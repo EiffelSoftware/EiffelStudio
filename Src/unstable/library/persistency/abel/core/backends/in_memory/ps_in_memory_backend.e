@@ -53,28 +53,11 @@ feature {PS_ABEL_EXPORT} -- Access
 			end
 		end
 
-	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
-			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
-			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
-		local
-			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
-		do
-			across
-				order as cursor
-			from
-				create list.make (order.count)
-				Result := list
-			loop
-				if
-					attached collection_database [cursor.item.type.type.type_id] as inner
-					and then attached inner [cursor.item.primary_key] as res
-				then
-					list.extend (res)
-				end
-			end
-		end
+feature {PS_ABEL_EXPORT} -- Retrieval
 
 	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+			-- See function `specific_retrieve'.
+			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
 		local
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			i: INTEGER
@@ -95,6 +78,28 @@ feature {PS_ABEL_EXPORT} -- Access
 			end
 		end
 
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+			-- See function `retrieve'.
+			-- Use `internal_retrieve' for contracts and other calls within a backend.
+		require else
+			supported: is_object_type_supported (type)
+		do
+--			if success then -- Enable transaction conflict simulation
+--				success := False
+--			else
+--				success := True
+--				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
+--				transaction.error.raise
+--			end
+
+			if attributes.count < type.attribute_count then
+					-- Prevent the QUERY_CURSOR from messing around with our database.
+				Result := create_get_inner_database (type).deep_twin.new_cursor
+			else
+				Result := create_get_inner_database (type).new_cursor
+			end
+		end
+
 feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 
 
@@ -104,12 +109,24 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 			Result := create_get_inner_collection_database (collection_type).new_cursor
 		end
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
-			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
+	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
+			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+		local
+			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 		do
-			if attached collection_database [collection_type.type.type_id] as inner then
-				Result := inner [collection_primary_key]
-					-- Result may be Void when collection is not present.
+			across
+				order as cursor
+			from
+				create list.make (order.count)
+				Result := list
+			loop
+				if
+					attached collection_database [cursor.item.type.type.type_id] as inner
+					and then attached inner [cursor.item.primary_key] as res
+				then
+					list.extend (res)
+				end
 			end
 		end
 
@@ -137,38 +154,10 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 		do
 		end
 
-feature{PS_READ_ONLY_BACKEND}
-
-	success: BOOLEAN
-
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
-			-- See function `retrieve'.
-			-- Use `internal_retrieve' for contracts and other calls within a backend.
-		do
---			if success then -- Enable transaction conflict simulation
---				success := False
---			else
---				success := True
---				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
---				transaction.error.raise
---			end
-
-			if attributes.count < type.attribute_count then
-					-- Prevent the QUERY_CURSOR from messing around with our database.
-				Result := create_get_inner_database (type).deep_twin.new_cursor
-			else
-				Result := create_get_inner_database (type).new_cursor
-			end
-		end
-
-	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
-			-- See function `retrieve_by_primary'.
-			-- Use `internal_retrieve_by_primary' for contracts and other calls within a backend.
-		do
-			Result := create_get_inner_database (type).item (key)
-		end
-
 feature {PS_ABEL_EXPORT} -- Testing
+
+--	success: BOOLEAN
+--			-- If false, simulate a transaction failure during next retrieval.
 
 	wipe_out, make
 			-- Wipe out everything and initialize new.

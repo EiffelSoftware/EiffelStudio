@@ -136,6 +136,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			field_type: PS_TYPE_METADATA
+
+			key: INTEGER
 		do
 			retrieved := object.backend_collection
 			count := retrieved.collection_items.count
@@ -149,7 +151,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 
 				if not field_type.is_none and then not read_manager.is_attribute_ready (field.value, field_type) then
-					read_manager.process_next (field.value.to_integer, field_type, object)
+					key := field.value.to_integer
+					if read_manager.cache_lookup (key, field_type) = 0 then
+						read_manager.process_next (key, field_type, object)
+					end
 				end
 				i := i + 1
 			end

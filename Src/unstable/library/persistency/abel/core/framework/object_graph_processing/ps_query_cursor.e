@@ -131,7 +131,7 @@ feature {PS_ABEL_EXPORT}
 			from
 				advance_item
 			until
-				after or else query.criterion.is_satisfied_by (item)
+				after or else (attached maybe_item as it and then query.criterion.is_satisfied_by (it))
 			loop
 				advance_item
 			end
@@ -202,6 +202,7 @@ feature {PS_ABEL_EXPORT}
 						new_object.set_backend_representation (retrieved_entity)
 
 						if index /= read_manager.count and then to_build = to_build_interval then
+							check false end
 							create to_build_array.make (2 * to_build_interval.count)
 							to_build_interval.do_all (agent to_build_array.extend)
 							to_build := to_build_array
@@ -215,18 +216,32 @@ feature {PS_ABEL_EXPORT}
 				batch_count := batch_count - 1
 			end
 
-			read_manager.build (to_build, query.object_initialization_depth)
+			read_manager.build (to_build_interval, query.object_initialization_depth)
 			processed_items := processed_item_list.new_cursor
 		end
 
 	item: ANY
 		do
-			Result := read_manager.item (processed_items.item).reflector.object
+--			Result := read_manager.item (processed_items.item).reflector.object
+			check attached maybe_item as safe then
+				Result := safe
+			end
 		end
 
 	after: BOOLEAN
 		do
 			Result := subtypes.after and current_result.after and processed_items.after
+		end
+
+	maybe_item: detachable ANY
+		do
+			if 0 < query.object_initialization_depth and query.object_initialization_depth <= 2 then
+				Result := read_manager.item (processed_items.item).reflector.object
+			elseif attached {REFLECTED_OBJECT} read_manager.object_item (processed_items.item) as res then
+				Result := res.object
+			else
+				Result := read_manager.object_item (processed_items.item)
+			end
 		end
 
 end

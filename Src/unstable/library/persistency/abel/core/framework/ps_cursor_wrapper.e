@@ -38,7 +38,7 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			real_cursor.forth
-			if not after and attached {PS_BACKEND_OBJECT} item as i then
+			if not after and not backend.plugins.is_empty and then attached {PS_BACKEND_OBJECT} item as i then
 				backend.apply_plugins (i, transaction)
 			end
 		ensure then

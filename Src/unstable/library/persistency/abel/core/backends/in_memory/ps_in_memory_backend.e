@@ -176,7 +176,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 			create database.make (default_size)
 			create collection_database.make (default_size)
 			create plugins.make
-			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
+--			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 			max_primary := 0
 			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
 		end

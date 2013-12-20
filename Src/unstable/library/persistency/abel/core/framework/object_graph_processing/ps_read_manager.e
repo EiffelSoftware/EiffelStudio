@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 
 
 	cache: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], PS_TYPE_METADATA]
+--	cache: PS_LOOKUP_TABLE [INTEGER]
 			-- A cache to map a [type, primary_key] tuple to an index in `object_storage'.
 
 
@@ -70,9 +71,16 @@ feature {PS_ABEL_EXPORT} -- Access
 	item (index: INTEGER): PS_OBJECT_READ_DATA
 			-- Get the object with index `index'
 		do
+			check to_finalize.has (index) or to_process.has (index) or to_process_next.has (index) end
 			Result := storage_array [index]
 		ensure then
 			object_correct: storage_array [index] = Result
+		end
+
+	object_item (index: INTEGER): detachable ANY
+		do
+			check not (to_finalize.has (index) or to_process.has (index) or to_process_next.has (index)) end
+			Result := storage_array [index].reflector.object
 		end
 
 	backend: PS_READ_ONLY_BACKEND
@@ -83,6 +91,7 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- See if an object of type `type' and with primary key `primary_key' is already loaded.
 			-- The result is 0 if no such object exists.
 		do
+--			Result := cache.lookup (primary_key, type)
 			if attached cache [type] as inner then
 				Result := inner [primary_key]
 			end
@@ -111,6 +120,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 			-- Also add items which have not been found in the database (i.e. backend_representation = Void).
 			-- This avoids a potential problem that a shared object that got deleted may be queried several times.
 			if cached then
+--				cache.add_value (object.index, object.primary_key, object.type)
 				if attached cache [object.type] as inner_cache then
 					inner_cache.extend (object.index, object.primary_key)
 				else
@@ -176,14 +186,15 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 
 feature {PS_ABEL_EXPORT} -- Object building
 
-	build (index_set: INDEXABLE [INTEGER, INTEGER]; a_max_level: INTEGER)
+	build (index_set: PS_INTEGER_INTERVAL --INDEXABLE [INTEGER, INTEGER]
+		; a_max_level: INTEGER)
 			-- Build all items in `index_set'.
 		do
 			from
 				max_level := a_max_level
 
-				to_finalize := new_interval
-				to_process := new_interval
+				to_finalize := empty_interval
+				to_process := empty_interval
 				to_process_next := index_set
 
 				current_level := 0
@@ -210,19 +221,27 @@ feature {NONE}  -- Object building: loop control variables
 	current_level: INTEGER
 			-- The current object initialization depth.
 
-	to_process_next: INDEXABLE [INTEGER, INTEGER]
+	to_process_next: PS_INTEGER_INTERVAL
+		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and build in the next iteration.
 
-	to_process: INDEXABLE [INTEGER, INTEGER]
+	to_process: PS_INTEGER_INTERVAL
+		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and (partially) build in this iteration.
 
-	to_finalize: INDEXABLE [INTEGER, INTEGER]
+	to_finalize: PS_INTEGER_INTERVAL
+		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects from the last iteration which need to be finalized.
 
 	new_interval: PS_INTEGER_INTERVAL
 			-- Create a new empty interval with values [count+1, count]
 		do
 			create Result.make_new (count+1, count)
+		end
+
+	empty_interval: PS_INTEGER_INTERVAL
+		do
+			create Result.make_new (1, 0)
 		end
 
 feature {PS_ABEL_EXPORT} -- Handler support functions
@@ -291,21 +310,37 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				foreign_key := value.to_integer
 				referee_index := cache_lookup (foreign_key, type)
 
-				if referee_index > 0 then
-
-
-					referee := item (referee_index)
-					if referee.is_ignored then
-						-- do nothing
-					elseif referee.is_object_initialized then
-						Result := referee.reflector.object
-						referee.set_referer (referer.index)
-					else
-						process_next (foreign_key, type, referer)
-					end
-				else
+				if referee_index <= 0 then
 					process_next (foreign_key, type, referer)
+
+				elseif referee_index < to_finalize.lower then
+					Result := object_item (referee_index)
+
+				elseif referee_index < to_process_next.lower then
+					referee := item (referee_index)
+					if referee.is_object_initialized then
+						referee.set_referer (referer.index)
+						Result := referee.reflector.object
+					end
+--				else
+--					process_next (foreign_key, type, referer)
 				end
+
+--				if referee_index > 0 then
+
+
+--					referee := item (referee_index)
+--					if referee.is_ignored then
+--						-- do nothing
+--					elseif referee.is_object_initialized then
+--						Result := referee.reflector.object
+--						referee.set_referer (referer.index)
+--					else
+--						process_next (foreign_key, type, referer)
+--					end
+--				else
+--					process_next (foreign_key, type, referer)
+--				end
 			end
 		end
 
@@ -345,31 +380,33 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 	process_next (key: INTEGER; type: PS_TYPE_METADATA; referer: PS_OBJECT_READ_DATA)
 			-- Retrieve the object with primary key `key' and type `type' in the next iteration.
 			-- The `referer' denotes the object issuing the request.
+		require
+			not_in_cache: cache_lookup (key, type) = 0
 		local
 			i: INTEGER
 			object: PS_OBJECT_READ_DATA
 			found: BOOLEAN
 		do
 				-- First check if the item is not already registered for retrieval
-			i := cache_lookup (key, type)
+--			i := cache_lookup (key, type)
 
-			if i > 0 then
-				object := item (i)
+--			if i > 0 then
+--				object := item (i)
 
-				check
-					equal_algorithm:
-						to_process_next.has (i)
-						and object.primary_key = key
-						and object.type ~ type
-				end
+--				check
+--					equal_algorithm:
+--						to_process_next.has (i)
+--						and object.primary_key = key
+--						and object.type ~ type
+--				end
 
-			else
+--			else
 				-- Extend the objects list for retrieval
 				i := count + 1
 				create object.make_with_primary_key (i, key, type, current_level)
 				add_object (object, True)
 				to_process_next.extend (i)
-			end
+--			end
 				-- Update the referer
 			object.set_referer (referer.index)
 		end

@@ -6,6 +6,7 @@
 			<assertions supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="inlining_size" value="8"/>
 		<library name="abel_connector_mysql" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_mysql\connector_mysql.ecf">
 			<option profile="true">
 			</option>

@@ -10,6 +10,8 @@ deferred class
 inherit
 	IRON_NODE_EXPORTER
 
+	IRON_NODE_FORWARD_OBSERVER
+
 feature -- Initialization
 
 	initialize
@@ -21,6 +23,13 @@ feature -- Initialization
 feature -- Status report
 
 	is_available: BOOLEAN
+		deferred
+		end
+
+feature -- Logs
+
+	save_log (a_log: IRON_NODE_LOG)
+			-- Save log `a_log'.
 		deferred
 		end
 

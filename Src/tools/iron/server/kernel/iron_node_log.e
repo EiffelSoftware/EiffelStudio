@@ -1,50 +1,42 @@
 note
 	description: "[
-			Objects that ...
+			Objects that represent an IRON_NODE_LOG entry
 		]"
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_NODE_FACTORY
+	IRON_NODE_LOG
 
-inherit
-	SHARED_EXECUTION_ENVIRONMENT
+create
+	make,
+	make_now
+
+feature {NONE} -- Initialization
+
+	make (dt: DATE_TIME; a_title: like title; a_content: like content)
+			-- Initialize `Current'.
+		do
+			time := dt
+			title := a_title
+			content := a_content
+		end
+
+	make_now (a_title: like title; a_content: like content)
+			-- Initialize `Current'.
+		do
+			make (create {DATE_TIME}.make_now_utc, a_title, a_content)
+		end
 
 feature -- Access
 
-	iron_node: IRON_NODE
-		local
-			db: IRON_NODE_DATABASE
-			obs: IRON_NODE_OBSERVER
-			mailer: NOTIFICATION_MAILER
-			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
-			lay: IRON_NODE_LAYOUT
-		do
-			if attached execution_environment.item ({IRON_NODE_CONSTANTS}.IRON_REPO_variable_name) as s then
+	time: DATE_TIME
 
-				create lay.make_with_path (create {PATH}.make_from_string (s))
-			else
-				create lay.make_default
-			end
-			if {PLATFORM}.is_windows then
-				create ext_mailer.make (lay.binaries_path.extended ("sendmail.bat").name, Void)
-				mailer := ext_mailer
-			else
-				create {NOTIFICATION_SENDMAIL_MAILER} mailer
-			end
-			create {IRON_NODE_FS_DATABASE} db.make_with_layout (lay)
-			create Result.make (db, lay)
-				-- FIXME: do not hardcode email address.
-			create {IRON_NODE_MAILER_OBSERVER} obs.make_with_mailer (mailer, "jfiat@eiffel.com")
-			Result.register_observer (obs)
+	title: READABLE_STRING_32
 
-			create {IRON_NODE_LOGGING_OBSERVER} obs.make (agent db.save_log, 1)
-			Result.register_observer (obs)
+	content: detachable READABLE_STRING_32
 
-			db.register_observer (Result)
-		end
+invariant
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software"

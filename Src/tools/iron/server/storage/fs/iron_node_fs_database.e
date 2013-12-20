@@ -53,6 +53,67 @@ feature -- Status report
 			end
 		end
 
+feature -- Logs
+
+	save_log (a_log: IRON_NODE_LOG)
+			-- Save log `a_log'.
+		local
+			f: RAW_FILE
+			dt: DATE_TIME
+			dt_text: STRING
+			d: DIRECTORY
+			p: PATH
+			j: JSON_OBJECT
+		do
+			dt := a_log.time
+			create dt_text.make_empty
+			dt_text.append_integer (dt.year)
+			if dt.month < 10 then
+				dt_text.append_character ('0')
+			end
+			dt_text.append_integer (dt.month)
+			if dt.day < 10 then
+				dt_text.append_character ('0')
+			end
+			dt_text.append_integer (dt.day)
+
+			p := layout.logs_path.extended (dt_text)
+
+			create d.make_with_path (p)
+			if not d.exists then
+				d.recursive_create_dir
+			end
+
+--			dt_text.append_character ('_')
+--			if dt.hour < 10 then
+--				dt_text.append_character ('0')
+--			end
+--			dt_text.append_integer (dt.hour)
+--			if dt.minute < 10 then
+--				dt_text.append_character ('0')
+--			end
+--			dt_text.append_integer (dt.minute)
+--			if dt.second < 10 then
+--				dt_text.append_character ('0')
+--			end
+--			dt_text.append_integer (dt.second)
+--			dt_text.append_character ('-')
+--			dt_text.append_double (dt.fractional_second)
+			dt_text := dt.date.ordered_compact_date.out + "-" + dt.time.compact_time.out + "-" + dt.time.nano_second.out
+
+			p := p.extended (dt_text).appended_with_extension ("log")
+			create j.make
+			j.put (create {JSON_STRING}.make_json ((create {HTTP_DATE}.make_from_date_time (dt)).string), "date")
+			j.put (create {JSON_STRING}.make_json_from_string_32 (a_log.title), "title")
+			if attached a_log.content as l_content then
+				j.put (create {JSON_STRING}.make_json_from_string_32 (l_content), "message")
+			end
+			create f.make_with_path (p)
+			f.create_read_write
+			f.put_string (j.representation)
+			f.close
+		end
+
 feature -- User
 
 	encrypted_password (p: detachable READABLE_STRING_GENERAL): READABLE_STRING_8
@@ -218,6 +279,7 @@ feature -- User
 			u.set_password (Void)
 
 			inf.save_to (user_path (u.name))
+			on_user_updated (u, flag_is_new)
 		end
 
 feature -- Version
@@ -503,6 +565,7 @@ feature -- Package: change
 				inf.put (o.name, "owner")
 			end
 			inf.save_to (p.extended ("package.info"))
+			on_package_updated (a_package, flag_is_new)
 		end
 
 feature -- Version package
@@ -834,27 +897,9 @@ feature -- Version Package: change
 			end
 
 			inf.put (a_package.id, "id")
---			if attached a_package.last_modified as dt then
---				create hdate.make_from_date_time (dt)
---				inf.put (hdate.rfc1123_string, "last-modified")
---			end
---			create s.make_empty
---			across
---				a_package.tags as tags_ic
---			loop
---				if not s.is_empty then
---					s.append_character (',')
---				end
---				s.append (tags_ic.item)
---			end
---			if not s.is_empty then
---				inf.put (s, "tags")
---			end
 
---			if attached a_package.owner as o then
---				inf.put (o.name, "owner")
---			end
 			inf.save_to (vp.extended ("version.info"))
+			on_version_package_updated (a_package, flag_is_new)
 
 			if a_prev_package = Void then
 				patch_package (a_package.package, Void)
@@ -898,6 +943,7 @@ feature -- Version package / archive: change
 			b := a_file.move_to (p.name.to_string_8)
 			if b then
 				a_package.set_archive_path (p)
+				on_version_package_updated (a_package, False)
 			end
 		end
 
@@ -922,9 +968,11 @@ feature -- Version package / archive: change
 						src.rename_path (p)
 					end
 					a_package.set_archive_path (p)
+					on_version_package_updated (a_package, False)
 				end
 			else
 				a_package.set_archive_path (Void)
+				on_version_package_updated (a_package, False)
 			end
 		rescue
 			retried := True
@@ -941,8 +989,7 @@ feature -- Version package / archive: change
 			if f.exists then
 				f.delete
 				a_package.set_archive_path (Void)
-
-				update_version_package (a_package)
+				on_version_package_updated (a_package, False)
 			end
 		end
 
@@ -973,6 +1020,7 @@ feature -- Version package / archive: change
 					f.put_new_line
 					f.close
 					reset_path_association_map (a_package.version)
+					on_version_package_updated (a_package, False)
 				end
 			end
 		end
@@ -996,6 +1044,7 @@ feature -- Version package / archive: change
 					if f.exists then
 						f.delete
 						reset_path_association_map (a_package.version)
+						on_version_package_updated (a_package, False)
 					end
 				else
 						-- path is mapped to another package !!!

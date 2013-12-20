@@ -155,7 +155,6 @@ feature -- Users
 						u.set_data_item ("reset_password.url", req.absolute_script_url (iron.account_page (u) + "?reset_password=" + l_uuid))
 						u.set_data_item ("reset_password.datetime", (create {HTTP_DATE}.make_now_utc).string)
 						iron.database.update_user (u)
-						iron.notify_user_updated (u, False)
 						s.append ("An email has just been sent to you. This describes how to reset your password. Check you inbox (eventually also your spam folder).")
 					end
 				else
@@ -298,7 +297,6 @@ feature -- Users
 							u.set_data_item ("profile.note", l_note)
 						end
 						iron.database.update_user (u)
-						iron.notify_user_updated (u, True)
 					end
 				end
 			else

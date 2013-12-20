@@ -458,20 +458,29 @@ feature -- Package form
 							p.add_tag (tic.item)
 						end
 					end
+--					if attached fd.table_item ("links") as l_links then
+--						if attached p.links as p_links then
+--							p_links.wipe_out
+--						end
+--						across
+--							l_links as l_ic
+--						loop
+--							p.add_link (...)
+--						end
+--					end
 				end
 				if has_permission_to_modify_package (req, p) then
 					if not fd.has_error then
 						if p.has_id then
 							iron.database.update_package (p)
-							iron.database.update_version_package (vp)
 
 							m.add_normal_message ("Package updated [" + p.id + "]")
 						else
 							iron.database.update_package (p)
-							iron.database.update_version_package (vp)
 
 							m.add_normal_message ("Package created [" + p.id + "]")
 						end
+						iron.database.update_version_package (vp)
 
 						if attached {WSF_UPLOADED_FILE} fd.item ("archive") as l_file then
 							iron.database.save_uploaded_package_archive (vp, l_file)

@@ -73,8 +73,43 @@ feature -- Event
 		end
 
 	on_package_updated (p: IRON_NODE_PACKAGE; flag_is_new: BOOLEAN)
+		local
+			utf: UTF_CONVERTER
+			l_body: STRING
+			l_title: STRING
+			m: NOTIFICATION_EMAIL
 		do
-			-- do nothing
+			if flag_is_new then
+				l_title := "[Iron] New package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_body := l_title + "%N"
+			else
+				l_title := "[Iron] Updated package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_body := l_title + "%N"
+			end
+			if mailer.is_available then
+				create m.make (admin_email, admin_email, l_title, l_body)
+				mailer.process_email (m)
+			end
+		end
+
+	on_version_package_updated (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
+		local
+			utf: UTF_CONVERTER
+			l_body: STRING
+			l_title: STRING
+			m: NOTIFICATION_EMAIL
+		do
+			if flag_is_new then
+				l_title := "[Iron:"+ p.version.value +"] New version package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_body := l_title + "%N"
+			else
+				l_title := "[Iron:"+ p.version.value +"] Updated version package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_body := l_title + "%N"
+			end
+			if mailer.is_available then
+				create m.make (admin_email, admin_email, l_title, l_body)
+				mailer.process_email (m)
+			end
 		end
 
 note

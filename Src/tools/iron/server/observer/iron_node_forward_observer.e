@@ -1,30 +1,92 @@
 note
-	description: "Summary description for {IRON_NODE_OBSERVER}."
+	description: "Summary description for {IRON_NODE_FORWARD_OBSERVER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
+	IRON_NODE_FORWARD_OBSERVER
+
+inherit
 	IRON_NODE_OBSERVER
 
-feature -- User
+feature {NONE} -- Observers
+
+	observers: detachable ARRAYED_LIST [IRON_NODE_OBSERVER]
+
+feature -- Observers: User events
 
 	on_user_event (a_user: IRON_NODE_USER; a_title: READABLE_STRING_32; a_message: READABLE_STRING_32)
-		deferred
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_user_event (a_user, a_title, a_message)
+				end
+			end
 		end
 
 	on_user_updated (u: IRON_NODE_USER; flag_is_new: BOOLEAN)
-		deferred
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_user_updated (u, flag_is_new)
+				end
+			end
 		end
 
-feature -- Package
+feature -- Observers: Package events
 
 	on_package_updated (p: IRON_NODE_PACKAGE; flag_is_new: BOOLEAN)
-		deferred
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_package_updated (p, flag_is_new)
+				end
+			end
 		end
 
-	on_version_package_updated (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
-		deferred
+	on_version_package_updated  (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_version_package_updated (p, flag_is_new)
+				end
+			end
+		end
+
+feature -- Observers
+
+	register_observer (o: IRON_NODE_OBSERVER)
+		local
+			obs: like observers
+		do
+			obs := observers
+			if obs = Void then
+				create obs.make (1)
+				observers := obs
+			end
+			obs.force (o)
+		end
+
+	unregister_observer (o: IRON_NODE_OBSERVER)
+		local
+			obs: like observers
+		do
+			obs := observers
+			if obs /= Void then
+				obs.prune_all (o)
+				if obs.is_empty then
+					observers := Void
+				end
+			end
 		end
 
 note
@@ -58,5 +120,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

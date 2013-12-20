@@ -8,6 +8,9 @@ note
 class
 	IRON_NODE
 
+inherit
+	IRON_NODE_FORWARD_OBSERVER
+
 create
 	make
 
@@ -62,61 +65,6 @@ feature -- Visitor
 	accept (vis: IRON_NODE_VISITOR)
 		do
 			vis.visit_node (Current)
-		end
-
-feature {NONE} -- Observers
-
-	observers: detachable ARRAYED_LIST [IRON_NODE_OBSERVER]
-
-feature -- Observers	
-
-	notify_user_updated (u: IRON_NODE_USER; flag_is_new: BOOLEAN)
-		do
-			if attached observers as lst then
-				across
-					lst as c
-				loop
-					c.item.on_user_updated (u, flag_is_new)
-				end
-			end
-		end
-
-	notify_package_updated (p: IRON_NODE_PACKAGE; flag_is_new: BOOLEAN)
-		do
-			if attached observers as lst then
-				across
-					lst as c
-				loop
-					c.item.on_package_updated (p, flag_is_new)
-				end
-			end
-		end
-
-feature -- Observers
-
-	register_observer (o: IRON_NODE_OBSERVER)
-		local
-			obs: like observers
-		do
-			obs := observers
-			if obs = Void then
-				create obs.make (1)
-				observers := obs
-			end
-			obs.force (o)
-		end
-
-	unregister_observer (o: IRON_NODE_OBSERVER)
-		local
-			obs: like observers
-		do
-			obs := observers
-			if obs /= Void then
-				obs.prune_all (o)
-				if obs.is_empty then
-					observers := Void
-				end
-			end
 		end
 
 feature -- Access: api url

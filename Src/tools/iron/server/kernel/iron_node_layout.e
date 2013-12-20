@@ -94,6 +94,11 @@ feature -- Access: internal
 			Result := path.extended ("bin")
 		end
 
+	logs_path: PATH
+		once
+			Result := path.extended ("logs")
+		end
+
 	documentation_path: PATH
 			-- directory for iron documentation	
 		once

@@ -62,7 +62,7 @@ feature -- Execution
 				r.set_body (s)
 				res.send (r)
 			else
-				res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+				res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
 			end
 		end
 

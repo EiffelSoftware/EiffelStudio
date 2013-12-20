@@ -52,7 +52,7 @@ feature -- Execution
 				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then
 				not l_searched_name.is_empty
 			then
-				l_title := {STRING_32} "IRON packages matching name=%"" + l_searched_name.value + "%""
+				l_title := {STRING_32} "Search for name=%"" + l_searched_name.value + "%""
 				lst := iron.database.version_packages (iron_version (req), 1, 0)
 				if lst /= Void then
 					l_total_count := lst.count
@@ -85,7 +85,7 @@ feature -- Execution
 				html.add_parameter (l_search_query.value, "search_query_text")
 				html.add_parameter (iron.database.version_package_criteria_factory.description, "search_query_description")
 				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
-				l_title := {STRING_32} "IRON packages matching query=%"" + l_search_query.value + "%""
+				l_title := {STRING_32} "Search for query=%"" + l_search_query.value + "%""
 				l_total_count := iron.database.version_packages_count (iron_version (req))
 				lst := iron.database.query_version_packages (l_search_query.value, iron_version (req), 1, 0)
 				l_found_count := lst.count
@@ -107,7 +107,7 @@ feature -- Execution
 			if l_title /= Void then
 				html.set_title (html.html_encoded_string (l_title))
 			else
-				html.set_title ("List of available IRON packages")
+				html.set_title ("All packages (version " + iron_version (req).value + ")")
 			end
 			s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
 			html.set_body (s)

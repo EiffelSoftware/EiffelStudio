@@ -122,7 +122,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			end
 
 			create reflector.make (new_instance)
-			object.set_object (reflector)
+			object.set_reflector (reflector)
 		end
 
 	initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
@@ -193,13 +193,13 @@ feature {PS_ABEL_EXPORT} -- Read functions
 						special.extend (read_manager.try_build_attribute (field.value, field_type, object))
 						if object.reflector.is_special_copy_semantics_item (i - 1) and not basic_expanded_types.has (field_type.type.type_id) then
 							ref := read_manager.cache_lookup (field.value.to_integer, field_type)
-							read_manager.item (ref).set_object (object.reflector.special_copy_semantics_item (i - 1))
+							read_manager.item (ref).set_reflector (object.reflector.special_copy_semantics_item (i - 1))
 						end
 					end
 				elseif exp_special then
 					special.extend (read_manager.try_build_attribute (field.value, field_type, object))
 					ref := read_manager.cache_lookup (field.value.to_integer, field_type)
-					read_manager.item (ref).set_object (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, i - 1))
+					read_manager.item (ref).set_reflector (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, i - 1))
 
 				else
 					special.extend (read_manager.try_build_attribute (field.value, field_type, object))

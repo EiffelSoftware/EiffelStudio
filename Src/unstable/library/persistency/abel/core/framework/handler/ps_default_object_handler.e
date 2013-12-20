@@ -181,7 +181,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					if attached retrieved.value_lookup (retrieved.metadata.attributes [i]) as field then
 						field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 						ref_item := read_manager.cache_lookup (field.value.to_integer, field_type)
-						read_manager.item (ref_item).set_object (reflector.expanded_field (i))
+						read_manager.item (ref_item).set_reflector (reflector.expanded_field (i))
 					end
 
 				when reference_type then
@@ -197,7 +197,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 							if reflector.is_copy_semantics_field (i) then
 									-- Update the reflector of the referenced item.
 								ref_item := read_manager.cache_lookup (field.value.to_integer, field_type)
-								read_manager.item (ref_item).set_object (reflector.copy_semantics_field (i))
+								read_manager.item (ref_item).set_reflector (reflector.copy_semantics_field (i))
 							end
 						end
 					end

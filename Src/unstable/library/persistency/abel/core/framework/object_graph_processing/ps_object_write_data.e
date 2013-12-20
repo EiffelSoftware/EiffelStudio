@@ -24,10 +24,11 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			index := idx
-			internal_object := an_object
+			reflector := an_object
 			level := a_level
 			type := a_type
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
+			set_object (Current)
 		end
 
 end

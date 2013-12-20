@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 			type := a_type
 			level := a_level
 			primary_key := a_primary_key
+			set_object (Current)
+			reflector := Current
 		end
 
 end

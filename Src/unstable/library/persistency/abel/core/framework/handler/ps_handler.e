@@ -118,10 +118,9 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			new_instance: detachable ANY
 			reflector: REFLECTED_REFERENCE_OBJECT
 		do
-			-- Create object
+				-- Create object
 			new_instance := internal_lib.new_instance_of (object.type.type.type_id)
-			create reflector.make (new_instance)
-			object.set_object (reflector)
+			object.set_object (new_instance)
 		ensure
 			built: object.is_object_initialized
 		end

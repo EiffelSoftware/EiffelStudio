@@ -37,7 +37,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			type := type_from_string (pair.type)
 			if attached build_from_string (pair.value, type) as obj then
 				create reflector.make (obj)
-				object.set_object (reflector)
+				object.set_reflector (reflector)
 			end
 		end
 

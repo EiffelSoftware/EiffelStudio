@@ -10,16 +10,21 @@ deferred class
 inherit
 	PS_ABEL_EXPORT
 
+	REFLECTED_REFERENCE_OBJECT
+		export
+		{NONE}
+			all
+		{PS_ABEL_EXPORT}
+			set_object, physical_offset
+		end
+
 feature {PS_ABEL_EXPORT} -- Access: General information
 
 	reflector: REFLECTED_OBJECT
 			-- A reflection wrapper to the actual object.
 		require
 			initialized: is_object_initialized
-		do
-			check attached internal_object as obj then
-				Result := obj
-			end
+		attribute
 		end
 
 	index: INTEGER
@@ -59,7 +64,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_object_initialized: BOOLEAN
 			-- Is the actual object set?
 		do
-			Result := attached internal_object
+			Result := reflector.object /= Current
 		end
 
 feature {PS_ABEL_EXPORT} -- Access: ABEL internals
@@ -156,10 +161,10 @@ feature {PS_ABEL_EXPORT} -- Element change
 			backend_collection_correct: attached {PS_BACKEND_COLLECTION} a_backend_representation implies backend_collection = a_backend_representation
 		end
 
-	set_object (an_object: like reflector)
+	set_reflector (an_object: like reflector)
 			-- Assign `object' with `an_object'.
 		do
-			internal_object := an_object
+			reflector := an_object
 		ensure
 			initialized: is_object_initialized
 			object_assigned: an_object = reflector
@@ -180,12 +185,4 @@ feature {NONE} -- Implementation
 			option: stable
 		attribute
 		end
-
-	internal_object: detachable like reflector
-			-- The detachable but stable reference to the reflected object.
-		note
-			option: stable
-		attribute
-		end
-
 end

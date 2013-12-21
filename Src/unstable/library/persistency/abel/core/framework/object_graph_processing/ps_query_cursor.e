@@ -146,10 +146,12 @@ feature {PS_ABEL_EXPORT}
 			retrieved_entity: PS_BACKEND_ENTITY
 			new_object: PS_OBJECT_READ_DATA
 
-			to_build: INDEXABLE [INTEGER, INTEGER]
 
 			to_build_array: ARRAYED_LIST [INTEGER]
 			to_build_interval: PS_INTEGER_INTERVAL
+
+			to_build: PS_INTEGER_INTERVAL
+--			to_build: INDEXABLE [INTEGER, INTEGER]
 
 			processed_item_list:ARRAYED_LIST [INTEGER]
 		do
@@ -158,10 +160,10 @@ feature {PS_ABEL_EXPORT}
 			from
 
 				batch_count := read_manager.backend.batch_retrieval_size
---				if batch_count < 1 then
---						-- Some reasonable default to exploit caches.
---					batch_count := 500
---				end
+				if batch_count < 1 then
+						-- Some reasonable default to exploit caches.
+					batch_count := 100
+				end
 
 				if query.object_initialization_depth >= 0 then
 						-- Wipe out the read manager, because there are a lot of half-initialized objects.
@@ -201,12 +203,11 @@ feature {PS_ABEL_EXPORT}
 
 						new_object.set_backend_representation (retrieved_entity)
 
-						if index /= read_manager.count and then to_build = to_build_interval then
-							check false end
-							create to_build_array.make (2 * to_build_interval.count)
-							to_build_interval.do_all (agent to_build_array.extend)
-							to_build := to_build_array
-						end
+--						if index /= read_manager.count and then to_build = to_build_interval then
+--							create to_build_array.make (2 * to_build_interval.count)
+--							to_build_interval.do_all (agent to_build_array.extend)
+--							to_build := to_build_array
+--						end
 						to_build.extend (index)
 					end
 

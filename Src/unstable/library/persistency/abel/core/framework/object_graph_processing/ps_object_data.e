@@ -80,8 +80,8 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 		require
 			initialized: is_handler_initialized
 		do
-			check attached internal_handler then
-				Result := internal_handler
+			check attached internal_handler as res then
+				Result := res
 			end
 		ensure
 			correct: Result = internal_handler
@@ -89,10 +89,10 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 
 	backend_representation: detachable PS_BACKEND_ENTITY
 			-- The representation of the current object in the backend.
-		note
-			option: stable
-		attribute
-		end
+--		note
+--			option: stable
+--		attribute
+--		end
 
 	backend_object: PS_BACKEND_OBJECT
 			-- The representation of current as a backend object.
@@ -181,8 +181,8 @@ feature {NONE} -- Implementation
 
 	internal_handler: detachable like handler
 			-- The detachable but stable reference to the handler.
-		note
-			option: stable
-		attribute
-		end
+--		note
+--			option: stable
+--		attribute
+--		end
 end

@@ -15,6 +15,15 @@ inherit
 create
 	make
 
+		-- Performance ToDo's:
+		-- 1)	Investigate if it is more efficient to have two `storage_array' with correct types each.
+		-- 2)	Check if `free_objects' has an effect at all, or if it's better to let the GC manage the free list.
+		--		(The release of PS_OBJECT_READ_DATA at the end of `build' certainly has an effect)
+		-- 3)	Improve `process_step' performance, e.g. by not allocating cursor objects.
+		--		For small batch sizes this function needs to be very efficient.
+		-- 4)	Improve `QUERY_CURSOR.batch_retrieve': e.g. use an `INTEGER_INTERVAL' when possible.
+		-- 5)	Improve `process_batch_retrieve' for collections as well.
+
 feature {NONE} -- Initialization
 
 	make (
@@ -37,10 +46,8 @@ feature {NONE} -- Initialization
 			create bogus.make_with_primary_key (0, -1, metadata_factory.create_metadata_from_type ({NONE}), -1)
 			storage_array.extend (bogus)
 
---			create object_storage.make (default_size)
 			create cache.make (small_size)
 
---			create objects_to_retrieve.make (small_size)
 			create object_primaries_to_retrieve.make (small_size)
 			create object_types_to_retrieve.make (small_size)
 			create collections_to_retrieve.make (small_size)
@@ -48,6 +55,8 @@ feature {NONE} -- Initialization
 			to_process_next := new_interval
 			to_process := new_interval
 			to_finalize := new_interval
+
+			create free_objects.make (10)
 		end
 
 
@@ -55,12 +64,13 @@ feature {NONE} -- Initialization
 --	cache: PS_LOOKUP_TABLE [INTEGER]
 			-- A cache to map a [type, primary_key] tuple to an index in `object_storage'.
 
-
---	object_storage: ARRAYED_LIST [PS_OBJECT_READ_DATA]
+--	storage_array: SPECIAL [PS_OBJECT_READ_DATA]
+	storage_array: SPECIAL [detachable ANY]
 			-- An internal storage for objects.
 
-	storage_array: SPECIAL [PS_OBJECT_READ_DATA]
-			-- An internal storage for objects.
+	free_objects: ARRAYED_STACK [PS_OBJECT_READ_DATA]
+
+
 
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -72,7 +82,9 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- Get the object with index `index'
 		do
 			check to_finalize.has (index) or to_process.has (index) or to_process_next.has (index) end
-			Result := storage_array [index]
+			check attached {PS_OBJECT_READ_DATA} storage_array [index] as res then
+				Result := res
+			end
 		ensure then
 			object_correct: storage_array [index] = Result
 		end
@@ -80,7 +92,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	object_item (index: INTEGER): detachable ANY
 		do
 			check not (to_finalize.has (index) or to_process.has (index) or to_process_next.has (index)) end
-			Result := storage_array [index].reflector.object
+			Result := storage_array [index]--.reflector.object
 		end
 
 	backend: PS_READ_ONLY_BACKEND
@@ -91,12 +103,12 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- See if an object of type `type' and with primary key `primary_key' is already loaded.
 			-- The result is 0 if no such object exists.
 		do
---			Result := cache.lookup (primary_key, type)
 			if attached cache [type] as inner then
 				Result := inner [primary_key]
 			end
 		ensure
-			correct: Result > 0 implies item (Result).primary_key = primary_key and item (Result).type ~ type
+--			correct: Result > 0 implies item (Result).primary_key = primary_key and item (Result).type ~ type
+			correct: Result > to_finalize.lower implies item (Result).primary_key = primary_key and item (Result).type ~ type
 		end
 
 feature {PS_ABEL_EXPORT} -- Element change
@@ -114,13 +126,11 @@ feature {PS_ABEL_EXPORT} -- Element change
 				storage_array := storage_array.aliased_resized_area (2 * count)
 			end
 			storage_array.extend (object)
---			object_storage.extend (object)
 
-			-- Add the item to the cache.
-			-- Also add items which have not been found in the database (i.e. backend_representation = Void).
-			-- This avoids a potential problem that a shared object that got deleted may be queried several times.
+				-- Add the item to the cache.
+				-- Also add items which have not been found in the database (i.e. backend_representation = Void).
+				-- This avoids a potential problem that a shared object that got deleted may be queried several times.
 			if cached then
---				cache.add_value (object.index, object.primary_key, object.type)
 				if attached cache [object.type] as inner_cache then
 					inner_cache.extend (object.index, object.primary_key)
 				else
@@ -137,7 +147,6 @@ feature {PS_ABEL_EXPORT} -- Element change
 	wipe_out
 			-- Empty caches and remove all data.
 		do
---			object_storage.wipe_out
 			storage_array.keep_head (1)
 			count := 0
 			cache.wipe_out
@@ -189,6 +198,8 @@ feature {PS_ABEL_EXPORT} -- Object building
 	build (index_set: PS_INTEGER_INTERVAL --INDEXABLE [INTEGER, INTEGER]
 		; a_max_level: INTEGER)
 			-- Build all items in `index_set'.
+		local
+			object: PS_OBJECT_READ_DATA
 		do
 			from
 				max_level := a_max_level
@@ -202,6 +213,22 @@ feature {PS_ABEL_EXPORT} -- Object building
 				to_process_next.is_empty and to_process.is_empty and to_finalize.is_empty
 				or (current_level >= max_level and max_level > 0)
 			loop
+				across
+					to_finalize as cursor
+				loop
+					object := item (cursor.item)
+					if object.reflector /= object then
+							-- Expanded type
+						storage_array.put (object.reflector, cursor.item)
+					elseif object.is_object_initialized then
+						storage_array.put (object.reflector.object, cursor.item)
+					else
+						storage_array.put (Void, cursor.item)
+					end
+
+					free_objects.put (object)
+				end
+
 				to_finalize := to_process
 				to_process := to_process_next
 				to_process_next := new_interval
@@ -222,15 +249,12 @@ feature {NONE}  -- Object building: loop control variables
 			-- The current object initialization depth.
 
 	to_process_next: PS_INTEGER_INTERVAL
-		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and build in the next iteration.
 
 	to_process: PS_INTEGER_INTERVAL
-		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects to retrieve and (partially) build in this iteration.
 
 	to_finalize: PS_INTEGER_INTERVAL
-		--INDEXABLE [INTEGER, INTEGER]
 			-- The objects from the last iteration which need to be finalized.
 
 	new_interval: PS_INTEGER_INTERVAL
@@ -315,6 +339,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 				elseif referee_index < to_finalize.lower then
 					Result := object_item (referee_index)
+					check no_reflector: not attached {REFLECTED_OBJECT} Result end
 
 				elseif referee_index < to_process_next.lower then
 					referee := item (referee_index)
@@ -322,25 +347,10 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 						referee.set_referer (referer.index)
 						Result := referee.reflector.object
 					end
---				else
---					process_next (foreign_key, type, referer)
+				else
+					referee := item (referee_index)
+					referee.set_referer (referer.index)
 				end
-
---				if referee_index > 0 then
-
-
---					referee := item (referee_index)
---					if referee.is_ignored then
---						-- do nothing
---					elseif referee.is_object_initialized then
---						Result := referee.reflector.object
---						referee.set_referer (referer.index)
---					else
---						process_next (foreign_key, type, referer)
---					end
---				else
---					process_next (foreign_key, type, referer)
---				end
 			end
 		end
 
@@ -383,30 +393,23 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 		require
 			not_in_cache: cache_lookup (key, type) = 0
 		local
-			i: INTEGER
+			index: INTEGER
 			object: PS_OBJECT_READ_DATA
 			found: BOOLEAN
 		do
-				-- First check if the item is not already registered for retrieval
---			i := cache_lookup (key, type)
-
---			if i > 0 then
---				object := item (i)
-
---				check
---					equal_algorithm:
---						to_process_next.has (i)
---						and object.primary_key = key
---						and object.type ~ type
---				end
-
---			else
 				-- Extend the objects list for retrieval
-				i := count + 1
-				create object.make_with_primary_key (i, key, type, current_level)
-				add_object (object, True)
-				to_process_next.extend (i)
---			end
+			index := count + 1
+			if free_objects.is_empty then
+				create object.make_with_primary_key (index, key, type, current_level)
+			else
+				object := free_objects.item
+				free_objects.remove
+				object.reset (index, key, type, current_level)
+			end
+
+			add_object (object, True)
+			to_process_next.extend (index)
+
 				-- Update the referer
 			object.set_referer (referer.index)
 		end
@@ -419,7 +422,6 @@ feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 			-- Register `object' to be added to the next batch retrieval request.
 		do
 			if not attached object.backend_representation then
---				objects_to_retrieve.extend ([object.type, object.primary_key, object.index])
 				object_types_to_retrieve.extend (object.type)
 				object_primaries_to_retrieve.extend (object.primary_key)
 			end
@@ -441,7 +443,6 @@ feature {NONE} -- Implementation: Loop body
 			-- Finish initialization of all objects in `to_finalize'
 		require
 			collections_to_retrieve.is_empty
---			objects_to_retrieve.is_empty
 			object_types_to_retrieve.is_empty
 			object_primaries_to_retrieve.is_empty
 		local
@@ -568,15 +569,6 @@ feature {NONE} -- Implementation: Batch retrieval
 				loop
 					item (cache_lookup (obj.item.primary_key, obj.item.metadata)).set_backend_representation (obj.item)
 				end
-
---				across
---					objects_to_retrieve as cursor
---				loop
---					if not attached item (cursor.item.index).backend_representation then
---						item (cursor.item.index).ignore
---					end
---				end
-
 			end
 
 			if not collections_to_retrieve.is_empty then
@@ -587,25 +579,15 @@ feature {NONE} -- Implementation: Batch retrieval
 				loop
 					item (cache_lookup (coll.item.primary_key, coll.item.metadata)).set_backend_representation (coll.item)
 				end
-
---				across
---					collections_to_retrieve as cursor
---				loop
---					if not attached item (cursor.item.index).backend_representation then
---						item (cursor.item.index).ignore
---					end
---				end
-
 			end
 
 			collections_to_retrieve.wipe_out
---			objects_to_retrieve.wipe_out
 
 			object_primaries_to_retrieve.wipe_out
 			object_types_to_retrieve.wipe_out
 
 		ensure
-			cleared_arrays: collections_to_retrieve.is_empty -- and objects_to_retrieve.is_empty
+			cleared_arrays: collections_to_retrieve.is_empty
 			more_cleared_arrays: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		end
 

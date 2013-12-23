@@ -54,10 +54,18 @@ feature {NONE} -- Initialization
 				l_text := a_class.text_32
 				l_encoding ?= a_class.encoding
 				original_bom := a_class.bom
+					-- We do not compute orginal text EOL style.
+					-- It is computed only when it is really needed.
+				internal_original_text_eol_style := unknown_eol_style
 			else
 				l_text := l_editor.wide_text
 				l_encoding := l_editor.encoding
 				original_bom := l_editor.bom
+				if l_editor.is_windows_file then
+					internal_original_text_eol_style := windows_eol_style
+				else
+					internal_original_text_eol_style := unix_eol_style
+				end
 			end
 
 				-- Set detected encoding
@@ -109,6 +117,28 @@ feature -- Access
 			result_attached: attached Result
 		end
 
+	original_text_eol_style: NATURAL_8
+			-- Orignal text EOL style.
+		do
+			Result := internal_original_text_eol_style
+			if Result = unknown_eol_style then
+				if original_text.has ('%R') then
+					Result := windows_eol_style
+				else
+					Result := unix_eol_style
+				end
+				internal_original_text_eol_style := Result
+			end
+		ensure
+			result_either_windows_or_unix: Result = windows_eol_style or Result = unix_eol_style
+		end
+
+feature -- EOL style constants
+
+	unknown_eol_style: NATURAL_8 = 0
+	windows_eol_style: NATURAL_8 = 1
+	unix_eol_style: NATURAL_8 = 2
+
 feature {NONE} -- Access
 
 	original_file_date: INTEGER
@@ -116,6 +146,9 @@ feature {NONE} -- Access
 
 	modified_data: ES_CLASS_TEXT_MODIFIER_DATA
 			-- Active modified class text data
+
+	internal_original_text_eol_style: like original_text_eol_style
+			-- Internal orignal EOL style
 
 feature -- Status report
 

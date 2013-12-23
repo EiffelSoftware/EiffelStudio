@@ -151,7 +151,7 @@ feature -- Attributes
 --			correct: Result = reflection.field_count_of_type (type.type_id)
 --		end
 
-	attributes: LIST [STRING]
+	attributes: ARRAYED_LIST [STRING]
 			-- Names of all attributes in `Current' type.
 
 	basic_attributes: LIST [STRING]

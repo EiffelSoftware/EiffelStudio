@@ -146,14 +146,12 @@ feature {PS_ABEL_EXPORT}
 			retrieved_entity: PS_BACKEND_ENTITY
 			new_object: PS_OBJECT_READ_DATA
 
-
-			to_build_array: ARRAYED_LIST [INTEGER]
-			to_build_interval: PS_INTEGER_INTERVAL
-
 			to_build: PS_INTEGER_INTERVAL
---			to_build: INDEXABLE [INTEGER, INTEGER]
 
-			processed_item_list:ARRAYED_LIST [INTEGER]
+			processed_interval: PS_INTEGER_INTERVAL
+			processed_array: ARRAYED_LIST [INTEGER]
+
+			processed: INDEXABLE [INTEGER, INTEGER]
 		do
 
 
@@ -170,9 +168,9 @@ feature {PS_ABEL_EXPORT}
 					read_manager.wipe_out
 				end
 
-				create processed_item_list.make (batch_count.max (1))
-				create to_build_interval.make_new (read_manager.count + 1, read_manager.count)
-				to_build := to_build_interval
+				create to_build.make_new (read_manager.count + 1, read_manager.count)
+				create processed_interval.make_new (read_manager.count + 1, read_manager.count)
+				processed := processed_interval
 			until
 				batch_count = 0 or current_result.after
 			loop
@@ -184,16 +182,21 @@ feature {PS_ABEL_EXPORT}
 						-- Check if the object has been loaded previously.
 					index := read_manager.cache_lookup (retrieved_entity.primary_key, retrieved_entity.metadata)
 
-					if index > 0 then
-						new_object := read_manager.item (index)
-					else
+					if index = 0 then
+
+
 						index := read_manager.count + 1
-						create new_object.make_with_primary_key (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
+
+						if read_manager.free_objects.is_empty then
+							create new_object.make_with_primary_key (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
+						else
+								-- Reuse one of the existing PS_OBJECT_READ_DATA.
+							new_object := read_manager.free_objects.item
+							read_manager.free_objects.remove
+							new_object.reset (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
+						end
+
 						read_manager.add_object (new_object, not query.is_tuple_query)
-					end
-
-					if not new_object.is_object_initialized then
-
 
 							-- Remove suberfluous attributes for tuple queries to prevent
 							-- automatic loading in the handlers.
@@ -202,23 +205,23 @@ feature {PS_ABEL_EXPORT}
 						end
 
 						new_object.set_backend_representation (retrieved_entity)
-
---						if index /= read_manager.count and then to_build = to_build_interval then
---							create to_build_array.make (2 * to_build_interval.count)
---							to_build_interval.do_all (agent to_build_array.extend)
---							to_build := to_build_array
---						end
 						to_build.extend (index)
+
+					elseif processed = processed_interval then
+							-- The list is no longer continuous, and we need to store the retrieved items in an array.
+						create processed_array.make (2 * processed_interval.count)
+						processed_interval.do_all (agent processed_array.extend)
+						processed := processed_array
 					end
 
-					processed_item_list.extend (index)
+					processed.extend (index)
 
 				end
 				batch_count := batch_count - 1
 			end
 
-			read_manager.build (to_build_interval, query.object_initialization_depth)
-			processed_items := processed_item_list.new_cursor
+			read_manager.build (to_build, query.object_initialization_depth)
+			processed_items := processed.new_cursor
 		end
 
 	item: ANY

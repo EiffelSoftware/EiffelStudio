@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			to_process := new_interval
 			to_finalize := new_interval
 
-			create free_objects.make (10)
+			create free_objects.make (default_size)
 		end
 
 
@@ -68,12 +68,14 @@ feature {NONE} -- Initialization
 	storage_array: SPECIAL [detachable ANY]
 			-- An internal storage for objects.
 
-	free_objects: ARRAYED_STACK [PS_OBJECT_READ_DATA]
 
 
 
 
 feature {PS_ABEL_EXPORT} -- Access
+
+
+	free_objects: ARRAYED_STACK [PS_OBJECT_READ_DATA]
 
 	count: INTEGER
 			-- The number of objects known to this manager.
@@ -134,7 +136,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 				if attached cache [object.type] as inner_cache then
 					inner_cache.extend (object.index, object.primary_key)
 				else
-					create new_inner_cache.make (small_size)
+					create new_inner_cache.make (default_size)
 					new_inner_cache.extend (object.index, object.primary_key)
 					cache.extend (new_inner_cache, object.type)
 				end
@@ -449,32 +451,54 @@ feature {NONE} -- Implementation: Loop body
 			i: INTEGER
 			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
 			object: PS_OBJECT_READ_DATA
+
+			start, stop: INTEGER
+			finalize_stop: INTEGER
 		do
+			start := to_process.lower
+			stop := to_process.upper
+			finalize_stop := to_finalize.upper
+
 				-- Search for an appropriate handler for all items to be created
 			assign_handlers (to_process)
 
 				-- Command the handlers to retrieve their objects.
 				-- (Most of them will place an order for a batch retrieve though)
 
-			across
-				to_process as idx
+--			across
+--				to_process as idx
+			from
+				i := start
+			until
+				i > stop
 			loop
-				object := item (idx.item)
+--				i := idx.item
+				object := item (i)
 
 				check not_ignored: not object.is_ignored end
 				check initialized: object.is_handler_initialized end
 
 				object.handler.retrieve (object, Current)
+
+				i := i + 1
+			variant
+				(stop + 1) - i
 			end
 
 				-- Do a batch retrieve
 			process_batch_retrieve
 
 				-- Create the objects, but don't initialize them yet
-			across
-				to_process as idx
+--			across
+--				to_process as idx
+			from
+				i := start
+			until
+				i > stop
 			loop
-				object := item (idx.item)
+--				i := idx.item
+				object := item (i)
+
 
 				check not_ignored: not object.is_ignored end
 				check initialized: object.is_handler_initialized end
@@ -484,16 +508,25 @@ feature {NONE} -- Implementation: Loop body
 				else
 					object.ignore
 				end
+
+				i := i + 1
+			variant
+				(stop + 1) - i
 			end
 
 
 				-- Identify and cache the objects
 			if not transaction.is_readonly then
 
-				across
-					to_process as idx_cursor
+--				across
+--					to_process as idx
+				from
+					i := start
+				until
+					i > stop
 				loop
-					object := item (idx_cursor.item)
+--					i := idx.item
+					object := item (i)
 
 					if not object.is_ignored and not object.type.type.is_expanded then
 							-- Identify the object with the id_manager
@@ -510,32 +543,52 @@ feature {NONE} -- Implementation: Loop body
 							transaction.root_flags.force (br.is_root, identifier.object_identifier)
 						end
 					end
+					i := i + 1
+				variant
+					(stop + 1) - i
 				end
-
 			end
 
 				-- Update the references from the last iteration
-			across
-				to_finalize as idx
+--			across
+--				to_finalize as idx
+			from
+				i := to_finalize.lower
+			until
+				i > finalize_stop
 			loop
-				object := item (idx.item)
+--				i := idx.item
+				object := item (i)
 				if not object.is_ignored then
 					check initialized: object.is_handler_initialized end
 					object.handler.finish_initialize (object, Current)
 				end
+
+				i := i + 1
+			variant
+				(finalize_stop + 1) - i
 			end
 
 
 				-- Do some basic initialization and search for objects
 				-- which need to be built in the next iteration
-			across
-				to_process as idx
+--			across
+--				to_process as idx
+			from
+				i := start
+			until
+				i > stop
 			loop
-				object := item (idx.item)
+--				i := idx.item
+				object := item (i)
 				if not object.is_ignored then
 					check initialized: object.is_handler_initialized end
 					object.handler.initialize (object, Current)
 				end
+
+				i := i + 1
+			variant
+				(stop + 1) - i
 			end
 
 		end

@@ -157,7 +157,6 @@ feature -- Element change
 		local
 			l_ast: detachable AST_EIFFEL
 			l_pos: attached like ast_position
-			l_license: attached STRING_32
 			l_data: like modified_data
 			l_parser: like indexing_parser
 			l_wrapper: like eiffel_parser_wrapper
@@ -165,7 +164,8 @@ feature -- Element change
 			l_indexing_ast: detachable INDEXING_CLAUSE_AS
 			l_match_list: like ast_match_list
 			l_start_position: INTEGER
-			l_new_license: STRING_32
+			l_new_license, l_current_license: STRING_32
+			l_win_eol_style: BOOLEAN
 		do
 			if a_license = Void then
 					-- Remove the license
@@ -174,23 +174,33 @@ feature -- Element change
 					remove_ast_code (l_ast, remove_white_space_trailing)
 				end
 			else
-				l_new_license := a_license.as_string_32
-				l_new_license.replace_substring_all ("%R", "")
-				if not l_new_license.is_equal (license) then
+				create l_new_license.make_from_string_general (a_license)
+				l_current_license := license
+					-- We keep the new license the same style of new line.
+				l_win_eol_style := original_text_eol_style = windows_eol_style
+				l_new_license.prune_all ('%R')
+				if l_win_eol_style then
+					l_new_license.replace_substring_all ("%N", "%R%N")
+				end
+
+				if not l_new_license.is_equal (l_current_license) then
 						-- The license is different from the class license, so change it.
 					l_indexing_ast ?= ast_license
 					l_match_list := ast_match_list
 					if l_indexing_ast /= Void and then l_match_list /= Void then
-						merge_license_code (l_indexing_ast, l_match_list, a_license)
+						merge_license_code (l_indexing_ast, l_match_list, l_new_license)
 					else
 							-- There is no indexing AST clause, so insert just above the class end keyword.
 						l_ast := ast.end_keyword
 						if l_ast /= Void then
-							create l_license.make_from_string (a_license)
-							l_license.append_character ('%N')
+							if l_win_eol_style then
+								l_new_license.append ("%R%N")
+							else
+								l_new_license.append_character ('%N')
+							end
 							l_pos := ast_position (l_ast)
 							l_start_position := l_pos.start_position
-							insert_code (l_start_position, l_license)
+							insert_code (l_start_position, l_new_license)
 
 							l_wrapper := eiffel_parser_wrapper
 							l_parser := validating_parser
@@ -211,8 +221,8 @@ feature -- Element change
 								end
 
 									-- Add ; to license and reapply.
-								l_license.prepend_character (';')
-								insert_code (l_start_position, l_license)
+								l_new_license.prepend_character (';')
+								insert_code (l_start_position, l_new_license)
 							end
 						end
 					end

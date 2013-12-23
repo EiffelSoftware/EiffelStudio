@@ -2052,6 +2052,7 @@ test	c-header-sequence				ccomp085 tcf fail c_compilation
 test	finalize-without-then-with-assertions		ccomp086 tcf fail c_compilation
 test	finalize-expanded-generic-c-error	ccomp087 tcf fail c_compilation
 test	finalize-inline-with-dollar-operator	ccomp088 tcf pass c_compilation
+test	real64-constant-zero			ccomp089 tcf fail c_compilation
 
 -- Storable tests
 

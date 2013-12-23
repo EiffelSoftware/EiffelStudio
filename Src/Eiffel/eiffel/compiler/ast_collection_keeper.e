@@ -21,6 +21,16 @@ feature {NONE} -- Creation
 			collection_set: collection = a.area
 		end
 
+feature -- Modification
+
+	extend (k: AST_NESTING_KEEPER)
+			-- Extend a collection of context keepers with `k'.
+		require
+			same_level: k.nesting_level = nesting_level
+		do
+			collection.extend (k)
+		end
+
 feature -- Status report: nesting
 
 	nesting_level: INTEGER

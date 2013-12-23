@@ -39,22 +39,25 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 		local
 			conv: UTF_CONVERTER
 			string32: STRING_32
+			id: INTEGER
 		do
-			fixme ("No type comparison based on strings...")
+			id := type.type.type_id
 
-			if type.type.name.is_equal ("STRING_8") then
+			if id = ({detachable STRING_8}).type_id then
 				Result := value.twin
-			elseif type.type.name.is_equal ("STRING_32") then
+
+			elseif id = ({detachable STRING_32}).type_id then
 				string32 := conv.utf_8_string_8_to_string_32 (value)
 				string32.adapt_size
 				Result := string32
-			elseif type.type.name.is_equal ("IMMUTABLE_STRING_8") then
+
+			elseif id = ({detachable IMMUTABLE_STRING_8}).type_id then
 				create {IMMUTABLE_STRING_8} Result.make_from_string (value)
 
-			elseif type.type.name.is_equal ("IMMUTABLE_STRING_32")  then
+			elseif id = ({detachable IMMUTABLE_STRING_32}).type_id  then
 				string32 := conv.utf_8_string_8_to_string_32 (value)
-				string32.adapt_size
 				create {IMMUTABLE_STRING_32} Result.make_from_string_32 (string32)
+
 			end
 		end
 

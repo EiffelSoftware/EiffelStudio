@@ -55,6 +55,9 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			managed: MANAGED_POINTER
 
 			dynamic_type: INTEGER
+
+			l_field_types: ARRAYED_LIST [INTEGER]
+			l_field_names: ARRAYED_LIST [STRING]
 		do
 			reflector := object.reflector
 			retrieved := object.backend_object
@@ -62,11 +65,15 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			from
 				i := 1
 				field_count := retrieved.metadata.attribute_count
+
+				l_field_types := retrieved.metadata.builtin_type
+				l_field_names := retrieved.metadata.attributes
+
 			until
 				i > field_count
 			loop
-				field_type := retrieved.metadata.builtin_type [i]
-				field_name := retrieved.metadata.attributes [i]
+				field_type := l_field_types [i]
+				field_name := l_field_names [i]
 
 				if attached retrieved.value_lookup (field_name) as f then
 					field := f
@@ -161,6 +168,9 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			retrieved: PS_BACKEND_OBJECT
 			i: INTEGER
 			count: INTEGER
+
+			l_field_types: ARRAYED_LIST [INTEGER]
+			l_field_names: ARRAYED_LIST [STRING]
 		do
 			index := object.index
 
@@ -170,22 +180,25 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			from
 				i := 1
 				count := object.type.attribute_count
+
+				l_field_types := retrieved.metadata.builtin_type
+				l_field_names := retrieved.metadata.attributes
 			until
 				i > count
 
 			loop
 				inspect
-					object.type.builtin_type [i]
+					l_field_types [i]
 
 				when expanded_type then
-					if attached retrieved.value_lookup (retrieved.metadata.attributes [i]) as field then
+					if attached retrieved.value_lookup (l_field_names [i]) as field then
 						field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
 						ref_item := read_manager.cache_lookup (field.value.to_integer, field_type)
 						read_manager.item (ref_item).set_reflector (reflector.expanded_field (i))
 					end
 
 				when reference_type then
-					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (retrieved.metadata.attributes [i]) as field then
+					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (l_field_names [i]) as field then
 						if not field.value.is_empty then
 
 							field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)

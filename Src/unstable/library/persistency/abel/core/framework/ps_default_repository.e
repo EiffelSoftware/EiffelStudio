@@ -153,9 +153,11 @@ feature {PS_ABEL_EXPORT} -- Status Report
 
 	can_handle (object: ANY): BOOLEAN
 			-- Can `Current' handle the object `object'?
+		local
+			local_transaction: PS_INTERNAL_TRANSACTION
 		do
-			fixme ("TODO: implement a query")
-			Result := True
+			create local_transaction.make_readonly (Current)
+			Result := write_manager.can_handle (object, local_transaction)
 		end
 
 feature {NONE} -- Initialization

@@ -171,6 +171,7 @@ feature -- Disposal
 			no_internal_transaction: transaction_impl = Void
 			no_internal_cursor: internal_cursor = Void
 
+
 			criteria_unchanged: criterion = old criterion
 			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
 			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
@@ -188,15 +189,15 @@ feature -- Disposal
 				if attached transaction as tr then
 					tr.internal_active_queries.prune_all (Current)
 				else
+					internal_transaction.repository.internal_active_queries.prune_all (Current)
 					internal_transaction.repository.commit_transaction (internal_transaction)
 				end
-
-				fixme ("TODO: clean up internal data structures")
 			end
 			is_closed := True
 		ensure
 			closed: is_closed
 			not_active: attached transaction as tr implies not tr.active_queries.has (Current)
+			not_active_in_repository: not attached transaction implies not repository.active_queries.has (Current)
 			criteria_unchanged: criterion = old criterion
 			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
 			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
@@ -286,6 +287,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			not_after: not is_after
 			executed: is_executed
 			active_transaction: internal_transaction.is_active
+			not_closed: not is_closed
 		deferred
 		ensure
 			active_transaction: internal_transaction.is_active

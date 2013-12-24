@@ -40,17 +40,14 @@ feature -- Access
 	active_queries: CONTAINER [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- The currently active queries (which are not executed within a transaction).
 		do
-			fixme ("TODO")
-			create {LINKED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]} Result.make
+			Result := internal_active_queries
 		end
 
 	active_transactions: CONTAINER [PS_TRANSACTION]
 			-- The currently active transactions.
 		do
-			fixme ("TODO")
-			create {LINKED_LIST [PS_TRANSACTION]} Result.make
+			Result := internal_active_transactions
 		end
-
 
 feature -- Element change
 
@@ -79,12 +76,21 @@ feature -- Query execution
 			-- Execute `query' and store the results in `query.result_cursor'.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.
+		require
+			not_active: not active_queries.has (query)
+			not_executed: not query.is_executed
+			not_closed: not query.is_closed
 		local
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
 			create transaction.make_readonly (Current)
 			internal_execute_query (query, transaction)
+			internal_active_queries.extend (query)
+		ensure
+			active: active_queries.has (query)
+			executed: query.is_executed
+			not_closed: not query.is_closed
 		rescue
 			if
 				attempts <= retry_count
@@ -100,12 +106,21 @@ feature -- Query execution
 			-- Execute `query' and store the results in `query.result_cursor'.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.
+		require
+			not_active: not active_queries.has (query)
+			not_executed: not query.is_executed
+			not_closed: not query.is_closed
 		local
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
 			create transaction.make_readonly (Current)
 			internal_execute_tuple_query (query, transaction)
+			internal_active_queries.extend (query)
+		ensure
+			active: active_queries.has (query)
+			executed: query.is_executed
+			not_closed: not query.is_closed
 		rescue
 			if
 				attempts <= retry_count
@@ -271,6 +286,12 @@ feature {PS_ABEL_EXPORT} -- Implementation
 
 	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
 			-- The object identifier manager.
+
+	internal_active_queries: ARRAYED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
+			-- A list of active queries.
+
+	internal_active_transactions: ARRAYED_LIST [PS_TRANSACTION]
+			-- A list of active transactions.
 
 feature -- Constants
 

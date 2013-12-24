@@ -194,7 +194,10 @@ feature {PS_ABEL_EXPORT} -- Table and column names
 
 feature {PS_ABEL_EXPORT} -- Special attributes and classes
 
-	None_class: STRING = "NONE"
+	None_class: IMMUTABLE_STRING_8
+		once
+			create Result.make_from_string ("NONE")
+		end
 
 	Existence_attribute: STRING = "ps_existence"
 

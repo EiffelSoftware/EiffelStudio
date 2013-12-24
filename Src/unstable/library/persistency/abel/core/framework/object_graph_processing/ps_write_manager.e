@@ -86,6 +86,38 @@ feature {PS_ABEL_EXPORT} -- Access: Per Write
 
 feature {PS_ABEL_EXPORT} -- Write execution
 
+	can_handle (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
+			-- Check if `Current' can handle `root_object'.
+		local
+			i: INTEGER
+		do
+			wipe_out
+			internal_transaction := a_transaction
+			traversal.set_root_object (root_object)
+			traversal.traverse
+			assign_handlers (1 |..| count)
+			do_all (agent {PS_HANDLER}.set_is_persistent)
+
+			from
+				Result := True
+				i := 1
+			until
+				i > count or not Result
+			loop
+				if item (i).is_ignored then
+
+				elseif item (i).handler.is_mapping_to_object then
+					Result := Result and backend.is_object_type_supported (item (i).type)
+				elseif item (i).handler.is_mapping_to_collection then
+					Result := Result and backend.is_generic_collection_supported
+
+				end
+				i := i + 1
+			variant
+				count + 1 - i
+			end
+		end
+
 	write (root_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert or update `root_object' and all objects reachable from it.
 		local

@@ -10,9 +10,13 @@ class
 inherit
 
 	PS_SQL_CONNECTION
+
 	PS_ABEL_EXPORT
 
-	REFACTORING_HELPER
+	PS_SQLSTATE_CONVERTER
+		export {NONE}
+			all
+		end
 
 create {PS_SQLITE_DATABASE}
 	make
@@ -35,7 +39,6 @@ feature {PS_ABEL_EXPORT} -- Database operations
 			stmt: SQLITE_QUERY_STATEMENT
 			result_list: ARRAYED_LIST [PS_SQLITE_ROW]
 			res: SQLITE_STATEMENT_ITERATION_CURSOR
-			l_error: PS_ERROR
 		do
 				-- By default we can get multiple SQL statements - SQLite somehow handles them differently, therefore split them.
 			all_statements := statement.split (';')
@@ -62,17 +65,19 @@ feature {PS_ABEL_EXPORT} -- Database operations
 			loop
 				create stmt.make (current_statement.item, internal_connection)
 				create res.make (stmt) -- This executes the statement
+
 					-- Do error handling
-				if stmt.has_error then
+				if attached get_error as l_error then
+
 						-- Print information for easier debugging
-					print (current_statement.item)
-					if attached stmt.last_exception as ex then
-						print (ex.meaning)
-					end
-					l_error := get_error
+					print (current_statement.item + "%N")
+					print (l_error.backend_error_message)
+					print ("%N")
+
 					last_error := l_error
 					l_error.raise
 				end
+
 					-- Collect the result (if any)
 				from
 					create result_list.make (100)
@@ -139,19 +144,109 @@ feature {PS_SQLITE_DATABASE} -- Initialization
 
 feature {NONE} -- Error handling
 
-	get_error: PS_ERROR
+	get_error: detachable PS_ERROR
 			-- Translate the SQLite specific error to an ABEL error object.
 		local
 			error_number: INTEGER
 		do
 			if attached internal_connection.last_exception as exception then
+
 				error_number := exception.result_code
-				fixme ("TODO: Extend this for all types of errors")
-				create Result
-				Result.set_backend_error_message (exception.meaning)
-			else
-				create Result
-				Result.set_backend_error_message ("Unknown error")
+
+				if error_number = {SQLITE_RESULT_CODE}.ok then
+						-- No error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_error then
+						-- General error.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_internal then
+						-- Internal logic error.
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_perm then
+						-- No permission.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_abort then
+						-- Callback routine requested abort.
+					Result := external_routine_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_busy then
+						-- The database is locked.
+					Result := transaction_aborted_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_locked then
+						-- A table is locked.
+					Result := transaction_aborted_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_no_mem then
+						-- Out of memory.
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_read_only then
+						-- Read-only database.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_interrupt then
+						-- Operation terminated by interrupt.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_io_err then
+						-- I/O error.
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_corrupt then
+						-- Database file is corrupt.
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_not_found then
+						-- ?
+					Result := error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_full then
+						-- Database file is full.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_cant_open then
+						-- Cannot open database file.
+					Result := connection_setup_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_protocol then
+						-- Lock protocol error.
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_empty then
+						-- Empty database.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_schema then
+						-- The database schema has changed.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_too_big then
+						-- A string or BLOB is too big.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_constraint then
+						-- Integrity constraint violation
+					Result := integrity_constraint_violation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_mismatch then
+						-- Data type mismatch
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_misuse then
+						-- Wrong API usage.
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_nolfs then
+						-- Missing OS feaures
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_auth then
+						-- Authorization denied
+					Result := authorization_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_format then
+						-- Auxiliary database format error
+					Result := backend_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_range then
+						-- Parameter in bind() out of range
+					Result := operation_error
+				elseif error_number = {SQLITE_RESULT_CODE}.e_not_a_db then
+						-- File is not a database
+					Result := connection_setup_error
+				elseif error_number = {SQLITE_RESULT_CODE}.row then
+						-- No error
+				elseif error_number = {SQLITE_RESULT_CODE}.done then
+						-- No error
+				else
+						-- Some new, unknown error.
+					Result := error
+				end
+
+				if attached Result then
+					Result.set_backend_error (exception.meaning)
+					Result.set_backend_error_code (error_number)
+					Result.set_backend_error (exception)
+				end
 			end
 		end
 

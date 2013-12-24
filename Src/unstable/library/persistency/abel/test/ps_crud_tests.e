@@ -90,6 +90,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 	all_flat_object_tests
 			-- All tests that use FLAT_CLASS_1
 		do
+			repository.clean_db_for_testing
 			test_empty_object
 			test_flat_class_store
 			test_flat_class_all_crud

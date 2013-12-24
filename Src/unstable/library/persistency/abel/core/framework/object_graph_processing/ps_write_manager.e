@@ -164,12 +164,8 @@ feature {PS_ABEL_EXPORT} -- Write execution
 				end
 			end
 
+			set_root_flags (transaction.root_declaration_strategy)
 
-
-			fixme ("Support the other root object strategies as well")
-			if not item (1).is_persistent then
-				transaction.root_flags.force (True, item (1).identifier)
-			end
 			across
 				1 |..| count as idx
 			loop
@@ -224,14 +220,14 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			do_all (agent {PS_HANDLER}.set_identifier)
 			do_all (agent {PS_HANDLER}.generate_primary_key)
 
-			-- No need to generate primary keys in a batch, as the object should be identified already.
+				-- No need to generate primary keys in a batch, as the object should be identified already.
 			check object_persistent: object_primary_key_order.is_empty and collection_primary_key_order.is_empty end
 
 			do_all (agent {PS_HANDLER}.generate_backend_representation)
 
-			-- Do not initialize... we don't want to perform an actual update...
+				-- Do not initialize... we don't want to perform an actual update...
 
-			-- Set the root status in the backend representation
+				-- Set the root status in the backend representation
 			transaction.root_flags.force (value, item (1).identifier)
 			check attached item (1).backend_representation as br then
 				br.set_is_root (transaction.root_flags [item (1).identifier])
@@ -280,8 +276,14 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			do_all_in_set (agent {PS_HANDLER}.generate_backend_representation, 1 |..| k)
 			do_all_in_set (agent {PS_HANDLER}.initialize_backend_representation, 1 |..| 1)
 
+			if
+				not transaction.root_declaration_strategy.is_preserve and
+				(not item (1).is_persistent or transaction.root_declaration_strategy.is_argument_of_write)
+			then
+				transaction.root_flags.force (True, item (1).identifier)
+			end
+
 			check attached item (1).backend_representation as br then
-				fixme ("Other root declaration strategies")
 				br.set_is_root (transaction.root_flags [item (1).identifier])
 			end
 
@@ -294,6 +296,25 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			if not collections_to_write.is_empty then
 				backend.write_collections (collections_to_write, transaction)
 			end
+		end
+
+	set_root_flags (strategy: PS_ROOT_OBJECT_STRATEGY)
+		do
+			if
+				not transaction.root_declaration_strategy.is_preserve and
+				(not item (1).is_persistent or transaction.root_declaration_strategy.is_argument_of_write)
+			then
+				transaction.root_flags.force (True, item (1).identifier)
+			end
+
+			if strategy.is_everything then
+				across
+					1 |..| count as idx
+				loop
+					transaction.root_flags.force (True, item (idx.item).identifier)
+				end
+			end
+
 		end
 
 feature {PS_ABEL_EXPORT} -- Support

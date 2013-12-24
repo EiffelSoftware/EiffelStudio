@@ -65,14 +65,16 @@ feature {NONE} -- Initialization
 
 	make (a_repository: like repository)
 			-- Initialization for `Current'.
+		local
+			default_strategy: like root_declaration_strategy
 		do
 			repository := a_repository
 			last_error := Void
-			create internal_active_queries.make
-			create root_declaration_strategy.make_argument_of_insert
-			create transaction.make (repository)
-
+			create internal_active_queries.make (0)
+			create default_strategy.make_argument_of_insert
+			create transaction.make (repository, default_strategy)
 			is_active_control := True
+			repository.internal_active_transactions.extend (Current)
 		ensure
 			default_strategy: root_declaration_strategy.is_argument_of_insert
 			active: is_active
@@ -89,6 +91,9 @@ feature -- Access
 
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The default behaviour for root declaration on write functions.
+		do
+			Result := transaction.root_declaration_strategy
+		end
 
 	active_queries: CONTAINER [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- The currently active queries.
@@ -145,8 +150,7 @@ feature -- Element change
 	set_root_declaration_strategy (a_strategy: like root_declaration_strategy)
 			-- Set the new root declaration strategy.
 		do
-			fixme ("Implement this setting in the backend")
-			-- root_declaration_strategy := a_strategy
+			transaction.set_root_declaration_strategy (a_strategy)
 		ensure
 			correct: root_declaration_strategy = a_strategy
 		end
@@ -158,6 +162,9 @@ feature -- Data retrieval
 		require
 			in_transaction: is_active
 			no_error: not has_error
+			not_active: not active_queries.has (query)
+			not_executed: not query.is_executed
+			not_closed: not query.is_closed
 		do
 			internal_active_queries.extend (query)
 			query.set_transaction (Current)
@@ -175,6 +182,9 @@ feature -- Data retrieval
 		require
 			in_transaction: is_active
 			no_error: not has_error
+			not_active: not active_queries.has (query)
+			not_executed: not query.is_executed
+			not_closed: not query.is_closed
 		do
 			internal_active_queries.extend (query)
 			query.set_transaction (Current)
@@ -198,18 +208,17 @@ feature -- Data modification
 		local
 			saved: detachable PS_ROOT_OBJECT_STRATEGY
 		do
-			fixme ("The commented code is more efficient. Switch the code as soon as set_root_declaration_strategy gets implemented.")
+--			fixme ("The commented code is more efficient. Switch the code as soon as set_root_declaration_strategy gets implemented.")
 			if root_declaration_strategy.is_argument_of_insert and then is_persistent (object) then
---				saved := root_declaration_strategy
---				set_root_declaration_strategy (saved.new_argument_of_write)
-				mark_root (object)
+				saved := root_declaration_strategy
+				set_root_declaration_strategy (saved.new_argument_of_write)
 			end
 
 			repository.write (object, transaction)
 
---			if attached saved then
---				set_root_declaration_strategy (saved)
---			end
+			if attached saved then
+				set_root_declaration_strategy (saved)
+			end
 
 		ensure
 			in_transaction: is_active
@@ -309,6 +318,7 @@ feature -- Transaction operations
 		do
 			repository.commit_transaction (transaction)
 			is_active_control := False
+			repository.internal_active_transactions.prune_all (Current)
 		ensure
 			not_active: not is_active
 		rescue
@@ -324,6 +334,7 @@ feature -- Transaction operations
 		do
 			repository.rollback_transaction (transaction, True)
 			is_active_control := False
+			repository.internal_active_transactions.prune_all (Current)
 		ensure
 			not_active: not is_active
 		rescue
@@ -336,7 +347,8 @@ feature -- Transaction operations
 			not_active: not is_active
 		do
 			last_error := Void
-			create transaction.make (repository)
+			create transaction.make (repository, root_declaration_strategy)
+			repository.internal_active_transactions.extend (Current)
 			is_active_control := True
 		ensure
 			active: is_active
@@ -345,7 +357,7 @@ feature -- Transaction operations
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	internal_active_queries: LINKED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
+	internal_active_queries: ARRAYED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- The internal storage for `active_queries'.
 
 feature {NONE} -- Implementation
@@ -359,6 +371,7 @@ feature {NONE} -- Implementation
 		do
 			last_error := transaction.error
 			is_active_control := False
+			repository.internal_active_transactions.prune_all (Current)
 		ensure
 			not_active: not is_active
 		end
@@ -368,5 +381,6 @@ feature {NONE} -- Implementation
 invariant
 	correct_active: is_active = is_active_control
 	not_active_when_error: has_error implies not is_active
+	in_active_transaction_collection: is_active = repository.active_transactions.has (Current)
 
 end

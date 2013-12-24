@@ -15,7 +15,7 @@ create {PS_ABEL_EXPORT}
 
 feature {NONE} -- Initialization
 
-	make (a_repository: PS_REPOSITORY)
+	make (a_repository: PS_REPOSITORY; a_strategy: PS_ROOT_OBJECT_STRATEGY)
 			-- Initialize `Current'.
 		do
 			repository := a_repository
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			create identifier_set.make
 			is_readonly := False
 			is_active := True
+			root_declaration_strategy := a_strategy
 
 			repository.id_manager.register_transaction (Current)
 		end
@@ -35,6 +36,7 @@ feature {NONE} -- Initialization
 			create identifier_set.make
 			is_readonly := True
 			is_active := True
+			create root_declaration_strategy.make_preserve
 
 			repository.id_manager.register_transaction (Current)
 		end
@@ -51,6 +53,10 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- Mapping for ABEL identifier -> root status of every object.
 
 	identifier_set: PS_IDENTIFIER_SET
+
+
+	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
+			-- The root object strategy for the current transaction.
 
 feature {PS_ABEL_EXPORT} -- Status report
 
@@ -73,7 +79,13 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_readonly: BOOLEAN
 			-- Is this a readonly transaction?
 
-feature {PS_ABEL_EXPORT} -- Basic operations
+feature {PS_ABEL_EXPORT} -- Element change
+
+	set_root_declaration_strategy (a_strategy: like root_declaration_strategy)
+			-- Set `root_declaration_strategy' to `a_strategy'.
+		do
+			root_declaration_strategy := a_strategy
+		end
 
 --	commit
 --			-- Try to commit the transaction.

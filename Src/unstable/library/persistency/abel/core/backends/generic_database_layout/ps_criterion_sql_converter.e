@@ -35,7 +35,6 @@ feature {PS_CRITERION} -- Visitor functions
 			left := visit (or_crit.left)
 			right := visit (or_crit.right)
 
---			Result := "(" + left + " UNION " + right + ")"
 			Result := " " + left + " UNION " + right + " "
 		end
 
@@ -66,15 +65,17 @@ feature {PS_CRITERION} -- Visitor functions
 
 	visit_agent (agent_crit: PS_AGENT_CRITERION): STRING
 		do
-			fixme ("Should be filtered in advance and thus never called...")
+				-- Those criteria should be filtered in advance and thus never be called.
+				-- A call to this function indicates a bug.
 			check implementation_error: False end
 			Result := " SELECT DISTINCT objectid FROM ps_value "
 		end
 
 	visit_empty (empty_crit: PS_EMPTY_CRITERION): STRING
 		do
+				-- Those criteria should be filtered in advance and thus never be called.
+				-- A call to this function indicates a bug.
 			check implementation_error: False end
---			fixme ("Should be filtered in advance and thus never called...")
 			Result := " SELECT DISTINCT objectid FROM ps_value "
 		end
 

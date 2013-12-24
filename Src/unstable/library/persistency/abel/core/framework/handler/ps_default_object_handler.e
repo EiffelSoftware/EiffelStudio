@@ -307,7 +307,6 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 					-- Characters
 				when character_8_type then
-					fixme ("natural_32_code ?")
 					backend_object.add_attribute (attribute_name, reflector.character_8_field (i).natural_32_code.out, basic_type_names [static_field_type])
 				when character_32_type then
 					backend_object.add_attribute (attribute_name, reflector.character_32_field (i).natural_32_code.out, basic_type_names [static_field_type])

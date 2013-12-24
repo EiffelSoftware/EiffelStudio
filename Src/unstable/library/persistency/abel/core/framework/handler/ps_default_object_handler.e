@@ -43,14 +43,18 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			reflector: REFLECTED_OBJECT
 
 			retrieved: PS_BACKEND_OBJECT
-			field_type: INTEGER
+			field_static_type: INTEGER
 			field_name: STRING
 			i: INTEGER
 			field_count: INTEGER
 
 			pos: INTEGER
 
-			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+--			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+
+			attribute_value: STRING
+			attribute_type: IMMUTABLE_STRING_8
+
 			dynamic_field_type: PS_TYPE_METADATA
 			managed: MANAGED_POINTER
 
@@ -72,54 +76,54 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			until
 				i > field_count
 			loop
-				field_type := l_field_types [i]
+				field_static_type := l_field_types [i]
 				field_name := l_field_names [i]
 
 				if attached retrieved.value_lookup (field_name) as f then
-					field := f
+					attribute_value := f
 
 					inspect
-						field_type
+						field_static_type
 
 						-- Integers
 					when integer_8_type then
-						reflector.set_integer_8_field (i, field.value.to_integer_8)
+						reflector.set_integer_8_field (i, attribute_value.to_integer_8)
 					when integer_16_type then
-						reflector.set_integer_16_field (i, field.value.to_integer_16)
+						reflector.set_integer_16_field (i, attribute_value.to_integer_16)
 					when integer_32_type then
-						reflector.set_integer_32_field (i, field.value.to_integer_32)
+						reflector.set_integer_32_field (i, attribute_value.to_integer_32)
 					when integer_64_type then
-						reflector.set_integer_64_field (i, field.value.to_integer_64)
+						reflector.set_integer_64_field (i, attribute_value.to_integer_64)
 
 						-- Naturals
 					when natural_8_type then
-						reflector.set_natural_8_field (i, field.value.to_natural_8)
+						reflector.set_natural_8_field (i, attribute_value.to_natural_8)
 					when natural_16_type then
-						reflector.set_natural_16_field (i, field.value.to_natural_16)
+						reflector.set_natural_16_field (i, attribute_value.to_natural_16)
 					when natural_32_type then
-						reflector.set_natural_32_field (i, field.value.to_natural_32)
+						reflector.set_natural_32_field (i, attribute_value.to_natural_32)
 					when natural_64_type then
-						reflector.set_natural_64_field (i, field.value.to_natural_64)
+						reflector.set_natural_64_field (i, attribute_value.to_natural_64)
 
 						-- Reals
 					when real_32_type then
 						create managed.make ({PLATFORM}.real_32_bytes)
-						managed.put_integer_32_be (field.value.to_integer_32, 0)
+						managed.put_integer_32_be (attribute_value.to_integer_32, 0)
 						reflector.set_real_32_field (i, managed.read_real_32_be (0))
 					when real_64_type then
 						create managed.make ({PLATFORM}.real_64_bytes)
-						managed.put_integer_64_be (field.value.to_integer_64, 0)
+						managed.put_integer_64_be (attribute_value.to_integer_64, 0)
 						reflector.set_real_64_field (i, managed.read_real_64_be (0))
 
 						-- Characters
 					when character_8_type then
-						reflector.set_character_8_field (i, field.value.to_natural_8.to_character_8)
+						reflector.set_character_8_field (i, attribute_value.to_natural_8.to_character_8)
 					when character_32_type then
-						reflector.set_character_32_field (i, field.value.to_natural_32.to_character_32)
+						reflector.set_character_32_field (i, attribute_value.to_natural_32.to_character_32)
 
 						-- Booleans
 					when boolean_type then
-						reflector.set_boolean_field (i, field.value.to_boolean)
+						reflector.set_boolean_field (i, attribute_value.to_boolean)
 
 						-- None, Pointer, Expanded and References
 					when none_type then
@@ -131,17 +135,20 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 					when expanded_type then
 
-						check value_is_primary_key: field.value.is_integer end
-						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
-						read_manager.process_next (field.value.to_integer, dynamic_field_type, object)
+						check value_is_primary_key: attribute_value.is_integer end
+						attribute_type := retrieved.type_lookup (field_name)
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (attribute_type)
+						read_manager.process_next (attribute_value.to_integer, dynamic_field_type, object)
 
 					when reference_type then
 
-						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+
+						attribute_type := retrieved.type_lookup (field_name)
+						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (attribute_type)
 
 						if not dynamic_field_type.is_none then
 
-							if attached read_manager.try_build_attribute (field.value, dynamic_field_type, object) as val then
+							if attached read_manager.try_build_attribute (attribute_value, dynamic_field_type, object) as val then
 								reflector.set_reference_field (i, val)
 							end
 						end
@@ -191,25 +198,25 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					l_field_types [i]
 
 				when expanded_type then
-					if attached retrieved.value_lookup (l_field_names [i]) as field then
-						field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
-						ref_item := read_manager.cache_lookup (field.value.to_integer, field_type)
+					if attached retrieved.value_lookup (l_field_names [i]) as attribute_value then
+						field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
+						ref_item := read_manager.cache_lookup (attribute_value.to_integer, field_type)
 						read_manager.item (ref_item).set_reflector (reflector.expanded_field (i))
 					end
 
 				when reference_type then
-					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (l_field_names [i]) as field then
-						if not field.value.is_empty then
+					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (l_field_names [i]) as attribute_value then
+						if not attribute_value.is_empty then
 
-							field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+							field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
 								-- This check is safe because of {PS_BACKEND_OBJECT}.is_consistent
 							check not_none: not field_type.is_none end
 
-							reflector.set_reference_field (i, read_manager.build_attribute (field.value.to_integer, field_type, object))
+							reflector.set_reference_field (i, read_manager.build_attribute (attribute_value.to_integer, field_type, object))
 
 							if reflector.is_copy_semantics_field (i) then
 									-- Update the reflector of the referenced item.
-								ref_item := read_manager.cache_lookup (field.value.to_integer, field_type)
+								ref_item := read_manager.cache_lookup (attribute_value.to_integer, field_type)
 								read_manager.item (ref_item).set_reflector (reflector.copy_semantics_field (i))
 							end
 						end
@@ -363,7 +370,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 						end
 					else
 							-- Void reference
-						backend_object.add_attribute (object.type.attributes [i], "", create {IMMUTABLE_STRING_8}.make_from_string ("NONE"))
+						backend_object.add_attribute (object.type.attributes [i], "", none_string)
 					end
 				else
 					check unknown_static_type: False end

@@ -28,12 +28,14 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'
 		do
 			create internal_lib
+			none_string := "NONE"
 		end
 
 	make (a_write_manager: PS_WRITE_MANAGER)
 			-- Initialization for `Current'
 		do
 			create internal_lib
+			none_string := "NONE"
 			internal_write_manager := a_write_manager
 		end
 
@@ -60,6 +62,9 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	internal_lib: INTERNAL
 			-- An INTERNAL library instance.
+
+	none_string: IMMUTABLE_STRING_8
+			-- The type string for "NONE".
 
 feature {PS_ABEL_EXPORT} -- Status report
 

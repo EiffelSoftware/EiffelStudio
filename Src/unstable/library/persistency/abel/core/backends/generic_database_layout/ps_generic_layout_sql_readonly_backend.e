@@ -450,6 +450,7 @@ feature {NONE} -- Initialization
 			management_connection := database.acquire_connection
 			management_connection.set_autocommit (True)
 			create db_metadata_manager.make (management_connection, SQL_Strings)
+			management_connection.commit
 			create active_connections.make
 
 			batch_retrieval_size := Default_batch_size

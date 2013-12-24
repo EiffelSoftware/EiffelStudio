@@ -240,7 +240,7 @@ feature
 						-- This values could be needed to calculate functions returned by the schema evolution handler
 						stored_obj_attr_values := get_attribute_values (stored_object)
 						clean_stored_obj (stored_object)
-						stored_object.remove_attribute ("version")
+--						stored_object.remove_attribute ("version")
 						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
 						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 							-- Create a fresh instance of the current class
@@ -295,15 +295,19 @@ feature {NONE} -- Schema Evolution helper functions
 			tuple: TUPLE [val: STRING; type: IMMUTABLE_STRING_8]
 		do
 			create Result.make (10)
-			from
-				stored_obj.attributes.start
-			until
-				stored_obj.attributes.after
+			across
+				stored_obj.attributes as cursor
 			loop
-				current_attr_name := stored_obj.attributes.item
+--			from
+--				stored_obj.attributes.start
+--			until
+--				stored_obj.attributes.after
+--			loop
+--				current_attr_name := stored_obj.attributes.item
+				current_attr_name := cursor.item
 				tuple := stored_obj.attribute_value (current_attr_name)
 				Result.extend ([tuple.val, tuple.type.to_string_8], current_attr_name)
-				stored_obj.attributes.forth
+--				stored_obj.attributes.forth
 			end
 		end
 
@@ -312,12 +316,16 @@ feature {NONE} -- Schema Evolution helper functions
 		local
 			current_name: STRING
 		do
-			from
-				stored_obj.attributes.start
-			until
-				stored_obj.attributes.after
+			across
+				stored_obj.attributes.twin as cursor
 			loop
-				current_name := stored_obj.attributes.item
+--			from
+--				stored_obj.attributes.start
+--			until
+--				stored_obj.attributes.after
+--			loop
+--				current_name := stored_obj.attributes.item
+				current_name := cursor.item
 				stored_obj.remove_attribute (current_name)
 			end
 		end

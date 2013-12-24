@@ -29,6 +29,7 @@ feature -- Test routines
 				basic_select_make_selection
 					-- Test dynamic SQL selection.
 				basic_select_make_dynamic_selection
+				basic_select_make_dynamic_selection_with_question_mark
 					-- Test dynamic SQL Modification
 				basic_select_make_dynamic_change
 			end
@@ -181,9 +182,68 @@ feature {NONE} -- Basic select
 			l_selection: like db_dyn_selection
 		do
 			l_selection := db_dyn_selection
+			l_selection.reset
 			l_selection.set_map_name ("Bertrand Meyer", "author_name")
 			l_selection.object_convert (basic_select_create_data)
 			l_selection.prepare_32 (basic_select_select_data)
+			l_selection.execute
+			l_list := load_list_from_executed_selection (l_selection, basic_select_create_data)
+			l_selection.unset_map_name ("author_name")
+
+			if l_list = Void then
+				create l_list.make (0)
+			end
+			if l_list.count = 2 then
+				assert ("Result is not expected", l_list.i_th (1).title ~ "Eiffel The Language" and then
+													l_list.i_th (1).author ~ "Bertrand Meyer" and then
+													l_list.i_th (1).quantity = 9 and then
+													l_list.i_th (1).price = 51 and then
+													l_list.i_th (1).year.date.year = 1992 and then
+													l_list.i_th (1).double_value = 3254.6767
+													)
+
+				assert ("Result is not expected", l_list.i_th (2).title ~ "Eiffel The Libraries " and then
+													l_list.i_th (2).author ~ "Bertrand Meyer" and then
+													l_list.i_th (2).quantity = 11 and then
+													l_list.i_th (2).price = 20 and then
+													l_list.i_th (2).year.date.year = 1994 and then
+													l_list.i_th (2).double_value = 435.6
+													)
+			else
+				assert ("Number of results is not expected", False)
+			end
+
+			l_selection.set_map_name ("Grady Booch", "author_name")
+			l_selection.rebind_arguments
+			l_selection.execute
+			l_list := load_list_from_executed_selection (l_selection, basic_select_create_data)
+			l_selection.unset_map_name ("author_name")
+
+			if l_list.count = 1 then
+				assert ("Result is not expected", l_list.i_th (1).title ~ "ObjectOriented Development" and then
+													l_list.i_th (1).author ~ "Grady Booch" and then
+													l_list.i_th (1).quantity = 5 and then
+													l_list.i_th (1).price = 40.5 and then
+													l_list.i_th (1).year.date.year = 1986 and then
+													l_list.i_th (1).double_value = 345.665
+													)
+			else
+				assert ("Number of results is not expected", False)
+			end
+
+			l_selection.terminate
+		end
+
+	basic_select_make_dynamic_selection_with_question_mark
+			-- Select books
+		local
+			l_list: detachable ARRAYED_LIST [like basic_select_create_data]
+			l_selection: like db_dyn_selection
+		do
+			l_selection := db_dyn_selection
+			l_selection.set_map_name ("Bertrand Meyer", "author_name")
+			l_selection.object_convert (basic_select_create_data)
+			l_selection.prepare_32 (basic_select_select_data_with_question_mark)
 			l_selection.execute
 			l_list := load_list_from_executed_selection (l_selection, basic_select_create_data)
 			l_selection.unset_map_name ("author_name")
@@ -306,6 +366,11 @@ feature {NONE} -- Basic select
 	basic_select_select_data: STRING
 		do
 			Result := "select * from " + sql_table_name (basic_select_table_name) + " where author=:author_name order by quantity"
+		end
+
+	basic_select_select_data_with_question_mark: STRING
+		do
+			Result := "select * from " + sql_table_name (basic_select_table_name) + " where author=? order by quantity"
 		end
 
 	basic_select_change_data: STRING

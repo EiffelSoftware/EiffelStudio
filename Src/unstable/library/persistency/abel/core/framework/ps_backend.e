@@ -147,7 +147,6 @@ feature {NONE} -- Contract support
 	check_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a write was successful
 		local
---			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			primaries: ARRAYED_LIST [INTEGER]
 			types: ARRAYED_LIST [PS_TYPE_METADATA]
@@ -156,9 +155,6 @@ feature {NONE} -- Contract support
 			create primaries.make (1)
 			primaries.extend (object.primary_key)
 			types.extend (object.metadata)
---			create order.make
---			order.extend ([object.metadata, object.primary_key])
---			retrieved := internal_specific_retrieve (order, transaction)
 			retrieved := internal_specific_retrieve (primaries, types, transaction)
 			Result := retrieved.index_set.count = 1 and then object.is_subset_of (retrieved.item (retrieved.index_set.lower))
 		end
@@ -166,7 +162,6 @@ feature {NONE} -- Contract support
 	check_delete (object: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a delete was successful
 		local
---			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			primaries: ARRAYED_LIST [INTEGER]
 			types: ARRAYED_LIST [PS_TYPE_METADATA]
@@ -175,9 +170,7 @@ feature {NONE} -- Contract support
 			create primaries.make (1)
 			primaries.extend (object.primary_key)
 			types.extend (object.metadata)
---			create order.make
---			order.extend ([object.metadata, object.primary_key])
---			retrieved := internal_specific_retrieve (order, transaction)
+
 			retrieved := internal_specific_retrieve (primaries, types, transaction)
 			Result := retrieved.index_set.count = 0
 		end
@@ -192,9 +185,8 @@ feature {NONE} -- Contract support
 			order.extend ([collection.metadata, collection.primary_key])
 			retrieved := specific_collection_retrieve (order, transaction)
 
-			fixme ("Implement an is_subset_of query in BACKEND_COLLECTION")
 			Result := retrieved.index_set.count = 1 and then
-				(collection.is_update_delta or collection ~ retrieved.item (retrieved.index_set.lower))
+				((collection.is_update_delta and collection.is_subset_of (retrieved.item (retrieved.index_set.lower))) or collection ~ retrieved.item (retrieved.index_set.lower))
 		end
 
 	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN

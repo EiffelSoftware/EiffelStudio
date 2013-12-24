@@ -20,15 +20,27 @@ feature {PS_ABEL_EXPORT} -- Access
 
 feature {NONE} -- Initialization
 
-	make_with_object (idx: INTEGER; an_object: REFLECTED_OBJECT; a_level: INTEGER; a_type: PS_TYPE_METADATA)
+	make_with_object (idx: INTEGER; a_reflector: REFLECTED_OBJECT; a_level: INTEGER; a_type: PS_TYPE_METADATA)
 			-- Initialization for `Current'.
 		do
 			index := idx
-			reflector := an_object
+
 			level := a_level
 			type := a_type
+
 			create {ARRAYED_LIST [INTEGER]} references.make (a_type.attribute_count)
-			set_object (Current)
+
+			if attached {REFLECTED_REFERENCE_OBJECT} a_reflector as ref and then ref.physical_offset = 0 then
+					-- For normal reference types, reuse the inherited reflector, as `a_reflector' will not be stable.
+					-- Note that some expanded types may slip into this code section as well, due to missing reflectors
+					-- for tuples or `SPECIAL [EXPANDED_TYPE]'.
+				set_object (a_reflector.object)
+				reflector := Current
+			else
+					-- For expanded types or copy-semantics references, `a_reflector' is stable and can be aliased.
+				reflector := a_reflector
+				set_object (Current)
+			end
 		end
 
 end

@@ -22,7 +22,8 @@ feature {PS_ABEL_EXPORT} -- Status report
 	has_primary_key_of (obj: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Has `obj' a primary key?		
 		do
-			Result := obj_to_key_hash.has (obj.object_identifier)
+			Result := primary_hash.has (obj.object_identifier)
+--			Result := obj_to_key_hash.has (obj.object_identifier)
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -39,9 +40,11 @@ feature {PS_ABEL_EXPORT} -- Access
 	quick_translate (a_poid: INTEGER; transaction: PS_INTERNAL_TRANSACTION): INTEGER
 			-- Returns the primary key of a_poid, or 0 if a_poid doesn't have a primary key.
 		do
-			if attached obj_to_key_hash [a_poid] as pair then
-				Result := pair.first
-			end
+			Result := primary_hash [a_poid]
+
+--			if attached obj_to_key_hash [a_poid] as pair then
+--				Result := pair.first
+--			end
 			fixme ("first check transaction-local set, then global one")
 		end
 
@@ -50,10 +53,13 @@ feature {PS_ABEL_EXPORT} -- Element change
 	add_entry (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION)
 			-- Add a new table entry.
 		local
-			type_hash: HASH_TABLE [LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER], INTEGER]
-			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
+--			type_hash: HASH_TABLE [LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER], INTEGER]
+--			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
 		do
-			obj_to_key_hash.extend (create {PS_PAIR [INTEGER, PS_TYPE_METADATA]}.make (primary_key, obj.metadata), obj.object_identifier)
+			primary_hash.extend (primary_key, obj.object_identifier)
+			type_hash.extend (obj.metadata, obj.object_identifier)
+
+--			obj_to_key_hash.extend (create {PS_PAIR [INTEGER, PS_TYPE_METADATA]}.make (primary_key, obj.metadata), obj.object_identifier)
 			fixme (" write to transaction-local write set, (and remove delete from transaction-local delete set if there is one)")
 		end
 
@@ -63,20 +69,22 @@ feature {PS_ABEL_EXPORT} -- Element change
 			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
 			to_remove: LINKED_LIST [INTEGER]
 		do
-			create to_remove.make
-			across
-				obj_to_key_hash as cursor
-			loop
-				if cursor.item.first = primary_key and cursor.item.second.type.type_id = type.type.type_id then
-					to_remove.extend (cursor.key)
-				end
-			end
-			across
-				to_remove as cursor
-			loop
-				obj_to_key_hash.remove (cursor.item)
-			end
-			fixme (" delete from transaction-local write set, or collect deletes in transaction-local delete set - only delete at commit-time")
+			check not_implemented: False end
+
+--			create to_remove.make
+--			across
+--				obj_to_key_hash as cursor
+--			loop
+--				if cursor.item.first = primary_key and cursor.item.second.type.type_id = type.type.type_id then
+--					to_remove.extend (cursor.key)
+--				end
+--			end
+--			across
+--				to_remove as cursor
+--			loop
+--				obj_to_key_hash.remove (cursor.item)
+--			end
+--			fixme (" delete from transaction-local write set, or collect deletes in transaction-local delete set - only delete at commit-time")
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction management
@@ -105,9 +113,16 @@ feature {PS_ABEL_EXPORT} -- Cleanup and Memory management
 
 feature {NONE} -- Implementation
 
-	obj_to_key_hash: HASH_TABLE [
-							PS_PAIR [INTEGER, PS_TYPE_METADATA], -- the primary key and class
-							INTEGER] -- the object_id
+--	obj_to_key_hash: HASH_TABLE [
+--							PS_PAIR [INTEGER, PS_TYPE_METADATA], -- the primary key and class
+--							INTEGER] -- the object_id
+
+
+	primary_hash: HASH_TABLE [INTEGER, INTEGER]
+			-- Object id to primary key hash.
+
+	type_hash: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
+			-- Object id to type hash.
 
 	default_size: INTEGER = 100
 			-- An arbitrarily chosen default size for the hash tables
@@ -115,7 +130,10 @@ feature {NONE} -- Implementation
 	make
 			-- Initialization for `Current'.
 		do
-			create obj_to_key_hash.make (default_size)
+--			create obj_to_key_hash.make (default_size)
+
+			create primary_hash.make (default_size)
+			create type_hash.make (default_size)
 		end
 
 end

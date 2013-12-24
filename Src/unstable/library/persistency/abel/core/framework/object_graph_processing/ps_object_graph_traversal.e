@@ -82,37 +82,46 @@ feature {NONE} -- Implementation: Agents
 		do
 			current_index := current_index + 1
 		ensure
-			index_correct: traversed_objects [current_index].reflector.object.is_equal (an_object.object)
-
-			-- This version doesn't work due to some copying of copy-semantics reference items...
-			--index_correct: traversed_objects [current_index].object.is_deep_equal (object)
+			index_correct:
+					-- Expanded types: The reflector is aliased because it is stable.
+				traversed_objects [current_index].reflector = an_object
+					-- Reference types: The object is aliased.
+				or else traversed_objects [current_index].reflector.object = an_object.object
 		end
 
 	on_reference_agent (referer: REFLECTED_OBJECT; referee: REFLECTED_OBJECT)
 			-- Update the {PS_OBJECT_DATA}.referers and {PS_OBJECT_DATA}.references
 			-- for both `referer' and `referee'.
 		require
-			index_correct: traversed_objects [current_index].reflector.object.is_equal (referer.object)
+			index_correct:
+					-- Expanded types: The reflector is aliased because it is stable.
+				traversed_objects [current_index].reflector = referer
+					-- Reference types: The object is aliased.
+				or else traversed_objects [current_index].reflector.object = referer.object
 		local
 			new_object: PS_OBJECT_WRITE_DATA
 			found: BOOLEAN
 		do
-			across
-				traversed_objects as cursor
-			from
-				found := False
-			until
-				found
-			loop
-				if cursor.item.reflector.is_equal (referee) then
-					cursor.item.set_referer (current_index)
-					traversed_objects [current_index].references.extend (cursor.cursor_index)
-					found := True
+
+			found := False
+
+			if not referee.is_expanded then
+
+				across
+					traversed_objects as cursor
+				until
+					found
+				loop
+					if cursor.item.reflector.object = referee.object then
+						cursor.item.set_referer (current_index)
+						traversed_objects [current_index].references.extend (cursor.cursor_index)
+						found := True
+					end
 				end
 			end
 
 			if not found then
-				create new_object.make_with_object (traversed_objects.count + 1, referee.twin, traversed_objects [current_index].level + 1, factory.create_metadata_from_type_id (referee.dynamic_type))
+				create new_object.make_with_object (traversed_objects.count + 1, referee, traversed_objects [current_index].level + 1, factory.create_metadata_from_type_id (referee.dynamic_type))
 				new_object.set_referer (current_index)
 				traversed_objects.extend (new_object)
 				traversed_objects [current_index].references.extend (traversed_objects.count)

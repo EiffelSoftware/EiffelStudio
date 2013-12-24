@@ -15,7 +15,6 @@ feature -- Factory methods
 	create_metadata_from_type_id (type_id: INTEGER): PS_TYPE_METADATA
 			-- Get the metadata of the type `type_id'.
 		local
-			reflection: INTERNAL
 			type: TYPE [detachable ANY]
 		do
 			if metadata_cache.has (type_id) then
@@ -23,7 +22,6 @@ feature -- Factory methods
 					Result := res
 				end
 			else
-				create reflection
 				type := reflection.type_of_type (type_id)
 				create Result.make (type, Current)
 				metadata_cache.extend (Result, type.type_id)
@@ -49,22 +47,16 @@ feature -- Factory methods
 
 	create_metadata_from_object (object: ANY): PS_TYPE_METADATA
 			-- Get the metadata of `object'.
-		local
-			reflection: INTERNAL
 		do
-			create reflection
 			Result := create_metadata_from_type (reflection.type_of_type (reflection.dynamic_type (object)))
 		end
 
 	create_metadata_from_string (type_string: IMMUTABLE_STRING_8): PS_TYPE_METADATA
 			-- Get the metadata for the type `type_string'.
-		local
-			reflection: INTERNAL
 		do
 			if attached type_lookup [type_string] as res then
 				Result := res
 			else
-				create reflection
 				Result := create_metadata_from_type_id (reflection.dynamic_type_from_string (type_string))
 			end
 		end
@@ -114,6 +106,7 @@ feature {NONE} -- Initialization
 		do
 			create metadata_cache.make (cache_capacity)
 			create type_lookup.make (cache_capacity)
+			create reflection
 		end
 
 feature {NONE} -- Implementation
@@ -125,5 +118,7 @@ feature {NONE} -- Implementation
 
 	cache_capacity: INTEGER = 20
 			-- An arbitrarily chosen initial capacity for `metadata_cache'.
+
+	reflection: INTERNAL
 
 end

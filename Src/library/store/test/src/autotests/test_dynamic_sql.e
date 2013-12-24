@@ -241,12 +241,18 @@ feature {NONE} -- Basic select
 			l_selection: like db_dyn_selection
 		do
 			l_selection := db_dyn_selection
-			l_selection.set_map_name ("Bertrand Meyer", "author_name")
+
+				-- For dynamic SQL, the key of the mapping can be anything if the question mark
+				-- style of SQL is used.
+				-- The order of arguments is the order of the mappings are prepared.
+			l_selection.set_map_name ("Bertrand Meyer", "1")
+			l_selection.set_map_name (1, "2")
 			l_selection.object_convert (basic_select_create_data)
 			l_selection.prepare_32 (basic_select_select_data_with_question_mark)
 			l_selection.execute
 			l_list := load_list_from_executed_selection (l_selection, basic_select_create_data)
-			l_selection.unset_map_name ("author_name")
+			l_selection.unset_map_name ("1")
+			l_selection.unset_map_name ("2")
 
 			if l_list = Void then
 				create l_list.make (0)
@@ -271,11 +277,13 @@ feature {NONE} -- Basic select
 				assert ("Number of results is not expected", False)
 			end
 
-			l_selection.set_map_name ("Grady Booch", "author_name")
+			l_selection.set_map_name ("Grady Booch", "1")
+			l_selection.set_map_name (1, "2")
 			l_selection.rebind_arguments
 			l_selection.execute
 			l_list := load_list_from_executed_selection (l_selection, basic_select_create_data)
-			l_selection.unset_map_name ("author_name")
+			l_selection.unset_map_name ("1")
+			l_selection.unset_map_name ("2")
 
 			if l_list.count = 1 then
 				assert ("Result is not expected", l_list.i_th (1).title ~ "ObjectOriented Development" and then
@@ -370,7 +378,7 @@ feature {NONE} -- Basic select
 
 	basic_select_select_data_with_question_mark: STRING
 		do
-			Result := "select * from " + sql_table_name (basic_select_table_name) + " where author=? order by quantity"
+			Result := "select * from " + sql_table_name (basic_select_table_name) + " where author=? and price>? order by quantity"
 		end
 
 	basic_select_change_data: STRING

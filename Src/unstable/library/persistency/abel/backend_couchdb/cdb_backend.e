@@ -467,16 +467,10 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 		do
 		end
 
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- The currently active transaction isolation level.
+	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
+			-- Set the transaction isolation level such that all values in `settings' are respected.
 		do
-			create Result
-			Result := Result.read_uncommitted
-		end
-
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the transaction isolation level `a_level' for all future transactions.
-		do
+			fixme ("TODO")
 		end
 
 feature {PS_ABEL_EXPORT} -- Mapping

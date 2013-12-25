@@ -135,9 +135,6 @@ feature {PS_SQLITE_DATABASE} -- Initialization
 			last_error := Void
 			last_result := (create {LINKED_LIST [PS_SQL_ROW]}.make).new_cursor
 			create last_results.make
-				-- The default isolation level is Serializable, and it can't be changed to something else
-			create transaction_isolation_level
-			transaction_isolation_level := transaction_isolation_level.serializable
 		end
 
 	internal_connection: SQLITE_DATABASE

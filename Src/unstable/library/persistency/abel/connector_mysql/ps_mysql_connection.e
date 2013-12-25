@@ -95,12 +95,11 @@ feature {PS_MYSQL_DATABASE} -- Access
 
 feature {NONE} -- Initialization
 
-	make (a_connection: MYSQLI_CLIENT; isolation_level: PS_TRANSACTION_ISOLATION_LEVEL)
+	make (a_connection: MYSQLI_CLIENT)
 			-- Initialization for `Current'.
 		do
 			internal_connection := a_connection
 			last_error := Void
-			transaction_isolation_level := isolation_level
 			create last_results.make
 		end
 

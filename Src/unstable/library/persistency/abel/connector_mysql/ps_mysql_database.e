@@ -34,7 +34,7 @@ feature
 					-- Set the default settings
 				internal_set_transaction_level (internal_connection)
 					-- Use `internal_connection' to create the MySQL connection wrapper
-				create {PS_MYSQL_CONNECTION} Result.make (internal_connection, transaction_isolation_level)
+				create {PS_MYSQL_CONNECTION} Result.make (internal_connection)
 					-- Disable autocommit
 				Result.set_autocommit (False)
 --			else
@@ -77,11 +77,10 @@ feature
 --			end
 		end
 
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the transaction isolation level `a_level' for all connections that are acquired in the future
-			-- Note: Some databases don't support all transaction isolation levels. In that case, a higher isolation level is chosen.
+	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
+			-- Set the transaction isolation level such that all values in `settings' are respected.
 		do
-			transaction_isolation_level := a_level
+			internal_settings := settings.twin
 		end
 
 feature {NONE} -- Initialization
@@ -94,10 +93,9 @@ feature {NONE} -- Initialization
 			database_name := db_name
 			mysql_server_hostname := db_host
 			mysql_server_port := db_port
-			create transaction_isolation_level
-			transaction_isolation_level := transaction_isolation_level.repeatable_read -- This is the default in MySQL for InnoDB tables
 
 			create connection_stack.make
+			create internal_settings
 		end
 
 feature {NONE} -- Connection details
@@ -119,15 +117,27 @@ feature {NONE} -- Implementation
 	internal_set_transaction_level (a_connection: MYSQLI_CLIENT)
 			-- Set the default transaction level defined in `Current.transaction_isolation_level'
 		do
-			if transaction_isolation_level = transaction_isolation_level.read_uncommitted then
-				a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
-			elseif transaction_isolation_level = transaction_isolation_level.read_committed then
-				a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
-			elseif transaction_isolation_level = transaction_isolation_level.repeatable_read then
-					-- Do nothing - Repeatable Read is the standard
-			elseif transaction_isolation_level = transaction_isolation_level.serializable then
+			if
+				not internal_settings.is_phantom_allowed
+			then
 				a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+			elseif
+				not internal_settings.is_read_skew_allowed
+				or not internal_settings.is_write_skew_allowed
+				or not internal_settings.is_lost_update_allowed
+				or not internal_settings.is_fuzzy_read_allowed
+			then
+					-- Do nothing, as Repeatable Read is the standard in MySQL.
+				--a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+			elseif
+				not internal_settings.is_dirty_read_allowed
+			then
+				a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+			else
+				a_connection.execute_query ("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")
 			end
 		end
+
+	internal_settings: PS_TRANSACTION_SETTINGS
 
 end

@@ -30,11 +30,11 @@ feature {PS_ABEL_EXPORT}
 				-- There is only one connection which should not be closed, therefore do nothing.
 		end
 
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the transaction isolation level `a_level' for all connections that are acquired in the future
-			-- Note: Some databases don't support all transaction isolation levels. In that case, a higher isolation level is chosen.
+	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
+			-- Set the transaction isolation level such that all values in `settings' are respected.
 		do
-				-- Serializable is the default, and it can't be changed.
+			-- Due to the global write lock of SQLite, the highest isolation is default
+			-- (and cannot be changed). Thus this function does not need an implementation.
 		end
 
 	close_connections
@@ -49,8 +49,6 @@ feature {NONE} -- Initialization
 	make (database_file: STRING)
 			-- Initialization for `Current'.
 		do
-			create transaction_isolation_level
-			transaction_isolation_level := transaction_isolation_level.serializable -- This is the default in SQLite
 			database_location := database_file
 			create unique_connection.make_create_read_write (database_location)
 			unique_connection.begin_transaction (false)

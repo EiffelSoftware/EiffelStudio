@@ -262,8 +262,8 @@ feature {PS_METADATA_FACTORY} -- Initialization
 				i > attribute_count
 			loop
 				attr_name := reflection.field_name_of_type (i, type.type_id)
-					-- Get the attribute type
-				fixme ("check if the detachable type really is needed all the time")
+					-- Get the attribute type.
+					-- Note that it's required to always use the detachable type.
 				attr_type := reflection.type_of_type (reflection.detachable_type (reflection.field_static_type_of_type (i, type.type_id)))
 				attr_type_metadata := factory.create_metadata_from_type (attr_type)
 					-- Insert the values to the data structures

@@ -40,15 +40,17 @@ feature -- Check
 				if attribute_name.is_case_insensitive_equal (intern.field_name (loop_var, object)) then
 					attribute_is_present := true
 					index := loop_var
-						--print ("attribute name: "+field_name (loop_var,object) + " index: " + index.out + " value: " + (field (index, object)).out)
 				end
 				loop_var := loop_var - 1
 			variant
 				loop_var
 			end
 			field_value := intern.field (index, object)
-				-- apparently automatic conversion doesn't work in agents, so we have to do it manually
-			if attached {INTEGER_32} field_value as int then
+				-- Apparently automatic conversion doesn't work in tuples,
+				-- so we have to do it manually
+			if attached {INTEGER_64} field_value as int then
+				Result := my_agent.item ([int])
+			elseif attached {INTEGER_32} field_value as int then
 				Result := my_agent.item ([int.to_integer_64])
 			elseif attached {INTEGER_16} field_value as int then
 				Result := my_agent.item ([int.to_integer_64])
@@ -57,27 +59,36 @@ feature -- Check
 					-- Reals
 			elseif attached {REAL_32} field_value as real then
 				Result := my_agent.item ([real.to_double])
+			elseif attached {REAL_64} field_value as real then
+				Result := my_agent.item ([real])
 					-- Naturals
+			elseif attached {NATURAL_64} field_value as nat then
+				Result := my_agent.item ([nat])
 			elseif attached {NATURAL_32} field_value as nat then
 				Result := my_agent.item ([nat.to_natural_64])
 			elseif attached {NATURAL_16} field_value as nat then
 				Result := my_agent.item ([nat.to_natural_64])
 			elseif attached {NATURAL_8} field_value as nat then
 				Result := my_agent.item ([nat.to_natural_64])
-			--ADDED by MARCO: we also need to be able to pass strings
+					-- Boolean
+			elseif attached {BOOLEAN} field_value as bool then
+				Result := my_agent.item ([bool])
+					-- Character
+			elseif attached {CHARACTER_8} field_value as char then
+				Result := my_agent.item ([char])
+			elseif attached {CHARACTER_32} field_value as char then
+				Result := my_agent.item ([char])
+					-- Strings
 			elseif attached {STRING} field_value as str then
 				Result := my_agent.item ([str])
 			elseif attached {STRING_32} field_value as str then
 				Result := my_agent.item ([str])
-			--END 		
-			elseif attached {ANY} field_value as field_val then
-					-- for the rest we don't need conversions.
-				fixme ("TODO: I am afraid we do need conversion. So we could use reflection for a generalized solution and get rid of the code for strings above as well.")
-				-- The issue is that the arg: [field_val] will always be of type TUPLE [ANY], and never of type TUPLE [X], where is the type of field_val.
-				Result := my_agent.item ([field_val])
+			elseif attached {IMMUTABLE_STRING_8} field_value as str then
+				Result := my_agent.item ([str])
+			elseif attached {IMMUTABLE_STRING_32} field_value as str then
+				Result := my_agent.item ([str])
 			else
-				Result := false
-				fixme ("TODO: exception because of void reference")
+				check unknown_basic_type: False end
 			end
 		end
 

@@ -90,6 +90,8 @@ feature {NONE} -- Basic select
 			end
 
 			if is_oracle then
+					-- Old set of Oracle OCI interface does not support Unicode well.
+					-- To support Unicode, OCIEnvNlsCreate could be used.
 				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, to_date ('1986', 'YYYY'), 7898.3423)")
 				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, to_date ('1986', 'YYYY'), 7898.3423)")
 			end

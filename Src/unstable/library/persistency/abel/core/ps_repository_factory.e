@@ -143,6 +143,7 @@ feature -- Factory function
 			write_manager: PS_WRITE_MANAGER
 		do
 			backend := new_backend
+			backend.set_transaction_isolation (anomaly_settings)
 
 			internal_plugins.do_all (agent backend.add_plugin)
 

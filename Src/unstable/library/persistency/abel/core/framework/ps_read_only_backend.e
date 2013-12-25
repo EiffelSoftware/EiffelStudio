@@ -42,13 +42,6 @@ feature {PS_ABEL_EXPORT} -- Backend capabilities
 		deferred
 		end
 
-	is_active: BOOLEAN
-			-- Is the current backend active and ready for operation?
-		do
-			fixme ("TODO")
-			Result := True
-		end
-
 feature {PS_ABEL_EXPORT} -- Element change
 
 	set_batch_retrieval_size (size: INTEGER)
@@ -63,8 +56,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
 			-- Set the transaction isolation level such that all values in `settings' are respected.
-		do
-			fixme ("TODO")
+		deferred
 		end
 
 feature {PS_ABEL_EXPORT} -- Object retrieval

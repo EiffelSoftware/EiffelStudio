@@ -23,9 +23,6 @@ feature {PS_ABEL_EXPORT} -- Settings
 	autocommit: BOOLEAN
 			-- Is autocommit enabled? Default: no
 
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- The transaction isolation level of the current connection, as set at creation time.
-
 feature {PS_ABEL_EXPORT} -- Database operations
 
 	execute_sql (statement: STRING)

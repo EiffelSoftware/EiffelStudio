@@ -29,7 +29,6 @@ feature {PS_ABEL_EXPORT}
 				-- To have proper transaction support, you should create ABEL with client-side transaction management support enabled.
 		ensure
 			autocommit_disabled: not Result.autocommit
-			transaction_level_set: Result.transaction_isolation_level.is_equal (Current.transaction_isolation_level)
 		end
 
 	release_connection (a_connection: PS_SQL_CONNECTION)
@@ -45,15 +44,9 @@ feature {PS_ABEL_EXPORT}
 		deferred
 		end
 
-	transaction_isolation_level: PS_TRANSACTION_ISOLATION_LEVEL
-			-- The transaction isolation level for new connections.
-
-	set_transaction_isolation_level (a_level: PS_TRANSACTION_ISOLATION_LEVEL)
-			-- Set the transaction isolation level `a_level' for all connections that are acquired in the future
-			-- Note: Some databases don't support all transaction isolation levels. In that case, a higher isolation level is chosen.
+	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
+			-- Set the transaction isolation level such that all values in `settings' are respected.
 		deferred
-		ensure
-			correct_result: transaction_isolation_level >= a_level
 		end
 
 end

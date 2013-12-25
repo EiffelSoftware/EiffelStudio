@@ -57,6 +57,7 @@ feature -- Initialization
 			l_use_ext := use_extended_types
 			set_use_extended_types (False)
 			table.wipe_out
+			request_select.reset
 			request_select.set_action (Current)
 			request_select.set_map_name (repository_name, "rep")
 			request_select.query (Selection_string)

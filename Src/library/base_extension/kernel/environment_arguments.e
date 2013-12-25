@@ -115,15 +115,15 @@ feature {NONE} -- Implementation
 			index_large_enough: i > base_arguments.argument_count
 			index_small_enough: i <= argument_count
 		do
-			Result := environment_arguments.item (i)
+			Result := environment_arguments.i_th (i - base_arguments.argument_count)
 		ensure
 			argument_not_void: Result /= Void
 		end
 
-	environment_arguments: ARRAY [IMMUTABLE_STRING_32]
+	environment_arguments: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- Arguments array extracted from environment
 		local
-			i,n,r: INTEGER
+			i, n: INTEGER
 			c: CHARACTER_32
 			l_flags: detachable STRING_32
 			s: STRING_32
@@ -137,11 +137,10 @@ feature {NONE} -- Implementation
 			end
 			if l_flags /= Void and then not l_flags.is_empty then
 				from
-					r := base_arguments.argument_count
 					i := 1
 					n := l_flags.count
 					create s.make_empty
-					create Result.make_filled (create {IMMUTABLE_STRING_32}.make_empty, r + 1, r + 6)
+					create Result.make (6)
 				until
 					i > n
 				loop
@@ -158,8 +157,7 @@ feature {NONE} -- Implementation
 							l_in_quote := True
 						when ' ', '%T' then
 							if not s.is_empty then
-								r := r + 1
-								Result.force (create {IMMUTABLE_STRING_32}.make_from_string (s), r)
+								Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
 								s.wipe_out
 							end
 						else
@@ -171,14 +169,11 @@ feature {NONE} -- Implementation
 				if l_in_quote then
 						-- Quote was not terminated, we simply ignore everything after
 						-- the last non-closed quote.
-					Result := Result.subarray (Result.lower, r)
 				elseif not s.is_empty then
-					r := r + 1
-					Result.force (create {IMMUTABLE_STRING_32}.make_from_string (s), r)
-					Result := Result.subarray (Result.lower, r)
+					Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
 				end
 			else
-				create Result.make_empty
+				create Result.make (0)
 			end
 		end
 
@@ -196,8 +191,8 @@ invariant
 		)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

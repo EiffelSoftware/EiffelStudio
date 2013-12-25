@@ -79,13 +79,13 @@ feature {NONE} -- Basic select
 
 				-- Put more data using direct SQL
 			if is_mysql then
-				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)")
+				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 3, 200.00, {d '1986-06-07'}, 7898.3423)")
 				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)")
 			end
 
 			if is_odbc then
 				l_table_name := sql_table_name (extended_select_table_name)
-				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
+				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 3, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
 				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
 			end
 
@@ -95,7 +95,7 @@ feature {NONE} -- Basic select
 			end
 
 			if is_sybase then
-				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, '1986-06-07', 7898.3423)")
+				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 3, 200.00, '1986-06-07', 7898.3423)")
 				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, '1986-06-07', 7898.3423)")
 			end
 		end
@@ -109,21 +109,19 @@ feature {NONE} -- Basic select
 			l_list := load_list_with_select (extended_select_select_data, extended_select_create_data)
 			db_selection.unset_map_name ("author_name")
 			if l_list.count = 2 then
-				assert ("Result is not expected", l_list.i_th (1).title ~ {STRING_32} "面向对象软件构造" and then
-													l_list.i_th (1).author ~ "Bertrand Meyer" and then
-													l_list.i_th (1).quantity = 4 and then
-													l_list.i_th (1).price = 200 and then
-													l_list.i_th (1).year.date.year = 1986 and then
-													l_list.i_th (1).double_value = 7898.3423
-													)
+				assert ("Result is not expected", l_list.i_th (1).title ~ {STRING_32} "面向对象软件构造")
+				assert ("Result is not expected", l_list.i_th (1).author ~ "Bertrand Meyer")
+				assert ("Result is not expected", l_list.i_th (1).quantity = 3)
+				assert ("Result is not expected", l_list.i_th (1).price = 200)
+				assert ("Result is not expected", l_list.i_th (1).year.date.year = 1986)
+				assert ("Result is not expected", l_list.i_th (1).double_value = 7898.3423)
 
-				assert ("Result is not expected", l_list.i_th (2).title ~ {STRING_32} "Object-Oriented Software Construction" and then
-													l_list.i_th (2).author ~ "Bertrand Meyer" and then
-													l_list.i_th (2).quantity = 4 and then
-													l_list.i_th (2).price = 200 and then
-													l_list.i_th (2).year.date.year = 1986 and then
-													l_list.i_th (2).double_value = 7898.3423
-													)
+				assert ("Result is not expected", l_list.i_th (2).title ~ {STRING_32} "Object-Oriented Software Construction")
+				assert ("Result is not expected", l_list.i_th (2).author ~ "Bertrand Meyer")
+				assert ("Result is not expected", l_list.i_th (2).quantity = 4)
+				assert ("Result is not expected", l_list.i_th (2).price = 200)
+				assert ("Result is not expected", l_list.i_th (2).year.date.year = 1986)
+				assert ("Result is not expected", l_list.i_th (2).double_value = 7898.3423)
 			else
 				assert ("Number of results is not expected", False)
 			end

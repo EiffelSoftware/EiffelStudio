@@ -25,10 +25,10 @@ feature
 			init := t2.name
 
 			create criterion.make ("internal_name", "=", "!ANY")
-			check equal_satisfied: criterion.is_satisfied_by (t1) end
+			assert ("equal_satisfied", criterion.is_satisfied_by (t1))
 
 			create criterion.make ("internal_name", "like", "*EXP?RIM*")
-			check like_satisfied: criterion.is_satisfied_by (t2) end
+			assert ("like_satisfied", criterion.is_satisfied_by (t2))
 
 		end
 

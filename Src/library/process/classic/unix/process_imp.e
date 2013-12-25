@@ -350,9 +350,9 @@ feature {NONE}  -- Implementation
 				child_process.set_error_same_as_output
 			else
 				if attached error_file_name as l_file_name then
-					child_process.set_output_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+					child_process.set_error_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
 				else
-					child_process.set_output_file_name (Void)
+					child_process.set_error_file_name (Void)
 				end
 			end
 			set_is_read_pipe_broken (False)

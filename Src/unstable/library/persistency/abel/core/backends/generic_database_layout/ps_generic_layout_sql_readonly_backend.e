@@ -218,7 +218,8 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			Result := result_list.new_cursor
 		end
 
-	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+--	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		local
@@ -240,23 +241,35 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 			current_object: PS_BACKEND_COLLECTION
 			actual_result: HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]
+
+			i: INTEGER
+			count: INTEGER
 		do
+			count := primary_keys.count
 
 				-- Prepare the SQL strings and the type lookup table.
-			across
-				order as order_cursor
 			from
+				i := 1
+				count := primary_keys.count
+
 				sql_get_collection := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectionid IN ("
 				sql_get_info := "SELECT collectionid, info_key, info FROM ps_collection_info WHERE collectionid IN ("
 
-				create key_type_lookup.make (order.count)
-				create actual_result.make (order.count)
+				create key_type_lookup.make (count)
+				create actual_result.make (count)
+			until
+				i > count
 			loop
-				sql_get_collection.append (order_cursor.item.primary_key.out + ", ")
-				sql_get_info.append (order_cursor.item.primary_key.out + ", ")
+				sql_get_collection.append (primary_keys [i].out + ", ")
+				sql_get_info.append (primary_keys [i].out + ", ")
 
-				key_type_lookup.extend (order_cursor.item.type, order_cursor.item.primary_key)
+				key_type_lookup.extend (types [i], primary_keys [i])
+
+				i := i + 1
+			variant
+				count + 1 - i
 			end
+
 			sql_get_collection.put (')', sql_get_collection.count - 1)
 			sql_get_info.put (')', sql_get_info.count - 1)
 

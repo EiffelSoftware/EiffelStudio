@@ -180,10 +180,19 @@ feature {NONE} -- Contract support
 		local
 			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			primaries: ARRAYED_LIST [INTEGER]
+			types: ARRAYED_LIST [PS_TYPE_METADATA]
 		do
-			create order.make
-			order.extend ([collection.metadata, collection.primary_key])
-			retrieved := specific_collection_retrieve (order, transaction)
+			create types.make (1)
+			create primaries.make (1)
+			primaries.extend (collection.primary_key)
+			types.extend (collection.metadata)
+
+--			create order.make
+--			order.extend ([collection.metadata, collection.primary_key])
+--			retrieved := specific_collection_retrieve (order, transaction)
+
+			retrieved := specific_collection_retrieve (primaries, types, transaction)
 
 			Result := retrieved.index_set.count = 1 and then
 				((collection.is_update_delta and collection.is_subset_of (retrieved.item (retrieved.index_set.lower))) or collection ~ retrieved.item (retrieved.index_set.lower))
@@ -194,10 +203,20 @@ feature {NONE} -- Contract support
 		local
 			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			primaries: ARRAYED_LIST [INTEGER]
+			types: ARRAYED_LIST [PS_TYPE_METADATA]
 		do
-			create order.make
-			order.extend ([collection.metadata, collection.primary_key])
-			retrieved := specific_collection_retrieve (order, transaction)
+			create types.make (1)
+			create primaries.make (1)
+			primaries.extend (collection.primary_key)
+			types.extend (collection.metadata)
+
+--			create order.make
+--			order.extend ([collection.metadata, collection.primary_key])
+--			retrieved := specific_collection_retrieve (order, transaction)
+
+			retrieved := specific_collection_retrieve (primaries, types, transaction)
+
 			Result := retrieved.index_set.count = 0
 		end
 

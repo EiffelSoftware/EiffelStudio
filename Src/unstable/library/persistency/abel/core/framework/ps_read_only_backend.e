@@ -163,16 +163,19 @@ feature {PS_ABEL_EXPORT} -- Collection retrieval
 			transaction_unchanged: transaction.is_active
 		end
 
-	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+--	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		require
+			not_empty: not primary_keys.is_empty
+			same_count: primary_keys.count = types.count
 			collection_supported: is_generic_collection_supported
-			not_empty: not order.is_empty
 			transaction_active: transaction.is_active
 		deferred
 		ensure
-			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
+			type_and_primary_correct: across Result as res_cursor all (across 1 |..| primary_keys.count as arg_cursor some res_cursor.item.primary_key = primary_keys [arg_cursor.item] and res_cursor.item.metadata = types [arg_cursor.item] end) end
+--			type_and_primary_correct: across Result as res_cursor all (across order as arg_cursor some res_cursor.item.primary_key = arg_cursor.item.primary_key and res_cursor.item.metadata = arg_cursor.item.type end) end
 			consistent: across Result as cursor all cursor.item.is_consistent end
 			transaction_unchanged: transaction.is_active
 		end

@@ -10,11 +10,6 @@ class
 inherit
 	PS_BACKEND
 
---	PS_BACKEND_CONVERTER
---		redefine
---			internal_specific_retrieve
---		end
-
 create
 	make
 
@@ -100,19 +95,17 @@ feature {PS_ABEL_EXPORT} -- Retrieval
 			end
 		end
 
-feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
+feature {PS_ABEL_EXPORT} -- Collection retrieval
 
 
 	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
-			-- Retrieves all collections of type `collection_type'.
+			-- <Precursor>
 		do
 			Result := create_get_inner_collection_database (collection_type).new_cursor
 		end
 
---	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
-			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
-			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+			-- <Precursor>
 		local
 			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 		do
@@ -160,7 +153,6 @@ feature {PS_ABEL_EXPORT} -- Testing
 			create database.make (default_size)
 			create collection_database.make (default_size)
 			create plugins.make
---			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 			max_primary := 0
 			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
 		end

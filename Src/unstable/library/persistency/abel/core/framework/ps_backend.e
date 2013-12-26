@@ -178,7 +178,6 @@ feature {NONE} -- Contract support
 	check_collection_write (collection: PS_BACKEND_COLLECTION; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a collection write was successful
 		local
-			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			primaries: ARRAYED_LIST [INTEGER]
 			types: ARRAYED_LIST [PS_TYPE_METADATA]
@@ -187,10 +186,6 @@ feature {NONE} -- Contract support
 			create primaries.make (1)
 			primaries.extend (collection.primary_key)
 			types.extend (collection.metadata)
-
---			create order.make
---			order.extend ([collection.metadata, collection.primary_key])
---			retrieved := specific_collection_retrieve (order, transaction)
 
 			retrieved := specific_collection_retrieve (primaries, types, transaction)
 
@@ -201,7 +196,6 @@ feature {NONE} -- Contract support
 	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Check if a collection delete was successful
 		local
-			order: LINKED_LIST [TUPLE [PS_TYPE_METADATA, INTEGER]]
 			retrieved: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			primaries: ARRAYED_LIST [INTEGER]
 			types: ARRAYED_LIST [PS_TYPE_METADATA]
@@ -211,12 +205,7 @@ feature {NONE} -- Contract support
 			primaries.extend (collection.primary_key)
 			types.extend (collection.metadata)
 
---			create order.make
---			order.extend ([collection.metadata, collection.primary_key])
---			retrieved := specific_collection_retrieve (order, transaction)
-
 			retrieved := specific_collection_retrieve (primaries, types, transaction)
-
 			Result := retrieved.index_set.count = 0
 		end
 

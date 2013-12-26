@@ -319,7 +319,9 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				elseif l_type = ({CHARACTER_32}).type_id then
 					Result := value.to_natural_32.to_character_32
 				elseif l_type = ({POINTER}).type_id then
-					fixme ("Warn the user?")
+						-- Do not restore the pointer.
+						-- The memory address will be very likely invalid, thus
+						-- setting the default pointer is the only reasonable choice.
 					Result := default_pointer
 				else
 					check

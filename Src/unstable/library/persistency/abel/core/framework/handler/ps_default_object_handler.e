@@ -130,7 +130,9 @@ feature {PS_ABEL_EXPORT} -- Read functions
 							-- Do nothing
 
 					when pointer_type then
-						fixme ("Should we give the user some warning?")
+							-- Do not restore the pointer.
+							-- The memory address will be very likely invalid, thus
+							-- setting the default pointer is the only reasonable choice.
 						reflector.set_pointer_field (i, default_pointer)
 
 					when expanded_type then

@@ -19,10 +19,6 @@ create
 		-- 1)	Investigate if it is more efficient to have two `storage_array' with correct types each.
 		-- 2)	Check if `free_objects' has an effect at all, or if it's better to let the GC manage the free list.
 		--		(The release of PS_OBJECT_READ_DATA at the end of `build' certainly has an effect)
-		-- 3)	Improve `process_step' performance, e.g. by not allocating cursor objects.
-		--		For small batch sizes this function needs to be very efficient.
-		-- 4)	Improve `QUERY_CURSOR.batch_retrieve': e.g. use an `INTEGER_INTERVAL' when possible.
-		-- 5)	Improve `process_batch_retrieve' for collections as well.
 
 feature {NONE} -- Initialization
 
@@ -50,7 +46,8 @@ feature {NONE} -- Initialization
 
 			create object_primaries_to_retrieve.make (small_size)
 			create object_types_to_retrieve.make (small_size)
-			create collections_to_retrieve.make (small_size)
+			create collection_primaries_to_retrieve.make (small_size)
+			create collection_types_to_retrieve.make (small_size)
 
 			to_process_next := new_interval
 			to_process := new_interval
@@ -154,7 +151,8 @@ feature {PS_ABEL_EXPORT} -- Element change
 			cache.wipe_out
 			object_primaries_to_retrieve.wipe_out
 			object_types_to_retrieve.wipe_out
-			collections_to_retrieve.wipe_out
+			collection_primaries_to_retrieve.wipe_out
+			collection_types_to_retrieve.wipe_out
 
 			to_process_next := new_interval
 			to_process := new_interval
@@ -435,7 +433,9 @@ feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 			-- Register `collection' to be added to the next batch retrieval request.
 		do
 			if not attached collection.backend_representation then
-				collections_to_retrieve.extend ([collection.type, collection.primary_key, collection.index])
+				collection_primaries_to_retrieve.extend (collection.primary_key)
+				collection_types_to_retrieve.extend (collection.type)
+--				collections_to_retrieve.extend ([collection.type, collection.primary_key, collection.index])
 			end
 		end
 
@@ -446,9 +446,8 @@ feature {NONE} -- Implementation: Loop body
 			-- Collect all objects to be retrieved in the next iteration in `to_process_next'.
 			-- Finish initialization of all objects in `to_finalize'
 		require
-			collections_to_retrieve.is_empty
-			object_types_to_retrieve.is_empty
-			object_primaries_to_retrieve.is_empty
+			cleared_collections: collection_primaries_to_retrieve.is_empty and collection_types_to_retrieve.is_empty
+			cleared_objects: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		local
 			i: INTEGER
 			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
@@ -604,7 +603,11 @@ feature {NONE} -- Implementation: Batch retrieval
 
 	object_types_to_retrieve: ARRAYED_LIST [PS_TYPE_METADATA]
 
-	collections_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
+	collection_primaries_to_retrieve: ARRAYED_LIST [INTEGER]
+
+	collection_types_to_retrieve: ARRAYED_LIST [PS_TYPE_METADATA]
+
+--	collections_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
 			-- All collections to be retrieved in the next batch retrieval operation.
 
 	process_batch_retrieve
@@ -626,8 +629,8 @@ feature {NONE} -- Implementation: Batch retrieval
 				end
 			end
 
-			if not collections_to_retrieve.is_empty then
-				retrieved_collections := backend.specific_collection_retrieve (collections_to_retrieve, transaction)
+			if not collection_primaries_to_retrieve.is_empty then
+				retrieved_collections := backend.specific_collection_retrieve (collection_primaries_to_retrieve, collection_types_to_retrieve, transaction)
 
 				across
 					retrieved_collections as coll
@@ -636,16 +639,21 @@ feature {NONE} -- Implementation: Batch retrieval
 				end
 			end
 
-			collections_to_retrieve.wipe_out
+			collection_primaries_to_retrieve.wipe_out
+			collection_types_to_retrieve.wipe_out
+--			collections_to_retrieve.wipe_out
 
 			object_primaries_to_retrieve.wipe_out
 			object_types_to_retrieve.wipe_out
 
 		ensure
-			cleared_arrays: collections_to_retrieve.is_empty
-			more_cleared_arrays: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
+			cleared_collections: collection_primaries_to_retrieve.is_empty and collection_types_to_retrieve.is_empty
+			cleared_objects: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		end
 
 invariant
 	count_correct: count = storage_array.count - 1
+
+	same_count_to_retrieve: object_primaries_to_retrieve.count = object_types_to_retrieve.count
+		and collection_primaries_to_retrieve.count = collection_types_to_retrieve.count
 end

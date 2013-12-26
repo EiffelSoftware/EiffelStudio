@@ -109,21 +109,22 @@ feature {PS_RETRIEVAL_MANAGER} -- Collection retrieval
 			Result := create_get_inner_collection_database (collection_type).new_cursor
 		end
 
-	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+--	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		local
 			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 		do
 			across
-				order as cursor
+				1 |..| primary_keys.count as cursor
 			from
-				create list.make (order.count)
+				create list.make (primary_keys.count)
 				Result := list
 			loop
 				if
-					attached collection_database [cursor.item.type.type.type_id] as inner
-					and then attached inner [cursor.item.primary_key] as res
+					attached collection_database [types [cursor.item].type.type_id] as inner
+					and then attached inner [primary_keys [cursor.item]] as res
 				then
 					list.extend (res)
 				end

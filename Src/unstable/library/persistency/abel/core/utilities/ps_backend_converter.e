@@ -42,19 +42,20 @@ feature {PS_ABEL_EXPORT}
 		end
 
 
-	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+--	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		local
-			list: LINKED_LIST [PS_BACKEND_COLLECTION]
+			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 		do
 			across
-				order as cursor
+				1 |..| primary_keys.count as cursor
 			from
-				create list.make
+				create list.make (primary_keys.count)
 				Result := list
 			loop
-				if attached retrieve_collection (cursor.item.type, cursor.item.primary_key, transaction) as retrieved_collection then
+				if attached retrieve_collection (types [cursor.item], primary_keys [cursor.item], transaction) as retrieved_collection then
 					list.extend (retrieved_collection)
 				end
 			end

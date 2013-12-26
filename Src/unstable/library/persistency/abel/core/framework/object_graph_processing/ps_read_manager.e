@@ -195,8 +195,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 
 feature {PS_ABEL_EXPORT} -- Object building
 
-	build (index_set: PS_INTEGER_INTERVAL --INDEXABLE [INTEGER, INTEGER]
-		; a_max_level: INTEGER)
+	build (index_set: PS_INTEGER_INTERVAL; a_max_level: INTEGER)
 			-- Build all items in `index_set'.
 		local
 			object: PS_OBJECT_READ_DATA
@@ -435,7 +434,6 @@ feature {PS_ABEL_EXPORT} -- Handler support: Batch Retrieval
 			if not attached collection.backend_representation then
 				collection_primaries_to_retrieve.extend (collection.primary_key)
 				collection_types_to_retrieve.extend (collection.type)
---				collections_to_retrieve.extend ([collection.type, collection.primary_key, collection.index])
 			end
 		end
 
@@ -596,24 +594,22 @@ feature {NONE} -- Implementation: Loop body
 
 feature {NONE} -- Implementation: Batch retrieval
 
---	objects_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
-			-- All objects to be retrieved in the next batch retrieval operation.
-
 	object_primaries_to_retrieve: ARRAYED_LIST [INTEGER]
+			-- The primary keys of all objects to be retrieved.
 
 	object_types_to_retrieve: ARRAYED_LIST [PS_TYPE_METADATA]
+			-- The types of all objects to be retrieved.
 
 	collection_primaries_to_retrieve: ARRAYED_LIST [INTEGER]
+			-- The primary keys of all collections to be retrieved.
 
 	collection_types_to_retrieve: ARRAYED_LIST [PS_TYPE_METADATA]
-
---	collections_to_retrieve: ARRAYED_LIST [TUPLE [type:PS_TYPE_METADATA; primary:INTEGER; index:INTEGER]]
-			-- All collections to be retrieved in the next batch retrieval operation.
+			-- The types of all collections to be retrieved.
 
 	process_batch_retrieve
-			-- Retrieve all objects and collections `objects_to_retrieve' and `collections_to_retrieve'.
+			-- Retrieve all objects and collections listed in the respective `*_to_retrieve' lists.
 			-- If the entity is present in the database, update the reference in the corresponding
-			-- `{PS_OBJECT_DATA}.backend_representation'. Else set `{PS_OBJECT_DATA}.is_ignored' to true.
+			-- `PS_OBJECT_DATA.backend_representation'.
 		local
 			retrieved_objects: READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			retrieved_collections: READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
@@ -641,7 +637,6 @@ feature {NONE} -- Implementation: Batch retrieval
 
 			collection_primaries_to_retrieve.wipe_out
 			collection_types_to_retrieve.wipe_out
---			collections_to_retrieve.wipe_out
 
 			object_primaries_to_retrieve.wipe_out
 			object_types_to_retrieve.wipe_out

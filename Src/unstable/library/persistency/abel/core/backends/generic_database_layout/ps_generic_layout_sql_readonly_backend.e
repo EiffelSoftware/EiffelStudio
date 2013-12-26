@@ -44,21 +44,15 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
-			-- Retrieves all objects of type `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
-			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
-			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+			-- <Precursor>
 		do
 			Result := create {PS_LAZY_CURSOR}.make (type, criteria, attributes, transaction, Current)
 		rescue
 			rollback (transaction)
 		end
 
---	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
-			-- See function `specific_retrieve'.
-			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
+			-- <Precursor>
 		local
 			key_type_lookup: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
 
@@ -146,8 +140,8 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
-			-- Retrieves all collections of type `collection_type'.
+	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+			-- <Precursor>
 		local
 			result_list: LINKED_LIST [PS_BACKEND_COLLECTION]
 
@@ -164,7 +158,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			-- Get the collection items
 			connection := get_connection (transaction)
 			sql_string := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectiontype = "
-				+ db_metadata_manager.primary_key_of_class (collection_type.name).out
+				+ db_metadata_manager.primary_key_of_class (type.name).out
 				+ " ORDER BY collectionid, position " + SQL_Strings.for_update_appendix
 			connection.execute_sql (sql_string)
 
@@ -182,7 +176,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 				if position <= 0 then
 					-- new item
-					result_list.extend (create {PS_BACKEND_COLLECTION}.make (primary_key, collection_type))
+					result_list.extend (create {PS_BACKEND_COLLECTION}.make (primary_key, type))
 					result_list.last.set_is_root (row_cursor.item.at ("value").to_boolean)
 				else
 					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
@@ -218,10 +212,8 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			Result := result_list.new_cursor
 		end
 
---	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
-			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
-			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
+			-- <Precursor>
 		local
 			key_type_lookup: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
 
@@ -342,7 +334,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			connection := get_connection (a_transaction)
 			connection.commit
 			release_connection (a_transaction)
---			key_mapper.commit (a_transaction)
 		rescue
 			rollback (a_transaction)
 		end
@@ -357,7 +348,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 				a_transaction.set_error (connection.last_error)
 				connection.rollback
 				release_connection (a_transaction)
---				key_mapper.rollback (a_transaction)
 			end
 		end
 

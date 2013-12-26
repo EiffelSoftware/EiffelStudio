@@ -156,7 +156,7 @@ feature {PS_ABEL_EXPORT} -- Status Report
 		local
 			local_transaction: PS_INTERNAL_TRANSACTION
 		do
-			create local_transaction.make_readonly (Current)
+			local_transaction := new_internal_transaction (True)
 			Result := write_manager.can_handle (object, local_transaction)
 		end
 

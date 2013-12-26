@@ -313,7 +313,6 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				if attached actual_result [primary_key] as partial then
 					partial.add_information (info_key, info_value)
 				end
---				attach (actual_result [primary_key]).add_information (info_key, info_value)
 				row_cursor.forth
 			end
 
@@ -329,7 +328,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 		do
 			connection := get_connection (a_transaction)
 			connection.commit
---			database.release_connection (connection)
 			release_connection (a_transaction)
 --			key_mapper.commit (a_transaction)
 		rescue
@@ -371,47 +369,21 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 			new_connection: PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
 			found: detachable PS_SQL_CONNECTION
 		do
-			if transaction.is_readonly then
-				fixme ("remove this hack")
-				Result := management_connection
+			if attached active_connections [transaction] as res then
+				Result := res
 			else
-				fixme ("A hash table would be nice.")
-				across
-					active_connections as cursor
-				loop
-					if cursor.item.second ~ transaction then
-						found := cursor.item.first
-					end
-				end
-
-				if attached found then
-					Result := found
-				else
-					Result := database.acquire_connection
-					create new_connection.make (Result, transaction)
-					active_connections.extend (new_connection)
-				end
+				Result := database.acquire_connection
+				active_connections.extend (Result, transaction)
 			end
 		end
 
 	release_connection (transaction: PS_INTERNAL_TRANSACTION)
 			-- Release the connection associated with `transaction'.
 		do
-			from
-				active_connections.start
-			until
-				active_connections.after
-			loop
-				if active_connections.item.second.is_equal (transaction) then
-					database.release_connection (active_connections.item.first)
-					active_connections.remove
-				else
-					active_connections.forth
-				end
-			end
+			active_connections.remove (transaction)
 		end
 
-	active_connections: LINKED_LIST [PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]]
+	active_connections: HASH_TABLE [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
 			-- These are the normal connections attached to a transaction.
 			-- They do not have auto-commit and they are closed once the transaction is finished.
 			-- They only write and read the ps_value table.
@@ -445,7 +417,7 @@ feature {NONE} -- Initialization
 			management_connection.set_autocommit (True)
 			create db_metadata_manager.make (management_connection, SQL_Strings)
 			management_connection.commit
-			create active_connections.make
+			create active_connections.make (1)
 
 			batch_retrieval_size := Default_batch_size
 

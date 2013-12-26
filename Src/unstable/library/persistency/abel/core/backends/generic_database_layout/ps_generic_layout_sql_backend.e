@@ -232,8 +232,8 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			stmt: STRING
 		do
 
-			-- Delete all items in the collection.
-			-- The additional information gets deleted automatically via an integrity constraint.
+				-- Delete all items in the collection.
+				-- The additional information gets deleted automatically via an integrity constraint.
 			across
 				collections as cursor
 			from
@@ -242,7 +242,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			loop
 				stmt.append (cursor.item.primary_key.out + ",")
 			end
-			-- conveniently this also removes the last comma
+				-- conveniently this also removes the last comma
 			stmt.put (')', stmt.count)
 
 			connection := get_connection (transaction)
@@ -254,23 +254,22 @@ feature {PS_ABEL_EXPORT} -- Write operations
 	wipe_out
 			-- Wipe out everything and initialize new.
 		do
-			from
-				active_connections.start
-			until
-				active_connections.after
+			across
+				active_connections as cursor
 			loop
-				active_connections.item.first.commit
-				database.release_connection (active_connections.item.first)
-				active_connections.remove
+				cursor.item.commit
+				database.release_connection (cursor.item)
 				print ("found active transaction")
 			end
+			active_connections.wipe_out
+
 			management_connection.execute_sql (SQL_Strings.Drop_value_table)
 			management_connection.execute_sql (SQL_Strings.Drop_collection_info_table)
 			management_connection.execute_sql (SQL_Strings.Drop_collection_table)
 			management_connection.execute_sql (SQL_Strings.Drop_attribute_table)
 			management_connection.execute_sql (SQL_Strings.Drop_class_table)
 			database.release_connection (management_connection)
-				--			database.close_connections
+			
 			make (database, SQL_Strings)
 		end
 

@@ -140,6 +140,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			key: INTEGER
 		do
 			retrieved := object.backend_collection
+--			count := retrieved.get_information ("count").to_integer
 			count := retrieved.collection_items.count
 
 			from
@@ -168,6 +169,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			ref: INTEGER
 			i: INTEGER
+			count: INTEGER
 			ref_special: BOOLEAN
 			exp_special: BOOLEAN
 
@@ -185,8 +187,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			from
 				i := 1
+				count := retrieved.collection_items.count
+--				count := retrieved.get_information ("count").to_integer
 			until
-				i > retrieved.collection_items.count
+				i > count
 			loop
 				field := retrieved.collection_items [i]
 				field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
@@ -293,6 +297,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			end
 
 			collection.add_information ("capacity", special.capacity.out)
+--			collection.add_information ("count", special.count.out)
 		end
 
 

@@ -135,36 +135,45 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			info_commands: LINKED_LIST [STRING]
 			collection_type_key: INTEGER
 
+			delete_command: STRING
+			delete_command_list: STRING
+
 			connection: PS_SQL_CONNECTION
 			stmt: STRING
 		do
-			fixme ("Collections should get deleted first")
+
 			across
 				collections as cursor
 			from
+				delete_command := "DELETE FROM ps_collection WHERE position > 0 AND collectionid IN ("
+				create delete_command_list.make_empty
+
 				create commands.make
 				create info_commands.make
 			loop
-				-- Insert all items
+					-- Insert all items
 				across
 					cursor.item.collection_items as collection_item
 				from
 					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)
 
-					-- Insert a default item at position -1 to acknowledge the existence of the collection.
+						-- Insert a default item at position -1 to acknowledge the existence of the collection.
 					commands.extend (SQL_Strings.to_list_with_braces ([
-						-- Primary key
+							-- Primary key
 						cursor.item.primary_key,
-						-- Type of the collection
+							-- Type of the collection
 						collection_type_key,
-						-- Position of the item
+							-- Position of the item
 						-1,
-						-- Runtime type of the default item (NONE)
+							-- Runtime type of the default item (NONE)
 						db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class),
-						-- Store the root status.
+							-- Store the root status.
 						cursor.item.is_root.out]))
---						-- Some dummy value
---						""]))
+
+						-- Clear database from any previous entry for that collection.
+					if not cursor.item.is_update_delta then
+						delete_command_list.append (cursor.item.primary_key.out + ",")
+					end
 
 				loop
 					commands.extend (SQL_Strings.to_list_with_braces ([
@@ -196,7 +205,14 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 			end
 
-			stmt := SQL_Strings.assemble_multi_replace_collection (commands)
+				-- Create the final SQL commands from the information gathered previously.
+			if not delete_command_list.is_empty then
+				delete_command_list.put (')', delete_command_list.count)
+				delete_command.append (delete_command_list)
+				stmt := delete_command + ";" + SQL_Strings.assemble_multi_replace_collection (commands)
+			else
+				stmt := SQL_Strings.assemble_multi_replace_collection (commands)
+			end
 
 			if not info_commands.is_empty then
 				stmt.append (";" + SQL_Strings.assemble_multi_replace_collection_info (info_commands))
@@ -204,9 +220,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 			connection := get_connection (transaction)
 			connection.execute_sql (stmt)
---			if not info_commands.is_empty then
---				connection.execute_sql (SQL_Strings.assemble_multi_replace_collection_info (info_commands))
---			end
+
 		rescue
 			rollback (transaction)
 		end
@@ -295,8 +309,6 @@ feature {PS_BACKEND} -- Implementation
 						db_metadata_manager.create_get_primary_key_of_attribute (attribute_cursor.item, db_metadata_manager.create_get_primary_key_of_class (cursor.item.metadata.name)),
 						-- Runtime type
 						db_metadata_manager.create_get_primary_key_of_class (cursor.item.attribute_value (attribute_cursor.item).attribute_class_name),
-						-- Do we need a longtext value?
---						0, -- False
 						-- Value
 						cursor.item.attribute_value (attribute_cursor.item).value
 						]))

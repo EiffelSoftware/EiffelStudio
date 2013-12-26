@@ -142,9 +142,11 @@ feature {PS_TEST_PROVIDER}
 
 				if attached update_operation then
 
-					update_operation.call ([object])
-
 					query.close
+
+					update_operation.call ([object])
+					context.update (object)
+
 					create query.make
 					query.set_type (object.generating_type)
 					query.set_is_non_root_ignored (True)

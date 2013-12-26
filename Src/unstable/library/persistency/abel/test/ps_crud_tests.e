@@ -221,6 +221,9 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			test_direct_collection_new_object
 			test_collection_basic_type_store
 			test_shared_special
+			
+			test_collection_shrink
+
 --			takes too long, but should work.
 --			test_data_structures_store
 --			test_update_on_reference
@@ -271,6 +274,16 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create test.make (repository)
 			test.test_insert (test_data.special_of_persons)
+			repository.clean_db_for_testing
+		end
+
+	test_collection_shrink
+			-- Test if shrinking an object works.
+		local
+			obj: SPECIAL [TEST_PERSON]
+		do
+			obj := test_data.special_of_persons.deep_twin
+			test_read_write_cycle_with_root (obj, agent {SPECIAL [TEST_PERSON]}.keep_head (2))
 			repository.clean_db_for_testing
 		end
 

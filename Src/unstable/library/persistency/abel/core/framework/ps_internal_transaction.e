@@ -10,12 +10,14 @@ class
 inherit
 	PS_ABEL_EXPORT
 
+	HASHABLE
+
 create {PS_ABEL_EXPORT}
 	make, make_readonly
 
 feature {NONE} -- Initialization
 
-	make (a_repository: PS_REPOSITORY; a_strategy: PS_ROOT_OBJECT_STRATEGY)
+	make (a_repository: PS_REPOSITORY; a_strategy: PS_ROOT_OBJECT_STRATEGY; id: INTEGER)
 			-- Initialize `Current'.
 		do
 			repository := a_repository
@@ -26,9 +28,10 @@ feature {NONE} -- Initialization
 			root_declaration_strategy := a_strategy
 
 			repository.id_manager.register_transaction (Current)
+			transaction_identifier := id
 		end
 
-	make_readonly (a_repository: PS_REPOSITORY)
+	make_readonly (a_repository: PS_REPOSITORY; id: INTEGER)
 			-- Initialize `Current', mark transaction as readonly.
 		do
 			repository := a_repository
@@ -39,9 +42,13 @@ feature {NONE} -- Initialization
 			create root_declaration_strategy.make_preserve
 
 			repository.id_manager.register_transaction (Current)
+			transaction_identifier := id
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
+
+	transaction_identifier: INTEGER
+			-- A unique transaction identifier.
 
 	error: detachable PS_ERROR
 			-- Error description of the last error.
@@ -57,6 +64,13 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The root object strategy for the current transaction.
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := transaction_identifier
+		end
+
 
 feature {PS_ABEL_EXPORT} -- Status report
 

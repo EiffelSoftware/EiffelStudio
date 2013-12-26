@@ -71,8 +71,9 @@ feature {NONE} -- Initialization
 			repository := a_repository
 			last_error := Void
 			create internal_active_queries.make (0)
-			create default_strategy.make_argument_of_insert
-			create transaction.make (repository, default_strategy)
+--			create default_strategy.make_argument_of_insert
+--			create transaction.make (repository, default_strategy)
+			transaction := repository.new_internal_transaction (False)
 			is_active_control := True
 			repository.internal_active_transactions.extend (Current)
 		ensure
@@ -347,7 +348,9 @@ feature -- Transaction operations
 			not_active: not is_active
 		do
 			last_error := Void
-			create transaction.make (repository, root_declaration_strategy)
+			transaction := repository.new_internal_transaction (False)
+			transaction.set_root_declaration_strategy (root_declaration_strategy)
+--			create transaction.make (repository, root_declaration_strategy)
 			repository.internal_active_transactions.extend (Current)
 			is_active_control := True
 		ensure

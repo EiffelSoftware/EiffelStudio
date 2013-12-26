@@ -84,7 +84,7 @@ feature -- Query execution
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
-			create transaction.make_readonly (Current)
+			transaction := new_internal_transaction (True)
 			internal_execute_query (query, transaction)
 			internal_active_queries.extend (query)
 		ensure
@@ -114,7 +114,7 @@ feature -- Query execution
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
-			create transaction.make_readonly (Current)
+			transaction := new_internal_transaction (True)
 			internal_execute_tuple_query (query, transaction)
 			internal_active_queries.extend (query)
 		ensure
@@ -237,6 +237,18 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
+
+	new_internal_transaction (readonly: BOOLEAN): PS_INTERNAL_TRANSACTION
+		do
+			max_transaction_id := max_transaction_id + 1
+			if readonly then
+				create Result.make_readonly (Current, max_transaction_id)
+			else
+				create Result.make (Current, create {PS_ROOT_OBJECT_STRATEGY}.make_argument_of_insert, max_transaction_id)
+			end
+		end
+
+	max_transaction_id: INTEGER
 
 	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Commit `transaction'. It raises an exception if the commit fails.

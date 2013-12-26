@@ -74,7 +74,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order [type_key]' new collections in the database.
 		do
-			fixme ("Use a stored procedure, like generate_all_object_primaries")
+			fixme ("For performance reasons, use a stored procedure, like in generate_all_object_primaries")
 			Result := Precursor (order, transaction)
 		end
 

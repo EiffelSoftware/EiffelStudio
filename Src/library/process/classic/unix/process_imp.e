@@ -271,20 +271,14 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		require
 			process_running: is_running
 			output_redirected_to_agent: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
-			output_handler_not_void: output_handler /= Void
-		local
-			l_output_handler: like output_handler
-			l_last_output: detachable STRING
 		do
-			child_process.read_output_stream (buffer_size)
-			l_last_output := child_process.last_output
-			if l_last_output /= Void then
-				last_output_bytes := l_last_output.count
-				l_output_handler := output_handler
-				check l_output_handler /= Void end
-				l_output_handler.call ([l_last_output])
-			else
-				last_output_bytes := 0
+			last_output_bytes := 0
+			if attached output_handler as l_output_handler then
+				child_process.read_output_stream (buffer_size)
+				if attached child_process.last_output as l_last_output then
+					last_output_bytes := l_last_output.count
+					l_output_handler.call ([l_last_output])
+				end
 			end
 		end
 
@@ -294,20 +288,14 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		require
 			process_running: is_running
 			error_redirected_to_agent: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
-			error_hander_not_void: error_handler /= Void
-		local
-			l_handler: like error_handler
-			l_last_error: detachable STRING
 		do
-			child_process.read_error_stream (buffer_size)
-			l_last_error := child_process.last_error
-			if child_process.last_error /= Void and l_last_error /= Void then
-				last_error_bytes := l_last_error.count
-				l_handler := error_handler
-				check l_handler /= Void end
-				l_handler.call ([l_last_error])
-			else
-				last_error_bytes := 0
+			last_error_bytes := 0
+			if attached error_handler as l_error_handler then
+				child_process.read_error_stream (buffer_size)
+				if attached child_process.last_error as l_last_error then
+					last_error_bytes := l_last_error.count
+					l_error_handler.call ([l_last_error])
+				end
 			end
 		end
 
@@ -505,7 +493,7 @@ invariant
 	child_process_not_void: child_process /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -95,13 +95,14 @@ feature -- Control
 
 	terminate
 			-- Terminate launched process.
-		local
-			l_process_info: detachable WEL_PROCESS_INFO
 		do
-			l_process_info := child_process.process_info
-			check l_process_info /= Void end
-			try_terminate_process (l_process_info.process_handle)
-			force_terminated := last_termination_successful
+			if attached child_process.process_info as l_process_info then
+				try_terminate_process (l_process_info.process_handle)
+				force_terminated := last_termination_successful
+			else
+				last_termination_successful := False
+				force_terminated := False
+			end
 		end
 
 	terminate_tree
@@ -271,7 +272,6 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			l_cnt: INTEGER
 			l_left: INTEGER
 			l_str: detachable STRING
-			l_input_file_handle: like input_file_handle
 		do
 			input_mutex.lock
 			l_cnt := input_buffer.count
@@ -285,9 +285,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 				last_input_bytes := 0
 			end
 			input_mutex.unlock
-			if l_str /= Void then
-				l_input_file_handle := input_file_handle
-				check l_input_file_handle /= Void end
+			if l_str /= Void and attached input_file_handle as l_input_file_handle then
 				l_input_file_handle.put_string (child_process.std_input, l_str)
 			end
 		end
@@ -298,30 +296,20 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		require
 			process_running: is_running
 			output_redirected_to_agent: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
-			output_handler_not_void: output_handler /= Void
 		local
 			succ: BOOLEAN
 			bytes_avail: INTEGER
-			l_output_handler: like output_handler
-			l_last_string: detachable STRING_8
-			l_output_file_handle: like output_file_handle
 		do
-			succ := cwin_peek_named_pipe (child_process.std_output, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
-			if succ and bytes_avail > 0 then
-				l_output_file_handle := output_file_handle
-				check l_output_file_handle /= Void end
-				l_output_file_handle.read_stream (child_process.std_output, buffer_size.min (bytes_avail))
-				succ := l_output_file_handle.last_read_successful
-				if succ then
-					l_output_handler := output_handler
-					check l_output_handler /= Void end
-					last_output_bytes := l_output_file_handle.last_read_bytes
-					l_last_string := l_output_file_handle.last_string
-					check l_last_string /= Void end
-					l_output_handler.call ([l_last_string])
+			last_output_bytes := 0
+			if attached output_handler as l_output_handler and then attached output_file_handle as l_output_file_handle then
+				succ := cwin_peek_named_pipe (child_process.std_output, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
+				if succ and bytes_avail > 0 then
+					l_output_file_handle.read_stream (child_process.std_output, buffer_size.min (bytes_avail))
+					if attached l_output_file_handle.last_string as l_last_string then
+						last_output_bytes := l_output_file_handle.last_read_bytes
+						l_output_handler.call ([l_last_string])
+					end
 				end
-			else
-				last_output_bytes := 0
 			end
 		end
 
@@ -331,30 +319,20 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 		require
 			process_running: is_running
 			error_redirected_to_agent: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
-			error_hander_not_viod: error_handler /= Void
 		local
 			succ: BOOLEAN
 			bytes_avail: INTEGER
-			l_error_handler: like error_handler
-			l_last_string: detachable STRING
-			l_error_file_handle: like error_file_handle
 		do
-			succ := cwin_peek_named_pipe (child_process.std_error, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
-			if succ and bytes_avail > 0 then
-				l_error_file_handle := error_file_handle
-				check l_error_file_handle /= Void end
-				l_error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
-				succ := l_error_file_handle.last_read_successful
-				if succ then
-					l_error_handler := error_handler
-					check l_error_handler /= Void end
-					last_error_bytes := l_error_file_handle.last_read_bytes
-					l_last_string := l_error_file_handle.last_string
-					check l_last_string /= Void end
-					l_error_handler.call ([l_last_string])
+			last_error_bytes := 0
+			if attached error_handler as l_error_handler and then attached error_file_handle as l_error_file_handle then
+				succ := cwin_peek_named_pipe (child_process.std_error, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
+				if succ and bytes_avail > 0 then
+					l_error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
+					if attached l_error_file_handle.last_string as l_last_string then
+						last_error_bytes := l_error_file_handle.last_read_bytes
+						l_error_handler.call ([l_last_string])
+					end
 				end
-			else
-				last_error_bytes := 0
 			end
 		end
 
@@ -370,10 +348,6 @@ feature{NONE} -- Implementation
 
 	initialize_child_process
 			-- Initialize `child_process'.
-		local
-			l_input_file_name: like input_file_name
-			l_output_file_name: like output_file_name
-			l_error_file_name: like error_file_name
 		do
 			if hidden then
 				child_process.run_hidden
@@ -383,19 +357,19 @@ feature{NONE} -- Implementation
 			child_process.set_error_direction (error_direction)
 			child_process.set_environment_variables (environment_variable_table)
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				l_input_file_name := input_file_name
-				check l_input_file_name /= Void end
-				child_process.set_input_file_name (l_input_file_name)
+				check attached input_file_name as l_input_file_name then
+					child_process.set_input_file_name (l_input_file_name)
+				end
 			end
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				l_output_file_name := output_file_name
-				check l_output_file_name /= Void end
-				child_process.set_output_file_name (l_output_file_name)
+				check attached output_file_name as l_output_file_name then
+					child_process.set_output_file_name (l_output_file_name)
+				end
 			end
 			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				l_error_file_name := error_file_name
-				check l_error_file_name /= Void end
-				child_process.set_error_file_name (l_error_file_name)
+				check attached error_file_name as l_error_file_name then
+					child_process.set_error_file_name (l_error_file_name)
+				end
 			end
 		ensure
 			child_process_not_void: child_process /= Void
@@ -403,17 +377,17 @@ feature{NONE} -- Implementation
 
 	initialize_after_launch
 			-- Initialize when process has been launched successfully.
-		local
-			l_process_info: detachable WEL_PROCESS_INFO
 		do
-			l_process_info := child_process.process_info
-			check l_process_info /= Void end
-			internal_id := l_process_info.process_id
-			process_has_exited := False
-			force_terminated := False
-			last_termination_successful := True
-			has_cleaned_up := False
-			start_listening_threads
+			if attached child_process.process_info as l_process_info then
+				internal_id := l_process_info.process_id
+				process_has_exited := False
+				force_terminated := False
+				last_termination_successful := True
+				has_cleaned_up := False
+				start_listening_threads
+			else
+				last_termination_successful := False
+			end
 		end
 
 	start_listening_threads
@@ -673,7 +647,7 @@ feature{NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

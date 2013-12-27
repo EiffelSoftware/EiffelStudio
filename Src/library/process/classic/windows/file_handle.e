@@ -65,7 +65,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_write_inheritable: detachable TUPLE [POINTER, POINTER]
+	create_pipe_write_inheritable: detachable TUPLE [read_pipe, write_pipe: POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -86,7 +86,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_read_inheritable: detachable TUPLE [POINTER, POINTER]
+	create_pipe_read_inheritable: detachable TUPLE [read_pipe, write_pipe: POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

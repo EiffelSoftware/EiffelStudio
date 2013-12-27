@@ -227,8 +227,8 @@ feature {NONE} -- Event handlers
 			Precursor
 			if attached widget_table as l_table then
 				across l_table as l_cursor loop
-					if attached l_cursor.item as l_widget then
-						l_widget.editor.handle_after_processing
+					if attached l_cursor.item as l_widget and then attached l_widget.editor as l_editor then
+						l_editor.handle_after_processing
 					end
 				end
 			end

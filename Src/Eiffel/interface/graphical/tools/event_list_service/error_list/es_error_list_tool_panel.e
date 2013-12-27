@@ -896,7 +896,9 @@ feature {NONE} -- Event handlers
 	on_unlocked (a_sender: attached LOCKABLE_I)
 			-- <Precursor>
 		do
-			update_error_and_warning_counters
+			if is_interface_usable and is_initialized then
+				update_error_and_warning_counters
+			end
 			Precursor (a_sender)
 		end
 

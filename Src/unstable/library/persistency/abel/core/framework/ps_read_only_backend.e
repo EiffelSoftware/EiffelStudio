@@ -194,7 +194,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Plugins
 
-	plugins: LINKED_LIST [PS_PLUGIN]
+	plugins: ARRAYED_LIST [PS_PLUGIN]
 			-- A collection of plugins providing additional functionality.
 			-- The list is traversed front-to-back during retrieval operations,
 			-- and back-to-front during write operations

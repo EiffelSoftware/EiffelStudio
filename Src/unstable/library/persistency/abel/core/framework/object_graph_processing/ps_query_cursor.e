@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		local
 			reflector: REFLECTOR
 			stored_types: LIST [READABLE_STRING_GENERAL]
-			subtypes_list: LINKED_LIST [PS_TYPE_METADATA]
+			subtypes_list: ARRAYED_LIST [PS_TYPE_METADATA]
 
 			type, l_type: PS_TYPE_METADATA
 
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 			create reflector
 
-			create subtypes_list.make
+			create subtypes_list.make (1)
 			subtypes_list.extend (type)
 
 			if query.is_subtype_included then

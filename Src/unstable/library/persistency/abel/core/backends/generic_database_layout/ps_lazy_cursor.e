@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		local
 			connection: PS_SQL_CONNECTION
 			sql_string: STRING
-			attribute_keys: LINKED_LIST [INTEGER]
+			attribute_keys: ARRAYED_LIST [INTEGER]
 
 			conv: PS_CRITERION_SQL_CONVERTER
 		do

@@ -66,13 +66,13 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			Result := class_name_to_key_map [class_name]
 		end
 
-	all_types: LINKED_LIST [READABLE_STRING_GENERAL]
+	all_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Get all types in the database.
 		do
 			across
 				class_name_to_key_map as cursor
 			from
-				create Result.make
+				create Result.make (class_name_to_key_map.count)
 			loop
 				if not cursor.key.is_equal ("NONE") then
 					Result.extend (cursor.key)
@@ -103,7 +103,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			end
 		end
 
-	attribute_keys_of_class (class_key: INTEGER): LINKED_LIST [INTEGER]
+	attribute_keys_of_class (class_key: INTEGER): ARRAYED_LIST [INTEGER]
 			-- Get all the primary keys of attributes defined in class `class_id'
 		require
 			class_key_exists: is_valid_class_key (class_key)
@@ -112,7 +112,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 				across
 					inner as cursor
 				from
-					create Result.make
+					create Result.make (inner.count)
 				loop
 					Result.extend (cursor.item)
 				end
@@ -225,7 +225,7 @@ feature {NONE} -- Initialization
 			-- Read existing database entries and initialize local copy with them.
 			-- If necessary, create missing tables.
 		local
-			existing_tables: LINKED_LIST [STRING]
+			existing_tables: ARRAYED_LIST [STRING]
 		do
 			fixme ("As the metadata is basically cached from the database, find a way to avoid inconsistencies.")
 
@@ -238,7 +238,7 @@ feature {NONE} -- Initialization
 			management_connection := a_connection
 				-- Create all tables if they do not yet exist
 			management_connection.execute_sql (SQL_Strings.Show_tables)
-			create existing_tables.make
+			create existing_tables.make (10)
 			across
 				management_connection as cursor
 			loop

@@ -181,14 +181,16 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 		local
 			found: BOOLEAN
 		do
+				-- Void safety...
 			Result := (create {LINKED_LIST [PS_BACKEND_ENTITY]}.make).new_cursor
 
-
+				-- First check if a value type handler is responsible for `type'.
 			if attached search_value_type_handler (type) then
 				Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
 				found := True
 			end
 
+				-- If not, try to find a handler and decide whether to retrieve objects or collections.
 			across
 				identity_type_handlers as cursor
 			until

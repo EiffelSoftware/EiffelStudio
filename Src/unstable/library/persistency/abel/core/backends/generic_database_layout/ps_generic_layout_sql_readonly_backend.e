@@ -143,7 +143,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- <Precursor>
 		local
-			result_list: LINKED_LIST [PS_BACKEND_COLLECTION]
+			result_list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 
 			primary_key: INTEGER
 			position: INTEGER
@@ -167,7 +167,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 			-- Get all the content
 			from
-				create result_list.make
+				create result_list.make (1)
 			until
 				row_cursor.after
 			loop
@@ -424,7 +424,7 @@ feature {NONE} -- Initialization
 
 			batch_retrieval_size := Default_batch_size
 
-			create plugins.make
+			create plugins.make (1)
 			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
 
 		end

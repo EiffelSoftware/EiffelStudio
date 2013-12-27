@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			is_readonly := False
 			is_active := True
 			root_declaration_strategy := a_strategy
+			transaction_identifier := id
 
 			repository.id_manager.register_transaction (Current)
-			transaction_identifier := id
 		end
 
 	make_readonly (a_repository: PS_REPOSITORY; id: INTEGER)
@@ -40,9 +40,9 @@ feature {NONE} -- Initialization
 			is_readonly := True
 			is_active := True
 			create root_declaration_strategy.make_preserve
+			transaction_identifier := id
 
 			repository.id_manager.register_transaction (Current)
-			transaction_identifier := id
 		end
 
 feature {PS_ABEL_EXPORT} -- Access

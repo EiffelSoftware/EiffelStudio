@@ -295,7 +295,7 @@ feature -- Implementation
 		local
 			reflection: INTERNAL
 		do
-			create {LINKED_LIST [INTEGER]} Result.make
+			create {ARRAYED_LIST [INTEGER]} Result.make (4)
 			create reflection
 			if is_boolean_type (value) then
 				Result.extend (reflection.dynamic_type_from_string ("BOOLEAN"))

@@ -24,9 +24,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create deleted_objects.make
-			create weak_reference_items.make
-			create garbage_collected_items.make
+			create deleted_objects.make (0)
+			create weak_reference_items.make (50)
+			create garbage_collected_items.make (0)
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -39,10 +39,10 @@ feature {PS_ABEL_EXPORT} -- Access
 			Result := actual_identifier (object)
 		end
 
-	current_items: LINKED_LIST [TUPLE [object: ANY; identifier: INTEGER]]
+	current_items: ARRAYED_LIST [TUPLE [object: ANY; identifier: INTEGER]]
 			-- All objects and their identifiers in the set.
 		do
-			create Result.make
+			create Result.make (weak_reference_items.count)
 			across
 				weak_reference_items as cursor
 			loop
@@ -52,7 +52,7 @@ feature {PS_ABEL_EXPORT} -- Access
 			end
 		end
 
-	deleted_objects: LINKED_LIST [ANY]
+	deleted_objects: ARRAYED_LIST [ANY]
 			-- All object identifiers that have been deleted
 
 feature {PS_ABEL_EXPORT} -- Status report
@@ -122,12 +122,12 @@ feature {PS_ABEL_EXPORT} -- Set operations
 
 feature {PS_ABEL_EXPORT} -- Cleanup
 
-	garbage_collected_items: LINKED_LIST [INTEGER]
+	garbage_collected_items: ARRAYED_LIST [INTEGER]
 			-- All identifiers whose objects have been garbage collected
 
 feature {NONE} -- Implementation
 
-	weak_reference_items: LINKED_LIST [TUPLE [object: WEAK_REFERENCE [ANY]; identifier: INTEGER]]
+	weak_reference_items: ARRAYED_LIST [TUPLE [object: WEAK_REFERENCE [ANY]; identifier: INTEGER]]
 			-- The actual store with weak references
 
 	has_identifier (object: ANY): BOOLEAN
@@ -147,6 +147,7 @@ feature {NONE} -- Implementation
 				else
 						-- Found a garbage-collected item
 					garbage_collected_items.extend (weak_reference_items.item.identifier)
+					fixme ("For performance reasons, rather copy items to a second location or use two cursors for reading and inserting.")
 					weak_reference_items.remove
 				end
 			end

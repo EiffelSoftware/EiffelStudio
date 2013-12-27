@@ -82,7 +82,7 @@ feature {PS_ABEL_EXPORT}
 			Result := last_results.last
 		end
 
-	last_results: LINKED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
+	last_results: LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- The results of the last database operations
 
 	last_error: detachable PS_ERROR
@@ -100,12 +100,12 @@ feature {NONE} -- Initialization
 		do
 			internal_connection := a_connection
 			last_error := Void
-			create last_results.make
+			create {ARRAYED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]} last_results.make (1)
 		end
 
 feature {NONE} -- Implementation
 
-	compute_last_results: LINKED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
+	compute_last_results: ARRAYED_LIST [ITERATION_CURSOR [PS_SQL_ROW]]
 			-- Get the last results as a linked list.
 		local
 			result_list: ARRAYED_LIST [PS_SQL_ROW]
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			across
 				internal_connection.last_results as cursor
 			from
-				create Result.make
+				create Result.make (internal_connection.last_results.count)
 			loop
 				across
 					cursor.item as res

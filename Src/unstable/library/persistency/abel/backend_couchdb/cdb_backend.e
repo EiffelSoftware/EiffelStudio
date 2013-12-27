@@ -552,7 +552,7 @@ feature {NONE} -- Initialization
 		do
 			create curl.make
 			create key_set.make (100)
-			create plugins.make
+			create plugins.make (1)
 			batch_retrieval_size := {PS_REPOSITORY}.infinite_batch_size
 		end
 
@@ -560,7 +560,7 @@ feature {NONE} -- Initialization
 		do
 			create curl.make_with_host_and_port (host, port)
 			create key_set.make (100)
-			create plugins.make
+			create plugins.make (1)
 			batch_retrieval_size := {PS_REPOSITORY}.infinite_batch_size
 		end
 

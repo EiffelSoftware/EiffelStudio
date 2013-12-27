@@ -152,7 +152,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 		do
 			create database.make (default_size)
 			create collection_database.make (default_size)
-			create plugins.make
+			create plugins.make (1)
 			max_primary := 0
 			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
 		end
@@ -164,7 +164,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
 			-- Generates `count' primary keys for each `type'.
 		local
-			list: LINKED_LIST [PS_BACKEND_OBJECT]
+			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			index: INTEGER
 		do
 			across
@@ -174,7 +174,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			loop
 				from
 					index := 1
-					create list.make
+					create list.make (cursor.item)
 				until
 					index = cursor.item + 1
 				loop
@@ -191,7 +191,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- Generate `count' primary keys for collections.
 		local
-			list: LINKED_LIST [PS_BACKEND_COLLECTION]
+			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 			index: INTEGER
 		do
 			across
@@ -201,7 +201,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			loop
 				from
 					index := 1
-					create list.make
+					create list.make (cursor.item)
 				until
 					index = cursor.item + 1
 				loop

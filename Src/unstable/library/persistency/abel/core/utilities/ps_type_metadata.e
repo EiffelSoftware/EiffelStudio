@@ -10,22 +10,9 @@ class
 inherit
 
 	HASHABLE
-		undefine
-			is_equal
-		end
-
-	ANY
 		redefine
 			is_equal
 		end
-
-	REFACTORING_HELPER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 
 create {PS_METADATA_FACTORY}
 	make
@@ -58,29 +45,14 @@ feature -- Status report
 			-- Is `Current' of an ABEL basic type (STRING or expanded types)?
 		do
 			Result := type.is_expanded
-				--or reflection.type_conforms_to (type.type_id, reflection.dynamic_type_from_string ("READABLE_STRING_GENERAL"))
 				or type.type_id = ({detachable STRING_8}).type_id or type.type_id = ({detachable STRING_32}).type_id
-				-- The attached syntax is used here because the {TYPE}.is_conforming_to will always generate a catcall.
 				or attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type
-				--or type.is_conforming_to ({detachable IMMUTABLE_STRING_GENERAL})
 		end
 
 	is_generic_derivation: BOOLEAN
 			-- Does `Current' type have one or more generic parameters?
 		do
 			Result := generic_parameter_count > 0
-		end
-
-	is_subtype_of (other: PS_TYPE_METADATA): BOOLEAN
-			-- Does `Current' conform to `other'?
-		do
-			Result := conforms (type, other.type)
-		end
-
-	is_supertype_of (other: PS_TYPE_METADATA): BOOLEAN
-			-- Does `other' conform to `Current'?
-		do
-			Result := conforms (other.type, type)
 		end
 
 	has_attribute (a_name: STRING): BOOLEAN
@@ -113,91 +85,13 @@ feature -- Genericity
 			Result := factory.create_metadata_from_type (reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type_of_type (type.type_id, index))))
 		end
 
-feature -- Conformance
-
-	supertypes: LIST [PS_TYPE_METADATA]
-			-- All types that `Current' conforms to.
-		do
-			create {LINKED_LIST [PS_TYPE_METADATA]} Result.make
-			across
-				supertypes_internal_wrapper (type) as type_cursor
-			loop
-				Result.extend (factory.create_metadata_from_type (type_cursor.item))
-			end
-		ensure
-			across Result as cursor all Current.is_subtype_of (cursor.item) end
-		end
-
-	subtypes: LIST [PS_TYPE_METADATA]
-			-- All types that conform to `Current'.
-		do
-			create {LINKED_LIST [PS_TYPE_METADATA]} Result.make
-			across
-				subtypes_internal_wrapper (type) as type_cursor
-			loop
-				Result.extend (factory.create_metadata_from_type (type_cursor.item))
-			end
-		ensure
-			across Result as cursor all cursor.item.is_subtype_of (Current) end
-		end
-
 feature -- Attributes
 
 	attribute_count: INTEGER
 			-- The number of attributes in `Current'.
---		do
---			Result := attributes.count
---		ensure
---			correct: Result = reflection.field_count_of_type (type.type_id)
---		end
 
 	attributes: ARRAYED_LIST [STRING]
 			-- Names of all attributes in `Current' type.
-
-	basic_attributes: LIST [STRING]
-			-- Names of all attributes of a basic type.
-		do
-			create {LINKED_LIST [STRING]} Result.make
-			across
-				attributes as attr_cursor
-			loop
-				if attribute_type (attr_cursor.item).is_basic_type then
-					Result.extend (attr_cursor.item)
-				end
-			end
-		ensure
-			exists: Result.for_all (agent has_attribute (?))
-			only_basic: across Result as cursor all attribute_type (cursor.item).is_basic_type end
-			complete: across attributes as cursor all attribute_type (cursor.item).is_basic_type implies Result.has (cursor.item) end
-		end
-
-	reference_attributes: LIST [STRING]
-			-- Name of all attributes of a reference type.
-		do
-			create {LINKED_LIST [STRING]} Result.make
-			across
-				attributes as attr_cursor
-			loop
-				if not attribute_type (attr_cursor.item).is_basic_type then
-					Result.extend (attr_cursor.item)
-				end
-			end
-		ensure
-			exists: Result.for_all (agent has_attribute (?))
-			only_reference: across Result as cursor all not attribute_type (cursor.item).is_basic_type end
-			complete: across attributes as cursor all not attribute_type (cursor.item).is_basic_type implies Result.has (cursor.item) end
-		end
-
-	field_index (attribute_name: STRING): INTEGER
-			-- The field index of `attribute_name', to be used for INTERNAL.
-		require
-			attribute_present: has_attribute (attribute_name)
-		do
-			Result := attr_name_to_index_hash [attribute_name]
-		ensure
-			correct: reflection.field_name_of_type (Result, type.type_id).is_equal (attribute_name)
-			within_bounds: 0 < Result and Result <= attribute_count
-		end
 
 	attribute_type (attribute_name: STRING): PS_TYPE_METADATA
 			-- Metadata of the detachable type of attribute `attribute_name'.
@@ -224,8 +118,6 @@ feature {PS_METADATA_FACTORY} -- Initialization
 
 	make (a_type: TYPE [detachable ANY]; a_manager: PS_METADATA_FACTORY)
 			-- Initialize `Current'.
---		local
---			count: INTEGER
 		do
 			type := a_type
 			factory := a_manager
@@ -287,40 +179,10 @@ feature {NONE} -- Implementation
 	attr_name_to_index_hash: HASH_TABLE [INTEGER, STRING]
 			-- A hash table to map attribute names to their index, as used by INTERNAL.
 
-	subtypes_internal_wrapper (a_type: TYPE [detachable ANY]): LIST [TYPE [detachable ANY]]
-			-- A wrapper for a not-yet-implemented INTERNAL feature.
-		do
-			to_implement ("As soon as INTERNAL has the appropriate features, implement this function")
-			check
-				not_implemented: False
-			end
-			create {LINKED_LIST [TYPE [detachable ANY]]} Result.make
-		ensure
-			definition: Result.for_all (agent conforms (?, a_type))
-		end
-
-	supertypes_internal_wrapper (a_type: TYPE [detachable ANY]): LIST [TYPE [detachable ANY]]
-			-- A wrapper for a not-yet-implemented INTERNAL feature.
-		do
-			to_implement ("As soon as INTERNAL has the appropriate features, implement this function")
-			check
-				not_implemented: False
-			end
-			create {LINKED_LIST [TYPE [detachable ANY]]} Result.make
-		ensure
-			definition: Result.for_all (agent conforms (a_type, ?))
-		end
-
-	conforms (subtype, supertype: TYPE [detachable ANY]): BOOLEAN
-			-- A small helper utility to check conformance between two types.
-		do
-			Result := reflection.type_conforms_to (subtype.type_id, supertype.type_id)
-		end
-
 invariant
 	non_negative_generic_count: generic_parameter_count >= 0
 	correct_genericity: (generic_parameter_count = 0) = not is_generic_derivation
-	attributes_splitted_correctly: basic_attributes.count + reference_attributes.count = attributes.count
 
-	hash_correct: hash_code = type.type_id
+	correct_attribute_count:  not is_none implies attribute_count = reflection.field_count_of_type (type.type_id)
+	correct_hash: hash_code = type.type_id
 end

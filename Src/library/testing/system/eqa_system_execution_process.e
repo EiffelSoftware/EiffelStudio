@@ -148,14 +148,12 @@ feature {EQA_EXECUTION} -- Basic operations
 		require
 			a_input_attached: a_input /= Void
 			running: is_running
-		local
-			l_process: like process
 		do
 			mutex.lock
 			if not is_finished then
-				l_process := process
-				check l_process /= Void end
-				l_process.put_string (a_input)
+				check is_runnign: attached process as l_process then
+					l_process.put_string (a_input)
+				end
 			end
 			mutex.unlock
 		end
@@ -170,7 +168,6 @@ feature {EQA_EXECUTION} -- Basic operations
 			l_output: like next_output
 			l_processor: like output_processor
 			l_file: like output_file
-			l_process: like process
 		do
 			mutex.lock
 			if next_output = Void and not is_finished then
@@ -187,10 +184,9 @@ feature {EQA_EXECUTION} -- Basic operations
 				end
 					-- We can assume that `l_processor' is attached, since otherwise the output would have been
 					-- redirected to the file directly.
-				check
-					l_processor /= Void
+				if l_processor /= Void then
+					l_processor.append_output (l_output)
 				end
-				l_processor.append_output (l_output)
 
 					-- The file can be Void, if the output was only redirected to a processor
 				if l_file /= Void and then l_file.extendible then
@@ -200,9 +196,9 @@ feature {EQA_EXECUTION} -- Basic operations
 			next_output := Void
 			if is_finished then
 				cleanup_redirection
-				l_process := process
-				check l_process /= Void end
-				last_exit_code := l_process.exit_code
+				check attached process as l_process then
+					last_exit_code := l_process.exit_code
+				end
 				process := Void
 			end
 			producer_signal.signal
@@ -235,7 +231,7 @@ feature {NONE} -- Basic operations
 			mutex.unlock
 		end
 
-	prepare_redirection (a_process: like process)
+	prepare_redirection (a_process: attached like process)
 			-- Prepare redirection for `a_process'.
 		require
 			a_process_attached: a_process /= Void
@@ -306,7 +302,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

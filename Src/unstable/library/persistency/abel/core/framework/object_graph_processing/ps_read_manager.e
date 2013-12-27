@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			initialize (a_metadata_factory, an_id_manager, a_primary_key_mapper)
 			backend := a_backend
-			internal_transaction := a_transaction
+			transaction := a_transaction
 
 
 			create storage_array.make_empty (default_size)
@@ -56,47 +56,31 @@ feature {NONE} -- Initialization
 			create free_objects.make (default_size)
 		end
 
+feature {NONE} -- Data structures
 
 	cache: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], PS_TYPE_METADATA]
---	cache: PS_LOOKUP_TABLE [INTEGER]
-			-- A cache to map a [type, primary_key] tuple to an index in `object_storage'.
+			-- A cache to map a [type, primary_key] tuple to an index in `storage_array'.
 
---	storage_array: SPECIAL [PS_OBJECT_READ_DATA]
 	storage_array: SPECIAL [detachable ANY]
 			-- An internal storage for objects.
+			-- In the area 1 |..| (to_finalize.lower - 1), the array contains a direct
+			--		reference to a retrieved objects or a reflector in case of an expanded type.
+			-- In the area to_finalize.lower |..| count, the array contains a `PS_OBJECT_READ_DATA'.
+			-- To retrieve items only use the two functions `item' and `object_item'.
 
-
-
-
+	free_objects: ARRAYED_STACK [PS_OBJECT_READ_DATA]
+			-- A stack of free `PS_OBJECT_READ_DATA' which can be used instead of creating new objects.
 
 feature {PS_ABEL_EXPORT} -- Access
 
-
-	free_objects: ARRAYED_STACK [PS_OBJECT_READ_DATA]
-
 	count: INTEGER
-			-- The number of objects known to this manager.
+			-- The number of objects which are finalized or under construction.
 
-	item (index: INTEGER): PS_OBJECT_READ_DATA
-			-- Get the object with index `index'
-		do
-			check to_finalize.has (index) or to_process.has (index) or to_process_next.has (index) end
-			check attached {PS_OBJECT_READ_DATA} storage_array [index] as res then
-				Result := res
-			end
-		ensure then
-			object_correct: storage_array [index] = Result
-		end
-
-	object_item (index: INTEGER): detachable ANY
-		do
-			check not (to_finalize.has (index) or to_process.has (index) or to_process_next.has (index)) end
-			Result := storage_array [index]--.reflector.object
-		end
+	transaction: PS_INTERNAL_TRANSACTION
+			-- The transaction in which the current operation is running.
 
 	backend: PS_READ_ONLY_BACKEND
 			-- The database backend.
-
 
 	cache_lookup (primary_key: INTEGER; type: PS_TYPE_METADATA):INTEGER
 			-- See if an object of type `type' and with primary key `primary_key' is already loaded.
@@ -106,8 +90,39 @@ feature {PS_ABEL_EXPORT} -- Access
 				Result := inner [primary_key]
 			end
 		ensure
---			correct: Result > 0 implies item (Result).primary_key = primary_key and item (Result).type ~ type
-			correct: Result > to_finalize.lower implies item (Result).primary_key = primary_key and item (Result).type ~ type
+			correct: is_valid_index (Result) implies item (Result).primary_key = primary_key and item (Result).type ~ type
+		end
+
+	item (index: INTEGER): PS_OBJECT_READ_DATA
+			-- Get the object with index `index'.
+			-- Use this function for objects not yet finalized.
+		do
+			check attached {PS_OBJECT_READ_DATA} storage_array [index] as res then
+				Result := res
+			end
+		ensure then
+			object_correct: storage_array [index] = Result
+		end
+
+	object_item (index: INTEGER): detachable ANY
+			-- Get the object with index `index'.
+			-- Use this function for finalized objects (i.e. all attributes are set).
+			-- The result will be a `REFLECTED_OBJECT' for expanded types.
+		require
+			in_bounds: 1 <= index and index <= count
+			finalized: not is_valid_index (index) -- <==> index < to_finalize.lower
+		do
+			Result := storage_array [index]
+		end
+
+feature {PS_ABEL_EXPORT} -- Status report
+
+	is_valid_index (index: INTEGER): BOOLEAN
+			-- Is `index' a valid index?
+		do
+			Result := 1 <= index and to_finalize.lower <= index and index <= count
+		ensure then
+			in_set: Result implies to_finalize.has (index) or to_process.has (index) or to_process_next.has (index)
 		end
 
 feature {PS_ABEL_EXPORT} -- Element change
@@ -192,6 +207,35 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 			check handler_found: found end
 		end
 
+feature {PS_ABEL_EXPORT} -- Factory functions
+
+	new_object_data (primary_key: INTEGER; type: PS_TYPE_METADATA; level: INTEGER): PS_OBJECT_READ_DATA
+			-- Create a new object data with index = `count' + 1 and other data as specified.
+		do
+			if free_objects.is_empty then
+				create Result.make_with_primary_key (count + 1, primary_key, type, level)
+			else
+				Result := free_objects.item
+				free_objects.remove
+				Result.reset (count + 1, primary_key, type, level)
+			end
+		ensure
+			index_correct: Result.index = count + 1
+			type_correct: Result.type = type
+			primary_correct: Result.primary_key = primary_key
+			level_correct: Result.level = level
+		end
+
+	new_interval: PS_INTEGER_INTERVAL
+			-- Create a new empty interval with values [count+1, count]
+		do
+			create Result.make_new (count+1, count)
+		end
+
+	empty_interval: PS_INTEGER_INTERVAL
+		do
+			create Result.make_new (1, 0)
+		end
 
 feature {PS_ABEL_EXPORT} -- Object building
 
@@ -238,7 +282,6 @@ feature {PS_ABEL_EXPORT} -- Object building
 			end
 		end
 
-
 feature {NONE}  -- Object building: loop control variables
 
 	max_level: INTEGER
@@ -255,17 +298,6 @@ feature {NONE}  -- Object building: loop control variables
 
 	to_finalize: PS_INTEGER_INTERVAL
 			-- The objects from the last iteration which need to be finalized.
-
-	new_interval: PS_INTEGER_INTERVAL
-			-- Create a new empty interval with values [count+1, count]
-		do
-			create Result.make_new (count+1, count)
-		end
-
-	empty_interval: PS_INTEGER_INTERVAL
-		do
-			create Result.make_new (1, 0)
-		end
 
 feature {PS_ABEL_EXPORT} -- Handler support functions
 
@@ -394,22 +426,12 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 		require
 			not_in_cache: cache_lookup (key, type) = 0
 		local
-			index: INTEGER
 			object: PS_OBJECT_READ_DATA
-			found: BOOLEAN
 		do
 				-- Extend the objects list for retrieval
-			index := count + 1
-			if free_objects.is_empty then
-				create object.make_with_primary_key (index, key, type, current_level)
-			else
-				object := free_objects.item
-				free_objects.remove
-				object.reset (index, key, type, current_level)
-			end
-
+			object := new_object_data (key, type, current_level)
 			add_object (object, True)
-			to_process_next.extend (index)
+			to_process_next.extend (count)
 
 				-- Update the referer
 			object.set_referer (referer.index)
@@ -463,15 +485,11 @@ feature {NONE} -- Implementation: Loop body
 
 				-- Command the handlers to retrieve their objects.
 				-- (Most of them will place an order for a batch retrieve though)
-
---			across
---				to_process as idx
 			from
 				i := start
 			until
 				i > stop
 			loop
---				i := idx.item
 				object := item (i)
 
 				check not_ignored: not object.is_ignored end
@@ -488,16 +506,12 @@ feature {NONE} -- Implementation: Loop body
 			process_batch_retrieve
 
 				-- Create the objects, but don't initialize them yet
---			across
---				to_process as idx
 			from
 				i := start
 			until
 				i > stop
 			loop
---				i := idx.item
 				object := item (i)
-
 
 				check not_ignored: not object.is_ignored end
 				check initialized: object.is_handler_initialized end
@@ -517,14 +531,11 @@ feature {NONE} -- Implementation: Loop body
 				-- Identify and cache the objects
 			if not transaction.is_readonly then
 
---				across
---					to_process as idx
 				from
 					i := start
 				until
 					i > stop
 				loop
---					i := idx.item
 					object := item (i)
 
 					if not object.is_ignored and not object.type.type.is_expanded then
@@ -549,14 +560,11 @@ feature {NONE} -- Implementation: Loop body
 			end
 
 				-- Update the references from the last iteration
---			across
---				to_finalize as idx
 			from
 				i := to_finalize.lower
 			until
 				i > finalize_stop
 			loop
---				i := idx.item
 				object := item (i)
 				if not object.is_ignored then
 					check initialized: object.is_handler_initialized end
@@ -571,14 +579,11 @@ feature {NONE} -- Implementation: Loop body
 
 				-- Do some basic initialization and search for objects
 				-- which need to be built in the next iteration
---			across
---				to_process as idx
 			from
 				i := start
 			until
 				i > stop
 			loop
---				i := idx.item
 				object := item (i)
 				if not object.is_ignored then
 					check initialized: object.is_handler_initialized end

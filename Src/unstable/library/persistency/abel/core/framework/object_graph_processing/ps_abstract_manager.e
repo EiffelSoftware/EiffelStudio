@@ -42,10 +42,15 @@ feature {PS_ABEL_EXPORT} -- Access
 	item (index: INTEGER): G
 			-- Get the object with index `index'
 		require
-			valid_index: 1 <= index and index <= count
+			valid_index: is_valid_index (index)
 		deferred
 		ensure
 			index_set: Result.index = index
+		end
+
+	transaction: PS_INTERNAL_TRANSACTION
+			-- The transaction in which the current operation is running.
+		deferred
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -59,20 +64,14 @@ feature {PS_ABEL_EXPORT} -- Access
 	primary_key_mapper: PS_KEY_POID_TABLE
 			-- A table to map an ABEL identifier to a primary key.
 
-	transaction: PS_INTERNAL_TRANSACTION
-			-- The transaction in which the current operation is running.
-		do
-			check attached internal_transaction as attached_transaction then
-				Result := attached_transaction
-			end
-		end
 
 feature {PS_ABEL_EXPORT} -- Status report
 
-	is_transaction_initialized: BOOLEAN
-			-- Is `transaction' initialized?
-		do
-			Result := attached internal_transaction
+	is_valid_index (index: INTEGER): BOOLEAN
+			-- Is `index' a valid index?
+		deferred
+		ensure
+			within_bounds: Result implies 1 <= index and index <= count
 		end
 
 feature {PS_ABEL_EXPORT} -- Element change
@@ -92,18 +91,22 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 feature {NONE} -- Utilities
 
-	assign_handlers (set: INDEXABLE [INTEGER, INTEGER])
+	assign_handlers (set: INTEGER_INTERVAL)
 			-- Assign an appropriate handler for all objects with an index in `set'.
 		local
 			i: INTEGER
+			stop: INTEGER
 			object: PS_OBJECT_DATA
 			found: BOOLEAN
 			not_found_exception: PS_INTERNAL_ERROR
 		do
-			across
-				set as idx_cursor
+			from
+				i:= set.lower
+				stop := set.upper
+			until
+				i > stop
 			loop
-				object := item (idx_cursor.item)
+				object := item (i)
 				if
 					attached type_handler_cache [object.type] as cached
 					and then cached.can_handle (object)
@@ -111,7 +114,6 @@ feature {NONE} -- Utilities
 					object.set_handler (cached)
 				else
 
-					i := idx_cursor.item
 					found := False
 						-- First search for value types.
 					across
@@ -119,9 +121,9 @@ feature {NONE} -- Utilities
 					until
 						found
 					loop
-						if v_cursor.item.can_handle (item (i)) then
-							item (i).set_handler (v_cursor.item)
-							type_handler_cache.extend (v_cursor.item, item (i).type)
+						if v_cursor.item.can_handle (object) then
+							object.set_handler (v_cursor.item)
+							type_handler_cache.extend (v_cursor.item, object.type)
 							found := True
 						end
 					end
@@ -131,9 +133,9 @@ feature {NONE} -- Utilities
 					until
 						found
 					loop
-						if i_cursor.item.can_handle (item (i)) then
-							item (i).set_handler (i_cursor.item)
-							type_handler_cache.extend (i_cursor.item, item (i).type)
+						if i_cursor.item.can_handle (object) then
+							object.set_handler (i_cursor.item)
+							type_handler_cache.extend (i_cursor.item, object.type)
 							found := True
 						end
 					end
@@ -141,11 +143,14 @@ feature {NONE} -- Utilities
 					if not found then
 						create not_found_exception
 						not_found_exception.set_description (
-							"Could not find a handler for type: " + item (i).type.type.name + "%N")
+							"Could not find a handler for type: " + object.type.type.name + "%N")
 						not_found_exception.raise
 					end
 
 				end
+				i := i + 1
+			variant
+				stop + 1 - i
 			end
 		end
 
@@ -209,7 +214,4 @@ feature {NONE} -- Internal data structures
 
 	value_type_handlers: SPECIAL [PS_HANDLER]
 			-- All value type handlers.
-
-	internal_transaction: detachable like transaction
-			-- The detachable attribute for `transaction'
 end

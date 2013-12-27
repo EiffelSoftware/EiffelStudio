@@ -89,7 +89,6 @@ feature {NONE} -- Initialization
 			a_server_url_attached: a_server_url /= Void
 			a_port_valid: a_port >= 0
 		local
-			l_excpt_trace: like exception_trace
 			l_trace: STRING
 		do
 			create socket.make_client_by_address_and_port (a_server_url, a_port)
@@ -104,14 +103,16 @@ feature {NONE} -- Initialization
 				-- Get an one line trace by replacing new line characters with space, since
 				-- the stream parser from proxy cannot deal with multi line error messages.
 				-- TODO: Added support for multi line error message.
-			l_excpt_trace:= exception_trace
-			check l_excpt_trace /= Void end
-			l_trace := l_excpt_trace.twin
-			l_trace.replace_substring_all ("%N", " ")
-
-			report_error ("internal. " + l_trace)
-			log_internal_error (l_excpt_trace)
+			if attached exception_trace as l_excpt_trace then
+				l_trace := l_excpt_trace.twin
+				l_trace.replace_substring_all ("%N", " ")
+				log_internal_error (l_excpt_trace)
+			else
+				l_trace := "Unknown error"
+				log_internal_error (l_trace)
+			end
 			log_message ("</session>%N")
+			report_error ("internal. " + l_trace)
 			die (1)
 		end
 
@@ -316,9 +317,16 @@ feature {NONE} -- Logging
 			l_meaning := meaning (l_exception_code)
 			l_tag := tag_name
 			l_recipient := recipient_name
-			l_recipient_class_name := class_name
-			l_trace := exception_trace
-			check l_trace /= Void end
+			if attached class_name as l_class_name then
+				l_recipient_class_name := l_class_name
+			else
+				l_recipient_class_name := "UNKNOWN_CLASS"
+			end
+			if attached exception_trace as l_exception_trace then
+				l_trace := l_exception_trace
+			else
+				l_trace := "Unknown exception trace"
+			end
 
 			if l_meaning = Void then
 				l_meaning := ""
@@ -604,7 +612,7 @@ invariant
 	socket_attached: socket /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

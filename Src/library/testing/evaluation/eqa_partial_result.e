@@ -64,11 +64,8 @@ feature -- Access
 
 	tag: READABLE_STRING_8
 			-- Short tag describing status of `Current'
-		local
-			l_exception: EQA_TEST_INVOCATION_EXCEPTION
 		do
-			if setup_response.is_exceptional then
-				l_exception := setup_response.exception
+			if attached setup_response.exception as l_exception then
 				Result := l_exception.tag_name
 			else
 				Result := ""
@@ -123,7 +120,7 @@ invariant
 	pass_or_fail_or_unresolved: is_pass or is_fail or is_unresolved
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

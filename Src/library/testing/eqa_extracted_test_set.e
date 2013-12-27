@@ -49,7 +49,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	object_cache: detachable ARRAY [attached ANY]
+	object_cache: detachable ARRAY [ANY]
 			-- Cache containing restored objects from `context'
 
 feature -- Status report
@@ -57,9 +57,9 @@ feature -- Status report
 	is_prepared: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor and is_cache_loaded
+			Result := Precursor and object_cache /= Void
 		ensure then
-			result_implies_cache_loaded: Result implies is_cache_loaded
+			result_implies_cache_loaded: Result implies object_cache /= Void
 		end
 
 feature {NONE} -- Status report
@@ -68,12 +68,13 @@ feature {NONE} -- Status report
 			-- Is `a_id' an id of an existing object in `context'?
 		require
 			a_id_attached: a_id /= Void
-			a_id_valid: is_valid_id (a_id)
 		local
 			n: like index_of_id
 		do
-			n := index_of_id (a_id)
-			Result := context.valid_index (n.to_integer_32)
+			if is_valid_id (a_id) then
+				n := index_of_id (a_id)
+				Result := context.valid_index (n.to_integer_32)
+			end
 		end
 
 	is_cache_loaded: BOOLEAN
@@ -81,7 +82,7 @@ feature {NONE} -- Status report
 		do
 			Result := object_cache /= Void
 		ensure
-			result_implies_attached: Result implies object_cache /= Void
+			definition: Result implies object_cache /= Void
 		end
 
 feature {NONE} -- Query
@@ -111,7 +112,7 @@ feature {NONE} -- Query
 			result_valid: ("#" + Result.out).is_equal (a_id)
 		end
 
-	object_for_id (a_id: STRING): ANY
+	object_for_id (a_id: STRING): detachable ANY
 			-- Cached instance restored from `context' for given id.
 			--
 			-- `a_id': ID used in `context' for requested object.
@@ -119,15 +120,10 @@ feature {NONE} -- Query
 		require
 			a_id_attached: a_id /= Void
 			a_id_valid: is_existing_id (a_id)
-			object_cache_loaded: is_cache_loaded
-		local
-			l_cache: like object_cache
 		do
-			l_cache := object_cache
-			check l_cache /= Void end
-			Result := l_cache.item (index_of_id (a_id).to_integer_32)
-		ensure
-			result_attached: Result /= Void
+			if attached object_cache as l_cache then
+				Result := l_cache.item (index_of_id (a_id).to_integer_32)
+			end
 		end
 
 	is_valid_item_tuple (a_special: SPECIAL [ANY]; a_tuple: TUPLE): BOOLEAN
@@ -203,7 +199,7 @@ feature {NONE} -- Events
 	on_prepare
 			-- Called after `prepare' has performed all initialization.
 		require
-			object_cache_loaded: is_cache_loaded
+			object_cache_loaded: object_cache /= Void
 		do
 		ensure
 			prepared: is_prepared
@@ -224,7 +220,7 @@ feature {NONE} -- Events
 			prepared: is_prepared
 		do
 		ensure
-			object_cache_loaded: is_cache_loaded
+			object_cache_loaded: object_cache /= Void
 		end
 
 feature {NONE} -- Basic operations
@@ -291,8 +287,9 @@ feature {NONE} -- Object initialization
 					end
 					check l_object /= Void end
 				end
-				check l_object /= Void end
-				l_cache.put (l_object, i)
+				if l_object /= Void then
+					l_cache.put (l_object, i)
+				end
 				i := i + 1
 			end
 
@@ -342,10 +339,10 @@ feature {NONE} -- Object initialization
 				i := i + 1
 			end
 		ensure
-			object_cache_loaded: is_cache_loaded
+			object_cache_loaded: object_cache /= Void
 		end
 
-	create_special_object (a_special: TYPE [SPECIAL [ANY]]; a_count: INTEGER): SPECIAL [detachable ANY]
+	create_special_object (a_special: TYPE [SPECIAL [ANY]]; a_count: INTEGER): detachable SPECIAL [detachable ANY]
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
 			a_special_attached: a_special /= Void
@@ -390,17 +387,11 @@ feature {NONE} -- Object initialization
 				l_type := generic_dynamic_type (a_special, 1)
 
 				if l_type >= 0 and then is_special_any_type (l_type) then
-					l_special := new_special_any_instance (l_type, a_count)
-					check l_special /= Void end
-					l_result := l_special
+					Result := new_special_any_instance (l_type, a_count)
 				else
 					assert_32 ("special type not supported", False)
-					check l_result /= Void end
 				end
-				Result := l_result
 			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 	set_attributes (an_object: ANY; an_attributes: TUPLE)
@@ -412,7 +403,6 @@ feature {NONE} -- Object initialization
 		local
 			i, j: INTEGER
 			l_attributes: HASH_TABLE [INTEGER, STRING]
-			l_obj: ANY
 			l_name: like field_name
 		do
 			create l_attributes.make (an_attributes.count // 2)
@@ -441,8 +431,7 @@ feature {NONE} -- Object initialization
 					inspect field_type (i, an_object)
 					when reference_type then
 						if an_attributes.is_reference_item (j) and then attached {STRING} an_attributes.reference_item (j) as l_id then
-							if is_valid_id (l_id) and then is_existing_id (l_id) then
-								l_obj := object_for_id (l_id)
+							if is_existing_id (l_id) and then attached object_for_id (l_id) as l_obj then
 								if field_conforms_to (dynamic_type (l_obj), field_static_type_of_type (i, dynamic_type (an_object))) then
 									set_reference_field (i, an_object, l_obj)
 								end
@@ -522,7 +511,6 @@ feature {NONE} -- Object initialization
 			an_attributes_attached: an_attributes /= Void
 		local
 			i, j: INTEGER
-			l_obj: ANY
 		do
 			from
 				i := 1
@@ -534,8 +522,7 @@ feature {NONE} -- Object initialization
 					a_tuple.item_code (i)
 				when {TUPLE}.reference_code then
 					if an_attributes.is_reference_item (j) and then attached {STRING} an_attributes.reference_item (j) as l_id then
-						if is_valid_id (l_id) and then is_existing_id (l_id) then
-							l_obj := object_for_id (l_id)
+						if is_existing_id (l_id) and then attached object_for_id (l_id) as l_obj then
 							if a_tuple.valid_type_for_index (l_obj, i) then
 								a_tuple.put_reference (l_obj, i)
 							end
@@ -610,7 +597,6 @@ feature {NONE} -- Object initialization
 			attributes_uniform: is_valid_item_tuple (a_special, an_attributes)
 		local
 			i, l_type, l_gtype: INTEGER
-			l_obj: ANY
 			l_b_special: detachable SPECIAL [BOOLEAN]
 			l_c8_special: detachable SPECIAL [CHARACTER_8]
 			l_c32_special: detachable SPECIAL [CHARACTER_32]
@@ -682,55 +668,68 @@ feature {NONE} -- Object initialization
 					l_type
 				when reference_type then
 					if attached {STRING} an_attributes.reference_item (i) as l_id then
-						if is_valid_id (l_id) and then is_existing_id (l_id) then
-							l_obj := object_for_id (l_id)
+						if is_existing_id (l_id) and then attached object_for_id (l_id) as l_obj then
 							if field_conforms_to (dynamic_type (l_obj), l_gtype) then
 								a_special.extend (l_obj)
 							end
 						end
 					end
 				when boolean_type then
-					check l_b_special /= Void end
-					l_b_special.extend (an_attributes.boolean_item (i))
+					check l_b_special /= Void then
+						l_b_special.extend (an_attributes.boolean_item (i))
+					end
 				when character_8_type then
-					check l_c8_special /= Void end
-					l_c8_special.extend (an_attributes.character_8_item (i))
+					check l_c8_special /= Void then
+						l_c8_special.extend (an_attributes.character_8_item (i))
+					end
 				when character_32_type then
-					check l_c32_special /= Void end
-					l_c32_special.extend (an_attributes.character_32_item (i))
+					check l_c32_special /= Void then
+						l_c32_special.extend (an_attributes.character_32_item (i))
+					end
 				when integer_8_type then
-					check l_i8_special /= Void end
-					l_i8_special.extend (an_attributes.integer_8_item (i))
+					check l_i8_special /= Void then
+						l_i8_special.extend (an_attributes.integer_8_item (i))
+					end
 				when integer_16_type then
-					check l_i16_special /= Void end
-					l_i16_special.extend (an_attributes.integer_16_item (i))
+					check l_i16_special /= Void then
+						l_i16_special.extend (an_attributes.integer_16_item (i))
+					end
 				when integer_32_type then
-					check l_i32_special /= Void end
-					l_i32_special.extend (an_attributes.integer_32_item (i))
+					check l_i32_special /= Void then
+						l_i32_special.extend (an_attributes.integer_32_item (i))
+					end
 				when integer_64_type then
-					check l_i64_special /= Void end
-					l_i64_special.extend (an_attributes.integer_64_item (i))
+					check l_i64_special /= Void then
+						l_i64_special.extend (an_attributes.integer_64_item (i))
+					end
 				when natural_8_type then
-					check l_n8_special /= Void end
-					l_n8_special.extend (an_attributes.natural_8_item (i))
+					check l_n8_special /= Void then
+						l_n8_special.extend (an_attributes.natural_8_item (i))
+					end
 				when natural_16_type then
-					check l_n16_special /= Void end
-					l_n16_special.extend (an_attributes.natural_16_item (i))
+					check l_n16_special /= Void then
+						l_n16_special.extend (an_attributes.natural_16_item (i))
+					end
 				when natural_32_type then
-					check l_n32_special /= Void end
-					l_n32_special.extend (an_attributes.natural_32_item (i))
+					check l_n32_special /= Void then
+						l_n32_special.extend (an_attributes.natural_32_item (i))
+					end
 				when natural_64_type then
-					check l_n64_special /= Void end
-					l_n64_special.extend (an_attributes.natural_64_item (i))
+					check l_n64_special /= Void then
+						l_n64_special.extend (an_attributes.natural_64_item (i))
+					end
 				when real_type then
-					check l_r_special /= Void end
-					l_r_special.extend (an_attributes.real_32_item (i))
+					check l_r_special /= Void then
+						l_r_special.extend (an_attributes.real_32_item (i))
+					end
 				when double_type then
-					check l_d_special /= Void end
-					l_d_special.extend (an_attributes.real_64_item (i))
+					check l_d_special /= Void then
+						l_d_special.extend (an_attributes.real_64_item (i))
+					end
 				when pointer_type then
-					check l_p_special /= Void end
-					l_p_special.extend (an_attributes.pointer_item (i))
+					check l_p_special /= Void then
+						l_p_special.extend (an_attributes.pointer_item (i))
+					end
 				end
 				i := i + 1
 			end
@@ -757,7 +756,7 @@ feature {NONE} -- Constants
 	dynamic_string_32_type: INTEGER once Result := ({STRING_32}).type_id end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

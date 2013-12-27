@@ -90,6 +90,11 @@
 		<root class="ES" feature="make"/>
 		<setting name="platform" value="unix"/>
 	</target>
+	<target name="batch_windows" extends="batch">
+		<description>Compiling Windows batch compiler on other platforms</description>
+		<root class="ES" feature="make"/>
+		<setting name="platform" value="windows"/>
+	</target>
 	<target name="eclite" extends="batch">
 		<description>Lite version of Eiffel compiler, compiles only. This is primarly for tools that need to use the Eiffel compiler rather than developers</description>
 		<root cluster="lite_compiler" class="APPLICATION" feature="make"/>

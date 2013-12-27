@@ -100,7 +100,6 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Read functions
 
-
 	retrieve (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Retrieve `object' from the database.
 		require

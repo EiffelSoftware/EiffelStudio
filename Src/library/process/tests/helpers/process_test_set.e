@@ -116,7 +116,7 @@ feature {NONE} -- Query
 	echo_executable: PATH
 			-- Path to `eiffel_echo' executable
 			--
-			-- Note: by default this is $ISE_EIFFEL/studio/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
+			-- Note: by default this is $ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
 			--       environment variables are missing we check for a Unix layout. Otherwise we assume
 			--       `eiffel_echo' is reachable from $PATH.
 		local
@@ -271,13 +271,19 @@ feature {NONE} -- Constants
 
 	ise_eiffel_env: STRING = "ISE_EIFFEL"
 	ise_platform_env: STRING = "ISE_PLATFORM"
-	eiffel_echo_name: STRING = "eiffel_echo"
+	eiffel_echo_name: STRING
+		do
+			Result := "eiffel_echo"
+			if {PLATFORM}.is_windows then
+				Result.append (".exe")
+			end
+		end
 
 	timeout: INTEGER = 2000
 			-- Time in milliseconds we wait for process to send new output
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

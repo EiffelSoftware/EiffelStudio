@@ -72,7 +72,7 @@ feature -- Basic operations
 						-- performed.
 					l_events.publish_if ([Current], agent (ia_lock: LOCKABLE_I): BOOLEAN
 						do
-							Result := not ia_lock.is_locked
+							Result := ia_lock.is_interface_usable and then not ia_lock.is_locked
 						end)
 				end
 			end
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!			
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

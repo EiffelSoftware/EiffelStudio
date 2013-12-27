@@ -20,7 +20,6 @@ feature {LOCKABLE_I} -- Event handlers
 			--
 			-- `a_sender': The locked interface.
 		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_sender_is_interface_usable: attached {USABLE_I} a_sender as l_usable_lock implies l_usable_lock.is_interface_usable
 			a_sender_is_locked: a_sender.is_locked
 		do
@@ -31,13 +30,12 @@ feature {LOCKABLE_I} -- Event handlers
 			--
 			-- `a_sender': The unlocked interface.
 		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 			a_sender_is_interface_usable: attached {USABLE_I} a_sender as l_usable_lock implies l_usable_lock.is_interface_usable
 		do
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

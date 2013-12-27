@@ -82,7 +82,7 @@ feature -- Access
 			l_result: like internal_editor
 		do
 			l_result := internal_editor
-			if l_result = Void then
+			if l_result = Void and then is_interface_usable then
 				Result := new_editor
 				auto_recycle (Result)
 				internal_editor := Result
@@ -90,7 +90,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure
-			result_is_consistent: Result = editor
+			result_is_consistent: is_interface_usable implies Result = editor
 		end
 
 feature {NONE} -- Status report
@@ -119,7 +119,7 @@ feature -- Basic operations
 			l_text: CLICKABLE_TEXT
 		do
 			l_editor := editor
-			if l_editor.is_interface_usable then
+			if l_editor /= Void and then l_editor.is_interface_usable then
 				if (attached l_editor.text_displayed as l_text_displayed) and then l_text_displayed.cursor /= Void then
 					l_text := l_editor.text_displayed
 					if a_force or else l_text.last_line = l_text.current_line then
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

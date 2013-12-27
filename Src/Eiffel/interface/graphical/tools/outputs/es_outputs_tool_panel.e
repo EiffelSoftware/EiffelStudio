@@ -780,7 +780,7 @@ feature {LOCKABLE_I} -- Event handlers
 	on_output_unlocked (a_lock: attached ES_OUTPUT_PANE_I)
 			-- <Precursor>
 		do
-			if is_initialized and then a_lock = output then
+			if is_interface_usable and then is_initialized and then a_lock = output then
 				clear_button.enable_sensitive
 				end_icon_animation
 			end

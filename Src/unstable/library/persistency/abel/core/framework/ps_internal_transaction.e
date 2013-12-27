@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			is_active := True
 			root_declaration_strategy := a_strategy
 			transaction_identifier := id
+			create identifier_table
 
 			repository.id_manager.register_transaction (Current)
 		end
@@ -41,6 +42,7 @@ feature {NONE} -- Initialization
 			is_active := True
 			create root_declaration_strategy.make_preserve
 			transaction_identifier := id
+			create identifier_table
 
 			repository.id_manager.register_transaction (Current)
 		end
@@ -61,6 +63,8 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	identifier_set: PS_IDENTIFIER_SET
 
+
+	identifier_table: PS_IDENTIFIER_TABLE
 
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The root object strategy for the current transaction.

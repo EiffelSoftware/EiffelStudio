@@ -17,6 +17,10 @@ create
 
 feature {NONE} -- Initialization
 
+	default_batch_size: INTEGER = 100
+			-- The default batch size when not specified by the backend.
+			-- A batch size is useful to reduce memory usage and maybe exploit caching.
+
 	make (a_query: PS_ABSTRACT_QUERY [ANY, ANY]; a_filter: READABLE_INDEXABLE [STRING]; a_read_manager: PS_READ_MANAGER)
 			-- Initialization for `Current'.
 		local
@@ -57,52 +61,93 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			subtypes := subtypes_list.new_cursor
+			type_cursor := subtypes_list.new_cursor
 
 			create empty_result.make
-			current_result := empty_result.new_cursor
+			retrieved_cursor := empty_result.new_cursor
 			create empty_processed.make
 
 				-- Populate with a bogus item such that a call to `forth' can be used
 				-- for proper initialization.
 			empty_processed.extend (-1)
-			processed_items := empty_processed.new_cursor
+			item_cursor := empty_processed.new_cursor
+			item := Current -- for void safety...
 		end
 
-feature {PS_ABEL_EXPORT}
+feature {PS_ABEL_EXPORT} -- Access
 
-	query: PS_ABSTRACT_QUERY [ANY, ANY]
+	item: ANY
+			-- <Precursor>
 
-	filter: PS_IMMUTABLE_STRUCTURE [STRING]
+feature {PS_ABEL_EXPORT} -- Status report
 
-	filter_lookup: HASH_TABLE [BOOLEAN, STRING]
+	after: BOOLEAN
+			-- <Precursor>
+		do
+			Result := type_cursor.after and retrieved_cursor.after and item_cursor.after
+		end
 
-	subtypes: ITERATION_CURSOR [PS_TYPE_METADATA]
+feature {PS_ABEL_EXPORT} -- Cursor movement
 
-	current_result: ITERATION_CURSOR [PS_BACKEND_ENTITY]
+	forth
+			-- <Precursor>
+		do
+			from
+				advance_item
+			until
+				after or else query.criterion.is_satisfied_by (item)
+			loop
+				advance_item
+			end
+		end
 
-	processed_items: ITERATION_CURSOR [INTEGER]
+feature {NONE} -- Implementation: Access
+
 
 	read_manager: PS_READ_MANAGER
+			-- The read manager to be used for object retrieval.
+
+	query: PS_ABSTRACT_QUERY [ANY, ANY]
+			-- The query object associated to `Current'.
+
+	filter: PS_IMMUTABLE_STRUCTURE [STRING]
+			-- An attribute filter. Attributes not listed in `filter' should not be retrieved.
+
+	filter_lookup: HASH_TABLE [BOOLEAN, STRING]
+			-- Quick lookup for `filter'.
+		attribute
+			create Result.make (filter.count)
+			filter.do_all (agent Result.extend (True, ?))
+		end
+
+
+	type_cursor: ITERATION_CURSOR [PS_TYPE_METADATA]
+			-- A cursor over the different types to be retrieved.
+
+	retrieved_cursor: ITERATION_CURSOR [PS_BACKEND_ENTITY]
+			-- A cursor over the result of a specific type.
+
+	item_cursor: ITERATION_CURSOR [INTEGER]
+			-- A cursor over the finalized items.
 
 
 
 	advance_type
-			-- Retrieve the query result for the next type and update `current_result'.
+			-- Retrieve the query result for the next type and reset `retrieved_cursor'.
 		do
-			if not subtypes.after then
+			if not type_cursor.after then
 					-- Query the database and initialize the new current_result.
-				current_result := read_manager.dispatch_retrieve (subtypes.item, query.criterion, filter, read_manager.transaction)
-				subtypes.forth
+				retrieved_cursor := read_manager.dispatch_retrieve (type_cursor.item, query.criterion, filter, read_manager.transaction)
+				type_cursor.forth
 			end
 		end
 
-	advance_current_result
-			-- Build the next batch of items in `current_result' and update `processed_items'.
+	advance_retrieved
+			-- Build the next batch of items in `retrieved_cursor' and reset `item_cursor'.
 		do
 			from
 			until
-				not current_result.after or after
+				not retrieved_cursor.after or after
 			loop
 				advance_type
 			end
@@ -116,26 +161,18 @@ feature {PS_ABEL_EXPORT}
 			-- Get the next item.
 		do
 			from
-				processed_items.forth
+				item_cursor.forth
 			until
-				not processed_items.after or after
+				after or (not item_cursor.after and then attached maybe_item)
 			loop
-				advance_current_result
+				advance_retrieved
+			end
+
+			if not after and then attached maybe_item as it then
+				item := it
 			end
 		end
 
-
-	forth
-			-- Get objects until one satisfies the query criteria.
-		do
-			from
-				advance_item
-			until
-				after or else (attached maybe_item as it and then query.criterion.is_satisfied_by (it))
-			loop
-				advance_item
-			end
-		end
 
 	build_batch
 			-- Build all objects which were returned in the last batch by the backend.
@@ -158,9 +195,9 @@ feature {PS_ABEL_EXPORT}
 			from
 
 				batch_count := read_manager.backend.batch_retrieval_size
+					-- Some reasonable default to exploit caches.
 				if batch_count < 1 then
-						-- Some reasonable default to exploit caches.
-					batch_count := 100
+					batch_count := default_batch_size
 				end
 
 				if query.object_initialization_depth >= 0 then
@@ -172,10 +209,10 @@ feature {PS_ABEL_EXPORT}
 				create processed_interval.make_new (read_manager.count + 1, read_manager.count)
 				processed := processed_interval
 			until
-				batch_count = 0 or current_result.after
+				batch_count = 0 or retrieved_cursor.after
 			loop
-				retrieved_entity := current_result.item
-				current_result.forth
+				retrieved_entity := retrieved_cursor.item
+				retrieved_cursor.forth
 					-- Ignore non-root objects when not required.
 				if retrieved_entity.is_root or not query.is_non_root_ignored then
 
@@ -184,17 +221,8 @@ feature {PS_ABEL_EXPORT}
 
 					if index = 0 then
 
-
-						index := read_manager.count + 1
-
-						if read_manager.free_objects.is_empty then
-							create new_object.make_with_primary_key (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
-						else
-								-- Reuse one of the existing PS_OBJECT_READ_DATA.
-							new_object := read_manager.free_objects.item
-							read_manager.free_objects.remove
-							new_object.reset (index, retrieved_entity.primary_key, retrieved_entity.metadata, 0)
-						end
+						new_object := read_manager.new_object_data (retrieved_entity.primary_key, retrieved_entity.metadata, 0)
+						index := new_object.index
 
 						read_manager.add_object (new_object, not query.is_tuple_query)
 
@@ -221,30 +249,19 @@ feature {PS_ABEL_EXPORT}
 			end
 
 			read_manager.build (to_build, query.object_initialization_depth)
-			processed_items := processed.new_cursor
+			item_cursor := processed.new_cursor
 		end
 
-	item: ANY
-		do
---			Result := read_manager.item (processed_items.item).reflector.object
-			check attached maybe_item as safe then
-				Result := safe
-			end
-		end
-
-	after: BOOLEAN
-		do
-			Result := subtypes.after and current_result.after and processed_items.after
-		end
 
 	maybe_item: detachable ANY
+			-- Retrieve the item pointed to by `item_cursor', if any.
 		do
 			if 0 < query.object_initialization_depth and query.object_initialization_depth <= 2 then
-				Result := read_manager.item (processed_items.item).reflector.object
-			elseif attached {REFLECTED_OBJECT} read_manager.object_item (processed_items.item) as res then
+				Result := read_manager.item (item_cursor.item).reflector.object
+			elseif attached {REFLECTED_OBJECT} read_manager.object_item (item_cursor.item) as res then
 				Result := res.object
 			else
-				Result := read_manager.object_item (processed_items.item)
+				Result := read_manager.object_item (item_cursor.item)
 			end
 		end
 

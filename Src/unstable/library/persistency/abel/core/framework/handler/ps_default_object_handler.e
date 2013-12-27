@@ -50,8 +50,6 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			pos: INTEGER
 
---			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
-
 			attribute_value: STRING
 			attribute_type: IMMUTABLE_STRING_8
 

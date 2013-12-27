@@ -55,6 +55,23 @@ feature {PS_ABEL_EXPORT} -- Access
 			index_set: Result.index = index
 		end
 
+
+	transaction: PS_INTERNAL_TRANSACTION
+			-- The transaction in which the current operation is running.
+		do
+			check attached internal_transaction as attached_transaction then
+				Result := attached_transaction
+			end
+		end
+
+feature {PS_ABEL_EXPORT} -- Status report
+
+	is_valid_index (index: INTEGER): BOOLEAN
+			-- Is `index' a valid index?
+		do
+			Result := 1 <= index and index <= count
+		end
+
 feature {PS_ABEL_EXPORT} -- Accesss: Static
 
 	backend: PS_BACKEND
@@ -398,4 +415,6 @@ feature {NONE} -- Implementation
 			collections_to_write.wipe_out
 		end
 
+	internal_transaction: detachable like transaction
+			-- The detachable attribute for `transaction'
 end

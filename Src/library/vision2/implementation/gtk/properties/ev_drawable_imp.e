@@ -1039,37 +1039,33 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		local
-			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
+			l_mask_pix, l_temp_pix: POINTER
+			l_null: POINTER
 		do
-			new_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-			l_image := {GTK2}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
+			Result := {GTK2}.gdk_pixbuf_get_from_drawable (l_null, drawable, l_null, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
 
-			a_pix := {GTK2}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-				-- We do not unref new_pix as it is being reused
+			if Result = l_null then
+					-- Cannot get pixbuf from `drawable', just create an empty one 
+					-- to ensure that there is no failure, just a bad display.
+				Result := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+			elseif mask /= l_null then
+				l_mask_pix := {GTK2}.gdk_pixbuf_get_from_drawable (l_null, mask, l_null, src_x, src_y, dest_x, dest_y, a_width, a_height)
 
-			{GTK2}.object_unref (l_image)
-			l_image := default_pointer
+				if l_mask_pix /= l_null then
+					l_temp_pix := l_mask_pix
+					l_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
+					{GTK2}.object_unref (l_temp_pix)
 
-			if mask /= default_pointer then
-				new_mask_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-				l_mask_image := {GTK2}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-				a_mask_pix := {GTK2}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-				{GTK2}.object_unref (l_mask_image)
-				l_mask_image := default_pointer
+						-- Draw mask on top of pixbuf.
+					{GTK2}.gdk_pixbuf_composite (l_mask_pix, Result, 0, 0, a_width, a_height, 0.0, 0.0, 1.0, 1.0, {GTK2}.gdk_interp_bilinear, 255)
 
-				l_temp_pix := a_mask_pix
-				a_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
-				{GTK2}.object_unref (l_temp_pix)
-					-- Draw mask on top of pixbuf.
-				{GTK2}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {GTK2}.gdk_interp_bilinear, 255)
-				draw_mask_on_pixbuf (a_pix, a_mask_pix)
+					draw_mask_on_pixbuf (Result, l_mask_pix)
 
-				 -- Clean up
-				{GTK2}.object_unref (a_mask_pix)
-
-				Result := a_pix
-			else
-				Result := a_pix
+						-- Clean up
+					{GTK2}.object_unref (l_mask_pix)
+				else
+						-- Mask could not be allocated, free `Result', we still keep `Result' without masking
+				end
 			end
 		end
 

@@ -24,7 +24,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			all_primaries: INTEGER
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
-			current_list: LINKED_LIST [PS_BACKEND_OBJECT]
+			current_list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 --			none_class_key: INTEGER
 --			existence_attribute_key: INTEGER
 		do
@@ -50,7 +50,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 				across
 					1 |..| cursor.item as current_count
 				from
-					create current_list.make
+					create current_list.make (cursor.item)
 					Result.extend (current_list, cursor.key)
 				loop
 					-- Get a primary key

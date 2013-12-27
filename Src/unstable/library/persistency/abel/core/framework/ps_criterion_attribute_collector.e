@@ -15,7 +15,7 @@ create
 
 feature
 
-	attributes: LINKED_LIST [STRING]
+	attributes: ARRAYED_LIST [STRING]
 
 	visit_and (and_crit: PS_AND_CRITERION): INTEGER
 		do
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create attributes.make
+			create attributes.make (5)
 		end
 
 end

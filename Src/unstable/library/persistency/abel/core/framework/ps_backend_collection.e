@@ -204,8 +204,8 @@ feature {NONE}
 			-- Initialize `Current'
 		do
 			Precursor (key, meta)
-			create additional_information_hash.make (10)
-			create {LINKED_LIST [STRING]} information_descriptions.make
+			create additional_information_hash.make (2)
+			create {ARRAYED_LIST [STRING]} information_descriptions.make (2)
 			create {ARRAYED_LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]} collection_items.make (25)
 		ensure then
 			additional_info_empty: additional_information_hash.is_empty

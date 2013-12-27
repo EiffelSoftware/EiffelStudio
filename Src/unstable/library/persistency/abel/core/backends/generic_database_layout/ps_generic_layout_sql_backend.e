@@ -28,7 +28,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
 			existence_attribute_key: INTEGER
-			current_list: LINKED_LIST [PS_BACKEND_OBJECT]
+			current_list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 		do
 			connection := get_connection (transaction)
 
@@ -43,7 +43,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 				across
 					1 |..| cursor.item as current_count
 				from
-					create current_list.make
+					create current_list.make (cursor.item)
 					Result.extend (current_list, cursor.key)
 				loop
 					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
@@ -70,7 +70,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			none_class_key: INTEGER
-			current_list: LINKED_LIST [PS_BACKEND_COLLECTION]
+			current_list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 		do
 			connection := get_connection (transaction)
 
@@ -84,7 +84,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 				across
 					1 |..| cursor.item as current_count
 				from
-					create current_list.make
+					create current_list.make (cursor.item)
 					Result.extend (current_list, cursor.key)
 				loop
 					-- Generate a new primary key in the database by inserting the "existence" attribute with the objects object_identifier as a temporary value
@@ -131,8 +131,8 @@ feature {PS_ABEL_EXPORT} -- Write operations
 	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write every item in `collections' to the database
 		local
-			commands: LINKED_LIST [STRING]
-			info_commands: LINKED_LIST [STRING]
+			commands: ARRAYED_LIST [STRING]
+			info_commands: ARRAYED_LIST [STRING]
 			collection_type_key: INTEGER
 
 			delete_command: STRING
@@ -148,8 +148,8 @@ feature {PS_ABEL_EXPORT} -- Write operations
 				delete_command := "DELETE FROM ps_collection WHERE position > 0 AND collectionid IN ("
 				create delete_command_list.make_empty
 
-				create commands.make
-				create info_commands.make
+				create commands.make (5 * collections.count)
+				create info_commands.make (collections.count)
 			loop
 					-- Insert all items
 				across
@@ -269,7 +269,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			management_connection.execute_sql (SQL_Strings.Drop_attribute_table)
 			management_connection.execute_sql (SQL_Strings.Drop_class_table)
 			database.release_connection (management_connection)
-			
+
 			make (database, SQL_Strings)
 		end
 
@@ -280,12 +280,12 @@ feature {PS_BACKEND} -- Implementation
 			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		local
 			connection: PS_SQL_CONNECTION
-			commands: LINKED_LIST [STRING]
+			commands: ARRAYED_LIST [STRING]
 		do
 			across
 				objects as cursor
 			from
-				create commands.make
+				create commands.make (objects.count + 1)
 			loop
 				across
 					cursor.item.attributes as attribute_cursor

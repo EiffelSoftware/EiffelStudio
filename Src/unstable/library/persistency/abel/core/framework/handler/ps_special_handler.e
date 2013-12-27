@@ -249,15 +249,16 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 
-			used_refs: LINKED_LIST [INTEGER]
+			used_refs: ARRAYED_LIST [INTEGER]
 
 		do
 			collection := object.backend_collection
-			create used_refs.make
 
 			check attached {SPECIAL [detachable ANY]} object.reflector.object as spec then
 				special := spec
 			end
+			
+			create used_refs.make (special.count)
 
 			across
 				0 |..| (special.count - 1) as idx

@@ -62,9 +62,9 @@ feature {PS_ABEL_EXPORT} -- Identification
 		do
 			--check all other transaction local sets if someone already has the same object.
 			across transaction_sets as cursor loop
-				if cursor.item.set.is_identified (an_object) then
+				if cursor.item.is_identified (an_object) then
 					-- if yes, use copy of the same identification
-					new_identifier:= cursor.item.set.identifier (an_object)
+					new_identifier:= cursor.item.identifier (an_object)
 				end
 			end
 
@@ -136,9 +136,8 @@ feature {PS_ABEL_EXPORT} -- Transaction management
 			-- Add `transaction' to the pool of active transactions, if not present yet.
 		do
 			if not is_registered (transaction) then
-				registered_transactions.extend (transaction)
-				--transaction_sets.extend ([transaction, create {PS_IDENTIFIER_SET}.make])
-				transaction_sets.extend ([transaction, transaction.identifier_set])
+				registered_transactions.extend (True, transaction)
+				transaction_sets.extend (transaction.identifier_set, transaction)
 			end
 		ensure
 			is_registered (transaction)
@@ -161,24 +160,15 @@ feature {PS_ABEL_EXPORT} -- Transaction management
 	rollback (transaction: PS_INTERNAL_TRANSACTION)
 			-- Rollback all identifications performed within `transaction'
 		require
-			registered: is_registered (transaction)
+--			registered: is_registered (transaction)
 		do
-			from transaction_sets.start
-			until transaction_sets.after
-			loop
-				if transaction_sets.item.transaction = transaction then
-					transaction_sets.remove
-				else
-					transaction_sets.forth
-				end
-			end
-			registered_transactions.start
-			registered_transactions.prune (transaction)
+			transaction_sets.remove (transaction)
+			registered_transactions.remove (transaction)
 		ensure
 			not_registered: not is_registered (transaction)
 		end
 
-	registered_transactions: LINKED_LIST [PS_INTERNAL_TRANSACTION]
+	registered_transactions: HASH_TABLE [BOOLEAN, PS_INTERNAL_TRANSACTION]
 
 feature {PS_ABEL_EXPORT} -- Deletion management
 
@@ -230,9 +220,9 @@ feature {NONE} -- Implementation
 			create subscribers.make
 			create metadata_manager.make
 			last_id := 0
-			create registered_transactions.make
+			create registered_transactions.make (1)
 			create global_set.make
-			create transaction_sets.make
+			create transaction_sets.make (1)
 		end
 
 	last_id: INTEGER
@@ -241,7 +231,7 @@ feature {NONE} -- Implementation
 	global_set: PS_IDENTIFIER_SET
 			-- The global set of (committed) identifiers
 
-	transaction_sets: LINKED_LIST [TUPLE [transaction: PS_INTERNAL_TRANSACTION; set: PS_IDENTIFIER_SET]]
+	transaction_sets: HASH_TABLE [PS_IDENTIFIER_SET, PS_INTERNAL_TRANSACTION]
 			-- The transaction-local sets
 
 	local_set (transaction: PS_INTERNAL_TRANSACTION): PS_IDENTIFIER_SET

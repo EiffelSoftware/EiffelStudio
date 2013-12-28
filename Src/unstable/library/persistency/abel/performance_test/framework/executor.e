@@ -57,7 +57,7 @@ feature -- Test execution
 
 			measure_query_deep_all
 			measure_query_deep_select
--- 
+--
 -- 			controller.repository.clean_db_for_testing
 
 -- 			measure_insert_shared
@@ -100,6 +100,11 @@ feature -- Insertion tests
 			loop
 				transaction := controller.repository.new_transaction
 				transaction.insert (generated_objects[i])
+				if transaction.has_error then
+					print (i)
+					print (transaction.last_error)
+					(create {DEVELOPER_EXCEPTION}).raise
+				end
 				transaction.commit
 				i := i + 1
 			variant
@@ -239,6 +244,8 @@ feature -- Query tests
 				loop
 					do_nothing
 				end
+
+				query.close
 				i := i + step
 			variant
 				controller.object_count - i + step
@@ -290,6 +297,8 @@ feature -- Query tests
 				loop
 					do_nothing
 				end
+
+				query.close
 				i := i + step
 			variant
 				controller.object_count - i + step
@@ -340,6 +349,8 @@ feature -- Query tests
 				loop
 					do_nothing
 				end
+				
+				query.close
 				i := i + step
 			variant
 				controller.object_count - i + step

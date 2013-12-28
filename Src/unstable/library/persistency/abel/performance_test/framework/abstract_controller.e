@@ -31,14 +31,14 @@ feature -- Access
 	object_count: INTEGER
 			-- The default number of objects in the database.
 		do
-			Result := 100000
+			Result := 10000
 		end
 
 	selection_count: INTEGER
 			-- The default number of objects that should be selected by
 			-- tests involving queries with criteria.
 		do
-			Result := 100
+			Result := 10
 		end
 
 	repository: PS_REPOSITORY

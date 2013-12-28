@@ -84,7 +84,7 @@ feature {PS_ABEL_EXPORT} -- Retrieval
 --			else
 --				success := True
 --				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
---				transaction.error.raise
+--				check attached transaction.error as err then err.raise end
 --			end
 
 			if attributes.count < type.attribute_count then
@@ -144,8 +144,8 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Testing
 
---	success: BOOLEAN
---			-- If false, simulate a transaction failure during next retrieval.
+	success: BOOLEAN
+			-- If false, simulate a transaction failure during next retrieval.
 
 	wipe_out, make
 			-- Wipe out everything and initialize new.
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 --			else
 --				success := True
 --				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
---				transaction.error.raise
+--				check attached transaction.error as err then err.raise end
 --			end
 
 			across

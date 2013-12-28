@@ -84,22 +84,25 @@ feature -- Query execution
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
-			transaction := new_internal_transaction (True)
-			internal_execute_query (query, transaction)
-			internal_active_queries.extend (query)
-		ensure
-			active: active_queries.has (query)
-			executed: query.is_executed
-			not_closed: not query.is_closed
-		rescue
-			if
-				attempts <= retry_count
-				and then attached transaction as t
-				and then attached {PS_TRANSACTION_ABORTED_ERROR} t.error
-			then
+			from
+				attempts := 0
+			until
+				attempts > retry_count or
+				(attempts > 0 and then
+				not attached {PS_TRANSACTION_ABORTED_ERROR} query.last_error)
+			loop
+				query.reset
+				transaction := new_internal_transaction (True)
+				internal_active_queries.extend (query)
+				internal_execute_query (query, transaction)
 				attempts := attempts + 1
-				retry
+			variant
+				retry_count - attempts + 2
 			end
+		ensure
+			active: query.has_error xor active_queries.has (query)
+			executed: query.is_executed
+			not_closed: query.has_error xor not query.is_closed
 		end
 
 	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
@@ -114,22 +117,25 @@ feature -- Query execution
 			attempts: INTEGER
 			transaction: detachable PS_INTERNAL_TRANSACTION
 		do
-			transaction := new_internal_transaction (True)
-			internal_execute_tuple_query (query, transaction)
-			internal_active_queries.extend (query)
+			from
+				attempts := 0
+			until
+				attempts > retry_count or
+				(attempts > 0 and then
+				not attached {PS_TRANSACTION_ABORTED_ERROR} query.last_error)
+			loop
+				query.reset
+				transaction := new_internal_transaction (True)
+				internal_active_queries.extend (query)
+				internal_execute_tuple_query (query, transaction)
+				attempts := attempts + 1
+			variant
+				retry_count - attempts + 2
+			end
 		ensure
 			active: active_queries.has (query)
 			executed: query.is_executed
 			not_closed: not query.is_closed
-		rescue
-			if
-				attempts <= retry_count
-				and then attached transaction as t
-				and then attached {PS_TRANSACTION_ABORTED_ERROR} t.error
-			then
-				attempts := attempts + 1
-				retry
-			end
 		end
 
 feature -- Transactional access
@@ -190,8 +196,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 		ensure
 			executed: query.is_executed
 			transaction_set: query.internal_transaction = transaction
-			transaction_still_alive: transaction.is_active
-			no_error: not transaction.has_error
+			transaction_still_alive: transaction.has_error xor transaction.is_active
 			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
 			not_after_means_known: (not query.is_after and not transaction.is_readonly) implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
 		end
@@ -206,8 +211,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 		ensure
 			executed: tuple_query.is_executed
 			transaction_set: tuple_query.internal_transaction = transaction
-			transaction_still_alive: transaction.is_active
-			no_error: not transaction.has_error
+			transaction_still_alive: transaction.has_error xor transaction.is_active
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Write operations
@@ -220,10 +224,9 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 			can_handle_object: can_handle (object)
 		deferred
 		ensure
-			transaction_still_alive: transaction.is_active
-			no_error: not transaction.has_error
-			transaction_active_in_id_manager: id_manager.is_registered (transaction)
-			object_known: is_identified (object, transaction) xor object.generating_type.is_expanded
+			transaction_still_alive: transaction.is_active xor transaction.has_error
+			transaction_active_in_id_manager: not transaction.has_error implies id_manager.is_registered (transaction)
+			object_known: transaction.has_error implies  is_identified (object, transaction) xor object.generating_type.is_expanded
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
@@ -257,10 +260,9 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 			no_error: not transaction.has_error
 			repository_correct: transaction.repository = Current
 		deferred
-		ensure -- This will only hold of course if the commit has not failed...
+		ensure
 			transaction_dead: not transaction.is_active
-			successful_commit: transaction.is_successful_commit
-			no_error: not transaction.has_error
+			successful_commit: transaction.is_successful_commit xor transaction.has_error
 			transaction_gone_in_id_manager: not id_manager.is_registered (transaction)
 		end
 
@@ -291,7 +293,9 @@ feature {NONE} -- Rescue
 	default_transactional_rescue (transaction: PS_INTERNAL_TRANSACTION)
 			-- The default action if a routine has failed.
 		do
-			rollback_transaction (transaction, False)
+			if transaction.is_active then
+				rollback_transaction (transaction, False)
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation

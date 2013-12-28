@@ -50,9 +50,9 @@ feature {PS_ABEL_EXPORT} -- Object query
 		do
 			type := id_manager.metadata_manager.create_metadata_from_type (query.generic_type)
 			initialize_query (query, transaction, type.attributes)
-		rescue
-			default_transactional_rescue (transaction)
-			query.close
+--		rescue
+--			default_transactional_rescue (transaction)
+--			query.close
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -73,9 +73,9 @@ feature {PS_ABEL_EXPORT} -- Object query
 			end
 
 			initialize_query (tuple_query, transaction, collector.attributes)
-		rescue
-			default_transactional_rescue (transaction)
-			tuple_query.close
+--		rescue
+--			default_transactional_rescue (transaction)
+--			tuple_query.close
 		end
 
 feature {PS_ABEL_EXPORT} -- Modification
@@ -126,6 +126,9 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			backend.rollback (transaction)
 			id_manager.rollback (transaction)
 			transaction.declare_as_aborted
+			if not transaction.has_error then
+--				transaction.set_error (create {PS_INTERNAL_ERROR})
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing

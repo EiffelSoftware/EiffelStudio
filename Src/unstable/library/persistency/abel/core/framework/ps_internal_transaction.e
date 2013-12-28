@@ -105,34 +105,6 @@ feature {PS_ABEL_EXPORT} -- Element change
 			root_declaration_strategy := a_strategy
 		end
 
---	commit
---			-- Try to commit the transaction.
---			--The result of the commit operation is set in the `is_successful_commit' attribute.
---		do
---			if is_active then
---				repository.commit_transaction (Current)
---			end
---		ensure
---			transaction_terminted: not is_active
---		rescue
---				-- Catch any exception if the commit failed
---			check
---				ensure_correct_rollback: not is_active and not is_successful_commit
---			end
---			retry -- Do nothing, but terminate normally.
---		end
-
---	rollback
---			-- Rollback all operations within this transaction.
---		require
---			transaction_alive: is_active
---		do
---			repository.rollback_transaction (Current, True)
---		ensure
---			transaction_terminated: not is_active
---			no_success: not is_successful_commit
---		end
-
 feature {PS_ABEL_EXPORT} -- Internals
 
 	set_error (an_error: detachable PS_ERROR)

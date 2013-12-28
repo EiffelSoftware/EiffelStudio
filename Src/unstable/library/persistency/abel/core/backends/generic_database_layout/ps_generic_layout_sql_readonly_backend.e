@@ -383,7 +383,10 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 	release_connection (transaction: PS_INTERNAL_TRANSACTION)
 			-- Release the connection associated with `transaction'.
 		do
-			active_connections.remove (transaction)
+			if attached active_connections [transaction] as conn then
+				active_connections.remove (transaction)
+				database.release_connection (conn)
+			end
 		end
 
 	active_connections: HASH_TABLE [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]

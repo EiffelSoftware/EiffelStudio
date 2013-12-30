@@ -1,0 +1,141 @@
+# AutoTest results for test_store (12/30/2013 19:41)
+TEST_DATA_CORRECTNESS.test_quotes_in_string: pass
+TEST_DATA_CORRECTNESS.test_trailing_blanks: pass
+TEST_DYNAMIC_SQL.test_dynamic_sql: pass
+TEST_ERROR_MESSAGE.test_error_message: pass
+TEST_ERROR_MESSAGE.test_error_recovery: pass
+TEST_EXTENDED_SELECT.test_extended_select: FAIL (Number of results is not expected)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EQA_ASSERTIONS.assert)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Number of results is not expected:
+		<000000000268F748>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<000000000268F748>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<000000000268F748>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<000000000268F698>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<000000000265AC68>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EXTENDED_SELECT
+		                    assert @2              
+		<000000000265ABC8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EXTENDED_SELECT
+		                    extended_select_make_selection @17
+		<000000000265ABC8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_EXTENDED_SELECT
+		                    test_extended_select @6
+		<000000000265ABC8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_GUID_TYPE.test_uuid_type: pass
+TEST_LENGTH_OF_COLUMN_NAME.test: pass
+TEST_MEMORY.test_memory_trim: pass
+TEST_MULTIPLE_THREAD.test_multiple_thread: unresolved (Evaluator Died)
+	The evaluator process which was executing test TEST_MULTIPLE_THREAD.test_multiple_thread terminated unexpectedly with exit code -336589910. Any output from the
+	evaluator is printed below.
+	
+	
+	-- ora error--
+	
+	
+	-- ora error--
+	
+	
+	-- ora error--
+	
+	
+	-- ora error--
+	
+TEST_NESTED_TRANSACTION.test: pass
+TEST_NUMERIC_TYPES.test_numeric_types: pass
+TEST_NUMERIC_TYPES.test_numeric_types_use_decimal_mode: FAIL (Result is not expected)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EQA_ASSERTIONS.assert)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Result is not expected:
+		<00000000027E22E8>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<00000000027E22E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<00000000027E22E8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000027E2238>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<00000000027B8398>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  assert @2                                           
+		<00000000027B82F8>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  numeric_types_with_decimal_make_selection @17
+		<00000000027B82F8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_NUMERIC_TYPES  test_numeric_types_use_decimal_mode @8
+		<00000000027B82F8>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok
+TEST_PROCEDURE.test_procedure: pass
+TEST_SELECT.test_basic_select: pass
+TEST_SELECT.test_large_string_select: pass
+TEST_TRANSACTION.test: FAIL (Data in database is not correct.)
+	on_prepare: ok
+	test routine: exceptional (Developer exception in EQA_ASSERTIONS.assert)
+		******************************** Thread exception *****************************
+		In thread           Root thread            0x0 (thread id)
+		*******************************************************************************
+		-------------------------------------------------------------------------------
+		Class / Object      Routine                Nature of exception           Effect
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        Data in database is not correct.:
+		<000000000268F748>                         Developer exception.          Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    developer_raise        
+		<000000000268F748>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		ISE_EXCEPTION_MANAGER
+		                    raise @11              
+		<000000000268F748>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		DEVELOPER_EXCEPTION raise @2                                            
+		<00000000027313F8>  (From EXCEPTION)       Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		EQA_ASSERTIONS      assert @7                                           
+		<00000000026DE708>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_TRANSACTION    assert @2                                           
+		<00000000026DE658>  (From EQA_TEST_SET)    Routine failure.              Fail
+		-------------------------------------------------------------------------------
+		TEST_TRANSACTION    test @8                                             
+		<00000000026DE658>                         Routine failure.              Fail
+		-------------------------------------------------------------------------------
+	on_clean: ok

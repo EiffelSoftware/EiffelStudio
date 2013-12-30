@@ -15,10 +15,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_metadata_factory: like metadata_factory; a_primary_key_mapper: like primary_key_mapper;  a_backend: like backend)
+	make (a_metadata_factory: like metadata_factory; a_backend: like backend)
 			-- Initialization for `Current'.
 		do
-			initialize (a_metadata_factory, a_primary_key_mapper)
+			initialize (a_metadata_factory)
 			backend := a_backend
 			create traversal.make (create {ANY}, metadata_factory)
 

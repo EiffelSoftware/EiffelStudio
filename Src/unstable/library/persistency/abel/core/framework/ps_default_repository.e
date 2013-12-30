@@ -130,9 +130,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 			backend.wipe_out
 
 			create type_factory.make
-			create mapper.make
-
-			create write_manager.make (type_factory, mapper, backend)
+			create write_manager.make (type_factory, backend)
 
 			all_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			all_handlers.do_all (agent write_manager.add_handler)
@@ -156,7 +154,6 @@ feature {NONE} -- Initialization
 	make_from_factory (
 			a_backend: PS_BACKEND;
 			a_type_factory: PS_METADATA_FACTORY;
-			a_mapper: PS_KEY_POID_TABLE;
 			a_write_manager: PS_WRITE_MANAGER;
 			handler_list: LINKED_LIST [PS_HANDLER];
 			transaction_settings: PS_TRANSACTION_SETTINGS
@@ -165,7 +162,6 @@ feature {NONE} -- Initialization
 		do
 			backend := a_backend
 			type_factory := a_type_factory
-			mapper := a_mapper
 			write_manager := a_write_manager
 			all_handlers := handler_list
 			transaction_isolation := transaction_settings
@@ -181,9 +177,6 @@ feature {PS_ABEL_EXPORT} -- Implementation
 
 	backend: PS_BACKEND
 			-- A BACKEND implementation
-
-	mapper: PS_KEY_POID_TABLE
-			-- An ABEL identifier -> primary key mapper.
 
 	write_manager: PS_WRITE_MANAGER
 			-- The write manager.
@@ -204,7 +197,7 @@ feature {NONE} -- Implementation
 			new_read_manager: PS_READ_MANAGER
 			query_cursor: PS_QUERY_CURSOR
 		do
-			create new_read_manager.make (type_factory, mapper, backend, transaction)
+			create new_read_manager.make (type_factory, backend, transaction)
 			all_handlers.do_all (agent new_read_manager.add_handler)
 
 			create query_cursor.make (query, filter, new_read_manager)
@@ -233,7 +226,8 @@ feature {NONE} -- Obsolete
 			found: BOOLEAN
 		do
 			id := transaction.identifier_table.search (object)
-			primary := mapper.quick_translate (id, transaction)
+--			primary := mapper.quick_translate (id, transaction)
+			primary := transaction.primary_key_table [id]
 
 			type := type_factory.create_metadata_from_object (object)
 
@@ -254,7 +248,9 @@ feature {NONE} -- Obsolete
 					end
 				end
 			end
-			mapper.remove_primary_key (primary, type, transaction)
+
+			fixme ("Make sure other mappings to the same primary key are removed as well.")
+			transaction.primary_key_table.remove (id)
 			transaction.identifier_table.remove (id)
 		ensure
 			transaction_still_alive: transaction.is_active

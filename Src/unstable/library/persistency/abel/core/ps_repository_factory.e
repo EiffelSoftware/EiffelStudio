@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			create internal_handlers.make
 			create internal_plugins.make
 			create type_factory.make
-			create key_mapper.make
 			create anomaly_settings
 		end
 
@@ -147,7 +146,7 @@ feature -- Factory function
 
 			internal_plugins.do_all (agent backend.add_plugin)
 
-			create write_manager.make (type_factory, key_mapper, backend)
+			create write_manager.make (type_factory, backend)
 
 			internal_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			internal_handlers.do_all (agent write_manager.add_handler)
@@ -155,7 +154,6 @@ feature -- Factory function
 			create {PS_DEFAULT_REPOSITORY} Result.make_from_factory (
 				backend,
 				type_factory,
-				key_mapper,
 				write_manager,
 				internal_handlers,
 				anomaly_settings.twin)
@@ -172,9 +170,6 @@ feature {NONE} -- Implementation
 
 	type_factory: PS_METADATA_FACTORY
 			-- The type factory for the new repsitory.
-
-	key_mapper: PS_KEY_POID_TABLE
-			-- The identifier -> primary_key table for the new repository.
 
 	internal_handlers: LINKED_LIST [PS_HANDLER]
 			-- Mutable container for `handlers'.

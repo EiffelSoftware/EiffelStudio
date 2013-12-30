@@ -24,14 +24,13 @@ feature {NONE} -- Initialization
 
 	make (
 			a_metadata_factory: like metadata_factory;
-			a_primary_key_mapper: like primary_key_mapper;
 			a_backend: like backend;
 			a_transaction: like transaction)
 			-- Initialization for `Current'
 		local
 			bogus: PS_OBJECT_READ_DATA
 		do
-			initialize (a_metadata_factory, a_primary_key_mapper)
+			initialize (a_metadata_factory)
 			backend := a_backend
 			transaction := a_transaction
 
@@ -549,7 +548,8 @@ feature {NONE} -- Implementation: Loop body
 						object.set_identifier (identifier)
 
 							-- Update the ABEL id -> primary key mapping
-						primary_key_mapper.add_entry (identifier, object.type, object.primary_key, transaction)
+						transaction.primary_key_table.extend (object.primary_key, identifier)
+--						primary_key_mapper.add_entry (identifier, object.type, object.primary_key, transaction)
 
 							-- Update the root status
 						check attached object.backend_representation as br then

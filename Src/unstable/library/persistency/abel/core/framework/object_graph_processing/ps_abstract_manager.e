@@ -135,6 +135,7 @@ feature {NONE} -- Utilities
 						create not_found_exception
 						not_found_exception.set_description (
 							"Could not find a handler for type: " + object.type.type.name + "%N")
+						transaction.set_error (not_found_exception)
 						not_found_exception.raise
 					end
 

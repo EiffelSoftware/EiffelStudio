@@ -94,6 +94,21 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_readonly: BOOLEAN
 			-- Is this a readonly transaction?
 
+	is_retry_allowed: BOOLEAN
+			-- Should there be a retry?
+			-- Default yes, except for contract violations or other errors
+			-- which happen only during development.
+		require
+			has_error: attached error
+		do
+			check from_precondition: attached error as l_error then
+				Result := not attached {ASSERTION_VIOLATION} l_error.backend_error
+					and not attached {LANGUAGE_EXCEPTION} l_error.backend_error
+					and not attached {OLD_VIOLATION} l_error.backend_error
+			end
+		end
+
+
 feature {PS_ABEL_EXPORT} -- Element change
 
 	set_root_declaration_strategy (a_strategy: like root_declaration_strategy)
@@ -102,14 +117,26 @@ feature {PS_ABEL_EXPORT} -- Element change
 			root_declaration_strategy := a_strategy
 		end
 
-feature {PS_ABEL_EXPORT} -- Internals
-
 	set_error (an_error: detachable PS_ERROR)
 			-- Set the error field if an error occurred.
 		do
 			error := an_error
 		ensure
 			error_set: error = an_error
+		end
+
+	set_default_error
+			-- Set the error field with a default PS_INTERNAL_ERROR.
+		require
+			no_error: not attached error
+		local
+			internal_error: PS_INTERNAL_ERROR
+		do
+			create internal_error
+			internal_error.set_backend_error (internal_error.exception_manager.last_exception)
+			set_error (internal_error)
+		ensure
+			has_error: attached error
 		end
 
 	declare_as_aborted

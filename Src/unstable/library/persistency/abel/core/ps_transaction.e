@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			repository := a_repository
 			create internal_active_queries.make (0)
 			transaction := repository.new_internal_transaction (False)
-			is_active_control := True
 			repository.internal_active_transactions.extend (Current)
 		ensure
 			default_strategy: root_declaration_strategy.is_argument_of_insert
@@ -77,7 +76,6 @@ feature {NONE} -- Initialization
 			repository_set: repository = a_repository
 			empty_queries: active_queries.is_empty
 			no_error: not has_error
-			correct_active: is_active_control
 		end
 
 feature -- Access
@@ -174,7 +172,6 @@ feature -- Data retrieval
 			check correctly_aliased: query.has_error = has_error and query.has_error = not is_active end
 
 			if query.has_error then
-				is_active_control := False
 				internal_active_queries.prune_all (query)
 				repository.internal_active_transactions.prune_all (Current)
 			end
@@ -182,8 +179,6 @@ feature -- Data retrieval
 			executed: query.is_executed
 			registered: has_error xor active_queries.has (query)
 			active: has_error xor is_active
-		rescue
-			set_error
 		end
 
 	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
@@ -207,7 +202,6 @@ feature -- Data retrieval
 			check correctly_aliased: query.has_error = has_error and query.has_error = not is_active end
 
 			if query.has_error then
-				is_active_control := False
 				internal_active_queries.prune_all (query)
 				repository.internal_active_transactions.prune_all (Current)
 			end
@@ -227,19 +221,16 @@ feature -- Data modification
 			supported: is_supported (object)
 		local
 			saved: detachable PS_ROOT_OBJECT_STRATEGY
-			retried: BOOLEAN
 		do
-			if not retried then
-				if root_declaration_strategy.is_argument_of_insert and then is_persistent (object) then
-					saved := root_declaration_strategy
-					set_root_declaration_strategy (saved.new_argument_of_write)
-				end
+			if root_declaration_strategy.is_argument_of_insert and then is_persistent (object) then
+				saved := root_declaration_strategy
+				set_root_declaration_strategy (saved.new_argument_of_write)
+			end
 
-				repository.write (object, transaction)
+			repository.write (object, transaction)
 
-				if attached saved then
-					set_root_declaration_strategy (saved)
-				end
+			if attached saved then
+				set_root_declaration_strategy (saved)
 			end
 		ensure
 			active: has_error xor is_active
@@ -247,10 +238,6 @@ feature -- Data modification
 			persistent: not has_error implies is_persistent (object) xor object.generating_type.is_expanded
 			root_set: not has_error implies (object.generating_type.is_expanded xor
 				(root_declaration_strategy > root_declaration_strategy.new_preserve implies is_root (object)))
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 	update (object: ANY)
@@ -263,17 +250,11 @@ feature -- Data modification
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				repository.write (object, transaction)
-			end
+			repository.write (object, transaction)
 		ensure
 			active: has_error xor is_active
 			persistent: not has_error implies is_persistent (object)
 			root_set: not has_error implies (root_declaration_strategy > root_declaration_strategy.new_argument_of_insert implies is_root (object))
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 	direct_update (object: ANY)
@@ -294,10 +275,6 @@ feature -- Data modification
 			active: has_error xor is_active
 			persistent: not has_error implies is_persistent (object)
 			root_set: not has_error implies (root_declaration_strategy > root_declaration_strategy.new_argument_of_insert implies is_root (object))
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 feature -- Root status modification
@@ -311,20 +288,12 @@ feature -- Root status modification
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 			not_root: not is_root (object)
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
-				repository.set_root_status (object, True, transaction)
-			end
+			repository.set_root_status (object, True, transaction)
 		ensure
 			active: has_error xor is_active
 			persistent: not has_error implies is_persistent (object)
 			root: not has_error implies is_root (object)
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 	unmark_root (object: ANY)
@@ -336,20 +305,12 @@ feature -- Root status modification
 			supported: is_supported (object)
 			persistent: is_persistent (object)
 			not_root: is_root (object)
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
-				repository.set_root_status (object, False, transaction)
-			end
+			repository.set_root_status (object, False, transaction)
 		ensure
 			active: has_error xor is_active
 			persistent: not has_error implies is_persistent (object)
 			root: not has_error implies not is_root (object)
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 
@@ -365,17 +326,10 @@ feature -- Transaction operations
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				repository.commit_transaction (transaction)
-				is_active_control := False
-				repository.internal_active_transactions.prune_all (Current)
-			end
+			repository.commit_transaction (transaction)
+			repository.internal_active_transactions.prune_all (Current)
 		ensure
 			not_active: not is_active
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 	rollback
@@ -387,17 +341,10 @@ feature -- Transaction operations
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				repository.rollback_transaction (transaction, True)
-				is_active_control := False
-				repository.internal_active_transactions.prune_all (Current)
-			end
+			repository.rollback_transaction (transaction)
+			repository.internal_active_transactions.prune_all (Current)
 		ensure
 			not_active: not is_active
-		rescue
-			set_error
-			retried := True
-			retry
 		end
 
 	prepare
@@ -408,7 +355,6 @@ feature -- Transaction operations
 			transaction := repository.new_internal_transaction (False)
 			transaction.set_root_declaration_strategy (root_declaration_strategy)
 			repository.internal_active_transactions.extend (Current)
-			is_active_control := True
 		ensure
 			active: is_active
 			no_error: not has_error
@@ -422,24 +368,8 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	transaction: PS_INTERNAL_TRANSACTION
 			-- The currently active transaction.
 
-feature {NONE} -- Implementation
-
-
-
-	set_error
-			-- Set the `last_error' field.
-		do
-			is_active_control := False
-			repository.internal_active_transactions.prune_all (Current)
-		ensure
-			not_active: not is_active and has_error
-		end
-
-	is_active_control: BOOLEAN
-
 invariant
---	correct_active: is_active = is_active_control
 	not_active_when_error: has_error implies not is_active
---	in_active_transaction_collection: is_active = repository.active_transactions.has (Current)
+	in_active_transaction_collection: is_active = repository.active_transactions.has (Current)
 
 end

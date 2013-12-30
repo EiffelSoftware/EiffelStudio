@@ -69,7 +69,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 
-	identifier: INTEGER
+	identifier: NATURAL_64
 			-- The unique ABEL identifier.
 
 	primary_key: INTEGER

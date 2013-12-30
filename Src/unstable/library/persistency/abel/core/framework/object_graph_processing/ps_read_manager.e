@@ -472,7 +472,7 @@ feature {NONE} -- Implementation: Loop body
 			cleared_objects: object_primaries_to_retrieve.is_empty and object_types_to_retrieve.is_empty
 		local
 			i: INTEGER
-			identifier: PS_OBJECT_IDENTIFIER_WRAPPER
+			identifier: NATURAL_64
 			object: PS_OBJECT_READ_DATA
 
 			start, stop: INTEGER
@@ -542,17 +542,19 @@ feature {NONE} -- Implementation: Loop body
 
 					if not object.is_ignored and not object.type.type.is_expanded then
 							-- Identify the object with the id_manager
-						id_manager.identify (object.reflector.object, transaction)
+						transaction.identifier_table.extend (object.reflector.object)
+--						id_manager.identify (object.reflector.object, transaction)
 
-						identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
-						object.set_identifier (identifier.object_identifier)
+						identifier := transaction.identifier_table.last_identifier
+--						identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
+						object.set_identifier (identifier)
 
 							-- Update the ABEL id -> primary key mapping
-						primary_key_mapper.add_entry (identifier, object.primary_key, transaction)
+						primary_key_mapper.add_entry (identifier, object.type, object.primary_key, transaction)
 
 							-- Update the root status
 						check attached object.backend_representation as br then
-							transaction.root_flags.force (br.is_root, identifier.object_identifier)
+							transaction.root_flags.force (br.is_root, identifier)
 						end
 					end
 					i := i + 1

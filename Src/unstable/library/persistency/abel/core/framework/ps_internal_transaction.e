@@ -22,14 +22,12 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create root_flags.make (1)
---			create identifier_set.make
 			is_readonly := False
 			is_active := True
 			root_declaration_strategy := a_strategy
 			transaction_identifier := id
-			create identifier_table
-
---			repository.id_manager.register_transaction (Current)
+			create identifier_table.make
+			create primary_key_table.make
 		end
 
 	make_readonly (a_repository: PS_REPOSITORY; id: INTEGER)
@@ -37,14 +35,12 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create root_flags.make (1)
---			create identifier_set.make
 			is_readonly := True
 			is_active := True
 			create root_declaration_strategy.make_preserve
 			transaction_identifier := id
-			create identifier_table
-
---			repository.id_manager.register_transaction (Current)
+			create identifier_table.make
+			create primary_key_table.make
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -61,10 +57,11 @@ feature {PS_ABEL_EXPORT} -- Access
 	root_flags: HASH_TABLE [BOOLEAN, NATURAL_64]
 			-- Mapping for ABEL identifier -> root status of every object.
 
---	identifier_set: PS_IDENTIFIER_SET
-
-
 	identifier_table: PS_IDENTIFIER_TABLE
+			-- An object -> identifier lookup table.
+
+	primary_key_table: PS_PRIMARY_KEY_TABLE
+			-- An identifier -> primary key lookup table.
 
 	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
 			-- The root object strategy for the current transaction.

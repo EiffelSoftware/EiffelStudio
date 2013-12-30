@@ -7,23 +7,18 @@ note
 class
 	PS_IDENTIFIER_TABLE
 
-inherit
-
-	ANY
-		redefine
-			default_create
-		end
+create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create
+	make
 			-- Initialization for `Current'.
 		do
 			create gc
 			create lookup_table.make (1)
 			create object_store.make (1)
 		end
-
 
 feature -- Access
 

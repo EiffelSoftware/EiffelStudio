@@ -235,23 +235,28 @@ feature {NONE} -- Obsolete
 			can_handle_object: can_handle (object)
 			object_known: is_identified (object, transaction)
 		local
-			id: PS_OBJECT_IDENTIFIER_WRAPPER
+			id: NATURAL_64
 			primary: INTEGER
+			type: PS_TYPE_METADATA
 			to_delete: LINKED_LIST [PS_BACKEND_ENTITY]
 			found: BOOLEAN
 		do
-			id := id_manager.identifier_wrapper (object, transaction)
-			primary := mapper.quick_translate (id.object_identifier, transaction)
+			transaction.identifier_table.prepare
+			id := transaction.identifier_table [object]
+			transaction.identifier_table.release
+			primary := mapper.quick_translate (id, transaction)
+
+			type := id_manager.metadata_manager.create_metadata_from_object (object)
 
 			create to_delete.make
-			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, id.metadata))
+			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, type))
 
 			across
 				all_handlers as h_cursor
 			until
 				found
 			loop
-				if h_cursor.item.can_handle_type (id.metadata) then
+				if h_cursor.item.can_handle_type (type) then
 					found := True
 					if h_cursor.item.is_mapping_to_collection then
 						backend.delete_collections (to_delete, transaction)
@@ -260,7 +265,7 @@ feature {NONE} -- Obsolete
 					end
 				end
 			end
-			mapper.remove_primary_key (primary, id.metadata, transaction)
+			mapper.remove_primary_key (primary, type, transaction)
 			id_manager.delete_identification (object, transaction)
 		ensure
 			transaction_still_alive: transaction.is_active

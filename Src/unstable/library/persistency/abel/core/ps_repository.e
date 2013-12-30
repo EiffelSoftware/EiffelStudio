@@ -170,18 +170,34 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 		deferred
 		end
 
-	is_identified (an_object: ANY; a_transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
+	is_identified (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `an_object' already identified and thus registered in this repository?
+		local
+			id: NATURAL_64
 		do
-			Result := id_manager.is_identified (an_object, a_transaction)
+			transaction.identifier_table.prepare
+			id := transaction.identifier_table [object]
+			transaction.identifier_table.release
+			Result := id /= 0
+
+--			Result := id_manager.is_identified (an_object, a_transaction)
 		end
 
 	is_root (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `object' a garbage collection root?
+		local
+			id: NATURAL_64
 		do
-			if id_manager.is_identified (object, transaction) then
-				Result := transaction.root_flags [id_manager.identifier_wrapper (object, transaction).object_identifier]
+			transaction.identifier_table.prepare
+			id := transaction.identifier_table [object]
+			transaction.identifier_table.release
+			if id > 0 then
+				Result := transaction.root_flags [id]
 			end
+
+--			if id_manager.is_identified (object, transaction) then
+--				Result := transaction.root_flags [id_manager.identifier_wrapper (object, transaction).object_identifier]
+--			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Querying operations

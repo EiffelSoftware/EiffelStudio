@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			is_active_control := False
 			repository.internal_active_transactions.prune_all (Current)
 		ensure
-			not_active: not is_active
+			not_active: not is_active and has_error
 		end
 
 	is_active_control: BOOLEAN

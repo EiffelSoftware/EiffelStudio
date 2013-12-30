@@ -19,12 +19,12 @@ create
 
 feature {PS_ABEL_EXPORT} -- Status report
 
-	has_primary_key_of (obj: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
-			-- Has `obj' a primary key?		
-		do
-			Result := primary_hash.has (obj.object_identifier)
---			Result := obj_to_key_hash.has (obj.object_identifier)
-		end
+--	has_primary_key_of (obj: PS_OBJECT_IDENTIFIER_WRAPPER; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
+--			-- Has `obj' a primary key?		
+--		do
+--			Result := primary_hash.has (obj.object_identifier)
+----			Result := obj_to_key_hash.has (obj.object_identifier)
+--		end
 
 feature {PS_ABEL_EXPORT} -- Access
 
@@ -37,7 +37,7 @@ feature {PS_ABEL_EXPORT} -- Access
 --			same_type: obj.metadata.is_equal (Result.second)
 --		end
 
-	quick_translate (a_poid: INTEGER; transaction: PS_INTERNAL_TRANSACTION): INTEGER
+	quick_translate (a_poid: NATURAL_64; transaction: PS_INTERNAL_TRANSACTION): INTEGER
 			-- Returns the primary key of a_poid, or 0 if a_poid doesn't have a primary key.
 		do
 			Result := primary_hash [a_poid]
@@ -50,14 +50,14 @@ feature {PS_ABEL_EXPORT} -- Access
 
 feature {PS_ABEL_EXPORT} -- Element change
 
-	add_entry (obj: PS_OBJECT_IDENTIFIER_WRAPPER; primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION)
+	add_entry (id: NATURAL_64; type: PS_TYPE_METADATA; primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION)
 			-- Add a new table entry.
 		local
 --			type_hash: HASH_TABLE [LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER], INTEGER]
 --			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
 		do
-			primary_hash.extend (primary_key, obj.object_identifier)
-			type_hash.extend (obj.metadata, obj.object_identifier)
+			primary_hash.extend (primary_key, id)
+			type_hash.extend (type, id)
 
 --			obj_to_key_hash.extend (create {PS_PAIR [INTEGER, PS_TYPE_METADATA]}.make (primary_key, obj.metadata), obj.object_identifier)
 			fixme (" write to transaction-local write set, (and remove delete from transaction-local delete set if there is one)")
@@ -118,10 +118,10 @@ feature {NONE} -- Implementation
 --							INTEGER] -- the object_id
 
 
-	primary_hash: HASH_TABLE [INTEGER, INTEGER]
+	primary_hash: HASH_TABLE [INTEGER, NATURAL_64]
 			-- Object id to primary key hash.
 
-	type_hash: HASH_TABLE [PS_TYPE_METADATA, INTEGER]
+	type_hash: HASH_TABLE [PS_TYPE_METADATA, NATURAL_64]
 			-- Object id to type hash.
 
 	default_size: INTEGER = 100

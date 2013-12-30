@@ -149,6 +149,7 @@ feature {PS_ABEL_EXPORT} -- Write execution
 
 			assign_handlers (1 |..| count)
 
+			a_transaction.identifier_table.prepare
 
 --			do_all (agent {PS_HANDLER}.set_is_persistent)
 			across
@@ -169,6 +170,8 @@ feature {PS_ABEL_EXPORT} -- Write execution
 					object.handler.set_identifier (object)
 				end
 			end
+
+			a_transaction.identifier_table.release
 
 
 --			do_all (agent {PS_HANDLER}.generate_primary_key)
@@ -265,8 +268,10 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			check count_is_one: count = 1 end
 
 			assign_handlers (1 |..| count)
+			a_transaction.identifier_table.prepare
 			do_all (agent {PS_HANDLER}.set_is_persistent)
 			do_all (agent {PS_HANDLER}.set_identifier)
+			a_transaction.identifier_table.release
 			do_all (agent {PS_HANDLER}.generate_primary_key)
 
 				-- No need to generate primary keys in a batch, as the object should be identified already.
@@ -316,8 +321,10 @@ feature {PS_ABEL_EXPORT} -- Write execution
 
 
 			assign_handlers (1 |..| k)
+			a_transaction.identifier_table.prepare
 			do_all_in_set (agent {PS_HANDLER}.set_is_persistent, 1 |..| k)
 			do_all_in_set (agent {PS_HANDLER}.set_identifier, 1 |..| k)
+			a_transaction.identifier_table.release
 			do_all_in_set (agent {PS_HANDLER}.generate_primary_key, 1 |..| k)
 
 			check object_primary_key_order.is_empty and collection_primary_key_order.is_empty end

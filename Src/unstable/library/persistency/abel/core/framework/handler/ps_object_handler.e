@@ -48,7 +48,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 				check attached write_manager.generated_object_primary_keys [object.type] as generated_list then
 					new_command := generated_list.item
 					generated_list.forth
-					write_manager.primary_key_mapper.add_entry (create {PS_OBJECT_IDENTIFIER_WRAPPER}.make (object.identifier, object.reflector.object, object.type), new_command.primary_key, write_manager.transaction)
+--					write_manager.primary_key_mapper.add_entry (create {PS_OBJECT_IDENTIFIER_WRAPPER}.make (object.identifier, object.reflector.object, object.type), new_command.primary_key, write_manager.transaction)
+					write_manager.primary_key_mapper.add_entry (object.identifier, object.type, new_command.primary_key, write_manager.transaction)
 				end
 			end
 			object.set_backend_representation (new_command)

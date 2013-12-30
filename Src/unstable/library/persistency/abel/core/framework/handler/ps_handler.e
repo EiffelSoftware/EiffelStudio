@@ -163,7 +163,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
 		do
-			object.set_is_persistent (write_manager.id_manager.is_identified (object.reflector.object, write_manager.transaction))
+			object.set_is_persistent (write_manager.transaction.identifier_table [object.reflector.object] /= 0)
+--			object.set_is_persistent (write_manager.id_manager.is_identified (object.reflector.object, write_manager.transaction))
 		end
 
 	set_identifier (object: PS_OBJECT_WRITE_DATA)
@@ -175,12 +176,14 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		do
 			if not object.reflector.is_expanded then
 				if not object.is_persistent then
-					write_manager.id_manager.identify (object.reflector.object, write_manager.transaction)
+--					write_manager.id_manager.identify (object.reflector.object, write_manager.transaction)
+					write_manager.transaction.identifier_table.extend (object.reflector.object)
 				end
-
-				object.set_identifier (write_manager.id_manager.identifier_wrapper (object.reflector.object, write_manager.transaction).object_identifier)
+				object.set_identifier (write_manager.transaction.identifier_table [object.reflector.object])
+--				object.set_identifier (write_manager.id_manager.identifier_wrapper (object.reflector.object, write_manager.transaction).object_identifier)
 			else
-				object.set_identifier (write_manager.id_manager.new_id)
+				object.set_identifier (write_manager.transaction.identifier_table.new_identifier)
+--				object.set_identifier (write_manager.id_manager.new_id)
 			end
 		ensure
 			identifier_set: object.identifier > 0

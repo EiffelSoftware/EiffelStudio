@@ -58,7 +58,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	repository: PS_REPOSITORY
 			-- The repository this `Current' is bound to.
 
-	root_flags: HASH_TABLE [BOOLEAN, INTEGER]
+	root_flags: HASH_TABLE [BOOLEAN, NATURAL_64]
 			-- Mapping for ABEL identifier -> root status of every object.
 
 	identifier_set: PS_IDENTIFIER_SET

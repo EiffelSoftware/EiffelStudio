@@ -270,7 +270,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 			successful_commit: transaction.is_successful_commit xor transaction.has_error
 		end
 
-	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION; manual_rollback: BOOLEAN)
+	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Rollback `transaction'.
 			-- This acts as a `default_rescue' clause, so the postcondition defines what happens in case of an error.
 		require
@@ -280,8 +280,6 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 		ensure
 			transaction_dead: not transaction.is_active
 			transaction_failed: not transaction.is_successful_commit
-			error_on_implicit_abort: not manual_rollback implies transaction.has_error
-			exception_raised_on_implicit_abort: not manual_rollback implies attached transaction.error as error and then error.is_caught
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
@@ -289,16 +287,6 @@ feature {PS_ABEL_EXPORT} -- Testing
 	clean_db_for_testing
 			-- Wipe out all data.
 		deferred
-		end
-
-feature {NONE} -- Rescue
-
-	default_transactional_rescue (transaction: PS_INTERNAL_TRANSACTION)
-			-- The default action if a routine has failed.
-		do
-			if transaction.is_active then
-				rollback_transaction (transaction, False)
-			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation

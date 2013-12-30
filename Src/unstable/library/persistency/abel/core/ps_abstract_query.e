@@ -315,14 +315,21 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			-- The rescue action when an error on `retrieve_next' happens.
 		require
 			executed: is_executed
-			has_error: internal_transaction.has_error
 		do
 			is_after := True
 			is_closed := True
 
-			internal_transaction.declare_as_aborted
+			if not has_error then
+				internal_transaction.set_default_error
+			end
+
+			if internal_transaction.is_active then
+				internal_transaction.repository.rollback_transaction (internal_transaction)
+				internal_transaction.declare_as_aborted
+			end
 
 			if attached transaction as tr then
+				internal_transaction.repository.internal_active_transactions.prune_all (tr)
 				tr.internal_active_queries.prune_all (Current)
 			else
 				internal_transaction.repository.internal_active_queries.prune_all (Current)

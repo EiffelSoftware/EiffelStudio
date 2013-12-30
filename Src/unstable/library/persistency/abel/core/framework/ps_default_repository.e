@@ -76,47 +76,77 @@ feature {PS_ABEL_EXPORT} -- Modification
 
 	write (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Insert `object' within `transaction' into `Current'.
+		local
+			retried: BOOLEAN
 		do
-			write_manager.write (object, transaction)
+			if not retried then
+				write_manager.write (object, transaction)
+			end
 		rescue
-			default_transactional_rescue (transaction)
+			abort (transaction)
+			retried := True
+			if transaction.is_retry_allowed then
+				retry
+			end
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Update `object' only and none of its referenced objects.
+		local
+			retried: BOOLEAN
 		do
-			write_manager.direct_update (object, transaction)
+			if not retried then
+				write_manager.direct_update (object, transaction)
+			end
 		rescue
-			default_transactional_rescue (transaction)
+			abort (transaction)
+			retried := True
+			if transaction.is_retry_allowed then
+				retry
+			end
 		end
 
 	set_root_status (object: ANY; value: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION)
 			-- Set the root status of `object' to `value'.
+		local
+			retried: BOOLEAN
 		do
-			write_manager.update_root (object, value, transaction)
+			if not retried then
+				write_manager.update_root (object, value, transaction)
+			end
 		rescue
-			default_transactional_rescue (transaction)
+			abort (transaction)
+			retried := True
+			if transaction.is_retry_allowed then
+				retry
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Explicitly commit the transaction.
+		local
+			retried: BOOLEAN
 		do
-			backend.commit (transaction) -- can fail and raise an exception
-			transaction.declare_as_successful
+			if not retried then
+				backend.commit (transaction) -- can fail and raise an exception
+				transaction.declare_as_successful
+			end
 		rescue
-			default_transactional_rescue (transaction)
+			abort (transaction)
+			retried := True
+			if transaction.is_retry_allowed then
+				retry
+			end
 		end
 
-	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION; manual_rollback: BOOLEAN)
+	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Rollback the transaction.
+
 		do
 			backend.rollback (transaction)
 			transaction.declare_as_aborted
-			if not transaction.has_error then
---				transaction.set_error (create {PS_INTERNAL_ERROR})
-			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
@@ -190,7 +220,6 @@ feature {PS_ABEL_EXPORT} -- Implementation
 
 feature {NONE} -- Implementation
 
-
 	initialize_query (query: PS_ABSTRACT_QUERY [ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
 			-- Set up the internal query cursor and retrieve the first result.
 		local
@@ -204,6 +233,33 @@ feature {NONE} -- Implementation
 
 			query.prepare_execution (transaction, query_cursor)
 			query.retrieve_next
+		end
+
+	abort (transaction: PS_INTERNAL_TRANSACTION)
+			-- Execute `operation' and do error handling if necessary.
+		local
+			to_prune: detachable PS_TRANSACTION
+		do
+			if transaction.is_active then
+				backend.rollback (transaction)
+				transaction.declare_as_aborted
+			end
+
+			if not transaction.has_error then
+				transaction.set_default_error
+			end
+
+			across
+				internal_active_transactions as cursor
+			loop
+				if cursor.item.transaction = transaction then
+					to_prune := cursor.item
+				end
+			end
+
+			if attached to_prune then
+				internal_active_transactions.prune_all (to_prune)
+			end
 		end
 
 feature {NONE} -- Obsolete
@@ -226,7 +282,6 @@ feature {NONE} -- Obsolete
 			found: BOOLEAN
 		do
 			id := transaction.identifier_table.search (object)
---			primary := mapper.quick_translate (id, transaction)
 			primary := transaction.primary_key_table [id]
 
 			type := type_factory.create_metadata_from_object (object)
@@ -257,7 +312,7 @@ feature {NONE} -- Obsolete
 			no_error: not transaction.has_error
 			object_not_known: not is_identified (object, transaction)
 		rescue
-			default_transactional_rescue (transaction)
+--			default_transactional_rescue (transaction)
 		end
 
 	delete_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)

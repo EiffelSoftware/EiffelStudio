@@ -541,15 +541,12 @@ feature {NONE} -- Implementation: Loop body
 					if not object.is_ignored and not object.type.type.is_expanded then
 							-- Identify the object with the id_manager
 						transaction.identifier_table.extend (object.reflector.object)
---						id_manager.identify (object.reflector.object, transaction)
 
 						identifier := transaction.identifier_table.last_identifier
---						identifier := id_manager.identifier_wrapper (object.reflector.object, transaction)
 						object.set_identifier (identifier)
 
 							-- Update the ABEL id -> primary key mapping
 						transaction.primary_key_table.extend (object.primary_key, identifier)
---						primary_key_mapper.add_entry (identifier, object.type, object.primary_key, transaction)
 
 							-- Update the root status
 						check attached object.backend_representation as br then

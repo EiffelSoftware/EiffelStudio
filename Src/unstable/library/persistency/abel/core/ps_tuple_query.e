@@ -121,7 +121,9 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 		rescue
 			retried := True
 			do_rescue
-			retry
+			if internal_transaction.is_retry_allowed then
+				retry
+			end
 		end
 
 feature {NONE} -- Initialization

@@ -29,7 +29,9 @@ feature -- Test routines
 				basic_select_make_selection
 					-- Test dynamic SQL selection.
 				basic_select_make_dynamic_selection
-				basic_select_make_dynamic_selection_with_question_mark
+				if not is_oracle then
+					basic_select_make_dynamic_selection_with_question_mark
+				end
 					-- Test dynamic SQL Modification
 				basic_select_make_dynamic_change
 			end

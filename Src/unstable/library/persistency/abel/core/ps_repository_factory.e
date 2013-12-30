@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			create internal_handlers.make
 			create internal_plugins.make
-			create id_manager.make
+			create type_factory.make
 			create key_mapper.make
 			create anomaly_settings
 		end
@@ -147,14 +147,14 @@ feature -- Factory function
 
 			internal_plugins.do_all (agent backend.add_plugin)
 
-			create write_manager.make (id_manager.metadata_manager, id_manager, key_mapper, backend)
+			create write_manager.make (type_factory, key_mapper, backend)
 
 			internal_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			internal_handlers.do_all (agent write_manager.add_handler)
 
 			create {PS_DEFAULT_REPOSITORY} Result.make_from_factory (
 				backend,
-				id_manager,
+				type_factory,
 				key_mapper,
 				write_manager,
 				internal_handlers,
@@ -170,9 +170,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-
-	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
-			-- The object identifier manager for the new repository.
+	type_factory: PS_METADATA_FACTORY
+			-- The type factory for the new repsitory.
 
 	key_mapper: PS_KEY_POID_TABLE
 			-- The identifier -> primary_key table for the new repository.

@@ -22,14 +22,14 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create root_flags.make (1)
-			create identifier_set.make
+--			create identifier_set.make
 			is_readonly := False
 			is_active := True
 			root_declaration_strategy := a_strategy
 			transaction_identifier := id
 			create identifier_table
 
-			repository.id_manager.register_transaction (Current)
+--			repository.id_manager.register_transaction (Current)
 		end
 
 	make_readonly (a_repository: PS_REPOSITORY; id: INTEGER)
@@ -37,14 +37,14 @@ feature {NONE} -- Initialization
 		do
 			repository := a_repository
 			create root_flags.make (1)
-			create identifier_set.make
+--			create identifier_set.make
 			is_readonly := True
 			is_active := True
 			create root_declaration_strategy.make_preserve
 			transaction_identifier := id
 			create identifier_table
 
-			repository.id_manager.register_transaction (Current)
+--			repository.id_manager.register_transaction (Current)
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
@@ -61,7 +61,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	root_flags: HASH_TABLE [BOOLEAN, NATURAL_64]
 			-- Mapping for ABEL identifier -> root status of every object.
 
-	identifier_set: PS_IDENTIFIER_SET
+--	identifier_set: PS_IDENTIFIER_SET
 
 
 	identifier_table: PS_IDENTIFIER_TABLE

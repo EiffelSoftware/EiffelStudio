@@ -48,11 +48,8 @@ feature {PS_ABEL_EXPORT} -- Object query
 		local
 			type: PS_TYPE_METADATA
 		do
-			type := id_manager.metadata_manager.create_metadata_from_type (query.generic_type)
+			type := type_factory.create_metadata_from_type (query.generic_type)
 			initialize_query (query, transaction, type.attributes)
---		rescue
---			default_transactional_rescue (transaction)
---			query.close
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -73,9 +70,6 @@ feature {PS_ABEL_EXPORT} -- Object query
 			end
 
 			initialize_query (tuple_query, transaction, collector.attributes)
---		rescue
---			default_transactional_rescue (transaction)
---			tuple_query.close
 		end
 
 feature {PS_ABEL_EXPORT} -- Modification
@@ -109,13 +103,8 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Explicitly commit the transaction.
 		do
-			if id_manager.can_commit (transaction) then
-				backend.commit (transaction) -- can fail and raise an exception
-				id_manager.commit (transaction)
-				transaction.declare_as_successful
-			else
-				rollback_transaction (transaction, False)
-			end
+			backend.commit (transaction) -- can fail and raise an exception
+			transaction.declare_as_successful
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -124,7 +113,6 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			-- Rollback the transaction.
 		do
 			backend.rollback (transaction)
-			id_manager.rollback (transaction)
 			transaction.declare_as_aborted
 			if not transaction.has_error then
 --				transaction.set_error (create {PS_INTERNAL_ERROR})
@@ -141,10 +129,10 @@ feature {PS_ABEL_EXPORT} -- Testing
 			batch_size := batch_retrieval_size
 			backend.wipe_out
 
-			create id_manager.make
+			create type_factory.make
 			create mapper.make
 
-			create write_manager.make (id_manager.metadata_manager, id_manager, mapper, backend)
+			create write_manager.make (type_factory, mapper, backend)
 
 			all_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			all_handlers.do_all (agent write_manager.add_handler)
@@ -167,7 +155,7 @@ feature {NONE} -- Initialization
 
 	make_from_factory (
 			a_backend: PS_BACKEND;
-			an_id_manager: PS_OBJECT_IDENTIFICATION_MANAGER;
+			a_type_factory: PS_METADATA_FACTORY;
 			a_mapper: PS_KEY_POID_TABLE;
 			a_write_manager: PS_WRITE_MANAGER;
 			handler_list: LINKED_LIST [PS_HANDLER];
@@ -176,7 +164,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'
 		do
 			backend := a_backend
-			id_manager := an_id_manager
+			type_factory := a_type_factory
 			mapper := a_mapper
 			write_manager := a_write_manager
 			all_handlers := handler_list
@@ -203,6 +191,9 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	all_handlers: LINKED_LIST [PS_HANDLER]
 			-- All object handlers known to `Current'
 
+	type_factory: PS_METADATA_FACTORY
+			-- A type factory.
+
 
 feature {NONE} -- Implementation
 
@@ -213,7 +204,7 @@ feature {NONE} -- Implementation
 			new_read_manager: PS_READ_MANAGER
 			query_cursor: PS_QUERY_CURSOR
 		do
-			create new_read_manager.make (id_manager.metadata_manager, id_manager, mapper, backend, transaction)
+			create new_read_manager.make (type_factory, mapper, backend, transaction)
 			all_handlers.do_all (agent new_read_manager.add_handler)
 
 			create query_cursor.make (query, filter, new_read_manager)
@@ -241,12 +232,10 @@ feature {NONE} -- Obsolete
 			to_delete: LINKED_LIST [PS_BACKEND_ENTITY]
 			found: BOOLEAN
 		do
-			transaction.identifier_table.prepare
-			id := transaction.identifier_table [object]
-			transaction.identifier_table.release
+			id := transaction.identifier_table.search (object)
 			primary := mapper.quick_translate (id, transaction)
 
-			type := id_manager.metadata_manager.create_metadata_from_object (object)
+			type := type_factory.create_metadata_from_object (object)
 
 			create to_delete.make
 			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, type))
@@ -266,12 +255,11 @@ feature {NONE} -- Obsolete
 				end
 			end
 			mapper.remove_primary_key (primary, type, transaction)
-			id_manager.delete_identification (object, transaction)
+			transaction.identifier_table.remove (id)
 		ensure
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 			object_not_known: not is_identified (object, transaction)
-			transaction_active_in_id_manager: id_manager.is_registered (transaction)
 		rescue
 			default_transactional_rescue (transaction)
 		end
@@ -293,7 +281,6 @@ feature {NONE} -- Obsolete
 		ensure
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
-			transaction_active_in_id_manager: id_manager.is_registered (transaction)
 			query_executed: query.is_executed
 			no_result: query.is_after
 		end

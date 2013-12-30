@@ -175,12 +175,8 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 		local
 			id: NATURAL_64
 		do
-			transaction.identifier_table.prepare
-			id := transaction.identifier_table [object]
-			transaction.identifier_table.release
+			id := transaction.identifier_table.search (object)
 			Result := id /= 0
-
---			Result := id_manager.is_identified (an_object, a_transaction)
 		end
 
 	is_root (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
@@ -188,16 +184,10 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 		local
 			id: NATURAL_64
 		do
-			transaction.identifier_table.prepare
-			id := transaction.identifier_table [object]
-			transaction.identifier_table.release
+			id := transaction.identifier_table.search (object)
 			if id > 0 then
 				Result := transaction.root_flags [id]
 			end
-
---			if id_manager.is_identified (object, transaction) then
---				Result := transaction.root_flags [id_manager.identifier_wrapper (object, transaction).object_identifier]
---			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Querying operations
@@ -241,8 +231,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 		deferred
 		ensure
 			transaction_still_alive: transaction.is_active xor transaction.has_error
-			transaction_active_in_id_manager: not transaction.has_error implies id_manager.is_registered (transaction)
-			object_known: transaction.has_error implies  is_identified (object, transaction) xor object.generating_type.is_expanded
+			object_known: not transaction.has_error implies  is_identified (object, transaction) xor object.generating_type.is_expanded
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
@@ -279,7 +268,6 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 		ensure
 			transaction_dead: not transaction.is_active
 			successful_commit: transaction.is_successful_commit xor transaction.has_error
-			transaction_gone_in_id_manager: not id_manager.is_registered (transaction)
 		end
 
 	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION; manual_rollback: BOOLEAN)
@@ -292,7 +280,6 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 		ensure
 			transaction_dead: not transaction.is_active
 			transaction_failed: not transaction.is_successful_commit
-			transaction_gone_in_id_manager: not id_manager.is_registered (transaction)
 			error_on_implicit_abort: not manual_rollback implies transaction.has_error
 			exception_raised_on_implicit_abort: not manual_rollback implies attached transaction.error as error and then error.is_caught
 		end
@@ -316,9 +303,6 @@ feature {NONE} -- Rescue
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
-			-- The object identifier manager.
-
 	internal_active_queries: ARRAYED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- A list of active queries.
 
@@ -332,20 +316,6 @@ feature -- Constants
 
 	Infinite_batch_size: INTEGER = -1
 			-- The special value for an infinite batch size (i.e. to effectively disable lazy loading).
-
-feature {NONE} -- Obsolete: global caching
-
-	global_object_pool: BOOLEAN
-			-- Does `Current' maintain a global pool of object identifiers?
-		do
-			Result := id_manager.is_global_pool
-		end
-
-	set_global_pool (val: BOOLEAN)
-			-- Set `global_object_pool' to `val'.
-		do
-			id_manager.set_is_global_pool (val)
-		end
 
 invariant
 	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size

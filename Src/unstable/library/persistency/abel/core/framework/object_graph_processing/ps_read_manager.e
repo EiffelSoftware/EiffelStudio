@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 
 	make (
 			a_metadata_factory: like metadata_factory;
-			an_id_manager: like id_manager;
 			a_primary_key_mapper: like primary_key_mapper;
 			a_backend: like backend;
 			a_transaction: like transaction)
@@ -32,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			bogus: PS_OBJECT_READ_DATA
 		do
-			initialize (a_metadata_factory, an_id_manager, a_primary_key_mapper)
+			initialize (a_metadata_factory, a_primary_key_mapper)
 			backend := a_backend
 			transaction := a_transaction
 

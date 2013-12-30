@@ -12,11 +12,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (meta_mgr: like metadata_factory; id_mgr: like id_manager; key_mapper: like primary_key_mapper)
+	initialize (meta_mgr: like metadata_factory; key_mapper: like primary_key_mapper)
 			-- Initialization for `Current'
 		do
 			metadata_factory := meta_mgr
-			id_manager := id_mgr
 			primary_key_mapper := key_mapper
 			create identity_type_handlers.make (tiny_size)
 			create value_type_handlers.make_empty (tiny_size)
@@ -58,12 +57,8 @@ feature {PS_ABEL_EXPORT} -- Access
 	metadata_factory: PS_METADATA_FACTORY
 			-- A factory for PS_TYPE_METADATA.
 
-	id_manager: PS_OBJECT_IDENTIFICATION_MANAGER
-			-- The ABEL identifier manager.
-
 	primary_key_mapper: PS_KEY_POID_TABLE
 			-- A table to map an ABEL identifier to a primary key.
-
 
 feature {PS_ABEL_EXPORT} -- Status report
 

@@ -66,8 +66,8 @@ feature {PS_ABEL_EXPORT} -- Element change
 	remove_primary_key (primary_key: INTEGER; type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION)
 			-- Remove the primary key `primary_key' from the table, alongside all objects associated to it.
 		local
-			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
-			to_remove: LINKED_LIST [INTEGER]
+--			local_list: LINKED_LIST [PS_OBJECT_IDENTIFIER_WRAPPER]
+--			to_remove: LINKED_LIST [INTEGER]
 		do
 			check not_implemented: False end
 
@@ -105,11 +105,11 @@ feature {PS_ABEL_EXPORT} -- Transaction management
 
 feature {PS_ABEL_EXPORT} -- Cleanup and Memory management
 
-	remove_object (obj: PS_OBJECT_IDENTIFIER_WRAPPER)
-			-- Remove `obj' from the table, but keep any other object associated to the same primary key if possible.
-		do
-			fixme ("TODO: reimplement this feature and add it as an agent to the object identification manager.")
-		end
+--	remove_object (obj: PS_OBJECT_IDENTIFIER_WRAPPER)
+--			-- Remove `obj' from the table, but keep any other object associated to the same primary key if possible.
+--		do
+--			fixme ("TODO: reimplement this feature and add it as an agent to the object identification manager.")
+--		end
 
 feature {NONE} -- Implementation
 

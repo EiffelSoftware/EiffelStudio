@@ -320,7 +320,6 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			is_after := True
 			is_closed := True
 
-			repository.id_manager.rollback (internal_transaction)
 			internal_transaction.declare_as_aborted
 
 			if attached transaction as tr then

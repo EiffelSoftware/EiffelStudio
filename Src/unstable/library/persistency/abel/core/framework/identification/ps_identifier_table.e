@@ -9,14 +9,6 @@ class
 
 inherit
 
-	MEMORY
-		export
-		{NONE}
-			all
-		redefine
-			default_create
-		end
-
 	ANY
 		redefine
 			default_create
@@ -27,6 +19,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialization for `Current'.
 		do
+			create gc
 			create lookup_table.make (1)
 			create object_store.make (1)
 		end
@@ -42,6 +35,21 @@ feature -- Access
 			Result := lookup_table [$object]
 		ensure
 			two_way_mapping: Result /= 0 implies object_store [Result] = object
+		end
+
+	search (object: ANY): NATURAL_64
+			-- Try to find an identifier for `object'. If not found, the result is 0.
+			-- This operation is slow but doesn't require `Current' to be prepared.
+		do
+			across
+				object_store as cursor
+			until
+				Result > 0
+			loop
+				if cursor.item = object then
+					Result := cursor.key
+				end
+			end
 		end
 
 	last_identifier: NATURAL_64
@@ -72,6 +80,14 @@ feature -- Element change
 			id_correct: is_prepared implies lookup_table [$object] = last_identifier
 		end
 
+	remove (id: NATURAL_64)
+			-- Remove the object with id `id' from the identifier set.
+		require
+			not_prepared: not is_prepared
+		do
+			object_store.remove (id)
+		end
+
 	prepare
 			-- Prepare `Current' for access and turn off garbage collection.
 		require
@@ -81,7 +97,7 @@ feature -- Element change
 		do
 			lookup_table.accommodate (object_store.count)
 
-			collection_off
+			gc.collection_off
 
 			across
 				object_store as cursor
@@ -101,7 +117,7 @@ feature -- Element change
 		do
 			lookup_table.wipe_out
 			is_prepared := False
-			collection_on
+			gc.collection_on
 		ensure
 			not_prepared: not is_prepared
 			lookup_empty: lookup_table.is_empty
@@ -137,12 +153,12 @@ feature {NONE} -- Implementation
 
 	lookup_table: HASH_TABLE [NATURAL_64, POINTER]
 			-- The lookup table.
-		attribute
-		end
+
+	gc: MEMORY
+			-- A handle to control garbage collection.
 
 invariant
 	empty_when_not_prepared: not is_prepared implies lookup_table.is_empty
 	full_when_prepared: is_prepared implies lookup_table.count = object_store.count
-	garbage_collection_off: is_prepared = not collecting
-
+	garbage_collection_off: is_prepared = not gc.collecting
 end

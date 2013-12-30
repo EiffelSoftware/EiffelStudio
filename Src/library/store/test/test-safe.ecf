@@ -34,4 +34,11 @@
 		<cluster name="odbc_spec" location=".\src\spec\odbc\"/>
 		<cluster name="src" location=".\src\"/>
 	</target>
+	<target name="test_oracle" extends="common">
+		<root class="TEST_STORE" feature="make"/>
+		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle-safe.ecf" readonly="false" use_application_options="true"/>
+		<tests name="autotests" location=".\src\autotests\"/>
+		<cluster name="oracle_spec" location=".\src\spec\oracle\"/>
+		<cluster name="src" location=".\src\"/>
+	</target>
 </system>

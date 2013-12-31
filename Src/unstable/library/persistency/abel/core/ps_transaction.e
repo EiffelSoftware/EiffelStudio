@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			repository := a_repository
 			create internal_active_queries.make (0)
 			transaction := repository.new_internal_transaction (False)
-			repository.internal_active_transactions.extend (Current)
+			repository.internal_active_transactions.extend (Current, transaction)
 		ensure
 			default_strategy: root_declaration_strategy.is_argument_of_insert
 			active: is_active
@@ -173,7 +173,7 @@ feature -- Data retrieval
 
 			if query.has_error then
 				internal_active_queries.prune_all (query)
-				repository.internal_active_transactions.prune_all (Current)
+				repository.internal_active_transactions.remove (transaction)
 			end
 		ensure
 			executed: query.is_executed
@@ -203,7 +203,7 @@ feature -- Data retrieval
 
 			if query.has_error then
 				internal_active_queries.prune_all (query)
-				repository.internal_active_transactions.prune_all (Current)
+				repository.internal_active_transactions.remove (transaction)
 			end
 		ensure
 			executed: query.is_executed
@@ -327,7 +327,7 @@ feature -- Transaction operations
 			retried: BOOLEAN
 		do
 			repository.commit_transaction (transaction)
-			repository.internal_active_transactions.prune_all (Current)
+			repository.internal_active_transactions.remove (transaction)
 		ensure
 			not_active: not is_active
 		end
@@ -342,7 +342,7 @@ feature -- Transaction operations
 			retried: BOOLEAN
 		do
 			repository.rollback_transaction (transaction)
-			repository.internal_active_transactions.prune_all (Current)
+			repository.internal_active_transactions.remove (transaction)
 		ensure
 			not_active: not is_active
 		end
@@ -354,7 +354,7 @@ feature -- Transaction operations
 		do
 			transaction := repository.new_internal_transaction (False)
 			transaction.set_root_declaration_strategy (root_declaration_strategy)
-			repository.internal_active_transactions.extend (Current)
+			repository.internal_active_transactions.extend (Current, transaction)
 		ensure
 			active: is_active
 			no_error: not has_error

@@ -249,17 +249,7 @@ feature {NONE} -- Implementation
 				transaction.set_default_error
 			end
 
-			across
-				internal_active_transactions as cursor
-			loop
-				if cursor.item.transaction = transaction then
-					to_prune := cursor.item
-				end
-			end
-
-			if attached to_prune then
-				internal_active_transactions.prune_all (to_prune)
-			end
+			internal_active_transactions.remove (transaction)
 		end
 
 feature {NONE} -- Obsolete

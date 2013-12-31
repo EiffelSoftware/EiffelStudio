@@ -62,7 +62,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		require
 			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
---			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all cursor.item.metadata.attributes.has (attr.item) end end
+			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all attr.item ~ cursor.item.value_type_item or cursor.item.metadata.attributes.has (attr.item) end end
 			new_attributes_complete: across objects as cursor all cursor.item.is_new implies cursor.item.is_complete end
 			active_transaction: transaction.is_active
 			not_readonly: not transaction.is_readonly

@@ -3,18 +3,18 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 6.00.0365 */
-/* at Mon Dec 31 14:54:43 2012
+ /* File created by MIDL compiler version 7.00.0555 */
+/* at Mon Dec 30 16:43:08 2013
  */
 /* Compiler settings for metadata_consumer.idl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
-//@@MIDL_FILE_HEADING(  )
+/* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 
@@ -63,8 +63,6 @@ typedef struct EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER EiffelS
 extern "C"{
 #endif 
 
-void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * ); 
 
 
 #ifndef __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__
@@ -133,7 +131,8 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ void **ppvObject);
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
@@ -155,7 +154,7 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
             EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [in] */ UINT cNames,
+            /* [range][in] */ UINT cNames,
             /* [in] */ LCID lcid,
             /* [size_is][out] */ DISPID *rgDispId);
         
@@ -223,171 +222,60 @@ EXTERN_C const IID IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAG
 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_QueryInterface(This,riid,ppvObject)	\
-    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_AddRef(This)	\
-    (This)->lpVtbl -> AddRef(This)
+    ( (This)->lpVtbl -> AddRef(This) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Release(This)	\
-    (This)->lpVtbl -> Release(This)
+    ( (This)->lpVtbl -> Release(This) ) 
 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_GetTypeInfoCount(This,pctinfo)	\
-    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly(This,a_name,a_version,a_culture,a_key,a_info_only)	\
-    (This)->lpVtbl -> consume_assembly(This,a_name,a_version,a_culture,a_key,a_info_only)
+    ( (This)->lpVtbl -> consume_assembly(This,a_name,a_version,a_culture,a_key,a_info_only) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_from_path(This,a_path,a_info_only,a_references)	\
-    (This)->lpVtbl -> consume_assembly_from_path(This,a_path,a_info_only,a_references)
+    ( (This)->lpVtbl -> consume_assembly_from_path(This,a_path,a_info_only,a_references) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9(This)	\
-    (This)->lpVtbl -> Missing9(This)
+    ( (This)->lpVtbl -> Missing9(This) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize(This)	\
-    (This)->lpVtbl -> initialize(This)
+    ( (This)->lpVtbl -> initialize(This) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize_with_path(This,a_path)	\
-    (This)->lpVtbl -> initialize_with_path(This,a_path)
+    ( (This)->lpVtbl -> initialize_with_path(This,a_path) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_initialized(This,pRetVal)	\
-    (This)->lpVtbl -> is_initialized(This,pRetVal)
+    ( (This)->lpVtbl -> is_initialized(This,pRetVal) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_successful(This,pRetVal)	\
-    (This)->lpVtbl -> is_successful(This,pRetVal)
+    ( (This)->lpVtbl -> is_successful(This,pRetVal) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_last_error_message(This,pRetVal)	\
-    (This)->lpVtbl -> last_error_message(This,pRetVal)
+    ( (This)->lpVtbl -> last_error_message(This,pRetVal) ) 
 
 #define EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_unload(This)	\
-    (This)->lpVtbl -> unload(This)
+    ( (This)->lpVtbl -> unload(This) ) 
 
 #endif /* COBJMACROS */
 
 
 #endif 	/* C style interface */
 
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [in] */ BSTR a_name,
-    /* [in] */ BSTR a_version,
-    /* [in] */ BSTR a_culture,
-    /* [in] */ BSTR a_key,
-    /* [in] */ VARIANT_BOOL a_info_only);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_from_path_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [in] */ BSTR a_path,
-    /* [in] */ VARIANT_BOOL a_info_only,
-    /* [in] */ BSTR a_references);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_consume_assembly_from_path_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [restricted] */ void STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_Missing9_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize_with_path_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [in] */ BSTR a_path);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_initialize_with_path_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_initialized_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [retval][out] */ VARIANT_BOOL *pRetVal);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_initialized_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_successful_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [retval][out] */ VARIANT_BOOL *pRetVal);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_is_successful_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_last_error_message_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This,
-    /* [retval][out] */ BSTR *pRetVal);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_last_error_message_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_unload_Proxy( 
-    EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER * This);
-
-
-void __RPC_STUB EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER_unload_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
 
 
 

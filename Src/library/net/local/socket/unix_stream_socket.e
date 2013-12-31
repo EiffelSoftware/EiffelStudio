@@ -86,19 +86,21 @@ feature
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		local
-			pass_address: like address;
+			l_pass_address: like address;
 			l_accepted: like accepted
 			return: INTEGER;
 		do
-			pass_address := address
-				-- Per inherited precondition
-			check pass_address_attached: pass_address /= Void end
-			pass_address := pass_address.twin
-			return := c_accept (descriptor, pass_address.socket_address.item, pass_address.count);
-			if return > 0 then
-				create l_accepted.create_from_descriptor (return);
-				accepted := l_accepted
-				l_accepted.set_peer_address (pass_address)
+			l_pass_address := address
+			if l_pass_address /= Void then
+				l_pass_address := l_pass_address.twin
+				return := c_accept (descriptor, l_pass_address.socket_address.item, l_pass_address.count);
+				if return > 0 then
+					create l_accepted.create_from_descriptor (return
+					accepted := l_accepted
+					l_accepted.set_peer_address (l_pass_address)
+				else
+					accepted := Void
+				end
 			else
 				accepted := Void
 			end
@@ -120,14 +122,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

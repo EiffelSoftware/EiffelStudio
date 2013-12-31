@@ -59,4 +59,7 @@
 		</cluster>
 		<cluster name="transfer" location="transfer\" recursive="true"/>
 	</target>
+	<target name="net_unix" extends="net">
+		<setting name="platform" value="unix"/>
+	</target>
 </system>

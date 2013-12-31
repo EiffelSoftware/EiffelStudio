@@ -76,12 +76,11 @@ feature -- Input
 			peer_addr_size: INTEGER
 			l_peer_address: like peer_address
 		do
-			if peer_address = Void then
-				make_peer_address
-			end
 			l_peer_address := peer_address
-				-- Per postcondition of `make_peer_address' if `peer_address' was Void.
-			check l_peer_address_attached: l_peer_address /= Void end
+			if l_peer_address = Void then
+				create l_peer_address.make
+				peer_address := l_peer_address
+			end
 			peer_addr_size := l_peer_address.count;
 			create Result.make (size);
 			return_val := c_rcv_from (descriptor, Result.data.item, Result.count, flags, l_peer_address.socket_address.item, $peer_addr_size);
@@ -112,6 +111,8 @@ feature -- Miscellaneous
 
 	make_peer_address
 			-- Create a peer address.
+		obsolete
+			"Automatically created when calling `received'."
 		do
 			create peer_address.make
 		ensure

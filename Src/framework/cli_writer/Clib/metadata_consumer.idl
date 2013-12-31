@@ -1,6 +1,6 @@
 // Generated .IDL file (by the OLE/COM Object Viewer)
 // 
-// typelib filename: <could not determine filename>
+// typelib filename: EiffelSoftware.MetadataConsumer.tlb
 
 [
   uuid(8E61CD57-7F8F-3AB5-B3BB-76952253802B),
@@ -66,4 +66,3 @@ library EiffelSoftware_MetadataConsumer
         interface ISponsor;
     };
 };
-

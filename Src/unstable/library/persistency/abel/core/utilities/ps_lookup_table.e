@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_LOOKUP_TABLE}."
-	author: ""
+	description: "A double hash table to map a [type, primary_key] tuple to an arbitrary value."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,9 +35,6 @@ feature -- Element change
 			new_inner: like item
 		do
 			if attached item (type) as inner then
---				if inner.soon_full then
---					inner.accommodate (2 * inner.count)
---				end
 				inner.extend (value, primary_key)
 			else
 				create new_inner.make (inner_default_capacity)

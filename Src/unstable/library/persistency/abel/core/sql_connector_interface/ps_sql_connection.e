@@ -17,10 +17,10 @@ feature {PS_ABEL_EXPORT} -- Settings
 			-- Enable or disable autocommit on this connection.
 		deferred
 		ensure
-			autocommit_correctly_disabled: not flag implies not autocommit -- We actually can't guarantee it the other way round in all cases
+			autocommit_correctly_disabled: not flag implies not is_auto_commit_enabled -- We actually can't guarantee it the other way round in all cases
 		end
 
-	autocommit: BOOLEAN
+	is_auto_commit_enabled: BOOLEAN
 			-- Is autocommit enabled? Default: no
 
 feature {PS_ABEL_EXPORT} -- Database operations

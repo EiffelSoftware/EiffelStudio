@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {NONE} -- Implmentation
 
-	new_backend: PS_BACKEND
+	new_backend: PS_REPOSITORY_CONNECTOR
 			-- Create a backend.
 		do
 			create {PS_IN_MEMORY_BACKEND} Result.make

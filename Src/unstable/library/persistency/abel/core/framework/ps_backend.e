@@ -5,15 +5,11 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PS_BACKEND
+	PS_REPOSITORY_CONNECTOR
+
 inherit
-	PS_READ_ONLY_BACKEND
 
-
-feature {PS_ABEL_EXPORT} -- Backend capabilities
-
-
-
+	PS_READ_REPOSITORY_CONNECTOR
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
@@ -128,7 +124,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		end
 
 
-feature {PS_BACKEND} -- Implementation
+feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 
 	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.

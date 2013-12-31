@@ -174,7 +174,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 
 feature {PS_ABEL_EXPORT} -- Smart retrieval
 
-	dispatch_retrieve (type: PS_TYPE_METADATA; criterion: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; a_transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_ENTITY]
+	dispatch_retrieve (type: PS_TYPE_METADATA; criterion: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; a_transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_ENTITY]
 			-- Retrieve a set of collections or objects (based on the handler for `type').
 		local
 			found: BOOLEAN
@@ -184,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 
 				-- First check if a value type handler is responsible for `type'.
 			if attached search_value_type_handler (type) then
-				Result := backend.retrieve (type, criterion, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
+				Result := backend.retrieve (type, criterion, is_root_only, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
 				found := True
 			end
 
@@ -197,9 +197,9 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 				if cursor.item.can_handle_type (type) then
 					found := True
 					if cursor.item.is_mapping_to_object then
-						Result := backend.retrieve (type, criterion, attributes, a_transaction)
+						Result := backend.retrieve (type, criterion, is_root_only, attributes, a_transaction)
 					else
-						Result := backend.collection_retrieve (type, a_transaction)
+						Result := backend.collection_retrieve (type, is_root_only, a_transaction)
 					end
 				end
 			end

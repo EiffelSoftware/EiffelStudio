@@ -34,24 +34,17 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Object retrieval operations
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
-			-- Retrieves all objects of class `type' (direct instance - not inherited from) that match the criteria in `criteria' within transaction `transaction'.
-			-- If `attributes' is not empty, it will only retrieve the attributes listed there.
-			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch, the attribute value during retrieval will be an empty string and its class name `NONE'.
-			-- If `type' has a generic parameter, the retrieve function will return objects of all generic instances of the generating class.
-			-- You can find out about the actual generic parameter by comparing the class name associated to a foreign key value.
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+			-- <Precursor>
 		require else
 			True
 		local
---			temp_list: LINKED_LIST [PS_RETRIEVED_OBJECT]
 			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
 			highest_id, curr_id: INTEGER
 			curr_obj: detachable PS_BACKEND_OBJECT
 		do
 			create result_list.make
---			create temp_list.make
 			highest_id := key_set [type.name]
---			highest_id := max_key + 1
 			from
 				curr_id := 1
 			until
@@ -59,12 +52,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 			loop
 				curr_obj := internal_retrieve_by_primary (type, curr_id, attributes, transaction)
 				if attached curr_obj then
---					curr_obj := temp_list.first
---					if criteria.can_handle_object (curr_obj) then
---						if criteria.is_satisfied_by (curr_obj) then
-							result_list.extend (curr_obj)
---						end
---					end
+					result_list.extend (curr_obj)
 				end
 				curr_id := curr_id + 1
 			end
@@ -443,10 +431,8 @@ feature --json operations
 
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
-			-- Retrieves all collections from the database where the following conditions hold:
-			--		1) The object is a (direct) instance of `type'
-			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
+	collection_retrieve (type: PS_TYPE_METADATA; is_root_only: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+			-- <Precursor>
 		do
 			check
 				not_implemented: False

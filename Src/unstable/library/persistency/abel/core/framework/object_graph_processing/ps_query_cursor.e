@@ -137,7 +137,7 @@ feature {NONE} -- Implementation: Access
 		do
 			if not type_cursor.after then
 					-- Query the database and initialize the new current_result.
-				retrieved_cursor := read_manager.dispatch_retrieve (type_cursor.item, query.criterion, filter, read_manager.transaction)
+				retrieved_cursor := read_manager.dispatch_retrieve (type_cursor.item, query.criterion, query.is_non_root_ignored, filter, read_manager.transaction)
 				type_cursor.forth
 			end
 		end

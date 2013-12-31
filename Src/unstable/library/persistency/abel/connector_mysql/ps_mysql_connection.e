@@ -26,9 +26,9 @@ feature {PS_ABEL_EXPORT} -- Settings
 			-- Enable or disable autocommit
 		do
 			internal_connection.set_flag_autocommit (flag)
-			autocommit := flag
+			is_auto_commit_enabled := flag
 		ensure then
-			correctly_set: autocommit = flag
+			correctly_set: is_auto_commit_enabled = flag
 		end
 
 feature {PS_ABEL_EXPORT}

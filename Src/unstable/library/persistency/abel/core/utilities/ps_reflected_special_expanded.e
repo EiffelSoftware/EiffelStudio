@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_REFLECTED_SPECIAL_EXPANDED}."
-	author: ""
+	description: "A reflector for SPECIAL [XX], where XX is a user-defined expanded type."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

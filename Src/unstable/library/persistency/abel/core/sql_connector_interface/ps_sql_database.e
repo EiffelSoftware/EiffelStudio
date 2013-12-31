@@ -17,8 +17,8 @@ inherit
 feature {PS_ABEL_EXPORT}
 
 	acquire_connection: PS_SQL_CONNECTION
-			-- Get a new connection.
-			-- The transaction isolation level of the new connection is the same as in `Current.transaction_isolation_level', and autocommit is disabled.
+			-- Get a new connection. Autocommit is disabled, and the transaction settings are
+			-- are as set by `set_transaction_isolation'.
 		deferred
 			-- Remarks when implementing this feature:
 			-- You can create a new connection to the database or use a pool of connections.
@@ -26,13 +26,12 @@ feature {PS_ABEL_EXPORT}
 				-- This function always returns the same connection (the only one you have).
 				-- `release_connection' should not close it
 				-- Autocommit always has to stay disabled
-				-- To have proper transaction support, you should create ABEL with client-side transaction management support enabled.
 		ensure
-			autocommit_disabled: not Result.autocommit
+			autocommit_disabled: not Result.is_auto_commit_enabled
 		end
 
-	release_connection (a_connection: PS_SQL_CONNECTION)
-			-- Release connection `a_connection'.
+	release_connection (connection: PS_SQL_CONNECTION)
+			-- Release connection `connection'.
 		deferred
 				-- Remarks when implementing this feature:
 				-- Close it or add it back to the pool of free connections.

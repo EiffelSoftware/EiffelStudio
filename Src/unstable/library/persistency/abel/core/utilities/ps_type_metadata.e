@@ -82,7 +82,7 @@ feature -- Genericity
 			is_generic: is_generic_derivation
 			valid_index: index <= generic_parameter_count and index > 0
 		do
-			Result := factory.create_metadata_from_type (reflection.type_of_type (reflection.detachable_type (reflection.generic_dynamic_type_of_type (type.type_id, index))))
+			Result := factory.create_metadata_from_type_id (reflection.detachable_type (type.generic_parameter_type (index).type_id))
 		end
 
 feature -- Attributes
@@ -133,7 +133,6 @@ feature {PS_METADATA_FACTORY} -- Initialization
 			end
 
 			create attr_name_to_type_hash.make (attribute_count)
-			create attr_name_to_index_hash.make (attribute_count)
 			create {ARRAYED_LIST [STRING]} attributes.make (attribute_count)
 			create builtin_type.make (attribute_count)
 			attributes.compare_objects
@@ -159,7 +158,6 @@ feature {PS_METADATA_FACTORY} -- Initialization
 				attr_type := reflection.type_of_type (reflection.detachable_type (reflection.field_static_type_of_type (i, type.type_id)))
 				attr_type_metadata := factory.create_metadata_from_type (attr_type)
 					-- Insert the values to the data structures
-				attr_name_to_index_hash.extend (i, attr_name)
 				attr_name_to_type_hash.extend (attr_type_metadata, attr_name)
 				attributes.extend (attr_name)
 
@@ -175,9 +173,6 @@ feature {NONE} -- Implementation
 
 	attr_name_to_type_hash: HASH_TABLE [PS_TYPE_METADATA, STRING]
 			-- A hash table to map attribute names to types.
-
-	attr_name_to_index_hash: HASH_TABLE [INTEGER, STRING]
-			-- A hash table to map attribute names to their index, as used by INTERNAL.
 
 invariant
 	non_negative_generic_count: generic_parameter_count >= 0

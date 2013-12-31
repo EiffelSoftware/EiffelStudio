@@ -257,7 +257,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			check attached {SPECIAL [detachable ANY]} object.reflector.object as spec then
 				special := spec
 			end
-			
+
 			create used_refs.make (special.count)
 
 			across

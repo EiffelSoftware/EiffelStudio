@@ -11,8 +11,6 @@ inherit
 
 	PS_REPOSITORY_CONNECTOR
 
-	PS_BACKEND_CONVERTER
-
 create
 	make, make_with_host_and_port
 
@@ -71,6 +69,29 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 				curr_id := curr_id + 1
 			end
 			Result := result_list.new_cursor
+		end
+
+	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
+		local
+			struct: PS_IMMUTABLE_STRUCTURE [STRING]
+			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
+			i: INTEGER
+		do
+			from
+				create list.make (primaries.count)
+				Result := list
+				i := 1
+			until
+				i > primaries.count
+			loop
+				create struct.make (types [i].attributes)
+				if attached internal_retrieve_by_primary (types [i], primaries [i], struct, transaction) as retrieved_obj then
+					list.extend (retrieved_obj)
+				end
+				i := i + 1
+			variant
+				primaries.count + 1 - i
+			end
 		end
 
 	internal_retrieve_by_primary (type: PS_TYPE_METADATA; key: INTEGER; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_OBJECT
@@ -422,21 +443,27 @@ feature --json operations
 
 feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
-	retrieve_collection (collection_type: PS_TYPE_METADATA; collection_primary_key: INTEGER; transaction: PS_INTERNAL_TRANSACTION): detachable PS_BACKEND_COLLECTION
-			-- Retrieves the object-oriented collection of type `collection_type' and with primary key `collection_primary_key'.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	collection_retrieve (collection_type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
-			-- Retrieves all collections of type `collection_type'.
+	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+			-- Retrieves all collections from the database where the following conditions hold:
+			--		1) The object is a (direct) instance of `type'
+			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
 		do
 			check
 				not_implemented: False
 			end
 			Result := (create {LINKED_LIST [PS_BACKEND_COLLECTION]}.make).new_cursor
+		end
+
+	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
+			-- For every position `i' in the two lists, retrieve the object
+			-- with `types [i]' and `primary_keys [i]'.
+			-- Note: The result does not have to be ordered, and items deleted in
+			-- the database are not present in the result.
+		do
+			check
+				not_implemented: False
+			end
+			Result := (create {LINKED_LIST [PS_BACKEND_COLLECTION]}.make)
 		end
 
 	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)

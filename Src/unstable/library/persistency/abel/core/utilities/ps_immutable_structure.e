@@ -13,9 +13,6 @@ inherit
 create
 	make
 
-convert
-	make ({LIST [G], LINKED_LIST [G]})
-
 feature {NONE} -- Initialization
 
 	make (a_structure: READABLE_INDEXABLE [G])
@@ -27,7 +24,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item alias "[]" (i: INTEGER): G
-			-- Entry at position `i'
+			-- Entry at position `i'.
 		do
 			Result:= structure [i]
 		end
@@ -35,13 +32,13 @@ feature -- Access
 feature -- Measurement
 
 	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
+			-- Range of acceptable indices.
 		do
 			Result := structure.index_set
 		end
 
 	count: INTEGER
-			-- Number of items
+			-- Number of items.
 		do
 			Result := index_set.count
 		end
@@ -59,10 +56,6 @@ feature -- Status report
 		do
 			Result := count = 0
 		end
-
-feature -- Status setting
-
-feature -- Cursor movement
 
 feature -- Iteration
 
@@ -90,5 +83,6 @@ feature -- Iteration
 feature {NONE} -- Implementation
 
 	structure: READABLE_INDEXABLE [G]
+			-- The wrapped structure.
 
 end

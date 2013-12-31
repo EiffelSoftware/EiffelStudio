@@ -82,12 +82,12 @@ feature -- Access
 	max_value: REAL_32 = 3.4028234663852885981170e+038
 			-- Minimum and Maximum value hold in `item'.
 
-	epsilon: REAL_32 = 1.1754943508222875079688e-038
-			-- Minimum normalized positive floating-point number.
-
 	machine_epsilon: REAL_32 = 1.1920928955078125000000e-007
 			-- The difference between 1 and the least value greater than
 			-- 1 that is representable in the given floating point type.
+
+	epsilon: REAL_32 = 1.1754943508222875079688e-038
+			-- Minimum normalized positive floating-point number.
 
 feature -- Comparison
 

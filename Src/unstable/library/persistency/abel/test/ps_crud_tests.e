@@ -41,7 +41,7 @@ feature {PS_REPOSITORY_TESTS} -- References
 		do
 			create test.make (repository)
 			test.test_insert (test_data.void_reference)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_insert_one_reference
@@ -52,7 +52,7 @@ feature {PS_REPOSITORY_TESTS} -- References
 			create test.make (repository)
 			test.test_insert (test_data.reference_to_single_other)
 			assert ("The result does not have exactly two items", test.count_results = 2)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_insert_reference_cycle
@@ -63,7 +63,7 @@ feature {PS_REPOSITORY_TESTS} -- References
 			create test.make (repository)
 			test.test_insert (test_data.reference_cycle)
 			assert ("The wrong number of items has been inserted", test.count_results = 3)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_crud_reference_cycle
@@ -73,7 +73,7 @@ feature {PS_REPOSITORY_TESTS} -- References
 		do
 			create test.make (repository)
 			test.test_crud_operations (test_data.reference_cycle, agent {REFERENCE_CLASS_1}.update)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_crud_update_on_reference
@@ -90,7 +90,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 	all_flat_object_tests
 			-- All tests that use FLAT_CLASS_1
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			test_empty_object
 			test_flat_class_store
 			test_flat_class_all_crud
@@ -105,7 +105,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 			create test.make (repository)
 			create obj
 			test.test_crud_operations (obj, agent {ANY}.do_nothing)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_flat_class_store
@@ -115,7 +115,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 		do
 			create test.make (repository)
 			test.test_insert (test_data.flat_class)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_flat_class_all_crud
@@ -125,7 +125,7 @@ feature {PS_REPOSITORY_TESTS} -- Flat objects
 		do
 			create test.make (repository)
 			test.test_crud_operations (test_data.flat_class, agent {FLAT_CLASS_1}.update)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 
@@ -145,7 +145,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 		local
 			test: PS_GENERIC_CRUD_TEST [INTEGER]
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			test.test_insert (42)
 		end
@@ -154,7 +154,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 		local
 			test: PS_GENERIC_CRUD_TEST [STRING]
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			test.test_insert ("a_string")
 		end
@@ -165,7 +165,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			container: EXPANDED_PERSON_CONTAINER
 		do
 
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			create container.set_item ("a_string")
 			test.test_insert (container)
@@ -177,7 +177,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			person: EXPANDED_PERSON
 			anybox: ANY_BOX
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			create anybox.set_item (person)
 			test.test_insert (anybox)
@@ -190,7 +190,7 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 			person: EXPANDED_PERSON
 			anybox: ANY_BOX
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			test.test_insert (person)
 			test.test_crud_operations (person, agent {EXPANDED_PERSON}.add_item)
@@ -212,7 +212,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	all_easy_collection_tests
 			-- All collection tests
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			test_referenced_collection_store
 			test_referenced_collection_update_known_object
 			test_referenced_collection_new_object
@@ -242,7 +242,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create test.make (repository)
 			test.test_insert (test_data.array_of_persons)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_referenced_collection_update_known_object
@@ -252,7 +252,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create test.make (repository)
 			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.put (test_data.array_of_persons.item (1), 2))
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_referenced_collection_new_object
@@ -264,7 +264,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
 			test.test_crud_operations (test_data.array_of_persons, agent {ARRAY [TEST_PERSON]}.force (new, 5))
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_direct_collection_store
@@ -274,7 +274,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create test.make (repository)
 			test.test_insert (test_data.special_of_persons)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_collection_shrink
@@ -284,7 +284,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			obj := test_data.special_of_persons.deep_twin
 			test_read_write_cycle_with_root (obj, agent {SPECIAL [TEST_PERSON]}.keep_head (2))
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_direct_collection_update_known_object
@@ -294,7 +294,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 		do
 			create test.make (repository)
 			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.put (test_data.special_of_persons.item (0), 1))
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_direct_collection_new_object
@@ -306,7 +306,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			create new.make ("some", "new_guy", 20)
 			create test.make (repository)
 			test.test_crud_operations (test_data.special_of_persons, agent {SPECIAL [TEST_PERSON]}.extend (new))
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_collection_basic_type_store
@@ -328,7 +328,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			create test.make (repository)
 			test.test_insert (test_data.data_structures_1)
 				-- TODO: They are probably not equal, as DATA_STRUCTURES uses FLAT_CLASS, which uses REALs that have a rounding error.
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_update_on_reference
@@ -340,7 +340,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 
 			test: PS_GENERIC_CRUD_TEST [DATA_STRUCTURES_CLASS_1]
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 
 			create test.make (repository)
 			test.test_crud_operations (
@@ -350,7 +350,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 						retrieved_obj.array_1 [1].update
 					end
 			)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_shared_special
@@ -362,7 +362,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			query2: PS_QUERY [SPECIAL [INTEGER]]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create special.make_filled (0, 2)
 			create a.make (special)
 			create b.make (special)
@@ -400,7 +400,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				box: ANY_BOX
 				test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			do
-				repository.clean_db_for_testing
+				repository.wipe_out
 				create box.set_item ([create {FLAT_CLASS_1}.make, 42, "abc"])
 				create test.make (repository)
 				test.test_crud_operations (box,
@@ -419,7 +419,7 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 				hash: HASH_TABLE [FLAT_CLASS_1, STRING]
 				test: PS_GENERIC_CRUD_TEST [ANY_BOX]
 			do
-				repository.clean_db_for_testing
+				repository.wipe_out
 				create hash.make (10)
 				hash.extend (test_data.flat_class.twin, "something")
 				create box.set_item (hash)
@@ -456,7 +456,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create link.set_item (create {ANY}.default_create)
 			create test.make (repository)
 			test.test_insert (link)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 
@@ -469,7 +469,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create link.set_item (test_data.people.first)
 			create test.make (repository)
 			test.test_insert (link)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_expanded_object
@@ -481,7 +481,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create link.set_item (3)
 			create test.make (repository)
 			test.test_insert (link)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_generic_object
@@ -494,7 +494,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			list.fill (test_data.people)
 			create test.make (repository)
 			test.test_insert (list) -- BUG: the elements don't get loaded.
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_referenced_list
@@ -510,7 +510,7 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create test.make (repository)
 			-- Regression test: the list within box got initialized as LINKED_LIST [ANY], and the list was empty.
 			test.test_insert (box)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_subtype_of_string
@@ -526,10 +526,10 @@ feature {PS_REPOSITORY_TESTS} -- Polymorphism
 			create test.make (repository)
 			-- Regression test: instead of creating FILE_NAME objects, a STRING object was created.
 			test.test_insert (person)
-			repository.clean_db_for_testing
+			repository.wipe_out
 			create test.make (repository)
 			test.test_crud_operations (person, agent (p:TEST_PERSON) do p.add_item end)
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 

@@ -31,7 +31,7 @@ feature
 			tr: PS_TRANSACTION
 		do
 			create obj.make ("a", "b", 3)
-			repository.clean_db_for_testing
+			repository.wipe_out
 			tr := repository.new_transaction
 			tr.insert (obj)
 
@@ -48,7 +48,7 @@ feature
 			end
 			query.close
 			tr.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 
 		end
 

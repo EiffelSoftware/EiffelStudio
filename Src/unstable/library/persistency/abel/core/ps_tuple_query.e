@@ -65,19 +65,20 @@ feature -- Utilities
 			type: INTEGER
 			field_type: INTEGER
 			string_type: INTEGER
+			count: INTEGER
 		do
 			type := generic_type.type_id
 			string_type := ({detachable READABLE_STRING_GENERAL}).type_id
+			count := reflector.field_count_of_type (type)
 
-			create Result.make (10)
-			Result.compare_objects
-
+				-- Collect the attribute names using reflection.
 			across
-				1 |..| reflector.field_count_of_type (type) as idx
+				1 |..| count as idx
+			from
+				create Result.make (count)
+				Result.compare_objects
 			loop
-
 				field_type := reflector.field_static_type_of_type (idx.item, type)
-
 				if basic_expanded_types.has (field_type) or else reflector.type_conforms_to (field_type, string_type) then
 					Result.extend (reflector.field_name_of_type (idx.item, type))
 				end
@@ -151,7 +152,6 @@ feature {NONE} -- Initialization
 			set_projection (default_projection)
 		end
 
-
 	field_indices: HASH_TABLE [INTEGER, STRING]
 			-- A quick lookup: field_name -> index, as used by reflection.
 
@@ -196,6 +196,5 @@ feature {NONE} -- Initialization
 		ensure
 			valid_tuple_type: tuple_type > 0 and then attached {TUPLE} (create {REFLECTOR}).new_instance_of (tuple_type)
 		end
-
 
 end

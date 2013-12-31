@@ -63,7 +63,7 @@ feature {PS_REPOSITORY_TESTS}
 
 			query.close
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_immediate_retrieve
@@ -84,7 +84,7 @@ feature {PS_REPOSITORY_TESTS}
 
 			head_query.close
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_exact_retrieve_depth
@@ -148,7 +148,7 @@ feature {PS_REPOSITORY_TESTS}
 
 			query.close
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_initialization_with_cache
@@ -173,9 +173,9 @@ feature {PS_REPOSITORY_TESTS}
 
 			query.close
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		rescue
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 feature {NONE} -- Constants

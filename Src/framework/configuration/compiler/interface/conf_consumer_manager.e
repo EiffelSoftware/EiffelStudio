@@ -474,6 +474,8 @@ feature {NONE} -- retrieving information from cache
 			-- Retrieve (and consume if necessary) consumed information about `an_assembly'.
 		require
 			an_assembly_ok: an_assembly /= Void
+		local
+			l_path: PATH
 		do
 				-- was this a non local assembly?
 			if an_assembly.is_non_local_assembly then
@@ -483,13 +485,14 @@ feature {NONE} -- retrieving information from cache
 					consume_gac_assembly (an_assembly)
 					Result := consumed_gac_assembly (an_assembly)
 				end
-				-- is it a local assembly
 			else
-				Result := consumed_local_assembly (an_assembly.location.evaluated_path)
+					-- It is a local assembly
+				l_path := an_assembly.location.evaluated_path
+				Result := consumed_local_assembly (l_path)
 				if Result = Void then
 					-- (re)consume all local assemblies
 					consume_local_assemblies (new_assemblies)
-					Result := consumed_local_assembly (an_assembly.location.evaluated_path)
+					Result := consumed_local_assembly (l_path)
 				end
 			end
 			if Result = Void or else not Result.is_consumed then

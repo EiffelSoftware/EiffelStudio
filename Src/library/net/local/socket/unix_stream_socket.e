@@ -95,7 +95,7 @@ feature
 				l_pass_address := l_pass_address.twin
 				return := c_accept (descriptor, l_pass_address.socket_address.item, l_pass_address.count);
 				if return > 0 then
-					create l_accepted.create_from_descriptor (return
+					create l_accepted.create_from_descriptor (return)
 					accepted := l_accepted
 					l_accepted.set_peer_address (l_pass_address)
 				else

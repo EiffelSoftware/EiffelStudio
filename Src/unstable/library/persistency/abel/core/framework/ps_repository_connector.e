@@ -8,7 +8,6 @@ deferred class
 	PS_REPOSITORY_CONNECTOR
 
 inherit
-
 	PS_READ_REPOSITORY_CONNECTOR
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
@@ -19,7 +18,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
 			types_supported: across order as cursor all is_object_type_supported (cursor.key) end
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
@@ -38,7 +37,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			not_empty: not order.is_empty
 			positive_numbers: across order as cursor all cursor.item > 0 end
 			collection_supported: is_generic_collection_supported
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
@@ -60,7 +59,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
 			no_additional_attributes: across objects as cursor all across cursor.item.attributes as attr all attr.item ~ cursor.item.value_type_item or cursor.item.metadata.attributes.has (attr.item) end end
 			new_attributes_complete: across objects as cursor all cursor.item.is_new implies cursor.item.is_complete end
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		do
 			-- Apply plugins first
@@ -84,7 +83,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		require
 			not_empty: not objects.is_empty
 			types_supported: across objects as cursor all is_object_type_supported (cursor.item.metadata)  end
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
@@ -97,7 +96,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		require
 			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
@@ -110,7 +109,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		require
 			not_empty: not collections.is_empty
 			collection_supported: is_generic_collection_supported
-			active_transaction: transaction.is_active
+			active_transaction: transaction.is_active and not transaction.has_error
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
@@ -122,7 +121,6 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			-- Wipe out everything and initialize new.
 		deferred
 		end
-
 
 feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 

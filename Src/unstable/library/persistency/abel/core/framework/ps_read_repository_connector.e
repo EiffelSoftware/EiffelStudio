@@ -25,7 +25,7 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	batch_retrieval_size: INTEGER
 			-- The amount of objects to retrieve in a single batch.
-			-- Set to -1 to retrieve all objects.
+			-- Set to `{PS_REPOSITORY}.Infinite_batch_size' to retrieve all objects.
 
 feature {PS_ABEL_EXPORT} -- Backend capabilities
 
@@ -61,11 +61,12 @@ feature {PS_ABEL_EXPORT} -- Element change
 feature {PS_ABEL_EXPORT} -- Object retrieval
 
 
-	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	frozen retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- Retrieves all objects from the database where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
-			--		3) The `criteria' are satisfied for this object (this point is optional however).
+			--		3) The `criteria' are satisfied for this object (optional).
+			--		4) If `is_root_only', then the retrieved object is a garbage collection root (optional).
 			-- All attributes defined in `attributes' are guaranteed to be present. Additional attributes may be included.
 			-- If an attribute was `Void' during an insert, or it doesn't exist in the database because of a version mismatch,
 			-- the attribute value during retrieval will be an empty string and its class name `NONE'.
@@ -88,7 +89,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			end
 
 				-- Retrieve result from backend
-			real_cursor := internal_retrieve (args.type, args.criteria, args.attr, transaction)
+			real_cursor := internal_retrieve (args.type, args.criteria, is_root_only, args.attr, transaction)
 
 				-- Wrap the cursor
 			create wrapper.make (Current, real_cursor, args.type, args.attr, transaction)
@@ -142,10 +143,12 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 
 feature {PS_ABEL_EXPORT} -- Collection retrieval
 
-	collection_retrieve (type: PS_TYPE_METADATA; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
+	collection_retrieve (type: PS_TYPE_METADATA; is_root: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_COLLECTION]
 			-- Retrieves all collections from the database where the following conditions hold:
 			--		1) The object is a (direct) instance of `type'
 			--		2) The object is visible within the current `transaction' (e.g. not deleted previously)
+			--		3) If `root_only' is true, then the retrieved collection is a garbage collection root (optional).
+
 		require
 			collections_supported: is_generic_collection_supported
 			transaction_active: transaction.is_active
@@ -217,7 +220,7 @@ feature {PS_CURSOR_WRAPPER}
 
 feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 
-	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
+	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.
 			-- Use `internal_retrieve' for contracts and other calls within a backend.
 		require

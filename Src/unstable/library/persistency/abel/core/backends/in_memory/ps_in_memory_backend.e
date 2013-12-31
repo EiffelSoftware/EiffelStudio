@@ -8,7 +8,7 @@ class
 	PS_IN_MEMORY_BACKEND
 
 inherit
-	PS_BACKEND
+	PS_REPOSITORY_CONNECTOR
 
 create
 	make
@@ -140,6 +140,11 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			-- Set the transaction isolation level such that all values in `settings' are respected.
 		do
 				-- Do nothing. Transactions are not supported for the in-memory backend.
+		end
+
+	close
+			-- Close the backend.
+		do
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing

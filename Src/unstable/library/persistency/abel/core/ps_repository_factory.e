@@ -138,7 +138,7 @@ feature -- Factory function
 		require
 			buildable: is_buildable
 		local
-			backend: PS_BACKEND
+			backend: PS_REPOSITORY_CONNECTOR
 			write_manager: PS_WRITE_MANAGER
 		do
 			backend := new_backend
@@ -161,7 +161,7 @@ feature -- Factory function
 
 feature {NONE} -- Implementation
 
-	new_backend: PS_BACKEND
+	new_backend: PS_REPOSITORY_CONNECTOR
 			-- Create a backend.
 		require
 			buildable: is_buildable

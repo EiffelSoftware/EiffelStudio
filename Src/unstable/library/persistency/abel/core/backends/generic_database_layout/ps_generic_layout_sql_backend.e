@@ -11,10 +11,7 @@ inherit
 
 	PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
 
-	PS_BACKEND
-		undefine
-			close
-		end
+	PS_REPOSITORY_CONNECTOR
 
 create
 	make
@@ -273,7 +270,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			make (database, SQL_Strings)
 		end
 
-feature {PS_BACKEND} -- Implementation
+feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 
 	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.

@@ -77,7 +77,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	transaction: PS_INTERNAL_TRANSACTION
 			-- The transaction in which the current operation is running.
 
-	backend: PS_READ_ONLY_BACKEND
+	backend: PS_READ_REPOSITORY_CONNECTOR
 			-- The database backend.
 
 	cache_lookup (primary_key: INTEGER; type: PS_TYPE_METADATA):INTEGER

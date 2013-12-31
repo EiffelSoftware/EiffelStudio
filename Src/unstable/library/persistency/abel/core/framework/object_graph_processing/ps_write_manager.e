@@ -74,7 +74,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 
 feature {PS_ABEL_EXPORT} -- Accesss: Static
 
-	backend: PS_BACKEND
+	backend: PS_REPOSITORY_CONNECTOR
 			-- An actual backend for the write operations.
 
 	traversal: PS_OBJECT_GRAPH_TRAVERSAL

@@ -1,16 +1,15 @@
 note
-	description: "Provides an abstraction to the actual database. This class only contains the read functions."
+	description: "Provides an abstraction to the actual database. %
+				%This class only contains the read functions."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	PS_READ_ONLY_BACKEND
+	PS_READ_REPOSITORY_CONNECTOR
 
 inherit
 	PS_ABEL_EXPORT
-
-	REFACTORING_HELPER
 
 feature {PS_ABEL_EXPORT} -- Access
 
@@ -188,8 +187,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	close
 			-- Close the backend.
-		do
-
+		deferred
 		end
 
 feature {PS_ABEL_EXPORT} -- Plugins
@@ -217,7 +215,7 @@ feature {PS_CURSOR_WRAPPER}
 			end
 		end
 
-feature {PS_READ_ONLY_BACKEND} -- Implementation
+feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- See function `retrieve'.

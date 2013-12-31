@@ -13,7 +13,7 @@ inherit
 
 	PS_ABEL_EXPORT
 
-create {PS_READ_ONLY_BACKEND}
+create {PS_READ_REPOSITORY_CONNECTOR}
 	make
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Cursor movement
 
 feature {NONE} -- Impementation
 
-	backend: PS_READ_ONLY_BACKEND
+	backend: PS_READ_REPOSITORY_CONNECTOR
 
 	real_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
@@ -62,7 +62,7 @@ feature {NONE} -- Impementation
 feature {NONE} -- Initialization
 
 	make (
-			a_backend: PS_READ_ONLY_BACKEND;
+			a_backend: PS_READ_REPOSITORY_CONNECTOR;
 			a_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT];
 			a_type: like type;
 			attr_list: like attributes

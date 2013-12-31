@@ -182,7 +182,7 @@ feature {PS_ABEL_EXPORT} -- Status Report
 feature {NONE} -- Initialization
 
 	make_from_factory (
-			a_backend: PS_BACKEND;
+			a_backend: PS_REPOSITORY_CONNECTOR;
 			a_type_factory: PS_METADATA_FACTORY;
 			a_write_manager: PS_WRITE_MANAGER;
 			handler_list: LINKED_LIST [PS_HANDLER];
@@ -205,7 +205,7 @@ feature {NONE} -- Initialization
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	backend: PS_BACKEND
+	backend: PS_REPOSITORY_CONNECTOR
 			-- A BACKEND implementation
 
 	write_manager: PS_WRITE_MANAGER

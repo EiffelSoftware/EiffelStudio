@@ -11,10 +11,10 @@ note
 		
 			criterion_3 := criterion_1 and criterion_2
 		
-		Alternative bracked syntax:
+		Alternative parenthesis syntax:
 		
-			criterion_3 := factory [["first_name", factory.equals, "John"]]
-							and factory [[agent last_name_equal (?, "Doe") ]]
+			criterion_3 := factory ("first_name", factory.equals, "John")
+							and factory (agent last_name_equal (?, "Doe"))
 		]"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -37,7 +37,6 @@ feature -- Creating a criterion
 			-- using an uniform notation. `tuple' contains either a single agent PREDICATE
 			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
 			-- to the arguments of the `new_predefined' routine.
-			-- Using this notation criteria can be combined as shown in the example in the class header.
 		obsolete
 			"Use new_criterion with parenthesis alias."
 		require

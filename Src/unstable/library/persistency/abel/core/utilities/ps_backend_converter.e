@@ -12,8 +12,6 @@ inherit
 
 feature {PS_ABEL_EXPORT}
 
-
---	internal_specific_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 		local
 			struct: PS_IMMUTABLE_STRUCTURE [STRING]
@@ -43,7 +41,6 @@ feature {PS_ABEL_EXPORT}
 
 
 	specific_collection_retrieve (primary_keys: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
---	specific_collection_retrieve (order: LIST [TUPLE [type: PS_TYPE_METADATA; primary_key: INTEGER]]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_COLLECTION]
 			-- For every item in `order', retrieve the object with the correct `type' and `primary_key'.
 			-- Note: The result does not have to be ordered, and items deleted in the database are not present in the result.
 		local

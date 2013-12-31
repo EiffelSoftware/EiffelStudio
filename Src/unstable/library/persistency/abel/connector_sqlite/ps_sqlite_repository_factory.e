@@ -48,7 +48,7 @@ feature {PS_ABEL_EXPORT} -- Testing Internal
 
 feature {NONE}
 
-	new_backend: PS_BACKEND
+	new_backend: PS_REPOSITORY_CONNECTOR
 			-- Create a new backend.
 		local
 			l_sqlite_database: PS_SQLITE_DATABASE

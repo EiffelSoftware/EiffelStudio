@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #CONTROLLERS=$(ls controllers/)
-#CONTROLLERS=(memory.e) 
-CONTROLLERS=(mysql.e) 
+CONTROLLERS=(memory.e) 
+# CONTROLLERS=(mysql.e) 
 
 for ctrl in ${CONTROLLERS[@]}; do
 	rm -r ./framework/EIFGENs

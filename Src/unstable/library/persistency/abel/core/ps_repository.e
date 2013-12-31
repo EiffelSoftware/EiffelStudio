@@ -7,7 +7,7 @@ note
 		shipped with each ABEL backend.
 		
 		A repository can be used to execute read-only queries or create
-		a new transaction context for read-write operations.
+		a new transaction for read-write operations.
 		
 		It is possible to change some of the default settings
 		for performance tuning, such as the transaction isolation level
@@ -22,6 +22,14 @@ deferred class
 
 inherit
 	PS_ABEL_EXPORT
+
+feature -- Constants
+
+	Default_retry_count: INTEGER = 1
+			-- The default number of retries for implicit transactions.
+
+	Infinite_batch_size: INTEGER = -1
+			-- The special value for an infinite batch size, i.e. to disable lazy loading.
 
 feature -- Access
 
@@ -73,9 +81,10 @@ feature -- Element change
 feature -- Query execution
 
 	execute_query (query: PS_QUERY [ANY])
-			-- Execute `query' and store the results in `query.result_cursor'.
+			-- Execute `query' against the database.
+			-- The result can be fetched by calling `query.new_cursor' afterwards.
 			-- Note that the query is executed in an hidden, implicit transaction context
-			-- and that the result cannot be used for any subsequent write operations.
+			-- and that the result cannot be used for any subsequent update operation.
 		require
 			not_active: not active_queries.has (query)
 			not_executed: not query.is_executed
@@ -87,6 +96,7 @@ feature -- Query execution
 			from
 				attempts := 0
 			until
+					-- Try several times in case of a transaction conflict.
 				attempts > retry_count or
 				(attempts > 0 and then
 				not attached {PS_TRANSACTION_ABORTED_ERROR} query.last_error)
@@ -106,7 +116,8 @@ feature -- Query execution
 		end
 
 	execute_tuple_query (query: PS_TUPLE_QUERY [ANY])
-			-- Execute `query' and store the results in `query.result_cursor'.
+			-- Execute `query' against the database.
+			-- The result can be fetched by calling `query.new_cursor' afterwards.
 			-- Note that the query is executed in an hidden, implicit transaction context
 			-- and that the result cannot be used for any subsequent write operations.
 		require
@@ -120,6 +131,7 @@ feature -- Query execution
 			from
 				attempts := 0
 			until
+					-- Try several times in case of a transaction conflict.
 				attempts > retry_count or
 				(attempts > 0 and then
 				not attached {PS_TRANSACTION_ABORTED_ERROR} query.last_error)
@@ -153,16 +165,6 @@ feature -- Disposal
 		deferred
 		end
 
-
-feature {PS_ABEL_EXPORT} -- Internal
-
---		Note: Every feature with a PS_TRANSACTION as an argument will either
---			- return normally, if no error occurred
---			- raise an exception, if any kind of error has occured
---			
---		The actual error is returned in the PS_TRANSACTION.error field,
---		and the transaction is automatically rolled back.
-
 feature {PS_ABEL_EXPORT} -- Internal: Status report
 
 	can_handle (object: ANY): BOOLEAN
@@ -172,11 +174,8 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 
 	is_identified (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `an_object' already identified and thus registered in this repository?
-		local
-			id: NATURAL_64
 		do
-			id := transaction.identifier_table.search (object)
-			Result := id /= 0
+			Result := transaction.identifier_table.search (object) /= 0
 		end
 
 	is_root (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
@@ -185,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 			id: NATURAL_64
 		do
 			id := transaction.identifier_table.search (object)
-			if id > 0 then
+			if id /= 0 then
 				Result := transaction.root_flags [id]
 			end
 		end
@@ -193,60 +192,88 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Executes the object query `query' within `internal_transaction'.
+			-- Executes `query' within `transaction'.
 		require
 			not_executed: not query.is_executed
 			transaction_repository_correct: transaction.repository = Current
 			active_transaction: transaction.is_active
+			no_error: not transaction.has_error and not query.has_error
 		deferred
 		ensure
 			executed: query.is_executed
 			transaction_set: query.internal_transaction = transaction
-			transaction_still_alive: transaction.has_error xor transaction.is_active
+			valid_transaction_status: transaction.has_error xor transaction.is_active
+			after_if_error: transaction.has_error implies query.is_after
 			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
 			not_after_means_known: (not query.is_after and not transaction.is_readonly) implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Execute the tuple query `tuple_query' within `transaction'.
+			-- Execute `tuple_query' within `transaction'.
 		require
 			not_executed: not tuple_query.is_executed
 			transaction_repository_correct: transaction.repository = Current
 			active_transaction: transaction.is_active
+			no_error: not transaction.has_error and not tuple_query.has_error
 		deferred
 		ensure
 			executed: tuple_query.is_executed
 			transaction_set: tuple_query.internal_transaction = transaction
-			transaction_still_alive: transaction.has_error xor transaction.is_active
+			valid_transaction_status: transaction.has_error xor transaction.is_active
+			after_if_error: transaction.has_error implies tuple_query.is_after
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Write operations
 
 	write (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Insert `object' within `transaction' into `Current'.
+			-- Write `object' to the database.
+			-- Perform an update if object `is_identified', otherwise do an insert.
 		require
-			transaction_repository_correct: transaction.repository = Current
-			active_transaction: transaction.is_active
+			repository_correct: transaction.repository = Current
+			active: transaction.is_active
 			can_handle_object: can_handle (object)
+			no_error: not transaction.has_error
 		deferred
 		ensure
-			transaction_still_alive: transaction.is_active xor transaction.has_error
+			valid_transaction_status: transaction.is_active xor transaction.has_error
 			object_known: not transaction.has_error implies  is_identified (object, transaction) xor object.generating_type.is_expanded
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Update `object' only and none of its referenced objects.
+			-- Update `object', but none of its references.
+		require
+			repository_correct: transaction.repository = Current
+			active: transaction.is_active
+			can_handle_object: can_handle (object)
+			no_error: not transaction.has_error
+			not_expanded: not object.generating_type.is_expanded
+			object_known: is_identified (object, transaction)
 		deferred
+		ensure
+			valid_transaction_status: transaction.is_active xor transaction.has_error
+			object_known: not transaction.has_error implies is_identified (object, transaction)
 		end
 
 	set_root_status (object: ANY; value: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION)
 			-- Set the root status of `object' to `value'.
+		require
+			repository_correct: transaction.repository = Current
+			active: transaction.is_active
+			can_handle_object: can_handle (object)
+			no_error: not transaction.has_error
+			not_expanded: not object.generating_type.is_expanded
+			object_known: is_identified (object, transaction)
 		deferred
+		ensure
+			valid_transaction_status: transaction.is_active xor transaction.has_error
+			object_known: not transaction.has_error implies is_identified (object, transaction)
+			root_set: not transaction.has_error implies is_root (object, transaction) = value
 		end
 
 feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 
 	new_internal_transaction (readonly: BOOLEAN): PS_INTERNAL_TRANSACTION
+			-- Create a new internal transaction.
 		do
 			max_transaction_id := max_transaction_id + 1
 			if readonly then
@@ -256,35 +283,34 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 			end
 		end
 
-	max_transaction_id: INTEGER
-
 	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
-			-- Commit `transaction'. It raises an exception if the commit fails.
+			-- Commit `transaction'. If the commit fails, `transaction.has_error' is True.
 		require
-			transaction_alive: transaction.is_active
-			no_error: not transaction.has_error
 			repository_correct: transaction.repository = Current
+			active: transaction.is_active
+			no_error: not transaction.has_error
 		deferred
 		ensure
-			transaction_dead: not transaction.is_active
-			successful_commit: transaction.is_successful_commit xor transaction.has_error
+			dead: not transaction.is_active
+			valid_status: transaction.is_successful_commit xor transaction.has_error
 		end
 
 	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- Rollback `transaction'.
-			-- This acts as a `default_rescue' clause, so the postcondition defines what happens in case of an error.
+			-- This feature may be called when an exception happens to do some cleanup.
 		require
-			transaction_alive: transaction.is_active
 			repository_correct: transaction.repository = Current
+			active: transaction.is_active
 		deferred
 		ensure
-			transaction_dead: not transaction.is_active
+			dead: not transaction.is_active
 			transaction_failed: not transaction.is_successful_commit
+			error_unchanged: transaction.has_error = old (transaction.has_error)
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
 
-	clean_db_for_testing
+	wipe_out
 			-- Wipe out all data.
 		deferred
 		end
@@ -297,15 +323,13 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	internal_active_transactions: HASH_TABLE [PS_TRANSACTION, PS_INTERNAL_TRANSACTION]
 			-- A list of active transactions.
 
-feature -- Constants
+feature {NONE} -- Implementation
 
-	Default_retry_count: INTEGER = 1
-			-- The default number of retries for implicit transactions.
-
-	Infinite_batch_size: INTEGER = -1
-			-- The special value for an infinite batch size (i.e. to effectively disable lazy loading).
+	max_transaction_id: INTEGER
+			-- The maximum transaction id.
 
 invariant
 	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size
-
+	retry_count_positive: retry_count >= 0
+	max_transaction_id_positive: max_transaction_id >= 0
 end

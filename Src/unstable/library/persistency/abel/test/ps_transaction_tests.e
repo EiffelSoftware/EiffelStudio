@@ -144,7 +144,7 @@ feature {PS_REPOSITORY_TESTS}
 
 			q2.close
 
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 
@@ -183,7 +183,7 @@ feature {PS_REPOSITORY_TESTS}
 			repository.execute_query (q2)
 			assert ("Update not rolled back", q2.stable_cursor.item.is_deep_equal (some_person))
 			q2.close
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 
@@ -266,7 +266,7 @@ feature {NONE} -- Support
 				tx2.rollback
 			end
 
-			repository.clean_db_for_testing
+			repository.wipe_out
 
 		rescue
 			if

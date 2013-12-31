@@ -9,7 +9,7 @@ class
 
 inherit
 
-	PS_BACKEND
+	PS_REPOSITORY_CONNECTOR
 
 	PS_BACKEND_CONVERTER
 
@@ -232,7 +232,7 @@ feature {PS_ABEL_EXPORT} -- Object write operations
 			check not_implemented: False end
 		end
 
-feature {PS_BACKEND} -- Implementation
+feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 
 	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
 			-- Write all `objects' to the database.
@@ -464,6 +464,11 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
 			-- Aborts `a_transaction' and undoes all changes in the database.
+		do
+		end
+
+	close
+			-- Close the backend.
 		do
 		end
 

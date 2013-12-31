@@ -65,7 +65,7 @@ feature {PS_TEST_PROVIDER}
 			first_count: INTEGER
 			second_count: INTEGER
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			context := repository.new_transaction
 			context.insert (object)
 
@@ -112,7 +112,7 @@ feature {PS_TEST_PROVIDER}
 		do
 			object := an_object
 
-			repository.clean_db_for_testing
+			repository.wipe_out
 			context := repository.new_transaction
 			context.insert (object)
 

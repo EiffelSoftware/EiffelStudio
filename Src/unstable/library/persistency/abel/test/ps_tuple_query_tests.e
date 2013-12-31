@@ -25,7 +25,7 @@ feature
 			res: LINKED_LIST [TUPLE [STRING, STRING, INTEGER]]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			across
 				test_data.people as person
@@ -77,7 +77,7 @@ feature
 			query:PS_TUPLE_QUERY [TEST_PERSON]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			across
 				test_data.people as person
@@ -115,7 +115,7 @@ feature
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			across
 				test_data.people as person
@@ -148,7 +148,7 @@ feature
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			across
 				test_data.people as person
@@ -184,7 +184,7 @@ feature
 			res: LINKED_LIST [TUPLE [INTEGER]]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 
 			transaction.insert (test_data.reference_to_single_other)
@@ -228,7 +228,7 @@ feature
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_to_single_other)
 			create query.make
@@ -272,7 +272,7 @@ feature
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
 		do
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			transaction.insert (test_data.reference_cycle)
 			create query.make_with_criterion (factory.new_predefined ("ref_class_id", factory.equals, test_data.reference_cycle.ref_class_id))

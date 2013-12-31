@@ -151,7 +151,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 
 feature {PS_ABEL_EXPORT} -- Testing
 
-	clean_db_for_testing
+	wipe_out
 			-- Wipe out all data.
 		local
 			batch_size: INTEGER

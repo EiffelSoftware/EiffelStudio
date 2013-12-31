@@ -23,7 +23,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 			-- Some simple tests: strings and numbers with agent criteria
 		do
 
-			repository.clean_db_for_testing
+			repository.wipe_out
 			transaction := repository.new_transaction
 			insert_data
 
@@ -37,7 +37,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 			test_query_one_result_two_agent_criteria_ored
 
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_criteria_predefined
@@ -56,7 +56,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 
 
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 	test_criteria_agents_and_predefined
@@ -68,7 +68,7 @@ feature {PS_REPOSITORY_TESTS} -- Test criteria setting
 			test_query_many_results_three_mixed_criteria
 
 			transaction.commit
-			repository.clean_db_for_testing
+			repository.wipe_out
 		end
 
 feature {NONE} -- Implementation: Agent criteria tests

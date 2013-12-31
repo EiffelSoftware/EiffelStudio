@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 					else
 						if l_font /= Void then
 								-- All non selected items should be regular.
-							if l_font.shape /= {EV_FONT_CONSTANTS}.weight_regular then
+							if l_font.weight /= {EV_FONT_CONSTANTS}.weight_regular then
 								l_font := l_font.twin
 								l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 							end

@@ -329,7 +329,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 			end
 
 			if attached transaction as tr then
-				internal_transaction.repository.internal_active_transactions.prune_all (tr)
+				internal_transaction.repository.internal_active_transactions.remove (internal_transaction)
 				tr.internal_active_queries.prune_all (Current)
 			else
 				internal_transaction.repository.internal_active_queries.prune_all (Current)

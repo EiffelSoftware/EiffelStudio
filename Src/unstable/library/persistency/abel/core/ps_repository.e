@@ -294,7 +294,7 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	internal_active_queries: ARRAYED_LIST [PS_ABSTRACT_QUERY [ANY, ANY]]
 			-- A list of active queries.
 
-	internal_active_transactions: ARRAYED_LIST [PS_TRANSACTION]
+	internal_active_transactions: HASH_TABLE [PS_TRANSACTION, PS_INTERNAL_TRANSACTION]
 			-- A list of active transactions.
 
 feature -- Constants

@@ -7455,21 +7455,6 @@ feature {NONE} -- Visitor
 						if not is_inherited then
 							context.supplier_ids.extend_depend_unit_with_level (iteration_base_type.class_id, f, depend_unit_level)
 						end
-							-- Generate cursor creation code.
-						if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
-							create new_cursor_b
-							if attached {ACCESS_B} e as a then
-								a.set_parent (new_cursor_b)
-								new_cursor_b.set_target (a)
-							else
-								create access_expr_b
-								access_expr_b.set_expr (e)
-								access_expr_b.set_parent (new_cursor_b)
-								new_cursor_b.set_target (access_expr_b)
-							end
-							new_cursor_b.set_message (f.access_for_feature (iteration_type, Void, True))
-							new_cursor_b.message.set_parent (new_cursor_b)
-						end
 							-- Use an attached variant of a cursor type if required.
 						unattached_local_type := f.type.actual_type.instantiated_in (iteration_base_type)
 						local_type := unattached_local_type.as_attached_in (context.current_class)
@@ -7501,7 +7486,21 @@ feature {NONE} -- Visitor
 							context.add_object_test_local (local_info, local_id)
 							local_info.set_is_used (True)
 						end
-						if attached new_cursor_b then
+							-- Generate cursor creation code.
+						if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
+							create new_cursor_b
+							if attached {ACCESS_B} e as a then
+								a.set_parent (new_cursor_b)
+								new_cursor_b.set_target (a)
+							else
+								create access_expr_b
+								access_expr_b.set_expr (e)
+								access_expr_b.set_parent (new_cursor_b)
+								new_cursor_b.set_target (access_expr_b)
+							end
+							new_cursor_b.set_message (f.access_for_feature (local_type, Void, True))
+							new_cursor_b.message.set_parent (new_cursor_b)
+
 							create initialization_code.make (2)
 							create assign_b
 							assign_b.set_source (new_cursor_b)

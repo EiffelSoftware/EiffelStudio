@@ -365,14 +365,18 @@ feature -- Transaction operations
 			-- Prepare `Current' to be reused as a new transaction.
 		require
 			not_active: not is_active and not repository.active_transactions.has (Current)
+		local
+			l_transaction: like transaction
 		do
-			transaction := repository.new_internal_transaction (False)
-			transaction.set_root_declaration_strategy (root_declaration_strategy)
+			l_transaction := repository.new_internal_transaction (False)
+			l_transaction.set_root_declaration_strategy (root_declaration_strategy)
+			transaction := l_transaction
 			repository.internal_active_transactions.extend (Current, transaction)
 		ensure
 			active: is_active
 			no_active_queries: active_queries.is_empty
 			no_error: not has_error
+			root_declaration_unchanged: root_declaration_strategy = old root_declaration_strategy
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation

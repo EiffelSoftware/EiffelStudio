@@ -12,9 +12,6 @@ inherit
 	ITERATION_CURSOR [G]
 
 	PS_ABEL_EXPORT
-		export {NONE}
-			all
-		end
 
 create {PS_ABSTRACT_QUERY}
 	make
@@ -24,9 +21,7 @@ feature -- Access
 	item: G
 			-- Item at current cursor position.
 		do
-			check attached {G} query.result_cache [index] as res then
-				Result := res
-			end
+			Result := query.result_cache [index]
 		end
 
 feature -- Status report	
@@ -50,12 +45,13 @@ feature -- Cursor movement
 
 feature {NONE} -- Initialization
 
-	query: PS_ABSTRACT_QUERY [ANY, ANY]
-		-- The query to iterate over.
+	query: PS_ABSTRACT_QUERY [ANY, G]
+			-- The query to iterate over.
 
 	index: INTEGER
+			-- The current index in the query result cache.
 
-	make (a_query: PS_ABSTRACT_QUERY [ANY, ANY])
+	make (a_query: PS_ABSTRACT_QUERY [ANY, G])
 			-- Initialization for `Current'.
 		do
 			query := a_query

@@ -255,7 +255,7 @@ feature {PS_ABEL_EXPORT} -- Implementation : Access
 	generic_type: TYPE [detachable ANY]
 			-- Get the (detachable) generic type of `Current'.
 
-	result_cache: ARRAYED_LIST [ANY]
+	result_cache: ARRAYED_LIST [RESULT_TYPE]
 			-- The cached results.
 
 	internal_transaction: PS_INTERNAL_TRANSACTION
@@ -325,7 +325,7 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 
 			if internal_transaction.is_active then
 				internal_transaction.repository.rollback_transaction (internal_transaction)
-				internal_transaction.declare_as_aborted
+				internal_transaction.close
 			end
 
 			if attached transaction as tr then

@@ -259,7 +259,7 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 				doc := make_json_new (cursor.item, cursor.item.primary_key.out, "")
 --				db_name := cursor.item.metadata.base_class.name.twin
 --				db_name.to_lower
-				db_name := convert_type (cursor.item.metadata)
+				db_name := convert_type (cursor.item.type)
 --				print (db_name)
 
 				err := curl.create_document (db_name, doc)
@@ -267,7 +267,7 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 --				print (err)
 
 				-- ??
-				prev_attr_list := make_object (cursor.item.metadata, err, "")
+				prev_attr_list := make_object (cursor.item.type, err, "")
 				across
 					prev_attr_list as attr
 				loop
@@ -418,7 +418,7 @@ feature --json operations
 		do
 			create attr_list.make
 			callback := curl.get_document (db_name, id)
-			attr_list := make_object (object.metadata, callback, id)
+			attr_list := make_object (object.type, callback, id)
 			create Result.make_empty
 			across
 				attr_list as curr_attr

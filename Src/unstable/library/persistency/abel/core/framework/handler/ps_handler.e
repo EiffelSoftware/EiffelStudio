@@ -205,7 +205,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			object_generated: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_generated: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 			attached_anyway: attached object.backend_representation as rep
-			type_set: rep.metadata = object.type
+			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 			empty_object: is_mapping_to_object implies object.backend_object.attributes.is_empty
 			empty_collection: is_mapping_to_collection implies object.backend_collection.collection_items.is_empty
@@ -221,7 +221,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			object_generated: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_generated: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 			attached_anyway: attached object.backend_representation as rep
-			type_set: rep.metadata = object.type
+			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 			empty_object: is_mapping_to_object implies object.backend_object.attributes.is_empty
 			empty_collection: is_mapping_to_collection implies object.backend_collection.collection_items.is_empty
@@ -238,7 +238,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			object_generated: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_generated: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
 			attached_anyway: attached object.backend_representation as rep
-			type_set: rep.metadata = object.type
+			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 		deferred
 		end
@@ -251,11 +251,11 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
 			backend_rep_initialized: attached object.backend_representation as rep
-			type_set: rep.metadata = object.type
+			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 		do
 			check attached object.backend_representation as rep then
-				Result := [rep.primary_key.out, rep.metadata.name]
+				Result := [rep.primary_key.out, rep.type.name]
 			end
 		end
 

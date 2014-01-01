@@ -227,7 +227,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across
 				objects as cursor
 			loop
-				if attached database [cursor.item.metadata.type.type_id] as inner then
+				if attached database [cursor.item.type.type.type_id] as inner then
 					inner.remove (cursor.item.primary_key)
 				end
 			end
@@ -241,7 +241,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across
 				collections as cursor
 			loop
-				db := create_get_inner_collection_database (cursor.item.metadata)
+				db := create_get_inner_collection_database (cursor.item.type)
 
 				if cursor.item.is_update_delta and attached db [cursor.item.primary_key] as old_coll then
 
@@ -268,7 +268,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			across
 				collections as cursor
 			loop
-				if attached collection_database [cursor.item.metadata.type.type_id] as inner then
+				if attached collection_database [cursor.item.type.type.type_id] as inner then
 					inner.remove (cursor.item.primary_key)
 				end
 			end
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			across
 				objects as cursor
 			loop
-				inner := create_get_inner_database (cursor.item.metadata)
+				inner := create_get_inner_database (cursor.item.type)
 
 				if attached inner [cursor.item.primary_key] as old_obj then
 
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 						old_obj.set_is_root (cursor.item.is_root)
 					loop
 						old_obj.remove_attribute (attr.item)
-						old_obj.add_attribute (attr.item, cursor.item.attribute_value (attr.item).value, cursor.item.attribute_value (attr.item).attribute_class_name)
+						old_obj.add_attribute (attr.item, cursor.item.attribute_value (attr.item).value, cursor.item.attribute_value (attr.item).type)
 					end
 
 				else

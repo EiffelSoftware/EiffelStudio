@@ -1,5 +1,6 @@
 note
-	description: "A default repository that does the object-relational mapping, but relies on a PS_BACKEND for the stoage mechanism."
+	description: "A default repository that does the object-relational mapping, %
+				% but relies on a PS_BACKEND for the stoage mechanism."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,17 +11,13 @@ class
 inherit
 	PS_REPOSITORY
 
-	REFACTORING_HELPER
-
 create
 	make_from_factory
-
 
 feature -- Access.
 
 	batch_retrieval_size: INTEGER
-			-- Define the number of objects to be retrieved in one batch for query operations.
-			-- Set to `infinite_batch_size' to retrieve all objects at once (and disable lazy loading).
+			-- <Precursor>
 		do
 			Result := backend.batch_retrieval_size
 		end
@@ -28,7 +25,7 @@ feature -- Access.
 feature -- Element change
 
 	set_batch_retrieval_size (size: INTEGER)
-			-- Set `batch_retrieval_size' to `size'.
+			-- <Precursor>
 		do
 			backend.set_batch_retrieval_size (size)
 		end
@@ -36,7 +33,7 @@ feature -- Element change
 feature -- Disposal
 
 	close
-			-- Close the current repository.
+			-- <Precursor>
 		do
 			backend.close
 		end
@@ -44,7 +41,7 @@ feature -- Disposal
 feature {PS_ABEL_EXPORT} -- Object query
 
 	internal_execute_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Execute `query' within `transaction'.
+			-- <Precursor>
 		local
 			type: PS_TYPE_METADATA
 		do
@@ -53,7 +50,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
-			-- Execute the tuple query `tuple_query' within the readonly transaction `transaction'.
+			-- <Precursor>
 		local
 			collector: PS_CRITERION_ATTRIBUTE_COLLECTOR
 			trash: INTEGER
@@ -75,7 +72,7 @@ feature {PS_ABEL_EXPORT} -- Object query
 feature {PS_ABEL_EXPORT} -- Modification
 
 	write (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Insert `object' within `transaction' into `Current'.
+			-- <Precursor>
 		local
 			retried: BOOLEAN
 		do
@@ -83,15 +80,16 @@ feature {PS_ABEL_EXPORT} -- Modification
 				write_manager.write (object, transaction)
 			end
 		rescue
-			abort (transaction)
 			retried := True
+			abort (transaction)
+			check has_error: transaction.has_error end
 			if transaction.is_retry_allowed then
 				retry
 			end
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
-			-- Update `object' only and none of its referenced objects.
+			-- <Precursor>
 		local
 			retried: BOOLEAN
 		do
@@ -99,15 +97,16 @@ feature {PS_ABEL_EXPORT} -- Modification
 				write_manager.direct_update (object, transaction)
 			end
 		rescue
-			abort (transaction)
 			retried := True
+			abort (transaction)
+			check has_error: transaction.has_error end
 			if transaction.is_retry_allowed then
 				retry
 			end
 		end
 
 	set_root_status (object: ANY; value: BOOLEAN; transaction: PS_INTERNAL_TRANSACTION)
-			-- Set the root status of `object' to `value'.
+			-- <Precursor>
 		local
 			retried: BOOLEAN
 		do
@@ -115,8 +114,9 @@ feature {PS_ABEL_EXPORT} -- Modification
 				write_manager.update_root (object, value, transaction)
 			end
 		rescue
-			abort (transaction)
 			retried := True
+			abort (transaction)
+			check has_error: transaction.has_error end
 			if transaction.is_retry_allowed then
 				retry
 			end
@@ -125,34 +125,36 @@ feature {PS_ABEL_EXPORT} -- Modification
 feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	commit_transaction (transaction: PS_INTERNAL_TRANSACTION)
-			-- Explicitly commit the transaction.
+			-- <Precursor>
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				backend.commit (transaction) -- can fail and raise an exception
-				transaction.declare_as_successful
+					-- The next statement may fail and raise an exception.
+					-- In that case, `transaction.has_error' is True.
+				backend.commit (transaction)
+				transaction.close
 			end
 		rescue
-			abort (transaction)
 			retried := True
+			abort (transaction)
+			check has_error: transaction.has_error end
 			if transaction.is_retry_allowed then
 				retry
 			end
 		end
 
 	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
-			-- Rollback the transaction.
-
+			-- <Precursor>
 		do
 			backend.rollback (transaction)
-			transaction.declare_as_aborted
+			transaction.close
 		end
 
 feature {PS_ABEL_EXPORT} -- Testing
 
 	wipe_out
-			-- Wipe out all data.
+			--<Precursor>
 		local
 			batch_size: INTEGER
 		do
@@ -171,7 +173,7 @@ feature {PS_ABEL_EXPORT} -- Testing
 feature {PS_ABEL_EXPORT} -- Status Report
 
 	can_handle (object: ANY): BOOLEAN
-			-- Can `Current' handle the object `object'?
+			-- <Precursor>
 		local
 			local_transaction: PS_INTERNAL_TRANSACTION
 		do
@@ -188,7 +190,7 @@ feature {NONE} -- Initialization
 			handler_list: LINKED_LIST [PS_HANDLER];
 			transaction_settings: PS_TRANSACTION_SETTINGS
 			)
-			-- Initialization for `Current'
+			-- Initialization for `Current'.
 		do
 			backend := a_backend
 			type_factory := a_type_factory
@@ -217,7 +219,6 @@ feature {PS_ABEL_EXPORT} -- Implementation
 	type_factory: PS_METADATA_FACTORY
 			-- A type factory.
 
-
 feature {NONE} -- Implementation
 
 	initialize_query (query: PS_ABSTRACT_QUERY [ANY, ANY]; transaction: PS_INTERNAL_TRANSACTION; filter: READABLE_INDEXABLE [STRING])
@@ -236,13 +237,14 @@ feature {NONE} -- Implementation
 		end
 
 	abort (transaction: PS_INTERNAL_TRANSACTION)
-			-- Execute `operation' and do error handling if necessary.
+			-- Abort `transaction' and do some cleanup.
+			-- May be called to resolve exceptions.
 		local
 			to_prune: detachable PS_TRANSACTION
 		do
 			if transaction.is_active then
 				backend.rollback (transaction)
-				transaction.declare_as_aborted
+				transaction.close
 			end
 
 			if not transaction.has_error then
@@ -250,12 +252,12 @@ feature {NONE} -- Implementation
 			end
 
 			internal_active_transactions.remove (transaction)
+		ensure
+			has_error: transaction.has_error
+			not_present: not internal_active_transactions.has (transaction)
 		end
 
-feature {NONE} -- Obsolete
-
-		-- The two functions are just here to prevent bit-rot in case we need them again.
-
+feature {NONE} -- Obsolete: for future reference.
 
 	delete (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
 			-- Delete `object' within `transaction' from `Current'.
@@ -268,15 +270,14 @@ feature {NONE} -- Obsolete
 			id: NATURAL_64
 			primary: INTEGER
 			type: PS_TYPE_METADATA
-			to_delete: LINKED_LIST [PS_BACKEND_ENTITY]
+			to_delete: ARRAYED_LIST [PS_BACKEND_ENTITY]
 			found: BOOLEAN
 		do
 			id := transaction.identifier_table.search (object)
 			primary := transaction.primary_key_table [id]
-
 			type := type_factory.create_metadata_from_object (object)
 
-			create to_delete.make
+			create to_delete.make (1)
 			to_delete.extend (create {PS_BACKEND_OBJECT}.make (primary, type))
 
 			across
@@ -301,8 +302,6 @@ feature {NONE} -- Obsolete
 			transaction_still_alive: transaction.is_active
 			no_error: not transaction.has_error
 			object_not_known: not is_identified (object, transaction)
-		rescue
---			default_transactional_rescue (transaction)
 		end
 
 	delete_query (query: PS_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -310,7 +309,6 @@ feature {NONE} -- Obsolete
 		require
 			not_executed: not query.is_executed
 			transaction_repository_correct: transaction.repository = Current
-			--active_transaction: query.transaction.is_active
 			active_transaction: transaction.is_active
 		do
 			internal_execute_query (query, transaction)

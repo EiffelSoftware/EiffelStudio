@@ -217,11 +217,11 @@ feature {NONE} -- Implementation: Access
 				if retrieved_entity.is_root or not query.is_non_root_ignored then
 
 						-- Check if the object has been loaded previously.
-					index := read_manager.cache_lookup (retrieved_entity.primary_key, retrieved_entity.metadata)
+					index := read_manager.cache_lookup (retrieved_entity.primary_key, retrieved_entity.type)
 
 					if index = 0 then
 
-						new_object := read_manager.new_object_data (retrieved_entity.primary_key, retrieved_entity.metadata, 0)
+						new_object := read_manager.new_object_data (retrieved_entity.primary_key, retrieved_entity.type, 0)
 						index := new_object.index
 
 						read_manager.add_object (new_object, not query.is_tuple_query)

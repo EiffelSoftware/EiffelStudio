@@ -626,7 +626,7 @@ feature {NONE} -- Implementation: Batch retrieval
 				across
 					retrieved_objects as obj
 				loop
-					item (cache_lookup (obj.item.primary_key, obj.item.metadata)).set_backend_representation (obj.item)
+					item (cache_lookup (obj.item.primary_key, obj.item.type)).set_backend_representation (obj.item)
 				end
 			end
 
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation: Batch retrieval
 				across
 					retrieved_collections as coll
 				loop
-					item (cache_lookup (coll.item.primary_key, coll.item.metadata)).set_backend_representation (coll.item)
+					item (cache_lookup (coll.item.primary_key, coll.item.type)).set_backend_representation (coll.item)
 				end
 			end
 

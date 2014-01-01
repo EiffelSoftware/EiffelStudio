@@ -371,9 +371,6 @@ feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
 	get_connection (transaction: PS_INTERNAL_TRANSACTION): PS_SQL_CONNECTION
 			-- Get the connection associated with `transaction'.
 			-- Acquire a new connection if the transaction is new.
-		local
-			new_connection: PS_PAIR [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
-			found: detachable PS_SQL_CONNECTION
 		do
 			if attached active_connections [transaction] as res then
 				Result := res

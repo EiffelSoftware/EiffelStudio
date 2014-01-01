@@ -19,7 +19,7 @@ create {PS_ABEL_EXPORT}
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	collection_items: LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]
+	collection_items: LIST [TUPLE [value: STRING; type: IMMUTABLE_STRING_8]]
 			-- All objects that are stored inside this collection.
 			-- The first item in the PS_PAIR is the actual value of the item (foreign key or basic value), and the second item is the class name of the generating class of the first item.
 
@@ -28,7 +28,6 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	get_information (description: STRING): STRING
 			-- Returns the additional information to the key `description'.
-			-- (Background info: Information is generated during insert and needed during retrieval by a PS_COLLECTION_HANDLER. The backend just stores the <description, value> tuple.)
 		require
 			description_not_empty: not description.is_empty
 			information_present: has_information (description)
@@ -62,14 +61,14 @@ feature {PS_ABEL_EXPORT} -- Status report
 			reflection: INTERNAL
 		do
 			Result := True
-			if not attached {TYPE [detachable TUPLE]} metadata.type then
+			if not attached {TYPE [detachable TUPLE]} type.type then
 				across
 					collection_items as cursor
 				from
 					create reflection
-					collection_item_type := metadata.actual_generic_parameter (1).type.type_id
+					collection_item_type := type.actual_generic_parameter (1).type.type_id
 				loop
-					runtime_type := reflection.dynamic_type_from_string (cursor.item.second)
+					runtime_type := reflection.dynamic_type_from_string (cursor.item.type)
 
 					if runtime_type >= 0 then
 						-- Check if runtime type conforms to collection type
@@ -79,7 +78,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 						Result := Result
 							and runtime_type = reflection.none_type -- Runtime type set to "NONE"
 							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
-							and cursor.item.first.is_empty -- Value is an empty string
+							and cursor.item.value.is_empty -- Value is an empty string
 					end
 				end
 			end
@@ -94,7 +93,7 @@ feature -- Comparison
 			if Current = other then
 				Result := True
 			else
-				Result := primary_key.is_equal (other.primary_key) and metadata.is_equal (other.metadata)
+				Result := primary_key.is_equal (other.primary_key) and type.is_equal (other.type)
 				from
 					collection_items.start
 					other.collection_items.start
@@ -108,8 +107,8 @@ feature -- Comparison
 				until
 					collection_items.after or not Result
 				loop
-					Result := Result and collection_items.item.first.is_equal (other.collection_items.item.first)
-									 and collection_items.item.second.is_equal (other.collection_items.item.second)
+					Result := Result and collection_items.item.value.is_equal (other.collection_items.item.value)
+									 and collection_items.item.type.is_equal (other.collection_items.item.type)
 					collection_items.forth
 					other.collection_items.forth
 				variant
@@ -126,7 +125,7 @@ feature -- Comparison
 			if Current = other then
 				Result := True
 			else
-				Result := primary_key = other.primary_key and metadata ~ other.metadata and then
+				Result := primary_key = other.primary_key and type ~ other.type and then
 					across
 						information_descriptions as cursor
 					all
@@ -141,8 +140,8 @@ feature -- Comparison
 				until
 					i > collection_items.count or not Result
 				loop
-					Result := Result and collection_items [i].first ~ other.collection_items [i].first
-						and collection_items [i].second ~ other.collection_items [i].second
+					Result := Result and collection_items [i].value ~ other.collection_items [i].value
+						and collection_items [i].type ~ other.collection_items [i].type
 
 					i := i + 1
 				variant
@@ -153,16 +152,16 @@ feature -- Comparison
 
 feature {PS_ABEL_EXPORT} -- Element change
 
-	add_item (item_value, class_name_of_item_value: STRING)
+	add_item (item_value: STRING; runtime_type: IMMUTABLE_STRING_8)
 			-- Add the value `item_value' and its `class_name_of_item_value' to the end of the `collection_items' list.
 		require
-			class_name_not_empty: not class_name_of_item_value.is_empty
-			void_value_means_none_type: item_value.is_empty implies class_name_of_item_value.is_equal ("NONE")
+			class_name_not_empty: not runtime_type.is_empty
+			void_value_means_none_type: item_value.is_empty implies runtime_type ~ "NONE"
 		do
-			collection_items.extend (create {PS_PAIR [STRING, IMMUTABLE_STRING_8]}.make (item_value, class_name_of_item_value))
+			collection_items.extend ([item_value, runtime_type])
 		ensure
-			item_inserted: collection_items.last.first.is_equal (item_value)
-			class_name_inserted: collection_items.last.second.is_equal (class_name_of_item_value)
+			item_inserted: collection_items.last.value ~ item_value
+			class_name_inserted: collection_items.last.type ~ runtime_type
 		end
 
 	put_item (value: STRING; runtime_type: IMMUTABLE_STRING_8; position: INTEGER)
@@ -206,7 +205,7 @@ feature {NONE}
 			Precursor (key, meta)
 			create additional_information_hash.make (2)
 			create {ARRAYED_LIST [STRING]} information_descriptions.make (2)
-			create {ARRAYED_LIST [PS_PAIR [STRING, IMMUTABLE_STRING_8]]} collection_items.make (25)
+			create {ARRAYED_LIST [TUPLE [STRING, IMMUTABLE_STRING_8]]} collection_items.make (25)
 		ensure then
 			additional_info_empty: additional_information_hash.is_empty
 			collection_items_empty: collection_items.is_empty
@@ -217,7 +216,7 @@ feature {NONE} -- Consistency checks
 	check_void_types: BOOLEAN
 			-- Check that all Void items have `NONE' as the generating class.
 		do
-			Result := across collection_items as item_cursor all item_cursor.item.first.is_empty implies item_cursor.item.second.is_equal ("NONE") end
+			Result := across collection_items as item_cursor all item_cursor.item.value.is_empty implies item_cursor.item.type ~"NONE" end
 		end
 
 invariant

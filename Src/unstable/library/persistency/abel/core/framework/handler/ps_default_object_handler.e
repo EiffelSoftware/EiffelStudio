@@ -66,10 +66,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			from
 				i := 1
-				field_count := retrieved.metadata.attribute_count
+				field_count := retrieved.type.attribute_count
 
-				l_field_types := retrieved.metadata.builtin_type
-				l_field_names := retrieved.metadata.attributes
+				l_field_types := retrieved.type.builtin_type
+				l_field_names := retrieved.type.attributes
 
 			until
 				i > field_count
@@ -188,8 +188,8 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				i := 1
 				count := object.type.attribute_count
 
-				l_field_types := retrieved.metadata.builtin_type
-				l_field_names := retrieved.metadata.attributes
+				l_field_types := retrieved.type.builtin_type
+				l_field_names := retrieved.type.attributes
 			until
 				i > count
 

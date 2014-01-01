@@ -292,7 +292,6 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 		deferred
 		ensure
 			dead: not transaction.is_active
-			valid_status: transaction.is_successful_commit xor transaction.has_error
 		end
 
 	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
@@ -304,7 +303,6 @@ feature {PS_ABEL_EXPORT} -- Internal: Transaction handling
 		deferred
 		ensure
 			dead: not transaction.is_active
-			transaction_failed: not transaction.is_successful_commit
 			error_unchanged: transaction.has_error = old (transaction.has_error)
 		end
 

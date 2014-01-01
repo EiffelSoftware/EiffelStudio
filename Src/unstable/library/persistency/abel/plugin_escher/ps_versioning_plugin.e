@@ -46,9 +46,9 @@ feature
 			reflection: INTERNAL
 		do
 			-- TODO: check if it's sufficient to only add the version attribute to new objects!
-			if object.is_new and object.metadata.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
+			if object.is_new and object.type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
 				create reflection
-				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.metadata.type.type_id) as versioned_object then
+				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.type.type.type_id) as versioned_object then
 					stored_version := versioned_object.version
 				end
 				-- Testing-related code start
@@ -157,7 +157,7 @@ feature
 				-- Used for testing purposes
 		do
 			create reflection
-			current_class_instance := reflection.new_instance_of (object.metadata.type.type_id)
+			current_class_instance := reflection.new_instance_of (object.type.type.type_id)
 
 			if attached {VERSIONED_CLASS} current_class_instance as versioned_object then
 				current_version := versioned_object.version
@@ -244,7 +244,7 @@ feature
 						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
 						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 							-- Create a fresh instance of the current class
-							current_class_instance := reflection.new_instance_of (object.metadata.type.type_id)
+							current_class_instance := reflection.new_instance_of (object.type.type.type_id)
 							-- Go through every attribute in 'current_class_instance'
 							from i := 1 until i > no_of_attr loop
 								set := false

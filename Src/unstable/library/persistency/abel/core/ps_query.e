@@ -31,7 +31,9 @@ feature {PS_ABEL_EXPORT} -- Implementation: Element change
 					if cursor.after then
 						is_after := True
 					else
-						result_cache.extend (cursor.item)
+						check correct_type: attached {OBJECT_TYPE} cursor.item as res then
+							result_cache.extend (res)
+						end
 					end
 				end
 			end

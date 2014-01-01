@@ -20,39 +20,55 @@ feature {NONE} -- Initialization
 	make (a_repository: PS_REPOSITORY; a_strategy: PS_ROOT_OBJECT_STRATEGY; id: INTEGER)
 			-- Initialize `Current'.
 		do
-			repository := a_repository
-			create root_flags.make (1)
-			is_readonly := False
-			is_active := True
-			root_declaration_strategy := a_strategy
-			transaction_identifier := id
 			create identifier_table.make
 			create primary_key_table.make
+			create root_flags.make (1)
+
+			is_active := True
+			repository := a_repository
+			root_declaration_strategy := a_strategy
+			transaction_identifier := id
+		ensure
+			read_write: not is_readonly
+			active: is_active
+			repository_correct: repository = a_repository
+			strategy_correct: root_declaration_strategy = a_strategy
+			id_correct: transaction_identifier = id
 		end
 
 	make_readonly (a_repository: PS_REPOSITORY; id: INTEGER)
 			-- Initialize `Current', mark transaction as readonly.
 		do
-			repository := a_repository
-			create root_flags.make (1)
+			make (a_repository, create {PS_ROOT_OBJECT_STRATEGY}.make_preserve, id)
 			is_readonly := True
-			is_active := True
-			create root_declaration_strategy.make_preserve
-			transaction_identifier := id
-			create identifier_table.make
-			create primary_key_table.make
+		ensure
+			readonly: is_readonly
+			active: is_active
+			repository_correct: repository = a_repository
+			id_correct: transaction_identifier = id
 		end
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	transaction_identifier: INTEGER
-			-- A unique transaction identifier.
+	repository: PS_REPOSITORY
+			-- The repository this `Current' is bound to.
+
+	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
+			-- The root object strategy for the current transaction.
 
 	error: detachable PS_ERROR
 			-- Error description of the last error.
 
-	repository: PS_REPOSITORY
-			-- The repository this `Current' is bound to.
+	transaction_identifier: INTEGER
+			-- A unique transaction identifier.
+
+	hash_code: INTEGER
+			-- Hash code value.
+		do
+			Result := transaction_identifier
+		end
+
+feature {PS_ABEL_EXPORT} -- Access: Transaction context
 
 	root_flags: HASH_TABLE [BOOLEAN, NATURAL_64]
 			-- Mapping for ABEL identifier -> root status of every object.
@@ -63,27 +79,10 @@ feature {PS_ABEL_EXPORT} -- Access
 	primary_key_table: PS_PRIMARY_KEY_TABLE
 			-- An identifier -> primary key lookup table.
 
-	root_declaration_strategy: PS_ROOT_OBJECT_STRATEGY
-			-- The root object strategy for the current transaction.
-
-	hash_code: INTEGER
-			-- Hash code value
-		do
-			Result := transaction_identifier
-		end
-
-
 feature {PS_ABEL_EXPORT} -- Status report
 
 	is_active: BOOLEAN
 			-- Is the current transaction still active, or has it been commited or rolled back at some point?
-
-	is_successful_commit: BOOLEAN
-			-- Was the last commit operation successful?
-		require
-			not_active: not is_active
-		attribute
-		end
 
 	has_error: BOOLEAN
 			-- Has there been an error in any of the operations or the final commit?
@@ -139,21 +138,10 @@ feature {PS_ABEL_EXPORT} -- Element change
 			has_error: attached error
 		end
 
-	declare_as_aborted
-			-- Declare `Current' as aborted.
+	close
+			-- Set `is_active' to False.
 		do
 			is_active := False
-			is_successful_commit := False
 		end
-
-	declare_as_successful
-			-- Declare `Current' as successfully committed.
-		do
-			is_active := False
-			is_successful_commit := True
-		end
-
-invariant
-	error_implies_no_success: not is_active and has_error implies not is_successful_commit
 
 end

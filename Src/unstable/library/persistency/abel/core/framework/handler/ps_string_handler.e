@@ -69,7 +69,6 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			fixme ("We need to escape STRING and STRING_32 here, to prevent SQL injection.")
 
 			if attached {READABLE_STRING_32} object.reflector.object as string_32 then
-				create conv
 				Result := [conv.string_32_to_utf_8_string_8 (string_32), object.type.name]
 			else
 				Result := [object.reflector.object.out, object.type.name]

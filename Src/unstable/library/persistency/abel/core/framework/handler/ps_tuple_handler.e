@@ -32,11 +32,11 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			count: INTEGER
 			i: INTEGER
 
-			field: TUPLE [value: STRING; type:IMMUTABLE_STRING_8]
+			field: STRING --TUPLE [value: STRING; type:IMMUTABLE_STRING_8]
 			l_type: PS_TYPE_METADATA
 		do
 			retrieved := object.backend_collection
-			count := retrieved.collection_items.count
+			count := retrieved.count
 
 			check attached {TUPLE} object.reflector.object as tuple then
 				from
@@ -44,11 +44,11 @@ feature {PS_ABEL_EXPORT} -- Read functions
 				until
 					i > count
 				loop
-					field := retrieved.collection_items [i]
-					l_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+					field := retrieved [i]
+					l_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.item_type (i))
 					if
 						not l_type.is_none and then
-						attached read_manager.try_build_attribute (field.value, l_type, object) as obj
+						attached read_manager.try_build_attribute (field, l_type, object) as obj
 					then
 						tuple [i] := obj
 					end
@@ -66,11 +66,11 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			count: INTEGER
 			i: INTEGER
 
-			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+			field: STRING --TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
 			l_type: PS_TYPE_METADATA
 		do
 			retrieved := object.backend_collection
-			count := retrieved.collection_items.count
+			count := retrieved.count
 
 			check attached {TUPLE} object.reflector.object as tuple then
 				from
@@ -79,10 +79,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					i > count
 				loop
 					if not attached tuple [i] then
-						field := retrieved.collection_items [i]
-						l_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+						field := retrieved [i]
+						l_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.item_type (i))
 						if not l_type.is_none then
-							tuple [i] := read_manager.build_attribute (field.value.to_integer, l_type, object)
+							tuple [i] := read_manager.build_attribute (field.to_integer, l_type, object)
 						end
 					end
 					i := i + 1
@@ -107,13 +107,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			new_command: PS_BACKEND_COLLECTION
 		do
 			obj := object
-			check attached {PS_BACKEND_COLLECTION} obj.backend_representation as cmd then
-				new_command := cmd
-			end
-
-			check attached obj.type as t then
-				type := t
-			end
+			new_command := obj.backend_collection
+			type := obj.type
 
 			check attached {TUPLE} obj.reflector.object as t then
 				tuple_to_build := t
@@ -142,11 +137,11 @@ feature {PS_ABEL_EXPORT} -- Write functions
 							tuple := handler.as_string_pair (write_manager.item (obj.references [k]))
 						end
 					end
-					new_command.collection_items.extend ([tuple.value, tuple.type])
+					new_command.extend (tuple.value, tuple.type)
 				else
 					-- Value type
 					if attached tuple_to_build.item (i) as field then
-						new_command.collection_items.extend ([ basic_attribute_value (field), write_manager.metadata_factory.create_metadata_from_object (field).name])
+						new_command.extend (basic_attribute_value (field), write_manager.metadata_factory.create_metadata_from_object (field).name)
 					end
 				end
 				i := i + 1

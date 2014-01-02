@@ -150,7 +150,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			loop
 					-- Insert all items
 				across
-					cursor.item.collection_items as collection_item
+					cursor.item as item_cursor
 				from
 					collection_type_key := db_metadata_manager.create_get_primary_key_of_class (cursor.item.type.name)
 
@@ -179,24 +179,24 @@ feature {PS_ABEL_EXPORT} -- Write operations
 						-- Type of the collection
 						collection_type_key,
 						-- Position of the item
-						collection_item.target_index,
+						item_cursor.target_index,
 						-- Runtime type
-						db_metadata_manager.create_get_primary_key_of_class (collection_item.item.type),
+						db_metadata_manager.create_get_primary_key_of_class (cursor.item.item_type (item_cursor.target_index)),
 						-- Value
-						collection_item.item.value
+						item_cursor.item
 						]))
 				end
 
 				across
-					cursor.item.information_descriptions as info_cursor
+					cursor.item.meta_information as info
 				loop
 					info_commands.extend (SQL_Strings.to_list_with_braces ([
 						-- Primary key
 						cursor.item.primary_key,
 						-- Information key
-						info_cursor.item,
+						info.key,
 						-- Actual info
-						cursor.item.get_information (info_cursor.item)
+						info.item
 					]))
 				end
 

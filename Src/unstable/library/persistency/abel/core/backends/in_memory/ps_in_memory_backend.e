@@ -247,14 +247,14 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 					old_coll.set_is_root (cursor.item.is_root)
 					across
-						cursor.item.information_descriptions as key
+						cursor.item.meta_information as info
 					loop
-						old_coll.add_information (key.item, cursor.item.get_information (key.item))
+						old_coll.meta_information.force (info.item, info.key)
 					end
 					across
-						1 |..| cursor.item.collection_items.count as idx
+						1 |..| cursor.item.count as idx
 					loop
-						old_coll.collection_items.put_i_th (cursor.item.collection_items.i_th (idx.item), idx.item)
+						old_coll.put_i_th (cursor.item [idx.item], cursor.item.item_type (idx.item), idx.item)
 					end
 				else
 					db.force (cursor.item, cursor.item.primary_key)

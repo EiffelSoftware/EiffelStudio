@@ -184,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				else
 					runtime_type := db_metadata_manager.class_name_of_key (row_cursor.item.at ("runtimetype").to_integer)
 					value := row_cursor.item.at ("value")
-					result_list.last.add_item (value, runtime_type)
+					result_list.last.extend (value, runtime_type)
 				end
 				row_cursor.forth
 			end
@@ -207,7 +207,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 					key := row_cursor.item.at ("info_key")
 					info := row_cursor.item.at ("info")
 
-					cursor.item.add_information (key, info)
+					cursor.item.meta_information [key] := info
 
 					row_cursor.forth
 				end
@@ -300,7 +300,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 				if position > 0 then
 					runtime_type_foreign_key := row_cursor.item.at ("runtimetype").to_integer
-					current_object.put_item (value, db_metadata_manager.class_name_of_key (runtime_type_foreign_key), position)
+					current_object.force_i_th (value, db_metadata_manager.class_name_of_key (runtime_type_foreign_key), position)
 				else
 					current_object.set_is_root (value.to_boolean)
 				end
@@ -319,7 +319,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				info_value := row_cursor.item.at ("info")
 
 				if attached actual_result [primary_key] as partial then
-					partial.add_information (info_key, info_value)
+					partial.meta_information [info_key] := info_value
 				end
 				row_cursor.forth
 			end

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	PS_ABEL_EXPORT
+		undefine
+			is_equal
+		end
 
 feature {PS_ABEL_EXPORT} -- Access
 
@@ -36,6 +39,16 @@ feature {PS_ABEL_EXPORT} -- Status report
 			-- Is `Current.metadata' equal to `a_type'?
 		do
 			Result := type.is_equal (a_type)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- <Precursor>
+		deferred
+		ensure then
+			same_primary: primary_key = other.primary_key
+			same_type: type ~ other.type
 		end
 
 feature {PS_ABEL_EXPORT} -- Element change
@@ -68,9 +81,7 @@ feature {NONE} -- Initialization
 
 	make (key: INTEGER; a_type: PS_TYPE_METADATA)
 			-- Initialization for `Current'.
-		do
-			primary_key := key
-			type := a_type
+		deferred
 		ensure
 			key_set: primary_key = key
 			metadata_set: type.is_equal (a_type)

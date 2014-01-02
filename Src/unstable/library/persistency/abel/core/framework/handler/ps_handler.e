@@ -208,7 +208,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 			empty_object: is_mapping_to_object implies object.backend_object.attributes.is_empty
-			empty_collection: is_mapping_to_collection implies object.backend_collection.collection_items.is_empty
+			empty_collection: is_mapping_to_collection implies object.backend_collection.is_empty
 		end
 
 	initialize_backend_representation (object: PS_OBJECT_WRITE_DATA)
@@ -224,7 +224,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 			empty_object: is_mapping_to_object implies object.backend_object.attributes.is_empty
-			empty_collection: is_mapping_to_collection implies object.backend_collection.collection_items.is_empty
+			empty_collection: is_mapping_to_collection implies object.backend_collection.is_empty
 		deferred
 		end
 
@@ -254,6 +254,7 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 		do
+			fixme ("Change signature to not generate a tuple")
 			check attached object.backend_representation as rep then
 				Result := [rep.primary_key.out, rep.type.name]
 			end

@@ -16,7 +16,7 @@ inherit
 
 	PS_BACKEND_ENTITY
 		redefine
-			make, is_equal, out
+			out
 		end
 
 create {PS_ABEL_EXPORT}
@@ -199,9 +199,10 @@ feature -- Debugging output
 feature {NONE} -- Initialization
 
 	make (key: INTEGER; a_type: PS_TYPE_METADATA)
-			-- Initialization for `Current'.
+			-- <Precursor>
 		do
-			Precursor (key, a_type)
+			primary_key := key
+			type := a_type
 			create attr_values.make (a_type.attribute_count + 1)
 			create attr_types.make (a_type.attribute_count + 1)
 		ensure then

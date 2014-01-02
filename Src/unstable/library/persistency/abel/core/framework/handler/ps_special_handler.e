@@ -51,7 +51,9 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			-- Create object
 			type := object.type
 			retrieved := object.backend_collection
-			capacity := retrieved.get_information ("capacity").to_integer
+			check attached retrieved.meta_information ["capacity"] as cap then
+				capacity := cap.to_integer
+			end
 
 			if internal_lib.is_special_any_type (type.type.type_id) then
 				new_instance := internal_lib.new_special_any_instance (type.type.type_id, capacity)
@@ -134,25 +136,24 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			count: INTEGER
 			i: INTEGER
 
-			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+			field: STRING
 			field_type: PS_TYPE_METADATA
 
 			key: INTEGER
 		do
 			retrieved := object.backend_collection
---			count := retrieved.get_information ("count").to_integer
-			count := retrieved.collection_items.count
+			count := retrieved.count
 
 			from
 				i := 1
 			until
 				i > count
 			loop
-				field := retrieved.collection_items [i]
-				field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+				field := retrieved [i]
+				field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.item_type (i))
 
-				if not field_type.is_none and then not read_manager.is_attribute_ready (field.value, field_type) then
-					key := field.value.to_integer
+				if not field_type.is_none and then not read_manager.is_attribute_ready (field, field_type) then
+					key := field.to_integer
 					if read_manager.cache_lookup (key, field_type) = 0 then
 						read_manager.process_next (key, field_type, object)
 					end
@@ -164,7 +165,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 	finish_initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
 			-- Finish initialization of `object'.
 		local
-			field: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+			field: STRING
 			field_type: PS_TYPE_METADATA
 
 			ref: INTEGER
@@ -187,31 +188,30 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 			from
 				i := 1
-				count := retrieved.collection_items.count
---				count := retrieved.get_information ("count").to_integer
+				count := retrieved.count
 			until
 				i > count
 			loop
-				field := retrieved.collection_items [i]
-				field_type := read_manager.metadata_factory.create_metadata_from_string (field.type)
+				field := retrieved [i]
+				field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.item_type (i))
 
 				if ref_special then
 					if field_type.is_none then
 						special.extend (Void)
 					else
-						special.extend (read_manager.try_build_attribute (field.value, field_type, object))
+						special.extend (read_manager.try_build_attribute (field, field_type, object))
 						if object.reflector.is_special_copy_semantics_item (i - 1) and not basic_expanded_types.has (field_type.type.type_id) then
-							ref := read_manager.cache_lookup (field.value.to_integer, field_type)
+							ref := read_manager.cache_lookup (field.to_integer, field_type)
 							read_manager.item (ref).set_reflector (object.reflector.special_copy_semantics_item (i - 1))
 						end
 					end
 				elseif exp_special then
-					special.extend (read_manager.try_build_attribute (field.value, field_type, object))
-					ref := read_manager.cache_lookup (field.value.to_integer, field_type)
+					special.extend (read_manager.try_build_attribute (field, field_type, object))
+					ref := read_manager.cache_lookup (field.to_integer, field_type)
 					read_manager.item (ref).set_reflector (create {PS_REFLECTED_SPECIAL_EXPANDED}.make_special_expanded (special, i - 1))
 
 				else
-					special.extend (read_manager.try_build_attribute (field.value, field_type, object))
+					special.extend (read_manager.try_build_attribute (field, field_type, object))
 				end
 				i := i + 1
 			end
@@ -268,14 +268,13 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 						-- Basic types
 					if basic_expanded_types.has (item_type.type_id) then
-						collection.collection_items.extend ([ basic_attribute_value (item), item_type.name])
+						collection.extend (basic_attribute_value (item), item_type.name)
 						-- Reference and expanded
 					else
 						from
 							k := 1
 						until
 							k > object.references.count or (
---							write_manager.item (object.references [k]).referers.has (object.index) and
 							not used_refs.has (k) and
 							write_manager.item (object.references [k]).reflector.object = special.item (idx.item))
 						loop
@@ -283,22 +282,21 @@ feature {PS_ABEL_EXPORT} -- Write functions
 						end
 
 						if k > object.references.count then
-							tuple := ["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")]
+							collection.extend ("", none_string)
 						else
 							check attached write_manager.item (object.references [k]).handler as handler then
 								tuple := handler.as_string_pair (write_manager.item (object.references [k]))
+								collection.extend (tuple.value, tuple.type)
 								used_refs.extend (k)
 							end
 						end
-						collection.collection_items.extend ([tuple.value, tuple.type])
 					end
 				else
-					collection.collection_items.extend (["", create {IMMUTABLE_STRING_8}.make_from_string ("NONE")])
+					collection.extend ("", none_string)
 				end
 			end
 
-			collection.add_information ("capacity", special.capacity.out)
---			collection.add_information ("count", special.count.out)
+			collection.meta_information ["capacity"] := special.capacity.out
 		end
 
 

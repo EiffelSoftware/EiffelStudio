@@ -110,7 +110,6 @@ feature -- Command
 		local
 			l_er: detachable EQA_EW_EXECUTION_RESULT
 			l_failure_explanation: like failure_explanation
-			l_expected_execution_result: like expected_execution_result
 		do
 			l_er := a_test.execution_result
 			if l_er = Void then
@@ -119,9 +118,7 @@ feature -- Command
 				failure_explanation := l_failure_explanation
 				l_failure_explanation.append ("no pending execution result to check")
 
-			else
-				l_expected_execution_result := expected_execution_result
-				check attached l_expected_execution_result end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
+			elseif attached expected_execution_result as l_expected_execution_result then
 				execute_ok := l_er.matches (l_expected_execution_result)
 				if not execute_ok then
 					create l_failure_explanation.make (0)
@@ -133,6 +130,9 @@ feature -- Command
 					l_failure_explanation.append (l_expected_execution_result.summary)
 				end
 				a_test.set_execution_result (Void)
+			else
+				execute_ok := False
+				failure_explanation := "No execution result available"
 			end
 
 			if not execute_ok then
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			-- Result expected from system compilation
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -233,31 +233,28 @@ feature {NONE} -- Implementation
 		do
 			l_words := string_util.broken_into_words (a_phrase)
 			l_count := l_words.count
-			if l_count = 2 then
-				l_cname := l_words.i_th (1)
-				l_line_no := l_words.i_th (2)
-			end
 			if l_count /= 2 then
 				init_ok := False
 				create l_failure_explanation.make (0)
 				failure_explanation := l_failure_explanation
 				l_failure_explanation.append ("wrong number of arguments for syntax error phrase: ")
 				l_failure_explanation.append (a_phrase)
-			elseif attached l_line_no and then not string_util.is_integer (l_line_no) then
-				init_ok := False
-				create l_failure_explanation.make (0)
-				failure_explanation := l_failure_explanation
-				l_failure_explanation.append ("syntax error has non-integer line number: ")
-				l_failure_explanation.append (l_line_no)
 			else
-				check attached l_cname end -- Implied by previous if clause
-				l_cname := real_class_name (l_cname)
-				create l_syn.make (l_cname)
-				check attached l_line_no end -- Implied by previous if clause
-				l_syn.set_line_number (l_line_no.to_integer)
-				a_cr.add_syntax_error (l_syn)
+				l_cname := l_words.i_th (1)
+				l_line_no := l_words.i_th (2)
+				if not string_util.is_integer (l_line_no) then
+					init_ok := False
+					create l_failure_explanation.make (0)
+					failure_explanation := l_failure_explanation
+					l_failure_explanation.append ("syntax error has non-integer line number: ")
+					l_failure_explanation.append (l_line_no)
+				else
+					l_cname := real_class_name (l_cname)
+					create l_syn.make (l_cname)
+					l_syn.set_line_number (l_line_no.to_integer)
+					a_cr.add_syntax_error (l_syn)
+				end
 			end
-
 		end
 
 	process_validity_phrase (a_phrase: STRING; a_cr: EQA_EW_EIFFEL_COMPILATION_RESULT)
@@ -325,7 +322,7 @@ feature {NONE} -- Constants
 	Validity_warning_result: STRING = "validity_warning"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

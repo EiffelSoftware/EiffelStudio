@@ -68,34 +68,33 @@ feature {NONE} -- Initialization
 				l_failure_explanation.append ("variable being defined cannot start with ")
 				l_failure_explanation.extend ({EQA_EW_SUBSTITUTION_CONST}.Substitute_char)
 				init_ok := False
-			elseif count = 2 then
-				variable := args.i_th (1)
-				value := args.i_th (2)
-				init_ok := True
 			else
-				pos :=  string_util.first_white_position (a_line)
-				variable := a_line.substring (1, pos - 1)
-				l_val := a_line.substring (pos, a_line.count)
-				value := l_val
-				l_val.left_adjust
-				l_val.right_adjust
-				init_ok := True
-			end
-			if init_ok then
-				l_val := value
-				check attached l_val end -- Implied by `init_ok'
+				if count = 2 then
+					variable := args.i_th (1)
+					l_val := args.i_th (2)
+					value := l_val
+					init_ok := True
+				else
+					pos :=  string_util.first_white_position (a_line)
+					variable := a_line.substring (1, pos - 1)
+					l_val := a_line.substring (pos, a_line.count)
+					value := l_val
+					l_val.left_adjust
+					l_val.right_adjust
+					init_ok := True
+				end
 				if l_val.item (1) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char and
-				   l_val.item (l_val.count) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char then
+					l_val.item (l_val.count) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char then
 					l_val.remove (l_val.count)
 					l_val.remove (1)
 				elseif l_val.item (1) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char or
-				   l_val.item (l_val.count) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char then
+					l_val.item (l_val.count) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char then
 					failure_explanation := "value must be quoted on both ends or on neither end"
 					init_ok := False
 				end
-			end
-			if init_ok then
---				init_environment.define (variable, value)
+				if init_ok then
+--					init_environment.define (variable, value)
+				end
 			end
 
 			if not init_ok then
@@ -109,16 +108,10 @@ feature -- Command
 	execute (a_test: EQA_EW_SYSTEM_TEST_SET)
 			-- Execute `Current' as one of the
 			-- instructions of `a_test'.  Always successful.
-		local
-			l_var, l_val: like value
 		do
-			l_var := variable
-			check attached l_var end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-
-			l_val := value
-			check attached l_val end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-
-			a_test.environment.put (l_val, l_var)
+			if attached variable as l_var and attached value as l_val then
+				a_test.environment.put (l_val, l_var)
+			end
 		end
 
 feature -- Query
@@ -138,7 +131,7 @@ feature {NONE}
 			-- Value to be given to environment value
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

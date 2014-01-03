@@ -203,10 +203,10 @@ feature -- Access
 
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'.
-		obsolete
-			"For consistency with Unicode string handling, use `code (i)' instead."
+			-- Use `code' instead for consistency with Unicode handling.
+			--| Not obsolete because old code using just ASCII is safe.
 		do
-			Result := area.item (i - 1).natural_32_code.as_integer_32
+			Result := area.item (i - 1).code
 		end
 
 	area: SPECIAL [CHARACTER_8]

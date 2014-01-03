@@ -487,7 +487,7 @@ feature {NONE}  -- Implementation
 			others_right_side_not_outside: a_hot_index /= positions_and_sizes_try.count implies positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count) <= tool_bar_row.size
 		end
 
-	put_hot_tool_bar_at (a_mediator_is_resizing: BOOLEAN; a_position: INTEGER): INTEGER
+	put_hot_tool_bar_at (a_mediator_is_resizing_mode: BOOLEAN; a_position: INTEGER): INTEGER
 			-- Which index we should put hot tool bar?
 			-- 0 is before 1st tool bar, 1 is after 1st tool bar, 2 is after 2nd tool bar...
 			-- a_position is relative position

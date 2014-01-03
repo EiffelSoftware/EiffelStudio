@@ -15,12 +15,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_metadata_factory: like metadata_factory; a_backend: like backend)
+	make (a_metadata_factory: like type_factory; a_backend: like backend)
 			-- Initialization for `Current'.
 		do
 			initialize (a_metadata_factory)
 			backend := a_backend
-			create traversal.make (create {ANY}, metadata_factory)
+			create traversal.make (create {ANY}, type_factory)
 
 			-- NOTE: Be aware that object_storage is aliased!
 			object_storage := traversal.traversed_objects

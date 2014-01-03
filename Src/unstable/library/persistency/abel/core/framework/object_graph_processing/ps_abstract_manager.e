@@ -12,10 +12,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (meta_mgr: like metadata_factory)
+	initialize (meta_mgr: like type_factory)
 			-- Initialization for `Current'
 		do
-			metadata_factory := meta_mgr
+			type_factory := meta_mgr
 			create identity_type_handlers.make (tiny_size)
 			create value_type_handlers.make_empty (tiny_size)
 			create type_handler_cache.make (tiny_size)
@@ -53,7 +53,7 @@ feature {PS_ABEL_EXPORT} -- Access
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	metadata_factory: PS_METADATA_FACTORY
+	type_factory: PS_METADATA_FACTORY
 			-- A factory for PS_TYPE_METADATA.
 
 feature {PS_ABEL_EXPORT} -- Status report
@@ -179,10 +179,10 @@ feature {NONE} -- Utilities
 			do_all_in_set (operation, 1 |..| count)
 		end
 
-	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]]; set: INDEXABLE [INTEGER, INTEGER])
+	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]]; set: INTEGER_INTERVAL)
 			-- Apply `operation' on all items with an index in `set'.
-			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
-			-- Do nothing if `from_index' > `to_index'
+			-- Ignore items when `{PS_OBJECT_DATA}.handler' is Void or `{PS_OBJECT_DATA}.is_ignored' is True.
+			-- Do nothing if `set.is_empty'
 		local
 			index: INTEGER
 		do

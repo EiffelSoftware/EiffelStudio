@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_READ_CURSOR}."
-	author: ""
+	description: "An internal query result cursor capable of lazy loading."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			stored_types: LIST [READABLE_STRING_GENERAL]
 			subtypes_list: ARRAYED_LIST [PS_TYPE_METADATA]
 
-			type, l_type: PS_TYPE_METADATA
+			query_type, l_type: PS_TYPE_METADATA
 
 			empty_result: LINKED_LIST [PS_BACKEND_ENTITY]
 			empty_processed: LINKED_LIST [INTEGER]
@@ -36,26 +36,20 @@ feature {NONE} -- Initialization
 			query := a_query
 			create filter.make (a_filter)
 			read_manager := a_read_manager
-			type := read_manager.metadata_factory.create_metadata_from_type (query.generic_type)
-
-			create filter_lookup.make (filter.count)
-			filter.do_all (agent filter_lookup.extend (True, ?))
-
-
-			create reflector
+			query_type := read_manager.type_factory.create_metadata_from_type (query.generic_type)
 
 			create subtypes_list.make (1)
-			subtypes_list.extend (type)
+			subtypes_list.extend (query_type)
 
 			if query.is_subtype_included then
-
 				stored_types := read_manager.backend.stored_types
+				create reflector
 
 				across
 					stored_types as cursor
 				loop
-					l_type := read_manager.metadata_factory.create_metadata_from_type_id (reflector.dynamic_type_from_string (cursor.item))
-					if l_type.type.type_id /= type.type.type_id and reflector.type_conforms_to (l_type.type.type_id, type.type.type_id) then
+					l_type := read_manager.type_factory.create_metadata_from_type_id (reflector.dynamic_type_from_string (cursor.item))
+					if l_type /~ query_type and reflector.type_conforms_to (l_type.type.type_id, query_type.type.type_id) then
 						subtypes_list.extend (l_type)
 					end
 				end

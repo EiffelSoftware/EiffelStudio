@@ -22,7 +22,7 @@ create
 feature {NONE} -- Implementation
 
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
-			-- Can `Current' handle objects of type `type'?
+			-- <Precursor>
 		do
 			Result :=
 				type.type.type_id = ({detachable STRING_8}).type_id
@@ -30,10 +30,10 @@ feature {NONE} -- Implementation
 				or else attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type.type
 		end
 
-feature {PS_ABEL_EXPORT} -- String pair conversion
+feature {PS_ABEL_EXPORT} -- String conversion
 
 	build_from_string (value: STRING; type: PS_TYPE_METADATA): detachable ANY
-			-- Create an object from a value type.
+			-- <Precursor>
 		local
 			conv: UTF_CONVERTER
 			string32: STRING_32
@@ -59,17 +59,17 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			end
 		end
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
-			-- The `object' converted to a string pair.
+	as_string (object: PS_OBJECT_DATA): STRING
+			-- <Precursor>
 		local
 			conv: UTF_CONVERTER
 		do
 			fixme ("We need to escape STRING and STRING_32 here, to prevent SQL injection.")
 
 			if attached {READABLE_STRING_32} object.reflector.object as string_32 then
-				Result := [conv.string_32_to_utf_8_string_8 (string_32), object.type.name]
+				Result := conv.string_32_to_utf_8_string_8 (string_32)
 			else
-				Result := [object.reflector.object.out, object.type.name]
+				Result := object.reflector.object.out
 			end
 		end
 

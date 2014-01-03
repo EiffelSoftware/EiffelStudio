@@ -23,7 +23,7 @@ feature {PS_ABEL_EXPORT} -- Access: General information
 	reflector: REFLECTED_OBJECT
 			-- A reflection wrapper to the actual object.
 		require
-			initialized: is_object_initialized
+			initialized: is_reflector_initialized
 		attribute
 		end
 
@@ -41,10 +41,6 @@ feature {PS_ABEL_EXPORT} -- Access: General information
 
 	level: INTEGER
 			-- The level of the current object in the object graph.
-		obsolete
-			"Only used for debugging, will be removed."
-		attribute
-		end
 
 feature {PS_ABEL_EXPORT} -- Status report
 
@@ -53,16 +49,16 @@ feature {PS_ABEL_EXPORT} -- Status report
 			-- I.e. is there a mapping to a primary key?
 
 	is_ignored: BOOLEAN
-			-- Is the current object ignored for further processing?
+			-- Is the current object ignored?
 
 	is_handler_initialized: BOOLEAN
-			-- Is there a handler for the current object?
+			-- Is the handler set?
 		do
 			Result := attached internal_handler
 		end
 
-	is_object_initialized: BOOLEAN
-			-- Is the actual object set?
+	is_reflector_initialized: BOOLEAN
+			-- Is the reflector set?
 		do
 			Result := reflector.object /= Current
 		end
@@ -80,7 +76,7 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 		require
 			initialized: is_handler_initialized
 		do
-			check attached internal_handler as res then
+			check from_precondition: attached internal_handler as res then
 				Result := res
 			end
 		ensure
@@ -89,17 +85,13 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 
 	backend_representation: detachable PS_BACKEND_ENTITY
 			-- The representation of the current object in the backend.
---		note
---			option: stable
---		attribute
---		end
 
 	backend_object: PS_BACKEND_OBJECT
 			-- The representation of current as a backend object.
 		require
 			is_backend_object: attached {PS_BACKEND_OBJECT} backend_representation
 		do
-			check attached {PS_BACKEND_OBJECT} backend_representation as res then
+			check from_precondition: attached {PS_BACKEND_OBJECT} backend_representation as res then
 				Result := res
 			end
 		end
@@ -107,9 +99,9 @@ feature {PS_ABEL_EXPORT} -- Access: ABEL internals
 	backend_collection: PS_BACKEND_COLLECTION
 			-- The representation of current as a backend collection.
 		require
-			is_backend_object: attached {PS_BACKEND_COLLECTION} backend_representation
+			is_backend_collection: attached {PS_BACKEND_COLLECTION} backend_representation
 		do
-			check attached {PS_BACKEND_COLLECTION} backend_representation as res then
+			check from_precondition: attached {PS_BACKEND_COLLECTION} backend_representation as res then
 				Result := res
 			end
 		end
@@ -152,7 +144,7 @@ feature {PS_ABEL_EXPORT} -- Element change
 	set_backend_representation (a_backend_representation: PS_BACKEND_ENTITY)
 			-- Assign `backend_representation' with `a_backend_representation'.
 		require
---			same_type: a_backend_representation.metadata.is_equal (type)
+			same_type: a_backend_representation.type ~ type
 		do
 			backend_representation := a_backend_representation
 		ensure
@@ -161,28 +153,28 @@ feature {PS_ABEL_EXPORT} -- Element change
 			backend_collection_correct: attached {PS_BACKEND_COLLECTION} a_backend_representation implies backend_collection = a_backend_representation
 		end
 
-	set_reflector (an_object: like reflector)
-			-- Assign `object' with `an_object'.
+	set_reflector (a_reflector: like reflector)
+			-- Assign `reflector' with `a_reflector'.
 		do
-			reflector := an_object
+			reflector := a_reflector
 		ensure
-			initialized: is_object_initialized
-			object_assigned: an_object = reflector
+			initialized: is_reflector_initialized
+			correct: a_reflector = reflector
 		end
 
-	set_referer (referer_index: INTEGER)
-			-- Set the referer.
+	set_referer (referer: INTEGER)
+			-- Set `last_referer' to `referer' and increase `referer_count' by one.
 		do
-			last_referer := referer_index
+			last_referer := referer
 			referer_count := referer_count + 1
+		ensure
+			correct: last_referer = referer
+			count_increased: referer_count = old referer_count + 1
 		end
 
 feature {NONE} -- Implementation
 
 	internal_handler: detachable like handler
 			-- The detachable but stable reference to the handler.
---		note
---			option: stable
---		attribute
---		end
+
 end

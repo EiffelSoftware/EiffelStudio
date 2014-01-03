@@ -58,10 +58,10 @@ feature {PS_ABEL_EXPORT} -- Access
 		end
 
 	internal_lib: INTERNAL
-			-- An INTERNAL library instance.
+			-- An {INTERNAL} library instance.
 
 	none_string: IMMUTABLE_STRING_8
-			-- The type string for "NONE".
+			-- The type string for {NONE}.
 
 feature {PS_ABEL_EXPORT} -- Status report
 
@@ -91,7 +91,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 		end
 
 	is_mapping_to_value_type: BOOLEAN
-			-- Does `Current' map objects to a value type (i.e. STRING)?
+			-- Does `Current' map objects to a value type (i.e. {STRING_8})?
 		deferred
 		end
 
@@ -123,7 +123,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			new_instance := internal_lib.new_instance_of (object.type.type.type_id)
 			object.set_object (new_instance)
 		ensure
-			built: object.is_object_initialized
+			built: object.is_reflector_initialized
 		end
 
 	initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
@@ -136,7 +136,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			object_retrieved: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_retrieved: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
-			created: object.is_object_initialized
+			created: object.is_reflector_initialized
 		deferred
 		end
 
@@ -148,7 +148,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 			object_retrieved: is_mapping_to_object implies attached {PS_BACKEND_OBJECT} object.backend_representation
 			collection_retrieved: is_mapping_to_collection implies attached {PS_BACKEND_COLLECTION} object.backend_representation
-			created: object.is_object_initialized
+			created: object.is_reflector_initialized
 		deferred
 		end
 
@@ -164,7 +164,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		end
 
 	set_identifier (object: PS_OBJECT_WRITE_DATA)
-			-- Set the ABEL `identifier' of `object'.
+			-- Set the {PS_OBJECT_WRITE_DATA}.identifier of `object'.
 		require
 			can_handle: can_handle (object)
 			not_ignored: not object.is_ignored
@@ -243,9 +243,9 @@ feature {PS_ABEL_EXPORT} -- Write functions
 		deferred
 		end
 
-feature {PS_ABEL_EXPORT} -- String pair conversion
+feature {PS_ABEL_EXPORT} -- String conversion
 
-	as_string_pair (object: PS_OBJECT_DATA): TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+	as_string (object: PS_OBJECT_DATA): STRING
 			-- The `object' as a string pair, i.e. when referenced by another object.
 		require
 			can_handle: can_handle (object)
@@ -254,9 +254,8 @@ feature {PS_ABEL_EXPORT} -- String pair conversion
 			type_set: rep.type = object.type
 			primary_key_set: rep.primary_key > 0
 		do
-			fixme ("Change signature to not generate a tuple")
-			check attached object.backend_representation as rep then
-				Result := [rep.primary_key.out, rep.type.name]
+			check from_precondition: attached object.backend_representation as rep then
+				Result := rep.primary_key.out
 			end
 		end
 
@@ -298,12 +297,12 @@ feature {NONE} -- Implementation
 		end
 
 	type_from_string (type_string: STRING): PS_TYPE_METADATA
-			-- Return a `{PS_TYPE_METADATA}' for the type denoted by `type_string'.
+			-- Return a {PS_TYPE_METADATA} for the type denoted by `type_string'.
 		local
 			type_id: INTEGER
 		do
 			type_id := internal_lib.dynamic_type_from_string (type_string)
-			Result := write_manager.metadata_factory.create_metadata_from_type_id (type_id)
+			Result := write_manager.type_factory.create_metadata_from_type_id (type_id)
 		end
 
 feature {NONE} -- Impementation

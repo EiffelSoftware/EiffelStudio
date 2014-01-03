@@ -8,9 +8,12 @@ class
 	PS_MYSQL_BACKEND
 
 inherit
+
 	PS_GENERIC_LAYOUT_SQL_BACKEND
 		redefine
-			generate_all_object_primaries, generate_collection_primaries, make
+			generate_all_object_primaries,
+			generate_collection_primaries,
+			make
 		end
 
 create
@@ -19,16 +22,14 @@ create
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
 	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
-			-- For each type `type_key' in `order', generate `order [type_key]' new objects in the database.
+			-- <Precursor>
 		local
 			all_primaries: INTEGER
 			connection: PS_SQL_CONNECTION
 			new_primary_key: INTEGER
 			current_list: ARRAYED_LIST [PS_BACKEND_OBJECT]
---			none_class_key: INTEGER
---			existence_attribute_key: INTEGER
 		do
-			-- Count the total number of objects to generate
+				-- Count the total number of objects to generate.
 			across
 				order as cursor
 			from
@@ -37,11 +38,11 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 				all_primaries := all_primaries + cursor.item
 			end
 
-			-- Invoke the stored procedure to generate the primary keys
+				-- Invoke the stored procedure to generate the primary keys.
 			connection := get_connection (transaction)
 			connection.execute_sql ("call generateprimaries (" + all_primaries.out + ")")
 
-			-- Distribute the generated numbers among the objects
+				-- Distribute the generated numbers among the objects.
 			across
 				order as cursor
 			from
@@ -53,20 +54,18 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 					create current_list.make (cursor.item)
 					Result.extend (current_list, cursor.key)
 				loop
-					-- Get a primary key
+						-- Get a primary key.
 					new_primary_key := connection.last_results.first.item.item (1).to_integer
 					connection.last_results.first.forth
 
-					-- Create a new object
+						-- Create a new object.
 					current_list.extend (create {PS_BACKEND_OBJECT}.make_fresh (new_primary_key, cursor.key))
 				end
 			end
 
-			-- Cleanup
---			none_class_key := db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.None_class)
---			existence_attribute_key := db_metadata_manager.create_get_primary_key_of_attribute (SQL_Strings.Existence_attribute, db_metadata_manager.create_get_primary_key_of_class (SQL_Strings.none_class))
---			connection.execute_sql ("DELETE FROM ps_value WHERE attributeid = " + existence_attribute_key.out)
-
+				-- Cleanup
+			fixme ("Check if it is beneficial for performance reasons to %
+					% delete the superfluous existence attributes again.")
 		rescue
 			rollback (transaction)
 		end
@@ -74,7 +73,8 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
 			-- For each type `type_key' in the hash table `order', generate `order [type_key]' new collections in the database.
 		do
-			fixme ("For performance reasons, use a stored procedure, like in generate_all_object_primaries")
+			fixme ("For performance reasons, use a stored procedure, %
+					% like in generate_all_object_primaries")
 			Result := Precursor (order, transaction)
 		end
 

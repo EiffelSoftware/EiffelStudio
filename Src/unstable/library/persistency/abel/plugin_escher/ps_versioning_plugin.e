@@ -1,5 +1,6 @@
 note
-	description: "Summary description for {PS_VERSIONING_PLUGIN}."
+	description: "An ESCHER extension to ABEL. Adds a version attribute to  %
+				% inserted objects, and checks on this version during retrieval."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,10 +9,9 @@ class
 	PS_VERSIONING_PLUGIN
 
 inherit
+
 	PS_PLUGIN
-		redefine
---			before_write_compatibility
-		end
+
 	PS_ABEL_EXPORT
 
 	REFACTORING_HELPER
@@ -21,109 +21,66 @@ create
 
 feature {NONE} -- Initialization
 
-	make (schema_evolution_handlers: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING])
+	make (schema_evolution_handlers: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER, STRING])
 			-- Initialization for `Current'.
 		local
 			factory: PS_METADATA_FACTORY
 		do
 			create factory.make
 			integer_metadata := factory.create_metadata_from_type ({INTEGER})
-
 			schema_evolution_handlers_table := schema_evolution_handlers
 		end
 
 	integer_metadata: PS_TYPE_METADATA
 			-- Metadata for INTEGER
 
-	schema_evolution_handlers_table: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER,STRING]
+	schema_evolution_handlers_table: HASH_TABLE [SCHEMA_EVOLUTION_HANDLER, STRING]
 			-- Hashtable with class names as keys and respective schema evolution handlers as values
 
 feature
 
 	before_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
+			-- Adds the version attribute.
 		local
 			stored_version: INTEGER
 			reflection: INTERNAL
 		do
-			-- TODO: check if it's sufficient to only add the version attribute to new objects!
+			fixme ("TODO: check if it's sufficient to only add the version attribute to new objects!")
 			if object.is_new and object.type.type.is_conforming_to ({detachable VERSIONED_CLASS}) then
 				create reflection
 				check attached {VERSIONED_CLASS} reflection.new_instance_of (object.type.type.type_id) as versioned_object then
 					stored_version := versioned_object.version
 				end
-				-- Testing-related code start
+					-- Testing-related code start
 				if simulate_version_mismatch then
 					fixme ("Remove testing-related code")
 					stored_version := stored_version - 1
 					if simulate_added_attribute then
-						-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+							-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
 						stored_version := 1
 					end
 					if simulate_attribute_type_changed then
-						-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+							-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
 						stored_version := 2
 					end
 					if simulate_attribute_name_changed then
-						-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+							-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
 						stored_version := 3
 					end
 					if simulate_removed_attribute then
-						-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
+							-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
 						stored_version := 5
 					end
 					if simulate_multiple_changes then
-						-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+							-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
 						stored_version := 4
 					end
 				end
-				-- Testing-related code end
+					-- Testing-related code end
 
 				object.add_attribute ("version", stored_version.out, integer_metadata.name)
 			end
 		end
-
---	before_write_compatibility (an_object: PS_SINGLE_OBJECT_PART; transaction:PS_INTERNAL_TRANSACTION)
---			-- Adds the version attribute.
---		local
---			stored_version: INTEGER
---			version_attribute: PS_BASIC_ATTRIBUTE_PART
---			test_int_attribute: PS_BASIC_ATTRIBUTE_PART
---		do
---			if an_object.write_operation = an_object.write_operation.insert and
---					attached {VERSIONED_CLASS} an_object.represented_object as versioned_object then
---				stored_version := versioned_object.version
-
---				-- Testing-related code start
---				if simulate_version_mismatch then
---					fixme ("Remove testing-related code")
---					stored_version := stored_version - 1
---					if simulate_added_attribute then
---						-- 'stored_version' has to be set to 1 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
---						stored_version := 1
---					end
---					if simulate_attribute_type_changed then
---						-- 'stored_version' has to be set to 2 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
---						stored_version := 2
---					end
---					if simulate_attribute_name_changed then
---						-- 'stored_version' has to be set to 3 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
---						stored_version := 3
---					end
---					if simulate_removed_attribute then
---						-- 'stored_version' has to be set to 5 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
---						stored_version := 5
---					end
---					if simulate_multiple_changes then
---						-- 'stored_version' has to be set to 4 such that that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
---						stored_version := 4
---					end
---				end
---				-- Testing-related code end
-
---				create version_attribute.make (stored_version, integer_metadata, an_object.root)
---				an_object.add_attribute ("version", version_attribute)
---			end
---		end
 
 	before_retrieve (args: TUPLE [type: PS_TYPE_METADATA; criteria: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Add the version attribute, if necessary
@@ -140,7 +97,7 @@ feature
 			end
 		end
 
-	after_retrieve (object: PS_BACKEND_OBJECT; transaction:PS_INTERNAL_TRANSACTION)
+	after_retrieve (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 			-- Check the version of the retrieved object and apply conversion functions if necessary
 		local
 			reflection: INTERNAL
@@ -152,137 +109,113 @@ feature
 			set: BOOLEAN
 			current_class_name, attr_name, attr_type_as_string: STRING
 			exception: EXCEPTIONS
-
 			test_var: TUPLE [STRING, IMMUTABLE_STRING_8]
-				-- Used for testing purposes
+			-- Used for testing purposes
 		do
 			create reflection
 			current_class_instance := reflection.new_instance_of (object.type.type.type_id)
-
 			if attached {VERSIONED_CLASS} current_class_instance as versioned_object then
 				current_version := versioned_object.version
 				check
 					version_positive: current_version > 0
 				end
-					-- Collect the results
---				from
---					create result_list.make
---					if attributes.is_empty then
---						attributes.append (type.attributes)
---					end
---					attributes.extend ("version")
---					Result := real_backend.retrieve (type, criteria, attributes, transaction)
---				until
---					Result.after
---				loop
 
 					-- Testing-related code start
-					if simulate_version_mismatch then
-						fixme ("Remove testing-related code")
-						if simulate_added_attribute then
+				if simulate_version_mismatch then
+					fixme ("Remove testing-related code")
+					if simulate_added_attribute then
 							-- 'current_version' has to be set to 2 such that 'v1_to_v2' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-							current_version := 2
+						current_version := 2
 							-- Simulate that 'new_attr' is a new attribute in class ESCHER_TEST_CLASS_2
-							object.remove_attribute ("new_attr")
-							object.attributes.start
-						end
-						if simulate_attribute_type_changed then
+						object.remove_attribute ("new_attr")
+						object.attributes.start
+					end
+					if simulate_attribute_type_changed then
 							-- 'current_version' has to be set to 3 such that 'v2_to_v3' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-							current_version := 3
+						current_version := 3
 							-- Simulate that 'type_changed' was previously of type INTEGER
-							test_var := object.attribute_value ("type_changed")
-							object.remove_attribute ("type_changed")
-							object.attributes.start
-							if attached {STRING} test_var.item (1) as attr_value then
-								object.add_attribute ("type_changed", attr_value, "INTEGER_32")
-							end
-						end
-						if simulate_attribute_name_changed then
-							-- 'current_version' has to be set to 4 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-							current_version := 4
-							-- Simulate that 'name_changed' was previously named 'old_name'
-							test_var := object.attribute_value ("name_changed")
-							object.remove_attribute ("name_changed")
-							object.attributes.start
-							if attached {STRING} test_var.item (1) as attr_value then
-								if attached {IMMUTABLE_STRING_8} test_var.item (2) as attr_type then
-									object.add_attribute ("old_name", attr_value, attr_type)
-								end
-							end
-						end
-						if simulate_removed_attribute then
-							-- 'current_version' has to be set to 6 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
-							current_version := 6
-							-- Simulate that 'removed_attr' was removed from class ESCHER_TEST_CLASS_2
-							object.add_attribute ("removed_attr", "12", "INTEGER_32")
-						end
-						if simulate_multiple_changes then
-							-- 'current_version' has to be set to 5 such that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
-							current_version := 5
+						test_var := object.attribute_value ("type_changed")
+						object.remove_attribute ("type_changed")
+						object.attributes.start
+						if attached {STRING} test_var.item (1) as attr_value then
+							object.add_attribute ("type_changed", attr_value, "INTEGER_32")
 						end
 					end
+					if simulate_attribute_name_changed then
+							-- 'current_version' has to be set to 4 such that 'v3_to_v4' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						current_version := 4
+							-- Simulate that 'name_changed' was previously named 'old_name'
+						test_var := object.attribute_value ("name_changed")
+						object.remove_attribute ("name_changed")
+						object.attributes.start
+						if attached {STRING} test_var.item (1) as attr_value then
+							if attached {IMMUTABLE_STRING_8} test_var.item (2) as attr_type then
+								object.add_attribute ("old_name", attr_value, attr_type)
+							end
+						end
+					end
+					if simulate_removed_attribute then
+							-- 'current_version' has to be set to 6 such that no conversion function is used ('v5_to_v6' not available in APPLICATION_SCHEMA_EVOLUTION_HANDLER)
+						current_version := 6
+							-- Simulate that 'removed_attr' was removed from class ESCHER_TEST_CLASS_2
+						object.add_attribute ("removed_attr", "12", "INTEGER_32")
+					end
+					if simulate_multiple_changes then
+							-- 'current_version' has to be set to 5 such that 'v4_to_v5' from APPLICATION_SCHEMA_EVOLUTION_HANDLER is used
+						current_version := 5
+					end
+				end
 					-- Testing-related code end
-
---					result_list.extend (Result.item)
---					Result.forth
---				end
 
 				current_class_name := reflection.class_name (current_class_instance)
 				no_of_attr := reflection.field_count (current_class_instance)
-				-- Check for each result if the version matches
---				across
---					result_list as cursor
---				loop
-					stored_object := object
-					stored_version := stored_object.attribute_value ("version").value.to_integer
-					if stored_version /= current_version then
+					-- Check for each result if the version matches
+
+				stored_object := object
+				stored_version := stored_object.attribute_value ("version").value.to_integer
+				if stored_version /= current_version then
 						-- Save all attribute values in 'stored_obj_attr_values'
 						-- This values could be needed to calculate functions returned by the schema evolution handler
-						stored_obj_attr_values := get_attribute_values (stored_object)
-						clean_stored_obj (stored_object)
---						stored_object.remove_attribute ("version")
-						stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
-						if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
+					stored_obj_attr_values := get_attribute_values (stored_object)
+					clean_stored_obj (stored_object)
+						--						stored_object.remove_attribute ("version")
+					stored_object.add_attribute ("version", current_version.out, "INTEGER_32")
+					if attached {SCHEMA_EVOLUTION_HANDLER} schema_evolution_handlers_table.item (current_class_name) as current_schema_evolution_handler then
 							-- Create a fresh instance of the current class
-							current_class_instance := reflection.new_instance_of (object.type.type.type_id)
+						current_class_instance := reflection.new_instance_of (object.type.type.type_id)
 							-- Go through every attribute in 'current_class_instance'
-							from i := 1 until i > no_of_attr loop
-								set := false
-								attr_name := reflection.field_name (i, current_class_instance)
+						from
+							i := 1
+						until
+							i > no_of_attr
+						loop
+							set := false
+							attr_name := reflection.field_name (i, current_class_instance)
 								-- Try to use schema evolution handler to calculate value of attribute
-								set := handle_object_evolution (current_schema_evolution_handler, current_class_instance, stored_obj_attr_values, reflection.field_type (i, current_class_instance), attr_name, i, stored_version, current_version)
-								if set then
+							set := handle_object_evolution (current_schema_evolution_handler, current_class_instance, stored_obj_attr_values, reflection.field_type (i, current_class_instance), attr_name, i, stored_version, current_version)
+							if set then
 									-- Attribute was set in current_class_instance by the schema evolution handler
-									if attached {ANY} reflection.field (i, current_class_instance) as attr_value then
-										attr_type_as_string := get_type_as_string (reflection.field_type (i, current_class_instance))
-										stored_object.add_attribute (attr_name, attr_value.out, attr_type_as_string)
-									end
-								else
+								if attached {ANY} reflection.field (i, current_class_instance) as attr_value then
+									attr_type_as_string := get_type_as_string (reflection.field_type (i, current_class_instance))
+									stored_object.add_attribute (attr_name, attr_value.out, attr_type_as_string)
+								end
+							else
 									-- Attribute wasn't set by the schema evolution handler
-									if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (attr_name) as tuple then
-										if attached {STRING} tuple.item (1) as attr_value then
-											if attached {STRING} tuple.item (2) as attr_type then
-												stored_object.add_attribute (attr_name, attr_value, attr_type)
-											end
+								if attached {TUPLE [STRING, STRING]} stored_obj_attr_values.item (attr_name) as tuple then
+									if attached {STRING} tuple.item (1) as attr_value then
+										if attached {STRING} tuple.item (2) as attr_type then
+											stored_object.add_attribute (attr_name, attr_value, attr_type)
 										end
 									end
 								end
-								i := i + 1
 							end
-						else
-							create exception
-							exception.raise ("No schema evolution handler available for class '" + current_class_name + "'.")
+							i := i + 1
 						end
 					else
---						object.remove_attribute ("version")
+						create exception
+						exception.raise ("No schema evolution handler available for class '" + current_class_name + "'.")
 					end
---				end -- loop
---				Result := result_list.new_cursor
---					-- Required because of postcondition...
---				attributes.compare_objects
---				attributes.prune ("version")
---			else
---				Result := real_backend.retrieve (type, criteria, attributes, transaction)
+				end
 			end
 		end
 
@@ -298,16 +231,9 @@ feature {NONE} -- Schema Evolution helper functions
 			across
 				stored_obj.attributes as cursor
 			loop
---			from
---				stored_obj.attributes.start
---			until
---				stored_obj.attributes.after
---			loop
---				current_attr_name := stored_obj.attributes.item
 				current_attr_name := cursor.item
 				tuple := stored_obj.attribute_value (current_attr_name)
 				Result.extend ([tuple.val, tuple.type.to_string_8], current_attr_name)
---				stored_obj.attributes.forth
 			end
 		end
 
@@ -319,12 +245,6 @@ feature {NONE} -- Schema Evolution helper functions
 			across
 				stored_obj.attributes.twin as cursor
 			loop
---			from
---				stored_obj.attributes.start
---			until
---				stored_obj.attributes.after
---			loop
---				current_name := stored_obj.attributes.item
 				current_name := cursor.item
 				stored_obj.remove_attribute (current_name)
 			end
@@ -338,10 +258,10 @@ feature {NONE} -- Schema Evolution helper functions
 		do
 			create reflection
 			Result := false
-			-- Check wheter conversion function from 'stored_version' to 'current_version' is available in 'current_schema_evolution_handler'
-			-- ATTENTION: feature 'conversion_function_available' is a new feature
+				-- Check wheter conversion function from 'stored_version' to 'current_version' is available in 'current_schema_evolution_handler'
+				-- ATTENTION: feature 'conversion_function_available' is a new feature
 			if current_schema_evolution_handler.conversion_function_available (current_version, stored_version) then
-				-- If conversion function is available get it from the current schema evolution handler
+					-- If conversion function is available get it from the current schema evolution handler
 				if attached {HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]} current_schema_evolution_handler.create_schema_evolution_handler (current_version, stored_version) as tmp then
 					if attached {TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]]} tmp.item (attr_name) as tuple then
 						evaluate_function (current_class_instance, stored_obj_attr_values, type, index, tuple)
@@ -361,17 +281,21 @@ feature {NONE} -- Schema Evolution helper functions
 			values: ARRAYED_LIST [ANY]
 		do
 			create reflection
-			-- Get the list of variables
+				-- Get the list of variables
 			if attached {LIST [STRING]} tuple.item (1) as vars then
-				-- Get the function
+					-- Get the function
 				if attached {FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]} tuple.item (2) as function then
 					create values.make (vars.count)
-					-- Calculate for each variable the respective value
-					from vars.start until vars.after loop
-						if attached {TUPLE [STRING,STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
+						-- Calculate for each variable the respective value
+					from
+						vars.start
+					until
+						vars.after
+					loop
+						if attached {TUPLE [STRING, STRING]} stored_obj_attr_values.item (vars.item) as current_attr_tuple then
 							if attached {STRING} current_attr_tuple.item (1) as current_value then
 								if attached {STRING} current_attr_tuple.item (2) as current_type then
-									values.force (convert_string (current_value,current_type))
+									values.force (convert_string (current_value, current_type))
 								end
 							end
 						end
@@ -382,7 +306,7 @@ feature {NONE} -- Schema Evolution helper functions
 			end
 		end
 
-	set_attribute (index: INTEGER; type: INTEGER; obj: ANY; generic_value: ANY; )
+	set_attribute (index: INTEGER; type: INTEGER; obj: ANY; generic_value: ANY;)
 			-- Set the attribute with index 'index' of type 'type' of object 'obj' to value 'generic_value'
 		require
 			value_exists: generic_value /= Void
@@ -395,49 +319,42 @@ feature {NONE} -- Schema Evolution helper functions
 		do
 			create reflection
 			value := generic_value.out
-			-------------------------INTEGER-------------------------
+				-------------------------INTEGER-------------------------
 			if type = reflection.integer_8_type and value.is_integer_8 then
 				reflection.set_integer_8_field (index, obj, value.to_integer_8)
-
 			elseif type = reflection.integer_16_type and value.is_integer_16 then
 				reflection.set_integer_16_field (index, obj, value.to_integer_16)
-
 			elseif type = reflection.integer_32_type and value.is_integer_32 then
 				reflection.set_integer_32_field (index, obj, value.to_integer_32)
-
 			elseif type = reflection.integer_64_type and value.is_integer_64 then
 				reflection.set_integer_64_field (index, obj, value.to_integer_64)
-			-------------------------DOUBLE-------------------------
+					-------------------------DOUBLE-------------------------
 			elseif type = reflection.double_type and value.is_double then
 				reflection.set_double_field (index, obj, value.to_double)
-			-------------------------CHAR-------------------------
+					-------------------------CHAR-------------------------
 			elseif type = reflection.character_8_type and value.count = 1 then
 				reflection.set_character_8_field (index, obj, value.area [1])
-
 			elseif type = reflection.character_32_type and value.count = 1 then
 				reflection.set_character_32_field (index, obj, value.area [1])
-			-------------------------BOOLEAN-------------------------
+					-------------------------BOOLEAN-------------------------
 			elseif type = reflection.boolean_type and value.is_boolean then
 				reflection.set_boolean_field (index, obj, value.to_boolean)
-			-------------------------NATURAL-------------------------
+					-------------------------NATURAL-------------------------
 			elseif type = reflection.natural_8_type and value.is_natural_8 then
 				reflection.set_natural_8_field (index, obj, value.to_natural_8)
-
 			elseif type = reflection.natural_16_type and value.is_natural_16 then
 				reflection.set_natural_16_field (index, obj, value.to_natural_16)
-
 			elseif type = reflection.natural_32_type and value.is_natural_32 then
 				reflection.set_natural_32_field (index, obj, value.to_natural_32)
-
 			elseif type = reflection.natural_64_type and value.is_natural_64 then
 				reflection.set_natural_64_field (index, obj, value.to_natural_64)
-			-------------------------REAL-------------------------
+					-------------------------REAL-------------------------
 			elseif type = reflection.real_32_type and value.is_real then
 				reflection.set_real_32_field (index, obj, value.to_real)
-			-------------------------REF-------------------------
+					-------------------------REF-------------------------
 			elseif type = reflection.reference_type then
 				reflection.set_reference_field (index, obj, generic_value)
-			-------------------------ELSE-------------------------
+					-------------------------ELSE-------------------------
 			else
 				create exception
 				exception.raise ("The static and dynamic type of the attribute are incompatible.")
@@ -445,52 +362,44 @@ feature {NONE} -- Schema Evolution helper functions
 		end
 
 	convert_string (value, type: STRING): ANY
-		-- Convert value 'value' to type 'type'
-		-- The following types can be handled: INTEGER, DOUBLE, BOOLEAN, NATURAL, REAL and STRING
-		-- TODO: Implement other possible types
+			-- Convert value 'value' to type 'type'
+			-- The following types can be handled: INTEGER, DOUBLE, BOOLEAN, NATURAL, REAL and STRING
+			-- TODO: Implement other possible types
 		local
 			exception: EXCEPTIONS
 		do
-			-------------------------INTEGER-------------------------
+				-------------------------INTEGER-------------------------
 			if type.is_equal ("INTEGER_8") and value.is_integer_8 then
 				Result := value.to_integer_8
-
 			elseif type.is_equal ("INTEGER_16") and value.is_integer_16 then
 				Result := value.to_integer_16
-
 			elseif type.is_equal ("INTEGER_32") and value.is_integer_32 then
 				Result := value.to_integer_32
-
 			elseif type.is_equal ("INTEGER_64") and value.is_integer_64 then
 				Result := value.to_integer_64
-			-------------------------DOUBLE-------------------------
+					-------------------------DOUBLE-------------------------
 			elseif type.is_equal ("DOUBLE") and value.is_double then
 				Result := value.to_double
-			-------------------------BOOLEAN-------------------------
+					-------------------------BOOLEAN-------------------------
 			elseif type.is_equal ("BOOLEAN") and value.is_boolean then
 				Result := value.to_boolean
-			-------------------------NATURAL-------------------------
+					-------------------------NATURAL-------------------------
 			elseif type.is_equal ("NATURAL_8") and value.is_natural_8 then
 				Result := value.to_natural_8
-
 			elseif type.is_equal ("NATURAL_16") and value.is_natural_16 then
 				Result := value.to_natural_16
-
 			elseif type.is_equal ("NATURAL_32") and value.is_natural_32 then
 				Result := value.to_natural_32
-
 			elseif type.is_equal ("NATURAL_64") and value.is_natural_64 then
 				Result := value.to_natural_64
-			-------------------------REAL-------------------------
+					-------------------------REAL-------------------------
 			elseif type.is_equal ("REAL_32") and value.is_real then
 				Result := value.to_real_32
-
 			elseif type.is_equal ("REAL_64") and value.is_real then
 				Result := value.to_real_64
-			-------------------------STRING-------------------------
+					-------------------------STRING-------------------------
 			elseif type.is_equal ("STRING_8") then
 				Result := value
-
 			else
 				Result := ""
 				create exception
@@ -509,45 +418,38 @@ feature {NONE} -- Schema Evolution helper functions
 			test_instance: ANY
 		do
 			create reflection
-			-------------------------INTEGER-------------------------
+				-------------------------INTEGER-------------------------
 			if type = reflection.integer_8_type then
 				Result := "INTEGER_8"
-
 			elseif type = reflection.integer_16_type then
 				Result := "INTEGER_16"
-
 			elseif type = reflection.integer_32_type then
 				Result := "INTEGER_32"
-
 			elseif type = reflection.integer_64_type then
 				Result := "INTEGER_64"
-			-------------------------DOUBLE-------------------------
+					-------------------------DOUBLE-------------------------
 			elseif type = reflection.double_type then
 				Result := "DOUBLE"
-			-------------------------BOOLEAN-------------------------
+					-------------------------BOOLEAN-------------------------
 			elseif type = reflection.boolean_type then
 				Result := "BOOLEAN"
-			-------------------------NATURAL-------------------------
+					-------------------------NATURAL-------------------------
 			elseif type = reflection.natural_8_type then
 				Result := "NATURAL_8"
-
 			elseif type = reflection.natural_16_type then
 				Result := "NATURAL_16"
-
 			elseif type = reflection.natural_32_type then
 				Result := "NATURAL_32"
-
 			elseif type = reflection.natural_64_type then
 				Result := "NATURAL_64"
-			-------------------------REAL-------------------------
+					-------------------------REAL-------------------------
 			elseif type = reflection.real_32_type then
 				Result := "REAL_32"
-
 			elseif type = reflection.real_64_type then
 				Result := "REAL_64"
-			-------------------------REF-------------------------
+					-------------------------REF-------------------------
 			elseif type = reflection.reference_type then
-				-- STRING has type id 1
+					-- STRING has type id 1
 				if type = 1 then
 					Result := "STRING_8"
 				else
@@ -555,7 +457,7 @@ feature {NONE} -- Schema Evolution helper functions
 					create exception
 					exception.raise ("Reference type with id '" + type.out + "' cannot be handled.")
 				end
-			-------------------------ELSE-------------------------
+					-------------------------ELSE-------------------------
 			else
 				Result := ""
 				create exception

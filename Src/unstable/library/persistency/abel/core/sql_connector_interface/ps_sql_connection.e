@@ -9,6 +9,8 @@ deferred class
 
 inherit
 
+	PS_ABEL_EXPORT
+
 	ITERABLE [PS_SQL_ROW]
 
 feature {PS_ABEL_EXPORT} -- Settings
@@ -26,7 +28,7 @@ feature {PS_ABEL_EXPORT} -- Settings
 feature {PS_ABEL_EXPORT} -- Database operations
 
 	execute_sql (statement: STRING)
-			-- Execute the SQL statement `statement', and store the result (if any) in `Current.last_result'
+			-- Execute the SQL statement `statement', and store the result (if any) in `last_result'
 			-- In case of an error, it will report it in `last_error' and raise an exception.
 		deferred
 				-- Remarks when implementing this feature:

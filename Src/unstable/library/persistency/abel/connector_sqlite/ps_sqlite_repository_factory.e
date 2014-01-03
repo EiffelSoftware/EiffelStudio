@@ -25,7 +25,7 @@ feature -- Access
 feature -- Status report
 
 	is_buildable: BOOLEAN
-			-- Does `Current' have enough information to build a repository?
+			-- <Precursor>
 		do
 			Result := attached database
 		end
@@ -42,25 +42,17 @@ feature -- Element change
 			database_set: database ~ value
 		end
 
-feature {PS_ABEL_EXPORT} -- Testing Internal
-
-	sqlite_database: detachable PS_SQLITE_DATABASE
-
 feature {NONE}
 
 	new_connector: PS_REPOSITORY_CONNECTOR
-			-- Create a new backend.
+			-- <Precursor>
 		local
 			l_sqlite_database: PS_SQLITE_DATABASE
 		do
-
-			check attached database as l_database then
+			check from_precondition: attached database as l_database then
 				create l_sqlite_database.make (l_database)
-				sqlite_database := l_sqlite_database
 				create {PS_GENERIC_LAYOUT_SQL_BACKEND} Result.make (l_sqlite_database, create {PS_SQLITE_STRINGS})
 			end
-
---			Result.add_plug_in (create {PS_ATTRIBUTE_REMOVER_PLUGIN})
 		end
 
 end

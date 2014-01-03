@@ -17,7 +17,7 @@ create {PS_SQLITE_CONNECTION}
 feature {PS_ABEL_EXPORT} -- Status report
 
 	has_column (column_name: STRING): BOOLEAN
-			-- Does `Current' have a column with name `column_name'?
+			-- <Precursor>
 		do
 			Result := name_to_index_map.has (column_name)
 		end
@@ -25,10 +25,10 @@ feature {PS_ABEL_EXPORT} -- Status report
 feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
-			-- The number of items in `Current' row.
+			-- <Precursor>
 
 	at alias "@" (column_name: STRING): STRING
-			-- Get the item at column `column_name'. Empty string if database field is NULL.
+			-- <Precursor>
 		do
 			check attached values.item (name_to_index_map [column_name]) as val then
 				Result := val
@@ -36,7 +36,7 @@ feature {PS_ABEL_EXPORT} -- Access
 		end
 
 	item alias "[]" (index: INTEGER): STRING
-			-- Get the item at index `index'. Empty string if database field is NULL.
+			-- <Precursor>
 		do
 			check attached values.item (index.as_natural_32) as val then
 				Result := val

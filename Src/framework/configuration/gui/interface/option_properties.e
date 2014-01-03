@@ -125,29 +125,6 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-				-- Full checking option
-			l_bool_prop := new_boolean_property (conf_interface_names.option_full_class_checking_name, an_inherited_options.is_full_class_checking)
-			l_bool_prop.set_description (conf_interface_names.option_full_class_checking_description)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_full_class_checking)
-			if a_inherits then
-				l_bool_prop.set_refresh_action (agent an_inherited_options.is_full_class_checking)
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_full_class_checking)
-				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-
-				if an_options.is_full_class_checking_configured then
-					l_bool_prop.enable_overriden
-				else
-					l_bool_prop.enable_inherited
-				end
-			end
-			if a_check_non_client_option and then is_non_client_option (at_full_class_checking) then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
-
 				-- Cat call detection
 			l_bool_prop := new_boolean_property (conf_interface_names.option_cat_call_detection_name, an_inherited_options.is_cat_call_detection)
 			l_bool_prop.set_description (conf_interface_names.option_cat_call_detection_description)
@@ -233,6 +210,29 @@ feature {NONE} -- Implementation
 				end
 			end
 			if a_check_non_client_option and then is_non_client_option (at_is_attached_by_default) then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
+				-- Full checking option
+			l_bool_prop := new_boolean_property (conf_interface_names.option_full_class_checking_name, an_inherited_options.is_full_class_checking)
+			l_bool_prop.set_description (conf_interface_names.option_full_class_checking_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_full_class_checking)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_full_class_checking)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_full_class_checking)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_full_class_checking_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			if a_check_non_client_option and then is_non_client_option (at_full_class_checking) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -706,7 +706,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

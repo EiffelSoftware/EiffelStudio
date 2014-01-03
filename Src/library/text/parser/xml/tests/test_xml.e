@@ -152,8 +152,6 @@ feature -- Test routines
 		end
 
 	xml_file_name (a_name: READABLE_STRING_GENERAL): PATH
-		local
-			fn: PATH
 		do
 			Result := execution_environment.current_working_path
 --			across 1 |..| 5 as c loop Result := Result.extended ("..") end

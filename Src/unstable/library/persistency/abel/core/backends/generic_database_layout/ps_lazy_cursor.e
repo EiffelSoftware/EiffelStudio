@@ -78,16 +78,14 @@ feature {NONE} -- Implementation
 			until
 				internal_result_cursor.after or else internal_result_cursor.item.at (backend.SQL_Strings.Value_table_id_column).to_integer /= item.primary_key
 			loop
-				-- fill all attributes - The result is ordered by the object id, therefore the attributes of a single object are grouped together.
+					-- Fill all attributes. The result is ordered by the object id,
+					-- therefore the attributes of a single object are grouped together.
 				attribute_name := backend.db_metadata_manager.attribute_name_of_key (internal_result_cursor.item.at (backend.SQL_Strings.Value_table_attributeid_column).to_integer)
 				attribute_value := internal_result_cursor.item.at (backend.SQL_Strings.Value_table_value_column)
 				class_name_of_value := backend.db_metadata_manager.class_name_of_key (internal_result_cursor.item.at (backend.SQL_Strings.Value_table_runtimetype_column).to_integer)
 				if not attribute_name.is_equal (backend.SQL_Strings.Existence_attribute) then
---					if attribute_name /~ item.root_key then
-						item.add_attribute (attribute_name, attribute_value, class_name_of_value)
---					end
+					item.add_attribute (attribute_name, attribute_value, class_name_of_value)
 				else
---					print (attribute_value)
 					item.set_is_root (attribute_value.to_boolean)
 				end
 				internal_result_cursor.forth
@@ -106,7 +104,6 @@ feature {NONE} -- Implementation
 			conv: PS_CRITERION_SQL_CONVERTER
 		do
 			create conv.make (backend.db_metadata_manager, type)
-
 
 			if backend.db_metadata_manager.has_primary_key_of_class (type.name) then
 
@@ -131,16 +128,14 @@ feature {NONE} -- Implementation
 
 				connection := backend.get_connection (transaction)
 				connection.execute_sql (sql_string)
---				print (sql_string + "%N")
 
 				internal_result_cursor := connection.last_result
 				after := internal_result_cursor.after
 
 			else
-				-- No such objects
+					-- No such objects
 				after := True
-
-				-- Void safety...
+					-- Void safety...
 				internal_result_cursor := (create {LINKED_LIST [PS_SQL_ROW]}.make).new_cursor
 			end
 		end
@@ -174,5 +169,4 @@ feature {NONE} -- Initialization
 
 invariant
 	attached_when_not_after: not after implies attached internal_item
-
 end

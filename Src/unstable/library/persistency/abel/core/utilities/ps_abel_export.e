@@ -1,5 +1,5 @@
 note
-	description: "Dummy class to restrict export of backend features to descendants of this class."
+	description: "Dummy class to restrict export of internal features."
 	author: "Roman schmocker"
 	date: "$Date$"
 	revision: "$Revision$"

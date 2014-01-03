@@ -24,14 +24,14 @@ feature {NONE} -- Initialization
 
 	make (
 			a_metadata_factory: like type_factory;
-			a_backend: like backend;
+			a_connector: like connector;
 			a_transaction: like transaction)
 			-- Initialization for `Current'
 		local
 			bogus: PS_OBJECT_READ_DATA
 		do
 			initialize (a_metadata_factory)
-			backend := a_backend
+			connector := a_connector
 			transaction := a_transaction
 
 
@@ -77,7 +77,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	transaction: PS_INTERNAL_TRANSACTION
 			-- The transaction in which the current operation is running.
 
-	backend: PS_READ_REPOSITORY_CONNECTOR
+	connector: PS_READ_REPOSITORY_CONNECTOR
 			-- The database backend.
 
 	cache_lookup (primary_key: INTEGER; type: PS_TYPE_METADATA):INTEGER
@@ -184,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 
 				-- First check if a value type handler is responsible for `type'.
 			if attached search_value_type_handler (type) then
-				Result := backend.retrieve (type, criterion, is_root_only, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
+				Result := connector.retrieve (type, criterion, is_root_only, create {PS_IMMUTABLE_STRUCTURE [STRING]}.make (<<{PS_BACKEND_OBJECT}.value_type_item>>), a_transaction)
 				found := True
 			end
 
@@ -197,9 +197,9 @@ feature {PS_ABEL_EXPORT} -- Smart retrieval
 				if cursor.item.can_handle_type (type) then
 					found := True
 					if cursor.item.is_mapping_to_object then
-						Result := backend.retrieve (type, criterion, is_root_only, attributes, a_transaction)
+						Result := connector.retrieve (type, criterion, is_root_only, attributes, a_transaction)
 					else
-						Result := backend.collection_retrieve (type, is_root_only, a_transaction)
+						Result := connector.collection_retrieve (type, is_root_only, a_transaction)
 					end
 				end
 			end
@@ -621,7 +621,7 @@ feature {NONE} -- Implementation: Batch retrieval
 		do
 
 			if not object_primaries_to_retrieve.is_empty then
-				retrieved_objects := backend.specific_retrieve (object_primaries_to_retrieve, object_types_to_retrieve, transaction)
+				retrieved_objects := connector.specific_retrieve (object_primaries_to_retrieve, object_types_to_retrieve, transaction)
 
 				across
 					retrieved_objects as obj
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation: Batch retrieval
 			end
 
 			if not collection_primaries_to_retrieve.is_empty then
-				retrieved_collections := backend.specific_collection_retrieve (collection_primaries_to_retrieve, collection_types_to_retrieve, transaction)
+				retrieved_collections := connector.specific_collection_retrieve (collection_primaries_to_retrieve, collection_types_to_retrieve, transaction)
 
 				across
 					retrieved_collections as coll

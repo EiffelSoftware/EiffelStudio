@@ -114,7 +114,7 @@ feature -- Element change
 
 feature {NONE}
 
-	new_backend: PS_REPOSITORY_CONNECTOR
+	new_connector: PS_REPOSITORY_CONNECTOR
 			-- Create a new backend.
 		local
 			l_host: STRING

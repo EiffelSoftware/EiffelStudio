@@ -29,23 +29,6 @@ feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 			]"
 		end
 
---	Create_value_table: STRING
---		do
---			Result := "[
---							CREATE TABLE ps_value (
---							objectid INTEGER NOT NULL AUTO_INCREMENT,
---							attributeid INTEGER,
---							runtimetype INTEGER,
---							islong: BOOLEAN
---							value VARCHAR (128),
---		
---							PRIMARY KEY (objectid, attributeid),
---							FOREIGN KEY (attributeid) REFERENCES ps_attribute (attributeid) ON DELETE CASCADE,
---							FOREIGN KEY (runtimetype) REFERENCES ps_class (classid) ON DELETE CASCADE
---							)
---			]"
---		end
-
 	Create_class_table: STRING
 		do
 			Result := "[
@@ -154,7 +137,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 				Result.append (" " + cursor.item + ",")
 			end
 
-			-- Remove last comma
+				-- Remove last comma
 			Result.remove_tail (1)
 			Result.append (" on duplicate key update runtimetype = VALUES (runtimetype), value = VALUES (value);")
 		end
@@ -169,7 +152,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 				Result.append (" " + cursor.item + ",")
 			end
 
-			-- Remove last comma
+				-- Remove last comma
 			Result.remove_tail (1)
 			Result.append (" on duplicate key update collectiontype = VALUES (collectiontype), runtimetype = VALUES (runtimetype), value = VALUES (value)")
 
@@ -185,7 +168,7 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 				Result.append (" " + cursor.item + ",")
 			end
 
-			-- Remove last comma
+				-- Remove last comma
 			Result.remove_tail (1)
 
 			Result.append (" on duplicate key update info = VALUES (info)")
@@ -194,7 +177,6 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 
 	For_update_appendix: STRING = " FOR UPDATE "
-
 
 	Query_last_object_autoincrement: STRING = "SELECT LAST_INSERT_ID ()"
 

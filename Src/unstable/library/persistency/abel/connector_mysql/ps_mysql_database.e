@@ -17,11 +17,12 @@ create
 feature
 
 	acquire_connection: PS_SQL_CONNECTION
-			-- Get a new connection.
-			-- The transaction isolation level of the new connection is the same as in `Current.transaction_isolation_level', and autocommit is disabled.
+			-- <Precursor>
 		local
 			internal_connection: MYSQLI_CLIENT
 		do
+			fixme ("Implement connection pooling.")
+
 --			if connection_stack.is_empty then
 					-- Create a new `internal_connection'
 				create internal_connection.make
@@ -49,20 +50,19 @@ feature
 		end
 
 	release_connection (a_connection: PS_SQL_CONNECTION)
-			-- Release connection `a_connection'
+			-- <Precursor>
 		do
 --			a_connection.rollback
 --			connection_stack.extend (a_connection)
 
-				--Just close the connection
+				-- Just close the connection.
 			check attached {PS_MYSQL_CONNECTION} a_connection as conn then
-			--	conn.internal_connection.rollback
 				conn.internal_connection.close
 			end
 		end
 
 	close_connections
-			-- Close all currently open connections
+			-- <Precursor>
 		do
 --			from
 --			until
@@ -78,7 +78,7 @@ feature
 		end
 
 	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
-			-- Set the transaction isolation level such that all values in `settings' are respected.
+			-- <Precursor>
 		do
 			internal_settings := settings.twin
 		end
@@ -86,7 +86,7 @@ feature
 feature {NONE} -- Initialization
 
 	make (username, user_password, db_name, db_host: STRING; db_port: INTEGER)
-			-- Create the MySQL database wrapper
+			-- Initialization for `Current'.
 		do
 			database_user := username
 			database_user_password := user_password
@@ -115,7 +115,7 @@ feature {NONE} -- Connection details
 feature {NONE} -- Implementation
 
 	internal_set_transaction_level (a_connection: MYSQLI_CLIENT)
-			-- Set the default transaction level defined in `Current.transaction_isolation_level'
+			-- Set the default transaction level defined in `internal_settings'
 		do
 			if
 				not internal_settings.is_phantom_allowed

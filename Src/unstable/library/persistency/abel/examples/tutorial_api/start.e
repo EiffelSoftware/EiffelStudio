@@ -6,6 +6,8 @@ note
 
 class
 	START
+inherit
+	PS_ABEL_EXPORT
 
 create
 	make
@@ -85,16 +87,16 @@ feature -- Printing results
 		local
 			query: PS_QUERY [PERSON]
 		do
-			-- To retrieve data we need to create a query object.
-			-- Note that the generic argunent in PS_QUERY denotes
-			-- the type of objects we're interested in.
+				-- To retrieve data we need to create a query object.
+				-- Note that the generic argunent in PS_QUERY denotes
+				-- the type of objects we're interested in.
 			create query.make
 
-			-- Now let the repository execute the query and retrieve the result.
-			-- Note that we don't need a transaction for read-only operations.
+				-- Now let the repository execute the query and retrieve the result.
+				-- Note that we don't need a transaction for read-only operations.
 			repository.execute_query (query)
 
-			-- We can use the familiar across syntax to iterate over the result.
+				-- We can use the familiar across syntax to iterate over the result.
 			across
 				query as person_cursor
 			from
@@ -103,7 +105,16 @@ feature -- Printing results
 				print (person_cursor.item)
 			end
 
-			-- Don't forget to close the query.
+				-- You should always check for errors.
+				-- If an error happens, {PS_QUERY}.has_error is `True',
+				-- and the cursor will be `after'.
+				-- No exception is thrown, therefore there is a risk
+				-- that the error may go unnoticed.
+			if query.has_error then
+				print ("An error occurred during retrieve!%N")
+			end
+
+				-- When you're finished, close the query.
 			query.close
 		end
 
@@ -121,6 +132,12 @@ feature -- Printing results
 				print ("Printing all CHILD objects in the repository:%N")
 			loop
 				print (person_cursor.item)
+			end
+
+				-- Don't forget to check for errors
+				-- and then close the query.
+			if query.has_error then
+				print ("An error occurred during retrieve!%N")
 			end
 
 			query.close
@@ -146,12 +163,27 @@ feature -- Initialization
 			transaction := repository.new_transaction
 
 				-- Now we can insert all three persons.
-			transaction.insert (p1)
-			transaction.insert (p2)
-			transaction.insert (p3)
+				-- Before doing any kind of operation please always check
+				-- for errors, else you might get a precondition violation.
+			if not transaction.has_error then
+				transaction.insert (p1)
+			end
+			if not transaction.has_error then
+				transaction.insert (p2)
+			end
+			if not transaction.has_error then
+				transaction.insert (p3)
+			end
 
 				-- Finally we can commit the transaction to make the changes effective.
-			transaction.commit
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+				-- Note that a commit may also fail and return an error.
+			if transaction.has_error then
+				print ("An error occurred during insert!%N")
+			end
 		end
 
 	insert_children
@@ -173,9 +205,17 @@ feature -- Initialization
 
 				-- It is sufficient to just insert "Baby Joe", as the other CHILD objects
 				-- are (transitively) referenced and thus inserted automatically.
-			transaction.insert (c1)
+			if not transaction.has_error then
+				transaction.insert (c1)
+			end
 
-			transaction.commit
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+			if transaction.has_error then
+				print ("An error occurred during insert!%N")
+			end
 
 		end
 
@@ -196,7 +236,9 @@ feature -- Data modification
 
 				-- As we're doing a read followed by a write, we
 				-- need to execute the query within a transaction.
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
 
 				-- Search for Berno Citrini
 			across
@@ -209,6 +251,9 @@ feature -- Data modification
 					berno.celebrate_birthday
 
 						-- Perform the database update.
+						-- Note that it's not actually necessary to check
+						-- for an error here, because the across loop would
+						-- have an early exit.
 					transaction.update (berno)
 				end
 			end
@@ -217,8 +262,15 @@ feature -- Data modification
 				-- be done before committing the transaction.
 			query.close
 
-				-- Make the changes effective
-			transaction.commit
+				-- Make the changes effective.
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+				-- Check if the transaction was successful.
+			if transaction.has_error then
+				print ("An error occurred during update!%N")
+			end
 		end
 
 	update_berno_citrini_smart
@@ -226,6 +278,7 @@ feature -- Data modification
 			-- Make use of criteria.
 		local
 			query: PS_QUERY [PERSON]
+			cursor: ITERATION_CURSOR [PERSON]
 			transaction: PS_TRANSACTION
 			berno: PERSON
 		do
@@ -240,19 +293,37 @@ feature -- Data modification
 
 				-- As we're doing a read followed by a write, we need to execute
 				-- the query within a transaction.
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
 
-				-- The result now only contains Berno Citrini
-			berno := query.new_cursor.item
-			check correct: berno.first_name.is_equal ("Berno") end
+				-- The result now only contains Berno Citrini.
 
-				-- Perform the update
-			berno.celebrate_birthday
-			transaction.update (berno)
+				-- The cursor may be after if Berno cannot be found
+				-- in the database, or when an error occurred.
+			cursor := query.new_cursor
 
-				-- Cleanup
+			if not cursor.after then
+				berno := cursor.item
+
+				check correct: berno.first_name ~ "Berno" end
+
+					-- Perform the update.
+				berno.celebrate_birthday
+				transaction.update (berno)
+			end
+
+				-- Close and commit.
 			query.close
-			transaction.commit
+
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+				-- Check if the transaction was successful.
+			if transaction.has_error then
+				print ("An error occurred during update!%N")
+			end
 		end
 
 
@@ -260,78 +331,131 @@ feature -- Data modification
 			-- Try to update John Doe in several ways.
 		local
 			transaction: PS_TRANSACTION
-			query: PS_QUERY [CHILD]
 			baby: CHILD
 			john: CHILD
 			grandpa: CHILD
 		do
 			transaction := repository.new_transaction
+
+				-- Get "Baby Doe" from the database.
+				-- We're using a small helper function to get a specific CHILD object.
+			if attached get_child (transaction, "Baby") as baby_doe then
+
+				baby := baby_doe
+
+					-- Note that John and Grandpa Doe got loaded as well
+					-- because they were referenced by Baby Doe.
+				check attached baby.father as f then
+					john := f
+				end
+				check attached john.father as f then
+					grandpa := f
+				end
+
+				john.celebrate_birthday
+
+					-- You can give `john' as an argument to the update function.
+				if not transaction.has_error then
+					transaction.update (john)
+				end
+
+					-- Check the result:
+
+					-- A database error may happen even in production code,
+					-- in which case it is ok not to be able to retrieve john,
+					-- but if we do, then both `retrieved_john' and `john' are the same.
+				if attached get_child (transaction, "John") as retrieved_john then
+					check equal: retrieved_john ~ john end
+				end
+
+					-- During an update operation ABEL will follow all references.
+					-- Therefore John Doe gets updated automatically when you update Baby Doe.
+				john.celebrate_birthday
+				if not transaction.has_error then
+					transaction.update (baby)
+				end
+
+					-- Check the result:
+				if attached get_child (transaction, "John") as retrieved_john then
+					check equal: retrieved_john ~ john end
+				end
+
+					-- As Grandpa doesn't have any references, the above trick doesn't work.
+				john.celebrate_birthday
+				if not transaction.has_error then
+					transaction.update (grandpa)
+				end
+
+				if attached get_child (transaction, "John") as retrieved_john then
+					check not_updated: retrieved_john.age /= john.age end
+				end
+
+					-- Updating the whole object graph could be costly in some cases.
+					-- ABEL provides an alternative. A direct update only updates the object
+					-- given in its argument, and does not follow any references.
+				if not transaction.has_error then
+					transaction.direct_update (john)
+				end
+
+					-- Check the result:
+				if attached get_child (transaction, "John") as retrieved_john then
+					check equal: retrieved_john ~ john end
+				end
+
+					-- Check that the update really only affects the immediate argument.
+				john.celebrate_birthday
+				grandpa.celebrate_birthday
+
+				if not transaction.has_error then
+					transaction.direct_update (john)
+				end
+
+				if attached get_child (transaction, "John") as retrieved_john then
+					check equal_age:
+						retrieved_john.age = john.age
+					end
+					check grandpa_not_updated:
+						attached retrieved_john.father as retrieved_grandpa
+						and then retrieved_grandpa.age /= grandpa.age
+					end
+				end
+			end
+
+				-- Commit the transaction.
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+				-- Never forget to check for errors.
+			if transaction.has_error then
+				print ("An error occured in `update_john_doe'.%N")
+			end
+		end
+
+	get_child (transaction: PS_TRANSACTION; first_name: STRING): detachable CHILD
+			-- Retrieve the child with `first_name' from the database.
+			-- The result will be Void if the object could not be found, or when
+			-- an error occured.
+		local
+			query: PS_QUERY [CHILD]
+			cursor: ITERATION_CURSOR [CHILD]
+		do
 			create query.make
+			query.set_criterion (criterion_factory.new_predefined ("first_name", criterion_factory.equals, first_name))
 
-				-- Get "Baby Doe" from the database
-			query.set_criterion (criterion_factory.new_predefined ("first_name", criterion_factory.equals, "Baby"))
-			transaction.execute_query (query)
+				-- The transaction may already have an error.
+			if not transaction.has_error then
+				transaction.execute_query (query)
+				cursor := query.new_cursor
 
-			baby := query.new_cursor.item
-				-- Note that John and Grandpa Doe got loaded as well because they were referenced
-				-- by Baby Doe.
-			check attached baby.father as f then
-				john := f
+					-- Note that the cursor may be `after' when:
+					-- 1) The object isn't present in the database
+					-- 2) or an error occurred.
+				if not cursor.after then
+					Result := cursor.item
+				end
 			end
-			check attached john.father as f then
-				grandpa := f
-			end
-
-				-- You can give `john' as an argument to the update function.
-			john.celebrate_birthday
-			transaction.update (john)
-
-			query.reset
-			query.set_criterion (criterion_factory.new_predefined ("first_name", criterion_factory.equals, "John"))
-			transaction.execute_query (query)
-			check equal: query.new_cursor.item.is_equal (john) end
-
-				-- You can also update `john' via the reference from Baby Doe.
-			john.celebrate_birthday
-			transaction.update (baby)
-			query.reset -- Note: reset keeps the criterion.
-			transaction.execute_query (query)
-			check equal: query.new_cursor.item.is_equal (john) end
-
-				-- It is not possible via Grandpa Doe however, as Grandpa doesn't have a reference to John...
-			john.celebrate_birthday
-			transaction.update (grandpa)
-			query.reset
-			transaction.execute_query (query)
-			check not_updated: query.new_cursor.item.age /= john.age end
-
-				-- Updating the whole object graph could be costly in some cases.
-				-- ABEL provides an alternative. A direct update only updates the object
-				-- given in its argument, and does not follow any references.
-			transaction.direct_update (john)
-			query.reset
-			transaction.execute_query (query)
-			check equal: query.new_cursor.item.age = john.age end
-
-				-- Check that the update really only affects the immediate argument.
-			john.celebrate_birthday
-			grandpa.celebrate_birthday
-
-			transaction.direct_update (john)
-
-			query.reset
-			transaction.execute_query (query)
-			check
-				john_updated: query.new_cursor.item.age = john.age
-			end
-			check
-				grandpa_not_updated:
-					attached query.new_cursor.item.father as new_grandpa
-					and then new_grandpa.age /= grandpa.age
-			end
-
 			query.close
-			transaction.commit
 		end
 
 feature -- Criteria
@@ -419,6 +543,11 @@ feature -- Criteria
 				print (person_cursor.item.age)
 				io.new_line
 			end
+
+				-- Always check for an error.
+			if query.has_error then
+				print ("An error occurred during retrieve.%N")
+			end
 		end
 
 	check_exception
@@ -445,6 +574,7 @@ feature -- Root objects
 			-- See what can be done with the `root' status of an object.
 		local
 			query: PS_QUERY [CHILD]
+			l_cursor: ITERATION_CURSOR [CHILD]
 			transaction: PS_TRANSACTION
 		do
 				-- By default any root of an object graph during `insert'
@@ -458,13 +588,16 @@ feature -- Root objects
 			transaction := repository.new_transaction
 			create query.make
 
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
+
 			across
 				query as cursor
 			loop
 				print (cursor.item.first_name + " " + cursor.item.last_name)
 				print (", is_root: ")
-					-- The root status can be queried with `{PS_TRANSACTION}.is_root'.
+					-- The root status can be queried with {PS_TRANSACTION}.is_root.
 				print (transaction.is_root (cursor.item))
 				io.new_line
 			end
@@ -476,7 +609,10 @@ feature -- Root objects
 
 			query.reset
 			query.set_is_non_root_ignored (True)
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
+
 			across
 				query as cursor
 			loop
@@ -484,9 +620,13 @@ feature -- Root objects
 			end
 
 				-- You can declare an object as root or non-root manually.
-			check attached query.new_cursor.item.father as john then
-				transaction.mark_root (john)
+			l_cursor := query.new_cursor
+			if not l_cursor.after then
+				check attached l_cursor.item.father as john then
+					transaction.mark_root (john)
+				end
 			end
+
 
 			print ("Print all CHILD root objects, after declaring John Doe as root:%N")
 
@@ -494,23 +634,40 @@ feature -- Root objects
 				 -- Note that the `query.is_non_root_ignored' attibute survives a reset.
 			check still_ignored: query.is_non_root_ignored end
 
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
 			across
 				query as cursor
 			loop
 				print (cursor.item.first_name + " " + cursor.item.last_name + "%N")
 			end
 
-			transaction.unmark_root (query.new_cursor.item)
+			l_cursor := query.new_cursor
+			if not l_cursor.after then
+				transaction.unmark_root (l_cursor.item)
+			end
 
 			print ("Print all CHILD root objects, after declaring Baby Doe as non-root:%N")
 
 			query.reset
-			transaction.execute_query (query)
+			if not transaction.has_error then
+				transaction.execute_query (query)
+			end
 			across
 				query as cursor2
 			loop
 				print (cursor2.item.first_name + " " + cursor2.item.last_name + "%N")
+			end
+
+				-- Cleanup
+			query.close
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+			if transaction.has_error then
+				print ("An error occurred during `explore_root_objects'.%N")
 			end
 
 				-- Once a garbage collector is implemented in ABEL, declaring an object
@@ -567,7 +724,9 @@ feature -- Tuple queries
 				-- We're now executing the query in a transaction such that we can
 				-- use the results for subsequent write operations.
 			transaction := repository.new_transaction
-			transaction.execute_tuple_query (query)
+			if not transaction.has_error then
+				transaction.execute_tuple_query (query)
+			end
 
 				-- Search for John Doe
 			across
@@ -600,7 +759,9 @@ feature -- Tuple queries
 				-- Let's check if the update worked.
 			print ("Printing first name and father of all CHILD objects, after adding a father to Grandpa Doe:%N")
 			query.reset
-			transaction.execute_tuple_query (query)
+			if not transaction.has_error then
+				transaction.execute_tuple_query (query)
+			end
 			across
 				query as cursor
 			loop
@@ -615,6 +776,17 @@ feature -- Tuple queries
 				end
 			end
 
+
+				-- Commit and check for errors.
+			query.close
+
+			if not transaction.has_error then
+				transaction.commit
+			end
+
+			if transaction.has_error then
+				print ("An error occurred during `explore_tuple_queries'.%N")
+			end
 		end
 
 feature -- Common pitfalls

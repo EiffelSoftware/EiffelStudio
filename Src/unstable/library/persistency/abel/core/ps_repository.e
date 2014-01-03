@@ -145,9 +145,9 @@ feature -- Query execution
 				retry_count - attempts + 2
 			end
 		ensure
-			active: active_queries.has (query)
+			active: query.has_error xor active_queries.has (query)
 			executed: query.is_executed
-			not_closed: not query.is_closed
+			not_closed: query.has_error xor not query.is_closed
 		end
 
 feature -- Transactional access

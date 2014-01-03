@@ -18,6 +18,9 @@ create {PS_ABSTRACT_QUERY}
 
 feature -- Access
 
+	query: PS_ABSTRACT_QUERY [ANY, G]
+			-- The query to iterate over.
+
 	item: G
 			-- Item at current cursor position.
 		do
@@ -36,17 +39,19 @@ feature -- Cursor movement
 
 	forth
 			-- Move to next position.
+		require else
+				-- Relax the precondition. That way an across loop is safe to use.
+			has_error: query.has_error
 		do
 			index := index + 1
-			if index > query.result_cache.count and not query.is_after then
+			if query.has_error then
+				query.do_rescue
+			elseif index > query.result_cache.count and not query.is_after then
 				query.retrieve_next
 			end
 		end
 
 feature {NONE} -- Initialization
-
-	query: PS_ABSTRACT_QUERY [ANY, G]
-			-- The query to iterate over.
 
 	index: INTEGER
 			-- The current index in the query result cache.

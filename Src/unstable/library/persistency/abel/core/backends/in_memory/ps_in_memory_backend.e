@@ -15,6 +15,9 @@ create
 
 feature {PS_ABEL_EXPORT} -- Backend capabilities
 
+	raise_exception: BOOLEAN = False
+			-- For testing: Raise transaction aborted error in every function.
+
 	is_generic_collection_supported: BOOLEAN = True
 			-- <Precursor>
 
@@ -45,6 +48,13 @@ feature {PS_ABEL_EXPORT} -- Retrieval
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			i: INTEGER
 		do
+			if raise_exception then
+				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
+				check attached transaction.error as err then
+					err.raise
+				end
+			end
+
 			from
 				create list.make (primaries.count)
 				Result := list
@@ -73,6 +83,12 @@ feature {PS_ABEL_EXPORT} -- Retrieval
 --				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
 --				check attached transaction.error as err then err.raise end
 --			end
+			if raise_exception then
+				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
+				check attached transaction.error as err then
+					err.raise
+				end
+			end
 
 			if attributes.count < type.attribute_count then
 					-- Prevent the QUERY_CURSOR from messing around with our database.
@@ -157,6 +173,13 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			index: INTEGER
 		do
+			if raise_exception then
+				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
+				check attached transaction.error as err then
+					err.raise
+				end
+			end
+
 			across
 				order as cursor
 			from
@@ -270,7 +293,6 @@ feature {NONE} -- Implementation
 		local
 			inner: like create_get_inner_database
 		do
-
 --			if success then -- Enable transaction conflict simulation
 --				success := False
 --			else
@@ -278,6 +300,13 @@ feature {NONE} -- Implementation
 --				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
 --				check attached transaction.error as err then err.raise end
 --			end
+
+			if raise_exception then
+				transaction.set_error (create {PS_TRANSACTION_ABORTED_ERROR})
+				check attached transaction.error as err then
+					err.raise
+				end
+			end
 
 			across
 				objects as cursor

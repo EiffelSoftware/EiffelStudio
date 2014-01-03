@@ -1,6 +1,6 @@
 note
 	description: "A default repository that does the object-relational mapping, %
-				% but relies on a PS_BACKEND for the stoage mechanism."
+				% but relies on a PS_REPOSITORY_CONNECTOR for the stoage mechanism."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ feature -- Access.
 	batch_retrieval_size: INTEGER
 			-- <Precursor>
 		do
-			Result := backend.batch_retrieval_size
+			Result := connector.batch_retrieval_size
 		end
 
 feature -- Element change
@@ -27,7 +27,7 @@ feature -- Element change
 	set_batch_retrieval_size (size: INTEGER)
 			-- <Precursor>
 		do
-			backend.set_batch_retrieval_size (size)
+			connector.set_batch_retrieval_size (size)
 		end
 
 feature -- Disposal
@@ -35,7 +35,7 @@ feature -- Disposal
 	close
 			-- <Precursor>
 		do
-			backend.close
+			connector.close
 		end
 
 feature {PS_ABEL_EXPORT} -- Object query
@@ -132,7 +132,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 			if not retried then
 					-- The next statement may fail and raise an exception.
 					-- In that case, `transaction.has_error' is True.
-				backend.commit (transaction)
+				connector.commit (transaction)
 				transaction.close
 			end
 		rescue
@@ -147,7 +147,7 @@ feature {PS_ABEL_EXPORT} -- Transaction handling
 	rollback_transaction (transaction: PS_INTERNAL_TRANSACTION)
 			-- <Precursor>
 		do
-			backend.rollback (transaction)
+			connector.rollback (transaction)
 			transaction.close
 		end
 
@@ -159,10 +159,10 @@ feature {PS_ABEL_EXPORT} -- Testing
 			batch_size: INTEGER
 		do
 			batch_size := batch_retrieval_size
-			backend.wipe_out
+			connector.wipe_out
 
 			create type_factory.make
-			create write_manager.make (type_factory, backend)
+			create write_manager.make (type_factory, connector)
 
 			all_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			all_handlers.do_all (agent write_manager.add_handler)
@@ -184,7 +184,7 @@ feature {PS_ABEL_EXPORT} -- Status Report
 feature {NONE} -- Initialization
 
 	make_from_factory (
-			a_backend: PS_REPOSITORY_CONNECTOR;
+			a_connector: PS_REPOSITORY_CONNECTOR;
 			a_type_factory: PS_METADATA_FACTORY;
 			a_write_manager: PS_WRITE_MANAGER;
 			handler_list: LINKED_LIST [PS_HANDLER];
@@ -192,7 +192,7 @@ feature {NONE} -- Initialization
 			)
 			-- Initialization for `Current'.
 		do
-			backend := a_backend
+			connector := a_connector
 			type_factory := a_type_factory
 			write_manager := a_write_manager
 			all_handlers := handler_list
@@ -207,8 +207,8 @@ feature {NONE} -- Initialization
 
 feature {PS_ABEL_EXPORT} -- Implementation
 
-	backend: PS_REPOSITORY_CONNECTOR
-			-- A BACKEND implementation
+	connector: PS_REPOSITORY_CONNECTOR
+			-- A repository connector.
 
 	write_manager: PS_WRITE_MANAGER
 			-- The write manager.
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			new_read_manager: PS_READ_MANAGER
 			query_cursor: PS_QUERY_CURSOR
 		do
-			create new_read_manager.make (type_factory, backend, transaction)
+			create new_read_manager.make (type_factory, connector, transaction)
 			all_handlers.do_all (agent new_read_manager.add_handler)
 
 			create query_cursor.make (query, filter, new_read_manager)
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			to_prune: detachable PS_TRANSACTION
 		do
 			if transaction.is_active then
-				backend.rollback (transaction)
+				connector.rollback (transaction)
 				transaction.close
 			end
 
@@ -288,9 +288,9 @@ feature {NONE} -- Obsolete: for future reference.
 				if h_cursor.item.can_handle_type (type) then
 					found := True
 					if h_cursor.item.is_mapping_to_collection then
-						backend.delete_collections (to_delete, transaction)
+						connector.delete_collections (to_delete, transaction)
 					else
-						backend.delete (to_delete, transaction)
+						connector.delete (to_delete, transaction)
 					end
 				end
 			end

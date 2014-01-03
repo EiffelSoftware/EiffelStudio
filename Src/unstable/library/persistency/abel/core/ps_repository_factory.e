@@ -138,21 +138,21 @@ feature -- Factory function
 		require
 			buildable: is_buildable
 		local
-			backend: PS_REPOSITORY_CONNECTOR
+			connector: PS_REPOSITORY_CONNECTOR
 			write_manager: PS_WRITE_MANAGER
 		do
-			backend := new_backend
-			backend.set_transaction_isolation (anomaly_settings)
+			connector := new_connector
+			connector.set_transaction_isolation (anomaly_settings)
 
-			internal_plugins.do_all (agent backend.add_plugin)
+			internal_plugins.do_all (agent connector.add_plugin)
 
-			create write_manager.make (type_factory, backend)
+			create write_manager.make (type_factory, connector)
 
 			internal_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
 			internal_handlers.do_all (agent write_manager.add_handler)
 
 			create {PS_DEFAULT_REPOSITORY} Result.make_from_factory (
-				backend,
+				connector,
 				type_factory,
 				write_manager,
 				internal_handlers,
@@ -161,7 +161,7 @@ feature -- Factory function
 
 feature {NONE} -- Implementation
 
-	new_backend: PS_REPOSITORY_CONNECTOR
+	new_connector: PS_REPOSITORY_CONNECTOR
 			-- Create a backend.
 		require
 			buildable: is_buildable

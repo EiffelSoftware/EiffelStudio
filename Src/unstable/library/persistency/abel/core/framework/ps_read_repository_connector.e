@@ -27,16 +27,16 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- The amount of objects to retrieve in a single batch.
 			-- Set to `{PS_REPOSITORY}.Infinite_batch_size' to retrieve all objects.
 
-feature {PS_ABEL_EXPORT} -- Backend capabilities
+feature {PS_ABEL_EXPORT} -- Status report
 
 	is_object_type_supported (type: PS_TYPE_METADATA): BOOLEAN
-			-- Can the current backend handle objects of type `type'?
+			-- Can the current connector handle objects of type `type'?
 		do
 			Result := not attached {TYPE [detachable SPECIAL [detachable ANY]]} type.type and not attached {TYPE [detachable TUPLE]} type.type
 		end
 
 	is_generic_collection_supported: BOOLEAN
-			-- Can the current backend support collections?
+			-- Are collections supported by this connector?
 		deferred
 		end
 
@@ -77,7 +77,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 			wrapper: PS_CURSOR_WRAPPER
 			args: TUPLE [type: PS_TYPE_METADATA; criteria: PS_CRITERION; attr: PS_IMMUTABLE_STRUCTURE [STRING]]
 		do
-				-- Execute plugins to adapt the query parameters
+				-- Execute plugins to adapt the query parameters.
 			across
 				plugins as cursor
 			from
@@ -86,7 +86,7 @@ feature {PS_ABEL_EXPORT} -- Object retrieval
 				args := cursor.item.before_retrieve (args, transaction)
 			end
 
-				-- Retrieve result from backend
+				-- Retrieve result from actual implementation.
 			real_cursor := internal_retrieve (args.type, args.criteria, is_root_only, args.attr, transaction)
 
 				-- Wrap the cursor

@@ -39,8 +39,8 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			real_cursor.forth
-			if not after and not backend.plugins.is_empty and then attached {PS_BACKEND_OBJECT} item as i then
-				backend.apply_plugins (i, transaction)
+			if not after and not connector.plugins.is_empty and then attached {PS_BACKEND_OBJECT} item as i then
+				connector.apply_plugins (i, transaction)
 			end
 		ensure then
 			metadata_set: not after implies item.type.is_equal (type)
@@ -50,7 +50,7 @@ feature -- Cursor movement
 
 feature {NONE} -- Impementation
 
-	backend: PS_READ_REPOSITORY_CONNECTOR
+	connector: PS_READ_REPOSITORY_CONNECTOR
 
 	real_cursor: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 
@@ -62,11 +62,11 @@ feature {NONE} -- Impementation
 
 feature {NONE} -- Initialization
 
-	make (a_backend: like backend; a_cursor: like real_cursor; a_type: like type;
+	make (a_connector: like connector; a_cursor: like real_cursor; a_type: like type;
 			attr_list: like attributes; a_transaction: like transaction)
 			-- Initialization fo `Current'.
 		do
-			backend := a_backend
+			connector := a_connector
 			real_cursor := a_cursor
 			type := a_type
 			attributes := attr_list

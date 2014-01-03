@@ -12,13 +12,12 @@ class
 	PS_METADATA_TABLES_MANAGER
 
 inherit
-
 	PS_ABEL_EXPORT
 
 create
 	make
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Status report
+feature {PS_ABEL_EXPORT} -- Status report
 
 	has_primary_key_of_class (class_name: IMMUTABLE_STRING_8): BOOLEAN
 			-- Does the class `class_name' have a primary key in the database?
@@ -46,7 +45,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			Result := attribute_key_to_name_map.has (attribute_key)
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Access - Class
+feature {PS_ABEL_EXPORT} -- Access - Class
 
 	class_name_of_key (class_key: INTEGER): IMMUTABLE_STRING_8
 			-- Get the class name of the class with primary key `class_key'
@@ -69,6 +68,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 	all_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Get all types in the database.
 		do
+			fixme ("This also returns some basic types which are sometimes just present as attributes of other objects.")
 			across
 				class_name_to_key_map as cursor
 			from
@@ -80,7 +80,7 @@ feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQ
 			end
 		end
 
-feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND, PS_LAZY_CURSOR, PS_CRITERION_SQL_CONVERTER} -- Access - Attribute
+feature {PS_ABEL_EXPORT} -- Access - Attribute
 
 	attribute_name_of_key (attribute_key: INTEGER): STRING
 			-- Get the attribute name of the attribute with primary key `class_key'

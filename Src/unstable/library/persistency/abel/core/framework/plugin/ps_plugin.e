@@ -1,5 +1,5 @@
 note
-	description: "Main interface for backend plugins. %
+	description: "Main interface for connector plugins. %
 		%A plugin can change the objects to store and retrieve, or adjust query parameters."
 	author: "Roman Schmocker"
 	date: "$Date$"

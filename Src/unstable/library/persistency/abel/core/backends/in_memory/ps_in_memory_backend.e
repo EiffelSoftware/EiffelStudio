@@ -15,44 +15,32 @@ create
 
 feature {PS_ABEL_EXPORT} -- Backend capabilities
 
-	is_generic_collection_supported: BOOLEAN
-			-- Can the current backend support collections in general,
-			-- i.e. is there a default strategy?
-		do
-			Result := True
-		end
+	is_generic_collection_supported: BOOLEAN = True
+			-- <Precursor>
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	stored_types: LIST [READABLE_STRING_GENERAL]
-			-- The type string for all objects and collections stored in `Current'.
-		local
-			reflection: REFLECTOR
+	stored_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- <Precursor>
 		do
-			-- Note to implementors: It is highly recommended to cache the result, and
-			-- refresh it during a `retrieve' operation (or not at all if the result
-			-- is always stable).
-			create {ARRAYED_LIST [READABLE_STRING_GENERAL]} Result.make (database.count + collection_database.count)
-			create reflection
-
+			create Result.make (database.count + collection_database.count)
 			across
 				database as cursor
 			loop
-				Result.extend (reflection.type_of_type (cursor.key).name)
+				Result.extend (cursor.key.name)
 			end
 
 			across
 				collection_database as collection_cursor
 			loop
-				Result.extend (reflection.type_of_type (collection_cursor.key).name)
+				Result.extend (collection_cursor.key.name)
 			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Retrieval
 
 	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
-			-- See function `specific_retrieve'.
-			-- Use `internal_specific_retrieve' for contracts and other calls within a backend.
+			-- <Precursor>
 		local
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			i: INTEGER
@@ -74,8 +62,7 @@ feature {PS_ABEL_EXPORT} -- Retrieval
 		end
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
-			-- See function `retrieve'.
-			-- Use `internal_retrieve' for contracts and other calls within a backend.
+			-- <Precursor>
 		require else
 			supported: is_object_type_supported (type)
 		do
@@ -116,7 +103,7 @@ feature {PS_ABEL_EXPORT} -- Collection retrieval
 				Result := list
 			loop
 				if
-					attached collection_database [types [cursor.item].type.type_id] as inner
+					attached collection_database [types [cursor.item]] as inner
 					and then attached inner [primary_keys [cursor.item]] as res
 				then
 					list.extend (res)
@@ -127,23 +114,23 @@ feature {PS_ABEL_EXPORT} -- Collection retrieval
 feature {PS_ABEL_EXPORT} -- Transaction handling
 
 	commit (a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
+			-- <Precursor>
 		do
 		end
 
 	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Aborts `a_transaction' and undoes all changes in the database.
+			-- <Precursor>
 		do
 		end
 
 	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
-			-- Set the transaction isolation level such that all values in `settings' are respected.
+			-- <Precursor>
 		do
 				-- Do nothing. Transactions are not supported for the in-memory backend.
 		end
 
 	close
-			-- Close the backend.
+			-- <Precursor>
 		do
 		end
 
@@ -164,10 +151,8 @@ feature {PS_ABEL_EXPORT} -- Testing
 
 feature {PS_ABEL_EXPORT} -- Primary key generation
 
-	max_primary: INTEGER
-
 	generate_all_object_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_OBJECT], PS_TYPE_METADATA]
-			-- Generates `count' primary keys for each `type'.
+			-- <Precursor>
 		local
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 			index: INTEGER
@@ -194,7 +179,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 		end
 
 	generate_collection_primaries (order: HASH_TABLE [INTEGER, PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): HASH_TABLE [LIST [PS_BACKEND_COLLECTION], PS_TYPE_METADATA]
-			-- Generate `count' primary keys for collections.
+			-- <Precursor>
 		local
 			list: ARRAYED_LIST [PS_BACKEND_COLLECTION]
 			index: INTEGER
@@ -223,11 +208,12 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 feature {PS_ABEL_EXPORT} -- Write operations
 
 	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+			-- <Precursor>
 		do
 			across
 				objects as cursor
 			loop
-				if attached database [cursor.item.type.type.type_id] as inner then
+				if attached database [cursor.item.type] as inner then
 					inner.remove (cursor.item.primary_key)
 				end
 			end
@@ -235,6 +221,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 
 	write_collections (collections: LIST [PS_BACKEND_COLLECTION]; transaction: PS_INTERNAL_TRANSACTION)
+			-- <Precursor>
 		local
 			db: HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER]
 		do
@@ -264,11 +251,12 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		end
 
 	delete_collections (collections: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
+			-- <Precursor>
 		do
 			across
 				collections as cursor
 			loop
-				if attached collection_database [cursor.item.type.type.type_id] as inner then
+				if attached collection_database [cursor.item.type] as inner then
 					inner.remove (cursor.item.primary_key)
 				end
 			end
@@ -278,6 +266,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 feature {NONE} -- Implementation
 
 	internal_write (objects: LIST [PS_BACKEND_OBJECT]; transaction: PS_INTERNAL_TRANSACTION)
+			-- <Precursor>
 		local
 			inner: like create_get_inner_database
 		do
@@ -316,21 +305,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	collection_database: HASH_TABLE [HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER], INTEGER]
-
-	database: HASH_TABLE [HASH_TABLE [PS_BACKEND_OBJECT, INTEGER], INTEGER]
-		-- First key: Type ID
-		-- Second key: unique object identifier
+feature {NONE} -- Implementation
 
 	create_get_inner_database (type: PS_TYPE_METADATA): HASH_TABLE [PS_BACKEND_OBJECT, INTEGER]
 			-- Return `database [type]'.
 			-- If not present, create a new hash table.
 		do
-			if attached database [type.type.type_id] as res then
+			if attached database [type] as res then
 				Result := res
 			else
 				create Result.make (default_size)
-				database.extend (Result, type.type.type_id)
+				database.extend (Result, type)
 			end
 		end
 
@@ -338,13 +323,26 @@ feature {NONE} -- Implementation
 			-- Return `collection_database [type]'.
 			-- If not present, create a new hash table.
 		do
-			if attached collection_database [type.type.type_id] as res then
+			if attached collection_database [type] as res then
 				Result := res
 			else
 				create Result.make (default_size)
-				collection_database.extend (Result, type.type.type_id)
+				collection_database.extend (Result, type)
 			end
 		end
+
+feature {NONE} -- Data structures
+
+	database: HASH_TABLE [HASH_TABLE [PS_BACKEND_OBJECT, INTEGER], PS_TYPE_METADATA]
+		-- First key: Type ID.
+		-- Second key: Primary key.
+
+	collection_database: HASH_TABLE [HASH_TABLE [PS_BACKEND_COLLECTION, INTEGER], PS_TYPE_METADATA]
+		-- First key: Type ID.
+		-- Second key: Primary key.
+
+	max_primary: INTEGER
+		-- The maximum generated primary key.
 
 feature {NONE} -- Constants
 

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			subtypes_list.extend (query_type)
 
 			if query.is_subtype_included then
-				stored_types := read_manager.backend.stored_types
+				stored_types := read_manager.connector.stored_types
 				create reflector
 
 				across
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation: Access
 
 			from
 
-				batch_count := read_manager.backend.batch_retrieval_size
+				batch_count := read_manager.connector.batch_retrieval_size
 					-- Some reasonable default to exploit caches.
 				if batch_count < 1 then
 					batch_count := default_batch_size

@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize with default handlers and plugins.
+			-- <Precursor>
 		do
 			make_uninitialized
 
@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_buildable: BOOLEAN = True
-			-- Does `Current' have enough information to build a repository?
+			-- <Precursor>
 
 feature {NONE} -- Implmentation
 
-	new_backend: PS_REPOSITORY_CONNECTOR
-			-- Create a backend.
+	new_connector: PS_REPOSITORY_CONNECTOR
+			-- <Precursor>
 		do
 			create {PS_IN_MEMORY_BACKEND} Result.make
 		end

@@ -10,7 +10,7 @@ class
 inherit
 	PS_CRITERION_VISITOR [STRING]
 
-	REFACTORING_HELPER
+	PS_ABEL_EXPORT
 
 create
 	make
@@ -18,6 +18,7 @@ create
 feature {PS_CRITERION} -- Visitor functions
 
 	visit_and (and_crit: PS_AND_CRITERION): STRING
+			-- Precursor
 		local
 			left, right: STRING
 		do
@@ -29,6 +30,7 @@ feature {PS_CRITERION} -- Visitor functions
 		end
 
 	visit_or (or_crit: PS_OR_CRITERION): STRING
+			-- Precursor
 		local
 			left, right: STRING
 		do
@@ -39,6 +41,7 @@ feature {PS_CRITERION} -- Visitor functions
 		end
 
 	visit_not (not_crit: PS_NOT_CRITERION): STRING
+			-- Precursor
 		local
 			child: STRING
 		do
@@ -47,6 +50,7 @@ feature {PS_CRITERION} -- Visitor functions
 		end
 
 	visit_predefined (predef_crit: PS_PREDEFINED_CRITERION): STRING
+			-- Precursor
 		local
 			attribute_key: INTEGER
 			value: STRING
@@ -64,6 +68,7 @@ feature {PS_CRITERION} -- Visitor functions
 		end
 
 	visit_agent (agent_crit: PS_AGENT_CRITERION): STRING
+			-- Precursor
 		do
 				-- Those criteria should be filtered in advance and thus never be called.
 				-- A call to this function indicates a bug.
@@ -82,11 +87,17 @@ feature {PS_CRITERION} -- Visitor functions
 
 feature {NONE} -- Implementation
 
+	metadata: PS_METADATA_TABLES_MANAGER
+			-- Information about the class and attribute primary keys in the database.
+
 	type: PS_TYPE_METADATA
+			-- The type for building criterion strings.
 
 	temp_count: INTEGER
+			-- A counter for temporary names.
 
 	new_temp: STRING
+			-- Generates a unique temporary name.
 		do
 			Result := "tmp" + temp_count.out
 			temp_count := temp_count + 1
@@ -94,9 +105,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	metadata: PS_METADATA_TABLES_MANAGER
 
 	make (meta: like metadata; a_type: like type)
+			-- Initialization for `Current'.
 		do
 			metadata := meta
 			type := a_type

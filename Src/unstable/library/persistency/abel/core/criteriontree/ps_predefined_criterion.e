@@ -1,5 +1,6 @@
 note
-	description: "A criterion to filter objects according to some predefined operations on attributes (see class PS_PREDEFINED_OPERATORS)."
+	description: "A criterion to filter objects according to some predefined %
+				% operations on attributes (see class PS_PREDEFINED_OPERATORS)."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -148,7 +149,7 @@ feature --Access
 			-- The value to check for
 
 	my_agent: PREDICATE [ANY, TUPLE [ANY]]
-			-- Used if the predefined queries cannot be executed by the database backend
+			-- Used if the predefined queries cannot be executed by the database.
 
 feature -- Predefined Operators
 

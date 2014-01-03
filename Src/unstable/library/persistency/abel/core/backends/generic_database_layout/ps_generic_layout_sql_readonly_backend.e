@@ -9,39 +9,24 @@ class
 
 inherit
 	PS_READ_REPOSITORY_CONNECTOR
-		redefine
-			close
-		end
 
 create
 	make
 
-feature {PS_ABEL_EXPORT} -- Lazy loading
-
-	Default_batch_size: INTEGER = -1
-
 feature {PS_ABEL_EXPORT} -- Access
 
 	stored_types: LIST [READABLE_STRING_GENERAL]
-			-- The type string for all objects and collections stored in `Current'.
+			-- <Precursor>
 		do
-			-- Note to implementors: It is highly recommended to cache the result, and
-			-- refresh it during a `retrieve' operation (or not at all if the result
-			-- is always stable).
-			fixme ("This also returns some basic types which are sometimes just present as attributes of other objects.")
 			Result := db_metadata_manager.all_types
 		end
-
 
 feature {PS_ABEL_EXPORT}-- Backend capabilities
 
 	is_generic_collection_supported: BOOLEAN = True
-			-- Can the current backend support collections in general,
-			-- i.e. is there a default strategy?
+			-- <Precursor>
 
 feature {PS_ABEL_EXPORT} -- Object retrieval operations
-
-
 
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- <Precursor>
@@ -158,7 +143,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 		do
 			fixme ("Implement `is_root_only'.")
 
-			-- Get the collection items
+				-- Get the collection items
 			connection := get_connection (transaction)
 			sql_string := "SELECT collectionid, position, runtimetype, value FROM ps_collection WHERE collectiontype = "
 				+ db_metadata_manager.primary_key_of_class (type.name).out
@@ -168,7 +153,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 
 			row_cursor := connection.last_result
 
-			-- Get all the content
+				-- Get all the content
 			from
 				create result_list.make (1)
 			until
@@ -178,7 +163,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				position:= row_cursor.item.at ("position").to_integer
 
 				if position <= 0 then
-					-- new item
+						-- We have a new item.
 					result_list.extend (create {PS_BACKEND_COLLECTION}.make (primary_key, type))
 					result_list.last.set_is_root (row_cursor.item.at ("value").to_boolean)
 				else
@@ -189,7 +174,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 				row_cursor.forth
 			end
 
-			-- Get the additional information
+				-- Get the additional information
 			across
 				result_list as cursor
 			loop
@@ -425,14 +410,11 @@ feature {NONE} -- Initialization
 			management_connection.commit
 			create active_connections.make (1)
 
-			batch_retrieval_size := Default_batch_size
+			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
 
 			create plugins.make (1)
-			plugins.extend (create {PS_AGENT_CRITERION_ELIMINATOR_PLUGIN})
-
 		end
 
 invariant
 	valid_batchsize: batch_retrieval_size > 0 or batch_retrieval_size = -1
-
 end

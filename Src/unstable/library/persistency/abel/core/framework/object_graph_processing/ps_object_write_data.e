@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_WRITE_DATA}."
-	author: ""
+	description: "Write-specific object data."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			index := idx
-
 			level := a_level
 			type := a_type
 

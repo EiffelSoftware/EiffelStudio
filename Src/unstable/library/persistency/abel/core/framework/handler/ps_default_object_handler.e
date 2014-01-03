@@ -22,7 +22,7 @@ create
 feature {NONE} -- Implementation
 
 	internal_can_handle_type (type: PS_TYPE_METADATA): BOOLEAN
-			-- Can `Current' handle objects of type `type'?
+			-- <Precursor>
 		do
 			Result := not attached {TYPE [detachable SPECIAL [detachable ANY]]} type.type and not attached {TYPE [detachable TUPLE]} type.type
 		end
@@ -30,15 +30,13 @@ feature {NONE} -- Implementation
 feature {PS_ABEL_EXPORT} -- Status report
 
 	is_mapping_to_value_type: BOOLEAN = False
-			-- Does `Current' map objects to a value type (i.e. STRING)?
+			-- <Precursor>
 
 
 feature {PS_ABEL_EXPORT} -- Read functions
 
 	initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
-			-- Try to initialize the `object' as much as possible.
-			-- For any referenced object not yet loaded, tell the `read_manager'
-			-- to retrieve it in the next iteration.
+			-- <Precursor>
 		local
 			reflector: REFLECTED_OBJECT
 
@@ -137,14 +135,14 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 						check value_is_primary_key: attribute_value.is_integer end
 						attribute_type := retrieved.type_lookup (field_name)
-						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (attribute_type)
+						dynamic_field_type := read_manager.type_factory.create_metadata_from_string (attribute_type)
 						read_manager.process_next (attribute_value.to_integer, dynamic_field_type, object)
 
 					when reference_type then
 
 
 						attribute_type := retrieved.type_lookup (field_name)
-						dynamic_field_type := read_manager.metadata_factory.create_metadata_from_string (attribute_type)
+						dynamic_field_type := read_manager.type_factory.create_metadata_from_string (attribute_type)
 
 						if not dynamic_field_type.is_none then
 
@@ -164,7 +162,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 		end
 
 	finish_initialize (object: PS_OBJECT_READ_DATA; read_manager: PS_READ_MANAGER)
-			-- Finish initialization of `object'.
+			-- <Precursor>
 		local
 			index: INTEGER
 			reflector: REFLECTED_OBJECT
@@ -199,7 +197,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 
 				when expanded_type then
 					if attached retrieved.value_lookup (l_field_names [i]) as attribute_value then
-						field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
+						field_type := read_manager.type_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
 						ref_item := read_manager.cache_lookup (attribute_value.to_integer, field_type)
 						read_manager.item (ref_item).set_reflector (reflector.expanded_field (i))
 					end
@@ -208,7 +206,7 @@ feature {PS_ABEL_EXPORT} -- Read functions
 					if reflector.reference_field (i) = Void and then attached retrieved.value_lookup (l_field_names [i]) as attribute_value then
 						if not attribute_value.is_empty then
 
-							field_type := read_manager.metadata_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
+							field_type := read_manager.type_factory.create_metadata_from_string (retrieved.type_lookup (l_field_names [i]))
 								-- This check is safe because of {PS_BACKEND_OBJECT}.is_consistent
 							check not_none: not field_type.is_none end
 
@@ -233,10 +231,10 @@ feature {PS_ABEL_EXPORT} -- Read functions
 feature {PS_ABEL_EXPORT} -- Write functions
 
 	initialize_backend_representation (object: PS_OBJECT_WRITE_DATA)
-			-- Initialize all attributes or items in `object.backend_representation'
+			-- <Precursor>
 		local
 			i, k: INTEGER
-			tuple: TUPLE [value: STRING; type: IMMUTABLE_STRING_8]
+			value: STRING
 
 			backend_object: PS_BACKEND_OBJECT
 			field_type: PS_TYPE_METADATA
@@ -339,8 +337,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 					check reference_found: k <= object.references.count end
 
 					ref_item := write_manager.item (object.references [k])
-					tuple := ref_item.handler.as_string_pair (ref_item)
-					backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
+					value := ref_item.handler.as_string (ref_item)
+					backend_object.add_attribute (object.type.attributes [i], value, ref_item.type.name)
 
 				when reference_type then
 
@@ -348,7 +346,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 						if basic_expanded_types.has (field.generating_type.type_id) then
 								-- Basic type, disguised in a copy-semantics object.
-							field_type := write_manager.metadata_factory.create_metadata_from_object (field)
+							field_type := write_manager.type_factory.create_metadata_from_object (field)
 							backend_object.add_attribute (object.type.attributes [i], basic_attribute_value (field), field_type.name)
 						else
 								-- Reference type
@@ -364,8 +362,8 @@ feature {PS_ABEL_EXPORT} -- Write functions
 
 							check reference_found: k <= object.references.count end
 							ref_item := write_manager.item (object.references [k])
-							tuple := ref_item.handler.as_string_pair (ref_item)
-							backend_object.add_attribute (object.type.attributes [i], tuple.value, tuple.type)
+							value := ref_item.handler.as_string (ref_item)
+							backend_object.add_attribute (object.type.attributes [i], value, ref_item.type.name)
 						end
 					else
 							-- Void reference

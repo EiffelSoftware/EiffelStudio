@@ -1,5 +1,6 @@
 note
-	description: "Traverses an object graph and creates an array of OBJECT_DATA for every visited object."
+	description: "Traverses an object graph and creates an array %
+				% of OBJECT_DATA for every visited object."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7,7 +8,7 @@ note
 class
 	PS_OBJECT_GRAPH_TRAVERSAL
 
-inherit -- {NONE}
+inherit
 
 	PS_ABEL_EXPORT
 
@@ -16,7 +17,6 @@ inherit -- {NONE}
 			set_on_processing_object_action,
 			set_on_processing_reference_action,
 			set_object_action,
---			set_is_skip_transient,
 			set_is_skip_copy_semantics_reference,
 			set_is_exception_on_copy_suppressed,
 			wipe_out

@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (
-			a_metadata_factory: like metadata_factory;
+			a_metadata_factory: like type_factory;
 			a_backend: like backend;
 			a_transaction: like transaction)
 			-- Initialization for `Current'
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 			create storage_array.make_empty (default_size)
 				-- Fill the first position with a bogus result.
-			create bogus.make_with_primary_key (0, -1, metadata_factory.create_metadata_from_type ({NONE}), -1)
+			create bogus.make_with_primary_key (0, -1, type_factory.create_metadata_from_type ({NONE}), -1)
 			storage_array.extend (bogus)
 
 			create cache.make (small_size)
@@ -263,7 +263,7 @@ feature {PS_ABEL_EXPORT} -- Object building
 					if object.reflector /= object then
 							-- Expanded type
 						storage_array.put (object.reflector, cursor.item)
-					elseif object.is_object_initialized then
+					elseif object.is_reflector_initialized then
 						storage_array.put (object.reflector.object, cursor.item)
 					else
 						storage_array.put (Void, cursor.item)
@@ -376,7 +376,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 
 				elseif referee_index < to_process_next.lower then
 					referee := item (referee_index)
-					if referee.is_object_initialized then
+					if referee.is_reflector_initialized then
 						referee.set_referer (referer.index)
 						Result := referee.reflector.object
 					end
@@ -416,7 +416,7 @@ feature {PS_ABEL_EXPORT} -- Handler support functions
 				or else attached search_value_type_handler (type)
 				or else (attached cache [type] as second_lvl
 					and then second_lvl [value.to_integer] > 0
-					and then (item (second_lvl [value.to_integer]).is_object_initialized
+					and then (item (second_lvl [value.to_integer]).is_reflector_initialized
 						or item (second_lvl [value.to_integer]).is_ignored))
 		end
 

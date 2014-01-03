@@ -1,5 +1,6 @@
 note
-	description: "Main interface for backend plugins. A plugin can change the objects to store and retrieve, or adjust the query parameter."
+	description: "Main interface for backend plugins. %
+		%A plugin can change the objects to store and retrieve, or adjust query parameters."
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +11,7 @@ deferred class
 inherit
 	PS_ABEL_EXPORT
 
-feature
+feature -- Plugin operations
 
 	before_write (object: PS_BACKEND_OBJECT; transaction: PS_INTERNAL_TRANSACTION)
 			-- Action to be applied before `object' gets written.
@@ -19,7 +20,8 @@ feature
 
 	before_retrieve (args: TUPLE [type: PS_TYPE_METADATA; criterion: PS_CRITERION; attributes: PS_IMMUTABLE_STRUCTURE [STRING]]; transaction: PS_INTERNAL_TRANSACTION): like args
 			-- Action to be applied to the query parameters.
-			-- This feature is only called in `{PS_READ_ONLY_BACKEND}.retrieve', but not in `{PS_READ_ONLY_BACKEND}.specific_retrieve'
+			-- This feature is only called in `{PS_READ_REPOSITORY_CONNECTOR}.retrieve',
+			-- but not in `{PS_READ_REPOSITORY_CONNECTOR}.specific_retrieve'
 		deferred
 		end
 

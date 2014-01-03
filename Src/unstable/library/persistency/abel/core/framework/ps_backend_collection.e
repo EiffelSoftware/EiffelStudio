@@ -26,18 +26,24 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- The number of items in `Current'.
 		do
 			Result := item_store.count
+		ensure then
+			correct: Result = item_store.count and Result = type_store.count
 		end
 
 	item alias "[]" (i: INTEGER): STRING
 			--  <Precursor>
 		do
 			Result := item_store [i]
+		ensure then
+			correct: Result = item_store [i]
 		end
 
 	item_type (i: INTEGER): IMMUTABLE_STRING_8
 			-- Runtime type of entry at position `i'.
 		do
 			Result := type_store [i]
+		ensure
+			correct: Result = type_store [i]
 		end
 
 	meta_information: HASH_TABLE [STRING, STRING]
@@ -137,22 +143,23 @@ feature -- Comparison
 
 feature {PS_ABEL_EXPORT} -- Element change
 
-	extend (item_value: STRING; runtime_type: IMMUTABLE_STRING_8)
-			-- Add the value `item_value' and its `class_name_of_item_value' to the end of the `collection_items' list.
+	extend (value: STRING; runtime_type: IMMUTABLE_STRING_8)
+			-- Add `value' with type `runtime_type' to `Current'.
 		require
 			class_name_not_empty: not runtime_type.is_empty
-			void_value_means_none_type: item_value.is_empty implies runtime_type ~ "NONE"
+			void_value_means_none_type: value.is_empty implies runtime_type ~ "NONE"
 		do
-			item_store.extend (item_value)
+			item_store.extend (value)
 			type_store.extend (runtime_type)
 		ensure
-			item_inserted: item_store.last ~ item_value
-			class_name_inserted: type_store.last ~ runtime_type
+			count_increased: count = old count + 1
+			item_inserted: item (count)  = value
+			class_name_inserted: item_type (count) = runtime_type
 		end
 
 	force_i_th (value: STRING; runtime_type: IMMUTABLE_STRING_8; position: INTEGER)
-			-- Add the tuple [`value', `runtime_type'] at position `position'.
-			-- Fill the list with ["", "NONE"] tuples if necessary.
+			-- Insert `value' with type `runtime_type' at `position'.
+			-- Extend the list with Void items if necessary.
 		require
 			runtime_type_set: not runtime_type.is_empty
 			none_means_void: runtime_type ~ "NONE" implies value.is_empty
@@ -172,10 +179,14 @@ feature {PS_ABEL_EXPORT} -- Element change
 			end
 
 			put_i_th (value, runtime_type, position)
+		ensure
+			count_big_enough: count >= position
+			item_inserted: item (position) = value
+			type_inserted: item_type (position) = runtime_type
 		end
 
 	put_i_th (value: STRING; runtime_type: IMMUTABLE_STRING_8; position: INTEGER)
-			-- Add the tuple [`value', `runtime_type'] at position `position'.
+			-- Insert `value' with type `runtime_type' at `position'.
 		require
 			runtime_type_set: not runtime_type.is_empty
 			none_means_void: runtime_type ~ "NONE" implies value.is_empty
@@ -183,6 +194,10 @@ feature {PS_ABEL_EXPORT} -- Element change
 		do
 			item_store [position] := value
 			type_store [position] := runtime_type
+		ensure
+			count_unchanged: count = old count
+			item_inserted: item (position) = value
+			type_inserted: item_type (position) = runtime_type
 		end
 
 feature {NONE} -- Implementation
@@ -193,7 +208,7 @@ feature {NONE} -- Implementation
 	item_store: ARRAYED_LIST [STRING]
 			-- The storage array for items.
 
-	type_store: ARRAYED_LIST [STRING]
+	type_store: ARRAYED_LIST [IMMUTABLE_STRING_8]
 			-- The storage array for types.
 
 	check_void_types: BOOLEAN

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PS_OBJECT_READ_DATA}."
-	author: ""
+	description: "Read-specific object data."
+	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"
 

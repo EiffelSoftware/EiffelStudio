@@ -60,7 +60,6 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_cr: detachable EQA_EW_C_COMPILATION_RESULT
-			l_expected_compile_result: like expected_compile_result
 			l_failure_explanation: like failure_explanation
 		do
 			l_cr := a_test.c_compilation_result
@@ -70,9 +69,7 @@ feature -- Command
 				failure_explanation := l_failure_explanation
 				l_failure_explanation.append ("no pending C compilation result to check")
 
-			else
-				l_expected_compile_result := expected_compile_result
-				check attached l_expected_compile_result end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
+			elseif attached expected_compile_result as l_expected_compile_result then
 				execute_ok := l_cr.matches (l_expected_compile_result)
 				if not execute_ok then
 					create l_failure_explanation.make (0)
@@ -84,6 +81,9 @@ feature -- Command
 					l_failure_explanation.append (l_expected_compile_result.summary)
 				end
 				a_test.set_c_compilation_result (Void)
+			else
+				execute_ok := False
+				failure_explanation := "No execution result available"
 			end
 
 			if not execute_ok then
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			-- Result expected from C compilations
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

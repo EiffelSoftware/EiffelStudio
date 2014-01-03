@@ -167,21 +167,21 @@ feature -- Command
 				compilation_aborted := True
 			elseif string_util.is_prefix ({EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_prefix, a_line) then
 				had_exception := True
-				if exception_tag = Void then
-					create exception_tag.make(0)
+				l_exception_tag := exception_tag
+				if l_exception_tag = Void then
+					create l_exception_tag.make(0)
+					exception_tag := l_exception_tag
 				end
 				l_s.keep_tail(a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_prefix.count)
-				l_exception_tag := exception_tag
-				check attached l_exception_tag end -- Implied by previous if clause
 				l_exception_tag.wipe_out
 				l_exception_tag.append (l_s)
 			elseif string_util.is_prefix ({EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix, a_line) then
 				had_exception := True
-				if exception_tag = Void then
-					create exception_tag.make(0)
-				end
 				l_exception_tag := exception_tag
-				check attached l_exception_tag end -- Implied by previous if clause
+				if l_exception_tag = Void then
+					create l_exception_tag.make(0)
+					exception_tag := l_exception_tag
+				end
 				if l_exception_tag.count = 0 then
 					l_s.keep_tail (a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix.count)
 					l_exception_tag.append (l_s)
@@ -212,11 +212,11 @@ feature {EQA_EW_COMPILE_RESULT_INST} -- Internal command
 		local
 			l_validity_errors: like validity_errors
 		do
-			if validity_errors = Void then
-				create validity_errors.make
-			end
 			l_validity_errors := validity_errors
-			check attached l_validity_errors end -- Implied by previous if clause
+			if l_validity_errors = Void then
+				create l_validity_errors.make
+				validity_errors := l_validity_errors
+			end
 			l_validity_errors.extend (a_err)
 			last_validity_error := a_err
 		end
@@ -228,11 +228,11 @@ feature {EQA_EW_COMPILE_RESULT_INST} -- Internal command
 		local
 			l_syntax_errors: like syntax_errors
 		do
-			if syntax_errors = Void then
-				create syntax_errors.make
-			end
 			l_syntax_errors := syntax_errors
-			check attached l_syntax_errors end -- Implied by previous if clause
+			if l_syntax_errors = Void then
+				create l_syntax_errors.make
+				syntax_errors := l_syntax_errors
+			end
 			l_syntax_errors.extend (a_err)
 		end
 
@@ -420,17 +420,14 @@ feature {NONE} -- Implementation
 		local
 			l_words: LIST [STRING]
 			l_class_name: STRING
-			l_last_validity_error: like last_validity_error
 		do
 			if string_util.is_prefix ({EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Class_name_prefix, a_line) then
 				l_words := string_util.broken_into_words (a_line)
 				if l_words.count >= 2 then
 					l_class_name := l_words.i_th (2)
-					l_last_validity_error := last_validity_error
-					check
-						last_validity_error_not_void: l_last_validity_error /= Void
+					if attached last_validity_error as l_last_validity_error then
+						l_last_validity_error.set_class_name (l_class_name)
 					end
-					l_last_validity_error.set_class_name (l_class_name)
 				end
 				in_error := False
 			end
@@ -452,37 +449,24 @@ feature {NONE} -- Implementation
 			l_count1, l_count2: INTEGER
 			l_different: BOOLEAN
 		do
-			if a_list1 = Void then
-				l_count1 := 0
-			else
-				l_count1 := a_list1.count
-			end
-			if a_list2 = Void then
-				l_count2 := 0
-			else
-				l_count2 := a_list2.count
-			end
-			if l_count1 = 0 and l_count2 = 0 then
+			if a_list1 = Void and a_list2 = Void then
 				Result := True
-			elseif l_count1 /= l_count2 then
-				Result := False
-			else
-				check attached a_list1 end -- Implied by previous if clause
-				check attached a_list2 end -- Implied by previous if clause
-				from
-					a_list1.start
-					a_list2.start
-				until
-					a_list1.after or a_list2.after or l_different
-				loop
-					if not equal (a_list1.item, a_list2.item) then
-						l_different := True
-					else
+			elseif a_list1 /= Void and a_list2 /= Void then
+				l_count1 := a_list1.count
+				l_count2 := a_list2.count
+				if l_count1 = l_count2 then
+					from
+						a_list1.start
+						a_list2.start
+						Result := True
+					until
+						a_list1.after or a_list2.after or not Result
+					loop
+						Result := equal (a_list1.item, a_list2.item)
 						a_list1.forth
 						a_list2.forth
 					end
 				end
-				Result := not l_different
 			end
 		end
 
@@ -490,7 +474,7 @@ feature {NONE} -- Implementation
 			-- Raw output of compiler, if not Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

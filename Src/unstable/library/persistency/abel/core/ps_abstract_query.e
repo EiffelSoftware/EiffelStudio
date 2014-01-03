@@ -214,7 +214,7 @@ feature -- Disposal
 		ensure
 			closed: is_closed
 			not_active: attached transaction as tr implies not tr.active_queries.has (Current)
-			not_active_in_repository: not attached transaction implies not repository.active_queries.has (Current)
+			not_active_in_repository: is_executed and not attached transaction implies not repository.active_queries.has (Current)
 			criteria_unchanged: criterion = old criterion
 			root_setting_unchanged: is_non_root_ignored = old is_non_root_ignored
 			initialization_depth_unchanged: object_initialization_depth = old object_initialization_depth
@@ -384,5 +384,5 @@ invariant
 
 	same_context: (is_executed and then attached transaction as tr) implies internal_transaction = tr.transaction
 
-	error_implies_after: has_error implies is_after
+--	error_implies_after: has_error implies is_after
 end

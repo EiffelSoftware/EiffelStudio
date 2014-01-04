@@ -28,14 +28,15 @@ create
 	make_6_3,
 	make_6_4,
 	make_7_0,
-	make_7_3
+	make_7_3,
+	make_14_05
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_7_3
+			make_14_05
 		end
 
 	make_6_3
@@ -65,6 +66,15 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_transitional)
+			is_attached_by_default := True
+			is_full_class_checking := True
+		end
+
+	make_14_05
+			-- Initialize options to the defaults of 14.05.
+		do
+			create syntax.make (syntax_name, syntax_index_standard)
+			create void_safety.make (void_safety_name, void_safety_index_all)
 			is_attached_by_default := True
 			is_full_class_checking := True
 		end
@@ -696,7 +706,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1972,6 +1972,11 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					namespace.same_string (namespace_1_13_0)
+				then
+						-- Use the defaults of ES 14.05.
+					o.merge (default_options_14_05)
+				elseif
 					namespace.same_string (namespace_1_12_0) or
 					namespace.same_string (namespace_1_11_0)
 				then
@@ -2732,6 +2737,14 @@ feature {NONE} -- Implementation state transitions
 
 feature {NONE} -- Default options
 
+	default_options_14_05: CONF_OPTION
+			-- Default options of 14.05.
+		once
+			create Result.make_14_05
+		ensure
+			result_attached: Result /= Void
+		end
+
 	default_options_7_3: CONF_OPTION
 			-- Default options of 7.3.
 		once
@@ -2778,7 +2791,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

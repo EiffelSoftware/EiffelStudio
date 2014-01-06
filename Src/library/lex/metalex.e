@@ -28,28 +28,22 @@ feature -- Initialization
 		require
 			not_initialized: not initialized
 		local
-			l_dfa: like dfa
-			l_categories_table: like categories_table
 			l_keyword_h_table: like keyword_h_table
 			l_analyzer: like analyzer
 		do
 			freeze_lexical;
-			l_analyzer := analyzer
-			if l_analyzer = Void then
-				create l_analyzer.make
-				analyzer := l_analyzer
-			end;
-
-			l_dfa := dfa
-			l_categories_table := categories_table
-			l_keyword_h_table := keyword_h_table
 				--| implied by post-condition of `freeze_lexical'
-			check
-				l_dfa_attached: l_dfa /= Void
-				l_categories_table_attached: l_categories_table /= Void
+			check attached dfa as l_dfa and attached categories_table as l_categories_table then
+				l_analyzer := analyzer
+				if l_analyzer = Void then
+					create l_analyzer.make
+					analyzer := l_analyzer
+				end;
+
+				l_keyword_h_table := keyword_h_table
+				l_analyzer.initialize_attributes (l_dfa, l_categories_table, l_keyword_h_table, keywords_case_sensitive);
+				initialized := True
 			end
-			l_analyzer.initialize_attributes (l_dfa, l_categories_table, l_keyword_h_table, keywords_case_sensitive);
-			initialized := True
 		ensure
 			initialized;
 			analyzer_created: analyzer /= Void;
@@ -89,10 +83,13 @@ feature -- Input
 			-- `name'  `regular_expression'
 			-- then a line beginning with two dashes --
 			-- then zero or more lines containing one keyword each.
+		local
+			l_token_file: PLAIN_TEXT_FILE
 		do
-			create token_file.make_open_read (token_file_name);
-			record_atomics;
-			record_keywords;
+			create l_token_file.make_open_read (token_file_name);
+			record_atomics (l_token_file)
+			record_keywords (l_token_file)
+			l_token_file.close
 			make_analyzer
 		ensure
 			analyzer_exists: analyzer /= Void
@@ -113,30 +110,20 @@ feature {NONE} -- Implementation
 			keyword_h_table := d
 		end;
 
-	token_file: detachable PLAIN_TEXT_FILE;
-
-	record_atomics
+	record_atomics (a_token_file: PLAIN_TEXT_FILE)
 			-- Record the regular expressions with their names and
 			-- their line numbers as token identifiers.
 		require
-			token_file_attached: token_file /= Void
+			token_file_attached: a_token_file /= Void
 		local
-			l_token_file: like token_file
-			l_token_name: detachable STRING;
-			l_regular: detachable STRING
+			l_token_name: STRING;
+			l_regular: STRING
 			id: INTEGER
 		do
-			l_token_file := token_file
-			check l_token_file_attached: l_token_file /= Void end
-
-			l_token_file.read_word;
-			l_token_name := l_token_file.last_string
-			check l_token_name_attached: l_token_name /= Void end
-			l_token_name := l_token_name.twin
-			l_token_file.read_line;
-			l_regular := l_token_file.last_string
-			check l_regular_attached: l_regular /= Void end
-			l_regular := l_regular.twin
+			a_token_file.read_word;
+			l_token_name := a_token_file.last_string.twin
+			a_token_file.read_line;
+			l_regular := a_token_file.last_string.twin
 
 			from
 				id := 1;
@@ -144,60 +131,39 @@ feature {NONE} -- Implementation
 				l_token_name ~ "--"
 			loop
 				put_expression (l_regular, id, l_token_name);
-				l_token_file.read_word;
-				l_token_name := l_token_file.last_string
-				check l_token_name_attached: l_token_name /= Void end
-				l_token_name := l_token_name.twin
-				l_token_file.read_line;
-				l_regular := l_token_file.last_string
-				check l_regular_attached: l_regular /= Void end
-				l_regular := l_regular.twin
+				a_token_file.read_word;
+				l_token_name := a_token_file.last_string.twin
+				a_token_file.read_line;
+				l_regular := a_token_file.last_string.twin
 				id := id + 1
 			end
 		end;
 
-	record_keywords
+	record_keywords (a_token_file: PLAIN_TEXT_FILE)
 			-- Record the keywords with their names, with type
 			-- corresponding to the last atomic expression read.
 		require
-			token_file_attached: token_file /= Void
-			token_type_list_attached: token_type_list /= Void
+			token_file_attached: a_token_file /= Void
 		local
-			l_token_file: like token_file
-			l_token_type_list: like token_type_list
-			l_keyword_name: detachable STRING;
+			l_keyword_name: STRING;
 			l_keyword_type: INTEGER
 		do
-			l_token_file := token_file
-			l_token_type_list := token_type_list
+			if attached token_type_list as l_token_type_list then
+					-- The type of the keywords
+					-- corresponds to the last type recorded.
+				l_keyword_type := l_token_type_list.last;
+				a_token_file.read_word;
+				l_keyword_name := a_token_file.last_string.twin
 
-				--| Implied by preconditions
-			check
-				l_token_file_attached: l_token_file /= Void
-				l_token_type_list_attached: l_token_type_list /= Void
+				from
+				until
+					a_token_file.end_of_file
+				loop
+					put_keyword (l_keyword_name, l_keyword_type);
+					a_token_file.read_word;
+					l_keyword_name := a_token_file.last_string.twin
+				end
 			end
-
-				-- The type of the keywords
-				-- corresponds to the last type recorded.
-			l_keyword_type := l_token_type_list.last;
-			l_token_file.read_word;
-			l_keyword_name := l_token_file.last_string
-			check l_keyword_name_attached: l_keyword_name /= Void end
-			l_keyword_name := l_keyword_name.twin
-
-			from
-			until
-				l_token_file.end_of_file
-			loop
-				put_keyword (l_keyword_name, l_keyword_type);
-				l_token_file.read_word;
-				l_keyword_name := l_token_file.last_string
-				check l_keyword_name_attached: l_keyword_name /= Void end
-				l_keyword_name := l_keyword_name.twin
-			end
-
-				-- The file should have read to the end.
-			check l_token_file_read: l_token_file.end_of_file end
 		end;
 
 	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING)
@@ -206,7 +172,6 @@ feature {NONE} -- Implementation
 		local
 			error_position: INTEGER;
 			message: STRING
-			l_construct: like construct
 			l_description: like description
 		do
 			create message.make (0);
@@ -218,9 +183,11 @@ feature {NONE} -- Implementation
 				error_position := description_length - 1
 			end;
 			message.append ("Metalex, construct ");
-			l_construct := construct
-			check l_construct_attached: l_construct /= Void end
-			message.append (l_construct);
+			if attached construct as l_construct then
+				message.append (l_construct);
+			else
+				message.append ("%"no construct found%"")
+			end
 			message.append (", error in format near: ``");
 			l_description := description
 			check l_description_attached: l_description /= Void end
@@ -241,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

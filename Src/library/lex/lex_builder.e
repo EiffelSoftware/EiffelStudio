@@ -15,7 +15,6 @@ class LEX_BUILDER inherit
 			make as pdfa_make,
 			item as pdfa_item,
 			put as pdfa_put,
-			wipe_out as pdfa_wipe_out,
 			move as pdfa_move
 		redefine
 			dfa_set_final
@@ -30,10 +29,7 @@ feature  -- Initialization
 	make
 			-- Set up the analyzer.
 		do
-			pdfa_make (0, 0)
-			last_character_code := Last_ascii;
-			create tool_list.make;
-			create tool_names.make
+			make_extended (last_ascii)
 		ensure
 			last_character_set: last_character_code = Last_ascii
 		end;
@@ -55,9 +51,6 @@ feature  -- Initialization
 			-- Set up attributes of `analyzer'.
 		local
 			l_analyzer: like analyzer
-			l_dfa: like dfa
-			l_categories: like categories_table
-			l_keywords: like keyword_h_table
 		do
 			initialized := True;
 			l_analyzer := analyzer
@@ -65,14 +58,9 @@ feature  -- Initialization
 				create l_analyzer.make
 				analyzer := l_analyzer
 			end;
-			l_dfa := dfa
-			l_categories := categories_table
-			l_keywords := keyword_h_table
-			check
-				l_dfa_attached: l_dfa /= Void
-				l_categories_attached: l_categories /= Void
+			if attached dfa as l_dfa and attached categories_table as l_categories then
+				l_analyzer.initialize_attributes (l_dfa, l_categories, keyword_h_table, keywords_case_sensitive)
 			end
-			l_analyzer.initialize_attributes (l_dfa, l_categories, l_keywords, keywords_case_sensitive)
 		ensure
 			analyzer_attached: analyzer /= Void
 			initialized
@@ -83,10 +71,10 @@ feature -- Access
 	last_character_code: INTEGER;
 			-- Last character code recognized by the language
 
-	tool_list: detachable LINKED_LIST [PDFA];
+	tool_list: LINKED_LIST [PDFA];
 			-- Regular expressions used as auxiliary tools
 
-	tool_names: detachable LINKED_LIST [STRING];
+	tool_names: LINKED_LIST [STRING];
 			-- Names of regular expressions in tool list
 
 	case_sensitive: BOOLEAN;
@@ -208,10 +196,6 @@ feature -- Element change
 
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 			last_created_tool := last_created_tool + 1;
 			l_tools.finish;
 			l_tools.put_right (fa);
@@ -261,10 +245,6 @@ feature -- Element change
 
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 			l_tools.finish;
 			l_tools.put_right (new_tool);
 			l_tool_names.finish;
@@ -299,10 +279,6 @@ feature -- Element change
 
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 			l_tools.finish;
 			l_tools.put_right (new_tool);
 			l_tool_names.finish;
@@ -341,7 +317,6 @@ feature -- Element change
 			l_tools.put_right (new);
 			create c_name.make (0);
 			l_tool_names := tool_names
-			check l_tool_names_attached: l_tool_names /= Void end
 			l_tool_names.go_i_th (r);
 			c_name.append (l_tool_names.item);
 			c_name.extend ('-');
@@ -368,10 +343,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 
 			l_tools.go_i_th (p);
 			p_length := l_tools.item.nb_states;
@@ -415,10 +386,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 
 			l_tools.go_i_th (p);
 			p_length := l_tools.item.nb_states;
@@ -465,10 +432,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 
 			l_tools.go_i_th (p);
 			p_length := l_tools.item.nb_states;
@@ -514,11 +477,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (c);
 			create new.make (l_tools.item.nb_states, last_character_code);
 			new.include (l_tools.item, 0);
@@ -551,11 +509,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (c);
 			length := l_tools.item.nb_states;
 			create new.make (length, last_character_code);
@@ -591,11 +544,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (c);
 			length := l_tools.item.nb_states;
 			create new.make (length, last_character_code);
@@ -632,11 +580,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (c);
 			length := l_tools.item.nb_states;
 			create new.make (length, last_character_code);
@@ -675,11 +618,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (c);
 			new := l_tools.item;
 			o_length := new.nb_states;
@@ -728,11 +666,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			l_tools.go_i_th (a);
 			a_length := l_tools.item.nb_states;
 			a_transitions := l_tools.item.item (a_length);
@@ -802,11 +735,6 @@ feature -- Element change
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			create cat_set.make (b);
 			create non_cat_set.make (b);
 			length := 2;
@@ -836,40 +764,41 @@ feature -- Element change
 				end
 			end;
 
-			check cat_attached: cat /= Void end
-			if length = 2 then
-				new := cat
-			else
-				if cat_set.is_empty then
-					create new.make (length, last_character_code);
-					index := 2
+			check cat /= Void then
+				if length = 2 then
+					new := cat
 				else
-					length := length + 2;
-					create new.make (length, last_character_code);
-					new.include (cat, 1);
-					new.set_e_transition (1, 2);
-					new.set_e_transition (3, length);
-					index := 4
+					if cat_set.is_empty then
+						create new.make (length, last_character_code);
+						index := 2
+					else
+						length := length + 2;
+						create new.make (length, last_character_code);
+						new.include (cat, 1);
+						new.set_e_transition (1, 2);
+						new.set_e_transition (3, length);
+						index := 4
+					end;
+					from
+						tool_p := non_cat_set.smallest
+					until
+						tool_p > b
+					loop
+						l_tools.go_i_th (tool_p);
+						new.include (l_tools.item, index - 1);
+						new.set_e_transition (1, index);
+						index := index + l_tools.item.nb_states;
+						new.set_e_transition (index - 1, length);
+						tool_p := non_cat_set.next (tool_p)
+					end
 				end;
-				from
-					tool_p := non_cat_set.smallest
-				until
-					tool_p > b
-				loop
-					l_tools.go_i_th (tool_p);
-					new.include (l_tools.item, index - 1);
-					new.set_e_transition (1, index);
-					index := index + l_tools.item.nb_states;
-					new.set_e_transition (index - 1, length);
-					tool_p := non_cat_set.next (tool_p)
-				end
-			end;
-			if not case_sensitive then
-				new.remove_case_sensitiveness
-			end;
-			last_created_tool := last_created_tool + 1;
-			l_tools.finish;
-			l_tools.put_right (new);
+				if not case_sensitive then
+					new.remove_case_sensitiveness
+				end;
+				last_created_tool := last_created_tool + 1;
+				l_tools.finish;
+				l_tools.put_right (new);
+			end
 			create c_name.make (0);
 			from
 				l_tool_names.go_i_th (a);
@@ -917,10 +846,6 @@ feature -- Element change
 
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools/= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 			last_created_tool := last_created_tool + 1;
 			l_tools.finish;
 			l_tools.put_right (new_tool);
@@ -989,10 +914,6 @@ feature -- Element change
 
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools/= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
 			l_tools.finish;
 			l_tools.put_right (new_tool);
 			create r_name.make (4);
@@ -1013,6 +934,7 @@ feature -- Element change
 		require
 			not_frozen: not lexical_frozen;
 			exp_selected: attached token_type_list as rl_token_types and then rl_token_types.has(exp)
+			selected_tools: selected_tools /= Void
 		local
 			u, l: STRING;
 			index: INTEGER
@@ -1023,21 +945,22 @@ feature -- Element change
 			l_selected_tools := selected_tools
 			l_token_types := token_type_list
 			l_tools := tool_list
+				-- Per precondition
 			check
 				l_selected_tools_attached: l_selected_tools /= Void
 				l_token_types_attached: l_token_types /= Void
-				l_tools_attached: l_tools /= Void
-			end
-			index := l_token_types.index_of (exp, 1);
-			l_tools.go_i_th (l_selected_tools.i_th (index));
-			l_tools.item.add_keyword (s.twin);
-			last_declared_keyword := last_declared_keyword + 1;
-			if not keywords_case_sensitive then
-				l := s.as_lower
-				l_tools.item.add_keyword (l);
-				u := s.as_upper
-				l_tools.item.add_keyword (u);
-				last_declared_keyword := last_declared_keyword + 2
+			then
+				index := l_token_types.index_of (exp, 1);
+				l_tools.go_i_th (l_selected_tools.i_th (index));
+				l_tools.item.add_keyword (s.twin);
+				last_declared_keyword := last_declared_keyword + 1;
+				if not keywords_case_sensitive then
+					l := s.as_lower
+					l_tools.item.add_keyword (l);
+					u := s.as_upper
+					l_tools.item.add_keyword (u);
+					last_declared_keyword := last_declared_keyword + 2
+				end
 			end
 		end;
 
@@ -1054,13 +977,12 @@ feature -- Element change
 		do
 			l_selected_tools := selected_tools
 			l_token_types := token_type_list
-			if l_selected_tools = Void then
+			if l_selected_tools = Void or l_token_types = Void then
 				create l_selected_tools.make;
 				selected_tools := l_selected_tools
 				create l_token_types.make
 				token_type_list := l_token_types
 			end;
-			check l_token_types_attached: l_token_types /= Void end
 			l_selected_tools.finish;
 			l_selected_tools.put_right (i);
 			l_selected_tools.finish;
@@ -1069,7 +991,6 @@ feature -- Element change
 			l_token_types.finish;
 
 			l_tools := tool_list
-			check l_tools_attached: l_tools /= Void end
 			l_tools.go_i_th (i);
 			nb_states := nb_states + l_tools.item.nb_states
 		ensure
@@ -1083,6 +1004,7 @@ feature -- Element change
 			-- If this routine is not used, the default value is `t'.
 		require
 			t_selected: attached selected_tools as rl_selected_tools and then rl_selected_tools.has (t);
+			token_type_not_void: token_type_list /= Void
 			n_not_zero: n /= 0;
 			n_not_minus_one: n /= -1
 				-- 0 is reserved for the non-final states.
@@ -1096,22 +1018,23 @@ feature -- Element change
 			check
 				l_selected_tools_attached: l_selected_tools /= Void
 				l_token_types_attached: l_token_types /= Void
-			end
-			l_selected_tools.finish;
-			if l_selected_tools.item = t then
-				l_token_types.finish;
-				l_token_types.put (n)
-			else
-				from
-					l_selected_tools.start;
-					l_token_types.start
-				until
-					l_selected_tools.item = t
-				loop
-					l_selected_tools.forth;
-					l_token_types.forth
-				end;
-				l_token_types.put (n)
+			then
+				l_selected_tools.finish;
+				if l_selected_tools.item = t then
+					l_token_types.finish;
+					l_token_types.put (n)
+				else
+					from
+						l_selected_tools.start;
+						l_token_types.start
+					until
+						l_selected_tools.item = t
+					loop
+						l_selected_tools.forth;
+						l_token_types.forth
+					end;
+					l_token_types.put (n)
+				end
 			end
 		end;
 
@@ -1125,21 +1048,19 @@ feature -- Element change
 		do
 			l_dfa := dfa
 			l_categories := categories_table
-			check
-				l_dfa_attached: l_dfa /= Void
-				l_categories_attached: l_categories /= Void
+			if l_dfa /= Void and l_categories /= Void then
+				create l.make;
+				from
+					i := 1
+				until
+					i = s.count + 1
+				loop
+					l.put_right (l_categories.item (s.item (i).code));
+					l.forth;
+					i := i + 1
+				end;
+				Result := l_dfa.recognize (l)
 			end
-			create l.make;
-			from
-				i := 1
-			until
-				i = s.count + 1
-			loop
-				l.put_right (l_categories.item (s.item (i).code));
-				l.forth;
-				i := i + 1
-			end;
-			Result := l_dfa.recognize (l)
 		end;
 
 feature -- Removal
@@ -1156,11 +1077,6 @@ feature -- Removal
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
-			check
-				l_tools_attached: l_tools /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
-
 			last_created_tool := last_created_tool - 1;
 			l_tools.finish;
 			l_tool_names.finish;
@@ -1249,6 +1165,7 @@ feature {NONE} -- Implementation
 			lexical_frozen := True
 		ensure
 			not_frozen: dfa /= Void;
+			categories_table_set: categories_table /= Void
 			not_frozen: lexical_frozen
 		end;
 
@@ -1259,6 +1176,9 @@ feature {NONE} -- Implementation
 			-- final state is the last one.
 		require
 			not_frozen: not lexical_frozen
+			selected_tools_not_void: selected_tools /= Void
+			token_type_list_not_void: token_type_list /= Void
+			tool_list_not_void: tool_list /= Void
 		local
 			shift: INTEGER;
 			fa: PDFA
@@ -1272,36 +1192,37 @@ feature {NONE} -- Implementation
 			l_selected_tools := selected_tools
 			l_token_types := token_type_list
 			l_tools := tool_list
+				-- Per precondition
 			check
 				l_selected_tools_attached: l_selected_tools /= Void
 				l_token_types_attached: l_token_types /= Void
 				l_tools_attached: l_tools /= Void
-			end
-			from
-				l_selected_tools.start;
-				l_token_types.start;
-				shift := 1
-			until
-				l_selected_tools.after or l_selected_tools.is_empty
-			loop
-				set_e_transition (1, shift + 1);
-				fa := l_tools.i_th (l_selected_tools.item);
-				include (fa, shift);
-				shift := shift + fa.nb_states;
-				set_final (shift, l_token_types.item);
-				debug ("lex_output")
-					io.put_string (" Tool selected: ");
-					io.put_integer (l_selected_tools.item);
-					io.put_string (" Description: ");
-					l_tool_names := tool_names
-					check l_tool_names_attached: l_tool_names /= Void end
-					io.put_string (l_tool_names.i_th (l_selected_tools.item));
-					io.put_string (" Token type associated: ");
-					io.put_integer (l_token_types.item);
-					io.new_line
-				end;
-				l_selected_tools.forth;
-				l_token_types.forth
+			then
+				from
+					l_selected_tools.start;
+					l_token_types.start;
+					shift := 1
+				until
+					l_selected_tools.after or l_selected_tools.is_empty
+				loop
+					set_e_transition (1, shift + 1);
+					fa := l_tools.i_th (l_selected_tools.item);
+					include (fa, shift);
+					shift := shift + fa.nb_states;
+					set_final (shift, l_token_types.item);
+					debug ("lex_output")
+						io.put_string (" Tool selected: ");
+						io.put_integer (l_selected_tools.item);
+						io.put_string (" Description: ");
+						l_tool_names := tool_names
+						io.put_string (l_tool_names.i_th (l_selected_tools.item));
+						io.put_string (" Token type associated: ");
+						io.put_integer (l_token_types.item);
+						io.new_line
+					end;
+					l_selected_tools.forth;
+					l_token_types.forth
+				end
 			end
 		end;
 
@@ -1323,7 +1244,7 @@ feature {NONE} -- Implementation
 			l_categories: like categories_table
 		do
 			create set_tree.make_filled (nb_states, 0);
-			create l_categories.make (-1, last_character_code);
+			create l_categories.make_filled (0, -1, last_character_code);
 			categories_table := l_categories
 			create old_set.make (nb_states);
 			from
@@ -1360,23 +1281,23 @@ feature {NONE} -- Implementation
 		local
 			new_input_array: ARRAY [detachable FIXED_INTEGER_SET];
 			category, in_put: INTEGER
-			l_categories: like categories_table
 		do
-			l_categories := categories_table
-			check l_categories_attached: l_categories /= Void end
-			create new_input_array.make (0, greatest_input);
-			from
-				in_put := -1
-			until
-				in_put = last_character_code
-			loop
-				in_put := in_put + 1;
-				category := l_categories.item (in_put);
-				if new_input_array.item (category) = Void and then attached input_array.item (in_put) as l_input_array_item then
-					new_input_array.put (l_input_array_item, category)
-				end
-			end;
-			input_array := new_input_array
+				-- Per precondition
+			check attached categories_table as l_categories then
+				create new_input_array.make_filled (Void, 0, greatest_input);
+				from
+					in_put := -1
+				until
+					in_put = last_character_code
+				loop
+					in_put := in_put + 1;
+					category := l_categories.item (in_put);
+					if new_input_array.item (category) = Void and then attached input_array.item (in_put) as l_input_array_item then
+						new_input_array.put (l_input_array_item, category)
+					end
+				end;
+				input_array := new_input_array
+			end
 		end;
 
 	copy_keywords
@@ -1390,42 +1311,38 @@ feature {NONE} -- Implementation
 			l_keywords: like keyword_h_table
 			l_tools: like tool_list
 		do
+			create l_keywords.make (last_declared_keyword)
 			if last_declared_keyword > 0 then
-				create l_keywords.make (last_declared_keyword)
 				keyword_h_table := l_keywords
-			end;
+			end
 			l_selected_tools := selected_tools
 			l_token_types := token_type_list
 			l_tools := tool_list
-			check
-				l_selected_tools_attached: l_selected_tools /= Void
-				l_token_types_attached: l_token_types /= Void
-				l_tools_attached: l_tools /= Void
-			end
-			from
-				l_selected_tools.start;
-				l_token_types.start
-			until
-				l_selected_tools.after or l_selected_tools.is_empty
-			loop
-				tool_number := l_selected_tools.item;
-				token_type := l_token_types.item;
-				k_list := l_tools.i_th (tool_number).keywords_list;
+			if l_selected_tools /= Void and l_token_types /= Void and l_tools /= Void then
 				from
-					k_list.start
+					l_selected_tools.start;
+					l_token_types.start
 				until
-					k_list.after or k_list.is_empty
+					l_selected_tools.after or l_selected_tools.is_empty
 				loop
-					k := k_list.item;
-					check l_keywords_attached: l_keywords /= Void end
-					l_keywords.put (token_type, k);
-					if not recognized (k, token_type) then
-						error_keyword (tool_number, k)
+					tool_number := l_selected_tools.item;
+					token_type := l_token_types.item;
+					k_list := l_tools.i_th (tool_number).keywords_list;
+					from
+						k_list.start
+					until
+						k_list.after or k_list.is_empty
+					loop
+						k := k_list.item;
+						l_keywords.put (token_type, k);
+						if not recognized (k, token_type) then
+							error_keyword (tool_number, k)
+						end;
+						k_list.forth
 					end;
-					k_list.forth
-				end;
-				l_selected_tools.forth;
-				l_token_types.forth
+					l_selected_tools.forth;
+					l_token_types.forth
+				end
 			end
 		end;
 
@@ -1439,36 +1356,33 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 			l: LINKED_LIST [INTEGER];
 			l_tokens: detachable ARRAY [INTEGER]
-			l_dfa: like dfa
-			l_categories: like categories_table
 		do
-			l_categories := categories_table
-			l_dfa := dfa
+				-- Per precondtion
 			check
-				l_categories_attached: l_categories /= Void
-				l_dfa_attached: l_dfa /= Void
-			end
-
-			create l.make;
-			from
-				i := 1
-			until
-				i = kwd.count + 1
-			loop
-				l.put_right (l_categories.item (kwd.item (i).code));
-				l.forth;
-				i := i + 1
-			end;
-
-			l_tokens := l_dfa.possible_tokens (l);
-			if l_tokens /= Void then
+				l_dfa_attached: attached dfa as l_dfa
+				l_categories_attached: attached categories_table as l_categories
+			then
+				create l.make;
 				from
-					i := l_tokens.lower
+					i := 1
 				until
-					Result or i > l_tokens.upper
+					i = kwd.count + 1
 				loop
-					Result := (l_tokens.item (i) = token_type);
+					l.put_right (l_categories.item (kwd.item (i).code));
+					l.forth;
 					i := i + 1
+				end;
+
+				l_tokens := l_dfa.possible_tokens (l);
+				if l_tokens /= Void then
+					from
+						i := l_tokens.lower
+					until
+						Result or i > l_tokens.upper
+					loop
+						Result := (l_tokens.item (i) = token_type);
+						i := i + 1
+					end
 				end
 			end
 		end;
@@ -1477,19 +1391,15 @@ feature {NONE} -- Implementation
 			-- Set the attribute `final' of state `s' to `new_final'.
 		local
 			old_final: INTEGER;
-			l_dfa: like dfa
-			l_state_of_dfa: detachable STATE_OF_DFA
 		do
-			l_dfa := dfa
-			check l_dfa_attached: l_dfa /= Void end
-			l_state_of_dfa := l_dfa.item (s)
-			check l_state_of_dfa /= Void end
-			old_final := l_state_of_dfa.final;
-			if old_final = 0 then
-				l_state_of_dfa.set_final (new_final)
-			elseif old_final /= new_final then
-				error_common_part (old_final, new_final);
-				l_state_of_dfa.set_final (new_final)
+			if attached dfa as l_dfa and then attached l_dfa.item (s) as l_state_of_dfa then
+				old_final := l_state_of_dfa.final;
+				if old_final = 0 then
+					l_state_of_dfa.set_final (new_final)
+				elseif old_final /= new_final then
+					error_common_part (old_final, new_final);
+					l_state_of_dfa.set_final (new_final)
+				end
 			end
 		end;
 
@@ -1502,6 +1412,7 @@ feature {NONE} -- Implementation
 			first_and_second_is_a_token_type: attached token_type_list as rl_token_types and then
 				rl_token_types.has (first) and then
 				rl_token_types.has (second)
+			has_selected_tools: selected_tools /= Void
 		local
 			message: STRING
 			l_selected_tools: like selected_tools
@@ -1510,28 +1421,26 @@ feature {NONE} -- Implementation
 		do
 			l_selected_tools := selected_tools
 			l_token_types := token_type_list
-			l_tool_names := tool_names
-			check
-				l_selected_tools_attached: l_selected_tools /= Void
-				l_token_types_attached: l_token_types /= Void
-				l_tool_names_attached: l_tool_names /= Void
-			end
+				-- Per precondition
+			check l_token_types /= Void and l_selected_tools /= Void then
+				l_tool_names := tool_names
 
-			create message.make (0);
-			message.append ("Warning: some tokens can be recognized by ");
-			l_token_types.start;
-			l_token_types.search (first);
-			l_selected_tools.go_i_th (l_token_types.index);
-			l_tool_names.go_i_th (l_selected_tools.item);
-			message.append (l_tool_names.item);
-			message.append (" and by ");
-			l_token_types.start;
-			l_token_types.search (second);
-			l_selected_tools.go_i_th (l_token_types.index);
-			l_tool_names.go_i_th (l_selected_tools.item);
-			message.append (l_tool_names.item);
-			message.append (".%N	The second one has priority.");
-			error_list.add_message (message)
+				create message.make (0);
+				message.append ("Warning: some tokens can be recognized by ");
+				l_token_types.start;
+				l_token_types.search (first);
+				l_selected_tools.go_i_th (l_token_types.index);
+				l_tool_names.go_i_th (l_selected_tools.item);
+				message.append (l_tool_names.item);
+				message.append (" and by ");
+				l_token_types.start;
+				l_token_types.search (second);
+				l_selected_tools.go_i_th (l_token_types.index);
+				l_tool_names.go_i_th (l_selected_tools.item);
+				message.append (l_tool_names.item);
+				message.append (".%N	The second one has priority.");
+				error_list.add_message (message)
+			end
 		end;
 
 	error_keyword (t: INTEGER; k: STRING)
@@ -1547,7 +1456,6 @@ feature {NONE} -- Implementation
 			message.append (k);
 			message.append (" is not recognized by ");
 			l_tools_names := tool_names
-			check l_tools_names_attached: l_tools_names /= Void end
 			l_name := l_tools_names.i_th (t)
 			check l_name_attached: l_name /= Void end
 			message.append (l_name);
@@ -1558,9 +1466,10 @@ feature {NONE} -- Implementation
 invariant
 	analyzer_attached: initialized implies analyzer /= Void
 	last_created: not attached tool_list as il_tool_list or else last_created_tool = il_tool_list.count
+	consistent: dfa /= Void implies categories_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

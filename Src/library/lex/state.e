@@ -32,9 +32,7 @@ feature -- Status setting
 		do
 			l_array := final_array
 			if l_array = Void then
-				create l_array.make (1, 1);
-				l_array.put (i, 1);
-				final_array := l_array
+				create final_array.make_filled (i, 1, 1);
 				final := i
 			elseif l_array.item (l_array.lower) /= i then
 				l_array.force (i, l_array.lower - 1);
@@ -51,14 +49,14 @@ invariant
 		(attached final_array as il_array and then il_array.item (il_array.lower) = final)
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -39,7 +39,6 @@ feature -- Access
 			when text_type then
 				if a_token.keyword_code > 0 then
 	  			    create {EDITOR_TOKEN_KEYWORD} Result.make (a_token.string_value)
-	  			    Result.font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 	  			else
 					create {EDITOR_TOKEN_TEXT} Result.make (a_token.string_value)
 				end

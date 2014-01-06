@@ -8,7 +8,7 @@ class
 	PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND
 
 inherit
-	PS_READ_REPOSITORY_CONNECTOR
+	PS_RDBMS_CONNECTOR
 
 create
 	make
@@ -312,82 +312,7 @@ feature {PS_ABEL_EXPORT} -- Object-oriented collection operations
 			Result := actual_result
 		end
 
-feature {PS_ABEL_EXPORT} -- Transaction handling
-
-	commit (a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Tries to commit `a_transaction'. As with every other error, a failed commit will result in a new exception and the error will be placed inside `a_transaction'.
-		local
-			connection: PS_SQL_CONNECTION
-		do
-			connection := get_connection (a_transaction)
-			connection.commit
-			release_connection (a_transaction)
-		rescue
-			rollback (a_transaction)
-		end
-
-	rollback (a_transaction: PS_INTERNAL_TRANSACTION)
-			-- Aborts `a_transaction' and undoes all changes in the database.
-		local
-			connection: PS_SQL_CONNECTION
-		do
-			if not a_transaction.has_error then -- Avoid a "double rollback"
-				connection := get_connection (a_transaction)
-				a_transaction.set_error (connection.last_error)
-				connection.rollback
-				release_connection (a_transaction)
-			end
-		end
-
-	set_transaction_isolation (settings: PS_TRANSACTION_SETTINGS)
-			-- Set the transaction isolation level such that all values in `settings' are respected.
-		do
-			database.set_transaction_isolation (settings)
-		end
-
-	close
-			-- Close all connections.
-		do
-			database.close_connections
-		end
-
-feature {PS_LAZY_CURSOR} -- Implementation - Connection and Transaction handling
-
-	get_connection (transaction: PS_INTERNAL_TRANSACTION): PS_SQL_CONNECTION
-			-- Get the connection associated with `transaction'.
-			-- Acquire a new connection if the transaction is new.
-		do
-			if attached active_connections [transaction] as res then
-				Result := res
-			else
-				Result := database.acquire_connection
-				active_connections.extend (Result, transaction)
-			end
-		end
-
-	release_connection (transaction: PS_INTERNAL_TRANSACTION)
-			-- Release the connection associated with `transaction'.
-		do
-			if attached active_connections [transaction] as conn then
-				active_connections.remove (transaction)
-				database.release_connection (conn)
-			end
-		end
-
-	active_connections: HASH_TABLE [PS_SQL_CONNECTION, PS_INTERNAL_TRANSACTION]
-			-- These are the normal connections attached to a transaction.
-			-- They do not have auto-commit and they are closed once the transaction is finished.
-			-- They only write and read the ps_value table.
-
-	management_connection: PS_SQL_CONNECTION
-			-- This is a special connection used for management and read-only transactions.
-			-- It uses auto-commit, and is always active.
-			-- The connection can only read and write tables ps_attribute and ps_class.
-
-feature {PS_LAZY_CURSOR} -- Implementation: Various fields
-
-	database: PS_SQL_DATABASE
-			-- The actual database.
+feature {PS_LAZY_CURSOR} -- Implementation
 
 	db_metadata_manager: PS_METADATA_TABLES_MANAGER
 			-- The manager for the metadata tables.
@@ -402,19 +327,18 @@ feature {NONE} -- Initialization
 		local
 			initialization_connection: PS_SQL_CONNECTION
 		do
+			initialize (a_database)
+
 			SQL_Strings := strings
-			database := a_database
 			management_connection := database.acquire_connection
 			management_connection.set_autocommit (True)
 			create db_metadata_manager.make (management_connection, SQL_Strings)
 			management_connection.commit
-			create active_connections.make (1)
-
-			batch_retrieval_size := {PS_REPOSITORY}.Infinite_batch_size
-
-			create plugins.make (1)
 		end
 
-invariant
-	valid_batchsize: batch_retrieval_size > 0 or batch_retrieval_size = -1
+	management_connection: PS_SQL_CONNECTION
+			-- This is a special connection used for management.
+			-- It uses auto-commit, and is always active.
+			-- The connection can only read and write tables ps_attribute and ps_class.
+
 end

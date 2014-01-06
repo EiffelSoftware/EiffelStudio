@@ -112,7 +112,7 @@ feature -- Element change
 			port_set: port = value
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	new_connector: PS_REPOSITORY_CONNECTOR
 			-- <Precursor>

@@ -116,16 +116,15 @@ feature -- Element Change
 
 feature -- Removal
 
-		wipe_out
-				-- Erase data.
-			local
-				l_default: like first_data
-			do
-				set_first_data (l_default)
-				set_last_data (l_default)
-				create root_node.make
-			end
-
+	wipe_out
+			-- Erase data.
+		local
+			l_default: like first_data
+		do
+			set_first_data (l_default)
+			set_last_data (l_default)
+			create root_node.make
+		end
 
 feature {NONE} -- Implementation
 
@@ -136,14 +135,14 @@ invariant
 	last_data_valid: attached last_data as l_last_data implies l_last_data.is_valid
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

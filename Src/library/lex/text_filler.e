@@ -16,9 +16,6 @@ feature -- Access
 
 	buffer: STRING
 			-- Buffer filled by fill_buffer
-		attribute
-			create Result.make_empty
-		end
 
 	source_file_path: detachable PATH
 			-- The source file path if `source_is_file'.		
@@ -39,17 +36,11 @@ feature -- Access
 			-- Array recording the line numbers of each buffered
 			-- character (the line number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `line_nb_array')
-		attribute
-			create Result.make_empty
-		end
 
 	column_nb_array: LEX_ARRAY [INTEGER]
 			-- Array recording the column numbers of each buffered
 			-- character (the column number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `column_nb_array')
-		attribute
-			create Result.make_empty
-		end
 
 	char_buffered_number: INTEGER;
 			-- Number of characters read and written

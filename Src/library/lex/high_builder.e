@@ -144,9 +144,6 @@ feature {NONE} -- Implementation
 	current_char: CHARACTER;
 			-- Character.
 
-	last_string: detachable STRING;
-			-- String used in `action_set_word' and `action_up_to'.
-
 	build_sequence (end_sequence: CHARACTER)
 			-- Build the tool corresponding to the next sequence
 			-- in description.
@@ -530,13 +527,8 @@ feature {NONE} -- Implementation
 			-- Build a tool "word", same as ('w' 'o' 'r' 'd').
 		require
 			good_first_character: description.item (cursor) = '"'
-		local
-			l_last_string: like last_string
 		do
-			get_string;
-			l_last_string := last_string
-			check l_last_string_attached: l_last_string /= Void end
-			set_word (l_last_string)
+			set_word (retrieved_string)
 		ensure
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
@@ -547,8 +539,6 @@ feature {NONE} -- Implementation
 			-- finished by a given word.
 		require
 			good_first_character: description.item (cursor) = '-'
-		local
-			l_last_string: like last_string
 		do
 			if description.item (cursor + 1) /= '>' then
 				raise_error (cursor + 1, '>', "")
@@ -556,26 +546,21 @@ feature {NONE} -- Implementation
 				raise_error (cursor + 2, '"', "")
 			else
 				cursor := cursor + 2;
-				get_string;
-				l_last_string := last_string
-				check l_last_string_attached: l_last_string /= Void end
-				up_to (l_last_string)
+				up_to (retrieved_string)
 			end
 		ensure
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
 		end;
 
-	get_string
+	retrieved_string: STRING
 			-- Set last_string to the string value beginning at cursor.
 		require
 			good_first_character: description.item (cursor) = '"'
 		local
 			back_slashed, endword: BOOLEAN
-			l_string: like last_string
 		do
-			create l_string.make_empty
-			last_string := l_string
+			create Result.make_empty
 			from
 			until
 				endword or parsing_stopped
@@ -584,13 +569,13 @@ feature {NONE} -- Implementation
 				current_char := description.item (cursor);
 				if back_slashed then
 					if current_char = 'n' then
-						l_string.extend ('%N')
+						Result.extend ('%N')
 					elseif current_char = '"' then
-						l_string.extend ('"')
+						Result.extend ('"')
 					elseif current_char = '\' then
-						l_string.extend ('\')
+						Result.extend ('\')
 					elseif current_char = '%'' then
-						l_string.extend ('%'')
+						Result.extend ('%'')
 					else
 						raise_error (cursor, '%U', "Unexpected character.")
 					end;
@@ -602,14 +587,13 @@ feature {NONE} -- Implementation
 				elseif current_char = '%/001/' then
 					raise_error (cursor, '"', "")
 				else
-					l_string.extend (current_char)
+					Result.extend (current_char)
 				end
 			end;
 			if not parsing_stopped then
 				cursor := cursor + 1
 			end
 		ensure
-			last_string_attached: last_string /= Void
 			cursor_after_double_quote: parsing_stopped or else
 				description.item (cursor - 1) = '"'
 		end;
@@ -817,14 +801,14 @@ invariant
 	cursor_not_too_far: cursor <= description_length
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

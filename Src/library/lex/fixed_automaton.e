@@ -10,25 +10,37 @@ class FIXED_AUTOMATON [S-> detachable STATE] inherit
 
 	ARRAY [S]
 		rename
-			make as array_make
+			make as array_make,
+			make_filled as array_make_filled
 		export
 			{ANY} lower, upper, item, put
 		end
 
 create
-
-	make
+	make, make_filled
 
 feature -- Initialization
 
 	make (i, s: INTEGER)
 			-- Make an automaton including at most `s' states,
 			-- with transitions 0 to `i'.
+		obsolete
+			"Use `make_filled' instead."
 		require
 			s_large_enough: s > 0;
 			i_large_enough: i >= 0
 		do
 			array_make (1, s);
+		end;
+
+	make_filled (a_default_value: S; i, s: INTEGER_32)
+			-- Make an automaton including at most `s' states,
+			-- with transitions 0 to `i'.
+		require
+			s_large_enough: s > 0;
+			i_large_enough: i >= 0
+		do
+			array_make_filled (a_default_value, 1, s);
 		end;
 
 feature -- Access
@@ -42,12 +54,10 @@ feature -- Status setting
 			-- Make `state' `final' for regular expression `f'.
 		require
 			is_in_automaton: state <= upper and state >= lower
-		local
-			l_state: S
 		do
-			l_state := item (state)
-			check l_state_attached: l_state /= Void end
-			l_state.set_final (f)
+			if attached item (state) as l_state then
+				l_state.set_final (f)
+			end
 		end;
 
 feature -- Element change
@@ -64,7 +74,7 @@ feature -- Element change
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

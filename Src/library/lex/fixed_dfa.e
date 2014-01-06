@@ -18,6 +18,7 @@ class FIXED_DFA inherit
 	FIXED_AUTOMATON [detachable STATE_OF_DFA]
 		rename
 			make as fixed_make,
+			make_filled as fixed_make_filled,
 			set_final as f_set_final
 		export
 			{ANY} add_right, item, put, upper, last_position
@@ -33,7 +34,7 @@ feature -- Initialization
 			-- Make a dfa with 0 to `i' possible inputs
 			-- and `s' possible states.
 		do
-			fixed_make (i, s);
+			fixed_make_filled (Void, i, s);
 			greatest_input := i;
 			nb_states := s
 		end;
@@ -46,12 +47,10 @@ feature -- Access
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
-		local
-			l_item: like item
 		do
-			l_item := item (source)
-			check l_item /= Void end
-			Result := l_item.successor (input_doc)
+			if attached item (source) as l_item then
+				Result := l_item.successor (input_doc)
+			end
 		end;
 
 feature -- Status setting
@@ -71,12 +70,10 @@ feature -- Status setting
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
-		local
-			l_item: like item
 		do
-			l_item := item (source)
-			check l_item /= Void end
-			l_item.append_transition (input_doc, item (target))
+			if attached item (source) as l_item then
+				l_item.append_transition (input_doc, item (target))
+			end
 		end;
 
 	set_final (state, f: INTEGER)
@@ -91,8 +88,6 @@ feature -- Output
 			-- Print information about the automaton's states.
 		local
 			i,j, index: INTEGER;
-			value: detachable STATE_OF_DFA
-			l_array: detachable ARRAY [INTEGER]
 		do
 			io.put_string (" FIXED_DFA%N");
 			from
@@ -102,52 +97,50 @@ feature -- Output
 			loop
 				io.put_string (" State #");
 				io.put_integer (j);
-				value := item (j);
-				check value /= Void end
-				if value.final /= 0 then
-					l_array := value.final_array
-					check l_array_attached: l_array /= Void end
-					io.put_string (" final state of token type ");
-					io.put_integer (value.final);
-					if l_array.count > 1 then
-						io.put_string ("%N and also of token types ");
-						from
-							i := l_array.lower + 1
-						until
-							i > l_array.upper
-						loop
-							io.put_integer (l_array.item (i));
-							io.put_string (" ");
-							i := i + 1
-						end
-					end
-				end;
-				io.new_line;
-				from
-					i := 0
-				until
-					i = greatest_input + 1
-				loop
-					if value.successor (i) /= Void then
-						io.put_string (" Input: ");
-						io.put_integer (i);
-						io.put_string (" Successor: ");
-						from
-							index := 0
-						until
-							index = upper
-						loop
-							index := index + 1;
-							if
-								item (index) = value.successor (i)
-							then
-								io.put_integer (index)
+				if attached item (j) as l_value then
+					if l_value.final /= 0 and attached l_value.final_array as l_array then
+						io.put_string (" final state of token type ");
+						io.put_integer (l_value.final);
+						if l_array.count > 1 then
+							io.put_string ("%N and also of token types ");
+							from
+								i := l_array.lower + 1
+							until
+								i > l_array.upper
+							loop
+								io.put_integer (l_array.item (i));
+								io.put_string (" ");
+								i := i + 1
 							end
-						end;
-						io.new_line
+						end
 					end;
-					i := i + 1
-				end;
+					io.new_line;
+					from
+						i := 0
+					until
+						i = greatest_input + 1
+					loop
+						if l_value.successor (i) /= Void then
+							io.put_string (" Input: ");
+							io.put_integer (i);
+							io.put_string (" Successor: ");
+							from
+								index := 0
+							until
+								index = upper
+							loop
+								index := index + 1;
+								if
+									item (index) = l_value.successor (i)
+								then
+									io.put_integer (index)
+								end
+							end;
+							io.new_line
+						end;
+						i := i + 1
+					end;
+				end
 				j := j + 1;
 				io.new_line
 			end;
@@ -165,7 +158,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

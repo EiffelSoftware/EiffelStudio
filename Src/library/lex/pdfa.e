@@ -10,22 +10,16 @@ note
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PDFA inherit
+class PDFA
 
-	ARRAY [detachable LINKED_LIST [INTEGER]]
-		rename
-			make as array_make
-		export
-			{NONE} to_c
-		end;
-
+inherit
 	NDFA
-		undefine
+		redefine
 			copy, is_equal
 		end;
 
 	ASCII
-		undefine
+		redefine
 			copy, is_equal
 		end
 
@@ -40,15 +34,23 @@ feature -- Initialization
 		do
 			nb_states := n;
 			greatest_input := i;
-			create input_array.make (0, greatest_input);
-			create final_array.make (1, nb_states);
+			create input_array.make_filled (Void, greatest_input + 1)
+			create final_array.make_filled (0, 1, nb_states);
 			create keywords_list.make
-			array_make (1, nb_states);
+			create area.make_filled (Void, nb_states);
 		end;
 
-feature -- Access
+feature {PDFA} -- Access
 
-	input_array: ARRAY [detachable FIXED_INTEGER_SET];
+	item (i: INTEGER): detachable LINKED_LIST [INTEGER]
+			-- Entry at index `i'.
+		require
+			valid_index: i >= 1 and i <= nb_states
+		do
+			Result := area.item (i - 1)
+		end
+
+	input_array: SPECIAL [detachable FIXED_INTEGER_SET];
 			-- For each input, set of the states which have
 			-- a transition on this input to the following state
 
@@ -58,6 +60,8 @@ feature -- Access
 
 	keywords_list: LINKED_LIST [STRING];
 			-- Keywords associated with current automaton.
+
+feature -- Access
 
 	has_letters: BOOLEAN;
 			-- Are there any letters among the active transitions?
@@ -110,6 +114,14 @@ feature -- Status setting
 		end;
 
 feature -- Element change
+
+	put (v: like item; i: INTEGER)
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		require
+			valid_index: i >= 1 and i <= nb_states
+		do
+			area.put (v, i - 1)
+		end
 
 	add_keyword (word: STRING)
 			-- Insert `word' in the keyword list.
@@ -256,6 +268,35 @@ feature -- Output
 			end
 		end
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- <Precursor>
+		do
+			if other = Current then
+				Result := True
+			elseif area.count = other.area.count then
+				Result := area.same_items (other.area, 0, 0, area.count)
+			end
+
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- <Precursor>
+		do
+			if other /= Current then
+				standard_copy (other)
+				area := other.area.twin
+			end
+		end
+
+feature {PDFA} -- Implementation: Access
+
+	area: SPECIAL [detachable LINKED_LIST [INTEGER]]
+			-- Storage
+
 feature {NONE} -- Implementation
 
 	closure (state: INTEGER): FIXED_INTEGER_SET
@@ -267,7 +308,6 @@ feature {NONE} -- Implementation
 		local
 			stack: LINKED_STACK [INTEGER];
 			top, int: INTEGER;
-			e_successors_list: detachable LINKED_LIST [INTEGER]
 		do
 			create stack.make;
 			create Result.make (nb_states);
@@ -279,10 +319,8 @@ feature {NONE} -- Implementation
 			loop
 				top := stack.item;
 				stack.remove;
-				if item (top) /= Void then
+				if attached item (top) as e_successors_list then
 					from
-						e_successors_list := item (top);
-						check e_successors_list /= Void end
 						e_successors_list.start
 					until
 						e_successors_list.after or e_successors_list.is_empty
@@ -324,35 +362,28 @@ feature {NONE} -- Implementation
 			-- consistent with those of the current automaton.
 		local
 			index: INTEGER
-			l_dfa: like dfa
-			l_sets_list: like sets_list
 			l_array: like final_array
 		do
-			l_dfa := dfa
-			l_sets_list := sets_list
-			l_array := final_array
-			check
-				l_dfa_attached: l_dfa /= Void
-				l_sets_list_attached: l_sets_list /= Void
-				l_array_attached: l_array /= Void
-			end
-			l_dfa.set_start (1);
-			from
-			until
-				index = nb_states
-			loop
-				index := index + 1;
-				if l_array.item (index) /= 0 then
-					from
-						l_sets_list.start
-					until
-						l_sets_list.after or l_sets_list.is_empty
-					loop
-						if l_sets_list.item.has (index) then
-							dfa_set_final (l_sets_list.index,
-									l_array.item (index));
-						end;
-						l_sets_list.forth;
+			if attached dfa as l_dfa and attached sets_list as l_sets_list then
+				l_array := final_array
+				l_dfa.set_start (1);
+				from
+				until
+					index = nb_states
+				loop
+					index := index + 1;
+					if l_array.item (index) /= 0 then
+						from
+							l_sets_list.start
+						until
+							l_sets_list.after or l_sets_list.is_empty
+						loop
+							if l_sets_list.item.has (index) then
+								dfa_set_final (l_sets_list.index,
+										l_array.item (index));
+							end;
+							l_sets_list.forth;
+						end
 					end
 				end
 			end
@@ -360,17 +391,10 @@ feature {NONE} -- Implementation
 
 	dfa_set_final (s, f: INTEGER)
 			-- Make `f' the `final' state for `s'.
-		require
-			dfa_attached: dfa /= Void
-		local
-			l_dfa: like dfa
-			l_state_of_dfa: detachable STATE_OF_DFA
 		do
-			l_dfa := dfa
-			check l_dfa_attached: l_dfa /= Void end
-			l_state_of_dfa := l_dfa.item (s)
-			check l_state_of_dfa /= Void end
-			l_state_of_dfa.set_final (final_array.item (f))
+			if attached dfa as l_dfa and then attached l_dfa.item (s) as l_state_of_dfa then
+				l_state_of_dfa.set_final (final_array.item (f))
+			end
 		end;
 
 	e_include (fa: PDFA; shift: INTEGER)
@@ -381,7 +405,6 @@ feature {NONE} -- Implementation
 			nb_states_large_enough: nb_states >= fa.nb_states + shift
 		local
 			index, last_index: INTEGER;
-			list: detachable LINKED_LIST [INTEGER]
 		do
 			last_index := fa.nb_states;
 			from
@@ -390,15 +413,15 @@ feature {NONE} -- Implementation
 			loop
 				index := index + 1;
 				if fa.item (index) /= Void then
-					list := fa.item (index);
-					check list /= Void end
-					from
-						list.start
-					until
-						list.after or list.is_empty
-					loop
-						set_e_transition (index + shift, list.item + shift);
-						list.forth
+					if attached fa.item (index) as l_list then
+						from
+							l_list.start
+						until
+							l_list.after
+						loop
+							set_e_transition (index + shift, l_list.item + shift);
+							l_list.forth
+						end
 					end
 				end
 			end
@@ -447,7 +470,7 @@ feature {NONE} -- Implementation
 -- can be associated with Current.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

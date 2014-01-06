@@ -30,7 +30,7 @@ feature -- Initialization
 		local
 			store_file: RAW_FILE
 		do
-			create store_file.make (store_file_name);
+			create store_file.make_with_name (store_file_name);
 			if not store_file.exists then
 				build_from_grammar (store_file_name, grammar_file_name)
 			end;
@@ -44,20 +44,18 @@ feature -- Status setting
 	analyze (input_file_name: STRING)
 			-- Perform lexical analysis on file
 			-- of name `input_file_name'.
-		local
-			l_analyzer: like analyzer
 		do
-			l_analyzer := analyzer
-			check l_analyzer_attached: l_analyzer /= Void end
-			from
-				l_analyzer.set_file (input_file_name);
-				begin_analysis
-			until
-				l_analyzer.end_of_text
-			loop
-				l_analyzer.get_any_token;
-				do_a_token (l_analyzer.last_token)
-			end;
+			begin_analysis
+			if attached analyzer as l_analyzer then
+				from
+					l_analyzer.set_file (input_file_name);
+				until
+					l_analyzer.end_of_text
+				loop
+					l_analyzer.get_any_token;
+					do_a_token (l_analyzer.last_token)
+				end
+			end
 			end_analysis
 		end;
 
@@ -132,14 +130,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

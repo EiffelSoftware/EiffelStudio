@@ -9,32 +9,22 @@ note
 class LEX_ARRAY [T] inherit
 
 	ARRAY [T]
-		rename
-			make as array_make
 		export
 			{ANY} lower, upper, item, put, resize;
 		end
 
 create
-
-	make
-
-feature -- Initialization
-
-	make (lower_index, upper_index: INTEGER)
-		do
-			array_make (lower_index, upper_index)
-		end;
+	make_filled, make_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

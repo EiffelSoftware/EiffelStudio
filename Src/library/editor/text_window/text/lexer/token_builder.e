@@ -39,6 +39,7 @@ feature -- Access
 			when text_type then
 				if a_token.keyword_code > 0 then
 	  			    create {EDITOR_TOKEN_KEYWORD} Result.make (a_token.string_value)
+	  			    Result.font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 	  			else
 					create {EDITOR_TOKEN_TEXT} Result.make (a_token.string_value)
 				end
@@ -67,14 +68,14 @@ feature {NONE} -- Implementation
 	text_type: INTEGER = 11;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

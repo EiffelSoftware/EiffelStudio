@@ -14,6 +14,8 @@ class HIGH_BUILDER inherit
 	LEX_BUILDER
 		export
 			{ANY} store_analyzer, retrieve_analyzer
+		redefine
+			make_extended
 		end
 
 	BASIC_ROUTINES
@@ -26,6 +28,15 @@ class HIGH_BUILDER inherit
 create
 
 	make, make_extended
+
+feature {NONE} -- Initialization
+
+	make_extended (char_code: INTEGER_32)
+			-- <Precursor>
+		do
+			Precursor (char_code)
+			create description.make_empty
+		end
 
 feature -- Element change
 
@@ -125,9 +136,6 @@ feature -- Implementation
 
 	description: STRING
 			-- Description of the regular expression
-		attribute
-			create Result.make_empty
-		end
 
 	cursor: INTEGER;
 			-- Position in description.

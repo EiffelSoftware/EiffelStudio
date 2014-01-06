@@ -24,6 +24,10 @@ feature -- Initialization
 			create last_token
 			create categories_table.make_empty
 			create dfa.make (1, 0)
+			create buffer.make_empty
+			create line_nb_array.make_empty
+			create column_nb_array.make_empty
+			create keyword_h_table.make (0)
 		end;
 
 	make_new
@@ -586,9 +590,6 @@ feature {NONE} -- Implementation
 
 	keyword_h_table: HASH_TABLE [INTEGER, STRING]
 			-- Keywords table
-		attribute
-			create Result.make (1)
-		end
 
 	keywords_case_sensitive: BOOLEAN;
 			-- Are the keyword case sensitive?

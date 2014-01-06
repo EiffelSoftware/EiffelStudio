@@ -7,6 +7,10 @@ note
 class
 	TEST_PERSON
 
+inherit
+	ANY
+		redefine out end
+
 create
 	make
 
@@ -38,13 +42,6 @@ feature -- Access
 	items_owned: INTEGER
 			-- The number of items the person ownes.
 
---feature --Experiment: transient attributes
-
---	transient_integer: INTEGER
---	note option:transient attribute end
-
---	set_transient_integer (int: INTEGER) do transient_integer := int end
-
 feature -- Basic operations
 
 	add_item
@@ -52,9 +49,14 @@ feature -- Basic operations
 			items_owned := items_owned + 1
 		end
 
-feature {NONE} -- Implementation
+feature -- Output
+
+	out: STRING
+			-- <Precursor>
+		do
+			Result := first_name + " " + last_name + ", items: " + items_owned.out + "%N"
+		end
 
 invariant
 	items_owned_negative: items_owned >= 0
-
 end

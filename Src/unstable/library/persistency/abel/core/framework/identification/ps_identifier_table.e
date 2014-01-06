@@ -7,6 +7,9 @@ note
 class
 	PS_IDENTIFIER_TABLE
 
+inherit
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -92,6 +95,7 @@ feature -- Element change
 		do
 			lookup_table.accommodate (object_store.count)
 
+			fixme ("Make sure this works in a multi-threaded setup.")
 			gc.collection_off
 
 			across
@@ -155,5 +159,5 @@ feature {NONE} -- Implementation
 invariant
 	empty_when_not_prepared: not is_prepared implies lookup_table.is_empty
 	full_when_prepared: is_prepared implies lookup_table.count = object_store.count
-	garbage_collection_off: is_prepared = not gc.collecting
+	garbage_collection_off: is_prepared implies not gc.collecting
 end

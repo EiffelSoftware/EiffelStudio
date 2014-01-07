@@ -73,7 +73,7 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 					bogus_primary := bogus_primary + 1
 
 					create object.make (bogus_primary, type)
-					
+
 					res_list.extend (object)
 				loop
 					fixme ("What to do about the runtime type?")
@@ -92,9 +92,18 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 
 	internal_specific_retrieve (primaries: ARRAYED_LIST [INTEGER]; types: ARRAYED_LIST [PS_TYPE_METADATA]; transaction: PS_INTERNAL_TRANSACTION): READABLE_INDEXABLE [PS_BACKEND_OBJECT]
 			-- <Precursor>
+		local
+			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
 		do
-			fixme ("to implement")
-			Result := create {LINKED_LIST [PS_BACKEND_OBJECT]}.make
+
+			fixme ("This is a hack to make writes work. %
+				%The `internal_specific_retrieve' isn't actually needed for flat objects.")
+			create list.make (primaries.count)
+			Result := list
+
+			if attached last_inserted_object as ret and then ret.primary_key = primaries.first then
+				list.extend (ret)
+			end
 		end
 
 feature {NONE} -- Initialization
@@ -106,5 +115,7 @@ feature {NONE} -- Initialization
 		end
 
 	bogus_primary: INTEGER
+
+	last_inserted_object: detachable PS_BACKEND_OBJECT
 
 end

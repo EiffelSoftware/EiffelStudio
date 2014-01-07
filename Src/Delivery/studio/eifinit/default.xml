@@ -638,6 +638,11 @@
 	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.link_background_color" DESCRIPTION="Background color for links."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.general.colors.link_color" DESCRIPTION="Color for links."><COLOR>0;0;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.mouse_over_link_background_color" DESCRIPTION="Background color for links when mouse is over."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.general.colors.mouse_over_link_color" DESCRIPTION="Color for links when mouse is over."><COLOR>255;153;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.focus_out_selection_background_color" DESCRIPTION="Background color of selected text when not focused."><COLOR>236;233;216</COLOR></PREF>
 	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>auto</COLOR></PREF>

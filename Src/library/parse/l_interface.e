@@ -22,15 +22,14 @@ feature -- Initialization
 			-- to be the input document.
 		require
 			document_exists: doc /= Void
-		local
-			l_analyzer: like analyzer
 		do
 			metalex_make;
 			obtain_analyzer;
-			make_analyzer;
-			l_analyzer := analyzer
-			check l_analyzer_not_void: l_analyzer /= Void end
-			doc.set_lexical (l_analyzer)
+			make_analyzer
+				-- Per postcondition of `make_analyzer'
+			check attached analyzer as l_analyzer then
+				doc.set_lexical (l_analyzer)
+			end
 		end;
 
 	obtain_analyzer
@@ -56,7 +55,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

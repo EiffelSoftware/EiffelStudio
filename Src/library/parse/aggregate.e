@@ -43,8 +43,7 @@ feature -- Status report
 				loop
 					Result := not message_construction;
 					l_child := child
-					check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-					end_loop := not l_child.is_optional;
+					end_loop := l_child /= Void and then not l_child.is_optional;
 					child_forth
 				end
 			end;
@@ -102,8 +101,7 @@ feature {NONE} -- Implementation
 			loop
 				parse_child;
 				l_child := child
-				check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-				wrong :=  not l_child.parsed;
+				wrong := l_child = Void or else not l_child.parsed;
 				if not wrong then
 					expand
 				end
@@ -115,8 +113,7 @@ feature {NONE} -- Implementation
 				no_components or child_after
 			loop
 				l_child := child
-				check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-				if l_child.is_optional and then l_child.parsed and then not l_child.complete then
+				if l_child /= Void and then l_child.is_optional and then l_child.parsed and then not l_child.complete then
 					remove_child
 				else
 					child_forth
@@ -126,17 +123,15 @@ feature {NONE} -- Implementation
 
 	in_action
 			-- Perform semantics of the child constructs.
-		local
-			l_child: like child
 		do
 			from
 				child_start
 			until
 				no_components or child_after
 			loop
-				l_child := child
-				check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-				l_child.semantics;
+				if attached child as l_child then
+					l_child.semantics;
+				end
 				child_forth
 			end
 		end
@@ -160,22 +155,22 @@ feature {CONSTRUCT} -- Implementation
 					no_components or child_after
 				loop
 					l_child := child
-					check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-					if not_optional_found then
-						l_child.expand_all;
-						b := not l_child.left_recursion;
-						if child_recursion.item then
-							child_recursion.put (False)
+					if l_child /= Void then
+						if not_optional_found then
+							l_child.expand_all;
+							b := not l_child.left_recursion;
+							if child_recursion.item then
+								child_recursion.put (False)
+							else
+								l_child.check_recursion
+							end;
 						else
-							l_child.check_recursion
-						end;
-						child_forth
-					else
-						l_child.expand_all;
-						l_child.check_recursion;
-						not_optional_found := not l_child.is_optional;
-						child_forth
+							l_child.expand_all;
+							l_child.check_recursion;
+							not_optional_found := not l_child.is_optional;
+						end
 					end
+					child_forth
 				end
 			end
 		end  -- check_recursion
@@ -204,22 +199,21 @@ feature {NONE} -- Implementation
 			-- with square brackets if optional.
 		require
 			child_not_void: child /= Void
-		local
-			l_child: like child
 		do
-			l_child := child
-			check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-			if l_child.is_optional then
-				io.put_character ('[')
-			end;
-			l_child.print_name;
-			if l_child.is_optional then
-				io.put_character (']')
+				-- Implied from `child_after'.
+			check attached child as l_child then
+				if l_child.is_optional then
+					io.put_character ('[')
+				end;
+				l_child.print_name;
+				if l_child.is_optional then
+					io.put_character (']')
+				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -70,8 +70,9 @@ feature {CONSTRUCT} -- Implementation
 					no_components or child_after
 				loop
 					l_child := child
-					check l_child /= Void end -- Implied from the `child_after'.
-					l_child.check_recursion;
+					if l_child /= Void then
+						l_child.check_recursion;
+					end
 					child_forth
 				end
 			end
@@ -92,8 +93,9 @@ feature {NONE} -- Implementation
 				no_components or child_after
 			loop
 				l_child := child
-				check l_child /= Void end -- Implied from the `child_after'.
-				l_child.print_name;
+				if l_child /= Void then
+					l_child.print_name;
+				end
 				child_forth;
 				if not child_after then
 					io.put_string (" | ")
@@ -123,12 +125,13 @@ feature {NONE} -- Implementation
 			loop
 				parse_child;
 				l_child := child
-				check l_child /= Void end -- Implied from the `child_after'.
-				if l_child.parsed then
-					retained := l_child
-				else
-					document.go_i_th (initial_document_position)
-				end;
+				check l_child /= Void then -- Implied from the `child_after'.
+					if l_child.parsed then
+						retained := l_child
+					else
+						document.go_i_th (initial_document_position)
+					end;
+				end
 				expand
 			end;
 			complete := retained /= Void;
@@ -145,7 +148,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

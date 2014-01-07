@@ -173,9 +173,10 @@ feature {NONE} -- Implementation
 				committed := committed or tmp_committed
 			end;
 			l_child := child
-			check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-			Result := l_child.parsed;
-			if not l_child.parsed then
+			if l_child /= Void then
+				Result := l_child.parsed;
+			end
+			if not Result then
 				remove_child
 			end
 		end;
@@ -183,8 +184,6 @@ feature {NONE} -- Implementation
 	in_action
 			-- Execute semantic actions on current construct
 			-- by executing actions on children in sequence.
-		local
-			l_child: like child
 		do
 			if not no_components then
 				from
@@ -192,9 +191,9 @@ feature {NONE} -- Implementation
 				until
 					child_after
 				loop
-					l_child := child
-					check l_child_not_void: l_child /= Void end -- Implied from `child_after'.
-					l_child.semantics;
+					if attached child as l_child then
+						l_child.semantics;
+					end
 					middle_action;
 					child_forth
 				end
@@ -219,15 +218,16 @@ feature {NONE} -- Implementation
 			io.put_string (" :	");
 			child_start;
 			l_child := child
-			check l_child_not_void: l_child /= Void end -- Implied from the precondition.
-			if l_child.is_optional then
-				io.put_character ('[')
-			end;
-			l_child.print_name;
-			if l_child.is_optional then
-				io.put_character (']')
-			end;
-			io.put_string (" ..");
+			if l_child /= Void then
+				if l_child.is_optional then
+					io.put_character ('[')
+				end;
+				l_child.print_name;
+				if l_child.is_optional then
+					io.put_character (']')
+				end;
+				io.put_string (" ..");
+			end
 			child_forth;
 			if has_separator then
 				io.put_string (" ");
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

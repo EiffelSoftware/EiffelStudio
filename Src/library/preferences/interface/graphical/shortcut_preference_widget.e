@@ -141,7 +141,6 @@ feature {NONE} -- Implementation
 			l_app: EV_APPLICATION
 			l_string,
 			l_key: STRING_32
-			tf: detachable EV_TEXT_FIELD
 		do
 			if attached {SHORTCUT_PREFERENCE} preference as l_pref then
 				l_app := application
@@ -152,10 +151,8 @@ feature {NONE} -- Implementation
 					not l_app.alt_pressed
 				then
 					change_item_widget.deactivate
-				elseif l_pref.shortcut_keys.has (a_key.code) then
+				elseif l_pref.shortcut_keys.has (a_key.code) and then attached change_item_widget.text_field as tf then
 					valid_shortcut_text := False
-					tf := change_item_widget.text_field
-					check tf /= Void end -- implied by the context
 					if l_app.ctrl_pressed or l_app.alt_pressed then
 						valid_shortcut_text := True
 						create l_string.make_empty

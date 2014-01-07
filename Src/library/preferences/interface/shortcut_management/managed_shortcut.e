@@ -88,7 +88,6 @@ feature -- Status change
 			-- Set `group' with `a_group'.
 			-- Change elements in `group' and `a_group' also.
 		local
-			l_shortcut: detachable MANAGED_SHORTCUT
 			l_group: like group
 		do
 			if a_group = group then
@@ -100,16 +99,12 @@ feature -- Status change
 						l_group.remove_shortcut (Current)
 					end
 				else
-					if not a_group.has (Current) then
+					if not attached a_group.shortcut (Current) as l_shortcut then
 						a_group.add_shortcut (Current)
 						if l_group /= Void then
 							l_group.remove_shortcut (Current)
 						end
 					else
-						l_shortcut := a_group.found_item
-						check
-							l_shortcut_not_void: l_shortcut /= Void
-						end
 						if not l_shortcut.is_fixed then
 								-- Override a non fixed shortcut and call related action.
 							l_shortcut.set_is_wiped (True)
@@ -139,7 +134,6 @@ feature -- Status change
 		require
 			modifiable: modifiable_with (a_key, alt, ctrl, shift)
 		local
-			l_shortcut: detachable MANAGED_SHORTCUT
 			l_group: like group
 		do
 			if a_key = Void then
@@ -147,9 +141,7 @@ feature -- Status change
 			else
 				l_group := group
 				if l_group /= Void then
-					if l_group.has_key_combination (a_key, alt, ctrl, shift) then
-						l_shortcut := l_group.found_item
-						check l_shortcut /= Void end -- implied by `group.has_key_combination (...)'
+					if attached l_group.key_combination (a_key, alt, ctrl, shift) as l_shortcut then
 						l_shortcut.set_is_wiped (True)
 						if l_shortcut /= Current then
 							l_shortcut.overridden_actions.call (Void)
@@ -208,16 +200,13 @@ feature -- Status report
 	modifiable_with (a_key: detachable like key; alt, ctrl, shift: BOOLEAN): BOOLEAN
 			-- Is current modifiable considering shortcuts in `group'?
 		local
-			l_shortcut: detachable MANAGED_SHORTCUT
 			l_group: like group
 		do
 			l_group := group
 			if l_group = Void then
 				Result := True
 			else
-				if l_group.has_key_combination (a_key, alt, ctrl, shift) then
-					l_shortcut := l_group.found_item
-					check l_shortcut /= Void end -- implied by condition
+				if attached l_group.key_combination (a_key, alt, ctrl, shift) as l_shortcut then
 					Result := not l_shortcut.is_fixed
 				else
 					Result := True
@@ -244,7 +233,7 @@ feature {NONE} -- Implementation
 	overridden_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

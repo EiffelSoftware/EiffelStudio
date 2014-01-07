@@ -83,14 +83,14 @@ feature -- Setting
 		require
 			has_auto_preference: auto_preference /= Void
 		local
-			l_auto_preference: like auto_preference
 			l_value: like value
 		do
-			l_auto_preference := auto_preference
-			check attached l_auto_preference end -- implied by precondition `has_auto_preference'
-			l_value := l_auto_preference.value
-			check attached l_value end -- implied by invariant `attached_auto_preference_has_value' and precondition `has_auto_preference'
-			set_value (l_value)
+				-- Implied by precondition `has_auto_preference'
+			check attached auto_preference as l_auto_preference then
+				l_value := l_auto_preference.value
+				check attached l_value end -- implied by invariant `attached_auto_preference_has_value' and precondition `has_auto_preference'
+				set_value (l_value)
+			end
 		ensure
 			value_set: (attached auto_preference as el_auto_preference) and then internal_value = el_auto_preference.value
 		end
@@ -188,7 +188,7 @@ invariant
 	attached_auto_preference_has_value: (attached auto_preference as l_auto_preference) implies l_auto_preference.has_value
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

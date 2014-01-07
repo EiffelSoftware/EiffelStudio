@@ -46,7 +46,10 @@ feature  -- Access
 			lex_not_void: analyzer /= Void
 			s_not_void: s /= Void
 		do
-			Result := analyzer.keyword_code (s)
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.keyword_code (s)
+			end
 		end;
 
 	keyword_string (code: INTEGER): STRING
@@ -54,7 +57,10 @@ feature  -- Access
 		require
 			lex_not_void: analyzer /= Void
 		do
-			Result := analyzer.keyword_string (code)
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.keyword_string (code)
+			end
 		end;
 
 	set_lexical (lexical: LEXICAL)
@@ -72,7 +78,10 @@ feature  -- Status report
 		require
 			lex_not_void: analyzer /= Void
 		do
-			Result := analyzer.end_of_text
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.end_of_text
+			end
 		end;
 
 feature  -- Status setting
@@ -84,7 +93,10 @@ feature  -- Status setting
 			lex_not_void: analyzer /= Void;
 			name_not_void: filename /= Void;
 		do
-			analyzer.set_file (filename)
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				l_analyzer.set_file (filename)
+			end
 		end;
 
 	set_input_string (stringname: STRING)
@@ -94,7 +106,10 @@ feature  -- Status setting
 			lex_not_void: analyzer /= Void
 			stringname_not_void: stringname /= Void
 		do
-			analyzer.set_string (stringname)
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				l_analyzer.set_string (stringname)
+			end
 		end;
 
 feature  -- Input
@@ -106,26 +121,29 @@ feature  -- Input
 		local
 			new_token: TOKEN
 		do
-			if is_empty or else islast then
-				analyzer.get_token;
-				if analyzer.last_token.type = 0 then
-					io.put_string("unrecognized_tokens%N");
-					raise_error
-						("Unrecognized token(s) found (and ignored)");
-					from
-					until
-						end_of_document or analyzer.last_token.type /= 0
-					loop
-						analyzer.get_token
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				if is_empty or else islast then
+					analyzer.get_token;
+					if analyzer.last_token.type = 0 then
+						io.put_string("unrecognized_tokens%N");
+						raise_error
+							("Unrecognized token(s) found (and ignored)");
+						from
+						until
+							end_of_document or analyzer.last_token.type /= 0
+						loop
+							analyzer.get_token
+						end
+					end;
+					new_token := analyzer.last_token
+					if new_token /= Void then
+						new_token := new_token.twin
 					end
+					put_right (new_token)
 				end;
-				new_token := analyzer.last_token
-				if new_token /= Void then
-					new_token := new_token.twin
-				end
-				put_right (new_token)
-			end;
-			forth
+				forth
+			end
 		end;
 
 	retrieve_lex (filename: STRING)
@@ -170,7 +188,7 @@ feature  -- Output
 			error_message.wipe_out;
 			if attached file_path as l_file_path then
 					-- FIXME jfiat [2013/06/25] : unicode support
-				error_message.append (l_file_path.name.as_string_8) 
+				error_message.append (l_file_path.name.as_string_8)
 			end
 			error_message.append (" (line ");
 			error_message.append_integer (token.line_number);
@@ -196,7 +214,10 @@ feature {NONE}
 		require
 			lex_not_void: analyzer /= Void
 		do
-			Result := analyzer.file_name
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.file_name
+			end
 		end;
 
 	file_path: detachable PATH
@@ -204,7 +225,10 @@ feature {NONE}
 		require
 			lex_not_void: analyzer /= Void
 		do
-			Result := analyzer.source_file_path
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.source_file_path
+			end
 		end;
 
 	line_number : INTEGER
@@ -212,11 +236,14 @@ feature {NONE}
 		require
 			lex_not_void: analyzer /= Void
 		do
-			Result := analyzer.token_line_number
+				-- Per precondition
+			check attached analyzer as l_analyzer then
+				Result := l_analyzer.token_line_number
+			end
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

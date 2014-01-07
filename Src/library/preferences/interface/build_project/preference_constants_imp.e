@@ -1,11 +1,37 @@
 note
-	description: "Objects that provide access to constants loaded from files."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "[
+			Objects that provide access to constants, possibly loaded from a files.
+			Each constant is generated into two features: both a query and a storage
+			feature. For example, for a STRING constant named `my_string', the following
+			features are generated: my_string: STRING and my_string_cell: CELL [STRING].
+			`my_string' simply returns the current item of `my_string_cell'. By separating
+			the constant access in this way, it is possible to change the constant's value
+			by either redefining `my_string' in descendent classes or simply performing
+			my_string_cell.put ("new_string") as required.
+			If you are loading the constants from a file and you wish to reload a different set
+			of constants for your interface (e.g. for multi-language support), you may perform
+			this in the following way:
+			
+			set_file_name ("my_constants_file.text")
+			reload_constants_from_file
+			
+			and then for each generated widget, call `set_all_attributes_using_constants' to reset
+			the newly loaded constants into the attribute settings of each widget that relies on constants.
+			
+			Note that if you wish your constants file to be loaded from a specific location,
+			you may redefine `initialize_constants' to handle the loading of the file from
+			an alternative location.
+			
+			Note that if you have selected to load constants from a file, and the file cannot
+			be loaded, you will get a precondition violation when attempting to access one
+			of the constants that should have been loaded. Therefore, you must ensure that either the
+			file is accessible or you do not specify to load from a file.
+		]"
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PREFERENCE_CONSTANTS_IMP
 
 feature {NONE} -- Initialization
@@ -31,6 +57,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	reload_constants_from_file
+			-- Re-load all constants from file named `file_name'.
+			-- When used in conjunction with `set_file_name', it enables
+			-- you to load a fresh set of INTEGER and STRING constants
+			-- from a constants file. If you then wish these to be applied
+			-- to a current generated interface, call `set_all_attributes_using_constants'
+			-- on that interface for the changed constants to be reflected in the attributes
+			-- of your widgets.
+		do
+			initialized_cell.put (False)
+			initialize_constants
+		end
+
 feature -- Access
 
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
@@ -47,13 +86,11 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant: has_constant (a_name)
-		local
-			s: detachable STRING
+			has_constant (a_name)
 		do
-			s := all_constants.item (a_name)
-			check s /= Void end -- implied by precondition `has_constant'
-			Result := s.string
+			check attached all_constants.item (a_name) as l_string then
+				Result := l_string.twin
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -63,18 +100,14 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant: has_constant (a_name)
-		local
-			l_string: detachable STRING
+			has_constant (a_name)
 		do
-			l_string := all_constants.item (a_name)
-			check l_string /= Void end -- implied by precondition `has_constant'
-			l_string := l_string.string
-			check
-				is_integer: l_string.is_integer
+			check attached all_constants.item (a_name) as l_string then
+				check
+					is_integer: l_string.is_integer
+				end
+				Result := l_string.to_integer
 			end
-
-			Result := l_string.to_integer
 		end
 
 	has_constant (a_name: STRING): BOOLEAN
@@ -83,7 +116,8 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 		do
-			Result := all_constants.item (a_name) /= Void
+			all_constants.search (a_name)
+			Result := all_constants.found
 		end
 
 feature {NONE} -- Implementation
@@ -100,8 +134,22 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 		end
 
-	file_name: STRING = "constants.txt"
-		-- File name from which constants must be loaded.
+	file_name: STRING
+			-- File name from which constants must be loaded.
+		do
+			Result := file_name_cell.item
+		end
+
+	file_name_cell: CELL [STRING]
+		once
+			create Result.put ("constants.txt")
+		end
+
+	set_file_name (a_file_name: STRING)
+			-- Assign `a_file_name' to `file_name'.
+		do
+			file_name_cell.put (a_file_name)
+		end
 
 	String_constant: STRING = "STRING"
 
@@ -131,7 +179,7 @@ feature {NONE} -- Implementation
 						end_quote2 := line_contents.index_of ('"', start_quote2 + 1)
 						name := line_contents.substring (start_quote1 + 1, end_quote1 - 1)
 						value := line_contents.substring (start_quote2 + 1, end_quote2 - 1)
-						all_constants.put (value, name)
+						all_constants.force (value, name)
 					end
 				end
 			end
@@ -159,7 +207,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: PATH)
+	set_with_named_path (a_pixmap: EV_PIXMAP; a_file_name: PATH)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -178,8 +226,8 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -187,5 +235,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-end -- class PREFERENCE_CONSTANTS_IMP
+end

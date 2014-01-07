@@ -260,6 +260,7 @@
          <EV_TOOLTIPABLE>
          </EV_TOOLTIPABLE>
          <EV_WIDGET>
+          <Minimum_height>50</Minimum_height>
          </EV_WIDGET>
          <EV_TEXT_COMPONENT>
           <Is_editable>False</Is_editable>

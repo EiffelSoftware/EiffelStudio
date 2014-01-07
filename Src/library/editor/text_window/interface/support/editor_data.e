@@ -730,6 +730,8 @@ feature {NONE} -- Implementation
 			number_background_color_preference.set_auto_preference (normal_background_color_preference)
 			operator_background_color_preference.set_auto_preference (normal_background_color_preference)
 			string_background_color_preference.set_auto_preference (normal_background_color_preference)
+			link_background_color_preference.set_auto_preference (normal_background_color_preference)
+			mouse_over_link_background_color_preference.set_auto_preference (normal_background_color_preference)
 
 				-- Ensure that the value is never negative
 			if tabulation_spaces_preference.value <= 0 then

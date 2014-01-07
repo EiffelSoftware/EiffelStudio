@@ -55,7 +55,7 @@ feature -- Basic operations
 			preference_set: preference = new_preference
 		end
 
-	set_caller (a_caller: like caller)
+	set_caller (a_caller: attached like caller)
 			-- Set the view this widget belongs to.
 		require
 			caller_not_void: a_caller /= Void
@@ -107,7 +107,7 @@ invariant
 	has_widget: preference /= Void implies change_item_widget /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

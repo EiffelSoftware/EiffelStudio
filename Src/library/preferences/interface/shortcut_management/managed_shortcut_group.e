@@ -25,10 +25,8 @@ feature -- Access
 
 	found_item: detachable MANAGED_SHORTCUT
 
-feature -- Status Report
-
-	has_key_combination (a_key: detachable EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN
-			-- Does this group has `a_shortcut' with the key combination?
+	key_combination (a_key: detachable EV_KEY; alt, ctrl, shift: BOOLEAN): detachable MANAGED_SHORTCUT
+			-- Does this group has a shortcut with the key combination?
 		local
 			l_cursor: CURSOR
 		do
@@ -37,16 +35,32 @@ feature -- Status Report
 					l_cursor := shortcuts.cursor
 					shortcuts.start
 				until
-					shortcuts.after or Result
+					shortcuts.after or Result /= Void
 				loop
 					if shortcuts.item.matches (a_key, alt, ctrl, shift) then
-						Result := True
-						found_item := shortcuts.item
+						Result := shortcuts.item
 					end
 					shortcuts.forth
 				end
 				shortcuts.go_to (l_cursor)
 			end
+		end
+
+	shortcut (a_shortcut: detachable MANAGED_SHORTCUT): detachable MANAGED_SHORTCUT
+			-- Shortcut similar to `a_shortcut'?
+		do
+			if a_shortcut /= Void and then not a_shortcut.is_wiped then
+				Result := key_combination (a_shortcut.key, a_shortcut.is_alt, a_shortcut.is_ctrl, a_shortcut.is_shift)
+			end
+		end
+
+feature -- Status Report
+
+	has_key_combination (a_key: detachable EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN
+			-- Does this group has `a_shortcut' with the key combination?
+		do
+			found_item := key_combination (a_key, alt, ctrl, shift)
+			Result := found_item /= Void
 		ensure
 			has_item_implies_found_item_not_void: Result implies found_item /= Void
 		end
@@ -54,11 +68,8 @@ feature -- Status Report
 	has (a_shortcut: detachable MANAGED_SHORTCUT): BOOLEAN
 			-- Does this group has `a_shortcut'?
 		do
-			if a_shortcut /= Void then
-				if not a_shortcut.is_wiped then
-					Result := has_key_combination (a_shortcut.key, a_shortcut.is_alt, a_shortcut.is_ctrl, a_shortcut.is_shift)
-				end
-			end
+			found_item := shortcut (a_shortcut)
+			Result := found_item /= Void
 		ensure
 			has_item_implies_found_item_not_void: Result implies found_item /= Void
 		end
@@ -85,7 +96,7 @@ invariant
 	shortcuts_not_void: shortcuts /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

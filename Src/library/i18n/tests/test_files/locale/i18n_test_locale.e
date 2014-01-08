@@ -73,7 +73,7 @@ feature {NONE} -- Result generation
 				l_list.after
 			loop
 				test_locale (l_list.item_for_iteration, False)
-				save_cache_to_file (generated_result_file_name (l_list.item_for_iteration.name))
+				save_cache_to_file (result_file_name (l_list.item_for_iteration.name, {PLATFORM}.is_unix))
 				clean_cache
 				l_list.forth
 			end
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

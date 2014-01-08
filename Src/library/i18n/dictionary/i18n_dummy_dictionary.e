@@ -32,29 +32,21 @@ feature -- Entries
 			Result := False -- Let's be very clear on this..
 		end
 
-	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
-			-- Always False, as we don't have any entries
-		do
-			Result := False
-		end
-
 feature -- Retrieval
 
-	singular_in_context (original_singular: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original_singular: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
-			create Result.make_empty
 		end
 
-	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
-			create Result.make_empty
 		end
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

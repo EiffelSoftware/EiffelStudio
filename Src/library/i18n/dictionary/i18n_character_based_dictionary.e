@@ -63,54 +63,27 @@ feature -- Access
 			end
 		end
 
-	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
-			--
-		local
-			l_trans: detachable ARRAY [STRING_32]
-		do
-			if attached plural_char_tree.get_item_with_key (id_from_original_and_context (original_singular, a_context)) as entry then
-				if entry.has_plural then
-					l_trans := entry.plural_translations
-					check l_trans /= Void end -- Implied by `entry.has_plural'
-					Result := l_trans.item (reduce (plural_number)) /= Void
-				end
-			end
-		end
-
-	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- get the translation of `original'
 			-- in the singular form
 		local
-			t_entry: detachable I18N_DICTIONARY_ENTRY
-			l_result: detachable STRING_32
+			l_id: like id_from_original_and_context
 		do
-			t_entry := singular_char_tree.get_item_with_key (id_from_original_and_context (original, a_context))
-			if t_entry /= Void then
-				l_result := t_entry.singular_translation
-			else -- because of the precondition it has to be in the plural_char_tree
-				t_entry := plural_char_tree.get (original.as_string_32)
-				check t_entry /= Void end -- Implied from precondition
-				l_result := t_entry.singular_translation
+			l_id := id_from_original_and_context (original, a_context)
+			if attached singular_char_tree.get_item_with_key (l_id) as l_entry then
+				Result := l_entry.singular_translation
+			elseif attached plural_char_tree.get_item_with_key (l_id) as l_entry then
+				Result := l_entry.singular_translation
 			end
-			check l_result /= Void end -- Implied from precondition
-			Result := l_result
 		end
 
-	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- get the translation of `original_singular'
 			-- in the given plural form
-		local
-			l_result: detachable STRING_32
-			l_entry: detachable I18N_DICTIONARY_ENTRY
-			l_trans: detachable ARRAY [STRING_32]
 		do
-			l_entry := plural_char_tree.get (id_from_original_and_context (original_singular, a_context))
-			check l_entry /= Void end -- Implied from precondition
-			l_trans := l_entry.plural_translations
-			check l_trans /= Void end -- Implied from precondition
-			l_result := l_trans.item (reduce (plural_number))
-			check l_result /= Void end -- Implied from precondition
-			Result := l_result
+			if attached plural_char_tree.get_item_with_key (id_from_original_and_context (original_singular, a_context)) as l_entry and then l_entry.has_plural then
+				Result := l_entry.plural_translations.item (reduce (plural_number))
+			end
 		end
 
 feature --Information
@@ -128,7 +101,7 @@ feature {NONE} -- Implementation
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

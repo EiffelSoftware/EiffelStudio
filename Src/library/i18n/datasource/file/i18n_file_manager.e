@@ -107,18 +107,18 @@ feature {NONE} --Implementation
 						l_fn := l_path.extended_path (temp.item).name
 						scope := chain.file_scope (l_fn)
 						if scope /= Void then
-							if scope.scope = scope.scope_locale_specific then
+							if attached scope.locale as l_locale then
 									--have we already encountered this locale?
 									--policy on duplicate locales: ignore the second one.
-								locale_file_list.put (l_fn ,scope.get_locale)
+								locale_file_list.put (l_fn, l_locale)
 								if locale_file_list.inserted then
-									locale_list.extend (scope.get_locale)
+									locale_list.extend (l_locale)
 								end
-							elseif scope.scope = scope.scope_language_specific then
+							elseif attached scope.language as l_language then
 									-- policy on duplicate languages: ignore
-								language_file_list.put (l_fn, scope.get_language)
+								language_file_list.put (l_fn, l_language)
 								if language_file_list.inserted then
-									language_list.extend (scope.get_language)
+									language_list.extend (l_language)
 								end
 							end
 						end -- end scope /= void
@@ -137,7 +137,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -24,31 +24,28 @@ feature -- Initialization
 
 	default_create
 			-- Default `culture_info' to `System.Globalization.CultureInfo.CurrentCulture'
-		local
-			l_culture: detachable CULTURE_INFO
 		do
-			l_culture := {CULTURE_INFO}.current_culture
-			check l_culture_attached: l_culture /= Void end
-			culture_info := l_culture
+			check attached {CULTURE_INFO}.current_culture as l_culture then
+				culture_info := l_culture
+			end
 		end
 
 	create_locale_info_from_user_locale: I18N_LOCALE_INFO
 			-- create locale form the user locale
 		local
-			l_info : detachable CULTURE_INFO
 			l_locale_id: I18N_LOCALE_ID
 		do
-			l_info := {CULTURE_INFO}.current_culture
-			check l_info_attached: l_info /= Void end
-			create culture_info.make_from_name (l_info.name)
-			if attached culture_info.name as l_culture_name then
-				create l_locale_id.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
-			else
-				create l_locale_id.make ("en", "US", Void)
+			check attached {CULTURE_INFO}.current_culture as l_info then
+				create culture_info.make_from_name (l_info.name)
+				if attached culture_info.name as l_culture_name then
+					create l_locale_id.make_from_string (create {STRING_32}.make_from_cil (l_culture_name))
+				else
+					create l_locale_id.make ("en", "US", Void)
+				end
+				create Result.make
+				fill (Result)
+				Result.set_id (l_locale_id)
 			end
-			create Result.make
-			fill (Result)
-			Result.set_id (l_locale_id)
 		ensure then
 			culture_info_exists: culture_info /= Void
 		end
@@ -609,30 +606,26 @@ feature {NONE} -- Implementation
 	culture_info : CULTURE_INFO
 
 	date_time_format: DATE_TIME_FORMAT_INFO
-		local
-			l_result: detachable DATE_TIME_FORMAT_INFO
 		do
-			l_result := culture_info.date_time_format
-			check l_result_not_void: l_result /= Void end
-			Result := l_result
+			check attached culture_info.date_time_format as l_result then
+				Result := l_result
+			end
 		end
 
 	number_format: NUMBER_FORMAT_INFO
-		local
-			l_result: detachable NUMBER_FORMAT_INFO
 		do
-			l_result := culture_info.number_format
-			check l_result_not_void: l_result /= Void end
-			Result := l_result
+				-- Per .NET specification
+			check attached culture_info.number_format as l_result then
+				Result := l_result
+			end
 		end
 
 	invariant_culture_number_format: NUMBER_FORMAT_INFO
-		local
-			l_result: detachable NUMBER_FORMAT_INFO
 		do
-			l_result := {NUMBER_FORMAT_INFO}.invariant_info
-			check l_result_not_void: l_result /= Void end
-			Result := l_result
+				-- Per .NET specification
+			check attached {NUMBER_FORMAT_INFO}.invariant_info as l_result then
+				Result := l_result
+			end
 		end
 
 	first_day : INTEGER
@@ -691,7 +684,7 @@ invariant
 	culture_info_exists: culture_info /= Void
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

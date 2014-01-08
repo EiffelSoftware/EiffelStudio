@@ -33,27 +33,47 @@ feature -- Modification
 			not_yet_in_tree: not has (a_item, a_key)
 		local
 			tree_el: detachable CHARACTER_TREE[G]
-			l_key: like key
+			l_list: like character_trees_list
+			distance: INTEGER
+			l_tree, r_tree: CHARACTER_TREE [G]
+			r_key: detachable STRING_32
 		do
-			if not is_leaf then
-					-- It is a node.
-				l_key := key
-				check l_key /= Void end -- Implied from invariant
-				tree_el:= search_character_tree (a_key.substring (l_key.count+1, a_key.count))
-				if tree_el = Void or not a_key.substring (1,l_key.count).is_equal (l_key) then
-						-- Element is not in the node.
-					insert_character_tree (a_item, a_key)
+			if attached key as l_key then
+				if not is_leaf then
+						-- It is a node.
+					tree_el:= search_character_tree (a_key.substring (l_key.count+1, a_key.count))
+					if tree_el = Void or not a_key.substring (1,l_key.count).is_equal (l_key) then
+							-- Element is not in the node.
+						insert_character_tree (a_item, a_key)
+					else
+							-- Similar element is in the node, insert there.
+						tree_el.insert (a_item,a_key.substring (l_key.count+1, a_key.count))
+					end
 				else
-						-- Similar element is in the node, insert there.
-					tree_el.insert (a_item,a_key.substring (l_key.count+1, a_key.count))
+						-- It is a 1-element leaf, we split.
+					create l_list.make
+					character_trees_list := l_list
+
+					distance := minimum_distance (a_key, l_key)
+
+					create l_tree
+					check attached item as l_item then
+						l_tree.insert (l_item, l_key.substring (distance+1, l_key.count))
+					end
+
+					l_list.put_front (l_tree)
+
+					r_key := a_key.substring (distance+1, a_key.count)
+					create r_tree
+					r_tree.insert (a_item, r_key)
+					l_list.put_front (r_tree)
+					key := l_key.substring (1, distance)
+					item := default_item
 				end
-			elseif key = Void then
+			else
 					-- It is an empty leaf.
 				key := a_key
 				item := a_item
-			else
-					-- It is a 1-element leaf.
-				split (a_item, a_key)
 			end
 		end
 
@@ -66,19 +86,16 @@ feature -- Access
 			a_key_in_tree: get_item_with_key (a_key) /= Void
 		local
 			tree_el: like search_character_tree
-			l_item: like item
-			l_key: like key
 		do
 			if not is_leaf then
-				l_key := key
-				check l_key /= Void end -- Implied by invariant
-				tree_el := search_character_tree (a_key.substring (l_key.count +1, a_key.count))
-				check tree_el /= Void end -- Implied by precondition.
-				Result := tree_el.get (a_key.substring (l_key.count +1, a_key.count))
+				if attached key as l_key then
+					tree_el := search_character_tree (a_key.substring (l_key.count +1, a_key.count))
+					if tree_el /= Void then
+						Result := tree_el.get (a_key.substring (l_key.count +1, a_key.count))
+					end
+				end
 			else
-				l_item := item
-				check l_item /= Void end -- Implied by precondition.
-				Result := l_item
+				Result := item
 			end
 		end
 
@@ -89,13 +106,12 @@ feature -- Access
 			s_not_void: s /= Void
 		local
 			tree_el: detachable CHARACTER_TREE[G]
-			l_key: like key
 		do
 			if not is_leaf then
-				l_key := key
-				check l_key /= Void end -- Implied by invariant
-				tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
-				Result := tree_el /= Void and then tree_el.has (a_item, s.substring (l_key.count + 1, s.count))
+				if attached key as l_key then
+					tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
+					Result := tree_el /= Void and then tree_el.has (a_item, s.substring (l_key.count + 1, s.count))
+				end
 			else
 				Result := (s ~ key and then a_item ~ item)
 			end
@@ -108,14 +124,13 @@ feature -- Access
 			a_key_exists: s /= Void
 		local
 			tree_el: detachable CHARACTER_TREE[G]
-			l_key: like key
 		do
 			if not is_leaf then
-				l_key := key
-				check l_key /= Void end -- Implied by invariant
-				tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
-				if tree_el /= Void then
-					Result := tree_el.get_item_with_key (s.substring (l_key.count + 1, s.count))
+				if attached key as l_key then
+					tree_el := search_character_tree (s.substring (l_key.count + 1, s.count))
+					if tree_el /= Void then
+						Result := tree_el.get_item_with_key (s.substring (l_key.count + 1, s.count))
+					end
 				end
 			elseif key ~ s then
 				Result := item
@@ -130,7 +145,7 @@ feature {CHARACTER_TREE} -- Information
 			a_string_not_void: a_key /= Void
 		do
 			if key /= Void then
-				Result := minimum_distance (a_key) > 0
+				Result := minimum_distance (a_key, key) > 0
 			end
 		end
 
@@ -143,109 +158,60 @@ feature {NONE} -- character_trees_list
 			-- Search for a tree that represents a_string,
 			-- return Void if not found.
 		require
-			not_is_leaf: not is_leaf
 			a_string_not_void: a_string /= Void
 		local
 			l_tree: detachable CHARACTER_TREE [G]
-			l_list: like character_trees_list
 		do
-				-- User move to front method.
-			l_list := character_trees_list
-			check l_list /= Void end -- Implied by invariant
-			from
-				l_list.start
-			until
-				Result /= Void or l_list.after
-			loop
-				if l_list.item.key_corresponds(a_string) then
-					l_tree := l_list.item
-					check l_tree /= Void end
-					Result := l_tree
-					Result := Result.twin
-					l_list.remove
-					l_list.put_front (Result)
+			if attached character_trees_list as l_list then
+					-- User move to front method.
+				from
 					l_list.start
- 					Result := l_list.item
-				else
-					l_list.forth
+				until
+					Result /= Void or l_list.after
+				loop
+					if l_list.item.key_corresponds(a_string) then
+						l_tree := l_list.item
+						check l_tree /= Void end
+						Result := l_tree
+						Result := Result.twin
+						l_list.remove
+						l_list.put_front (Result)
+						l_list.start
+	 					Result := l_list.item
+					else
+						l_list.forth
+					end
 				end
 			end
 		end
 
 	insert_character_tree (a_item: G; a_key: STRING_32)
-			-- Insert in `character_trees_list' a subtree with
-			-- `a_item' as an element and `a_key' as a key
-			-- If necessary, update `key' and all keys
-			-- of the subtrees.
-		require
-			not_is_leaf: not is_leaf
-			key_not_void: key /= Void
+			-- If `key' and `character_trees_list' are set, insert in
+			-- `character_trees_list' a subtree with `a_item' as an
+			-- element and `a_key' as a key. If necessary, update `key'
+			-- and all keys of the subtrees.
 		local
 			l_tree, new_tree: CHARACTER_TREE[G]
 			distance: INTEGER
 			l_str: STRING_32
-			l_key: like key
 			l_list: like character_trees_list
 		do
-			distance := minimum_distance (a_key)
-
 			l_list := character_trees_list
-			check l_list /= Void end -- Implied by precondition and invariant
+			if attached key as l_key and l_list /= Void then
+				distance := minimum_distance (a_key, l_key)
+				if distance < l_key.count  then
+					l_str := l_key.substring (distance+1, l_key.count)
+					create new_tree.make (l_str, l_list)
 
-			l_key := key
-			check l_key /= Void end -- Implied by precondition
-			if distance < l_key.count  then
-				l_str := l_key.substring (distance+1, l_key.count)
-				create new_tree.make (l_str, l_list)
-
-				create l_list.make
-				l_list.extend (new_tree)
-				character_trees_list := l_list
-				l_key.keep_head (distance)
+					create l_list.make
+					l_list.extend (new_tree)
+					character_trees_list := l_list
+					l_key.keep_head (distance)
+				end
+				create l_tree
+				l_tree.insert (a_item, a_key.substring (l_key.count+1, a_key.count))
+				l_list.put_front (l_tree)
 			end
-			create l_tree
-			l_tree.insert (a_item, a_key.substring (l_key.count+1, a_key.count))
-			l_list.put_front (l_tree)
-		end
-
-	split (a_item: G; a_string: STRING_32)
-			-- Split leaf in a node with a character tree list.
-		require
-			a_item_not_void: a_item /= Void
-			a_string_not_void: a_string /= Void
-			is_leaf: is_leaf
-		local
-			distance: INTEGER
-			r_key: STRING_32
-			l_key: detachable STRING_32
-			l_tree, r_tree: CHARACTER_TREE[G]
-			l_item: like item
-			l_list: like character_trees_list
-		do
-			create l_list.make
-			character_trees_list := l_list
-
-			l_key := key
-			check l_key /= Void end -- Implied by precondition and invariant.
-
-			distance := minimum_distance (a_string)
-
-			create l_tree
-			l_item := item
-			check l_item /= Void end
-			l_tree.insert (l_item, l_key.substring (distance+1, l_key.count))
-
-			l_list.put_front (l_tree)
-
-			r_key := a_string.substring (distance+1, a_string.count)
-			create r_tree
-			r_tree.insert (a_item, r_key)
-			l_list.put_front (r_tree)
-			key := l_key.substring (1, distance)
-			item := default_item
-		ensure
-			two_elements: (attached character_trees_list as l) and then l.count = 2
-			no_item: item = default_item
 		end
 
 feature {NONE} -- Information
@@ -259,16 +225,13 @@ feature {NONE} -- Information
 	key: detachable STRING_32
 
 	prepend_to_key (a_string: STRING_32)
-			-- Prepend `a_string' to `key'.
+			-- Prepend `a_string' to `key' if set.
 		require
 			a_string_not_void: a_string /= Void
-			key_not_void: key /= Void
-		local
-			l_key: like key
 		do
-			l_key := key
-			check l_key /= Void end -- Implied by precondition.
-			key:= a_string + l_key
+			if attached key as l_key then
+				key := a_string + l_key
+			end
 		end
 
 	item: detachable G
@@ -279,27 +242,26 @@ feature {NONE} -- Information
 
 feature {NONE} -- Measurement
 
-	minimum_distance (a_key: STRING_32): INTEGER
-			-- find distance between `a_string' and `key'
+	minimum_distance (a_key: STRING_32; a_reference_key: detachable STRING_32): INTEGER
+			-- Find distance between `a_key' and `a_reference_key', and `0' if `a_reference_key' is not set.
 			-- Result is the amount of equal characters from the beginning
 			-- of the two strings
 		require
 			a_key_not_void: a_key /= Void
-			key_not_void: key /= Void
-		local
-			l_key: like key
 		do
-			l_key := key
-			check l_key /= Void end -- Implied from precondition
-			from
-				Result := 1
-			until
-				Result > a_key.count.min (l_key.count) or else
-				a_key.item (Result) /= l_key.item (Result)
-			loop
-				Result := Result + 1
+			if a_reference_key /= Void then
+				from
+					Result := 1
+				until
+					Result > a_key.count.min (a_reference_key.count) or else
+					a_key.item (Result) /= a_reference_key.item (Result)
+				loop
+					Result := Result + 1
+				end
+				Result := Result - 1
+			else
+				Result := 0
 			end
-			Result := Result - 1
 		end
 
 feature -- Output
@@ -348,11 +310,11 @@ feature -- Output
 
 invariant
 	is_leaf_implies_character_trees_list: is_leaf implies character_trees_list = Void
-	is_leaf_implies_key_not_void: not is_leaf implies key /= Void
+	is_leaf_implies_key_not_void: not is_leaf implies key /= Void and character_trees_list /= Void
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

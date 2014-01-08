@@ -520,30 +520,33 @@ doc:		<summary>Initialized the various IEEE values.</summary>
 doc:		<thread_safety>Safe when called upon runtime initialization</thread_safety>
 doc:	</routine>
 */
-
-rt_private void ieee_init (void) {
-	EIF_NATURAL_32 val_32;
-	EIF_NATURAL_32 *l_val_32 = &val_32;
-	EIF_NATURAL_64 val_64;
-	EIF_NATURAL_64 *l_val_64 = &val_64;
+void ieee_init (void) {
+	union {
+		EIF_NATURAL_32 nat_val_32;
+		EIF_REAL_32 real_val_32;
+	} val_32;
+	union {
+		EIF_NATURAL_64 nat_val_64;
+		EIF_REAL_64 real_val_64;
+	} val_64;
 
 		/* Computation of NaN. */
-	val_32 = 0x7FC00000;
-	eif_real_32_nan = *((EIF_REAL_32 *) l_val_32);
-	val_64 = RTU64C(0x7FF8000000000000);
-	eif_real_64_nan = *((EIF_REAL_64 *) l_val_64);
+	val_32.nat_val_32 = 0x7FC00000;
+	eif_real_32_nan = val_32.real_val_32;
+	val_64.nat_val_64 = RTU64C(0x7FF8000000000000);
+	eif_real_64_nan = val_64.real_val_64;
 
 		/* Computation of Negative Infinity. */
-	val_32 = 0xFF800000;
-	eif_real_32_negative_infinity = *((EIF_REAL_32 *) l_val_32);
-	val_64 = RTU64C(0xFFF0000000000000);
-	eif_real_64_negative_infinity = *((EIF_REAL_64 *) l_val_64);
+	val_32.nat_val_32 = 0xFF800000;
+	eif_real_32_negative_infinity = val_32.real_val_32;
+	val_64.nat_val_64 = RTU64C(0xFFF0000000000000);
+	eif_real_64_negative_infinity = val_64.real_val_64;
 
 		/* Computation of Positive Infinity. */
-	val_32 = 0x7F800000;
-	eif_real_32_positive_infinity = *((EIF_REAL_32 *) l_val_32);
-	val_64 = RTU64C(0x7FF0000000000000);
-	eif_real_64_positive_infinity = *((EIF_REAL_64 *) l_val_64);
+	val_32.nat_val_32 = 0x7F800000;
+	eif_real_32_positive_infinity = val_32.real_val_32;
+	val_64.nat_val_64 = RTU64C(0x7FF0000000000000);
+	eif_real_64_positive_infinity = val_64.real_val_64;
 }
 
 rt_public void once_init (void)

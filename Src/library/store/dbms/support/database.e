@@ -117,9 +117,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
+			-- `dynamic', True if a dynamic parse is required. False, the argument is simply ignored.
 			-- for set input arguments
 			-- For ODBC
 		require
@@ -132,6 +133,19 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Fetch one row resulting from the sql query
 			-- Default value zero
 			-- For Sybase
+		do
+		end
+
+	bind_arguments (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+			-- Bind arguments to current statement.
+		do
+		end
+
+	dyn_sql_colon_style: BOOLEAN
+			-- Is dynamic SQL in colon style?
+			-- i.e. "SELECT * FROM t WHERE price = :price"
+			-- Otherwise it will be question mark style.
+			-- i.e. "SELECT * FROM t WHERE price = ?"
 		do
 		end
 
@@ -1104,7 +1118,7 @@ feature -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

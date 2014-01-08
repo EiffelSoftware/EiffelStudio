@@ -16,7 +16,6 @@ inherit
 			{ANY} is_connected
 		undefine
 			is_equal, out, copy
-
 		end
 
 	DB_EXEC_USE
@@ -83,7 +82,7 @@ feature -- Basic operations
 			l_status := handle.status
 			descriptor := l_db_spec.new_descriptor
 			if not l_db_spec.normal_parse then
-				parsed := l_db_spec.parse (descriptor, ht, ht_order, handle, s)
+				parsed := l_db_spec.parse (descriptor, ht, ht_order, handle, s, False)
 			end
 			if not parsed then
 				parsed_s := parse_32 (s)
@@ -221,7 +220,7 @@ feature {NONE} -- Implementation
 			-- Internal `affected_row_count'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

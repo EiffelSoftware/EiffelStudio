@@ -25,9 +25,12 @@ feature {NONE} -- Initialization
 	make
 			-- Creation routine
 		do
-			implementation := handle.database.db_dyn_change
 			create ht.make (name_table_size)
+			create ht_order.make (name_table_size)
+			ht_order.compare_objects
+			implementation := handle.database.db_dyn_change
 			implementation.set_ht (ht)
+			implementation.set_ht_order (ht_order)
 		end
 
 feature -- Element change
@@ -74,6 +77,20 @@ feature -- Element change
 			prepared_statement: is_prepared
 		end
 
+	rebind_arguments
+			-- Rebind arguments from argument mapping list.
+		require
+			connected: is_connected
+		local
+			u: UTF_CONVERTER
+		do
+			implementation.rebind_arguments
+			if not is_ok and then is_tracing then
+				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+				trace_output.new_line
+			end
+		end
+
 	execute
 			-- Execute the sql statement
 		require
@@ -111,14 +128,14 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

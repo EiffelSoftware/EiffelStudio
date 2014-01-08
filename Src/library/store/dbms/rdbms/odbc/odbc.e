@@ -15,6 +15,7 @@ inherit
 			identifier_quoter,
 			qualifier_separator,
 			parse,
+			bind_arguments,
 			user_name_ok,
 			hide_qualifier,
 			pre_immediate,
@@ -135,12 +136,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 		local
 			tmp_str: STRING_32
 			c_temp: SQL_STRING
 			l_ptr: POINTER
-			l_para: like para
 		do
 			create c_temp.make (sql)
 				-- This routine manipulates buffer information but does not allocate memory.
@@ -148,7 +148,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 			tmp_str := c_temp.string
 			tmp_str.left_adjust
-			if tmp_str.count > 1 and then (tmp_str.item (1) = {CHARACTER_32} '{') then
+
+				-- '{' Indicates a procedure call excape sequence which requires argument binding.
+				-- See http://msdn.microsoft.com/en-us/library/ms710248(v=vs.85).aspx
+			if tmp_str.count > 1 and then (dynamic or else tmp_str.item (1) = {CHARACTER_32} '{') then
 				if uht /= Void then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (con_context_pointer, descriptor, uht.count)
@@ -157,23 +160,8 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					end
 					is_error_updated := False
 					is_warning_updated := False
-					if uht.count > 0 then
-						l_para := para
-						if l_para /= Void then
--- ADDED PGC
-							l_para.release
-							l_para.resize (uht.count)
-						else
-							create l_para.make (uht.count)
-							para := l_para
-						end
---
-						bind_args_value (descriptor, uht, ht_order) -- PGC: Pourquoi ???
-					end
+					bind_arguments (descriptor, uht, ht_order)
 				end
---				if para /= Void then
---					para.release
---				end
 				Result := True
 			else
  				Result := False
@@ -186,89 +174,21 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_str.adapt_size
 		end
 
-	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
+	bind_arguments (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+			-- Bind arguments to current statement.
 		local
-			i: INTEGER
-			object : ANY
-			tmp_str: STRING
-			tmp_c: SQL_STRING
-			tmp_date: detachable DATE_TIME
-			type: INTEGER
-			l_managed_pointer: MANAGED_POINTER
 			l_para: like para
-			l_decimal_t: detachable like convert_to_decimal
-			l_nat64: NATURAL_64
-			l_pointer: MANAGED_POINTER
 		do
-			l_para := para
-			if l_para /= Void then
-				l_para.release
-				l_para.resize (table.count)
-			else
-				create l_para.make (table.count)
-				para := l_para
-			end
-			create tmp_str.make (1)
-			from
-				i := table.lower
-			until
-				i > table.upper
-			loop
-				type := -1
-				object := table.item (i)
-				if attached {POINTER_REF} object as ptr then -- NULL value
-					l_para.set (Void, i)
+			if uht.count > 0 then
+				l_para := para
+				if l_para /= Void then
+					l_para.release
+					l_para.resize (uht.count)
 				else
-					if obj_is_string (object) then
-						type := c_string_type
-					elseif obj_is_integer (object) then
-						type := c_integer_type
-					elseif obj_is_date (object) then
-						type := c_date_type
-						if attached {DATE_TIME} object as l_tmp_date then
-							tmp_date := l_tmp_date
-						else
-							check False end -- implied by `obj_is_date (object)'
-						end
-					elseif obj_is_double (object) then
-						type := c_float_type
-					elseif obj_is_real (object) then
-						type := c_real_type
-					elseif obj_is_character (object) then
-						type := c_character_type
-					elseif obj_is_boolean (object) then
-						type := c_boolean_type
-					elseif is_decimal_used and then obj_is_decimal (object) then
-						type := c_decimal_type
-						l_decimal_t := convert_to_decimal (object)
-					end
-					tmp_str.wipe_out
-					if type = c_date_type  then
-						create l_managed_pointer.make (c_timestamp_struct_size)
-						check tmp_date /= Void end -- Implied by `type = c_date_type'
-						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month,
-							tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-						l_para.set (l_managed_pointer, i)
-					elseif is_decimal_used and then type = c_decimal_type then
-						create l_managed_pointer.make (c_numeric_struct_size)
-						if attached l_decimal_t as l_d then
-							if l_d.digits.is_natural_64 then
-								l_nat64 := l_d.digits.to_natural_64
-							end
-							l_pointer := natural_64_to_odbc_numeric_string (l_nat64)
-							odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_d.sign, l_d.precision, l_d.scale)
-							l_para.set (l_managed_pointer, i)
-						end -- Implied by `type = c_decimal_type'
-					else
-						tmp_str.append ( (object).out)
-						create tmp_c.make (tmp_str)
-						l_para.set (tmp_c.managed_data, i)
-					end
-				end -- Null value
-				odbc_set_parameter (con_context_pointer, descriptor, i, 1, type,  odbc_get_col_len (con_context_pointer, descriptor, i), 0, l_para.get (i))
-				is_error_updated := False
-				is_warning_updated := False
-				i := i + 1
+					create l_para.make (uht.count)
+					para := l_para
+				end
+				bind_args_value (descriptor, uht, ht_order)
 			end
 		end
 

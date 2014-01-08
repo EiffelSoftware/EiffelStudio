@@ -142,7 +142,7 @@ int ora_first_descriptor_available (void);
 int ora_available_descriptor (void);
 int ora_max_descriptor (void);
 void ora_exec_immediate (int no_desc, text *order); //
-void ora_init_order (text order[1024], int no_desc); //
+void ora_init_order (text *order, int no_desc); //
 sword describe_define(Cda_Def *cda, int no_desc);
 void print_header(sword ncols, int no_desc);
 void print_rows(Cda_Def *cda, sword ncols, int no_desc);
@@ -151,7 +151,7 @@ int ora_put_select_name (int no_des, int i, char *result);
 void ora_start_order (int no_desc); //
 void ora_terminate_order (int no_des); //
 int ora_next_row (int no_des); //
-void ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value); //
+void ora_set_parameter(int no_desc, text *ph, char *value); //
 void ora_connect (text *name, text *passwd); //
 void ora_disconnect (void); //
 void ora_rollback (void); //

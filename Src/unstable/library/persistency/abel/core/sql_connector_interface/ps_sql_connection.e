@@ -66,6 +66,11 @@ feature {PS_ABEL_EXPORT} -- Database results
 		deferred
 		end
 
+	last_primary_key: INTEGER
+			-- The last automatically generated primary key.
+		deferred
+		end
+
 feature {PS_ABEL_EXPORT} -- Utilities
 
 	new_cursor: ITERATION_CURSOR [PS_SQL_ROW]

@@ -10,11 +10,25 @@ class
 inherit
 	PS_MYSQL_REPOSITORY_FACTORY
 		redefine
-			new_connector
+			new_connector, make_uninitialized
 		end
 
 create
 	make, make_uninitialized
+
+feature {NONE} -- Initialization
+
+	make_uninitialized
+			-- <Precursor>
+		do
+			Precursor
+			create mapping.make
+		end
+
+feature -- Access
+
+	mapping: PS_DATABASE_MAPPING
+			-- A mapping table to override naming and primary key defaults.
 
 feature {NONE} -- Implementation
 
@@ -43,7 +57,7 @@ feature {NONE} -- Implementation
 				and attached database as l_database
 			then
 				create mysql_database.make (l_user, l_password, l_database, l_host, l_port)
-				create Result.make (mysql_database)
+				create Result.make (mysql_database, mapping)
 			end
 		end
 

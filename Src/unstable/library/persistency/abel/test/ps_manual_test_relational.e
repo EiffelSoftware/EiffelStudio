@@ -47,6 +47,65 @@ feature -- Tests
 			criteria_tests.test_criteria_agents_and_predefined
 		end
 
+	test_primary
+			-- Test if primary key generation works.
+		local
+			flat: FLAT_CLASS_2
+			transaction: PS_TRANSACTION
+			query: PS_QUERY [FLAT_CLASS_2]
+
+			count: INTEGER
+		do
+			repository.wipe_out
+			transaction := repository.new_transaction
+
+			create flat.make (42, "some")
+			transaction.insert (flat)
+
+			create flat.make (21, "thing")
+			transaction.insert (flat)
+
+			flat.string_value.append ("more")
+			transaction.update (flat)
+
+			create query.make
+			transaction.execute_query (query)
+
+			across
+				query as cursor
+			loop
+				if cursor.item.int_value = 42 then
+					cursor.item.string_value.append ("thing")
+				elseif cursor.item.int_value = 21 then
+					 cursor.item.string_value.wipe_out
+					 cursor.item.string_value.append ("more")
+				end
+			end
+
+			across
+				query as cursor
+			loop
+				transaction.update (cursor.item)
+			end
+
+			query.close
+			query.reset
+			transaction.execute_query (query)
+
+			across
+				query as cursor
+			loop
+				print (cursor.item.id.out + ", " + cursor.item.int_value.out + ", " + cursor.item.string_value + "%N")
+				assert ("first item correct", cursor.item.int_value = 42 implies cursor.item.string_value ~ "something")
+				assert ("second item correct",cursor.item.int_value = 21 implies cursor.item.string_value ~ "more")
+				count := count + 1
+			end
+			query.close
+			transaction.commit
+
+			assert ("count is two", count = 2)
+		end
+
 feature {NONE} -- Initialization
 
 	populate
@@ -74,6 +133,8 @@ feature {NONE} -- Initialization
 			factory.set_user (username)
 			factory.set_password (password)
 			factory.set_database (db_name)
+
+			factory.mapping.add_primary_key_column ("id", "flat_class_2")
 
 			Result := factory.new_repository
 		end

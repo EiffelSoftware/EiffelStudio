@@ -52,13 +52,17 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 	internal_retrieve (type: PS_TYPE_METADATA; criteria: PS_CRITERION; is_root_only: BOOLEAN; attributes: PS_IMMUTABLE_STRUCTURE [STRING]; transaction: PS_INTERNAL_TRANSACTION): ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			-- <Precursor>
 		local
+			table: STRING
 			connection: PS_SQL_CONNECTION
 			res_list: ARRAYED_LIST [PS_BACKEND_OBJECT]
+
+			primary: INTEGER
 			object: PS_BACKEND_OBJECT
 		do
+			table := type.name.as_lower
 
 			connection := get_connection (transaction)
-			connection.execute_sql ("SELECT * FROM " + type.name.as_lower)
+			connection.execute_sql ("SELECT * FROM " + table)
 
 			across
 				connection as cursor
@@ -69,11 +73,14 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 					type.attributes as attribute_cursor
 				from
 
-					fixme ("Find out about the primary key.")
-					bogus_primary := bogus_primary + 1
+					if attached database_mapping.primary_key_column (table) as id_column then
+						primary := cursor.item.at (id_column).to_integer
+					else
+						bogus_primary := bogus_primary + 1
+						primary := bogus_primary
+					end
 
-					create object.make (bogus_primary, type)
-
+					create object.make (primary, type)
 					res_list.extend (object)
 				loop
 					fixme ("What to do about the runtime type?")
@@ -108,14 +115,16 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 
 feature {NONE} -- Initialization
 
-	make (a_database: like database)
+	make (a_database: like database; mapping: like database_mapping)
 			-- Initialization for `Current'.
 		do
 			initialize (a_database)
+			database_mapping := mapping
 		end
 
 	bogus_primary: INTEGER
 
 	last_inserted_object: detachable PS_BACKEND_OBJECT
 
+	database_mapping: PS_DATABASE_MAPPING
 end

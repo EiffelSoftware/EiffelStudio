@@ -126,6 +126,13 @@ feature {PS_ABEL_EXPORT} -- Database results
 	last_error: detachable PS_ERROR
 			-- The last occured error
 
+	last_primary_key: INTEGER
+			-- <Precursor>
+		do
+			fixme ("to implement")
+			check not_implemented: False end
+		end
+
 feature {PS_SQLITE_DATABASE} -- Initialization
 
 	make (connection: SQLITE_DATABASE)

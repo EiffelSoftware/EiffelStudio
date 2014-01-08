@@ -22,13 +22,33 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			-- <Precursor>
 		local
 			object: PS_BACKEND_OBJECT
+			type: PS_TYPE_METADATA
 			list: ARRAYED_LIST [PS_BACKEND_OBJECT]
+
+			table: STRING
+			connection: PS_SQL_CONNECTION
+			primary: INTEGER
 		do
 			order.start
+			type := order.key_for_iteration
+			table := type.name.as_lower
+
 			check no_references: order.count = 1 and order.item_for_iteration = 1 end
 
-			bogus_primary := bogus_primary + 1
-			create object.make_fresh (bogus_primary, order.key_for_iteration)
+
+			fixme ("It would be nicer to insert just once and then update the data structures.")
+			if attached database_mapping.primary_key_column (table) as id_column then
+
+				connection := get_connection (transaction)
+				connection.execute_sql ("INSERT INTO " + table + " VALUES ()")
+				primary := connection.last_primary_key
+			else
+
+				bogus_primary := bogus_primary + 1
+				primary := bogus_primary
+			end
+
+			create object.make_fresh (primary, order.key_for_iteration)
 
 			create list.make (1)
 			list.extend (object)
@@ -73,7 +93,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 
 			fixme ("to implement.")
 			connection := database.acquire_connection
-			connection.execute_sql ("DELETE FROM test_person;")
+			connection.execute_sql ("DELETE FROM test_person; DELETE FROM flat_class_2;")
 			connection.commit
 			database.release_connection (connection)
 --			check not_implemented: False end
@@ -87,6 +107,8 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			object: PS_BACKEND_OBJECT
 			type: PS_TYPE_METADATA
 
+			table: STRING
+
 			sql:STRING
 			sql_column_list: STRING
 			sql_value_list: STRING
@@ -99,15 +121,20 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			object := objects.first
 			last_inserted_object := object
 			type := object.type
+			table := type.name.as_lower
 
 			across
 				type.attributes as cursor
 			from
+					-- Add the previously generated primary key to the object.
+				if attached database_mapping.primary_key_column (table) as id_column then
+					object.add_attribute (id_column, object.primary_key.out, "INTEGER_32")
+				end
+
 				create sql_column_list.make (100)
 				create sql_value_list.make (100)
 				create sql_update_list.make (200)
 			loop
-				fixme ("Filter out auto-incremented primary key.")
 
 				if attached object.value_lookup (cursor.item) as val then
 

@@ -81,6 +81,12 @@ feature {PS_ABEL_EXPORT}
 	last_error: detachable PS_ERROR
 			-- <Precursor>
 
+	last_primary_key: INTEGER
+			-- <Precursor>
+		do
+			Result := internal_connection.last_result.last_insert_id
+		end
+
 feature {PS_MYSQL_DATABASE} -- Access
 
 	internal_connection: MYSQLI_CLIENT

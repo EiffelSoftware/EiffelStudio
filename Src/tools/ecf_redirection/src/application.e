@@ -1,6 +1,6 @@
 note
 	description: "[
-			Tool to create an ecf redirection
+			Tool to create ecf redirection
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			l_target, l_redirection_ecf: detachable READABLE_STRING_32
+			l_target_folder, l_redirection_folder: detachable READABLE_STRING_32
+			has_cleanup: BOOLEAN
 			n,i: INTEGER
 			op: detachable READABLE_STRING_32
 			env: EC_EIFFEL_LAYOUT
@@ -52,6 +54,8 @@ feature {NONE} -- Initialization
 							is_verbose := False
 						elseif v.is_case_insensitive_equal_general ("-f") or v.is_case_insensitive_equal_general ("--force") then
 							has_flag_force := True
+						elseif v.is_case_insensitive_equal_general ("--cleanup") then
+							has_cleanup := True
 						else
 							localized_print_error ({STRING_32} "Unknown flag: " + v + {STRING_32} " -> ignored!%N")
 						end
@@ -63,6 +67,15 @@ feature {NONE} -- Initialization
 								l_redirection_ecf := v
 							elseif l_target = Void then
 								l_target := v
+							else
+								localized_print_error ({STRING_32} "[" + op + "] Too many parameters : " + v + {STRING_32} " -> ERROR!%N")
+								execute_help (op)
+							end
+						elseif op.is_case_insensitive_equal_general ("shadow") or op.is_case_insensitive_equal_general ("unshadow") then
+							if l_redirection_folder = Void then
+								l_redirection_folder := v
+							elseif l_target_folder = Void then
+								l_target_folder := v
 							else
 								localized_print_error ({STRING_32} "[" + op + "] Too many parameters : " + v + {STRING_32} " -> ERROR!%N")
 								execute_help (op)
@@ -87,37 +100,65 @@ feature {NONE} -- Initialization
 					i := i + 1
 				end
 			end
-			if l_redirection_ecf /= Void and then l_redirection_ecf.is_empty then
-				l_redirection_ecf := Void
-			end
-			if l_target /= Void and then l_target.is_empty then
-				l_target := Void
+
+			if op.is_case_insensitive_equal_general ("shadow") or op.is_case_insensitive_equal_general ("unshadow") then
+				if l_redirection_folder /= Void and then l_redirection_folder.is_empty then
+					l_redirection_folder := Void
+				end
+				if l_target_folder /= Void and then l_target_folder.is_empty then
+					l_target_folder := Void
+				end
+			else
+				if l_redirection_ecf /= Void and then l_redirection_ecf.is_empty then
+					l_redirection_ecf := Void
+				end
+				if l_target /= Void and then l_target.is_empty then
+					l_target := Void
+				end
 			end
 
 			if op = Void then
 				localized_print_error ({STRING_32} "Missing operation!%N")
 				execute_help (Void)
+			elseif op.is_case_insensitive_equal_general ("shadow") then
+				if
+					l_target_folder /= Void and l_redirection_folder /= Void
+				then
+					shadow_redirection (l_target_folder, l_redirection_folder, has_flag_force)
+				else
+					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
+					execute_help (op)
+				end
+			elseif op.is_case_insensitive_equal_general ("unshadow") then
+				if
+					l_target_folder /= Void and l_redirection_folder /= Void
+				then
+					unshadow_redirection (l_target_folder, l_redirection_folder, has_flag_force, has_cleanup)
+				else
+					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
+					execute_help (op)
+				end
 			elseif op.is_case_insensitive_equal_general ("create") then
 				if
 					l_target /= Void and l_redirection_ecf /= Void
 				then
 					set_redirection (l_target, l_redirection_ecf, has_flag_force)
 				else
-					localized_print_error ({STRING_32} "Missing or invalid parameters for operation: " + op + {STRING_32} " -> ERROR!%N")
+					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
 				end
 			elseif op.is_case_insensitive_equal_general ("delete") then
 				if (l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty) then
 					unset_redirection (l_redirection_ecf)
 				else
-					localized_print_error ({STRING_32} "Missing or invalid parameters for operation: " + op + {STRING_32} " -> ERROR!%N")
+					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
 				end
 			elseif op.is_case_insensitive_equal_general ("check") then
 				if (l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty) then
 					check_redirection (l_target, l_redirection_ecf)
 				else
-					localized_print_error ({STRING_32} "Missing or invalid parameters for operation: " + op + {STRING_32} " -> ERROR!%N")
+					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
 				end
 			else
@@ -178,12 +219,127 @@ feature -- Change
 				localized_print ("   <redirection_ecf> : redirection ecf file%N")
 				localized_print ("   {target_ecf}      : optional target ecf file%N")
 				localized_print ("Check redirection <redirection_ecf>.%N")
+			elseif op.is_case_insensitive_equal_general ("shadow") then
+				localized_print ("usage: ecf_redirection shadow [options] <redirection_folder> <target_folder>%N")
+				localized_print ("   <redirection_folder> : redirection folder%N")
+				localized_print ("   <target_folder>      : target folder%N")
+				localized_print ("Recursively create redirection from ecf file under <redirection_folder> to <target_folder>.%N")
+				localized_print ("%NOptions:%N")
+				localized_print ("   -f|--force: force operation%N")
+			elseif op.is_case_insensitive_equal_general ("unshadow") then
+				localized_print ("usage: ecf_redirection unshadow [options] <redirection_folder> <target_folder>%N")
+				localized_print ("   <redirection_folder> : redirection folder%N")
+				localized_print ("   <target_folder>      : target folder%N")
+				localized_print ("Undo previous 'shadow' from <redirection_folder> to <target_folder>.%N")
+				localized_print ("Note: only valid redirections will be unset,%N  and if this operation leaves empty folder, they will be deleted only if --cleanup is precised..%N")
+				localized_print ("%NOptions:%N")
+				localized_print ("   -f|--force: force operation%N")
 			end
 			localized_print ("%NGlobal options:%N")
 			localized_print ("   -v|--verbose: verbose output%N")
 
 			localized_print ("%N")
 			(create {EXCEPTIONS}).die (-1)
+		end
+
+	shadow_redirection (a_target_folder: READABLE_STRING_32; a_redirection_folder: READABLE_STRING_32; a_update: BOOLEAN)
+			-- For each ecf file in `a_target_folder' create a redirection to the expected location in `a_redirection_folder'.
+		require
+			no_error: not has_error
+			valid_redirection: not a_redirection_folder.is_empty
+			valid_target_ecf: not a_target_folder.is_empty
+		local
+			d: DIRECTORY
+			v: ECF_FINDER
+			dn: READABLE_STRING_32
+			s: STRING_32
+			p: PATH
+		do
+			create d.make_with_name (a_target_folder)
+			if d.exists then
+				create v.make
+				dn := d.path.canonical_path.name
+				v.process_directory (d.path.canonical_path)
+				if v.ecfs.is_empty then
+					localized_print_error ({STRING_32} "[ERROR] Directory %"" + d.path.name + {STRING_32} "%" does not contain any ecf files!%N")
+				else
+					across
+						v.ecfs as ic
+					loop
+						if ic.item.name.has_substring (dn) then
+							create s.make_from_string (ic.item.name)
+							s.remove_head (dn.count + 1)
+							create p.make_from_string (a_redirection_folder)
+							p := p.extended (s)
+							file_utilities.create_directory_path (p.parent)
+							set_redirection (ic.item.name, p.name, a_update)
+						end
+					end
+				end
+			else
+				localized_print_error ({STRING_32} "[ERROR] Directory %"" + d.path.name + {STRING_32} "%" does not exist!%N")
+			end
+		end
+
+	unshadow_redirection (a_target_folder: READABLE_STRING_32; a_redirection_folder: READABLE_STRING_32; a_update: BOOLEAN; has_cleanup: BOOLEAN)
+			-- For each ecf file in `a_redirection_folder' being a redirection to the expected location from `a_target_folder'
+			-- unset associated redirection.
+			-- If `has_cleanup' is True, empty folders will be removed.
+		require
+			no_error: not has_error
+			valid_redirection: not a_redirection_folder.is_empty
+			valid_target_ecf: not a_target_folder.is_empty
+		local
+			d: DIRECTORY
+			v: ECF_FINDER
+			dn: READABLE_STRING_32
+			s: STRING_32
+			p: detachable PATH
+		do
+			create d.make_with_name (a_redirection_folder)
+			if d.exists then
+				create v.make
+				dn := d.path.canonical_path.name
+				v.process_directory (d.path.canonical_path)
+				if v.ecfs.is_empty then
+					localized_print_error ({STRING_32} "[WARNING] Directory %"" + d.path.name + {STRING_32} "%" does not contain any ecf files!%N")
+				else
+					across
+						v.ecfs as ic
+					loop
+						if ic.item.name.has_substring (dn) then
+							create s.make_from_string (ic.item.name)
+							s.remove_head (dn.count + 1)
+							create p.make_from_string (a_target_folder)
+							p := p.extended (s)
+							if is_valid_redirection (p.name, ic.item.name) then
+								unset_redirection (ic.item.name)
+								if has_cleanup then
+									from
+										p := ic.item.parent
+									until
+										p = Void
+									loop
+										create d.make_with_path (p)
+										if d.exists and then d.is_empty then
+											localized_print ({STRING_32} "[INFO] Cleaning/deleting empty folder %"" + d.path.name + {STRING_32} "%"%N")
+											d.recursive_delete
+											p := p.parent
+											if not p.name.has_substring (a_redirection_folder) then
+												p := Void
+											end
+										else
+											p := Void
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			else
+				localized_print_error ({STRING_32} "[ERROR] Directory %"" + d.path.name + {STRING_32} "%" does not exist!%N")
+			end
 		end
 
 	set_redirection (a_target_ecf: READABLE_STRING_32; a_redirection: READABLE_STRING_32; a_update: BOOLEAN)
@@ -205,10 +361,10 @@ feature -- Change
 					l_continue := True
 				else
 					if is_valid_redirection (a_target_ecf, a_redirection) then
-						localized_print_error ("Redirection already exists!%N")
+						localized_print_error ("[WARNING] Redirection already exists!%N")
 						localized_print_error ("To update it, please use flag [--force].%N")
 					else
-						localized_print_error ("Redirection already exists but is not valid!%N")
+						localized_print_error ("[WARNING] Redirection already exists but is not valid!%N")
 						localized_print_error ("To update it, please delete it first.%N")
 					end
 				end
@@ -223,7 +379,7 @@ feature -- Change
 --					l_target := evaluated_location (a_target_ecf)
 					conf_loader.retrieve_configuration (evaluated_location (a_target_ecf))
 					if conf_loader.is_error then
-						io.error.put_string ({STRING_32} "Unable to get data from target <" + a_target_ecf + ">.%N")
+						io.error.put_string ({STRING_32} "[WARNING] Unable to get data from target <" + a_target_ecf + ">.%N")
 						l_location := a_target_ecf
 					else
 						if attached conf_loader.last_redirection as l_redir then
@@ -255,7 +411,7 @@ feature -- Change
 						end
 					end
 				else
-					io.error.put_string ({STRING_32} "Missing redirection location.%N")
+					io.error.put_string ({STRING_32} "[ERROR] Missing redirection location.%N")
 					has_error := True
 				end
 
@@ -268,9 +424,9 @@ feature -- Change
 								redir.store
 								has_error := not redir.store_successful
 								if has_error then
-									print ("Redirection creation: failed!%N")
+									localized_print_error ("[ERROR] Redirection creation: failed!%N")
 								else
-									print ("Redirection created: ")
+									print ("[OK] Redirection created: ")
 									localized_print (a_redirection)
 									print (" -> ")
 									if a_target_ecf.same_string_general (l_location) then
@@ -284,7 +440,7 @@ feature -- Change
 								end
 							end
 						else
-							print ("Redirection already exists!%N")
+							print ("[WARNING] Redirection already exists!%N")
 							print ("Use flag [--force] to force the update!%N")
 							has_error := True
 						end
@@ -306,9 +462,9 @@ feature -- Change
 			if attached conf_loader.last_redirection as l_redir then
 				create f.make_with_name (a_redirection)
 				f.delete
-				print ("Redirection deleted: OK!%N")
+				localized_print ({STRING_32} "[OK] Redirection %"" + a_redirection + {STRING_32} "%" deleted!%N")
 			else
-				print ("This is not a redirection: file not deleted!%N")
+				localized_print_error ({STRING_32} "[ERROR] File %"" + a_redirection + {STRING_32} "%" is not a redirection: file not deleted!%N")
 				has_error := True
 			end
 		end
@@ -334,11 +490,11 @@ feature -- Change
 						end
 					end
 				else
-					localized_print_error ({STRING_32} "File `" + a_redirection + "' is NOT a valid redirection.%N")
+					localized_print_error ({STRING_32} "[ERROR] File `" + a_redirection + "' is NOT a valid redirection.%N")
 					has_error := True
 				end
 			else
-				localized_print_error ({STRING_32} "File `" + a_redirection + "' is NOT a redirection.%N")
+				localized_print_error ({STRING_32} "[ERROR] File `" + a_redirection + "' is NOT a redirection.%N")
 				has_error := True
 			end
 		end
@@ -422,7 +578,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

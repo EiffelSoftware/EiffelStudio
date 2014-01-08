@@ -1047,13 +1047,18 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_select_row_visible: BOOLEAN
 			l_list: like choice_list
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_visible_row: detachable EV_GRID_ROW
 		do
 			l_list := choice_list
 			if l_list.column_count > 0 and then l_list.row_count > 0 then
+					-- When resizing, if the first selected row, if any, is currently visible,
+					-- we will ensure it stays visible during resizing.
 				if l_list.is_displayed and then l_list.has_selected_row then
-					l_rows := l_list.selected_rows
-					l_select_row_visible := l_list.visible_row_indexes.has (l_rows.first.index)
+					l_visible_row := l_list.selected_rows.first
+					if not l_list.visible_row_indexes.has (l_visible_row.index) then
+							-- Not visible, we do not force it to be shown during resizing.
+						l_visible_row := Void
+					end
 				end
 				i := l_list.column (1).required_width_of_item_span (1, l_list.row_count) + 3
 				if l_list.vertical_scroll_bar.is_displayed then
@@ -1069,8 +1074,9 @@ feature {NONE} -- Implementation
 						l_list.column (1).set_width (i)
 					end
 				end
-				if l_select_row_visible then
-					l_rows.first.ensure_visible
+					-- Selected row was already visible, let's make sure it is still visible.
+				if l_visible_row /= Void then
+					l_visible_row.ensure_visible
 				end
 			end
 		end
@@ -1449,7 +1455,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

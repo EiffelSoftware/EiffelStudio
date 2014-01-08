@@ -101,6 +101,21 @@ feature -- Basic operations
 			Result := Current
 		end
 
+	parse_dynamic (s: READABLE_STRING_GENERAL): STRING_32
+			-- Parse string `s' by replacing each pattern ":<name>" with "?".
+		require
+			s_not_void: s /= Void
+		do
+			wipe_out
+			append_string_general (s)
+			replace_dynamic
+			if handle.execution_type.is_tracing then
+				handle.execution_type.trace_output.putstring (Current.as_string_8)
+				handle.execution_type.trace_output.new_line
+			end
+			Result := Current
+		end
+
 	get_value (obj: detachable ANY; str: STRING_32)
 			-- Retrieve string value of `obj' and put in `str'.
 		require
@@ -318,6 +333,21 @@ feature -- Basic operations
 
 	replace
 			-- Replace all occurrences of :key by `ht.item (":key")'
+		do
+			replace_statement (False)
+		end
+
+feature {NONE} -- Implementation
+
+	replace_dynamic
+			-- Replace all occurrences of :key by ?.
+		do
+			replace_statement (True)
+		end
+
+	replace_statement (a_dynamic: BOOLEAN)
+			-- Replace all occurrences of :key by `ht.item (":key")'.
+			-- If `a_dynamic', replace :key by ?.
 		local
 			l_new_string: detachable like Current
 			c: CHARACTER_32
@@ -344,7 +374,11 @@ feature -- Basic operations
 						old_index := index
 						index := index + 1
 						go_after_identifier
-						replacement_string (substring (old_index + 1, index - 1), l_new_string)
+						if not a_dynamic then
+							replacement_string (substring (old_index + 1, index - 1), l_new_string)
+						else
+							l_new_string.append_character ('?')
+						end
 						old_index := index
 					elseif index < count then
 						index := index_of (c, index + 1)
@@ -489,14 +523,14 @@ feature {NONE} -- Status setting
 			-- Reading complex value?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -309,9 +309,9 @@ feature {NONE} -- Implementation
 			if db_spec.support_proc then
 				private_selection.set_map_name (name, {STRING_32} "name")
 				private_selection.query (Select_exists)
+				private_selection.unset_map_name ({STRING_32} "name")
 				p_exists := handle.status.found
 				private_selection.load_result
-				private_selection.unset_map_name ({STRING_32} "name")
 				l_cursor := private_selection.cursor
 				check l_cursor /= Void end -- implied by `private_selection.query''s postcondition
 				create tuple.copy (l_cursor)
@@ -540,7 +540,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

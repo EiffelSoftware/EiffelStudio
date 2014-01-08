@@ -43,48 +43,22 @@ feature --Access
 			Result := hash.has (id_from_original_and_context (original, a_context))
 		end
 
-	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
-			-- does the dictionary have an entry with `original_singular', `original_plural'
-			-- and does this entry have the `plural_number'-th plural translation
-		local
-			entry: detachable I18N_DICTIONARY_ENTRY
-			l_trans: detachable ARRAY [STRING_32]
-			l_id: like id_from_original_and_context
+	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
+			-- get the singular translation of `original'
 		do
-			l_id := id_from_original_and_context (original_singular, a_context)
-			if hash.has (l_id) then
-				entry := hash.item (l_id)
-				check entry /= Void end -- Implied from `hash.has (l_id)'
-				if entry.has_plural then
-					l_trans := entry.plural_translations
-					check l_trans /= Void end -- Implied by `entry.has_plural'
-					Result := l_trans.item (reduce (plural_number)) /= Void
-				end
+			if attached hash.item (id_from_original_and_context (original, a_context)) as l_entry then
+				Result := l_entry.singular_translation
 			end
 		end
 
-	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
-			-- get the singular translation of `original'
-		local
-			entry: detachable I18N_DICTIONARY_ENTRY
-		do
-			entry := hash.item (id_from_original_and_context (original, a_context))
-			check entry /= Void end -- Implied from precondition
-			Result := entry.singular_translation
-		end
-
-	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- get the `plural_number'-th plural translation of entry
 			-- with `original_singular' and `original_plural'
-		local
-			entry: detachable I18N_DICTIONARY_ENTRY
-			l_trans: detachable ARRAY [STRING_32]
 		do
-			entry := hash.item (id_from_original_and_context (original_singular, a_context))
-			check entry /= Void end -- Implied from precondition
-			l_trans := entry.plural_translations
-			check l_trans /= Void end -- Implied by `entry.has_plural'
-			Result := l_trans.item (reduce (plural_number))
+				-- Per inherited precondition
+			if attached hash.item (id_from_original_and_context (original_singular, a_context)) as l_entry and then l_entry.has_plural then
+				Result := l_entry.plural_translations.item (reduce (plural_number))
+			end
 		end
 
 feature --Information
@@ -103,7 +77,7 @@ feature {NONE} --Implementation
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

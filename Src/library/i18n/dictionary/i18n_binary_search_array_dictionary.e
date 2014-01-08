@@ -29,9 +29,8 @@ feature {NONE} --Creation
 			-- create the datastructure
 		do
 			Precursor (a_plural_form)
-			create array.make_filled (Void, min_index, default_number_of_entries)
+			create array.make_empty
 			current_index := 1
-			max_index := default_number_of_entries
 		end
 
 feature --Insertion
@@ -42,12 +41,7 @@ feature --Insertion
 			-- auto resize when the capacity of `array' is filled
 			-- without duplicate check, let insertion_sort do it
 		do
-			if last_index < default_number_of_entries then
-				array.put (a_entry, current_index)
-			else
-				array.force (a_entry, current_index)
-				max_index := max_index + 1
-			end
+			array.force (a_entry, current_index)
 			current_index := current_index + 1
 			search_index_and_insert
 		end
@@ -65,31 +59,30 @@ feature {NONE} -- help functions
 			cur_entry, l_entry1, l_entry2: detachable I18N_DICTIONARY_ENTRY
 			mid_entry: detachable I18N_DICTIONARY_ENTRY
 			right_index: INTEGER
+			l_last_index: INTEGER
 		do
 				-- one element case will do nothing
-			if (last_index > 1) then
-				cur_entry := array.item (last_index)
-				check cur_entry_not_void: cur_entry /= Void end
+			l_last_index := current_index - 1
+			if (l_last_index > 1) then
+				cur_entry := array.item (l_last_index)
 				l_entry1 := array.item (1)
-				l_entry2 := array.item (last_index - 1)
-				check l_entry_exists: l_entry1 /= Void and then l_entry2 /= Void end -- Implied by `last_index > 1'
+				l_entry2 := array.item (l_last_index - 1)
 				if cur_entry < l_entry1 then
 					right_index := 1
 				elseif cur_entry > l_entry2 then
-					right_index := last_index
+					right_index := l_last_index
 				else
-						--cur_entry < array.item (last_index-1) and cur_entry > array.item(1)
+						--cur_entry < array.item (l_last_index-1) and cur_entry > array.item(1)
 						-- search the right index for the last inserted elem
 						-- with binary search
 					from
 						left := 2
-						right := last_index - 2
+						right := l_last_index - 2
 					until
 						left > right
 					loop
 						middle := ((left + right).as_natural_32 |>> 1).as_integer_32
 						mid_entry := array.item (middle)
-						check mid_entry_exists: mid_entry /= Void end
 						if cur_entry < mid_entry then
 							right := middle - 1
 						else
@@ -99,8 +92,8 @@ feature {NONE} -- help functions
 					right_index := left
 				end
 					-- put the last inserted elem in the right index
-				if right_index /= last_index then
-					array.subcopy (array, right_index, last_index - 1, right_index + 1)
+				if right_index /= l_last_index then
+					array.subcopy (array, right_index, l_last_index - 1, right_index + 1)
 					array.put (cur_entry, right_index)
 				end
 			end
@@ -120,16 +113,18 @@ feature {NONE} -- help functions
 			m_string: STRING_32
 			found: BOOLEAN
 			l_id: STRING_32
+			l_last_index: INTEGER
 		do
 			from
+				l_last_index := current_index - 1
 				left := min_index
-				right := last_index
+				right := l_last_index
 				l_id := a_id.as_string_32
 			invariant
-				right < last_index
-						implies (attached array.item (right + 1) as l_item1 and then attached array.item (last_index) as l_item2 and then l_item1 <= l_item2)
-				left <= last_index and left > min_index
-						implies (attached array.item (left - 1) as l_item3 and then attached array.item (last_index) as l_item4 and then l_item3 <= l_item4)
+				right < l_last_index
+						implies (attached array.item (right + 1) as l_item1 and then attached array.item (l_last_index) as l_item2 and then l_item1 <= l_item2)
+				left <= l_last_index and left > min_index
+						implies (attached array.item (left - 1) as l_item3 and then attached array.item (l_last_index) as l_item4 and then l_item3 <= l_item4)
 			until
 				left > right or found
 			loop
@@ -163,7 +158,7 @@ feature {NONE} -- help functions
 feature -- Query
 
 	has_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
-			-- does the dictionary have this entry?
+			-- Does the dictionary have this entry?
 			-- use binary search algorithm
 			-- require `array'is sorted
 			-- use has_index has a help function
@@ -176,51 +171,26 @@ feature -- Query
 			end
 		end
 
-	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
-			-- <Precursor>
-		local
-			entry: detachable I18N_DICTIONARY_ENTRY
-			index: INTEGER
-			l_trans: detachable ARRAY [STRING_32]
-		do
-			index := has_index (id_from_original_and_context (original_singular, a_context))
-			if index /= -1 then
-				entry := array.item (index)
-				check entry /= Void end -- Implied from `has_index'
-				l_trans := entry.plural_translations
-				if l_trans /= Void then
-					Result := l_trans.item (reduce (plural_number)) /= Void
-				end
-			end
-		end
-
-	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Singular form
 		local
-			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
 		do
 			index := has_index (id_from_original_and_context (original, a_context))
-			check valid_index: index /= -1 end -- Implied by precondition.
-			entry := array.item (index)
-			check entry_not_void: entry /= Void end
-			Result := entry.singular_translation
+			if index /= -1 and then attached array.item (index) as l_entry then
+				Result := l_entry.singular_translation
+			end
 		end
 
-	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Plural form
 		local
-			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
-			l_trans: detachable ARRAY [STRING_32]
 		do
 			index := has_index (id_from_original_and_context (original_singular, a_context))
-			check valid_index: index /= -1 end -- Implied by precondition.
-			entry := array.item (index)
-			check entry_not_void: entry /= Void end -- Implied by precondition of `extend'
-			l_trans := entry.plural_translations
-			check l_trans /= Void end
-			Result := l_trans.item (reduce (plural_number))
+			if index /= -1 and then attached array.item (index) as l_entry and then l_entry.has_plural then
+				Result := l_entry.plural_translations.item (reduce (plural_number))
+			end
 		end
 
 feature --Information
@@ -232,31 +202,19 @@ feature --Information
 
 feature {NONE} -- Implementation
 
-	array: ARRAY [detachable I18N_DICTIONARY_ENTRY]
+	array: ARRAY [I18N_DICTIONARY_ENTRY]
 
 	min_index: INTEGER = 1
-
-	max_index: INTEGER
-			-- should be updated after it is equal to `default_number_of_entries'
-
-	last_index: INTEGER
-			--actually last_index is equal to `count'
-		do
-			Result := current_index - 1
-		end
 
 	current_index: INTEGER
 			-- the index which is to be filled next
 
-	default_number_of_entries: INTEGER = 50
-
 invariant
 	count_equal_current_index: count = current_index - 1
-	count_equal_last_index: count = last_index
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

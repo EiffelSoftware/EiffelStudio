@@ -345,8 +345,8 @@ feature {NONE} -- Data access
 				original_plural:=random.item.out
 				output_file.put_string ("get data iteration " + i.out + ": " + "%N")
 
-				if t.has (singular) then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.singular (singular)+"%N")
+				if attached t.singular (singular) as l_singular then
+					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
 				else
 					output_file.put_string ("not has(" + singular.as_string_8 + "): "+ "%N")
 				end
@@ -360,10 +360,10 @@ feature {NONE} -- Data access
 				until
 					j>10
 				loop
-					if t.has_plural (singular,original_plural, j.as_integer_32) then
+					if attached t.plural (singular,original_plural, j) as l_plural then
 						output_file.put_string ("get_plural (" + singular.as_string_8 + ","
 												+ original_plural.as_string_8 + "," + j.out +"): "
-												+ t.plural (singular, original_plural, j.as_integer_32)+"%N")
+												+ l_plural +"%N")
 
 					else
 
@@ -409,8 +409,8 @@ feature {NONE} -- Data access
 				output_file.put_string ("get_data_iteration " + i.out + ": " + "%N")
 
 
-				if t.has (singular) then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ t.singular (singular)+"%N")
+				if attached t.singular (singular) as l_singular then
+					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
 				else
 					output_file.put_string (" not has_singular(" + singular.as_string_8 + ") %N ")
 				end
@@ -423,9 +423,9 @@ feature {NONE} -- Data access
 				until
 					j>10
 				loop
-					if t.has_plural (singular,original_plural, j.as_integer_32) then
+					if attached t.plural (singular,original_plural, j) as l_plural then
 						output_file.put_string ("get_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +"): "
-						+ t.plural (singular, original_plural, j.as_integer_32)+"%N")
+						+ l_plural +"%N")
 
 					else
 
@@ -458,7 +458,7 @@ feature {NONE} -- access
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

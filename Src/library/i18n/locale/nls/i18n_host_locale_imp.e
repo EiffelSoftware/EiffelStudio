@@ -24,12 +24,16 @@ feature -- Creation
 			Result.set_id (lcid_tools.lcid_to_locale_id (current_lcid))
 		end
 
-	create_locale_info (locale: I18N_LOCALE_ID):I18N_LOCALE_INFO
+	create_locale_info (locale: I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- fill in
 		do
 			current_lcid := lcid_tools.locale_id_to_lcid (locale)
+				-- We are querying another locale than the `user_locale' we therefore
+				-- any locale setting.
+			is_overriding_current_user_setting := True
 			Result := fill
 			Result.set_id (locale)
+			is_overriding_current_user_setting := False
 		end
 
 feature -- Information
@@ -394,7 +398,7 @@ feature {NONE} -- Transformation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

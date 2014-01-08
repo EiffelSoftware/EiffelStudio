@@ -34,7 +34,7 @@ feature -- Tests
 				count := count + 1
 				print (cursor.item)
 			end
-
+			query.close
 			assert ("Correct count.", count = 4)
 		end
 

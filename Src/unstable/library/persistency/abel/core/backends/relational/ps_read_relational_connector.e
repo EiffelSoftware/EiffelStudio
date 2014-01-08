@@ -17,12 +17,32 @@ feature {PS_ABEL_EXPORT} -- Access
 
 	stored_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- The type string for all objects and collections stored in `Current'.
+		local
+			connection: PS_SQL_CONNECTION
+			internal: INTERNAL
 		do
-			-- Note to implementors: It is highly recommended to cache the result, and
-			-- refresh it during a `retrieve' operation (or not at all if the result
-			-- is always stable).
-			fixme ("to implement")
-			create Result.make (0)
+			if attached cached_types as res then
+				Result := res
+			else
+				connection := database.acquire_connection
+
+				fixme ("Support for SQLite.")
+				connection.execute_sql ("SHOW TABLES")
+
+				create internal
+				create Result.make (10)
+
+				across
+					connection as cursor
+				loop
+					if internal.dynamic_type_from_string (cursor.item [1]) > 0 then
+						Result.extend (cursor.item [1])
+					end
+				end
+				database.release_connection (connection)
+				cached_types := Result
+
+			end
 		end
 
 feature {PS_ABEL_EXPORT} -- Status report
@@ -127,4 +147,8 @@ feature {NONE} -- Initialization
 	last_inserted_object: detachable PS_BACKEND_OBJECT
 
 	database_mapping: PS_DATABASE_MAPPING
+
+
+	cached_types: detachable like stored_types
+
 end

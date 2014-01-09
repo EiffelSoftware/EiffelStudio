@@ -69,7 +69,7 @@ feature -- Tests
 			criteria_tests.test_criteria_agents_and_predefined
 		end
 
-	test_primary
+	test_managed_primary_key_generation
 			-- Test if primary key generation works.
 		local
 			flat: FLAT_CLASS_2
@@ -128,8 +128,8 @@ feature -- Tests
 			assert ("count is two", count = 2)
 		end
 
-	test_auto_primary
-			-- Check if a generated primary key gets stored in an object during insert.
+	test_managed_primary_key_update
+			-- Check if a generated primary key gets stored in a managed object during insert.
 		local
 			transaction: PS_TRANSACTION
 			object: FLAT_CLASS_2
@@ -163,12 +163,34 @@ feature -- Tests
 			transaction.commit
 		end
 
+	test_reject_nonzero_primary
+			-- Test if an insert on a managed object gets rejected
+			-- when the user sets a value manually.
+		local
+			transaction: detachable PS_TRANSACTION
+			object: FLAT_CLASS_2
+		do
+			create object.make (42, "value")
+			object.set_id (42)
+
+			repository.wipe_out
+			transaction := repository.new_transaction
+			transaction.insert (object)
+
+			assert ("has_error", transaction.has_error)
+			assert ("correct_cleanup", not transaction.is_active and not repository.active_transactions.has (transaction))
+		rescue
+			if attached transaction then
+				transaction.rollback
+			end
+		end
+
 	test_manual_primary
 			-- Check what happens when the user specifies
 			-- a primary key on its own.
 		local
 			transaction: PS_TRANSACTION
-			object: FLAT_CLASS_2
+			object: FLAT_CLASS_3
 		do
 			create object.make (42, "value")
 			object.set_id (123)
@@ -179,7 +201,93 @@ feature -- Tests
 			print (object)
 			transaction.commit
 			assert ("same_primary", object.id = 123)
+		end
 
+	test_managed_multi_insert
+			-- Test multiple inserts with the same managed object, which should
+			-- be handled as update.
+		local
+			transaction: PS_TRANSACTION
+			object: FLAT_CLASS_3
+			i: INTEGER
+
+			query: PS_QUERY [FLAT_CLASS_3]
+		do
+			from
+				i := 1
+				create object.make (42, "value")
+				repository.wipe_out
+				transaction := repository.new_transaction
+			until
+				i > 10
+			loop
+				transaction.insert (object)
+				i := i + 1
+			end
+			transaction.commit
+
+			create query.make
+
+			repository.execute_query (query)
+
+			across
+				query as cursor
+			from
+				i := 0
+			loop
+				assert ("same_string_value", cursor.item.string_value ~ object.string_value)
+				assert ("same_int_value", cursor.item.int_value = object.int_value)
+				i := i + 1
+			end
+			query.close
+
+			assert ("correct_count", i = 1)
+		end
+
+	test_unmanaged_multi_insert
+			-- Test multiple inserts with the same, unmanaged object.
+		local
+			transaction: PS_TRANSACTION
+			object: FLAT_CLASS_3
+			i: INTEGER
+
+			query: PS_QUERY [FLAT_CLASS_3]
+			control: ARRAYED_LIST [BOOLEAN]
+		do
+			from
+				i := 1
+				create object.make (42, "value")
+				repository.wipe_out
+				transaction := repository.new_transaction
+			until
+				i > 10
+			loop
+				object.set_id (i)
+				transaction.insert (object)
+				i := i + 1
+			end
+			transaction.commit
+
+			create query.make
+
+			repository.execute_query (query)
+
+			across
+				query as cursor
+			from
+				i := 0
+				create control.make_filled (10)
+			loop
+				assert ("same_string_value", cursor.item.string_value ~ object.string_value)
+				assert ("same_int_value", cursor.item.int_value = object.int_value)
+				assert ("in_range", 1 <= cursor.item.id and cursor.item.id <= 10)
+				control [cursor.item.id] := True
+				i := i + 1
+			end
+			query.close
+
+			assert ("correct_count", i = 10)
+			assert ("different", across control as cursor all cursor.item = True end)
 		end
 
 feature {NONE} -- Initialization

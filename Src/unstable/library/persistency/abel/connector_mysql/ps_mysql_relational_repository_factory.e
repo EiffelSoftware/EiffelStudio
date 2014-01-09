@@ -34,64 +34,37 @@ feature -- Access
 
 feature -- Factory function
 
-	new_repository: PS_DEFAULT_REPOSITORY
+	new_repository: PS_RELATIONAL_REPOSITORY
 			-- Create a new repository.
 		local
-			connection: PS_SQL_CONNECTION
-			sql: STRING
-			primary_ok: HASH_TABLE [BOOLEAN, STRING]
+			connector: PS_RELATIONAL_CONNECTOR
+			write_manager: PS_WRITE_MANAGER
 			internal: INTERNAL
-			type_id: INTEGER
 		do
-			check attached {PS_DEFAULT_REPOSITORY } Precursor as res then
-				Result := res
+			connector := new_connector
+			connector.set_transaction_isolation (anomaly_settings)
 
-				check
-						-- Safe because `Precursor' calls `new_connector'.
-					attached internal_database as db
-						-- Safe because of precondition.
-					and then attached database as db_name
+			internal_plugins.do_all (agent connector.add_plugin)
 
-				then
+			create write_manager.make (type_factory, connector)
 
-						-- Find out which tables don't have a primary key and
-						-- thus have to be treated like an expanded type.
+			internal_handlers.do_all (agent {PS_HANDLER}.set_write_manager (write_manager))
+			internal_handlers.do_all (agent write_manager.add_handler)
 
-					create primary_ok.make (1)
-					create internal
+			create Result.make_from_factory (
+				connector,
+				type_factory,
+				write_manager,
+				internal_handlers,
+				anomaly_settings.twin)
 
-					connection := db.acquire_connection
-					sql := "[
-						SELECT DISTINCT table_name
-						FROM information_schema.columns
-						WHERE column_key = 'PRI' and table_schema = '
-						]"
-						+ db_name + "'"
-
-					connection.execute_sql (sql)
-
-					across
-						connection as cursor
-					loop
-						primary_ok.extend (True, cursor.item[1])
-					end
-
-					connection.execute_sql ("SHOW TABLES")
-
-					across
-						connection as cursor
-					loop
-						if not primary_ok.has (cursor.item [1]) then
-
-							type_id := internal.dynamic_type_from_string (cursor.item [1].as_upper)
-
-							if type_id > 0 then
-								Result.override_expanded_type (type_factory.create_metadata_from_type_id (type_id).type)
-							end
-						end
-					end
-					connection.commit
-					db.release_connection (connection)
+			across
+				connector.stored_types as cursor
+			from
+				create internal
+			loop
+				if not attached mapping.primary_key_column (cursor.item.as_lower) then
+					Result.override_expanded_type (internal.type_of_type (internal.dynamic_type_from_string (cursor.item)))
 				end
 			end
 		end
@@ -106,7 +79,9 @@ feature {NONE} -- Implementation
 		do
 			l_db := new_internal_database
 			internal_database := l_db
-			create Result.make (l_db, mapping)
+			check attached database as db_name then
+				create Result.make (l_db, mapping, db_name)
+			end
 		ensure then
 			db_set: attached internal_database
 		end

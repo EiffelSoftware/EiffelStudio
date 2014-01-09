@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		local
 			reflector: REFLECTOR
-			stored_types: LIST [READABLE_STRING_GENERAL]
+			stored_types: READABLE_INDEXABLE [IMMUTABLE_STRING_8]
 			subtypes_list: ARRAYED_LIST [PS_TYPE_METADATA]
 
 			query_type, l_type: PS_TYPE_METADATA

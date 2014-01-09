@@ -23,7 +23,7 @@ feature {PS_ABEL_EXPORT} -- Backend capabilities
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	stored_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
+	stored_types: ARRAYED_LIST [IMMUTABLE_STRING_8]
 			-- <Precursor>
 		do
 			create Result.make (database.count + collection_database.count)

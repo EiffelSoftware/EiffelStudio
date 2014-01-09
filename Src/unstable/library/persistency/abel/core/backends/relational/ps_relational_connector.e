@@ -15,6 +15,9 @@ inherit
 		end
 
 	PS_REPOSITORY_CONNECTOR
+		undefine
+			is_object_type_supported
+		end
 
 create
 	make
@@ -68,7 +71,6 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 feature {PS_ABEL_EXPORT} -- Write operations
 
-
 	delete (objects: LIST [PS_BACKEND_ENTITY]; transaction: PS_INTERNAL_TRANSACTION)
 			-- <Precursor>
 		do
@@ -93,13 +95,14 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		local
 			connection: PS_SQL_CONNECTION
 		do
-
-			fixme ("to implement.")
 			connection := database.acquire_connection
-			connection.execute_sql ("DELETE FROM test_person; DELETE FROM flat_class_2;")
+			across
+				stored_types as cursor
+			loop
+				connection.execute_sql ("DELETE FROM " + cursor.item.as_lower)
+			end
 			connection.commit
 			database.release_connection (connection)
---			check not_implemented: False end
 		end
 
 feature {PS_REPOSITORY_CONNECTOR} -- Implementation
@@ -118,6 +121,8 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			sql_update_list: STRING
 
 			connection: PS_SQL_CONNECTION
+
+			non_zero_exception: PS_INTERNAL_ERROR
 		do
 			check no_references: objects.count = 1 end
 
@@ -131,6 +136,18 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			from
 					-- Add the previously generated primary key to the object.
 				if attached database_mapping.primary_key_column (table) as id_column then
+
+					if
+						attached object.value_lookup (id_column) as val
+						and then (val.to_integer /= 0 and val.to_integer /= object.primary_key)
+					then
+						create non_zero_exception
+						non_zero_exception.set_description (
+							"The managed object of type " + object.type.name +
+							" contains a user-generated primary key.")
+						non_zero_exception.raise
+					end
+
 					object.add_attribute (id_column, object.primary_key.out, "INTEGER_32")
 				end
 
@@ -215,10 +232,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make (a_database: like database; mapping: like database_mapping)
+	make (a_database: like database; mapping: like database_mapping; db_name: STRING)
 			-- <Precursor>
 		do
-			Precursor (a_database, mapping)
+			Precursor (a_database, mapping, db_name)
 			after_write_action := agent set_primary_key
 		end
 

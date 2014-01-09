@@ -15,7 +15,7 @@ create
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	stored_types: LIST [READABLE_STRING_GENERAL]
+	stored_types: LIST [IMMUTABLE_STRING_8]
 			-- <Precursor>
 		do
 			Result := db_metadata_manager.all_types

@@ -180,7 +180,8 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 
 	is_expanded (type: TYPE [detachable ANY]): BOOLEAN
 			-- Is `type' expanded?
-		deferred
+		do
+			Result := type.is_expanded
 		ensure
 			correct: type.is_expanded implies Result
 		end
@@ -332,6 +333,13 @@ feature {NONE} -- Implementation
 
 	max_transaction_id: INTEGER
 			-- The maximum transaction id.
+
+	initialize
+			-- Initialize some data structures.
+		do
+			create internal_active_queries.make (1)
+			create internal_active_transactions.make (1)
+		end
 
 invariant
 	valid_batch_size: batch_retrieval_size > 0 or batch_retrieval_size = infinite_batch_size

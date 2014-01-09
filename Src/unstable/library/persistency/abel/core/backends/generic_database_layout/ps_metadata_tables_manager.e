@@ -65,7 +65,7 @@ feature {PS_ABEL_EXPORT} -- Access - Class
 			Result := class_name_to_key_map [class_name]
 		end
 
-	all_types: ARRAYED_LIST [READABLE_STRING_GENERAL]
+	all_types: ARRAYED_LIST [IMMUTABLE_STRING_8]
 			-- Get all types in the database.
 		do
 			fixme ("This also returns some basic types which are sometimes just present as attributes of other objects.")

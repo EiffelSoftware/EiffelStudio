@@ -13,7 +13,7 @@ inherit
 
 feature {PS_ABEL_EXPORT} -- Access
 
-	stored_types: LIST [READABLE_STRING_GENERAL]
+	stored_types: READABLE_INDEXABLE [IMMUTABLE_STRING_8]
 			-- The type string for all objects and collections stored in `Current'.
 		deferred
 			-- Note to implementors: It is highly recommended to cache the result, and

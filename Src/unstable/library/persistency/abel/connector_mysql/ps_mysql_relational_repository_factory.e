@@ -10,7 +10,9 @@ class
 inherit
 	PS_MYSQL_REPOSITORY_FACTORY
 		redefine
-			new_connector, make_uninitialized
+			new_connector,
+			new_repository,
+			make_uninitialized
 		end
 
 create
@@ -30,35 +32,93 @@ feature -- Access
 	mapping: PS_DATABASE_MAPPING
 			-- A mapping table to override naming and primary key defaults.
 
+feature -- Factory function
+
+	new_repository: PS_DEFAULT_REPOSITORY
+			-- Create a new repository.
+		local
+			connection: PS_SQL_CONNECTION
+			sql: STRING
+			primary_ok: HASH_TABLE [BOOLEAN, STRING]
+			internal: INTERNAL
+			type_id: INTEGER
+		do
+			check attached {PS_DEFAULT_REPOSITORY } Precursor as res then
+				Result := res
+
+				check
+						-- Safe because `Precursor' calls `new_connector'.
+					attached internal_database as db
+						-- Safe because of precondition.
+					and then attached database as db_name
+
+				then
+
+						-- Find out which tables don't have a primary key and
+						-- thus have to be treated like an expanded type.
+
+					create primary_ok.make (1)
+					create internal
+
+					connection := db.acquire_connection
+					sql := "[
+						SELECT DISTINCT table_name
+						FROM information_schema.columns
+						WHERE column_key = 'PRI' and table_schema = '
+						]"
+						+ db_name + "'"
+
+					connection.execute_sql (sql)
+
+					across
+						connection as cursor
+					loop
+						primary_ok.extend (True, cursor.item[1])
+					end
+
+					connection.execute_sql ("SHOW TABLES")
+
+					across
+						connection as cursor
+					loop
+						if not primary_ok.has (cursor.item [1]) then
+
+							type_id := internal.dynamic_type_from_string (cursor.item [1].as_upper)
+
+							if type_id > 0 then
+
+							print (cursor.item[1])
+
+								Result.override_expanded_type (type_factory.create_metadata_from_type_id (type_id).type)
+							end
+						end
+					end
+					connection.commit
+					db.release_connection (connection)
+				end
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	new_connector: PS_RELATIONAL_CONNECTOR
 			-- <Precursor>
 		local
-			l_host: STRING
-			l_port: INTEGER
-			mysql_database: PS_MYSQL_DATABASE
+			l_db: PS_SQL_DATABASE
 		do
-			if attached host as h then
-				l_host := h
-			else
-				l_host := default_host
-			end
+			l_db := new_internal_database
+			internal_database := l_db
+			create Result.make (l_db, mapping)
+		ensure then
+			db_set: attached internal_database
+		end
 
-			if port > 0 then
-				l_port := port
-			else
-				l_port := default_port
-			end
-
-			check
-				attached user as l_user
-				and attached password as l_password
-				and attached database as l_database
-			then
-				create mysql_database.make (l_user, l_password, l_database, l_host, l_port)
-				create Result.make (mysql_database, mapping)
-			end
+	internal_database: detachable PS_SQL_DATABASE
+			-- An internal database.
+		note
+			option: stable
+		attribute
 		end
 
 end

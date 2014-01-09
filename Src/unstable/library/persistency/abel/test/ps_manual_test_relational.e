@@ -38,6 +38,28 @@ feature -- Tests
 			assert ("Correct count.", count = 4)
 		end
 
+	test_expanded_override
+			-- Test if a class without a primary key is treated like an expanded type.
+		local
+			transaction: PS_TRANSACTION
+			query: PS_QUERY [TEST_PERSON]
+		do
+			repository.wipe_out
+			populate
+
+			create query.make
+			repository.execute_query (query)
+			assert ("No error", not query.has_error)
+
+			across
+				query as cursor
+			loop
+				assert ("is_expanded", repository.is_expanded (cursor.item.generating_type))
+			end
+			query.close
+			assert ("no_error", not query.has_error)
+		end
+
 	test_criteria
 			-- Test if criteria work.
 		do

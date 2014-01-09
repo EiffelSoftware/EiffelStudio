@@ -181,6 +181,12 @@ feature {PS_ABEL_EXPORT} -- Status Report
 			Result := write_manager.can_handle (object, local_transaction)
 		end
 
+	is_expanded (type: TYPE [detachable ANY]): BOOLEAN
+			-- <Precursor>
+		do
+			Result := type.is_expanded or else expanded_type_override.has (type)
+		end
+
 feature {NONE} -- Initialization
 
 	make_from_factory (
@@ -203,6 +209,16 @@ feature {NONE} -- Initialization
 
 			create internal_active_queries.make (1)
 			create internal_active_transactions.make (1)
+
+			create expanded_type_override.make (0)
+		end
+
+feature {PS_ABEL_EXPORT} -- Initialization
+
+	override_expanded_type (type: TYPE [detachable ANY])
+			-- Treat `type' like an expanded type.
+		do
+			expanded_type_override.extend (True, type)
 		end
 
 feature {PS_ABEL_EXPORT} -- Implementation
@@ -218,6 +234,9 @@ feature {PS_ABEL_EXPORT} -- Implementation
 
 	type_factory: PS_METADATA_FACTORY
 			-- A type factory.
+
+	expanded_type_override: HASH_TABLE [BOOLEAN, TYPE [detachable ANY]]
+			-- A table to override types which should be treated as if expanded.
 
 feature {NONE} -- Implementation
 

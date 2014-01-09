@@ -170,7 +170,7 @@ feature {PS_ABEL_EXPORT} -- Write functions
 			not_ignored: not object.is_ignored
 			not_value_type_or_first: not is_mapping_to_value_type or object.index = 1
 		do
-			if not object.reflector.is_expanded then
+			if not write_manager.transaction.repository.is_expanded (object.type.type) then
 				if not object.is_persistent then
 					write_manager.transaction.identifier_table.extend (object.reflector.object)
 				end

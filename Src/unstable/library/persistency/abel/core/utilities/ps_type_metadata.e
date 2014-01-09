@@ -41,13 +41,13 @@ feature -- Status report
 			Result:= hash_code = other.hash_code
 		end
 
-	is_basic_type: BOOLEAN
-			-- Is `Current' of an ABEL basic type (STRING or expanded types)?
-		do
-			Result := type.is_expanded
-				or type.type_id = ({detachable STRING_8}).type_id or type.type_id = ({detachable STRING_32}).type_id
-				or attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type
-		end
+--	is_basic_type: BOOLEAN
+--			-- Is `Current' of an ABEL basic type (STRING or expanded types)?
+--		do
+--			Result := type.is_expanded
+--				or type.type_id = ({detachable STRING_8}).type_id or type.type_id = ({detachable STRING_32}).type_id
+--				or attached {TYPE [detachable IMMUTABLE_STRING_GENERAL]} type
+--		end
 
 	is_generic_derivation: BOOLEAN
 			-- Does `Current' type have one or more generic parameters?

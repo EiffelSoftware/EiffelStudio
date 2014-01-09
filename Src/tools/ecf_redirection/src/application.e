@@ -92,6 +92,8 @@ feature {NONE} -- Initialization
 								localized_print_error ({STRING_32} "[" + op + "] Too many parameters : " + v + {STRING_32} " -> ERROR!%N")
 								execute_help (op)
 							end
+						elseif op.is_case_insensitive_equal_general ("help") then
+							execute_help (v)
 						else
 							localized_print_error ({STRING_32} "Unsupported operation: " + op + {STRING_32} " -> ERROR!%N")
 							execute_help (op)
@@ -203,6 +205,7 @@ feature -- Change
 				localized_print ("   create <redirection_ecf> <target_ecf>%N")
 				localized_print ("   delete <redirection_ecf>%N")
 				localized_print ("   check  <redirection_ecf> {target_ecf}%N")
+				localized_print ("   shadow/unshadow  <redirection_ecf> {target_ecf}%N")
 			elseif op.is_case_insensitive_equal_general ("create") then
 				localized_print ("usage: ecf_redirection create [options] <redirection_ecf> <target_ecf>%N")
 				localized_print ("   <redirection_ecf> : redirection ecf file%N")
@@ -231,9 +234,10 @@ feature -- Change
 				localized_print ("   <redirection_folder> : redirection folder%N")
 				localized_print ("   <target_folder>      : target folder%N")
 				localized_print ("Undo previous 'shadow' from <redirection_folder> to <target_folder>.%N")
-				localized_print ("Note: only valid redirections will be unset,%N  and if this operation leaves empty folder, they will be deleted only if --cleanup is precised..%N")
+				localized_print ("%NNote: only valid redirections will be unset,%N      and new empty folders will be deleted only if --cleanup is set.%N")
 				localized_print ("%NOptions:%N")
 				localized_print ("   -f|--force: force operation%N")
+				localized_print ("   --cleanup: remove empty folder due to unshadow operation%N")
 			end
 			localized_print ("%NGlobal options:%N")
 			localized_print ("   -v|--verbose: verbose output%N")

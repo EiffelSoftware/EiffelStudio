@@ -178,6 +178,13 @@ feature {PS_ABEL_EXPORT} -- Internal: Status report
 			Result := transaction.identifier_table.search (object) /= 0
 		end
 
+	is_expanded (type: TYPE [detachable ANY]): BOOLEAN
+			-- Is `type' expanded?
+		deferred
+		ensure
+			correct: type.is_expanded implies Result
+		end
+
 	is_root (object: ANY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
 			-- Is `object' a garbage collection root?
 		local
@@ -205,7 +212,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Querying operations
 			valid_transaction_status: transaction.has_error xor transaction.is_active
 			after_if_error: transaction.has_error implies query.is_after
 			can_handle_retrieved_object: not query.is_after implies can_handle (query.result_cache.last)
-			not_after_means_known: (not query.is_after and not transaction.is_readonly) implies (query.generic_type.is_expanded or is_identified (query.result_cache.last, transaction))
+			not_after_means_known: (not query.is_after and not transaction.is_readonly) implies (is_expanded (query.generic_type) xor is_identified (query.result_cache.last, transaction))
 		end
 
 	internal_execute_tuple_query (tuple_query: PS_TUPLE_QUERY [ANY]; transaction: PS_INTERNAL_TRANSACTION)
@@ -236,7 +243,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 		deferred
 		ensure
 			valid_transaction_status: transaction.is_active xor transaction.has_error
-			object_known: not transaction.has_error implies  is_identified (object, transaction) xor object.generating_type.is_expanded
+			object_known: not transaction.has_error implies  is_identified (object, transaction) xor is_expanded (object.generating_type)
 		end
 
 	direct_update (object: ANY; transaction: PS_INTERNAL_TRANSACTION)
@@ -246,7 +253,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 			active: transaction.is_active
 			can_handle_object: can_handle (object)
 			no_error: not transaction.has_error
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			object_known: is_identified (object, transaction)
 		deferred
 		ensure
@@ -261,7 +268,7 @@ feature {PS_ABEL_EXPORT} -- Internal: Write operations
 			active: transaction.is_active
 			can_handle_object: can_handle (object)
 			no_error: not transaction.has_error
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			object_known: is_identified (object, transaction)
 		deferred
 		ensure

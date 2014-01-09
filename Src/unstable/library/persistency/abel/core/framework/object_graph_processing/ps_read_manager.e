@@ -538,7 +538,7 @@ feature {NONE} -- Implementation: Loop body
 				loop
 					object := item (i)
 
-					if not object.is_ignored and not object.type.type.is_expanded then
+					if not object.is_ignored and not transaction.repository.is_expanded (object.type.type) then
 							-- Identify the object with the id_manager
 						transaction.identifier_table.extend (object.reflector.object)
 

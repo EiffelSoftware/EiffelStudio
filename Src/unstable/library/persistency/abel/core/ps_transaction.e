@@ -125,6 +125,14 @@ feature -- Status report
 			Result := repository.is_identified (object, transaction)
 		end
 
+	is_expanded (type: TYPE [detachable ANY]): BOOLEAN
+			-- Is `type' expanded?
+		do
+			Result := repository.is_expanded (type)
+		ensure
+			correct: type.is_expanded implies Result
+		end
+
 	is_root (object: ANY): BOOLEAN
 			-- Is `object' a root object?
 		require
@@ -238,9 +246,9 @@ feature -- Data modification
 		ensure
 			valid_status: has_error xor is_active
 			root_declaration_unchanged: root_declaration_strategy = old root_declaration_strategy
-			persistent: not has_error implies is_persistent (object) xor object.generating_type.is_expanded
+			persistent: not has_error implies is_persistent (object) xor is_expanded (object.generating_type)
 			correct_cleanup: has_error implies not repository.active_transactions.has (Current)
-			root_set: not has_error implies (object.generating_type.is_expanded xor
+			root_set: not has_error implies (is_expanded (object.generating_type) xor
 				(root_declaration_strategy > root_declaration_strategy.new_preserve implies is_root (object)))
 		end
 
@@ -250,7 +258,7 @@ feature -- Data modification
 			active: is_active
 			no_error: not has_error
 			supported: is_supported (object)
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			persistent: is_persistent (object)
 		local
 			retried: BOOLEAN
@@ -271,7 +279,7 @@ feature -- Data modification
 			active: is_active
 			no_error: not has_error
 			supported: is_supported (object)
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			persistent: is_persistent (object)
 			valid_direct_update: to_implement_assertion ("check that all referenced objects are persistent")
 		local
@@ -298,7 +306,7 @@ feature -- Root status modification
 			active: is_active
 			no_error: not has_error
 			supported: is_supported (object)
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			persistent: is_persistent (object)
 			not_root: not is_root (object)
 		do
@@ -317,7 +325,7 @@ feature -- Root status modification
 			active: is_active
 			no_error: not has_error
 			supported: is_supported (object)
-			not_expanded: not object.generating_type.is_expanded
+			not_expanded: not is_expanded (object.generating_type)
 			persistent: is_persistent (object)
 			root: is_root (object)
 		do

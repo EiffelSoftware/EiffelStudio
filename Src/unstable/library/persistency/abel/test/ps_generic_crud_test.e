@@ -41,7 +41,7 @@ feature {PS_CRUD_TESTS}
 			internal_check_equality (object)
 				-- Test successful update
 
-			if not object.generating_type.is_expanded then
+			if not repo_access.is_expanded (object.generating_type) then
 
 				update_operation.call ([object])
 				first_count := count_results

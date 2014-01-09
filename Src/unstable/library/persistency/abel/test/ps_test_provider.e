@@ -116,7 +116,7 @@ feature {PS_TEST_PROVIDER}
 			context := repository.new_transaction
 			context.insert (object)
 
-			if not object.generating_type.is_expanded then
+			if not context.is_expanded (object.generating_type) then
 				assert ("Object is not persistent", context.is_persistent (object))
 				assert ("Object is not root", context.is_root (object))
 			end
@@ -130,7 +130,7 @@ feature {PS_TEST_PROVIDER}
 			assert ("Query is empty", not cursor.after)
 			assert ("Insert-Retrieve cycle failed!", cursor.item.is_deep_equal (object))
 
-			if not object.generating_type.is_expanded then
+			if not context.is_expanded (object.generating_type) then
 
 				assert ("Retrieved object is not root", context.is_root (cursor.item))
 			end
@@ -138,7 +138,7 @@ feature {PS_TEST_PROVIDER}
 			cursor.forth
 			assert ("More than one result.", cursor.after)
 
-			if not object.generating_type.is_expanded then
+			if not context.is_expanded (object.generating_type) then
 
 				if attached update_operation then
 

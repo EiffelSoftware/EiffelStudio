@@ -244,6 +244,17 @@ feature {PS_ABEL_EXPORT} -- Write execution
 			if not collections_to_write.is_empty then
 				connector.write_collections (collections_to_write, transaction)
 			end
+
+			if attached connector.after_write_action as action then
+				across
+					object_storage as cursor
+				loop
+					object := cursor.item
+					if not object.is_ignored then
+						action (cursor.item)
+					end
+				end
+			end
 		end
 
 
@@ -296,6 +307,16 @@ feature {PS_ABEL_EXPORT} -- Write execution
 
 			if not collections_to_write.is_empty then
 				connector.write_collections (collections_to_write, transaction)
+			end
+
+			if attached connector.after_write_action as action then
+				across
+					object_storage as cursor
+				loop
+					if not cursor.item.is_ignored then
+						action (cursor.item)
+					end
+				end
 			end
 		end
 
@@ -351,6 +372,16 @@ feature {PS_ABEL_EXPORT} -- Write execution
 
 			if not collections_to_write.is_empty then
 				connector.write_collections (collections_to_write, transaction)
+			end
+
+			if attached connector.after_write_action as action then
+				across
+					object_storage as cursor
+				loop
+					if not cursor.item.is_ignored then
+						action (cursor.item)
+					end
+				end
 			end
 		end
 

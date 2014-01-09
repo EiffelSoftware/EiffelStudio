@@ -117,7 +117,7 @@ feature -- Tests
 			across
 				query as cursor
 			loop
-				print (cursor.item.id.out + ", " + cursor.item.int_value.out + ", " + cursor.item.string_value + "%N")
+				print (cursor.item)
 				assert ("first item correct", cursor.item.int_value = 42 implies cursor.item.string_value ~ "something")
 				assert ("second item correct",cursor.item.int_value = 21 implies cursor.item.string_value ~ "more")
 				count := count + 1
@@ -126,6 +126,60 @@ feature -- Tests
 			transaction.commit
 
 			assert ("count is two", count = 2)
+		end
+
+	test_auto_primary
+			-- Check if a generated primary key gets stored in an object during insert.
+		local
+			transaction: PS_TRANSACTION
+			object: FLAT_CLASS_2
+			query: PS_QUERY [FLAT_CLASS_2]
+		do
+			repository.wipe_out
+			transaction := repository.new_transaction
+
+			create object.make (100, "a_string")
+			print ("Before: " + object.out)
+			transaction.insert (object)
+			print ("After: " + object.out)
+
+			assert ("has_primary", object.id > 0)
+
+			object.string_value.remove_head (2)
+			transaction.update (object)
+
+
+			create query.make
+			transaction.execute_query (query)
+			across
+				query as cursor
+			loop
+				print ("After update: " + cursor.item.out)
+			end
+
+			assert ("correct_count", query.result_cache.count = 1)
+			assert ("no_error", not transaction.has_error)
+			query.close
+			transaction.commit
+		end
+
+	test_manual_primary
+			-- Check what happens when the user specifies
+			-- a primary key on its own.
+		local
+			transaction: PS_TRANSACTION
+			object: FLAT_CLASS_2
+		do
+			create object.make (42, "value")
+			object.set_id (123)
+
+			repository.wipe_out
+			transaction := repository.new_transaction
+			transaction.insert (object)
+			print (object)
+			transaction.commit
+			assert ("same_primary", object.id = 123)
+
 		end
 
 feature {NONE} -- Initialization

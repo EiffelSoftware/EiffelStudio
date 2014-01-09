@@ -10,6 +10,9 @@ class
 inherit
 
 	PS_READ_RELATIONAL_CONNECTOR
+		redefine
+			make
+		end
 
 	PS_REPOSITORY_CONNECTOR
 
@@ -196,6 +199,27 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			connection.execute_sql (sql)
 
 			fixme ("Update auto-generated primary key?")
+		end
+
+feature {NONE} -- Implementation
+
+	set_primary_key (object: PS_OBJECT_WRITE_DATA)
+			-- Set the generated primary key in `object'.
+		local
+			index: INTEGER
+		do
+			if attached database_mapping.primary_key_column (object.type.name.as_lower) as column_id then
+				object.type.attributes.compare_objects
+				index := object.type.attributes.index_of (column_id, 1)
+				object.reflector.set_integer_32_field (index, object.backend_object.primary_key)
+			end
+		end
+
+	make (a_database: like database; mapping: like database_mapping)
+			-- <Precursor>
+		do
+			Precursor (a_database, mapping)
+			after_write_action := agent set_primary_key
 		end
 
 end

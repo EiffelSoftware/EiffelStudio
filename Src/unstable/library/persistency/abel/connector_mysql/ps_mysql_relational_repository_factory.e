@@ -86,9 +86,6 @@ feature -- Factory function
 							type_id := internal.dynamic_type_from_string (cursor.item [1].as_upper)
 
 							if type_id > 0 then
-
-							print (cursor.item[1])
-
 								Result.override_expanded_type (type_factory.create_metadata_from_type_id (type_id).type)
 							end
 						end

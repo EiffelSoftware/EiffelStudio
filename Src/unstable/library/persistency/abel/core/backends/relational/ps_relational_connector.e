@@ -113,8 +113,6 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			object: PS_BACKEND_OBJECT
 			type: PS_TYPE_METADATA
 
-			table: STRING
-
 			sql:STRING
 			sql_column_list: STRING
 			sql_value_list: STRING
@@ -129,13 +127,12 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			object := objects.first
 			last_inserted_object := object
 			type := object.type
-			table := type.name.as_lower
 
 			across
 				type.attributes as cursor
 			from
 					-- Add the previously generated primary key to the object.
-				if attached database_mapping.primary_key_column (table) as id_column then
+				if attached database_mapping.primary_key_column (type.name) as id_column then
 
 					if
 						attached object.value_lookup (id_column) as val
@@ -154,11 +151,11 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 				create sql_column_list.make (100)
 				create sql_value_list.make (100)
 				create sql_update_list.make (200)
+
+				fixme ("This doesn't work for REALs")
 			loop
 
 				if attached object.value_lookup (cursor.item) as val then
-
-
 					sql_column_list.extend (',')
 					sql_column_list.extend (' ')
 					sql_column_list.append (cursor.item)
@@ -211,11 +208,8 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			sql.append (" ON DUPLICATE KEY UPDATE")
 			sql.append (sql_update_list)
 
-
 			connection := get_connection (transaction)
 			connection.execute_sql (sql)
-
-			fixme ("Update auto-generated primary key?")
 		end
 
 feature {NONE} -- Implementation
@@ -225,7 +219,7 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
-			if attached database_mapping.primary_key_column (object.type.name.as_lower) as column_id then
+			if attached database_mapping.primary_key_column (object.type.name) as column_id then
 				object.type.attributes.compare_objects
 				index := object.type.attributes.index_of (column_id, 1)
 				object.reflector.set_integer_32_field (index, object.backend_object.primary_key)

@@ -27,15 +27,26 @@ feature {NONE} -- Initialization
 			create mapping.make
 		end
 
-feature -- Access
+feature -- Element change
 
-	mapping: PS_DATABASE_MAPPING
-			-- A mapping table to override naming and primary key defaults.
+	manage (type: TYPE [detachable ANY]; primary_key_attribute: STRING)
+			-- Manage `type' and deal with the primary key stored in `primary_key_attribute'
+		local
+			name: IMMUTABLE_STRING_8
+		do
+				-- Attached types have a nasty '!' at the beginning.
+			if type.is_attached then
+				name := type.name.tail (type.name.count - 1)
+			else
+				name := type.name
+			end
+			mapping.add_primary_key_column (primary_key_attribute, name)
+		end
 
 feature -- Factory function
 
 	new_repository: PS_RELATIONAL_REPOSITORY
-			-- Create a new repository.
+			-- <Precursor>
 		local
 			connector: PS_RELATIONAL_CONNECTOR
 			write_manager: PS_WRITE_MANAGER
@@ -63,7 +74,7 @@ feature -- Factory function
 			from
 				create internal
 			loop
-				if not attached mapping.primary_key_column (cursor.item.as_lower) then
+				if not attached mapping.primary_key_column (cursor.item) then
 					Result.override_expanded_type (internal.type_of_type (internal.dynamic_type_from_string (cursor.item)))
 				end
 			end
@@ -92,5 +103,8 @@ feature {NONE} -- Implementation
 			option: stable
 		attribute
 		end
+
+	mapping: PS_DATABASE_MAPPING
+			-- A mapping table to override naming and primary key defaults.
 
 end

@@ -25,9 +25,6 @@ feature {PS_ABEL_EXPORT} -- Access
 			-- The primary key columns for each table, if any.
 			-- Note that the key is stored in upper case.
 
-
-	database_mapping: PS_DATABASE_MAPPING
-
 feature {PS_ABEL_EXPORT} -- Status report
 
 	is_generic_collection_supported: BOOLEAN = False
@@ -92,21 +89,28 @@ feature {PS_ABEL_EXPORT} -- Primary key handling
 			bogus_primary := Result
 		end
 
+	managed_type_lookup (type: PS_TYPE_METADATA): detachable STRING
+			-- If `type' is managed, return the primary key column.
+		do
+			Result := managed_types [type]
+		end
+
 feature {NONE} -- Initialization
 
-	make (a_database: like database; mapping: like database_mapping; db_name: STRING)
+	make (a_database: like database; a_managed_types: like managed_types; db_name: STRING)
 			-- Initialization for `Current'.
 		do
 			initialize (a_database)
-			database_mapping := mapping
+			managed_types := a_managed_types
 			load_layout (db_name)
 		end
+
+	managed_types: HASH_TABLE [STRING, PS_TYPE_METADATA]
+			-- The managed types and their primary key column.
 
 	bogus_primary: INTEGER
 
 	last_inserted_object: detachable PS_BACKEND_OBJECT
-
-
 
 	load_layout (db_name: STRING)
 			-- Initialize information about the layout.

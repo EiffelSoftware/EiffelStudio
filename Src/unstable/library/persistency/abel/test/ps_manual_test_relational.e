@@ -64,9 +64,9 @@ feature -- Tests
 			-- Test if criteria work.
 		do
 			repository.wipe_out
---			criteria_tests.test_criteria_agents
+			criteria_tests.test_criteria_agents
 			criteria_tests.test_criteria_predefined
---			criteria_tests.test_criteria_agents_and_predefined
+			criteria_tests.test_criteria_agents_and_predefined
 		end
 
 	test_managed_primary_key_generation

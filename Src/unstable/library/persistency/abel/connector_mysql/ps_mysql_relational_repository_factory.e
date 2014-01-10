@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor
-			create mapping.make
+			create managed_types.make (0)
 		end
 
 feature -- Element change
@@ -33,14 +33,10 @@ feature -- Element change
 			-- Manage `type' and deal with the primary key stored in `primary_key_attribute'
 		local
 			name: IMMUTABLE_STRING_8
+			type_meta: PS_TYPE_METADATA
 		do
-				-- Attached types have a nasty '!' at the beginning.
-			if type.is_attached then
-				name := type.name.tail (type.name.count - 1)
-			else
-				name := type.name
-			end
-			mapping.add_primary_key_column (primary_key_attribute, name)
+			type_meta := type_factory.create_metadata_from_type (type)
+			managed_types.extend (primary_key_attribute, type_meta)
 		end
 
 feature -- Factory function
@@ -51,6 +47,7 @@ feature -- Factory function
 			connector: PS_RELATIONAL_CONNECTOR
 			write_manager: PS_WRITE_MANAGER
 			internal: INTERNAL
+			type: PS_TYPE_METADATA
 		do
 			connector := new_connector
 			connector.set_transaction_isolation (anomaly_settings)
@@ -74,8 +71,9 @@ feature -- Factory function
 			from
 				create internal
 			loop
-				if not attached mapping.primary_key_column (cursor.item) then
-					Result.override_expanded_type (internal.type_of_type (internal.dynamic_type_from_string (cursor.item)))
+				type := type_factory.create_metadata_from_string (cursor.item)
+				if not attached managed_types [type] then
+					Result.override_expanded_type (type.type)
 				end
 			end
 		end
@@ -91,7 +89,7 @@ feature {NONE} -- Implementation
 			l_db := new_internal_database
 			internal_database := l_db
 			check attached database as db_name then
-				create Result.make (l_db, mapping, db_name)
+				create Result.make (l_db, managed_types, db_name)
 			end
 		ensure then
 			db_set: attached internal_database
@@ -104,7 +102,7 @@ feature {NONE} -- Implementation
 		attribute
 		end
 
-	mapping: PS_DATABASE_MAPPING
-			-- A mapping table to override naming and primary key defaults.
+	managed_types: HASH_TABLE [STRING, PS_TYPE_METADATA]
+			-- The managed types and their primary key column.
 
 end

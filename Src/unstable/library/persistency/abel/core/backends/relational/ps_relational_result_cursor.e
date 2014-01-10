@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 				values := sql_result.item
 
 					-- Try to find a primary key column.
-				if attached connector.database_mapping.primary_key_column (type.name) as id_column then
+				if attached connector.managed_type_lookup (type) as id_column then
 					primary := values.at (id_column).to_integer
 				else
 					primary := connector.new_primary

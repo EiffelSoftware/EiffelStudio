@@ -43,7 +43,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 
 
 			fixme ("It would be nicer to insert just once and then update the data structures.")
-			if attached database_mapping.primary_key_column (table) as id_column then
+			if attached managed_type_lookup (type) as id_column then
 
 				connection := get_connection (transaction)
 				connection.execute_sql ("INSERT INTO " + table + " VALUES ()")
@@ -132,7 +132,7 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 				type.attributes as cursor
 			from
 					-- Add the previously generated primary key to the object.
-				if attached database_mapping.primary_key_column (type.name) as id_column then
+				if attached managed_type_lookup (type) as id_column then
 
 					if
 						attached object.value_lookup (id_column) as val
@@ -219,17 +219,17 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
-			if attached database_mapping.primary_key_column (object.type.name) as column_id then
+			if attached managed_type_lookup (object.type) as column_id then
 				object.type.attributes.compare_objects
 				index := object.type.attributes.index_of (column_id, 1)
 				object.reflector.set_integer_32_field (index, object.backend_object.primary_key)
 			end
 		end
 
-	make (a_database: like database; mapping: like database_mapping; db_name: STRING)
+	make (a_database: like database; a_managed_types: like managed_types; db_name: STRING)
 			-- <Precursor>
 		do
-			Precursor (a_database, mapping, db_name)
+			Precursor (a_database, a_managed_types, db_name)
 			after_write_action := agent set_primary_key
 		end
 

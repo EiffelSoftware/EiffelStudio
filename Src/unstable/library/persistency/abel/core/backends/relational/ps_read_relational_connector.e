@@ -79,7 +79,7 @@ feature {PS_READ_REPOSITORY_CONNECTOR} -- Implementation
 					type.attributes as attribute_cursor
 				from
 
-					if attached database_mapping.primary_key_column (table) as id_column then
+					if attached database_mapping.primary_key_column (type.name) as id_column then
 						primary := cursor.item.at (id_column).to_integer
 					else
 						bogus_primary := bogus_primary + 1
@@ -192,17 +192,5 @@ feature {NONE} -- Initialization
 
 			connection.commit
 			database.release_connection (connection)
-
-
---			across
---				stored_types as cursor
---			loop
---				print (cursor.item + "%N")
---			end
---			across
---				primary_key_columns as cursor
---			loop
---				print (cursor.key + " " + cursor.item.count.out + "%N")
---			end
 		end
 end

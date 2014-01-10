@@ -318,7 +318,7 @@ feature {NONE} -- Initialization
 			factory.set_password (password)
 			factory.set_database (db_name)
 
-			factory.mapping.add_primary_key_column ("id", "flat_class_2")
+			factory.manage ({detachable FLAT_CLASS_2}, "id")
 
 			Result := factory.new_repository
 		end

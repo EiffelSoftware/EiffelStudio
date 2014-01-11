@@ -188,7 +188,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					create l_para.make (uht.count)
 					para := l_para
 				end
-				bind_args_value (descriptor, uht, ht_order)
+				bind_args_value (descriptor, uht, ht_order, l_para)
 			end
 		end
 
@@ -1335,7 +1335,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; a_para: DB_PARA_ODBC)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -1353,7 +1353,6 @@ feature {NONE} -- External features
 			l_c_string: C_STRING -- single byte
 			l_platform: PLATFORM
 			l_value_count: INTEGER
-			l_para: like para
 			l_decimal_t: like convert_to_decimal
 			l_nat64: NATURAL_64
 			l_pointer: MANAGED_POINTER
@@ -1488,13 +1487,10 @@ feature {NONE} -- External features
 						 -- most likely Void?
 					end
 
-					l_para := para
-					check l_para_not_void: l_para /= Void end
 					if type = -1 then
-						l_para.set (Void, i)
+						a_para.set (Void, i)
 					else
-						check l_managed_pointer /= Void end -- implied by `type /= -1' and previous codes
-						l_para.set (l_managed_pointer, i)
+						a_para.set (l_managed_pointer, i)
 					end
 
 					tmp_str.wipe_out
@@ -1502,7 +1498,7 @@ feature {NONE} -- External features
 						l_value_count := 1
 					end
 
-					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
+					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, a_para.get (i))
 
 					is_error_updated := False
 					is_warning_updated := False
@@ -1723,7 +1719,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

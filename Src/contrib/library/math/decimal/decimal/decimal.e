@@ -221,8 +221,6 @@ feature {NONE} -- Initialization
 		require
 			a_decimal_parser_not_void: a_decimal_parser /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_last_parsed: detachable STRING
 		do
 			if a_decimal_parser.error then
 				if a_context.is_extended then
@@ -237,7 +235,7 @@ feature {NONE} -- Initialization
 					make_snan
 				elseif a_decimal_parser.is_nan then
 					make_nan
-				else
+				elseif attached a_decimal_parser.last_parsed as l_last_parsed then
 					set_is_negative (a_decimal_parser.sign < 0)
 					if a_decimal_parser.has_exponent then
 						if a_decimal_parser.exponent_as_double > {INTEGER}.max_value then
@@ -255,10 +253,11 @@ feature {NONE} -- Initialization
 						exponent := exponent - a_decimal_parser.fractional_part_count
 					end
 					create {DCM_MA_DECIMAL_COEFFICIENT_IMP} coefficient.make ((a_context.digits + 1).max (a_decimal_parser.coefficient_count))
-					l_last_parsed := a_decimal_parser.last_parsed
-					check l_last_parsed /= Void end -- implied by `not a_decimal_parser.error'
 					coefficient.set_from_substring (l_last_parsed, a_decimal_parser.coefficient_begin, a_decimal_parser.coefficient_end)
 					clean_up (a_context)
+				else
+					check False end
+					make_nan
 				end
 			end
 		end
@@ -3147,7 +3146,6 @@ feature {DECIMAL} -- Basic operations
 			e_tiny, shared_digits, subnormal_count, count_upto_elimit, saved_digits: INTEGER
 			l_is_zero, l_was_rounded: BOOLEAN
 			value: INTEGER
-			l_reason: detachable STRING
 		do
 			l_is_zero := is_zero
 			if not l_is_zero then
@@ -3217,9 +3215,11 @@ feature {DECIMAL} -- Basic operations
 				exponent := e_tiny
 				if l_is_zero then
 					if l_was_rounded then
-						l_reason := ctx.reason
-						check l_reason /= Void end -- implied by ... ?
-						ctx.signal (Signal_rounded, l_reason)
+						if attached ctx.reason as l_reason then
+							ctx.signal (Signal_rounded, l_reason)
+						else
+							ctx.signal (Signal_rounded, "Unknown reason")
+						end
 					else
 						ctx.reset_flag (Signal_rounded)
 					end

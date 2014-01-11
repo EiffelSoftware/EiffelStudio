@@ -14,7 +14,7 @@ feature -- Access
 			template_content: STRING
 			l_last_string: detachable STRING
 		do
-			create l_file.make (a_path)
+			create l_file.make_with_name (a_path)
 				-- We perform several checks until we make a real attempt to open the file.
 			if not l_file.exists then
 				print ("error: '" + a_path + "' does not exist%N")

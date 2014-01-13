@@ -1,0 +1,11 @@
+test_name 	pretty-loop-invariant
+test_description Comments between features within one section should have consistent indentation.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output_1
+compile_result ok
+compare		prettify_output_1 output
+
+test_end

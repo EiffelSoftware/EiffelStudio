@@ -55,7 +55,7 @@ feature -- Basic operations
 				l_result.replace_substring_all ("%R", "")
 				if preferences.misc_data.text_mode_is_windows then
 						-- Add carriage returns when requested.
-					l_result.replace_substring_all ("%N", "%N%R")
+					l_result.replace_substring_all ("%N", "%R%N")
 				end
 				Result := l_result
 			else
@@ -191,7 +191,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

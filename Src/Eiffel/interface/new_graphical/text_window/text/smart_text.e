@@ -278,39 +278,42 @@ feature -- Search
 		require
 			text_loaded: reading_text_finished
 		local
-			tok: EDITOR_TOKEN
-			ln: like line
-			low, low2: STRING_32
-			feature_stone: FEATURE_STONE
+			tok: detachable EDITOR_TOKEN
+			l_line: like line
+			low2: STRING_32
 		do
 			found_feature := False
 			if has_selection then
 				disable_selection
 			end
-			if click_tool_enabled then --and then click_tool.is_ready then
-				low := a_name
+			if click_tool_enabled then
 				from
-					ln ?= first_line
-					tok := ln.first_token
+					l_line := first_line
+					if l_line /= Void then
+						tok := l_line.first_token
+					else
+							-- This should not happen but we have proof that it happens:
+							-- See bug#18792, bug#18501 and bug#17626.
+						check False end
+					end
 				until
 					tok = Void or found_feature
 				loop
 					if tok.is_feature_start then
-						feature_stone ?= tok.pebble
-						if feature_stone /= Void then
-							low2 := feature_stone.e_feature.name_32
+						if attached {FEATURE_STONE} tok.pebble as l_feature_stone then
+							low2 := l_feature_stone.e_feature.name_32
 						else
 							low2 := tok.wide_image
 						end
-						found_feature := low.is_case_insensitive_equal (low2)
+						found_feature := a_name.is_case_insensitive_equal (low2)
 						if found_feature then
-							cursor.set_from_relative_pos (ln, tok, 1, Current)
+							cursor.set_from_relative_pos (l_line, tok, 1, Current)
 						end
 					end
 					tok := tok.next
-					if tok = Void and then ln.next /= Void then
-						ln := ln.next
-						tok := ln.first_token
+					if tok = Void and then attached l_line.next as l_next_line then
+						l_line := l_next_line
+						tok := l_line.first_token
 					end
 				end
 			end
@@ -886,7 +889,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

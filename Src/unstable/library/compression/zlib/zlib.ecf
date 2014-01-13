@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="zlib" uuid="8D76506B-B91E-49A2-BB2C-3B37F2FFA56C" library_target="zlib">
+	<target name="zlib">
+		<root all_classes="true"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<external_include location="$(EIFFEL_LIBRARY)\zlib\spec\include">
+            <condition>
+                <platform value="windows"/>
+            </condition>
+        </external_include>
+		<external_object location="zlibwapi.lib">
+		<!--external_object location="zdll.lib"-->
+            <condition>
+                <platform value="windows"/>
+            </condition>
+        </external_object>
+        <external_object location="-lz"> 
+            <condition> 
+                <platform excluded_value="windows"/> 
+            </condition>
+        </external_object>    
+		<cluster name="zlib" location="library\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

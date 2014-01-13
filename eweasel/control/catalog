@@ -1281,7 +1281,7 @@ test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
 test	inlining-parent-with-less-formals	final105 tcf fail finalizing inlining
 test	inlining-in-parent-with-child-with-less-formals final106 tcf fail finalizing inlining
 test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
-test	finalize-external-invariant-2kipped	final108 tcf fail finalizing assertions external
+test	finalize-external-invariant-skipped	final108 tcf fail finalizing assertions external
 test	inline-manifest-type			final109 tcf fail finalizing
 test	profile-once-per-process-function	final110 tcf fail finalizing
 test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
@@ -2826,6 +2826,7 @@ test	pretty-routine-comment-indentation	pretty025 tcf pass pretty
 test	pretty-constant-attribute-comment	pretty026 tcf pass pretty
 test	pretty-feature-call-comment		pretty027 tcf pass pretty
 test	pretty-comments-between-features	pretty028 tcf pass pretty
+test	pretty-loop-invariant			pretty029 tcf pass pretty
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

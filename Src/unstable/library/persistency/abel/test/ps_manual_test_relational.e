@@ -9,6 +9,13 @@ class
 
 inherit
 	PS_REPOSITORY_TESTS
+		redefine
+			on_clean
+		end
+
+feature {NONE} -- Test switch
+
+	mysql: BOOLEAN = False
 
 feature -- Tests
 
@@ -292,6 +299,11 @@ feature -- Tests
 
 feature {NONE} -- Initialization
 
+	on_clean
+		do
+			repository.close
+		end
+
 	populate
 			-- Add some initial data.
 		local
@@ -311,16 +323,23 @@ feature {NONE} -- Initialization
 	make_repository: PS_REPOSITORY
 			-- Create the repository for this test
 		local
-			factory: PS_MYSQL_RELATIONAL_REPOSITORY_FACTORY
+			mysql_factory: PS_MYSQL_RELATIONAL_REPOSITORY_FACTORY
+			sqlite_factory: PS_SQLITE_RELATIONAL_REPOSITORY_FACTORY
 		do
-			create factory.make
-			factory.set_user (username)
-			factory.set_password (password)
-			factory.set_database (db_name)
+			if mysql then
+				create mysql_factory.make
+				mysql_factory.set_user (username)
+				mysql_factory.set_password (password)
+				mysql_factory.set_database (db_name)
+				mysql_factory.manage ({detachable FLAT_CLASS_2}, "id")
+				Result := mysql_factory.new_repository
+			else
+				create sqlite_factory.make
+				sqlite_factory.set_database (sqlite_file)
+				sqlite_factory.manage ({FLAT_CLASS_2}, "id")
+				Result := sqlite_factory.new_repository
+			end
 
-			factory.manage ({detachable FLAT_CLASS_2}, "id")
-
-			Result := factory.new_repository
 			Result.set_batch_retrieval_size (1)
 		end
 
@@ -329,5 +348,8 @@ feature {NONE} -- Initialization
 	password: STRING = "eiffelstoretest"
 
 	db_name: STRING = "eiffelstoretest"
+
+	sqlite_file: STRING = "abel_sqlite_test.db"
+			-- The SQLite database file
 
 end

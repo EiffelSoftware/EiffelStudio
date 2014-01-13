@@ -11,6 +11,8 @@ inherit
 
 	PS_GENERIC_LAYOUT_SQL_STRINGS
 
+	PS_RELATIONAL_SQL_STRINGS
+
 feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 
 	Create_value_table: STRING
@@ -172,6 +174,49 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 			Result.remove_tail (1)
 
 			Result.append (" on duplicate key update info = VALUES (info)")
+		end
+
+	assemble_upsert (table: READABLE_STRING_8; columns: LIST [STRING]; values: LIST [STRING]): STRING
+		local
+			update_list: STRING
+		do
+			create Result.make (100)
+			create update_list.make (100)
+			Result.append ("INSERT INTO ")
+			Result.append (table)
+			Result.append (" (")
+
+			update_list.append (" ON DUPLICATE KEY UPDATE ")
+
+			across
+				columns as cursor
+			loop
+				Result.append (cursor.item)
+				update_list.append (cursor.item)
+				update_list.append (" = VALUES (")
+				update_list.append (cursor.item)
+				update_list.append (")")
+
+				if not cursor.is_last then
+					Result.append (", ")
+					update_list.append (", ")
+				else
+					Result.append (") VALUES (")
+				end
+			end
+
+			across
+				values as cursor
+			loop
+				Result.append (cursor.item)
+				if not cursor.is_last then
+					Result.append (", ")
+				else
+					Result.append (")")
+				end
+			end
+
+			Result.append (update_list)
 		end
 
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend

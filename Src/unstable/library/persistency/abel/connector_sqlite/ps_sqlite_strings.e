@@ -11,6 +11,8 @@ inherit
 
 	PS_GENERIC_LAYOUT_SQL_STRINGS
 
+	PS_RELATIONAL_SQL_STRINGS
+
 feature {PS_METADATA_TABLES_MANAGER} -- Table creation
 
 	Create_value_table: STRING
@@ -157,6 +159,38 @@ feature {PS_GENERIC_LAYOUT_SQL_BACKEND} -- Data modification - Backend
 				Result.append ("REPLACE INTO ps_collection_info VALUES" + cursor.item + ";")
 			end
 		end
+
+	assemble_upsert (table: READABLE_STRING_8; columns: LIST [STRING]; values: LIST [STRING]): STRING
+		do
+			create Result.make (100)
+			Result.append ("REPLACE INTO ")
+			Result.append (table)
+			Result.append (" (")
+
+			across
+				columns as cursor
+			loop
+				Result.append (cursor.item)
+				if not cursor.is_last then
+					Result.append (", ")
+				else
+					Result.append (") VALUES (")
+				end
+			end
+
+			across
+				values as cursor
+			loop
+				Result.append (cursor.item)
+				if not cursor.is_last then
+					Result.append (", ")
+				else
+					Result.append (");")
+				end
+			end
+
+		end
+
 
 feature {PS_GENERIC_LAYOUT_SQL_READONLY_BACKEND} -- Data querying - Backend
 

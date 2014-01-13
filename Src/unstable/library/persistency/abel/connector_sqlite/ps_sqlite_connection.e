@@ -129,8 +129,8 @@ feature {PS_ABEL_EXPORT} -- Database results
 	last_primary_key: INTEGER
 			-- <Precursor>
 		do
-			fixme ("to implement")
-			check not_implemented: False end
+			execute_sql ("SELECT last_insert_rowid()")
+			Result := last_result.item.item (1).to_integer
 		end
 
 feature {PS_SQLITE_DATABASE} -- Initialization

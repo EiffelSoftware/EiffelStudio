@@ -158,6 +158,8 @@ feature {NONE} -- Initialization
 				a_transaction: like transaction;
 				a_connector: like connector)
 			-- Initialization for `Current'.
+		require
+			not_empty: not a_attributes.is_empty
 		local
 			table: STRING
 			visitor: PS_CRITERION_SQL_CONVERTER_VISITOR
@@ -171,9 +173,22 @@ feature {NONE} -- Initialization
 			item_count := 0
 
 				-- Generate the basic SQL command.
-			fixme ("Only load the required attributes.")
+			across
+				attributes as cursor
+			from
+				create sql_template.make (100)
+				sql_template.append ("SELECT ")
+			loop
+				sql_template.append (cursor.item)
+				if not cursor.is_last then
+					sql_template.append (", ")
+				else
+					sql_template.append (" FROM " + type.name.as_lower)
+				end
+			end
+
+
 			table := type.name.as_lower
-			sql_template := "SELECT * FROM " + table
 
 				-- Add the WHERE clause.
 			if not criteria.is_empty_criterion then

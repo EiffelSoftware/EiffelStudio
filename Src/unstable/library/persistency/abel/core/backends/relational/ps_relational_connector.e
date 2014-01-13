@@ -34,6 +34,7 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			table: STRING
 			connection: PS_SQL_CONNECTION
 			primary: INTEGER
+			sql: STRING
 		do
 			order.start
 			type := order.key_for_iteration
@@ -46,7 +47,19 @@ feature {PS_ABEL_EXPORT} -- Primary key generation
 			if attached managed_type_lookup (type) as id_column then
 
 				connection := get_connection (transaction)
-				connection.execute_sql ("INSERT INTO " + table + " VALUES ()")
+				sql := "INSERT INTO " + table + " VALUES ("
+				across
+					type.attributes as cursor
+				loop
+					sql.append ("NULL")
+					if not cursor.is_last then
+						sql.append (", ")
+					else
+						sql.extend (')')
+					end
+				end
+
+				connection.execute_sql (sql)
 				primary := connection.last_primary_key
 			else
 
@@ -113,11 +126,10 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			object: PS_BACKEND_OBJECT
 			type: PS_TYPE_METADATA
 
-			sql:STRING
-			sql_column_list: STRING
-			sql_value_list: STRING
-			sql_update_list: STRING
+			columns: ARRAYED_LIST [STRING]
+			values: ARRAYED_LIST [STRING]
 
+			sql:STRING
 			connection: PS_SQL_CONNECTION
 
 			non_zero_exception: PS_INTERNAL_ERROR
@@ -144,70 +156,28 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 							" contains a user-generated primary key.")
 						non_zero_exception.raise
 					end
-
 					object.add_attribute (id_column, object.primary_key.out, "INTEGER_32")
 				end
 
-				create sql_column_list.make (100)
-				create sql_value_list.make (100)
-				create sql_update_list.make (200)
+				create columns.make (type.attribute_count)
+				create values.make (type.attribute_count)
 
 				fixme ("This doesn't work for REALs")
 			loop
 
 				if attached object.value_lookup (cursor.item) as val then
-					sql_column_list.extend (',')
-					sql_column_list.extend (' ')
-					sql_column_list.append (cursor.item)
 
-					sql_value_list.extend (',')
-					sql_value_list.extend (' ')
+					columns.extend (cursor.item)
+
 					if type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.reference_type then
-						sql_value_list.extend ('%'')
-						sql_value_list.append (val)
-						sql_value_list.extend ('%'')
+						values.extend ("'" + val + "'")
 					else
-						sql_value_list.append (val)
+						values.extend (val)
 					end
-
-					sql_update_list.extend (',')
-					sql_update_list.extend (' ')
-					sql_update_list.append (cursor.item)
-					sql_update_list.append (" = VALUES (")
-					sql_update_list.append (cursor.item)
-					sql_update_list.extend (')')
 				end
 			end
 
-				-- Replace the first comma.
-			sql_column_list [1] := '('
-			sql_column_list.extend (')')
-
-			sql_value_list [1] := '('
-			sql_value_list.extend (')')
-
-			sql_update_list [1] := ' '
-
-
-
-			create sql.make (
-				sql_column_list.count +
-				sql_value_list.count +
-				type.name.count +
-				sql_update_list.count +
-				50)
-
-			sql.append ("INSERT INTO ")
-			sql.append (type.name.as_lower)
-			sql.extend (' ')
-			sql.append (sql_column_list)
-			sql.append (" VALUES ")
-			sql.append (sql_value_list)
-
-
-			sql.append (" ON DUPLICATE KEY UPDATE")
-			sql.append (sql_update_list)
-
+			sql := strings.assemble_upsert (type.name.as_lower, columns, values)
 			connection := get_connection (transaction)
 			connection.execute_sql (sql)
 		end
@@ -226,10 +196,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make (a_database: like database; a_managed_types: like managed_types; db_name: STRING)
+	make (a_database: like database; a_managed_types: like managed_types; a_strings: like strings)
 			-- <Precursor>
 		do
-			Precursor (a_database, a_managed_types, db_name)
+			Precursor (a_database, a_managed_types, a_strings)
 			after_write_action := agent set_primary_key
 		end
 

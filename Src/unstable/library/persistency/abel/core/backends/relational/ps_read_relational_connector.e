@@ -21,7 +21,7 @@ feature {PS_ABEL_EXPORT} -- Access
 	stored_types: HASH_TABLE [IMMUTABLE_STRING_8, IMMUTABLE_STRING_8]
 			-- The type string for all objects and collections stored in `Current'.
 
-	primary_key_columns: STRING_TABLE [ARRAYED_LIST [STRING]]
+--	primary_key_columns: STRING_TABLE [ARRAYED_LIST [STRING]]
 			-- The primary key columns for each table, if any.
 			-- Note that the key is stored in upper case.
 
@@ -97,22 +97,26 @@ feature {PS_ABEL_EXPORT} -- Primary key handling
 
 feature {NONE} -- Initialization
 
-	make (a_database: like database; a_managed_types: like managed_types; db_name: STRING)
+	make (a_database: like database; a_managed_types: like managed_types; a_strings: like strings)
 			-- Initialization for `Current'.
 		do
 			initialize (a_database)
 			managed_types := a_managed_types
-			load_layout (db_name)
+			strings := a_strings
+			load_layout
 		end
 
 	managed_types: HASH_TABLE [STRING, PS_TYPE_METADATA]
 			-- The managed types and their primary key column.
 
+	strings: PS_RELATIONAL_SQL_STRINGS
+			-- The SQL strings for `Current'.
+
 	bogus_primary: INTEGER
 
 	last_inserted_object: detachable PS_BACKEND_OBJECT
 
-	load_layout (db_name: STRING)
+	load_layout
 			-- Initialize information about the layout.
 		local
 			connection: PS_SQL_CONNECTION
@@ -127,17 +131,18 @@ feature {NONE} -- Initialization
 			fixme ("Support for SQLite.")
 
 			create stored_types.make (1)
-			create primary_key_columns.make (1)
+--			create primary_key_columns.make (1)
 			create internal
 
 
 			connection := database.acquire_connection
-			sql := "[
-				SELECT table_name, column_name, column_key
-				FROM information_schema.columns
-				WHERE table_schema = '
-				]"
-				+ db_name + "'"
+			sql := strings.show_tables
+--			sql := "[
+--				SELECT table_name, column_name, column_key
+--				FROM information_schema.columns
+--				WHERE table_schema = '
+--				]"
+--				+ db_name + "'"
 
 			connection.execute_sql (sql)
 
@@ -145,8 +150,8 @@ feature {NONE} -- Initialization
 				connection as cursor
 			loop
 				type_name := cursor.item [1].as_upper
-				column_name := cursor.item [2]
-				column_key := cursor.item [3]
+--				column_name := cursor.item [2]
+--				column_key := cursor.item [3]
 
 				if internal.dynamic_type_from_string (type_name) > 0 then
 
@@ -154,15 +159,15 @@ feature {NONE} -- Initialization
 						stored_types.extend (type_name, type_name)
 					end
 
-					if column_key.is_case_insensitive_equal ("PRI") then
-						if attached primary_key_columns [type_name] as inner then
-							inner.extend (column_name)
-						else
-							create list.make (1)
-							list.extend (column_name)
-							primary_key_columns.extend (list, type_name)
-						end
-					end
+--					if column_key.is_case_insensitive_equal ("PRI") then
+--						if attached primary_key_columns [type_name] as inner then
+--							inner.extend (column_name)
+--						else
+--							create list.make (1)
+--							list.extend (column_name)
+--							primary_key_columns.extend (list, type_name)
+--						end
+--					end
 				end
 			end
 

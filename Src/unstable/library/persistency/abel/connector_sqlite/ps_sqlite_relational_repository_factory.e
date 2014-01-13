@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {PS_MYSQL_RELATIONAL_REPOSITORY_FACTORY}."
+	description: "Summary description for {PS_SQLITE_RELATIONAL_REPOSITORY_FACTORY}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PS_MYSQL_RELATIONAL_REPOSITORY_FACTORY
+	PS_SQLITE_RELATIONAL_REPOSITORY_FACTORY
 
 inherit
-	PS_MYSQL_REPOSITORY_FACTORY
+	PS_SQLITE_REPOSITORY_FACTORY
 		redefine
 			new_connector,
 			new_repository,
@@ -36,7 +36,6 @@ feature -- Element change
 			type_meta: PS_TYPE_METADATA
 			internal: INTERNAL
 		do
-				-- Make sure we have the detachable type.
 			create internal
 			type_meta := type_factory.create_metadata_from_type_id (internal.detachable_type (type.type_id))
 			managed_types.extend (primary_key_attribute, type_meta)
@@ -87,12 +86,12 @@ feature {NONE} -- Implementation
 	new_connector: PS_RELATIONAL_CONNECTOR
 			-- <Precursor>
 		local
-			l_db: PS_SQL_DATABASE
+			l_db: PS_SQLITE_DATABASE
 		do
-			l_db := new_internal_database
-			internal_database := l_db
-			check attached database as db_name then
-				create Result.make (l_db, managed_types, create {PS_MYSQL_STRINGS})
+			check from_precondition: attached database as l_database then
+				create l_db.make (l_database)
+				internal_database := l_db
+				create Result.make (l_db, managed_types, create {PS_SQLITE_STRINGS})
 			end
 		ensure then
 			db_set: attached internal_database
@@ -107,5 +106,6 @@ feature {NONE} -- Implementation
 
 	managed_types: HASH_TABLE [STRING, PS_TYPE_METADATA]
 			-- The managed types and their primary key column.
+
 
 end

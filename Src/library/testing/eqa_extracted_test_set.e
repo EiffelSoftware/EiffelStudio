@@ -349,8 +349,6 @@ feature {NONE} -- Object initialization
 			a_count_not_negative: a_count >= 0
 		local
 			l_type: INTEGER
-			l_result: detachable like create_special_object
-			l_special: like new_special_any_instance
 		do
 			if attached {TYPE [SPECIAL [BOOLEAN]]} a_special as l_b_special then
 				Result := create {SPECIAL [BOOLEAN]}.make_empty (a_count)
@@ -756,7 +754,7 @@ feature {NONE} -- Constants
 	dynamic_string_32_type: INTEGER once Result := ({STRING_32}).type_id end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -273,10 +273,10 @@ feature -- Access
 			end
 		end
 
-	new_invariant_pair (k_as: detachable KEYWORD_AS; i_as: detachable EIFFEL_LIST [TAGGED_AS]): detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
+	new_invariant_pair (k_as: detachable KEYWORD_AS; i_as: detachable EIFFEL_LIST [TAGGED_AS]): detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]
 			-- New PAIR for a keyword and a tagged_as list.
 		do
-			if k_as /= Void and i_as /= Void then
+			if k_as /= Void then
 				create Result.make (k_as, i_as)
 			end
 		end
@@ -2069,7 +2069,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

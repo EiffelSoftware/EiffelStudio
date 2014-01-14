@@ -74,43 +74,6 @@ feature
 			double_value := d
 		end
 
-	set_from_array (v:  ARRAY [ANY])
-		local
-			q: detachable INTEGER_REF
-			p, d: detachable DOUBLE_REF
-		do
-			if attached {like title} v.item (1) as l_title then
-				title := l_title
-			end
-
-			if attached {like author} v.item (2) as l_author then
-				author := l_author
-			end
-
-			if attached {like year} v.item (3) as l_year then
-				year := l_year
-			end
-
-			if attached {INTEGER_REF} v.item (4) as l_q then
-				q := l_q
-			end
-
-			if attached {DOUBLE_REF} v.item (5) as l_p then
-				p := l_p
-			end
-
-			if attached {DOUBLE_REF} v.item (6) as l_d then
-				d := l_d
-			end
-
-			check q /= Void end -- FIXME: implied by...?
-			quantity := q.item
-			check p /= Void end -- FIXME: implied by...?
-			price := p.item
-			check d /= Void end -- FIXME: implied by...?
-			double_value := d.item
-		end
-
 	make
 		do
 			create title.make_filled ('x', 80)

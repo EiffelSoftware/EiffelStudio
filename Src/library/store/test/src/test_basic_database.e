@@ -48,7 +48,15 @@ feature {NONE} -- Prepare
 		do
 			create base_stores.make (5)
 			create repositories.make (5)
-			set_connection_information (user_login, user_password, database_name)
+			if is_odbc then
+				if is_trusted then
+					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + ";Trusted_Connection=Yes;")
+				else
+					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + "Uid=" + user_login + ";Pwd=" + user_password)
+				end
+			else
+				set_connection_information (user_login, user_password, database_name)
+			end
 			if attached Manager.current_session.session_login as l_login then
 				l_login.set_application (database_name)	-- For MySQL
 			end

@@ -1685,6 +1685,7 @@ test	conditional-expression-smoke-test	exec355 tcf pass execution conditional ex
 test	parenthesis-alias-smoke-test		exec356 tcf pass execution expression parenthesis_alias
 test	parenthesis-alias-tuple-convention	exec357 tcf pass execution expression parenthesis_alias
 test	conditional-expression-constant		exec358 tcf pass execution conditional expression conformance
+test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias
 
 -- Once specific
 

@@ -85,7 +85,7 @@ feature {NONE} -- Basic select
 
 			if is_odbc then
 				l_table_name := sql_table_name (extended_select_table_name)
-				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 3, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
+				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values (N'面向对象软件构造', 'Bertrand Meyer', 3, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
 				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
 			end
 

@@ -1,5 +1,5 @@
 test_name	 invalid-conversion-to-tuple
-test_description Parenthesis alias should accept implicit tuple argument.
+test_description Passing an actual argument of type detachable ANY to an entity expecting attached ANY causes no compilation error, instead it converts the instance into a TUPLE [ANY] which is unexpected.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

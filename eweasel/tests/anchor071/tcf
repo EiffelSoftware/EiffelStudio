@@ -1,0 +1,16 @@
+test_name 	 qat-generic-inheritance-2
+test_description A qualified anchored type that references a generic type is made non-generic in a descendant class and causes the compiler to report an error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	kd_display.e $CLUSTER kd_display.e
+copy_raw	kd_displayable.e $CLUSTER kd_displayable.e
+copy_raw	kd_edge.e $CLUSTER kd_edge.e
+copy_raw	kd_graph_widget.e $CLUSTER kd_graph_widget.e
+copy_raw	kd_model_display.e $CLUSTER kd_model_display.e
+copy_raw	kd_model_edge.e $CLUSTER kd_model_edge.e
+
+compile_melted
+compile_result	ok
+
+test_end

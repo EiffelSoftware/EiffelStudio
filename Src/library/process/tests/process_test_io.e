@@ -59,7 +59,6 @@ feature -- Test routines
 			l_args.force ("ARGUMENT1")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_file := create_temporary_file ("stdout")
 			l_process.redirect_output_to_file (l_file.name)
 			print (l_file.name)
@@ -86,7 +85,6 @@ feature -- Test routines
 			l_args.force ("ARGUMENT1")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_file := create_temporary_file ("stderr")
 			l_process.redirect_error_to_file (l_file.name)
 			print (l_file.name)
@@ -112,7 +110,6 @@ feature -- Test routines
 			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_file := create_temporary_file ("stdin")
 			l_file.open_write
 			l_file.put_string ("ARGUMENT1%N")
@@ -142,7 +139,6 @@ feature -- Test routines
 			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.redirect_input_to_stream
 			launch_process
 			l_process.put_string ("ARGUMENT1%N")
@@ -212,12 +208,11 @@ feature {NONE} -- Implementation
 			a_file.open_read
 			a_file.read_stream (a_file.count)
 			l_last_string := a_file.last_string
-			check l_last_string /= Void end
 			assert ("expected_content", a_expected.same_string (l_last_string))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

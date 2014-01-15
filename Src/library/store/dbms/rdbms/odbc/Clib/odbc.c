@@ -37,6 +37,7 @@
 #include <string.h>
 #include "odbc.h"
 #include <ctype.h>
+#include <math.h>
 
 /* Allocate string in characters */
 #define ALLOC_STRING(s,c) \
@@ -102,7 +103,7 @@ void odbc_clear_error (void *);
 void odbc_unhide_qualifier(SQLTCHAR *buf, int char_count);
 SQLSMALLINT	 odbc_c_type(SQLSMALLINT odbc_type);
 
-EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr);
+rt_private EIF_REAL_64 c_numeric_to_real_64 (SQL_NUMERIC_STRUCT *NumStr);
 rt_private SQLTCHAR *sqlstrcpy(SQLTCHAR *strDestination, int pos, const char *strSource);
 rt_private int find_name (SQLTCHAR *buf, int buf_count, SQLTCHAR * sqlStat, int sqlStat_count);
 rt_private void setup_result_space (void *con, int no_desc);
@@ -2056,9 +2057,6 @@ double odbc_get_float_data (void *con, int no_des, int index)
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	ODBCSQLDA * dbp = l_con->odbc_descriptor[no_des];
 	SQL_NUMERIC_STRUCT NumStr;
-	int j,sign =1;
-	EIF_NATURAL_64 myvalue, divisor;
-	double final_val;
 	int data_type;
 
 	data_type = GetDbCType (dbp, i);
@@ -2077,19 +2075,7 @@ double odbc_get_float_data (void *con, int no_des, int index)
 			return 0.0;
 		}
 		memcpy((char *)(&NumStr), GetDbColPtr(dbp, i), sizeof (SQL_NUMERIC_STRUCT));
-		myvalue = strhextoval(&NumStr);
-		divisor = 1;
-		if(NumStr.scale > 0){
-			for (j=0;j< NumStr.scale; j++)
-				divisor = divisor * 10;
-		}
-		final_val =  myvalue /(double) divisor;
-		if(!NumStr.sign)
-			sign = -1;
-		else
-			sign  = 1;
-		final_val *= sign;
-		return final_val;
+		return c_numeric_to_real_64(&NumStr);
 	}
 	ATCSTXTCAT(&l_con->error_message, "\nError  FLOAT  type in odbc_get_float_data. ");
 	if (l_con->error_number) {
@@ -2480,22 +2466,68 @@ rt_private int find_name (SQLTCHAR *buf, int buf_count, SQLTCHAR * sqlStat, int 
 	return j;
 }
 
-EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
+/* Convert little endian mode of `NumStr' to a real 64-bit using the same rounding errors as converting
+ * a string value to a REAL_64 as done in class {STRING_TO_REAL_CONVERTOR}.parse_string_with_type.
+ * Currently it means converting the hex representation into a digit sequence and then converting it to
+ * a REAL_64. */
+rt_private EIF_REAL_64 c_numeric_to_real_64 (SQL_NUMERIC_STRUCT *NumStr)
 {
-	EIF_NATURAL_64 val,value,last,current,a,b;
-	int i=1;
+	EIF_NATURAL_64 value, last, current;
+		/* 20 digits max in a NATURAL_64 plus NULL terminating character.*/
+	char l_buffer[21];
+	EIF_REAL_64 l_fractional_part, l_natural_part, l_divisor, l_result;
+	int len;
+	int i = 1;
 
-	val=0;value=0;last=1;a=0;b=0;
+	value = 0; last = 1; 
 
-    for(i=0;i<=15;i++){
-		current = (EIF_NATURAL_64) NumStr->val[i];
-		a= current % 16; /* Obtain LSD */
-		b= current / 16; /* Obtain MSD */
+		/* Currently we cannot represent more than 64-bit. */
+	for (i = 0; i <= 0x07; i++) {
+		current = (EIF_NATURAL_64)NumStr->val[i];
+		value += last*current;
+		last = last * 256;
+	}
 
-		value += last* a;
-		last = last * 16;
-		value += last* b;
-		last = last * 16;
+	len = snprintf(l_buffer, 21, "%" EIF_NATURAL_64_DISPLAY, value);
+	if (len > 0) {
+		l_natural_part = 0.0;
+		l_fractional_part = 0.0;
+		l_divisor = 1.0;
+			/* Read the natural part. */
+		for (i = 0; i < len - NumStr->scale; i++) {
+			l_natural_part = l_natural_part * 10.0 + (l_buffer[i] - 48);
+		}
+			/* Read the fractional part. */
+		for (i = len - NumStr->scale; i < len; i++) {
+			l_fractional_part = l_fractional_part * 10.0 + (l_buffer[i] - 48);
+			l_divisor = l_divisor * 10.0;
+		}
+		l_result = l_natural_part + l_fractional_part / l_divisor;
+	} else {
+			/* An error occurred. We convert using the poor method which is different
+			 * from the Eiffel class. */
+		l_result = (double) value / pow (10.0, NumStr->scale);
+	}
+	
+	if (NumStr->sign) {
+		return l_result;
+	} else {
+		return -l_result;
+	}
+}
+
+rt_public EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
+{
+	EIF_NATURAL_64 value, last, current;
+	int i = 1;
+
+	value = 0; last = 1;
+
+		/* Currently we cannot represent more than 64-bit. */
+	for (i = 0; i <= 0x07; i++) {
+		current = (EIF_NATURAL_64)NumStr->val[i];
+		value += last*current;
+		last = last * 256;
 	}
 	return value;
 }

@@ -24,9 +24,7 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			set_object_and_function_address
-			create item.share_from_pointer (c_create_instance, size)
-			all_property_sets.extend (object_id)
+			share_with_pointer (c_create_instance)
 		end
 
 	share_with_pointer (a_pointer: POINTER)
@@ -34,8 +32,8 @@ feature {NONE} -- Initialization
 		require
 			valid: a_pointer /= default_pointer
 		do
-			set_object_and_function_address
 			create item.share_from_pointer (a_pointer, size)
+			set_object_and_function_address
 			all_property_sets.extend (object_id)
 		end
 
@@ -215,7 +213,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

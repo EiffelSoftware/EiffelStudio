@@ -800,6 +800,7 @@ feature -- Common pitfalls
 			create bob.make ("Robert", "Baratheon")
 			transaction := repository.new_transaction
 				-- Error: Bob was not inserted / retrieved before.
+				-- The result is a precondition violation.
 			transaction.update (bob)
 			transaction.commit
 		end
@@ -821,6 +822,7 @@ feature -- Common pitfalls
 			transaction.prepare
 
 				-- Error: Joff was not inserted / retrieved before.
+				-- The result is a precondition violation.
 			transaction.update (joff)
 
 				-- Note: After commit and prepare,`transaction'

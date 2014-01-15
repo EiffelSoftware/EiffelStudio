@@ -5,10 +5,13 @@ note
 	revision: "$Revision$"
 
 deferred class
-	VISION2_TEST_SET
+	EV_VISION2_TEST_SET
 
 inherit
-	EQA_TEST_SET
+	ANY
+		undefine
+			default_create
+		end
 
 feature -- Action
 
@@ -35,6 +38,15 @@ feature -- Action
 			report_vision2_failure
 		end
 
+feature -- Basic operations
+
+	assert_32 (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
+			-- Assert `a_condition'.
+		require
+			a_tag_not_void: a_tag /= Void
+		deferred
+		end
+
 feature {NONE} -- Access
 
 	application: detachable EV_APPLICATION
@@ -51,9 +63,9 @@ feature {NONE} -- Access
 					l_appl.destroy
 				end
 				if attached a_exception.description as l_desc then
-					assert ("Exception occurred: (" + a_exception.tag + ") " + l_desc, False)
+					assert_32 ({STRING_32} "Exception occurred: (" + a_exception.tag + ") " + l_desc, False)
 				else
-					assert ("Exception occurred: (" + a_exception.tag + ")", False)
+					assert_32 ({STRING_32} "Exception occurred: (" + a_exception.tag + ")", False)
 				end
 			end
 		end
@@ -100,10 +112,10 @@ feature {NONE} -- Event handling
 			if attached {EV_BUTTON} find_widget_with_name (a_identifer_name) as l_button then
 				create l_screen
 				l_screen.set_pointer_position (l_button.screen_x + l_button.width // 2, l_button.screen_y + l_button.height // 2)
-				assert ("Widget under pointer match", l_screen.widget_at_mouse_pointer = l_button)
+				assert_32 ({STRING_32} "Widget under pointer match", l_screen.widget_at_mouse_pointer = l_button)
 				l_screen.fake_pointer_button_click ({EV_POINTER_CONSTANTS}.left)
 			else
-				assert ("Can't find button with name: " + a_identifer_name, False)
+				assert_32 ({STRING_32} "Can't find button with name: " + a_identifer_name, False)
 			end
 		end
 
@@ -119,7 +131,7 @@ feature {NONE} -- Event handling
 				l_screen.set_pointer_position (l_window.screen_x + l_window.width - 5, l_window.screen_y + 5)
 				l_screen.fake_pointer_button_click ({EV_POINTER_CONSTANTS}.left)
 			else
-				assert ("Can't find window with name: " + a_window_identifier, False)
+				assert_32 ({STRING_32} "Can't find window with name: " + a_window_identifier, False)
 			end
 		end
 
@@ -131,10 +143,10 @@ feature {NONE} -- Event handling
 		do
 			if attached {EV_BUTTON} find_widget_with_name (a_identifier_name) as l_button then
 				if not l_button.text.same_string (a_correct_text) then
-					assert ("Button's text not correct. " + a_identifier_name + " " + a_correct_text + " " + l_button.text, False)
+					assert_32 ({STRING_32} "Button's text not correct. " + a_identifier_name + " " + a_correct_text + " " + l_button.text, False)
 				end
 			else
-				assert ("Can't find button with name: " + a_identifier_name, False)
+				assert_32 ({STRING_32} "Can't find button with name: " + a_identifier_name, False)
 			end
 		end
 
@@ -196,7 +208,7 @@ feature {NONE} -- Conveniences
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

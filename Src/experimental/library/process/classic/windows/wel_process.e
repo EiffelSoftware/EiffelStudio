@@ -96,12 +96,12 @@ feature -- Process operations
 			-- in `last_process_result'.
 		require
 			process_launched: launched
-		local
-			l_process_info: like process_info
 		do
-			l_process_info := process_info
-			check l_process_info /= Void end
-			last_operation_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+			if attached process_info as l_process_info then
+				last_operation_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+			else
+				last_operation_successful := False
+			end
 		end
 
 feature -- Status setting
@@ -309,23 +309,22 @@ feature -- Handle operation
 			-- Close process handle.
 		require
 			process_launched: launched
-		local
-			l_process_info: like process_info
 		do
-			l_process_info := process_info
-			check l_process_info /= Void end
-			last_operation_successful := file_handle.close (l_process_info.thread_handle)
-			l_process_info.set_thread_handle (default_pointer)
-			last_operation_successful := file_handle.close (l_process_info.process_handle)
-			l_process_info.set_process_handle (default_pointer)
+			if attached process_info as l_process_info then
+				last_operation_successful := file_handle.close (l_process_info.thread_handle)
+				l_process_info.set_thread_handle (default_pointer)
+					-- Make sure to not reset the value of `last_operation_successful'.
+				last_operation_successful := file_handle.close (l_process_info.process_handle) and last_operation_successful
+				l_process_info.set_process_handle (default_pointer)
+			else
+				last_operation_successful := False
+			end
 		end
 
 feature
 
 	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
-		local
-			l_tuple: detachable TUPLE [p1: POINTER; p2: POINTER]
 		do
 			create Result.make
 
@@ -337,10 +336,14 @@ feature
 					Result.set_std_input (stdin)
 				else
 					if input_pipe_needed then
-						l_tuple := file_handle.create_pipe_read_inheritable
-						check l_tuple /= Void end
-						child_input := l_tuple.p1
-						std_input := l_tuple.p2
+						if attached file_handle.create_pipe_read_inheritable as l_tuple then
+							child_input := l_tuple.read_pipe
+							std_input := l_tuple.write_pipe
+						else
+								-- An error occurred
+							child_input := default_pointer
+							std_input := default_pointer
+						end
 					else
 						child_input := file_handle.open_file_inheritable (input_file_name)
 						std_input := default_pointer
@@ -354,10 +357,14 @@ feature
 					Result.set_std_output (stdout)
 				else
 					if output_pipe_needed then
-						l_tuple := file_handle.create_pipe_write_inheritable
-						check l_tuple /= Void end
-						std_output := l_tuple.p1
-						child_output := l_tuple.p2
+						if attached file_handle.create_pipe_write_inheritable as l_tuple then
+							std_output := l_tuple.read_pipe
+							child_output := l_tuple.write_pipe
+						else
+								-- An error occurred
+							std_output := default_pointer
+							child_output := default_pointer
+						end
 					else
 						child_output := file_handle.create_file_inheritable (output_file_name, True)
 						std_output := default_pointer
@@ -378,10 +385,14 @@ feature
 						end
 					else
 						if error_pipe_needed then
-							l_tuple := file_handle.create_pipe_write_inheritable
-							check l_tuple /= Void end
-							std_error := l_tuple.p1
-							child_error := l_tuple.p2
+							if attached file_handle.create_pipe_write_inheritable as l_tuple then
+								std_error := l_tuple.read_pipe
+								child_error := l_tuple.write_pipe
+							else
+									-- An error occurred
+								std_error := default_pointer
+								child_error := default_pointer
+							end
 						else
 							child_error := file_handle.create_file_inheritable (error_file_name, True)
 							std_error := default_pointer

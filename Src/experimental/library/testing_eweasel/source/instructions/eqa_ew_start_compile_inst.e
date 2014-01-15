@@ -79,7 +79,6 @@ feature {NONE} -- Query
 			-- The arguments to the compiler for test `test'.
 		local
 			l_test_dir: STRING_32
-			l_ecf_name: detachable STRING
 		do
 			create Result.make
 			from
@@ -99,12 +98,11 @@ feature {NONE} -- Query
 			Result.extend (l_test_dir)
 				-- Ignore user file for testing
 			Result.extend ("-local")
-				-- Path to configuration file
-			Result.extend ("-config")
-			l_ecf_name := a_test.ecf_name
-			check attached l_ecf_name end -- Implied by `init_env' is called before each test run
-			Result.extend (a_test.file_system.build_path (l_test_dir, << l_ecf_name >>))
-
+				-- Path to configuration file. If none specified, the compiler will use the default one.
+			if attached a_test.ecf_name as l_ecf_name then
+				Result.extend ("-config")
+				Result.extend (a_test.file_system.build_path (l_test_dir, << l_ecf_name >>))
+			end
 		end
 
 	compilation_options: LIST [STRING]
@@ -116,7 +114,7 @@ feature {NONE} -- Query
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

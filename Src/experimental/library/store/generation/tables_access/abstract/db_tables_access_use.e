@@ -13,7 +13,7 @@ feature -- Status report
 	is_valid_code (code: INTEGER): BOOLEAN
 			-- Does `code' represents a database table?
 		do
-			Result := tables.is_valid (code)
+			Result := attached tables_cell.item as l_tables and then l_tables.is_valid (code)
 		end
 
 	tables_set: BOOLEAN
@@ -29,12 +29,10 @@ feature {NONE} -- Access
 			-- Abstract description of database tables.
 		require
 			tables_set: tables_set
-		local
-			l_item: detachable DB_TABLES_ACCESS
 		do
-			l_item := tables_cell.item
-			check l_item /= Void end -- implied by precondition `tables_set'
-			Result := l_item
+			check attached tables_cell.item as l_item then
+				Result := l_item
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -60,14 +58,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

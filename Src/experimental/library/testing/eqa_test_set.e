@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			l_exec_env: EXECUTION_ENVIRONMENT
 			l_exec_dir: PATH
 			l_directory: DIRECTORY
-			l_target_path: PATH
+			l_target_path: detachable PATH
 		do
 			create environment
 			file_system := new_file_system
@@ -33,26 +33,30 @@ feature {NONE} -- Initialization
 			if attached environment.item ({EQA_TEST_SET}.target_path_key) as l_target then
 				create l_target_path.make_from_string (l_target)
 			else
-				if attached environment.item ({EQA_TEST_SET}.testing_directory_key) as l_exec then
+				if
+					attached environment.item ({EQA_TEST_SET}.testing_directory_key) as l_exec and then
+					attached environment.item ({EQA_TEST_SET}.test_name_key) as l_test_name
+				then
 					create l_exec_dir.make_from_string (l_exec)
-				else
-					l_exec_dir := l_exec_env.current_working_path
+					l_target_path := l_exec_dir.extended (l_test_name)
+					environment.put (l_target_path.name, {EQA_TEST_SET}.target_path_key)
 				end
-				l_target_path := l_exec_dir.extended (environment.item_attached ({EQA_TEST_SET}.test_name_key, asserter))
-				environment.put (l_target_path.name, {EQA_TEST_SET}.target_path_key)
 			end
-			create l_directory.make_with_path (l_target_path)
-				-- We cannot assume that the directory does not already exist which sometimes
-				-- happen since EiffelStudio let users keep their testing directory via a preference.
-				-- This is why we do not assert its non-existence anymore, we will create it only if
-				-- it does not exist.
-			if not l_directory.exists then
-				l_directory.recursive_create_dir
-			else
-					-- Remove existing file which could prevent a proper re-execution of the test
-				l_directory.delete_content
+				-- If launched from EiffelStudio's AutoTest we remove the previous executions.
+			if l_target_path /= Void then
+				create l_directory.make_with_path (l_target_path)
+					-- We cannot assume that the directory does not already exist which sometimes
+					-- happen since EiffelStudio let users keep their testing directory via a preference.
+					-- This is why we do not assert its non-existence anymore, we will create it only if
+					-- it does not exist.
+				if not l_directory.exists then
+					l_directory.recursive_create_dir
+				else
+						-- Remove existing file which could prevent a proper re-execution of the test
+					l_directory.delete_content
+				end
+				assert_32 ({STRING_32} "testing_directory_exists " + l_target_path.name, l_directory.exists)
 			end
-			assert_32 ({STRING_32} "testing_directory_exists " + l_target_path.name, l_directory.exists)
 			on_prepare
 		ensure then
 			prepared: is_prepared
@@ -216,7 +220,7 @@ invariant
 	internal_file_system_valid: file_system.asserter = asserter
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

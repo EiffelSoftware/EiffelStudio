@@ -316,14 +316,12 @@ feature -- Basic operations
 		require
 			launched: is_launched
 			not_exited: not has_exited
-		local
-			l_status: like process
 		do
-			l_status := process
-			check l_status /= Void end
-			l_status.redirect_output
-			if not l_status.is_running then
-				cleanup_process
+			check not_exited: attached process as l_process then
+				l_process.redirect_output
+				if not l_process.is_running then
+					cleanup_process
+				end
 			end
 		end
 
@@ -332,17 +330,16 @@ feature -- Basic operations
 		require
 			launched: is_launched
 			not_exited: not has_exited
-		local
-			l_status: like process
 		do
-			l_status := process
-			check l_status /= Void end
-			from until
-				not l_status.is_running
-			loop
-				l_status.redirect_output
+			check not_exited: attached process as l_process then
+				from
+				until
+					not l_process.is_running
+				loop
+					l_process.redirect_output
+				end
+				cleanup_process
 			end
-			cleanup_process
 		ensure
 			exited: has_exited
 		end
@@ -355,12 +352,10 @@ feature -- Basic operations
 			launched: is_launched
 			not_exited: not has_exited
 			input_file_name_detached: input_file_name = Void
-		local
-			l_process: like process
 		do
-			l_process := process
-			check l_process /= Void end
-			l_process.redirect_input (a_input)
+			check not_exited: attached process as l_process then
+				l_process.redirect_input (a_input)
+			end
 		end
 
 feature -- Element change
@@ -407,13 +402,11 @@ feature {NONE} -- Implementation
 			launched: is_launched
 			not_has_exited: not has_exited
 			process_exited: attached process as l_proc and then not l_proc.is_running
-		local
-			l_process: like process
 		do
-			l_process := process
-			check l_process /= Void end
-			last_exit_code := l_process.last_exit_code
-			process := Void
+			check not_exited: attached process as l_process then
+				last_exit_code := l_process.last_exit_code
+				process := Void
+			end
 		ensure
 			exited: has_exited
 		end
@@ -441,7 +434,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -65,10 +65,10 @@ feature -- Access
 	tag: READABLE_STRING_8
 			-- If available, short tag describing stats of `Current'
 		do
-			if test_response.is_exceptional then
-				Result := test_response.exception.tag_name
-			elseif teardown_response.is_exceptional then
-				Result := teardown_response.exception.tag_name
+			if attached test_response.exception as l_exception then
+				Result := l_exception.tag_name
+			elseif attached teardown_response.exception as l_exception then
+				Result := l_exception.tag_name
 			else
 				Result := Precursor
 			end
@@ -111,16 +111,16 @@ feature -- Status report
 			--       violation occurred which was caused by a call from TEST_INTERPRETER or any (!) call
 			--       from an agent.
 		do
-			Result := not test_response.is_exceptional or else not test_response.exception.is_test_invalid
+			Result := not attached test_response.exception as l_exception or else not l_exception.is_test_invalid
 		ensure
-			definition: Result implies (not test_response.is_exceptional or else not test_response.exception.is_test_invalid)
+			definition: Result implies (not attached test_response.exception as l_exception or else not l_exception.is_test_invalid)
 		end
 
 invariant
 	setup_clean: not setup_response.is_exceptional
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

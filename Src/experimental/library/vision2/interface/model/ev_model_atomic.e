@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_foreground_color (a_color: EV_COLOR)
+	set_foreground_color (a_color: like foreground_color)
 			-- Assign `a_color' to `foreground_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -161,14 +161,14 @@ invariant
 	line_width_non_negative: line_width >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

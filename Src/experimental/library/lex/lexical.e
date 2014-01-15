@@ -22,12 +22,20 @@ feature -- Initialization
 			-- Set up lexical analyzer for retrieval.
 		do
 			create last_token
+			create categories_table.make_empty
+			create dfa.make (1, 0)
+			create buffer.make_empty
+			create line_nb_array.make_empty
+			create column_nb_array.make_empty
+			create keyword_h_table.make (0)
 		end;
 
 	make_new
 			-- Set up a new lexical analyzer
+		obsolete
+			"Use make instead."
 		do
-			create last_token;
+			make
 			initialize
 		end
 
@@ -231,14 +239,11 @@ feature -- Input
 				from
 					l_dfa := dfa
 					l_cat_table := categories_table
-					check
-						l_dfa_attached: l_dfa /= Void
-						l_cat_table_attached: l_cat_table /= Void
-					end
 					state := l_dfa.item (1);
-					check state /= Void end
-					state := state.item (l_cat_table.item
+					if state /= Void then
+						state := state.item (l_cat_table.item
 							(buffer_item_code (read_index)))
+					end
 				until
 					state = Void or too_big
 				loop
@@ -331,14 +336,11 @@ feature -- Input
 				from
 					l_dfa := dfa
 					l_cat_table := categories_table
-					check
-						l_dfa_attached: l_dfa /= Void
-						l_cat_table_attached: l_cat_table /= Void
-					end
-					state := l_dfa.item (1);
-					check state /= Void end
-					state := state.item (l_cat_table.item
+					state := l_dfa.item (1)
+					if state /= Void then
+						state := state.item (l_cat_table.item
 								(buffer_item_code (read_index)));
+					end
 				until
 					state = Void or recognized or too_big
 				loop
@@ -427,14 +429,11 @@ feature -- Input
 				from
 					l_dfa := dfa
 					l_cat_table := categories_table
-					check
-						l_dfa_attached: l_dfa /= Void
-						l_cat_table_attached: l_cat_table /= Void
-					end
-					state := l_dfa.item (1);
-					check state /= Void end
-					state := state.item (l_cat_table.item
+					state := l_dfa.item (1)
+					if state /= Void then
+						state := state.item (l_cat_table.item
 								(buffer_item_code (read_index)))
+					end
 				until
 					state = Void or (read_index - token_start) = l or too_big
 				loop
@@ -489,39 +488,33 @@ feature -- Output
 			l_cat_table: like categories_table
 			i: INTEGER
 		do
-			debug ("lex_output")
-				l_dfa := dfa
-				l_cat_table := categories_table
-				check
-					l_dfa_attached: l_dfa /= Void
-					l_cat_table_attached: l_cat_table /= Void
-				end
-				from
-					i := l_cat_table.lower;
-					io.put_string (" LEXICAL%N Categories table.%N From ");
+			l_dfa := dfa
+			l_cat_table := categories_table
+			from
+				i := l_cat_table.lower;
+				io.put_string (" LEXICAL%N Categories table.%N From ");
+				io.put_integer (i)
+			until
+				i = l_cat_table.upper
+			loop
+				i := i + 1;
+				if l_cat_table.item (i) /= l_cat_table.item (i - 1) then
+					io.put_string (" to ");
+					io.put_integer (i - 1);
+					io.put_string (" ");
+					io.put_integer (l_cat_table.item (i - 1));
+					io.put_string ("th category.%N From ");
 					io.put_integer (i)
-				until
-					i = l_cat_table.upper
-				loop
-					i := i + 1;
-					if l_cat_table.item (i) /= l_cat_table.item (i - 1) then
-						io.put_string (" to ");
-						io.put_integer (i - 1);
-						io.put_string (" ");
-						io.put_integer (l_cat_table.item (i - 1));
-						io.put_string ("th category.%N From ");
-						io.put_integer (i)
-					end
-				end;
-				io.put_string (" to ");
-				io.put_integer (i);
-				io.put_string (" ");
-				io.put_integer (l_cat_table.item (i));
-				io.put_string ("-th category.%N End of categories table.%N");
-				l_dfa.trace;
-				io.put_string (" End LEXICAL.");
-				io.new_line
-			end
+				end
+			end;
+			io.put_string (" to ");
+			io.put_integer (i);
+			io.put_string (" ");
+			io.put_integer (l_cat_table.item (i));
+			io.put_string ("-th category.%N End of categories table.%N");
+			l_dfa.trace;
+			io.put_string (" End LEXICAL.");
+			io.new_line
 		end;
 
 feature -- Obsolete
@@ -567,7 +560,7 @@ feature {LEXICAL, LEX_BUILDER} -- Implementation
 
 feature -- Implementation
 
-	dfa: detachable FIXED_DFA;
+	dfa: FIXED_DFA
 			-- Automaton used for the parsing
 
 feature {NONE} -- Implementation
@@ -592,14 +585,11 @@ feature {NONE} -- Implementation
 	Close_of_file: INTEGER = 255;
 			-- End-of-file indicator on some platforms
 
-	categories_table: detachable ARRAY [INTEGER];
+	categories_table: ARRAY [INTEGER];
 			-- For each input, category number
 
 	keyword_h_table: HASH_TABLE [INTEGER, STRING]
 			-- Keywords table
-		attribute
-			create Result.make (1)
-		end
 
 	keywords_case_sensitive: BOOLEAN;
 			-- Are the keyword case sensitive?
@@ -642,7 +632,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

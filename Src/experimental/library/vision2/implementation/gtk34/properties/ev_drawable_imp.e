@@ -698,7 +698,7 @@ feature -- filling operations
 			if l_drawable /= default_pointer then
 				if a_width > 0 and then a_height > 0 then
 						-- If width or height are zero then nothing will be rendered.
-					{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+					{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width - line_width, a_height - line_width)
 					if a_fill then
 						{CAIRO}.cairo_stroke_preserve (l_drawable)
 						{CAIRO}.cairo_save (l_drawable)

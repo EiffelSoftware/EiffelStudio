@@ -26,15 +26,7 @@ inherit
 		end
 
 create
-	default_create, make
-
-feature -- Creation
-
-	make
-		obsolete
-			"Use no creation procedure to create a TUPLE instance"
-		do
-		end
+	default_create
 
 feature -- Access
 

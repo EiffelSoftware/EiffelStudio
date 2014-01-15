@@ -32,42 +32,37 @@ feature -- Initialization
 
 feature -- Access
 
-	redirected_value (data: ANY): STRING
+	redirected_value (data: ANY): STRING_32
 			-- Return the redirected value from redirector.
 		require
 			at_least_one_result_set: at_least_one_result_set
-		local
-			h: HASHABLE
 		do
-			h ?= data
-			if h /= Void then
-				if result_table.has (h) then
-					Result := result_table.item (h)
+			if attached {HASHABLE} data as h then
+				if attached result_table.item (h) as l_found_item then
+					Result := l_found_item
+				elseif attached redirector as l_redirector then
+					Result := l_redirector.item ([h])
+					result_table.put (Result, h)
 				else
-					if redirector /= Void then
-						Result := redirector.item ([h])
-						result_table.put (Result, h)
-					end
+					Result := ""
 				end
+			elseif attached redirector as l_redirector then
+				Result := l_redirector.item ([data])
 			else
-				if redirector /= Void then
-					Result := redirector.item ([data])
-				end
+				Result := ""
 			end
 		end
 
-	inverted_value (s: STRING): ANY
-			-- 
+	inverted_value (s: STRING): detachable ANY
+			--
 		require
 			can_invert: can_invert
 		do
-			if inversion_table.has (s) then
-				Result := inversion_table.item (s)
-			else
-				if invertor /= Void then
-					Result := invertor.item ([s])
-					inversion_table.put (Result, s)
-				end
+			if attached inversion_table.item (s) as l_found_item then
+				Result := l_found_item
+			elseif attached invertor as l_invertor then
+				Result := l_invertor.item ([s])
+				inversion_table.put (Result, s)
 			end
 		end
 
@@ -87,7 +82,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_results (res_t: HASH_TABLE [STRING, HASHABLE])
+	set_results (res_t: HASH_TABLE [STRING_32, HASHABLE])
 			-- Set values of the redirector result table with `res_t'.
 		require
 			not_void: res_t /= Void
@@ -131,27 +126,27 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	redirector: FUNCTION [ANY, TUPLE [ANY], STRING]
+	redirector: detachable FUNCTION [ANY, TUPLE [ANY], STRING]
 			-- Function to redirect data to a string representation.
 
-	invertor: FUNCTION [ANY, TUPLE [STRING], ANY]
+	invertor: detachable FUNCTION [ANY, TUPLE [STRING], ANY]
 			-- Function to find back data from its string representation.
 
-	result_table: HASH_TABLE [STRING, HASHABLE]
+	result_table: HASH_TABLE [STRING_32, HASHABLE]
 			-- Table to store and access string corresponding to an hashable data.
 
 	inversion_table: HASH_TABLE [ANY, STRING];
 			--  Table to store and access data from its string representation.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

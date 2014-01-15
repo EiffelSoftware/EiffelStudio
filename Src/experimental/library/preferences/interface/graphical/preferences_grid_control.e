@@ -44,113 +44,116 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		local
-			box: EV_VERTICAL_BOX
-			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			ffilter, fgrid, fdesc: EV_FRAME
-			lab: EV_LABEL
-			tb: EV_TOOL_BAR
+			l_box: EV_VERTICAL_BOX
+			l_vb: EV_VERTICAL_BOX
+			l_hb: EV_HORIZONTAL_BOX
+			l_ffilter, l_fgrid, l_fdesc: EV_FRAME
+			l_lab: EV_LABEL
+			l_tb: EV_TOOL_BAR
 		do
-			display_update_agent := agent on_preference_changed_externally
-			build_filter_icons
-
-			create box
-			widget := box
-			box.set_border_width (small_border_size)
-			box.set_padding_width (small_padding_size)
-
-			create ffilter
-			create hb
-			hb.set_border_width (small_border_size)
-			hb.set_padding_width (small_padding_size)
+				-- Create objects before using them for void-safety reasons.
 			create filter_box
-			create lab.make_with_text (l_filter)
 			create filter_text_box
 			create filter_value_check_box.make_with_text (l_filter_value)
-			create tb
 			create view_toggle_button.make_with_text (l_flat_view)
-			filter_box.extend (lab)
-			filter_box.disable_item_expand (lab)
-			filter_box.extend (filter_text_box)
-			filter_box.extend (filter_value_check_box)
-			filter_box.disable_item_expand (filter_value_check_box)
-			filter_box.set_padding_width (small_padding_size)
-			hb.extend (filter_box)
-			tb.extend (view_toggle_button)
-			hb.extend (tb)
-			hb.disable_item_expand (tb)
-			ffilter.extend (hb)
-			box.extend (ffilter)
-			box.disable_item_expand (ffilter)
-
 			create split_area
-
-			create fgrid
-			create vb
-			vb.set_border_width (small_border_size)
 			create grid_container
-			grid_container.set_border_width (1)
-			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			vb.extend (grid_container)
 			create status_box
-			status_box.set_padding_width (tiny_padding_size)
-
 			create description_location
-			status_box.extend (description_location)
 			create status_label
-			status_box.extend (status_label)
-			status_label.align_text_right
-			status_box.disable_item_expand (status_label)
-			vb.extend (status_box)
-			vb.disable_item_expand (status_box)
-			fgrid.extend (vb)
-
-			create fdesc.make_with_text (l_description)
-			create vb
-			vb.set_padding_width (tiny_padding_size)
-			vb.set_border_width (small_border_size)
-
 			create description_text
-			description_text.set_minimum_height (40)
-			vb.extend (description_text)
-
-			fdesc.extend (vb)
-
-			split_area.extend (fgrid)
-			split_area.extend (fdesc)
-			split_area.enable_item_expand (fgrid)
-			split_area.disable_item_expand (fdesc)
-			box.extend (split_area)
-
-			create hb
-			hb.set_padding_width (small_padding_size)
-			hb.set_border_width (small_border_size)
 			create restore_button.make_with_text (l_restore_defaults)
 			create import_button.make_with_text (l_import_preferences)
 			create export_button.make_with_text (l_export_preferences)
 			create display_hidden_button.make_with_text (l_display_hidden_preferences)
+			create apply_or_close_button.make_with_text (l_apply)
+			create grid
+			build_filter_icons
+
+			display_update_agent := agent on_preference_changed_externally
+
+			create l_box
+			widget := l_box
+			l_box.set_border_width (small_border_size)
+			l_box.set_padding_width (small_padding_size)
+
+			create l_ffilter
+			create l_hb
+			l_hb.set_border_width (small_border_size)
+			l_hb.set_padding_width (small_padding_size)
+			create l_lab.make_with_text (l_filter)
+			create l_tb
+			filter_box.extend (l_lab)
+			filter_box.disable_item_expand (l_lab)
+			filter_box.extend (filter_text_box)
+			filter_box.extend (filter_value_check_box)
+			filter_box.disable_item_expand (filter_value_check_box)
+			filter_box.set_padding_width (small_padding_size)
+			l_hb.extend (filter_box)
+			l_tb.extend (view_toggle_button)
+			l_hb.extend (l_tb)
+			l_hb.disable_item_expand (l_tb)
+			l_ffilter.extend (l_hb)
+			l_box.extend (l_ffilter)
+			l_box.disable_item_expand (l_ffilter)
+
+
+			create l_fgrid
+			create l_vb
+			l_vb.set_border_width (small_border_size)
+			grid_container.set_border_width (1)
+			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			l_vb.extend (grid_container)
+			status_box.set_padding_width (tiny_padding_size)
+
+			status_box.extend (description_location)
+			status_box.extend (status_label)
+			status_label.align_text_right
+			status_box.disable_item_expand (status_label)
+			l_vb.extend (status_box)
+			l_vb.disable_item_expand (status_box)
+			l_fgrid.extend (l_vb)
+
+			create l_fdesc.make_with_text (l_description)
+			create l_vb
+			l_vb.set_padding_width (tiny_padding_size)
+			l_vb.set_border_width (small_border_size)
+
+			description_text.set_minimum_height (40)
+			l_vb.extend (description_text)
+
+			l_fdesc.extend (l_vb)
+
+			split_area.extend (l_fgrid)
+			split_area.extend (l_fdesc)
+			split_area.enable_item_expand (l_fgrid)
+			split_area.disable_item_expand (l_fdesc)
+			l_box.extend (split_area)
+
+			create l_hb
+			l_hb.set_padding_width (small_padding_size)
+			l_hb.set_border_width (small_border_size)
 			if show_hidden_preferences then
 				display_hidden_button.enable_select
 			end
 
-			create apply_or_close_button.make_with_text (l_apply)
 			set_default_width_for_button (restore_button)
 			set_default_width_for_button (import_button)
 			set_default_width_for_button (export_button)
 			set_default_width_for_button (apply_or_close_button)
-			hb.extend (restore_button)
-			hb.extend (import_button)
-			hb.extend (export_button)
-			hb.extend (display_hidden_button)
-			hb.extend (create {EV_CELL})
-			hb.extend (apply_or_close_button)
-			hb.disable_item_expand (restore_button)
-			hb.disable_item_expand (import_button)
-			hb.disable_item_expand (export_button)
-			hb.disable_item_expand (display_hidden_button)
-			hb.disable_item_expand (apply_or_close_button)
-			box.extend (hb)
-			box.disable_item_expand (hb)
+			l_hb.extend (restore_button)
+			l_hb.extend (import_button)
+			l_hb.extend (export_button)
+			l_hb.extend (display_hidden_button)
+			l_hb.extend (create {EV_CELL})
+			l_hb.extend (apply_or_close_button)
+			l_hb.disable_item_expand (restore_button)
+			l_hb.disable_item_expand (import_button)
+			l_hb.disable_item_expand (export_button)
+			l_hb.disable_item_expand (display_hidden_button)
+			l_hb.disable_item_expand (apply_or_close_button)
+			l_box.extend (l_hb)
+			l_box.disable_item_expand (l_hb)
 
 				--| Widget properties
 			if attached description_location.parent as p then
@@ -164,7 +167,6 @@ feature {NONE} -- Initialization
 				--| Dynamic behavior
 
 			flat_sorting_info := Name_sorting_mode
-			create grid
 			default_row_height := grid.row_height
 			grid.enable_single_row_selection
 			grid_container.extend (grid)
@@ -191,7 +193,7 @@ feature {NONE} -- Initialization
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
-			box.resize_actions.force_extend (agent on_resize)
+			l_box.resize_actions.force_extend (agent on_resize)
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter
@@ -216,7 +218,7 @@ feature -- Access
 	close_button_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action called when "Close" button is pressed.
 
-	parent_window: detachable EV_WINDOW
+	parent_window: detachable EV_WINDOW note option: stable attribute end
 			-- Parent window.  Used to display this view relative to.
 
 	parent_window_of (w: EV_WIDGET): detachable EV_WINDOW
@@ -252,7 +254,7 @@ feature -- Obsolete
 
 feature -- Status Setting
 
-	set_parent_window (p: like parent_window)
+	set_parent_window (p: attached like parent_window)
 			-- Set `parent_window'
 		do
 			parent_window := p
@@ -458,17 +460,18 @@ feature {NONE} -- Events
 			stor: PREFERENCES_STORAGE_XML
 			p: detachable EV_WINDOW
 		do
-			create dlg.make_with_title (l_export_preferences)
 			p := parent_window
 			if p = Void then
 				p := parent_window_of (widget)
-				check p /= Void end -- Implied by `widget' being part of the UI
 			end
-			dlg.show_modal_to_window (p)
-			s := dlg.file_name
-			if s /= Void and then not s.is_empty then --| Cancelled
-				create stor.make_with_location_and_version (s, preferences.version)
-				preferences.export_to_storage (stor, False)
+			if p /= Void then
+				create dlg.make_with_title (l_export_preferences)
+				dlg.show_modal_to_window (p)
+				s := dlg.file_name
+				if s /= Void and then not s.is_empty then --| Cancelled
+					create stor.make_with_location_and_version (s, preferences.version)
+					preferences.export_to_storage (stor, False)
+				end
 			end
 		end
 
@@ -479,18 +482,19 @@ feature {NONE} -- Events
 			stor: PREFERENCES_STORAGE_XML
 			p: detachable EV_WINDOW
 		do
-			create dlg.make_with_title (l_import_preferences)
 			p := parent_window
 			if p = Void then
 				p := parent_window_of (widget)
-				check p /= Void end -- Implied by `widget' being part of the UI
 			end
-			dlg.show_modal_to_window (p)
-			s := dlg.file_name
-			if s /= Void then
-				create stor.make_with_location_and_version (s, preferences.version)
-				preferences.import_from_storage (stor)
-				rebuild
+			if p /= Void then
+				create dlg.make_with_title (l_import_preferences)
+				dlg.show_modal_to_window (p)
+				s := dlg.file_name
+				if s /= Void then
+					create stor.make_with_location_and_version (s, preferences.version)
+					preferences.import_from_storage (stor)
+					rebuild
+				end
 			end
 		end
 
@@ -789,9 +793,13 @@ feature {NONE} -- Implementation
 					add_parent_structure_preference_row (l_parent_name, a_grid_structure)
 				end
 				l_row := a_grid_structure.item (l_parent_name)
-				check l_row /= Void end -- implied by `not a_grid_structure.has (l_parent_name)' and postcondition from `add_parent_structure_preference_row'
-				l_row.insert_subrow (l_row.subrow_count + 1)
-				l_row := l_row.subrow (l_row.subrow_count)
+				if l_row /= Void then
+					l_row.insert_subrow (l_row.subrow_count + 1)
+					l_row := l_row.subrow (l_row.subrow_count)
+				else
+						-- implied by `not a_grid_structure.has (l_parent_name)' and postcondition from `add_parent_structure_preference_row'
+					check l_row /= Void then end
+				end
 			else
 					--| Precondition requires `a_pref_parent_full_name' is not already inserted
 					--| So it can only be a new top row
@@ -799,7 +807,6 @@ feature {NONE} -- Implementation
 				grid.insert_new_row (grid.row_count + 1)
 				l_row := grid.row (grid.row_count)
 			end
-			check l_row /= Void end
 			create l_grid_label.make_with_text (try_to_translate (formatted_name (l_short_name)))
 			if folder_icon /= Void then
 				l_grid_label.set_pixmap (folder_icon)
@@ -1688,7 +1695,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

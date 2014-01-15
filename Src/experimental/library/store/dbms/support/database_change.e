@@ -83,7 +83,7 @@ feature -- Element change
 			end
 			if not db_spec.normal_parse then
 			--	handle.execution_type.set_immediate
-				parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql)
+				parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql, False)
 				tmp_string := sql.as_string_32
 			end
 
@@ -121,7 +121,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_ht (table: like ht)
+	set_ht (table: attached like ht)
 			-- Pass map `table' to current.
 			-- Set `ht' with `table'.
 		require
@@ -132,7 +132,7 @@ feature -- Status setting
 			ht = table
 		end
 
-	set_ht_order (list: like ht_order)
+	set_ht_order (list: attached like ht_order)
 			-- Pass map `list' to current.
 			-- Set `ht_order' with `list'.
 		require
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

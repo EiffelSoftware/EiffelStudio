@@ -9,6 +9,9 @@ class
 
 inherit
 	TESTING_SETTINGS
+		redefine
+			is_trusted
+		end
 
 feature -- Storage
 
@@ -45,6 +48,14 @@ feature -- Storage
 				Result := l_p
 			else
 				Result := ""
+			end
+		end
+
+	is_trusted: BOOLEAN
+			-- Is connection structed?
+		once
+			if attached json_configuration.item ("database.odbc.trusted") as l_p and then l_p.is_boolean then
+				Result := l_p.to_boolean
 			end
 		end
 

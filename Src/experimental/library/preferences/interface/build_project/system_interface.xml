@@ -3,7 +3,7 @@
  </item>
  <item type="EV_DIALOG">
   <Internal_properties>
-   <id>2</id>
+   <id>1</id>
    <name>preferences_window</name>
    <Expanded>1</Expanded>
    <Is_root_window>True</Is_root_window>
@@ -25,7 +25,7 @@
   </EV_CONTAINER>
   <item type="EV_VERTICAL_BOX">
    <Internal_properties>
-    <id>8</id>
+    <id>18</id>
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
@@ -44,7 +44,7 @@
    </EV_CONTAINER>
    <item type="EV_HORIZONTAL_SPLIT_AREA">
     <Internal_properties>
-     <id>6</id>
+     <id>12</id>
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
@@ -62,7 +62,7 @@
     </EV_CONTAINER>
     <item type="EV_TREE">
      <Internal_properties>
-      <id>9</id>
+      <id>2</id>
       <name>left_list</name>
       <Expanded>0</Expanded>
      </Internal_properties>
@@ -78,7 +78,7 @@
     </item>
     <item type="EV_VERTICAL_BOX">
      <Internal_properties>
-      <id>10</id>
+      <id>11</id>
       <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
@@ -98,7 +98,7 @@
      </EV_CONTAINER>
      <item type="EV_HORIZONTAL_BOX">
       <Internal_properties>
-       <id>16</id>
+       <id>5</id>
        <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
@@ -116,7 +116,7 @@
       </EV_CONTAINER>
       <item type="EV_FRAME">
        <Internal_properties>
-        <id>17</id>
+        <id>3</id>
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
@@ -140,7 +140,7 @@
       </item>
       <item type="EV_HORIZONTAL_BOX">
        <Internal_properties>
-        <id>18</id>
+        <id>4</id>
         <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
@@ -159,7 +159,7 @@
      </item>
      <item type="EV_VERTICAL_SPLIT_AREA">
       <Internal_properties>
-       <id>7</id>
+       <id>10</id>
        <name>split_area</name>
        <Expanded>1</Expanded>
       </Internal_properties>
@@ -178,7 +178,7 @@
       </EV_CONTAINER>
       <item type="EV_VERTICAL_BOX">
        <Internal_properties>
-        <id>15</id>
+        <id>6</id>
         <name>grid_container</name>
         <Expanded>1</Expanded>
        </Internal_properties>
@@ -200,7 +200,7 @@
       </item>
       <item type="EV_FRAME">
        <Internal_properties>
-        <id>12</id>
+        <id>9</id>
         <name>description_frame</name>
         <Expanded>1</Expanded>
        </Internal_properties>
@@ -225,7 +225,7 @@
        </EV_CONTAINER>
        <item type="EV_VERTICAL_BOX">
         <Internal_properties>
-         <id>11</id>
+         <id>8</id>
          <Expanded>1</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
@@ -245,7 +245,7 @@
         </EV_CONTAINER>
         <item type="EV_TEXT">
          <Internal_properties>
-          <id>5</id>
+          <id>7</id>
           <name>description_text</name>
           <Expanded>0</Expanded>
          </Internal_properties>
@@ -287,7 +287,7 @@
    </item>
    <item type="EV_HORIZONTAL_BOX">
     <Internal_properties>
-     <id>14</id>
+     <id>17</id>
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
@@ -307,7 +307,7 @@
     </EV_CONTAINER>
     <item type="EV_BUTTON">
      <Internal_properties>
-      <id>1</id>
+      <id>14</id>
       <name>restore_button</name>
       <Expanded>0</Expanded>
      </Internal_properties>
@@ -331,7 +331,7 @@
     </item>
     <item type="EV_CELL">
      <Internal_properties>
-      <id>3</id>
+      <id>15</id>
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
@@ -347,7 +347,7 @@
     </item>
     <item type="EV_BUTTON">
      <Internal_properties>
-      <id>4</id>
+      <id>16</id>
       <name>close_button</name>
       <Expanded>0</Expanded>
      </Internal_properties>

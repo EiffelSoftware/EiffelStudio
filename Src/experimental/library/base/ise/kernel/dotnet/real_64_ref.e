@@ -78,6 +78,17 @@ feature -- Access
 			"built_in static"
 		end
 
+	min_value: REAL_64 = -1.7976931348623157081452e+308
+	max_value: REAL_64 = 1.7976931348623157081452e+308
+			-- Minimum and Maximum value hold in `item'.
+
+	machine_epsilon: REAL_64 = 2.2204460492503130808473e-016
+			-- The difference between 1 and the least value greater than
+			-- 1 that is representable in the given floating point type.
+
+	epsilon: REAL_64 = 2.2250738585072013830903e-308
+			-- Minimum normalized positive floating-point number.
+
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN

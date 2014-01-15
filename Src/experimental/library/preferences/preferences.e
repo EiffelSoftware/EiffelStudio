@@ -335,20 +335,13 @@ feature -- Manager
 			manager_added: managers.has (a_namespace)
 		end
 
-	manager (a_namespace: STRING): PREFERENCE_MANAGER
+	manager (a_namespace: STRING): detachable PREFERENCE_MANAGER
 			-- Associated manager to `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
 			namespace_not_empty: not a_namespace.is_empty
-			has_manager: has_manager (a_namespace)
-		local
-			l_result: detachable like manager
 		do
-			l_result := managers.item (a_namespace)
-			check attached l_result end -- implied by precondition `has_manager'
-			Result := l_result
-		ensure
-			result_not_void: Result /= Void
+			Result := managers.item (a_namespace)
 		end
 
 	has_manager (a_namespace: STRING): BOOLEAN
@@ -375,23 +368,16 @@ feature {PREFERENCE_MANAGER} -- Element change
 
 feature -- Preference
 
-	get_preference (a_name: STRING): PREFERENCE
+	get_preference (a_name: STRING): detachable PREFERENCE
 			-- Fetch the preference with `a_name'.
 		require
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
-			has_preference: has_preference (a_name)
-		local
-			l_result: detachable like get_preference
 		do
-			l_result := preferences.item (a_name)
-			check l_result /= Void end -- implied by precondition `has_preference'
-			Result := l_result
-		ensure
-			result_not_void: Result /= Void
+			Result := preferences.item (a_name)
 		end
 
-	get_resource (a_name: STRING): PREFERENCE
+	get_resource (a_name: STRING): detachable PREFERENCE
 		obsolete "[060113] use get_preference instead of get_resource"
 		do
 			Result := get_preference (a_name)
@@ -698,7 +684,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

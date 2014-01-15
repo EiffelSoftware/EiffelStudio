@@ -143,7 +143,7 @@ feature {NONE} -- Trailing blanks
 		do
 			l_list := load_list_with_select (trailing_blanks_select_data, trailing_blanks_create_data)
 			if l_list.count = 1 then
-				assert ("Result is not expected", l_list.i_th (1).my_image.starts_with ("%/66/%/77/%/63/%/91/%/49/%/93/%U%U%U%U%U%U%/54/"))
+				assert ("Result is not expected", l_list.i_th (1).my_image.starts_with (bm_data))
 			else
 				assert ("Number of result is not expected", False)
 			end
@@ -157,6 +157,8 @@ feature {NONE} -- Trailing blanks
 	trailing_blanks_create_table: STRING = "CREATE TABLE DB_TRAILING_BLANKS_TABLE ([id] [int] IDENTITY(1,1) NOT NULL, [my_image] [image] NULL)"
 
 	trailing_blanks_insert_data: STRING = "INSERT INTO DB_TRAILING_BLANKS_TABLE (my_image) VALUES (CAST('BM¶[1]%U%U%U%U%U%U6' as binary))"
+
+	bm_data: STRING = "BM¶[1]%U%U%U%U%U%U6"
 
 end
 

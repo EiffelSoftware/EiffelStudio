@@ -104,6 +104,11 @@ feature {NONE} -- Initialization
 			else
 				set_default_cancel_button (ok_button)
 			end
+
+			check_button.select_actions.extend (agent destroy)
+			ok_button.select_actions.extend (agent destroy)
+			no_button.select_actions.extend (agent destroy)
+			cancel_button.select_actions.extend (agent destroy)
 		end
 
 	build_buttons_box: EV_HORIZONTAL_BOX
@@ -133,13 +138,12 @@ feature -- Basic operations
 		do
 			if assume_ok then
 				if ok_action /= Void then
-					ok_action.call(Void)
+					ok_action.call (Void)
 				end
 			elseif assume_cancel then
-				check
-					cancel_action_not_void: cancel_action /= Void
-				end -- `assume_cancel' ensures `cancel_action' /= Void.
-				cancel_action.call(Void)
+				if cancel_action /= Void then
+					cancel_action.call (Void)
+				end
 			else
 				Precursor (a_window)
 			end
@@ -270,7 +274,6 @@ feature {NONE} -- Implementation
 			Result.align_text_center
 			Result.set_text (a_text)
 			Layout_constants.set_default_width_for_button (Result)
-			Result.select_actions.extend (agent destroy)
 		end
 
 	dialog_title: STRING_32
@@ -348,7 +351,7 @@ feature {NONE} -- Deferred Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

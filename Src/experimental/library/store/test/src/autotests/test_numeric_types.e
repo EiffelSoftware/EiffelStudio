@@ -20,9 +20,12 @@ feature {NONE} -- Prepare
 
 	on_prepare
 			-- Prepare
+		local
 		do
 			Precursor;
-			(create {GLOBAL_SETTINGS}).set_use_extended_types (True)
+			set_use_extended_types (True)
+			set_default_decimal_scale (10)
+			set_default_decimal_presicion (19)
 		end
 
 feature -- Test routines
@@ -172,8 +175,6 @@ feature {NONE} -- Basic select
 			l_data: like numeric_types_create_data_with_decimal
 		do
 			l_data := numeric_types_create_data_with_decimal
-				-- Default scale is 4.
-			l_data.set_numeric_t (create {DECIMAL}.make_from_string ("-999999999.9999"))
 			db_selection.set_map_name (l_data.int_16, "int_16")
 			db_selection.set_map_name (l_data.int_32, "int_32")
 			db_selection.set_map_name (l_data.int_64, "int_64")
@@ -189,6 +190,10 @@ feature {NONE} -- Basic select
 			db_selection.unset_map_name ("numeric_t")
 			if l_list.count = 2 then
 				assert ("Result is not expected", l_list.i_th (1) ~ l_data)
+					-- We slightly change the value here because when inserting "-999999999.999999" as a REAL_64 into
+					-- a decimal fields, the actual REAL_64 value from the string is "-999999999.9999990500" and because
+					-- the database stores a decimal and not a REAL_64 it keeps the digits as is.
+				l_data.set_numeric_t (create {DECIMAL}.make_from_string ("-999999999.9999990500"))
 				assert ("Result is not expected", l_list.i_th (2) ~ l_data)
 			else
 				assert ("Number of results is not expected", False)

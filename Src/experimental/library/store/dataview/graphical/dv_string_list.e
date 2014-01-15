@@ -49,7 +49,6 @@ feature -- Access
 			-- and comma-separated.
 		local
 			lis: DYNAMIC_LIST [EV_LIST_ITEM]
-			ir: INTEGER_REF
 		do
 			lis := selected_items
 			Result := ""
@@ -58,8 +57,9 @@ feature -- Access
 			until
 				lis.after
 			loop
-				ir ?= lis.item.data
-				Result.append (ir.item.out)
+				if attached {INTEGER_REF} lis.item.data as l_int then
+					Result.append_integer (l_int.item)
+				end
 				lis.forth
 				if not lis.after then
 					Result.append_character (separator)
@@ -71,7 +71,6 @@ feature -- Access
 			-- List selected values, coded with integers.
 		local
 			lis: DYNAMIC_LIST [EV_LIST_ITEM]
-			ir: INTEGER_REF
 		do
 			lis := selected_items
 			create Result.make (lis.count)
@@ -80,8 +79,9 @@ feature -- Access
 			until
 				lis.after
 			loop
-				ir ?= lis.item.data
-				Result.extend (ir.item)
+				if attached {INTEGER_REF} lis.item.data as l_int then
+					Result.extend (l_int.item)
+				end
 				lis.forth
 			end
 		ensure
@@ -142,7 +142,7 @@ feature -- Basic operations
 			-- List values to select , coded with integers.
 			-- and comma-separated.
 		local
-			it: EV_LIST_ITEM
+			it: detachable EV_LIST_ITEM
 			i_beg, i_end, col: INTEGER
 		do
 			remove_selection
@@ -160,7 +160,7 @@ feature -- Basic operations
 						col := s.substring (i_beg, s.count).to_integer
 						i_beg := i_end
 					end
-					it := item_by_data (col)
+					it := retrieve_item_by_data (col, True)
 					if it /= Void then
 						it.enable_select
 					end
@@ -195,16 +195,16 @@ feature -- Basic operations
 		do
 			is_locked := False
 		end
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

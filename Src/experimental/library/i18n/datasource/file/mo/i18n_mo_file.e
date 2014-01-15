@@ -31,10 +31,12 @@ feature {NONE} -- Initialization
 			--
 			-- `a_path': File path of a valid mo file
 		local
-			l_list: detachable LIST [STRING_32]
+			l_list: ARRAYED_LIST [STRING_32]
 		do
 			create {RAW_FILE} file.make_with_name (a_path)
+			create l_list.make (0)
 			last_translated := [0, l_list]
+			create l_list.make (0)
 			last_original := [0, l_list]
 		ensure then
 			last_translated /= Void
@@ -92,23 +94,19 @@ feature -- Access
 
 	entry_has_plurals (i:INTEGER): BOOLEAN
 			-- does `i'-th entry have a plural?
-		local
-			l_list: detachable LIST [STRING_32]
 		do
 			get_original_entries (i)
-			l_list := last_original.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
-			Result := l_list.count > 1
+			Result := last_original.list.count > 1
 		end
 
 	original_singular_string (i: INTEGER): STRING_32
 			-- `i'-th original string
 		local
-			l_list: detachable LIST [STRING_32]
+			l_list: LIST [STRING_32]
 		do
 			get_original_entries (i)
 			l_list := last_original.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			check l_list.valid_index (1) end -- Implied from postcondition of `get_translated_entries'
 			Result := l_list.i_th (1)
 				-- Extract original in case of `msgctxt' appears.
 				-- '%/4/' is the separator used by .mo file.
@@ -118,23 +116,23 @@ feature -- Access
 	original_plural_string (i: INTEGER): STRING_32
 			-- `i'-th original plural
 		local
-			l_list: detachable LIST [STRING_32]
+			l_list: LIST [STRING_32]
 		do
 			get_original_entries (i)
 			l_list := last_original.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			check l_list.valid_index (2) end -- Implied from postcondition of `get_translated_entries'
 			Result := l_list.i_th (2)
 		end
 
 	context_string (i: INTEGER): detachable STRING_32
 			-- `i'-th original string
 		local
-			l_list: detachable LIST [STRING_32]
+			l_list: LIST [STRING_32]
 			l_index: INTEGER
 		do
 			get_original_entries (i)
 			l_list := last_original.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			check l_list.valid_index (1) end -- Implied from postcondition of `get_translated_entries'
 			Result := l_list.i_th (1)
 				-- Extract context string in case of `msgctxt' appears.
 			l_index := Result.index_of ('%/4/', 1)
@@ -149,24 +147,23 @@ feature -- Access
 			-- singular translation of `i'-th entry
 		local
 			red: INTEGER
-			l_list: detachable LIST [STRING_32]
+			l_list: LIST [STRING_32]
 		do
 			get_translated_entries (i)
 			l_list := last_translated.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			red := plural_tools.get_reduction_agent (plural_form).item ([1])
-			Result := l_list.i_th(red+1)
+			check l_list.valid_index (red + 1) end -- Implied from postcondition of `get_translated_entries'
+			Result := l_list.i_th (red+1)
 		end
 
 	translated_plural_strings (i: INTEGER): ARRAY [STRING_32]
 			-- plural translations of `i'-th entry
 		local
 			counter: INTEGER
-			l_list: detachable LIST [STRING_32]
+			l_list: LIST [STRING_32]
 		do
 			get_translated_entries (i)
 			l_list := last_translated.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			create Result.make_filled ({STRING_32} "", 0, 3)
 			from
 				l_list.start
@@ -203,8 +200,8 @@ feature -- Access
 
 feature --Entries
 
-	last_original: TUPLE [i:INTEGER; list: detachable LIST [STRING_32]]
-	last_translated: TUPLE [i:INTEGER; list: detachable LIST [STRING_32]]
+	last_original: TUPLE [i:INTEGER; list: LIST [STRING_32]]
+	last_translated: TUPLE [i:INTEGER; list: LIST [STRING_32]]
 
 	get_original_entries (i_th: INTEGER)
 			-- get `i_th' original entry in the file
@@ -213,8 +210,6 @@ feature --Entries
 				last_original.i := i_th
 				last_original.list := extract_string(original_table_offset, i_th).split('%U')
 			end
-		ensure
-			last_original.list /= Void
 		end
 
 	get_translated_entries (i_th: INTEGER)
@@ -224,8 +219,6 @@ feature --Entries
 				last_translated.i := i_th
 				last_translated.list := extract_string(translated_table_offset, i_th).split('%U')
 			end
-		ensure
-			last_translated.list /= Void
 		end
 
 feature -- Status
@@ -284,15 +277,12 @@ feature {NONE} -- Implementation
 			code0: NATURAL_32
 			conditional: STRING_32
 			nplurals: INTEGER_32
-			l_list: detachable LIST [STRING_32]
 		do
 			char0 := '0'
 			code0 := char0.natural_32_code
 				-- Get the first translated string of the first entry in the .mo file - this is the headers entry (the empty string)
 			get_translated_entries (1)
-			l_list := last_translated.list
-			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
-			t_list := l_list.i_th(1).split('%N')
+			t_list := last_translated.list.i_th(1).split('%N')
 			 	-- Search the headers
 			from
 				t_list.start
@@ -441,7 +431,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

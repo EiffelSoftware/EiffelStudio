@@ -48,12 +48,10 @@ feature -- Access
 		require
 			proxy_supported: is_proxy_supported
 			has_proxy: is_proxy_used
-		local
-			l_proxy_information: like proxy_information
 		do
-			l_proxy_information := proxy_information
-			check l_proxy_information_attached: l_proxy_information /= Void end
-			Result := l_proxy_information.host
+			check is_proxy_used: attached proxy_information as l_proxy_information then
+				Result := l_proxy_information.host
+			end
 		ensure
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
@@ -63,12 +61,10 @@ feature -- Access
 		require
 			proxy_supported: is_proxy_supported
 			has_proxy: is_proxy_used
-		local
-			l_proxy_information: like proxy_information
 		do
-			l_proxy_information := proxy_information
-			check l_proxy_information_attached: l_proxy_information /= Void end
-			Result := l_proxy_information.port
+			check is_proxy_used: attached proxy_information as l_proxy_information then
+				Result := l_proxy_information.port
+			end
 		ensure
 			result_non_negative: Result >= 0
 		end
@@ -199,14 +195,14 @@ invariant
 	proxy_usage_constraint: is_proxy_used implies is_proxy_supported
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

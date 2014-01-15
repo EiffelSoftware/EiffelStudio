@@ -172,6 +172,12 @@ feature -- Agent functions.
 			Result := agent gtk_value_int_to_tuple (?, ?)
 		end
 
+	button_event_translate_agent: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+			-- Translation agent used for button events
+		once
+			Result := agent gtk_value_pointer_to_tuple (?, ?)
+		end
+
 feature {EV_ANY_IMP} -- Agent implementation routines
 
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER]

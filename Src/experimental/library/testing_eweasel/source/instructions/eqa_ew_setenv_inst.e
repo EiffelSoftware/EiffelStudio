@@ -56,22 +56,20 @@ feature {NONE} -- Intialization
 			elseif l_args.i_th (2).has ('%/0/') then
 				failure_explanation := "environment variable value contains null character"
 				init_ok := False
-			elseif l_count = 2 then
-				variable := l_args.i_th (1)
-				value := l_args.i_th (2)
-				init_ok := True
 			else
-				l_pos :=  string_util.first_white_position (a_line)
-				variable := a_line.substring (1, l_pos - 1)
-				l_value := a_line.substring (l_pos, a_line.count)
-				value := l_value
-				l_value.left_adjust
-				l_value.right_adjust
 				init_ok := True
-			end
-			if init_ok then
-				l_value := value
-				check attached l_value end -- Implied by previous if clause
+				if l_count = 2 then
+					variable := l_args.i_th (1)
+					l_value := l_args.i_th (2)
+					value := l_value
+				else
+					l_pos :=  string_util.first_white_position (a_line)
+					variable := a_line.substring (1, l_pos - 1)
+					l_value := a_line.substring (l_pos, a_line.count)
+					value := l_value
+					l_value.left_adjust
+					l_value.right_adjust
+				end
 				if l_value.item (1) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char and
 				   l_value.item (l_value.count) = {EQA_EW_SUBSTITUTION_CONST}.Quote_char then
 					l_value.remove (l_value.count)
@@ -86,7 +84,6 @@ feature {NONE} -- Intialization
 			if not init_ok then
 				print (failure_explanation)
 				a_test_set.assert ("Invalid setenv instruction", False)
-
 			end
 		end
 
@@ -95,20 +92,18 @@ feature -- Command
 	execute (a_test: EQA_EW_SYSTEM_TEST_SET)
 			-- Execute `Current' as one of the
 			-- instructions of `a_test'
-		local
-			l_var, l_val: like variable
 		do
-			l_var := variable
-			check attached l_var end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-			l_val := value
-			check attached l_val end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-
-			environment.put (l_val, l_var)
-			if environment.return_code = 0 then
-				execute_ok := True
+			if attached variable as l_var and attached value as l_val then
+				environment.put (l_val, l_var)
+				if environment.return_code = 0 then
+					execute_ok := True
+				else
+					execute_ok := False
+					failure_explanation := "call to set environment variable failed"
+				end
 			else
 				execute_ok := False
-				failure_explanation := "call to set environment variable failed"
+				failure_explanation := "No environment variable or value set"
 			end
 		end
 
@@ -135,7 +130,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

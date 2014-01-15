@@ -51,21 +51,22 @@ feature
 			arg_num: INTEGER
 			l_sql_string: like sql_string_32
 		do
-			l_sql_string := sql_string_32
-			if l_sql_string = Void then
-				create l_sql_string.make (s.count)
-				sql_string_32 := l_sql_string
-			else
-				l_sql_string.wipe_out
+			if not db_spec.dyn_sql_colon_style then
+				l_sql_string := sql_string_32
+				if l_sql_string = Void then
+					create l_sql_string.make (s.count)
+					sql_string_32 := l_sql_string
+				else
+					l_sql_string.wipe_out
+				end
+				l_sql_string.append (s)
+				s.wipe_out
+				s.append (parse_dynamic (l_sql_string))
 			end
-			l_sql_string.append (s)
-			s.wipe_out
-			s.append (parse_32 (l_sql_string))
-			arg_num := s.occurrences ({CHARACTER_32} '?')
 
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
+				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s, True)
 			end
 			if not parsed then
 				parsed_s := s
@@ -73,6 +74,9 @@ feature
 					db_spec.init_order (descriptor, parsed_s)
 				end
 				if is_ok then
+					if attached ht as l_ht then
+						arg_num := ht.count
+					end
 					db_spec.pre_immediate (descriptor, arg_num)
 				end
 			end
@@ -103,6 +107,14 @@ feature
 			executed_statement: is_executed
 		end
 
+	rebind_arguments
+			-- Rebind arguments from argument mapping list.
+		do
+			if is_ok and then attached ht as l_ht then
+				db_spec.bind_arguments (descriptor, l_ht, ht_order)
+			end
+		end
+
 	reset_cursor
 		require
 			prepared_statement: is_prepared
@@ -118,14 +130,14 @@ feature {NONE} -- Implementation
 			-- Buffer for storing SQL string in `prepare_32'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

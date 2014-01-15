@@ -17,16 +17,20 @@ feature -- Test routines
 
 	test
 		do
-			reset_database
-			establish_connection
+				-- We don't do the test for Oracle, because the limit of identifiers is 30 bytes.
+				-- See: http://docs.oracle.com/cd/B28359_01/server.111/b28286/sql_elements008.htm#SQLRF00223
+			if not is_oracle then
+				reset_database
+				establish_connection
 
-			if attached session_control as l_control and then not l_control.is_connected then
-				assert ("Could not connect to database", False)
-			else
-				load_data
-				make_selection
+				if attached session_control as l_control and then not l_control.is_connected then
+					assert ("Could not connect to database", False)
+				else
+					load_data
+					make_selection
+				end
+				disconnect
 			end
-			disconnect
 		end
 
 feature {NONE} -- Implementation

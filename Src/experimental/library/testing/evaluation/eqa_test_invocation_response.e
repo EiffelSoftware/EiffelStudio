@@ -31,33 +31,26 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	exception: EQA_TEST_INVOCATION_EXCEPTION
-			-- Exception thrown during the execution
-		require
-			exceptional: is_exceptional
-		local
-			l_exception: like internal_exception
+	exception: detachable EQA_TEST_INVOCATION_EXCEPTION
 		do
-			l_exception := internal_exception
-			check l_exception /= Void end
-			Result := l_exception
+			Result := internal_exception
 		end
 
-feature {NONE} -- Access
-
-	internal_exception: detachable like exception
-			-- Internal storage for `exception'
+	internal_exception: detachable EQA_TEST_INVOCATION_EXCEPTION
+			-- Exception if any thrown during the execution
 
 feature -- Status report
 
 	is_exceptional: BOOLEAN
 			-- Has an exception been thrown during the execution?
 		do
-			Result := internal_exception /= Void
+			Result := exception /= Void
+		ensure
+			definition: Result implies exception /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -30,17 +30,16 @@ feature {NONE} -- Initialization
 			a_process_attached: a_process /= Void
 			a_process_not_launched: not a_process.launched
 		do
+			create buffer.make (100)
+			create mutex.make
+			create condition_variable.make
+			create {STRING} last_received.make_empty
+			process := a_process
+			
 			a_process.redirect_output_to_agent (agent on_output)
 			a_process.redirect_error_to_same_as_output
 			a_process.set_on_exit_handler (agent on_exit)
 			a_process.set_on_terminate_handler (agent on_exit)
-			process := a_process
-
-			create buffer.make (100)
-			create mutex.make
-			create condition_variable.make
-
-			create {STRING} last_received.make_empty
 		end
 
 feature -- Access
@@ -164,7 +163,7 @@ feature {NONE} -- Constants
 			-- Time in milliseconds we wait for process to send new output
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

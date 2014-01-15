@@ -224,12 +224,14 @@ feature -- Query
 			l_all_size: INTEGER
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_caller: detachable SD_TOOL_BAR_ZONE
+			l_caller_maximize_size: INTEGER
 			l_row_max_size: INTEGER
 		do
 			l_tool_bars := internal_tool_bar_row.zones
 
 			if a_inlcude_caller_size and then attached internal_mediator as l_mediator then
 				l_caller := l_mediator.caller
+				l_caller_maximize_size := l_caller.maximize_size
 				l_tool_bars.start
 				l_tool_bars.search (l_caller)
 				if not l_tool_bars.exhausted then
@@ -246,8 +248,7 @@ feature -- Query
 			end
 			l_all_size := internal_tool_bar_row.size
 			if a_inlcude_caller_size then
-				check l_caller /= Void end -- Implied by previsou if clause
-				Result := l_all_size >= l_row_max_size + l_caller.maximize_size
+				Result := l_all_size >= l_row_max_size + l_caller_maximize_size
 			else
 				Result := l_all_size >= l_row_max_size
 			end

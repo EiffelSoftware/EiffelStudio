@@ -32,6 +32,7 @@ feature {NONE} --creation
 		do
 			original_singular := an_original_singular.to_string_32
 			singular_translation := a_translated_singular.to_string_32
+			create plural_translations.make_filled ({STRING_32} "", 0, 3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!			
 		ensure
 			original_singular_set: original_singular.is_equal (an_original_singular.as_string_32)
 			singular_translation_set: singular_translation.is_equal (a_translated_singular.as_string_32)
@@ -46,8 +47,6 @@ feature {NONE} --creation
 		do
 			make (an_original_singular, a_translated_singular)
 			original_plural := an_original_plural.to_string_32
-			create plural_translations.make_filled ({STRING_32} "", 0, 3) -- there are at most 4 forms, INDEX IS 0-BASED!!!!!!!!!!!!
-			has_plural := True
 		ensure
 			original_singular_set: original_singular.is_equal (an_original_singular.as_string_32)
 			singular_translation_set: singular_translation.is_equal (a_translated_singular.as_string_32)
@@ -71,6 +70,10 @@ feature -- Element Change
 feature -- Query
 
 	has_plural: BOOLEAN
+			-- Does entry has a plural?
+		do
+			Result := original_plural /= Void
+		end
 
 feature -- Access
 
@@ -93,7 +96,7 @@ feature -- Contents
 
 	singular_translation: STRING_32
 
-	plural_translations: detachable ARRAY [STRING_32]
+	plural_translations: ARRAY [STRING_32]
 
 	context: detachable STRING_32
 
@@ -111,12 +114,11 @@ feature {NONE} -- Implementation
 			-- Cached identifier
 
 invariant
-	no_plural_translations_if_no_plural: not has_plural implies plural_translations = Void
-	plural_translations_if_plural: has_plural implies plural_translations /= Void
+	original_plural_set: has_plural implies original_plural /= Void
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

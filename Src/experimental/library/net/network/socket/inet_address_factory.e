@@ -35,14 +35,11 @@ feature
 			--
 		local
 			localhostname: STRING
-			l_result: detachable INET_ADDRESS
 		do
 			localhostname := impl.local_host_name
-			l_result := create_from_name (localhostname)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
-		ensure
-			create_localhost_attached: Result /= Void
+			check attached create_from_name (localhostname) as l_result then
+				Result := l_result
+			end
 		end
 
 	create_from_name (hostname: STRING): detachable INET_ADDRESS
@@ -281,10 +278,9 @@ feature {NONE} -- Implementation
 		    			end
 		    			i := i + 1
 			    	end
-			    	if splitted.i_th (3).is_integer_32 then
+			    	if splitted.i_th (3).is_integer_32 and Result /= Void then
 			    		val := splitted.i_th (3).to_integer_32
 		    			if val >= 0 and then val <= 0xffff then
-		    				check result_attached: Result /= Void end
 							Result.put (((val |>> 8) & 0xff).as_natural_8, 3)
 							Result.put ((val & 0xff).as_natural_8, 4)
 		    			else
@@ -449,11 +445,12 @@ feature {NONE} -- Implementation
 							if j /= {INET6_ADDRESS}.INADDRSZ+1 then
 	    						Result := Void
 	    					else
-	    						check result_attached: Result /= Void end
-								new_result := convert_from_ipv4_mappedd_address (Result)
-								if new_result /= Void then
-	    							Result := new_result;
-	    						end
+	    						check result_attached: Result /= Void then
+									new_result := convert_from_ipv4_mappedd_address (Result)
+									if new_result /= Void then
+		    							Result := new_result;
+		    						end
+								end
 							end
 						end
 					end
@@ -620,4 +617,14 @@ feature {NONE} -- Externals
 			"en_sockaddr_get_family"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

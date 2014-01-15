@@ -15,6 +15,7 @@ inherit
 			identifier_quoter,
 			qualifier_separator,
 			parse,
+			bind_arguments,
 			user_name_ok,
 			hide_qualifier,
 			pre_immediate,
@@ -135,12 +136,11 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 		local
 			tmp_str: STRING_32
 			c_temp: SQL_STRING
 			l_ptr: POINTER
-			l_para: like para
 		do
 			create c_temp.make (sql)
 				-- This routine manipulates buffer information but does not allocate memory.
@@ -148,7 +148,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 			tmp_str := c_temp.string
 			tmp_str.left_adjust
-			if tmp_str.count > 1 and then (tmp_str.item (1) = {CHARACTER_32} '{') then
+
+				-- '{' Indicates a procedure call excape sequence which requires argument binding.
+				-- See http://msdn.microsoft.com/en-us/library/ms710248(v=vs.85).aspx
+			if tmp_str.count > 1 and then (dynamic or else tmp_str.item (1) = {CHARACTER_32} '{') then
 				if uht /= Void then
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (con_context_pointer, descriptor, uht.count)
@@ -157,23 +160,8 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					end
 					is_error_updated := False
 					is_warning_updated := False
-					if uht.count > 0 then
-						l_para := para
-						if l_para /= Void then
--- ADDED PGC
-							l_para.release
-							l_para.resize (uht.count)
-						else
-							create l_para.make (uht.count)
-							para := l_para
-						end
---
-						bind_args_value (descriptor, uht, ht_order) -- PGC: Pourquoi ???
-					end
+					bind_arguments (descriptor, uht, ht_order)
 				end
---				if para /= Void then
---					para.release
---				end
 				Result := True
 			else
  				Result := False
@@ -186,89 +174,21 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_str.adapt_size
 		end
 
-	bind_parameter (table: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
+	bind_arguments (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+			-- Bind arguments to current statement.
 		local
-			i: INTEGER
-			object : ANY
-			tmp_str: STRING
-			tmp_c: SQL_STRING
-			tmp_date: detachable DATE_TIME
-			type: INTEGER
-			l_managed_pointer: MANAGED_POINTER
 			l_para: like para
-			l_decimal_t: detachable like convert_to_decimal
-			l_nat64: NATURAL_64
-			l_pointer: MANAGED_POINTER
 		do
-			l_para := para
-			if l_para /= Void then
-				l_para.release
-				l_para.resize (table.count)
-			else
-				create l_para.make (table.count)
-				para := l_para
-			end
-			create tmp_str.make (1)
-			from
-				i := table.lower
-			until
-				i > table.upper
-			loop
-				type := -1
-				object := table.item (i)
-				if attached {POINTER_REF} object as ptr then -- NULL value
-					l_para.set (Void, i)
+			if uht.count > 0 then
+				l_para := para
+				if l_para /= Void then
+					l_para.release
+					l_para.resize (uht.count)
 				else
-					if obj_is_string (object) then
-						type := c_string_type
-					elseif obj_is_integer (object) then
-						type := c_integer_type
-					elseif obj_is_date (object) then
-						type := c_date_type
-						if attached {DATE_TIME} object as l_tmp_date then
-							tmp_date := l_tmp_date
-						else
-							check False end -- implied by `obj_is_date (object)'
-						end
-					elseif obj_is_double (object) then
-						type := c_float_type
-					elseif obj_is_real (object) then
-						type := c_real_type
-					elseif obj_is_character (object) then
-						type := c_character_type
-					elseif obj_is_boolean (object) then
-						type := c_boolean_type
-					elseif is_decimal_used and then obj_is_decimal (object) then
-						type := c_decimal_type
-						l_decimal_t := convert_to_decimal (object)
-					end
-					tmp_str.wipe_out
-					if type = c_date_type  then
-						create l_managed_pointer.make (c_timestamp_struct_size)
-						check tmp_date /= Void end -- Implied by `type = c_date_type'
-						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month,
-							tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-						l_para.set (l_managed_pointer, i)
-					elseif is_decimal_used and then type = c_decimal_type then
-						create l_managed_pointer.make (c_numeric_struct_size)
-						if attached l_decimal_t as l_d then
-							if l_d.digits.is_natural_64 then
-								l_nat64 := l_d.digits.to_natural_64
-							end
-							l_pointer := natural_64_to_odbc_numeric_string (l_nat64)
-							odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_d.sign, l_d.precision, l_d.scale)
-							l_para.set (l_managed_pointer, i)
-						end -- Implied by `type = c_decimal_type'
-					else
-						tmp_str.append ( (object).out)
-						create tmp_c.make (tmp_str)
-						l_para.set (tmp_c.managed_data, i)
-					end
-				end -- Null value
-				odbc_set_parameter (con_context_pointer, descriptor, i, 1, type,  odbc_get_col_len (con_context_pointer, descriptor, i), 0, l_para.get (i))
-				is_error_updated := False
-				is_warning_updated := False
-				i := i + 1
+					create l_para.make (uht.count)
+					para := l_para
+				end
+				bind_args_value (descriptor, uht, ht_order, l_para)
 			end
 		end
 
@@ -1415,7 +1335,7 @@ feature {NONE} -- External features
 
 	para: detachable DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+	bind_args_value (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; a_para: DB_PARA_ODBC)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -1433,7 +1353,6 @@ feature {NONE} -- External features
 			l_c_string: C_STRING -- single byte
 			l_platform: PLATFORM
 			l_value_count: INTEGER
-			l_para: like para
 			l_decimal_t: like convert_to_decimal
 			l_nat64: NATURAL_64
 			l_pointer: MANAGED_POINTER
@@ -1451,108 +1370,69 @@ feature {NONE} -- External features
 					type := -1
 					l_string := ht_order.item
 					l_any := uht.item (l_string)
-					check l_any /= Void end -- FIXME: bug here?
-					if obj_is_string (l_any) then
+					if l_any = Void then
+							-- Value was not found, should we attempt to insert NULL?
+					elseif attached {READABLE_STRING_8} l_any as l_val_string then
 						type := c_string_type
-						if attached {READABLE_STRING_8} l_any as l_val_string then
-							create l_c_string.make (l_val_string)
-							pointers.extend (l_c_string.item)
-							l_value_count := l_c_string.bytes_count
-							l_managed_pointer := l_c_string.managed_data
-						else
-							check False end -- implied by `obj_is_string (l_any)'
-						end
-					elseif obj_is_string_32 (l_any) then
+						create l_c_string.make (l_val_string)
+						pointers.extend (l_c_string.item)
+						l_value_count := l_c_string.bytes_count
+						l_managed_pointer := l_c_string.managed_data
+					elseif attached {READABLE_STRING_32} l_any as l_string_32 then
 						type := c_wstring_type
-						if attached {READABLE_STRING_32} l_any as l_string_32 then
-							create l_sql_string.make (l_string_32)
-							pointers.extend (l_sql_string.item)
-							l_value_count := l_sql_string.bytes_count
-							l_managed_pointer := l_sql_string.managed_data
-						else
-							check False end -- implied by `obj_is_string (l_any)'
-						end
-					elseif obj_is_integer (l_any) then
+						create l_sql_string.make (l_string_32)
+						pointers.extend (l_sql_string.item)
+						l_value_count := l_sql_string.bytes_count
+						l_managed_pointer := l_sql_string.managed_data
+					elseif attached {INTEGER_32_REF} l_any as l_val_int then
 						type := c_integer_type
-						if attached {INTEGER_REF} l_any as l_val_int then
-							create l_managed_pointer.make (l_platform.integer_32_bytes)
-							l_managed_pointer.put_integer_32 (l_val_int.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_32_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_integer_16 (l_any) then
+						create l_managed_pointer.make (l_platform.integer_32_bytes)
+						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_32_bytes
+					elseif attached {INTEGER_16_REF} l_any as l_val_int16 then
 						type := c_integer_16_type
-						if attached {INTEGER_16_REF} l_any as l_val_int16 then
-							create l_managed_pointer.make (l_platform.integer_16_bytes)
-							l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_16_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_integer_64 (l_any) then
+						create l_managed_pointer.make (l_platform.integer_16_bytes)
+						l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_16_bytes
+					elseif attached {INTEGER_64_REF} l_any as l_val_int64 then
 						type := c_integer_64_type
-						if attached {INTEGER_64_REF} l_any as l_val_int64 then
-							create l_managed_pointer.make (l_platform.integer_64_bytes)
-							l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_64_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_date (l_any) then
+						create l_managed_pointer.make (l_platform.integer_64_bytes)
+						l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_64_bytes
+					elseif attached {DATE_TIME} l_any as l_tmp_date then
 						type := c_date_type
-						if attached {DATE_TIME} l_any as l_tmp_date then
-							tmp_date := l_tmp_date
-							create l_managed_pointer.make (c_timestamp_struct_size)
-							odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-								 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-							l_value_count := c_timestamp_struct_size
-						else
-							check False end -- implied by `obj_is_date (l_any)'
-						end
-					elseif obj_is_double (l_any) then
+						tmp_date := l_tmp_date
+						create l_managed_pointer.make (c_timestamp_struct_size)
+						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
+							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
+						l_value_count := c_timestamp_struct_size
+					elseif attached {REAL_64_REF} l_any as l_val_double then
 						type := c_float_type
-						if attached {DOUBLE_REF} l_any as l_val_double then
-							create l_managed_pointer.make (l_platform.real_64_bytes)
-							l_managed_pointer.put_real_64 (l_val_double.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.real_64_bytes
-						else
-							check False end -- implied by `obj_is_double (l_any)'
-						end
-					elseif obj_is_real (l_any) then
+						create l_managed_pointer.make (l_platform.real_64_bytes)
+						l_managed_pointer.put_real_64 (l_val_double.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.real_64_bytes
+					elseif attached {REAL_32_REF} l_any as l_val_real then
 						type := c_real_type
-						if attached {REAL_REF} l_any as l_val_real then
-							create l_managed_pointer.make (l_platform.real_32_bytes)
-							l_managed_pointer.put_real_32 (l_val_real.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.real_32_bytes
-						else
-							check False end -- implied by `obj_is_real (l_any)'
-						end
-					elseif obj_is_character (l_any) then
+						create l_managed_pointer.make (l_platform.real_32_bytes)
+						l_managed_pointer.put_real_32 (l_val_real.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.real_32_bytes
+					elseif attached {CHARACTER_8_REF} l_any as l_val_char then
 						type := c_character_type
-						if attached {CHARACTER_REF} l_any as l_val_char then
-							create l_managed_pointer.make (l_platform.character_8_bytes)
-							l_managed_pointer.put_character (l_val_char.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.character_8_bytes
-						else
-							check False end -- implied by `obj_is_character (l_any)'
-						end
-					elseif obj_is_boolean (l_any) then
+						create l_managed_pointer.make (l_platform.character_8_bytes)
+						l_managed_pointer.put_character (l_val_char.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.character_8_bytes
+					elseif attached {BOOLEAN_REF} l_any as l_val_bool  then
 						type := c_boolean_type
-						if attached {BOOLEAN_REF} l_any as l_val_bool  then
-							create l_managed_pointer.make (l_platform.boolean_bytes)
-							l_managed_pointer.put_boolean (l_val_bool.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.boolean_bytes
-						else
-							check False end -- implied by `obj_is_boolean (l_any)'
-						end
+						create l_managed_pointer.make (l_platform.boolean_bytes)
+						l_managed_pointer.put_boolean (l_val_bool.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.boolean_bytes
 					elseif is_decimal_used and then obj_is_decimal (l_any) then
 						type := c_decimal_type
 						l_decimal_t := convert_to_decimal (l_any)
@@ -1568,13 +1448,10 @@ feature {NONE} -- External features
 						 -- most likely Void?
 					end
 
-					l_para := para
-					check l_para_not_void: l_para /= Void end
 					if type = -1 then
-						l_para.set (Void, i)
+						a_para.set (Void, i)
 					else
-						check l_managed_pointer /= Void end -- implied by `type /= -1' and previous codes
-						l_para.set (l_managed_pointer, i)
+						a_para.set (l_managed_pointer, i)
 					end
 
 					tmp_str.wipe_out
@@ -1582,7 +1459,7 @@ feature {NONE} -- External features
 						l_value_count := 1
 					end
 
-					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
+					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, a_para.get (i))
 
 					is_error_updated := False
 					is_warning_updated := False
@@ -1688,76 +1565,6 @@ feature {NONE} -- External features
 			"sizeof(SQL_NUMERIC_STRUCT)"
 		end
 
-	obj_is_integer (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_REF} obj
-		end
-
-	obj_is_integer_16 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_16_REF} obj
-		end
-
-	obj_is_integer_64 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_64_REF} obj
-		end
-
-	obj_is_real (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {REAL_REF} obj
-		end
-
-	obj_is_double (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {DOUBLE_REF} obj
-		end
-
-	obj_is_string (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {READABLE_STRING_8} obj
-		end
-
-	obj_is_string_32 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {READABLE_STRING_32} obj
-		end
-
-	obj_is_character (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {CHARACTER_REF} obj
-		end
-
-	obj_is_boolean (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {BOOLEAN_REF} obj
-		end
-
-	obj_is_date (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {DATE_TIME} obj
-		end
-
 	obj_is_decimal (obj: ANY): BOOLEAN
 		require
 			argument_not_null: obj /= Void
@@ -1803,7 +1610,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

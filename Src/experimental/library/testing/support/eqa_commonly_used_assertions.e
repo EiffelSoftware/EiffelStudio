@@ -61,22 +61,18 @@ feature -- Equality
 			disassert (assert_strings_not_equal_message (a_tag, expected.out, actual.out), expected = actual)
 		end
 
-	assert_strings_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL)
+	assert_strings_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: READABLE_STRING_GENERAL)
 			-- Check that `expected' and `actual' are the same string.
 		require
 			a_tag_not_void: a_tag /= Void
-			expected_attached: expected /= Void
-			actual_attached: actual /= Void
 		do
 			assert (assert_strings_equal_message (a_tag, expected, actual), expected.same_string (actual))
 		end
 
-	assert_strings_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: detachable READABLE_STRING_GENERAL)
+	assert_strings_not_equal (a_tag: READABLE_STRING_GENERAL; expected, actual: READABLE_STRING_GENERAL)
 			-- Check that `expected' and `actual' are not the same string.
 		require
 			a_tag_not_void: a_tag /= Void
-			expected_attached: expected /= Void
-			actual_attached: actual /= Void
 		do
 			disassert (assert_strings_not_equal_message (a_tag, expected, actual), expected.same_string (actual))
 		end
@@ -85,8 +81,6 @@ feature -- Equality
 			-- Check that `expected' and `actual' are the same string (case insensitive).
 		require
 			a_tag_not_void: a_tag /= Void
-			expected_attached: expected /= Void
-			actual_attached: actual /= Void
 		do
 			assert (assert_strings_equal_message (a_tag, expected, actual), expected.is_case_insensitive_equal (actual))
 		end
@@ -318,7 +312,7 @@ feature {NONE} -- Messages
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

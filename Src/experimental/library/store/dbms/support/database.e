@@ -117,9 +117,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
+			-- `dynamic', True if a dynamic parse is required. False, the argument is simply ignored.
 			-- for set input arguments
 			-- For ODBC
 		require
@@ -135,6 +136,19 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
+	bind_arguments (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+			-- Bind arguments to current statement.
+		do
+		end
+
+	dyn_sql_colon_style: BOOLEAN
+			-- Is dynamic SQL in colon style?
+			-- i.e. "SELECT * FROM t WHERE price = :price"
+			-- Otherwise it will be question mark style.
+			-- i.e. "SELECT * FROM t WHERE price = ?"
+		do
+		end
+
 feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]; obj: ANY): STRING
@@ -146,10 +160,10 @@ feature -- For DATABASE_STORE
 		local
 			i, j, nb: INTEGER
 			l_identity_index: INTEGER
-			l_column_name: detachable STRING
 		do
 			create Result.make (25)
-			Result.append_character (' '); Result.append_character ('(')
+			Result.append_character (' ');
+			Result.append_character ('(')
 			if attached {DB_TABLE} obj as table and then not insert_auto_identity_column then
 					-- There was an explicit requirement from the database to exclude
 					-- the identity column from the statement.
@@ -171,9 +185,7 @@ feature -- For DATABASE_STORE
 						Result.append_character (',')
 						Result.append_character (' ')
 					end
-					if l_identity_index /= j then
-						l_column_name := repository.column_name (j)
-						check l_column_name /= Void end -- FIXME: implied by ... bug ?
+					if l_identity_index /= j and then attached repository.column_name (j) as l_column_name then
 						Result.append (l_column_name)
 						i := 1
 					end
@@ -1104,7 +1116,7 @@ feature -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

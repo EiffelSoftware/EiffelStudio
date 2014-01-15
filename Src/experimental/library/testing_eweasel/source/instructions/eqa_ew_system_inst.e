@@ -53,12 +53,10 @@ feature -- Command
 	execute (test: EQA_EW_SYSTEM_TEST_SET)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
-		local
-			l_name: like system_name
 		do
-			l_name := system_name
-			check attached l_name end -- Implied by `init_ok' is True, otherwise assertion would be violated in `inst_initialize'
-			test.set_system_name (l_name)
+			if attached system_name as l_name then
+				test.set_system_name (l_name)
+			end
 		end
 
 feature -- Query
@@ -74,7 +72,7 @@ feature {NONE} -- Implementation
 	system_name: detachable STRING
 			-- Name of executable file specified in Ace.
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

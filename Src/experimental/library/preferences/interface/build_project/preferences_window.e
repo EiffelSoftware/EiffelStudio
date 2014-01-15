@@ -85,6 +85,11 @@ feature {NONE} -- Initialization
 			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
 		end
 
+	user_create_interface_objects
+			-- <Precursor>
+		do
+		end
+
 	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
@@ -857,7 +862,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

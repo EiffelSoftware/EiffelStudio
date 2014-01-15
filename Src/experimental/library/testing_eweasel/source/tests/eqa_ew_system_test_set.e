@@ -368,28 +368,26 @@ feature {EQA_EW_EIFFEL_COMPILATION, EQA_EW_SYSTEM_EXECUTION, EQA_EW_C_COMPILATIO
 			not_void: attached a_path
 		local
 			l_path: EQA_SYSTEM_PATH
-			l_execution: like current_execution
 		do
 			prepare_system_if_needed
 
 			create l_path.make (<<a_path>>)
-			l_execution := current_execution
-			check attached l_execution end -- Implied by postcondition of `prepare_system_if_needed'			
-			l_execution.set_output_path (l_path)
+				-- Implied by postcondition of `prepare_system_if_needed'.
+			check attached current_execution as l_execution then
+				l_execution.set_output_path (l_path)
+			end
 		end
 
 	set_output_processor (a_processor: EQA_SYSTEM_OUTPUT_PROCESSOR)
 			-- Set `a_process' as system execution output processor
 		require
 			not_void: attached a_processor
-		local
-			l_execution: like current_execution
 		do
 			prepare_system (create {EQA_SYSTEM_PATH}.make (<<e_compile_output_name>>))
-
-			l_execution := current_execution
-			check attached l_execution end -- Implied by postcondition of `prepare_system_if_needed'
-			l_execution.set_output_processor (a_processor)
+				-- Implied by postcondition of `prepare_system'.
+			check attached current_execution as l_execution then
+				l_execution.set_output_processor (a_processor)
+			end
 		end
 
 	prepare_system_if_needed
@@ -436,7 +434,7 @@ feature {NONE} -- Implementation
 			-- File name prefix for execution output
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -19,7 +19,7 @@ feature  -- Initilization
 
 	make
 		do
-			create ecd_fields.make_filled (Void, 1, 10);
+			create ecd_fields.make (10);
 			ecd_clear
 		end;
 
@@ -31,10 +31,13 @@ feature -- Status report
 
 	field_separator: CHARACTER
 
-	ecd_fields: ARRAY [detachable EC_FIELD]
+	ecd_fields: ARRAYED_LIST [EC_FIELD]
 
 	ecd_index: INTEGER
 			-- Index of the current field
+		do
+			Result := ecd_fields.index
+		end
 
 	ecd_min_index: INTEGER
 			-- Index of the first field
@@ -58,20 +61,10 @@ feature -- Status setting
 
 	ecd_clear
 		do
-			ecd_fields.clear_all;
-			ecd_index := 0;
-			ecd_initialized := False;
-			ecd_min_index := 32768;
-			ecd_max_index := 0;
+			ecd_fields.wipe_out
+			ecd_initialized := False
+			ecd_max_index := 0
 			field_separator := ';'
-		end;
-
-	set_index (i: INTEGER)
-			-- Set `ecd_index' with `i'.
-		do
-			ecd_index := i-1
-		ensure
-			ecd_index = i-1
 		end;
 
 	set_field (n: STRING; type: INTEGER)
@@ -80,45 +73,35 @@ feature -- Status setting
 			f: EC_FIELD
 		do
 			ecd_initialized := True;
-			ecd_index := ecd_index + 1;
-			if ecd_index > ecd_max_index then
-				ecd_max_index := ecd_index
-			end;
-			if ecd_index < ecd_min_index then
-				ecd_min_index := ecd_index
-			end;
 			create f.make (type, n)
-			ecd_fields.force (f, ecd_index)
+			ecd_fields.extend (f)
+			if ecd_fields.count > ecd_max_index then
+				ecd_max_index := ecd_fields.count
+			end;
 		end;
 
 	set_delimiters (ld, rd: CHARACTER)
 			-- Set field value delimiters with `ld' and `rd'.
 		require
-			current_field_exists: ecd_fields.item (ecd_index) /= Void
+			current_field_exists: not ecd_fields.is_empty
 		do
-			check attached ecd_fields.item (ecd_index) as l_field then
-				l_field.set_value_delimiters (ld, rd)
-			end
+			ecd_fields.last.set_value_delimiters (ld, rd)
 		end;
 
 	set_label_separator (ls: CHARACTER)
 			-- Set label separator with `ls'.
 		require
-			current_field_exists: ecd_fields.item (ecd_index) /= Void
+			current_field_exists: not ecd_fields.is_empty
 		do
-			check attached ecd_fields.item (ecd_index) as l_field then
-				l_field.set_label_separator (ls)
-			end
+			ecd_fields.last.set_label_separator (ls)
 		end;
 
 	set_use_label (b: BOOLEAN)
 			-- Set `use_label' with `b'.
 		require
-			current_field_exists: ecd_fields.item (ecd_index) /= Void
+			current_field_exists: not ecd_fields.is_empty
 		do
-			check attached ecd_fields.item (ecd_index) as l_field then
-				l_field.set_use_label (b)
-			end
+			ecd_fields.last.set_use_label (b)
 		end;
 
 	check_conformity (ref: ANY)
@@ -133,45 +116,41 @@ feature -- Status setting
 			i, j, nb_fields: INTEGER;
 			tmps: STRING;
 			ra, da: ARRAY [BOOLEAN]  -- Referenced and Declared array
+			l_field: EC_FIELD
 		do
 			ecd_error := False;
 			create tmps.make(0);
 			nb_fields := field_count (ref);
-			if ecd_min_index /= 1 then
+			if ecd_fields.is_empty then
 				tmps.wipe_out;
-				tmps.append("Type conformity error, First field `");
-				check attached ecd_fields.item (ecd_min_index) as l_field then
-					tmps.append(l_field.field_name);
-					tmps.append("' cannot be indexed with ");
-					tmps.append(ecd_min_index.out);
-					tmps.append(".%N");
-					set_ecd_error(tmps)
-				end
+				tmps.append ("Type conformity error, No field can be indexed with ");
+				tmps.append_integer (nb_fields)
+				tmps.append (".%N");
+				set_ecd_error (tmps)
 			end;
-			if not ecd_error and then ecd_max_index /= nb_fields then
+			if not ecd_error and then ecd_fields.count /= nb_fields then
 				tmps.wipe_out;
-				tmps.append("Type conformity error, Last field `");
-				check attached ecd_fields.item (ecd_max_index) as l_field then
-					tmps.append(l_field.field_name);
-					tmps.append("' cannot be indexed with ");
-					tmps.append(ecd_max_index.out);
-					tmps.append(".%N");
-					set_ecd_error(tmps)
-				end
-			end;
-			create ra.make_filled (False, 1, nb_fields);
-			create da.make_filled (False, 1, nb_fields);
-			from
-				i:=1
-			until
-				i > nb_fields or ecd_error
-			loop
+				tmps.append ("Type conformity error, Last field `");
+				tmps.append (ecd_fields.last.field_name);
+				tmps.append("' cannot be indexed with ");
+				tmps.append_integer (nb_fields);
+				tmps.append (".%N");
+				set_ecd_error(tmps)
+			end
+			if not ecd_error then
+				create ra.make_filled (False, 1, nb_fields);
+				create da.make_filled (False, 1, nb_fields);
 				from
-					j:=1
+					i:=1
 				until
-					j > nb_fields or ecd_error
+					i > nb_fields or ecd_error
 				loop
-					if attached ecd_fields.item (j) as l_field then
+					from
+						j:=1
+					until
+						j > nb_fields or ecd_error
+					loop
+						l_field := ecd_fields.i_th (j)
 						if field_conforms (i, ref, l_field) then
 							if ra.item (i) then
 								tmps.wipe_out;
@@ -191,39 +170,31 @@ feature -- Status setting
 								l_field.set_rank(i)
 							end
 						end
-					else
-						tmps.wipe_out;
-						tmps.append("Type conformity error, Field ");
-						tmps.append(j.out);
-						tmps.append(" has not been set.%N");
-						set_ecd_error(tmps)
-					end
-					j := j + 1
-				end;
-				i := i + 1
-			end;
-			if not ecd_error then
-				from
-					i := 1
-				until
-					i > nb_fields
-				loop
-					if not da.item(i) then
-						tmps.append("Type conformity error, Field ");
-						tmps.append(i.out);
-						tmps.append(":`");
-						check attached ecd_fields.item (i) as l_field then
-							tmps.append(l_field.field_name)
-							tmps.append("' does not match any reference field.%N");
-							set_ecd_error(tmps)
-						end
+						j := j + 1
 					end;
 					i := i + 1
+				end;
+				if not ecd_error then
+					from
+						i := 1
+					until
+						i > nb_fields
+					loop
+						if not da.item(i) then
+							tmps.append("Type conformity error, Field ");
+							tmps.append(i.out);
+							tmps.append(":`");
+							tmps.append(ecd_fields.i_th (i).field_name)
+							tmps.append("' does not match any reference field.%N");
+							set_ecd_error(tmps)
+						end;
+						i := i + 1
+					end
+				end;
+				if not ecd_error then
+					ecd_reference_name := ref.generator;
+					ecd_reference := ref
 				end
-			end;
-			if not ecd_error then
-				ecd_reference_name := ref.generator;
-				ecd_reference := ref
 			end
 		end;
 
@@ -259,9 +230,7 @@ feature -- Status setting
 				else
 					set_field (l_f_name, String_ttype);
 				end;
-				check attached ecd_fields.item (i) as l_field then
-					l_field.set_rank(i)
-				end
+				ecd_fields.i_th (i).set_rank (i)
 				i := i + 1
 			end;
 			if not ecd_error then
@@ -332,14 +301,14 @@ feature {NONE} -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EC_DESCRIPTOR

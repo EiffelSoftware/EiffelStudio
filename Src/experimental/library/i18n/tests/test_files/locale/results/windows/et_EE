@@ -55,18 +55,18 @@ CURRENCY INFO TEST
     Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
-    currency symbol:'kr'
+    currency symbol:'€'
     symbol location: 1
     INT cur dec sep: '.'
     INT cur gr.sep: ','
     INT Grouping: 330
     INT cur nr list sep: ';'
     INT cur num after dec: '2'
-    INT currency symbol:'EEK'
+    INT currency symbol:'EUR'
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: 1324539.23 kr
+    Formatted: 1324539.23 €
 VALUE INFO TEST
     value dec separator: ','
     value numb after dec. sep: '2'

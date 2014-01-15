@@ -13,7 +13,9 @@ inherit
 		redefine
 			normal_parse,
 			parse,
-			convert_string_type
+			bind_arguments,
+			convert_string_type,
+			dyn_sql_colon_style
 		end
 
 	STRING_HANDLER
@@ -96,55 +98,35 @@ feature -- For DATABASE_FORMAT
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
-	normal_parse: BOOLEAN
-		do
-			if is_proc then
-				Result := False
-				is_proc := False
-			else
-				Result := True
-			end
-		end
+	normal_parse: BOOLEAN = False
 
-	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL): BOOLEAN
+	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
 			else
-				init_order (descriptor, sql)
-				bind_args_value (descriptor, uht, sql)
-				Result := True
+				if dynamic then
+					init_order (descriptor, sql)
+					bind_args_value (descriptor, uht)
+					Result := True
+				end
 			end
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: READABLE_STRING_GENERAL)
-		local
-			i: INTEGER
-			tmp_c2, tmp_c, c_temp: SQL_STRING
+	bind_arguments (descriptor: INTEGER; uht: DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL])
+			-- Bind arguments to current statement.
 		do
-			create c_temp.make (sql)
-			from
-				i:=1
-			until
-				value.count<i
-			loop
-				create tmp_c.make (value.item (i).out)
-				create tmp_c2.make(parameters.item (i).out)
-				ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
-				i := i + 1
-			end
-			is_error_updated := False
+			bind_args_value (descriptor, uht)
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; sql: READABLE_STRING_GENERAL)
+	bind_args_value (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY])
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
 		local
-			tmp_c, tmp_c2, c_temp: SQL_STRING
+			tmp_c, tmp_c2: SQL_STRING
 		do
 			if attached uht as l_u then
-				create c_temp.make (database_format (sql.as_string_32))
 				from
 					l_u.start
 				until
@@ -158,12 +140,15 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						create tmp_c.make ("NULL")
 					end
 					create tmp_c2.make (l_u.key_for_iteration)
-					ora_set_parameter (descriptor, c_temp.item, tmp_c2.item, tmp_c.item)
+					ora_set_parameter (descriptor, tmp_c2.item, tmp_c.item)
 					l_u.forth
 				end
 			end
 			is_error_updated := False
 		end
+
+	dyn_sql_colon_style: BOOLEAN = True
+			-- <Precursor>
 
 feature -- DATABASE_STRING
 
@@ -277,11 +262,7 @@ feature -- For DATABASE_PROC
 
 	support_sql_of_proc: BOOLEAN = True
 
-	support_stored_proc: BOOLEAN
-		do
-			Result := True
-			is_proc := True
-		end
+	support_stored_proc: BOOLEAN = True
 
 	sql_as: STRING = " AS BEGIN "
 
@@ -705,14 +686,14 @@ feature -- External features
 		end
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId: STRING; rolePassWd: detachable STRING; groupId: STRING)
-        local
+		local
 			c_temp1, c_temp2: C_STRING
 		do
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
 			ora_connect (c_temp1.item, c_temp2.item)
 			is_error_updated := False
-       	end
+		end
 
 	connect_by_connection_string (a_connect_string: STRING)
 			-- Connect to database by connection string
@@ -727,12 +708,16 @@ feature -- External features
 		end
 
 	commit
+			-- Commit current transaction
+			-- Oracale defaults to non auto-commit transaction.
 		do
 			ora_commit
 			is_error_updated := False
 		end
 
 	rollback
+			-- Rollback current transaction
+			-- Oracale defaults to non auto-commit transaction.
 		do
 			ora_rollback
 			is_error_updated := False
@@ -743,18 +728,22 @@ feature -- External features
 			Result := ora_trancount
 		end
 
- 	begin
+	begin
+			-- Begin a new transation
+			-- Oracale defaults to non auto-commit transaction.
 		do
 		end
 
 feature {NONE} -- Explicit Conversion
 
-	database_format (a_str: STRING_32): STRING_8
+	database_format (a_str: READABLE_STRING_GENERAL): STRING_8
 			-- Append a Unicode code point `a_code' to a UTF-8 stream.
 		require
 			a_str_not_void: a_str /= Void
+		local
+			u: UTF_CONVERTER
 		do
-			Result := utf32_to_utf8 (a_str)
+			Result := u.utf_32_string_to_utf_8_string_8 (a_str)
 		end
 
 feature {NONE} -- External features
@@ -951,9 +940,9 @@ feature {NONE} -- External features
 			"C | %"oracle.h%""
 		end
 
-	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER)
+	ora_set_parameter (descriptor: INTEGER; ph: POINTER; value: POINTER)
 		external
-			"C (EIF_INTEGER, text *, text *, char *) | %"oracle.h%""
+			"C (EIF_INTEGER, text *, char *) | %"oracle.h%""
 		end
 
 	ora_string_type: INTEGER
@@ -1077,7 +1066,7 @@ feature {NONE} -- External features
 	Concat_string: STRING_32 = "'||'";
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

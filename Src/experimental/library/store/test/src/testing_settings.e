@@ -25,6 +25,10 @@ feature -- Storage
 		deferred
 		end
 
+	is_trusted: BOOLEAN
+		do
+		end
+
 feature {NONE} -- Imp
 
 	json_configuration: JSON_CONFIGURATION

@@ -319,7 +319,7 @@ feature {NONE} -- Externals
 				  } else {
 				    (void) execve((char *) $pname, (char **) $args, (char **) $env);
 				  }
-				  eraise(Strerror(errno), EN_SYS);
+				  _exit(127);
 				}
 			]"
 		end

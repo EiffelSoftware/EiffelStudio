@@ -8,10 +8,20 @@ note
 class EC_PARSE
 
 inherit
-
 	EC_TYPES;
 
 	EXT_INTERNAL
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			create descriptor.make
+			create ecp_reference
+		end
 
 feature -- Status report
 
@@ -24,10 +34,10 @@ feature -- Status report
 			create Result.make (0)
 		end
 
-	ecp_token_array: detachable ARRAY [detachable TOKEN]
+	ecp_token_array: detachable ARRAYED_LIST [TOKEN]
 			-- Array of tokens
 
-	ecp_reference: detachable ANY
+	ecp_reference: ANY
 			-- One object reference
 
 	is_descriptor_set: BOOLEAN
@@ -46,15 +56,16 @@ feature  -- Status setting
 			descriptor := e
 		end;
 
-	ecp_parse (at: ARRAY [detachable TOKEN])
+	ecp_parse (at: ARRAYED_LIST [TOKEN])
 			-- Perform syntactical analysis on a lexical item list.
 		require
 			token_array_exists: at /= Void
 			set: is_descriptor_set
 		local
-			l_reference: detachable ANY
 			l_descriptor: like descriptor
 			l_array: like ecp_token_array
+			l_context: like context_type
+			l_token: TOKEN
 		do
 			l_array := at
 			ecp_token_array := l_array;
@@ -62,40 +73,42 @@ feature  -- Status setting
 			ecp_message.wipe_out;
 			if at.is_empty then
 				set_ecp_parse_error("Empty Line")
-			end;
-			from
-				ecp_current_field := 1;
-				ecp_current_token := 1;
-				ecp_token := l_array.item(1);
-				l_descriptor := descriptor
-				check l_descriptor /= Void end -- implied by precondition `is_descriptor_set'
-				l_reference := l_descriptor.ecd_reference
-				check l_reference /= Void end -- FIXME: implied by .... bug?
-				set_ecp_reference(l_reference)
-			until
-				not ecp_parsed or
-					ecp_current_field >= l_descriptor.ecd_max_index
-			loop
-				ecp_field := l_descriptor.ecd_fields.item(ecp_current_field);
-				ecp_parse_field;
-				ecp_parse_separator;
-				ecp_current_field := ecp_current_field +1
-			end;
-			ecp_field := l_descriptor.ecd_fields.item(ecp_current_field);
-			ecp_parse_last_field;
-			check_end_of_line
+			else
+				from
+					ecp_current_field := 1;
+					ecp_current_token := 1;
+					l_token := l_array.i_th (1);
+					l_descriptor := descriptor
+					if attached l_descriptor.ecd_reference as l_ref then
+						set_ecp_reference (l_ref)
+					end
+					l_context := [l_token, l_descriptor.ecd_fields.i_th (ecp_current_field), 0, 0]
+				until
+					not ecp_parsed or
+						ecp_current_field >= l_descriptor.ecd_max_index
+				loop
+					l_context.ecp_field := l_descriptor.ecd_fields.i_th (ecp_current_field);
+					ecp_parse_field (l_context)
+					ecp_parse_separator (l_context)
+					ecp_current_field := ecp_current_field +1
+				end;
+				l_context.ecp_field := l_descriptor.ecd_fields.i_th (ecp_current_field);
+				ecp_parse_last_field (l_context)
+				check_end_of_line
+			end
 		end;
 
 feature {NONE} -- Status report
 
-	descriptor: detachable EC_DESCRIPTOR
+	context_type: TUPLE [ecp_token: TOKEN; ecp_field: EC_FIELD; ecp_current_token, ecp_current_field: INTEGER]
+			-- Type of context used during parsing. It is only used for typing.
+		do
+			check False then
+			end
+		end
+
+	descriptor: EC_DESCRIPTOR
 		-- A descriptor
-
-	ecp_field: detachable EC_FIELD
-		-- A field instance
-
-	ecp_token: detachable TOKEN
-		-- One lexical token
 
 	ecp_current_token: INTEGER
 		-- Token lexical number
@@ -123,36 +136,30 @@ feature {NONE} -- Status setting
 			-- Set error flag, and initialize error message.
 		do
 			ecp_parsed := False;
+			ecp_token_array := Void
 			ecp_message.wipe_out;
 			ecp_message.append(message)
 		end;
 
 feature {NONE} -- Implementation
 
-	ecp_parse_separator
+	ecp_parse_separator (a_context: like context_type)
 			-- Parse current token which must be the field separator.
 		require
 			set: is_descriptor_set
 		local
-			l_token: like ecp_token
-			l_field: like ecp_field
 			l_descriptor: like descriptor
 		do
 			if ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
 				l_descriptor := descriptor
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_descriptor /= Void end -- implied by precondition `set'
-				if l_token.type = Field_sep_ttype
-					and then l_token.string_value ~
+				if a_context.ecp_token.type = Field_sep_ttype
+					and then a_context.ecp_token.string_value ~
 					l_descriptor.field_separator.out then
-					ecp_remove_word
+					ecp_remove_word (a_context)
 				else
 					tmps.wipe_out;
 					tmps.append("Syntax error, Bad field separator `");
-					tmps.append(l_token.string_value);
+					tmps.append(a_context.ecp_token.string_value);
 					tmps.append("' instead of `");
 					tmps.append(l_descriptor.field_separator.out);
 					tmps.append("'.%N");
@@ -161,53 +168,46 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_field
+	ecp_parse_field (a_context: like context_type)
 			-- Parse an object field.
 		local
-			l_field: like ecp_field
 		do
 			if ecp_parsed then
-				l_field := ecp_field
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'
-				if l_field.use_label then
-					ecp_parse_label_name;
-					ecp_parse_label_sep
+				if a_context.ecp_field.use_label then
+					ecp_parse_label_name (a_context)
+					ecp_parse_label_sep (a_context)
 				end;
-				if l_field.use_value_delimiters then
-					ecp_parse_left_delimiter
+				if a_context.ecp_field.use_value_delimiters then
+					ecp_parse_left_delimiter (a_context)
 				end;
-				ecp_parse_value(1);
-				if l_field.use_value_delimiters then
-					ecp_parse_right_delimiter(1)
+				ecp_parse_value(a_context, 1);
+				if a_context.ecp_field.use_value_delimiters then
+					ecp_parse_right_delimiter(a_context, 1)
 				end
 			end
 		end;
 
-	ecp_parse_last_field
+	ecp_parse_last_field (a_context: like context_type)
 			-- Parse the last field of an object.
-		local
-			l_field: like ecp_field
 		do
 			if ecp_parsed then
-				l_field := ecp_field
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'				
-				if l_field.use_label then
-					ecp_parse_label_name;
-					ecp_parse_label_sep
+				if a_context.ecp_field.use_label then
+					ecp_parse_label_name (a_context)
+					ecp_parse_label_sep (a_context)
 				end;
-				if l_field.use_value_delimiters then
-					ecp_parse_left_delimiter
+				if a_context.ecp_field.use_value_delimiters then
+					ecp_parse_left_delimiter (a_context)
 				end;
-				if l_field.use_value_delimiters then
-					ecp_parse_value(1);
-					ecp_parse_right_delimiter(0)
+				if a_context.ecp_field.use_value_delimiters then
+					ecp_parse_value(a_context, 1);
+					ecp_parse_right_delimiter(a_context, 0)
 				else
-					ecp_parse_value(0)
+					ecp_parse_value(a_context, 0)
 				end
 			end
 		end;
 
-	ecp_parse_label_name
+	ecp_parse_label_name (a_context: like context_type)
 			-- Parse current token which must be an identifier
 			-- matching the current field name.
 		require
@@ -215,33 +215,24 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER;
 			done: BOOLEAN
-			l_token: like ecp_token
-			l_field: like ecp_field
+			l_field: EC_FIELD
 			l_descriptor: like descriptor
 		do
 			if ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'			
-				if l_token.type = Identifier_ttype and then l_token.string_value ~ l_field.field_name then
-					ecp_remove_word
+				if a_context.ecp_token.type = Identifier_ttype and then a_context.ecp_token.string_value ~ a_context.ecp_field.field_name then
+					ecp_remove_word (a_context)
 				else
 					from
 						l_descriptor := descriptor
-						check l_descriptor /= Void end -- implied by precondition `set'
 						i := 1
 					until
 						i > l_descriptor.ecd_max_index or done
 					loop
-						if
-							attached l_descriptor.ecd_fields.item (i) as l_ecd_field and then
-							(l_token.string_value ~ l_ecd_field.field_name)
-						then
-							--l_ecd_field.set_rank (ecp_current_field);
-							l_field := l_ecd_field
-							ecp_field := l_field
-							ecp_remove_word;
+						l_field := l_descriptor.ecd_fields.i_th (i)
+						if (a_context.ecp_token.string_value ~ l_field.field_name) then
+							--l_field.set_rank (ecp_current_field);
+							a_context.ecp_field := l_field
+							ecp_remove_word (a_context)
 							done := True
 						end;
 						i := i + 1
@@ -249,9 +240,9 @@ feature {NONE} -- Implementation
 					if not done then
 						tmps.wipe_out;
 						tmps.append("Syntax error, Field name `");
-						tmps.append(l_token.string_value);
+						tmps.append(a_context.ecp_token.string_value);
 						tmps.append("' instead of `");
-						tmps.append(l_field.field_name);
+						tmps.append(a_context.ecp_field.field_name);
 						tmps.append("'.%N");
 						set_ecp_parse_error(tmps)
 					end
@@ -259,93 +250,72 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_label_sep
+	ecp_parse_label_sep (a_context: like context_type)
 			-- Parse current token which must be an label separator
 			-- matching the current field label separator.
-		local
-			l_token: like ecp_token
-			l_field: like ecp_field
 		do
 			if ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'
-				if l_token.type = Label_sep_ttype and then
-					l_token.string_value ~ l_field.label_separator.out then
-					ecp_remove_word
+				if a_context.ecp_token.type = Label_sep_ttype and then
+					a_context.ecp_token.string_value ~ a_context.ecp_field.label_separator.out then
+					ecp_remove_word (a_context)
 				else
 					tmps.wipe_out;
 					tmps.append("Syntax error, Bad label separator `");
-					tmps.append(l_token.string_value);
+					tmps.append(a_context.ecp_token.string_value);
 					tmps.append("' instead of `");
-					tmps.append(l_field.label_separator.out);
+					tmps.append(a_context.ecp_field.label_separator.out);
 					tmps.append("'.%N");
 					set_ecp_parse_error(tmps)
 				end
 			end
 		end;
 
-	ecp_parse_left_delimiter
+	ecp_parse_left_delimiter (a_context: like context_type)
 			-- Parse current token which must be a left delimiter
 			-- matching the current field value left delim. .
-		local
-			l_token: like ecp_token
-			l_field: like ecp_field
 		do
 			if ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'
-				if l_token.type = Left_del_ttype and then
-					l_token.string_value ~ l_field.left_delimiter.out then
-					ecp_remove_word
+				if a_context.ecp_token.type = Left_del_ttype and then
+					a_context.ecp_token.string_value ~ a_context.ecp_field.left_delimiter.out then
+					ecp_remove_word (a_context)
 				else
 					tmps.wipe_out;
 					tmps.append("Syntax error, Bad left delimiter `");
-					tmps.append(l_token.string_value);
+					tmps.append(a_context.ecp_token.string_value);
 					tmps.append("' instead of `");
-					tmps.append(l_field.left_delimiter.out);
+					tmps.append(a_context.ecp_field.left_delimiter.out);
 					tmps.append("'.%N");
 					set_ecp_parse_error(tmps)
 				end
 			end
 		end;
 
-	ecp_parse_right_delimiter (i:INTEGER)
+	ecp_parse_right_delimiter (a_context: like context_type; i: INTEGER)
 			-- Parse current token which must be a right delimiter
 			-- matching the current field value right delim.
 			-- `i' is 0 if this is the last token to be read, else >0
-		local
-			l_token: like ecp_token
-			l_field: like ecp_field
 		do
 			if ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'			
-				if l_token.type = Right_del_ttype and then
-					l_token.string_value ~ l_field.right_delimiter.out then
+				if a_context.ecp_token.type = Right_del_ttype and then
+					a_context.ecp_token.string_value ~ a_context.ecp_field.right_delimiter.out then
 					if i>0 then
-						ecp_remove_word
+						ecp_remove_word (a_context)
 					else
 						ecp_current_token := ecp_current_token+1
 					end
 				else
 					tmps.wipe_out;
 					tmps.append("Syntax error, Bad right delimiter `");
-					tmps.append(l_token.string_value);
+					tmps.append(a_context.ecp_token.string_value);
 					tmps.append("' instead of `");
-					tmps.append(l_field.right_delimiter.out);
+					tmps.append(a_context.ecp_field.right_delimiter.out);
 					tmps.append("'.%N");
 					set_ecp_parse_error(tmps)
 				end
 			end
 		end;
 
-	ecp_parse_value (i:INTEGER)
+	ecp_parse_value (a_context: like context_type; i:INTEGER)
 			-- Parse and skip next token which
 			-- will be converted in an object.
 			-- `i' is 0 if this is the last token to be read, else >0
@@ -354,19 +324,14 @@ feature {NONE} -- Implementation
 			token_type, tmp_i: INTEGER;
 			tmp_r: REAL;
 			tmp_b ,tst: BOOLEAN
-			l_token: like ecp_token
-			l_field: like ecp_field
+			l_field: EC_FIELD
 			l_reference: like ecp_reference
 		do
-			if  ecp_parsed then
-				l_token := ecp_token
-				l_field := ecp_field
+			if ecp_parsed then
+				l_field := a_context.ecp_field
 				l_reference := ecp_reference
-				check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_field /= Void end -- implied by invariant `ecp_token_field_not_void'
-				check l_reference /= Void end -- implied by invariant `ecp_reference_not_void'
-				token_string := l_token.string_value.twin
-				token_type := l_token.type;
+				token_string := a_context.ecp_token.string_value.twin
+				token_type := a_context.ecp_token.type;
 				if token_type = l_field.field_type then
 					inspect
 						token_type
@@ -399,7 +364,7 @@ feature {NONE} -- Implementation
 					end;
 					if ecp_parsed then
 						if i>0 then
-							ecp_remove_word
+							ecp_remove_word (a_context)
 						else
 							ecp_current_token := ecp_current_token + 1
 						end
@@ -416,28 +381,20 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_remove_word
+	ecp_remove_word (a_context: like context_type)
 			-- Remove current token and checks for the
 			-- next token to exist.
-		local
-			l_token: like ecp_token
-			l_array: like ecp_token_array
 		do
-			if ecp_parsed then
-				l_array := ecp_token_array
-				check l_array /= Void end -- implied by invariant `ecp_token_array_not_void'
-				ecp_current_token := ecp_current_token+1;
-				if ecp_current_token > l_array.upper or
-						l_array.item (ecp_current_token) = Void then
+			if attached ecp_token_array as l_array then
+				ecp_current_token := ecp_current_token + 1;
+				if ecp_current_token > l_array.count then
 					tmps.wipe_out;
 					tmps.append("Unexpected end of line after `");
-					l_token := ecp_token
-					check l_token /= Void end -- implied by invariant `ecp_token_field_not_void'
-					tmps.append(l_token.string_value);
+					tmps.append(a_context.ecp_token.string_value);
 					tmps.append("'.%N");
 					set_ecp_parse_error(tmps)
 				else
-					ecp_token := l_array.item(ecp_current_token)
+					a_context.ecp_token := l_array.i_th (ecp_current_token)
 				end
 			end
 		end;
@@ -449,19 +406,17 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	ecp_token_field_not_void: ecp_parsed implies ecp_token /= Void and ecp_field /= Void
-	ecp_token_array_not_void: ecp_parsed implies ecp_token_array /= Void
-	ecp_reference_not_void: ecp_parsed implies ecp_reference /= Void
+	ecp_token_array_not_void: ecp_parsed = (ecp_token_array /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

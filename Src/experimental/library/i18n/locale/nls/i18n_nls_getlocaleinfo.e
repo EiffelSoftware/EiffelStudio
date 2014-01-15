@@ -11,87 +11,95 @@ class
 inherit
 	SHARED_I18N_NLS_LC_CTYPE_CONSTANTS
 
-	UNICODE_CONVERSION
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Interface
 
-	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER
-			--
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-				int temp;
-				GetLocaleInfo ((LCID) $lcid, ((LCTYPE) $lc_ctype | LOCALE_RETURN_NUMBER), (LPTSTR) &temp, 2);
-				return (EIF_INTEGER) temp;
-			]"
+	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER_32
+			-- Extract number locale information of `lcid' of `lc_ctype'.
+		local
+			l_result: INTEGER
+			l_ctype: INTEGER
+		do
+			if is_overriding_current_user_setting then
+				l_ctype := lc_ctype | locale_return_number | locale_no_user_override
+			else
+				l_ctype := lc_ctype | locale_return_number
+			end
+			l_result := c_get_locale_info (lcid, l_ctype, $Result, {PLATFORM}.integer_32_bytes // 2)
+			check l_result /= 0 end
 		end
 
-	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER): STRING_32
-			--
+	extract_locale_string (lcid: INTEGER; lc_ctype: INTEGER): STRING_32
+			-- Extract locale information of `lcid' of `lc_ctype'.
 		local
-			pointer: POINTER
-			l_nchar: INTEGER -- Character number including the null char
+			c: MANAGED_POINTER
+			bufferlen: INTEGER
+			l_ctype: INTEGER
+			utf: UTF_CONVERTER
 		do
-			pointer := c_extract_locale_string(lcid, lc_ctype, $l_nchar)
-			Result := pointer_to_string (pointer, l_nchar)
-			pointer.memory_free
+			if is_overriding_current_user_setting then
+				l_ctype := lc_ctype | locale_no_user_override
+			else
+				l_ctype := lc_ctype
+			end
+			c := c_ptr
+			bufferlen := c_get_locale_info (lcid, l_ctype, default_pointer, 0)
+			if bufferlen /= 0 then
+				if bufferlen * 2 > c.count then
+					c.resize (bufferlen * 2)
+				end
+				bufferlen := c_get_locale_info (lcid, l_ctype | locale_no_user_override, c.item, bufferlen)
+			end
+			if bufferlen = 0 then
+					-- An error occurred, return an empty string.
+				check False end
+				create Result.make_empty
+			else
+				Result := utf.utf_16_0_pointer_to_string_32 (c)
+			end
 		end
+
+feature {NONE} -- Access
+
+	is_overriding_current_user_setting: BOOLEAN
+			-- Are we going to use the current user setting to query the OS for the locale information?
+			--| By default it is always False from the outside world, but internally we change it to True
+			--| to query other locale. It cannot be made an invariant because of agent callbacks.
 
 feature {NONE} -- C helper
 
-	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; return_len: TYPED_POINTER [INTEGER]): POINTER
-			--
+	c_get_locale_info (lcid, lc_ctype: INTEGER; p: POINTER; p_size: INTEGER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
-			"[
-				TCHAR *string;
-				int bufferlen = GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, NULL, 0);
-				
-				*$return_len = bufferlen;
-				string = malloc(sizeof(TCHAR)*bufferlen);
-				GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, string, bufferlen);
-				return string;
-			]"
+			"return GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, (LPTSTR) $p, (DWORD) $p_size);"
 		end
 
-feature {NONE} -- utf16-LE (aka "wide string") handling
-
-	pointer_to_string(ptr: POINTER; buf_size: INTEGER): STRING_32
-			-- takes a pointer to a utf16-LE string (the LE is important!)
-			-- and returns the corresponding STRING_32 by means of Horrible Things
-			--
-			-- `buf_size', number of characters, including the null character.
-		require
-				--pointer is not null, I suppose
-			ptr_not_null: ptr /= default_pointer
-		do
-				-- `buf_size - 1' to remove the null character.
-			Result := pointer_to_wide_string (ptr, (buf_size - 1) * c_wcsize)
-			Result := utf16_to_utf32 (Result)
+	c_ptr: MANAGED_POINTER
+			-- Buffer for `GetLocaleInfo'
+		once
+			create Result.make (10)
+		ensure
+			at_least_2: Result.count >= 2
+			multiple_of_two: Result.count \\ 2 = 0
 		end
 
-	c_wcslen (ptr: POINTER): INTEGER
+	locale_return_number: INTEGER
 		external
-			"C (void *): EIF_INTEGER| <string.h>"
+			"C inline use <windows.h>"
 		alias
-			"wcslen"
+			"return LOCALE_RETURN_NUMBER;"
 		end
 
-	c_wcsize: INTEGER
+	locale_no_user_override: INTEGER
 		external
-			"C inline"
+			"C inline use <windows.h>"
 		alias
-			"sizeof (wchar_t)"
+			"return LOCALE_NOUSEROVERRIDE;"
 		end
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -43,7 +43,9 @@ feature {NONE} -- Initialization
 
 			if operating_environment.home_directory_supported then
 				l_loc := l_exec.home_directory_path
-				check l_loc /= Void end -- implied by `home_directory_supported'
+				if l_loc = Void then
+					create l_loc.make_current
+				end
 			else
 				l_loc := l_exec.current_working_path
 			end
@@ -90,13 +92,11 @@ feature {PREFERENCES} -- Resource Management
 
 	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to the file on disk.
-		local
-			l_preferences: like preferences
 		do
 				-- TODO: neilc.  How to save only a single preference to the file?
-			l_preferences := preferences
-			check attached l_preferences end -- implied by precondition `initialized'
-			save_preferences (l_preferences.preferences.linear_representation, True)
+			if attached preferences as l_preferences then
+				save_preferences (l_preferences.preferences.linear_representation, True)
+			end
 		end
 
 	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN)
@@ -313,7 +313,7 @@ invariant
 	has_xml_structure: xml_structure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -48,49 +48,42 @@ feature -- Command
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			l_save: STRING
-			l_freeze_cmd, l_dir: detachable IMMUTABLE_STRING_32
+			l_freeze_cmd: detachable READABLE_STRING_GENERAL
 			l_exec_error: detachable READABLE_STRING_32
 			l_max_c_processes: INTEGER
 			l_compilation: EQA_EW_C_COMPILATION
 			l_file_system: EQA_FILE_SYSTEM
 		do
 			l_freeze_cmd := a_test.environment.item ({EQA_EW_PREDEFINED_VARIABLES}.Freeze_command_name)
-			check attached l_freeze_cmd end -- Implied by environment values have been set before executing test cases
-			l_freeze_cmd := a_test.environment.substitute_recursive (l_freeze_cmd)
-			l_file_system := a_test.file_system
-			if attached l_freeze_cmd as l_attached_freeze then
-				l_exec_error := l_file_system.executable_file_exists (l_attached_freeze)
-			else
-				check False end -- l_freeze_cmd should not void
-			end
+			if l_freeze_cmd /= Void then
+				l_freeze_cmd := a_test.environment.substitute_recursive (l_freeze_cmd)
+				l_file_system := a_test.file_system
+				l_exec_error := l_file_system.executable_file_exists (l_freeze_cmd)
 
-			if l_exec_error = Void then
-				a_test.increment_c_compile_count
-				l_dir := a_test.environment.item (compilation_dir_name)
-				check attached l_dir end -- Implied by environment values have been set before executing test cases
---				l_max_c_processes := a_test.environment.max_c_processes
-				if attached output_file_name as l_output_file_name and then not l_output_file_name.is_empty then
-					l_save := l_output_file_name
-				else
-					l_save := a_test.c_compile_output_name
-				end
-				if attached l_freeze_cmd as l_attached_freeze_2 then
-					create l_compilation.make (l_dir, l_save, l_attached_freeze_2, l_max_c_processes, a_test)
-					if attached l_compilation as l_attached_compilation then
+				if l_exec_error = Void then
+					a_test.increment_c_compile_count
+					if attached a_test.environment.item (compilation_dir_name) as l_dir then
+--						l_max_c_processes := a_test.environment.max_c_processes
+						if attached output_file_name as l_output_file_name and then not l_output_file_name.is_empty then
+							l_save := l_output_file_name
+						else
+							l_save := a_test.c_compile_output_name
+						end
+						create l_compilation.make (l_dir, l_save, l_freeze_cmd, l_max_c_processes, a_test)
 						a_test.set_c_compilation (l_compilation)
+						execute_ok := True
 					else
-						check False end -- l_compilation should not void
+						failure_explanation := "No compilation directory set"
+						execute_ok := False
 					end
 				else
-					check False end -- l_freeze_cmd should not void
+					failure_explanation := l_exec_error
+					execute_ok := False
 				end
-
-				execute_ok := True
 			else
-				failure_explanation := l_exec_error
+				failure_explanation := "No freeze command available"
 				execute_ok := False
 			end
-
 			if not execute_ok then
 				print (failure_explanation)
 				a_test.assert ("C compilation failure", False)
@@ -117,7 +110,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

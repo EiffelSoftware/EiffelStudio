@@ -25,100 +25,94 @@ feature -- Access
 			ss, se, ds, de: INTEGER --start and end positions in source and destination of this block
 			block_line_diff, line_diff: INTEGER -- #lines in destination - #lines in source
 			block: STRING
-			l_hunks: like hunks
-			l_header: like unified_header
 			l_hunk: LIST [DIFF_LINE]
 			l_line: DIFF_LINE
-			l_src: like src
-			l_dst: like dst
 		do
-			l_hunks := hunks
-			l_header := unified_header
-			l_src := src
-			l_dst := dst
+				-- Per precondition
 			check
-				l_hunks_attached: l_hunks /= Void
-				l_header_attached: l_header /= Void
-				l_src_attached: l_src /= Void
-				l_dst_attached: l_dst /= Void
-			end
-			create Result.make_from_string (l_header)
-			from
-				l_hunks.start
-			until
-				l_hunks.after
-			loop
-				l_hunk := l_hunks.item
-				check l_hunk_attached: l_hunk /= Void end
-
-				create block.make_empty
-				ss := ss.Max_value
-				se := -1
-				ds := ds.Max_value
-				de := -1
-				block_line_diff := 0
+				attached hunks as l_hunks and
+				attached unified_header as l_header and
+				attached src as l_src and
+				attached dst as l_dst
+			then
+				create Result.make_from_string (l_header)
 				from
-					l_hunk.start
+					l_hunks.start
 				until
-					l_hunk.after
+					l_hunks.after
 				loop
-						-- What kind of line is it (add or remove)
-					l_line := l_hunk.item
-					check l_line_attached: l_line /= Void end
-					if attached {DIFF_LINE_ADD} l_line as l_line_add then
-						if ds > l_line_add.dst then
-							ds := l_line_add.dst
+					l_hunk := l_hunks.item
+					check l_hunk_attached: l_hunk /= Void end
+
+					create block.make_empty
+					ss := ss.Max_value
+					se := -1
+					ds := ds.Max_value
+					de := -1
+					block_line_diff := 0
+					from
+						l_hunk.start
+					until
+						l_hunk.after
+					loop
+							-- What kind of line is it (add or remove)
+						l_line := l_hunk.item
+						check l_line_attached: l_line /= Void end
+						if attached {DIFF_LINE_ADD} l_line as l_line_add then
+							if ds > l_line_add.dst then
+								ds := l_line_add.dst
+							end
+							if de < l_line_add.dst then
+								de := l_line_add.dst
+							end
+							block_line_diff := block_line_diff + 1
+							block.append ("+")
+							block.append (l_dst [l_line_add.dst])
+							block.append_character (line_delimiter)
+						else
+							if ss > l_line.src then
+								ss := l_line.src
+							end
+							if se < l_line.src then
+								se := l_line.src
+							end
+							block_line_diff := block_line_diff - 1
+							block.append ("-")
+							block.append (l_src [l_line.src])
+							block.append_character (line_delimiter)
 						end
-						if de < l_line_add.dst then
-							de := l_line_add.dst
-						end
-						block_line_diff := block_line_diff + 1
-						block.append ("+")
-						block.append (l_dst [l_line_add.dst])
-						block.append_character (line_delimiter)
-					else
-						if ss > l_line.src then
-							ss := l_line.src
-						end
-						if se < l_line.src then
-							se := l_line.src
-						end
-						block_line_diff := block_line_diff - 1
-						block.append ("-")
-						block.append (l_src [l_line.src])
-						block.append_character (line_delimiter)
+						l_hunk.forth
 					end
-					l_hunk.forth
-				end
 
-					-- if we had only adds or dels in this block the other start/end position
-					-- is not filled and has to be computed with line_diff
-				if se = -1 then
-					ss := ds-line_diff
-					se := ss-1
-				elseif de = -1 then
-					ds := ss+line_diff
-					de := ds-1
-				end
+						-- if we had only adds or dels in this block the other start/end position
+						-- is not filled and has to be computed with line_diff
+					if se = -1 then
+						ss := ds-line_diff
+						se := ss-1
+					elseif de = -1 then
+						ds := ss+line_diff
+						de := ds-1
+					end
 
-				Result.append ("@@ -")
-				Result.append_integer (ss+1)
-				if se-ss+1 /= 1  then
-					Result.append (",")
-					Result.append_integer (se-ss+1)
-				end
-				Result.append (" +")
-				Result.append_integer (ds+1)
-				if de-ds+1 /= 1 then
-					Result.append (",")
-					Result.append_integer (de-ds+1)
-				end
-				Result.append (" @@")
-				Result.append_character (line_delimiter)
-				Result.append (block)
+					Result.append ("@@ -")
+					Result.append_integer (ss+1)
+					if se-ss+1 /= 1  then
+						Result.append (",")
+						Result.append_integer (se-ss+1)
+					end
+					Result.append (" +")
+					Result.append_integer (ds+1)
+					if de-ds+1 /= 1 then
+						Result.append (",")
+						Result.append_integer (de-ds+1)
+					end
+					Result.append (" @@")
+					Result.append_character (line_delimiter)
+					Result.append (block)
 
-				line_diff := line_diff + block_line_diff
-				l_hunks.forth
+					line_diff := line_diff + block_line_diff
+					l_hunks.forth
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -339,7 +333,7 @@ feature {NONE} -- Implementation
 	unified_header: detachable STRING
 			-- The header for the unified diff.
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

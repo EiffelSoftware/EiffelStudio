@@ -32,7 +32,8 @@ inherit
 			internal_set_focus,
 			on_size_allocate,
 			on_widget_mapped,
-			process_draw_event
+			process_draw_event,
+			button_actions_handled_by_signals
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -61,6 +62,9 @@ feature {NONE} -- Initialization
 			{GTK2}.gtk_widget_set_app_paintable (c_object, True)
 			{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
 
+			real_signal_connect (c_object, once "button-press-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
+			real_signal_connect (c_object, once "button-release-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
+
 			line_width := 1
 			drawing_mode := drawing_mode_copy
 
@@ -72,6 +76,14 @@ feature {NONE} -- Initialization
 
 			disable_tabable_to
 			disable_tabable_from
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	button_actions_handled_by_signals: BOOLEAN
+			-- Are the button actions (press/release) handled by signals?
+		do
+			Result := True
 		end
 
 feature -- Implementation

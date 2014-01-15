@@ -62,23 +62,29 @@ feature -- Deletion
 
 feature --
 
-	retrieve_field_value (type, name: STRING): STRING
+	retrieve_field_value (type: detachable STRING; name: STRING): STRING
 			-- Value of field with `name' and `type' retrieval failure message.
 		do
-			Result := "Cannot retrieve " + type + " value for field '"
-					+ name + "'."
+			if type /= Void then
+				Result := "Cannot retrieve " + type + " value for field '" + name + "'."
+			else
+				Result := "Cannot retrieve for field '" + name + "' of an unknown type."
+			end
 		end
-					
-	enter_field_value (type, name: STRING): STRING
+
+	enter_field_value (type: detachable STRING; name: STRING): STRING
 			-- Value of field with `name' and `type' not valid message.
 		do
-			Result := "Please enter a " + type + " value for field '"
-					+ name + "'."
+			if type /= Void then
+				Result := "Please enter a " + type + " value for field '" + name + "'."
+			else
+				Result := "Please enter a value for field '" + name + "' of an unknown type."
+			end
 		end
 
 	type_not_recognized (name: STRING): STRING
 			-- Type of field with `name' not recognized message.
-		do					
+		do
 			Result := "Field '" + name + "' type not recognized."
 		end
 
@@ -118,17 +124,17 @@ feature -- Combo box
 			-- Label for an empty combo item value.
 		do
 			Result := "(Empty)"
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

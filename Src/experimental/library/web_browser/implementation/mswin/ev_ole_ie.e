@@ -4,6 +4,10 @@ note
 					
 					More details: See MSDN "IWebBrowser2 Interface"
 					http://msdn.microsoft.com/en-us/library/aa752127(VS.85).aspx
+
+
+					Have a look at the following page to configure the behavior of the web browser:
+					http://msdn.microsoft.com/en-us/library/ee330730(v=vs.85).aspx
 																				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

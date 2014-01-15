@@ -1332,9 +1332,9 @@ feature {NONE} -- Output
 			l_cfg: STRING_32
 			l_cursor: CURSOR
 		do
-			if 
-				attached sub_system_name as l_sub_system_name and then 
-				not l_sub_system_name.is_empty 
+			if
+				attached sub_system_name as l_sub_system_name and then
+				not l_sub_system_name.is_empty
 			then
 				create l_name.make_from_string (system_name + " " + l_sub_system_name)
 			else
@@ -1964,11 +1964,9 @@ feature {NONE} -- Switches
 				create l_switch.make (version_switch, "Displays version information.", True, False)
 				l_switch.set_is_special
 				Result.extend (l_switch)
-				if {PLATFORM}.is_windows then
-					create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
-					l_switch.set_is_special
-					Result.extend (l_switch)
-				end
+				create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
+				l_switch.set_is_special
+				Result.extend (l_switch)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -2243,8 +2241,8 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

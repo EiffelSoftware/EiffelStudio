@@ -26,7 +26,7 @@ feature -- Action
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		local
-			l_app: EV_APPLICATION
+			l_app: like application
 		do
 			create l_app
 			application := l_app

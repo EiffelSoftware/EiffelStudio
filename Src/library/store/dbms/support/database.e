@@ -160,10 +160,10 @@ feature -- For DATABASE_STORE
 		local
 			i, j, nb: INTEGER
 			l_identity_index: INTEGER
-			l_column_name: detachable STRING
 		do
 			create Result.make (25)
-			Result.append_character (' '); Result.append_character ('(')
+			Result.append_character (' ');
+			Result.append_character ('(')
 			if attached {DB_TABLE} obj as table and then not insert_auto_identity_column then
 					-- There was an explicit requirement from the database to exclude
 					-- the identity column from the statement.
@@ -185,9 +185,7 @@ feature -- For DATABASE_STORE
 						Result.append_character (',')
 						Result.append_character (' ')
 					end
-					if l_identity_index /= j then
-						l_column_name := repository.column_name (j)
-						check l_column_name /= Void end -- FIXME: implied by ... bug ?
+					if l_identity_index /= j and then attached repository.column_name (j) as l_column_name then
 						Result.append (l_column_name)
 						i := 1
 					end
@@ -1118,7 +1116,7 @@ feature -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

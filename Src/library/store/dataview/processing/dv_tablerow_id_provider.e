@@ -20,10 +20,11 @@ create
 
 feature -- Initialization
 
-	make
+	make (a_navigator: DV_TABLEROWS_NAVIGATOR)
 			-- Initialize.
 		do
 			create db_all_searcher.make
+			set_db_tablerow_navigator (a_navigator)
 		end
 
 feature -- Status report
@@ -33,7 +34,7 @@ feature -- Status report
 		do
 			Result := db_creator /= Void and then
 					selecting_control /= Void and then
-					raise /= Void and then
+					raise_action /= Void and then
 					db_tablerow_navigator /= Void
 		end
 
@@ -49,7 +50,7 @@ feature -- Basic operations
 			not_activated: not is_activated
 			action_not_void: raising_action /= Void
 		do
-			raise := raising_action
+			raise_action := raising_action
 		end
 
 	set_selecting_control (selecting_ctrl: DV_SENSITIVE_CONTROL)
@@ -60,18 +61,20 @@ feature -- Basic operations
 			not_void: selecting_ctrl /= Void
 		do
 			selecting_control := selecting_ctrl
-			selecting_control.set_action (agent ok)
+			selecting_ctrl.set_action (agent ok)
 		end
 
 feature {DV_COMPONENT} -- Access
 
-	table_description: DB_TABLE_DESCRIPTION
+	table_description: detachable DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 
 	selected_tablerows: ARRAYED_LIST [DB_TABLE]
 			-- Base for database table row selection.
 		do
-			Result := tablerow_set
+			check attached tablerow_set as l_set then
+				Result := l_set
+			end
 		end
 
 feature {DV_COMPONENT} -- Basic operations
@@ -90,70 +93,83 @@ feature {DV_COMPONENT} -- Basic operations
 			-- `table_code'.
 		require
 			is_activated: is_activated
+		local
+			l_set: like tablerow_set
 		do
 			db_all_searcher.set_table_code (table_code)
 			if not db_all_searcher.is_activated then
 				db_all_searcher.activate
 			end
-			tablerow_set := db_all_searcher.refresh
-			tablerow_set.start
-			table_description := tables.description (table_code)
-			db_tablerow_navigator.reactivate
-			db_tablerow_navigator.refresh
-			raise.call ([])
+			if db_all_searcher.is_activated then
+				l_set := db_all_searcher.refresh
+				tablerow_set := l_set
+				l_set.start
+				table_description := tables.description (table_code)
+				if attached db_tablerow_navigator as l_nav then
+					l_nav.reactivate
+					l_nav.refresh
+				end
+				if attached raise_action as l_raise_action then
+					l_raise_action.call ([])
+				end
+			end
 		end
 
 	activate
 			-- Activate component.
 		do
-			db_all_searcher.set_user_component (db_creator.db_table_component)
-			is_activated := True
+			if attached db_creator as l_db_creator and then attached l_db_creator.db_table_component as l_comp then
+				db_all_searcher.set_user_component (l_comp)
+				is_activated := True
+			end
 		end
-		
+
 feature {NONE} -- Implementation
 
-	tablerow_set: ARRAYED_LIST [DB_TABLE]
+	tablerow_set: detachable ARRAYED_LIST [DB_TABLE]
 			-- Base for database table row selection.
 
 	db_all_searcher: DV_TYPED_SEARCHER
 			-- Component retrieving database table rows.
 
-	db_creator: DV_CHOICE_CREATOR
-			-- Creation component requesting table IDs. 
+	db_creator: detachable DV_CHOICE_CREATOR
+			-- Creation component requesting table IDs.
 
-	selecting_control: DV_SENSITIVE_CONTROL
+	selecting_control: detachable DV_SENSITIVE_CONTROL
 			-- Control to select a database table row.
 
-	raise: PROCEDURE [ANY, TUPLE]
+	raise_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action to perform to raise the navigator.
 
 	update_controls_sensitiveness
 			-- Update controls sensitiveness.
 		do
-			if tablerow_set.before then
-				selecting_control.disable_sensitive
-			else
-				selecting_control.enable_sensitive
+			if attached selecting_control as l_ctrl and attached tablerow_set as l_set then
+				if l_set.before then
+					l_ctrl.disable_sensitive
+				else
+					l_ctrl.enable_sensitive
+				end
 			end
 		end
-		
+
 	ok
 			-- Select current table row and transmit its ID to creation component.
-		require
-			valid_position: tablerow_set.valid_index (tablerow_set.index)
 		do
-			db_creator.add_foreign_key_value (tablerow_set.item.table_description.id)
+			if attached tablerow_set as l_set and then not l_set.off and then attached db_creator as l_db_creator then
+				l_db_creator.add_foreign_key_value (l_set.item.table_description.id)
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

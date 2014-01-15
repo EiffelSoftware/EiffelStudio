@@ -63,11 +63,11 @@ feature -- Status report
 						private_selection.load_result
 						private_selection.unset_map_name ("seq")
 						l_cursor := private_selection.cursor
-							-- implied by private_selection.`load_result''s postcondition
-						check l_cursor /= Void end
-						create tuple.copy (l_cursor)
-						check attached {READABLE_STRING_GENERAL} tuple.item (1) as row_text then
-							Result.append_string_general (row_text)
+						if l_cursor /= Void then
+							create tuple.copy (l_cursor)
+							if attached {READABLE_STRING_GENERAL} tuple.item (1) as row_text then
+								Result.append_string_general (row_text)
+							end
 						end
 						seq := seq + 1
 					end
@@ -76,11 +76,15 @@ feature -- Status report
 					private_selection.query (Select_text (name))
 					private_selection.load_result
 					l_cursor := private_selection.cursor
-
-					check l_cursor /= Void end -- implied by private_selection.`load_result''s postcondition					
-					create tuple.copy (l_cursor)
-					check attached {READABLE_STRING_GENERAL} tuple.item (1) as l_item then
-						Result := l_item.as_string_32
+					if l_cursor /= Void then
+						create tuple.copy (l_cursor)
+						if attached {READABLE_STRING_GENERAL} tuple.item (1) as l_item then
+							Result := l_item.as_string_32
+						else
+							create Result.make_empty
+						end
+					else
+						create Result.make_empty
 					end
 				end
 				private_selection.unset_map_name ("name")
@@ -139,11 +143,7 @@ feature -- Basic operations
 				private_string.wipe_out
 				private_string.append_string_general(db_spec.sql_creation)
 				private_string.append(name)
-				if arguments_set then
-					append_in_args_type (private_string)
-				else
-					append_no_args (private_string)
-				end
+				append_in_args_type (private_string)
 				private_string.append_string_general (db_spec.sql_as)
 				private_string.append (sql_temp)
 				private_string.append_string_general (db_spec.sql_end)
@@ -165,10 +165,7 @@ feature -- Basic operations
 				private_string.wipe_out
 				private_string.append_string_general (db_spec.sql_execution)
 				private_string.append (proc_name)
-
-				if arguments_set then
-					append_in_args_value (private_string)
-				end
+				append_in_args_value (private_string)
 				private_string.append_string_general (db_spec.sql_after_exec)
 				destination.set_query (private_string)
 				destination.execute_query
@@ -236,8 +233,8 @@ feature -- Element change
 			name_changed: name.same_string_general (new_name) or else name.same_string_general (new_name.as_lower)
 		end
 
-	set_arguments (args_name: like arguments_name;
-			 			args_type: like arguments_type)
+	set_arguments (args_name: attached like arguments_name;
+			 			args_type: attached like arguments_type)
 			-- Set `arguments_name' and `arguments_type'
 			-- of current as a variable list of argument
 			-- names and a variable list of argument
@@ -268,8 +265,8 @@ feature -- Element change
 			set_with_input_parameter2: arguments_type = args_type
 		end
 
-	set_arguments_32 (args_name: like arguments_name_32;
-			 			args_type: like arguments_type)
+	set_arguments_32 (args_name: attached like arguments_name_32;
+			 			args_type: attached like arguments_type)
 			-- Set `arguments_name_32' and `arguments_type'
 			-- of current as a variable list of argument
 			-- names and a variable list of argument
@@ -313,33 +310,36 @@ feature {NONE} -- Implementation
 				p_exists := handle.status.found
 				private_selection.load_result
 				l_cursor := private_selection.cursor
-				check l_cursor /= Void end -- implied by `private_selection.query''s postcondition
-				create tuple.copy (l_cursor)
-				if not tuple.is_empty then
-					if attached {INTEGER_REF} tuple.item (1) as temp_int then
-						p_exists := temp_int > 0
-						if db_spec.has_row_number then
-							row_number := temp_int.item
-						end
-					elseif attached {INTEGER_64_REF} tuple.item (1) as temp_int64 then
-							-- MySQL returns an integer_64 for count(*).
-						p_exists := temp_int64.item > 0
-						if db_spec.has_row_number then
-							row_number := temp_int64.item.as_integer_32
-						end
-					else
-						if attached {DOUBLE_REF} tuple.item (1) as temp_dble then
-							p_exists := temp_dble > 0.0
+				if l_cursor = Void then
+					p_exists := False
+				else
+					create tuple.copy (l_cursor)
+					if not tuple.is_empty then
+						if attached {INTEGER_REF} tuple.item (1) as temp_int then
+							p_exists := temp_int > 0
 							if db_spec.has_row_number then
-								row_number := temp_dble.item.truncated_to_integer
+								row_number := temp_int.item
+							end
+						elseif attached {INTEGER_64_REF} tuple.item (1) as temp_int64 then
+								-- MySQL returns an integer_64 for count(*).
+							p_exists := temp_int64.item > 0
+							if db_spec.has_row_number then
+								row_number := temp_int64.item.as_integer_32
 							end
 						else
-								-- Added for ODBC, should really be abstracted
-							p_exists := attached {READABLE_STRING_GENERAL} tuple.item (3) as temp_string and then not temp_string.is_empty
+							if attached {DOUBLE_REF} tuple.item (1) as temp_dble then
+								p_exists := temp_dble > 0.0
+								if db_spec.has_row_number then
+									row_number := temp_dble.item.truncated_to_integer
+								end
+							else
+									-- Added for ODBC, should really be abstracted
+								p_exists := attached {READABLE_STRING_GENERAL} tuple.item (3) as temp_string and then not temp_string.is_empty
+							end
 						end
+					else
+						p_exists := False
 					end
-				else
-					p_exists := False
 				end
 				private_selection.terminate
 			end
@@ -355,98 +355,87 @@ feature {NONE} -- Implementation
 			-- Map variables are used for set input arguments.
 		require
 			s_not_void: s /= Void
-			arguments_set: arguments_set
 		local
 			i: INTEGER
-			l_arguments_name_32: like arguments_name_32
 		do
-			s.append_string_general (db_spec.map_var_before)
-			from
-				l_arguments_name_32 := arguments_name_32
-				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'
-				i := l_arguments_name_32.lower
-			until
-				i > l_arguments_name_32.upper
-			loop
-				if db_spec.proc_args then
-					s.append_string_general (db_spec.map_var_between)
-					s.append (l_arguments_name_32.item (i))
-					s.append_string_general (" = ")
+			if attached arguments_name_32 as l_arguments_name_32 then
+				s.append_string_general (db_spec.map_var_before)
+				from
+					i := l_arguments_name_32.lower
+				until
+					i > l_arguments_name_32.upper
+				loop
+					if db_spec.proc_args then
+						s.append_string_general (db_spec.map_var_between)
+						s.append (l_arguments_name_32.item (i))
+						s.append_string_general (" = ")
+					end
+					s.append (db_spec.map_var_name_32 (l_arguments_name_32.item (i)))
+					i := i + 1
+					if i <= l_arguments_name_32.upper then
+						s.extend (',')
+					end
 				end
-				s.append (db_spec.map_var_name_32 (l_arguments_name_32.item (i)))
-				i := i + 1
-				if i <= l_arguments_name_32.upper then
-					s.extend (',')
-				end
+				s.append_string_general (db_spec.map_var_after)
 			end
-			s.append_string_general (db_spec.map_var_after)
 		ensure
 			s_larger: s.count > old s.count
 		end
 
 	append_in_args_type (s: STRING_32)
-			-- Append arguments type name in `s'.
+			-- Append arguments type name in `s' if `argument_set', otherwise no arguments.
 		require
 			s_not_void: s /= Void
-			arguments_set: arguments_set
 		local
 			i: INTEGER
-			l_arguments_name_32: like arguments_name_32
-			l_arguments_type: like arguments_type
 			l_all_types: DB_ALL_TYPES
 			l_obj: ANY
 		do
-			s.append_string_general (db_spec.map_var_before)
-			from
-				l_arguments_name_32 := arguments_name_32
-				check l_arguments_name_32 /= Void end -- implied by precondition `arguments_set'	
-				l_arguments_type := arguments_type
-				check l_arguments_type /= Void end -- implied by precondition `arguments_set'	
-				i := l_arguments_name_32.lower
-				l_all_types := handle.all_types
-			until
-				i > l_arguments_name_32.upper
-			loop
-				s.append_string_general (db_spec.map_var_between)
-				s.append (l_arguments_name_32.item (i))
-				s.append_string_general (db_spec.map_var_between_2)
-				l_obj := l_arguments_type.item (i)
-				if attached {INTEGER_16_REF}l_obj then
-					s.append_string_general (db_spec.sql_name_integer_16)
-				elseif attached {INTEGER_64_REF}l_obj then
-					s.append_string_general (db_spec.sql_name_integer_64)
-				elseif attached {IMMUTABLE_STRING_8} l_obj then
-					s.append_string_general (l_all_types.db_type (string_8_for_type).sql_name)
-				elseif attached {IMMUTABLE_STRING_32} l_obj then
-					s.append_string_general (l_all_types.db_type (string_32_for_type).sql_name)
-				elseif is_decimal_used and then is_decimal_function.item ([l_obj]) then
-					s.append_string_general (db_spec.sql_name_decimal)
-					s.append_string_general (" (")
-					s.append_string_general (default_decimal_presicion.out)
-					s.append_string_general (", ")
-					s.append_string_general (default_decimal_scale.out)
-					s.append_string_general (")")
-				else
-					if l_all_types.is_registered (l_obj) then
-						s.append_string_general (l_all_types.db_type (l_obj).sql_name)
+			if attached arguments_name_32 as l_arguments_name_32 and attached arguments_type as l_arguments_type then
+				s.append_string_general (db_spec.map_var_before)
+				from
+					i := l_arguments_name_32.lower
+					l_all_types := handle.all_types
+				until
+					i > l_arguments_name_32.upper
+				loop
+					s.append_string_general (db_spec.map_var_between)
+					s.append (l_arguments_name_32.item (i))
+					s.append_string_general (db_spec.map_var_between_2)
+					l_obj := l_arguments_type.item (i)
+					if attached {INTEGER_16_REF}l_obj then
+						s.append_string_general (db_spec.sql_name_integer_16)
+					elseif attached {INTEGER_64_REF}l_obj then
+						s.append_string_general (db_spec.sql_name_integer_64)
+					elseif attached {IMMUTABLE_STRING_8} l_obj then
+						s.append_string_general (l_all_types.db_type (string_8_for_type).sql_name)
+					elseif attached {IMMUTABLE_STRING_32} l_obj then
+						s.append_string_general (l_all_types.db_type (string_32_for_type).sql_name)
+					elseif is_decimal_used and then is_decimal_function.item ([l_obj]) then
+						s.append_string_general (db_spec.sql_name_decimal)
+						s.append_string_general (" (")
+						s.append_string_general (default_decimal_presicion.out)
+						s.append_string_general (", ")
+						s.append_string_general (default_decimal_scale.out)
+						s.append_string_general (")")
 					else
-						s.append_string_general (" Unknown type")
+						if l_all_types.is_registered (l_obj) then
+							s.append_string_general (l_all_types.db_type (l_obj).sql_name)
+						else
+							s.append_string_general (" Unknown type")
+						end
+					end
+					i := i + 1
+					if i <= l_arguments_name_32.upper then
+						s.extend (',')
 					end
 				end
-				i := i + 1
-				if i <= l_arguments_name_32.upper then
-					s.extend (',')
-				end
+				s.append_string_general (db_spec.map_var_after)
+			else
+				s.append_string_general (db_spec.no_args)
 			end
-			s.append_string_general (db_spec.map_var_after)
 		ensure
 			s_larger: s.count > old s.count
-		end
-
-	append_no_args (s: STRING_32)
-			-- Append no argument
-		do
-			s.append_string_general (db_spec.no_args)
 		end
 
 	string_8_for_type: STRING_8 = ""
@@ -540,7 +529,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -41,6 +41,15 @@ feature -- Connection
 			database_manager.set_connection_information (user_name, password, data_source)
 		end
 
+	set_connection_string_information (a_connection_string: STRING_8)
+			-- Set connection string required to connect to the database.
+			-- It overrides the information set by `set_connection_information' when login.
+		require
+			not_void: a_connection_string /= Void
+		do
+			database_manager.set_connection_string_information (a_connection_string)
+		end
+
 	establish_connection
 			-- Establish connection to database.
 		do
@@ -54,7 +63,9 @@ feature -- Connection
 		require
 			is_connected: is_connected
 		do
-			session_control.disconnect
+			if attached database_manager.session_control as l_session_control then
+				l_session_control.disconnect
+			end
 		end
 
 feature -- Status report
@@ -62,8 +73,8 @@ feature -- Status report
 	is_connected: BOOLEAN
 			-- Is the application connected to a database?
 		do
-			if database_manager.session_control_created then
-				Result := session_control.is_connected
+			if attached database_manager.session_control as l_session_control then
+				Result := l_session_control.is_connected
 			end
 		end
 
@@ -114,32 +125,30 @@ feature -- Access
 			select_query_prepared: select_query_prepared
 		local
 			l_select_qualifiers: like select_qualifiers
-			l_select_columns: like select_columns
-			l_table_descr: like select_table_descr
 		do
-			l_select_columns := select_columns
-			check l_select_columns /= Void end -- implied by precondition `select_query_prepared'
-			l_table_descr := select_table_descr
-			check l_table_descr /= Void end -- implied by precondition `select_query_prepared'
-			Result := "select " + l_select_columns + " from " + l_table_descr.Table_name
-			l_select_qualifiers := select_qualifiers
-			if l_select_qualifiers /= Void then
-				Result.append (" where " + l_select_qualifiers)
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				if attached select_columns as l_select_columns then
+					Result := "select " + l_select_columns
+				else
+					Result := "select *"
+				end
+				Result.append (" from " + l_select_table_descr.Table_name)
+				l_select_qualifiers := select_qualifiers
+				if l_select_qualifiers /= Void then
+					Result.append (" where " + l_select_qualifiers)
+				end
+				Result.append (order_by)
 			end
-			Result.append (order_by)
 		end
 
 	select_qualifiers: detachable STRING
 			-- Qualifying clause of current SQL query.
 
-	database_result_list: ARRAYED_LIST [DB_TABLE]
+	database_result_list: detachable ARRAYED_LIST [DB_TABLE]
 			-- Database result list.
-		local
-			l_result_list: like result_list
 		do
-			l_result_list := result_list
-			check l_result_list /= Void end -- implied by precursor's precondition not `has_error'
-			Result := l_result_list
+			Result := result_list
 		end
 
 	database_result: detachable DB_TABLE
@@ -148,12 +157,8 @@ feature -- Access
 		require
 			no_error: not has_error
 			is_id_selection: is_id_selection
-		local
-			l_result_list: like result_list
 		do
-			l_result_list := result_list
-			check l_result_list /= Void end -- implied by precondition not `has_error'
-			if not l_result_list.is_empty then
+			if attached result_list as l_result_list and then not l_result_list.is_empty then
 				Result := l_result_list.first
 			end
 		end
@@ -166,12 +171,11 @@ feature -- Basic operations
 	load_result
 			-- Load result. Set `has_error'. Result is available in
 			-- `database_result' if result is unique, `database_result_list' otherwise.
-		local
-			l_table_descr: like select_table_descr
 		do
-			l_table_descr := select_table_descr
-			check l_table_descr /= Void end -- implied by precursor's precondition `select_query_prepared'
-			result_list := load_list_with_query_and_tablecode (select_query, l_table_descr.Table_code)
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				result_list := load_list_with_query_and_tablecode (select_query, l_select_table_descr.Table_code)
+			end
 		end
 
 	prepare_select_with_table (tablecode: INTEGER)
@@ -209,21 +213,21 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 		local
-			l_table_descr: like select_table_descr
 			l_select_columns: like select_columns
 		do
-			from
-				cols.start
-				l_table_descr := select_table_descr
-				check l_table_descr /= Void end -- implied by precondition `select_query_prepared'
-				l_select_columns := l_table_descr.description_list.i_th (cols.item)
-				select_columns := l_select_columns
-				cols.forth
-			until
-				cols.after
-			loop
-				l_select_columns.append (Values_separator + l_table_descr.description_list.i_th (cols.item))
-				cols.forth
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				from
+					cols.start
+					l_select_columns := l_select_table_descr.description_list.i_th (cols.item)
+					select_columns := l_select_columns
+					cols.forth
+				until
+					cols.after
+				loop
+					l_select_columns.append (Values_separator + l_select_table_descr.description_list.i_th (cols.item))
+					cols.forth
+				end
 			end
 		end
 
@@ -232,13 +236,13 @@ feature -- Basic operations
 		local
 			q: STRING
 			sql_value: STRING
-			l_table_descr: like select_table_descr
 		do
-			sql_value := string_format (value)
-			l_table_descr := select_table_descr
-			check l_table_descr /= Void end -- implied by precursor's precondition `select_query_prepared'
-			q := l_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
-			add_qualifier (q)
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				sql_value := string_format (value)
+				q := l_select_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
+				add_qualifier (q)
+			end
 		end
 
 	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN)
@@ -251,71 +255,70 @@ feature -- Basic operations
 			q: STRING
 			attr, val: STRING
 			coltype: INTEGER
-			l_select_table_descr: like select_table_descr
 		do
-			l_select_table_descr := select_table_descr
-			check l_select_table_descr /= Void end -- implied by precuirsor's  precondition `select_query_prepared'
-			attr := l_select_table_descr.description_list.i_th (column)
-			val := value.twin
-			coltype := l_select_table_descr.type_list.i_th (column)
-			if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
-				q := attr.twin
-			else
-				if coltype = l_select_table_descr.string_type or else
-						coltype = l_select_table_descr.character_type then
-					q := to_lower (attr)
-					val.to_lower
-				else
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				attr := l_select_table_descr.description_list.i_th (column)
+				val := value.twin
+				coltype := l_select_table_descr.type_list.i_th (column)
+				if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
 					q := attr.twin
+				else
+					if coltype = l_select_table_descr.string_type or else
+							coltype = l_select_table_descr.character_type then
+						q := to_lower (attr)
+						val.to_lower
+					else
+						q := attr.twin
+					end
 				end
+				if like_type (type) then
+						-- '%' and '_' have a special meaning in SQL (wild cards: '%' -> '*',
+						-- '_' -> '?'): a solution is to replace
+						-- these characters by any character, i.e. '_'.
+					val.replace_substring_all (any_wildcard, only_one_wildcard)
+					q.append (Space)
+					q.append (Like_predicate)
+					q.append (Space)
+					if type = Contains_type or else type = Suffix_type then
+						val.prepend (any_wildcard)
+					end
+					if type = Contains_type or else type = Prefix_type then
+						val.append (any_wildcard)
+					end
+				else
+					q.append (Space)
+					if type = Equals_type then
+						q.append ("=")
+					elseif type = Greater_type then
+						q.append (">")
+					elseif type = Lower_type then
+						q.append ("<")
+					end
+					q.append (Space)
+				end
+						-- Gives a valid SQL string representation to `val'.
+				if like_type (type) or else
+						coltype = l_select_table_descr.string_type or else
+						coltype = l_select_table_descr.character_type then
+					val := string_format (val)
+				end
+				q.append (val)
+				add_qualifier (q)
 			end
-			if like_type (type) then
-					-- '%' and '_' have a special meaning in SQL (wild cards: '%' -> '*',
-					-- '_' -> '?'): a solution is to replace
-					-- these characters by any character, i.e. '_'.
-				val.replace_substring_all (any_wildcard, only_one_wildcard)
-				q.append (Space)
-				q.append (Like_predicate)
-				q.append (Space)
-				if type = Contains_type or else type = Suffix_type then
-					val.prepend (any_wildcard)
-				end
-				if type = Contains_type or else type = Prefix_type then
-					val.append (any_wildcard)
-				end
-			else
-				q.append (Space)
-				if type = Equals_type then
-					q.append ("=")
-				elseif type = Greater_type then
-					q.append (">")
-				elseif type = Lower_type then
-					q.append ("<")
-				end
-				q.append (Space)
-			end
-					-- Gives a valid SQL string representation to `val'.
-			if like_type (type) or else
-					coltype = l_select_table_descr.string_type or else
-					coltype = l_select_table_descr.character_type then
-				val := string_format (val)
-			end
-			q.append (val)
-			add_qualifier (q)
 		end
 
 	set_id_qualifier (id_value: STRING)
 			-- Prepared select query will select table row with id `id_value'.
 		require
 			has_id: attached select_table_descr as lr_table_descr and then lr_table_descr.id_code /= lr_table_descr.No_id
-		local
-			l_table_descr: like select_table_descr
 		do
-			remove_qualifiers
-			l_table_descr := select_table_descr
-			check l_table_descr /= Void end -- implied by precondition `has_id'
-			add_value_qualifier (l_table_descr.Id_code, id_value)
-			is_id_selection := True
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				remove_qualifiers
+				add_value_qualifier (l_select_table_descr.Id_code, id_value)
+				is_id_selection := True
+			end
 		ensure
 			is_id_selection: is_id_selection
 		end
@@ -351,12 +354,11 @@ feature -- Basic operations
 			-- Order result by attribute of code `column'.
 		require
 			select_query_prepared: select_query_prepared
-		local
-			l_table_descr: like select_table_descr
 		do
-			l_table_descr := select_table_descr
-			check l_table_descr /= Void end -- implied by `select_query_prepared'
-			order_by := Space + Order_by_clause + Space + l_table_descr.description_list.i_th (column)
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				order_by := Space + Order_by_clause + Space + l_select_table_descr.description_list.i_th (column)
+			end
 		end
 
 	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER])
@@ -366,24 +368,24 @@ feature -- Basic operations
 			column_list_not_void: column_list /= Void
 		local
 			descr_list: ARRAYED_LIST [STRING]
-			l_select_table_descr: like select_table_descr
 		do
-			l_select_table_descr := select_table_descr
-			check l_select_table_descr /= Void end -- implied by precondition `select_query_prepared'
-			descr_list := l_select_table_descr.description_list
-			if not column_list.is_empty then
-				order_by := Space + Order_by_clause + Space + descr_list.i_th (column_list.first)
-				from
-					column_list.start
-					column_list.forth
-				until
-					column_list.after
-				loop
-					order_by.append (Values_separator + descr_list.i_th (column_list.item))
-					column_list.forth
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				descr_list := l_select_table_descr.description_list
+				if not column_list.is_empty then
+					order_by := Space + Order_by_clause + Space + descr_list.i_th (column_list.first)
+					from
+						column_list.start
+						column_list.forth
+					until
+						column_list.after
+					loop
+						order_by.append (Values_separator + descr_list.i_th (column_list.item))
+						column_list.forth
+					end
+				else
+					remove_order_by
 				end
-			else
-				remove_order_by
 			end
 		end
 
@@ -404,13 +406,14 @@ feature -- Queries
 		local
 			l_error_message: detachable STRING_32
 		do
-			has_error := False
 			Result := database_manager.load_data_with_select (s)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message_32
-				check l_error_message /= Void end -- implied by `has_error'
-				error_message_32 := selection_failed (s) + l_error_message
+				l_error_message := selection_failed (s).twin
+				l_error_message.append_string (database_manager.error_message_32)
+				error_message_32 := l_error_message
+			else
+				has_error := False
 			end
 		end
 
@@ -446,9 +449,9 @@ feature -- General command
 			database_manager.execute_query (query)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message_32
-				check l_error_message /= Void end -- implied by `has_error'
-				error_message_32 := Command_failed + l_error_message
+				l_error_message := command_failed.twin
+				l_error_message.append_string (database_manager.error_message_32)
+				error_message_32 := l_error_message
 			end
 		end
 
@@ -460,27 +463,33 @@ feature -- Update
 			table_descr: DB_TABLE_DESCRIPTION
 			rescued: BOOLEAN
 			updater: DB_CHANGE
-			l_error_message: detachable STRING_32
 		do
 			if not rescued then
-				has_error := False
-				session_control.reset
-				table_descr := tablerow.table_description
-				if attached updater_table.item (table_descr.Table_code) as l_table then
-					updater := l_table
+				if attached session_control as l_session_control then
+					has_error := False
+					l_session_control.reset
+					table_descr := tablerow.table_description
+					if attached updater_table.item (table_descr.Table_code) as l_table then
+						updater := l_table
+					else
+						create updater.make
+						updater.set_query (update_sql_query (table_descr))
+					end
+					map_parameters (updater, table_descr)
+					updater.execute_query
+					updater.clear_all
+					commit
+					if database_manager.has_error then
+						has_error := True
+						if attached database_manager.error_message_32 as l_error_message then
+							error_message_32 := Update_failed + l_error_message
+						else
+							error_message_32 := Update_failed
+						end
+					end
 				else
-					create updater.make
-					updater.set_query (update_sql_query (table_descr))
-				end
-				map_parameters (updater, table_descr)
-				updater.execute_query
-				updater.clear_all
-				commit
-				if database_manager.has_error then
 					has_error := True
-					l_error_message := database_manager.error_message_32
-					check l_error_message /= Void end -- implied by `has_error'
-					error_message_32 := Update_failed + l_error_message
+					error_message_32 :=  update_failed + "No session created"
 				end
 			else
 				has_error := True
@@ -685,7 +694,6 @@ feature {NONE} -- Creation implementation
 			--Store in the DB object `an_obj'.
 		local
 			rep: DB_REPOSITORY
-			l_error_message: detachable STRING_32
 			l_error_message_2: detachable STRING_32
 		do
 			has_error := False
@@ -694,9 +702,7 @@ feature {NONE} -- Creation implementation
 				has_error := True
 				l_error_message_2 := Creation_failed + repository_failed (tables.name_list.i_th (tablecode))
 				error_message_32 := l_error_message_2
-				if database_manager.has_error then
-					l_error_message := database_manager.error_message_32
-					check l_error_message /= Void end  -- implied by `has_error'
+				if database_manager.has_error and then attached database_manager.error_message_32 as l_error_message then
 					l_error_message_2.append (l_error_message)
 				else
 					l_error_message_2.append (No_repository)
@@ -705,9 +711,11 @@ feature {NONE} -- Creation implementation
 				database_manager.insert_with_repository (an_obj, rep)
 				if database_manager.has_error then
 					has_error := True
-					l_error_message := database_manager.error_message_32
-					check l_error_message /= Void end  -- implied by `has_error'
-					error_message_32 := Creation_failed + l_error_message
+					if attached database_manager.error_message_32 as l_error_message then
+						error_message_32 := Creation_failed + l_error_message
+					else
+						error_message_32 := Creation_failed
+					end
 				end
 			end
 		end
@@ -753,16 +761,17 @@ feature {NONE} -- Deletion implementation
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
 			q: STRING
-			l_error_message: detachable STRING_32
 		do
 			q := "delete from " + description.Table_name + " where " + description.id_name
 				+ " = " + description.printable_id
 			database_manager.execute_query (q)
 			if database_manager.has_error then
 				has_error := True
-				l_error_message := database_manager.error_message_32
-				check l_error_message /= Void end -- implied by `has_error'
-				error_message_32 := Deletion_failed + l_error_message
+				if attached database_manager.error_message_32 as l_error_message then
+					error_message_32 := Deletion_failed + l_error_message
+				else
+					error_message_32 := Deletion_failed
+				end
 			end
 		end
 
@@ -792,18 +801,10 @@ feature {NONE} -- Deletion implementation
 
 feature {NONE} -- Implementation
 
-	session_control: DB_CONTROL
+	session_control: detachable DB_CONTROL
 			-- Session control.
-		require
-			created: database_manager.session_control_created
-		local
-			l_session_control: detachable DB_CONTROL
-		once
-			l_session_control := database_manager.session_control
-			check l_session_control /= Void end -- implied by precondition `created'
-			Result := l_session_control
-		ensure
-			not_void: Result /= Void
+		do
+			Result := database_manager.session_control
 		end
 
 	database_handle_name: STRING
@@ -961,7 +962,7 @@ feature {NONE} -- Error messages
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

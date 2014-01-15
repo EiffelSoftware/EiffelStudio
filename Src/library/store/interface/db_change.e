@@ -86,12 +86,10 @@ feature -- Basic operations
 
 	execute_query
 			-- Execute `modify' with `last_query'.
-		local
-			l_query: like last_query_32
 		do
-			l_query := last_query_32
-			check l_query /= Void end -- implied by precursor's precondition `last_query_not_void'
-			modify (l_query)
+			if attached last_query_32 as l_query then
+				modify (l_query)
+			end
 		end
 
 feature -- Query
@@ -129,7 +127,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

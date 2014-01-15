@@ -42,11 +42,11 @@ feature {NONE} -- Events
 				end
 			end
 			l_db_selection.terminate
-			if not l_db_selection.is_ok then
-				create l_result.make (0)
+			if l_result /= Void then
+				Result := l_result
+			else
+				create Result.make (0)
 			end
-			check l_result /= Void end -- FIXME: implied by previous if clause, bug here? `l_result' can be void if rescued
-			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -72,11 +72,11 @@ feature {NONE} -- Events
 					l_result := db_actions.list
 				end
 			end
-			if not l_db_selection.is_ok then
-				create l_result.make (0)
+			if l_result /= Void then
+				Result := l_result
+			else
+				create Result.make (0)
 			end
-			check l_result /= Void end -- FIXME: implied by previous if clause, bug here? `l_result' can be void if rescued
-			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end

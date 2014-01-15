@@ -27,20 +27,8 @@ feature -- Initialization
 		local
 			pair: DV_LOCATED_VALUE_REDIRECTOR
 		do
-			create pair
-			pair.set_value_redirector (redirector)
-			pair.set_location (position)
+			create pair.make (redirector, position)
 			redirection_list.extend (pair)
-		end
-
-feature -- Access
-
-	redirected_list: ARRAYED_LIST [STRING]
-			-- Last list set with redirections performed.
-		require
-			list_set: list_set
-		do
-			Result := result_list
 		end
 
 feature -- Status report
@@ -54,6 +42,13 @@ feature -- Status report
 feature -- Basic operations
 
 	redirect_list (list: ARRAYED_LIST [ANY])
+		obsolete
+			"Use `redirected_list' instead."
+		do
+			result_list := redirected_list (list)
+		end
+
+	redirected_list (list: ARRAYED_LIST [ANY]): ARRAYED_LIST [STRING_32]
 			-- Redirect defined values of `list'.
 			-- Values at redirection positions must be integer values.
 		require
@@ -62,7 +57,7 @@ feature -- Basic operations
 			position: INTEGER
 			item: ANY
 		do
-			create result_list.make (list.count)
+			create Result.make (list.count)
 			from
 				list.start
 			until
@@ -70,9 +65,9 @@ feature -- Basic operations
 			loop
 				item := list.item
 				if item /= Void then
-					result_list.extend (item.out)
+					Result.extend (item.out)
 				else
-					result_list.extend ("")
+					Result.extend ("")
 				end
 				list.forth
 			end
@@ -82,7 +77,7 @@ feature -- Basic operations
 				redirection_list.after
 			loop
 				position := redirection_list.item.location
-				result_list.put_i_th (redirection_list.item.value_redirector.redirected_value (list.i_th (position)), position)
+				Result.put_i_th (redirection_list.item.value_redirector.redirected_value (list.i_th (position)), position)
 				redirection_list.forth
 			end
 		ensure
@@ -94,18 +89,18 @@ feature {NONE} -- Implementation
 	redirection_list: ARRAYED_LIST [DV_LOCATED_VALUE_REDIRECTOR]
 			-- List of redirectors with positions of values to redirect.
 
-	result_list: ARRAYED_LIST [STRING];
+	result_list: detachable ARRAYED_LIST [STRING_32];
 			-- Last list set with redirections performed (implementation).
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

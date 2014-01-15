@@ -64,24 +64,17 @@ feature -- Access
 	index: INTEGER
 			-- Position of graphic selected element
 			-- in the buffer list.
-		local
-			tmp: INTEGER_REF
 		do
-			tmp ?= selected_item.data
-			check
-				tmp /= Void
+			if attached selected_item as l_item and then attached {INTEGER_REF} l_item.data as l_int then
+				Result := l_int.item
 			end
-			Result := tmp.item
-		end 
+		end
 
 	table_code: INTEGER
 			-- Database table code.
 
-	attribute_list: ARRAYED_LIST [INTEGER]
+	attribute_list: detachable ARRAYED_LIST [INTEGER]
 			-- List of table attributes to display in column titles.
-
-	title_list: ARRAYED_LIST [STRING]
-			-- List of column titles.
 
 feature -- Basic operations
 
@@ -95,12 +88,12 @@ feature -- Basic operations
 			-- Set `a_title_list' to the column title list.
 		do
 			Precursor (a_title_list)
-			title_list_set := True 
+			title_list_set := True
 		ensure then
 			title_list_set: title_list_set
 		end
 
-	set_attributes (a_list: ARRAYED_LIST [INTEGER])
+	set_attributes (a_list: detachable ARRAYED_LIST [INTEGER])
 			-- Set `a_list' to the list of database table attributes to display.
 		do
 			if a_list /= Void then
@@ -112,13 +105,17 @@ feature -- Basic operations
 
 	build
 			-- Set up the list.
+		local
+			l_list: like attribute_list
 		do
 			if table_code /= No_code then
-				if attribute_list = Void then 
-					attribute_list := tables.obj (table_code).table_description.attribute_code_list
+				l_list := attribute_list
+				if l_list = Void then
+					l_list := tables.obj (table_code).table_description.attribute_code_list
+					attribute_list := l_list
 				end
 				if not title_list_set then
-					set_col_titles
+					set_col_titles (l_list)
 				end
 			end
 			disable_multiple_selection
@@ -142,14 +139,14 @@ feature -- Basic operations
 				loop
 					add_to_list (tablerow_list.item, tablerow_list.index, last_index)
 					tablerow_list.forth
-				end			
+				end
 			end
 			if is_displayed then
 				set_focus
 			end
 				-- Avoid side-effects.
 			tablerow_list.go_i_th (last_index)
-			
+
 				-- Enable a nice display.
 			from
 				col_count := column_count
@@ -183,7 +180,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_col_titles
+	set_col_titles (l_list: attached like attribute_list)
 			-- Set column titles with names of attributes which codes are in `attr_codes_list'.
 		local
 			ind: INTEGER
@@ -193,9 +190,9 @@ feature {NONE} -- Implementation
 			from
 				ind := 1
 			until
-				ind > attribute_list.count
+				ind > l_list.count
 			loop
-				set_column_title (table_descr_l.i_th (attribute_list.i_th (ind)), ind)
+				set_column_title (table_descr_l.i_th (l_list.i_th (ind)), ind)
 				ind := ind + 1
 			end
 		end
@@ -205,13 +202,16 @@ feature {NONE} -- Implementation
 			-- `current_i' = `last_i'.
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
+			l_list: like attribute_list
 		do
 			create it
-			if value_list_redirector /= Void then
-				value_list_redirector.redirect_list (list_item.table_description.selected_attribute_list (attribute_list))
-				it.fill_with_strings_8 (value_list_redirector.redirected_list)
-			else
-				it.fill_with_strings_8 (list_item.table_description.selected_printable_attribute_list (attribute_list))
+			l_list := attribute_list
+			if l_list /= Void then
+				if attached value_list_redirector as l_redirector then
+					it.fill (l_redirector.redirected_list (list_item.table_description.selected_attribute_list (l_list)))
+				else
+					it.fill (list_item.table_description.selected_printable_attribute_list (l_list))
+				end
 			end
 			it.set_data (current_i)
 			extend (it)
@@ -220,21 +220,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	value_list_redirector: DV_VALUE_LIST_REDIRECTOR
+	value_list_redirector: detachable DV_VALUE_LIST_REDIRECTOR
 			-- Value list redirector.
 
 	No_code: INTEGER = 0;
 			-- No `table_code' has been set yet.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -26,18 +26,14 @@ feature -- Initialization
 	make
 			-- Make object.
 		do
-			-- create `input_array', `final_array' and `keywords_list'
-			create input_array.make_filled (Void, 0, 0)
-			create final_array.make_filled (0, 0, 0)
-			create keywords_list.make
-
+			metalex_make
 			create ecl_message.make(5)
-			make_empty
+			create descriptor.make
 		end;
 
 feature  -- Status report
 
-	descriptor: detachable EC_DESCRIPTOR
+	descriptor: EC_DESCRIPTOR
 
 	ecl_error: BOOLEAN
 			-- Did lexical analysis succeeded?
@@ -62,78 +58,70 @@ feature -- Status setting
 		require
 			input_string_exists: input_string /= Void;
 			descriptor_exists: descriptor /= Void;
-			descriptor_is_ok: attached descriptor as lr_descriptor and then not lr_descriptor.ecd_error;
+			descriptor_is_ok: not descriptor.ecd_error;
 			analyzer_is_built: analyzer /= Void
 		local
 			t:TOKEN
-			l_analyzer: like analyzer
 		do
-			ecl_error := False;
-			ecl_message.wipe_out;
-			if input_string.count=0 then
-				ecl_error := True;
-				ecl_message.append("Empty line%N")
-			end;
-			from
-				l_analyzer := analyzer
-				check l_analyzer /= Void end -- implied by precondition `analyzer_is_built'
-				l_analyzer.set_string(input_string);
-				ecl_token_array.clear_all;
-				ecl_nb_token:=0
-			until
-				l_analyzer.end_of_text or ecl_error
-			loop
-				l_analyzer.get_any_token;
-				if not l_analyzer.end_of_text and then not ecl_error then
-					create t;
-					t.copy(l_analyzer.last_token);
-					if not t.string_value.is_equal(l_analyzer.last_string_read) then
-						ecl_error := True;
-						ecl_message.append("Lexical item `");
-						ecl_message.append(l_analyzer.last_string_read);
-						ecl_message.append("' is unknown.%N")
-					end;
-					if t.type /= Space_ttype then
-						if t.type =  Boolean_ttype then
-							t.string_value.to_upper
+			if attached analyzer as l_analyzer then
+				ecl_error := False;
+				ecl_message.wipe_out;
+				if input_string.count=0 then
+					ecl_error := True;
+					ecl_message.append("Empty line%N")
+				end;
+				from
+					l_analyzer.set_string(input_string);
+					ecl_token_array.wipe_out
+					ecl_nb_token:=0
+				until
+					l_analyzer.end_of_text or ecl_error
+				loop
+					l_analyzer.get_any_token;
+					if not l_analyzer.end_of_text and then not ecl_error then
+						create t;
+						t.copy(l_analyzer.last_token);
+						if not t.string_value.is_equal(l_analyzer.last_string_read) then
+							ecl_error := True;
+							ecl_message.append("Lexical item `");
+							ecl_message.append(l_analyzer.last_string_read);
+							ecl_message.append("' is unknown.%N")
 						end;
-						ecl_token_array.force(t,ecl_nb_token+1);
-						ecl_nb_token := ecl_nb_token + 1
+						if t.type /= Space_ttype then
+							if t.type =  Boolean_ttype then
+								t.string_value.to_upper
+							end;
+							ecl_token_array.extend (t);
+							ecl_nb_token := ecl_nb_token + 1
+						end
 					end
-				end
-			end;
-			if not ecl_error then
-				ecl_token_array.conservative_resize_with_default (Void, 1, ecl_nb_token)
+				end;
 			end
 		end;
 
-	ecl_token_array: ARRAY [detachable TOKEN]
+	ecl_token_array: ARRAYED_LIST [TOKEN]
 			-- Array of tokens
 		require
 			descriptor_exists: descriptor /= Void;
-			descriptor_is_ok: attached descriptor as lr_descriptor and then not lr_descriptor.ecd_error
-		local
-			l_descriptor: like descriptor
+			descriptor_is_ok: not descriptor.ecd_error
 		once
-			l_descriptor := descriptor
-			check l_descriptor /= Void end -- implied by precondition `descriptor_exists'
-			create Result.make_filled (Void, 1, l_descriptor.ecd_index)
+			create Result.make (descriptor.ecd_fields.count)
 		end;
 
-	ecl_build (s: STRING)
+	ecl_build (s: READABLE_STRING_GENERAL)
 			-- Retrieve analyzer associated with current object description
 			-- if it exists, else build a new one according to current description
 			-- and store it.
 		require
 			descriptor_exists: descriptor /= Void;
-			descriptor_is_ok: (attached descriptor as lr_descriptor) and then not lr_descriptor.ecd_error;
+			descriptor_is_ok: not descriptor.ecd_error
 			argument_exists: s /= Void
 		local
 			tmp_file: RAW_FILE
-			tmpsl,tmpsr,tmpss,file_name: STRING;
+			tmpsl,tmpsr,tmpss: STRING
+			file_name: STRING_32;
 			i:INTEGER;
 			already_done: BOOLEAN;
-			l_descriptor: like descriptor
 			l_field: detachable EC_FIELD
 		do
 			if analyzer = Void then
@@ -144,10 +132,10 @@ feature -- Status setting
 			create tmpss.make(0);
 			create file_name.make(0);
 		--	file_name.append("/tmp/ec_");
-			file_name.append(s);
+			file_name.append_string_general (s);
 			file_name.append(".lex");
 			file_name.to_lower;
-			create tmp_file.make(file_name);
+			create tmp_file.make_with_name (file_name);
 			if tmp_file.exists then
 				retrieve_analyzer (file_name)
 			else
@@ -163,32 +151,28 @@ feature -- Status setting
 				put_nameless_expression
 					("('t''r''u''e') | ('f''a''l''s''e')",Boolean_ttype);
 				tmpsl.wipe_out;
-				l_descriptor := descriptor
-				check l_descriptor /= Void end -- implied by precondition `descriptor_exists'
-				tmpsl.append (char2string(l_descriptor.field_separator));
+				tmpsl.append (char2string(descriptor.field_separator));
 				put_expression(tmpsl.twin, Field_sep_ttype, "FieldSepT");
 				tmpsl.wipe_out;
 				from
 					i := 1
 				until
-					i > l_descriptor.ecd_index
+					i > descriptor.ecd_fields.count
 				loop
-					l_field := l_descriptor.ecd_fields.item (i)
-					if l_field /= Void then
-						if i > 1 then
-							tmpss.append(" | ")
+					l_field := descriptor.ecd_fields.i_th (i)
+					if i > 1 then
+						tmpss.append(" | ")
+					end;
+					tmpss.append (char2string(l_field.label_separator));
+					if l_field.use_value_delimiters then
+						if not already_done then
+							already_done := True
+						else
+							tmpsl.append(" | ");
+							tmpsr.append(" | ")
 						end;
-						tmpss.append (char2string(l_field.label_separator));
-						if l_field.use_value_delimiters then
-							if not already_done then
-								already_done := True
-							else
-								tmpsl.append(" | ");
-								tmpsr.append(" | ")
-							end;
-							tmpsl.append (char2string(l_field.left_delimiter));
-							tmpsr.append (char2string(l_field.right_delimiter))
-						end
+						tmpsl.append (char2string(l_field.left_delimiter));
+						tmpsr.append (char2string(l_field.right_delimiter))
 					end
 					i := i + 1
 				end;
@@ -217,14 +201,14 @@ feature {NONE} -- Conversion
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

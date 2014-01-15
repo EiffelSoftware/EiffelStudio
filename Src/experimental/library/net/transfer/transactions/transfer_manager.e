@@ -103,22 +103,20 @@ feature -- Status report
 			error_exists: error
 		local
 			idx: INTEGER
-			error_found: BOOLEAN
 			l_error: detachable STRING
 		do
 			idx := index
-			from start until error_found or after loop
+			from start until l_error /= Void or after loop
 				if source.error then
 					l_error := error_text (source.error_code)
-					error_found := True
 				elseif target.error then
 					l_error := error_text (target.error_code)
-					error_found := True
 				end
 				forth
 			end
-			check l_error_attached: l_error /= Void end
-			Result := l_error
+			check l_error_attached: l_error /= Void then
+				Result := l_error
+			end
 			select_transaction (idx)
 		ensure
 			non_empty_string: Result /= Void and then not Result.is_empty
@@ -220,14 +218,14 @@ invariant
 			finished_transactions <= total_count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -128,7 +128,7 @@ feature -- Access (table row values)
 		deferred
 		end
 
-	printable_attribute (code: INTEGER): STRING
+	printable_attribute (code: INTEGER): STRING_32
 			-- String value of attribute with `code'.
 		require
 			valid_code: valid (code)
@@ -173,7 +173,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	printable_attribute_list: ARRAYED_LIST [STRING]
+	printable_attribute_list: ARRAYED_LIST [STRING_32]
 			-- Table row attribute string values.
 		do
 			create Result.make (Attribute_number)
@@ -207,7 +207,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	selected_printable_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [STRING]
+	selected_printable_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [STRING_32]
 			-- Table row attribute values which codes are in `list'.
 		require
 			not_void: list /= Void
@@ -239,9 +239,7 @@ feature -- Access (table row values)
 			until
 				description_list.after
 			loop
-				action.call ([description_list.item.twin])
-				l_result := action.last_result
-				check l_result /= Void end -- FIXME: implied by nothing... bug? add precondition `action_result_not_void' ?
+				l_result := action.item ([description_list.item.twin])
 				Result.extend (l_result)
 				description_list.forth
 			end
@@ -276,14 +274,14 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

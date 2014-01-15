@@ -661,6 +661,7 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EDITOR_PREFERENCE_MANAGER
+			l_bold_font: EV_FONT
 		do
 			create l_manager.make (preferences, "editor")
 
@@ -688,7 +689,9 @@ feature {NONE} -- Implementation
 			font_cell.put (editor_font_preference)
 			header_font_preference := l_manager.new_font_preference_value (l_manager, header_font_string, create {EV_FONT})
 			header_font_cell.put (header_font_preference)
-			keyword_font_preference := l_manager.new_font_preference_value (l_manager, keyword_font_string, create {EV_FONT})
+			create l_bold_font
+			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			keyword_font_preference := l_manager.new_font_preference_value (l_manager, keyword_font_string, l_bold_font)
 			keyword_font_cell.put (keyword_font_preference)
 			is_fixed_width_cell.put (
 				(not font.is_proportional and not keyword_font.is_proportional) and then
@@ -727,6 +730,8 @@ feature {NONE} -- Implementation
 			number_background_color_preference.set_auto_preference (normal_background_color_preference)
 			operator_background_color_preference.set_auto_preference (normal_background_color_preference)
 			string_background_color_preference.set_auto_preference (normal_background_color_preference)
+			link_background_color_preference.set_auto_preference (normal_background_color_preference)
+			mouse_over_link_background_color_preference.set_auto_preference (normal_background_color_preference)
 
 				-- Ensure that the value is never negative
 			if tabulation_spaces_preference.value <= 0 then
@@ -776,7 +781,7 @@ feature {NONE} -- Implementation
 			-- Preferences
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

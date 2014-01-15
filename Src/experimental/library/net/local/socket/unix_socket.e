@@ -70,18 +70,15 @@ feature
 			-- Bind socket to local address in `address'.
 		local
 			retried: BOOLEAN
-			l_address: like address
 		do
-			if not retried then
-				l_address := address
-					-- Per inherited precondition
-				check l_address_attached: l_address /= Void end
+			if not retried and attached address as l_address then
 				c_bind (descriptor, l_address.socket_address.item, l_address.count);
 				is_open_read := True
+			else
+				is_open_read := False
 			end
 		rescue
 			if not assertion_violation then
-				is_open_read := False
 				retried := True
 				retry
 			end
@@ -91,20 +88,17 @@ feature
 			-- Connect socket to peer address.
 		local
 			retried: BOOLEAN
-			l_peer_address: like peer_address
 		do
-			if not retried then
-				l_peer_address := peer_address
-					-- Per inherited precondition
-				check l_peer_address_attached: l_peer_address /= Void end
-				c_connect (descriptor, l_peer_address.socket_address.item, l_peer_address.count);
-				is_open_write := True;
+			if not retried and attached peer_address as l_peer_address then
+				c_connect (descriptor, l_peer_address.socket_address.item, l_peer_address.count)
+				is_open_write := True
 				is_open_read := True
+			else
+				is_open_read := False
+				is_open_write := False
 			end
 		rescue
 			if not assertion_violation then
-				is_open_read := False
-				is_open_write := False
 				retried := True
 				retry
 			end
@@ -135,11 +129,8 @@ feature -- Status Report
 
 	address_type: UNIX_SOCKET_ADDRESS
 			-- <Precursor>
-		local
-			l_result: detachable like address_type
 		do
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check False then end
 		end
 
 	cleanup
@@ -153,16 +144,11 @@ feature -- Status Report
 
 	name: STRING
 			-- Socket name
-		require else
-			valid_address: address /= Void
-		local
-			l_address: like address
 		do
 			create Result.make (10);
-			l_address := address
-				-- Per precondition
-			check l_address_attached: l_address /= Void end
-			Result.append (l_address.path)
+			if attached address as l_address then
+				Result.append (l_address.path)
+			end
 		end
 
 feature -- Status setting
@@ -229,14 +215,14 @@ feature {NONE} -- Externals
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

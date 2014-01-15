@@ -52,7 +52,15 @@ feature -- Execution
 				-- Setup login for current session.
 			manager.current_session.set_session_login (global_login.twin)
 
-			set_connection_information (user_login, user_password, database_name)
+			if is_odbc then
+				if is_trusted then
+					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + ";Trusted_Connection=Yes;")
+				else
+					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + "Uid=" + user_login + ";Pwd=" + user_password)
+				end
+			else
+				set_connection_information (user_login, user_password, database_name)
+			end
 			if attached Manager.current_session.session_login as l_login then
 				l_login.set_application (database_name)	-- For MySQL
 			end
@@ -165,6 +173,7 @@ feature {NONE} -- Factory
 			Result.set_quantity (50)
 			Result.set_title ("Yangzi River")
 			Result.set_double_value (2.3)
+			Result.set_year (1980)
 		end
 
 feature -- Constants

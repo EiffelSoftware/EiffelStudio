@@ -56,7 +56,7 @@ feature -- Command
 				check l_mediator /= Void end -- Implied by precondition `set'
 				check new_tool_bar_is_caller: a_new_tool_bar = l_mediator.caller end
 				sizer.resize_on_extend (a_new_tool_bar)
-				l_hot_index := put_hot_tool_bar_at (a_relative_pointer_position)
+				l_hot_index := put_hot_tool_bar_at (l_mediator.is_resizing_mode, a_relative_pointer_position)
 				l_tool_bars := tool_bar_row.zones
 				l_tool_bars.start
 				l_tool_bars.search (a_new_tool_bar)
@@ -206,7 +206,7 @@ feature -- Command
 				else
 					caller_position := a_relative_position
 				end
-				l_hot_index := put_hot_tool_bar_at (a_relative_position)
+				l_hot_index := put_hot_tool_bar_at (l_mediator.is_resizing_mode, a_relative_position)
 				try_set_position (a_relative_position, l_hot_index)
 				if is_possible_set_position (a_relative_position, l_hot_index) then
 					from
@@ -487,7 +487,7 @@ feature {NONE}  -- Implementation
 			others_right_side_not_outside: a_hot_index /= positions_and_sizes_try.count implies positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count) <= tool_bar_row.size
 		end
 
-	put_hot_tool_bar_at (a_position: INTEGER): INTEGER
+	put_hot_tool_bar_at (a_mediator_is_resizing_mode: BOOLEAN; a_position: INTEGER): INTEGER
 			-- Which index we should put hot tool bar?
 			-- 0 is before 1st tool bar, 1 is after 1st tool bar, 2 is after 2nd tool bar...
 			-- a_position is relative position
@@ -497,11 +497,8 @@ feature {NONE}  -- Implementation
 			l_found: BOOLEAN
 			l_last_end_position: INTEGER
 			l_positions_and_sizes: like positions_and_sizes
-			l_mediator: like internal_mediator
 		do
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `set'
-			if l_mediator.is_resizing_mode then
+			if a_mediator_is_resizing_mode then
 				Result := last_hot_index
 			else
 				l_positions_and_sizes := positions_and_sizes (True)

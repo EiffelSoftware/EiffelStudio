@@ -32,15 +32,23 @@ feature -- Test routines
 		local
 			l_fail_cell: CELL [BOOLEAN]
 			l_process: like current_process
+			l_exit: INTEGER
 		do
 			create l_fail_cell.put (False)
 			create_process ("an_executable_with_this_name_should_not_exist", Void)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_fail_launch_handler (agent l_fail_cell.put (True))
 			l_process.launch
 			wait_for_exit
-			assert ("exit_code_1", not l_process.launched and l_fail_cell.item)
+			if l_process.launched then
+					-- On Unix, the implementation is calling fork which will succeed even if the path is invalid,
+					-- thus a new process is created with a process ID. However if the call to `exec' fails, then
+					-- we return 127.
+				l_exit := l_process.exit_code
+				assert ("exit_code_is_127", l_exit = 127)
+			else
+				assert ("process failed to launch", not l_process.launched and l_fail_cell.item)
+			end
 		end
 
 	test_handlers
@@ -58,7 +66,6 @@ feature -- Test routines
 			create l_exit_cell.put (False)
 			create_echo_process (Void)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_start_handler (agent l_start_cell.put (True))
 			l_process.set_on_successful_launch_handler (agent l_launch_cell.put (True))
 			l_process.set_on_exit_handler (agent l_exit_cell.put (True))
@@ -84,7 +91,6 @@ feature -- Test routines
 			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_terminate_handler (agent l_terminate_cell.put (True))
 			l_process.launch
 			l_process.terminate
@@ -95,7 +101,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

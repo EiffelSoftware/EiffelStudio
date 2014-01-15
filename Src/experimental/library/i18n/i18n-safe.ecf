@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="i18n" uuid="1428822B-CDC0-4B9E-B519-63FEFC7CE3C6" library_target="i18n">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="i18n" uuid="1428822B-CDC0-4B9E-B519-63FEFC7CE3C6" library_target="i18n">
 	<target name="i18n">
 		<description>i18n: internationalise applications</description>
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 			<exclude>/documents$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/include$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Library">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>

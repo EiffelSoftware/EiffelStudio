@@ -56,21 +56,18 @@ feature -- Status report
 	is_mapped (key: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity?
 		require
-			ht_not_void: ht /= Void
 			keys_exists: key /= Void
 		do
 			Result := ht.has (key)
 		end
 
-	mapped_value (key: READABLE_STRING_GENERAL): ANY
+	mapped_value (key: READABLE_STRING_GENERAL): detachable ANY
 			-- Value mapped with `key'
 		require
-			ht_not_void: ht /= Void
 			key_exists: key /= Void
-			key_mapped: is_mapped (key)
 		do
 				-- Per precondition `is_mapped' this should always succeed.
-			check attached ht.item (key) as l_item then
+			if attached ht.item (key) as l_item then
 				Result := l_item
 			end
 		ensure
@@ -79,22 +76,22 @@ feature -- Status report
 
 feature -- Status report
 
-	ht: detachable DB_STRING_HASH_TABLE [detachable ANY] note option: stable attribute end
+	ht: DB_STRING_HASH_TABLE [detachable ANY] note option: stable attribute end
 		-- Correspondence table between object references
 		-- and mapped keys
 
-	ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL] note option: stable attribute end
+	ht_order: ARRAYED_LIST [READABLE_STRING_GENERAL] note option: stable attribute end
 		-- Keys of `ht' in order of mapping
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

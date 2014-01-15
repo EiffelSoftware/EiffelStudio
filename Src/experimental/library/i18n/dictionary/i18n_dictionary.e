@@ -81,53 +81,42 @@ feature -- Status report
 		require
 			original_singular_exists: original_singular /= Void
 			original_plural_exists: original_plural /= Void
-		deferred
+		do
+			Result := plural_in_context (original_singular, original_plural, plural_number, a_context) /= Void
 		end
 
 feature -- Access
 
-	singular (original: READABLE_STRING_GENERAL): STRING_32
+	singular (original: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Translation of `original' in singular form
 		require
 			original_exists: original /= Void
-			translation_exists: has (original)
 		do
 			Result := singular_in_context (original, Void)
-		ensure
-			result_exists: Result /= Void
 		end
 
-	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): detachable STRING_32
 			-- Translation of `original_singular' in the given plural form
 		require
 			original_singular_exists: original_singular /= Void
 			original_plural_exists: original_plural /= Void
-			translation_exists: has_plural (original_singular, original_plural, plural_number)
 		do
 			Result := plural_in_context (original_singular, original_plural, plural_number, Void)
-		ensure
-			result_exists: Result /= Void
 		end
 
-	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Translation of `original' in singular form
 		require
 			original_exists: original /= Void
-			translation_exists: has_in_context (original, a_context)
 		deferred
-		ensure
-			result_exists: Result /= Void
 		end
 
-	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Translation of `original_singular' in the given plural form
 		require
 			original_singular_exists: original_singular /= Void
 			original_plural_exists: original_plural /= Void
-			translation_exists: has_plural_in_context (original_singular, original_plural, plural_number, a_context)
 		deferred
-		ensure
-			result_exists: Result /= Void
 		end
 
 	plural_form: INTEGER
@@ -160,7 +149,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

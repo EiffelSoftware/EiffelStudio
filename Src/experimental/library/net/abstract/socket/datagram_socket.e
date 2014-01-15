@@ -105,23 +105,21 @@ feature -- Output
 
 	send (a_packet: PACKET; flags: INTEGER)
 			-- Send `a_packet' to address in `peer_address'.
-		local
-			l_peer_address: like peer_address
 		do
-			l_peer_address := peer_address
-			check l_peer_address_not_void: l_peer_address /= Void end
-			send_to (a_packet, l_peer_address, flags)
+			check peer_address_not_void: attached peer_address as l_peer_address then
+				send_to (a_packet, l_peer_address, flags)
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

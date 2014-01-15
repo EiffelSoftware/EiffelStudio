@@ -291,51 +291,31 @@ feature{NONE} -- Interprocess IO
 			input_mutex.unlock
 		end
 
-feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
+feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 
 	write_input_stream
 			-- Write at most `buffer_size' bytes of data in `input_buffer' into launched process.
 			--|Note: This feature will be used in input listening thread.			
 		require
 			process_running: is_running
-			input_redirected_to_stream_or_file:
-				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream or
-				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
+			input_redirected_to_stream: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
 			l_str: detachable STRING
 		do
-			check
-				input_buffer_set:
-					input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream implies input_buffer /= Void
-				input_file_set:
-					input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file implies input_file /= Void and then input_file.is_open_read
+			input_mutex.lock
+			l_cnt := input_buffer.count
+			if l_cnt > 0 then
+				last_input_bytes := l_cnt.min (buffer_size)
+				create l_str.make (last_input_bytes)
+				l_left := l_cnt - last_input_bytes
+				l_str.append (input_buffer.substring (1, last_input_bytes))
+				input_buffer.keep_tail (l_left)
+			else
+				last_input_bytes := 0
 			end
-			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
-				input_mutex.lock
-				l_cnt := input_buffer.count
-				if l_cnt > 0 then
-					last_input_bytes := l_cnt.min (buffer_size)
-					create l_str.make (last_input_bytes)
-					l_left := l_cnt - last_input_bytes
-					l_str.append (input_buffer.substring (1, last_input_bytes))
-					input_buffer.keep_tail (l_left)
-				else
-					last_input_bytes := 0
-				end
-				input_mutex.unlock
-			elseif input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-				check input_file /= Void end
-				if not input_file.end_of_file then
-					input_file.read_stream (buffer_size)
-					l_str := input_file.last_string
-					last_input_bytes := l_str.count
-				else
-					last_input_bytes := 0
-					l_str := Void
-				end
-			end
+			input_mutex.unlock
 			if l_str /= Void and then attached child_process.standard_input as l_writer then
 				l_writer.write_string (l_str)
 			end
@@ -346,43 +326,27 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 			--|Note: This feature will be used in output listening thread.
 		require
 			process_running: is_running
-			output_redirected_to_agent_or_file:
-				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent or
-				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
+			output_redirected_to_agent: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 		local
 			i: INTEGER
 			l_output: STRING
-			l_reader: detachable STREAM_READER
-			l_output_handler: like output_handler
 		do
-			check
-				output_handler_set:
-					output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent implies output_handler /= Void
-				output_file_set:
-					output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file implies output_file /= Void and then output_file.is_open_write
-				output_buffer_set: output_buffer /= Void
-			end
-			l_reader := child_process.standard_output
-			check l_reader_attached: l_reader /= Void end
-			last_output_bytes := l_reader.read_block (output_buffer, 0, buffer_size)
-			if last_output_bytes > 0 then
-				create l_output.make (last_output_bytes)
-				from
-					i:=0
-				until
-					i = last_output_bytes
-				loop
-					l_output.append_character (output_buffer.item (i))
-					i := i + 1
-				end
-				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					l_output_handler := output_handler
-					check l_output_handler_attached: l_output_handler /= Void end
+			if output_buffer /= Void and then attached output_handler as l_output_handler and then attached child_process.standard_output as l_reader then
+				last_output_bytes := l_reader.read_block (output_buffer, 0, buffer_size)
+				if last_output_bytes > 0 then
+					create l_output.make (last_output_bytes)
+					from
+						i:=0
+					until
+						i = last_output_bytes
+					loop
+						l_output.append_character (output_buffer.item (i))
+						i := i + 1
+					end
 					l_output_handler.call ([l_output])
-				elseif output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					check output_file_attached: output_file /= Void end
-					output_file.put_string (l_output)
 				end
+			else
+				last_output_bytes := 0
 			end
 		end
 
@@ -391,42 +355,26 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 			--|Note: This feature will be used in error listening thread.			
 		require
 			process_running: is_running
-			error_redirected_to_agent_or_file:
-				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent or
-				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
+			error_redirected_to_agent: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 		local
 			i: INTEGER
 			l_error: STRING
-			l_reader: detachable STREAM_READER
-			l_error_handler: like error_handler
 		do
-			check
-				error_handler_set:
-					error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent implies error_handler /= Void
-				error_file_set:
-					error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file implies error_file /= Void and then error_file.is_open_write
-				error_buffer_set: error_buffer /= Void
-			end
-			l_reader := child_process.standard_error
-			check l_reader_attached: l_reader /= Void end
-			last_error_bytes := l_reader.read_block (error_buffer, 0, buffer_size)
-			if last_error_bytes > 0 then
-				create l_error.make (last_error_bytes)
-				from
-					i:=0
-				until
-					i = last_error_bytes
-				loop
-					l_error.append_character (error_buffer.item (i))
-					i := i + 1
-				end
-				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					l_error_handler := error_handler
-					check l_error_handler_attached: l_error_handler /= Void end
+			if error_buffer /= Void and then attached error_handler as l_error_handler and then attached child_process.standard_error as l_reader then
+				last_error_bytes := l_reader.read_block (error_buffer, 0, buffer_size)
+				if last_error_bytes > 0 then
+					create l_error.make (last_error_bytes)
+					from
+						i:=0
+					until
+						i = last_error_bytes
+					loop
+						l_error.append_character (error_buffer.item (i))
+						i := i + 1
+					end
 					l_error_handler.call ([l_error])
-				elseif  error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					check error_file_attached: error_file /= Void end
-					error_file.put_string (l_error)
+				else
+					last_error_bytes := 0
 				end
 			end
 		end
@@ -515,50 +463,28 @@ feature{NONE} -- Implementation
 	start_listening_threads
 			-- Start listening threads.
 		local
-			l_input_file_name: like input_file_name
-			l_output_file_name: like output_file_name
-			l_error_file_name: like error_file_name
 			l_in_thread: like in_thread
 			l_out_thread: like out_thread
 			l_err_thread: like err_thread
 		do
-			if input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
 				create input_buffer.make (4096)
-				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					l_input_file_name := input_file_name
-					check l_input_file_name_attached: l_input_file_name /= Void end
-					create input_file.make_with_name (l_input_file_name)
-					check
-						input_file_exists: input_file.exists
-					end
-					input_file.open_read
-				end
 				create l_in_thread.make (Current)
 				in_thread := l_in_thread
 				l_in_thread.launch
 			else
 				in_thread := Void
 			end
-			if output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create output_buffer.make_filled ('%U', 0, buffer_size)
-				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					l_output_file_name := output_file_name
-					check l_output_file_name_attached: l_output_file_name /= Void end
-			  		create output_file.make_create_read_write (l_output_file_name)
-				end
 				create l_out_thread.make (Current)
 				out_thread := l_out_thread
 				l_out_thread.launch
 			else
 				out_thread := Void
 			end
-			if error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create error_buffer.make_filled ('%U', 0, buffer_size)
-				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
-					l_error_file_name := error_file_name
-					check l_error_file_name_attached: l_error_file_name /= Void end
-					create error_file.make_create_read_write (l_error_file_name)
-				end
 				create l_err_thread.make (Current)
 				err_thread := l_err_thread
 				l_err_thread.launch
@@ -749,35 +675,6 @@ feature{NONE} -- Implementation
 			Result := l_performance_counter.raw_value.as_integer_32
 		end
 
-	process_instance_name (a_pid: INTEGER; a_process_list: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]): detachable STRING
-			-- Process instance name of process id `a_pid' in `a_process_list'		
-		require
-			a_process_list_attached: a_process_list /= Void
-		local
-			l_performance_counter: SYSTEM_DLL_PERFORMANCE_COUNTER
-			l_upper: INTEGER
-			i: INTEGER
-			done: BOOLEAN
-		do
-			if a_process_list.count > 0 then
-				from
-					i := a_process_list.lower
-					l_upper := a_process_list.upper
-				until
-					i > l_upper or done
-				loop
-					create l_performance_counter.make_with_category_name (once "Process", once "ID Process", a_process_list.item (i), True)
-					done := a_pid = l_performance_counter.raw_value.as_integer_32
-					if not done then
-						i := i + 1
-					end
-				end
-				if done and then attached a_process_list.item (i) as l_process_name then
-					Result := l_process_name
-				end
-			end
-		end
-
 feature{NONE} -- Implementation
 
 	is_io_redirected: BOOLEAN
@@ -839,7 +736,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

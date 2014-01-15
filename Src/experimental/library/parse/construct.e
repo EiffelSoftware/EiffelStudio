@@ -203,10 +203,11 @@ feature {CONSTRUCT} -- Implementation
 	new_cell (v: like item): CONSTRUCT
 		do
 				--| FIXME: Bad design, no way to ensure result is attached.
-			check v /= Void end
-			Result := v
-			Result.twt_put (v)
-			Result.attach_to_parent (Current)
+			check v /= Void then
+				Result := v
+				Result.twt_put (v)
+				Result.attach_to_parent (Current)
+			end
 		end
 
 	check_recursion
@@ -331,22 +332,21 @@ feature {NONE} -- Implementation
 		require
 			child_not_void: child /= Void
 		local
-			l_child: like child
 			err: STRING
 		do
-			l_child := child
-			check l_child /= Void end -- Implied from the precondition.
-
-			create err.make (20)
-			err.append (l_child.construct_name)
-			err.append (" expected, ")
-			if document.token.type = -1 then
-				err.append ("end of document found")
-			elseif document.token.string_value.count > 0 then
-				err.append (document.token.string_value)
-				err.append (" found")
-			end;
-			raise_syntax_error (err)
+		 		-- Implied from the precondition.
+			check attached child as l_child then
+				create err.make (20)
+				err.append (l_child.construct_name)
+				err.append (" expected, ")
+				if document.token.type = -1 then
+					err.append ("end of document found")
+				elseif document.token.string_value.count > 0 then
+					err.append (document.token.string_value)
+					err.append (" found")
+				end;
+				raise_syntax_error (err)
+			end
 		end
 
 	structure_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]]
@@ -386,29 +386,28 @@ feature {NONE} -- Implementation
 			-- Has the message on left recursion been already printed?
 		require
 			child_not_void: child /= Void
-		local
-			l_child: like child
 		do
-			l_child := child
-			check l_child /= Void end -- Implied from the precondition.
-			l_child.expand_all
-			Result := not l_child.left_recursion
-			if not Result then
-				if not structure_list.has (production) then
-					structure_list.put_right (production)
-					io.put_string ("Left recursion has been detected ")
-					io.put_string ("in the following constructs:%N")
-					io.put_string (recursion_message);
-					io.new_line;
-					recursion_message.wipe_out;
-					Result := True
-				else
-					recursion_message.append (construct_name)
-					recursion_message.append ("%N")
+				-- Implied from the precondition.
+			check attached child as l_child then
+				l_child.expand_all
+				Result := not l_child.left_recursion
+				if not Result then
+					if not structure_list.has (production) then
+						structure_list.put_right (production)
+						io.put_string ("Left recursion has been detected ")
+						io.put_string ("in the following constructs:%N")
+						io.put_string (recursion_message);
+						io.new_line;
+						recursion_message.wipe_out;
+						Result := True
+					else
+						recursion_message.append (construct_name)
+						recursion_message.append ("%N")
+					end
+				elseif Result and not structure_list.has (production) then
+					io.put_string ("child.left_recursion = false")
+					io.put_string ("		and recursion_visited = false%N")
 				end
-			elseif Result and not structure_list.has (production) then
-				io.put_string ("child.left_recursion = false")
-				io.put_string ("		and recursion_visited = false%N")
 			end
 		end
 
@@ -435,17 +434,16 @@ feature {NONE} -- Implementation
 			-- i.e. at the deepest point known to be meaningful.
 		require
 			child_not_void: child /= Void
-		local
-			l_child: like child
 		do
-			l_child := child
-			check l_child /= Void end -- Implied from the precondition.
-			l_child.parse
-			if l_child.committed then
-				committed := True
-			end;
-			if committed and not (l_child.parsed or l_child.committed) then
-				expected_found_error
+		 		-- Implied from the precondition.
+			check attached child as l_child then
+				l_child.parse
+				if l_child.committed then
+					committed := True
+				end;
+				if committed and not (l_child.parsed or l_child.committed) then
+					expected_found_error
+				end
 			end
 		end
 
@@ -462,7 +460,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

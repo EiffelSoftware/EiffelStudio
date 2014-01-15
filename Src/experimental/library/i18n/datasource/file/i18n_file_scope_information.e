@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 		require
 			a_locale_not_void: a_locale /= Void
 		do
-			scope := scope_locale_specific
 			locale := a_locale
 		end
 
@@ -32,13 +31,21 @@ feature {NONE} -- Initialization
 		require
 			language_not_void: a_language /= Void
 		do
-			scope := scope_language_specific
 			language := a_language
 		end
 
 feature -- Scope
 
 	scope: INTEGER
+		do
+			if locale /= Void then
+				Result := scope_locale_specific
+			elseif language /= Void then
+				Result := scope_language_specific
+			else
+				check False end
+			end
+		end
 
 	scope_locale_specific:INTEGER = 1
 	scope_language_specific: INTEGER = 2
@@ -46,38 +53,15 @@ feature -- Scope
 
 feature -- Retrieval
 
-	get_locale: attached I18N_LOCALE_ID
-			--
-		require
-			scope = scope_locale_specific
-		local
-			l_locale: like locale
-		do
-			l_locale := locale
-			check l_locale /= Void end -- Implied by precondition
-			Result := l_locale
-		end
-
-	get_language: attached I18N_LANGUAGE_ID
-			--
-		require
-			scope = scope_language_specific
-		local
-			l_lang: like language
-		do
-			l_lang := language
-			check l_lang /= Void end -- Implied by precondition
-			Result := l_lang
-		end
-
-feature {NONE} -- Information
-
 	locale: detachable I18N_LOCALE_ID
-	language: detachable I18N_LANGUAGE_ID;
+	language: detachable I18N_LANGUAGE_ID
+
+invariant
+	one_set: (locale = Void and then language /= Void) or (locale /= Void and then language = Void)
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

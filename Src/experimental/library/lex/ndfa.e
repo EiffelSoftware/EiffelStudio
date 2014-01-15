@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			-- Each element of this array represents the
 			-- epsilon closure of one NDFA state
 
-	epsilon_closure (initial_set: FIXED_INTEGER_SET): detachable FIXED_INTEGER_SET
+	epsilon_closure (initial_set: FIXED_INTEGER_SET): FIXED_INTEGER_SET
 			-- Epsilon-closure of initial_set:
 			-- set of NDFA states
 			-- reachable from some NDFA states in initial_set
@@ -192,24 +192,23 @@ feature {NONE} -- Implementation
 			closures_exists: closures /= Void
 		local
 			l_closures: like closures
-			l_fixed_integer_set: detachable FIXED_INTEGER_SET
 			index, last_index: INTEGER
 		do
-			l_closures := closures
+			last_index := initial_set.count
+			create Result.make (last_index)
 				--| Implied from precondition
-			check l_closures_attached: l_closures /= Void end
-
-			create Result.make (initial_set.count);
-			last_index := initial_set.count;
-			from
-				index := initial_set.smallest
-			until
-				index > last_index
-			loop
-				l_fixed_integer_set := l_closures.item (index);
-				check l_fixed_integer_set /= Void end
-				Result := Result or l_fixed_integer_set;
-				index := initial_set.next (index)
+			l_closures := closures
+			check l_closures /= Void then
+				from
+					index := initial_set.smallest
+				until
+					index > last_index
+				loop
+					if attached l_closures.item (index) as l_fixed_integer_set then
+						Result := Result or l_fixed_integer_set;
+					end
+					index := initial_set.next (index)
+				end
 			end
 		end;
 
@@ -220,7 +219,7 @@ feature {NONE} -- Implementation
 			l_closures: like closures
 			index: INTEGER
 		do
-			create l_closures.make (1, nb_states);
+			create l_closures.make_filled (Void, 1, nb_states);
 			from
 				index := 0
 			until
@@ -252,40 +251,43 @@ feature {NONE} -- Implementation
 			end
 			last_index := set.largest
 			current_tree := set_tree
-				--| Implied by precondition
-			check current_tree_attached: current_tree /= Void end
-			from
-				index := set.smallest
-			until
-				index > last_index
-			loop
-				debug ("lex_output")
-					io.put_string ("Arity: ")
-					io.put_integer (current_tree.arity)
-					io.new_line
-					io.put_string ("Index: ")
-					io.put_integer (index)
-					io.new_line
+				-- Per precondition
+			check current_tree /= Void then
+				from
+					index := set.smallest
+				until
+					current_tree = Void or else index > last_index
+				loop
+					debug ("lex_output")
+						io.put_string ("Arity: ")
+						io.put_integer (current_tree.arity)
+						io.new_line
+						io.put_string ("Index: ")
+						io.put_integer (index)
+						io.new_line
+					end
+					current_tree.child_go_i_th (index)
+					child := current_tree.child
+					if child /= Void and then child.arity = 0 then
+						create new_tree.make_filled (nb_states, 0)
+						current_tree.replace_child (new_tree)
+					end
+					current_tree := current_tree.child
+					index := set.next (index)
 				end
-				current_tree.child_go_i_th (index)
-				child := current_tree.child
-				check child_attached: child /= Void end
-				if child.arity = 0 then
-					create new_tree.make_filled (nb_states, 0)
-					current_tree.replace_child (new_tree)
+				if current_tree /= Void then
+					set_position := current_tree.item
+					if set_position = 0 then
+						new_number := new_number + 1
+						current_tree.put (new_number)
+						set_position := new_number
+						new_set := True
+					else
+						new_set := False
+					end
+				else
+					new_set := False
 				end
-				current_tree := current_tree.child
-				check current_tree_attached: current_tree /= Void end
-				index := set.next (index)
-			end
-			set_position := current_tree.item
-			if set_position = 0 then
-				new_number := new_number + 1
-				current_tree.put (new_number)
-				set_position := new_number
-				new_set := True
-			else
-				new_set := False
 			end
 		end
 
@@ -318,7 +320,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

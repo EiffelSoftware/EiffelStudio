@@ -75,15 +75,12 @@ feature -- Access
 			-- `Result': Translated string, or the original string if no translation is available
 		require
 			original_not_void: original /= Void
-		local
-			l_result: STRING_32
 		do
-			if dictionary.has_in_context (original, a_context) then
-				l_result := dictionary.singular_in_context (original, a_context)
+			if attached dictionary.singular_in_context (original, a_context) as l_singular then
+				Result := l_singular
 			else
-				l_result := original.as_string_32
+				Result := original.as_string_32
 			end
-			Result := l_result
 		ensure
 			result_attached: Result /= Void
 		end
@@ -99,19 +96,16 @@ feature -- Access
 		require
 			original_singular_not_void: original_singular /= Void
 			original_plural_not_void: original_plural /= Void
-		local
-			l_result: STRING_32
 		do
-			if dictionary.has_plural_in_context (original_singular, original_plural, plural_number, a_context) then
-				l_result := dictionary.plural_in_context (original_singular, original_plural, plural_number, a_context)
+			if attached dictionary.plural_in_context (original_singular, original_plural, plural_number, a_context) as l_plural then
+				Result := l_plural
 			else
 				if plural_number = 1 then
-					l_result := original_singular.as_string_32
+					Result := original_singular.as_string_32
 				else
-					l_result := original_plural.as_string_32
+					Result := original_plural.as_string_32
 				end
 			end
-			Result := l_result
 		ensure
 			result_attached: Result /= Void
 		end
@@ -169,7 +163,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

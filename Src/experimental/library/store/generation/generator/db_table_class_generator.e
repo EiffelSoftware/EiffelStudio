@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	generated_file_name: STRING
+	generated_file_name: detachable STRING
 			-- File name possibility for the generated file:
 			-- maps the class name and has the ".e" extension.
 		require
@@ -55,36 +55,37 @@ feature -- Basic operations
 			-- template file content.
 		local
 			class_name: STRING
-			l_gfc: like gfc
+			l_gfn: like gfn
 		do
 			Precursor
-			class_name := table_description.repository_name.as_upper
-			class_name.replace_substring_all (" ", "_")
-			l_gfc := gfc
-			check l_gfc /= Void end -- implied by precursor's postcondition
-			l_gfc.replace_substring_all (tags.upper_class_name, class_name)
-			class_name.to_lower
-			gfn := class_name + Class_file_extension
-			if gfn.has ('$') then
-				gfn.replace_substring_all ("$", "")
+				-- implied by precursor's postcondition
+			check attached gfc as l_gfc then
+				class_name := table_description.repository_name.as_upper
+				class_name.replace_substring_all (" ", "_")
+				l_gfc.replace_substring_all (tags.upper_class_name, class_name)
+				class_name.to_lower
+				l_gfn := class_name + Class_file_extension
+				gfn := l_gfn
+				if l_gfn.has ('$') then
+					l_gfn.replace_substring_all ("$", "")
+				end
+				l_gfc.replace_substring_all (tags.lower_class_name, class_name)
+				to_initcap (class_name)
+				l_gfc.replace_substring_all (tags.initcap_class_name, class_name)
+	--			gfc.replace_substring_all (tags.Attribute_count, table_description.column_number.out)
 			end
-			l_gfc.replace_substring_all (tags.lower_class_name, class_name)
-			to_initcap (class_name)
-			l_gfc.replace_substring_all (tags.initcap_class_name, class_name)
---			gfc.replace_substring_all (tags.Attribute_count, table_description.column_number.out)
 		end
 
 feature {NONE} -- Implementation
 
-	append_block (attribute_block: STRING; column_number: INTEGER)
+	append_block (a_result_block, attribute_block: STRING; column_number: INTEGER)
 			-- Replace tags in `attribute_block' with values of attribute in
 			-- `column' (which is at `column_number').
-			-- Append result to `result_block'.
+			-- Append result to `a_result_block'.
 		local
 			attribute_name, tn: STRING
 			mapped_item: STRING
 			column: COLUMNS [DATABASE]
-			l_result_block: like result_block
 			l_column_name: detachable STRING
 		do
 			column := table_description.column_i_th (column_number)
@@ -114,9 +115,7 @@ feature {NONE} -- Implementation
 				to_initcap (tn)
 				mapped_item.replace_substring_all (tags.Initcap_type_name, tn)
 				mapped_item.replace_substring_all (tags.Type_default_value, type_default_value)
-				l_result_block := result_block
-				check l_result_block /= Void end -- FIXME: bug?
-				l_result_block.append (mapped_item)
+				a_result_block.append (mapped_item)
 			end
 		end
 
@@ -176,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gfn: STRING
+	gfn: detachable STRING
 			-- `generated_file_name' implementation.
 
 	table_description: DB_REPOSITORY
@@ -219,14 +218,14 @@ feature {NONE} -- Implementation
 			-- Date type default_value.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

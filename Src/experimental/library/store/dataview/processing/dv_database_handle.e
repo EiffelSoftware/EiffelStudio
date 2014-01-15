@@ -32,8 +32,12 @@ feature -- Access
 
 	database_handler: ABSTRACT_DB_TABLE_MANAGER
 			-- Interface with the database.
+		require
+			database_handler_set: database_handler_set
 		do
-			Result := database_handler_cell.item
+			check attached database_handler_cell.item as l_item then
+				Result := l_item
+			end
 		end
 
 	basic_message_handler (message: STRING)
@@ -59,7 +63,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	database_handler_cell: CELL [ABSTRACT_DB_TABLE_MANAGER]
+	database_handler_cell: CELL [detachable ABSTRACT_DB_TABLE_MANAGER]
 			-- Default Interface with the database.
 		once
 			create Result.put (Void)
@@ -68,14 +72,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -16,9 +16,6 @@ feature -- Access
 
 	buffer: STRING
 			-- Buffer filled by fill_buffer
-		attribute
-			create Result.make_empty
-		end
 
 	source_file_path: detachable PATH
 			-- The source file path if `source_is_file'.		
@@ -39,17 +36,11 @@ feature -- Access
 			-- Array recording the line numbers of each buffered
 			-- character (the line number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `line_nb_array')
-		attribute
-			create Result.make (1, 0)
-		end
 
 	column_nb_array: LEX_ARRAY [INTEGER]
 			-- Array recording the column numbers of each buffered
 			-- character (the column number of the `i'-th character in the
 			-- buffer is the `i'-th entry of `column_nb_array')
-		attribute
-			create Result.make (1, 0)
-		end
 
 	char_buffered_number: INTEGER;
 			-- Number of characters read and written
@@ -64,8 +55,8 @@ feature -- Status setting
 			line_length := lin;
 			create buffer.make (buffer_size);
 			buffer.fill_blank;
-			create line_nb_array.make (1, buffer_size);
-			create column_nb_array.make (1, buffer_size)
+			create line_nb_array.make_filled (0, 1, buffer_size);
+			create column_nb_array.make_filled (0, 1, buffer_size)
 		ensure
 			buffer_size = buf;
 			line_length = lin
@@ -505,7 +496,7 @@ feature {NONE} -- Implementation
 -- Do not forget to create the buffers before using this class.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

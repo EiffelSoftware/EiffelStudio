@@ -66,26 +66,6 @@ feature -- Element Change
 			very_very_very_very_very_very_very_very_long_boolean := b
 		end
 
-	set_from_array (v:  ARRAY [ANY])
-		local
-			q: detachable BOOLEAN_REF
-			p, b: detachable DOUBLE_REF
-		do
-			if attached {like title} v.item (1) as l_title then
-				title := l_title
-			end
-
-			if attached {like author} v.item (2) as l_author then
-				author := l_author
-			end
-
-			if attached {BOOLEAN_REF} v.item (3) as l_b then
-				very_very_very_very_very_very_very_very_long_boolean := l_b
-			else
-				check is_not_boolean: False end
-			end
-		end
-
 	make
 		do
 			create title.make (80)

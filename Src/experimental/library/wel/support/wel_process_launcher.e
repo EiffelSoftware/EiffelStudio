@@ -70,6 +70,8 @@ feature -- Basic Operations
 			valid_command_line: not a_command_line.is_empty
 		do
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
+		ensure
+			process_info_attached: process_info /= Void
 		end
 
 	spawn_with_console (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
@@ -79,6 +81,8 @@ feature -- Basic Operations
 			valid_command_line: not a_command_line.is_empty
 		do
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
+		ensure
+			process_info_attached: process_info /= Void
 		end
 
 	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [ANY, TUPLE [STRING]])
@@ -100,6 +104,9 @@ feature -- Basic Operations
 			else
 				spawn (a_command_line, a_working_directory)
 			end
+				-- Per postcondition
+			l_process_info := process_info
+			check l_process_info /= Void then end
 			l_output_pipe := output_pipe
 			check l_output_pipe /= Void then end
 			l_output_pipe.close_input
@@ -115,8 +122,6 @@ feature -- Basic Operations
 				end
 				l_output_pipe.read_stream (l_block_size)
 			end
-			l_process_info := process_info
-			check l_process_info /= Void then end
 			last_launch_successful := {WEL_API}.wait_for_single_object (l_process_info.process_handle,
 				{WEL_API}.infinite) = {WEL_API}.wait_object_0
 			if last_launch_successful then
@@ -149,30 +154,30 @@ feature -- Basic Operations
 			an_integer: INTEGER
 			a_boolean: BOOLEAN
 			finished: BOOLEAN
-			l_process_info: like process_info
 		do
 			spawn (a_command_line, a_working_directory)
-			from
-			until
-				finished
-			loop
-				l_process_info := process_info
-				check l_process_info /= Void then end
-				a_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
-				check
-					valid_external_call_2: a_boolean
-				end
-				if last_process_result = {WEL_API}.still_active then
-					an_integer := {WEL_API}.wait_for_single_object (l_process_info.process_handle, 1)
-					if an_integer = {WEL_API}.wait_object_0 then
-						finished := True
-					else
-						if a_refresh_handler /= Void then
-							a_refresh_handler.call (Void)
-						end
+				-- Per postcondition
+			check attached process_info as l_process_info then
+				from
+				until
+					finished
+				loop
+					a_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+					check
+						valid_external_call_2: a_boolean
 					end
-				else
-					finished := True
+					if last_process_result = {WEL_API}.still_active then
+						an_integer := {WEL_API}.wait_for_single_object (l_process_info.process_handle, 1)
+						if an_integer = {WEL_API}.wait_object_0 then
+							finished := True
+						else
+							if a_refresh_handler /= Void then
+								a_refresh_handler.call (Void)
+							end
+						end
+					else
+						finished := True
+					end
 				end
 			end
 			terminate_process
@@ -236,10 +241,9 @@ feature {NONE} -- Implementation
 			l_envs: detachable WEL_STRING
 			l_envs_ptr: POINTER
 		do
-			create process_info.make
 			create l_ws_command_line.make (a_command_line)
-			l_process_info := process_info
-			check l_process_info /= Void then end
+			create l_process_info.make
+			process_info := l_process_info
 			l_envs := environment_variables_as_wel_string
 			if l_envs /= Void then
 				l_envs_ptr := l_envs.item
@@ -256,6 +260,8 @@ feature {NONE} -- Implementation
 							l_envs_ptr, default_pointer,
 							startup_info.item, l_process_info.item)
 			end
+		ensure
+			process_info_attached: process_info /= Void
 		end
 
 	environment_variables_as_wel_string: detachable WEL_STRING

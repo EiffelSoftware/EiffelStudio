@@ -40,7 +40,6 @@ feature -- Initialization
 			-- Create attributes
 		do
 			create table.make (1)
-			create tmp_acc_col
 			create repository_name.make(1)
 			create rep_qualifier.make(1)
 			create rep_owner.make(1)
@@ -57,6 +56,7 @@ feature -- Initialization
 			l_use_ext := use_extended_types
 			set_use_extended_types (False)
 			table.wipe_out
+			request_select.reset
 			request_select.set_action (Current)
 			request_select.set_map_name (repository_name, "rep")
 			request_select.query (Selection_string)
@@ -183,11 +183,18 @@ feature -- Basic operations
 
 	execute
 			-- Implement an ACTION operation
+		local
+			l_tmp_col: like tmp_acc_col
 		do
-			request_select.object_convert (tmp_acc_col)
+			l_tmp_col := tmp_acc_col
+			if l_tmp_col = Void then
+				create l_tmp_col
+				tmp_acc_col := l_tmp_col
+			end
+			request_select.object_convert (l_tmp_col)
 			request_select.cursor_to_object
-			table.extend (tmp_acc_col.duplicate)
-			tmp_acc_col.clear_all
+			table.extend (l_tmp_col.duplicate)
+			l_tmp_col.clear_all
 		end
 
 feature -- Status setting
@@ -375,8 +382,7 @@ feature -- Status report
 			repository_exists: exists
 			good_position: 0 < i and i <= dimension
 		do
-			table.go_i_th (i)
-			if attached table.item.column_name as l_name then
+			if attached table.i_th (i).column_name as l_name then
 				Result := l_name
 			end
 		end
@@ -478,7 +484,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	tmp_acc_col: COLUMNS [G]
+	tmp_acc_col: detachable COLUMNS [G]
 			-- Temporary column related information holder.
 
 	table: ARRAYED_LIST [COLUMNS [G]]
@@ -510,7 +516,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

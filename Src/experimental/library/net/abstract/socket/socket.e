@@ -61,6 +61,9 @@ feature -- Status report
 
 	was_error: BOOLEAN
 			-- Indicates that there was an error during the last operation
+		do
+			Result := socket_error /= Void
+		end
 
 	socket_ok: BOOLEAN
 			-- No error
@@ -70,12 +73,8 @@ feature -- Status report
 
 	error: STRING
 			-- Output a related error message.
-		local
-			l_error: detachable STRING
 		do
-			if was_error then
-				l_error := socket_error
-				check l_error_attached: l_error /= Void end
+			if attached socket_error as l_error then
 				Result := l_error
 			else
 				Result := Precursor
@@ -469,10 +468,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, real_32_bytes)
 			if bytes_read /= real_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_real := socket_buffer.read_real_32_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -483,10 +481,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, real_64_bytes)
 			if bytes_read /= real_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_double := socket_buffer.read_real_64_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -497,10 +494,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
 			if bytes_read /= character_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_character := socket_buffer.read_character (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -528,10 +524,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_32_bytes)
 			if bytes_read /= integer_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_integer := socket_buffer.read_integer_32_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -542,10 +537,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_8_bytes)
 			if bytes_read /= integer_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_integer_8 := socket_buffer.read_integer_8_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -556,10 +550,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_16_bytes)
 			if bytes_read /= integer_16_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_integer_16 := socket_buffer.read_integer_16_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -570,10 +563,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, integer_64_bytes)
 			if bytes_read /= integer_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_integer_64 := socket_buffer.read_integer_64_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -584,10 +576,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_8_bytes)
 			if bytes_read /= natural_8_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_natural_8 := socket_buffer.read_natural_8_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -598,10 +589,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_16_bytes)
 			if bytes_read /= natural_16_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_natural_16 := socket_buffer.read_natural_16_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -612,10 +602,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_32_bytes)
 			if bytes_read /= natural_32_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_natural := socket_buffer.read_natural_32_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -626,10 +615,9 @@ feature -- Input
 			read_to_managed_pointer (socket_buffer, 0, natural_64_bytes)
 			if bytes_read /= natural_64_bytes then
 				socket_error := "Peer closed connection"
-				was_error := True
 			else
 				last_natural_64 := socket_buffer.read_natural_64_be (0)
-				was_error := False
+				socket_error := Void
 			end
 		end
 
@@ -700,7 +688,7 @@ feature -- Input
 		do
 			from
 				create l_last_string.make (512)
-				was_error := False
+				socket_error := Void
 			until
 				i = n
 			loop
@@ -714,7 +702,6 @@ feature -- Input
 			end
 			if not was_error and last_character /= '%N' then
 				socket_error := "End of line not reached after " + n.out + " read characters"
-				was_error := True
 			end
 			last_string := l_last_string
 		ensure
@@ -983,6 +970,7 @@ feature -- socket options
 feature {NONE} -- Implementation
 
 	socket_error: detachable STRING
+			-- Error description in case of an error.
 
 	shutdown
 		deferred
@@ -1116,14 +1104,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

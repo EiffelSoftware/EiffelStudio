@@ -30,21 +30,13 @@ feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
 			-- String representation of `value'.		
-		local
-			l_auto_preference: like auto_preference
 		do
-			if is_auto then
-				l_auto_preference := auto_preference
-				check attached l_auto_preference end -- implied by `is_auto' and code from `update_is_auto'
-				Result := l_auto_preference.text_value
-			else
-				create Result.make (11)
-				Result.append_integer (internal_value.red_8_bit)
-				Result.append_character (';')
-				Result.append_integer (internal_value.green_8_bit)
-				Result.append_character (';')
-				Result.append_integer (internal_value.blue_8_bit)
-			end
+			create Result.make (11)
+			Result.append_integer (internal_value.red_8_bit)
+			Result.append_character (';')
+			Result.append_integer (internal_value.green_8_bit)
+			Result.append_character (';')
+			Result.append_integer (internal_value.blue_8_bit)
 		end
 
 feature -- Access
@@ -135,7 +127,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

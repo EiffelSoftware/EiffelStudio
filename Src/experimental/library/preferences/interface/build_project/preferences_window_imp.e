@@ -21,12 +21,12 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DIALOG}
 
-
+			
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
@@ -81,11 +81,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-
-	create_interface_objects
+		
+	frozen create_interface_objects
 			-- Create objects
 		do
-
+			
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_split_area_1
@@ -118,37 +118,41 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
 		end
 
 
 feature -- Access
 
-	restore_button, close_button: EV_BUTTON
-	description_text: EV_TEXT
+	left_list: EV_TREE
 	split_area: EV_VERTICAL_SPLIT_AREA
 	grid_container: EV_VERTICAL_BOX
-	left_list: EV_TREE
 	description_frame: EV_FRAME
+	description_text: EV_TEXT
+	restore_button,
+	close_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
-	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1: EV_CELL
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
 	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1, l_ev_vertical_box_2,
-	l_ev_vertical_box_3: EV_VERTICAL_BOX
 	l_ev_frame_1: EV_FRAME
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
+		end
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
 		end
 
 	user_initialization
@@ -158,7 +162,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
@@ -178,7 +182,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_integer_constants
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -214,7 +218,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_pixmap_constants
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
@@ -234,7 +238,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_font_constants
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
@@ -251,10 +255,10 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end
+			end	
 		end
 
-	set_attributes_using_color_constants
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
@@ -274,7 +278,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_all_attributes_using_constants
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -284,7 +288,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-
+	
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -298,21 +302,11 @@ feature {NONE} -- Constant setting
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
 
-	integer_from_integer (an_integer: INTEGER): INTEGER
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do
 			Result := an_integer
 		end
 
-note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

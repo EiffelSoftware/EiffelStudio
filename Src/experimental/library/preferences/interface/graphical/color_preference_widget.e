@@ -64,19 +64,15 @@ feature {NONE} -- Commands
 
 	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.
-		require else
-			color_tool_exists: attached color_tool as rl_color_tool
-			color_selected : rl_color_tool.color /= Void
 		local
-			l_color_tool: like color_tool
-			color: EV_COLOR
+			l_color: EV_COLOR
 		do
-			l_color_tool := color_tool
-			check l_color_tool /= Void end -- implied by `color_tool_exists'
-			color := l_color_tool.color
-			last_selected_value := color
-			if color /= Void then
-				preference.set_value (color)
+			if attached color_tool as l_color_tool then
+				l_color := l_color_tool.color
+				last_selected_value := l_color
+				if l_color /= Void then
+					preference.set_value (l_color)
+				end
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
@@ -122,50 +118,47 @@ feature {NONE} -- Implementation
 			-- Expose part of color preference value item.
 		local
 			l_y: INTEGER
-			g: detachable EV_GRID
 			l_change_item_widget: like change_item_widget
 		do
 			l_change_item_widget := change_item_widget
-			check l_change_item_widget /= Void end
 				-- Write the text
-			g := l_change_item_widget.parent
-			check g /= Void end -- Implied by `on_color_item_exposed' being called			
+			if attached l_change_item_widget.parent as g then
+				if l_change_item_widget.row.is_selected then
+					area.set_foreground_color (g.focused_selection_color)
+					area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
+					area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+					area.draw_text_top_left (20, 1, preference.text_value)
+				else
+					area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+					area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
+					area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+					area.draw_text_top_left (20, 1, preference.text_value)
+				end
 
-			if l_change_item_widget.row.is_selected then
-				area.set_foreground_color (g.focused_selection_color)
-				area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
-				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (20, 1, preference.text_value)
-			else
-				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
+					-- Draw the little color box border
+				if g.is_row_height_fixed then
+					l_y := (g.row_height // 2 - 6)
+				else
+					l_y := (l_change_item_widget.row.height // 2 - 6)
+				end
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (20, 1, preference.text_value)
-			end
+				area.draw_rectangle (2, l_y, 12, 12)
 
-				-- Draw the little color box border
-			if g.is_row_height_fixed then
-				l_y := (g.row_height // 2 - 6)
-			else
-				l_y := (l_change_item_widget.row.height // 2 - 6)
+					-- Draw the little color box internal color
+				if attached preference.value as v then
+					area.set_foreground_color (v)
+				else
+					area.set_default_colors --| Should not occur
+				end
+				area.fill_rectangle (3, l_y + 1, 10, 10)
 			end
-			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			area.draw_rectangle (2, l_y, 12, 12)
-
-				-- Draw the little color box internal color
-			if attached preference.value as v then
-				area.set_foreground_color (v)
-			else
-				area.set_default_colors --| Should not occur
-			end
-			area.fill_rectangle (3, l_y + 1, 10, 10)
 		end
 
 	color_tool: detachable EV_COLOR_DIALOG;
 			-- Color Palette from which we can select a color.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

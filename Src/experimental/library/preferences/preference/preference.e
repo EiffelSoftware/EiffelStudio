@@ -67,20 +67,14 @@ feature -- Status setting
 
 	reset
 			-- Reset value to `default_value'.
-		require
-			has_default_value: has_default_value
-		local
-			l_default_value: like default_value
 		do
 			if attached auto_preference as l_auto_preference then
 				set_value_from_string (l_auto_preference.text_value)
-			else
-				l_default_value := default_value
-				check attached l_default_value end -- implied by precondition `has_default_value' and `auto_preference = Void'
+			elseif attached default_value as l_default_value then
 				set_value_from_string (l_default_value)
 			end
 		ensure
-			is_reset: is_default_value
+			is_reset: old has_default_value implies is_default_value
 		end
 
 	set_restart_required (is_required: BOOLEAN)
@@ -260,7 +254,7 @@ invariant
 	has_change_actions: change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

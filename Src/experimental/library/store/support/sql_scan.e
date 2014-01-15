@@ -66,6 +66,9 @@ feature -- Initialization
 	string_make (i: INTEGER)
 			-- <Precursor>
 		do
+			create ht.make (10)
+			create ht_order.make (10)
+			ht_order.compare_objects
 			Precursor {STRING_32} (i)
 			format_make
 		end
@@ -101,152 +104,79 @@ feature -- Basic operations
 			Result := Current
 		end
 
+	parse_dynamic (s: READABLE_STRING_GENERAL): STRING_32
+			-- Parse string `s' by replacing each pattern ":<name>" with "?".
+		require
+			s_not_void: s /= Void
+		do
+			wipe_out
+			append_string_general (s)
+			replace_dynamic
+			if handle.execution_type.is_tracing then
+				handle.execution_type.trace_output.putstring (Current.as_string_8)
+				handle.execution_type.trace_output.new_line
+			end
+			Result := Current
+		end
+
 	get_value (obj: detachable ANY; str: STRING_32)
 			-- Retrieve string value of `obj' and put in `str'.
 		require
 			str_exists: str /= Void
-		local
-			l_obj: detachable ANY
 		do
-			if is_void (obj) then
+			if obj = Void then
 				str.append (null_string)
 			else
-				if is_ref_integer_8 (obj) then
-					if attached {INTEGER_8_REF} obj as r_int then
-						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_8 then
-							str.append (null_string)
-						else
-							str.append_string_general (r_int.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_integer (obj) then
-					if attached {INTEGER_REF} obj as r_int then
-						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer then
-							str.append (null_string)
-						else
-							str.append_string_general (r_int.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_integer_16 (obj) then
-					if attached {INTEGER_16_REF} obj as r_int then
-						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer.as_integer_16 then
-							str.append (null_string)
-						else
-							str.append_string_general (r_int.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_integer_64 (obj) then
-					if attached {INTEGER_64_REF} obj as r_int then
-						if map_zero_null_value and then r_int.item = numeric_null_value.truncated_to_integer_64 then
-							str.append (null_string)
-						else
-							str.append_string_general (r_int.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_natural_8 (obj) then
-					if attached {NATURAL_8_REF} obj as na_8 then
-						if map_zero_null_value and then na_8.item = numeric_null_value.truncated_to_integer.to_natural_8 then
-							str.append (null_string)
-						else
-							str.append_string_general (na_8.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_natural_16 (obj) then
-					if attached {NATURAL_16_REF} obj as na_16 then
-						if map_zero_null_value and then na_16.item = numeric_null_value.truncated_to_integer.as_natural_16 then
-							str.append (null_string)
-						else
-							str.append_string_general (na_16.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_natural_32 (obj) then
-					if attached {NATURAL_32_REF} obj as na_32 then
-						if map_zero_null_value and then na_32.item = numeric_null_value.truncated_to_integer.as_natural_32 then
-							str.append (null_string)
-						else
-							str.append_string_general (na_32.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_ref_natural_64 (obj) then
-					if attached {NATURAL_64_REF} obj as na_64 then
-						if map_zero_null_value and then na_64.item = numeric_null_value.truncated_to_integer_64.as_natural_64 then
-							str.append (null_string)
-						else
-							str.append_string_general (na_64.out)
-						end
-					else
-						check False end -- implied by `is_integer'
-					end
-				elseif is_double (obj) then
-					if attached {DOUBLE_REF} obj as r_double then
-						if map_zero_null_value and then r_double.item = numeric_null_value then
-							str.append (null_string)
-						else
-							str.append_string_general (r_double.out)
-						end
-					else
-						check False end -- implied by `is_double'
-					end
-				elseif is_real (obj) then
-					if attached {REAL_REF} obj as r_real then
-						if map_zero_null_value and then r_real.item = numeric_null_value.truncated_to_real then
-							str.append (null_string)
-						else
-							str.append_string_general (r_real.out)
-						end
-					else
-						check False end -- implied by `is_real'
-					end
-				elseif is_character (obj) then
-					if attached {CHARACTER_REF} obj as r_character then
-						str.extend ({CHARACTER_32}'%'')
-						str.extend (r_character.item)
-						str.extend ({CHARACTER_32}'%'')
-					else
-						check False end -- implied by `is_character'
-					end
-				elseif is_readable_string_general (obj) then
-					if attached {READABLE_STRING_GENERAL} obj as r_string then
-						buffer.copy (r_string.as_string_32)
-						str.append (string_format_32 (buffer))
-					else
-						check False end -- implied by `is_string'
-					end
-				elseif is_boolean (obj) then
-					if attached {BOOLEAN_REF} obj as r_bool then
-						str.append_string_general (boolean_format (r_bool.item))
-					else
-						check False end -- implied by `is_boolean'
-					end
-				elseif is_date (obj) then
-					if attached {DATE_TIME} obj as r_date then
-						str.append_string_general (date_format (r_date))
-					else
-						check False end -- implied by `is_date'
-					end
+				if attached {INTEGER_8_REF} obj as r_int8 then
+					append_integer_32_value_into (r_int8.item, str)
+
+				elseif attached {INTEGER_REF} obj as r_int32 then
+					append_integer_32_value_into (r_int32.item, str)
+
+				elseif attached {INTEGER_16_REF} obj as r_int16 then
+					append_integer_32_value_into (r_int16.item, str)
+
+				elseif attached {INTEGER_64_REF} obj as r_int64 then
+					append_integer_64_value_into (r_int64.item, str)
+
+				elseif attached {NATURAL_8_REF} obj as na_8 then
+					append_natural_32_value_into (na_8.item, str)
+
+				elseif attached {NATURAL_16_REF} obj as na_16 then
+					append_natural_32_value_into (na_16.item, str)
+
+				elseif attached {NATURAL_32_REF} obj as na_32 then
+					append_natural_32_value_into (na_32.item, str)
+
+				elseif attached {NATURAL_64_REF} obj as na_64 then
+					append_natural_64_value_into (na_64.item, str)
+
+				elseif attached {REAL_64_REF} obj as r_real_64 then
+					append_real_64_value_into (r_real_64.item, str)
+
+				elseif attached {REAL_32_REF} obj as r_real_32 then
+					append_real_64_value_into (r_real_32.item, str)
+
+				elseif attached {CHARACTER_REF} obj as r_char_8 then
+					append_character_32_value_into (r_char_8.item, str)
+
+				elseif attached {CHARACTER_32_REF} obj as r_char_32 then
+					append_character_32_value_into (r_char_32.item, str)
+
+				elseif attached {READABLE_STRING_GENERAL} obj as r_string then
+					buffer.copy (r_string.as_string_32)
+					str.append (string_format_32 (buffer))
+				elseif attached {BOOLEAN_REF} obj as r_bool then
+					str.append_string_general (boolean_format (r_bool.item))
+				elseif attached {DATE_TIME} obj as r_date then
+					str.append_string_general (date_format (r_date))
 				elseif is_decimal_used and then attached obj as l_o and then is_decimal (l_o) then
 					str.append_string_general (decimal_output_function.item ([l_o]))
 				else
-					l_obj := obj
-					check l_obj /= Void end -- implied by previous `if is_void (obj)'
 						-- We do not recursively read values from an object.
 						-- Because we do not have a way to define database schema for such an object tree.
 					if not is_reading_complex_value then
-						get_complex_value (l_obj, str)
+						get_complex_value (obj, str)
 					end
 				end
 			end
@@ -259,12 +189,6 @@ feature -- Basic operations
 			str_exists: str /= Void
 		local
 			i: INTEGER
-			r_int: INTEGER
-			r_real: REAL
-			r_bool: BOOLEAN
-			r_double: DOUBLE
-			r_character: CHARACTER
-			i_obj_field: detachable ANY
 			ind, l_identity_index: INTEGER
 		do
 			is_reading_complex_value := True
@@ -286,24 +210,34 @@ feature -- Basic operations
 				i := next_index (ind)
 				if i > 0 and then l_identity_index /= i then
 					inspect field_type (i, obj)
-					when Integer_type then
-						r_int := integer_field (i, obj)
-						get_value (r_int, str)
+					when integer_8_type then
+						append_integer_32_value_into (integer_8_field (i, obj), str)
+					when integer_16_type then
+						append_integer_32_value_into (integer_16_field (i, obj), str)
+					when integer_32_type then
+						append_integer_32_value_into (integer_32_field (i, obj), str)
+					when integer_64_type then
+						append_integer_64_value_into (integer_64_field (i, obj), str)
+					when natural_8_type then
+						append_natural_32_value_into (natural_8_field (i, obj), str)
+					when natural_16_type then
+						append_natural_32_value_into (natural_16_field (i, obj), str)
+					when natural_32_type then
+						append_natural_32_value_into (natural_32_field (i, obj), str)
+					when natural_64_type then
+						append_natural_64_value_into (natural_64_field (i, obj), str)
 					when Real_type then
-						r_real := real_field (i, obj)
-						get_value (r_real, str)
-					when Character_type then
-						r_character := character_field (i, obj)
-						get_value (r_character, str)
+						append_real_64_value_into (real_32_field (i, obj), str)
+					when Character_8_type then
+						append_character_32_value_into (character_8_field (i, obj), str)
+					when Character_32_type then
+						append_character_32_value_into (character_32_field (i, obj), str)
 					when Boolean_type then
-						r_bool := boolean_field (i, obj)
-						get_value (r_bool, str)
+						str.append_string_general (boolean_format (boolean_field (i, obj)))
 					when Double_type then
-						r_double := double_field (i, obj)
-						get_value (r_double, str)
+						append_real_64_value_into (real_64_field (i, obj), str)
 					else
-						i_obj_field := field (i, obj)
-						get_value (i_obj_field, str)
+						get_value (field (i, obj), str)
 					end
 					ind := ind + 1
 					if ind <= max_index then
@@ -318,6 +252,79 @@ feature -- Basic operations
 
 	replace
 			-- Replace all occurrences of :key by `ht.item (":key")'
+		do
+			replace_statement (False)
+		end
+
+feature {NONE} -- Implementation
+
+	append_integer_32_value_into (a_val: INTEGER_32; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			if map_zero_null_value and then a_val = numeric_null_value.truncated_to_integer.as_integer_32 then
+				a_str.append (null_string)
+			else
+				a_str.append_integer (a_val)
+			end
+		end
+
+	append_integer_64_value_into (a_val: INTEGER_64; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			if map_zero_null_value and then a_val = numeric_null_value.truncated_to_integer_64 then
+				a_str.append (null_string)
+			else
+				a_str.append_integer_64 (a_val)
+			end
+		end
+
+	append_natural_32_value_into (a_val: NATURAL_32; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			if map_zero_null_value and then a_val = numeric_null_value.truncated_to_integer.as_natural_32 then
+				a_str.append (null_string)
+			else
+				a_str.append_natural_32 (a_val)
+			end
+		end
+
+	append_natural_64_value_into (a_val: NATURAL_64; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			if map_zero_null_value and then a_val = numeric_null_value.truncated_to_integer_64.as_natural_64 then
+				a_str.append (null_string)
+			else
+				a_str.append_natural_64 (a_val)
+			end
+		end
+
+	append_real_64_value_into (a_val: REAL_64; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			if map_zero_null_value and then a_val = numeric_null_value then
+				a_str.append (null_string)
+			else
+				a_str.append_double (a_val)
+			end
+		end
+
+	append_character_32_value_into (a_val: CHARACTER_32; a_str: STRING_32)
+			-- Append `a_val' in `a_str' if `a_val' is not equal to `numeric_null_value', otheriwse the NULL SQL string.
+		do
+			a_str.extend ({CHARACTER_32}'%'')
+			a_str.extend (a_val)
+			a_str.extend ({CHARACTER_32}'%'')
+		end
+
+	replace_dynamic
+			-- Replace all occurrences of :key by ?.
+		do
+			replace_statement (True)
+		end
+
+	replace_statement (a_dynamic: BOOLEAN)
+			-- Replace all occurrences of :key by `ht.item (":key")'.
+			-- If `a_dynamic', replace :key by ?.
 		local
 			l_new_string: detachable like Current
 			c: CHARACTER_32
@@ -344,7 +351,11 @@ feature -- Basic operations
 						old_index := index
 						index := index + 1
 						go_after_identifier
-						replacement_string (substring (old_index + 1, index - 1), l_new_string)
+						if not a_dynamic then
+							replacement_string (substring (old_index + 1, index - 1), l_new_string)
+						else
+							l_new_string.append_character ('?')
+						end
 						old_index := index
 					elseif index < count then
 						index := index_of (c, index + 1)
@@ -489,14 +500,14 @@ feature {NONE} -- Status setting
 			-- Reading complex value?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

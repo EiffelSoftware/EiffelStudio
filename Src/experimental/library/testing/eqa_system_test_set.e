@@ -87,22 +87,20 @@ feature {NONE} -- Basic operations
 			current_execution_attached: current_execution /= Void
 			current_execution_not_launched: attached current_execution as l_exec_nl and then
 				not l_exec_nl.is_launched
-		local
-			l_exec: like current_execution
 		do
-			l_exec := current_execution
-			check l_exec /= Void end
-			l_exec.clear_argument
-			a_args.do_all (agent (a_arg: STRING; a_exec: attached like current_execution)
-				require
-					a_arg_attached: a_arg /= Void
-				do
-					a_exec.add_argument (a_arg)
-				end (?, l_exec))
-			l_exec.launch
-			l_exec.process_output_until_exit
-				-- Safety assignments to satisfy postcondition
-			current_execution := l_exec
+			check attached current_execution as l_exec then
+				l_exec.clear_argument
+				a_args.do_all (agent (a_arg: STRING; a_exec: attached like current_execution)
+					require
+						a_arg_attached: a_arg /= Void
+					do
+						a_exec.add_argument (a_arg)
+					end (?, l_exec))
+				l_exec.launch
+				l_exec.process_output_until_exit
+					-- Safety assignments to satisfy postcondition
+				current_execution := l_exec
+			end
 		ensure
 			current_execution_unchanged: current_execution = old current_execution
 			current_execution_exited: attached current_execution as l_exec_exited and then
@@ -149,7 +147,7 @@ feature -- Constants
 	source_path_key: STRING = "SOURCE_PATH"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

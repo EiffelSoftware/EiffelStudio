@@ -41,12 +41,10 @@ feature -- Access
 
 	resend (msg: ANY)
 			-- Resend `msg'.
-		local
-			l_outflow: like outflow
 		do
-			l_outflow := outflow
-			check l_outflow_attached: l_outflow /= Void end
-			l_outflow.independent_store (msg)
+			if attached outflow as l_outflow then
+				l_outflow.independent_store (msg)
+			end
 		end;
 
 	set_queued (n: INTEGER)
@@ -85,14 +83,14 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

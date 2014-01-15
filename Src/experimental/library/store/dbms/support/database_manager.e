@@ -54,11 +54,9 @@ feature -- Connection
 	establish_connection
 			-- Establish connection.
 		require
-			information_set: database_handle_created
 			not_connected: not is_connected
 		local
 			rescued: BOOLEAN
-			l_database_appl: like database_appl
 			l_session_control: like session_control
 		do
 			if not rescued then
@@ -67,16 +65,19 @@ feature -- Connection
 					-- connection to the Relational database.
 					-- This will update the handle to link EiffelStore interface
 					-- to the RDBMS represented by this class.
-				l_database_appl := database_appl
-				check l_database_appl /= Void end -- implied by precondition `information_set'
-				l_database_appl.set_base
+				if attached database_appl as l_database_appl then
+					l_database_appl.set_base
 
-					-- Start session
-				create l_session_control.make
-				session_control := l_session_control
-				l_session_control.connect
-				has_error := not l_session_control.is_ok
-				error_message_32 := l_session_control.error_message_32
+						-- Start session
+					create l_session_control.make
+					session_control := l_session_control
+					l_session_control.connect
+					has_error := not l_session_control.is_ok
+					error_message_32 := l_session_control.error_message_32
+				else
+					has_error := True
+					error_message_32 := "Database handle not created"
+				end
 			else
 				has_error := True
 				error_message_32 := unexpected_error (Establish_connection_name)
@@ -90,12 +91,10 @@ feature -- Connection
 			-- Disconnect from database.
 		require
 			is_connected: is_connected
-		local
-			l_session_control: like session_control
 		do
-			l_session_control := session_control
-			check l_session_control /= Void end -- implied by precondition
-			l_session_control.disconnect
+			if attached session_control as l_session_control then
+				l_session_control.disconnect
+			end
 		end
 
 feature -- Status report
@@ -147,37 +146,35 @@ feature -- Queries
 			--| a minimum value.
 		require
 			meaningful_select: s /= Void
-			created: session_control_created
 		local
 			rescued: BOOLEAN
 			tuple: DB_TUPLE
-			l_session_control: like session_control
-			l_cursor: detachable DB_RESULT
 			l_db_selection: like db_selection
 		do
 			if not rescued then
 				has_error := False
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition `created'
-				l_session_control.reset
-				l_db_selection := db_selection
-				l_db_selection.no_object_convert
-				l_db_selection.unset_action
-				l_db_selection.set_query (s)
-				l_db_selection.execute_query
-				if l_db_selection.is_ok then
-					l_db_selection.load_result
+				if attached session_control as l_session_control then
+					l_session_control.reset
+					l_db_selection := db_selection
+					l_db_selection.no_object_convert
+					l_db_selection.unset_action
+					l_db_selection.set_query (s)
+					l_db_selection.execute_query
 					if l_db_selection.is_ok then
-						l_cursor := l_db_selection.cursor
-						check l_cursor /= Void end -- implied by `load_result''s postcondition
-						create tuple.copy (l_cursor)
-						Result := tuple.item (1)
+						l_db_selection.load_result
+						if l_db_selection.is_ok and attached l_db_selection.cursor as l_cursor then
+							create tuple.copy (l_cursor)
+							Result := tuple.item (1)
+						end
 					end
-				end
-				l_db_selection.terminate
-				if not l_db_selection.is_ok then
+					l_db_selection.terminate
+					if not l_db_selection.is_ok then
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
+				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
+					error_message_32 := session_control_not_set_error (data_select_name)
 				end
 			else
 				has_error := True
@@ -194,44 +191,46 @@ feature -- Queries
 		require
 			not_void: an_obj /= Void
 			meaningful_select: s /= Void
-			created: session_control_created
 		local
 			db_actions: DB_ACTION [like an_obj]
 			rescued: BOOLEAN
-			l_session_control: like session_control
 			l_result: detachable ARRAYED_LIST [like an_obj]
 			l_db_selection: like db_selection
 		do
 			if not rescued then
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition `created'
-				has_error := False
-				l_session_control.reset
-				l_db_selection := db_selection
-				l_db_selection.object_convert (an_obj)
-				l_db_selection.set_query (s)
-				create db_actions.make (l_db_selection, an_obj)
-				l_db_selection.set_action (db_actions)
-				l_db_selection.execute_query
-				if l_db_selection.is_ok then
-					l_db_selection.load_result
+				if attached session_control as l_session_control then
+					has_error := False
+					l_session_control.reset
+					l_db_selection := db_selection
+					l_db_selection.object_convert (an_obj)
+					l_db_selection.set_query (s)
+					create db_actions.make (l_db_selection, an_obj)
+					l_db_selection.set_action (db_actions)
+					l_db_selection.execute_query
 					if l_db_selection.is_ok then
-						l_result := db_actions.list
+						l_db_selection.load_result
+						if l_db_selection.is_ok then
+							l_result := db_actions.list
+						end
 					end
-				end
-				l_db_selection.terminate
-				if not l_db_selection.is_ok then
+					l_db_selection.terminate
+					if not l_db_selection.is_ok then
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
+				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
-					create l_result.make (0)
+					error_message_32 := session_control_not_set_error (list_select_name)
 				end
 			else
 				has_error := True
 				error_message_32 := unexpected_error (list_select_name)
-				create l_result.make (0)
 			end
-			check l_result /= Void end -- FIXME: implied by previous if clause, bug here? `l_result' can be void if rescued
-			Result := l_result
+			if l_result /= Void then
+				Result := l_result
+			else
+				create Result.make (0)
+			end
 		ensure
 			result_not_void: Result /= Void
 		rescue
@@ -243,20 +242,20 @@ feature -- Queries without result to load.
 
 	begin_transaction
 			-- Start a transaction which will be terminated by a call to `rollback' or `commit'.
-		require
-			session_control_created
 		local
 			rescued: BOOLEAN
-			l_session_control: like session_control
 		do
 			if not rescued then
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition
-				if l_session_control.is_ok then
-					l_session_control.begin
+				if attached session_control as l_session_control then
+					if l_session_control.is_ok then
+						l_session_control.begin
+					else
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
 				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
+					error_message_32 := session_control_not_set_error (Execute_query_name)
 				end
 			else
 				has_error := True
@@ -283,21 +282,22 @@ feature -- Queries without result to load.
 			-- `begin_transaction' to disable `auto-commit'.
 		require
 			not_void: a_query /= Void
-			created: session_control_created
 		local
 			rescued: BOOLEAN
-			l_session_control: like session_control
 		do
 			if not rescued then
 				has_error := False
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition
-				l_session_control.reset
-				db_change.set_query (a_query)
-				db_change.execute_query
-				if not l_session_control.is_ok then
+				if attached session_control as l_session_control then
+					l_session_control.reset
+					db_change.set_query (a_query)
+					db_change.execute_query
+					if not l_session_control.is_ok then
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
+				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
+					error_message_32 := session_control_not_set_error (Execute_query_name)
 				end
 			else
 				has_error := True
@@ -310,20 +310,20 @@ feature -- Queries without result to load.
 
 	commit
 			-- Commit updates in the database.
-		require
-			session_control_created
 		local
 			rescued: BOOLEAN
-			l_session_control: like session_control
 		do
 			if not rescued then
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition
-				if l_session_control.is_ok then
-					l_session_control.commit
+				if attached session_control as l_session_control then
+					if l_session_control.is_ok then
+						l_session_control.commit
+					else
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
 				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
+					error_message_32 := session_control_not_set_error (Commit_name)
 				end
 			else
 				has_error := True
@@ -336,20 +336,20 @@ feature -- Queries without result to load.
 
 	rollback
 			-- Rollback updates in the database.
-		require
-			session_control_created
 		local
 			rescued: BOOLEAN
-			l_session_control: like session_control
 		do
 			if not rescued then
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition
-				if l_session_control.is_ok then
-					l_session_control.rollback
+				if attached session_control as l_session_control then
+					if l_session_control.is_ok then
+						l_session_control.rollback
+					else
+						has_error := True
+						error_message_32 := l_session_control.error_message_32
+					end
 				else
 					has_error := True
-					error_message_32 := l_session_control.error_message_32
+					error_message_32 := session_control_not_set_error (Commit_name)
 				end
 			else
 				has_error := True
@@ -364,24 +364,25 @@ feature -- Queries without result to load.
 			--	Store in the database object `an_obj' with `db_repository'.
 		require
 			repository_loaded: rep.loaded
-			created: session_control_created
 		local
 			rescued: BOOLEAN
 			store_objects: DB_STORE
-			l_session_control: like session_control
 		do
 			if not rescued then
-				has_error := False
-				l_session_control := session_control
-				check l_session_control /= Void end -- implied by precondition
-				l_session_control.reset
-				create store_objects.make
-				store_objects.set_repository (rep)
-				store_objects.put (an_obj)
-				commit
+				if attached session_control as l_session_control then
+					has_error := False
+					l_session_control.reset
+					create store_objects.make
+					store_objects.set_repository (rep)
+					store_objects.put (an_obj)
+					commit
+				else
+					has_error := True
+					error_message_32 := session_control_not_set_error (insert_name)
+				end
 			else
 				has_error := True
-				error_message_32 := unexpected_error (Insert_name)
+				error_message_32 := unexpected_error (insert_name)
 			end
 		rescue
 			rescued := True
@@ -392,14 +393,12 @@ feature -- Access
 
 	database_handle_name: STRING
 			-- Database handle name
-		require
-			created: database_handle_created
-		local
-			l_database_appl: like database_appl
 		do
-			l_database_appl := database_appl
-			check l_database_appl /= Void end -- implied by precondition
-			Result := l_database_appl.db_spec.database_handle_name
+			if attached database_appl as l_database_appl then
+				Result := l_database_appl.db_spec.database_handle_name
+			else
+				create Result.make_empty
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -407,7 +406,6 @@ feature -- Access
 	string_format (s: READABLE_STRING_GENERAL): STRING
 			-- String representation in SQL of `s'.
 		require
-			created: database_handle_created
 			s_not_void: s /= Void
 		do
 			Result := string_format_32 (s).as_string_8
@@ -416,14 +414,13 @@ feature -- Access
 	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
 			-- String representation in SQL of `s'.
 		require
-			created: database_handle_created
 			s_not_void: s /= Void
-		local
-			l_database_appl: like database_appl
 		do
-			l_database_appl := database_appl
-			check l_database_appl /= Void end -- implied by precondition
-			Result := l_database_appl.db_spec.string_format_32 (s)
+			if attached database_appl as l_database_appl then
+				Result := l_database_appl.db_spec.string_format_32 (s)
+			else
+				create Result.make_empty
+			end
 		end
 
 	session_control: detachable DB_CONTROL
@@ -445,6 +442,14 @@ feature {NONE} -- Implementation
 
 	database_appl: detachable DATABASE_APPL [G]
 			-- Database application.
+
+	session_control_not_set_error (action: STRING_32): STRING_32
+			-- Unexpected error message.
+		require
+			action_not_void: action /= Void
+		do
+			Result := {STRING_32} "The session_control is not created in " + action
+		end
 
 	unexpected_error (action: STRING_32): STRING_32
 			-- Unexpected error message.
@@ -479,7 +484,7 @@ feature {NONE} -- Implementation
 			-- `insert_with_repository' feature name.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

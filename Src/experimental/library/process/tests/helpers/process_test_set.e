@@ -22,26 +22,20 @@ feature {NONE} -- Access
 	echo_executable_cache: detachable like echo_executable
 			-- Cache for `echo_executable'
 
-	current_process: detachable PROCESS
+	current_process: PROCESS
 			-- Process instance currently being used for testing
 
-	last_process_output: detachable PROCESS_OUTPUT
+	last_process_output: PROCESS_OUTPUT
 			-- Last created {PROCESS_OUTPUT} instance through `launch_process'
 
 feature {NONE} -- Status report
 
 	is_process_launched: BOOLEAN
 			-- Has `current_process' been launched yet?
-		require
-			current_process_attached: current_process /= Void
-		local
-			l_process: like current_process
 		do
-			l_process := current_process
-			check l_process /= Void end
-			Result := l_process.launched
+			Result := current_process.launched
 		ensure
-			current_process_not_launched: attached current_process as l_proc and then l_proc.launched
+			current_process_not_launched: current_process.launched
 		end
 
 feature {NONE} -- Status setting
@@ -63,7 +57,6 @@ feature {NONE} -- Status setting
 			l_process.set_separate_console (False)
 			current_process := l_process
 		ensure
-			current_process_attached: current_process /= Void
 			current_process_new: current_process /= old current_process
 			current_process_not_launched: not is_process_launched
 		end
@@ -84,7 +77,6 @@ feature {NONE} -- Status setting
 			end
 			create_process (echo_executable.name, l_args)
 		ensure
-			current_process_attached: current_process /= Void
 			current_process_new: current_process /= old current_process
 			current_process_not_launched: not is_process_launched
 		end
@@ -92,22 +84,16 @@ feature {NONE} -- Status setting
 	launch_process
 			-- Launch `current_process' and redirect all output to a new instance of `last_process_output'.
 		require
-			current_process_attached: current_process /= Void
 			current_process_not_launched: not is_process_launched
 		local
-			l_process: like current_process
 			l_output: like last_process_output
 		do
-			l_process := current_process
-			check l_process /= Void end
-			create l_output.make (l_process)
-			l_process.launch
+			create l_output.make (current_process)
+			current_process.launch
 			last_process_output := l_output
 		ensure
 			last_process_output_attached: last_process_output /= Void
-			current_process_attached: current_process /= Void
-			last_process_output_uses_current_process: attached last_process_output as l_out and then
-				attached current_process as l_proc and then l_out.process = l_proc
+			last_process_output_uses_current_process: last_process_output.process = current_process
 			process_launched: is_process_launched
 		end
 
@@ -116,7 +102,7 @@ feature {NONE} -- Query
 	echo_executable: PATH
 			-- Path to `eiffel_echo' executable
 			--
-			-- Note: by default this is $ISE_EIFFEL/studio/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
+			-- Note: by default this is $ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
 			--       environment variables are missing we check for a Unix layout. Otherwise we assume
 			--       `eiffel_echo' is reachable from $PATH.
 		local
@@ -166,7 +152,6 @@ feature {NONE} -- Basic functionality
 			s: STRING_8
 		do
 			l_output := last_process_output
-			check l_output /= Void end
 			if {PLATFORM}.is_windows then
 				l_output.receive (a_expected.count + a_expected.occurrences ('%N'), a_from_errors)
 				l_received := l_output.last_received
@@ -198,13 +183,10 @@ feature {NONE} -- Basic functionality
 			-- If launched, wait for `current_process' to exit.
 			--
 			-- Note: if process does not exit after `timeout', try to terminate it.
-		require
-			current_process_attached: current_process /= Void
 		local
 			l_process: like current_process
 		do
 			l_process := current_process
-			check l_process /= Void end
 			if l_process.launched and not l_process.has_exited then
 				l_process.wait_for_exit_with_timeout (timeout)
 				if not l_process.has_exited then
@@ -216,30 +198,30 @@ feature {NONE} -- Basic functionality
 				assert ("process_exited", l_process.has_exited)
 			end
 		ensure
-			not_running: attached current_process as l_proc and then not l_proc.is_running
+			not_running: not current_process.is_running
 		end
 
 	check_successful_exit
 			-- Check if `current_process' has exited successfully.
 		require
-			current_process_attached: current_process /= Void
 			current_process_launched: is_process_launched
-		local
-			l_process: like current_process
 		do
-			l_process := current_process
-			check l_process /= Void end
 			wait_for_exit
-			assert ("terminated_normally", not l_process.force_terminated)
-			assert ("good_exit_code", l_process.exit_code = 0)
+			assert ("terminated_normally", not current_process.force_terminated)
+			assert ("good_exit_code", current_process.exit_code = 0)
 		end
 
 feature {NONE} -- Events
 
 	frozen on_prepare_frozen
 			-- <Precursor>
+		local
+			l_factory: PROCESS_FACTORY
 		do
 			assert ("multithreaded", {PLATFORM}.is_thread_capable)
+			create l_factory
+			current_process := l_factory.process_launcher ("test", Void, Void)
+			create last_process_output.make (current_process)
 			on_prepare
 		end
 
@@ -247,10 +229,7 @@ feature {NONE} -- Events
 			-- <Precursor>
 		do
 			on_clean
-			if current_process /= Void then
-				wait_for_exit
-				current_process := Void
-			end
+			wait_for_exit
 		end
 
 	on_prepare
@@ -271,13 +250,19 @@ feature {NONE} -- Constants
 
 	ise_eiffel_env: STRING = "ISE_EIFFEL"
 	ise_platform_env: STRING = "ISE_PLATFORM"
-	eiffel_echo_name: STRING = "eiffel_echo"
+	eiffel_echo_name: STRING
+		do
+			Result := "eiffel_echo"
+			if {PLATFORM}.is_windows then
+				Result.append (".exe")
+			end
+		end
 
 	timeout: INTEGER = 2000
 			-- Time in milliseconds we wait for process to send new output
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

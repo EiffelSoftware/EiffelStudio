@@ -70,7 +70,6 @@ ub4 descrip_cs = (ub4) MAX_SELECT_LIST_SIZE;
 sb2 descrip_indp[MAX_SELECT_LIST_SIZE];
 
 /* Globals */
-static text sql_statement[2048];
 static sword sql_function;
 static sword numwidth = 8;
 static int error_number;
@@ -266,11 +265,10 @@ void ora_exec_immediate (int no_desc, text order[1024])
 /*   3. return error number.                                     */
 /*                                                               */
 /*****************************************************************/
-void ora_init_order (text order[1024], int no_desc)
+void ora_init_order (text *order, int no_desc)
 {
 	/* Process general ora SQL statements    */
-		strcpy((char *) sql_statement, (char *) order);
-		if (oparse(cda[no_desc], (text *) sql_statement, (sb4) -1, (sword) PARSE_NO_DEFER, (ub4) PARSE_V7_LNG)) {
+		if (oparse(cda[no_desc], order, (sb4) -1, (sword) PARSE_NO_DEFER, (ub4) PARSE_V7_LNG)) {
 			ora_error_handler(cda[no_desc]);
 			/*if (error_number) {
 				return error_number;
@@ -586,7 +584,7 @@ disregard null fetch error */
 /*****************************************************************/
 
 
-void ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value) {
+void ora_set_parameter(int no_desc, text *ph, char *value) {
 
 	//text bind_values[MAX_BINDS][MAX_ITEM_BUFFER_SIZE];
 

@@ -47,8 +47,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up the callback marshal and initialize GTK+.
-		local
-			l_cs: EV_GTK_C_STRING
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -400,7 +398,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 						l_user_event := True
 						l_call_event := False
-						process_button_event (gdk_event)
+						process_button_event (gdk_event, False)
 					when GDK_SCROLL then
 						debug ("GDK_EVENT")
 							print ("GDK_SCROLL%N")
@@ -869,7 +867,7 @@ feature -- Basic operation
 			Result := [default_widget, 0, 0]
 		end
 
-	process_button_event (a_gdk_event: POINTER)
+	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)
 			-- Process button event `a_gdk_event'.
 		require
 			a_gdkevent_not_null: a_gdk_event /= {GTK}.null_pointer
@@ -937,11 +935,11 @@ feature -- Basic operation
 			end
 
 			if not l_ignore_event then
-				if pick_and_drop_source = Void then
+				if pick_and_drop_source = Void and then not a_recursive then
 						-- We don't want signals firing during transport.
 					{GTK}.gtk_main_do_event (a_gdk_event)
 				end
-				if l_pnd_item /= Void then
+				if l_pnd_item /= Void and then (not l_pnd_item.button_actions_handled_by_signals or a_recursive) then
 					l_pnd_item.on_mouse_button_event (
 						{GTK}.gdk_event_button_struct_type (a_gdk_event),
 						{GTK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,

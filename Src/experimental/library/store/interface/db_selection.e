@@ -126,12 +126,10 @@ feature -- Status report
 			-- Is the `container' after?
 		require
 			container_exists: container /= Void
-		local
-			l_container: like container
 		do
-			l_container := container
-			check l_container /= Void end -- implied by precondition `container_exists'
-			Result := l_container.after
+			if attached container as l_container then
+				Result := l_container.after
+			end
 		end
 
 	error_m: STRING
@@ -152,17 +150,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_container (one_container: like container)
+	set_container (one_container: attached like container)
 			-- Make results of selection query persist in container.
 		require
 			container_exists: one_container /= Void
-		local
-			l_container: like container
 		do
-			l_container := one_container
-			check l_container /= Void end -- implied by precondition `container_exists'
-			container := l_container
-			l_container.start
+			container := one_container
+			one_container.start
 		ensure
 			container_set: container = one_container
 		end
@@ -206,54 +200,47 @@ feature -- Status setting
 		require
 			cursor_exists: cursor /= Void
 			object_exists: object /= Void
-		local
-			l_cursor: like cursor
-			l_object: like object
 		do
-			l_cursor := cursor
-			l_object := object
-			check l_cursor /= Void end -- implied by precondition
-			check l_object /= Void end -- implied by precondition
-			if l_cursor.map_table_to_create or else update_map_table then
-					-- This case must only happen when `object_convert' has been
-					-- called after `load_result': each cursor's map table should be
-					-- modified to fit to new object. (Cedric)
-				l_cursor.update_map_table (l_object)
-			end
-			if is_ok then
-				implementation.cursor_to_object (l_object, l_cursor)
+			if attached cursor as l_cursor and attached object as l_object then
+				if l_cursor.map_table_to_create or else update_map_table then
+						-- This case must only happen when `object_convert' has been
+						-- called after `load_result': each cursor's map table should be
+						-- modified to fit to new object. (Cedric)
+					l_cursor.update_map_table (l_object)
+				end
+				if is_ok then
+					implementation.cursor_to_object (l_object, l_cursor)
+				end
 			end
 		end
 
 	start
 			-- Set `cursor' on first element of `container'.
-		require else
+		require
 			container_exists: container /= Void
-		local
-			l_container: like container
 		do
-			l_container := container
-			check l_container /= Void end -- implied by precondition `container_exists'
-			l_container.start
-			cursor := l_container.item
+			if attached container as l_container then
+				l_container.start
+				if not l_container.off then
+					cursor := l_container.item
+				end
+			end
 		ensure then
-			container_attached: attached container as le_container
-			container_on_first: le_container.isfirst
-			cursor_updated: cursor = le_container.item
+			container_attached: attached container as l_container
+			container_on_first: not l_container.is_empty implies l_container.isfirst
+			cursor_updated: not l_container.is_empty implies cursor = l_container.item
 		end
 
 	forth
 			-- Move `cursor' to next element of `container'.
-		require else
+		require
 			container_exists: container /= Void
-		local
-			l_container: like container
 		do
-			l_container := container
-			check l_container /= Void end -- implied by precondition `container_exists'
-			l_container.forth
-			if not l_container.after then
-				cursor := l_container.item
+			if attached container as l_container then
+				l_container.forth
+				if not l_container.after then
+					cursor := l_container.item
+				end
 			end
 		ensure then
 			container_attached: (attached container as le_container) and (attached old container as le_old_container)
@@ -422,12 +409,10 @@ feature -- Basic operations
 
 	execute_query
 			-- Execute `query' with `last_query'.
-		local
-			l_query: like last_query_32
 		do
-			l_query := last_query_32
-			check l_query /= Void end -- implied by precursor's precondition `is_executable'
-			query (l_query)
+			if attached last_query_32 as l_query then
+				query (l_query)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -447,7 +432,7 @@ feature {NONE} -- Status report
 			-- Does `map_table' need to be updated?
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

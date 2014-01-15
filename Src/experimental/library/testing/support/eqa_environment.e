@@ -37,16 +37,13 @@ feature -- Access
 		require
 			a_key_attached: a_key /= Void
 			an_asserter_attached: an_asserter /= Void
-		local
-			l_value: like item
 		do
 			if attached item (a_key) as l_v then
-				l_value := l_v
+				Result := l_v
 			else
 				an_asserter.assert (a_key + " not defined", False)
-				check not_reached: l_value /= Void end
+				create Result.make_empty
 			end
-			Result := l_value
 		ensure
 			result_attached: Result /= Void
 		end
@@ -268,7 +265,7 @@ feature {NONE} -- Constants
 			-- variable name off from surrounding text
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

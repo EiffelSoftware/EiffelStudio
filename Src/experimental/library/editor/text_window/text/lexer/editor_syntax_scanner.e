@@ -69,26 +69,22 @@ feature -- Actions
 
 	execute (a_string: STRING)
 			-- Analyze a string.		
-		require else
-		   	has_analyzer: analyzer /= Void
-		local
-			l_analyzer: like analyzer
 		do
-			from
-				first_token := Void
-				end_token := Void
-				token_list.wipe_out
-				l_analyzer := analyzer
-				check l_analyzer /= Void end -- Implied by precondition
-				l_analyzer.set_string (a_string)
-				begin_analysis
-			until
-				l_analyzer.end_of_text
-			loop
-				l_analyzer.get_any_token
-				do_a_token (l_analyzer.last_token)
+			if attached analyzer as l_analyzer then
+				from
+					first_token := Void
+					end_token := Void
+					token_list.wipe_out
+					l_analyzer.set_string (a_string)
+					begin_analysis
+				until
+					l_analyzer.end_of_text
+				loop
+					l_analyzer.get_any_token
+					do_a_token (l_analyzer.last_token)
+				end
+				end_analysis
 			end
-			end_analysis
 		end
 
 	do_a_token (a_token: TOKEN)
@@ -159,14 +155,14 @@ feature {NONE} -- Implementation
 	  	end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

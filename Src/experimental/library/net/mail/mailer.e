@@ -44,6 +44,8 @@ feature -- Status report
 			Result := l_from_resource /= Void and then l_to_resource /= Void and then
 				((l_from_resource.can_be_sent and then l_to_resource.can_send) or
 				(l_from_resource.can_receive and then l_to_resource.can_be_received))
+		ensure
+			attached_resources: Result implies (from_resource /= Void and to_resource /= Void)
 		end
 
 feature -- Settings
@@ -76,14 +78,14 @@ feature -- Basic operations
 			-- transfer data and check for errors.
 		require
 			is_valid_for_transfer: is_valid_for_transfer
-		local
-			l_from_resource: like from_resource
-			l_to_resource: like to_resource
 		do
-			l_from_resource := from_resource
-			l_to_resource := to_resource
-			check resources_attached: l_from_resource /= Void and then l_to_resource /= Void end
-			l_to_resource.transfer (l_from_resource)
+				-- Implied by precondition
+			check
+				from_resource_attached: attached from_resource as l_from_resource
+				to_resource_attached: attached to_resource as l_to_resource
+			then
+				l_to_resource.transfer (l_from_resource)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -100,14 +102,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

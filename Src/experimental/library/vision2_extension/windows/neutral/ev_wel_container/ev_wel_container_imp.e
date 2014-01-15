@@ -50,12 +50,9 @@ feature -- Status setting
 
 	replace (a_window: detachable WEL_WINDOW)
 			-- Replace `item' with `a_window'
-		local
-			l_internal_child_window: like internal_child_window
 		do
-			if item /= Void then
-				l_internal_child_window := internal_child_window
-				check l_internal_child_window /= Void end
+				-- Remove any connection.
+			if attached internal_child_window as l_internal_child_window then
 				l_internal_child_window.set_parent (Default_parent)
 				internal_child_window := Void
 			end

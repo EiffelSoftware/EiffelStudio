@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="test_ribbon" uuid="345FC7FB-F7D9-4134-A002-2C66BEECEAEF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="test_ribbon" uuid="345FC7FB-F7D9-4134-A002-2C66BEECEAEF">
 	<target name="test_ribbon">
-		<root class="RIBBON_APPLICATION" feature="make_and_launch"/>
+		<root class="RIBBON_TEST" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/CVS$</exclude>

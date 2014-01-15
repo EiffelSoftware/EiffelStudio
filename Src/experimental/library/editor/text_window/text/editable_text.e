@@ -756,6 +756,7 @@ feature -- Basic Operations
 			l_leading_tabs, l_cursor_tabs: INTEGER
 			l_tab_symbol: like tabulation_symbol
 			i, l_indent_count: INTEGER
+			l_percent_r_number: INTEGER
 			l_has_non_tab_symbol: BOOLEAN
 			l_same_as_selection: BOOLEAN
 		do
@@ -806,8 +807,18 @@ feature -- Basic Operations
 					l_cursor_tabs > 0 and then	-- There is leading tab before the cursor
 					not l_same_as_selection
 				then
+						-- Since text read from clipboard might not contain '%R', `insert_string' puts '%R' on Windows
+						-- So we need to count it when `is_windows_eol_style' is True.
+						-- `l_second_line_pos - 1' is not a valid index implies that there is no %R before the first %N.
+					if
+						is_windows_eol_style and then
+						(not l_inserted_text.valid_index (l_second_line_pos - 1) or else
+						l_inserted_text.item (l_second_line_pos - 1) /= '%R')
+					then
+						l_percent_r_number := l_inserted_text.occurrences ('%N')
+					end
 						-- Indent/Unindent inserted lines except for the first line.
-					select_region (l_cur_pos + l_second_line_pos + 1, l_cur_pos + l_inserted_text.count)
+					select_region (l_cur_pos + l_second_line_pos + 1, l_cur_pos + l_inserted_text.count + l_percent_r_number)
 
 					l_indent_count := (l_leading_tabs - l_cursor_tabs).abs
 					from

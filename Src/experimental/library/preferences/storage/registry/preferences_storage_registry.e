@@ -152,7 +152,11 @@ feature {PREFERENCES} -- Resource Management
 				l_parent_key := open_key_with_access (location, key_write)
 			end
 			if valid_value_for_hkey (l_parent_key) then
-				l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
+				if is_format_version_1_0 then
+					l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
+				else
+					l_registry_preference_name := a_preference.name
+				end
 				delete_value (l_parent_key, l_registry_preference_name)
 				close_key (l_parent_key)
 			end
@@ -170,7 +174,7 @@ invariant
 	has_session_values: session_values /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

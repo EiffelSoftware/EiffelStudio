@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Access
 
-	table_description: DB_TABLE_DESCRIPTION
+	table_description: detachable DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 
 	selected_tablerows: ARRAYED_LIST [DB_TABLE]
@@ -45,15 +45,15 @@ feature -- Access
 		do
 			Result := tablerow_set
 		end
-		
-	selected_tablerow: DB_TABLE
+
+	selected_tablerow: detachable DB_TABLE
 			-- Currently selected table row.
 		do
 			if not tablerow_set.is_empty then
 				Result := tablerow_set.item
 			end
 		end
-		
+
 feature -- Status report
 
 	can_be_activated: BOOLEAN
@@ -69,14 +69,14 @@ feature -- Status report
 			-- Does `code' correspond to a necessary
 			-- table for represented table?
 		do
-			Result := table_description.to_create_fkey_from_table.has (code)
+			Result := attached table_description as l_descr and then l_descr.to_create_fkey_from_table.has (code)
 		end
 
 	is_dependent_tablecode (code: INTEGER): BOOLEAN
 			-- Does `code' correspond to a dependent
 			-- table on represented table?
 		do
-			Result := table_description.to_delete_fkey_from_table.has (code)
+			Result := attached table_description as l_descr and then l_descr.to_delete_fkey_from_table.has (code)
 		end
 
 	is_writing: BOOLEAN
@@ -159,12 +159,14 @@ feature -- Status report
 			not_void: tr_list /= Void
 		do
 			if not tr_list.is_empty then
-				Result := tr_list.first.table_description.Table_code = table_description.Table_code
+				if attached table_description as l_descr then
+					Result := tr_list.first.table_description.Table_code = l_descr.Table_code
+				end
 			else
 				Result := True
 			end
 		end
-	
+
 feature -- Status setting
 
 	set_writing_control (writing_ctrl: DV_SENSITIVE_CONTROL)
@@ -175,8 +177,8 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			writing_control := writing_ctrl
-			writing_control.set_action (agent write)
-			writing_control.disable_sensitive
+			writing_ctrl.set_action (agent write)
+			writing_ctrl.disable_sensitive
 		ensure
 			is_writing: is_writing
 		end
@@ -189,8 +191,8 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			refreshing_control := refreshing_ctrl
-			refreshing_control.set_action (agent refresh_from_database)
-			refreshing_control.disable_sensitive
+			refreshing_ctrl.set_action (agent refresh_from_database)
+			refreshing_ctrl.disable_sensitive
 		ensure
 			is_refreshing: is_refreshing
 		end
@@ -203,7 +205,7 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			db_creator := creator
-			db_creator.set_table_component (Current)
+			creator.set_table_component (Current)
 		ensure
 			is_creating: is_creating
 		end
@@ -216,8 +218,8 @@ feature -- Status setting
 			not_activated: not is_activated
 		do
 			deleting_control := deleting_ctrl
-			deleting_control.set_action (agent delete_after_confirmation)
-			deleting_control.disable_sensitive
+			deleting_ctrl.set_action (agent delete_after_confirmation)
+			deleting_ctrl.disable_sensitive
 		ensure
 			is_deleting: is_deleting
 		end
@@ -264,21 +266,23 @@ feature -- Basic operations
 			-- Add a subcomponent representing a necessary
 			-- table for represented table.
 		require
-			is_necessary_table: is_necessary_tablecode (comp.table_description.Table_code)
+			is_necessary_table: attached comp.table_description as l_descr and then is_necessary_tablecode (l_descr.Table_code)
 			no_db_searcher_set: not comp.db_searcher_set
 			not_activated: not is_activated
 		local
 			db_srcher: DV_TYPED_SEARCHER
-			td: DB_TABLE_DESCRIPTION
+			td: detachable DB_TABLE_DESCRIPTION
 		do
 			comp.enable_necessary (Current)
 			necessary_table_list.extend (comp)
 			create db_srcher.make
 			db_srcher.set_behavior_type (db_srcher.Qualified_selection)
 			td := comp.table_description
-			db_srcher.set_criterion (td.Id_code)
-			db_srcher.set_table_code (td.Table_code)
-			db_srcher.set_row_attribute_code (table_description.to_create_fkey_from_table.item (td.Table_code))
+			check td /= Void and attached table_description as l_descr then
+				db_srcher.set_criterion (td.Id_code)
+				db_srcher.set_table_code (td.Table_code)
+				db_srcher.set_row_attribute_code (l_descr.to_create_fkey_from_table.item (td.Table_code))
+			end
 			subsearcher_list.extend (db_srcher)
 			comp.set_db_searcher (db_srcher)
 		end
@@ -287,23 +291,27 @@ feature -- Basic operations
 			-- Add a subcomponent representing a dependent
 			-- table on represented table.
 		require
-			is_dependent_table: is_dependent_tablecode (comp.table_description.Table_code)
+			is_dependent_table: attached comp.table_description as l_descr and then is_dependent_tablecode (l_descr.Table_code)
 			no_db_searcher_set: not comp.db_searcher_set
 			not_activated: not is_activated
 		local
 			db_srcher: DV_TYPED_SEARCHER
-			td: DB_TABLE_DESCRIPTION
+			td: detachable DB_TABLE_DESCRIPTION
 			tc: INTEGER
 		do
-			tc := table_description.Table_code
+			if attached table_description as l_descr then
+				tc := l_descr.Table_code
+			end
 			comp.enable_dependent (Current)
 			dependent_table_list.extend (comp)
 			create db_srcher.make
 			db_srcher.set_behavior_type (db_srcher.Qualified_selection)
 			td := comp.table_description
-			db_srcher.set_criterion (td.to_create_fkey_from_table.item (tc))
-			db_srcher.set_table_code (td.Table_code)
-			db_srcher.set_row_attribute_code (td.Id_code)
+			check td /= Void then
+				db_srcher.set_criterion (td.to_create_fkey_from_table.item (tc))
+				db_srcher.set_table_code (td.Table_code)
+				db_srcher.set_row_attribute_code (td.Id_code)
+			end
 			subsearcher_list.extend (db_srcher)
 			comp.set_db_searcher (db_srcher)
 			set_handlers (comp)
@@ -317,9 +325,11 @@ feature -- Basic operations
 			not_activated: not is_activated
 		do
 			db_searcher := db_srcher
-			db_searcher.set_user_component (Current)
-			db_searcher.set_table_code (table_description.Table_code)
-			db_searcher.activate
+			db_srcher.set_user_component (Current)
+			if attached table_description as l_descr then
+				db_srcher.set_table_code (l_descr.Table_code)
+			end
+			db_srcher.activate
 		ensure
 			db_searcher_set: db_searcher_set
 		end
@@ -337,15 +347,15 @@ feature -- Basic operations
 	activate
 			-- Activate component.
 		do
-			if db_fields_component /= Void then
-				db_fields_component.set_table_description (table_description)
-				db_fields_component.activate
+			if attached db_fields_component as l_comp and attached table_description as l_descr then
+				l_comp.set_table_description (l_descr)
+				l_comp.activate
 			end
-			if db_tablerow_navigator /= Void then
-				db_tablerow_navigator.activate
+			if attached db_tablerow_navigator as l_nav then
+				l_nav.activate
 			end
-			if db_creator /= Void then
-				db_creator.activate
+			if attached db_creator as l_db_creator then
+				l_db_creator.activate
 			end
 			if not status_handler_set then
 				status_handler := agent basic_message_handler
@@ -400,16 +410,16 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Access
 
-	warning_handler: PROCEDURE [ANY, TUPLE [STRING]]
+	warning_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
 			-- Warning handler.
 
-	status_handler: PROCEDURE [ANY, TUPLE [STRING]]
+	status_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
 			-- Status information handler.
 
-	confirmation_handler: PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]]
-			-- Confirmation handler. 
+	confirmation_handler: detachable PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]]
+			-- Confirmation handler.
 
-	parent: DV_TABLE_COMPONENT
+	parent: detachable DV_TABLE_COMPONENT
 			-- Calling component if this component is subcomponent table
 			-- is necessary for calling component table.
 
@@ -428,7 +438,7 @@ feature {DV_COMPONENT} -- Status setting
 			-- calling component table.
 		require
 			not_void: par /= Void
-			is_current_dependent_table: is_necessary_tablecode (par.table_description.Table_code)
+			is_current_dependent_table: attached par.table_description as l_descr and then is_necessary_tablecode (l_descr.Table_code)
 			not_activated: not is_activated
 		do
 			parent := par
@@ -444,7 +454,7 @@ feature {DV_COMPONENT} -- Status setting
 		require
 			not_void: par /= Void
 			not_is_creating: not is_creating
-			is_current_necessary_table: is_dependent_tablecode (par.table_description.Table_code)
+			is_current_necessary_table: attached par.table_description as l_descr and then is_dependent_tablecode (l_descr.Table_code)
 			not_activated: not is_activated
 		do
 			parent := par
@@ -465,9 +475,11 @@ feature {DV_COMPONENT} -- Basic operations
 		do
 			tablerow_set := tr_set
 			if is_topcomponent then
-				status_handler.call ([tablerows_selected (tablerow_set.count)])
-			elseif is_dependent and then db_creator /= Void then
-				db_creator.set_calling_fkey_value (parent.selected_tablerows.item.table_description.id)
+				if attached status_handler as l_handler then
+					l_handler.call ([tablerows_selected (tablerow_set.count)])
+				end
+			elseif is_dependent and then attached parent as l_par and then attached db_creator as l_db_creator then
+				l_db_creator.set_calling_fkey_value (l_par.selected_tablerows.item.table_description.id)
 			end
 			is_cleared := False
 			is_just_created := False
@@ -487,32 +499,36 @@ feature {DV_COMPONENT} -- Basic operations
 		local
 			last_current_tablerow: DB_TABLE
 		do
-			if tablerow_set.valid_index (tablerow_set.index) then
+			if not tablerow_set.off then
 				last_current_tablerow := tablerow_set.item
 				if is_just_created then
-					tablerow_set := db_creator.refresh
+					check attached db_creator as l_db_creator then
+						tablerow_set := l_db_creator.refresh
+					end
 				else
-					tablerow_set := db_searcher.refresh
-				end
-				check
-					table_row_set_exists: tablerow_set /= Void
+					check attached db_searcher as l_db_searcher then
+						tablerow_set := l_db_searcher.refresh
+					end
 				end
 				if not tablerow_set.is_empty then
 					search_or_start (last_current_tablerow)
 				end
 			else
 				if is_just_created then
-					tablerow_set := db_creator.refresh
+					check attached db_creator as l_db_creator then
+						tablerow_set := l_db_creator.refresh
+					end
 				else
-					tablerow_set := db_searcher.refresh
-				end
-				check
-					table_row_set_exists: tablerow_set /= Void
+					check attached db_searcher as l_db_searcher then
+						tablerow_set := l_db_searcher.refresh
+					end
 				end
 				tablerow_set.start
 			end
 			refresh
-			status_handler.call ([tablerows_selected (tablerow_set.count)])
+			if attached status_handler as l_handler then
+				l_handler.call ([tablerows_selected (tablerow_set.count)])
+			end
 		end
 
 	clear
@@ -534,11 +550,11 @@ feature {DV_COMPONENT} -- Basic operations
 		do
 			if selected_tablerows.index /= position then
 				Precursor (position)
-				if db_fields_component /= Void then
+				if attached db_fields_component as l_comp then
 					if position = No_selection then
-						db_fields_component.clear
+						l_comp.clear
 					else
-						db_fields_component.refresh (tablerow_set.item.table_description)
+						l_comp.refresh (tablerow_set.item.table_description)
 					end
 				end
 				if tablerow_set.before then
@@ -554,13 +570,13 @@ feature {NONE} -- Access
 	tablerow_set: ARRAYED_LIST [DB_TABLE]
 			-- Current set of table rows reference.
 
-	db_fields_component: DV_TABLEROW_FIELDS
+	db_fields_component: detachable DV_TABLEROW_FIELDS
 			-- Component displaying selected database table row.
 
-	db_searcher: DV_SEARCHER
+	db_searcher: detachable DV_SEARCHER
 			-- Component giving database table rows to display.
 
-	db_creator: DV_CREATOR
+	db_creator: detachable DV_CREATOR
 			-- Component creating database table rows.
 
 	necessary_table_list: ARRAYED_LIST [DV_TABLE_COMPONENT]
@@ -574,13 +590,13 @@ feature {NONE} -- Access
 	subsearcher_list: ARRAYED_LIST [DV_TYPED_SEARCHER]
 			-- List of searchers corresponding to subcomponents.
 
-	writing_control: DV_SENSITIVE_CONTROL
+	writing_control: detachable DV_SENSITIVE_CONTROL
 			-- Enable the user to write the database at run-time.
 
-	refreshing_control: DV_SENSITIVE_CONTROL
+	refreshing_control: detachable DV_SENSITIVE_CONTROL
 			-- Enable the user to refresh display from the database at run-time.
 
-	deleting_control: DV_SENSITIVE_CONTROL
+	deleting_control: detachable DV_SENSITIVE_CONTROL
 			-- Enable the user to delete rows in the database at run-time.
 
 feature {NONE} -- Status report
@@ -602,53 +618,55 @@ feature {NONE} -- Basic operations
 			-- Update controls sensitiveness according to `tablerow_set'.
 		do
 			if is_cleared then
-				if writing_control /= Void then
-					writing_control.disable_sensitive
+				if attached writing_control as l_write_ctrl then
+					l_write_ctrl.disable_sensitive
 				end
-				if refreshing_control /= Void then
-					refreshing_control.disable_sensitive
+				if attached refreshing_control as l_refresh_ctrl then
+					l_refresh_ctrl.disable_sensitive
 				end
-				if db_creator /= Void then
-					db_creator.disable_sensitive
+				if attached db_creator as l_db_creator then
+					l_db_creator.disable_sensitive
 				end
-				if deleting_control /= Void then
-					deleting_control.disable_sensitive
+				if attached deleting_control as l_del_ctrl then
+					l_del_ctrl.disable_sensitive
 				end
 			elseif tablerow_set.is_empty or else tablerow_set.before then
-				if writing_control /= Void then
-					writing_control.disable_sensitive
+				if attached writing_control as l_write_ctrl then
+					l_write_ctrl.disable_sensitive
 				end
-				if refreshing_control /= Void then
-					refreshing_control.enable_sensitive
+				if attached refreshing_control as l_refresh_ctrl then
+					l_refresh_ctrl.enable_sensitive
 				end
-				if db_creator /= Void then
-					db_creator.enable_sensitive
+				if attached db_creator as l_db_creator then
+					l_db_creator.enable_sensitive
 				end
-				if deleting_control /= Void then
-					deleting_control.disable_sensitive
+				if attached deleting_control as l_del_ctrl then
+					l_del_ctrl.disable_sensitive
 				end
 			else
-				if writing_control /= Void then
-					writing_control.enable_sensitive
+				if attached writing_control as l_write_ctrl then
+					l_write_ctrl.enable_sensitive
 				end
-				if refreshing_control /= Void then
-					refreshing_control.enable_sensitive
+				if attached refreshing_control as l_refresh_ctrl then
+					l_refresh_ctrl.enable_sensitive
 				end
-				if db_creator /= Void then
-					db_creator.enable_sensitive
+				if attached db_creator as l_db_creator then
+					l_db_creator.enable_sensitive
 				end
-				if deleting_control /= Void then
-					deleting_control.enable_sensitive
+				if attached deleting_control as l_del_ctrl then
+					l_del_ctrl.enable_sensitive
 				end
 			end
 		end
-			
+
 	delete_after_confirmation
 			-- Ask for confirmation and delete currently displayed table row in the database.
 		require
 			is_activated: is_activated
 		do
-			confirmation_handler.call ([deletion_confirmation (table_description.Table_name), agent delete])
+			if attached confirmation_handler as l_conf_handler and attached table_description as l_descr then
+				l_conf_handler.call ([deletion_confirmation (l_descr.Table_name), agent delete])
+			end
 		end
 
 	delete
@@ -658,9 +676,17 @@ feature {NONE} -- Basic operations
 		do
 			database_handler.delete_tablerow (tablerow_set.item)
 			if database_handler.has_error then
-				warning_handler.call ([database_handler.error_message])
+				if attached warning_handler as l_warn_handler then
+					if attached database_handler.error_message as l_msg then
+						l_warn_handler.call ([l_msg])
+					else
+						l_warn_handler.call (["Unknown error"])
+					end
+				end
 			else
-				status_handler.call ([deletion_done (table_description.Table_name)])
+						if attached status_handler as l_handler and attached table_description as l_descr then
+					l_handler.call ([deletion_done (l_descr.Table_name)])
+				end
 				refresh_from_database
 			end
 		end
@@ -669,18 +695,30 @@ feature {NONE} -- Basic operations
 			-- Write currently displayed table row in the database.
 		require
 			is_activated: is_activated
+		local
+			l_updated_table_row: detachable DB_TABLE
 		do
-			db_fields_component.update_tablerow (tablerow_set.item)
-			if db_fields_component.is_update_valid then
-				database_handler.update_tablerow (db_fields_component.updated_tablerow)
-				if database_handler.has_error then
-					warning_handler.call ([database_handler.error_message])
-				else
-					status_handler.call ([update_done (table_description.Table_name)])
-					refresh_from_database
+			if attached db_fields_component as l_comp then
+				l_updated_table_row := l_comp.updated_tablerow (tablerow_set.item)
+				if l_updated_table_row /= Void then
+					database_handler.update_tablerow (l_updated_table_row)
+					if database_handler.has_error then
+						if attached warning_handler as l_warn_handler then
+							if attached database_handler.error_message as l_msg then
+								l_warn_handler.call ([l_msg])
+							else
+								l_warn_handler.call (["Unknown error"])
+							end
+						end
+					else
+						if attached status_handler as l_handler and attached table_description as l_descr then
+							l_handler.call ([update_done (l_descr.Table_name)])
+						end
+						refresh_from_database
+					end
+				elseif attached warning_handler as l_warn_handler then
+					l_warn_handler.call ([l_comp.error_message])
 				end
-			else
-				warning_handler.call ([db_fields_component.error_message])
 			end
 		end
 
@@ -689,14 +727,14 @@ feature {NONE} -- Basic operations
 		require
 			is_activated: is_activated
 		do
-			if db_tablerow_navigator /= Void then
-				db_tablerow_navigator.refresh
+			if attached db_tablerow_navigator as l_nav then
+				l_nav.refresh
 			end
-			if db_fields_component /= Void then
+			if attached db_fields_component as l_comp then
 				if tablerow_set.is_empty then
-					db_fields_component.clear
+					l_comp.clear
 				else
-					db_fields_component.refresh (tablerow_set.item.table_description)
+					l_comp.refresh (tablerow_set.item.table_description)
 				end
 			end
 			update_controls_sensitiveness
@@ -744,14 +782,14 @@ feature {NONE} -- Basic operations
 		require
 			not_activated: not is_activated
 		do
-			if status_handler_set and then not comp.status_handler_set then
-				comp.set_status_handler (status_handler)
+			if attached status_handler as l_status_handler and then not comp.status_handler_set then
+				comp.set_status_handler (l_status_handler)
 			end
-			if warning_handler_set and then not comp.warning_handler_set then
-				comp.set_warning_handler (warning_handler)
+			if attached warning_handler as l_warn_handler and then not comp.warning_handler_set then
+				comp.set_warning_handler (l_warn_handler)
 			end
-			if confirmation_handler_set and then not comp.confirmation_handler_set then
-				comp.set_confirmation_handler (confirmation_handler)
+			if attached confirmation_handler as l_conf_handler and then not comp.confirmation_handler_set then
+				comp.set_confirmation_handler (l_conf_handler)
 			end
 		end
 
@@ -787,14 +825,14 @@ invariant
 	top_is_not_cleared: is_topcomponent implies not is_cleared
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

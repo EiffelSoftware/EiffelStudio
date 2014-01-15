@@ -40,7 +40,11 @@ feature -- Test routines
 				assert ("Could not connect to database", False)
 			else
 				extended_select_load_data
-				basic_select_make_selection
+				if not is_oracle then
+					basic_select_make_selection
+				else
+					oracle_change
+				end
 			end
 			disconnect
 		end
@@ -93,7 +97,7 @@ feature {NONE} -- Test procedure
 			end
 
 			if is_oracle then
-				execute_query ({STRING_32} "insert into DB_TEST_PROCEDURE_TABLE (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('面向对象软件构造', 'Bertrand Meyer', to_date ('1986', 'YYYY'), 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
+				execute_query ({STRING_32} "insert into DB_TEST_PROCEDURE_TABLE (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('Name to replace', 'Bertrand Meyer', to_date ('1986', 'YYYY'), 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
 			end
 
 			if is_sybase then
@@ -114,7 +118,10 @@ feature {NONE} -- Test procedure
 				-- Recreate the procedure
 			create Result.make (procedure_name)
 			Result.load
-			if attached a_arg_names as l_agrs and then not l_agrs.is_empty then
+			if
+				attached a_arg_names and then not a_arg_names.is_empty and
+				attached a_args_type and then not a_args_type.is_empty
+			then
 				Result.set_arguments_32 (a_arg_names, a_args_type)
 			end
 			Result.store (a_text)
@@ -136,7 +143,6 @@ feature {NONE} -- Test procedure
 			l_proc := prepare_procedure (procedure_name, basic_select_select_data,
 				 <<"a_title", "a_author", "a_year", "a_int_16", "a_int_32", "a_int_64", "a_real_32_t", "a_real_64_t", "a_numeric_t">>,
 				 <<l_object.title, l_object.author, l_object.year, l_object.int_16, l_object.int_32, l_object.int_64, l_object.real_32_t, l_object.real_64_t, l_object.numeric_t>>)
-
 			if l_proc.exists then
 
 				db_selection.set_map_name (l_object.title, "a_title")
@@ -150,6 +156,8 @@ feature {NONE} -- Test procedure
 				db_selection.set_map_name (l_object.numeric_t, "a_numeric_t")
 
 				l_proc.execute (db_selection)
+				assert ("Has no error", l_proc.is_ok)
+
 				l_list := load_list_with_selection (db_selection, l_object)
 
 				assert ("Result is expected", l_list.count = 1)
@@ -168,6 +176,41 @@ feature {NONE} -- Test procedure
 			end
 		end
 
+	oracle_change
+			-- Oracle does not support selection in stored procedure.
+			-- We test it using a change.
+		local
+			l_list: ARRAYED_LIST [like create_data]
+			l_proc: DB_PROC
+			l_object: like create_data
+		do
+			l_object := create_data
+			l_proc := prepare_procedure (procedure_name, basic_select_select_data,
+				 <<"a_title">>,
+				 <<l_object.title>>)
+
+					-- Oracle does not support Unicode at the moment.
+			l_object.set_title ("Object-Oriented Software Construction")
+
+			if l_proc.exists then
+
+				db_change.set_map_name (l_object.title, "a_title")
+
+				l_proc.execute (db_change)
+				assert ("Has no error", l_proc.is_ok)
+
+				db_selection.set_query (oracle_query_string)
+				db_selection.execute_query
+				l_list := load_list_with_selection (db_selection, l_object)
+
+				assert ("Result is expected", l_list.count = 1)
+				if is_oracle then
+					assert ("Title changed", l_list.first.title.same_string ("Object-Oriented Software Construction"))
+				end
+			else
+				assert ("Procedure does not exist.", False)
+			end
+		end
 
 	load_list_with_selection (a_selection: DB_SELECTION; an_obj: ANY): ARRAYED_LIST [like an_obj]
 			-- Load list of objects whose type are the same as `an_obj',
@@ -206,10 +249,14 @@ feature {NONE} -- Implementation
 		once
 			if is_mysql then
 				Result := "SELECT * from DB_TEST_PROCEDURE_TABLE where title=a_title AND author=a_author AND year=a_year AND int_16=a_int_16 AND int_32=a_int_32 AND int_64=a_int_64 AND real_32_t=a_real_32_t AND real_64_t=a_real_64_t AND numeric_t=a_numeric_t"
+			elseif is_oracle then
+				Result := "UPDATE DB_TEST_PROCEDURE_TABLE set title=a_title"
 			else
 				Result := "SELECT * from " + sql_table_name (table_name) + " where title=:a_title AND author=:a_author AND year=:a_year AND int_16=:a_int_16 AND int_32=:a_int_32 AND int_64=:a_int_64 AND real_32_t=:a_real_32_t AND real_64_t=:a_real_64_t AND numeric_t=:a_numeric_t"
 			end
 		end
+
+	oracle_query_string: STRING = "SELECT * FROM DB_TEST_PROCEDURE_TABLE"
 
 	table_name: STRING = "DB_TEST_PROCEDURE_TABLE"
 

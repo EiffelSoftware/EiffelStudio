@@ -34,7 +34,7 @@ feature -- Status report
 
 feature {DV_COMPONENT} -- Access
 
-	db_table_component: DV_TABLE_COMPONENT
+	db_table_component: detachable DV_TABLE_COMPONENT
 			-- Table component where the created table
 			-- row will be displayed.
 
@@ -77,25 +77,25 @@ feature {DV_COMPONENT} -- Basic operations
 		require
 			is_activated: is_activated
 			not_void: calling_fkey_val /= Void
-			is_dependent: db_table_component.is_dependent
+			is_dependent: attached db_table_component as l_comp and then l_comp.is_dependent
 		do
 			calling_fkey_value := calling_fkey_val
 		end
 
 feature {NONE} -- Implementation
 
-	calling_fkey_value: ANY;
+	calling_fkey_value: detachable ANY;
 			-- Current calling component table row ID.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

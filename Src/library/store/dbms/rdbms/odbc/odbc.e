@@ -1370,108 +1370,69 @@ feature {NONE} -- External features
 					type := -1
 					l_string := ht_order.item
 					l_any := uht.item (l_string)
-					check l_any /= Void end -- FIXME: bug here?
-					if obj_is_string (l_any) then
+					if l_any = Void then
+							-- Value was not found, should we attempt to insert NULL?
+					elseif attached {READABLE_STRING_8} l_any as l_val_string then
 						type := c_string_type
-						if attached {READABLE_STRING_8} l_any as l_val_string then
-							create l_c_string.make (l_val_string)
-							pointers.extend (l_c_string.item)
-							l_value_count := l_c_string.bytes_count
-							l_managed_pointer := l_c_string.managed_data
-						else
-							check False end -- implied by `obj_is_string (l_any)'
-						end
-					elseif obj_is_string_32 (l_any) then
+						create l_c_string.make (l_val_string)
+						pointers.extend (l_c_string.item)
+						l_value_count := l_c_string.bytes_count
+						l_managed_pointer := l_c_string.managed_data
+					elseif attached {READABLE_STRING_32} l_any as l_string_32 then
 						type := c_wstring_type
-						if attached {READABLE_STRING_32} l_any as l_string_32 then
-							create l_sql_string.make (l_string_32)
-							pointers.extend (l_sql_string.item)
-							l_value_count := l_sql_string.bytes_count
-							l_managed_pointer := l_sql_string.managed_data
-						else
-							check False end -- implied by `obj_is_string (l_any)'
-						end
-					elseif obj_is_integer (l_any) then
+						create l_sql_string.make (l_string_32)
+						pointers.extend (l_sql_string.item)
+						l_value_count := l_sql_string.bytes_count
+						l_managed_pointer := l_sql_string.managed_data
+					elseif attached {INTEGER_32_REF} l_any as l_val_int then
 						type := c_integer_type
-						if attached {INTEGER_REF} l_any as l_val_int then
-							create l_managed_pointer.make (l_platform.integer_32_bytes)
-							l_managed_pointer.put_integer_32 (l_val_int.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_32_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_integer_16 (l_any) then
+						create l_managed_pointer.make (l_platform.integer_32_bytes)
+						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_32_bytes
+					elseif attached {INTEGER_16_REF} l_any as l_val_int16 then
 						type := c_integer_16_type
-						if attached {INTEGER_16_REF} l_any as l_val_int16 then
-							create l_managed_pointer.make (l_platform.integer_16_bytes)
-							l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_16_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_integer_64 (l_any) then
+						create l_managed_pointer.make (l_platform.integer_16_bytes)
+						l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_16_bytes
+					elseif attached {INTEGER_64_REF} l_any as l_val_int64 then
 						type := c_integer_64_type
-						if attached {INTEGER_64_REF} l_any as l_val_int64 then
-							create l_managed_pointer.make (l_platform.integer_64_bytes)
-							l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.integer_64_bytes
-						else
-							check False end -- implied by `obj_is_integer (l_any)'
-						end
-					elseif obj_is_date (l_any) then
+						create l_managed_pointer.make (l_platform.integer_64_bytes)
+						l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.integer_64_bytes
+					elseif attached {DATE_TIME} l_any as l_tmp_date then
 						type := c_date_type
-						if attached {DATE_TIME} l_any as l_tmp_date then
-							tmp_date := l_tmp_date
-							create l_managed_pointer.make (c_timestamp_struct_size)
-							odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-								 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-							l_value_count := c_timestamp_struct_size
-						else
-							check False end -- implied by `obj_is_date (l_any)'
-						end
-					elseif obj_is_double (l_any) then
+						tmp_date := l_tmp_date
+						create l_managed_pointer.make (c_timestamp_struct_size)
+						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
+							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
+						l_value_count := c_timestamp_struct_size
+					elseif attached {REAL_64_REF} l_any as l_val_double then
 						type := c_float_type
-						if attached {DOUBLE_REF} l_any as l_val_double then
-							create l_managed_pointer.make (l_platform.real_64_bytes)
-							l_managed_pointer.put_real_64 (l_val_double.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.real_64_bytes
-						else
-							check False end -- implied by `obj_is_double (l_any)'
-						end
-					elseif obj_is_real (l_any) then
+						create l_managed_pointer.make (l_platform.real_64_bytes)
+						l_managed_pointer.put_real_64 (l_val_double.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.real_64_bytes
+					elseif attached {REAL_32_REF} l_any as l_val_real then
 						type := c_real_type
-						if attached {REAL_REF} l_any as l_val_real then
-							create l_managed_pointer.make (l_platform.real_32_bytes)
-							l_managed_pointer.put_real_32 (l_val_real.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.real_32_bytes
-						else
-							check False end -- implied by `obj_is_real (l_any)'
-						end
-					elseif obj_is_character (l_any) then
+						create l_managed_pointer.make (l_platform.real_32_bytes)
+						l_managed_pointer.put_real_32 (l_val_real.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.real_32_bytes
+					elseif attached {CHARACTER_8_REF} l_any as l_val_char then
 						type := c_character_type
-						if attached {CHARACTER_REF} l_any as l_val_char then
-							create l_managed_pointer.make (l_platform.character_8_bytes)
-							l_managed_pointer.put_character (l_val_char.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.character_8_bytes
-						else
-							check False end -- implied by `obj_is_character (l_any)'
-						end
-					elseif obj_is_boolean (l_any) then
+						create l_managed_pointer.make (l_platform.character_8_bytes)
+						l_managed_pointer.put_character (l_val_char.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.character_8_bytes
+					elseif attached {BOOLEAN_REF} l_any as l_val_bool  then
 						type := c_boolean_type
-						if attached {BOOLEAN_REF} l_any as l_val_bool  then
-							create l_managed_pointer.make (l_platform.boolean_bytes)
-							l_managed_pointer.put_boolean (l_val_bool.item, 0)
-							pointers.extend (l_managed_pointer.item)
-							l_value_count := l_platform.boolean_bytes
-						else
-							check False end -- implied by `obj_is_boolean (l_any)'
-						end
+						create l_managed_pointer.make (l_platform.boolean_bytes)
+						l_managed_pointer.put_boolean (l_val_bool.item, 0)
+						pointers.extend (l_managed_pointer.item)
+						l_value_count := l_platform.boolean_bytes
 					elseif is_decimal_used and then obj_is_decimal (l_any) then
 						type := c_decimal_type
 						l_decimal_t := convert_to_decimal (l_any)
@@ -1602,76 +1563,6 @@ feature {NONE} -- External features
 			"C inline use %"sql.h%""
 		alias
 			"sizeof(SQL_NUMERIC_STRUCT)"
-		end
-
-	obj_is_integer (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_REF} obj
-		end
-
-	obj_is_integer_16 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_16_REF} obj
-		end
-
-	obj_is_integer_64 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {INTEGER_64_REF} obj
-		end
-
-	obj_is_real (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {REAL_REF} obj
-		end
-
-	obj_is_double (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {DOUBLE_REF} obj
-		end
-
-	obj_is_string (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {READABLE_STRING_8} obj
-		end
-
-	obj_is_string_32 (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {READABLE_STRING_32} obj
-		end
-
-	obj_is_character (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {CHARACTER_REF} obj
-		end
-
-	obj_is_boolean (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {BOOLEAN_REF} obj
-		end
-
-	obj_is_date (obj: ANY): BOOLEAN
-		require
-			argument_not_null: obj /= Void
-		do
-			Result := attached {DATE_TIME} obj
 		end
 
 	obj_is_decimal (obj: ANY): BOOLEAN

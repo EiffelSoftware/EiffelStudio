@@ -1,5 +1,5 @@
 test_name 	pretty-loop-invariant
-test_description Comments between features within one section should have consistent indentation.
+test_description A loop using an invariant does not pretty print correctly and the invariant keyword is stuck to the last instruction of the `from' part instead of being on a new line.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

@@ -11,6 +11,8 @@ class
 	TEST_MEMEORY_LEAK
 
 inherit
+	EV_VISION2_TEST_SET
+
 	EQA_TEST_SET
 		redefine
 			on_prepare
@@ -36,13 +38,61 @@ feature -- Test routines
 
 	test_memory_leak
 			-- New test routine
-		local
-			l_app: RIBBON_APPLICATION
 		do
-			create l_app.make_and_launch
+			run_test (agent perform_memory_leak)
 		end
 
 feature {NONE} -- Implementation
+
+	perform_memory_leak
+		local
+			main_window: MAIN_WINDOW
+		do
+			create main_window
+			main_window.set_title ("Do not close me, close the other one.")
+
+				-- Test `enabled' and `set_enabled', when the window is not shown.
+			main_window.application_menu.menu_group_1.button_3.set_enabled (True)
+			assert_32 ("Button 3 is enabled", main_window.application_menu.menu_group_1.button_3.is_enabled)
+			main_window.application_menu.menu_group_1.button_3.set_enabled (False)
+			assert_32 ("Button3 is disabled", not main_window.application_menu.menu_group_1.button_3.is_enabled)
+
+			main_window.show
+
+			process_events
+
+			check_leaks
+		end
+
+	check_leaks
+			-- Check leaks
+		do
+			memory.full_collect
+			ensure_remaining_one_object_of_type (({detachable RIBBON_1}).type_id)
+			ensure_remaining_one_object_of_type (({detachable MAIN_WINDOW}).type_id)
+			ensure_remaining_one_object_of_type (({detachable TAB_1}).type_id)
+			ensure_remaining_one_object_of_type (({detachable BUTTON_1}).type_id)
+			ensure_remaining_one_object_of_type (({detachable BUTTON_2}).type_id)
+			ensure_remaining_one_object_of_type (({detachable GROUP_1}).type_id)
+			ensure_remaining_one_object_of_type (({detachable EV_RIBBON_TITLED_WINDOW_IMP}).type_id)
+		end
+
+	ensure_remaining_one_object_of_type (a_type: INTEGER)
+			-- Ensure that only one object of `a_type' is left in the system
+			-- Otherwise raise an exception
+		local
+			l_list: detachable ARRAYED_LIST [ANY]
+		do
+			l_list := memory.memory_map.item (a_type)
+			if l_list /= Void then
+				if l_list.count /= 1 then
+						-- Only one object is left
+					(create {DEVELOPER_EXCEPTION}).raise
+				end
+			else
+				(create {DEVELOPER_EXCEPTION}).raise
+			end
+		end
 
 	dll_des: STRING
 			-- Test folder
@@ -94,6 +144,10 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+	memory: MEMORY
+		once
+			create Result
+		end
 end
 
 

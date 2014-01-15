@@ -15,15 +15,13 @@ inherit
 
 feature {NONE} -- Test switch
 
-	mysql: BOOLEAN = False
+	mysql: BOOLEAN = True
 
 feature -- Tests
 
 	test_query
 			-- Test a simple query.
 		local
-			transaction: PS_TRANSACTION
-
 			query: PS_QUERY [TEST_PERSON]
 			count: INTEGER
 		do
@@ -48,7 +46,6 @@ feature -- Tests
 	test_expanded_override
 			-- Test if a class without a primary key is treated like an expanded type.
 		local
-			transaction: PS_TRANSACTION
 			query: PS_QUERY [TEST_PERSON]
 		do
 			repository.wipe_out
@@ -199,7 +196,7 @@ feature -- Tests
 			transaction: PS_TRANSACTION
 			object: FLAT_CLASS_3
 		do
-			create object.make (42, "value")
+			create object.make (42.123456789, "value")
 			object.set_id (123)
 
 			repository.wipe_out
@@ -215,10 +212,10 @@ feature -- Tests
 			-- be handled as update.
 		local
 			transaction: PS_TRANSACTION
-			object: FLAT_CLASS_3
+			object: FLAT_CLASS_2
 			i: INTEGER
 
-			query: PS_QUERY [FLAT_CLASS_3]
+			query: PS_QUERY [FLAT_CLASS_2]
 		do
 			from
 				i := 1
@@ -263,7 +260,7 @@ feature -- Tests
 		do
 			from
 				i := 1
-				create object.make (42, "value")
+				create object.make (42.123, "value")
 				repository.wipe_out
 				transaction := repository.new_transaction
 			until
@@ -286,7 +283,7 @@ feature -- Tests
 				create control.make_filled (10)
 			loop
 				assert ("same_string_value", cursor.item.string_value ~ object.string_value)
-				assert ("same_int_value", cursor.item.int_value = object.int_value)
+				assert ("same_real_value", cursor.item.real_value = object.real_value)
 				assert ("in_range", 1 <= cursor.item.id and cursor.item.id <= 10)
 				control [cursor.item.id] := True
 				i := i + 1

@@ -87,7 +87,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
-			deleted: enable_expensive_contracts implies objects.for_all (agent check_delete (?, transaction))
+			deleted: enable_expensive_contracts implies across objects as cursor all check_delete (cursor.item, transaction) end
 			transaction_unchanged: transaction.is_active
 		end
 
@@ -113,7 +113,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 			not_readonly: not transaction.is_readonly
 		deferred
 		ensure
-			deleted: enable_expensive_contracts implies collections.for_all (agent check_collection_delete (?, transaction))
+			deleted: enable_expensive_contracts implies across collections as cursor all check_collection_delete (cursor.item, transaction) end
 			transaction_unchanged: transaction.is_active
 		end
 

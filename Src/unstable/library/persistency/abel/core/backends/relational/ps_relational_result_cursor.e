@@ -124,6 +124,9 @@ feature {NONE} -- Implementation
 		local
 			values: PS_SQL_ROW
 			primary: INTEGER
+
+			val: STRING
+			managed: MANAGED_POINTER
 		do
 			across
 				attributes as attribute_cursor
@@ -139,11 +142,25 @@ feature {NONE} -- Implementation
 
 				create item.make (primary, type)
 			loop
+				val := values.at (attribute_cursor.item)
+
+				if type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_32_type then
+					create managed.make ({PLATFORM}.real_32_bytes)
+					managed.put_real_32_be (val.to_real_32, 0)
+					val := managed.read_integer_32_be (0).out
+
+				elseif type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_64_type then
+					create managed.make ({PLATFORM}.real_64_bytes)
+					managed.put_real_64_be (val.to_real_64, 0)
+					val := managed.read_integer_64_be (0).out
+				end
+
+
 				item.add_attribute (
 						-- Attribute name.
 					attribute_cursor.item,
 						-- Attribute value.
-					values.at (attribute_cursor.item),
+					val,
 						-- Runtime type: We return the statically declared type,
 						-- because the backend doesn't support storing the runtime type.
 					type.attribute_type (attribute_cursor.item).name)

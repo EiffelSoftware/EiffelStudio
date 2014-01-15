@@ -73,6 +73,9 @@ feature {PS_ABEL_EXPORT} -- Access
 	item: ANY
 			-- <Precursor>
 
+	read_manager: PS_READ_MANAGER
+			-- The read manager to be used for object retrieval.
+
 feature {PS_ABEL_EXPORT} -- Status report
 
 	after: BOOLEAN
@@ -97,9 +100,6 @@ feature {PS_ABEL_EXPORT} -- Cursor movement
 
 feature {NONE} -- Implementation: Access
 
-
-	read_manager: PS_READ_MANAGER
-			-- The read manager to be used for object retrieval.
 
 	query: PS_ABSTRACT_QUERY [ANY, ANY]
 			-- The query object associated to `Current'.

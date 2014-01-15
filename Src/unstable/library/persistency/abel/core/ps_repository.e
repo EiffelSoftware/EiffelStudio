@@ -160,6 +160,14 @@ feature -- Transactional access
 
 feature -- Disposal
 
+	collect_garbage
+			-- Perform a garbage collection cycle.
+		require
+			no_queries: active_queries.is_empty
+			no_transactions: active_transactions.is_empty
+		deferred
+		end
+
 	close
 			-- Close the current repository.
 		deferred

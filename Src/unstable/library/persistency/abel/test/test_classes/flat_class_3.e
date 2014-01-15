@@ -20,7 +20,7 @@ feature
 
 	id: INTEGER
 
-	int_value: INTEGER
+	real_value: REAL_32
 
 	string_value: STRING
 
@@ -34,14 +34,14 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := id.out + ", " + int_value.out + ", " + string_value + "%N"
+			Result := id.out + ", " + real_value.out + ", " + string_value + "%N"
 		end
 
 feature {NONE}
 
-	make (int: INTEGER; string: STRING)
+	make (real: REAL_32; string: STRING)
 		do
-			int_value := int
+			real_value := real
 			string_value := string
 		end
 

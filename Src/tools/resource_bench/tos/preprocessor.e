@@ -23,11 +23,11 @@ feature	-- Initialization
 		require
 			a_output_file_not_void: a_output_file /= Void
 			a_output_file_exists: a_output_file.exists
-			a_output_file_is_open: a_output_file.is_open_write		
+			a_output_file_is_open: a_output_file.is_open_write
 		do
 			set_output_file (a_output_file)
 			create define_table.make (20)
-			
+
 			create condition_stack.make
 			condition_stack.extend (true)
 
@@ -49,7 +49,7 @@ feature -- Element change
 		require
 			a_output_file_not_void: a_output_file /= Void
 			a_output_file_exists: a_output_file.exists
-			a_output_file_is_open: a_output_file.is_open_write		
+			a_output_file_is_open: a_output_file.is_open_write
 		do
 			output_file := a_output_file
 		ensure
@@ -58,7 +58,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	convert_definition (input_file: STRING)
+	convert_definition (input_file: PATH)
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_Void: input_file /= Void
@@ -70,11 +70,12 @@ feature -- Basic operations
 			output: BOOLEAN
 			char: CHARACTER
 		do
-			create file.make_open_read (input_file)
+			create file.make_with_path (input_file)
+			file.open_read
 
 			from
 				file.start
-			until 
+			until
 				file.after
 
 			loop
@@ -90,7 +91,7 @@ feature -- Basic operations
 					elseif file.last_character = '*' then
 						read_comment (file)
 					else
-						display_error	
+						display_error
 					end
 				elseif char = '#' then
 					scan_directives (file)
@@ -104,7 +105,7 @@ feature -- Basic operations
 						end
 					else
 						if char /= '%N' then
-							file.next_line	
+							file.next_line
 						end
 					end
 				end
@@ -120,14 +121,14 @@ feature -- Basic operations
 
 feature -- Status report
 
-	file_exists (filename: STRING): BOOLEAN
+	file_exists (filename: PATH): BOOLEAN
 			-- Check if a file with filename exists
 		require
 			filename_not_void: filename /= Void
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			create a_file.make (filename)
+			create a_file.make_with_path (filename)
 			Result := a_file.exists
 		end
 
@@ -157,7 +158,7 @@ feature -- Implementation
 				name := a_file.last_string.twin
 				a_file.read_line
 				expression := a_file.last_string.twin
-				
+
 				if old_level then
 					create couple.make (name, expression)
 					define_table.put (couple, name)
@@ -179,9 +180,9 @@ feature -- Implementation
 				else
 					new_level := false
 				end
-				
+
 				condition_stack.extend (new_level)
-                                                                                                
+
 			elseif a_file.last_string.is_equal ("ifndef") then
 				a_file.read_word
 				name := a_file.last_string.twin
@@ -192,7 +193,7 @@ feature -- Implementation
 				else
 					new_level := old_level
 				end
-				
+
 				condition_stack.extend (new_level)
 
 			elseif a_file.last_string.is_equal ("else") then
@@ -218,12 +219,12 @@ feature -- Implementation
 			elseif a_file.last_string.is_equal ("endif") then
 				a_file.next_line
 				condition_stack.remove
-		
+
 			elseif a_file.last_string.is_equal ("include") then
-				if old_level then	
+				if old_level then
 					a_file.read_word
 					name := a_file.last_string.twin
-	
+
 					if name.item (1) = '%"' then
 						if file_exists (make_path (name)) then
 							actual_path.extend (actual_path.item)
@@ -259,27 +260,25 @@ feature -- Implementation
 	extract_name (a_name: STRING): STRING
 			-- Extract the contained name of `a_name'.
 		require
-			a_name_exists: a_name /= Void and then a_name.count > 0 
+			a_name_exists: a_name /= Void and then a_name.count > 0
 		do
 			Result := a_name.twin
-			Result.keep_head (a_name.count -1)
+			Result.keep_head (a_name.count - 1)
 			Result.keep_tail (a_name.count - 2)
 		ensure
 			Result_exists: Result /= Void and then Result.count = a_name.count - 2
 		end
 
-	make_path (a_name: STRING): STRING
+	make_path (a_name: STRING): PATH
 			-- Create a path to the file `a_name'.
 		require
-			a_name_exists: a_name /= Void and then a_name.count > 0 
+			a_name_exists: a_name /= Void and then not a_name.is_empty
 			actual_path_not_void: actual_path.item /= Void
 		do
-			create Result.make (64)
-			Result.append (actual_path.item)
-			Result.append ("\")
-			Result.append (extract_name (a_name))
-		ensure
-			Result_exists: Result /= Void and then Result.count > 0
+			create Result.make_from_string (actual_path.item)
+			Result := Result.extended (extract_name (a_name))
+			ensure
+			Result_exists: Result /= Void and then not Result.is_empty
 		end
 
 	display_error
@@ -298,7 +297,7 @@ feature -- Implementation
 			finish: BOOLEAN
 		do
 			from
-			until 
+			until
 				finish or a_file.after
 			loop
 				a_file.read_character
@@ -332,7 +331,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -345,22 +344,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class PREPROCESSOR
 

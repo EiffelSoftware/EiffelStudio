@@ -5,7 +5,7 @@ note
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	TDS_CONTROL_STATEMENT
 
@@ -41,7 +41,7 @@ feature -- Initialization
 		end
 
 feature	-- Access
-	
+
 	text: STRING
 			-- Text of the control statement.
 
@@ -207,7 +207,7 @@ feature -- Element change
 			-- Set `is_wel_code_on' to`a_value'.
 		do
 			is_wel_code_on := a_value
-		ensure 
+		ensure
 			is_wel_code_on_set: is_wel_code_on = a_value
 		end
 
@@ -241,7 +241,7 @@ feature -- Element change
 				set_variable_name(id.to_variable_style)
 			end
 		end
-	
+
 	set_type (a_type: INTEGER)
 			-- Set `type' to `a_type'.
 		do
@@ -253,7 +253,7 @@ feature -- Element change
 	set_variable_name (a_name: STRING)
 			-- Set `variable_name' to `a_name'.
 		require
-			a_name_not_void: a_name /= Void 
+			a_name_not_void: a_name /= Void
 			a_name_exists: a_name.count > 0
 		do
 			if variable_name = Void then
@@ -264,14 +264,14 @@ feature -- Element change
 				end
 			end
 		ensure
-			variable_name_set: variable_name.count >= a_name.count
+			variable_name_set: (old variable_name = Void) implies (variable_name.count >= a_name.count)
 		end
 
 	insert (a_control: like Current)
 		do
 			extend (a_control)
 		end
-		
+
 feature -- Code generation
 
 	display
@@ -293,7 +293,7 @@ feature -- Code generation
 		do
 			from
 				start
-			until 
+			until
 				after
 			loop
 				if item.is_wel_code_on then
@@ -314,7 +314,7 @@ feature -- Code generation
 		do
 			from
 				start
-			until 
+			until
 				after
 			loop
 				if item.is_wel_code_on then
@@ -340,7 +340,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -353,22 +353,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class TDS_CONTROL_STATEMENT
 

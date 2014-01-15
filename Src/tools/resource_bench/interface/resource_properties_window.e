@@ -11,8 +11,6 @@ class
 
 inherit
 	WEL_CONTROL_WINDOW
-		rename
-			make_with_coordinates as old_make
 		redefine
 			class_background,
 			class_name,
@@ -39,18 +37,6 @@ inherit
 create
 	make_with_coordinates
 
-feature
-
-	make_with_coordinates (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER)
-			-- Make the window as a child of `a_parent' and
-			-- `a_name' as a title.
-		do
-			old_make (a_parent , a_name, a_x, a_y, a_width, a_height)
-			parent_window ?= a_parent
-		ensure
-			parent_window_set: parent_window = a_parent
-		end
-
 feature -- Access
 
 	current_resource: TDS_RESOURCE
@@ -76,7 +62,7 @@ feature -- Behavior
 			icon: WEL_ICON
 			bitmap_resource: TDS_BITMAP
 			cursor_resource: TDS_CURSOR
-			icon_resource: TDS_icon
+			icon_resource: TDS_ICON
 			dib: WEL_DIB
 			file: RAW_FILE
 			filename: FILE_NAME
@@ -154,9 +140,6 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	parent_window: MAIN_WINDOW
-			-- Parent of the client.
-
 	error_message: STRING
 			-- Error string message.
 		once
@@ -164,7 +147,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,21 +160,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
 end -- class CLIENT_WINDOW

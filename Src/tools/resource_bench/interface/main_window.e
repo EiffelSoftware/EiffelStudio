@@ -32,6 +32,9 @@ inherit
 	INTERFACE_MANAGER
 
 	EXECUTION_ENVIRONMENT
+		rename
+			item as item_env
+		end
 
 	TDS_DEFINE_TABLE
 
@@ -52,11 +55,11 @@ inherit
 			{NONE} all
 		end
 
-    	WEL_TB_STYLE_CONSTANTS						       
+    	WEL_TB_STYLE_CONSTANTS
     		export
     			{NONE} all
     		end
-    
+
     	WEL_TB_STATE_CONSTANTS
     		export
     			{NONE} all
@@ -132,7 +135,7 @@ feature {NONE} -- Initialization
 
 				-- Create client.
 			create client_window.make (Current, "Client Window")
-	
+
 				-- Create the menu bar.
 			set_menu (main_menu)
 			main_menu.disable_item (Cmd_file_new)
@@ -143,8 +146,8 @@ feature {NONE} -- Initialization
 
 			create cursor.make_by_predefined_id (Idc_arrow)
 			cursor.set
-			
-			set_application_directory (current_working_directory)
+
+			set_application_directory (current_working_path)
 
 			show
 			create_analyzer (Current)
@@ -164,12 +167,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-        client_window: CLIENT_WINDOW
-			-- Window inside client area
-			-- minus toolbar and status window.
+	client_window: CLIENT_WINDOW
+		-- Window inside client area
+		-- minus toolbar and status window.
 
-        status_window: WEL_STATUS_WINDOW
-			-- Status window of main window.
+	status_window: WEL_STATUS_WINDOW
+		-- Status window of main window.
 
 	tree_view: WEL_TREE_VIEW
 			-- Tree view control.
@@ -213,7 +216,7 @@ feature -- Access
     			-- Create the buttons for the toolbar
     		local
     			button: WEL_TOOL_BAR_BUTTON
-    		once    
+    		once
     			create Result.make (0, 5)
 
     			create button.make_separator
@@ -243,7 +246,7 @@ feature -- Behavior
 
 	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
-			tt1: WEL_TOOLTIP_TEXT 
+			tt1: WEL_TOOLTIP_TEXT
 		do
 			if info.code = Ttn_needtext then
 					-- Set resource string id.
@@ -276,7 +279,7 @@ feature -- Behavior
 						client_rect.width, client_rect.height -
 						tool_bar.height - status_window.height, True)
 				end
-		
+
 				if (tree_view /= Void) then
 					tree_view.move_and_resize (-1, -1,
 						250,
@@ -302,7 +305,7 @@ feature -- Behavior
 				a_menu_id
 
 			when Cmd_file_new then
-                        
+
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
@@ -351,7 +354,7 @@ feature -- Behavior
 					tool_bar.disable_button (Cmd_build_wel_code)
 				else
 					interface.display_text (std_error, "No current project.")
-				end		
+				end
 
 			when Cmd_file_save_project then
 				if tds /= Void then
@@ -363,7 +366,7 @@ feature -- Behavior
 				else
 					interface.display_text (std_error, "No current project.")
 				end
-				
+
 			when Cmd_file_exit then
 				exit := closeable
 
@@ -387,17 +390,17 @@ feature -- Behavior
 				end
 
 			when Cmd_help_content then
-				set_working_directory (current_working_directory)
-				change_working_directory (application_directory)
+				set_working_directory (current_working_path)
+				change_working_path (application_directory)
 				win_help (Help_file, Help_contents, 0)
-				change_working_directory (working_directory)
+				change_working_path (working_directory)
 
 			when Cmd_help_about_rb then
-				do_about				
+				do_about
 
 			else
-			
-	
+
+
 			end
 		end
 
@@ -493,32 +496,29 @@ feature {NONE} -- Implementation
 			a_open_file_exists: a_open_file /= Void
 		local
 			temp_file: PLAIN_TEXT_FILE
-			temp_filename: STRING
-			folder: DIRECTORY 
+			folder: DIRECTORY
 			preprocessor: PREPROCESSOR
-			filename: STRING
-			directory_name: STRING
+			filename, directory_name, temp_filename: PATH
 		do
 			create cursor.make_by_predefined_id (Idc_wait)
 			cursor.set
 
-			create folder.make (Tmp_directory)
+			create folder.make_with_path (Tmp_directory)
 			If (not folder.exists) then
 				folder.create_dir
 			end
 
-			filename := a_open_file.file_name.twin
+			filename := a_open_file.file_path
 
 				-- Prepare saving of current working directory
 				-- and change to directory where file is opened from
-			create directory_name.make (a_open_file.file_name_offset)
-			directory_name.fill_blank
-			directory_name.subcopy (filename, 1, a_open_file.file_name_offset - 3, 1)
+			directory_name := filename.parent
 			set_working_directory (directory_name)
 
 			temp_filename := Tmp_directory.twin
-			temp_filename.append ("Temp_file.rc")
-			create temp_file.make_open_write (temp_filename)
+			temp_filename := temp_filename.extended ("Temp_file.rc")
+			create temp_file.make_with_path (temp_filename)
+			temp_file.open_write
 
 			create preprocessor.make (temp_file)
 			preprocessor.convert_definition (filename)
@@ -535,9 +535,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not has_error then
-				filename.keep_tail (filename.count - a_open_file.file_name_offset + 1)
-
-				create_tree_view_control (client_window, filename)
+				create_tree_view_control (client_window, filename.entry.name)
 
 				create properties_window.make_with_coordinates (client_window, "Properties Window",
 						tree_view.width -1, -2,
@@ -545,10 +543,10 @@ feature {NONE} -- Implementation
 						client_window.height)
 				client_window.set_properties_window (properties_window)
 				client_window.set_current_resource (Void)
-			end		
+			end
 
 			interface.hide_all
-	
+
 			create cursor.make_by_predefined_id (Idc_arrow)
 			cursor.set
 		end
@@ -597,7 +595,7 @@ feature {NONE} -- Implementation
 	do_exit
 			-- Exit to application.
 		do
-			destroy		
+			destroy
 		end
 
 	create_analyzer (a_parent: WEL_COMPOSITE_WINDOW)
@@ -607,8 +605,8 @@ feature {NONE} -- Implementation
 		local
 			file: RAW_FILE
 		do
-			set_working_directory (current_working_directory)
-			change_working_directory (application_directory)
+			set_working_directory (current_working_path)
+			change_working_path (application_directory)
 
 			create file.make (Grammar_name)
 
@@ -624,12 +622,12 @@ feature {NONE} -- Implementation
 			file.close
 
 			interface.hide_all
-			change_working_directory (working_directory)
+			change_working_path (working_directory)
 		ensure
 			analyzer_not_void: analyzer /= Void
 		end
 
-	create_tree_view_control (a_parent: WEL_COMPOSITE_WINDOW; a_filename: STRING)
+	create_tree_view_control (a_parent: WEL_COMPOSITE_WINDOW; a_filename: READABLE_STRING_GENERAL)
 			-- Create the tree view control corresponding to the analyzed resource script `filename'.
 		require
 			a_filename_exists: a_filename /= Void and then a_filename.count > 0
@@ -665,8 +663,8 @@ feature {NONE} -- Implementation
 			file: PLAIN_TEXT_FILE
 		do
 			create file.make_open_write (a_filename)
-			tds.generate_resource_file (file)	
-			file.close		
+			tds.generate_resource_file (file)
+			file.close
 		end
 
 	do_about
@@ -686,7 +684,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -699,21 +697,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class MAIN_WINDOW

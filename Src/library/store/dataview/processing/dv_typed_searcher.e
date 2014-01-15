@@ -22,6 +22,7 @@ feature -- Initialization
 	make
 			-- Initialization.
 		do
+			create last_criterion_value
 		end
 
 feature -- Access
@@ -103,7 +104,9 @@ feature -- Basic operations
 			is_activated: is_activated
 			user_component_set: user_component_set
 		do
-			db_table_component.display (refresh)
+			if attached db_table_component as l_comp then
+				l_comp.display (refresh)
+			end
 		end
 
 feature {DV_COMPONENT} -- Basic operations
@@ -129,17 +132,33 @@ feature {DV_COMPONENT} -- Basic operations
 		local
 			database_handler: ABSTRACT_DB_TABLE_MANAGER
 		do
-			database_handler := db_table_component.database_handler
-			database_handler.prepare_select_with_table (table_code)
-			if behavior_type = Id_selection or else behavior_type = Qualified_selection then
-				database_handler.add_value_qualifier (criterion, last_criterion_value.out)
-			end
-			database_handler.load_result
-			if database_handler.has_error then
-				db_table_component.warning_handler.call ([database_handler.error_message])
-				create Result.make (0)
+			if attached db_table_component as l_comp then
+				database_handler := l_comp.database_handler
+				database_handler.prepare_select_with_table (table_code)
+				if behavior_type = Id_selection or else behavior_type = Qualified_selection then
+					database_handler.add_value_qualifier (criterion, last_criterion_value.out)
+				end
+				database_handler.load_result
+				if database_handler.has_error then
+					if attached l_comp.warning_handler as l_warn_handler then
+						if attached database_handler.error_message as l_msg then
+							l_warn_handler.call ([l_msg])
+						else
+							l_warn_handler.call (["Unknown error"])
+						end
+					end
+					create Result.make (0)
+				elseif attached database_handler.database_result_list as l_result then
+					Result := l_result
+				else
+					create Result.make (0)
+						-- We should get an error.
+					check False end
+				end
 			else
-				Result := database_handler.database_result_list
+				create Result.make (0)
+					-- We should get an error.
+				check False end
 			end
 		end
 
@@ -148,7 +167,9 @@ feature {DV_COMPONENT} -- Basic operations
 		require
 			is_activated: is_activated
 		do
-			db_table_component.clear
+			if attached db_table_component as l_comp then
+				l_comp.clear
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -167,14 +188,14 @@ feature {NONE} -- Implementation
 	--|||		-- Code of the table ID attribute if behavior is ID selection.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

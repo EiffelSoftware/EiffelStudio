@@ -36,11 +36,10 @@ feature -- Initialization
 			l_session_login: detachable LOGIN [DATABASE]
 		do
 			l_session_login := manager.current_session.session_login
-			if not is_logged_to_base then
+			if l_session_login = Void then
 				create {LOGIN [G]} l_session_login.make
 				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set (user_name, password)
 			l_session_login.set_is_login_by_connection_string (False)
 		ensure
@@ -71,11 +70,10 @@ feature -- Initialization
 			l_session_login: detachable LOGIN [DATABASE]
 		do
 			l_session_login := manager.current_session.session_login
-			if not is_logged_to_base then
+			if l_session_login = Void then
 				create {LOGIN [G]} l_session_login.make
 				manager.current_session.set_session_login (l_session_login)
 			end
-			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set_connection_string (a_connection_string)
 			l_session_login.set_is_login_by_connection_string (True)
 		ensure
@@ -235,14 +233,14 @@ feature {NONE} -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

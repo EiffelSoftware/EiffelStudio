@@ -146,18 +146,15 @@ feature -- Status setting
 			i, pos: INTEGER
 			r_any: detachable ANY
 			tst : BOOLEAN
-			l_map_table: detachable ARRAY [INTEGER]
 			l_db_count: INTEGER
 			l_is_convert_string_type_required: BOOLEAN
 		do
-			if attached {DATABASE_DATA [G]} cursor.data as database_data then
+				-- Does a database field need conversion to an Eiffel object?
+			if attached {DATABASE_DATA [G]} cursor.data as database_data and then attached database_data.map_table as l_map_table then
 				from
 					i := 1
 					l_db_count := database_data.count
 					l_is_convert_string_type_required := db_spec.is_convert_string_type_required
-						-- Does a database field need conversion to an Eiffel object?
-					l_map_table := database_data.map_table
-					check l_map_table /= Void end -- FIXME: implied by ... bug?
 				until
 					i > l_db_count
 				loop
@@ -220,7 +217,7 @@ feature {NONE} -- Implementation
 			-- Internal `affected_row_count'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

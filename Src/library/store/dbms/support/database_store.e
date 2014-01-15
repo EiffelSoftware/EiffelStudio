@@ -86,58 +86,53 @@ feature -- Basic operations
 			temp_descriptor: INTEGER
 			quoter: STRING_32
 			sep: STRING_32
-			l_repository: like repository
-			l_map_table: like map_table
 		do
-			update_map_table (object)
-			create quoter.make(1)
-			create sep.make(1)
-			quoter := db_spec.identifier_quoter
-			sep := db_spec.qualifier_separator
-			sql_string.wipe_out
-			sql_string.append ({STRING_32} "INSERT INTO ")
-			l_repository := repository
-			check l_repository /= Void end -- implied by precondition `owns_repository'
-			if (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0) then
+			if attached repository as l_repository and attached map_table as l_map_table then
+				update_map_table (object)
+				create quoter.make(1)
+				create sep.make(1)
+				quoter := db_spec.identifier_quoter
+				sep := db_spec.qualifier_separator
+				sql_string.wipe_out
+				sql_string.append ({STRING_32} "INSERT INTO ")
+				if (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0) then
+					sql_string.append(quoter)
+					sql_string.append_string_general(l_repository.rep_qualifier)
+					sql_string.append(quoter)
+				end
+				if (l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) then
+					sql_string.append(sep)
+					sql_string.append(quoter)
+					sql_string.append_string_general(l_repository.rep_owner)
+					sql_string.append(quoter)
+				end
+				if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
+					sql_string.append_character ({CHARACTER_32} '.')
+				end
 				sql_string.append(quoter)
-				sql_string.append_string_general(l_repository.rep_qualifier)
+				sql_string.append_string_general (l_repository.repository_name)
 				sql_string.append(quoter)
-			end
-			if (l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) then
-				sql_string.append(sep)
-				sql_string.append(quoter)
-				sql_string.append_string_general(l_repository.rep_owner)
-				sql_string.append(quoter)
-			end
-			if ((l_repository.rep_owner /= Void and then l_repository.rep_owner.count > 0) or (l_repository.rep_qualifier /= Void and then l_repository.rep_qualifier.count > 0)) then
-				sql_string.append_character ({CHARACTER_32} '.')
-			end
-			sql_string.append(quoter)
-			sql_string.append_string_general (l_repository.repository_name)
-			sql_string.append(quoter)
-			l_map_table := map_table
-			check l_map_table /= Void end -- FIXME: implied by ...bug?			
-			sql_string.append_string_general(db_spec.put_column_name(l_repository, l_map_table, object))
-			sql_string.append ({STRING_32} " VALUES ( :XZ7Hj0sb5UU )")
-			set_map_name (object, {STRING_32} "XZ7Hj0sb5UU")
-			tmp_string := parse_32 (sql_string)
-			unset_map_name ({STRING_32} "XZ7Hj0sb5UU")
-			if tmp_string /= Void then
-				temp_descriptor := db_spec.new_descriptor
-				if immediate_execution then
-					db_spec.pre_immediate (temp_descriptor, 0)
-					db_spec.exec_immediate (temp_descriptor, tmp_string)
-				else
-					db_spec.init_order (temp_descriptor, tmp_string)
-					if is_ok then
-						db_spec.start_order (temp_descriptor)
-					end
-					if is_ok then
-						db_spec.terminate_order (temp_descriptor)
+				sql_string.append_string_general(db_spec.put_column_name(l_repository, l_map_table, object))
+				sql_string.append ({STRING_32} " VALUES ( :XZ7Hj0sb5UU )")
+				set_map_name (object, {STRING_32} "XZ7Hj0sb5UU")
+				tmp_string := parse_32 (sql_string)
+				unset_map_name ({STRING_32} "XZ7Hj0sb5UU")
+				if tmp_string /= Void then
+					temp_descriptor := db_spec.new_descriptor
+					if immediate_execution then
+						db_spec.pre_immediate (temp_descriptor, 0)
+						db_spec.exec_immediate (temp_descriptor, tmp_string)
+					else
+						db_spec.init_order (temp_descriptor, tmp_string)
+						if is_ok then
+							db_spec.start_order (temp_descriptor)
+						end
+						if is_ok then
+							db_spec.terminate_order (temp_descriptor)
+						end
 					end
 				end
 			end
-
 		end
 
 	force (obj: ANY)
@@ -162,14 +157,14 @@ feature {NONE} -- Status report
 
 	next_index (k: INTEGER): INTEGER
 			-- Value at k-th index in map table
-		local
-			l_map_table: like map_table
 		do
-			l_map_table := map_table
-			check l_map_table /= Void end -- FIXME: implied by ...bug?
-			Result := l_map_table.item (k)
+			if attached map_table as l_map_table then
+				Result := l_map_table.item (k)
+			else
+				Result := k
+			end
 		ensure then
-			resulting_value: attached map_table as le_map_table and then Result = le_map_table.item (k)
+			resulting_value: attached map_table as le_map_table implies Result = le_map_table.item (k)
 		end
 
 	sql_string: STRING_32
@@ -185,63 +180,61 @@ feature {NONE} -- Status setting
 		require
 			not_void_object: object /= Void
 			not_void_repository: repository /= Void
+			not_void_map_table: map_table /= Void
 		local
 			f, g, ind, idx: INTEGER
 --			colind: INTEGER
-			searched_name: detachable STRING
-			l_repository: like repository
-			l_map_table: like map_table
 		do
-			l_repository := repository
-			check l_repository /= Void end -- implied by precondition `not_void_repository'
-			f := l_repository.dimension
-			g := field_count  (object)
---			if l_table /= Void and then l_table.table_description.identity_column > 0 then
---				colind := l_table.table_description.identity_column			
---				f := f - 1
---				g := g - 1
---			end
+			if attached repository as l_repository and attached map_table as l_map_table then
+				f := l_repository.dimension
+				g := field_count  (object)
+--				if l_table /= Void and then l_table.table_description.identity_column > 0 then
+--					colind := l_table.table_description.identity_column			
+--					f := f - 1
+--					g := g - 1
+--				end
 
-			if
-				previous_type = 0 or else
-				previous_type /= dynamic_type (object)
-			then
-				previous_type := dynamic_type (object)
-				l_map_table := map_table
-				check l_map_table /= Void end -- FIXME: implied by ...bug?
-				l_map_table.clear_all
-				if db_spec.dim_rep_diff (f, g) then
-					make_default_table (g)
-				else
-					if l_map_table.count < f then
-						l_map_table.conservative_resize_with_default (0, 1, f)
-					end
-					from
-						ind := 1
-					until
-						ind > f
-					loop
---						if not (ind = colind) then	
-							searched_name := l_repository.column_name (ind)
-							check searched_name /= Void end -- FIXME: implied by ... bug?
-							searched_name.to_lower
-							from
-								idx := 1
-							until
-								idx > g or else
-								field_name (idx, object).is_equal (searched_name)
-							loop
-								idx := idx + 1
-							end
-							if idx > g then
-								db_spec.update_map_table_error (handle, l_map_table, ind)
-							else
-								l_map_table.put (idx, ind)
-							end
-							ind := ind + 1
---						else
---							ind := ind + 1
---						end
+				if
+					previous_type = 0 or else
+					previous_type /= dynamic_type (object)
+				then
+					previous_type := dynamic_type (object)
+					l_map_table.clear_all
+					if db_spec.dim_rep_diff (f, g) then
+						make_default_table (g)
+					else
+						if l_map_table.count < f then
+							l_map_table.conservative_resize_with_default (0, 1, f)
+						end
+						from
+							ind := 1
+						until
+							ind > f
+						loop
+--							if not (ind = colind) then	
+								if attached l_repository.column_name (ind) as searched_name then
+									searched_name.to_lower
+									from
+										idx := 1
+									until
+										idx > g or else
+										field_name (idx, object).is_equal (searched_name)
+									loop
+										idx := idx + 1
+									end
+								else
+									idx := g + 1
+								end
+								if idx > g then
+									db_spec.update_map_table_error (handle, l_map_table, ind)
+								else
+									l_map_table.put (idx, ind)
+								end
+								ind := ind + 1
+--							else
+--								ind := ind + 1
+--							end
+						end
 					end
 				end
 			end
@@ -273,29 +266,27 @@ feature {NONE} -- Status setting
 	start (object: ANY)
 			-- Set `max_index' to last non zero column rank.
 			-- (Input parameter unused)
-		local
-			l_map_table: like map_table
 		do
-			from
-				l_map_table := map_table
-				check l_map_table /= Void end -- FIXME: implied by ...bug?
-				max_index := l_map_table.count
-			until
-				l_map_table.item (max_index) /= 0
-			loop
-				max_index := max_index - 1
+			if attached map_table as l_map_table then
+				from
+					max_index := l_map_table.count
+				until
+					l_map_table.item (max_index) /= 0
+				loop
+					max_index := max_index - 1
+				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

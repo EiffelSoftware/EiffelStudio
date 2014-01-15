@@ -33,25 +33,19 @@ create
 
 feature -- Initialization
 
-	make
+	make (display_l: DV_TABLEROW_MULTILIST)
 			-- Create the window and the status bar.
-		do
-			default_create
-			close_request_actions.extend (agent hide)
-		end
-
-	set_display_list (display_l: DV_TABLEROW_MULTILIST)
-				-- Set selection list to `display_list'.
 		require
 			not_void: display_l /= Void
 		do
 			display_list := display_l
-		end
+			create selecting_control.make_with_text ("OK")
 
-	set_content
-			-- Set window widgets.
-		do
+			default_create
+
 			create_widgets
+
+			close_request_actions.extend (agent hide)
 		end
 
 feature -- Access
@@ -94,7 +88,6 @@ feature {NONE} -- Implementation
 			create hbox.make
 			hbox.disable_default_expand
 			hbox.extend_cell
-			create selecting_control.make_with_text ("OK")
 			selecting_control.add_action (agent hide)
 			hbox.extend (selecting_control)
 			create cancel_button.make_with_text ("Cancel")
@@ -104,10 +97,6 @@ feature {NONE} -- Implementation
 			container.extend (hbox)
 			container.disable_item_expand (hbox)
 		end
-
-	content: DV_TABLE_COMPONENT
-			-- Component contained in window enabling
-			-- to select data to export.
 
 	display_list: DV_TABLEROW_MULTILIST
 			-- Selection list.	
@@ -119,14 +108,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

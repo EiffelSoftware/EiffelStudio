@@ -33,8 +33,8 @@ feature -- Status report
 	can_be_activated_with_list: BOOLEAN
 			-- Can the component be activated if a display list is set?
 		do
-			Result := db_selectable_component /= Void and then
-					db_selectable_component.table_description /= Void
+			Result := attached db_selectable_component as l_comp and then
+					l_comp.table_description /= Void
 		end
 
 	can_be_activated: BOOLEAN
@@ -60,15 +60,15 @@ feature -- Basic operations
 			-- on DV_TABLE_COMPONENT and DV_SEARCHER.
 		require
 			not_void: display_l /= Void
-				-- If component is already activated, new state, i.e. having a list, 
+				-- If component is already activated, new state, i.e. having a list,
 				-- should verify `can_be_activated'.
-			information_set_for_list_if_activated: is_activated implies can_be_activated_with_list 
+			information_set_for_list_if_activated: is_activated implies can_be_activated_with_list
 		do
 			display_list := display_l
 			if is_activated then
 						-- `has_select_action' doesn't work...
-				if not display_list.has_select_action (agent list_select_actions) then
-					display_list.extend_select_actions (agent list_select_actions)
+				if not display_l.has_select_action (agent list_select_actions) then
+					display_l.extend_select_actions (agent list_select_actions)
 				end
 			end
 		ensure
@@ -84,7 +84,7 @@ feature -- Basic operations
 			not_void: list_edition_ctrl /= Void
 		do
 			list_edition_control := list_edition_ctrl
-			list_edition_control.disable_sensitive
+			list_edition_ctrl.disable_sensitive
 		end
 
 	set_previous_control (previous_ctrl: DV_SENSITIVE_CONTROL)
@@ -93,8 +93,8 @@ feature -- Basic operations
 			not_void: previous_ctrl /= Void
 		do
 			previous_control := previous_ctrl
-			previous_control.set_action (agent previous)
-			previous_control.disable_sensitive
+			previous_ctrl.set_action (agent previous)
+			previous_ctrl.disable_sensitive
 		end
 
 	set_next_control (next_ctrl: DV_SENSITIVE_CONTROL)
@@ -103,8 +103,8 @@ feature -- Basic operations
 			not_void: next_ctrl /= Void
 		do
 			next_control := next_ctrl
-			next_control.set_action (agent next)
-			next_control.disable_sensitive
+			next_ctrl.set_action (agent next)
+			next_ctrl.disable_sensitive
 		end
 
 	reactivate
@@ -113,15 +113,15 @@ feature -- Basic operations
 		do
 			if not is_activated then
 				activate
-			elseif display_list /= Void then
-				display_list.set_tablecode (db_selectable_component.table_description.Table_code)
-				display_list.build
+			elseif attached display_list as l_display_list and then attached db_selectable_component as l_comp and then attached l_comp.table_description as l_descr then
+				l_display_list.set_tablecode (l_descr.Table_code)
+				l_display_list.build
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	display_list: DV_TABLEROW_LIST
+	display_list: detachable DV_TABLEROW_LIST
 			-- Displayed list of table rows.
 
 	refresh
@@ -130,19 +130,21 @@ feature {NONE} -- Implementation
 		local
 			tablerow_set: ARRAYED_LIST [DB_TABLE]
 		do
-			tablerow_set := db_selectable_component.selected_tablerows
-			if display_list /= Void then
-				display_list.refresh (tablerow_set)
-			end
-			if not tablerow_set.is_empty then
-				if list_edition_control /= Void and then tablerow_set.count > 1 then
-					list_edition_control.activate
+			if attached db_selectable_component as l_comp then
+				tablerow_set := l_comp.selected_tablerows
+				if attached display_list as l_display_list then
+					l_display_list.refresh (tablerow_set)
 				end
-				update_controls_sensitive
-			else
-				disable_controls_sensitive
-				if list_edition_control /= Void then
-					list_edition_control.disable_sensitive
+				if not tablerow_set.is_empty then
+					if attached list_edition_control as l_list_ctrl and then tablerow_set.count > 1 then
+						l_list_ctrl.activate
+					end
+					update_controls_sensitive
+				else
+					disable_controls_sensitive
+					if attached list_edition_control as l_list_ctrl then
+						l_list_ctrl.disable_sensitive
+					end
 				end
 			end
 		end
@@ -150,12 +152,12 @@ feature {NONE} -- Implementation
 	activate
 			-- Build display.
 		do
-			if display_list /= Void then
-				display_list.extend_select_actions (agent list_select_actions)
-				if not display_list.information_set then
-					display_list.set_tablecode (db_selectable_component.table_description.Table_code)
+			if attached display_list as l_display_list then
+				l_display_list.extend_select_actions (agent list_select_actions)
+				if not l_display_list.information_set and then attached db_selectable_component as l_comp and then attached l_comp.table_description as l_descr then
+					l_display_list.set_tablecode (l_descr.Table_code)
 				end
-				display_list.build
+				l_display_list.build
 			end
 			is_activated := True
 		end
@@ -164,74 +166,89 @@ feature {NONE} -- Implementation
 			-- Action performed when a `display_list' item is
 			-- selected.
 		do
-			db_selectable_component.change_selection (display_list.index)
-			update_controls_sensitive
+			if attached display_list as l_display_list and attached db_selectable_component as l_comp then
+				l_comp.change_selection (l_display_list.index)
+				update_controls_sensitive
+			end
 		end
 
-	list_edition_control: DV_SENSITIVE_CONTROL
+	list_edition_control: detachable DV_SENSITIVE_CONTROL
 			-- Control to raise the display list.
 
-	previous_control: DV_SENSITIVE_CONTROL
+	previous_control: detachable DV_SENSITIVE_CONTROL
 			-- Control to go to previous page.
 
-	next_control: DV_SENSITIVE_CONTROL
+	next_control: detachable DV_SENSITIVE_CONTROL
 			-- Control to go to next page.
 
 	next
 			-- Move to next item in `db_selectable_component.selected_tablerows'.
 		require
-			not db_selectable_component.selected_tablerows.after
+			not_after: attached db_selectable_component as l_comp and then not l_comp.selected_tablerows.after
 		do
-			db_selectable_component.change_selection (db_selectable_component.selected_tablerows.index + 1)
-			previous_control.enable_sensitive
-			update_next_control
+			if attached db_selectable_component as l_comp then
+				l_comp.change_selection (l_comp.selected_tablerows.index + 1)
+				if attached previous_control as l_ctrl then
+					l_ctrl.enable_sensitive
+				end
+				update_next_control
+			end
 		end
 
 	previous
 			-- Move to previous item in `db_selectable_component.selected_tablerows'.
 		require
-			not db_selectable_component.selected_tablerows.before
+			not_before: attached db_selectable_component as l_comp and then not l_comp.selected_tablerows.before
 		do
-			db_selectable_component.change_selection (db_selectable_component.selected_tablerows.index - 1)
-			next_control.enable_sensitive
-			update_previous_control
+			if attached db_selectable_component as l_comp then
+				l_comp.change_selection (l_comp.selected_tablerows.index - 1)
+				if attached next_control as l_ctrl then
+					l_ctrl.enable_sensitive
+				end
+				update_previous_control
+			end
 		end
 
 	update_previous_control
 			-- Update previous control sensitiveness.
 		require
-			set_not_empty: db_selectable_component.selected_tablerows /= Void and then
-					not db_selectable_component.selected_tablerows.is_empty
+			set_not_empty: attached db_selectable_component as l_comp and then
+				 l_comp.selected_tablerows /= Void and then
+				not l_comp.selected_tablerows.is_empty
 		do
-			if db_selectable_component.selected_tablerows.index = 1 then
-				previous_control.disable_sensitive
-			else
-				previous_control.enable_sensitive
+			if attached previous_control as l_ctrl and attached db_selectable_component as l_comp then
+				if l_comp.selected_tablerows.index = 1 then
+					l_ctrl.disable_sensitive
+				else
+					l_ctrl.enable_sensitive
+				end
 			end
 		end
 
 	update_next_control
 			-- Update next control sensitiveness.
 		require
-			set_not_empty: db_selectable_component.selected_tablerows /= Void and then
-					not db_selectable_component.selected_tablerows.is_empty
+			set_not_empty: attached db_selectable_component as l_comp and then
+				 l_comp.selected_tablerows /= Void and then
+				not l_comp.selected_tablerows.is_empty
 		do
-			if db_selectable_component.selected_tablerows.index = 
-					db_selectable_component.selected_tablerows.count then
-				next_control.disable_sensitive
-			else
-				next_control.enable_sensitive
+			if attached next_control as l_ctrl and attached db_selectable_component as l_comp then
+				if l_comp.selected_tablerows.index = l_comp.selected_tablerows.count then
+					l_ctrl.disable_sensitive
+				else
+					l_ctrl.enable_sensitive
+				end
 			end
 		end
 
 	disable_controls_sensitive
 			-- Disable previous and next controls set sensitive.
 		do
-			if previous_control /= Void then
-				previous_control.disable_sensitive
+			if attached previous_control as l_prev_ctrl then
+				l_prev_ctrl.disable_sensitive
 			end
-			if next_control /= Void then
-				next_control.disable_sensitive
+			if attached next_control as l_next_ctrl then
+				l_next_ctrl.disable_sensitive
 			end
 		end
 
@@ -240,8 +257,8 @@ feature {NONE} -- Implementation
 			-- according to current position in
 			-- `db_selectable_component.selected_tablerows'.
 		do
-			if list_edition_control /= Void then
-				list_edition_control.enable_sensitive
+			if attached list_edition_control as l_edit_control then
+				l_edit_control.enable_sensitive
 			end
 			if previous_control /= Void then
 				update_previous_control
@@ -252,14 +269,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

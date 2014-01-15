@@ -23,7 +23,7 @@ feature -- Basic operations
 			not_activated: not is_activated
 		do
 			db_tablerow_navigator := db_tr_navigator
-			db_tablerow_navigator.set_table_component (Current)
+			db_tr_navigator.set_table_component (Current)
 		end
 
 feature {DV_COMPONENT} -- Access
@@ -40,7 +40,7 @@ feature {DV_COMPONENT} -- Access
 	No_selection: INTEGER = 0
 			-- No selection in the database table row list.
 
-	table_description: DB_TABLE_DESCRIPTION
+	table_description: detachable DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 		deferred
 		end
@@ -62,7 +62,7 @@ feature {DV_COMPONENT} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	db_tablerow_navigator: DV_TABLEROWS_NAVIGATOR
+	db_tablerow_navigator: detachable DV_TABLEROWS_NAVIGATOR
 			-- Component enabling user to browse selected database table rows.
 
 	update_controls_sensitiveness

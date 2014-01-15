@@ -118,7 +118,10 @@ feature {NONE} -- Test procedure
 				-- Recreate the procedure
 			create Result.make (procedure_name)
 			Result.load
-			if attached a_arg_names as l_agrs and then not l_agrs.is_empty then
+			if
+				attached a_arg_names and then not a_arg_names.is_empty and
+				attached a_args_type and then not a_args_type.is_empty
+			then
 				Result.set_arguments_32 (a_arg_names, a_args_type)
 			end
 			Result.store (a_text)

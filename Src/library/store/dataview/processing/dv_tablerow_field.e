@@ -28,6 +28,8 @@ feature -- Initialization
 			-- locate table attribute in the database.
 		do
 			attribute_code := code
+			create error_message.make_empty
+			database_text := ""
 		end
 
 feature -- Access
@@ -36,28 +38,29 @@ feature -- Access
 			-- Code of the represented attribute in the
 			-- database table.
 
-	table_description: DB_TABLE_DESCRIPTION
+	table_description: detachable DB_TABLE_DESCRIPTION
 			-- Description of the database table containing
 			-- the represented attribute.
 
 	text: STRING
 			-- Field text.
 		do
-			Result := graphical_value.value
-			if Result = Void then
+			if attached graphical_value as l_gv then
+				Result := l_gv.value
+			else
 				Result := ""
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	graphical_title: DV_SENSITIVE_STRING
+	graphical_title: detachable DV_SENSITIVE_STRING
 			-- Graphical element holding field title.
 
-	graphical_type: DV_SENSITIVE_STRING
+	graphical_type: detachable DV_SENSITIVE_STRING
 			-- Graphical element holding field type.
 
-	graphical_value: DV_SENSITIVE_STRING
+	graphical_value: detachable DV_SENSITIVE_STRING
 			-- Graphical element holding field value.
 
 feature -- Status report
@@ -74,43 +77,43 @@ feature -- Status report
 	is_boolean: BOOLEAN
 			-- Is the attribute a boolean value?
 		do
-			Result := type_code = table_description.Boolean_type
+			Result := attached table_description as l_table and then type_code = l_table.Boolean_type
 		end
 
 	is_character: BOOLEAN
 			-- Is the attribute a character value?
 		do
-			Result := type_code = table_description.Character_type
+			Result := attached table_description as l_table and then type_code = l_table.Character_type
 		end
 
 	is_double: BOOLEAN
 			-- Is the attribute a double value?
 		do
-			Result := type_code = table_description.Double_type
+			Result := attached table_description as l_table and then type_code = l_table.Double_type
 		end
 
 	is_datetime: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
-			Result := type_code = table_description.Date_time_type
+			Result := attached table_description as l_table and then type_code = l_table.Date_time_type
 		end
 
 	is_integer: BOOLEAN
 			-- Is the attribute an integer value?
 		do
-			Result := type_code = table_description.Integer_type
+			Result := attached table_description as l_table and then type_code = l_table.Integer_type
 		end
 
 	is_real: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
-			Result := type_code = table_description.Real_type
+			Result := attached table_description as l_table and then type_code = l_table.Real_type
 		end
 
 	is_string: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
-			Result := type_code = table_description.String_type
+			Result := attached table_description as l_table and then type_code = l_table.String_type
 		end
 
 	is_date: BOOLEAN
@@ -149,7 +152,7 @@ feature -- Status report
 	can_update: BOOLEAN
 			-- Can value held be updated?
 		do
-			Result := redirector /= Void implies redirector.can_invert
+			Result := attached redirector as l_redirector implies l_redirector.can_invert
 		end
 
 feature -- Status setting
@@ -173,9 +176,11 @@ feature -- Basic operations
 			not_activated: not is_activated
 			not_void: g_title /= Void
 		do
-			if g_title.value = void and then graphical_title_set
-					and then graphical_title.value /= Void then
-				g_title.set_value (graphical_title.value)
+			if
+				g_title.value = Void and then attached graphical_title as l_gtitle and then
+				l_gtitle.value /= Void
+			then
+				g_title.set_value (l_gtitle.value)
 			end
 			graphical_title := g_title
 		end
@@ -186,9 +191,11 @@ feature -- Basic operations
 			not_activated: not is_activated
 			not_void: g_type /= Void
 		do
-			if g_type.value = void and then graphical_type_set
-					and then graphical_type.value /= Void then
-				g_type.set_value (graphical_type.value)
+			if
+				g_type.value = Void and then attached graphical_type as l_gtype and then
+				l_gtype.value /= Void
+			then
+				g_type.set_value (l_gtype.value)
 			end
 			graphical_type := g_type
 		end
@@ -208,7 +215,9 @@ feature -- Basic operations
 			not_activated: not is_activated
 			graphical_title_set: graphical_title_set
 		do
-			graphical_title.set_value (t)
+			if attached graphical_title as l_gtitle then
+				l_gtitle.set_value (t)
+			end
 		end
 
 	set_type (t: STRING)
@@ -217,7 +226,9 @@ feature -- Basic operations
 			not_activated: not is_activated
 			graphical_type_set: graphical_type_set
 		do
-			graphical_type.set_value (t)
+			if attached graphical_type as l_gtype then
+				l_gtype.set_value (t)
+			end
 		end
 
 	set_redirector (a_redirector: DV_VALUE_REDIRECTOR)
@@ -256,21 +267,25 @@ feature {DV_COMPONENT} -- Basic operations
 			not_activated: not is_activated
 		do
 			table_description := table_descr
-			type_code := table_description.type_list.i_th (attribute_code)
+			type_code := table_descr.type_list.i_th (attribute_code)
 		end
 
 	activate
 			-- Activate component.
 		do
-			if graphical_title_set and then graphical_title.value = Void then
-				graphical_title.set_value (table_description.description_list.i_th (attribute_code))
+			if attached table_description as l_table then
+				if attached graphical_title as l_gtitle and then l_gtitle.value = Void then
+					l_gtitle.set_value (l_table.description_list.i_th (attribute_code))
+				end
+				type_name := l_table.printable_type_table.item
+								(l_table.type_list.i_th (attribute_code))
+				if attached graphical_type as l_gtype and then l_gtype.value = Void then
+					if attached type_name as l_type_name then
+						l_gtype.set_value (l_type_name)
+					end
+				end
+				is_activated := True
 			end
-			type_name := table_description.printable_type_table.item
-							(table_description.type_list.i_th (attribute_code))
-			if graphical_type_set and then graphical_type.value = Void then
-				graphical_type.set_value (type_name)
-			end
-			is_activated := True
 		end
 
 	clear
@@ -280,7 +295,9 @@ feature {DV_COMPONENT} -- Basic operations
 		do
 			has_changed := False
 			is_cleared := True
-			graphical_value.set_value ("")
+			if attached graphical_value as l_gv then
+				l_gv.set_value ("")
+			end
 			disable_sensitive
 		end
 
@@ -294,41 +311,40 @@ feature {DV_COMPONENT} -- Basic operations
 		local
 			d: DATE
 			dt: DATE_TIME
-			double_data: DOUBLE_REF
-			string_data: STRING
-			integer_data: INTEGER_REF
-			boolean_data: BOOLEAN_REF
-			character_data: CHARACTER_REF
+			l_title: STRING
 		do
+			if attached graphical_title as l_gtitle then
+				l_title := l_gtitle.value
+			else
+				l_title := ""
+			end
 			is_update_valid := True
 			if has_changed or else not text.is_equal (database_text) then
 				if is_string then
-					if redirector /= Void then
-						string_data ?= redirector.inverted_value (text)
-						if string_data /= Void then
-							default_tablerow.set_attribute (attribute_code, string_data)
+					if attached redirector as l_redirector then
+						if attached {STRING} l_redirector.inverted_value (text) as l_string_data then
+							default_tablerow.set_attribute (attribute_code, l_string_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						default_tablerow.set_attribute (attribute_code, text)
 					end
 				elseif is_double then
-					if redirector /= Void then
-						double_data ?= redirector.inverted_value (text)
-						if double_data /= Void then
-							default_tablerow.set_attribute (attribute_code, double_data)
+					if attached redirector as l_redirector then
+						if attached {DOUBLE_REF} l_redirector.inverted_value (text) as l_double_data then
+							default_tablerow.set_attribute (attribute_code, l_double_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						if text.is_double then
 							default_tablerow.set_attribute (attribute_code, text.to_double)
 						else
 							is_update_valid := False
-							error_message := enter_field_value (type_name, graphical_title.value)
+							error_message := enter_field_value (type_name, l_title)
 						end
 					end
 				elseif is_datetime then
@@ -341,7 +357,7 @@ feature {DV_COMPONENT} -- Basic operations
 								default_tablerow.set_attribute (attribute_code, dt)
 							else
 								is_update_valid := False
-								error_message := wrong_date_format (graphical_title.value)
+								error_message := wrong_date_format (l_title)
 								create d.make_now
 									-- `database_text' will be updated so if user
 									-- doesn't change the value, it won't be changed
@@ -356,7 +372,7 @@ feature {DV_COMPONENT} -- Basic operations
 								default_tablerow.set_attribute (attribute_code, dt)
 							else
 								is_update_valid := False
-								error_message := wrong_datetime_format (graphical_title.value)
+								error_message := wrong_datetime_format (l_title)
 								create dt.make_now
 									-- `database_text' will be updated so if user
 									-- doesn't change the value, it won't be changed
@@ -370,76 +386,72 @@ feature {DV_COMPONENT} -- Basic operations
 						default_tablerow.set_attribute (attribute_code, Void)
 					end
 				elseif is_integer then
-					if redirector /= Void then
-						integer_data ?= redirector.inverted_value (text)
-						if integer_data /= Void then
-							default_tablerow.set_attribute (attribute_code, integer_data)
+					if attached redirector as l_redirector then
+						if attached {INTEGER_REF} l_redirector.inverted_value (text) as l_integer_data then
+							default_tablerow.set_attribute (attribute_code, l_integer_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						if text.is_integer then
 							default_tablerow.set_attribute (attribute_code, text.to_integer)
 						else
 							is_update_valid := False
-							error_message := enter_field_value (type_name, graphical_title.value)
+							error_message := enter_field_value (type_name, l_title)
 						end
 					end
 				elseif is_real then
-					if redirector /= Void then
-						double_data ?= redirector.inverted_value (text)
-						if double_data /= Void then
-							default_tablerow.set_attribute (attribute_code, double_data)
+					if attached redirector as l_redirector then
+						if attached {DOUBLE_REF} l_redirector.inverted_value (text) as l_double_data then
+							default_tablerow.set_attribute (attribute_code, l_double_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						if text.is_double then
 							default_tablerow.set_attribute (attribute_code, text.to_double)
 						else
 							is_update_valid := False
-							error_message := enter_field_value (type_name, graphical_title.value)
+							error_message := enter_field_value (type_name, l_title)
 						end
 					end
 				elseif is_character then
-					if redirector /= Void then
-						character_data ?= redirector.inverted_value (text)
-						if character_data /= Void then
-							default_tablerow.set_attribute (attribute_code, character_data)
+					if attached redirector as l_redirector then
+						if attached {CHARACTER_REF} l_redirector.inverted_value (text) as l_character_data then
+							default_tablerow.set_attribute (attribute_code, l_character_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						if text.count = 1 then
 							default_tablerow.set_attribute (attribute_code, text.item (1))
 						else
 							is_update_valid := False
-							error_message := enter_field_value (type_name, graphical_title.value)
+							error_message := enter_field_value (type_name, l_title)
 						end
 					end
 				elseif is_boolean then
-					if redirector /= Void then
-						boolean_data ?= redirector.inverted_value (text)
-						if boolean_data /= Void then
-							default_tablerow.set_attribute (attribute_code, boolean_data)
+					if attached redirector as l_redirector then
+						if attached {BOOLEAN_REF} l_redirector.inverted_value (text) as l_boolean_data then
+							default_tablerow.set_attribute (attribute_code, l_boolean_data)
 						else
 							is_update_valid := False
-							error_message := retrieve_field_value (type_name, graphical_title.value)
+							error_message := retrieve_field_value (type_name, l_title)
 						end
 					else
 						if text.is_boolean then
 							default_tablerow.set_attribute (attribute_code, text.to_boolean)
 						else
 							is_update_valid := False
-							error_message := enter_field_value (type_name, graphical_title.value)
+							error_message := enter_field_value (type_name, l_title)
 						end
 					end
 				else
 					is_update_valid := False
-					error_message := type_not_recognized (graphical_title.value)
+					error_message := type_not_recognized (l_title)
 				end
 			end
 		end
@@ -447,25 +459,29 @@ feature {DV_COMPONENT} -- Basic operations
 	enable_sensitive
 			-- Request display sensitive.
 		do
-			if graphical_title /= void then
-				graphical_title.request_sensitive
+			if attached graphical_title as l_gt then
+				l_gt.request_sensitive
 			end
-			if graphical_type /= void then
-				graphical_type.request_sensitive
+			if attached graphical_type as l_gtype then
+				l_gtype.request_sensitive
 			end
-			graphical_value.request_sensitive
+			if attached graphical_value as l_gv then
+				l_gv.request_sensitive
+			end
 		end
 
 	disable_sensitive
 			-- Request display insensitive.
 		do
-			if graphical_title /= void then
-				graphical_title.request_insensitive
+			if attached graphical_title as l_gt then
+				l_gt.request_insensitive
 			end
-			if graphical_type /= void then
-				graphical_type.request_insensitive
+			if attached graphical_type as l_gtype then
+				l_gtype.request_insensitive
 			end
-			graphical_value.request_insensitive
+			if attached graphical_value as l_gv then
+				l_gv.request_insensitive
+			end
 		end
 
 	refresh (table_row: DB_TABLE_DESCRIPTION)
@@ -478,8 +494,8 @@ feature {DV_COMPONENT} -- Basic operations
 			if is_date or else is_datetime then
 				set_datetime (table_row)
 			else
-				if redirector /= Void then
-					set_text (redirector.redirected_value (table_row.attribute_value (attribute_code)))
+				if attached redirector as l_redirector then
+					set_text (l_redirector.redirected_value (table_row.attribute_value (attribute_code)))
 				else
 					set_text (table_row.printable_attribute (attribute_code))
 				end
@@ -498,17 +514,16 @@ feature {NONE} -- Implementation
 			has_changed := False
 			is_cleared := False
 			database_text := s
-			graphical_value.set_value (s)
+			if attached graphical_value as l_gv then
+				l_gv.set_value (s)
+			end
 			enable_sensitive
 		end
 
 	set_datetime (table_row: DB_TABLE_DESCRIPTION)
 			-- Set a date or a date & time value.
-		local
-			dt: DATE_TIME
 		do
-			dt ?= table_row.attribute_value (attribute_code)
-			if dt /= Void then
+			if attached {DATE_TIME} table_row.attribute_value (attribute_code) as dt then
 				if is_date then
 					set_text (dt.date.out)
 				else
@@ -519,7 +534,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	redirector: DV_VALUE_REDIRECTOR
+	redirector: detachable DV_VALUE_REDIRECTOR
 			-- Value redirector.
 
 	database_text: STRING
@@ -528,18 +543,18 @@ feature {NONE} -- Implementation
 	type_code: INTEGER
 			-- Represented field type code.
 
-	type_name: STRING;
+	type_name: detachable STRING;
 			-- Represented field type name.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

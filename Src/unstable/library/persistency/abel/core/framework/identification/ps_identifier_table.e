@@ -95,8 +95,7 @@ feature -- Element change
 		do
 			lookup_table.accommodate (object_store.count)
 
-			fixme ("Make sure this works in a multi-threaded setup.")
-			gc.collection_off
+			disable_gc (prepare_count)
 
 			across
 				object_store as cursor
@@ -116,7 +115,7 @@ feature -- Element change
 		do
 			lookup_table.wipe_out
 			is_prepared := False
-			gc.collection_on
+			enable_gc (prepare_count)
 		ensure
 			not_prepared: not is_prepared
 			lookup_empty: lookup_table.is_empty
@@ -152,6 +151,32 @@ feature {NONE} -- Implementation
 
 	lookup_table: HASH_TABLE [NATURAL_64, POINTER]
 			-- The lookup table.
+
+feature {NONE} -- Implementation: GC control
+
+	disable_gc (counter: separate NATURAL_32_REF)
+			-- Disable garbage collection.
+		do
+			if counter.item = 0 then
+				gc.collection_off
+			end
+			counter.set_item (counter.item + 1)
+		end
+
+	enable_gc (counter: separate NATURAL_32_REF)
+			-- Enable garbage collection.
+		do
+			counter.set_item (counter.item - 1)
+			if counter.item = 0 then
+				gc.collection_on
+			end
+		end
+
+	prepare_count: separate NATURAL_32_REF
+			-- The global collection counter.
+		once
+			create Result
+		end
 
 	gc: MEMORY
 			-- A handle to control garbage collection.

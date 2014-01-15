@@ -32,6 +32,86 @@ feature -- Element change
 
 feature -- Disposal
 
+	collect_garbage
+			-- <Precursor>
+		local
+			roots: PS_QUERY [ANY]
+			non_roots: PS_QUERY [ANY]
+
+			root_manager: PS_READ_MANAGER
+			non_root_manager: PS_READ_MANAGER
+
+			garbage_key: INTEGER
+			garbage_type: PS_TYPE_METADATA
+
+			collection_delete: ARRAYED_LIST [PS_BACKEND_COLLECTION]
+			object_delete: ARRAYED_LIST [PS_BACKEND_OBJECT]
+			delete_transaction: PS_INTERNAL_TRANSACTION
+
+		do
+			create collection_delete.make (0)
+			create object_delete.make (0)
+
+			create roots.make
+			roots.set_is_non_root_ignored (True)
+			internal_execute_query (roots, new_internal_transaction (True))
+				-- Load everything.
+			across roots as c loop end
+
+			check attached {PS_QUERY_CURSOR} roots.internal_cursor as c then
+				root_manager := c.read_manager
+			end
+
+			create non_roots.make
+			internal_execute_query (non_roots, new_internal_transaction (True))
+				-- Load everything.
+			across non_roots as c loop end
+
+			check attached {PS_QUERY_CURSOR} non_roots.internal_cursor as c then
+				non_root_manager := c.read_manager
+			end
+
+			across
+				non_root_manager.get_cache as type_cursor
+			loop
+				across
+					type_cursor.item as primary_cursor
+				loop
+					if root_manager.cache_lookup (primary_cursor.key, type_cursor.key) = 0 then
+							-- Found some garbage.
+						garbage_key := primary_cursor.key
+						garbage_type := type_cursor.key
+
+						across
+							all_handlers as cursor
+						loop
+							if cursor.item.can_handle_type (garbage_type) then
+								if cursor.item.is_mapping_to_collection then
+									collection_delete.extend (create {PS_BACKEND_COLLECTION}.make (garbage_key, garbage_type))
+								else
+									object_delete.extend (create {PS_BACKEND_OBJECT}.make (garbage_key, garbage_type))
+								end
+							end
+						end
+					end
+				end
+			end
+
+			roots.close
+			non_roots.close
+
+			delete_transaction := new_internal_transaction (False)
+			if not collection_delete.is_empty then
+				connector.delete_collections (collection_delete, delete_transaction)
+			end
+
+			if not object_delete.is_empty then
+				connector.delete (object_delete, delete_transaction)
+			end
+			connector.commit (delete_transaction)
+		end
+
+
 	close
 			-- <Precursor>
 		do

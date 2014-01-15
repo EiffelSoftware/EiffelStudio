@@ -133,6 +133,7 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			connection: PS_SQL_CONNECTION
 
 			non_zero_exception: PS_INTERNAL_ERROR
+			managed: MANAGED_POINTER
 		do
 			check no_references: objects.count = 1 end
 
@@ -161,15 +162,21 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 
 				create columns.make (type.attribute_count)
 				create values.make (type.attribute_count)
-
-				fixme ("This doesn't work for REALs")
 			loop
 
 				if attached object.value_lookup (cursor.item) as val then
 
 					columns.extend (cursor.item)
 
-					if type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.reference_type then
+					if type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.real_32_type then
+						create managed.make ({PLATFORM}.real_32_bytes)
+						managed.put_integer_32_be (val.to_integer_32, 0)
+						values.extend (managed.read_real_32_be (0).out)
+					elseif type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.real_64_type then
+						create managed.make ({PLATFORM}.real_64_bytes)
+						managed.put_integer_64_be (val.to_integer_64, 0)
+						values.extend (managed.read_real_64_be (0).out)
+					elseif type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.reference_type then
 						values.extend ("'" + val + "'")
 					else
 						values.extend (val)

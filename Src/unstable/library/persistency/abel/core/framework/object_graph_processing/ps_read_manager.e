@@ -71,6 +71,13 @@ feature {NONE} -- Data structures
 
 feature {PS_ABEL_EXPORT} -- Access
 
+	get_cache: like cache
+			-- Get the cache.
+			-- Do not manipulate the result!
+		do
+			Result := cache
+		end
+
 	count: INTEGER
 			-- The number of objects which are finalized or under construction.
 

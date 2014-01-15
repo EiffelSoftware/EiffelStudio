@@ -37,7 +37,6 @@ feature -- Test routines
 			create l_fail_cell.put (False)
 			create_process ("an_executable_with_this_name_should_not_exist", Void)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_fail_launch_handler (agent l_fail_cell.put (True))
 			l_process.launch
 			wait_for_exit
@@ -67,7 +66,6 @@ feature -- Test routines
 			create l_exit_cell.put (False)
 			create_echo_process (Void)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_start_handler (agent l_start_cell.put (True))
 			l_process.set_on_successful_launch_handler (agent l_launch_cell.put (True))
 			l_process.set_on_exit_handler (agent l_exit_cell.put (True))
@@ -93,7 +91,6 @@ feature -- Test routines
 			l_args.force ("--stdin")
 			create_echo_process (l_args)
 			l_process := current_process
-			check l_process /= Void end
 			l_process.set_on_terminate_handler (agent l_terminate_cell.put (True))
 			l_process.launch
 			l_process.terminate

@@ -1086,12 +1086,13 @@ feature -- Removal
 
 feature -- Input
 
-	retrieve_analyzer (file_name: STRING)
+	retrieve_analyzer (file_name: READABLE_STRING_GENERAL)
 			-- Retrieve `analyzer' from file named `file_name'.
 		local
 			retrieved_file: RAW_FILE
 		do
-			create retrieved_file.make_open_read (file_name);
+			create retrieved_file.make_with_name (file_name)
+			retrieved_file.open_read
 			if attached {like analyzer} retrieved_file.retrieved as l_analyzer then
 				analyzer := l_analyzer
 			else

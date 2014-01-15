@@ -36,7 +36,6 @@ feature {NONE}
 	execute
 		local
 			i:INTEGER
-			l_message: detachable STRING_32
 		do
 			io.putstring ("First example file:%N");
 			descriptor.make_conform (book);
@@ -44,9 +43,11 @@ feature {NONE}
 			converter1.set_file_name ("example1.dat");
 			converter1.parse_file;
 			if converter1.conv_error then
-				l_message := converter1.conv_message_32
-				check l_message /= Void end -- FIXME: implied by .. `conv_error'?
-				io.putstring (l_message)
+				if attached converter1.conv_message_32 as l_message then
+					io.put_string (l_message)
+				else
+					io.put_string ("Unknown error.")
+				end
 			else
 				from
 					i:=1
@@ -72,17 +73,21 @@ feature {NONE}
 			descriptor.set_field_separator ('$');
 			descriptor.check_conformity (book);
 			if descriptor.ecd_error then
-				l_message := descriptor.ecd_message
-				check l_message /= Void end -- FIXME: implied by `ecd_error'?
-				io.putstring (l_message)
+				if attached descriptor.ecd_message as l_message then
+					io.put_string (l_message)
+				else
+					io.put_string ("Unknown error.")
+				end
 			else
 				converter2.set_descriptor (descriptor);
 				converter2.set_file_name ("example2.dat");
 				converter2.parse_file;
 				if converter2.conv_error then
-					l_message := converter2.conv_message_32
-					check l_message /= Void end -- FIXME: implied by `conv_error'?
-					io.putstring (l_message)
+					if attached converter2.conv_message_32 as l_message then
+						io.put_string (l_message)
+					else
+						io.put_string ("Unknown error.")
+					end
 				else
 					from
 						i:=1

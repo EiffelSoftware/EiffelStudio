@@ -60,10 +60,22 @@ Software Engineering Lab
 York University, Toronto
 
 Revision History
-===============
+================
+
 17 April 2012
 Renamed the folder to espec (from espec-simple).
 Fixed obsolete assignment attempts in routines
 {ES_VIOLATION_CLASS} write_passed_case
 {ES_VIOLATION_CLASS} write_failed_case
 Fixed obsolete calls in tests:dictionary.
+
+9 January 2014
+--------------
+
+Fixed some errors reported by new void safe checks
+Added MacOs as supported system for browser report
+Added features: assert_equal, assert_not_equal, assert and sub_comment
+
+See 
+  * https://wiki.eecs.yorku.ca/project/eiffel/getting_started:
+  * https://wiki.eecs.yorku.ca/project/eiffel/getting_started:espec for new features

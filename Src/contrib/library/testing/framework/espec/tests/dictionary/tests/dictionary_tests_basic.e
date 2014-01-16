@@ -17,8 +17,11 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
+		local
+			pred: attached PREDICATE [attached ANY, attached TUPLE]
 		do
-			add_boolean_case (agent create_empty_dictionary)
+			pred := agent create_empty_dictionary
+			add_boolean_case (pred)
 			add_boolean_case (agent add_students_to_dictionary)
 			add_boolean_case (agent add_five_students_to_dictionary)
 			add_violation_case(agent crash_with_student_not_in_dictionary)

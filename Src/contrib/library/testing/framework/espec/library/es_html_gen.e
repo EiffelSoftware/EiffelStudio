@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 			file_name_valid: file_name /= Void
 		do
 			get_statistics
-			create output_file1.make (file_name)
+			create output_file1.make_with_name (file_name)
 			output_file.open_write
 			write_summary_start
 			write_summary_details
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			file_name_valid: file_name /= Void
 		do
 			get_statistics
-			create output_file1.make (file_name)
+			create output_file1.make_with_name (file_name)
 			output_file.open_write
 			write_summary_start_big
 			write_summary_details
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			if attached output_file1 as output_file2  then
 				Result := output_file2
 			else
-				create Result.make ("default_output")
+				create Result.make_with_name ("default_output")
 			end
 
 		end

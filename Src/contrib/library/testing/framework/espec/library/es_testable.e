@@ -41,7 +41,7 @@ feature
 
 
 
-feature 
+feature
 	set_error_report (v: BOOLEAN)
 			-- show the contract violations if set to true
 		do
@@ -72,6 +72,32 @@ feature
 			print (message)
 		end
 
+--	check_browser2
+--			-- run the browser on the generated HTML
+--		local
+--			env: EXECUTION_ENVIRONMENT
+--			command: STRING_8
+--		do
+--			create env
+--			if browser then
+--				if (curr_os_dir_separator = '\') then
+--					check
+--						attached get_html_name as html_name
+--					then
+--						command := "%"explorer%" " + (html_name.twin) + "%""
+--					end
+--					env.launch (command)
+--				else
+--					check
+--						attached get_html_name as html_name
+--					then
+--						env.launch ("firefox" + " '" + html_name.twin + "'")
+--					end
+--				end
+--			end
+--		end
+
+
 	check_browser
 			-- run the browser on the generated HTML
 		local
@@ -79,20 +105,18 @@ feature
 			command: STRING_8
 		do
 			create env
+			check attached get_html_name end
 			if browser then
-				if (curr_os_dir_separator = '\') then
-					check
-						attached get_html_name as html_name
-					then
-						command := "%"explorer%" " + (html_name.twin) + "%""
-					end
+				if {PLATFORM}.is_windows then
+					command := "%"explorer%" " + (get_html_name.twin) + "%""
+					env.launch (command)
+				elseif {PLATFORM}.is_mac then
+					command := "open" + " '" + get_html_name.twin + "'"
 					env.launch (command)
 				else
-					check
-						attached get_html_name as html_name
-					then
-						env.launch ("firefox" + " '" + html_name.twin + "'")
-					end
+					check{PLATFORM}.is_unix end
+					command := "xdg-open" + " '" + get_html_name.twin + "'"
+					env.launch (command)
 				end
 			end
 		end

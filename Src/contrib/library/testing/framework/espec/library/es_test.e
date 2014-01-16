@@ -10,7 +10,7 @@ inherit
 
 feature -- Basic Operations
 
-	add_boolean_case (v: FUNCTION [ANY, TUPLE, BOOLEAN])
+	add_boolean_case (v: PREDICATE [ANY, TUPLE])
 			-- Add boolean function v
 		require
 			v_valid: v /= Void
@@ -77,6 +77,98 @@ feature {NONE} -- setup and teardown
 			-- Adds `s' to descriptions
 		do
 			class_variable_comment_string := s
+		end
+
+	html_start_code: STRING = "<BR><code>"
+	html_end_code: STRING = "</code>"
+	space: STRING = "&nbsp"
+
+	sub_comment (s: STRING_8)
+			-- Adds `s' to comments
+		local
+			l_stuff: STRING_8
+		do
+			l_stuff := html_start_code + s + html_end_code
+			class_variable_comment_string.append (l_stuff)
+		end
+
+
+	assert_equal(a_name: STRING; expected, actual: detachable ANY)
+		local
+			l_line1, l_line2, l_line3: attached STRING
+			expected_out, actual_out: STRING
+			cv: CHECK_VIOLATION
+		do
+
+			if not (expected ~ actual) then
+				if expected /= Void then
+					expected_out := expected.out
+				else
+					expected_out := "Void"
+				end
+				if actual /= Void then
+					actual_out := actual.out
+				else
+					actual_out := "Void"
+				end
+				l_line1 := html_start_code + "Assert Equal Violation: " + a_name + html_end_code
+				l_line2 := html_start_code + "Expected: " + expected_out + html_end_code
+				l_line3 := html_start_code + "Actual:&nbsp&nbsp&nbsp" + actual_out + html_end_code
+				class_variable_comment_string.append (l_line1 + l_line2 + l_line3)
+				create cv
+				cv.set_description (a_name)
+				cv.raise
+			end
+		end
+
+		assert_not_equal(a_name: STRING; expected, actual: detachable ANY)
+			local
+				l_line1, l_line2, l_line3: attached STRING
+				expected_out, actual_out: STRING
+				cv: CHECK_VIOLATION
+			do
+
+				if  (expected ~ actual) then
+					if expected /= Void then
+						expected_out := expected.out
+					else
+						expected_out := "Void"
+					end
+					if actual /= Void then
+						actual_out := actual.out
+					else
+						actual_out := "Void"
+					end
+					l_line1 := html_start_code + "Assert NOT Equal Violation: " + a_name + html_end_code
+					l_line2 := html_start_code + "Expected: " + expected_out + html_end_code
+					l_line3 := html_start_code + "Actual:&nbsp&nbsp&nbsp" + actual_out + html_end_code
+					class_variable_comment_string.append (l_line1 + l_line2 + l_line3)
+					create cv
+					cv.set_description (a_name)
+					cv.raise
+			end
+		end
+
+		assert(a_name: STRING; condition: BOOLEAN; actual: detachable ANY)
+			local
+				l_line1, l_line2: attached STRING
+				actual_out: STRING
+				cv: CHECK_VIOLATION
+			do
+
+				if  not condition then
+					if actual /= Void then
+						actual_out := actual.out
+					else
+						actual_out := "Void"
+					end
+					l_line1 := html_start_code + "Assert Violation: " + a_name + html_end_code
+					l_line2 := html_start_code + "Object:&nbsp&nbsp&nbsp" + actual_out + html_end_code
+					class_variable_comment_string.append (l_line1 + l_line2)
+					create cv
+					cv.set_description (a_name)
+					cv.raise
+			end
 		end
 
 
@@ -234,7 +326,11 @@ feature {ES_HTML_GEN_SUITE} --test cases
 
 	descriptions: detachable LINKED_LIST [STRING_8]
 
-	class_variable_comment_string: detachable STRING_8
+	class_variable_comment_string: STRING_8
+		attribute
+			Result := ""
+		end
+
 
 
 end -- class ES_TEST

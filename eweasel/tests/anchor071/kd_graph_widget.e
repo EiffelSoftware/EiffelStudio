@@ -3,7 +3,7 @@ class
 
 feature
 
-	add_edge (a_edge: KD_MODEL_EDGE)
+	add_edge (a_edge: detachable KD_MODEL_EDGE)
 		do
 			-- Nothing.
 		end

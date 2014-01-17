@@ -5,7 +5,7 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result validity_warning NONE VD89 VD89
+compile_result	ok
 
 c_compile_work
 c_compile_result	ok

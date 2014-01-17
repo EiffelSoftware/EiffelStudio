@@ -22,6 +22,13 @@ feature {PS_ABEL_EXPORT} -- Status report
 			Result := name_to_index_map.has (column_name)
 		end
 
+
+	is_null (column_name: STRING): BOOLEAN
+			-- Is `column_name' NULL?
+		do
+			Result := attached values.item (name_to_index_map [column_name])
+		end
+
 feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER
@@ -30,16 +37,20 @@ feature {PS_ABEL_EXPORT} -- Access
 	at alias "@" (column_name: STRING): STRING
 			-- <Precursor>
 		do
-			check attached values.item (name_to_index_map [column_name]) as val then
+			if attached values.item (name_to_index_map [column_name]) as val then
 				Result := val
+			else
+				Result := ""
 			end
 		end
 
 	item alias "[]" (index: INTEGER): STRING
 			-- <Precursor>
 		do
-			check attached values.item (index.as_natural_32) as val then
+			if attached values.item (index.as_natural_32) as val then
 				Result := val
+			else
+				Result := ""
 			end
 		end
 
@@ -49,7 +60,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		local
 			i: NATURAL
-			field_value: STRING
+			field_value: detachable STRING
 		do
 				-- Create the hash tables
 			count := sqlite_row.count.to_integer_32
@@ -61,9 +72,10 @@ feature {NONE} -- Initialization
 			until
 				i > sqlite_row.count
 			loop
-				field_value := ""
 				if not sqlite_row.is_null (i) then
 					field_value := sqlite_row.string_value (i)
+				else
+					field_value := Void
 				end
 				name_to_index_map.extend (i, sqlite_row.column_name (i))
 				values.extend (field_value, i)
@@ -71,7 +83,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	values: HASH_TABLE [STRING, NATURAL]
+	values: HASH_TABLE [detachable STRING, NATURAL]
 			-- Maps the column index to the actual result.
 
 	name_to_index_map: HASH_TABLE [NATURAL, STRING]

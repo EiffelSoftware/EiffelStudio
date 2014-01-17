@@ -177,7 +177,11 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 						managed.put_integer_64_be (val.to_integer_64, 0)
 						values.extend (managed.read_real_64_be (0).out)
 					elseif type.builtin_type [cursor.target_index] = {REFLECTOR_CONSTANTS}.reference_type then
-						values.extend ("'" + val + "'")
+						if object.type_lookup (cursor.item) ~ "NONE" then
+							values.extend ("NULL")
+						else
+							values.extend ("'" + val + "'")
+						end
 					else
 						values.extend (val)
 					end

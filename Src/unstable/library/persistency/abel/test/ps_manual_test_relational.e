@@ -294,6 +294,36 @@ feature -- Tests
 			assert ("different", across control as cursor all cursor.item = True end)
 		end
 
+	test_void_attribute
+			-- Test if a Void attribute gets converted to NULL.
+		local
+			transaction: PS_TRANSACTION
+			object: FLAT_CLASS_3
+
+			query: PS_QUERY [FLAT_CLASS_3]
+		do
+			create object.make (10, Void)
+			object.set_id (55)
+			repository.wipe_out
+			transaction := repository.new_transaction
+			transaction.insert (object)
+			transaction.commit
+
+			create query.make
+			repository.execute_query (query)
+
+			across
+				query as cursor
+			loop
+				assert ("void_string", cursor.item.string_value = Void)
+				assert ("same_real_value", cursor.item.real_value = object.real_value)
+				assert ("same_id", cursor.item.id = object.id)
+			end
+			query.close
+
+			assert ("no_error", not query.has_error)
+		end
+
 feature {NONE} -- Initialization
 
 	on_clean

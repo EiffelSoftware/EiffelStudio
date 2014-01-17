@@ -24,12 +24,7 @@ feature -- Initialization
 				io.put_string ("Not OK%N")
 			end
 
-			tu := [$(default_pointer)]
-			if tu.ptr = l_null then
-				io.put_string ("Not OK%N")
-			end
-
-			tu := [$(default_pointer.default_pointer)]
+			tu.ptr := $l_null
 			if tu.ptr = l_null then
 				io.put_string ("Not OK%N")
 			end

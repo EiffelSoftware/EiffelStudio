@@ -23,20 +23,23 @@ inherit
 		end
 
 create
-	make, make_with_arguments
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_result_type: TYPE_A; a_argument_types: like argument_types)
+			-- Set pattern to represent Result `a_result_type' with arguments `a_argument_types' (if any).
+		require
+			valid_result_type: a_result_type /= Void
+			valid_arguments: a_argument_types = Void or else a_argument_types.count > 0
+		do
+			result_type := a_result_type
+			argument_types := a_argument_types
+		end
 
 feature {PATTERN, PATTERN_TABLE} -- Initialization
 
-	make (a_result_type: TYPE_A)
-			-- Set pattern to represent Result `a_result_type' no arguments.
-		require
-			valid_result_type: a_result_type /= Void
-		do
-			result_type := a_result_type
-			argument_types := Void
-		end
-
-	make_with_arguments (a_result_type: TYPE_A; a_argument_types: like argument_types)
+	update (a_result_type: TYPE_A; a_argument_types: like argument_types)
 			-- Set pattern to represent Result `a_result_type' with arguments `a_argument_types' (if any).
 		require
 			valid_result_type: a_result_type /= Void
@@ -51,10 +54,10 @@ feature -- Duplication
 	duplicate: PATTERN
 			-- Duplicate of `Current' to avoid aliasing.
 		do
-			if argument_types /= Void then
-				create Result.make_with_arguments (result_type, argument_types.twin)
+			if attached argument_types as l_args then
+				create Result.make (result_type, l_args.twin)
 			else
-				create Result.make (result_type)
+				create Result.make (result_type, Void)
 			end
 		end
 
@@ -146,7 +149,7 @@ feature -- Access
 				end
 			end
 				-- Update `a_c_pattern' with the instantiated result and argument C types.
-			a_c_pattern.make (result_type.adapted_in (gen_type).c_type, new_arguments)
+			a_c_pattern.update (result_type.adapted_in (gen_type).c_type, new_arguments)
 		end
 
 	c_pattern: C_PATTERN
@@ -204,7 +207,7 @@ invariant
 	result_type_exists: result_type /= Void;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3171,9 +3171,9 @@ feature -- Pattern
 			-- Feature pattern
 		do
 			if argument_count > 0 then
-				create Result.make_with_arguments (type.meta_type, arguments.pattern_types)
+				create Result.make (type.meta_type, arguments.pattern_types)
 			else
-				create Result.make (type.meta_type)
+				create Result.make (type.meta_type, Void)
 			end
 		end
 
@@ -3567,7 +3567,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

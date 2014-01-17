@@ -214,9 +214,9 @@ feature -- Element change
 					l_arguments_array.extend (l_feature_args [i].meta_type)
 					i := i + 1
 				end
-				pattern.make_with_arguments (a_feature_i.type.meta_type, l_arguments_array)
+				pattern.update (a_feature_i.type.meta_type, l_arguments_array)
 			else
-				pattern.make (a_feature_i.type.meta_type)
+				pattern.update (a_feature_i.type.meta_type, Void)
 			end
 			info.set_pattern (pattern)
 			info.set_written_in (a_feature_i.generation_class_id)
@@ -351,7 +351,7 @@ feature {NONE} -- Impementation: Access
 		once
 				-- Create reusable pattern for use in searching.
 			create l_shared_types
-			create l_pattern.make (l_shared_types.void_type)
+			create l_pattern.make (l_shared_types.void_type, Void)
 			create Result.make (0, l_pattern)
 		end
 
@@ -373,7 +373,7 @@ invariant
 	info_array_exists: info_array /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

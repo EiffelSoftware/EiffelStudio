@@ -37,9 +37,23 @@ inherit
 create
 	make
 
-feature {PATTERN} -- Initialization
+feature {NONE} -- Initialization
 
 	make (t: TYPE_C; a_args: like argument_types)
+			-- Creation of a pattern with a result meta type
+		require
+			valid_type: t /= Void;
+		do
+			result_type := t
+			argument_types := a_args
+		ensure
+			result_type_set: result_type = t
+			argument_types_set: argument_types = a_args
+		end
+
+feature {PATTERN} -- Update
+
+	update (t: TYPE_C; a_args: like argument_types)
 			-- Creation of a pattern with a result meta type
 		require
 			valid_type: t /= Void;
@@ -477,7 +491,7 @@ invariant
 	result_type_exists: result_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

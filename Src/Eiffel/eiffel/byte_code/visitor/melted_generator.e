@@ -289,25 +289,30 @@ feature {NONE} -- Visitors
 		local
 			l_target_type: TYPE_A
 			l_target_node: ACCESS_B
-			l_hector_b: HECTOR_B
 			l_mark_count: NATURAL
 		do
 			l_target_node := a_node.target
 			l_target_type := Context.real_type (l_target_node.type)
 			generate_melted_debugger_hook
+
 				-- Generate expression byte code
 			if a_node.is_creation_instruction then
 					-- Avoid object cloning.
 				a_node.source.process (Current)
-				if a_node.source.is_hector then
-					l_hector_b ?= a_node.source
-					check l_hector_b_not_void: l_hector_b /= Void end
-					make_protected_byte_code (l_hector_b, 0)
-				end
 			else
 					-- Clone source object depending on its type and type of target.
 				make_expression_byte_code_for_type (a_node.source, l_target_type)
 			end
+
+			if a_node.source.is_hector then
+				if attached {HECTOR_B} a_node.source as l_hector_b then
+					make_protected_byte_code (l_hector_b, 0)
+				else
+						-- Address expressions are disallowed for attachement
+					check False end
+				end
+			end
+
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
 			if l_target_type.is_true_expanded then
@@ -826,13 +831,20 @@ feature {NONE} -- Visitors
 
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
+			--| Generation is exactly the same as in `process_hector_b'.
+		local
+			l_type: TYPE_A
 		do
-			if a_node.expr.type.is_basic then
-					-- computation of the offset will be done once
-					-- all the arguements are pushed on the stack.
+			l_type := Context.real_type (a_node.expr.type)
+			if l_type.is_basic then
+					-- Getting the address of a basic type can be done
+					-- only once all the expressions have been evaluated
 				ba.append (Bc_reserve)
 			else
 				a_node.expr.process (Current)
+				if l_type.is_reference then
+					ba.append (Bc_ref_to_ptr)
+				end
 			end
 		end
 
@@ -2019,6 +2031,14 @@ feature {NONE} -- Visitors
 					-- Assignment to a tuple entry.
 				generate_melted_debugger_hook
 				a_node.source.process (Current)
+				if a_node.source.is_hector then
+					if attached {HECTOR_B} a_node.source.expression as l_hector_b then
+						make_protected_byte_code (l_hector_b, 0)
+					else
+							-- Address expressions are disallowed.
+						check False end
+					end
+				end
 				if l_tuple_type.c_type.is_reference then
 					context.make_tuple_catcall_check (ba, a_node.position)
 				end
@@ -2053,9 +2073,9 @@ feature {NONE} -- Visitors
 					if attached {HECTOR_B} l_expr as l_hector_b then
 						make_protected_byte_code (l_hector_b, 0)
 					else
-						check
-							is_hector_expression: False
-						end
+							-- Address expressions are disallowed for tuple
+							-- initialization.
+						check False end
 					end
 				end
 				a_node.expressions.back
@@ -2070,6 +2090,7 @@ feature {NONE} -- Visitors
 				ba.append_integer (0)
 			end
 		end
+
 
 	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
@@ -2164,16 +2185,9 @@ feature {NONE} -- Implementation
 			target_type_not_void: a_target_type /= Void
 		local
 			l_expression_type: TYPE_A
-			l_hector_b: HECTOR_B
 		do
 			an_expr.process (Current)
 			l_expression_type := context.real_type (an_expr.type)
-
-			if an_expr.is_hector then
-				l_hector_b ?= an_expr
-				check l_hector_b_not_void: l_hector_b /= Void end
-				make_protected_byte_code (l_hector_b, 0)
-			end
 
 			if a_target_type.is_reference then
 				if l_expression_type.is_basic then
@@ -2666,7 +2680,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

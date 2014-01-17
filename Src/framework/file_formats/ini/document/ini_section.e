@@ -16,7 +16,7 @@ inherit
 
 	DEBUG_OUTPUT
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

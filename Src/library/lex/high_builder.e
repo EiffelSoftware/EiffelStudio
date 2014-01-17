@@ -20,7 +20,7 @@ class HIGH_BUILDER inherit
 
 	BASIC_ROUTINES
 		export
-			{NONE} ALL
+			{NONE} all
 		undefine
 			copy, is_equal
 		end

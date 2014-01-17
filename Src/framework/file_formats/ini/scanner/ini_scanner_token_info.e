@@ -9,9 +9,11 @@ class
 	INI_SCANNER_TOKEN_INFO
 
 inherit
+	ANY
+
 	DEBUG_OUTPUT
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

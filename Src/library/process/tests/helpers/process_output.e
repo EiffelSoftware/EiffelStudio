@@ -12,12 +12,12 @@ inherit
 
 	EXCEPTIONS
 		export
-			{NONE}
+			{NONE} all
 		end
 
 	DISPOSABLE
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

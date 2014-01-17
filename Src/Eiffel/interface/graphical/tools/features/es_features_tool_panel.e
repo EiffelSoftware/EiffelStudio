@@ -40,7 +40,7 @@ inherit
 
 	SHARED_ERROR_HANDLER
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create {ES_FEATURES_TOOL}

@@ -12,8 +12,8 @@ class
 inherit
 
 	GB_CONSTANTS
-		export {NONE}
-			all
+		export
+			{NONE} all
 		end
 
 	GB_WIDGET_UTILITIES

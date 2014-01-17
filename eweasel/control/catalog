@@ -1142,6 +1142,7 @@ test	melted-once-creation-of-generic	melt101 tcf fail execution melting generic
 test	melted-special-creation-crash-2	melt102  tcf pass melting execution special
 test	melted-on-character-32	melt103  tcf pass melting execution
 test	melted-address-expression	melt104  tcf pass melting execution
+test	melted-address-current	melt105  tcf pass melting execution
 
 -- Freezing
 

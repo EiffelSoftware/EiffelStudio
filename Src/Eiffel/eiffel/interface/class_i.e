@@ -37,12 +37,12 @@ inherit
 
 	CONF_CONSTANTS
 		export
-			{NONE}
+			{NONE} all
 		end
 
 	SHARED_ENCODING_CONVERTER
 		export
-			{NONE}
+			{NONE} all
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER

@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	INHERIT_CLAUSE_AS [G -> detachable EIFFEL_LIST [AST_EIFFEL]]
+	INHERIT_CLAUSE_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
@@ -19,7 +19,7 @@ feature{NONE} -- Initialization
 	make (l: like content; k_as: like clause_keyword)
 			-- Initialize.
 		require
-			l_valid: l /= Void implies not l.is_empty
+			l_valid: l /= Void and then not l.is_empty
 		do
 			content := l
 			if k_as /= Void then
@@ -36,16 +36,15 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and clause_keyword_index /= 0 then
 				Result := clause_keyword (a_list)
-			elseif content /= Void then
+			end
+			if Result = Void or Result.is_null then
 				Result := content.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if content /= Void then
-				Result := content.last_token (a_list)
-			end
+			Result := content.last_token (a_list)
 			if (Result = Void or Result.is_null) and a_list /= Void and clause_keyword_index /= 0 then
 				Result := clause_keyword (a_list)
 			end
@@ -56,7 +55,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (meaningful_content, other.meaningful_content)
+			Result := content.is_equivalent (other.content)
 		end
 
 feature -- Roundtrip
@@ -83,8 +82,11 @@ feature -- Roundtrip
 			Result := clause_keyword_index
 		end
 
+invariant
+	content_not_empty: not content.is_empty
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

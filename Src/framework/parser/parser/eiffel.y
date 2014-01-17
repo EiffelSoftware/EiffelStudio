@@ -672,6 +672,14 @@ Clients: -- Empty
 
 Client_list: TE_LCURLY TE_RCURLY
 			{
+				
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply consider as {NONE}.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							once "Empty Client_list is not allowed and will be assumed to be {NONE}."))
+				end
 				$$ := ast_factory.new_class_list_as (1)
 				if attached $$ as l_list and then attached new_none_id as l_none_id then
 					l_list.reverse_extend (l_none_id)
@@ -1134,7 +1142,16 @@ New_export_list: New_export_item
 
 New_export_item: Client_list Feature_set ASemi
 			{
-					$$ := ast_factory.new_export_item_as (ast_factory.new_client_as ($1), $2)
+				if $2 = Void then
+						-- Per ECMA, this should be rejected. For now we only raise
+						-- a warning. And on the compiler side, we will simply ignore them altogether.
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+								once "Empty Feature_set is not allowed and will be discarded."))
+					end
+				end
+				$$ := ast_factory.new_export_item_as (ast_factory.new_client_as ($1), $2)
 			}
 	;
 
@@ -1274,7 +1291,16 @@ Select: TE_SELECT
 
 
 Formal_arguments:	TE_LPARAN TE_RPARAN
-			{ $$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2) }
+			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Empty formal argument list is not allowed"))
+				end
+				$$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2)
+			}
 	|	TE_LPARAN Add_counter Entity_declaration_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $5) }
 	;
@@ -2105,6 +2131,13 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 			}
 	|	TE_LSQURE TE_RSQURE
 			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							once "Empty Type_list is not allowed and will be discarded."))
+				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_list then
 					$$ := l_list
 					l_list.set_positions ($1, $2)
@@ -2137,12 +2170,19 @@ Unmarked_tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
+							once "Empty Type_list is not allowed and will be discarded."))
+				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
 					l_type_list.set_positions ($4, $5)
 					$$ := ast_factory.new_class_type_as ($1, l_type_list)
 				else
 					$$ := ast_factory.new_class_type_as ($1, Void)
-				end
+  				end
 				remove_counter
 				remove_counter2
 			}
@@ -2253,6 +2293,13 @@ Formal_generics:
 			}
 	|	TE_LSQURE TE_RSQURE
 			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							once "Empty Formal_generic_list is not allowed and will be discarded."))
+				end
 				set_formal_generics_end_positions (True)
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if attached $$ as l_formals then
@@ -2728,7 +2775,16 @@ Debug: TE_DEBUG Key_list Compound TE_END
 Key_list: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			{ $$ := ast_factory.new_key_list_as (Void, $1, $2) }
+			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Empty key list is not allowed"))
+				end
+				$$ := ast_factory.new_key_list_as (Void, $1, $2)
+			}
 	|	TE_LPARAN Add_counter String_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_key_list_as ($3, $1, $5) }
 	;
@@ -2900,7 +2956,16 @@ Agent_target: Identifier_as_lower
 Delayed_actuals: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			{ $$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2) }
+			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Empty agent actual list is not allowed"))
+				end
+				$$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2)
+			}
 	|	TE_LPARAN Add_counter Delayed_actual_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_delayed_actual_list_as ($3, $1, $5) }
 	;
@@ -3314,7 +3379,16 @@ Bracket_target:
 Parameters: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			{ $$ := ast_factory.new_parameter_list_as (Void, $1, $2) }
+			{
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Empty parameter list are not allowed"))
+				end
+				$$ := ast_factory.new_parameter_list_as (Void, $1, $2)
+			}
 	|	TE_LPARAN Add_counter Parameter_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_parameter_list_as ($3, $1, $5) }
 	;

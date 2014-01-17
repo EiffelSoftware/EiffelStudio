@@ -10,7 +10,7 @@ class
 	UNDEFINE_CLAUSE_AS
 
 inherit
-	INHERIT_CLAUSE_AS [detachable EIFFEL_LIST [FEATURE_NAME]]
+	INHERIT_CLAUSE_AS [EIFFEL_LIST [FEATURE_NAME]]
 		rename
 			clause_keyword as undefine_keyword,
 			clause_keyword_index as undefine_keyword_index
@@ -28,7 +28,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -59,8 +59,8 @@ feature -- Operation
 				item_ast.replace_text (l_text, match_list)
 			end
 			if is_separator_needed then
-				if not already_has_separator then
-					item_ast.append_text (separator, match_list)
+				if not already_has_separator and attached separator as l_sep then
+					item_ast.append_text (l_sep, match_list)
 				end
 			else
 				if already_has_separator then
@@ -115,7 +115,7 @@ invariant
 	item_ast_not_void: item_ast /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

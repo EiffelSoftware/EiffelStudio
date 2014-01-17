@@ -10,7 +10,7 @@ class
 	FORMAL_ARGU_DEC_LIST_AS
 
 inherit
-	PARAN_LIST_AS [detachable EIFFEL_LIST [TYPE_DEC_AS]]
+	PARAN_LIST_AS [EIFFEL_LIST [TYPE_DEC_AS]]
 		rename
 			content as arguments
 		end
@@ -27,7 +27,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

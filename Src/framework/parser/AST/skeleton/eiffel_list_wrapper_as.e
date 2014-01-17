@@ -7,39 +7,21 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_LIST_WRAPPER_AS [ G -> detachable EIFFEL_LIST [AST_EIFFEL]]
+	EIFFEL_LIST_WRAPPER_AS [ G -> EIFFEL_LIST [AST_EIFFEL]]
 
-feature -- Content
-
-	meaningful_content: detachable G
-			-- Meaningful `content'.
-			-- If `content' is not void and content is not empty,
-			-- `meaningful_content' is attached to `content', otherwise Void.
-		local
-			default_content: detachable G
-		do
-			Result := content
-			if Result /= Void and then Result.is_empty then
-				Result := default_content
-			end
-		ensure
-			good_result: valid_meaningful_content (Result)
-		end
+feature -- Access
 
 	content: G
 			-- Wrapped EIFFEL_LIST
 
-feature -- Status reporting
-
-	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN
-			-- Is `a_meaningful_content' valid?
+	meaningful_content: G
+		obsolete
+			"Use `content' instead."
 		do
-			if attached content as l_content and then not l_content.is_empty then
-				Result := a_meaningful_content = content
-			else
-				Result := a_meaningful_content = Void
-			end
+			Result := content
 		end
+
+invariant
 
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software"

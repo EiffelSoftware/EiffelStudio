@@ -83,7 +83,6 @@ feature {NONE} -- Implementation
 			l_old_name, l_new_name: FEATURE_NAME
 			old_name_id: INTEGER
 			l_vhrc2: VHRC2
-			l_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
 			if is_non_conforming then
 					-- If non-conforming then we will we create the appropriate non conforming parent c class
@@ -93,8 +92,7 @@ feature {NONE} -- Implementation
 			end
 			if attached {CL_TYPE_A} type_a_generator.evaluate_type (l_as.type, current_class) as l_parent_type then
 				last_parent_c.set_parent_type (l_parent_type)
-				l_exports := l_as.exports
-				if l_exports /= Void then
+				if attached l_as.exports as l_exports then
 					from
 						create last_export_adaptation.make (l_exports.count)
 						last_parent_c.set_exports (last_export_adaptation)
@@ -106,15 +104,15 @@ feature {NONE} -- Implementation
 						l_exports.forth
 					end
 				end
-				if l_as.renaming /= Void then
+				if attached l_as.renaming as l_renaming then
 					from
-						create l_renaming_c.make (l_as.renaming.count)
+						create l_renaming_c.make (l_renaming.count)
 						last_parent_c.set_renaming (l_renaming_c)
-						l_as.renaming.start
+						l_renaming.start
 					until
-						l_as.renaming.after
+						l_renaming.after
 					loop
-						l_rename_pair := l_as.renaming.item
+						l_rename_pair := l_renaming.item
 						l_old_name := l_rename_pair.old_name
 						old_name_id := l_old_name.internal_name.name_id
 						if l_renaming_c.has (old_name_id) then
@@ -129,7 +127,7 @@ feature {NONE} -- Implementation
 							l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, l_new_name.internal_alias_name_id, l_new_name.has_convert_mark), old_name_id)
 						end
 
-						l_as.renaming.forth
+						l_renaming.forth
 					end
 				end
 				if l_as.redefining /= Void then
@@ -153,7 +151,7 @@ feature {NONE} -- Implementation
 			check
 				last_export_status_set: last_export_status /= Void
 			end
-			l_as.features.process (Current)
+			safe_process (l_as.features)
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)
@@ -248,7 +246,7 @@ feature {NONE} -- Implementation
 	Selec: INTEGER = 3;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

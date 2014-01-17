@@ -762,8 +762,8 @@ feature {NONE} -- Implementation
 	update_character_locations
 			-- Update character locations for later use.
 		do
-			if yyline_used then
-				update_character_position_from_buffer (yy_content_area, yy_start, yy_end - 1)
+			if yyline_used and attached yy_content_area as l_content_area then
+				update_character_position_from_buffer (l_content_area, yy_start, yy_end - 1)
 			end
 		end
 

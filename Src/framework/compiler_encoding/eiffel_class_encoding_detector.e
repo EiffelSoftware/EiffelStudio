@@ -9,6 +9,17 @@ class
 inherit
 	ENCODING_DETECTOR
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize current
+		do
+			create {STRING_8} buffer.make_empty
+		end
+
 feature -- Access
 
 	detected_encoding: detachable ENCODING
@@ -243,6 +254,8 @@ feature {NONE} -- Implementation
 
 	consume_comments
 			-- Try consuming comments starting from current position.
+		require
+			buffer_attached: buffer /= Void
 		local
 			l_char: NATURAL_32
 			l_count: INTEGER
@@ -270,6 +283,8 @@ feature {NONE} -- Implementation
 
 	consume_space
 			-- Consume continous spaces starting from current position.
+		require
+			buffer_attached: buffer /= Void
 		local
 			l_char: NATURAL_32
 			l_count: INTEGER
@@ -304,7 +319,7 @@ feature {NONE} -- Implementation
 
 	found_encoding_keyword: BOOLEAN
 
-	buffer: detachable STRING_GENERAL
+	buffer: STRING_GENERAL
 
 	index: INTEGER
 
@@ -313,7 +328,7 @@ feature {NONE} -- Implementation
 	class_string: STRING = "class"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

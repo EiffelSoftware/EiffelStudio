@@ -9,17 +9,30 @@ feature -- Initialization
 	make
 			-- Creation procedure.
 		local
-			p: POINTER
+			l_null: POINTER
 			tp: TYPED_POINTER [POINTER]
-			the_foo: TUPLE [ptr: TYPED_POINTER [POINTER]]
-			the_foo2: TUPLE [ptr: TYPED_POINTER [POINTER]]
+			tu: TUPLE [ptr: TYPED_POINTER [POINTER]]
 		do
-			p := default_pointer
-			tp := $p
-			the_foo := [$p]
-			the_foo2 := [tp]
-			print (the_foo.ptr /= default_pointer) io.new_line
-			print (the_foo2.ptr /= default_pointer) io.new_line
+			tp := $l_null
+			tu := [tp]
+			if tu.ptr = l_null then
+				io.put_string ("Not OK%N")
+			end
+
+			tu := [$l_null]
+			if tu.ptr = l_null then
+				io.put_string ("Not OK%N")
+			end
+
+			tu := [$(default_pointer)]
+			if tu.ptr = l_null then
+				io.put_string ("Not OK%N")
+			end
+
+			tu := [$(default_pointer.default_pointer)]
+			if tu.ptr = l_null then
+				io.put_string ("Not OK%N")
+			end
 		end
 
 end

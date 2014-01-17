@@ -43,8 +43,6 @@ feature {NONE} -- Initialization
 			a_classname_not_void: a_classname /= Void
 			a_classname_not_empty: not a_classname.is_empty
 			a_factory_not_void: a_factory /= Void
-		local
-			l_cluster: CONF_CLUSTER
 		do
 			file_name := a_file_name
 			group := a_group
@@ -52,9 +50,6 @@ feature {NONE} -- Initialization
 			name := a_classname
 			is_valid := True
 			check_changed
-			if not is_error then
-				l_cluster ?= a_group
-			end
 			is_renamed := False
 			factory := a_factory
 		ensure
@@ -356,8 +351,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
-		local
-			l_cluster: CONF_CLUSTER
 		do
 			group := a_group
 			file_name := a_file_name
@@ -375,7 +368,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				-- are renamed and we want the old information to deal with removed overrides.
 			if not is_renamed then
 				if not is_error then
-					l_cluster ?= a_group
 					visible := Void
 				end
 

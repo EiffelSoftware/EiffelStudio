@@ -19,7 +19,7 @@ copy_raw	test_utf8.e $CLUSTER test_utf8.e
 copy_raw	test_external.e $CLUSTER test_external.e
 
 compile_final_keep
-compile_result validity_warning NONE VD89
+compile_result	ok
 
 c_compile_final
 c_compile_result ok

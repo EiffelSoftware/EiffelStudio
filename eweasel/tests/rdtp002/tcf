@@ -7,7 +7,7 @@ copy_sub	parser_test.e $CLUSTER parser_test.e
 copy_raw	test $TEST test
 
 compile_final
-compile_result validity_warning NONE VD89
+compile_result	ok
 
 c_compile_final
 c_compile_result ok

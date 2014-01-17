@@ -125,6 +125,8 @@ feature {NONE} -- Implementation
 			values: PS_SQL_ROW
 			primary: INTEGER
 
+			runtime_type: IMMUTABLE_STRING_8
+			is_null: BOOLEAN
 			val: STRING
 			managed: MANAGED_POINTER
 		do
@@ -142,28 +144,46 @@ feature {NONE} -- Implementation
 
 				create item.make (primary, type)
 			loop
-				val := values.at (attribute_cursor.item)
+				is_null := values.is_null (attribute_cursor.item)
 
-				if type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_32_type then
-					create managed.make ({PLATFORM}.real_32_bytes)
-					managed.put_real_32_be (val.to_real_32, 0)
-					val := managed.read_integer_32_be (0).out
+					-- We return the statically declared type,
+					-- because the backend doesn't support storing the runtime type.				
+				runtime_type := type.attribute_type (attribute_cursor.item).name
 
-				elseif type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_64_type then
-					create managed.make ({PLATFORM}.real_64_bytes)
-					managed.put_real_64_be (val.to_real_64, 0)
-					val := managed.read_integer_64_be (0).out
+				if is_null and then type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.reference_type then
+						-- String
+					val := ""
+					runtime_type := "NONE"
+				elseif is_null and then type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.boolean_type then
+						-- Boolean
+					val := "False"
+				elseif is_null then
+						-- Any numeric value
+					val := "0"
+				else
+						-- Not null
+					val := values.at (attribute_cursor.item)
+
+					if type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_32_type then
+						create managed.make ({PLATFORM}.real_32_bytes)
+						managed.put_real_32_be (val.to_real_32, 0)
+						val := managed.read_integer_32_be (0).out
+
+					elseif type.builtin_type [attribute_cursor.cursor_index] = {REFLECTOR_CONSTANTS}.real_64_type then
+						create managed.make ({PLATFORM}.real_64_bytes)
+						managed.put_real_64_be (val.to_real_64, 0)
+						val := managed.read_integer_64_be (0).out
+					end
 				end
-
 
 				item.add_attribute (
 						-- Attribute name.
 					attribute_cursor.item,
 						-- Attribute value.
 					val,
-						-- Runtime type: We return the statically declared type,
-						-- because the backend doesn't support storing the runtime type.
-					type.attribute_type (attribute_cursor.item).name)
+						-- Runtime type
+					runtime_type)
+
 			end
 		end
 

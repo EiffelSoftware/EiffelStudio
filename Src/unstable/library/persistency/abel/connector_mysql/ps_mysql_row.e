@@ -21,6 +21,12 @@ feature {PS_ABEL_EXPORT} -- Status report
 			Result := internal_row.mysql_result.field_map.has (column_name)
 		end
 
+	is_null (column_name: STRING): BOOLEAN
+			-- Is `column_name' NULL?
+		do
+			Result := internal_row.at_field (column_name).is_null_value
+		end
+
 feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER

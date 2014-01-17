@@ -22,7 +22,7 @@ feature
 
 	real_value: REAL_32
 
-	string_value: STRING
+	string_value: detachable STRING
 
 	set_id (an_id: like id)
 		do
@@ -34,12 +34,16 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := id.out + ", " + real_value.out + ", " + string_value + "%N"
+			Result := id.out + ", " + real_value.out + ", "
+			if attached string_value as str then
+				Result.append (str)
+			end
+			Result.append ("%N")
 		end
 
 feature {NONE}
 
-	make (real: REAL_32; string: STRING)
+	make (real: REAL_32; string: detachable STRING)
 		do
 			real_value := real
 			string_value := string

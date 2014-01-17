@@ -14,6 +14,11 @@ feature {PS_ABEL_EXPORT} -- Status report
 		deferred
 		end
 
+	is_null (column_name: STRING): BOOLEAN
+			-- Is `column_name' NULL?
+		deferred
+		end
+
 feature {PS_ABEL_EXPORT} -- Access
 
 	count: INTEGER

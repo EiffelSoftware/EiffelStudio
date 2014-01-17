@@ -114,23 +114,25 @@ feature -- Access
 			not_found_or_found: Result = 0 or else (Result >= 1 and then Result <= count)
 		end
 
-	pattern_types: ARRAY [TYPE_A]
+	pattern_types: detachable ARRAY [TYPE_A]
 			-- Pattern types of arguments
 		local
 			l_area: SPECIAL [TYPE_A]
 			r_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
-			from
-				l_area := area
-				nb := count
-				create Result.make (1, nb)
-				r_area := Result.area
-			until
-				i = nb
-			loop
-				r_area.put (l_area.item (i).meta_type, i)
-				i := i + 1
+			nb := count
+			if nb > 0 then
+				from
+					l_area := area
+					create Result.make (1, nb)
+					r_area := Result.area
+				until
+					i = nb
+				loop
+					r_area.put (l_area.item (i).meta_type, i)
+					i := i + 1
+				end
 			end
 		end
 
@@ -356,7 +358,7 @@ invariant
 	argument_names_not_void: argument_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -300,21 +300,26 @@ feature -- Parsing (Unknown encoding)
 			if attached a_class as l_class then
 				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
-			input_buffer := l_input_buffer
+					-- Only if we can get a buffer can we parse, otherwise it is an error
+			if attached l_input_buffer then
+				input_buffer := l_input_buffer
 
-				-- Abstracted from 'yy_load_input_buffer' to reuse local
-			yy_set_content (l_input_buffer.content)
-			yy_end := l_input_buffer.index
-			yy_start := yy_end
-			yy_line := l_input_buffer.line
-			yy_column := l_input_buffer.column
-			yy_position := l_input_buffer.position
+					-- Abstracted from 'yy_load_input_buffer' to reuse local
+				yy_set_content (l_input_buffer.content)
+				yy_end := l_input_buffer.index
+				yy_start := yy_end
+				yy_line := l_input_buffer.line
+				yy_column := l_input_buffer.column
+				yy_position := l_input_buffer.position
 
-			l_ast_factory := ast_factory
-			l_ast_factory.create_match_list (initial_match_list_size)
-			current_class := a_class
-			yyparse
-			match_list := l_ast_factory.match_list
+				l_ast_factory := ast_factory
+				l_ast_factory.create_match_list (initial_match_list_size)
+				current_class := a_class
+				yyparse
+				match_list := l_ast_factory.match_list
+			else
+				abort
+			end
 			reset
 		rescue
 			reset
@@ -350,22 +355,26 @@ feature -- Parsing (Unknown encoding)
 			if attached a_class as l_class then
 				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
-			input_buffer := l_input_buffer
+			if l_input_buffer /= Void then
+				input_buffer := l_input_buffer
 
-				-- Abstracted from 'yy_load_input_buffer' to reuse local.
-			yy_set_content (l_input_buffer.content)
-			yy_end := l_input_buffer.index
-			yy_start := yy_end
-			yy_line := l_input_buffer.line
-			yy_column := l_input_buffer.column
-			yy_position := l_input_buffer.position
+					-- Abstracted from 'yy_load_input_buffer' to reuse local.
+				yy_set_content (l_input_buffer.content)
+				yy_end := l_input_buffer.index
+				yy_start := yy_end
+				yy_line := l_input_buffer.line
+				yy_column := l_input_buffer.column
+				yy_position := l_input_buffer.position
 
-			filename := a_file.name
-			l_ast_factory := ast_factory
-			l_ast_factory.create_match_list (initial_match_list_size)
-			current_class := a_class
-			yyparse
-			match_list := l_ast_factory.match_list
+				filename := a_file.name
+				l_ast_factory := ast_factory
+				l_ast_factory.create_match_list (initial_match_list_size)
+				current_class := a_class
+				yyparse
+				match_list := l_ast_factory.match_list
+			else
+				abort
+			end
 			reset
 		rescue
 			reset

@@ -10,7 +10,7 @@ class
 	RENAME_CLAUSE_AS
 
 inherit
-	INHERIT_CLAUSE_AS [detachable EIFFEL_LIST [RENAME_AS]]
+	INHERIT_CLAUSE_AS [EIFFEL_LIST [RENAME_AS]]
 		rename
 			clause_keyword as rename_keyword,
 			clause_keyword_index as rename_keyword_index
@@ -108,7 +108,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

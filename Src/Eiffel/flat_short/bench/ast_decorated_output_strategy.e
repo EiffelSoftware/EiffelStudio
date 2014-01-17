@@ -3905,7 +3905,7 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.set_space_between_tokens
 			l_as.clients.process (Current)
 			l_text_formatter_decorator.put_space
-			l_as.features.process (Current)
+			safe_process (l_as.features)
 		end
 
 	process_elseif_as (l_as: ELSIF_AS)
@@ -5213,7 +5213,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

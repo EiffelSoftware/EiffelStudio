@@ -64,10 +64,10 @@ feature -- Buffer
 			l_buffer := detection_buffer
 			l_buffer.set_file (a_file)
 			l_buffer.detect_file
-			if l_buffer.last_detection_successful then
+			if attached l_buffer.detected_encoding as l_detected_encoding then
 				last_bom := l_buffer.last_bom
-				detected_encoding := l_buffer.detected_encoding
-				if l_buffer.detected_encoding.is_equal (utf8) then
+				detected_encoding := l_detected_encoding
+				if l_detected_encoding.is_equal (utf8) then
 					Result := l_buffer
 				else
 					-- Report unknown encoding error.
@@ -150,8 +150,8 @@ feature -- Buffer
 			detected_encoding := Void
 			last_bom := Void
 			bom_detector.detect (a_string)
-			if bom_detector.last_detection_successful then
-				l_encoding := bom_detector.detected_encoding
+			if attached bom_detector.detected_encoding as l_detected_encoding then
+				l_encoding := l_detected_encoding
 				last_bom := bom_detector.last_bom
 			elseif a_class /= Void and then attached encoding_from_class (a_class) as l_enc then
 				l_encoding := l_enc
@@ -197,7 +197,8 @@ feature -- Conversion
 				if l_encoding.last_conversion_successful then
 					Result := l_encoding.last_converted_stream
 				else
-					-- Report unsupported encoding error.
+						-- Report unsupported encoding error.
+					Result := a_stream
 				end
 				detected_encoding := l_encoding
 			else
@@ -236,7 +237,8 @@ feature -- Conversion
 					if l_encoding.last_conversion_successful then
 						Result := utf8_to_utf32 (l_encoding.last_converted_stream)
 					else
-						-- Report unsupported encoding error.
+							-- Report unsupported encoding error.
+						Result := a_stream.as_string_32
 					end
 				end
 				detected_encoding := l_encoding

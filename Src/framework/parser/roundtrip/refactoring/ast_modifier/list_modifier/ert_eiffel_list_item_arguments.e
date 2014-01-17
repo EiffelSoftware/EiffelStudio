@@ -14,7 +14,7 @@ inherit
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access		
 
-	separator:detachable  STRING
+	separator: detachable  STRING
 			-- Separator used to separate items.
 			-- Empty if no separator is needed.
 

@@ -9,7 +9,7 @@ class
 	PARAMETER_LIST_AS
 
 inherit
-	PARAN_LIST_AS [detachable EIFFEL_LIST [EXPR_AS]]
+	PARAN_LIST_AS [EIFFEL_LIST [EXPR_AS]]
 		rename
 			make as initialize,
 			content as parameters

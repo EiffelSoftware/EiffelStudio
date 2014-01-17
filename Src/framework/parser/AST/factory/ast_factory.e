@@ -1160,7 +1160,9 @@ feature -- Access
 	new_parameter_list_as (l: detachable EIFFEL_LIST [EXPR_AS]; lp_as, rp_as: detachable SYMBOL_AS): detachable PARAMETER_LIST_AS
 			-- New empty list of EXPR_AS
 		do
-			create Result.initialize (l, lp_as, rp_as)
+			if l /= Void then
+				create Result.initialize (l, lp_as, rp_as)
+			end
 		end
 
 	new_eiffel_list_feature_as (n: INTEGER): detachable EIFFEL_LIST [FEATURE_AS]
@@ -1997,25 +1999,31 @@ feature -- Access
 	new_formal_argu_dec_list_as (l: detachable EIFFEL_LIST [TYPE_DEC_AS]; l_as, r_as: detachable SYMBOL_AS): detachable FORMAL_ARGU_DEC_LIST_AS
 			-- New FORMAL_ARGU_DEC_LIST AST node
 		do
-			create Result.make (l, l_as, r_as)
+			if l /= Void then
+				create Result.make (l, l_as, r_as)
+			end
 		end
 
 	new_key_list_as (l: detachable EIFFEL_LIST [STRING_AS]; l_as, r_as: detachable SYMBOL_AS): detachable KEY_LIST_AS
 			-- New KEY_LIST AST node
 		do
-			create Result.make (l, l_as, r_as)
+			if l /= Void then
+				create Result.make (l, l_as, r_as)
+			end
 		end
 
 	new_delayed_actual_list_as (l: detachable EIFFEL_LIST [OPERAND_AS]; l_as, r_as: detachable SYMBOL_AS): detachable DELAYED_ACTUAL_LIST_AS
 			-- New DELAYED_ACTUAL_LIST AST node
 		do
-			create Result.make (l, l_as, r_as)
+			if l /= Void then
+				create Result.make (l, l_as, r_as)
+			end
 		end
 
 	new_rename_clause_as (l: detachable EIFFEL_LIST [RENAME_AS]; k_as: detachable KEYWORD_AS): detachable RENAME_CLAUSE_AS
 			-- New RENAME_CLAUSE AST node
 		do
-			if l = Void or else not l.is_empty then
+			if l /= Void then
 				create Result.make (l, k_as)
 			end
 		end
@@ -2023,7 +2031,7 @@ feature -- Access
 	new_export_clause_as (l: detachable EIFFEL_LIST [EXPORT_ITEM_AS]; k_as: detachable KEYWORD_AS): detachable EXPORT_CLAUSE_AS
 			-- New EXPORT_CLAUSE AST node
 		do
-			if l = Void or else not l.is_empty then
+			if l /= Void and then not l.is_empty then
 				create Result.make (l, k_as)
 			end
 		end
@@ -2031,7 +2039,7 @@ feature -- Access
 	new_undefine_clause_as (l: detachable EIFFEL_LIST [FEATURE_NAME]; k_as: detachable KEYWORD_AS): detachable UNDEFINE_CLAUSE_AS
 			-- New UNDEFINE_CLAUSE AST node
 		do
-			if l = Void or else not l.is_empty then
+			if l /= Void and then not l.is_empty then
 				create Result.make (l, k_as)
 			end
 		end
@@ -2039,7 +2047,7 @@ feature -- Access
 	new_redefine_clause_as (l: detachable EIFFEL_LIST [FEATURE_NAME]; k_as: detachable KEYWORD_AS): detachable REDEFINE_CLAUSE_AS
 			-- New REDEFINE_CLAUSE AST node
 		do
-			if l = Void or else not l.is_empty then
+			if l /= Void and then not l.is_empty then
 				create Result.make (l, k_as)
 			end
 		end
@@ -2047,7 +2055,7 @@ feature -- Access
 	new_select_clause_as (l: detachable EIFFEL_LIST [FEATURE_NAME]; k_as: detachable KEYWORD_AS): detachable SELECT_CLAUSE_AS
 			-- New SELECT_CLAUSE AST node
 		do
-			if l = Void or else not l.is_empty then
+			if l /= Void and then not l.is_empty then
 				create Result.make (l, k_as)
 			end
 		end

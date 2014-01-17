@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PARAN_LIST_AS [G -> detachable EIFFEL_LIST [AST_EIFFEL]]
+	PARAN_LIST_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
@@ -18,6 +18,8 @@ feature{NONE} -- Implementation
 
 	make (s_as: G; lp_as, rp_as: like lparan_symbol)
 			-- Initialize Current with `G' and its brackets.
+		require
+			s_as_not_void: s_as /= Void
 		do
 			content := s_as
 			if lp_as /= Void then
@@ -74,11 +76,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			if attached content as l_content and attached other.content as l_other_content then
-				Result := l_content.is_equivalent (l_other_content)
-			else
-				Result := content = other.content
-			end
+			Result := content.is_equivalent (other.content)
 		end
 
 feature -- Roundtrip/Token
@@ -87,9 +85,7 @@ feature -- Roundtrip/Token
 			-- First token in current AST node
 		do
 			if a_list = Void then
-				if content /= Void then
-					Result := content.first_token (a_list)
-				end
+				Result := content.first_token (a_list)
 			else
 				if lparan_symbol_index /= 0 and a_list /= Void then
 					Result := lparan_symbol (a_list)
@@ -101,9 +97,7 @@ feature -- Roundtrip/Token
 			-- Last token in current AST node
 		do
 			if a_list = Void then
-				if content /= Void then
-					Result := content.last_token (a_list)
-				end
+				Result := content.last_token (a_list)
 			else
 				if rparan_symbol_index /= 0 and a_list /= Void then
 					Result := rparan_symbol (a_list)
@@ -112,7 +106,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

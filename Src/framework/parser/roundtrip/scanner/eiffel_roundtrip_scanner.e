@@ -32,12 +32,16 @@ feature -- Scann
 		require
 			a_file_not_void: a_file /= Void
 		do
-			input_buffer := encoding_converter.input_buffer_from_file (a_file, Void)
-			detected_encoding := encoding_converter.detected_encoding
-			detected_bom := encoding_converter.last_bom
-			yy_load_input_buffer
-			filename := a_file.name
-			scan
+			if attached encoding_converter.input_buffer_from_file (a_file, Void) as l_input_buffer then
+				input_buffer := l_input_buffer
+				detected_encoding := encoding_converter.detected_encoding
+				detected_bom := encoding_converter.last_bom
+				yy_load_input_buffer
+				filename := a_file.name
+				scan
+			else
+				has_syntax_error := True
+			end
 		ensure
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end
@@ -93,11 +97,15 @@ feature -- Scann
 		require
 			a_string_not_void: a_string /= Void
 		do
-			input_buffer := encoding_converter.input_buffer_from_string (a_string, Void)
-			detected_encoding := encoding_converter.detected_encoding
-			detected_bom := encoding_converter.last_bom
-			yy_load_input_buffer
-			scan
+			if attached encoding_converter.input_buffer_from_string (a_string, Void) as l_input_buffer then
+				input_buffer := l_input_buffer
+				detected_encoding := encoding_converter.detected_encoding
+				detected_bom := encoding_converter.last_bom
+				yy_load_input_buffer
+				scan
+			else
+				has_syntax_error := True
+			end
 		ensure
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end

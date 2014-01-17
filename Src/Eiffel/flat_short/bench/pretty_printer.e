@@ -326,7 +326,7 @@ feature {NONE} -- List processing
 	list_separator_delimiting_space: NATURAL_8 = 4
 			-- List separator: space before every element but the first one.
 
-	process_and_print_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]; list_separator: NATURAL_8)
+	process_and_print_eiffel_list (l_as: detachable EIFFEL_LIST [AST_EIFFEL]; list_separator: NATURAL_8)
 			-- Process an eiffel list while printing `pre' and `post' before and after
 			-- processing of a list element.
 		require

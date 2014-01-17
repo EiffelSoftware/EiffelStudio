@@ -223,15 +223,15 @@ feature{NONE} -- Initialization
 			until
 				i > 5
 			loop
-				if inherit_clause.i_th (i) = Void then
+				if not attached inherit_clause.i_th (i) as l_inherit_clause then
 					l_empty_modifier := create {ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
 					l_empty_modifier.set_header_text (l_head_list.i_th (i))
 					if is_footer_needed then
 						l_empty_modifier.set_footer_text ("%N%T%T")
 					end
 					l_modifier := l_empty_modifier
-				elseif inherit_clause.i_th (i).content = Void or else inherit_clause.i_th (i).content.is_empty then
-					if attached inherit_clause.i_th (i).clause_keyword (match_list) as l_clause_keyword then
+				elseif not attached l_inherit_clause.content as l_content or else l_content.is_empty then
+					if attached l_inherit_clause.clause_keyword (match_list) as l_clause_keyword then
 						l_inherit_clause_name := l_clause_keyword
 					else
 							-- This should not happen.
@@ -241,7 +241,7 @@ feature{NONE} -- Initialization
 					l_empty_modifier.set_header_ast (l_inherit_clause_name)
 					l_modifier := l_empty_modifier
 				else
-					l_modifier := create {ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i).content, match_list)
+					l_modifier := create {ERT_EIFFEL_LIST_MODIFIER}.make (l_content, match_list)
 				end
 				l_modifier.set_arguments (l_sep_list.i_th (i), "%T%T%T", "%N")
 				inherit_clause_modifier.extend (l_modifier)
@@ -395,7 +395,7 @@ feature{NONE} -- Implementation
 	inherit_clause_modifier: ARRAYED_LIST [ERT_BASIC_EIFFEL_LIST_MODIFIER]
 			-- List of inherit clauses modifiers
 
-	inherit_clause: ARRAYED_LIST [INHERIT_CLAUSE_AS [EIFFEL_LIST [AST_EIFFEL]]]
+	inherit_clause: ARRAYED_LIST [detachable INHERIT_CLAUSE_AS [EIFFEL_LIST [AST_EIFFEL]]]
 			-- List of inherit clauses
 
 feature{NONE} -- Implementation
@@ -414,7 +414,7 @@ invariant
 	match_list_not_void: match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

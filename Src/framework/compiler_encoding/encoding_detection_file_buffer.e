@@ -30,6 +30,10 @@ feature -- Detection
 			l_file: like file
 			l_count: INTEGER
 		do
+			detected_encoding := Void
+			last_bom_count := 0
+			last_detection_successful := False
+			last_bom := Void
 			if not end_of_file then
 				l_file := file
 				compact_left
@@ -39,8 +43,8 @@ feature -- Detection
 				l_count := l_file.read_to_string (l_lead, 1, 4)
 				if l_count > 0 then
 					l_lead.set_count (l_count)
-					detect (l_lead)
 					buff := content
+					detect (l_lead)
 					if last_detection_successful then
 						buff.fill_from_string (l_lead.substring (last_bom_count + 1, l_lead.count), 1)
 						count := count + l_lead.count - last_bom_count
@@ -52,6 +56,8 @@ feature -- Detection
 					buff.put (End_of_buffer_character, count + 2)
 				end
 			end
+		ensure
+			detected_encoding_set_when_found: last_detection_successful implies detected_encoding /= Void
 		end
 
 note

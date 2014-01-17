@@ -166,13 +166,11 @@ feature{NONE} -- Modification computation
 			-- Compute modifications needed two merge rename clauses.
 		local
 			l_index: INTEGER
-			l_rename_list: EIFFEL_LIST [RENAME_AS]
 		do
 			check
 				last_computed_modifier /= Void
 			end
-			if source.internal_renaming /= Void and then source.internal_renaming.content /= Void then
-				l_rename_list := source.internal_renaming.content
+			if attached source.internal_renaming as l_renaming and then attached l_renaming.content as l_rename_list then
 				l_index := l_rename_list.index
 				from
 					l_rename_list.start
@@ -289,10 +287,8 @@ feature{NONE} -- Modification computation
 		local
 			l_index: INTEGER
 			l_rename: RENAME_AS
-			l_rename_list: EIFFEL_LIST [RENAME_AS]
 		do
-			if not (destination.internal_renaming = Void or else destination.internal_renaming.content = Void or else destination.internal_renaming.content.is_empty) then
-				l_rename_list := destination.internal_renaming.content
+			if attached destination.internal_renaming as l_renaming and then attached l_renaming.content as l_rename_list and then not l_rename_list.is_empty then
 				l_index := l_rename_list.index
 				from
 					l_rename_list.start
@@ -380,7 +376,7 @@ feature{NONE} -- Modification computation
 	internal_final_names: like final_names
 			-- Final names of all renamed features.
 
-	build_final_names (a_rename_clause: RENAME_CLAUSE_AS; a_name_table: like final_names)
+	build_final_names (a_rename_clause: detachable RENAME_CLAUSE_AS; a_name_table: like final_names)
 			-- Build a hash_tabel for renamed features.
 		require
 			a_name_table_not_void: a_name_table /= Void
@@ -430,7 +426,7 @@ invariant
 	destination_match_list_not_void: destination_match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -443,21 +439,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

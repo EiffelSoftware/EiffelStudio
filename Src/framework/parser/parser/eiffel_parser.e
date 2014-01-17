@@ -4936,6 +4936,14 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply consider as {NONE}.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+							once "Empty Client_list is not allowed and will be assumed to be {NONE}."))
+				end
 				yyval104 := ast_factory.new_class_list_as (1)
 				if attached yyval104 as l_list and then attached new_none_id as l_none_id then
 					l_list.reverse_extend (l_none_id)
@@ -6798,7 +6806,16 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-					yyval44 := ast_factory.new_export_item_as (ast_factory.new_client_as (yyvs104.item (yyvsp104)), yyvs50.item (yyvsp50))
+				if yyvs50.item (yyvsp50) = Void then
+						-- Per ECMA, this should be rejected. For now we only raise
+						-- a warning. And on the compiler side, we will simply ignore them altogether.
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (token_line (yyvs104.item (yyvsp104)), token_column (yyvs104.item (yyvsp104)), filename,
+								once "Empty Feature_set is not allowed and will be discarded."))
+					end
+				end
+				yyval44 := ast_factory.new_export_item_as (ast_factory.new_client_as (yyvs104.item (yyvsp104)), yyvs50.item (yyvsp50))
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
@@ -7441,7 +7458,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval121 := ast_factory.new_formal_argu_dec_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						once "Empty formal argument list is not allowed"))
+				end
+				yyval121 := ast_factory.new_formal_argu_dec_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp121 := yyvsp121 + 1
@@ -10708,6 +10733,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+							once "Empty Type_list is not allowed and will be discarded."))
+				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_list then
 					yyval117 := l_list
 					l_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
@@ -10837,12 +10869,19 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+							once "Empty Type_list is not allowed and will be discarded."))
+				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
 					l_type_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 					yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), l_type_list)
 				else
 					yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void)
-				end
+  				end
 				remove_counter
 				remove_counter2
 			
@@ -11160,6 +11199,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+							once "Empty Formal_generic_list is not allowed and will be discarded."))
+				end
 				set_formal_generics_end_positions (True)
 				yyval103 := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if attached yyval103 as l_formals then
@@ -13401,7 +13447,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval115 := ast_factory.new_key_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						once "Empty key list is not allowed"))
+				end
+				yyval115 := ast_factory.new_key_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp115 := yyvsp115 + 1
@@ -14409,7 +14463,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval110 := ast_factory.new_delayed_actual_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						once "Empty agent actual list is not allowed"))
+				end
+				yyval110 := ast_factory.new_delayed_actual_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp110 := yyvsp110 + 1
@@ -17138,7 +17200,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval95 := ast_factory.new_parameter_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+					-- Per ECMA, this should be rejected. For now we only raise
+					-- a warning. And on the compiler side, we will simply ignore them altogether.
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						once "Empty parameter list are not allowed"))
+				end
+				yyval95 := ast_factory.new_parameter_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp95 := yyvsp95 + 1

@@ -46,18 +46,18 @@ feature -- Operation
 			l_text: STRING
 		do
 			create l_text.make (text.count + trailing_text.count + leading_text.count + separator.count)
-			l_text.append (trailing_text)
-			l_text.append (leading_text)
+			l_text.append_string (trailing_text)
+			l_text.append_string (leading_text)
 			l_text.append_string (text)
 			if is_separator_needed then
-				l_text.append (separator)
+				l_text.append_string (separator)
 			end
 			attached_ast.append_text (l_text, match_list)
 			applied := True
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -606,7 +606,7 @@ feature -- Access
 	body_indexes: HASH_TABLE [FEATURE_AS, INTEGER]
 			-- Table for FEATURE_AS instance indexed by their body index.
 
-	feature_with_name (n: INTEGER): FEATURE_AS
+	feature_with_name (n: INTEGER): detachable FEATURE_AS
 			-- Feature AST with internal name `n'.
 		local
 			l_features: like features
@@ -724,13 +724,12 @@ feature -- Access
 			correct_item: Result /= Void implies Result.node = a_clickable
 		end
 
-	click_ast: CLICK_AST
+	click_ast: detachable CLICK_AST
 			-- Position of class name.
 		do
 			Result := clickable_item (Current)
 		ensure
-			not_void: Result /= Void
-			correct_item: Result.node = Current
+			click_ast_definition: Result /= Void implies Result.node = Current
 		end
 
 	generics_as_string: STRING

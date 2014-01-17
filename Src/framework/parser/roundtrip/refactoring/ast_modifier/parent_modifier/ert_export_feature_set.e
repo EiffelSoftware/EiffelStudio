@@ -37,28 +37,26 @@ feature{NONE} -- Implementation
 			until
 				export_clause.after
 			loop
-				if export_clause.item.features /= Void then
-					if attached {ALL_AS} export_clause.item.features as l_all then
-						features.extend (create{ERT_EXPORT_FEATURE}.make (l_all.all_keyword (a_list).text (a_list), client_set (export_clause.item)))
-					elseif attached {FEATURE_LIST_AS} export_clause.item.features as l_feature_list then
-						l_index2 := l_feature_list.features.index
-						from
-							l_feature_list.features.start
-						until
-							l_feature_list.features.after
-						loop
-							l_old_name := l_feature_list.features.item.internal_name.name.as_lower
-							l_new_name := final_name_table.item (l_old_name)
-							if l_new_name = Void then
-								l_new_name := l_old_name
-							end
-							features.extend (create{ERT_EXPORT_FEATURE}.make (l_new_name,
-											 client_set (export_clause.item)))
-
-							l_feature_list.features.forth
+				if attached {ALL_AS} export_clause.item.features as l_all then
+					features.extend (create{ERT_EXPORT_FEATURE}.make (l_all.all_keyword (a_list).text (a_list), client_set (export_clause.item)))
+				elseif attached {FEATURE_LIST_AS} export_clause.item.features as l_feature_list then
+					l_index2 := l_feature_list.features.index
+					from
+						l_feature_list.features.start
+					until
+						l_feature_list.features.after
+					loop
+						l_old_name := l_feature_list.features.item.internal_name.name.as_lower
+						l_new_name := final_name_table.item (l_old_name)
+						if l_new_name = Void then
+							l_new_name := l_old_name
 						end
-						l_feature_list.features.go_i_th (l_index2)
+						features.extend (create{ERT_EXPORT_FEATURE}.make (l_new_name,
+										 client_set (export_clause.item)))
+
+						l_feature_list.features.forth
 					end
+					l_feature_list.features.go_i_th (l_index2)
 				end
 				export_clause.forth
 			end
@@ -186,7 +184,7 @@ invariant
 	features_not_void: features /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

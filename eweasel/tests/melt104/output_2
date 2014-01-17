@@ -1,0 +1,15 @@
+Printing count via local variable:
+11
+11
+Printing count via address expression:
+11
+11
+Printing string via local variable:
+01234567890
+01234567890
+Printing string via assignment to a tuple entry:
+01234567890
+Printing string via address expression:
+01234567890
+01234567890
+Execution completed

@@ -3827,16 +3827,16 @@ feature {NONE} -- Visitor
 		end
 
 	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
-		local
-			l_expr: EXPR_B
 		do
 			l_as.expr.process (Current)
-				-- Eventhough there might be an error in `l_as.expr' we can continue
-				-- and do as if there was none.
-			set_type (pointer_type, l_as)
-			if is_byte_node_enabled then
-				l_expr ?= last_byte_node
-				create {EXPR_ADDRESS_B} last_byte_node.make (l_expr)
+			if attached last_type as l_type then
+				create {TYPED_POINTER_A} last_type.make_typed (l_type)
+				instantiator.dispatch (last_type, context.current_class)
+				if is_byte_node_enabled and attached {EXPR_B} last_byte_node as l_expr then
+					create {EXPR_ADDRESS_B} last_byte_node.make (l_expr)
+				end
+			else
+					-- An error occurred.
 			end
 		end
 
@@ -11167,7 +11167,7 @@ feature {NONE} -- Type recording
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

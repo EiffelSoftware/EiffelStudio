@@ -17,8 +17,8 @@ inherit
 	SHARED_TABLE
 	SHARED_DECLARATIONS
 	SHARED_TYPE_I
-		export {NONE}
-			all
+		export
+			{NONE} all
 		end
 
 create

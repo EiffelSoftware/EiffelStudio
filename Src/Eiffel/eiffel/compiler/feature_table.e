@@ -89,8 +89,7 @@ inherit
 			after as internal_table_after,
 			forth as internal_table_forth
 		export
-			{NONE}
-				clear_all, wipe_out, extend
+			{NONE} clear_all, wipe_out, extend
 		redefine
 			cursor, valid_cursor, go_to
 		end

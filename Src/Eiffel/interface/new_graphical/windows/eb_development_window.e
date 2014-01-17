@@ -38,9 +38,8 @@ inherit
 		end
 
 	EB_FILEABLE
-		export {NONE}
-			set_position,
-			set_pos_container
+		export
+			{NONE} set_position, set_pos_container
 		redefine
 			set_stone,
 			reset,
@@ -59,11 +58,9 @@ inherit
 	EB_FILEABLE
 		rename
 			set_stone as old_set_stone
-		export {NONE}
-			set_position,
-			set_pos_container
-				{EB_STONE_CHECKER}
-			old_set_stone
+		export
+			{NONE} set_position, set_pos_container
+			{EB_STONE_CHECKER} old_set_stone
 		redefine
 			reset,
 			stone,
@@ -99,7 +96,7 @@ inherit
 
 	EV_KEY_CONSTANTS
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -110,14 +107,14 @@ inherit
 
 	SHARED_TEXT_ITEMS
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	SHARED_COMPILER_PROFILE
 		rename
 			reset as reset_compiler_profile
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 	REFACTORING_HELPER

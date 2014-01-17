@@ -13,10 +13,9 @@ class
 inherit
 	ES_MODIFIABLE
 
---inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
 		export
-			{NONE}
+			{NONE} all
 		end
 
 	EB_SHARED_PREFERENCES

@@ -12,17 +12,17 @@ inherit
 
 	SHARED_WORKBENCH
 		export
-			{NONE} ALL
+			{NONE} all
 		end
 
 	COMPILER_EXPORTER
 		export
-			{NONE} ALL
+			{NONE} all
 		end
 
 	BASIC_ROUTINES
 		export
-			{NONE} ALL
+			{NONE} all
 		end
 
 feature -- Initialization

@@ -22,8 +22,8 @@ inherit
 	SHARED_GENERATION
 
 	SHARED_TYPE_I
-		export {NONE}
-			all
+		export
+			{NONE} all
 		end
 
 	BYTE_CONST

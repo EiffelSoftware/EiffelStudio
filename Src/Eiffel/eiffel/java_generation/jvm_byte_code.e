@@ -14,8 +14,8 @@ inherit
 	SHARED_JVM_CLASS_REPOSITORY
 			
 	APPENDABLE_NETWORK_BYTE_ARRAY
-		export {NONE}
-			store
+		export
+			{NONE} store
 		end
 
 create

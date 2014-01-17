@@ -20,8 +20,8 @@ inherit
 		end
 
 	SHARED_DEGREES
-		export {NONE}
-			all
+		export
+			{NONE} all
 		end
 
 create

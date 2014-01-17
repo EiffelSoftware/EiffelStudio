@@ -10,9 +10,11 @@ class
 	INI_LITERAL
 
 inherit
+	ANY
+
 	DEBUG_OUTPUT
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

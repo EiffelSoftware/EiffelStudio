@@ -42,7 +42,7 @@ inherit
 		rename
 			text as text_from_formatted_text
 		export
-			{NONE} All
+			{NONE} all
 		undefine
 			clear_window, reset, default_create
 		end

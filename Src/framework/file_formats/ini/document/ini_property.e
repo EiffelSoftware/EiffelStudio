@@ -20,9 +20,11 @@ class
 	INI_PROPERTY
 
 inherit
+	ANY
+
 	DEBUG_OUTPUT
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

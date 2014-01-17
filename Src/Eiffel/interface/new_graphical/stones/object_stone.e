@@ -20,7 +20,7 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 		export
-			{NONE}
+			{NONE} all
 		end
 
 create

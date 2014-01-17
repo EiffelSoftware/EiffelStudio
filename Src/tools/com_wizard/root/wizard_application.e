@@ -13,7 +13,7 @@ inherit
 
 	WIZARD_SHARED_DATA
 		export
-			{NONE}
+			{NONE} all
 		undefine
 			default_create,
 			copy
@@ -21,7 +21,7 @@ inherit
 
 	WIZARD_SHARED_VERSION_NUMBER
 		export
-			{NONE}
+			{NONE} all
 		undefine
 			default_create,
 			copy

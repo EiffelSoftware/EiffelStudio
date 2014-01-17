@@ -12,7 +12,7 @@ inherit
 
 	WARNING_MESSAGES
 		export
-			{NONE} All
+			{NONE} all
 		end
 
 create

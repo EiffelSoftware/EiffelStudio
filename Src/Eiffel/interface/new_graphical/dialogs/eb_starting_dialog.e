@@ -17,7 +17,7 @@ inherit
 
 	EV_DIALOG_CONSTANTS
 		export
-			{NONE} All
+			{NONE} all
 		undefine
 			copy,
 			default_create

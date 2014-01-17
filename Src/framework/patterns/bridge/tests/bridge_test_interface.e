@@ -13,7 +13,6 @@ class
 inherit
 	BRIDGE [BRIDGE_TEST_INTERFACE_I]
 
-inherit {NONE}
 	BRIDGE_TEST_INTERFACE_I
 
 feature -- Access

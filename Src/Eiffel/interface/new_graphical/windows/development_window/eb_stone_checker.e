@@ -15,7 +15,7 @@ inherit
 
 	SHARED_TEXT_ITEMS
 		export
-			{NONE} All
+			{NONE} all
 		end
 create
 	make

@@ -12,10 +12,9 @@ class
 inherit
 	WIZARD_ABOUT_DIALOG_IMP
 
-
 	WIZARD_SHARED_VERSION_NUMBER
 		export
-			{NONE}
+			{NONE} all
 		undefine
 			default_create,
 			copy

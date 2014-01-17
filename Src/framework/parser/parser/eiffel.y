@@ -129,7 +129,7 @@ create
 %type <detachable ELSIF_EXPRESSION_AS>		Elseif_part_expression
 %type <detachable ENSURE_AS>			Postcondition
 %type <detachable EXPORT_ITEM_AS>		New_export_item
-%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
+%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression Actual_parameter
 %type <detachable EXTERNAL_AS>			External
 %type <detachable EXTERNAL_LANG_AS>	External_language
 %type <detachable FEATURE_AS>			Feature_declaration
@@ -182,7 +182,7 @@ create
 %type <detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]>			Elseif_list_expression Elseif_part_list_expression
 %type <detachable EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
 %type <detachable EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
-%type <detachable EIFFEL_LIST [EXPR_AS]>			Expression_list
+%type <detachable EIFFEL_LIST [EXPR_AS]>			Expression_list Parameter_list
 %type <detachable PARAMETER_LIST_AS> 	Parameters
 %type <detachable EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
@@ -3142,8 +3142,6 @@ Factor: TE_VOID
 			{ $$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS Feature_name
 			{ $$ := ast_factory.new_address_as ($2, $1) }
-	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_expr_address_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS TE_CURRENT
 			{ $$ := ast_factory.new_address_current_as ($2, $1) }
 	|	TE_ADDRESS TE_RESULT
@@ -3317,8 +3315,31 @@ Parameters: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
 			{ $$ := ast_factory.new_parameter_list_as (Void, $1, $2) }
-	|	TE_LPARAN Add_counter Expression_list Remove_counter TE_RPARAN
+	|	TE_LPARAN Add_counter Parameter_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_parameter_list_as ($3, $1, $5) }
+	;
+
+Actual_parameter: Expression
+			{ $$ := $1 }
+	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
+			{ $$ := ast_factory.new_expr_address_as ($3, $1, $2, $4) }
+	;
+
+Parameter_list: Actual_parameter
+			{
+				$$ := ast_factory.new_eiffel_list_expr_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	Actual_parameter TE_COMMA Increment_counter Parameter_list
+			{
+				$$ := $4
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+					ast_factory.reverse_extend_separator (l_list, $2)
+				end
+			}
 	;
 
 Expression_list: Expression

@@ -10,7 +10,7 @@ feature
 
 		end
 
-	Frozen Idler:Procedure[Any, Tuple[]] Is 
+	Frozen Idler:Procedure[Any, Tuple] Is 
 		Once
 			Result := Agent Do_Nothing
 		End

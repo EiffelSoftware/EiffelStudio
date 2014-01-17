@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 			create choice_list
 			create full_list.make_empty
 			create matches.make_empty
-			choice_list.default_key_processing_handler := agent (a_key: EV_KEY): BOOLEAN
+			choice_list.set_default_key_processing_handler (agent (a_key: EV_KEY): BOOLEAN
 				do
 					Result := not a_key.is_arrow and not (a_key.code = {EV_KEY_CONSTANTS}.key_tab)
-				end
+				end)
 			choice_list.enable_single_row_selection
 			choice_list.key_press_string_actions.extend (agent on_char)
 			choice_list.key_press_actions.extend (agent on_key_down)

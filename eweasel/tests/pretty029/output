@@ -11,7 +11,7 @@ feature
 			i: INTEGER
 		do
 			i := euclid (13, 7)
-			g ()
+			g
 		end
 
 	g

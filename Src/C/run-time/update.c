@@ -721,16 +721,16 @@ rt_private void parents_updt(void)
 		if (pt == (struct eif_par_types *) 0)
 			enomem(MTC_NOARG);
 
-		/* Number of generics */
+			/* Number of parents */
+		pt->nb_parents = (uint16) wshort ();
 
+			/* Number of generics */
 		pt->nb_generics = (uint16) wshort ();
 
-		/* Read class name */
-
+			/* Read class name */
 		pt->dtype = (EIF_TYPE_INDEX) wshort ();
 
-		/* Is it expanded? */
-
+			/* Is it expanded? */
 		wread(&(pt->is_expanded),1);
 
 		/* Parent types */

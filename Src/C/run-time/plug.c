@@ -637,13 +637,8 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 	RT_GC_PROTECT(obj);	/* Automatic protection of `obj' */
 	cn_parents = par_info(dtype)->parents;	/* Recursion on parents first. */
 
-	cn_parents++;	/* We skip the annotation mark. */
 	p_type = *cn_parents++;
 	while (p_type != TERMINATOR) {
-			/* Skip any potential annotation mark on the parent clause. */
-		while (RT_HAS_ANNOTATION_TYPE(p_type)) {
-			p_type = *cn_parents++;
-		}
 			/* Call to potential parent invariant */
 		recursive_chkinv(p_type, obj, where);
 			/* Iterate `cn_parents' until we reach the next parent or the end. */
@@ -651,7 +646,6 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 			p_type = *cn_parents++;
 		}
 		if (p_type == PARENT_TYPE_SEPARATOR) {
-			cn_parents++;	/* We skip the annotation mark. */
 			p_type = *cn_parents++;
 		}
 	}

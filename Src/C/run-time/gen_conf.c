@@ -2311,24 +2311,12 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 	is_expanded = pt->is_expanded;
 
 		/* Let's compute the number of parent types. */
-	pcount = 0;
+	pcount = pt->nb_parents;
 	intable = pt->parents;
-		/* Skip annotation entry. */
-	intable++;
-	pftype = *intable++;
-	while (pftype != TERMINATOR) {
-		while ((pftype != PARENT_TYPE_SEPARATOR) && (pftype != TERMINATOR)) {
-			pftype = *intable++;
-		}
-		if (pftype == PARENT_TYPE_SEPARATOR) {
-			pftype = *intable++;
-		}
-		pcount++;
-	}
 
 	if (gdp->annotation) {
-			/* We propagate the annotation to the parent, that is to say if class A inherit B, when
-			 * building the parents of !A, we actually want !B. */
+			/* If type is attached, then we need to register the conformance
+			 * to the detachable version as well. That is to say !A should conform to ?A */
 		type_annotation = gdp->annotation;
 		pcount++;
 		repeat_parent_iteration = 0;
@@ -2376,27 +2364,17 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 
 non_attached_parents:
 		intable = pt->parents;
-			/* If there is an annotation and if it is not ANY (ANY being
-			 * the only class for which the parent description is made of
-			 * {0, 0xFFFF}), we put the annotation for all parents. */
-		if (type_annotation && (intable[1] != TERMINATOR)) {
-			intable[0] = type_annotation;
-		} else {
-				/* annotation slot is useless, so skip it. */
-			intable++;
-		}
 
 		outtable = outtab;
 		while (*intable != TERMINATOR) {
 			pftype = rt_id_of (&intable, &outtable, dftype);
+			if (type_annotation) {
+				pftype = eif_attached_type(pftype);
+			}
 			if (*intable == PARENT_TYPE_SEPARATOR) {
 				intable++;
-				if (type_annotation) {
-					*intable = type_annotation;
-				} else {
-						/* annotation slot is useless, so skip it. */
-					intable++;
-				}
+			} else {
+				CHECK("Terminator expected", *intable == TERMINATOR);
 			}
 
 				/* Register parent type */

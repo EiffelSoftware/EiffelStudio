@@ -4288,13 +4288,8 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 		/* The list of parent dynamic types is always terminated by TERMINATOR,
 		 * and between parents by PARENT_TYPE_SEPARATOR.
 		 */
-	cn_parents++;	/* We skip the annotation mark. */
 	p_type = *cn_parents++;
 	while (p_type != TERMINATOR) {
-			/* Skip any potential annotation mark on the parent clause. */
-		while (RT_HAS_ANNOTATION_TYPE(p_type)) {
-			p_type = *cn_parents++;
-		}
 			/* Call to potential parent invariant */
 		irecursive_chkinv(p_type, obj, scur, stop, where);
 			/* Iterate `cn_parents' until we reach the next parent or the end. */
@@ -4302,7 +4297,6 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 			p_type = *cn_parents++;
 		}
 		if (p_type == PARENT_TYPE_SEPARATOR) {
-			cn_parents++;	/* We skip the annotation mark. */
 			p_type = *cn_parents++;
 		}
 	}

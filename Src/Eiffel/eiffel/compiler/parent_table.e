@@ -6,10 +6,12 @@ note
 class PARENT_TABLE
 
 inherit
-	ARRAY [CL_TYPE_A]
+	HASH_TABLE [BOOLEAN, CL_TYPE_A]
 		rename
-			make as array_make
-		end;
+			make as table_make
+		redefine
+			same_keys
+		end
 
 	REFACTORING_HELPER
 		undefine
@@ -19,6 +21,9 @@ inherit
 
 create
 	make
+
+create {PARENT_TABLE}
+	table_make
 
 feature
 
@@ -32,10 +37,8 @@ feature
 			-- Is type expanded?
 
 	make
-
 		do
-			array_make (1, Init_size)
-			crnt_pos := 1
+			table_make (Init_size)
 		end
 
 	init (tid, gcount : INTEGER; is_exp : BOOLEAN)
@@ -48,12 +51,11 @@ feature
 			type_id := tid;
 			generic_count := gcount
 			is_expanded := is_exp
-			crnt_pos := 1
+			wipe_out
 		ensure
 			type_id_set: type_id = tid
 			generic_count_set: generic_count = gcount
 			expandedness_set: is_expanded = is_exp
-			cursor_reset: crnt_pos = 1
 		end;
 
 	append_type (ptype : CL_TYPE_A)
@@ -61,16 +63,9 @@ feature
 		require
 			valid_type: ptype /= Void
 		do
-			if crnt_pos > upper then
-				conservative_resize (1, crnt_pos + Increment);
-			end;
-
-				-- We use the parent type without an attachment mark because the
-				-- generated code already reserve an empty space for it which is used
-				-- by the runtime to perform proper conformance between attached
-				-- and detachable types
-			put (ptype.as_attachment_mark_free, crnt_pos);
-			crnt_pos := crnt_pos + 1
+				-- We use the parent type without any annotations since inheritance
+				-- is not bound to the annotations.
+			put (True, ptype.as_attachment_mark_free)
 		end;
 
 	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_class_type: CLASS_TYPE)
@@ -79,7 +74,7 @@ feature
 			valid_file: buffer /= Void
 			a_class_type_not_void: a_class_type /= Void
 		local
-			i, j, n : INTEGER;
+			j, n: INTEGER;
 			l_type_id: INTEGER
 		do
 			l_type_id := type_id
@@ -91,35 +86,22 @@ feature
 			buffer.put_string ("static EIF_TYPE_INDEX ptf");
 			buffer.put_integer (l_type_id);
 			buffer.put_string ("[] = {");
-					-- Prefix each description with a place holder that can be used to hold
-					-- an attachment mark.
-			buffer.put_two_character ('0', ',')
 
-			from
-				i := 1;
-				j := 1;
-				n := crnt_pos;
-			until
-				i >= n
-			loop
-					-- Prefix each description with a place holder that can be used to hold
-					-- an attachment mark.
-				item (i).generate_cid (buffer, final_mode, False, a_class_type.type);
-
-				i := i + 1;
-				j := j + 1;
-
-				if i < n then
+			j := 1
+			n := count
+			across Current as l_table loop
+				l_table.key.generate_cid (buffer, final_mode, False, a_class_type.type)
+				if j < n then
 						-- Add a separator between parents.
 					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
-						-- Prefix each description with a place holder that can be used to hold
-						-- an attachment mark.
-					buffer.put_three_character (',', '0', ',')
+					buffer.put_character (',')
 				end
 
 				if (j \\ 16) = 0 then
 					buffer.put_new_line
 				end
+
+				j := j + 1
 			end;
 
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type);
@@ -133,6 +115,8 @@ feature
 
 			buffer.put_integer (l_type_id);
 
+			buffer.put_string (", (uint16) ")
+			buffer.put_integer (count)
 			buffer.put_string (", (uint16) ")
 			buffer.put_integer (generic_count)
 			buffer.put_string (", (char) ")
@@ -149,10 +133,12 @@ feature
 	make_byte_code (ba: BYTE_ARRAY; a_class_type: CLASS_TYPE)
 			-- Generate byte code
 		local
-			i, n: INTEGER;
+			i, n: INTEGER
 		do
 			-- Dynamic type associated to the table
 			ba.append_short_integer (type_id);
+			-- Number of parents
+			ba.append_short_integer (count)
 			-- Number of formal generics
 			ba.append_short_integer (generic_count)
 			-- Static type
@@ -164,25 +150,15 @@ feature
 				ba.append ('%U')
 			end
 
-				-- Prefix each description with a place holder that can be used to hold
-				-- an attachment mark.
-			ba.append_short_integer (0)
-
-			from
-				i := 1
-				n := crnt_pos;
-			until
-				i >= n
-			loop
-				item (i).make_type_byte_code (ba, False, a_class_type.type);
-				i := i + 1
+			i := 1
+			n := count
+			across Current as l_table loop
+				l_table.key.make_type_byte_code (ba, False, a_class_type.type);
 				if i < n then
 						-- Add a separator between parents.
 					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.parent_type_separator)
-						-- Prefix each description with a place holder that can be used to hold
-						-- an attachment mark.
-					ba.append_short_integer (0)
 				end
+				i := i + 1
 			end;
 
 				-- End mark
@@ -191,16 +167,20 @@ feature
 
 feature {NONE}  -- Implementation
 
-	Init_size : INTEGER = 64
+	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			Result := a_search_key.same_as (a_key)
+		end
+
+	Init_size : INTEGER = 5
 				-- Initial size of array
-	Increment : INTEGER = 32
+
+	Increment : INTEGER = 5
 				-- Size increment
 
-	crnt_pos : INTEGER;
-				-- Cursor position for appending data
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

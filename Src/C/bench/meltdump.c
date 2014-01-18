@@ -714,6 +714,9 @@ static  void    analyze_parents (void)
 		if (dtype == TERMINATOR)
 			break;
 
+			/* Read number of parents. */
+		(void) rshort ();
+
 			/* Read number of generics. */
 		(void) rshort ();
 

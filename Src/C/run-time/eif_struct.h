@@ -160,6 +160,7 @@ struct conform {
 struct eif_par_types {
 	EIF_TYPE_INDEX dtype;	/* Dynamic type of this class per esystem */
 	EIF_TYPE_INDEX *parents;/* Parent types */
+	uint16 nb_parents;		/* Number of parents. */
 	uint16 nb_generics;		/* Number of formal generics */
 	char is_expanded;		/* Is it expanded? */
 };

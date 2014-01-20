@@ -95,13 +95,6 @@ feature -- HASH_TABLE like feature
 			Result := feature_table.item_id (l_id)
 		end
 
-	put (new: FEATURE_I; key: INTEGER)
-		require
-			new_not_void: new /= Void
-		do
-			internal_table_put (new.feature_name_id, key)
-		end
-
 feature -- Element change
 
 	add_feature (a_feat: FEATURE_I)
@@ -439,7 +432,7 @@ invariant
 	is_consistent: is_consistent
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

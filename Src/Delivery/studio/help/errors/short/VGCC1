@@ -3,4 +3,4 @@ Error: Creation instruction applies to target of generic type
 What to do: Make sure that the constraint has a creation part
    and that it lists the feature you need.
    For an abstract creation (create x) a version of
-   `default_create' from any is required.
+   `default_create' from `ANY' is required.

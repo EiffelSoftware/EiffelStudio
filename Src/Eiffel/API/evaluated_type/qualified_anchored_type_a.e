@@ -246,7 +246,7 @@ feature -- Modification
 			qualifier_set: qualifier = q
 		end
 
-feature {TYPE_A_CHECKER} -- Modification
+feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A} -- Modification
 
 	set_chain (n: like chain; c: CLASS_C)
 			-- Set `chain' to the value relative to class `c'.
@@ -261,6 +261,8 @@ feature {TYPE_A_CHECKER} -- Modification
 			chain_set: chain = n
 			class_id_set: class_id = c.class_id
 		end
+
+feature {TYPE_A_CHECKER} -- Modification
 
 	set_routine_id (r: like routine_id)
 			-- Set `routine_id' to `r'.
@@ -412,15 +414,10 @@ feature -- Primitives
 			Result := t
 		end
 
-	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): QUALIFIED_ANCHORED_TYPE_A
 			-- <Precursor>
-		local
-			t: like Current
 		do
-			t := twin
-			t.set_actual_type (actual_type.formal_instantiation_in (type, constraint, written_id).actual_type)
-			t.set_qualifier (qualifier.formal_instantiation_in (type, constraint, written_id))
-			Result := t
+			Result := recompute (qualifier.formal_instantiation_in (type, constraint, written_id), written_id)
 		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
@@ -436,26 +433,52 @@ feature -- Primitives
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
 			-- <Precursor>
-		local
-			i: INTEGER
-			c: like chain
-			q: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
+				Result := recompute (qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature), a_descendant.class_id)
+			else
+				Result := Current
+			end
+		end
+
+feature {NONE} -- Recomputation in a different context
+
+	recompute (new_qualifier: TYPE_A; new_class_id: like class_id): QUALIFIED_ANCHORED_TYPE_A
+			-- Recompute the complete type starting from a new qualifier `new_qualifier' in a new class with `new_class_id'.
+		local
+			c: like chain
+			q: TYPE_A
+			i, n: like chain.count
+			w: CLASS_C
+		do
+			if new_qualifier.same_as (qualifier) and then new_class_id = class_id then
+					-- Same context.
+				Result := Current
+			else
 					-- Compute new feature names.
-				create c.make_filled (0, chain.count)
 				from
-					q := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
-					create Result.make (q, c, a_descendant.class_id)
+					c := chain
+					q := new_qualifier
+					create Result.make (q, c, new_class_id)
+					w := system.class_of_id (new_class_id)
+					n := c.count
 				until
-					i >= chain.count
+					i >= n
 				loop
-						-- Find a corresponding feature in the descendant.
-					feature_finder.find_by_routine_id (routine_id [i], q, a_descendant)
+						-- Find a corresponding feature in the written type.
+					feature_finder.find_by_routine_id (routine_id [i], q, w)
 					check
-						is_descendant_feature_found: attached feature_finder.found_feature as f
+						is_feature_found: attached feature_finder.found_feature as f
 					then
-						c [i] := f.feature_name_id
+						if f.feature_name_id /= c [i] then
+								-- New feature name is used.
+							if c = chain then
+									-- Duplicate chain.
+								c := chain.twin
+								Result.set_chain (c, w)
+							end
+							c [i] := f.feature_name_id
+						end
 						q := f.type.instantiated_in (q)
 					end
 					i := i + 1
@@ -464,8 +487,6 @@ feature -- Primitives
 					-- Its actual type should be used to set the actual type of the result.
 				Result.set_actual_type (q.actual_type)
 				Result.set_marks_from (Current)
-			else
-				Result := Current
 			end
 		end
 
@@ -504,7 +525,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

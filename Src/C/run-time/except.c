@@ -140,6 +140,7 @@ rt_public struct eif_exception exdata = {
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_rt */
 	0,				/* ex_class */
+	0,				/* ex_retry */
 	0,				/* ex_error_handled */
 	0,				/* ex_panic_handled */
 };
@@ -3001,7 +3002,6 @@ rt_private void print_top(void (*append_trace)(char *))
 	char			buffer[1024];
 	char			rout_name_buffer[256];	/* To add line number at end of routine name */
 	int				line_number;
-	int				bpnested_index;
 	int				finished = 0;
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
@@ -3018,12 +3018,11 @@ rt_private void print_top(void (*append_trace)(char *))
 	/* get the line number, it's situated in the next satck element (the current bottom */
 	/* element gives only the reason of crashes                                         */
 	line_number = (eif_trace.st_bot)->ex_linenum;
-	bpnested_index = (eif_trace.st_bot)->ex_bpnested;
 
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
 	 * characters of `routine_name' otherwise we will do a buffer overflow. 
 	 * 189 = 192 - 3, 3 being characters of "..." */
-	if (line_number>0) { /* FIXME:jfiat bpnested_index? */
+	if (line_number > 0) { /* FIXME:jfiat bpnested_index? */
 		/* the line number seems valid, so we are going to print it */
 		if (strlen (eif_except.rname) > 189) {
 			sprintf(rout_name_buffer, "%.189s... @%d", eif_except.rname, line_number);

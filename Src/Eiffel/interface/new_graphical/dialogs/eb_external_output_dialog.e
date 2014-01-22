@@ -129,7 +129,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	action_queue: ACTION_SEQUENCE [TUPLE []]
+	action_queue: ACTION_SEQUENCE [TUPLE]
 			-- Actions to execute in the gui thread.
 
 	timer: EV_TIMEOUT

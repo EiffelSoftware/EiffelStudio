@@ -893,6 +893,8 @@ feature -- Parse errors
 			Result := locale.formatted_string (locale.translation ("Multiple note elements under $1."), [a_name])
 		end
 
+	e_parse_external_outside_target_element: STRING_32 do Result := locale.translation ("External element found outside a target element.") end
+
 feature -- Boolean values
 
 	boolean_true: STRING_32 do Result := locale.translation ("True") end
@@ -908,7 +910,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

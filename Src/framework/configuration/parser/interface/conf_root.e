@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster, a_class_type, a_feature: STRING_32; a_all_root: BOOLEAN)
+	make (a_cluster, a_class_type, a_feature: detachable STRING_32; a_all_root: BOOLEAN)
 			-- Create with `a_cluster', `a_class' and `a_feature'.
 			-- `a_all_root' indicates that all classes are considered to be root.
 		require
@@ -37,18 +37,24 @@ feature {NONE} -- Initialization
 				if a_feature /= Void then
 					feature_name := a_feature.as_lower
 				end
-				class_type_name := a_class_type.as_upper
+				if a_class_type /= Void then
+						-- Implied by precondition `a_class_ok' and condition `not a_all_root'
+					class_type_name := a_class_type.as_upper
+				else
+					check precondition__a_class_ok: False end
+					class_type_name := "ANY"
+				end
 			end
 		ensure
 			cluster_set: not a_all_root implies (a_cluster = Void and cluster_name = Void) or
-				(a_cluster /= Void and then cluster_name /= Void and then
-					cluster_name.is_equal (a_cluster.as_lower))
+				(a_cluster /= Void and then attached cluster_name as l_cluster_name and then
+					l_cluster_name.same_string (a_cluster.as_lower))
 			class_type_name_not_void: class_type_name /= Void
-			class_set: not a_all_root implies class_type_name.is_equal (a_class_type.as_upper)
-			class_set: a_all_root implies class_type_name.is_equal ("ANY")
+			class_set: not a_all_root implies (a_class_type /= Void and then class_type_name.same_string (a_class_type.as_upper))
+			class_set: a_all_root implies class_type_name.same_string ("ANY")
 			feature_set: not a_all_root implies (a_feature = Void and feature_name = Void) or
-				(a_feature /= Void and then feature_name /= Void and then
-					feature_name.is_equal (a_feature.as_lower))
+				(a_feature /= Void and then attached feature_name as l_feature_name and then
+					l_feature_name.same_string (a_feature.as_lower))
 			feature_set: a_all_root implies feature_name = Void
 		end
 
@@ -72,27 +78,27 @@ feature -- Output
 				Result := {STRING_32} "All classes"
 			else
 				create Result.make_empty
-				if cluster_name /= Void then
-					Result.append (cluster_name)
+				if attached cluster_name as l_cluster_name then
+					Result.append (l_cluster_name)
 					Result.append_character ('.')
 				end
 				Result.append (class_type_name)
-				if feature_name /= Void then
+				if attached feature_name as l_feature_name then
 					Result.append_character ('.')
-					Result.append (feature_name)
+					Result.append (l_feature_name)
 				end
 			end
 		end
 
 feature -- Access, stored in configuration file
 
-	cluster_name: STRING_32
+	cluster_name: detachable STRING_32
 			-- The name of the root cluster.
 
 	class_type_name: STRING_32
 			-- The name of the root type.
 
-	feature_name: STRING_32
+	feature_name: detachable STRING_32
 			-- The name of the root feature.
 
 	is_all_root: BOOLEAN
@@ -134,15 +140,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 invariant
-	cluster_name_ok: cluster_name /= Void implies not cluster_name.is_empty
-	cluster_name_lower: cluster_name /= Void implies cluster_name.is_equal (cluster_name.as_lower)
-	class_type_name_ok: class_type_name /= Void and then not class_type_name.is_empty
-	class_type_name_upper: class_type_name.is_equal (class_type_name.as_upper)
-	feature_name_ok: feature_name /= Void implies not feature_name.is_empty
-	feature_name_lower: feature_name /= Void implies feature_name.is_equal (feature_name.as_lower)
+	cluster_name_ok: attached cluster_name as inv_cluster_name implies not inv_cluster_name.is_empty
+	cluster_name_lower: attached cluster_name as inv_cluster_name implies inv_cluster_name.same_string (inv_cluster_name.as_lower)
+	class_type_name_ok: attached class_type_name as inv_class_type_name and then not inv_class_type_name.is_empty
+	class_type_name_upper: inv_class_type_name.same_string (inv_class_type_name.as_upper)
+	feature_name_ok: attached feature_name as inv_feature_name implies not inv_feature_name.is_empty
+	feature_name_lower: attached feature_name as inv_feature_name implies inv_feature_name.same_string (inv_feature_name.as_lower)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -155,21 +161,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

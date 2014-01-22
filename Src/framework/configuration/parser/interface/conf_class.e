@@ -62,7 +62,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error?
 
-	last_error: CONF_ERROR
+	last_error: detachable CONF_ERROR
 			-- Last error.
 
 feature -- Access, in compiled only, not stored to configuration file
@@ -82,7 +82,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_assertions: Result.assertions /= Void
 		end
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+	visible: detachable EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -161,16 +161,16 @@ feature -- Access, in compiled only, not stored to configuration file
 	path: STRING_32
 			-- The path of the class, relative to the group, in Unix format.
 
-	overriden_by: like class_type
+	overriden_by: detachable like class_type
 			-- The class that overrides this class.
 
-	overrides: ARRAYED_LIST [CONF_CLASS]
+	overrides: detachable ARRAYED_LIST [CONF_CLASS]
 			-- The classes that this class overrides.
 
 	is_class_name_confirmed: BOOLEAN
 			-- Has the class name of current class been confirmed?
 
-	last_class_name: STRING
+	last_class_name: detachable STRING
 			-- Last found class name set by `rebuild'.
 
 feature -- Status report
@@ -189,8 +189,8 @@ feature -- Access queries
 	actual_class: like class_type
 			-- Return the actual class (takes overriding into account).
 		do
-			if is_overriden then
-				Result := overriden_by
+			if attached overriden_by as l_overriden_by then
+				Result := l_overriden_by
 			else
 				Result := Current
 			end
@@ -256,78 +256,95 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_vis_not_void: a_vis /= Void
 			a_renamed_not_void: a_vis.item.class_renamed /= Void
 		local
-			l_vis_check, l_vis_other: STRING_TABLE [STRING_32]
-			l_other: STRING_32
+			l_vis_check, l_vis_other: detachable STRING_TABLE [STRING_32]
+			l_other: detachable STRING_32
 			l_error: BOOLEAN
+			l_visible_item_features, l_vis_item_features: detachable STRING_TABLE [STRING_32]
+			l_visible: like visible
 		do
 				-- easy case first, most of the time this will be the only thing that is needed to do
-			if visible = Void then
+			l_visible := visible
+			if l_visible = Void then
 				visible := a_vis
 			else
 					-- check final external class name
-				if visible.item.class_renamed.is_equal (a_vis.item.class_renamed) then
-					if equal (a_vis.item.features, visible.item.features) then
-						-- done, same features are visible
+				if l_visible.item.class_renamed.is_equal (a_vis.item.class_renamed) then
+					l_visible_item_features := l_visible.item.features
+					l_vis_item_features := a_vis.item.features
+					if l_vis_item_features = Void and l_visible_item_features = Void then
+							-- done, both are Void
 					else
-						if visible.item.features = Void then
-							l_vis_check := a_vis.item.features
-						elseif a_vis.item.features = Void then
-							l_vis_check := visible.item.features
-						end
-						if l_vis_check /= Void then
-								-- check for renamings
-							from
-								l_vis_check.start
-							until
-								l_error or l_vis_check.after
-							loop
-								l_error := not l_vis_check.key_for_iteration.is_equal (l_vis_check.item_for_iteration)
-								l_vis_check.forth
-							end
-							if l_error then
-									-- conflict, all features visible vs some features visible with renaming
-								is_error := True
-								last_error := create {CONF_ERROR_VISI_CONFL01}.make (visible.item.class_renamed)
-							else
-									-- done, everything is visible and we had no renamings
-									-- twin because we may change something
-								visible := visible.twin
-								visible.item.features := Void
-							end
+						if l_vis_item_features ~ l_visible_item_features then
+							-- done, same features are visible
 						else
-								-- check if there are no conflicting feature definitions
-							if visible.item.features.count >= a_vis.item.features.count then
-								l_vis_check := visible.item.features
-								l_vis_other := a_vis.item.features
+							if l_visible_item_features /= Void and l_vis_item_features /= Void then
+									-- check if there are no conflicting feature definitions
+								if l_visible_item_features.count >= l_vis_item_features.count then
+									l_vis_check := l_visible_item_features
+									l_vis_other := l_vis_item_features
+								else
+									l_vis_check := l_vis_item_features
+									l_vis_other := l_visible_item_features
+								end
+								from
+									l_vis_check.start
+								until
+									l_error or l_vis_check.after
+								loop
+									l_other := l_vis_other.item (l_vis_check.key_for_iteration)
+									l_error := not (l_other = Void or else l_other.same_string (l_vis_check.item_for_iteration))
+									l_vis_check.forth
+								end
+								if l_error then
+										-- conflict, conflicting feature renamings
+									is_error := True
+									last_error := create {CONF_ERROR_VISI_CONFL02}.make (l_visible.item.class_renamed)
+								else
+										-- merge
+										-- twin because we may change something
+									l_visible_item_features := l_visible_item_features.twin
+									l_visible.item.features := l_visible_item_features
+									l_visible_item_features.merge (l_vis_item_features)
+								end
 							else
-								l_vis_check := a_vis.item.features
-								l_vis_other := visible.item.features
-							end
-							from
-								l_vis_check.start
-							until
-								l_error or l_vis_check.after
-							loop
-								l_other := l_vis_other.item (l_vis_check.key_for_iteration)
-								l_error := not (l_other = Void or l_other.same_string (l_vis_check.item_for_iteration))
-								l_vis_check.forth
-							end
-							if l_error then
-									-- conflict, conflicting feature renamings
-								is_error := True
-								last_error := create {CONF_ERROR_VISI_CONFL02}.make (visible.item.class_renamed)
-							else
-									-- merge
-									-- twin because we may change something
-								visible.item.features := visible.item.features.twin
-								visible.item.features.merge (a_vis.item.features)
+								if l_visible_item_features = Void then
+									l_vis_check := l_vis_item_features
+								else
+										-- This is guaranteed since at least one of them is not Void.
+									check l_vis_item_features = Void end
+									l_vis_check := l_visible_item_features
+								end
+								if l_vis_check = Void then
+									check code_implies_l_vis_check_attached: False end
+								else
+										-- check for renamings
+									from
+										l_vis_check.start
+									until
+										l_error or l_vis_check.after
+									loop
+										l_error := not l_vis_check.key_for_iteration.is_equal (l_vis_check.item_for_iteration)
+										l_vis_check.forth
+									end
+									if l_error then
+											-- conflict, all features visible vs some features visible with renaming
+										is_error := True
+										last_error := create {CONF_ERROR_VISI_CONFL01}.make (l_visible.item.class_renamed)
+									else
+											-- done, everything is visible and we had no renamings
+											-- twin because we may change something
+										l_visible := l_visible.twin
+										l_visible.item.features := Void
+										visible := l_visible
+									end
+								end
 							end
 						end
 					end
 				else
 						-- conflict, different final external class name
 					is_error := True
-					last_error := create {CONF_ERROR_VISI_CONFL03}.make (visible.item.class_renamed, a_vis.item.class_renamed)
+					last_error := create {CONF_ERROR_VISI_CONFL03}.make (l_visible.item.class_renamed, a_vis.item.class_renamed)
 				end
 			end
 		end
@@ -359,7 +376,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			check_changed
 			if is_modified and not is_class_name_confirmed then
 				last_class_name := name_from_associated_file
-				is_renamed := last_class_name = Void or else not last_class_name.is_equal (name)
+				is_renamed := not attached last_class_name as l_class_name or else not l_class_name.is_equal (name)
 			else
 				last_class_name := name
 			end
@@ -378,7 +395,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				overriden_by := Void
 			end
 		ensure
-			last_class_name_set: (last_class_name = Void and not is_class_name_confirmed) or else (last_class_name /= Void and then not last_class_name.is_empty)
+			last_class_name_set: (last_class_name = Void and not is_class_name_confirmed)
+					or else (attached last_class_name as l_class_name and then not l_class_name.is_empty)
 		end
 
 	check_changed
@@ -416,7 +434,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			name_set: name ~ a_name.as_upper
 		end
 
-	name_from_associated_file: STRING
+	name_from_associated_file: detachable STRING
 			-- Read associated file and extract the name from it if possible.
 		local
 			l_file: KL_BINARY_INPUT_FILE_32
@@ -432,7 +450,11 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				Result := l_classname_finder.classname
 				if Result = Void then
 					date := -1
-					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name.name, group.target.system.file_name))
+					if attached group as l_group then
+						set_error (create {CONF_ERROR_CLASSN}.make (full_file_name.name, l_group.target.system.file_name))
+					else
+						set_error (create {CONF_ERROR_CLASSN}.make (full_file_name.name, Void))
+					end
 				else
 					Result.to_upper
 				end
@@ -457,11 +479,15 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 
 	add_does_override (a_class: like class_type)
 			-- `Current' overrides `a_class'.
+		local
+			l_overrides: like overrides
 		do
-			if overrides = Void then
-				create overrides.make (1)
+			l_overrides := overrides
+			if l_overrides = Void then
+				create l_overrides.make (1)
+				overrides := l_overrides
 			end
-			overrides.extend (a_class)
+			l_overrides.extend (a_class)
 		end
 
 feature -- Comparison
@@ -503,12 +529,17 @@ feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS
 			-- Class type anchor.
+		require
+			do_not_call: False
 		do
+			check False then
+				-- used only for typing
+			end
 		end
 
 invariant
 	name_ok: name /= Void and then not name.is_empty
-	name_upper: name.is_equal (name.as_upper)
+	name_upper: name.same_string (name.as_upper)
 	file_name_not_void: file_name /= Void
 	group_not_void: group /= Void
 	path_not_void: path /= Void
@@ -517,7 +548,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

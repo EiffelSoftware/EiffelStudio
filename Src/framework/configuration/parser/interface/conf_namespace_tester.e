@@ -13,13 +13,13 @@ inherit
 
 feature {NONE} -- Access
 
-	namespace: like latest_namespace
+	namespace: detachable like latest_namespace
 			-- Associated namespace.
 			-- Used by `includes_this_or_before' and `includes_this_or_after'.
 
 feature {NONE} -- Namespace checks
 
-	includes_this_or_before (n: like namespace): BOOLEAN
+	includes_this_or_before (n: like latest_namespace): BOOLEAN
 			-- Is current `namespace' less or equal to `n'?
 			-- (Includes unknown namespaces.)
 		require
@@ -28,10 +28,10 @@ feature {NONE} -- Namespace checks
 		do
 			Result := is_before_or_equal (namespace, n)
 		ensure
-			definition: Result = (is_namespace_known (namespace) implies is_before_or_equal (namespace, n))
+			definition: Result = ((attached namespace as l_namespace and then is_namespace_known (l_namespace)) implies is_before_or_equal (namespace, n))
 		end
 
-	includes_this_or_after (n: like namespace): BOOLEAN
+	includes_this_or_after (n: like latest_namespace): BOOLEAN
 			-- Is current `namespace' greater or equal to `n'?
 			-- (Includes unknown namespaces.)
 		require
@@ -40,11 +40,11 @@ feature {NONE} -- Namespace checks
 		do
 			Result := is_after_or_equal (namespace, n)
 		ensure
-			definition: Result = (is_namespace_known (namespace) implies is_after_or_equal (namespace, n))
+			definition: Result = ((attached namespace as l_namespace and then is_namespace_known (l_namespace)) implies is_after_or_equal (namespace, n))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

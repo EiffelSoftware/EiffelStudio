@@ -52,8 +52,11 @@ feature -- Access
 			end
 			if not a_file.is_empty then
 				Result := Result.extended (a_file)
+			elseif attached l_path.entry as l_entry then
+				Result := Result.extended_path (l_entry)
 			else
-				Result := Result.extended_path (l_path.entry)
+					-- FIXME: not sure why ...
+				check path_has_entry_attached: False end
 			end
 		end
 
@@ -71,7 +74,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -16,10 +16,10 @@ inherit
 
 feature -- Access, stored in configuration file
 
-	renaming: STRING_TABLE [STRING_32]
+	renaming: detachable STRING_TABLE [STRING_32]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	name_prefix: STRING_32
+	name_prefix: detachable STRING_32
 			-- An optional name prefix for this group.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -28,8 +28,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `name_prefix' to `a_name_prefix'.
 		do
 			name_prefix := a_name_prefix
-			if name_prefix /= Void then
-				name_prefix.to_upper
+			if a_name_prefix /= Void then
+					--| FIXME: check if this is expected to upper the argument.
+				a_name_prefix.to_upper
 			end
 		ensure
 			name_prefix_set: name_prefix = a_name_prefix
@@ -50,20 +51,25 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			an_old_name_upper: an_old_name.is_equal (an_old_name.as_upper)
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 			a_new_name_upper: a_new_name.is_equal (a_new_name.as_upper)
+		local
+			l_renaming: like renaming
 		do
-			if renaming = Void then
-				create renaming.make_equal (1)
+			l_renaming := renaming
+			if l_renaming = Void then
+				create l_renaming.make_equal (1)
+				renaming := l_renaming
 			end
-			renaming.force (a_new_name, an_old_name)
+			l_renaming.force (a_new_name, an_old_name)
 		ensure
-			added: renaming.has (an_old_name) and then renaming.item (an_old_name) = a_new_name
+			renaming_attached: attached renaming as el_renaming
+			added: el_renaming.has (an_old_name) and then el_renaming.item (an_old_name) = a_new_name
 		end
 
 invariant
-	name_prefix_upper: name_prefix /= Void implies name_prefix.is_equal (name_prefix.as_upper)
+	name_prefix_upper: attached name_prefix as l_name_prefix implies l_name_prefix.is_equal (l_name_prefix.as_upper)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -76,21 +82,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

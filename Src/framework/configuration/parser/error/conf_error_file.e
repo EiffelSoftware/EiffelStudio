@@ -39,10 +39,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	orig_file, file: STRING_32
+	file: STRING_32
 			-- File that could not be opened.
 
-	config: STRING_32
+	orig_file: detachable STRING_32
+			-- File that could not be opened.
+
+	config: detachable STRING_32
 			-- Config where the file was referenced.
 
 	text: STRING_32
@@ -62,12 +65,14 @@ feature -- Access
 
 feature -- Update
 
-	set_config (a_config: READABLE_STRING_GENERAL)
+	set_config (a_config: detachable READABLE_STRING_GENERAL)
 			-- Set `config' to `a_config'.
-		require
-			a_config_not_void: a_config /= Void
 		do
-			config := a_config.to_string_32
+			if a_config = Void then
+				config := Void
+			else
+				config := a_config.to_string_32
+			end
 		end
 
 	set_original_file (a_file: READABLE_STRING_GENERAL)
@@ -81,7 +86,7 @@ feature -- Update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

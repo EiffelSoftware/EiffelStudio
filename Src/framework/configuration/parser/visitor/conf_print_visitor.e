@@ -100,9 +100,15 @@ feature -- Visit nodes
 			end
 			append_text_indent ("<redirection")
 			append_text (" xmlns=%"")
-			append_text_escaped (Namespace, False)
---Alternative:	append_text (utf.string_32_to_utf_8_string_8 (Namespace)) -- FIXME: maybe add utf-8 BOM ...
+			if attached namespace as l_namespace then
+				append_text_escaped (l_namespace, False)
+--Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
+			else
+				append_text_escaped (default_namespace, False)
+				check has_namespace: False end
+			end
 			append_text ("%"")
+
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%"")
 			append_text_escaped (Schema, False)
@@ -121,16 +127,20 @@ feature -- Visit nodes
 	process_system (a_system: CONF_SYSTEM)
 			-- Visit `a_system'.
 		local
-			l_target: CONF_TARGET
+			l_target: detachable CONF_TARGET
 		do
 			create text.make_from_string (header)
 			if not text.is_empty then
 				append_text ("%N")
 			end
 			append_text_indent ("<system")
-			append_text (" xmlns=%"")
-			append_text_escaped (Namespace, False)
---Alternative:	append_text (utf.string_32_to_utf_8_string_8 (Namespace)) -- FIXME: maybe add utf-8 BOM ...
+			if attached namespace as l_namespace then
+				append_text_escaped (l_namespace, False)
+--Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
+			else
+				append_text_escaped (default_namespace, False)
+				check has_namespace: False end
+			end
 			append_text ("%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%"")
@@ -161,20 +171,20 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_root: CONF_ROOT
-			l_version: CONF_VERSION
+			l_root: detachable CONF_ROOT
+			l_version: detachable CONF_VERSION
 			l_settings: like {CONF_TARGET}.settings
 			l_variables: like {CONF_TARGET}.internal_variables
 			l_name: ARRAYED_LIST [READABLE_STRING_8]
-			l_val: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_val: ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
 			l_sorted_list: ARRAYED_LIST [STRING_32]
 			l_sorter: QUICK_SORTER [STRING_32]
 		do
 			current_target := a_target
 			append_text_indent ("<target")
 			append_text_attribute ("name", a_target.name)
-			if a_target.extends /= Void then
-				append_text_attribute ("extends", a_target.extends.name)
+			if attached a_target.extends as l_extends then
+				append_text_attribute ("extends", l_extends.name)
 			end
 			if a_target.is_abstract then
 				text.append (" abstract=%"true%"")
@@ -239,7 +249,10 @@ feature -- Visit nodes
 			loop
 				l_val.wipe_out
 				l_val.force (l_sorted_list.item_for_iteration)
-				l_val.force (l_settings.item (l_sorted_list.item_for_iteration))
+				if attached l_settings.item (l_sorted_list.item_for_iteration) as l_setting_item then
+						-- l_sorted_list is built from l_settings.current_keys, then l_settings has related item
+					l_val.force (l_setting_item)
+				end
 				append_tag ("setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
@@ -287,8 +300,8 @@ feature -- Visit nodes
 				l_variables.forth
 			end
 
-			if a_target.internal_precompile /= Void then
-				a_target.internal_precompile.process (Current)
+			if attached a_target.internal_precompile as l_pre then
+				l_pre.process (Current)
 			end
 
 			process_in_alphabetic_order (a_target.internal_libraries)
@@ -305,7 +318,7 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
-			l_str: STRING
+			l_str: detachable READABLE_STRING_GENERAL
 		do
 			append_pre_group ("assembly", an_assembly)
 			if an_assembly.location.original_path.is_empty then
@@ -340,8 +353,8 @@ feature -- Visit nodes
 				append_text (" use_application_options=%"true%"")
 			end
 			append_val_group (a_library)
-			if a_library.visible /= Void then
-				append_visible (a_library.visible)
+			if attached a_library.visible as l_visible then
+				append_visible (l_visible)
 			end
 			append_post_group ("library")
 		ensure then
@@ -352,8 +365,8 @@ feature -- Visit nodes
 			-- Visit `a_precompile'.
 		do
 			append_pre_group ("precompile", a_precompile)
-			if a_precompile.eifgens_location /= Void then
-				append_text_attribute ("eifgens_location", a_precompile.eifgens_location.original_path)
+			if attached a_precompile.eifgens_location as l_loc then
+				append_text_attribute ("eifgens_location", l_loc.original_path)
 			end
 			append_val_group (a_precompile)
 			append_post_group ("precompile")
@@ -388,7 +401,7 @@ feature -- Visit nodes
 	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		local
-			l_overrides: ARRAYED_LIST [CONF_GROUP]
+			l_overrides: detachable LIST [CONF_GROUP]
 		do
 				-- ignore subclusters, except if we are handling one.
 			if an_override.parent = Void or current_is_subcluster then
@@ -424,7 +437,7 @@ feature {NONE} -- Implementation
 	last_count: INTEGER
 			-- A helper counter, that is used to see if something was added.
 
-	current_target: CONF_TARGET
+	current_target: detachable CONF_TARGET
 			-- The target we are currently processing.
 
 	current_is_subcluster: BOOLEAN
@@ -446,24 +459,26 @@ feature {NONE} -- Implementation
 			until
 				l_sorted_list.after
 			loop
-				a_groups.item (l_sorted_list.item_for_iteration).process (Current)
+				if attached a_groups.item (l_sorted_list.item_for_iteration) as l_grp then
+					l_grp.process (Current)
+				end
 				l_sorted_list.forth
 			end
 		end
 
-	append_tag (a_name: READABLE_STRING_8; a_value: READABLE_STRING_32; an_attribute_names: ARRAYED_LIST [READABLE_STRING_8]; an_attribute_values: ARRAYED_LIST [detachable READABLE_STRING_GENERAL])
+	append_tag (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_32; an_attribute_names: detachable ARRAYED_LIST [READABLE_STRING_8]; an_attribute_values: detachable ARRAYED_LIST [detachable READABLE_STRING_GENERAL])
 			-- Append a tag with `a_name', `a_value' and `an_attributes' to `text', intendend it with `indent' tabs.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			attributes_same_count: (an_attribute_names = Void and an_attribute_values = Void) or else
-					(an_attribute_names /= Void and an_attribute_values /= Void and then an_attribute_names.count = an_attribute_values.count)
+					((an_attribute_names /= Void and an_attribute_values /= Void) and then an_attribute_names.count = an_attribute_values.count)
 		local
 			l_val: detachable READABLE_STRING_GENERAL
 			u: UTF_CONVERTER
 		do
 			append_text_indent ("<")
 			append_text (u.string_32_to_utf_8_string_8 (a_name))
-			if an_attribute_names /= Void and then not an_attribute_names.is_empty then
+			if (an_attribute_names /= Void and an_attribute_values /= Void) and then not an_attribute_names.is_empty then
 				from
 					an_attribute_names.start
 					an_attribute_values.start
@@ -478,7 +493,7 @@ feature {NONE} -- Implementation
 					an_attribute_values.forth
 				end
 			end
-			if a_value /= Void and not a_value.is_empty then
+			if a_value /= Void and then not a_value.is_empty then
 				append_text (">")
 				append_text_escaped (a_value, True)
 				append_text ("</")
@@ -573,7 +588,7 @@ feature {NONE} -- Implementation
 			text.append_character ('"')
 		end
 
-	append_description_tag (a_description: READABLE_STRING_32)
+	append_description_tag (a_description: detachable READABLE_STRING_32)
 			-- Append `a_description'.
 		do
 			if a_description /= Void and then not a_description.is_empty then
@@ -590,7 +605,7 @@ feature {NONE} -- Implementation
 		local
 			space_delimiter: STRING
 		do
-			check attached condition.item as i and then attached i.value as v then
+			if attached condition.item as i and then attached i.value as v then
 				append_text_indent ("<")
 				append_text (name)
 				if i.invert then
@@ -619,16 +634,15 @@ feature {NONE} -- Implementation
 		end
 
 
-	append_conditionals (a_conditions: ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN)
+	append_conditionals (a_conditions: detachable ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN)
 			-- Append `a_conditions' ignore platform if it `is_assembly'.
 		local
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
 			l_custs: like {CONF_CONDITION}.custom
 			l_custom: STRING_TABLE [BOOLEAN]
-			l_versions: STRING_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]]
 			l_name: STRING
-			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
+			l_ver: like {CONF_CONDITION}.version.item
 		do
 			if a_conditions /= Void then
 					-- assembly and only the default rule? => don't print it
@@ -662,32 +676,27 @@ feature {NONE} -- Implementation
 							end
 						end
 
-						if l_condition.dynamic_runtime /= Void then
-							append_text_indent ("<dynamic_runtime value=%""+l_condition.dynamic_runtime.item.out.as_lower+"%"/>%N")
+						if attached l_condition.dynamic_runtime as l_dyn_runtime then
+							append_text_indent ("<dynamic_runtime value=%""+ l_dyn_runtime.item.out.as_lower +"%"/>%N")
 						end
 
 							-- don't print dotnet for assemblies
-						if not is_assembly and then l_condition.dotnet /= Void then
-							append_text_indent ("<dotnet value=%""+l_condition.dotnet.item.out.as_lower+"%"/>%N")
+						if not is_assembly and then attached l_condition.dotnet as l_dotnet then
+							append_text_indent ("<dotnet value=%""+ l_dotnet.item.out.as_lower +"%"/>%N")
 						end
 
-						from
-							l_versions := l_condition.version
-							l_versions.start
-						until
-							l_versions.after
+						across
+							l_condition.version as ic_versons
 						loop
-							l_ver := l_versions.item_for_iteration
-							append_text_indent ("<version type=%""+l_versions.key_for_iteration+"%"")
-							if l_ver.item.min /= Void then
-								append_text (" min=%""+l_ver.item.min.version+"%"")
+							l_ver := ic_versons.item
+							append_text_indent ("<version type=%""+ ic_versons.key +"%"")
+							if attached l_ver.item.min as l_ver_min then
+								append_text (" min=%""+ l_ver_min.version+"%"")
 							end
-							if l_ver.item.max /= Void then
-								append_text (" max=%""+l_ver.item.max.version+"%"")
+							if attached l_ver.item.max as l_ver_max then
+								append_text (" max=%""+ l_ver_max.version +"%"")
 							end
 							append_text ("/>%N")
-
-							l_versions.forth
 						end
 
 						from
@@ -726,7 +735,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: STRING_TABLE [STRING_32])
+	append_mapping (a_mapping: detachable STRING_TABLE [STRING_32])
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -798,8 +807,8 @@ feature {NONE} -- Implementation
 			loop
 				l_action := an_actions.item
 				append_text_indent ("<"+a_name+"_compile_action")
-				if l_action.working_directory /= Void then
-					append_text_attribute ("working_directory", l_action.working_directory.original_path)
+				if attached l_action.working_directory as l_wdir then
+					append_text_attribute ("working_directory", l_wdir.original_path)
 				end
 				append_text_attribute ("command", l_action.command)
 				if l_action.must_succeed then
@@ -863,12 +872,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_options (an_options: CONF_OPTION; a_class: READABLE_STRING_GENERAL)
+	append_options (an_options: detachable CONF_OPTION; a_class: detachable READABLE_STRING_GENERAL)
 			-- Append `an_options', optionally for `a_class'.
 		local
-			l_str: STRING_32
-			l_debugs, l_warnings: STRING_TABLE [BOOLEAN]
-			l_assertions: CONF_ASSERTIONS
+			l_str: detachable STRING_32
+			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
+			l_assertions: detachable CONF_ASSERTIONS
 			l_a_name: ARRAYED_LIST [STRING]
 			l_a_val: ARRAYED_LIST [STRING_32]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
@@ -1029,9 +1038,10 @@ feature {NONE} -- Implementation
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: STRING_TABLE [STRING_32]
+			l_vis_feat: detachable STRING_TABLE [STRING_32]
 			l_class: READABLE_STRING_GENERAL
-			l_feat: READABLE_STRING_GENERAL l_feat_rename, l_class_rename: STRING_32
+			l_feat: detachable READABLE_STRING_GENERAL
+			l_feat_rename, l_class_rename: detachable STRING_32
 		do
 			from
 				a_visible.start
@@ -1060,7 +1070,11 @@ feature {NONE} -- Implementation
 						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.same_string_general (l_class) then
 							append_text_attribute ("class_rename", l_class_rename)
 						end
-						if l_feat_rename /= Void and then not l_feat_rename.is_empty and then not l_feat_rename.same_string_general (l_feat) then
+						if
+							l_feat_rename /= Void and then
+							not l_feat_rename.is_empty and then
+							(l_feat = Void or else not l_feat_rename.same_string_general (l_feat))
+						then
 							append_text_attribute ("feature_rename", l_feat_rename)
 						end
 						append_text ("/>%N")
@@ -1179,8 +1193,8 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_deps: SEARCH_TABLE [CONF_GROUP]
-			l_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]
+			l_deps: detachable SEARCH_TABLE [CONF_GROUP]
+			l_visible: detachable STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)
@@ -1220,7 +1234,7 @@ feature {NONE} -- Implementation
 		require
 			a_notable_not_void: a_notable /= Void
 		local
-			l_note: CONF_NOTE_ELEMENT
+			l_note: detachable CONF_NOTE_ELEMENT
 		do
 			l_note := a_notable.note_node
 			if l_note /= Void then
@@ -1260,13 +1274,10 @@ feature {NONE} -- Implementation
 
 				if not a_note.is_empty then
 					append_text (">%N")
-					from
-						a_note.start
-					until
-						a_note.after
+					across
+						a_note as ic
 					loop
-						append_note_recursive (a_note.item)
-						a_note.forth
+						append_note_recursive (ic.item)
 					end
 					indent := indent - 1
 					append_text_indent ("</" + a_note.element_name +">%N")
@@ -1278,7 +1289,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

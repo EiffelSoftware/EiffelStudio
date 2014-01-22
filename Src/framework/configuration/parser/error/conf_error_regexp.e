@@ -31,8 +31,8 @@ feature -- Access
 	text: STRING_32
 			-- Error text.
 		do
-			if file /= Void then
-				Result := {STRING_32} "Parse error in " + file + {STRING_32} ": Invalid regexp: " + regexp
+			if attached file as l_file then
+				Result := {STRING_32} "Parse error in " + l_file + {STRING_32} ": Invalid regexp: " + regexp
 			else
 				Result := {STRING_32} "Parse error: Invalid regexp: " + regexp
 			end
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 		-- Incorrect regular expression.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

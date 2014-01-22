@@ -28,19 +28,24 @@ feature -- Status
 
 	is_empty: BOOLEAN
 			-- Is this file rule empty?
+		local
+			l_exclude: like exclude
+			l_include: like include
 		do
-			Result := (exclude = Void or else exclude.is_empty) and (include = Void or else include.is_empty)
+			l_exclude := exclude
+			l_include := include
+			Result := (l_exclude = Void or else l_exclude.is_empty) and (l_include = Void or else l_include.is_empty)
 		end
 
 feature -- Access, stored in configuration file
 
-	exclude: SEARCH_TABLE [STRING_32]
+	exclude: detachable SEARCH_TABLE [STRING_32]
 			-- Exclude patterns
 
-	include: SEARCH_TABLE [STRING_32]
+	include: detachable SEARCH_TABLE [STRING_32]
 			-- Include patterns
 
-	description: STRING_32
+	description: detachable STRING_32
 			-- A description about the rules.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -49,11 +54,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add an exclude pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
+		local
+			l_exclude: like exclude
 		do
-			if exclude = Void then
-				create exclude.make (1)
+			l_exclude := exclude
+			if l_exclude = Void then
+				create l_exclude.make (1)
+				exclude := l_exclude
 			end
-			exclude.put (a_pattern)
+			l_exclude.put (a_pattern)
 			compile
 		end
 
@@ -61,22 +70,30 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add an include pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
+		local
+			l_include: like include
 		do
-			if include = Void then
-				create include.make (1)
+			l_include := include
+			if l_include = Void then
+				create l_include.make (1)
+				include := l_include
 			end
-			include.put (a_pattern)
+			l_include.put (a_pattern)
 			compile
 		end
 
 	del_exclude (a_pattern: STRING_32)
 			-- Delete an exclude pattern.
 		require
-			a_pattern_ok: exclude /= Void and then exclude.has (a_pattern)
+			a_pattern_ok: attached exclude as l_exclude and then l_exclude.has (a_pattern)
 		do
-			exclude.remove (a_pattern)
-			if exclude.is_empty then
-				exclude := Void
+			if attached exclude as l_exclude then
+				l_exclude.remove (a_pattern)
+				if l_exclude.is_empty then
+					exclude := Void
+				end
+			else
+					-- Does not occur with precondition `a_pattern_ok'
 			end
 			compile
 		end
@@ -84,11 +101,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	del_include (a_pattern: STRING_32)
 			-- Delete an include pattern.
 		require
-			a_pattern_ok: include /= Void and then include.has (a_pattern)
+			a_pattern_ok: attached include as l_include and then l_include.has (a_pattern)
 		do
-			include.remove (a_pattern)
-			if include.is_empty then
-				include := Void
+			if attached include as l_include then
+				l_include.remove (a_pattern)
+				if l_include.is_empty then
+					include := Void
+				end
+			else
+					-- Does not occur with precondition `a_pattern_ok'
 			end
 			compile
 		end
@@ -108,20 +129,21 @@ feature {CONF_ACCESS} -- Merging
 		require
 			other_valid: other.valid_excludes and other.valid_includes
 		do
-			if other /= Void then
-				if exclude = Void then
-					if other.exclude /= Void then
-						exclude := other.exclude.twin
+			if attached other as l_other then
+				if attached l_other.exclude as l_other_exclude then
+					if attached exclude as l_exclude then
+						l_exclude.merge (l_other_exclude)
+					else
+						exclude := l_other_exclude.twin
 					end
-				elseif other.exclude /= Void then
-					exclude.merge (other.exclude)
 				end
-				if include = Void then
-					if other.include /= Void then
-						include := other.include.twin
+
+				if attached l_other.include as l_other_include then
+					if attached include as l_include then
+						l_include.merge (l_other_include)
+					else
+						include := l_other_include.twin
 					end
-				elseif other.include /= Void then
-					include.merge (other.include)
 				end
 
 				compile
@@ -189,7 +211,7 @@ feature {NONE} -- Implementation
 			include_regexp := compile_list (include)
 		end
 
-	compile_list (a_list: like include): REGULAR_EXPRESSION
+	compile_list (a_list: like include): detachable REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
 		local
 			l_regexp_str: STRING
@@ -228,30 +250,37 @@ feature {NONE} -- Implementation
 
 feature {CONF_FILE_RULE} -- Implementation, merging
 
-	exclude_regexp: REGULAR_EXPRESSION
+	exclude_regexp: detachable REGULAR_EXPRESSION
 			-- The compiled regexp object for all the strings.
-	include_regexp: REGULAR_EXPRESSION
+
+	include_regexp: detachable REGULAR_EXPRESSION
 			-- The compiled regexp object for all the strings.
 
 feature -- Contracts
 
 	valid_excludes: BOOLEAN
 			-- Are excludes valid?
+		local
+			l_exclude: like exclude
 		do
-			if exclude = Void or else exclude.is_empty then
+			l_exclude := exclude
+			if l_exclude = void or else l_exclude.is_empty then
 				Result := exclude_regexp = Void
-			else
-				Result := exclude_regexp.is_compiled
+			elseif attached exclude_regexp as l_exclude_regexp then
+				Result := l_exclude_regexp.is_compiled
 			end
 		end
 
 	valid_includes: BOOLEAN
 			-- Are includes valid?
+		local
+			l_include: like include
 		do
-			if include = Void or else include.is_empty then
+			l_include := include
+			if l_include = Void or else l_include.is_empty then
 				Result := include_regexp = Void
-			else
-				Result := include_regexp.is_compiled
+			elseif attached include_regexp as l_include_regexp then
+				Result := l_include_regexp.is_compiled
 			end
 		end
 
@@ -260,7 +289,7 @@ invariant
 	include_patterns_valid: valid_includes
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

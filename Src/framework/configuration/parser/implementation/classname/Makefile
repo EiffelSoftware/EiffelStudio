@@ -11,15 +11,11 @@ GOBO_LEX="$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin/gelex" $(GOBO_LEX_
 GOBO_YACC_FLAGS=--new_typing --pragma=noline -x
 GOBO_YACC="$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin/geyacc" $(GOBO_YACC_FLAGS)
 
-all: lace_parser.e lace_scanner.e
+all: classname_finder.e
 
-lace_scanner.e: lace.l
-	$(GOBO_LEX) -o $@ $?
-	$(SYNTAX_UPDATER) .
-
-lace_parser.e: lace.y
-	$(GOBO_YACC) -t LACE_TOKENS -o $@ $?
+classname_finder.e: classname_finder.l
+	$(GOBO_LEX) $?
 	$(SYNTAX_UPDATER) .
 
 clean:
-	$(RM) lace_parser.e lace_scanner.e lace_tokens.e
+	$(RM) classname_finder.e

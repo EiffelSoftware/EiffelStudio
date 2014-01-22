@@ -55,7 +55,7 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_pre: CONF_PRECOMPILE
+			l_pre: detachable CONF_PRECOMPILE
 			l_libs: HASH_TABLE [CONF_TARGET, UUID]
 		do
 			if not is_error then
@@ -81,7 +81,10 @@ feature -- Visit nodes
 			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void
 			fully_parsed: not is_error implies a_target.system.is_fully_parsed
 		rescue
-			if attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
+			if
+				attached exception_manager.last_exception as e and then
+				attached {CONF_EXCEPTION} e.original 
+			then
 				retry
 			end
 		end
@@ -89,32 +92,32 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		local
-			l_existing_target: TUPLE [parent, base: CONF_TARGET]
-			l_target: CONF_TARGET
+			l_existing_target: detachable TUPLE [parent, base: CONF_TARGET]
+			l_target: detachable CONF_TARGET
 			l_load: CONF_LOAD
-			l_uuid: UUID
+			l_uuid: detachable UUID
 			l_path: like {CONF_LIBRARY}.path
 			l_comparer: FILE_COMPARER
 			l_cond: CONF_CONDITION
-			l_ferr: CONF_ERROR_FILE
+			l_last_warnings: like last_warnings
 		do
 			l_path := a_library.path
 			create l_load.make (factory)
 			l_load.retrieve_uuid (l_path)
-			if l_load.is_error then
-				l_ferr ?= l_load.last_error
-				if l_ferr /= Void then
+			if attached l_load.last_error as l_load_last_error then
+				if attached {CONF_ERROR_FILE} l_load_last_error as l_ferr then
 					l_ferr.set_config (a_library.target.system.file_name)
 					l_ferr.set_original_file (a_library.location.original_path)
 				end
 				if is_ignore_bad_libraries then
 						-- Add the warning.
-					if last_warnings = Void then
+					l_last_warnings := last_warnings
+					if l_last_warnings = Void then
 						last_warnings := l_load.last_warnings
-					elseif l_load.last_warnings /= Void then
-						last_warnings.append (l_load.last_warnings)
+					elseif attached l_load.last_warnings as l_load_last_warnings then
+						l_last_warnings.append (l_load_last_warnings)
 					end
-					add_warning (l_load.last_error)
+					add_warning (l_load_last_error)
 
 						-- Now continue as if the library was not included by creating this
 						-- compiler specific condition which is always false (as if library was excluded
@@ -124,20 +127,25 @@ feature -- Visit nodes
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
-					add_and_raise_error (l_load.last_error)
+					add_and_raise_error (l_load_last_error)
 				end
 			else
+				check l_load_has_no_error: not l_load.is_error end
+
 					-- add warnings
 				if l_load.is_warning then
-					if last_warnings = Void then
+					l_last_warnings := last_warnings
+					if l_last_warnings = Void then
 						last_warnings := l_load.last_warnings
-					else
-						last_warnings.append (l_load.last_warnings)
+					elseif attached l_load.last_warnings as l_load_last_warnings then
+						l_last_warnings.append (l_load_last_warnings)
 					end
 				end
 
 				l_uuid := l_load.last_uuid
-				l_existing_target := libraries.item (l_uuid)
+				if l_uuid /= Void then
+					l_existing_target := libraries.item (l_uuid)
+				end
 				if l_existing_target /= Void then
 					a_library.set_library_target (l_existing_target.base)
 					if level + 1 < l_existing_target.base.system.level then
@@ -145,16 +153,31 @@ feature -- Visit nodes
 					end
 
 					create l_comparer
-					if application_target.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_existing_target.base.system.file_name) then
-						add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
+					if attached l_existing_target.base.system.file_name as l_base_filename then
+						if
+							application_target.options.is_warning_enabled (w_same_uuid) and then
+							not l_comparer.same_files (l_path, l_base_filename)
+						then
+							if
+								attached a_library.target.system.file_name as l_target_filename and then
+								attached l_existing_target.parent.system.file_name as l_parent_filename
+							then
+								add_warning (create {CONF_ERROR_UUIDFILE}.make (l_target_filename, l_path, l_parent_filename, l_base_filename))
+							else
+								raise_error
+							end
+						end
+					else
+						raise_error
 					end
 				else
 					l_load.retrieve_configuration (l_path)
-					if l_load.is_error then
-						add_and_raise_error (l_load.last_error)
-					else
-						l_load.last_system.set_application_target (application_target)
-						l_target := l_load.last_system.library_target
+					if attached l_load.last_error as l_load_last_error then
+						check is_error: l_load.is_error end
+						add_and_raise_error (l_load_last_error)
+					elseif attached l_load.last_system as l_last_system then
+						l_last_system.set_application_target (application_target)
+						l_target := l_last_system.library_target
 
 						if l_target = Void then
 							add_and_raise_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
@@ -165,7 +188,12 @@ feature -- Visit nodes
 									-- set environment to our global environment
 								l_target.set_environ_variables (application_target.environ_variables)
 
-								libraries.force ([a_library.target, l_target], l_uuid)
+								if l_uuid /= Void then
+										-- Implied by not `l_load.is_error'
+									libraries.force ([a_library.target, l_target], l_uuid)
+								else
+									add_and_raise_error (create {CONF_ERROR_UUID})
+								end
 								processed_targets.force (l_target)
 
 								level := level + 1
@@ -175,6 +203,8 @@ feature -- Visit nodes
 								level := level - 1
 							end
 						end
+					else
+						check no_error_implies_has_system: False end
 					end
 				end
 			end
@@ -226,7 +256,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -196,13 +196,13 @@ feature -- Status update
 
 feature -- Access, stored in configuration file
 
-	assertions: CONF_ASSERTIONS
+	assertions: detachable CONF_ASSERTIONS
 			-- The assertion settings.
 
-	namespace: STRING_32
+	namespace: detachable STRING_32
 			-- .NET namespace that is computed on demand.
 
-	local_namespace: STRING_32
+	local_namespace: detachable STRING_32
 			-- .NET namespace set in configuration file
 
 	is_profile: BOOLEAN
@@ -232,7 +232,7 @@ feature -- Access, stored in configuration file
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
 
-	description: STRING_32
+	description: detachable STRING_32
 			-- A description about the options.
 
 feature -- Access: syntax
@@ -294,10 +294,10 @@ feature {NONE} -- Access: void safety
 
 feature -- Access, stored in configuration file.
 
-	debugs: STRING_TABLE [BOOLEAN]
+	debugs: detachable STRING_TABLE [BOOLEAN]
 			-- Debug settings.
 
-	warnings: STRING_TABLE [BOOLEAN]
+	warnings: detachable STRING_TABLE [BOOLEAN]
 			-- Warning settings.
 
 feature -- Access queries
@@ -305,7 +305,8 @@ feature -- Access queries
 	is_debug_enabled (a_debug: STRING): BOOLEAN
 			-- Is `a_debug' enabled?
 		do
-			Result := is_debug and then debugs /= Void and then debugs.item (a_debug)
+			Result := is_debug and then
+					attached debugs as l_debugs and then l_debugs.item (a_debug)
 		end
 
 	is_warning_enabled (a_warning: READABLE_STRING_GENERAL): BOOLEAN
@@ -331,13 +332,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_lower: a_name.is_equal (a_name.as_lower)
+		local
+			l_debugs: like debugs
 		do
-			if debugs = Void then
-				create debugs.make_equal (1)
+			l_debugs := debugs
+			if l_debugs = Void then
+				create l_debugs.make_equal (1)
+				debugs := l_debugs
 			end
-			debugs.force (an_enabled, a_name)
+			l_debugs.force (an_enabled, a_name)
 		ensure
-			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
+			debugs_set: attached debugs as el_debugs
+			added: el_debugs.has (a_name) and then el_debugs.item (a_name) = an_enabled
 		end
 
 	add_warning (a_name: READABLE_STRING_GENERAL; an_enabled: BOOLEAN)
@@ -356,7 +362,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			end
 			w.force (an_enabled, a_name)
 		ensure
-			added: warnings.has (a_name) and then warnings.item (a_name) = an_enabled
+			warnings_set: attached warnings as el_warnings
+			added: el_warnings.has (a_name) and then el_warnings.item (a_name) = an_enabled
 		end
 
 	set_local_namespace (a_namespace: like local_namespace)
@@ -610,23 +617,28 @@ feature -- Merging
 		local
 			l_tmp: like debugs
 			l_warnings: like warnings
+			l_debugs: like debugs
 		do
 			if other /= Void then
 				if assertions = Void then
 					assertions := other.assertions
 				end
-				if debugs = Void then
-					debugs := other.debugs
-				elseif other.debugs /= Void then
-					l_tmp := other.debugs.twin
-					l_tmp.merge (debugs)
+				l_debugs := debugs
+				if l_debugs = Void then
+					l_debugs := other.debugs
+					debugs := l_debugs
+				elseif attached other.debugs as l_other_debugs then
+					l_tmp := l_other_debugs.twin
+					l_tmp.merge (l_debugs)
 					debugs := l_tmp
 				end
-				if warnings = Void then
-					warnings := other.warnings
-				elseif other.warnings /= Void then
-					l_warnings := other.warnings.twin
-					l_warnings.merge (warnings)
+				l_warnings := warnings
+				if l_warnings = Void then
+					l_warnings := other.warnings
+					warnings := l_warnings
+				elseif attached other.warnings as l_other_warnings then
+					l_warnings := l_other_warnings.twin
+					l_warnings.merge (l_warnings)
 					warnings := l_warnings
 				end
 				if not is_profile_configured then
@@ -665,22 +677,23 @@ feature -- Merging
 			if other /= Void then
 				merge_client (other)
 					-- Computation of `namespace' by using values in `other'.
-				if other.namespace /= Void then
-					l_namespace := other.namespace
+				if attached other.namespace as l_other_namespace then
+					l_namespace := l_other_namespace
 				else
 					l_namespace := other.local_namespace
 				end
-				if l_namespace /= Void then
-					if local_namespace /= Void then
-						namespace := l_namespace + "." + local_namespace
+				if attached local_namespace as l_local_namespace then
+					if l_namespace /= Void then
+						namespace := l_namespace + "." + l_local_namespace
 					else
-						namespace := l_namespace.twin
+						namespace := l_local_namespace.twin
 					end
-				elseif local_namespace /= Void then
-					namespace := local_namespace.twin
+				elseif l_namespace /= Void then
+					namespace := l_namespace.twin
 				else
 					namespace := Void
 				end
+
 				if not is_full_class_checking_configured then
 					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
 					is_full_class_checking := other.is_full_class_checking
@@ -699,7 +712,7 @@ feature -- Merging
 		end
 
 invariant
-	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
+	local_namespace_not_empty: not attached local_namespace as ns or else not ns.is_empty
 	syntax_attached: syntax /= Void
 	void_safety_attached: void_safety /= Void
 	warnings_compare_objects: attached warnings as l_w implies l_w.object_comparison

@@ -81,7 +81,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_root (a_cluster, a_class, a_feature: STRING_32; a_all_root: BOOLEAN): CONF_ROOT
+	new_root (a_cluster, a_class, a_feature: detachable STRING_32; a_all_root: BOOLEAN): CONF_ROOT
 			-- Create a `CONF_ROOT' object.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
@@ -194,7 +194,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_action (a_command: READABLE_STRING_GENERAL; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION
+	new_action (a_command: READABLE_STRING_GENERAL; a_must_succeed: BOOLEAN; a_working_directory: detachable CONF_DIRECTORY_LOCATION): CONF_ACTION
 			-- Create a `CONF_ACTION' object.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
@@ -311,7 +311,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

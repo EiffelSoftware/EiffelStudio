@@ -45,27 +45,24 @@ feature -- Status
 	is_invalid_xml: BOOLEAN
 			-- Is the file not even valid xml?
 
-	last_error: CONF_ERROR
+	last_error: detachable CONF_ERROR
 			-- The last error message.
 
-	last_warnings: ARRAYED_LIST [CONF_ERROR]
+	last_warnings: detachable ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages.
 
-	last_warning_messages: STRING_32
+	last_warning_messages: detachable STRING_32
 			-- Warning messages as a single string.
 		do
-			if last_warnings /= Void then
+			if attached last_warnings as l_last_warnings then
 				create Result.make (20)
-				last_warnings.do_all (agent (a_warning: CONF_ERROR; a_msg: STRING_32)
-					require
-						a_msg_not_void: a_msg /= Void
-					do
-						a_msg.append (a_warning.text)
-						a_msg.append_character ('%N')
-					end (?, Result))
+				across
+					l_last_warnings as ic
+				loop
+					Result.append (ic.item.text)
+					Result.append_character ('%N')
+				end
 			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 feature -- Access
@@ -345,10 +342,10 @@ feature {NONE} -- Implementation
 			a_callback_not_void: a_callback /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
-			l_parser: XML_PARSER
+			l_parser: detachable XML_PARSER
 			l_ns_cb: XML_NAMESPACE_RESOLVER
 			l_end_tag_checker: XML_END_TAG_CHECKER
-			l_pos: XML_POSITION
+			l_pos: detachable XML_POSITION
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
@@ -379,19 +376,24 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-					-- In case it is an internal error (Call on Void target, or others...)
-					-- we need to properly handle this.
-				if l_parser.error_occurred then
-					l_pos := l_parser.error_position
-					a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
-					a_callback.last_error.set_xml_parse_mode
-				elseif a_callback.is_error then
-					l_pos := l_parser.position
-					a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
-					a_callback.last_error.set_xml_parse_mode
+				is_error := True
+				if l_parser /= Void then --| not is_error implies l_parser /= Void
+						-- In case it is an internal error (Call on Void target, or others...)
+						-- we need to properly handle this.
+					if attached a_callback.last_error as l_cb_error then
+						l_pos := l_parser.error_position
+						if (l_parser.error_occurred or a_callback.is_error) and l_pos /= Void then
+							l_cb_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
+							l_cb_error.set_xml_parse_mode
+						else
+								-- Since no error was retrieved it means that we had an internal
+								-- failure. Create an internal error instead.
+							a_callback.set_internal_error
+						end
+					else
+						a_callback.set_internal_error
+					end
 				else
-						-- Since no error was retrieved it means that we had an internal
-						-- failure. Create an internal error instead.
 					a_callback.set_internal_error
 				end
 			end
@@ -407,7 +409,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

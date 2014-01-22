@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	last_uuid: UUID
+	last_uuid: detachable UUID
 			-- The last parsed uuid.
 
 	last_location: detachable READABLE_STRING_GENERAL
@@ -52,10 +52,10 @@ feature -- Callbacks
 					if is_valid_uuid (a_value) then
 						create last_uuid.make_from_string (a_value)
 					else
-						set_error (create {CONF_ERROR_UUID})			
+						set_error (create {CONF_ERROR_UUID})
 					end
 				elseif --| xml attribute "location", relevant only for <redirection..>
-					is_redirection and then 
+					is_redirection and then
 					a_local_part.is_case_insensitive_equal_general ("location")
 				then
 					last_location := a_value
@@ -84,7 +84,7 @@ invariant
 	is_not_system_and_redirection: not (is_system and is_redirection)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

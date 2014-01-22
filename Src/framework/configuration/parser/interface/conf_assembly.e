@@ -84,21 +84,21 @@ feature -- Access, stored in configuration file
 	location: CONF_FILE_LOCATION
 			-- Location of the assembly.
 
-	assembly_name: READABLE_STRING_32
+	assembly_name: detachable READABLE_STRING_32
 			-- Name of the assembly.
 
-	assembly_version: READABLE_STRING_32
+	assembly_version: detachable READABLE_STRING_32
 			-- Version of the assembly.
 
-	assembly_culture: READABLE_STRING_32
+	assembly_culture: detachable READABLE_STRING_32
 			-- Culture of the assembly.
 
-	assembly_public_key_token: READABLE_STRING_32
+	assembly_public_key_token: detachable READABLE_STRING_32
 			-- Public key of the assembly.
 
 feature -- Access, in compiled only
 
-	physical_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE
+	physical_assembly: detachable CONF_PHYSICAL_ASSEMBLY_INTERFACE
 			-- Physical assembly that contains all the (unrenamed) classes.
 
 feature -- Access queries
@@ -106,7 +106,11 @@ feature -- Access queries
 	accessible_groups: SEARCH_TABLE [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 		do
-			Result := physical_assembly.accessible_groups
+			if attached physical_assembly as l_physical_assembly then
+				Result := l_physical_assembly.accessible_groups
+			else
+				create Result.make_map (0)
+			end
 		end
 
 	mapping: STRING_TABLE [STRING_32]
@@ -171,29 +175,29 @@ feature -- Access queries
 			create Result
 		end
 
-	class_options: STRING_TABLE [CONF_OPTION]
+	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
 		end
 
-	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
 			-- Return assembly dependency with `a_name' if there is any.
 		local
-			l_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER_32]
+			l_deps: detachable HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER_32]
 		do
-			if physical_assembly /= Void then
-				l_deps := physical_assembly.dependencies
-			end
-			if l_deps /= Void then
-				from
-					l_deps.start
-				until
-					Result /= Void or l_deps.after
-				loop
-					if l_deps.item_for_iteration.name.same_string_general (a_name) then
-						Result := l_deps.item_for_iteration
+			if attached physical_assembly as l_physical_assembly then
+				l_deps := l_physical_assembly.dependencies
+				if l_deps /= Void then
+					from
+						l_deps.start
+					until
+						Result /= Void or l_deps.after
+					loop
+						if l_deps.item_for_iteration.name.same_string_general (a_name) then
+							Result := l_deps.item_for_iteration
+						end
+						l_deps.forth
 					end
-					l_deps.forth
 				end
 			end
 		end
@@ -234,16 +238,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	set_physical_assembly (a_assembly: like physical_assembly)
+	set_physical_assembly (a_assembly: attached like physical_assembly)
 			-- Set `physical_assembly' to `a_assembly'.
 		require
 			a_assembly_not_void: a_assembly /= Void
 		do
 			physical_assembly := a_assembly
-			physical_assembly.add_assembly (Current)
+			a_assembly.add_assembly (Current)
 		ensure
 			physical_assembly_set: physical_assembly = a_assembly
-			physical_assembly_backlink: physical_assembly.assemblies.has (Current)
+			physical_assembly_backlink: a_assembly.assemblies.has (Current)
 		end
 
 feature -- Equality
@@ -273,7 +277,7 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

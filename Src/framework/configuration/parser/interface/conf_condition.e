@@ -38,22 +38,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	platform: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
+	platform: detachable EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Platform where it is enabled or for which it is disabled (if `invert' is true)
 
-	build: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
+	build: detachable EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
-	concurrency: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
+	concurrency: detachable EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Concurrency setting where it is is enabled or for which it is disabled (if `invert' is true)
 
-	dotnet: CELL [BOOLEAN]
+	dotnet: detachable CELL [BOOLEAN]
 			-- Enabled for dotnet?
 
-	dynamic_runtime: CELL [BOOLEAN]
+	dynamic_runtime: detachable CELL [BOOLEAN]
 			-- Enabled for dynamic runtime?
 
-	version: STRING_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]]
+	version: STRING_TABLE [EQUALITY_TUPLE [TUPLE [min: detachable CONF_VERSION; max: detachable CONF_VERSION]]]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
 	custom: STRING_TABLE [STRING_TABLE [BOOLEAN]]
@@ -70,36 +70,36 @@ feature -- Queries
 		local
 			l_vars: STRING_TABLE [READABLE_STRING_GENERAL]
 			l_version: STRING_TABLE [CONF_VERSION]
-			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
-			l_ver_state: CONF_VERSION
-			l_var_key, l_var_val: READABLE_STRING_GENERAL
+			l_ver_cond: like version.item_for_iteration
+			l_ver_state: detachable CONF_VERSION
+			l_var_key, l_var_val: detachable READABLE_STRING_GENERAL
 			l_values: STRING_TABLE [BOOLEAN]
 		do
 			Result := True
 
 				-- concurrency
-			if Result and concurrency /= Void then
-				Result := concurrency.item.value.has (a_state.concurrency) xor concurrency.item.invert
+			if Result and attached concurrency as l_concurrency then
+				Result := l_concurrency.item.value.has (a_state.concurrency) xor l_concurrency.item.invert
 			end
 
 				-- dotnet
-			if Result and dotnet /= Void then
-				Result := a_state.is_dotnet = dotnet.item
+			if Result and attached dotnet as l_dotnet then
+				Result := a_state.is_dotnet = l_dotnet.item
 			end
 
 				-- dynamic runtime
-			if Result and dynamic_runtime /= Void then
-				Result := a_state.is_dynamic_runtime = dynamic_runtime.item
+			if Result and attached dynamic_runtime as l_dynamic_runtime then
+				Result := a_state.is_dynamic_runtime = l_dynamic_runtime.item
 			end
 
 				-- platform
-			if Result and platform /= Void then
-				Result := platform.item.value.has (a_state.platform) xor platform.item.invert
+			if Result and attached platform as l_platform then
+				Result := l_platform.item.value.has (a_state.platform) xor l_platform.item.invert
 			end
 
 				-- build
-			if Result and build /= Void then
-				Result := build.item.value.has (a_state.build) xor build.item.invert
+			if Result and attached build as l_build then
+				Result := l_build.item.value.has (a_state.build) xor l_build.item.invert
 			end
 
 				-- Version
@@ -112,8 +112,9 @@ feature -- Queries
 				loop
 					l_ver_cond := version.item_for_iteration
 					l_ver_state := l_version.item (version.key_for_iteration)
-					Result := l_ver_state /= Void and then (l_ver_cond.item.min = Void or else l_ver_cond.item.min <= l_ver_state) and
-						(l_ver_cond.item.max = Void or else l_ver_cond.item.max >= l_ver_state)
+					Result := l_ver_state /= Void and then
+						(not attached l_ver_cond.item.min as l_min or else l_min <= l_ver_state) and then
+						(not attached l_ver_cond.item.max as l_max or else l_max >= l_ver_state)
 					version.forth
 				end
 			end
@@ -159,27 +160,35 @@ feature -- Update
 			-- Add requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
-			no_invert: platform = Void or else not platform.item.invert
+			no_invert: attached platform as p implies not p.item.invert
+		local
+			l_platform: like platform
 		do
-			if platform = Void then
-				create platform
-				platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			l_platform := platform
+			if l_platform = Void then
+				create l_platform
+				l_platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				platform := l_platform
 			end
-			platform.item.value.force (a_platform)
+			l_platform.item.value.force (a_platform)
 		end
 
 	exclude_platform (a_platform: INTEGER)
 			-- Add an exclude requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
-			all_invert: platform = Void or else platform.item.invert
+			all_invert: attached platform as p implies p.item.invert
+		local
+			l_platform: like platform
 		do
-			if platform = Void then
-				create platform
-				platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				platform.item.invert := True
+			l_platform := platform
+			if l_platform = Void then
+				create l_platform
+				l_platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				l_platform.item.invert := True
+				platform := l_platform
 			end
-			platform.item.value.force (a_platform)
+			l_platform.item.value.force (a_platform)
 		end
 
 	wipe_out_platform
@@ -194,27 +203,35 @@ feature -- Update
 			-- Add requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
-			no_invert: build = Void or else not build.item.invert
+			no_invert: attached build as b implies not b.item.invert
+		local
+			l_build: like build
 		do
-			if build = Void then
-				create build
-				build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			l_build := build
+			if l_build = Void then
+				create l_build
+				l_build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				build := l_build
 			end
-			build.item.value.force (a_build)
+			l_build.item.value.force (a_build)
 		end
 
 	exclude_build (a_build: INTEGER)
 			-- Add an exclude requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
-			all_invert: build = void or else build.item.invert
+			all_invert: attached build as b implies b.item.invert
+		local
+			l_build: like build
 		do
-			if build = Void then
-				create build
-				build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				build.item.invert := True
+			l_build := build
+			if l_build = Void then
+				create l_build
+				l_build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				l_build.item.invert := True
+				build := l_build
 			end
-			build.item.value.force (a_build)
+			l_build.item.value.force (a_build)
 		end
 
 	wipe_out_build
@@ -229,27 +246,35 @@ feature -- Update
 			-- Add requirement on `a_concurrency'.
 		require
 			valid_platform: valid_concurrency (a_concurrency)
-			no_invert: concurrency = Void or else not concurrency.item.invert
+			not_invert: attached concurrency as c implies not c.item.invert
+		local
+			l_concurrency: like concurrency
 		do
-			if concurrency = Void then
-				create concurrency
-				concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+			l_concurrency := concurrency
+			if l_concurrency = Void then
+				create l_concurrency
+				l_concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				concurrency := l_concurrency
 			end
-			concurrency.item.value.force (a_concurrency)
+			l_concurrency.item.value.force (a_concurrency)
 		end
 
 	exclude_concurrency (a_concurrency: INTEGER)
 			-- Add an exclude requirement on `a_concurrency'.
 		require
 			valid_concurrency: valid_concurrency (a_concurrency)
-			all_invert: concurrency = Void or else concurrency.item.invert
+			all_invert: attached concurrency as c implies c.item.invert
+		local
+			l_concurrency: like concurrency
 		do
-			if concurrency = Void then
-				create concurrency
-				concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				concurrency.item.invert := True
+			l_concurrency := concurrency
+			if l_concurrency = Void then
+				create l_concurrency
+				l_concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				l_concurrency.item.invert := True
+				concurrency := l_concurrency
 			end
-			concurrency.item.value.force (a_concurrency)
+			l_concurrency.item.value.force (a_concurrency)
 		end
 
 	wipe_out_concurrency
@@ -334,14 +359,14 @@ feature -- Update
 			unset: not version.has (a_type)
 		end
 
-	add_version (a_min, a_max: CONF_VERSION; a_type: STRING_32)
+	add_version (a_min, a_max: detachable CONF_VERSION; a_type: STRING_32)
 			-- Set version constraint.
 		require
 			min_or_max: a_min /= Void or a_max /= Void
 			min_less_max: a_min /= Void and a_max /= Void implies a_min <= a_max
 			valid_type: valid_version_type (a_type)
 		local
-			l_vers: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
+			l_vers: EQUALITY_TUPLE [TUPLE [min: detachable CONF_VERSION; max: detachable CONF_VERSION]]
 		do
 			create l_vers
 			l_vers.item.min := a_min
@@ -377,44 +402,40 @@ feature -- Output
 			until
 				version.after
 			loop
-				if version.item_for_iteration.item.min /= Void then
-					Result.append (version.item_for_iteration.item.min.version)
+				if attached version.item_for_iteration.item.min as l_min then
+					Result.append (l_min.version)
 					Result.append_string_general (" <= ")
 				end
 				Result.append_string_general (version.key_for_iteration + " version")
-				if version.item_for_iteration.item.max /= Void then
+				if attached version.item_for_iteration.item.max as l_max then
 					Result.append_string_general (" <= ")
-					Result.append (version.item_for_iteration.item.max.version)
+					Result.append (l_max.version)
 				end
 				Result.append_string_general (" and ")
 				version.forth
 			end
 
-			if dotnet /= Void then
-				if dotnet.item then
+			if attached dotnet as l_dotnet then
+				if l_dotnet.item then
 					Result.append_string_general (".NET and ")
 				else
 					Result.append_string_general ("not .NET and ")
 				end
 			end
 
-			if dynamic_runtime /= Void then
-				if dynamic_runtime.item then
+			if attached dynamic_runtime as l_dynamic_runtime then
+				if l_dynamic_runtime.item then
 					Result.append_string_general ("dynamic_runtime and ")
 				else
 					Result.append_string_general ("not dynamic_runtime and ")
 				end
 			end
 
-			from
-				custom.start
-			until
-				custom.after
-			loop
+			across custom as custom_ic loop
 				across
-					custom.item_for_iteration as l_c
+					custom_ic.item as l_c
 				loop
-					Result.append_string_general (custom.key_for_iteration)
+					Result.append_string_general (custom_ic.key)
 					if l_c.item then
 						Result.append_string_general (" /= ")
 					else
@@ -423,7 +444,6 @@ feature -- Output
 					Result.append_string_general (l_c.key)
 					Result.append_string_general (" and ")
 				end
-				custom.forth
 			end
 
 				-- remove last " and "
@@ -436,47 +456,54 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	append_list (data: like platform; names: like platform_names; output: STRING_32)
-			-- Append `data' (if any) to `output' using specified `names'.
+	append_list (data: like platform; names: like platform_names; a_output: STRING_32)
+			-- Append `data' (if any) to `a_output' using specified `names'.
 		require
 			names_attached: attached names
-			output_attached: attached output
+			output_attached: attached a_output
 		local
 			c: STRING
 		do
-			if attached data then
-				check attached data.item as i and then attached i.value as v then
+			if data /= Void then
+				if attached data.item as i and then attached i.value as v then
 					if i.invert then
-						output.append_string_general ("not ")
+						a_output.append_string_general ("not ")
 						c := " and "
 					else
 						c := " or "
 					end
-					output.append_character ('(')
+					a_output.append_character ('(')
 					from
 						v.start
 					until
 						v.after
 					loop
-						output.append (names.item (v.item))
-						output.append_string_general (c)
+						if attached names.item (v.item) as l_name then
+							a_output.append_string_general (l_name)
+						else
+							check has_name: False end
+							a_output.append_string_general ("False")
+						end
+						a_output.append_string_general (c)
 						v.forth
 					end
-					output.remove_tail (c.count)
-					output.append_string_general (") and ")
+					a_output.remove_tail (c.count)
+					a_output.append_string_general (") and ")
+				else
+					check False end
 				end
 			end
 		end
 
 invariant
-	platform_ok: platform /= Void implies platform.item.value /= Void
-	build_ok: build /= Void implies build.item.value /= Void
+	platform_ok: attached platform as p implies p.item.value /= Void
+	build_ok: attached build as b implies b.item.value /= Void
 	concurrency_ok: attached concurrency as c implies attached c.item as i and then attached i.value
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

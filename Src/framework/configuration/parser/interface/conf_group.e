@@ -48,7 +48,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during an operation?
 
-	last_error: CONF_ERROR
+	last_error: detachable CONF_ERROR
 			-- The last error.
 
 	classes_set: BOOLEAN
@@ -96,10 +96,11 @@ feature -- Status
 		end
 
 	is_used_in_library: BOOLEAN
-			-- Is this this cluster used in a library? (as opposed to directly in the application system)
+			-- Is this cluster used in a library? (as opposed to directly in the application system)
 		do
-			if target.system.is_fully_parsed then
-				Result := target.system.application_target.system /= target.system
+			if attached target.system.application_target as l_app_target then
+				check is_fully_parsed: target.system.is_fully_parsed end
+				Result := l_app_target.system /= target.system
 			end
 		end
 
@@ -110,10 +111,10 @@ feature -- Status
 
 feature -- Status update
 
-	set_error (an_error: CONF_ERROR)
+	set_error (an_error: detachable CONF_ERROR)
 			-- Set `an_error'.
 		do
-			is_error := True
+			is_error := an_error /= Void
 			last_error := an_error
 		end
 
@@ -137,7 +138,7 @@ feature -- Access, stored in configuration file
 	name: STRING_32
 			-- The name of the group.
 
-	description: STRING_32
+	description: detachable STRING_32
 			-- A description about the group.
 
 	location: CONF_LOCATION
@@ -154,10 +155,10 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only, not stored to configuration file
 
-	overriders: ARRAYED_LIST [CONF_OVERRIDE]
+	overriders: detachable ARRAYED_LIST [CONF_OVERRIDE]
 			-- The overriders that override this group.
 
-	classes: STRING_TABLE [like class_type]
+	classes: detachable STRING_TABLE [like class_type]
 			-- All the classes in this group, indexed by the renamed class name.
 
 	hash_code: INTEGER
@@ -175,7 +176,7 @@ feature -- Access queries
 	is_overriden: BOOLEAN
 			-- Is this group overriden by an override cluster?
 		do
-			Result := overriders /= Void and then not overriders.is_empty
+			Result := attached overriders as l_overriders and then not l_overriders.is_empty
 		end
 
 	mapping: STRING_TABLE [STRING_32]
@@ -192,7 +193,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_options: STRING_TABLE [CONF_OPTION]
+	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options for classes.
 		deferred
 		ensure
@@ -207,16 +208,15 @@ feature -- Access queries
 			l_class_options: like class_options
 		do
 			l_map := mapping
-			if l_map.has_key (a_class) then
-				l_name := l_map.found_item
+			if attached l_map.item (a_class) as l_map_found_item then
+				l_name := l_map_found_item
 			else
 				l_name := a_class
 			end
 			l_class_options := class_options
 			if l_class_options /= Void then
-				Result := l_class_options.item (l_name)
-				if Result /= Void then
-					Result := Result.twin
+				if attached l_class_options.item (l_name) as l_class then
+					Result := l_class.twin
 					Result.merge (options)
 				else
 					Result := options.twin
@@ -224,7 +224,6 @@ feature -- Access queries
 			else
 				Result := options.twin
 			end
-
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -236,12 +235,13 @@ feature -- Access queries
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 			classes_set: classes_set
-		local
-			l_class: CONF_CLASS
 		do
 			create Result.make
-			l_class := classes.item (a_class)
-			if l_class /= Void and then not l_class.does_override then
+			if
+				attached classes as l_classes and then
+				attached l_classes.item (a_class) as l_class and then
+				not l_class.does_override
+			then
 				Result.extend (l_class)
 			end
 		ensure
@@ -254,24 +254,27 @@ feature -- Access queries
 			a_class_ok: a_class /= Void and then a_class.is_valid
 			classes_set: classes_set
 		local
-			l_cursor: CURSOR
+			l_reverse_classes_cache: like reverse_classes_cache
 		do
 			create Result.make
-			if reverse_classes_cache = Void then
-				create reverse_classes_cache.make (classes.count)
-				from
-					classes.start
-					l_cursor := classes.cursor
-				until
-					classes.after
-				loop
-					reverse_classes_cache.force (classes.key_for_iteration, classes.item_for_iteration)
-					classes.forth
+			if attached classes as l_classes then
+				l_reverse_classes_cache := reverse_classes_cache
+				if l_reverse_classes_cache = Void then
+					create l_reverse_classes_cache.make (l_classes.count)
+					reverse_classes_cache := l_reverse_classes_cache
+					across
+						l_classes as ic
+					loop
+						l_reverse_classes_cache.force (ic.key, ic.item)
+					end
 				end
-				classes.go_to (l_cursor)
-			end
-			if reverse_classes_cache.has_key (a_class) then
-				Result.force (reverse_classes_cache.found_item)
+				if l_reverse_classes_cache.has_key (a_class) and then attached l_reverse_classes_cache.found_item as l_found_item then
+					Result.force (l_found_item )
+				else
+					check has_key: False end
+				end
+			else
+				check precondition__classes_set: False end
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -292,23 +295,26 @@ feature -- Access queries
 		require
 			classes_set: classes_set
 		local
-			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
 		do
-			Result :=  classes.twin
-			l_groups := accessible_groups
-			if l_groups /= Void then
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					l_grp := l_groups.item_for_iteration
-					if l_grp.classes_set then
-						Result.merge (l_grp.classes)
+			if attached classes as l_classes then
+				Result := l_classes.twin
+				if attached accessible_groups as l_groups then
+					from
+						l_groups.start
+					until
+						l_groups.after
+					loop
+						l_grp := l_groups.item_for_iteration
+						if attached l_grp.classes as l_grp_classes then
+							Result.merge (l_grp_classes)
+						end
+						l_groups.forth
 					end
-					l_groups.forth
 				end
+			else
+				check precondition__classes_set: False end
+				create Result.make_equal (0)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -339,7 +345,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
 			-- Return sub group with `a_name' if there is any.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -442,13 +448,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_option_not_void: a_option /= Void
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
+		local
+			l_internal_class_options: like internal_class_options
 		do
-			if internal_class_options = Void then
-				create internal_class_options.make_caseless (1)
+			l_internal_class_options := internal_class_options
+			if l_internal_class_options = Void then
+				create l_internal_class_options.make_caseless (1)
+				internal_class_options := l_internal_class_options
 			end
-			internal_class_options.force (a_option, a_class)
+			l_internal_class_options.force (a_option, a_class)
 		ensure
-			added: internal_class_options.has (a_class) and then internal_class_options.item (a_class) = a_option
+			internal_class_options_set: attached internal_class_options as el_internal_class_options
+			added: el_internal_class_options.has (a_class) and then el_internal_class_options.item (a_class) = a_option
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
@@ -463,16 +474,17 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			classes_set: classes = a_classes
 		end
 
-	set_classes_by_filename (a_classes: like classes_by_filename)
+	set_classes_by_filename (a_classes: attached like classes_by_filename)
 			-- Set `classes_by_filename' to `a_classes'
 		require
-			classes_up_to_date: classes /= Void and classes.count = a_classes.count
 			a_classes_not_void: a_classes /= Void
+			classes_up_to_date: attached classes as l_classes and then l_classes.count = a_classes.count
 		do
 			classes_by_filename := a_classes
 		ensure
 			classes_set: classes_by_filename = a_classes
-			same_as_classes: classes.count = classes_by_filename.count
+			classes_by_filename_set: attached classes_by_filename as l_classes_by_filename
+			same_as_classes: attached classes as el_classes and then el_classes.count = l_classes_by_filename.count
 		end
 
 	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: SEARCH_TABLE [CONF_CLASS])
@@ -485,64 +497,66 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_removed_classes_not_void: a_removed_classes /= Void
 			classes_set: classes_set
 		local
-			l_classes: like classes
-			l_overridee, l_overrider: CONF_CLASS
-			l_ovs: LINKED_SET [CONF_CLASS]
+			l_overridee, l_overrider: detachable CONF_CLASS
+			l_ovs: detachable LINKED_SET [CONF_CLASS]
 			l_er: CONF_ERROR_OVERRIDE
+			l_overriders: like overriders
 		do
 			if is_override then
 				create l_er
 				l_er.set_group (name)
 				set_error (l_er)
 			else
-				if overriders = Void then
-					create overriders.make (1)
+				l_overriders := overriders
+				if l_overriders = Void then
+					create l_overriders.make (1)
+					overriders := l_overriders
 				end
-				overriders.extend (an_overrider)
-
-				from
-					l_classes := an_overrider.classes
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_overrider := l_classes.item_for_iteration
-					l_ovs := class_by_name (l_overrider.name, False)
-					if l_ovs /= Void and then l_ovs.count > 0 then
-						l_overridee := l_ovs.first
-						if l_overridee.is_overriden then
-							set_error (
-								create {CONF_ERROR_MULOVER}.make (l_overridee.name,
-								l_overridee.full_file_name.name,
-								l_overridee.actual_class.full_file_name.name, l_overrider.full_file_name.name))
-						else
-							l_overridee.set_overriden_by (l_overrider)
-							l_overrider.add_does_override (l_overridee)
-							if l_overrider.is_modified then
-								if not l_overridee.is_compiled then
-									a_added_classes.force (l_overridee)
-								else
-									a_modified_classes.force (l_overridee)
-								end
-								l_overrider.set_up_to_date
+				l_overriders.extend (an_overrider)
+				if attached an_overrider.classes as l_classes then
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						l_overrider := l_classes.item_for_iteration
+						l_ovs := class_by_name (l_overrider.name, False)
+						if l_ovs /= Void and then l_ovs.count > 0 then
+							l_overridee := l_ovs.first
+							if l_overridee.is_overriden then
+								set_error (
+									create {CONF_ERROR_MULOVER}.make (l_overridee.name,
+									l_overridee.full_file_name.name,
+									l_overridee.actual_class.full_file_name.name, l_overrider.full_file_name.name))
 							else
-								a_added_classes.remove (l_overridee)
-								a_modified_classes.remove (l_overridee)
+								l_overridee.set_overriden_by (l_overrider)
+								l_overrider.add_does_override (l_overridee)
+								if l_overrider.is_modified then
+									if not l_overridee.is_compiled then
+										a_added_classes.force (l_overridee)
+									else
+										a_modified_classes.force (l_overridee)
+									end
+									l_overrider.set_up_to_date
+								else
+									a_added_classes.remove (l_overridee)
+									a_modified_classes.remove (l_overridee)
+								end
+									-- Make sure that `l_overrider' is not referenced
+									-- for normal compilation since it is now overriding `l_overidee'.
+								if l_overrider.is_compiled then
+									a_removed_classes.force (l_overrider)
+								end
+								a_added_classes.remove (l_overrider)
+								a_modified_classes.remove (l_overrider)
 							end
-								-- Make sure that `l_overrider' is not referenced
-								-- for normal compilation since it is now overriding `l_overidee'.
-							if l_overrider.is_compiled then
-								a_removed_classes.force (l_overrider)
-							end
-							a_added_classes.remove (l_overrider)
-							a_modified_classes.remove (l_overrider)
 						end
+						l_classes.forth
 					end
-					l_classes.forth
 				end
 			end
 		ensure
-			overrider_added: overriders.has (an_overrider)
+			overrider_added: attached overriders as el_overriders implies el_overriders.has (an_overrider)
 		end
 
 feature -- Equality
@@ -576,48 +590,60 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	is_readonly_set: BOOLEAN
 			-- Has a readonly status been set on this group?
 
-	internal_options: CONF_OPTION
+	internal_options: detachable CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.
 
-	internal_class_options: STRING_TABLE [CONF_OPTION]
+	internal_class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Classes with specific options of this group itself.
 
 	changeable_internal_options: like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
+		local
+			l_internal_options: like internal_options
 		do
-			if internal_options = Void then
-				create internal_options
+			l_internal_options := internal_options
+			if l_internal_options = Void then
+				create l_internal_options
+				internal_options := l_internal_options
 			end
-			Result := internal_options
+			Result := l_internal_options
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	changeable_class_options (a_class: CONF_CLASS): like internal_options
+	changeable_class_options (a_class: CONF_CLASS): attached like internal_options
 			-- A possibility to change settings of `a_class' without knowing if we have some options already set.
 		require
 			a_class_not_void: a_class /= Void
-			valid_group_for_class: classes_set implies classes.has (a_class.name)
+			valid_group_for_class: attached classes as l_classes implies l_classes.has (a_class.name)
+		local
+			res: detachable like changeable_class_options
 		do
-			if internal_class_options /= Void then
-				Result := internal_class_options.item (a_class.name)
+			if attached internal_class_options as l_internal_options then
+				res := l_internal_options.item (a_class.name)
 			end
-			if Result = Void then
-				create Result
-				add_class_options (Result, a_class.name)
+			if res = Void then
+				create res
+				add_class_options (res, a_class.name)
 			end
+			Result := res
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configuration fi
 
-	classes_by_filename: HASH_TABLE [like class_type, PATH]
+	classes_by_filename: detachable HASH_TABLE [like class_type, PATH]
 			-- Classes index by filename
 
 feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS
 			-- Class type anchor.
+		require
+			do_call: False
 		do
+			check False then
+				-- This function is only for typing.
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -625,10 +651,10 @@ feature {NONE} -- Implementation
 	internal_hash_code: INTEGER
 			-- Cached value of the hash_code
 
-	reverse_classes_cache: HASH_TABLE [READABLE_STRING_GENERAL, like class_type]
+	reverse_classes_cache: detachable HASH_TABLE [READABLE_STRING_GENERAL, like class_type]
 			-- Cache for speedup of `name_by_class' lookups.
 
-	accessible_groups_cache: like accessible_groups
+	accessible_groups_cache: detachable like accessible_groups
 			-- Cached version of `accessible_groups'.
 
 feature {CONF_ACCESS} -- Stored in configuration file
@@ -642,7 +668,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,14 +27,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `internal_notes' with `a_notes'
 		require
 			a_note_not_void: a_note /= Void
+		local
+			l_note_node: like note_node
 		do
-			if note_node = Void then
-				create note_node.make ("note")
+			l_note_node := note_node
+			if l_note_node = Void then
+				create l_note_node.make ("note")
+				note_node := l_note_node
 			end
-			note_node.extend (a_note)
+			l_note_node.extend (a_note)
 		ensure
-			note_node_not_void: note_node /= Void
-			a_note_extended: note_node.has (a_note)
+			note_node_not_void: attached note_node as el_note_node
+			a_note_extended: el_note_node.has (a_note)
 		end
 
 	remove_note (a_note: CONF_NOTE_ELEMENT)
@@ -42,9 +46,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_note_not_void: a_note /= Void
 		do
-			if note_node /= Void then
-				note_node.start
-				note_node.prune (a_note)
+			if attached note_node as l_note_notes then
+				l_note_notes.prune_all (a_note)
 			end
 		end
 
@@ -53,18 +56,20 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_old_note_void: a_old_note /= Void
 			a_new_note_void: a_new_note /= Void
-			notes_not_void: note_node /= Void
-			has_old_note: note_node.has (a_old_note)
+			notes_not_void: attached note_node as l_note_node
+			has_old_note: l_note_node.has (a_old_note)
 		do
-			note_node.start
-			note_node.search (a_old_note)
-			note_node.replace (a_new_note)
+			if attached note_node as l_note_node then
+				l_note_node.start
+				l_note_node.search (a_old_note)
+				l_note_node.replace (a_new_note)
+			end
 		ensure
-			note_node_has_new_note: note_node.has (a_new_note)
+			note_node_has_new_note: attached note_node as el_note_node and then el_note_node.has (a_new_note)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

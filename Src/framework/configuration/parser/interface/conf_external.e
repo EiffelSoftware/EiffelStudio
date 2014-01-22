@@ -70,18 +70,17 @@ feature -- Access, stored in configuration file
 
 	location: like internal_location
 			-- The file location.
-		local
-			l_path: like {CONF_TARGET}.library_root
 		do
 			Result := internal_location.twin
-			l_path := target.library_root
-			Result.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
-			Result.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
+			if attached target.library_root as l_path then
+				Result.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
+				Result.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	description: STRING_32
+	description: detachable STRING_32
 			-- A description about the external.
 
 	target: CONF_TARGET
@@ -117,7 +116,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

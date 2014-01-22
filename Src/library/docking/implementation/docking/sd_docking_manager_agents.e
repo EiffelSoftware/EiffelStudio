@@ -641,7 +641,7 @@ feature {NONE}  -- Implementation
 	drop_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]
 			-- Drop actions handler
 
-	theme_changed_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE[]]
+	theme_changed_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE]
 			-- Theme changed actions handler
 
 	ignore_additional_click: BOOLEAN

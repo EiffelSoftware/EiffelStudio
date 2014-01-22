@@ -42,10 +42,10 @@ feature -- Status
 	is_invalid_xml: BOOLEAN
 			-- Is the file not even valid xml?
 
-	last_error: CONF_ERROR_PARSE
+	last_error: detachable CONF_ERROR_PARSE
 			-- The last error message from the parser.
 
-	last_warning: ARRAYED_LIST [CONF_ERROR]
+	last_warning: detachable ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages from the parser.
 
 feature -- Callbacks
@@ -128,12 +128,16 @@ feature {NONE} -- Implementation
 			-- Set `an_error' as a warning.
 		require
 			an_error_ok: an_error /= Void
+		local
+			l_last_warning: like last_warning
 		do
 			is_warning := True
-			if last_warning = Void then
-				create last_warning.make (1)
+			l_last_warning := last_warning
+			if l_last_warning = Void then
+				create l_last_warning.make (1)
+				last_warning := l_last_warning
 			end
-			last_warning.force (an_error)
+			l_last_warning.force (an_error)
 		end
 
 	set_parse_error_message (a_message: READABLE_STRING_GENERAL)
@@ -145,7 +149,12 @@ feature {NONE} -- Implementation
 			e: XML_POSITION
 		do
 				-- Do not promote error to warning if this is an XML error.
-			if not is_invalid_xml and then not is_namespace_known (current_namespace) then
+			if
+				not is_invalid_xml and then
+				(	not attached current_namespace as l_current_namespace or else
+					not is_namespace_known (l_current_namespace)
+				)
+			then
 				set_parse_warning_message (a_message)
 			else
 				create l_error
@@ -167,6 +176,7 @@ feature {NONE} -- Implementation
 		local
 			l_error: CONF_ERROR_PARSE
 			e: XML_POSITION
+			l_last_warning: like last_warning
 		do
 			create l_error
 			l_error.set_message (a_message)
@@ -175,14 +185,16 @@ feature {NONE} -- Implementation
 				l_error.set_position (e.source_name, e.line, e.column)
 			end
 			is_warning := True
-			if last_warning = Void then
-				create last_warning.make (1)
+			l_last_warning := last_warning
+			if l_last_warning = Void then
+				create l_last_warning.make (1)
+				last_warning := l_last_warning
 			end
-			last_warning.force (l_error)
+			l_last_warning.force (l_error)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

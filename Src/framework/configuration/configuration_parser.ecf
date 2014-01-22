@@ -11,7 +11,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
-		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
 		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
@@ -21,6 +20,7 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="pcre" location="$ISE_LIBRARY\unstable\library\text\regexp\pcre\pcre.ecf" readonly="false"/>
+		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>

@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: READABLE_STRING_GENERAL
+	message: detachable READABLE_STRING_GENERAL
 			-- Error text.
 
-	file: STRING_32
+	file: detachable STRING_32
 			-- File with error.
 
 	row: INTEGER
@@ -53,8 +53,8 @@ feature -- Access
 				Result.append ({STRING_32} " (ACE syntax) ")
 			else
 			end
-			if file /= Void then
-				Result.append ({STRING_32} " in " + file + {STRING_32} " (line ")
+			if attached file as l_file then
+				Result.append ({STRING_32} " in " + l_file + {STRING_32} " (line ")
 				Result.append_integer (row)
 				Result.append ({STRING_32} ", column ")
 				Result.append_integer (column)
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 	Parse_mode_ace: INTEGER = 2
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,12 +21,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file, a_config: READABLE_STRING_32)
+	make (a_file: READABLE_STRING_32; a_config: detachable READABLE_STRING_32)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := locale.formatted_string (locale.translation ("Classfile without a class in $1%NConfiguration: $2"), [a_file, a_config])
+			if a_config /= Void then
+				text := locale.formatted_string (locale.translation ("Classfile without a class in $1%NConfiguration: $2"), [a_file, a_config])
+			else
+				text := locale.formatted_string (locale.translation ("Classfile without a class in $1"), [a_file])
+			end
 		end
 
 feature -- Access
@@ -35,7 +39,7 @@ feature -- Access
 		-- Error text.
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

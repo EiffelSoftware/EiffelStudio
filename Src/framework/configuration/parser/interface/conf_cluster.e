@@ -59,28 +59,28 @@ feature -- Access, stored in configuration file
 	is_hidden: BOOLEAN
 			-- Is this a hidden cluster that can not be used if the cluster is used in a library.
 
-	parent: CONF_CLUSTER
+	parent: detachable CONF_CLUSTER
 			-- An optional parent cluster.
 
-	children: ARRAYED_LIST [like Current]
+	children: detachable ARRAYED_LIST [like Current]
 			-- Optionally multiple children.
 
 feature -- Access queries
 
-	dependencies: SEARCH_TABLE [CONF_GROUP]
+	dependencies: detachable SEARCH_TABLE [CONF_GROUP]
 			-- Dependencies to other groups.
 			-- Empty = No dependencies
 			-- Void = Depend on all
 		do
-			if parent /= Void and then parent.dependencies /= Void then
-				Result := parent.dependencies.twin
+			if attached parent as l_parent and then attached l_parent.dependencies as l_parent_dependencies then
+				Result := l_parent_dependencies.twin
 			end
 
-			if internal_dependencies /= Void then
+			if attached internal_dependencies as l_internal_dependencies then
 				if Result /= Void then
-					Result.merge (internal_dependencies)
+					Result.merge (l_internal_dependencies)
 				else
-					Result := internal_dependencies
+					Result := l_internal_dependencies
 				end
 			end
 		end
@@ -108,12 +108,12 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	file_rule: like internal_file_rule
+	file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded.
 		do
 			Result := internal_file_rule.twin
-			if parent /= Void then
-				Result.append (parent.file_rule)
+			if attached parent as l_parent then
+				Result.append (l_parent.file_rule)
 			end
 			Result.append (target.file_rule)
 		ensure
@@ -123,17 +123,18 @@ feature -- Access queries
 	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		local
-			l_lib: CONF_LIBRARY
+			l_lib: detachable CONF_LIBRARY
 			l_local: CONF_OPTION
+			l_result: detachable CONF_OPTION
 		do
 				-- get local options
-			if internal_options /= Void then
-				l_local := internal_options.twin
+			if attached internal_options as l_internal_options then
+				l_local := l_internal_options.twin
 			else
 				create l_local
 			end
-			if parent /= Void then
-				l_local.merge (parent.options)
+			if attached parent as l_parent then
+				l_local.merge (l_parent.options)
 			else
 				l_local.merge (target.options)
 			end
@@ -142,38 +143,39 @@ feature -- Access queries
 			if is_used_in_library then
 				l_lib := target.system.application_target_library
 				if l_lib /= Void then
-					Result := l_lib.options
+					l_result := l_lib.options
 				end
 			end
 
-			if Result /= Void then
-				Result.merge (l_local)
+			if l_result /= Void then
+				l_result.merge (l_local)
 
 					-- Need to set local namespace, because local namespaces cannot be merged for libraries
-				Result.set_local_namespace (l_local.local_namespace)
+				l_result.set_local_namespace (l_local.local_namespace)
 			else
-				Result := l_local
+				l_result := l_local
 			end
+			Result := l_result
 		end
 
 	class_options: like internal_class_options
 			-- Options for classes.
 		local
-			l_lib: CONF_LIBRARY
+			l_lib: detachable CONF_LIBRARY
 			l_class_options: like class_options
 		do
 				-- get local options
-			if parent /= Void then
-				l_class_options :=  parent.class_options
+			if attached parent as l_parent then
+				l_class_options :=  l_parent.class_options
 				if l_class_options /= Void then
 					Result := l_class_options.twin
 				end
 			end
-			if internal_class_options /= Void then
+			if attached internal_class_options as l_internal_class_options then
 				if Result /= Void then
-					Result.merge (internal_class_options)
+					Result.merge (l_internal_class_options)
 				else
-					Result := internal_class_options.twin
+					Result := l_internal_class_options.twin
 				end
 			end
 
@@ -193,23 +195,27 @@ feature -- Access queries
 			end
 		end
 
-	mapping: like internal_mapping
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
+		local
+			l_cached_mapping: like cached_mapping
 		do
-			if cached_mapping = Void then
+			l_cached_mapping := cached_mapping
+			if l_cached_mapping = Void then
 				if internal_mapping = Void and parent = Void then
-					cached_mapping := target.mapping
+					l_cached_mapping := target.mapping
 				else
-					cached_mapping := target.mapping.twin
-					if parent /= Void then
-						cached_mapping.merge (parent.mapping)
+					l_cached_mapping := target.mapping.twin
+					if attached parent as l_parent then
+						l_cached_mapping.merge (l_parent.mapping)
 					end
-					if internal_mapping /= Void then
-						cached_mapping.merge (internal_mapping)
+					if attached internal_mapping as l_internal_mapping then
+						l_cached_mapping.merge (l_internal_mapping)
 					end
 				end
+				cached_mapping := l_cached_mapping
 			end
-			Result := cached_mapping
+			Result := l_cached_mapping
 		ensure then
 			Result_cached: Result = cached_mapping
 		end
@@ -219,24 +225,26 @@ feature -- Access queries
 			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
 		local
 			l_groups: like accessible_groups
-			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
 			l_name: READABLE_STRING_GENERAL
 		do
 				-- apply mapping
-			if mapping.has_key (a_class) then
-				l_name := mapping.found_item
+			if attached mapping.item (a_class) as l_mapping_found_item then
+				l_name := l_mapping_found_item
 			else
 				l_name := a_class
 			end
 
-			if a_dependencies and then class_by_name_cache.has_key (l_name) then
-				Result := class_by_name_cache.found_item
+			if a_dependencies and then attached class_by_name_cache.item (l_name) as l_found_item then
+				Result := l_found_item
 			else
 					-- search in cluster itself
 				create Result.make
-				l_class := classes.item (l_name)
-				if l_class /= Void and then not l_class.does_override then
+				if
+					attached classes as l_classes and then
+					attached l_classes.item (l_name) as l_class and then
+					not l_class.does_override
+				then
 					Result.extend (l_class)
 				end
 
@@ -266,8 +274,8 @@ feature -- Access queries
 			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
 		do
-			if a_dependencies and then name_by_class_cache.has_key (a_class) then
-				Result := name_by_class_cache.found_item
+			if a_dependencies and then attached name_by_class_cache.item (a_class) as l_name_by_class_cache_found_item then
+				Result := l_name_by_class_cache_found_item
 			else
 					-- search in cluster itself
 				Result := Precursor {CONF_PHYSICAL_GROUP} (a_class, a_dependencies)
@@ -296,74 +304,82 @@ feature -- Access queries
 			-- Dependencies if we have them, else everything except `Current'.
 		local
 			l_grps: STRING_TABLE [CONF_GROUP]
+			l_accessible_groups_cache: like accessible_groups_cache
 		do
-			if accessible_groups_cache = Void then
-				if dependencies = Void then
+			l_accessible_groups_cache := accessible_groups_cache
+			if l_accessible_groups_cache = Void then
+				if attached dependencies as l_dependencies then
+					l_accessible_groups_cache := l_dependencies
+					accessible_groups_cache := l_accessible_groups_cache
+				else
 					l_grps := target.clusters
-					create accessible_groups_cache.make_map (l_grps.count)
+					create l_accessible_groups_cache.make_map (l_grps.count)
+					accessible_groups_cache := l_accessible_groups_cache
+
 					from
 						l_grps.start
 					until
 						l_grps.after
 					loop
-						accessible_groups.force (l_grps.item_for_iteration)
-						l_grps.forth
-					end
-					l_grps := target.libraries
-					accessible_groups.resize (accessible_groups.count+l_grps.count)
-					from
-						l_grps.start
-					until
-						l_grps.after
-					loop
-						accessible_groups.force (l_grps.item_for_iteration)
-						l_grps.forth
-					end
-					l_grps := target.assemblies
-					accessible_groups.resize (accessible_groups.count+l_grps.count)
-					from
-						l_grps.start
-					until
-						l_grps.after
-					loop
-						accessible_groups.force (l_grps.item_for_iteration)
-						l_grps.forth
-					end
-					l_grps := target.overrides
-					accessible_groups.resize (accessible_groups.count+l_grps.count)
-					from
-						l_grps.start
-					until
-						l_grps.after
-					loop
-						accessible_groups.force (l_grps.item_for_iteration)
+						l_accessible_groups_cache.force (l_grps.item_for_iteration)
 						l_grps.forth
 					end
 
-					if target.precompile /= Void then
-						accessible_groups_cache.force (target.precompile)
+					l_grps := target.libraries
+					l_accessible_groups_cache.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						l_accessible_groups_cache.force (l_grps.item_for_iteration)
+						l_grps.forth
 					end
-					accessible_groups_cache.remove (Current)
-				else
-					accessible_groups_cache := dependencies
+
+					l_grps := target.assemblies
+					l_accessible_groups_cache.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						l_accessible_groups_cache.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+
+					l_grps := target.overrides
+					l_accessible_groups_cache.resize (accessible_groups.count+l_grps.count)
+					from
+						l_grps.start
+					until
+						l_grps.after
+					loop
+						l_accessible_groups_cache.force (l_grps.item_for_iteration)
+						l_grps.forth
+					end
+
+					if attached target.precompile as l_target_precompile then
+						l_accessible_groups_cache.force (l_target_precompile)
+					end
+					l_accessible_groups_cache.remove (Current)
 				end
 			end
-			Result := accessible_groups_cache
+			Result := l_accessible_groups_cache
 		end
 
-	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
 			-- Return sub cluster with `a_name' if there is any.
 		do
-			if children /= Void then
+			if attached children as l_children then
 				from
-					children.start
+					l_children.start
 				until
-					Result /= Void or children.after
+					Result /= Void or l_children.after
 				loop
-					if children.item.name.same_string_general (a_name) then
-						Result := children.item
+					if l_children.item.name.same_string_general (a_name) then
+						Result := l_children.item
 					end
-					children.forth
+					l_children.forth
 				end
 			end
 		end
@@ -371,7 +387,7 @@ feature -- Access queries
 	is_readonly: BOOLEAN
 			-- Is this group read only?
 		local
-			l_lib: CONF_LIBRARY
+			l_lib: detachable CONF_LIBRARY
 		do
 			Result := internal_read_only
 			if not Result and then is_used_in_library then
@@ -398,24 +414,25 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	add_child (a_cluster: like Current)
 			-- Add `a_cluster' to `children'.
+		local
+			l_children: like children
 		do
-			if children = Void then
-				create children.make (1)
+			l_children := children
+			if l_children = Void then
+				create l_children.make (1)
+				children := l_children
 			end
-			children.force (a_cluster)
+			l_children.force (a_cluster)
 		ensure
-			child_added: children.has (a_cluster)
+			children_set: attached children as el_children
+			child_added: el_children.has (a_cluster)
 		end
 
 	remove_child (a_cluster: like Current)
 			-- Remove `a_cluster' from `children'.
 		do
-			if children /= Void then
-				children.start
-				children.search (a_cluster)
-				if not children.exhausted then
-					children.remove
-				end
+			if attached children as l_children then
+				l_children.prune_all (a_cluster)
 			end
 		end
 
@@ -447,13 +464,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add a dependency.
 		require
 			a_group_not_void: a_group /= Void
+		local
+			l_internal_dependencies: like internal_dependencies
 		do
-			if internal_dependencies = Void then
-				create internal_dependencies.make (0)
+			l_internal_dependencies := internal_dependencies
+			if l_internal_dependencies = Void then
+				create l_internal_dependencies.make (0)
+				internal_dependencies := l_internal_dependencies
 			end
-			internal_dependencies.force (a_group)
+			l_internal_dependencies.force (a_group)
 		ensure
-			added: internal_dependencies.has (a_group)
+			internal_dependencies_set: attached internal_dependencies as el_internal_dependencies
+			added: el_internal_dependencies.has (a_group)
 		end
 
 	add_file_rule (a_file_rule: CONF_FILE_RULE)
@@ -481,11 +503,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
+		local
+			l_internal_mapping: like internal_mapping
 		do
-			if internal_mapping = Void then
-				create internal_mapping.make_equal (1)
+			l_internal_mapping := internal_mapping
+			if l_internal_mapping = Void then
+				create l_internal_mapping.make_equal (1)
+				internal_mapping := l_internal_mapping
 			end
-			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+			l_internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 			cached_mapping := Void
 		end
 
@@ -529,13 +555,13 @@ feature -- Visit
 
 feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
-	internal_dependencies: SEARCH_TABLE [CONF_GROUP]
+	internal_dependencies: detachable like dependencies
 			-- Dependencies to other groups of this cluster itself.
 
-	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
+	internal_file_rule: like file_rule
 			-- Rules for files to be included or excluded of this cluster itself.
 
-	internal_mapping: STRING_TABLE [STRING_32]
+	internal_mapping: detachable like mapping
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
 
 feature {NONE} -- Cached informations
@@ -549,10 +575,10 @@ feature {NONE} -- Cached informations
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
-	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
+	parent_child_relationship: attached parent as p implies (attached p.children as p_children and then p_children.has (Current))
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

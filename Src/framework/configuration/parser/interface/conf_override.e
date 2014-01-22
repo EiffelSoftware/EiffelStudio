@@ -28,7 +28,7 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	override: ARRAYED_LIST [CONF_GROUP]
+	override: detachable ARRAYED_LIST [CONF_GROUP]
 			-- The groups that this cluster overrides.
 			-- override.is_empty => overrides everything
 
@@ -46,11 +46,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add an override.
 		require
 			a_group_not_void: a_group /= Void
+		local
+			l_override: like override
 		do
-			if override = Void then
-				create override.make (1)
+			l_override := override
+			if l_override = Void then
+				create l_override.make (1)
+				override := l_override
 			end
-			override.extend (a_group)
+			l_override.extend (a_group)
 		end
 
 feature -- Equality
@@ -94,7 +98,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -107,21 +111,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

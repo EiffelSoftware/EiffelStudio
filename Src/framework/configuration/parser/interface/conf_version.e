@@ -113,16 +113,16 @@ feature -- Access, stored in configuration file
 			Result.append_integer (build)
 		end
 
-	company: STRING_32
+	company: detachable STRING_32
 			-- The company.
 
-	product: STRING_32
+	product: detachable STRING_32
 			-- The product.
 
-	trademark: STRING_32
+	trademark: detachable STRING_32
 			-- The trademark.
 
-	copyright: STRING_32
+	copyright: detachable STRING_32
 			-- The copyright
 
 feature -- Settings
@@ -250,30 +250,46 @@ feature -- Output
 			-- New string with printable representation.
 		local
 			l_ext: STRING_32
+			s: detachable READABLE_STRING_32
 		do
 			Result := version
 
 			create l_ext.make_empty
-			if product /= Void and then not product.is_empty then
-				l_ext.append (product+" ")
+			s := product
+			if s /= Void and then not s.is_empty then
+				l_ext.append (s)
+				l_ext.append_character (' ')
 			end
-			if company /= Void and then not company.is_empty then
-				l_ext.append (company+" ")
+			s := company
+			if s /= Void and then not s.is_empty then
+				l_ext.append (s)
+				l_ext.append_character (' ')
 			end
-			if copyright /= Void and then not copyright.is_empty then
-				l_ext.append ("(c) "+copyright+" ")
+
+			s := copyright
+			if s /= Void and then not s.is_empty then
+				l_ext.append ({STRING_32} "(c) ")
+				l_ext.append (s)
+				l_ext.append_character (' ')
 			end
-			if trademark /= Void and then not trademark.is_empty then
-				l_ext.append ("(tm) "+trademark+" ")
+
+			s := trademark
+			if s /= Void and then not s.is_empty then
+				l_ext.append ({STRING_32} "(tm) ")
+				l_ext.append (s)
+				l_ext.append_character (' ')
 			end
+
 			if not l_ext.is_empty then
 				l_ext.prune_all_trailing (' ')
-				Result.append (" ("+l_ext+")")
+				Result.append ({STRING_32} " (")
+				Result.append (l_ext)
+				Result.append_character (')')
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

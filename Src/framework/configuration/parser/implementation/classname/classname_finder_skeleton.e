@@ -42,7 +42,7 @@ feature -- Access
 	is_partial_class: BOOLEAN
 			-- Is this a partial class?
 
-	classname: STRING
+	classname: detachable STRING
 			-- Last classname found
 
 	verbatim_marker: STRING
@@ -154,7 +154,7 @@ invariant
 	verbatim_marker_not_void: verbatim_marker /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,19 +21,19 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error?
 		do
-			Result := last_errors /= Void and then not last_errors.is_empty
+			Result := attached last_errors as l_errors and then not l_errors.is_empty
 		end
 
 	is_warning: BOOLEAN
 			-- Was there a warning?
 		do
-			Result := last_warnings /= Void and then not last_warnings.is_empty
+			Result := attached last_warnings as l_warnings and then not l_warnings.is_empty
 		end
 
-	last_errors: ARRAYED_LIST [CONF_ERROR]
+	last_errors: detachable ARRAYED_LIST [CONF_ERROR]
 			-- The last errors.
 
-	last_warnings: ARRAYED_LIST [CONF_ERROR]
+	last_warnings: detachable ARRAYED_LIST [CONF_ERROR]
 			-- The last warnings.
 
 feature -- Visit nodes
@@ -121,11 +121,15 @@ feature {NONE} -- Implementation
 			-- Add `an_error' without raising an exception.
 		require
 			an_error_not_void: an_error /= Void
+		local
+			l_last_errors: like last_errors
 		do
-			if not is_error then
-				create last_errors.make (1)
+			l_last_errors := last_errors
+			if l_last_errors = Void then
+				create l_last_errors.make (1)
+				last_errors := l_last_errors
 			end
-			last_errors.extend (an_error)
+			l_last_errors.extend (an_error)
 		end
 
 	add_and_raise_error (an_error: CONF_ERROR)
@@ -133,10 +137,7 @@ feature {NONE} -- Implementation
 		require
 			an_error_not_void: an_error /= Void
 		do
-			if not is_error then
-				create last_errors.make (1)
-			end
-			last_errors.extend (an_error)
+			add_error (an_error)
 			raise_error
 		end
 
@@ -144,11 +145,15 @@ feature {NONE} -- Implementation
 			-- Add `a_warning'.
 		require
 			a_warning_not_void: a_warning /= Void
+		local
+			l_last_warnings: like last_warnings
 		do
-			if last_warnings = Void  then
-				create last_warnings.make (1)
+			l_last_warnings := last_warnings
+			if l_last_warnings = Void then
+				create l_last_warnings.make (1)
+				last_warnings := l_last_warnings
 			end
-			last_warnings.extend (a_warning)
+			l_last_warnings.extend (a_warning)
 		end
 
 	checksum
@@ -177,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Tag used when raising an exception error.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

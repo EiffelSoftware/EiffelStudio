@@ -23,17 +23,17 @@ feature -- Status
 			-- Was the last `store' operation successful?
 
 	date_has_changed: BOOLEAN
-			-- Did the file modification date of the configuration file change?
-		require
-			is_location_set: is_location_set
+			-- If location is set, has the file modification date of the configuration file change?
 		do
-			Result := file_modified_date (file_name) /= file_date
+			Result := attached file_name as f and then file_modified_date (f) /= file_date
 		end
 
 	is_location_set: BOOLEAN
 			-- Has the location of the configuration file been set?
 		do
-			Result := file_name /= Void and then not file_name.is_empty
+			Result := attached file_name as f and then not f.is_empty
+		ensure
+			set_implies_directory_set: Result implies directory /= Void
 		end
 
 	is_storable: BOOLEAN
@@ -87,7 +87,7 @@ feature -- Update, in compiled only
 			end
 		ensure
 			name_set: file_name = a_file_name
-			is_location_set: a_file_name /= Void implies is_location_set
+			is_location_set: a_file_name /= Void implies (is_location_set and directory /= Void)
 		end
 
 	set_file_date
@@ -154,10 +154,10 @@ feature -- Visitor
 		end
 
 invariant
-	location_set: is_location_set implies attached file_name as fn and then not fn.is_empty and directory /= Void
+	is_location_set: is_location_set implies (attached file_name as fn and then not fn.is_empty and directory /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

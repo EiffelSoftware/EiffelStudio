@@ -46,7 +46,7 @@ feature -- Basic validity queries
 			Result := known_warnings.has (a_warning)
 		end
 
-	valid_warning (a_warning: READABLE_STRING_GENERAL; a_namespace: like latest_namespace): BOOLEAN
+	valid_warning (a_warning: READABLE_STRING_GENERAL; a_namespace: detachable like latest_namespace): BOOLEAN
 			-- Is `a_warning' a valid warning in `a_namespace'?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -120,7 +120,11 @@ feature {NONE} -- Basic operation
 		require
 			valid_platform: valid_platform (a_platform)
 		do
-			Result := platform_names.item (a_platform)
+			check
+				valid_platform: attached platform_names.item (a_platform) as l_item
+			then
+				Result := l_item
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -130,7 +134,11 @@ feature {NONE} -- Basic operation
 		require
 			valid_build: valid_build (a_build)
 		do
-			Result := build_names.item (a_build)
+			check
+				valid_build: attached build_names.item (a_build) as l_item
+			then
+				Result := l_item
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -140,12 +148,16 @@ feature {NONE} -- Basic operation
 		require
 			valid_index: valid_concurrency (index)
 		do
-			Result := concurrency_names.item (index)
+			check
+				valid_index: attached concurrency_names.item (index) as l_item
+			then
+				Result := l_item
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	get_platform (a_name: READABLE_STRING_GENERAL): INTEGER
+	get_platform (a_name: detachable READABLE_STRING_GENERAL): INTEGER
 			-- Get the platform with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -164,7 +176,7 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_platform (Result)
 		end
 
-	get_build (a_name: READABLE_STRING_GENERAL): INTEGER
+	get_build (a_name: detachable READABLE_STRING_GENERAL): INTEGER
 			-- Get the build with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -183,7 +195,7 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_build (Result)
 		end
 
-	get_concurrency (a_name: READABLE_STRING_GENERAL): INTEGER
+	get_concurrency (a_name: detachable READABLE_STRING_GENERAL): INTEGER
 			-- Get the concurrency value with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -385,7 +397,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

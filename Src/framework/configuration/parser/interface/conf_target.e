@@ -70,10 +70,10 @@ feature -- Access, stored in configuration file
 	name: STRING_32
 			-- Name of the target.
 
-	description: STRING_32
+	description: detachable STRING_32
 			-- A description about the target.
 
-	extends: CONF_TARGET
+	extends: detachable CONF_TARGET
 			-- If we extend another target, this is the other target.
 
 	system: CONF_SYSTEM
@@ -87,8 +87,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	environ_variables: STRING_TABLE [READABLE_STRING_32]
 			-- Saved environment variables.
 
-	library_root: PATH
+	library_root: detachable PATH
 			-- Root location to use for relative paths, defaults to the location of the configuration file.
+			--| note: it is also use to replace $ECF_CONFIG_PATH value.
 		require
 			location_set: system.is_location_set
 		local
@@ -103,7 +104,13 @@ feature -- Access, in compiled only, not stored to configuration file
 				create l_dir.make (l_item, l_target)
 				Result := l_dir.evaluated_path
 			else
-				Result := system.directory
+				if attached system.directory as d then
+						-- implied by precondition `location_set', and meaning of `system.is_location_set'
+					Result := d
+				else
+				   		-- Implied by precondition "system_has_location_set"
+					check system_has_location_set: False end
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -134,31 +141,37 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	version: CONF_VERSION
+	version: detachable CONF_VERSION
 			-- Version number of the target.
 		do
-			if internal_version /= Void then
-				Result := internal_version
-			elseif extends /= Void then
-				Result := extends.version
+			if attached internal_version as l_internal_version then
+				Result := l_internal_version
+			elseif attached extends as l_extends then
+				Result := l_extends.version
 			end
 		end
 
-	precompile: like internal_precompile
+	precompile: detachable CONF_PRECOMPILE
 			-- The precompile (if any).
+		local
+			l_internal_precompile: like internal_precompile
 		do
-			if internal_precompile = Void and extends /= Void then
-				Result := extends.precompile
+			l_internal_precompile := internal_precompile
+			if
+				l_internal_precompile = Void and
+				attached extends as l_extends
+			then
+				Result := l_extends.precompile
 			else
-				Result := internal_precompile
+				Result := l_internal_precompile
 			end
 		end
 
-	libraries: like internal_libraries
+	libraries: STRING_TABLE [CONF_LIBRARY]
 			-- The used libraries.
 		do
-			if extends /= Void then
-				Result := extends.libraries.twin
+			if attached extends as l_extends then
+				Result := l_extends.libraries.twin
 				Result.merge (internal_libraries)
 			else
 				Result := internal_libraries.twin
@@ -167,11 +180,11 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	assemblies: like internal_assemblies
+	assemblies: STRING_TABLE [CONF_ASSEMBLY]
 			-- The assemblies.
 		do
-			if extends /= Void then
-				Result := extends.assemblies.twin
+			if attached extends as l_extends then
+				Result := l_extends.assemblies.twin
 				Result.merge (internal_assemblies)
 			else
 				Result := internal_assemblies.twin
@@ -180,11 +193,11 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	clusters: like internal_clusters
+	clusters: STRING_TABLE [CONF_CLUSTER]
 			-- The normal clusters.
 		do
-			if extends /= Void then
-				Result := extends.clusters.twin
+			if attached extends as l_extends then
+				Result := l_extends.clusters.twin
 				Result.merge (internal_clusters)
 			else
 				Result := internal_clusters.twin
@@ -193,11 +206,11 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	overrides: like internal_overrides
+	overrides: STRING_TABLE [CONF_OVERRIDE]
 			-- The override clusters.
 		do
-			if extends /= Void then
-				Result := extends.overrides.twin
+			if attached extends as l_extends then
+				Result := l_extends.overrides.twin
 				Result.merge (internal_overrides)
 			else
 				Result := internal_overrides.twin
@@ -214,52 +227,52 @@ feature -- Access queries
 			Result.merge (assemblies)
 			Result.merge (clusters)
 			Result.merge (overrides)
-			if precompile /= Void then
-				Result.force (precompile, precompile.name)
+			if attached precompile as l_precompile then
+				Result.force (l_precompile, l_precompile.name)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	root: CONF_ROOT
+	root: detachable CONF_ROOT
 			-- The root feature.
 		do
 			if internal_root /= Void then
 				Result := internal_root
-			elseif extends /= Void then
-				Result := extends.root
+			elseif attached extends as l_extends then
+				Result := l_extends.root
 			end
 		end
 
-	file_rule: like internal_file_rule
+	file_rule: ARRAYED_LIST [CONF_FILE_RULE]
 			-- Rules for files to be included or excluded.
 		do
 			Result := internal_file_rule.twin
-			if extends /= Void then
-				Result.append (extends.file_rule)
+			if attached extends as l_extends then
+				Result.append (l_extends.file_rule)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	options: like internal_options
+	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-			if internal_options /= Void then
-				Result := internal_options.twin
+			if attached internal_options as l_internal_options then
+				Result := l_internal_options.twin
 			else
 				create Result
 			end
-			if extends /= Void then
-				Result.merge (extends.options)
+			if attached extends as l_extends then
+				Result.merge (l_extends.options)
 			end
 		end
 
-	settings: like internal_settings
+	settings: HASH_TABLE [STRING_32, STRING_32]
 			-- Settings.
 		do
-			if extends /= Void then
-				Result := extends.settings.twin
+			if attached extends as l_extends then
+				Result := l_extends.settings.twin
 				Result.merge (internal_settings)
 			else
 				Result := internal_settings
@@ -268,18 +281,18 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_include: like internal_external_include
+	external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]
 			-- Global external include files.
 		do
 			Result := internal_external_include.twin
-			if extends /= Void then
-				Result.append (extends.external_include)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_include)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	external_cflag: like internal_external_cflag
+	external_cflag: ARRAYED_LIST [CONF_EXTERNAL_CFLAG]
 			-- Global external C flags.
 		do
 			Result := internal_external_cflag.twin
@@ -290,96 +303,96 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_object: like internal_external_object
+	external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- Global external object files.
 		do
 			Result := internal_external_object.twin
-			if extends /= Void then
-				Result.append (extends.external_object)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_object)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	external_library: like internal_external_library
+	external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY]
 			-- Global external library files.
 		do
 			Result := internal_external_library.twin
-			if extends /= Void then
-				Result.append (extends.external_library)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_library)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	external_linker_flag: like internal_external_linker_flag
+	external_linker_flag: ARRAYED_LIST [CONF_EXTERNAL_LINKER_FLAG]
 			-- Global external linker flags.
 		do
 			Result := internal_external_linker_flag.twin
-			if attached extends as e then
-				Result.append (e.external_linker_flag)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_linker_flag)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	external_make: like internal_external_make
+	external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE]
 			-- Global external make files.
 		do
 			Result := internal_external_make.twin
-			if extends /= Void then
-				Result.append (extends.external_make)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_make)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	external_resource: like internal_external_resource
+	external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 			-- Global external ressource files.
 		do
 			Result := internal_external_resource.twin
-			if extends /= Void then
-				Result.append (extends.external_resource)
+			if attached extends as l_extends then
+				Result.append (l_extends.external_resource)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	pre_compile_action: like internal_pre_compile_action
+	pre_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed before compilation.
 		do
-			if internal_pre_compile_action /= Void then
-				Result := internal_pre_compile_action.twin
+			if attached internal_pre_compile_action as l_internal_pre_compile_action then
+				Result := l_internal_pre_compile_action.twin
 			else
 				create Result.make (0)
 			end
-			if extends /= Void then
-				Result.append (extends.pre_compile_action)
+			if attached extends as l_extends then
+				Result.append (l_extends.pre_compile_action)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	post_compile_action: like internal_post_compile_action
+	post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation.
 		do
-			if internal_post_compile_action /= Void then
-				Result := internal_post_compile_action.twin
+			if attached internal_post_compile_action as l_internal_post_compile_action then
+				Result := l_internal_post_compile_action.twin
 			else
 				create Result.make (0)
 			end
-			if extends /= Void then
-				Result.append (extends.post_compile_action)
+			if attached extends as l_extends then
+				Result.append (l_extends.post_compile_action)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	variables: like internal_variables
+	variables: STRING_TABLE [READABLE_STRING_32]
 			-- User defined variables.
 		do
-			if extends /= Void then
-				Result := extends.variables.twin
+			if attached extends as l_extends then
+				Result := l_extends.variables.twin
 				Result.merge (internal_variables)
 			else
 				Result := internal_variables
@@ -388,17 +401,17 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	mapping: like internal_mapping
+	mapping: STRING_TABLE [STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32)
 		do
-			if extends /= Void then
-				Result := extends.mapping.twin
-				if internal_mapping /= Void then
-					Result.merge (internal_mapping)
+			if attached extends as l_extends then
+				Result := l_extends.mapping.twin
+				if attached internal_mapping as l_internal_mapping then
+					Result.merge (l_internal_mapping)
 				end
 			else
-				if internal_mapping /= Void then
-					Result := internal_mapping
+				if attached internal_mapping as l_internal_mapping then
+					Result := l_internal_mapping
 				else
 					create Result.make_equal (5)
 				end
@@ -417,11 +430,10 @@ feature -- Access queries for settings
 			l_settings: like settings
 		do
 			l_settings := settings
-			l_settings.search (a_name)
-			if l_settings.found then
-				check l_settings.found_item.is_boolean end
+			if attached l_settings.item (a_name) as l_found_item then
+				check l_found_item.is_boolean end
 				if not a_name.is_equal (s_array_optimization) then
-					Result := l_settings.found_item.to_boolean
+					Result := l_found_item.to_boolean
 				end
 			else
 				Result := true_boolean_settings.has (a_name)
@@ -538,14 +550,10 @@ feature -- Access queries for settings
 
 	setting_inlining_size: NATURAL_8
 			-- Value for the inlining_size setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_inlining_size)
-			if l_settings.found then
-				check l_settings.found_item.is_natural_8 and then l_settings.found_item.to_natural_8 <= 100 end
-				Result := l_settings.found_item.to_natural_8
+			if attached settings.item (s_inlining_size) as l_found_item then
+				check l_found_item.is_natural_8 and then l_found_item.to_natural_8 <= 100 end
+				Result := l_found_item.to_natural_8
 			else
 				Result := 4
 			end
@@ -589,14 +597,10 @@ feature -- Access queries for settings
 
 	setting_msil_classes_per_module: NATURAL_16
 			-- Value for the msil_classes_per_module setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_msil_classes_per_module)
-			if l_settings.found then
-				check l_settings.found_item.is_natural_16 and then l_settings.found_item.to_natural_16 > 0 end
-				Result := l_settings.found_item.to_natural_16
+			if attached settings.item (s_msil_classes_per_module) as l_found_item then
+				check l_found_item.is_natural_16 and then l_found_item.to_natural_16 > 0 end
+				Result := l_found_item.to_natural_16
 			else
 				Result := 0
 			end
@@ -634,14 +638,10 @@ feature -- Access queries for settings
 
 	setting_msil_generation_type: STRING_32
 			-- Value for the msil_generation_type setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_msil_generation_type)
-			if l_settings.found then
-				check l_settings.found_item.is_case_insensitive_equal_general ("exe") or l_settings.found_item.is_case_insensitive_equal_general ("dll") end
-				Result := l_settings.found_item
+			if attached settings.item (s_msil_generation_type) as l_found_item then
+				check l_found_item.is_case_insensitive_equal_general ("exe") or l_found_item.is_case_insensitive_equal_general ("dll") end
+				Result := l_found_item
 			else
 				Result := "exe"
 			end
@@ -669,14 +669,10 @@ feature -- Access queries for settings
 
 	setting_platform: STRING_32
 			-- Value for the platform setting.
-		local
-			l_settings: like settings
 		do
-			l_settings := settings
-			l_settings.search (s_platform)
-			if l_settings.found then
-				check get_platform (l_settings.found_item) /= 0 end
-				Result := l_settings.found_item.as_lower
+			if attached settings.item (s_platform) as l_found_item then
+				check get_platform (l_found_item) /= 0 end
+				Result := l_found_item.as_lower
 			else
 				Result := ""
 			end
@@ -803,8 +799,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			if system /= Void then
-				system.targets.replace_key (a_name.as_lower, name)
+			if attached system as l_system then
+				l_system.targets.replace_key (a_name.as_lower, name)
 			end
 			name := a_name.as_lower
 		ensure
@@ -848,7 +844,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			extends := Void
 		end
 
-	set_version (a_version: like internal_version)
+	set_version (a_version: like version)
 			-- Set `version' to `a_version'.
 		do
 			internal_version := a_version
@@ -958,7 +954,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			root_removed: internal_root = Void
 		end
 
-	set_file_rules (a_file_rules: like internal_file_rule)
+	set_file_rules (a_file_rules: detachable like file_rule)
 			-- Set `internal_file_rule' to `a_file_rules'.
 		do
 			if a_file_rules /= Void then
@@ -981,7 +977,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_added: internal_file_rule.has (a_file_rule)
 		end
 
-	set_options (an_option: like internal_options)
+	set_options (an_option: like options)
 			-- Set `an_option'.
 		require
 			an_option_not_void: an_option /= Void
@@ -991,7 +987,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			option_set: internal_options = an_option
 		end
 
-	set_settings (a_settings: like internal_settings)
+	set_settings (a_settings: like settings)
 			-- Set `a_settings'.
 		require
 			a_settings_not_void: a_settings /= Void
@@ -1027,7 +1023,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			updated_added_set: a_value /= Void and then not a_value.is_empty implies internal_settings.item (a_name) = a_value
 		end
 
-	set_external_includes (an_includes: like internal_external_include)
+	set_external_includes (an_includes: like external_include)
 			-- Set `an_includes'.
 		require
 			an_includes_not_void: an_includes /= Void
@@ -1037,7 +1033,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			includes_set: internal_external_include =an_includes
 		end
 
-	set_external_cflag (v: like internal_external_cflag)
+	set_external_cflag (v: like external_cflag)
 			-- Set `internal_external_cflag' to `v'.
 		require
 			v_attached: attached v
@@ -1047,7 +1043,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_cflag_set: internal_external_cflag = v
 		end
 
-	set_external_objects (an_objects: like internal_external_object)
+	set_external_objects (an_objects: like external_object)
 			-- Set `an_objects'.
 		require
 			an_objects_not_void: an_objects /= Void
@@ -1057,7 +1053,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			objects_set: internal_external_object = an_objects
 		end
 
-	set_external_libraries (a_libraries: like internal_external_library)
+	set_external_libraries (a_libraries: like external_library)
 			-- Set `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -1067,7 +1063,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			libraries_set: internal_external_library = a_libraries
 		end
 
-	set_external_resources (a_ressources: like internal_external_resource)
+	set_external_resources (a_ressources: like external_resource)
 			-- Set `a_ressources'.
 		require
 			a_ressources_not_void: a_ressources /= Void
@@ -1077,7 +1073,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			ressources_set: internal_external_resource = a_ressources
 		end
 
-	set_external_linker_flag (v: like internal_external_linker_flag)
+	set_external_linker_flag (v: like external_linker_flag)
 			-- Set `internal_external_linker_flag' to `v'.
 		require
 			v_attached: attached v
@@ -1087,7 +1083,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_linker_flag_set: internal_external_linker_flag = v
 		end
 
-	set_external_make (a_makes: like internal_external_make)
+	set_external_make (a_makes: like external_make)
 			-- Set `a_makes'.
 		require
 			a_makes_not_void: a_makes /= Void
@@ -1261,7 +1257,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_make.has (a_make)
 		end
 
-	set_pre_compile (a_pre_compile: like internal_pre_compile_action)
+	set_pre_compile (a_pre_compile: like pre_compile_action)
 			-- Set `a_pre_compile'.
 		do
 			internal_pre_compile_action := a_pre_compile
@@ -1269,7 +1265,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			pre_compile_set: internal_pre_compile_action = a_pre_compile
 		end
 
-	set_post_compile (a_post_compile: like internal_post_compile_action)
+	set_post_compile (a_post_compile: like post_compile_action)
 			-- Set `a_post_compile'.
 		do
 			internal_post_compile_action := a_post_compile
@@ -1339,12 +1335,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
+		local
+			l_internal_mapping: like internal_mapping
 		do
-			if internal_mapping = Void then
-				create internal_mapping.make_equal_caseless (15)
+			l_internal_mapping := internal_mapping
+			if l_internal_mapping = Void then
+				create l_internal_mapping.make_equal_caseless (15)
+				internal_mapping := l_internal_mapping
 			end
 				-- Eventhough we are caseless, we do store mapping in upper.
-			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
+			l_internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end
 
 	remove_mapping (a_name: READABLE_STRING_GENERAL)
@@ -1352,11 +1352,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			if internal_mapping /= Void then
-				internal_mapping.remove (a_name)
+			if attached internal_mapping as l_internal_mapping then
+				l_internal_mapping.remove (a_name)
 			end
 		ensure
-			mapping_removed: not internal_mapping.has (a_name)
+			mapping_removed: attached internal_mapping as el_internal_mapping implies not el_internal_mapping.has (a_name)
 		end
 
 	set_abstract (an_enabled: like is_abstract)
@@ -1383,13 +1383,17 @@ feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
+		local
+			l_extends, l_other_extends: like extends
 		do
 				-- If there is a change in the target hierarchy, we cannot cope with it
 				-- properly, see eweasel test#incr379
-			if extends = Void then
-				Result := other.extends = Void
-			elseif other.extends /= Void then
-				Result := extends.name.same_string (other.extends.name)
+			l_extends := extends
+			l_other_extends := other.extends
+			if l_extends = Void then
+				Result := l_other_extends = Void
+			elseif l_other_extends /= Void then
+				Result := l_extends.name.same_string (l_other_extends.name)
 			end
 			if Result then
 				Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
@@ -1403,10 +1407,10 @@ feature -- Equality
 						other.setting_enforce_unique_class_names = setting_enforce_unique_class_names
 			end
 			if Result then
-				if precompile = Void then
-					Result := other.precompile = Void
+				if attached precompile as l_precompile then
+					Result := attached other.precompile as l_other_precompile and then l_precompile.is_group_equivalent (l_other_precompile)
 				else
-					Result := other.precompile /= Void and then precompile.is_group_equivalent (other.precompile)
+					Result := other.precompile = Void
 				end
 			end
 		end
@@ -1418,7 +1422,8 @@ feature -- Equality
 			a_processed_libraries: a_processed_libraries /= Void
 		local
 			l_libs, l_other_libs: like libraries
-			l_lib, l_other_lib: CONF_LIBRARY
+			l_lib, l_other_lib: detachable CONF_LIBRARY
+			l_library_target: detachable CONF_TARGET
 		do
 			Result := is_group_equivalent (other)
 				-- check if all the used library are deep group equivalent
@@ -1427,11 +1432,13 @@ feature -- Equality
 					l_other_libs := other.libraries
 					l_libs := libraries
 						-- if we have a precompile, add this to the list of libraries
-					if precompile /= Void then
+					if attached precompile as l_precompile then
 						l_libs := l_libs.twin
-						l_libs.force (precompile, precompile.name)
+						l_libs.force (l_precompile, l_precompile.name)
+					end
+					if attached other.precompile as l_other_precompile then
 						l_other_libs := l_other_libs.twin
-						l_other_libs.force (other.precompile, other.precompile.name)
+						l_other_libs.force (l_other_precompile, l_other_precompile.name)
 					end
 					l_libs.start
 				until
@@ -1439,14 +1446,21 @@ feature -- Equality
 				loop
 					l_lib := l_libs.item_for_iteration
 					l_other_lib := l_other_libs.item (l_lib.name)
-					check
-						other_library_found: l_other_lib /= Void
-					end
-					if l_lib.library_target = Void then
-						Result := l_other_lib.library_target = Void
-					elseif not a_processed_libraries.has (l_lib.library_target.system.uuid) then
-						a_processed_libraries.force (l_lib.library_target.system.uuid)
-						Result := l_other_lib.library_target /= Void and then l_lib.library_target.is_deep_group_equivalent (l_other_lib.library_target, a_processed_libraries)
+					if l_other_lib /= Void then
+						l_library_target := l_lib.library_target
+						if l_library_target = Void then
+							Result := l_other_lib.library_target = Void
+						elseif not a_processed_libraries.has (l_library_target.system.uuid) then
+							a_processed_libraries.force (l_library_target.system.uuid)
+							Result := attached l_other_lib.library_target as l_other_library_target and then
+										l_library_target.is_deep_group_equivalent (l_other_library_target, a_processed_libraries)
+						end
+					else
+						check
+								-- `is_group_equivalent' is implying `other_library_found'.
+							other_library_found: False
+						end
+						Result := False
 					end
 					l_libs.forth
 				end
@@ -1479,78 +1493,82 @@ feature -- Output
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are stored to the configuration file
 
-	internal_root: CONF_ROOT
+	internal_root: detachable CONF_ROOT
 			-- The root feature of this target itself.
 
-	internal_version: CONF_VERSION
+	internal_version: detachable CONF_VERSION
 			-- The version of this target itself.
 
-	internal_precompile: CONF_PRECOMPILE
+	internal_precompile: detachable like precompile
 			-- Precompile of this target itself.
 
-	internal_libraries: STRING_TABLE [CONF_LIBRARY]
+	internal_libraries: like libraries
 			-- The used libraries of this target itself.
 
-	internal_overrides: STRING_TABLE [CONF_OVERRIDE]
+	internal_overrides: like overrides
 			-- The override clusters of this target itself.
 
-	internal_clusters: STRING_TABLE [CONF_CLUSTER]
+	internal_clusters: like clusters
 			-- The normal clusters of this target itself.
 
-	internal_assemblies: STRING_TABLE [CONF_ASSEMBLY]
+	internal_assemblies: like assemblies
 			-- The assemblies of this target itself.
 
-	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]
+	internal_file_rule: like file_rule
 			-- Rules for files to be included or excluded of this target itself.
 
-	internal_options: CONF_OPTION
+	internal_options: detachable like options
 			-- Options (Debuglevel, assertions, ...) of this target itself.
 
-	internal_mapping: STRING_TABLE [STRING_32]
+	internal_mapping: detachable like mapping
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
 	changeable_internal_options: like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
+		local
+			l_internal_options: like internal_options
 		do
-			if internal_options = Void then
-				create internal_options
+			l_internal_options := internal_options
+			if l_internal_options = Void then
+				create l_internal_options
+				internal_options := l_internal_options
 			end
-			Result := internal_options
+			Result := l_internal_options
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	internal_settings: HASH_TABLE [STRING_32, STRING_32]
+	internal_settings: like settings
 			-- Settings of this target itself.
 
-	internal_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]
+	internal_external_include: like external_include
 			-- Global external include files of this target itself.
 
-	internal_external_cflag: ARRAYED_LIST [CONF_EXTERNAL_CFLAG]
+	internal_external_cflag: like external_cflag
 			-- Global external C flags of this target itself.
 
-	internal_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
+	internal_external_object: like external_object
 			-- Global external object files of this target itself.
 
-	internal_external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY]
+	internal_external_library: like external_library
 			-- Global external library files of this target itself.
 
-	internal_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
+	internal_external_resource: like external_resource
 			-- Global external ressource files of this target itself.
 
-	internal_external_linker_flag: ARRAYED_LIST [CONF_EXTERNAL_LINKER_FLAG]
+	internal_external_linker_flag: like external_linker_flag
 			-- Global external linker flags of this target itself.
 
-	internal_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE]
+	internal_external_make: like external_make
 			-- Global external make files of this target itself.
 
-	internal_pre_compile_action: ARRAYED_LIST [CONF_ACTION]
+	internal_pre_compile_action: like pre_compile_action
 			-- Actions to be executed before compilation of this target itself.
 
-	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
+	internal_post_compile_action: like post_compile_action
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: STRING_TABLE [READABLE_STRING_32]
+	internal_variables: like variables
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation
@@ -1596,7 +1614,7 @@ invariant
 	internal_setting_concurrency_attached: attached immediate_setting_concurrency
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

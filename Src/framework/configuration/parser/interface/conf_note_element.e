@@ -12,13 +12,15 @@ inherit
 	ARRAYED_LIST [CONF_NOTE_ELEMENT]
 		rename
 			make as make_list
+		redefine
+			make_list
 		end
 
 create
 	make
 
 create {CONF_NOTE_ELEMENT}
-	make_list, make_filled
+	make_list
 
 feature {NONE} -- Initialization
 
@@ -29,10 +31,16 @@ feature {NONE} -- Initialization
 		do
 			make_list (0)
 			element_name := a_element_name.to_string_32
-			create attributes.make (0)
-			create content.make_empty
 		ensure
 			element_name_set: a_element_name.same_string (element_name)
+		end
+
+	make_list (n: INTEGER)
+		do
+			Precursor (n)
+			create attributes.make (0)
+			create content.make_empty
+			create element_name.make_empty -- Void-safety
 		end
 
 feature {CONF_ACCESS} -- Element Change
@@ -95,7 +103,7 @@ invariant
 	content_not_void: content /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

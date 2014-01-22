@@ -50,16 +50,19 @@ feature -- Access queries
 			-- The file part of `original_path'.
 		local
 			cnt, i: INTEGER
+			f: detachable like original_file
 		do
 			cnt := original_path.count
 			if cnt > 0 then
 				i := original_path.last_index_of ('\', cnt)
 				if i /= cnt then
-					Result := original_path.substring (i + 1, cnt)
+					f := original_path.substring (i + 1, cnt)
 				end
 			end
-			if Result = Void then
+			if f = Void then
 				create Result.make_empty
+			else
+				Result := f
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -70,22 +73,22 @@ feature -- Access queries
 		local
 			i, j, k: INTEGER
 			l_old_i: INTEGER
-			l_key: like original_path
-			l_value: READABLE_STRING_32
+			l_key: detachable like original_path
+			l_value: detachable READABLE_STRING_32
 			l_relative_base: like original_path
 			l_offset: INTEGER
 			l_stop: BOOLEAN
 			l_result: like original_path
-			l_root: PATH
+			l_root: detachable PATH
 		do
 			create l_result.make_from_string (original_path)
 
 				-- Replace $| with parent path
 			if
-				parent /= Void and then
+				attached parent as l_parent and then
 				l_result.count >= 2 and then l_result.item (1) = '$' and then l_result.item (2) = '|'
 			then
-				l_relative_base := parent.evaluated_path.name
+				l_relative_base := l_parent.evaluated_path.name
 				l_result.replace_substring (l_relative_base, 1, 2)
 				l_result.insert_character ('\', l_relative_base.count + 1)
 			end
@@ -180,6 +183,10 @@ feature -- Access queries
 		do
 			if attached evaluated_path.entry as l_entry then
 				create Result.make_from_string (l_entry.name)
+			else
+				check path_has_entry: False end
+					-- Unknown file name from path `evaluated_path.name' !
+				Result := {STRING_32} "Unknown file name from " + evaluated_path.name
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -236,7 +243,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation, attributes stored in configuration file
 
-	parent: CONF_LOCATION
+	parent: detachable CONF_LOCATION
 			-- The path of the parent directory (if any).
 
 	target: CONF_TARGET
@@ -281,7 +288,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

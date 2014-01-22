@@ -297,7 +297,11 @@ feature {NONE} -- Implementation of data retrieval
 				if a_cluster.is_recursive then
 					current_cluster.set_recursive (True)
 				end
-				if a_cluster.has_parent then
+				if attached a_cluster.parent_name as l_parent_name then
+					if l_parent = Void then
+						l_parent := l_parent_name.as_lower
+						l_parent := mask_special_characters_config (l_parent)
+					end
 					if not current_target.clusters.has (l_parent) then
 						set_error (create {CONF_ERROR_PARSE}.make ("Parent not found: " + l_parent))
 					else
@@ -305,6 +309,8 @@ feature {NONE} -- Implementation of data retrieval
 						current_cluster.set_parent (current_target.clusters.item (l_parent))
 						l_location.set_parent (current_cluster.parent.location)
 					end
+				else
+					check not a_cluster.has_parent end
 				end
 
 				process_cluster_properties (a_cluster.cluster_properties)

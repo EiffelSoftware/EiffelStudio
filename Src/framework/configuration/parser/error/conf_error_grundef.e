@@ -19,19 +19,19 @@ feature {NONE} -- Initialization
 	text: STRING_32
 			-- Error text.
 		do
-			if file /= Void then
-				Result := {STRING_32} "Parse error in " + file + {STRING_32} ": Undefined group"
+			if attached file as l_file then
+				Result := {STRING_32} "Parse error in " + l_file + {STRING_32} ": Undefined group"
 			else
 				Result := {STRING_32} "Parse error: Undefined group"
 			end
-			if group /= Void then
-				Result.append ({STRING_32} ": " + group)
+			if attached group as l_group then
+				Result.append ({STRING_32} ": " + l_group)
 			end
 		end
 
 feature -- Update
 
-	set_group (a_group: READABLE_STRING_GENERAL)
+	set_group (a_group: detachable READABLE_STRING_GENERAL)
 			-- Set the undefined group to `a_group'.
 		do
 			group := a_group
@@ -39,11 +39,11 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	group: READABLE_STRING_GENERAL;
-		-- Undefined group.
+	group: detachable READABLE_STRING_GENERAL;
+			-- Undefined group.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -36,7 +36,11 @@ feature -- Visit nodes
 				end
 			end
 		rescue
-			if is_error and then attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
+			if
+				is_error and then
+				attached exception_manager.last_exception as e and then
+				attached {CONF_EXCEPTION} e.original
+			then
 				l_retried := True
 				retry
 			end
@@ -46,8 +50,8 @@ feature -- Visit nodes
 			-- Visit `a_target'.
 		do
 			if not is_error then
-				if a_target.precompile /= Void then
-					a_target.precompile.process (Current)
+				if attached a_target.precompile as l_pre then
+					l_pre.process (Current)
 				end
 				a_target.libraries.linear_representation.do_all (agent {CONF_LIBRARY}.process (Current))
 				a_target.assemblies.linear_representation.do_all (agent {CONF_ASSEMBLY}.process (Current))
@@ -56,7 +60,10 @@ feature -- Visit nodes
 				a_target.overrides.linear_representation.do_all (agent {CONF_OVERRIDE}.process (Current))
 			end
 		rescue
-			if attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
+			if
+				attached exception_manager.last_exception as e and then
+				attached {CONF_EXCEPTION} e.original
+			then
 				retry
 			end
 		end

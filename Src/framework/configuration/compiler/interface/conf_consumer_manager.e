@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Observers
 
-	consume_assembly_observer: ACTION_SEQUENCE [TUPLE []]
+	consume_assembly_observer: ACTION_SEQUENCE [TUPLE]
 			-- Observer if assemblies are consumed.
 
 feature -- Commands

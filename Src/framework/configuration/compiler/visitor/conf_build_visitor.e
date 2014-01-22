@@ -143,7 +143,7 @@ feature -- Update
 
 feature -- Observers
 
-	consume_assembly_observer: ACTION_SEQUENCE [TUPLE []]
+	consume_assembly_observer: ACTION_SEQUENCE [TUPLE]
 			-- Observer if assemblies are consumed.
 
 	process_group_observer: ACTION_SEQUENCE [TUPLE [CONF_GROUP]]

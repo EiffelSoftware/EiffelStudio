@@ -284,7 +284,7 @@ feature -- Command
 
 feature {NONE} -- Agents
 
-	refresh_current: PROCEDURE [ANY, TUPLE[]]
+	refresh_current: PROCEDURE [ANY, TUPLE]
 			-- What to call to refresh the current view.
 
 	on_cancel

@@ -1740,7 +1740,7 @@ feature {NONE} -- User Interface
 				-- Remove agents added to preferences for color handling.
 			preferences.editor_data.feature_text_color_preference.change_actions.prune_all (colors_changed_agent)
 			preferences.editor_data.cluster_text_color_preference.change_actions.prune_all (colors_changed_agent)
-			preferences.editor_data.class_text_color_preference.change_actions.prune_alL (colors_changed_agent)
+			preferences.editor_data.class_text_color_preference.change_actions.prune_all (colors_changed_agent)
 
 			destroy
 		end
@@ -1768,7 +1768,7 @@ feature {NONE} -- Implementation
 		-- that the window is displayed or the preferences change, and are not onces as a user
 		-- may change the colors.
 
-	colors_changed_agent: PROCEDURE [ANY, TUPLE []]
+	colors_changed_agent: PROCEDURE [ANY, TUPLE]
 		-- Agent connected to the color change events from EiffelStudio.
 
 	count_active_subqueries

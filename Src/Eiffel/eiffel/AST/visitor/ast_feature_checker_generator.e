@@ -1512,7 +1512,10 @@ feature {NONE} -- Implementation
 								l_actual_count := l_formal_count
 								l_parameters.start
 							end
-							if l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment then
+							if
+								l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment and then
+								l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+							then
 									-- The list of actual arguments may be adapted to the list of formal arguments.
 								if l_actual_count > l_formal_count and then l_formal_count > 0 then
 										-- Additional actual arguments may be converted to a TUPLE.
@@ -1532,10 +1535,7 @@ feature {NONE} -- Implementation
 									l_parameters.put_i_th (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void), l_formal_count)
 										-- Adjust number of actual arguments.
 									l_actual_count := l_formal_count
-								elseif
-									l_actual_count + 1 = l_formal_count and then
-									l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
-								then
+								elseif l_actual_count + 1 = l_formal_count then
 										-- Avoid changing original list of arguments.
 									if attached l_parameters then
 										l_parameters := l_parameters.twin
@@ -1606,7 +1606,10 @@ feature {NONE} -- Implementation
 								if error_level = l_error_level then
 										-- Conformance checking of arguments.
 										-- Check if an actual type of the last actual argument is compatible with a formal type of that argument.
-									if attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) then
+									if
+										attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) and then
+										l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+									then
 											-- Actual and formal types of the last argument are not compatible.
 											-- Try to wrap last argument in a tuple.
 										l_arg_type := l_arg_types [l_actual_count]

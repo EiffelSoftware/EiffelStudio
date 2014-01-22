@@ -293,15 +293,7 @@ feature -- Window class
 
 feature -- Messages
 
-	post_message_result (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): POINTER
-			-- SDK PostMessage (with the result)
-		external
-			"C inline use <windows.h>"
-		alias
-			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $a_wparam, (LPARAM) $a_lparam)"
-		end
-
-	post_message_result_boolean (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): BOOLEAN
+	post_message_result (hwnd: POINTER; msg: INTEGER; a_wparam, a_lparam: POINTER): BOOLEAN
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -713,7 +705,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

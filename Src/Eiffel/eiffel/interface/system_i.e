@@ -1164,7 +1164,7 @@ end
 					check_unique_class_names
 				end
 
-				rebuild_configuration_actions.call ([])
+				rebuild_configuration_actions.call (Void)
 
 				set_is_force_rebuild (False)
 			end
@@ -1174,7 +1174,7 @@ end
 			set_is_force_rebuild (True)
 		end
 
-	rebuild_configuration_actions: attached ACTION_SEQUENCE [TUPLE[]]
+	rebuild_configuration_actions: attached ACTION_SEQUENCE [TUPLE]
 			-- Rebuild configuration actions hooks.
 		once
 			create Result

@@ -850,7 +850,9 @@ feature {NONE} -- Implementation
 									-- Evaluate type of `f' in the current context.
 									-- Use formal generic constraint instead of the formal general itself.
 									-- Avoid using `instantiated_in' to preserve `like Current' status.
-								q := r.formal_instantiation_in (q, p, c.class_id)
+									-- Use `r.actual_type' instead of just `r' to avoid recomputing qualified anchored types (if any)
+									-- that are not ready yet for use (test#anchor033).
+								q := r.actual_type.formal_instantiation_in (q, p, c.class_id).actual_type
 									-- Record supplier for recompilation.
 								degree_4.add_qualified_supplier (f, c, current_class)
 									-- Register intermediate type with instantiator.
@@ -1068,7 +1070,7 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

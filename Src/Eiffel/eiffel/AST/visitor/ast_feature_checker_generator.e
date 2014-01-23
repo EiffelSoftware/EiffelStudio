@@ -1514,6 +1514,7 @@ feature {NONE} -- Implementation
 							end
 							if
 								l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment and then
+								l_formal_count > 0 and then
 								l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
 							then
 									-- The list of actual arguments may be adapted to the list of formal arguments.

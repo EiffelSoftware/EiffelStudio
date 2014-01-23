@@ -24,17 +24,17 @@ feature {NONE} -- Initialization
   example
 		local
 			inp: ARRAY[CHARACTER]
-			fle: RAW_FILE
+			fle: PLAIN_TEXT_FILE
 			idx: INTEGER
 			tou: ZLIB_OUTPUT_STREAM
 			tst: ZLIB_INPUT_STREAM
 			cin: INTEGER
 			cot: INTEGER
-			l_out: RAW_FILE
+			l_out: PLAIN_TEXT_FILE
 		do
-			create inp.make (1, 0)
+			create inp.make_empty
 
-			create fle.make_open_read ("index.html")
+			create fle.make_open_read ("application.c")
 
 
 			if fle.is_open_read then
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				fle.close
 
 				from
-					create tou.connect_to_file ("index.bin")
+					create tou.connect_to_file ("application.bin")
 					idx := inp.lower
 				until
 					idx > inp.upper
@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 
 				tou.close
 
-				create tst.connect_to_file ("index.bin")
-				create l_out.make_create_read_write ("index_uncompress.html")
+				create tst.connect_to_file ("application.bin")
+				create l_out.make_create_read_write ("application2.c")
 
 				if tst.has_error then
 					if tst.has_error_message then

@@ -211,7 +211,7 @@ feature -- Zlib Operations
 					zlib.deflate (zstream, zlib.Z_finish)
 				end -- loop
 
-				if zlib.last_operation = zlib.Z_stream_end then
+				if zlib.last_operation = zlib.gz_header_end then
 					resize_array (tmp, 1, tmp.upper - zstream.available_output)
 					if file /= Void then
 						flush_temp_to_file

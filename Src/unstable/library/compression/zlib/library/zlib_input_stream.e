@@ -39,7 +39,7 @@ feature {NONE}
 	initialize
 		do
 			out_position := 0
-			create area.make_filled (create {CHARACTER}, 1, buffer_size)
+			create area.make( 1, buffer_size)
 			create zlib
 			create zstream.make
 			zstream.set_available_input (0)
@@ -156,7 +156,7 @@ feature {NONE}
 	read_character_from_buffer
 		do
 			if not area.valid_index (out_position) then
-				if zlib.last_operation = zlib.Z_stream_end then
+				if zlib.last_operation = zlib.gz_header_end then
 					end_of_input := True
 					zlib.inflate_end (zstream)
 				else
@@ -180,7 +180,7 @@ feature {NONE}
 			idx: INTEGER
 		do
 			if not area.valid_index (out_position) and then attached buffer as l_buffer then
-				if zlib.last_operation = zlib.Z_stream_end then
+				if zlib.last_operation = zlib.gz_header_end then
 					zlib.inflate_end (zstream)
 					end_of_input := True
 				else
@@ -276,7 +276,7 @@ feature {NONE}
 		do
 			if lower_ > array_.lower or else upper_ < array_.upper then
 				buf := array_.subarray (lower_, upper_)
-				array_.make_filled (create {CHARACTER}, lower_, upper_)
+				array_.make (lower_, upper_)
 				array_.copy (buf)
 			end -- if
 		end -- resize_array

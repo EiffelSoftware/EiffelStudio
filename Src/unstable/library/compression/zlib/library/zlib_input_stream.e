@@ -156,7 +156,7 @@ feature {NONE}
 	read_character_from_buffer
 		do
 			if not area.valid_index (out_position) then
-				if zlib.last_operation = zlib.gz_header_end then
+				if zlib.last_operation = zlib.z_stream_end then
 					end_of_input := True
 					zlib.inflate_end (zstream)
 				else
@@ -180,7 +180,7 @@ feature {NONE}
 			idx: INTEGER
 		do
 			if not area.valid_index (out_position) and then attached buffer as l_buffer then
-				if zlib.last_operation = zlib.gz_header_end then
+				if zlib.last_operation = zlib.z_stream_end then
 					zlib.inflate_end (zstream)
 					end_of_input := True
 				else

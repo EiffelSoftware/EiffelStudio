@@ -1257,7 +1257,7 @@ feature -- Melting
 			end
 
 				-- Melt descriptor tables
-			feature_table.select_table.melt (Current)
+			feature_table.descriptors (Current).melt
 		end
 
 feature -- Workbench feature and descriptor table generation
@@ -1310,7 +1310,7 @@ feature -- Workbench feature and descriptor table generation
 		do
 			System.set_current_class (Current)
 			if has_types then
-				feature_table.select_table.generate (Current)
+				feature_table.descriptors (Current).generate
 			end
 		end
 
@@ -2279,7 +2279,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,7 @@ class
 inherit
 	ARRAYED_LIST [FEATURE_I]
 		export
-			{COMPUTED_FEATURE_TABLE, CLASS_TYPE, SELECT_TABLE, INHERIT_TABLE}
+			{COMPUTED_FEATURE_TABLE, CLASS_TYPE, FEATURE_TABLE, INHERIT_TABLE}
 				area, copy
 		end
 
@@ -24,7 +24,7 @@ create
 	make, make_filled
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

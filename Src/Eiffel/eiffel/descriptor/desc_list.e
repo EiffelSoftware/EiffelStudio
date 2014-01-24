@@ -174,6 +174,30 @@ feature -- Insertion
 			end
 		end
 
+feature -- C code generation
+
+	generate
+			 -- Generate descriptor C tables of class
+			 -- types associated with class `base_class'.	
+		local
+			l_area: SPECIAL [DESCRIPTOR]
+			i, l_count: INTEGER
+			desc: DESCRIPTOR
+		do
+			from
+				l_area := area
+				l_count := count
+			until
+				i = l_count
+			loop
+				desc := l_area.item (i)
+				if desc.class_type.is_modifiable then
+					desc.generate
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Melting
 
 	melt
@@ -238,7 +262,7 @@ feature -- Melting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

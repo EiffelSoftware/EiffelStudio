@@ -235,7 +235,7 @@ feature -- Text operation
 		deferred
 		end
 
-	set_displayed_text (a_text: READABLE_STRING_GENERAL)
+	set_displayed_text (a_text: separate READABLE_STRING_GENERAL)
 			-- Set `a_text' to `displayed_text'.
 		require
 			not_destroyed: not is_destroyed
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation: Access
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

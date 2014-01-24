@@ -14,12 +14,12 @@ feature -- Generic conformance access
 
 	Like_arg_type: NATURAL_16 = 0xFFFD
 	Like_current_type: NATURAL_16 = 0xFFFC
-	Like_pfeature_type: NATURAL_16 = 0xFFFB
+	--not_used: NATURAL_16 = 0xFFFB
 	Like_feature_type: NATURAL_16 = 0xFFFA
 	Tuple_type: NATURAL_16 = 0xFFF9
 	Formal_type: NATURAL_16 = 0xFFF8
 	parent_type_separator: NATURAL_16 = 0xFFF7
-	qualified_pfeature_type: NATURAL_16 = 0xFFF6
+	--not_used: NATURAL_16 = 0xFFF6
 	qualified_feature_type: NATURAL_16 = 0xFFF5
 
 	attached_type: NATURAL_16 = 0xFF11
@@ -60,7 +60,7 @@ feature -- TUPLE code
 			-- Code used to identify special type, used in metainformation only: non-basic expanded type
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

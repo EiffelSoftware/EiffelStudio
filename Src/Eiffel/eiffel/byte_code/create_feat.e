@@ -143,7 +143,6 @@ feature -- C code generation
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 		do
 			if final_mode then
@@ -195,26 +194,12 @@ feature -- C code generation
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
-				if
-					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
-				then
-					buffer.put_string ("RTWPCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
-				end
-
+				buffer.put_string ("RTWCT2(")
+				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
-				context.Current_register.print_register
+				context.generate_current_dtype
+				buffer.put_string ({C_CONST}.comma_space)
+				context.generate_current_dftype
 				buffer.put_character (')')
 			end
 		end
@@ -254,20 +239,9 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for an anchored creation type.
-		local
-			rout_info: ROUT_INFO
 		do
-			if context.current_type.base_class.is_precompiled then
-				ba.append (Bc_pclike)
-				ba.append_short_integer (context.context_class_type.static_type_id - 1)
-				rout_info := System.rout_info_table.item (routine_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-				ba.append (Bc_clike)
-				ba.append_short_integer (context.context_class_type.static_type_id - 1)
-				ba.append_integer (feature_id)
-			end
+			ba.append (Bc_clike)
+			ba.append_integer (routine_id)
 		end
 
 feature -- Genericity
@@ -290,7 +264,6 @@ feature -- Genericity
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 		do
 			if context.final_mode then
@@ -338,26 +311,12 @@ feature -- Genericity
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
-				if
-					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
-				then
-					buffer.put_string ("RTWPCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
-				end
-
+				buffer.put_string ("RTWCT2(")
+				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
-				context.Current_register.print_register
+				context.generate_current_dtype
+				buffer.put_string ({C_CONST}.comma_space)
+				context.generate_current_dftype
 				buffer.put_character (')')
 				buffer.put_character (',')
 			end
@@ -411,7 +370,6 @@ feature -- Genericity
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 		do
 			if context.final_mode then
@@ -464,47 +422,22 @@ feature -- Genericity
 				buffer.put_natural_32 (a_level)
 				buffer.put_character ('[')
 				buffer.put_integer (idx_cnt.value)
-				if
-					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
-				then
-					buffer.put_string ("] = RTWPCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("] = RTWCT(")
-					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (feature_id)
-				end
-
+				buffer.put_string ("] = RTWCT2(")
+				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
-				context.Current_register.print_register
+				context.generate_current_dtype
+				buffer.put_string ({C_CONST}.comma_space)
+				context.generate_current_dftype
 				buffer.put_two_character (')', ';')
 				dummy := idx_cnt.next
 			end
 		end
 
 	make_type_byte_code (ba : BYTE_ARRAY)
-
-		local
-			rout_info: ROUT_INFO
+			-- <Precursor>
 		do
-			if context.current_type.base_class.is_precompiled then
-				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
-				ba.append_short_integer (context.context_class_type.static_type_id-1)
-				rout_info := System.rout_info_table.item (routine_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
-				ba.append_short_integer (context.context_class_type.static_type_id - 1)
-				ba.append_integer (feature_id)
-			end
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
+			ba.append_integer (routine_id)
 		end
 
 	type_to_create: CL_TYPE_A
@@ -521,7 +454,7 @@ feature -- Genericity
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -62,7 +62,7 @@ rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 
 #ifdef WORKBENCH
 
-rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
+rt_public void eif_log_call (int routine_id, EIF_SCP_PID p, call_data * a)
 {
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
@@ -75,34 +75,7 @@ rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 		a -> result_address = &result_reference;
 	}
 	CHECK("Target attached", t);
-	CBodyId(body_id,Routids(s)[f],Dtype(t));
-	a -> body_index = body_id;
-	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),a);
-	if (result) {
-		switch (result -> type & SK_HEAD) {
-		case SK_REF:
-		case SK_EXP:
-				/* Retrieve reference from the GC-protected storage. */
-			result -> it_ref = result_reference;
-		}
-		RT_GC_WEAN (result_reference);
-	}
-}
- 
-rt_public void eif_log_callp (int s, int f, EIF_SCP_PID p, call_data * a)
-{
-	EIF_GET_CONTEXT
-	BODY_INDEX body_id;
-	EIF_REFERENCE t = eif_access (a -> target);
-	EIF_TYPED_VALUE * result = a -> result;
-	EIF_REFERENCE result_reference = NULL;
-    
-	if (result) {
-		RT_GC_PROTECT (result_reference);
-		a -> result_address = &result_reference;
-	}
-	CHECK("Target attached", t);
-	body_id = desc_tab[s][Dtype(t)][f].body_index;
+	CBodyId(body_id,routine_id,Dtype(t));
 	a -> body_index = body_id;
 	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),a);
 	if (result) {

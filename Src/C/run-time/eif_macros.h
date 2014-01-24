@@ -1445,48 +1445,40 @@ RT_LNK void eif_exit_eiffel_code(void);
 	}
 
 /*
- * Separate call (versions ending with P stand for calls to precompiled routines, the first two arguments to them have a different meaning):
- * RTS_CF(s,f,n,t,a,r) - call a function on a static type s with a feature id f and name n on a target t and arguments a and result r
- * RTS_CP(s,f,n,t,a)   - call a procedure on a static type s with a feature id f and name n on a target t and arguments a
- * RTS_CC(s,f,d,a)     - call a creation procedure (asynchronous) on a static type s with a feature id f on a target of dynamic type d and arguments a
+ * Separate call, the first two arguments to them have a different meaning between workbench and finalized mode):
+ * RTS_CF(rid,n,t,a,r) - call a function on a routine ID id and name n on a target t and arguments a and result r
+ * RTS_CP(rid,n,t,a)   - call a procedure on a routine ID id and name n on a target t and arguments a
+ * RTS_CC(rid,d,a)     - call a creation procedure (asynchronous) on a routine ID id on a target of dynamic type d and arguments a
  * RTS_CA(o,p,t,a,r)   - call an attribute at offset o using pattern p on target t with arguments a and result r
  * RTS_CS(t,a)         - call a constant on target t with call structure a
  */
 
 #ifdef WORKBENCH
-#define RTS_CF(s,f,n,t,a,r) \
+#define RTS_CF(rid,n,t,a,r) \
 	{                                                         \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (s, f, RTS_PID(Current), (call_data*) a);         \
+		eif_log_call (rid, RTS_PID(Current), (call_data*) a);         \
 	}
-#define RTS_CFP(s,f,n,t,a,r) \
-	{                                                         \
-		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_callp (s, f, RTS_PID(Current), a);        \
-	}
-#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), (call_data*) a);
-#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), (call_data*) a);
+#define RTS_CP(rid,n,t,a)  eif_log_call  (rid, RTS_PID(Current), (call_data*) a);
 
-#define RTS_CC(s,f,d,a)  eif_log_call  (s, f, RTS_PID(Current), (call_data*) a);
-#define RTS_CCP(s,f,d,a) eif_log_callp  (s, f, RTS_PID(Current), (call_data*) a);
+#define RTS_CC(rid,d,a)  eif_log_call  (rid, RTS_PID(Current), (call_data*) a);
 #else /* WORKBENCH */
-#define RTS_CF(f,p,t,a,r) \
+#define RTS_CF(fptr,p,t,a,r) \
 	{                                                         \
-		((call_data*)(a)) -> feature.address = (fnptr) f; \
+		((call_data*)(a)) -> feature.address = (fnptr) fptr; \
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
 	}
-#define RTS_CP(f,p,t,a) \
+#define RTS_CP(fptr,p,t,a) \
 	{                                                         \
-		((call_data*)(a)) -> feature.address = (fnptr) f; \
+		((call_data*)(a)) -> feature.address = (fnptr) fptr; \
 		((call_data*)(a)) -> pattern = p;                 \
 		eif_log_call (RTS_PID(Current), (call_data*) a);               \
 	}
-#define RTS_CC(f,p,t,a) RTS_CP(f,p,t,a)
+#define RTS_CC(fptr,p,t,a) RTS_CP(fptr,p,t,a)
 #define RTS_CA(o,p,t,a,r) \
 	{                                                         \
 		((call_data*)(a)) -> feature.offset = o;          \
@@ -1611,14 +1603,22 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTWPA(x,y,z)		wpattr(x,y,z)
 #define RTVA(x,y,z,t)		wattr_inv(x,y,z,t)
 #define RTVPA(x,y,z,t)		wpattr_inv(x,y,z,t)
-#define RTWT(x,y,z)			wtype(x,y,z)
-#define RTWPT(x,y,z)		wptype(x,y,z)
 #define RTWCT(x,y,z)		wtype_gen(x,y,z)
 #define RTWPCT(st,x,y,z)	wptype_gen(st,x,y,z)
 #define RTWCTT(x,y,z)		wttype_gen(x,y,z)
 #define RTWPCTT(st,x,y,z)	wtptype_gen(st,x,y,z)
+
 #define RTWPP(x)			(egc_address_table[x])
 #define RTWO(x)
+
+#define RTWF2(rid,dtype)			(nstcall = 0, wfeat2(rid,dtype))
+#define RTVF2(rid,name,obj)			(nstcall = 1, wfeat2_inv(rid,name,obj))
+#define RTWC2(rid,dtype)			(nstcall =-1, wfeat2(rid,dtype))
+#define RTWA2(rid,dtype)			wattr2(rid,dtype)
+#define RTVA2(rid,name,obj)			wattr2_inv(rid,name,obj)
+#define RTWCT2(rid,dtype,dftype)	wtype2_gen(rid,dtype,dftype)
+#define RTWCTT2(rid,dftype)			wtype2_gen(rid,To_dtype(dftype),dftype)
+
 
 #define WDBG(x,y)			eif_is_debug(x,y)				/* Debug option */
 

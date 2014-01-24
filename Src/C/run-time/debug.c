@@ -2244,7 +2244,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 		};
 	};
 }
-rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,
+rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, int a_dyn_type,
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted)
 {
 
@@ -2266,12 +2266,8 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 			case RTDBG_EVENT_RT_ASSIGN_LOCAL:
 				break;
 			case RTDBG_EVENT_RT_ASSIGN_ATTRIB:
-				if (l_pos == 0 && a_static_type > 0 && a_feat_id > 0) {
-					if (a_precompiled == 1) {
-						l_pos = RTWPA(a_static_type, a_feat_id, a_dyn_type);
-					} else {
-						l_pos = RTWA(a_static_type, a_feat_id, a_dyn_type);
-					}
+				if (l_pos == 0 && a_routine_id > 0) {
+					l_pos = RTWA2(a_routine_id, a_dyn_type);
 				}
 				break;
 			default:
@@ -2279,7 +2275,7 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 			}
 
 #ifdef DEBUG
-			fprintf(stdout, "rt_ext_notify_assign (op=%d, dep=%d, ref, pos=%d, st=%d, fid=%d, dt=%d, rt=0x%X, , , ) \n", op, dep, a_pos, a_static_type, a_feat_id, a_dyn_type, a_rt_type);
+			fprintf(stdout, "rt_ext_notify_assign (op=%d, dep=%d, ref, pos=%d, rid=%d, dt=%d, rt=0x%X, , , ) \n", op, dep, a_pos, a_routine_id, a_dyn_type, a_rt_type);
 #endif
 
 			RT_ENTER_EIFFELCODE;

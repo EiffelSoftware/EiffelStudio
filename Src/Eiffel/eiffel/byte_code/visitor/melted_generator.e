@@ -208,7 +208,6 @@ feature {NONE} -- Visitors
 			l_expr: EXPR_B
 			l_target_type: TYPE_A
 			l_base_class: CLASS_C
-			l_rout_info: ROUT_INFO
 			l_special_info: CREATE_TYPE
 			l_special_type: TYPE_A
 			l_special_class_type: SPECIAL_CLASS_TYPE
@@ -266,16 +265,8 @@ feature {NONE} -- Visitors
 				-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
 			l_base_class := l_special_class_type.associated_class
 			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
-			if l_base_class.is_precompiled then
-				ba.append (Bc_parray)
-				l_rout_info := System.rout_info_table.item (l_feat_i.rout_id_set.first)
-				ba.append_integer (l_rout_info.origin)
-				ba.append_integer (l_rout_info.offset)
-			else
-				ba.append (Bc_array)
-				ba.append_type_id (l_special_class_type.static_type_id)
-				ba.append_short_integer (l_feat_i.feature_id)
-			end
+			ba.append (Bc_array)
+			ba.append_integer (l_feat_i.rout_id_set.first)
 		end
 
 	process_assert_b (a_node: ASSERT_B)
@@ -338,45 +329,25 @@ feature {NONE} -- Visitors
 	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
-			l_type: TYPE_A
-			l_cl_type: CL_TYPE_A
-			l_rout_info: ROUT_INFO
 			f: FEATURE_B
 		do
 			f := a_node.wrapper
 			if f /= Void then
 				process_feature_b (f)
 			else
-				l_type := context.real_type (a_node.type)
-				l_cl_type ?= a_node.context_type
-				if l_cl_type.is_basic then
+				if a_node.context_type.is_basic then
 						-- Access to `item' from basic types.
 						-- Nothing to be done since the right value is already on the stack.
 				else
 					if a_node.is_first then
 						ba.append (bc_current)
-					end
-					if l_cl_type.base_class.is_precompiled then
-						l_rout_info := system.rout_info_table.item (a_node.routine_id)
-						if a_node.is_first then
-							ba.append (bc_pattribute)
-						else
-							ba.append (bc_pattribute_inv)
-							ba.append_raw_string (a_node.attribute_name)
-						end
-						ba.append_integer (l_rout_info.origin)
-						ba.append_integer (l_rout_info.offset)
+						ba.append (bc_attribute)
 					else
-						if a_node.is_first then
-							ba.append (bc_attribute)
-						else
-							ba.append (bc_attribute_inv)
-							ba.append_raw_string (a_node.attribute_name)
-						end
-						ba.append_integer (a_node.real_feature_id (l_cl_type))
-						ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
+						ba.append (bc_attribute_inv)
+						ba.append_raw_string (a_node.attribute_name)
 					end
-					ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
+					ba.append_integer (a_node.routine_id)
+					ba.append_natural_32 (context.real_type (a_node.type).sk_value (context.context_class_type.type))
 				end
 			end
 		end
@@ -719,8 +690,7 @@ feature {NONE} -- Visitors
 						l_nested.set_target (a_node)
 						l_nested.set_message (l_call)
 						l_call.set_parent (l_nested)
-						make_call_access_b (
-							l_call, bc_feature, bc_feature_inv, bc_pfeature, bc_pfeature_inv, True)
+						make_call_access_b (l_call, bc_feature, bc_feature_inv, True)
 						l_call.set_parent (Void)
 					end
 				else
@@ -851,17 +821,15 @@ feature {NONE} -- Visitors
 	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
 		local
-			i, l_type_id: INTEGER
+			i: INTEGER
 			l_has_hector: BOOLEAN
 			l_parameter_b: PARAMETER_B
 			l_hector_b: HECTOR_B
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_nb_expr_address: INTEGER
-			l_pos, r_id: INTEGER
+			l_pos: INTEGER
 			l_type: TYPE_A
-			l_cl_type: CL_TYPE_A
 			l_is_in_creation_call: like is_in_creation_call
-			l_rout_info: ROUT_INFO
 		do
 			l_is_in_creation_call := is_in_creation_call
 			is_in_creation_call := False
@@ -923,31 +891,11 @@ feature {NONE} -- Visitors
 
 			if a_node.is_static_call then
 				ba.append (bc_current)
-				l_type := context.real_type (a_node.static_class_type)
-				if l_type.is_multi_constrained then
-					check
-						has_multi_constraint_static: a_node.has_multi_constraint_static
-					end
-					l_type := Context.real_type (a_node.multi_constraint_static)
-				end
-				l_cl_type ?= l_type
-				check has_class_type: l_cl_type /= Void end
-				if l_cl_type.base_class.is_precompiled then
-					r_id := a_node.routine_id
-					l_rout_info := System.rout_info_table.item (r_id)
-					ba.append (bc_pextern)
-					ba.append_integer (l_rout_info.origin)
-					ba.append_integer (l_rout_info.offset)
-				else
-					ba.append (bc_extern)
-					ba.append_integer (a_node.real_feature_id (l_cl_type))
-					l_type_id := l_cl_type.static_type_id (context.context_class_type.type) - 1
-					ba.append_short_integer (l_type_id)
-				end
+				ba.append (bc_extern)
+				ba.append_integer (a_node.routine_id)
 				make_precursor_byte_code (a_node)
 			else
-				make_call_access_b (
-					a_node, bc_extern, bc_extern_inv, bc_pextern, bc_pextern_inv, l_is_in_creation_call)
+				make_call_access_b (a_node, bc_extern, bc_extern_inv, l_is_in_creation_call)
 			end
 
 			if l_nb_expr_address > 0 then
@@ -1059,8 +1007,7 @@ feature {NONE} -- Visitors
 				end
 			end
 
-			make_call_access_b (
-				a_node, bc_feature, bc_feature_inv, bc_pfeature, bc_pfeature_inv, l_is_in_creation_call)
+			make_call_access_b (a_node, bc_feature, bc_feature_inv, l_is_in_creation_call)
 
 			if l_nb_expr_address > 0 then
 				ba.append (Bc_pop)
@@ -2466,7 +2413,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next, precomp_code_first, precomp_code_next: CHARACTER; is_creation: BOOLEAN)
+	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next: CHARACTER; is_creation: BOOLEAN)
 			-- Generate call to EXTERNAL_B/FEATURE_B.
 			-- Generate byte code for a feature call.
 			-- `is_creation' indicates if this is a call to a creation procedure.
@@ -2476,13 +2423,8 @@ feature {NONE} -- Implementation
 			a_node_not_void: a_node /= Void
 		local
 			l_basic_type: BASIC_A
-			l_cl_type: CL_TYPE_A
-			l_associated_class: CLASS_C
-			l_feat_tbl: FEATURE_TABLE
 			l_inst_cont_type: TYPE_A
-			l_metamorphosed: BOOLEAN
-			r_id: INTEGER
-			l_rout_info: ROUT_INFO
+			l_finish_byte_code: BOOLEAN
 		do
 			l_inst_cont_type := a_node.context_type
 			if l_inst_cont_type.is_separate then
@@ -2498,55 +2440,25 @@ feature {NONE} -- Implementation
 					-- True is used for a query, False - for a procedure.
 				ba.append_boolean (not a_node.type.is_void)
 			end
-			l_metamorphosed := l_inst_cont_type.is_basic
 				-- Note: Manu 08/08/2002: if `a_node.precursor_type' is not Void, it can only means
 				-- that we are currently performing a static access call on a feature
 				-- from a basic class. Assuming otherwise is not correct as you
 				-- cannot seriously inherit from a basic class.
-			if l_metamorphosed and a_node.precursor_type = Void then
+			if l_inst_cont_type.is_basic and a_node.precursor_type = Void then
 				l_basic_type ?= l_inst_cont_type
 				if a_node.is_feature_special (False, l_basic_type) then
 					a_node.make_special_byte_code (ba, l_basic_type)
 				else
-						-- Process the feature id of `feature_name' in the
+						-- Process the call via the `feature_name' in the
 						-- associated reference type
-					l_associated_class := l_basic_type.reference_type.base_class
-					l_feat_tbl := l_associated_class.feature_table
 					if a_node.parameters /= Void then
 						ba.append (Bc_rotate)
 						ba.append_short_integer (a_node.parameters.count + 1)
 					end
 					ba.append (Bc_metamorphose)
-					if l_associated_class.is_precompiled then
-						r_id := l_feat_tbl.item_id (a_node.feature_name_id).rout_id_set.first
-						l_rout_info := System.rout_info_table.item (r_id)
-						if is_creation then
-							ba.append (bc_pcreation)
-						elseif a_node.is_first then
-							ba.append (precomp_code_first)
-						else
-							ba.append (precomp_code_next)
-							ba.append_raw_string (a_node.feature_name)
-						end
-						ba.append_integer (l_rout_info.origin)
-						ba.append_integer (l_rout_info.offset)
-						make_precursor_byte_code (a_node)
-					else
-						if is_creation then
-							ba.append (bc_creation)
-						elseif a_node.is_first then
-							ba.append (code_first)
-						else
-							ba.append (code_next)
-							ba.append_raw_string (a_node.feature_name)
-						end
-						ba.append_integer (l_feat_tbl.item_id (a_node.feature_name_id).feature_id)
-						ba.append_short_integer (l_basic_type.associated_reference_class_type.static_type_id - 1)
-						make_precursor_byte_code (a_node)
-					end
+					l_finish_byte_code := True
 				end
 			else
-				l_cl_type ?= l_inst_cont_type
 				if a_node.is_first then
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
@@ -2557,34 +2469,19 @@ feature {NONE} -- Implementation
 						ba.append_short_integer (a_node.parameters.count + 1)
 					end
 				end
-				l_associated_class := l_cl_type.base_class
-				if l_associated_class.is_precompiled then
-					r_id := a_node.routine_id
-					l_rout_info := System.rout_info_table.item (r_id)
-					if is_creation then
-						ba.append (bc_pcreation)
-					elseif a_node.is_first then
-						ba.append (precomp_code_first)
-					else
-						ba.append (precomp_code_next)
-						ba.append_raw_string (a_node.feature_name)
-					end
-					ba.append_integer (l_rout_info.origin)
-					ba.append_integer (l_rout_info.offset)
-					make_precursor_byte_code (a_node)
+				l_finish_byte_code := True
+			end
+			if l_finish_byte_code then
+				if is_creation then
+					ba.append (bc_creation)
+				elseif a_node.is_first then
+					ba.append (code_first)
 				else
-					if is_creation then
-						ba.append (bc_creation)
-					elseif a_node.is_first then
-						ba.append (code_first)
-					else
-						ba.append (code_next)
-						ba.append_raw_string (a_node.feature_name)
-					end
-					ba.append_integer (a_node.real_feature_id (l_cl_type))
-					ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
-					make_precursor_byte_code (a_node)
+					ba.append (code_next)
+					ba.append_raw_string (a_node.feature_name)
 				end
+				ba.append_integer (a_node.routine_id)
+				make_precursor_byte_code (a_node)
 			end
 		end
 

@@ -425,7 +425,7 @@ feature {NONE} -- C code generation
 			buf: GENERATION_BUFFER
 			cl_type_i: CL_TYPE_A
 			l_type: TYPE_A
-			macro: TUPLE [normal, precompiled: STRING]
+			macro: STRING
 		do
 			is_nested := not is_first
 			buf := buffer
@@ -455,24 +455,9 @@ feature {NONE} -- C code generation
 			else
 				macro := m.unqualified_call
 			end
-			if compilation_modes.is_precompiling or else
-				cl_type_i.base_class.is_precompiled
-			then
-					-- Call to a precompiled routine.
-				buf.put_string (macro.precompiled)
-				buf.put_character ('(')
-				rout_info := System.rout_info_table.item (routine_id)
-				buf.put_class_id (rout_info.origin)
-				buf.put_two_character (',', ' ')
-				buf.put_integer (rout_info.offset)
-			else
-					-- Call to a non-precompiled routine.
-				buf.put_string (macro.normal)
-				buf.put_character ('(')
-				buf.put_static_type_id (cl_type_i.static_type_id (Context.context_class_type.type))
-				buf.put_two_character (',', ' ')
-				buf.put_integer (real_feature_id (cl_type_i))
-			end
+			buf.put_string (macro)
+			buf.put_character ('(')
+			buf.put_integer (routine_id)
 			buf.put_two_character (',', ' ')
 			if not is_nested then
 				if precursor_type /= Void then
@@ -507,32 +492,31 @@ feature {NONE} -- C code generation
 			buf.put_character (')')
 		end
 
-	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
 			-- Macros that compute address of a routine to be called.
 			-- `Result.unqualified_call' denotes an unqualified call.
 			-- `Result.qualified_call' denotes a qualified call.
 			-- `Result.creation_call' denotes a call to a creation procedure.
-			-- `normal' denotes a call to a non-precompiled feature, `precompiled' - to a precompiled one.
 		once
-			Result := [["RTWF", "RTWPF"], ["RTVF", "RTVPF"], ["RTWC", "RTWPC"]]
+			Result := ["RTWF2", "RTVF2", "RTWC2"]
 		end
 
 feature {NONE} -- Separate call
 
-	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
 			-- Name of a macro to make a call to a function depending on the kind of a call:
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls as well as creation function calls.
-			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
+			Result := ["ERROR", "RTS_CF", "ERROR"]
 		end
 
-	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
 			-- Name of a macro to make a call to a procedure depending on the kind of a call.
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls.
-			Result := [["ERROR", "ERROR"], ["RTS_CP", "RTS_CPP"], ["RTS_CC", "RTS_CCP"]]
+			Result := ["ERROR", "RTS_CP", "RTS_CC"]
 		end
 
 	generate_separate_call_for_workbench (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
@@ -674,7 +658,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

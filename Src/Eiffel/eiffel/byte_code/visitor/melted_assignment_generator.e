@@ -51,21 +51,8 @@ feature {NONE} -- Implementation
 
 	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
-		local
-			l_instant_context_type: CL_TYPE_A
-			l_base_class: CLASS_C
-			l_rout_info: ROUT_INFO
 		do
-			l_instant_context_type ?= a_node.context_type
-			l_base_class := l_instant_context_type.base_class
-			if l_base_class.is_precompiled then
-				l_rout_info := system.rout_info_table.item (a_node.routine_id)
-				ba.append_integer (l_rout_info.origin)
-				ba.append_integer (l_rout_info.offset)
-			else
-				ba.append_integer (a_node.attribute_id)
-				ba.append_short_integer (l_instant_context_type.static_type_id (context.context_class_type.type) - 1)
-			end
+			ba.append_integer (a_node.routine_id)
 			ba.append_natural_32 (context.real_type (a_node.type).sk_value (context.context_class_type.type))
 		end
 
@@ -87,7 +74,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

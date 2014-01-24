@@ -617,7 +617,6 @@ feature -- Byte code generation
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			r_id: INTEGER
-			rout_info: ROUT_INFO
 			current_type: CLASS_TYPE
 			create_info: CREATE_FEAT
 		do
@@ -692,20 +691,12 @@ feature -- Byte code generation
 				ba.append (Bc_current)
 				r_id := feat.rout_id_set.first
 				current_type := context.class_type
-				if current_type.associated_class.is_precompiled then
-					rout_info := System.rout_info_table.item (r_id)
-					ba.append (Bc_pattribute)
-					ba.append_integer (rout_info.origin)
-					ba.append_integer (rout_info.offset)
-				else
-					ba.append (Bc_attribute)
-						-- Feature id
-					ba.append_integer (feat.feature_id)
-						-- Static type
-					ba.append_short_integer (current_type.static_type_id - 1)
-				end
+				ba.append (Bc_attribute)
+					-- Routine id
+				ba.append_integer (r_id)
 					-- Attribute meta-type
 				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
+
 				ba.append (bc_void)
 				ba.append (bc_eq)
 				ba.append (bc_jmp_f)
@@ -741,17 +732,9 @@ feature -- Byte code generation
 			if feat.is_attribute then
 					--    <attribute> := Result
 				ba.append (bc_result)
-				if current_type.associated_class.is_precompiled then
-					ba.append (bc_passign)
-					ba.append_integer (rout_info.origin)
-					ba.append_integer (rout_info.offset)
-				else
-					ba.append (bc_assign)
-						-- Feature id
-					ba.append_integer (feat.feature_id)
-						-- Static type
-					ba.append_short_integer (current_type.static_type_id - 1)
-				end
+				ba.append (bc_assign)
+					-- Routine id
+				ba.append_integer (feat.rout_id_set.first)
 					-- Attribute meta-type
 				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (bc_jmp)
@@ -762,17 +745,9 @@ feature -- Byte code generation
 				ba.write_forward3
 					-- Access to attribute; Result := <attribute access>
 				ba.append (Bc_current)
-				if rout_info /= Void then
-					ba.append (Bc_pattribute)
-					ba.append_integer (rout_info.origin)
-					ba.append_integer (rout_info.offset)
-				else
-					ba.append (Bc_attribute)
-						-- Feature id
-					ba.append_integer (feat.feature_id)
-						-- Static type
-					ba.append_short_integer (current_type.static_type_id - 1)
-				end
+				ba.append (Bc_attribute)
+					-- Routine id
+				ba.append_integer (feat.rout_id_set.first)
 					-- Attribute meta-type
 				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (Bc_rassign)
@@ -1051,7 +1026,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

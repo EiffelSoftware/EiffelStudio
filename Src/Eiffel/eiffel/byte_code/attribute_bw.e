@@ -99,27 +99,12 @@ feature -- C code generation
 				buf.indent;
 			end;
 			base_class := typ.base_class;
-			if Compilation_modes.is_precompiling or else base_class.is_precompiled then
-				if is_nested then
-					buf.put_string ("RTVPA(");
-				else
-					buf.put_string ("RTWPA(");
-				end;
-				r_id := routine_id
-				rout_info := System.rout_info_table.item (r_id);
-				buf.put_class_id (rout_info.origin)
-				buf.put_string ({C_CONST}.comma_space);
-				buf.put_integer (rout_info.offset)
+			if is_nested then
+				buf.put_string ("RTVA2(");
 			else
-				if is_nested then
-					buf.put_string ("RTVA(");
-				else
-					buf.put_string ("RTWA(");
-				end;
-				buf.put_static_type_id (typ.static_type_id (context.context_class_type.type))
-				buf.put_string ({C_CONST}.comma_space);
-				buf.put_integer (real_feature_id (typ));
+				buf.put_string ("RTWA2(");
 			end;
+			buf.put_integer (routine_id)
 			buf.put_string ({C_CONST}.comma_space);
 			if is_nested then
 				buf.put_string_literal (attribute_name)
@@ -139,12 +124,12 @@ feature {NONE} -- Separate call
 	result_register: REGISTER
 			-- A register to hold return value from a separate call.
 
-	separate_attribute_macro: TUPLE [unqualified_call, qualified_call, creation_call: TUPLE [normal, precompiled: STRING]]
+	separate_attribute_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
 			-- Name of a macro to make a call to a function depending on the kind of a call:
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls as well as creation function calls.
-			Result := [["ERROR", "ERROR"], ["RTS_CF", "RTS_CFP"], ["ERROR", "ERROR"]]
+			Result := ["ERROR", "RTS_CF", "ERROR"]
 		end
 
 	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
@@ -169,7 +154,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

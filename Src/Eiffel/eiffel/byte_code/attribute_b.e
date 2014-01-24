@@ -176,41 +176,20 @@ feature -- Byte code generation
 
 	assign_code: CHARACTER
 			-- Assignment code to an attribute
-		local
-			cl_type: CL_TYPE_A
 		do
-			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := {BYTE_CONST}.bc_passign
-			else
-				Result := {BYTE_CONST}.bc_assign
-			end
+			Result := {BYTE_CONST}.bc_assign
 		end
 
 	expanded_assign_code: CHARACTER
 			-- Expanded assignment code to an attribute
-		local
-			cl_type: CL_TYPE_A
 		do
-			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := {BYTE_CONST}.bc_pexp_assign
-			else
-				Result := {BYTE_CONST}.bc_exp_assign
-			end
+			Result := {BYTE_CONST}.bc_exp_assign
 		end
 
 	reverse_code: CHARACTER
 			-- Reverse assignment code
-		local
-			cl_type: CL_TYPE_A
 		do
-			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := {BYTE_CONST}.bc_preverse
-			else
-				Result := {BYTE_CONST}.bc_reverse
-			end
+			Result := {BYTE_CONST}.bc_reverse
 		end
 
 feature -- Array optimization
@@ -242,7 +221,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -48,6 +48,13 @@
 extern "C" {
 #endif
 
+RT_LNK EIF_REFERENCE_FUNCTION wfeat2(int routine_id, EIF_TYPE_INDEX dtype); /* Feature call */
+RT_LNK EIF_REFERENCE_FUNCTION wfeat2_inv(int routine_id, char *name, EIF_REFERENCE object); /* Nested feature call */
+RT_LNK long	wattr2(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
+RT_LNK long wattr2_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
+RT_LNK EIF_TYPE_INDEX wtype2_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
+
+
 RT_LNK EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
 RT_LNK EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
 RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object); /* Nested feature call */

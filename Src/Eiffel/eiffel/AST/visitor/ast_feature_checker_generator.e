@@ -5756,7 +5756,11 @@ feature {NONE} -- Visitor
 										assigner_arguments.append (arguments)
 									end
 										-- Evaluate assigner command byte node
-									access_b := target_assigner.access (void_type, True)
+									if external_b /= Void and then external_b.static_class_type /= Void then
+										access_b := target_assigner.access_for_feature (void_type, external_b.static_class_type, True)
+									else
+										access_b := target_assigner.access (void_type, True)
+									end
 									access_b.set_parameters (assigner_arguments)
 
 									if l_multi_constraint_static /= Void then
@@ -5772,6 +5776,9 @@ feature {NONE} -- Visitor
 											-- Set external static assigner
 										check call_b_unattached: call_b = Void end
 										call_b := access_b
+										if external_b.is_static_call and attached {EXTERNAL_B} call_b as l_ext_b then
+											l_ext_b.enable_static_call
+										end
 									end
 									create l_instr.make (call_b, l_as.start_location.line)
 									l_instr.set_line_pragma (l_as.line_pragma)

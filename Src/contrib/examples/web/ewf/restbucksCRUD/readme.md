@@ -155,6 +155,9 @@ Response success
 	  } ]
 	}
 
+note: 
+    curl -vv http://localhost:9090/order -H "Content-Type: application/json" -d "{\"location\":\"takeAway\",\"items\":[{\"name\":\"Late\",\"option\":\"skim\",\"size\":\"Small\",\"quantity\":1}]}" -X POST 
+
 
 How to Read an order with GET
 -----------------------------
@@ -192,7 +195,8 @@ Response
 	  } ]
 	}
 
-
+note:
+    curl -vv http://localhost:9090/order/1 
 
 How to Update an order with PUT
 -------------------------------

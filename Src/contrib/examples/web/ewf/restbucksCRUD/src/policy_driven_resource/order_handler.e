@@ -227,8 +227,7 @@ feature -- Execution
 				end
 			end
 		ensure then
-			order_saved_only_for_get_head: req.is_get_head_request_method =
-				attached {ORDER} req.execution_variable (Order_execution_variable)
+			order_saved_only_for_get_head: attached {ORDER} req.execution_variable (Order_execution_variable) implies req.is_get_head_request_method
 		end
 
 feature -- GET/HEAD content

@@ -98,12 +98,7 @@ feature -- Eiffel source line information
 			workbench_mode: context.workbench_mode
 		local
 			buf: like buffer
-			l_base_class: CLASS_C
-			l_rout_info: ROUT_INFO
-			l_code: INTEGER
 			l_sk_type: NATURAL_32
-			l_offset: INTEGER
-			l_precomp: INTEGER
 			l_expanded: INTEGER
 		do
 			if
@@ -115,23 +110,7 @@ feature -- Eiffel source line information
 				if a_target.is_attribute then
 					--| Note: cf {MELTED_ASSIGNMENT_GENERATOR}.process_attribute_b ...
 					if attached {ATTRIBUTE_B} a_target as attb then
-						if attached {CL_TYPE_A} attb.context_type as l_instant_context_type then
-							l_base_class := l_instant_context_type.base_class
-							if Compilation_modes.is_precompiling or else l_base_class.is_precompiled then
-								l_precomp := 1
-								l_rout_info := system.rout_info_table.item (attb.routine_id)
-								l_code := l_rout_info.origin
-								l_offset := l_rout_info.offset
-							else
-								l_code := l_instant_context_type.static_type_id (context.context_class_type.type) - 1
-								l_offset := attb.attribute_id
-							end
-						end
-						if l_precomp = 1 then
-							buf.put_string ("RTDBGAPA")
-						else
-							buf.put_string ("RTDBGAA")
-						end
+						buf.put_string ("RTDBGAA")
 						buf.put_character ('(')
 						context.current_register.print_register
 						buf.put_string ({C_CONST}.comma_space)
@@ -142,9 +121,7 @@ feature -- Eiffel source line information
 							l_expanded := 1
 						end
 
-						buf.put_integer (l_code)
-						buf.put_string ({C_CONST}.comma_space)
-						buf.put_integer (l_offset)
+						buf.put_integer (attb.routine_id)
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_hex_natural_32 (l_sk_type)
 						buf.put_string ({C_CONST}.comma_space)
@@ -459,7 +436,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

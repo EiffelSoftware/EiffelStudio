@@ -100,6 +100,137 @@ rt_private int rt_is_call_allowed(void)
 }
 #endif
 
+/*
+doc:	<routine name="wfeat2" return_type="EIF_REFERENCE_FUNCTION" export="public">
+doc:		<summary>Function pointer associated to Eiffel feature of routine ID `routine_id' applied to an object of dynamic type `dtype'.</summary>
+doc:		<param name="routine_id" type="int">Routine ID of feature being called.</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of object on which feature will be applied.</param>
+doc:		<return>Function pointer</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE_FUNCTION wfeat2(int routine_id, EIF_TYPE_INDEX dtype)
+{
+	BODY_INDEX body_id;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
+	CBodyId(body_id,routine_id,dtype);		/* Get the body index */
+
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];			 /* Frozen feature */
+	else {
+			/* Slow part. */
+		EIF_GET_CONTEXT
+		IC = melt[body_id];				 /* Position byte code to interpret */
+		return pattern[MPatId(body_id)].toi;
+	}
+}
+
+/*
+doc:	<routine name="wfeat2_inv" return_type="EIF_REFERENCE_FUNCTION" export="public">
+doc:		<summary>Function pointer associated to a qualified call to Eiffel feature of routine ID `routine_id' and name `name' applied to an object `object'.</summary>
+doc:		<param name="routine_id" type="int">Routine ID of feature being called.</param>
+doc:		<param name="name" type="char *">Name of feature being called.</param>
+doc:		<param name="object" type="EIF_REFERENCE">Object on which feature will be applied.</param>
+doc:		<return>Function pointer</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE_FUNCTION wfeat2_inv(int routine_id, char *name, EIF_REFERENCE object)
+{
+	if (object == NULL) {			/* Void reference check */
+			/* Raise an exception for a feature named `name' applied
+			 * to a void reference. */
+		eraise(name, EN_VOID);
+		return NULL;
+	} else {
+		return wfeat2(routine_id, Dtype(object));
+	}
+}
+
+/*
+doc:	<routine name="wattr2" return_type="long" export="public">
+doc:		<summary>Attribute offset of attribute of routine ID `routine_id' applied to an object of dynamic type `dtype'.</summary>
+doc:		<param name="routine_id" type="int">Routine ID of attribute being accessed.</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of object on which attribute will be accessed.</param>
+doc:		<return>Offset</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public long wattr2(int routine_id, EIF_TYPE_INDEX dtype)
+{
+	long offset;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
+	CAttrOffs(offset,routine_id,dtype);
+	return (offset);
+}
+
+/*
+doc:	<routine name="wattr2_inv" return_type="long" export="public">
+doc:		<summary>Attribute offset of a qualified access to attribute of routine ID `routine_id' and name `name' applied to an object `object'. Note that invariants are not currently checked (code simply commented out for future reference).</summary>
+doc:		<param name="routine_id" type="int">Routine ID of attribute being accessed.</param>
+doc:		<param name="name" type="char *">Name of feature being called.</param>
+doc:		<param name="object" type="EIF_REFERENCE">Object on which attribute will be accessed.</param>
+doc:		<return>Offset</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public long wattr2_inv (int routine_id, char *name, EIF_REFERENCE object)
+{
+	if (object == NULL) {			/* Void reference check */
+			/* Raise an exception for a feature named `name' applied
+			 * to a void reference. */
+		eraise(name, EN_VOID);
+		return 0;
+	} else {
+		/* Invariants are not currently checked on attribute access. */
+ /* 
+		if (~in_assertion & WASC(Dtype(object)) & CK_INVARIANT) {
+			in_assertion = ~0;
+			chkinv(object);
+			in_assertion = 0;
+		}
+ */
+		return wattr2(routine_id, Dtype(object));
+	}
+}
+
+/*
+doc:	<routine name="wtype2_gen" return_type="EIF_TYPE_INDEX" export="public">
+doc:		<summary>Type of a generic feature of routine ID `routine_id' applied to an object of dynamic type `dtype' and full dynamic type `dftype'.</summary>
+doc:		<param name="routine_id" type="int">Routine ID of generic feature for which we need to know the type in the context of `dftype'.</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type ID of generic feature where type will be looked up.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full Dynamic type ID of generic feature where type will be looked up.</param>
+doc:		<return>Function pointer</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_TYPE_INDEX wtype2_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
+{
+	struct rout_info info;
+	struct desc_info *desc;
+	EIF_TYPE_INDEX *gen_type;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+	info = eorg_table[routine_id];
+	desc = &(((desc_tab[info.origin])[dtype])[info.offset]);
+	gen_type = desc->gen_type;
+
+	if (gen_type) {
+		return eif_compound_id (dftype, gen_type);
+	} else {
+		return desc->type;
+	}
+}
+
 rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of feature id

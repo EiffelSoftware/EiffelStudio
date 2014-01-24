@@ -71,8 +71,7 @@ typedef struct call_data {
 } call_data;
 
 #ifdef WORKBENCH
-extern void eif_log_call (int static_type_id, int feature_id, EIF_SCP_PID current_pid, call_data * data);
-extern void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, call_data * data);
+extern void eif_log_call (int routine_id, EIF_SCP_PID current_pid, call_data * data);
 extern void eif_try_call (call_data * a);
 #else
 #define eif_log_call(p,a) RTS_TCB(scoop_task_add_call,((EIF_SCP_PID)(p)),RTS_PID(eif_access (((call_data*)(a))->target)),((call_data*)(a)));

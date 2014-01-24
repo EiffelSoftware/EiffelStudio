@@ -438,7 +438,6 @@ feature -- Element Change
 			result_type: TYPE_A
 			table_name: STRING
 			rout_id: INTEGER
-			rout_info: ROUT_INFO
 			array_index: INTEGER
 		do
 			result_type := type.adapted_in (class_type)
@@ -478,24 +477,10 @@ feature -- Element Change
 						--| table in Final mode.
 					class_type.skeleton.generate_offset (buffer, feature_id, False, True)
 				end
-			elseif
-				Compilation_modes.is_precompiling or
-				class_type.associated_class.is_precompiled
-			then
-				rout_info := System.rout_info_table.item (rout_id)
-				buffer.put_string (" + RTWPA(")
-				buffer.put_class_id (rout_info.origin)
-				buffer.put_character (',')
-				buffer.put_integer (rout_info.offset)
-				buffer.put_two_character (',', ' ')
-				byte_context.generate_current_dtype
-				buffer.put_character (')')
 			else
-				buffer.put_string (" + RTWA(")
-				buffer.put_static_type_id (class_type.static_type_id)
+				buffer.put_string (" + RTWA2(")
+				buffer.put_integer (rout_id)
 				buffer.put_character (',')
-				buffer.put_integer (feature_id)
-				buffer.put_two_character (',', ' ')
 				byte_context.generate_current_dtype
 				buffer.put_character (')')
 			end;
@@ -572,8 +557,6 @@ feature -- Element Change
 			ba: BYTE_ARRAY
 			result_type: TYPE_A
 			current_type: CLASS_TYPE
-			r_id: INTEGER
-			rout_info: ROUT_INFO
 			l_byte_context: like byte_context
 			tmp_body_index: like body_index
 			byte_code: BYTE_CODE
@@ -624,19 +607,9 @@ feature -- Element Change
 				ba.append_boolean (False)
 					-- Access to attribute; Result := <attribute access>
 				ba.append (Bc_current)
-				if current_type.associated_class.is_precompiled then
-					r_id := rout_id_set.first
-					rout_info := System.rout_info_table.item (r_id)
-					ba.append (Bc_pattribute)
-					ba.append_integer (rout_info.origin)
-					ba.append_integer (rout_info.offset)
-				else
-					ba.append (Bc_attribute)
-						-- Feature id
-					ba.append_integer (feature_id)
-						-- Static type
-					ba.append_short_integer (current_type.static_type_id - 1)
-				end
+				ba.append (Bc_attribute)
+					-- Routine id
+				ba.append_integer (rout_id_set.first)
 					-- Attribute meta-type
 				ba.append_natural_32 (result_type.sk_value (l_byte_context.context_class_type.type))
 				ba.append (Bc_rassign)
@@ -664,7 +637,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

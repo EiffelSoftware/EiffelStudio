@@ -233,10 +233,8 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 
 /* Feature call and/or access  */
 rt_shared void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);
-rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
-rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
-rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
-rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
+rt_private int icall(int routine_id, int ptype);					/* Interpreter dispatcher (in water) */
+rt_private void rt_attribute_access(int routine_id, uint32 type);	/* Access to an attribute */
 rt_private void address(int32 aid);													/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
@@ -602,6 +600,7 @@ rt_private void interpret(int flag, int where)
 	RTS_SDX                                         /* Declarations for request chain */
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
+	int routine_id = 0;
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
 	long volatile once_key = 0;				/* Index in once table */
@@ -1629,32 +1628,10 @@ rt_private void interpret(int flag, int where)
 			uint32 type;
 			long att_offset;
 
-			offset = get_int32(&IC);		/* Get the feature id */
-			code = get_int16(&IC);			/* Get the static type */
+			routine_id = get_int32(&IC);		/* Get the routine ID */
 			type = get_uint32(&IC);			/* Get attribute meta-type */
-			att_offset = RTWA(code, offset, icur_dtype);
+			att_offset = RTWA2(routine_id, icur_dtype);
 			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,0);
-			assign(att_offset, type);
-		}
-		break;
-
-	/*
-	 * Assignment to a precompiled attribute.
-	 */
-	case BC_PASSIGN:
-#ifdef DEBUG
-		dprintf(2)("BC_PASSIGN\n");
-#endif
-		{
-			int32 origin, ooffset;
-			uint32 type;
-			long att_offset;
-
-			origin = get_int32(&IC);		/* Get the origin class id */
-			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			type = get_uint32(&IC);			/* Get attribute meta-type */
-			att_offset = RTWPA(origin, ooffset, icur_dtype);
-			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,1);
 			assign(att_offset, type);
 		}
 		break;
@@ -1667,7 +1644,6 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_EXP_ASSIGN\n");
 #endif
 		{
-			/* struct ac_info *info; */ /* %%ss removed */
 			EIF_REFERENCE ref;
 			long att_offset;
 
@@ -1675,37 +1651,11 @@ rt_private void interpret(int flag, int where)
 			if (ref == (EIF_REFERENCE) 0) {
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			}
-			offset = get_int32(&IC);		/* Get the feature id */
-			code = get_int16(&IC);			/* Get the static type */
+			routine_id = get_int32(&IC);		/* Get the routine ID */
 			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
-			att_offset = RTWA(code, offset, icur_dtype);
+			att_offset = RTWA2(routine_id, icur_dtype);
 			RTDBGA_ATTRB(icurrent->it_ref,att_offset,sk_type,1,0);
 			eif_std_ref_copy (ref, icurrent->it_ref + att_offset);
-		}
-		break;
-
-	/*
-	 * Attachment to a precompiled expanded attribute
-	 */
-	case BC_PEXP_ASSIGN:
-#ifdef DEBUG
-		dprintf(2)("BC_PEXP_ASSIGN\n");
-#endif
-		{
-			/* struct ac_info *info; */ /* %%ss removed */
-			EIF_REFERENCE ref;
-			int32 origin, ooffset;
-
-			ref = opop()->it_ref;		/* Expression type */
-			if (ref == (EIF_REFERENCE) 0) {
-				xraise(EN_VEXP);		/* Void assigned to expanded */
-			}
-			origin = get_int32(&IC);		/* Get the origin class id */
-			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
-			offset = RTWPA(origin, ooffset, icur_dtype);
-			RTDBGA_ATTRB(icurrent->it_ref,offset,sk_type,1,1);
-			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
 
@@ -1771,8 +1721,7 @@ rt_private void interpret(int flag, int where)
 			uint32 meta;
 			EIF_REFERENCE l_ref;
 
-			offset = get_int32(&IC);		/* Get the feature id */
-			code = get_int16(&IC);			/* Get the static type */
+			routine_id = get_int32(&IC);		/* Get the routine ID */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			type = get_creation_type (1);
 			last = otop();
@@ -1782,31 +1731,7 @@ rt_private void interpret(int flag, int where)
 			if (!RTRA(type, l_ref)) {
 				last->it_ref = (EIF_REFERENCE) 0;
 			}
-			reverse_attribute (RTWA(code, offset, icur_dtype), meta);
-		}
-		break;
-
-	/*
-	 * Reverse assignment to a precompiled attribute.
-	 */
-	case BC_PREVERSE:
-#ifdef DEBUG
-		dprintf(2)("BC_PREVERSE\n");
-#endif
-		{
-			int32 origin, ooffset;
-			uint32 meta;
-
-			origin = get_int32(&IC);		/* Get the origin class id */
-			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			meta = get_uint32(&IC);		/* Get the attribute meta-type */
-			type = get_creation_type (1);
-			last = otop();
-			CHECK("last not null", last);
-
-			if (!RTRA(type, last->it_ref))
-				last->it_ref = (EIF_REFERENCE) 0;
-			reverse_attribute (RTWPA(origin, ooffset, icur_dtype), meta);
+			reverse_attribute (RTWA2(routine_id, icur_dtype), meta);
 		}
 		break;
 
@@ -2540,8 +2465,7 @@ rt_private void interpret(int flag, int where)
 					eraise("", EN_VOID);	         /* Yes, raise exception */
 				}
 					/* Check if this is indeed a separate call. */
-				if ((code == BC_CREATION) || (code ==BC_PCREATION))
-				{
+				if (code == BC_CREATION) {
 						/* Associate new processor with the target of a call. */
 					RTS_PA (target -> it_ref);
 				}
@@ -2573,55 +2497,24 @@ rt_private void interpret(int flag, int where)
 				case BC_EXTERN_INV:
 				case BC_FEATURE_INV:
 					string = get_string8(&IC, -1); /* Get the feature name. */
-					offset = get_int32(&IC);       /* Get the feature id. */
-					code = get_int16(&IC);         /* Get the static type. */
+					routine_id = get_int32(&IC);   /* Get the routine_id. */
 					GET_PTYPE;                     /* Get precursor type. */
 					OLD_IC = IC;
 					if (q) {
 						last = iget ();                             /* Allocate a cell to store result of a call. */
 						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
-						RTS_CF (code, offset, string, 0, a, *last); /* Make a separate call to a function. */
+						RTS_CF (routine_id, string, 0, a, *last); /* Make a separate call to a function. */
 					}
 					else {
-						RTS_CP (code, offset, string, 0, a);       /* Make a separate call to a procedure. */
-					}
-					break;
-				case BC_PEXTERN_INV:
-				case BC_PFEATURE_INV:
-					{
-						int32 offset, origin;
-						string = get_string8(&IC, -1); /* Get the feature name. */
-						origin = get_int32(&IC);       /* Get the origin class id. */
-						offset = get_int32(&IC);       /* Get the offset in origin. */
-						GET_PTYPE;                     /* Get precursor type. */
-						OLD_IC = IC;
-						if (q) {
-							last = iget ();                                /* Allocate a cell to store result of a call. */
-							last -> type = SK_POINTER;                     /* Avoid GC on result until it is ready. */
-							RTS_CFP (origin, offset, string, 0, a, *last); /* Make a separate call to a function. */
-						}
-						else {
-							RTS_CPP (origin, offset, string, 0, a);       /* Make a separate call to a procedure. */
-						}
+						RTS_CP (routine_id, string, 0, a);       /* Make a separate call to a procedure. */
 					}
 					break;
 				case BC_CREATION:
-					offset = get_int32(&IC);           /* Get the feature id. */
-					code = get_int16(&IC);             /* Get the static type. */
+					routine_id = get_int32(&IC);       /* Get the feature id. */
 					GET_PTYPE;                         /* Get precursor type. */
 					OLD_IC = IC;
-					RTS_CC (code, offset, 0, a);       /* Make a separate call to a creation procedure. */
+					RTS_CC (routine_id, 0, a);       /* Make a separate call to a creation procedure. */
 					break;
-				case BC_PCREATION:
-					{
-						int32 origin, offset;
-						origin = get_int32(&IC);           /* Get the origin class id. */
-						offset = get_int32(&IC);           /* Get the offset in origin. */
-						GET_PTYPE;                         /* Get precursor type. */
-						OLD_IC  = IC;
-						RTS_CCP (origin, offset, 0, a);    /* Make a separate call to a creation procedure. */
-						break;
-					}
 				default:
 					OLD_IC  = IC;
 					eif_panic(MTC "illegal separate opcode");
@@ -2641,29 +2534,11 @@ rt_private void interpret(int flag, int where)
 	 */
 	case BC_EXTERN:
 	case BC_FEATURE:
-		offset = get_int32(&IC);				/* Get the feature id */
-		code = get_int16(&IC);					/* Get the static type */
+		routine_id = get_int32(&IC);				/* Get the routine ID */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall(MTC (int)offset, code, GET_PTYPE))
+		if (icall(routine_id, GET_PTYPE))
 			sync_registers(MTC scur, stop);
 		break;
-
-	/*
-	 * Calling a precompiled external function.
-	 * Calling a precompiled Eiffel feature.
-	 */
-	case BC_PEXTERN:
-	case BC_PFEATURE:
-		{
-			int32 origin, offset;
-
-			origin = get_int32(&IC);			/* Get the origin class id */
-			offset = get_int32(&IC);			/* Get the offset in origin */
-			nstcall = 0;					/* Invariant check turned off */
-			if (ipcall(MTC origin, offset, GET_PTYPE))
-				sync_registers(MTC scur, stop);
-			break;
-		}
 
 	/*
 	 * Calling an external in a nested expression (invariant check needed).
@@ -2674,134 +2549,37 @@ rt_private void interpret(int flag, int where)
 		string = get_string8(&IC, -1);	/* Get the feature name. */
 		if (otop()->it_ref == (char *) 0)	/* Called on a void reference? */
 			eraise((char *) string, EN_VOID);		/* Yes, raise exception */
-		offset = get_int32(&IC);				/* Get the feature id */
-		code = get_int16(&IC);					/* Get the static type */
+		routine_id = get_int32(&IC);				/* Get the routine ID */
 
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall(MTC (int)offset, code, GET_PTYPE))
+		if (icall(routine_id, GET_PTYPE))
 			sync_registers(MTC scur, stop);
 		break;
 
-	/*
-	 * Calling a precompiled external in a nested expression (invariant check needed).
-	 * Calling a precompiled Eiffel feature in a nested expression (invariant check).
-	 */
-	case BC_PEXTERN_INV:
-	case BC_PFEATURE_INV:
-		{
-			int32 offset, origin;
-
-			string = get_string8(&IC, -1);	/* Get the feature name. */
-			if (otop()->it_ref == (EIF_REFERENCE) 0)/* Called on a void reference? */
-				eraise((char *) string, EN_VOID);	/* Yes, raise exception */
-			origin = get_int32(&IC);			/* Get the origin class id */
-			offset = get_int32(&IC);			/* Get the offset in origin */
-			nstcall = 1;					/* Invariant check turned on */
-			if (ipcall(MTC origin, offset, GET_PTYPE))
-				sync_registers(MTC scur, stop);
-			break;
-		}
 	/*
 	 * Calling a creation procedure.
 	 */
 	case BC_CREATION:
-		offset = get_int32(&IC);				/* Get the feature id */
-		code = get_int16(&IC);					/* Get the static type */
+		routine_id = get_int32(&IC);				/* Get the routine ID */
 		nstcall = -1;						/* Invariant check is performed at the end */
-		if (icall(MTC (int)offset, code, GET_PTYPE))
+		if (icall(routine_id, GET_PTYPE))
 			sync_registers(MTC scur, stop);
 		break;
 
-	/*
-	 * Calling a precompiled creation procedure.
-	 */
-	case BC_PCREATION:
-		{
-			int32 origin, offset;
 
-			origin = get_int32(&IC);			/* Get the origin class id */
-			offset = get_int32(&IC);			/* Get the offset in origin */
-			nstcall = -1;					/* Invariant check is performed at the end */
-			if (ipcall(MTC origin, offset, GET_PTYPE))
-				sync_registers(MTC scur, stop);
-			break;
-		}
-
-
-	/*
-	 * Access to an attribute.
-	 */
-	case BC_ATTRIBUTE:
-#ifdef DEBUG
-		dprintf(2)("BC_ATTRIBUTE\n");
-#endif
-		{
-			uint32 type;
-
-			offset = get_int32(&IC);				/* Get feature id */
-			code = get_int16(&IC);					/* Get static type */
-			type = get_uint32(&IC);				/* Get attribute meta-type */
-			interp_access((int)offset, code, type);
-		}
-		break;
-
-	/*
-	 * Access to a precompiled attribute.
-	 */
-	case BC_PATTRIBUTE:
-#ifdef DEBUG
-		dprintf(2)("BC_PATTRIBUTE\n");
-#endif
-		{
-			int32 origin, ooffset;
-			uint32 type;
-
-			origin = get_int32(&IC);		/* Get the origin class id */
-			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			type = get_uint32(&IC);		/* Get attribute meta-type */
-			interp_paccess(origin, ooffset, type);
-		}
-		break;
-
-	/*
-	 * Accessing an attribute in a nested expression (need void ref. check).
-	 */
+		/*
+		 * Access to an attribute.
+		 */
 	case BC_ATTRIBUTE_INV:
-#ifdef DEBUG
-		dprintf(2)("BC_ATTRIBUTE_INV\n");
-#endif
-		{
-			uint32 type;
-			string = get_string8(&IC, -1);	/* Get the attribute name */
-			if (otop()->it_ref == (char *) 0)
-				eraise((char *) string, EN_VOID);
-			offset = get_int32(&IC);			/* Get feature id */
-			code = get_int16(&IC);				/* Get static type */
-			type = get_uint32(&IC);			/* Get attribute meta-type */
-			interp_access((int)offset, code, type);
+			/* Qualified access, we verify target is attached. */
+		string = get_string8(&IC, -1);	/* Get the attribute name */
+		if (otop()->it_ref == (char *) 0) {
+			eraise((char *) string, EN_VOID);
 		}
-		break;
-
-	/*
-	 * Accessing a precompiled attribute in a nested expression
-	 * (need void ref. check).
-	 */
-	case BC_PATTRIBUTE_INV:
-#ifdef DEBUG
-		dprintf(2)("BC_PATTRIBUTE_INV\n");
-#endif
-		{
-			int32 origin, ooffset;
-			uint32 type;
-
-			string = get_string8(&IC, -1);	/* Get the attribute name */
-			if (otop()->it_ref == (char *) 0)
-				eraise((char *) string, EN_VOID);
-			origin = get_int32(&IC);			/* Get the origin class id */
-			ooffset = get_int32(&IC);			/* Get the offset in origin */
-			type = get_uint32(&IC);			/* Get attribute meta-type */
-			interp_paccess(origin, ooffset, type);
-		}
+	case BC_ATTRIBUTE:
+			/* Continue with attribute access based on the routine ID. */
+		routine_id = get_int32(&IC);				/* Get the routine ID */
+		rt_attribute_access(routine_id, get_uint32(&IC));
 		break;
 
 	/*
@@ -3254,22 +3032,10 @@ rt_private void interpret(int flag, int where)
 				switch (*IC++) {
 				case BC_ATTRIBUTE:
 					is_attribute = EIF_TRUE;
-					offset = get_int32(&IC);		/* Get feature id */
-					code = get_int16(&IC);			/* Get static type */
+					routine_id = get_int32(&IC);		/* Get routine ID */
 					(void) get_uint32(&IC);		/* Get attribute meta-type */
-					offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
+					offset = RTWA2(routine_id, Dtype(icurrent->it_ref));
 					break;
-				case BC_PATTRIBUTE:
-					{
-					int32 origin, ooffset;
-
-					is_attribute = EIF_TRUE;
-					origin = get_int32(&IC);		/* Get the origin class id */
-					ooffset = get_int32(&IC);		/* Get the offset in origin */
-					(void) get_uint32(&IC);		/* Get attribute meta-type */
-					offset = RTWPA(origin, ooffset, Dtype(icurrent->it_ref));
-					break;
-					}
 				default:
 					eif_panic(MTC "illegal access to Current");
 				}
@@ -3367,40 +3133,19 @@ rt_private void interpret(int flag, int where)
 	 */
 
 	case BC_ARRAY:
-	case BC_PARRAY:
-#ifdef DEBUG
-		if (code == BC_ARRAY) {
-			dprintf(2)("BC_ARRAY\n");
-		} else {
-			dprintf(2)("BC_PARRAY\n");
-		}
-#endif
 		{
-			int32 origin, ooffset;
 			EIF_REFERENCE sp_area;
-			short stype, feat_id;
 			unsigned long stagval;
 			EIF_TYPED_VALUE new_obj;
 			unsigned char *OLD_IC;
 
 				/* Pop SPECIAL from stack. */
 			sp_area = opop()->it_ref;
+			routine_id = get_int32(&IC);		  	/* Get the routine ID */
 
-			if (code == BC_PARRAY) {
-				origin = get_int32(&IC);	/* Get the origin class id */
-				ooffset = get_int32(&IC);	/* Get the offset in origin */
-
-				stagval = tagval;
-				OLD_IC = IC;					/* Save IC counter */
-				new_obj = (((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWPF(origin, ooffset, Dtype(sp_area))) (sp_area));
-			} else {
-				stype = get_int16(&IC);			/* Get the static type */
-				feat_id = get_int16(&IC);		  	/* Get the feature id */
-
-				stagval = tagval;
-				OLD_IC = IC;					/* Save IC counter */
-				new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF(stype, feat_id, Dtype(sp_area))) (sp_area);
-			}
+			stagval = tagval;
+			OLD_IC = IC;					/* Save IC counter */
+			new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF2(routine_id, Dtype(sp_area))) (sp_area);
 			IC = OLD_IC;
 			if (tagval != stagval) {
 				sync_registers(MTC scur, stop); /* If calls melted make of array */
@@ -5493,9 +5238,8 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	}
 }
 
-rt_private int icall(int fid, int stype, int ptype)
-						/* Feature ID */
-						/* Static type (entity where feature is applied) */
+rt_private int icall(int routine_id, int ptype)
+						/* routine ID */
 						/* Is it an external or an Eiffel feature */
 						/* Type of precursor class, if any */
 {
@@ -5514,18 +5258,16 @@ rt_private int icall(int fid, int stype, int ptype)
 	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
-	int32 rout_id;
 	EIF_TYPED_VALUE *last;
 
-	rout_id = Routids(stype)[fid];
-
 	if (ptype == -1) {
+			/* Call is dynamic, we fetch the dynamic type of object at the top
+			 * to find out which version we need to call. */
 		last = otop();
 		CHECK("last not null", last);
-		CBodyId(body_id,rout_id,Dtype(last->it_ref));
-	} else {
-		CBodyId(body_id,rout_id,ptype);
+		ptype = Dtype(last->it_ref);
 	}
+	CBodyId(body_id,routine_id,ptype);
 
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
@@ -5540,58 +5282,6 @@ rt_private int icall(int fid, int stype, int ptype)
 		 * `tagval' will therefore be set, but we have to
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(MTC melt[body_id], 0);
-
-		result = 1;							/* Compulsory synchronisation */
-	}
-	IC = OLD_IC;					/* Restore IC back-up */
-	return result;
-}
-
-rt_private int ipcall(int32 origin, int32 offset, int ptype)
-						/* Origin class ID of the feature.*/
-						/* offset of the feature in the origin class */
-						/* Is it an external or an Eiffel feature */
-						/* Type of precursor, if any */
-{
-	/* This is the interpreter dispatcher for precompiled routine calls.
-	 * Depending on the routine's temperature, the snow version (i.e. C code)
-	 * is called and the result, if any, is left on the operational stack.
-	 * The I->C pattern is called to push the parameters on the "C stack"
-	 * correctly. Otherwise, the interpreter is called. The function returns
-	 * 1 to the caller if a resynchronization of registers is needed.
-	 */
-
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	BODY_INDEX body_id;					/* Value of selected body ID */
-	unsigned long stagval = tagval;	/* Save tag value */
-	unsigned char *OLD_IC;					/* IC back-up */
-	int result = 0;					/* A priori, no need for sync_registers */
-	uint32 pid;						/* Pattern id of the frozen feature */
-	EIF_TYPED_VALUE *last;
-
-	if (ptype == -1) {
-		last = otop();
-		CHECK("last not null", last);
-		body_id = desc_tab[origin][Dtype(last->it_ref)][offset].body_index;
-	} else {
-		body_id = desc_tab[origin][ptype][offset].body_index;
-	}
-
-	OLD_IC = IC;				/* IC back up */
-	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
-		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
-		if (tagval != stagval)		/* Interpreted function called */
-			result = 1;				/* Resynchronize registers */
-	} else {
-			/* The proper way to start the interpretation of a melted
-			 * feature is to call `xinterp' in order to initialize the
-			 * calling context (which is not done by `interpret').
-			 * `tagval' will therefore be set, but we have to
-			 * resynchronize the registers anyway. --ericb
-			 */
 		xinterp(MTC melt[body_id], 0);
 
 		result = 1;							/* Compulsory synchronisation */
@@ -5617,13 +5307,11 @@ rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX 
 	}
 }
 
-rt_private void interp_access(int fid, int stype, uint32 type)
-						/* Feature ID */
-		  				/* Static type (entity where feature is applied) */
-						/* Get attribute meta-type */
+rt_private void rt_attribute_access(int routine_id, uint32 type)
+						/* Routine ID */
 {
-	/* Fetch the attribute value of feature identified by 'fid', in the
-	 * static type context 'stype', with Current being place on top of the
+	/* Fetch the attribute value of feature identified by 'routine_id' of the
+	 * current type, with Current being place on top of the
 	 * operational stack. The value of Current is removed and the value of the
 	 * attribute replace it on the stack.
 	 */
@@ -5636,51 +5324,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	last = otop();
 	CHECK("last not null", last);
 	current = last->it_ref;
-	offset = RTWA(stype, fid, Dtype(current));
-	last->type = type;			/* Store type of accessed attribute */
-	switch (type & SK_HEAD) {
-	case SK_BOOL:
-	case SK_CHAR8: last->it_char = *(current + offset); break;
-	case SK_CHAR32: last->it_wchar = *(EIF_CHARACTER_32 *) (current + offset); break;
-	case SK_UINT8: last->it_uint8 = *(EIF_NATURAL_8 *) (current + offset); break;
-	case SK_UINT16: last->it_uint16 = *(EIF_NATURAL_16 *) (current + offset); break;
-	case SK_UINT32: last->it_uint32 = *(EIF_NATURAL_32 *) (current + offset); break;
-	case SK_UINT64: last->it_uint64 = *(EIF_NATURAL_64 *) (current + offset); break;
-	case SK_INT8: last->it_int8 = *(EIF_INTEGER_8 *) (current + offset); break;
-	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
-	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
-	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
-	case SK_REAL32: last->it_real32 = *(EIF_REAL_32 *) (current + offset); break;
-	case SK_REAL64: last->it_real64 = *(EIF_REAL_64 *) (current + offset); break;
-	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
-	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
-	case SK_EXP: last->it_ref = (current + offset); break;
-	default:
-		eif_panic(MTC "unknown attribute type");
-		/* NOTREACHED */
-	}
-}
-
-rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
-			 			/* Origin class ID of the attribute.*/
-			   			/* offset of the feature in the origin class */
-						/* Get attribute meta-type */
-{
-	/* Fetch the attribute value of offset 'offset' in the origin class
-	 * 'origin', with Current being place on top of the operational stack.
-	 * The value of Current is removed and the value of the attribute
-	 * replace it on the stack.
-	 */
-
-	EIF_REFERENCE current;							/* Current object */
-	/* struct ac_info *attrinfo; */	/* Call info for attribute */ /* %%ss removed */
-	EIF_TYPED_VALUE *last;						/* Value on top of the stack */
-	long offset;							/* Attribute offset */
-
-	last = otop();
-	CHECK("last not null", last);
-	current = last->it_ref;
-	offset = RTWPA(origin, f_offset, Dtype(current));
+	offset = RTWA2(routine_id, Dtype(current));
 	last->type = type;			/* Store type of accessed attribute */
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
@@ -5936,50 +5580,22 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 		case LIKE_CURRENT_TYPE: /* like Current */
 			result = Dftype(Current);
 			break;
-		case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
-			{
-				short stype;
-				int32 origin, ooffset;
-
-				stype = get_int16(&IC);			/* Get static type of caller */
-				origin = get_int32(&IC);			/* Get the origin class id */
-				ooffset = get_int32(&IC);			/* Get the offset in origin */
-				result = RTWPCT(stype, origin, ooffset, Current);
-			}
-			break;
 		case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
 			{
-				short code;
-				long  offset;
+				int routine_id;
 
-				code = get_int16(&IC);		/* Get the static type first */
-				offset = get_int32(&IC);	/* Get the feature id of the anchor */
-				result = RTWCT(code, offset, Current);
-			}
-			break;
-		case QUALIFIED_PFEATURE_TYPE: /* like feature - see BC_PQLIKE */
-			{
-				short stype;
-				int32 origin, ooffset;
-				EIF_TYPE_INDEX dftype;
-
-				dftype = get_compound_id(Current);
-				stype = get_int16(&IC);			/* Get static type of caller */
-				origin = get_int32(&IC);			/* Get the origin class id */
-				ooffset = get_int32(&IC);			/* Get the offset in origin */
-				result = RTWPCTT(stype, origin, ooffset, dftype);
+				routine_id = get_int32(&IC);		/* Get the routine ID */
+				result = RTWCT2(routine_id, Dtype(Current), Dftype(Current));
 			}
 			break;
 		case QUALIFIED_FEATURE_TYPE: /* like feature - see BC_QLIKE */
 			{
-				short code;
-				long  offset;
+				int routine_id;
 				EIF_TYPE_INDEX dftype;
 
 				dftype = get_compound_id(Current);
-				code = get_int16(&IC);		/* Get the static type first */
-				offset = get_int32(&IC);	/* Get the feature id of the anchor */
-				result = RTWCTT(code, offset, dftype);
+				routine_id = get_int32(&IC);	/* Get the routine ID */
+				result = RTWCTT2(routine_id, dftype);
 			}
 			break;
 		default:
@@ -6019,7 +5635,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 	RT_GET_CONTEXT
 	EIF_TYPE_INDEX type;/* Often used to hold type values */
 	EIF_TYPE_INDEX code;	/* Current intepreted byte code */
-	long offset;		/* Offset for jumps and al */
+	int routine_id;
 
 	switch (*IC++) {
 	case BC_CTYPE:				/* Hardcoded creation type */
@@ -6032,45 +5648,18 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 		type = RTCA(arg(code)->it_ref, type);
 		break;
 	case BC_CLIKE:				/* Like feature creation type */
-		code = get_int16(&IC);		/* Get the static type first */
-		offset = get_int32(&IC);	/* Get the feature id of the anchor */
+		routine_id = get_int32(&IC);		/* Get the routine ID */
 /* GENERIC CONFORMANCE */
-		type = RTWCT(code, offset, icurrent->it_ref);
+		type = RTWCT2(routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref));
 		break;
 	case BC_QLIKE:				/* Qualified anchored creation type */
 		{
 		EIF_TYPE_INDEX dftype; /* Current dftype */
 		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
-		code = get_int16(&IC);                    /* Get the static type first */
-		offset = get_int32(&IC);                  /* Get the feature id of the anchor */
-		type = RTWCTT(code, offset, dftype);      /* GENERIC CONFORMANCE */
+		routine_id = get_int32(&IC);                    /* Get the routine ID */
+		type = RTWCTT2(routine_id, dftype);      /* GENERIC CONFORMANCE */
 		}
 		break;
-	case BC_PCLIKE:				/* Like feature creation type */
-		{
-		EIF_TYPE_INDEX stype;
-		int32 origin, ooffset;
-
-		stype = get_int16(&IC);			/* Get static type of caller */
-		origin = get_int32(&IC);			/* Get the origin class id */
-		ooffset = get_int32(&IC);			/* Get the offset in origin */
-/* GENERIC CONFORMANCE */
-		type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
-		break;
-		}
-	case BC_PQLIKE:				/* Qualified anchored creation type */
-		{
-		EIF_TYPE_INDEX dftype; /* Current dftype */
-		EIF_TYPE_INDEX stype;
-		int32 origin, ooffset;
-
-		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
-		stype = get_int16(&IC);                   /* Get static type of caller */
-		origin = get_int32(&IC);                  /* Get the origin class id */
-		ooffset = get_int32(&IC);                 /* Get the offset in origin */
-		type = RTWPCTT(stype, origin, ooffset, dftype); /* GENERIC CONFORMANCE */
-		break;
-		}
 	case BC_CCUR:				/* Like Current creation type */
 		type = icur_dftype;
 		break;

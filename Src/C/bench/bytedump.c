@@ -164,17 +164,17 @@ static  char    *names [] = {
 "BC_END_EVAL_OLD" ,
 "BC_START_EVAL_OLD" ,
 "BC_OBJECT_ADDR" ,
-"BC_PFEATURE" ,
-"BC_PFEATURE_INV" ,
-"BC_PEXTERN" ,
-"BC_PEXTERN_INV" ,
-"BC_PARRAY" ,
-"BC_PATTRIBUTE" ,
-"BC_PATTRIBUTE_INV" ,
-"BC_PEXP_ASSIGN" ,
-"BC_PASSIGN" ,
-"BC_PREVERSE" ,
-"BC_PCLIKE" ,
+"BC_NOTUSED_118" ,
+"BC_NOTUSED_119" ,
+"BC_NOTUSED_120" ,
+"BC_NOTUSED_121" ,
+"BC_NOTUSED_122" ,
+"BC_NOTUSED_123" ,
+"BC_NOTUSED_124" ,
+"BC_NOTUSED_125" ,
+"BC_NOTUSED_126" ,
+"BC_NOTUSED_127" ,
+"BC_NOTUSED_128" ,
 "BC_OBJECT_EXPR_ADDR" ,
 "BC_RESERVE" ,
 "BC_POP" ,
@@ -208,10 +208,10 @@ static  char    *names [] = {
 "BC_IS_ATTACHED" ,
 "BC_SPECIAL_EXTEND" ,
 "BC_QLIKE" ,
-"BC_PQLIKE" ,
+"BC_NOTUSED_162" ,
 "BC_GUARD" ,
 "BC_CREATION" ,
-"BC_PCREATION" ,
+"BC_NOTUSED_165" ,
 "BC_WAIT_ARG" ,
 "BC_TUPLE_CATCALL" ,
 "BC_TUPLE",
@@ -732,39 +732,11 @@ static  void    print_instructions (void)
 				fprintf (ofp," %d", (int) get_int16(&ip));
 				break;
 			case  BC_ASSIGN :
-				/* Attribute */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Static type of class */
-				print_ctype (get_int16(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
 			case  BC_EXP_ASSIGN :
-				/* Attribute (expanded) */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Static type of class */
-				print_ctype (get_int16(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
-			case  BC_PASSIGN :
-				/* Precompiled attribute */
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d ", get_int32(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
-			case  BC_PEXP_ASSIGN :
-				/* Precompiled attribute (expanded)*/
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d ", get_int32(&ip));
-				/* True type */
+				/* Attribute */
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
+				/* Meta-type */
 				print_dtype (0,get_uint32(&ip));
 				break;
 			case  BC_NONE_ASSIGN :
@@ -783,23 +755,10 @@ static  void    print_instructions (void)
 				break;
 			case  BC_REVERSE :
 				/* Attribute */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Static type of class */
-				print_ctype (get_int16(&ip));
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
 				/* Meta-type */
 				print_dtype (0, get_uint32(&ip));
-				/* Static type of target */
-				get_creation_type ();
-				break;
-			case  BC_PREVERSE :
-				/* Precompiled attribute */
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d ", get_int32(&ip));
-				/* Meta-type */
-				print_dtype (0,get_uint32(&ip));
 				/* Static type of target */
 				get_creation_type ();
 				break;
@@ -876,16 +835,8 @@ static  void    print_instructions (void)
 				break;
 
 			case  BC_ARRAY: /* Manifest array */
-					/* Static type */
-				print_ctype (get_int16(&ip));
-					/* Feature id ('make') */
-				fprintf (ofp,"fid %d ", (int) get_int16(&ip));
-				break;
-			case  BC_PARRAY: /* Manifest array precompiled */
-					/* Org. id (make) */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-					/* Org. offset */
-				fprintf (ofp,"ooff %d ", get_int32(&ip));
+					/* Routine id ('make') */
+				fprintf (ofp,"rid %d ", (int) get_int32(&ip));
 				break;
 
 			case BC_SPECIAL_EXTEND:
@@ -925,129 +876,38 @@ static  void    print_instructions (void)
 				else
 					fprintf (ofp, "(nowait)");
 				break;
-			case  BC_EXTERN :
-				/* External */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-				break;
-			case  BC_PEXTERN :
-				/* External precompiled */
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-				break;
 			case  BC_EXTERN_INV :
 				/* External with invariant check */
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
+			case  BC_EXTERN :
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
 				/* Is precursor or static */
-				(void) get_int16(&ip);
+				fprintf (ofp, "static call on type ID=%d", get_int16(&ip));
+				break;
 
-				break;
-			case  BC_PEXTERN_INV :
-				/* External precompiled with invariant check */
-				/* Feature name */
-				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-				break;
-			case  BC_FEATURE :
-			case  BC_CREATION :
-				/* Routine */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-
-				break;
-			case  BC_PFEATURE :
-			case  BC_PCREATION :
-				/* Routine precompiled */
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-				break;
 			case  BC_FEATURE_INV :
 				/* Routine with invariant check */
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
-				/* Is precursor or static */
-				(void) get_int16(&ip);
-				break;
-			case  BC_PFEATURE_INV :
-				/* Routine precompiled with invariant check */
-				/* Feature name */
-				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
+			case  BC_FEATURE :
+			case  BC_CREATION :
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
 				/* Is precursor or static */
 				(void) get_int16(&ip);
 				break;
 
-			case  BC_ATTRIBUTE :
-				/* Attribute */
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
-			case  BC_PATTRIBUTE :
-				/* Attribute precompiled */
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
 			case  BC_ATTRIBUTE_INV :
 				/* Attribute with invariant check */
 				/* Feature name */
 				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Feature id */
-				fprintf (ofp,"fid %d ", get_int32(&ip));
-				/* Type of class */
-				print_ctype (get_int16(&ip));
-				/* True type */
-				print_dtype (0,get_uint32(&ip));
-				break;
-			case  BC_PATTRIBUTE_INV :
-				/* Attribute precompiled with invariant check */
-				/* Feature name */
-				fprintf (ofp,"\"%s\" ", get_string8(&ip, -1));
-				/* Org. id */
-				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
-				fprintf (ofp,"ooff %d", get_int32(&ip));
-				/* True type */
+			case  BC_ATTRIBUTE :
+				/* Attribute */
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
+				/* Meta-type */
 				print_dtype (0,get_uint32(&ip));
 				break;
 
@@ -1482,9 +1342,8 @@ static void get_creation_type (void)
 			/* like feature */
 			/* creation type */
 			fprintf (ofp, " (BC_CLIKE) ");
-			print_ctype (get_int16(&ip));
-			/* Anchor id */
-			fprintf (ofp,"%d", get_int32(&ip));
+			/* Routine id */
+			fprintf (ofp,"rid=%d", get_int32(&ip));
 			break;
 		case  BC_QLIKE :
 			/* Qualified anchor */
@@ -1492,29 +1351,8 @@ static void get_creation_type (void)
 			fprintf (ofp, " (BC_QLIKE) {");
 			get_creation_type ();
 			fprintf (ofp, "}.");
-			print_ctype (get_int16(&ip));
-			/* Anchor id */
-			fprintf (ofp,"%d", get_int32(&ip));
-			break;
-		case  BC_PCLIKE :
-			/* like precompiled feature */
-			fprintf (ofp, " (BC_PCTYPE) ");
-			print_ctype (get_int16(&ip));
-			/* Org. id */
-			fprintf (ofp,"oid %d ", get_int32(&ip));
-			/* Org. offset */
-			fprintf (ofp,"ooff %d", get_int32(&ip));
-			break;
-		case  BC_PQLIKE :
-			/* Qualified anchor (precompiled) */
-			fprintf (ofp, " (BC_PQLIKE) {");
-			get_creation_type ();
-			fprintf (ofp, "}.");
-			/* Org. id */
-			print_ctype (get_int16(&ip));
-			fprintf (ofp,"oid %d ", get_int32(&ip));
-			/* Org. offset */
-			fprintf (ofp,"ooff %d", get_int32(&ip));
+			/* Routine id */
+			fprintf (ofp,"rid=%d", get_int32(&ip));
 			break;
 	}
 }

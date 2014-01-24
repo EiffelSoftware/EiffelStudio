@@ -182,7 +182,6 @@ feature -- C code generation
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 		do
 			if final_mode then
@@ -233,21 +232,8 @@ feature -- C code generation
 					buffer.put_character (')')
 				end
 			else
-				if is_precompiled then
-					buffer.put_string ("RTWPCTT(")
-					buffer.put_static_type_id (qualifier_static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("RTWCTT(")
-					buffer.put_static_type_id (qualifier_static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (real_feature_id)
-				end
-
+				buffer.put_string ("RTWCTT2(")
+				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 				buffer.put_character (')')
@@ -310,22 +296,10 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for an anchored creation type.
-		local
-			rout_info: ROUT_INFO
 		do
-			if is_precompiled then
-				ba.append (Bc_pqlike)
-				qualifier_creation.make_byte_code (ba)
-				ba.append_type_id (qualifier_static_type_id)
-				rout_info := System.rout_info_table.item (routine_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-				ba.append (Bc_qlike)
-				qualifier_creation.make_byte_code (ba)
-				ba.append_type_id (qualifier_static_type_id)
-				ba.append_integer (real_feature_id)
-			end
+			ba.append (Bc_qlike)
+			qualifier_creation.make_byte_code (ba)
+			ba.append_integer (routine_id)
 		end
 
 feature -- Genericity
@@ -359,7 +333,6 @@ feature -- Genericity
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
-			rout_info: ROUT_INFO
 			l_type: TYPE_A
 		do
 			if context.final_mode then
@@ -406,20 +379,8 @@ feature -- Genericity
 					buffer.put_character (',')
 				end
 			else
-				if is_precompiled then
-					buffer.put_string ("RTWPCTT(")
-					buffer.put_static_type_id (qualifier_static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					rout_info := System.rout_info_table.item (routine_id)
-					buffer.put_class_id (rout_info.origin)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (rout_info.offset)
-				else
-					buffer.put_string ("RTWCTT(")
-					buffer.put_static_type_id (qualifier_static_type_id)
-					buffer.put_string ({C_CONST}.comma_space)
-					buffer.put_integer (real_feature_id)
-				end
+				buffer.put_string ("RTWCTT2(")
+				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, 0)
 				buffer.put_character (')')
@@ -517,22 +478,10 @@ feature -- Genericity
 
 	make_type_byte_code (ba : BYTE_ARRAY)
 			-- <Precursor>
-		local
-			rout_info: ROUT_INFO
 		do
-			if is_precompiled then
-				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_pfeature_type)
-				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
-				ba.append_type_id (qualifier_static_type_id)
-				rout_info := System.rout_info_table.item (routine_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
-				qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
-				ba.append_type_id (qualifier_static_type_id)
-				ba.append_integer (real_feature_id)
-			end
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
+			qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
+			ba.append_integer (routine_id)
 		end
 
 	type_to_create: CL_TYPE_A
@@ -562,7 +511,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

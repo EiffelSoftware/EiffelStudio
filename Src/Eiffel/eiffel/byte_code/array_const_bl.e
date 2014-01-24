@@ -358,8 +358,6 @@ feature {NONE} -- C code generation
 		local
 			f_table: FEATURE_TABLE;
 			feat_i: FEATURE_I;
-			r_id: INTEGER;
-			rout_info: ROUT_INFO;
 			base_class: CLASS_C
 			buf: GENERATION_BUFFER
 		do
@@ -371,22 +369,8 @@ feature {NONE} -- C code generation
 			print_register
 			buffer.put_four_character (' ', '=', ' ', '(')
 			reference_c_type.generate_function_cast (buffer, << "EIF_REFERENCE" >>, True)
-			if
-				Compilation_modes.is_precompiling or else
-				base_class.is_precompiled
-			then
-				buf.put_string (" RTWPF(");
-				r_id := feat_i.rout_id_set.first;
-				rout_info := System.rout_info_table.item (r_id);
-				buf.put_class_id (rout_info.origin);
-				buf.put_string ({C_CONST}.comma_space);
-				buf.put_integer (rout_info.offset);
-			else
-				buf.put_string (" RTWF(");
-				buf.put_static_type_id (real_ty.static_type_id (context.context_class_type.type));
-				buf.put_string ({C_CONST}.comma_space);
-				buf.put_integer (feat_i.feature_id);
-			end;
+			buf.put_string (" RTWF2(");
+			buf.put_integer (feat_i.rout_id_set.first);
 			buf.put_string ({C_CONST}.comma_space);
 			buf.put_string ({C_CONST}.dtype);
 			buf.put_character ('(')
@@ -429,7 +413,7 @@ feature {NONE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

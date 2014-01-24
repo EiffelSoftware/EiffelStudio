@@ -131,17 +131,17 @@ feature -- Access
 	Bc_end_eval_old:	CHARACTER = '%/115/';
 	Bc_start_eval_old:	CHARACTER = '%/116/';
 	Bc_object_addr:		CHARACTER = '%/117/';
-	Bc_pfeature:		CHARACTER = '%/118/';
-	Bc_pfeature_inv:	CHARACTER = '%/119/';
-	Bc_pextern:			CHARACTER = '%/120/';
-	Bc_pextern_inv:		CHARACTER = '%/121/';
-	Bc_parray:			CHARACTER = '%/122/';
-	Bc_pattribute:		CHARACTER = '%/123/';
-	Bc_pattribute_inv:	CHARACTER = '%/124/';
-	Bc_pexp_assign:		CHARACTER = '%/125/';
-	Bc_passign:			CHARACTER = '%/126/';
-	Bc_preverse:		CHARACTER = '%/127/';
-	Bc_pclike:			CHARACTER = '%/128/';
+	Bc_not_used_118:	CHARACTER = '%/118/';
+	Bc_not_used_119:	CHARACTER = '%/119/';
+	Bc_not_used_120:	CHARACTER = '%/120/';
+	Bc_not_used_121:	CHARACTER = '%/121/';
+	Bc_not_used_122:	CHARACTER = '%/122/';
+	Bc_not_used_123:	CHARACTER = '%/123/';
+	Bc_not_used_124:	CHARACTER = '%/124/';
+	Bc_not_used_125:	CHARACTER = '%/125/';
+	Bc_not_used_126:	CHARACTER = '%/126/';
+	Bc_not_used_127:	CHARACTER = '%/127/';
+	Bc_not_used_128:	CHARACTER = '%/128/';
 	Bc_object_expr_addr:CHARACTER = '%/129/';
 	Bc_reserve:			CHARACTER = '%/130/';
 	Bc_pop:				CHARACTER = '%/131/';
@@ -233,14 +233,14 @@ feature -- Access
 
 		-- Qualified anchored types
 	Bc_qlike:			CHARACTER = '%/161/';
-	Bc_pqlike:			CHARACTER = '%/162/';
+	Bc_not_used_162:	CHARACTER = '%/162/';
 
 		-- Check instruction that is always turned on
 	Bc_guard:			CHARACTER = '%/163/';
 
 		-- Call to creation procedure
 	Bc_creation:		CHARACTER = '%/164/';
-	Bc_pcreation:		CHARACTER = '%/165/';
+	Bc_not_used_165:		CHARACTER = '%/165/';
 
 		-- Wait conditions
 	Bc_wait_arg:		CHARACTER = '%/166/'
@@ -268,7 +268,7 @@ feature -- Access
 	Bc_postfail: CHARACTER = '%/177/';
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

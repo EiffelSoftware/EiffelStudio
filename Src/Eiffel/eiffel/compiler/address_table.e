@@ -913,17 +913,27 @@ feature {NONE} -- Generation
 							end
 							i := i - 1
 						end
-						if system.keep_assertions then
+						if final_mode and system.keep_assertions then
 								-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
 							buffer.put_new_line
 							buffer.put_string ("nstcall = 1;")
 						end
-					elseif not final_mode or else system.keep_assertions then
-							-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
+					elseif not final_mode then
+							-- We need to check invariant, so we need to prepare access to `nstcall' a per thread data.
+							-- Here we do not set `nstcall' it is done automatically by the macro we call in
+							-- workbench mode for calling routines.
+						buffer.put_gtcx
+					elseif system.keep_assertions then
+							-- We need to check invariant, so we need to prepare access to `nstcall' a per thread data.
 						buffer.put_gtcx
 						buffer.put_new_line
 						buffer.put_string ("nstcall = 1;")
 					end
+				elseif not final_mode then
+						-- We need to check invariant, so we need to prepare access to `nstcall' a per thread data.
+						-- Here we do not set `nstcall' it is done automatically by the macro we call in
+						-- workbench mode for calling routines.
+					buffer.put_gtcx
 				end
 
 				buffer.put_new_line
@@ -1164,21 +1174,8 @@ feature {NONE} -- Generation
 			end
 			c_return_type.generate_function_cast (buffer, l_types, True)
 
-			if
-				Compilation_modes.is_precompiling or else
-				a_type.associated_class.is_precompiled
-			then
-				l_rout_info := System.rout_info_table.item (l_rout_id)
-				buffer.put_string ("RTVPF(")
-				buffer.put_class_id (l_rout_info.origin)
-				buffer.put_string ({C_CONST}.comma_space)
-				buffer.put_integer (l_rout_info.offset)
-			else
-				buffer.put_string ("RTVF(")
-				buffer.put_static_type_id (a_type.static_type_id)
-				buffer.put_string ({C_CONST}.comma_space)
-				buffer.put_integer (a_feature.feature_id)
-			end
+			buffer.put_string ("RTVF2(")
+			buffer.put_integer (l_rout_id)
 			buffer.put_string ({C_CONST}.comma_space)
 			buffer.put_string_literal (a_feature.feature_name)
 			buffer.put_string ({C_CONST}.comma_space)
@@ -1422,7 +1419,7 @@ feature {NONE}	--implementation
 	new_frozen_age: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="eiffel_llvm" uuid="2EEC0A09-FC0F-493E-B2F9-78DAC4DF495C" library_target="eiffel_llvm">
+	<target name="eiffel_llvm">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<external_include location="/usr/include/"/>
+		<external_library location="/usr/lib/libLLVMLinker.a"/>
+		<external_library location="/usr/lib/libLLVMX86Disassembler.a"/>
+		<external_library location="/usr/lib/libLLVMX86AsmParser.a"/>
+		<external_library location="/usr/lib/libLLVMX86CodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMSelectionDAG.a"/>
+		<external_library location="/usr/lib/libLLVMARMAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMMCParser.a"/>
+		<external_library location="/usr/lib/libLLVMX86Desc.a"/>
+		<external_library location="/usr/lib/libLLVMX86Info.a"/>
+		<external_library location="/usr/lib/libLLVMX86AsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMX86Utils.a"/>
+		<external_library location="/usr/lib/libLLVMJIT.a"/>
+		<external_library location="/usr/lib/libLLVMRuntimeDyld.a"/>
+		<external_library location="/usr/lib/libLLVMExecutionEngine.a"/>
+		<external_library location="/usr/lib/libLLVMCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMObjCARCOpts.a"/>
+		<external_library location="/usr/lib/libLLVMScalarOpts.a"/>
+		<external_library location="/usr/lib/libLLVMInstCombine.a"/>
+		<external_library location="/usr/lib/libLLVMTransformUtils.a"/>
+		<external_library location="/usr/lib/libLLVMipa.a"/>
+		<external_library location="/usr/lib/libLLVMAnalysis.a"/>
+		<external_library location="/usr/lib/libLLVMTarget.a"/>
+		<external_library location="/usr/lib/libLLVMMC.a"/>
+		<external_library location="/usr/lib/libLLVMARMAsmParser.a"/>
+		<external_library location="/usr/lib/libLLVMARMCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMARMDesc.a"/>
+		<external_library location="/usr/lib/libLLVMARMDisassembler.a"/>
+		<external_library location="/usr/lib/libLLVMARMInfo.a"/>
+		<external_library location="/usr/lib/libLLVMAsmParser.a"/>
+		<external_library location="/usr/lib/libLLVMAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMBitReader.a"/>
+		<external_library location="/usr/lib/libLLVMBitWriter.a"/>
+		<external_library location="/usr/lib/libLLVMCppBackendCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMCppBackendInfo.a"/>
+		<external_library location="/usr/lib/libLLVMDebugInfo.a"/>
+		<external_library location="/usr/lib/libLLVMInstrumentation.a"/>
+		<external_library location="/usr/lib/libLLVMInterpreter.a"/>
+		<external_library location="/usr/lib/libLLVMipo.a"/>
+		<external_library location="/usr/lib/libLLVMIRReader.a"/>
+		<external_library location="/usr/lib/libLLVMLTO.a"/>
+		<external_library location="/usr/lib/libLLVMMCJIT.a"/>
+		<external_library location="/usr/lib/libLLVMMCDisassembler.a"/>
+		<external_library location="/usr/lib/libLLVMMipsAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMMipsCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMMipsInfo.a"/>
+		<external_library location="/usr/lib/libLLVMMSP430AsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMMSP430CodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMMSP430Info.a"/>
+		<external_library location="/usr/lib/libLLVMOption.a"/>
+		<external_library location="/usr/lib/libLLVMPowerPCAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMPowerPCCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMPowerPCInfo.a"/>
+		<external_library location="/usr/lib/libLLVMSparcDesc.a"/>
+		<external_library location="/usr/lib/libLLVMSparcCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMSparcInfo.a"/>
+		<external_library location="/usr/lib/libLLVMSystemZAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMSystemZCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMSystemZInfo.a"/>
+		<external_library location="/usr/lib/libLLVMTableGen.a"/>
+		<external_library location="/usr/lib/libLLVMTransformUtils.a"/>
+		<external_library location="/usr/lib/libLLVMVectorize.a"/>
+		<external_library location="/usr/lib/libLLVMXCoreAsmPrinter.a"/>
+		<external_library location="/usr/lib/libLLVMXCoreCodeGen.a"/>
+		<external_library location="/usr/lib/libLLVMXCoreDesc.a"/>
+		<external_library location="/usr/lib/libLLVMXCoreInfo.a"/>
+		<external_library location="/usr/lib/libLLVMObject.a"/>
+		<external_library location="/usr/lib/libLLVMCore.a"/>
+		<external_library location="/usr/lib/libLLVMSupport.a"/>
+		
+		<external_cflag value="-w" />
+		<external_cflag value="-D__STDC_CONSTANT_MACROS" />
+		<external_cflag value="-D__STDC_LIMIT_MACROS"/>
+		<external_linker_flag value="-ldl -lcurses"/>
+		
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="eiffel_llvm" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/testing</exclude>
+				<exclude>/.git$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^/debugging$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

@@ -74,9 +74,6 @@ feature -- C code generation
 			is_nested: BOOLEAN;
 			type_i: TYPE_A;
 			type_c: TYPE_C;
-			r_id: INTEGER;
-			rout_info: ROUT_INFO;
-			base_class: CLASS_C
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -98,7 +95,6 @@ feature -- C code generation
 				buf.put_new_line;
 				buf.indent;
 			end;
-			base_class := typ.base_class;
 			if is_nested then
 				buf.put_string ("RTVA2(");
 			else

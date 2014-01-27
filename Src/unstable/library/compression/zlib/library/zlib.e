@@ -323,6 +323,102 @@ feature -- Utitlity Functions
 			Result := c_compress_bound (a_source_len)
 		end
 
+	gzopen (a_path: STRING; a_mode: STRING): POINTER
+			--   Opens a gzip (.gz) file for reading or writing.  The mode parameter is as
+			--   in fopen ("rb" or "wb") but can also include a compression level ("wb9") or
+			--   a strategy: 'f' for filtered data as in "wb6f", 'h' for Huffman-only
+			--   compression as in "wb1h", 'R' for run-length encoding as in "wb1R", or 'F'
+			--   for fixed code compression as in "wb9F".  (See the description of
+			--   deflateInit2 for more information about the strategy parameter.)  'T' will
+			--   request transparent writing or appending with no compression and not using
+			--   the gzip format.
+
+			--     "a" can be used instead of "w" to request that the gzip stream that will
+			--   be written be appended to the file.  "+" will result in an error, since
+			--   reading and writing to the same gzip file is not supported.  The addition of
+			--   "x" when writing will create the file exclusively, which fails if the file
+			--   already exists.  On systems that support it, the addition of "e" when
+			--   reading or writing will set the flag to close the file on an execve() call.
+
+			--     These functions, as well as gzip, will read and decode a sequence of gzip
+			--   streams in a file.  The append function of gzopen() can be used to create
+			--   such a file.  (Also see gzflush() for another way to do this.)  When
+			--   appending, gzopen does not test whether the file begins with a gzip stream,
+			--   nor does it look for the end of the gzip streams to begin appending.  gzopen
+			--   will simply append a gzip stream to the existing file.
+
+			--     gzopen can be used to read a file which is not in gzip format; in this
+			--   case gzread will directly read from the file without decompression.  When
+			--   reading, this will be detected automatically by looking for the magic two-
+			--   byte gzip header.
+
+			--     gzopen returns NULL if the file could not be opened, if there was
+			--   insufficient memory to allocate the gzFile state, or if an invalid mode was
+			--   specified (an 'r', 'w', or 'a' was not provided, or '+' was provided).
+			--   errno can be checked to determine if the reason gzopen failed was that the
+			--   file could not be opened.	
+		local
+			l_path: C_STRING
+			l_mode: C_STRING
+		do
+			create l_path.make (a_path)
+			create l_mode.make (a_mode)
+			Result := c_gzopen (l_path.item, l_mode.item)
+		end
+
+	gzclose (a_file: POINTER)
+			--	 Flushes all pending output if necessary, closes the compressed file and
+			--   deallocates the (de)compression state.  Note that once file is closed, you
+			--   cannot call gzerror with file, since its structures have been deallocated.
+			--   gzclose must not be called more than once on the same file, just as free
+			--   must not be called more than once on the same allocation.
+
+			--     gzclose will return Z_STREAM_ERROR if file is not valid, Z_ERRNO on a
+			--   file operation error, Z_MEM_ERROR if out of memory, Z_BUF_ERROR if the
+			--   last read ended in the middle of a gzip stream, or Z_OK on success.		
+		do
+			last_operation := c_gzclose (a_file)
+		end
+
+
+	gzwrite (a_file: POINTER; a_buffer: POINTER; a_len: INTEGER)
+			--     Writes the given number of uncompressed bytes into the compressed file.
+			--   gzwrite returns the number of uncompressed bytes written or 0 in case of
+			--   error.
+		do
+			last_operation := c_gzwrite (a_file, a_buffer, a_len)
+		end
+
+
+	gzread (a_file: POINTER; a_buffer: POINTER; a_len: INTEGER)
+			--		     Reads the given number of uncompressed bytes from the compressed file.  If
+			--   the input file is not in gzip format, gzread copies the given number of
+			--   bytes into the buffer directly from the file.
+
+			--     After reaching the end of a gzip stream in the input, gzread will continue
+			--   to read, looking for another gzip stream.  Any number of gzip streams may be
+			--   concatenated in the input file, and will all be decompressed by gzread().
+			--   If something other than a gzip stream is encountered after a gzip stream,
+			--   that remaining trailing garbage is ignored (and no error is returned).
+
+			--     gzread can be used to read a gzip file that is being concurrently written.
+			--   Upon reaching the end of the input, gzread will return with the available
+			--   data.  If the error code returned by gzerror is Z_OK or Z_BUF_ERROR, then
+			--   gzclearerr can be used to clear the end of file indicator in order to permit
+			--   gzread to be tried again.  Z_OK indicates that a gzip stream was completed
+			--   on the last gzread.  Z_BUF_ERROR indicates that the input file ended in the
+			--   middle of a gzip stream.  Note that gzread does not return -1 in the event
+			--   of an incomplete gzip stream.  This error is deferred until gzclose(), which
+			--   will return Z_BUF_ERROR if the last gzread ended in the middle of a gzip
+			--   stream.  Alternatively, gzerror can be used before gzclose to detect this
+			--   case.
+
+			--     gzread returns the number of uncompressed bytes actually read, less than
+			--   len for end of file, or -1 for error.
+		do
+			last_operation := c_gzread (a_file, a_buffer, a_len)
+		end
+
 feature -- Helper Functions
 
 	inflate_init (a_stream: ZLIB_STREAM)
@@ -412,4 +508,37 @@ feature {NONE} -- C externals
 		alias
 			"compressBound"
 		end
+
+	c_gzopen (a_path:POINTER; a_mode:POINTER): POINTER
+		external
+			"C use <zlib.h>"
+		alias
+			"gzopen"
+		end
+
+	c_gzclose (a_file: POINTER): INTEGER
+		external
+			"C use <zlib.h>"
+		alias
+			"gzclose"
+		end
+
+
+	c_gzwrite (a_file: POINTER; a_buffer: POINTER; a_len: INTEGER): INTEGER
+		external
+			"C use <zlib.h>"
+		alias
+			"gzwrite"
+		end
+
+
+	c_gzread (a_file: POINTER; a_buffer: POINTER; a_len: INTEGER): INTEGER
+		external
+			"C use <zlib.h>"
+		alias
+			"gzread"
+		end
+
+
+
 end

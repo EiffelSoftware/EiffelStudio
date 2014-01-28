@@ -369,7 +369,7 @@ feature {NONE} -- C code generation
 			print_register
 			buffer.put_four_character (' ', '=', ' ', '(')
 			reference_c_type.generate_function_cast (buffer, << "EIF_REFERENCE" >>, True)
-			buf.put_string (" RTWF2(");
+			buf.put_string (" RTWF(");
 			buf.put_integer (feat_i.rout_id_set.first);
 			buf.put_string ({C_CONST}.comma_space);
 			buf.put_string ({C_CONST}.dtype);

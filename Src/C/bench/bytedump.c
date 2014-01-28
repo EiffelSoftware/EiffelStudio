@@ -778,14 +778,12 @@ static  void    print_instructions (void)
 			case  BC_RCREATE:
 				{
 				int open_count;
-				fprintf (ofp, " Args:%d ", get_bool(&ip));
+				fprintf (ofp, " Has args:%d ", get_bool(&ip));
 				print_cid ();
-				fprintf (ofp, " Class_id:%d ", get_int32(&ip));
-				fprintf (ofp, " Feature_id:%d ", get_int32(&ip));
-				fprintf (ofp, " Is_precompiled:%d ", get_bool(&ip));
+				fprintf (ofp, " Routine ID:%d ", get_int32(&ip));
 				fprintf (ofp, " Is_basic:%d ", get_bool(&ip));
 				fprintf (ofp, " Is_target_closed:%d ", get_bool(&ip));
-				fprintf (ofp, " Is_inline_agent:%d ", get_bool(&ip));
+				fprintf (ofp, " Written type id inline agent:%d ", get_int32(&ip));
 				open_count = get_int32(&ip);
 				fprintf (ofp, " Open_count: %d ", open_count);
 

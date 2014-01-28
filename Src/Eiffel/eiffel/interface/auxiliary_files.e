@@ -422,7 +422,7 @@ feature -- Plug and Makefile file
 			l_root_cl: CLASS_C
 			l_rout_info: ROUT_INFO
 			l_root_ft: FEATURE_I
-			l_rcorigin, l_rcoffset: INTEGER
+			l_rcrid: INTEGER
 			cs: CURSOR
 			i: INTEGER
 			arg_types: ARRAY [STRING]
@@ -821,7 +821,7 @@ feature -- Plug and Makefile file
 				if final_mode then
 					buffer.put_string ("%Tegc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) ")
 				else
-					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 				end
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string (";%N")
@@ -982,7 +982,6 @@ feature -- Plug and Makefile file
 				buffer.put_string ("%N%Tegc_einit = egc_einit_init;%N")
 				buffer.put_string ("%Tegc_tabinit = egc_tabinit_init;%N")
 
-				buffer.put_string ("%N%Tegc_fcall = egc_fcall_init;%N")
 				buffer.put_string ("%Tegc_forg_table = egc_forg_table_init;%N")
 			else
 					-- Do we need to protect the exception stack?
@@ -1080,10 +1079,7 @@ feature -- Plug and Makefile file
 			buffer.put_new_line
 
 			if not final_mode then
-				buffer.put_string ("egc_rcorigin = ")
-				buffer.put_string (l_root_malloc)
-				buffer.put_new_line
-				buffer.put_string ("egc_rcoffset = ")
+				buffer.put_string ("egc_rcrid = ")
 				buffer.put_string (l_root_malloc)
 				buffer.put_new_line
 				buffer.put_string ("egc_rcarg = ")
@@ -1103,13 +1099,11 @@ feature -- Plug and Makefile file
 					type_set: l_root.is_class_type_set
 				end
 				l_root_cl := l_root.class_type.base_class
-				if not compilation_modes.is_precompiling and then not l_root.procedure_name.is_empty then
+				if not l_root.procedure_name.is_empty then
 					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
-					l_rout_info := system.rout_info_table.item (l_root_ft.rout_id_set.first)
-					l_rcorigin := l_rout_info.origin
-					l_rcoffset := l_rout_info.offset
+					l_rcrid :=  l_root_ft.rout_id_set.first
 				else
-					l_rcorigin := -1
+					l_rcrid := -1
 				end
 
 				buffer.put_string ("egc_rlist[")
@@ -1131,17 +1125,10 @@ feature -- Plug and Makefile file
 				buffer.put_new_line
 
 				if not final_mode then
-					buffer.put_string ("egc_rcorigin[")
+					buffer.put_string ("egc_rcrid[")
 					buffer.put_integer (i)
 					buffer.put_string ("] = ")
-					buffer.put_integer (l_rcorigin)
-					buffer.put_string (";")
-					buffer.put_new_line
-
-					buffer.put_string ("egc_rcoffset[")
-					buffer.put_integer (i)
-					buffer.put_string ("] = ")
-					buffer.put_integer (l_rcoffset)
+					buffer.put_integer (l_rcrid)
 					buffer.put_string (";")
 					buffer.put_new_line
 
@@ -1385,7 +1372,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -229,10 +229,8 @@ rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Dbg evaluation */
 rt_shared int dbg_store_exception_trace (char* trace);
-rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);
 
 /* Feature call and/or access  */
-rt_shared void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed);
 rt_private int icall(int routine_id, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private void rt_attribute_access(int routine_id, uint32 type);	/* Access to an attribute */
 rt_private void address(int32 aid);													/* Address of a routine */
@@ -1630,7 +1628,7 @@ rt_private void interpret(int flag, int where)
 
 			routine_id = get_int32(&IC);		/* Get the routine ID */
 			type = get_uint32(&IC);			/* Get attribute meta-type */
-			att_offset = RTWA2(routine_id, icur_dtype);
+			att_offset = RTWA(routine_id, icur_dtype);
 			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,0);
 			assign(att_offset, type);
 		}
@@ -1653,7 +1651,7 @@ rt_private void interpret(int flag, int where)
 			}
 			routine_id = get_int32(&IC);		/* Get the routine ID */
 			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
-			att_offset = RTWA2(routine_id, icur_dtype);
+			att_offset = RTWA(routine_id, icur_dtype);
 			RTDBGA_ATTRB(icurrent->it_ref,att_offset,sk_type,1,0);
 			eif_std_ref_copy (ref, icurrent->it_ref + att_offset);
 		}
@@ -1731,7 +1729,7 @@ rt_private void interpret(int flag, int where)
 			if (!RTRA(type, l_ref)) {
 				last->it_ref = (EIF_REFERENCE) 0;
 			}
-			reverse_attribute (RTWA2(routine_id, icur_dtype), meta);
+			reverse_attribute (RTWA(routine_id, icur_dtype), meta);
 		}
 		break;
 
@@ -2113,21 +2111,20 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
 			unsigned char *OLD_IC;
-			EIF_BOOLEAN has_closed, is_precompiled, is_basic, is_target_closed, is_inline_agent;
+			EIF_BOOLEAN has_closed, is_basic, is_target_closed;
+			int32 written_type_id_inline_agent;
 			EIF_TYPED_VALUE *aclosed_operands, *aopen_map;
-			int32 class_id, feature_id, open_count;
+			int32 open_count;
 			EIF_REFERENCE open_map, closed_operands;
 
 			open_map = closed_operands = (EIF_REFERENCE) 0;
 			has_closed = get_bool(&IC); /* Do we have an closed operands tuple? */
 			type = get_compound_id(MTC icurrent->it_ref);
 
-			class_id = get_int32(&IC);
-			feature_id = get_int32(&IC);
-			is_precompiled = get_bool(&IC);
+			routine_id = get_int32(&IC);
 			is_basic = get_bool(&IC);
 			is_target_closed = get_bool(&IC);
-			is_inline_agent = get_bool(&IC);
+			written_type_id_inline_agent = get_int32(&IC);
 			open_count = get_int32(&IC);
 
 			if (open_count > 0) {
@@ -2148,8 +2145,8 @@ rt_private void interpret(int flag, int where)
 			stagval = tagval;
 			OLD_IC = IC;
 				/* Create new object */
-			new_obj = RTLNRW(type, NULL, NULL, NULL, class_id, feature_id, open_map, is_precompiled,
-							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
+			new_obj = RTLNRW(type, NULL, NULL, NULL, routine_id, open_map,
+							 is_basic, is_target_closed, written_type_id_inline_agent, closed_operands, open_count);
 
 			IC = OLD_IC;
 			last = iget();				/* Push a new value onto the stack */
@@ -3034,7 +3031,7 @@ rt_private void interpret(int flag, int where)
 					is_attribute = EIF_TRUE;
 					routine_id = get_int32(&IC);		/* Get routine ID */
 					(void) get_uint32(&IC);		/* Get attribute meta-type */
-					offset = RTWA2(routine_id, Dtype(icurrent->it_ref));
+					offset = RTWA(routine_id, Dtype(icurrent->it_ref));
 					break;
 				default:
 					eif_panic(MTC "illegal access to Current");
@@ -3145,7 +3142,7 @@ rt_private void interpret(int flag, int where)
 
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
-			new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF2(routine_id, Dtype(sp_area))) (sp_area);
+			new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF(routine_id, Dtype(sp_area))) (sp_area);
 			IC = OLD_IC;
 			if (tagval != stagval) {
 				sync_registers(MTC scur, stop); /* If calls melted make of array */
@@ -5096,12 +5093,10 @@ rt_private void eif_interp_bit_operations (void)
 /*
  * Function calling routines for debugger
  */
-rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result)
-						/* Feature ID or offset if the feature is precompiled */
-						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
-						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
+rt_shared void dynamic_eval_dbg(int routine_id, int static_dtype, int is_basic_type, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result)
+						/* Routine ID or offset if the feature is precompiled */
+						/* Dynamic type if needed on which call is being done. Mostly used for static calls. */
 						/* Is it an external or an Eiffel feature */
-						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
 						/* return the exception object if exception occurred (and set `exception_occurred' to 1) */
 {
@@ -5130,7 +5125,7 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 		debug_mode = saved_debug_mode;
 		exclear ();
 	} else {
-		dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0, nb_pushed);
+		dynamic_eval (routine_id, static_dtype, is_basic_type, nb_pushed);
 		last = otop();
 		if (last != NULL && last != previous_otop) { /* a result has been pushed on the stack */
 			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE));
@@ -5149,12 +5144,10 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 /*
  * Function calling routines
  */
-rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent, rt_uint_ptr nb_pushed)
-						/* Feature ID or offset if the feature is precompiled */
-						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
-						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
+rt_shared void dynamic_eval(int routine_id, int static_dtype, int is_basic_type, rt_uint_ptr nb_pushed)
+						/* routine ID or offset if the feature is precompiled */
+						/* Static type for the call (usually for static calls or inline agents. */
 						/* Is it an external or an Eiffel feature */
-						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
 						/* Does dynamic_eval catch the exception or pass it to caller ?
 						 * when called by debugger, pass it to the debugger                */
@@ -5165,7 +5158,6 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
 	unsigned char*	OLD_IC = IC;		/* IC back up */
 	uint32 			pid = 0;			/* Pattern id of the frozen feature */
-	int32 			rout_id = 0;		/* routine id of the requested feature */
 	uint32 db_cstack;
 	EIF_TYPED_VALUE *last;
 	STACK_PRESERVE;
@@ -5196,29 +5188,14 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 			metamorphose_top(scur, stop);
 		}
 
-		if (! is_precompiled) {
-			int stype = stype_or_origin;
-			rout_id = Routids(stype)[fid_or_offset];
-			if ((is_inline_agent) || (is_static_call)) {
-					/* For an inline agent or a static call, the call is always relative to
-					 * the type declaring the inline agent or the type target of the static call. */
-				CBodyId(body_id,rout_id,stype);
-			} else {
-				last = otop();
-				CHECK("last not null", last);
-				CBodyId(body_id,rout_id,Dtype(last->it_ref));
-			}
+		if (static_dtype >= 0) {
+				/* When For a static call, the call is always relative to
+				 * the type declaring the inline agent or the type target of the static call. */
+			CBodyId(body_id,routine_id,static_dtype);
 		} else {
-			int origin = stype_or_origin;
-			int offset = fid_or_offset;
-			CHECK("Not an inline agent", !is_inline_agent);
-			if (is_static_call) {
-				body_id = desc_tab[origin][dtype][offset].body_index;
-			} else {
-				last = otop();
-				CHECK("last not null", last);
-				body_id = desc_tab[origin][Dtype(last->it_ref)][offset].body_index;
-			}
+			last = otop();
+			CHECK("last not null", last);
+			CBodyId(body_id,routine_id,Dtype(last->it_ref));
 		}
 		if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 			pid = (uint32) FPatId(body_id);
@@ -5324,7 +5301,7 @@ rt_private void rt_attribute_access(int routine_id, uint32 type)
 	last = otop();
 	CHECK("last not null", last);
 	current = last->it_ref;
-	offset = RTWA2(routine_id, Dtype(current));
+	offset = RTWA(routine_id, Dtype(current));
 	last->type = type;			/* Store type of accessed attribute */
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
@@ -5585,7 +5562,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				int routine_id;
 
 				routine_id = get_int32(&IC);		/* Get the routine ID */
-				result = RTWCT2(routine_id, Dtype(Current), Dftype(Current));
+				result = RTWCT(routine_id, Dtype(Current), Dftype(Current));
 			}
 			break;
 		case QUALIFIED_FEATURE_TYPE: /* like feature - see BC_QLIKE */
@@ -5595,7 +5572,7 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 
 				dftype = get_compound_id(Current);
 				routine_id = get_int32(&IC);	/* Get the routine ID */
-				result = RTWCTT2(routine_id, dftype);
+				result = RTWCTT(routine_id, dftype);
 			}
 			break;
 		default:
@@ -5650,14 +5627,14 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 	case BC_CLIKE:				/* Like feature creation type */
 		routine_id = get_int32(&IC);		/* Get the routine ID */
 /* GENERIC CONFORMANCE */
-		type = RTWCT2(routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref));
+		type = RTWCT(routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref));
 		break;
 	case BC_QLIKE:				/* Qualified anchored creation type */
 		{
 		EIF_TYPE_INDEX dftype; /* Current dftype */
 		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
 		routine_id = get_int32(&IC);                    /* Get the routine ID */
-		type = RTWCTT2(routine_id, dftype);      /* GENERIC CONFORMANCE */
+		type = RTWCTT(routine_id, dftype);      /* GENERIC CONFORMANCE */
 		}
 		break;
 	case BC_CCUR:				/* Like Current creation type */

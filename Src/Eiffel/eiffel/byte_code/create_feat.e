@@ -194,7 +194,7 @@ feature -- C code generation
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
-				buffer.put_string ("RTWCT2(")
+				buffer.put_string ("RTWCT(")
 				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				context.generate_current_dtype
@@ -311,7 +311,7 @@ feature -- Genericity
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
-				buffer.put_string ("RTWCT2(")
+				buffer.put_string ("RTWCT(")
 				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				context.generate_current_dtype
@@ -422,7 +422,7 @@ feature -- Genericity
 				buffer.put_natural_32 (a_level)
 				buffer.put_character ('[')
 				buffer.put_integer (idx_cnt.value)
-				buffer.put_string ("] = RTWCT2(")
+				buffer.put_string ("] = RTWCT(")
 				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				context.generate_current_dtype

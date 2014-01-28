@@ -2267,7 +2267,7 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 				break;
 			case RTDBG_EVENT_RT_ASSIGN_ATTRIB:
 				if (l_pos == 0 && a_routine_id > 0) {
-					l_pos = RTWA2(a_routine_id, a_dyn_type);
+					l_pos = RTWA(a_routine_id, a_dyn_type);
 				}
 				break;
 			default:

@@ -2550,9 +2550,7 @@ end
 			l_root_cl: CLASS_C
 			l_root_dtype: INTEGER
 			l_root_ft: detachable FEATURE_I
-			l_root_rout_info: ROUT_INFO
 			l_root_rout_id: INTEGER
-			l_rcorigin, l_rcoffset: INTEGER
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Updating name.eif%N")
@@ -2592,8 +2590,7 @@ end
 					write_int (file_pointer, 0)
 				end
 				make_update_feature_tables (melted_file)
-				make_update_rout_id_arrays (melted_file)
-					-- Open the file for reading byte code for melted features
+					-- Open the file for reading byte code for melted feature
 					-- Update the execution table
 				Execution_table.make_update (melted_file)
 				make_parent_table_byte_code (melted_file)
@@ -2619,9 +2616,6 @@ end
 					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
 					if l_root_ft /= Void then
 						l_root_rout_id := l_root_ft.rout_id_set.first
-						l_root_rout_info := rout_info_table.item (l_root_rout_id)
-						l_rcorigin := l_root_rout_info.origin
-						l_rcoffset := l_root_rout_info.offset
 
 						write_int (file_pointer, l_root_cl.name.count + l_root_ft.feature_name.count + 1)
 						melted_file.put_string (l_root_cl.name.as_upper)
@@ -2629,10 +2623,10 @@ end
 						melted_file.put_string (l_root_ft.feature_name.as_lower)
 					else
 						write_int (file_pointer, 0)
-						l_rcorigin := -1
+						l_root_rout_id := -1
 					end
 
-					write_int (file_pointer, l_rcorigin)
+					write_int (file_pointer, l_root_rout_id)
 
 						-- Generate type ID for ANY
 					write_int (file_pointer, any_class.compiled_class.types.first.type_id - 1)
@@ -2643,7 +2637,6 @@ end
 						-- Write number of bytes in byte array.
 					l_ba.character_array.store (melted_file)
 
-					write_int (file_pointer, l_rcoffset)
 					if l_root_ft /= Void and then l_root_ft.has_arguments then
 						write_int (file_pointer, 1)
 					else
@@ -2666,55 +2659,6 @@ end
 			file_open_write: file.is_open_write
 		do
 			Degree_minus_1.make_update_feature_tables (file)
-		end
-
-	make_update_rout_id_arrays (file: RAW_FILE)
-			-- Write the melted routine id arrays into `file'.
-		require
-			file_not_void: file /= Void
-			file_open_write: file.is_open_write
-		local
-			class_id: INTEGER
-			file_pointer: POINTER
-			types: TYPE_LIST
-			cl_type: CLASS_TYPE
-		do
-			file_pointer := file.file_pointer
-debug ("ACTIVITY")
-	io.error.put_string ("%TMelted routine id array%N")
-end
-				-- Melted routine id array
-			from
-				m_rout_id_server.start
-			until
-				m_rout_id_server.after
-			loop
-				class_id := m_rout_id_server.key_for_iteration
-debug ("ACTIVITY")
-io.error.put_string ("melting routine id array of ")
-io.error.put_integer (class_id)
-io.error.put_string (class_of_id (class_id).name)
-io.error.put_new_line
-end
-				write_int (file_pointer, class_id)
-				m_rout_id_server.item (class_id).store (file)
-				types := class_of_id (class_id).types
-				from
-					types.start
-				until
-					types.after
-				loop
-					cl_type := types.item
-						-- Write dynamic type
-					write_int (file_pointer, cl_type.type_id - 1)
-						-- Write original dynamic type (first freezing)
-					write_int (file_pointer, cl_type.static_type_id - 1)
-					types.forth
-				end
-				write_int (file_pointer, -1)
-				m_rout_id_server.forth
-			end
-			write_int (file_pointer, -1)
 		end
 
 	make_update_descriptors (file: RAW_FILE)
@@ -2900,7 +2844,6 @@ end
 			creation_server.take_control (tmp_creation_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)
-			M_rout_id_server.take_control (Tmp_m_rout_id_server)
 			M_desc_server.take_control (Tmp_m_desc_server)
 
 				-- No need to do `Byte_server' and `Inv_byte_server' because
@@ -3070,7 +3013,6 @@ end
 				-- Clear the melted byte code servers
 			m_feat_tbl_server.clear
 			m_feature_server.clear
-			m_rout_id_server.clear
 
 debug ("ACTIVITY")
 	io.error.put_string ("Shake%N")
@@ -3448,13 +3390,11 @@ feature {NONE} -- Implementation
 				Inv_ast_server.remove (id)
 				Depend_server.remove (id)
 				creation_server.remove (id)
-				M_rout_id_server.remove (id)
 				M_desc_server.remove (id)
 				Tmp_inv_byte_server.remove (id)
 				Tmp_ast_server.remove (id)
 				Tmp_depend_server.remove (id)
 				tmp_creation_server.remove (id)
-				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
 				Degree_1.remove_class (a_class)
@@ -3773,16 +3713,6 @@ feature -- Dead code removal
 			l_feature_table := l_class.feature_table
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.rout_disp_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.calc_rout_addr_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.closed_operands_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.class_id_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.feature_id_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_precompiled_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_basic_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.open_map_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.open_count_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.closed_count_name_id), l_class)
 
 				-- Protection of ISE_EXCEPTION_MANAGER class features
 			l_class := ise_exception_manager_class.compiled_class
@@ -4678,33 +4608,6 @@ feature -- Generation
 			end
 			buffer.put_string ("};%N")
 
-			if not final_mode then
-					-- Generate the array of routine id arrays
-				buffer.put_string ("%Nint32 *egc_fcall_init[] = {%N")
-				from
-					i := 1
-					nb := cltype_array.upper
-				until
-					i > nb
-				loop
-					buffer.flush_buffer (skeleton_file)
-					cl_type := cltype_array.item (i)
-					if
-						not Compilation_modes.is_precompiling and
-						cl_type /= Void and then
-						not cl_type.associated_class.is_precompiled
-					then
-						buffer.put_string ("ra")
-						buffer.put_integer (cl_type.associated_class.class_id)
-					else
-						buffer.put_string ("(int32 *) 0")
-					end
-					buffer.put_string (",%N")
-					i := i + 1
-				end
-				buffer.put_string ("};")
-			end
-
 			buffer.end_c_specific_code
 
 				-- Generate skeleton
@@ -5333,14 +5236,14 @@ feature -- Pattern table generation
 				buffer.put_new_line_only
 				buffer.put_string (
 					"{
-	if (egc_rcorigin[egc_ridx] != -1) {
+	if (egc_rcrid[egc_ridx] != -1) {
 		if (egc_rcarg[egc_ridx]) {
 			EIF_TYPED_VALUE u_args;
 			u_args.type = SK_REF;
 			u_args.it_r = eif_arg_array();
-			(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin[egc_ridx], egc_rcoffset[egc_ridx], Dtype(root_obj)))(root_obj, u_args);
+			(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWF(egc_rcrid[egc_ridx], Dtype(root_obj)))(root_obj, u_args);
 		} else {
-			(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin[egc_ridx], egc_rcoffset[egc_ridx], Dtype(root_obj)))(root_obj);
+			(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWF(egc_rcrid[egc_ridx], Dtype(root_obj)))(root_obj);
 		}
 	}
 					}"
@@ -6303,7 +6206,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

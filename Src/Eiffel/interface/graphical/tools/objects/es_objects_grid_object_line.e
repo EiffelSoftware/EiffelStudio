@@ -1170,11 +1170,8 @@ feature {NONE} -- Agent filling
 			lrow: EV_GRID_ROW
 			n: STRING
 			v_item: ABSTRACT_DEBUG_VALUE
-			v_class_id,
-			v_feature_id: DEBUG_BASIC_VALUE [INTEGER]
-			v_is_precompiled: DEBUG_BASIC_VALUE [BOOLEAN]
-			cl_id, fe_id: INTEGER
-			v_nb: INTEGER
+			v_routine_id: detachable DEBUG_BASIC_VALUE [INTEGER]
+			rid: INTEGER
 			grid: EV_GRID
 			ag_fe: E_FEATURE
 			r: INTEGER
@@ -1183,44 +1180,27 @@ feature {NONE} -- Agent filling
 		do
 			grid := a_row.parent
 			from
-				v_nb := 0
 				list_cursor.start
 			until
-				list_cursor.after or (v_nb >= 3)
+				list_cursor.after or v_routine_id /= Void
 			loop
 				v_item := list_cursor.item
 				if v_item /= Void then
 					n := v_item.name
 					if n /= Void and then n.count > 3 then
 						if attached {DEBUG_BASIC_VALUE [INTEGER]} v_item as vi then
-							if vi.name /= Void then
-								if v_class_id = Void and n.item (1) = 'c' and then n.same_string ("class_id") then
-									v_nb := v_nb + 1
-									v_class_id := vi
-								elseif v_feature_id = Void and n.item (1) = 'f' and then n.same_string ("feature_id") then
-									v_nb := v_nb + 1
-									v_feature_id := vi
-								end
-							end
-						elseif attached {DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item as vb then
-							if v_is_precompiled = void and n.item (1) = 'i' and then n.same_string ("is_precompiled") then
-								v_nb := v_nb + 1
-								v_is_precompiled := vb
+							if vi.name /= Void and then v_routine_id = Void and n.item (1) = 'r' and then n.same_string ("routine_id") then
+								v_routine_id := vi
 							end
 						end
 					end
 				end
 				list_cursor.forth
 			end
-			if v_nb >= 3 then
-				cl_id := v_class_id.value
-				fe_id := v_feature_id.value
-				if cl_id > 0 and fe_id > 0 then
-					if v_is_precompiled.value then
-						ag_fe := agent_feature_for_origin_and_offset (cl_id, fe_id)
-					else
-						ag_fe := agent_feature_for_class_and_type_id (cl_id + 1, fe_id) --|cl_id: runtime value + 1: to get the eiffel compiler id
-					end
+			if v_routine_id /= Void then
+				rid := v_routine_id.value
+				if rid > 0 then
+					ag_fe := agent_feature_for_routine_id (rid)
 					if ag_fe /= Void then
 						ag_fe := real_feature (ag_fe)
 						r := 1
@@ -1268,7 +1248,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

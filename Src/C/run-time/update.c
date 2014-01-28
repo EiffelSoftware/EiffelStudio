@@ -313,22 +313,6 @@ rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 		SAFE_ALLOC(esystem, struct cnode, count);
 		memcpy (esystem, egc_fsystem, scount * sizeof(struct cnode));
 
-			/* Allocation of the variable `ecall' */
-		SAFE_ALLOC(ecall, int32 *, count);
-		memcpy (ecall, egc_fcall, scount * sizeof(int32 *));
-
-		/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
-		 * id. Therefore it should be resized using `scount' which is the number of
-		 * dynamic types in the system, but rather by the updated value of `fcount'
-		 * which is the number of static types (if some types have been removed
-		 * abd the type system has been recomputed, then scount < fcount).
-		 * This remark also applies to `fdtype' which is an array converting static
-		 * types to dynamic types. This table should be updated when melting the
-		 * system. Now it assumes that the number of static and dynamic types are
-		 * equal and that static and dynamic types for melted types are equal.
-		 * See also the FIXMEs in class SYSTEM_I
-		 */
-
 		scount = count;
 			/* Feature table update */
 		count = (EIF_TYPE_INDEX) wint32();
@@ -338,9 +322,6 @@ rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 
 		while (count-- > 0)
 			cnode_updt();
-
-			/* Update possible routine id array */
-		routid_updt();
 
 			/* Updating of the melting table */
 		melt_count = (rt_uint_ptr) wint32();		/* Read the size of the byte code array */
@@ -450,14 +431,12 @@ rt_private void root_class_updt (void)
 	l_rcount = wint32();
 	if (l_rcount > egc_rcount) {
 		eif_free (egc_rlist);
-		eif_free (egc_rcorigin);
 		eif_free (egc_rcdt);
-		eif_free (egc_rcoffset);
+		eif_free (egc_rcrid);
 		eif_free (egc_rcarg);
 		SAFE_EIF_MALLOC (egc_rlist, char*, l_rcount);
-		SAFE_EIF_MALLOC (egc_rcorigin, int32, l_rcount);
 		SAFE_EIF_MALLOC (egc_rcdt, int32, l_rcount);
-		SAFE_EIF_MALLOC (egc_rcoffset, int32, l_rcount);
+		SAFE_EIF_MALLOC (egc_rcrid, int32, l_rcount);
 		SAFE_EIF_MALLOC (egc_rcarg, int32, l_rcount);
 	}
 	egc_rcount = l_rcount;
@@ -469,7 +448,7 @@ rt_private void root_class_updt (void)
 		wread(egc_rlist[i], l_strcount * sizeof(char));
 		egc_rlist[i][l_strcount] = '\0';
 
-		egc_rcorigin[i] = wint32();
+		egc_rcrid[i] = wint32();
 
 			/* Create an instance of ANY, to give us a context. */
 		l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
@@ -478,15 +457,9 @@ rt_private void root_class_updt (void)
 		egc_rcdt[i] = get_compound_id (l_obj);
 		IC = old_IC;
 
-		egc_rcoffset[i] = wint32();
 		egc_rcarg[i] = wint32();
 
 	}
-
-#ifdef DEBUG
-	dprintf(1)("Root class info:\n\tegc_rcorigin = %ld, egc_rcdt = %ld\n", egc_rcorigin, egc_rcdt);
-	dprintf(1)("\tegc_rcoffset = %ld, egc_rcarg = %ld\n", egc_rcoffset, egc_rcarg);
-#endif
 }
 
 rt_public void cnode_updt(void)
@@ -593,13 +566,10 @@ rt_public void cnode_updt(void)
 	dprintf(4)("\tsize = %ld\n", node->cn_size);
 #endif
 
-		/* 9. Creation feature ID */
+		/* 9. Creation Routine ID */
 	node->cn_creation_id = wint32();
 
-		/* 10. Static ID */
-	node->cn_static_id = wint32();
-
-		/* 11. Storable version */
+		/* 10. Storable version */
 	str_count = wshort();
 	if (str_count > 0) {
 		SAFE_ALLOC(str, char, str_count + 1);
@@ -608,63 +578,6 @@ rt_public void cnode_updt(void)
 		str[str_count] = '\0';
 	} else {
 		node->cn_version = NULL;
-	}
-}
-
-rt_public void routid_updt(void)
-{
-	/* Update routine id arrays */
-
-	long class_id, dtype, orig_dtype;
-	long array_size;
-	int32 *cn_eroutid;
-	char has_cecil;
-	char **names = (char **) 0;
-	uint32 *feature_ids = (uint32 *) 0;
-	long size = 0;
-
-	while ((class_id = wint32()) != -1L) {
-		array_size = wint32();	/* Array size */
-#ifdef DEBUG
-	dprintf(4)("Updating rids of class of id %ld [%ld]\n",
-		class_id, array_size);
-#endif
-		if (array_size > 0) {
-			SAFE_ALLOC(cn_eroutid, int32, array_size);
-			wread((char *) cn_eroutid, array_size * sizeof(int32));
-		} else {
-			 cn_eroutid = (int32 *) 0;
-		}
-#ifdef DEBUG
-{
-	long i;
-	for (i=0; i<array_size; i++)
-		dprintf(4)("ra%d[%ld] = %ld\n", class_id, i, cn_eroutid[i]);
-}
-#endif
-		wread(&has_cecil, 1);		/* Cecil ? */
-		if (has_cecil) {
-			size = wint32();		/* Hash table size */
-			names = names_updt((short) size);
-			SAFE_ALLOC(feature_ids, uint32, size);
-			wread((char *) feature_ids, size * sizeof(uint32));
-		}
-		while ((dtype = wint32()) != -1L) {	/* Dynamic type */
-#ifdef DEBUG
-	dprintf(4)("\tfor %s [dt = %ld]\n", System(dtype).cn_generator, dtype);
-#endif
-			orig_dtype = wint32();
-			Routids(orig_dtype) = cn_eroutid;
-			System(dtype).cn_routids = cn_eroutid;
-			if (has_cecil) {
-				struct ctable *ce = &Cecil(dtype);
-
-				ce->h_size = (int32) size;
-				ce->h_sval = sizeof(uint32);
-				ce->h_keys = names;
-				ce->h_values = (char *) feature_ids;
-			}
-		}
 	}
 }
 

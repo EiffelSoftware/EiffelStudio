@@ -96,9 +96,9 @@ feature -- C code generation
 				buf.indent;
 			end;
 			if is_nested then
-				buf.put_string ("RTVA2(");
+				buf.put_string ("RTVA(");
 			else
-				buf.put_string ("RTWA2(");
+				buf.put_string ("RTWA(");
 			end;
 			buf.put_integer (routine_id)
 			buf.put_string ({C_CONST}.comma_space);

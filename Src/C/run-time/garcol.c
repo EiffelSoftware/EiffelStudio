@@ -1420,13 +1420,9 @@ rt_public void reclaim(void)
 				eif_free(egc_rcdt);
 				egc_rcdt = NULL;
 			}
-			if (egc_rcorigin) {
-				eif_free(egc_rcorigin);
-				egc_rcorigin = NULL;
-			}
-			if (egc_rcoffset) {
-				eif_free(egc_rcoffset);
-				egc_rcoffset = NULL;
+			if (egc_rcrid) {
+				eif_free(egc_rcrid);
+				egc_rcrid = NULL;
 			}
 			if (egc_rcarg) {
 				eif_free(egc_rcarg);

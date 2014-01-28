@@ -40,61 +40,38 @@ feature -- Processing
 			l_degree_output := degree_output
 			l_area := l_system.classes.sorted_classes.area
 				-- Generation of the descriptor tables.
-			if Compilation_modes.is_precompiling then
-				nb := count
-				l_degree_output.put_start_degree (Degree_number, nb)
-				l_system.open_log_files
-				from i := 0 until nb = 0 loop
-					a_class := l_area [i].eiffel_class_c
-					if a_class /= Void and then a_class.degree_minus_1_needed then
-							-- only eiffel classes have degree -1
-						check
-							eiffel_class: a_class.is_eiffel_class_c
-						end
-						eif_class := a_class.eiffel_class_c
+			if not compilation_modes.is_precompiling and l_system.first_compilation then
+				from
+					l_m_desc_server := m_desc_server
+					l_m_desc_server.start
+				until
+					l_m_desc_server.after
+				loop
+					a_class := l_system.class_of_id (l_m_desc_server.key_for_iteration)
+					if a_class /= Void then
+						insert_class (a_class)
+					end
+					l_m_desc_server.forth
+				end
+			end
+			nb := count
+			l_degree_output.put_start_degree (Degree_number, nb)
+			l_system.open_log_files
+			from i := 0 until nb = 0 loop
+				a_class := l_area [i]
+				if a_class /= Void and then a_class.degree_minus_1_needed then
+						-- only eiffel classes have degree -1
+					check
+						eiffel_class: a_class.is_eiffel_class_c
+					end
+					eif_class := a_class.eiffel_class_c
 
-						l_degree_output.put_degree_minus_1 (eif_class, nb)
-						eif_class.generate_descriptor_tables
-						eif_class.pass4
-						eif_class.remove_from_degree_minus_1
-						nb := nb - 1
-					end
-					i := i + 1
+					l_degree_output.put_degree_minus_1 (eif_class, nb)
+					eif_class.generate_workbench_files
+					eif_class.remove_from_degree_minus_1
+					nb := nb - 1
 				end
-			else
-				if l_system.first_compilation then
-					from
-						l_m_desc_server := m_desc_server
-						l_m_desc_server.start
-					until
-						l_m_desc_server.after
-					loop
-						a_class := l_system.class_of_id (l_m_desc_server.key_for_iteration)
-						if a_class /= Void then
-							insert_class (a_class)
-						end
-						l_m_desc_server.forth
-					end
-				end
-				nb := count
-				l_degree_output.put_start_degree (Degree_number, nb)
-				l_system.open_log_files
-				from i := 0 until nb = 0 loop
-					a_class := l_area [i]
-					if a_class /= Void and then a_class.degree_minus_1_needed then
-							-- only eiffel classes have degree -1
-						check
-							eiffel_class: a_class.is_eiffel_class_c
-						end
-						eif_class := a_class.eiffel_class_c
-
-						l_degree_output.put_degree_minus_1 (eif_class, nb)
-						eif_class.generate_workbench_files
-						eif_class.remove_from_degree_minus_1
-						nb := nb - 1
-					end
-					i := i + 1
-				end
+				i := i + 1
 			end
 			count := 0
 			l_system.close_log_files
@@ -221,7 +198,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,22 +211,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DEGREE_MINUS_1

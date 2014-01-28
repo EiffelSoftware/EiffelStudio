@@ -84,7 +84,7 @@ feature
 			l_context: like context
 		do
 			check
-				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id, is_target_closed, omap)
+				address_table_record_generated: not System.address_table.is_lazy (class_type.base_class.class_id, feature_id, is_target_closed, omap)
 			end
 			l_context := context
 			sep := once ", "
@@ -133,33 +133,12 @@ feature
 			end
 
 			if wb_mode then
-				if is_precompiled then
-					buf.put_integer (rout_origin)
-					buf.put_string (sep)
-					buf.put_integer (rout_offset)
-					buf.put_string (sep)
-				else
-						-- Note that we use `context.current_type' because we do not adapt
-						-- `a_node.class_type' to `context.context_class_type' for the simple reasons
-						-- that `feature_id' is the one from where the agent creation is declared.
-						-- If we were to adapt it, then we would need something like
-						-- `{CALL_ACCESS_B}.real_feature_id' for a proper code generation.
-					buf.put_static_type_id (class_type.static_type_id (context.current_type))
-					buf.put_string (sep)
-						-- feature_id
-					buf.put_integer (feature_id)
-					buf.put_string (sep)
-				end
+					-- Routine ID
+				buf.put_integer (rout_id)
+				buf.put_string (sep)
 					-- open_map
 				if open_positions /= Void and then not system.in_final_mode then
 					open_positions.print_register
-				else
-					buf.put_character ('0')
-				end
-				buf.put_string (sep)
-					-- is_precompiled
-				if is_precompiled then
-					buf.put_character ('1')
 				else
 					buf.put_character ('0')
 				end
@@ -180,9 +159,10 @@ feature
 				buf.put_string (sep)
 					-- is_inline_agent
 				if is_inline_agent then
-					buf.put_character ('1')
+						-- Type ID of the type defining the inline agent.
+					buf.put_type_id (class_type.static_type_id (l_context.current_type))
 				else
-					buf.put_character ('0')
+					buf.put_integer (-1)
 				end
 				buf.put_string (sep)
 			end
@@ -337,7 +317,7 @@ feature
 						l_rout_table ?= l_entry
 						l_rout_table.goto_implemented (class_type, context.class_type)
 
-						l_feat := l_class_type.associated_class.feature_of_feature_id (feature_id)
+						l_feat := l_class_type.associated_class.feature_of_rout_id (rout_id)
 						l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						l_return_type_string := l_c_return_type.c_string
 						if l_rout_table.is_implemented then
@@ -365,7 +345,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

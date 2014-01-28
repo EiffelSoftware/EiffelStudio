@@ -72,20 +72,10 @@ struct cnode {
 	long cn_size;				/* Object size */
 	long cn_nbref;				/* Number of references in the object */
 
-		/* The following two entities (`cn_creation_id' and `static_id')
-		 * are used to identify the creation procedure for expanded types.
-		 * They have two different meanings depending on whether the
-		 * corresponding type is precompiled or not. If the type is not
-		 * precompiled, `cn_creation_id' represents the feature_id of the
-		 * creation procedure and `static_id' is the static id of the
-		 * corresponding class. Otherwise, `cn_creation_id' is origin class
-		 * id and `static_id' the offset of the creation procedure in its
-		 * origin class.
+		/* The following entity `cn_creation_id' is the routine ID used to
+		 * identify the the creation procedure for expanded types.
 		 */
 	int32 cn_creation_id;
-	int32 cn_static_id;
-
-	int32 *cn_routids;   		/* Pointer on routine id array */
 	struct ctable cn_cecil;		/* Cecil hash table */
 #else
 	void (*cn_inv)();			/* Pointer on invariant routine if any */

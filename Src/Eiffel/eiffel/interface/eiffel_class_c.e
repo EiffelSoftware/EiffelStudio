@@ -1262,57 +1262,22 @@ feature -- Melting
 
 feature -- Workbench feature and descriptor table generation
 
-	generate_feature_table
-			-- Generation of workbench mode feature table for
-			-- the current class
-		local
-			file: INDENT_FILE
-			buffer: GENERATION_BUFFER
-		do
-			if not is_precompiled and has_types then
-					-- Clear buffer for Current generation
-				buffer := generation_buffer
-				buffer.clear_all
-				buffer.put_string ("/*%N * Class ")
-				buffer.put_string (external_class_name)
-				buffer.put_string ("%N */%N%N")
-				buffer.put_string ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"")
-				buffer.start_c_specific_code
-				feature_table.generate (buffer)
-				buffer.end_c_specific_code
-
-					-- Generation of workbench mode feature table for
-					-- the current class
-				create file.make_c_code_file (feature_table_file_name)
-				buffer.put_in_file (file)
-				file.close
-			end
-		end
-
 	generate_workbench_files
-			-- Collect calls to generate_decriptor_table, generate_feature_table and pass4
+			-- Collect calls to generate_decriptor_table and pass4
 			-- in case of first compilation.
 		do
-			generate_descriptor_tables
-			generate_feature_table
-
-				-- Generation of C files for each type associated to the current
-				-- class
-			Inst_context.set_group (cluster)
-			types.pass4
- 		end
-
-	generate_descriptor_tables
-			-- Generation of workbench mode descriptor tables
-			-- of associated class types.
-			--|Note: when precompiling a system a class might
-			--|have no generic derivations
-		do
+				-- Generation of workbench mode descriptor tables
+				-- of associated class types.
+				--|Note: when precompiling a system a class might
+				--|have no generic derivations
 			System.set_current_class (Current)
 			if has_types then
 				feature_table.descriptors (Current).generate
 			end
-		end
+
+				-- C code generation for each generic derivation
+			pass4
+ 		end
 
 feature
 

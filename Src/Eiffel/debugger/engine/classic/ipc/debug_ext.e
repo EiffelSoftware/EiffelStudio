@@ -47,11 +47,6 @@ feature -- Communication
 			"C"
 		end
 
-	send_rqst_4_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER; info4: INTEGER)
-		do
-			send_rqst_4 (code, info1, info2, integer_to_pointer (info3), info4)
-		end;
-
 	send_rqst_3_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER)
 		do
 			send_rqst_3 (code, info1, info2, integer_to_pointer (info3))
@@ -426,7 +421,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -8,8 +8,7 @@ class PRECOMP_MAKER
 inherit
 	WBENCH_MAKER
 		redefine
-			system_name, add_eiffel_objects,
-			generate_additional_rules
+			system_name, generate_additional_rules
 		end
 
 create
@@ -38,56 +37,6 @@ feature
 			else
 				System.set_has_precompiled_preobj (False)
 			end;
-		end;
-
-	add_eiffel_objects
-			-- Add Eiffel objects to the basket, i.e. C code for
-			-- each class as well as descriptor tables.
-		local
-			a_class: CLASS_C;
-			types: TYPE_LIST;
-			cl_type: CLASS_TYPE;
-			object_name, file_name: STRING;
-			class_array: ARRAY [CLASS_C];
-			i, nb: INTEGER;
-		do
-			from
-				class_array := System.classes
-				nb := Class_counter.count
-				i := 1
-			until
-				i > nb
-			loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.after
-					loop
-						cl_type := types.item;
-						if (not cl_type.is_precompiled) then
-								-- C code
-							object_name := cl_type.base_file_name;
-							create file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							object_baskets.item
-								(cl_type.packet_number).extend (file_name);
-
-								-- Descriptor file
-							create file_name.make (16);
-							file_name.append (object_name);
-							file_name.append_character (Descriptor_file_suffix);
-							file_name.append (".o");
-							object_baskets.item (cl_type.packet_number).extend (file_name);
-						end;
-						types.forth
-					end
-				end
-				i := i + 1
-			end
 		end;
 
 note

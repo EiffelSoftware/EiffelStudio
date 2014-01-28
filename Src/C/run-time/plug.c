@@ -731,27 +731,10 @@ void init_exp (EIF_REFERENCE obj)
 	}
 #else
 	EIF_TYPE_INDEX dtype = Dtype(obj);
-	struct cnode *exp_desc;	/* Expanded object description */
-	exp_desc = &System(Dtype(obj));
 
-	if (exp_desc->cn_routids) {
-		int32 feature_id;              	/* Creation procedure feature id */
-		int32 static_id;               	/* Creation procedure static id */
-
-		feature_id = exp_desc->cn_creation_id;
-		static_id = exp_desc->cn_static_id;
-		if (feature_id) {					/* Call creation routine */
-			wexp(static_id, feature_id, dtype, obj);
-		}
-	} else {							/* precompiled creation routine */
-		int32 origin;					/* Origin class id */
-		int32 offset;					/* Offset in origin class */
-
-		origin = exp_desc->cn_creation_id;
-		offset = exp_desc->cn_static_id;
-		if (origin) {						/* Call creation routine */
-			wpexp(origin, offset, dtype, obj);
-		}
+	int32 routine_id = System(dtype).cn_creation_id;
+	if (routine_id) {					/* Call creation routine */
+		wexp(routine_id, dtype, obj);
 	}
 #endif
 }
@@ -805,6 +788,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		case SK_EXP:						/* Found an expanded attribute */
 			{
 			struct cnode *exp_desc;			/* Expanded object description */
+			int32 routine_id;
 			/* char *OLD_IC; */ /* %%ss removed */
 			uint32 exp_offset;				/* Attribute offset */
 			EIF_TYPE_INDEX orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
@@ -842,22 +826,9 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				wstdinit(obj + exp_offset, parent);
 			}
 
-			if (exp_desc->cn_routids) {
-				int32 feature_id;			/* Creation procedure feature id */
-				int32 static_id;			/* Creation procedure static id */
-
-				feature_id = exp_desc->cn_creation_id;
-				static_id = exp_desc->cn_static_id;
-				if (feature_id)				/* Call creation routine */
-					wexp(static_id, feature_id, orig_exp_dtype, obj + exp_offset);
-			} else {						/* precompiled creation routine */
-				int32 origin;				/* Origin class id */
-				int32 offset;				/* Offset in origin class */
-
-				origin = exp_desc->cn_creation_id;
-				offset = exp_desc->cn_static_id;
-				if (origin)					/* Call creation routine */
-					wpexp(origin, offset, orig_exp_dtype, obj + exp_offset);
+			routine_id = exp_desc->cn_creation_id;
+			if (routine_id)	{			/* Call creation routine */
+				wexp(routine_id, orig_exp_dtype, obj + exp_offset);
 			}
 			}
 			break;

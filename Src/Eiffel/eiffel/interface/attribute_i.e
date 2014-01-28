@@ -478,7 +478,7 @@ feature -- Element Change
 					class_type.skeleton.generate_offset (buffer, feature_id, False, True)
 				end
 			else
-				buffer.put_string (" + RTWA2(")
+				buffer.put_string (" + RTWA(")
 				buffer.put_integer (rout_id)
 				buffer.put_character (',')
 				byte_context.generate_current_dtype

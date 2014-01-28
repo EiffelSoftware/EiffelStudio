@@ -59,8 +59,7 @@ feature {NONE} -- Implementation
 		local
 			fi: FEATURE_I
 			dmp: DUMP_VALUE
-			par: INTEGER
-			rout_info: ROUT_INFO
+			l_is_basic: INTEGER
 			wclt: CLASS_TYPE
 		do
 				-- Initialize the communication.
@@ -91,7 +90,7 @@ feature {NONE} -- Implementation
 				check is_valid_value: dmp.is_valid_value end
 				if dmp.is_basic then
 					fi := realf
-					par := par + 4
+					l_is_basic := 1
 				end
 				dmp.classic_send_value
 				if not dmp.last_classic_send_value_succeed then
@@ -101,13 +100,6 @@ feature {NONE} -- Implementation
 
 			if not error_occurred then
 					-- Send the final request.
-				if fi.is_external then
-					par := par + 1
-				end
-				if is_static_call then
-					par := par + 8
-				end
-
 				if
 					(a_addr = Void or (dmp /= Void and then dmp.is_basic)) and then
 					orig_class.is_expanded and then orig_class.is_basic
@@ -122,16 +114,7 @@ feature {NONE} -- Implementation
 					wclt := ctype
 				end
 
-				if fi.written_class.is_precompiled then
-					par := par + 2
-					rout_info := System.rout_info_table.item (fi.rout_id_set.first)
-					send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, wclt.type_id - 1, par)
-				else
-					debug ("refactor_fixme")
-						fixme ("it seems the runtime/debug is not designed to call precursor ...")
-					end
-					send_rqst_4_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, 0, par)
-				end
+				send_rqst_3_integer (Rqst_dynamic_eval, fi.rout_id_set.first, wclt.type_id - 1, l_is_basic)
 					-- Receive the Result.
 				recv_value (Current)
 				if is_exception then
@@ -356,7 +339,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

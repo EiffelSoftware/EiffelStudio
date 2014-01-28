@@ -60,23 +60,21 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 /* the call to `set_rout_disp'.									    */
 /*------------------------------------------------------------------*/
 rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp,
-										     EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id,
+										     EIF_POINTER calc_rout_addr, EIF_INTEGER routine_id,
 										     EIF_REFERENCE open_map,
-										     EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
-										     EIF_BOOLEAN is_inline_agent, EIF_REFERENCE closed_operands, EIF_INTEGER open_count)
+										     EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
+										     EIF_INTEGER written_type_id_inline_agent, EIF_REFERENCE closed_operands, EIF_INTEGER open_count)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	EIF_TYPED_VALUE u_rout_disp;
 	EIF_TYPED_VALUE u_encaps_rout_disp;
 	EIF_TYPED_VALUE u_calc_rout_addr;
-	EIF_TYPED_VALUE u_class_id;
-	EIF_TYPED_VALUE u_feature_id;
+	EIF_TYPED_VALUE u_routine_id;
 	EIF_TYPED_VALUE u_open_map;
-	EIF_TYPED_VALUE u_is_precompiled;
 	EIF_TYPED_VALUE u_is_basic;
 	EIF_TYPED_VALUE u_is_target_closed;
-	EIF_TYPED_VALUE u_is_inline_agent;
+	EIF_TYPED_VALUE u_written_type_id_inline_agent;
 	EIF_TYPED_VALUE u_closed_operands;
 	EIF_TYPED_VALUE u_open_count;
 	RTLD;
@@ -87,20 +85,16 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER 
 	u_encaps_rout_disp.it_p = encaps_rout_disp;
 	u_calc_rout_addr.type = SK_POINTER;
 	u_calc_rout_addr.it_p = calc_rout_addr;
-	u_class_id.type = SK_INT32;
-	u_class_id.it_i4 = class_id;
-	u_feature_id.type = SK_INT32;
-	u_feature_id.it_i4 = feature_id;
+	u_routine_id.type = SK_INT32;
+	u_routine_id.it_i4 = routine_id;
 	u_open_map.type = SK_REF;
 	u_open_map.it_r = open_map;
-	u_is_precompiled.type = SK_BOOL;
-	u_is_precompiled.it_b = is_precompiled;
 	u_is_basic.type = SK_BOOL;
 	u_is_basic.it_b = is_basic;
 	u_is_target_closed.type = SK_BOOL;
 	u_is_target_closed.it_b = is_target_closed;
-	u_is_inline_agent.type = SK_BOOL;
-	u_is_inline_agent.it_b = is_inline_agent;
+	u_written_type_id_inline_agent.type = SK_INT32;
+	u_written_type_id_inline_agent.it_i4 = written_type_id_inline_agent;
 	u_closed_operands.type = SK_REF;
 	u_closed_operands.it_r = closed_operands;
 	u_open_count.type = SK_INT32;
@@ -122,13 +116,11 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER 
 		u_rout_disp,
 		u_encaps_rout_disp,
 		u_calc_rout_addr,
-		u_class_id,
-		u_feature_id,
+		u_routine_id,
 		u_open_map,
-		u_is_precompiled,
 		u_is_basic,
 		u_is_target_closed,
-		u_is_inline_agent,
+		u_written_type_id_inline_agent,
 		u_closed_operands,
 		u_open_count
 	);
@@ -205,7 +197,7 @@ rt_public void rout_obj_free_args (EIF_POINTER args)
 void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te);
 
 rt_public void rout_obj_call_procedure_dynamic (
-	int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+	int routine_id, int is_basic_type, int written_type_id_inline_agent,
 	EIF_TYPED_VALUE* closed_args, int closed_count,
 	EIF_TYPED_VALUE* open_args, int open_count,
 	EIF_REFERENCE open_map)
@@ -288,9 +280,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 			/* We are calling a feature through an agent, in this case, we consider all calls
 			 * as qualified so that the invariant is checked. */
 		nstcall = 1;
-			/* We pass `0' for `dtype' in `dynamic_eval' because for an agent call we always have
-			 * a target object to get this from. */
-		dynamic_eval (feature_id, stype_id, 0, is_precompiled, is_basic_type, 0, is_inline_agent, nb_pushed);
+		dynamic_eval (routine_id, written_type_id_inline_agent, is_basic_type, nb_pushed);
 		expop(&eif_stack);
 	}
 }
@@ -304,14 +294,14 @@ void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te)
 }
 
 rt_public void rout_obj_call_function_dynamic (
-	int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+	int routine_id, int is_basic_type, int written_type_id_inline_agent,
 	EIF_TYPED_VALUE* closed_args, int closed_count,
 	EIF_TYPED_VALUE* open_args, int open_count,
 	EIF_REFERENCE open_map, void* res)
 {
 	EIF_TYPED_VALUE* it = NULL;
 
-	rout_obj_call_procedure_dynamic (stype_id, feature_id, is_precompiled, is_basic_type, is_inline_agent,
+	rout_obj_call_procedure_dynamic (routine_id, is_basic_type, written_type_id_inline_agent,
 									 closed_args, closed_count, open_args, open_count, open_map);
 
 	it = opop();

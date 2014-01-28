@@ -212,8 +212,8 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
-                                  EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
+                                  EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 
 #else
 /*
@@ -474,7 +474,6 @@ rt_public fnptr *egc_address_table;
 rt_public struct p_interface *egc_fpattern;
 rt_public void (*egc_einit)(void);	
 rt_public void (*egc_tabinit)(void);	
-rt_public int32 **egc_fcall;
 rt_public struct rout_info *egc_forg_table;
 
 #else
@@ -498,8 +497,7 @@ rt_public int32 egc_rcount;
 rt_public int32 egc_ridx;
 rt_public char  **egc_rlist;
 rt_public int32 *egc_rcdt;				/* E1/einit.c */
-rt_public int32 *egc_rcorigin;			/* E1/einit.c */
-rt_public int32 *egc_rcoffset;			/* E1/einit.c */
+rt_public int32 *egc_rcrid;				/* E1/einit.c */
 rt_public int32 *egc_rcarg;				/* E1/einit.c */
 
 

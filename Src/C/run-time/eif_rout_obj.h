@@ -58,13 +58,11 @@ RT_LNK EIF_REFERENCE rout_obj_create_wb (
 								EIF_POINTER rout_disp, 
 								EIF_POINTER encaps_rout_disp, 
 								EIF_POINTER calc_rout_addr, 
-								EIF_INTEGER class_id,
-								EIF_INTEGER feature_id,
+								EIF_INTEGER routine_id,
 								EIF_REFERENCE open_map,
-								EIF_BOOLEAN is_precompiled,
 								EIF_BOOLEAN is_basic, 
 								EIF_BOOLEAN is_target_closed,
-								EIF_BOOLEAN is_inline_agent,
+								EIF_INTEGER written_type_id_inline_agent,
 								EIF_REFERENCE closed_operands,
 								EIF_INTEGER open_count);
 #else
@@ -85,10 +83,10 @@ RT_LNK void rout_obj_free_args (EIF_POINTER);
 /* Calls */
 
 #ifdef WORKBENCH
-RT_LNK void rout_obj_call_procedure_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+RT_LNK void rout_obj_call_procedure_dynamic (int routine_id, int is_basic_type, int written_type_id_inline_agent,
 											 EIF_TYPED_VALUE* closed_args, int closed_count, EIF_TYPED_VALUE* open_args, 
 											 int open_count, EIF_REFERENCE open_map);
-RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
+RT_LNK void rout_obj_call_function_dynamic (int routine_id, int is_basic_type, int written_type_id_inline_agent,
 											EIF_TYPED_VALUE* closed_args, int closed_count, EIF_TYPED_VALUE* open_args, 
 											int open_count, EIF_REFERENCE open_map, void* res);
 #endif

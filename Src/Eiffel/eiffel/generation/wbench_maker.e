@@ -209,17 +209,6 @@ feature
 						end;
 						types.forth;
 					end;
-
-					if (not a_class.is_precompiled) then
-						eif_class := a_class.eiffel_class_c
-							-- Feature table
-						create file_name.make (16);
-						file_name.append (eif_class.base_file_name);
-						file_name.append_integer (eif_class.feature_table_file_id);
-						file_name.append_character (Feature_table_file_suffix);
-						file_name.append (".o");
-						object_baskets.item (eif_class.packet_number).extend (file_name);
-					end;
 				end
 				i := i + 1
 			end

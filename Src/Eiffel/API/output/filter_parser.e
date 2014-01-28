@@ -44,8 +44,8 @@ feature {NONE} -- Formats
 						filter_file.end_of_file
 					loop
 						from
-							in_construct := true;
-							in_before := false;
+							in_construct := True;
+							in_before := False;
 							create construct.make (10);
 							create construct_list.make;
 							before := Void;
@@ -63,29 +63,29 @@ feature {NONE} -- Formats
 										-- synoymn constructs i.e c1, c2
 									create construct.make (0)
  								elseif last_char_read = '|' then
-									in_construct := false;
-									in_before := true;
+									in_construct := False;
+									in_before := True;
 									create before.make (5)
 								else
 									syntax_error ("%"|%" expected");
-									read_error := true
+									read_error := True
 								end
 							elseif in_before then
 								if not is_last_meta then
 									before.extend (last_char_read)
  								elseif last_char_read = '*' then
-									in_before := false;
+									in_before := False;
 									create after.make (5)
 								else
 									syntax_error ("%"*%" expected");
-									read_error := true
+									read_error := True
 								end
 							else
 								if not is_last_meta then
 									after.extend (last_char_read)
 								else
 									syntax_error ("End of line expected");
-									read_error := true
+									read_error := True
 								end
 							end;
 							if not read_error then
@@ -100,13 +100,13 @@ feature {NONE} -- Formats
 								construct_list.after
 							loop
 								construct := construct_list.item;
-								normal_format := true;
+								normal_format := True;
 								construct.left_adjust;
 								if construct.count >= 7 then
 									escape := construct.substring (1, 6);
 									escape.to_lower;
 									if escape.is_equal ("escape") then
-										normal_format := false;
+										normal_format := False;
 										if before /= Void and after = Void then
 											escape_char :=
 												construct.item (construct.count);
@@ -141,8 +141,8 @@ feature {NONE} -- Formats
 							end
 						else
 								-- Go to the beginning of the next line
-							read_error := false;
-							char_in_buffer := false;
+							read_error := False;
+							char_in_buffer := False;
 							filter_file.read_line;
 							line_nb := line_nb + 1
 						end
@@ -161,11 +161,11 @@ feature {NONE} -- Formats
 			-- Interprete special characters. Put the
 			-- read character in last_char_read.
 		do
-			is_last_meta := false;
+			is_last_meta := False;
 			if not char_in_buffer then
 				filter_file.read_character
 			else
-				char_in_buffer := false
+				char_in_buffer := False
 			end;
 			if not filter_file.end_of_file then
 				inspect filter_file.last_character
@@ -173,7 +173,7 @@ feature {NONE} -- Formats
 					filter_file.read_character;
 					if filter_file.end_of_file then
 						syntax_error ("End of line expected");
-						read_error := true
+						read_error := True
 					else
 						inspect filter_file.last_character
 						when 'n', 'N' then
@@ -196,7 +196,7 @@ feature {NONE} -- Formats
 								filter_file.last_character /= '%%'
 							then
 								syntax_error ("%"%%%" expected");
-								read_error := true;
+								read_error := True;
 								if
 									not filter_file.end_of_file and then
 									filter_file.last_character = '%N'
@@ -212,10 +212,10 @@ feature {NONE} -- Formats
 					end
 				when ',', '|', '*' then
 					last_char_read := filter_file.last_character;
-					is_last_meta := true
+					is_last_meta := True
 				when '%N' then
 					last_char_read := filter_file.last_character;
-					is_last_meta := true;
+					is_last_meta := True;
 					line_nb := line_nb + 1
 				when '-' then
 					filter_file.read_character;
@@ -225,9 +225,9 @@ feature {NONE} -- Formats
 							filter_file.read_line;
 							line_nb := line_nb + 1;
 							last_char_read := '%N';
-							is_last_meta := true
+							is_last_meta := True
 						else
-							char_in_buffer := true;
+							char_in_buffer := True;
 							last_char_read := '-'
 						end
 					else
@@ -238,7 +238,7 @@ feature {NONE} -- Formats
 				end
 			else
 				last_char_read := '%N';
-				is_last_meta := true
+				is_last_meta := True
 			end
 		end;
 

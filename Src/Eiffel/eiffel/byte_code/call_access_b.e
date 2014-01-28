@@ -498,7 +498,7 @@ feature {NONE} -- C code generation
 			-- `Result.qualified_call' denotes a qualified call.
 			-- `Result.creation_call' denotes a call to a creation procedure.
 		once
-			Result := ["RTWF2", "RTVF2", "RTWC2"]
+			Result := ["RTWF", "RTVF", "RTWC"]
 		end
 
 feature {NONE} -- Separate call

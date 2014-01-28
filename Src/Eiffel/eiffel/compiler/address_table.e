@@ -1174,7 +1174,7 @@ feature {NONE} -- Generation
 			end
 			c_return_type.generate_function_cast (buffer, l_types, True)
 
-			buffer.put_string ("RTVF2(")
+			buffer.put_string ("RTVF(")
 			buffer.put_integer (l_rout_id)
 			buffer.put_string ({C_CONST}.comma_space)
 			buffer.put_string_literal (a_feature.feature_name)

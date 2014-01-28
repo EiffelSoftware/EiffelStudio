@@ -74,8 +74,8 @@ extern "C" {
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
 #endif
 #ifdef WORKBENCH
-	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
-		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp_wb' feature */
+	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
+		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp_wb' feature */
 #else
 	RT_LNK void (*egc_routdisp_fl)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER); /* ROUTINE `set_rout_disp_final' feature */
 #endif
@@ -195,7 +195,6 @@ extern "C" {
 	RT_LNK void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */
 	RT_LNK void (*egc_tabinit)(void);		/* E1/einit.c */
 
-	RT_LNK int32 **egc_fcall;	/* Routine id arrays indexed by feature id's */
 	RT_LNK struct rout_info *egc_forg_table;/* Routine origin/offset table */
 #else
 	RT_LNK void (**egc_edispose)(void);
@@ -217,8 +216,7 @@ extern "C" {
 	RT_LNK char  **egc_rlist;			/* List of root procedures ("class name"."feature name") */
 	RT_LNK int32 egc_ridx;				/* Index of root creation procedure */
 	RT_LNK int32 *egc_rcdt;				/* E1/einit.c */
-	RT_LNK int32 *egc_rcorigin;			/* E1/einit.c */
-	RT_LNK int32 *egc_rcoffset;			/* E1/einit.c */
+	RT_LNK int32 *egc_rcrid;			/* E1/einit.c */
 	RT_LNK int32 *egc_rcarg;			/* E1/einit.c */
 
 	RT_LNK char *egc_system_name;		/* Name of the generated system */

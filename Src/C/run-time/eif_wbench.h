@@ -48,32 +48,16 @@
 extern "C" {
 #endif
 
-RT_LNK EIF_REFERENCE_FUNCTION wfeat2(int routine_id, EIF_TYPE_INDEX dtype); /* Feature call */
-RT_LNK EIF_REFERENCE_FUNCTION wfeat2_inv(int routine_id, char *name, EIF_REFERENCE object); /* Nested feature call */
-RT_LNK long	wattr2(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
-RT_LNK long wattr2_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
-RT_LNK EIF_TYPE_INDEX wtype2_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
+RT_LNK EIF_REFERENCE_FUNCTION wfeat(int routine_id, EIF_TYPE_INDEX dtype); /* Feature call */
+RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int routine_id, char *name, EIF_REFERENCE object); /* Nested feature call */
+RT_LNK long	wattr(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
+RT_LNK long wattr_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
+RT_LNK EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
 
-
-RT_LNK EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
-RT_LNK EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
-RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object); /* Nested feature call */
-RT_LNK EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);/* Nested precompiled feature call */
-RT_LNK EIF_REFERENCE_FUNCTION wcreat(int static_type, int32 feature_id, int dyn_type); /* Creation procedure call */
-RT_LNK EIF_REFERENCE_FUNCTION wpcreat(int32 origin, int32 offset, int dyn_type);	/* Precompiled creation procedure call */
-RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
-RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object);			/* Creation call for precomp expanded types */
+RT_LNK void wexp(int routine_id, int dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
 RT_LNK EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type); /* Feature call for copy routine */ 
 RT_LNK EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type); /* Feature call for is_equal routine */ 
-RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
-RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
-RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object);				/* Nested attribute access */
-RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);				/* Nested precompiled attribute access*/
-RT_LNK EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_REFERENCE object);						/* Creation type (generic) */
-RT_LNK EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object);						/* Creation type of a precomp generic feature */
-RT_LNK EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_TYPE_INDEX dftype);						/* Creation type (generic) */
-RT_LNK EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_TYPE_INDEX dftype);						/* Creation type of a precomp generic feature */
 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */

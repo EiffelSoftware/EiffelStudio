@@ -232,7 +232,7 @@ feature -- C code generation
 					buffer.put_character (')')
 				end
 			else
-				buffer.put_string ("RTWCTT2(")
+				buffer.put_string ("RTWCTT(")
 				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
@@ -379,7 +379,7 @@ feature -- Genericity
 					buffer.put_character (',')
 				end
 			else
-				buffer.put_string ("RTWCTT2(")
+				buffer.put_string ("RTWCTT(")
 				buffer.put_integer (routine_id)
 				buffer.put_string ({C_CONST}.comma_space)
 				qualifier_creation.generate_type_id (buffer, final_mode, 0)

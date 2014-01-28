@@ -33,7 +33,6 @@ feature -- Initialization
 			create creation_server.make
 			create m_feat_tbl_server.make
 			create m_feature_server.make
-			create m_rout_id_server.make
 			create m_desc_server.make
 			create match_list_server.make
 		end
@@ -53,7 +52,6 @@ feature -- Purge of compilation files
 			ast_server.cache.wipe_out
 			m_feat_tbl_server.cache.wipe_out
 			m_feature_server.cache.wipe_out
-			m_rout_id_server.cache.wipe_out
 			m_desc_server.cache.wipe_out
 
 			--| Wipe out all cache information.
@@ -102,9 +100,6 @@ feature -- Access
 	m_feature_server: M_FEATURE_SERVER;
 			-- Server of melted feature byte code
 
-	m_rout_id_server: M_ROUT_ID_SERVER;
-			-- Server for routine id array byte code
-
 	m_desc_server: M_DESC_SERVER;
 			-- Server for class type descriptors
 
@@ -132,12 +127,11 @@ invariant
 	creation_server_not_void: creation_server /= Void
 	m_feat_tbl_server_not_void: m_feat_tbl_server /= Void
 	m_feature_server_not_void: m_feature_server /= Void
-	m_rout_id_server_not_void: m_rout_id_server /= Void
 	m_desc_server_not_void: m_desc_server /= Void
 	match_list_server_not_void: match_list_server /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

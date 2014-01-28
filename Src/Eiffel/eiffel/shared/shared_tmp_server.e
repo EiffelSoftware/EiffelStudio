@@ -78,11 +78,6 @@ feature {NONE}
 			create Result.make
 		end
 
-	Tmp_m_rout_id_server: TMP_M_ROUT_ID_SERVER
-		once
-			create Result.make
-		end
-
 	Tmp_m_desc_server: TMP_M_DESC_SERVER
 		once
 			create Result.make
@@ -99,7 +94,7 @@ feature {NONE}
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

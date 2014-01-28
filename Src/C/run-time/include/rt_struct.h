@@ -47,7 +47,6 @@ extern "C" {
 #endif
 
 #ifdef WORKBENCH
-extern int32 **ecall;					/* Updated pointer */
 extern struct rout_info *eorg_table;	/* Updated pointer */
 extern struct desc_info ***desc_tab;	/* Global descriptor table */
 
@@ -55,8 +54,6 @@ extern struct desc_info ***desc_tab;	/* Global descriptor table */
 extern unsigned char **melt;				/* Byte code array of melted eiffel features */
 extern rt_uint_ptr melt_count;				/* Size of `melt' array. */
 extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
-
-#define Routids(x)	ecall[x]	/* Routine id array */
 #endif
 
 /*

@@ -67,7 +67,6 @@ static  int     ctype_max;
 static void prepare_types (void);
 static void analyze_file (void);
 static void analyze_cnodes (void);
-static void analyze_routids (void);
 static void analyze_parents (void);
 static void analyze_cecil (void);
 static void analyze_options (void);
@@ -142,7 +141,7 @@ int main (int argc, char **argv)
 static  void    prepare_types (void)
 
 {
-	long    count, acount, i, ctype;
+	long    count, acount, i;
 	short   slen, dtype;
 	char    *dname;
 
@@ -265,34 +264,13 @@ static  void    prepare_types (void)
 
 		(void) rlong ();	/* Number of references. */
 		(void) rlong ();	/* Size of node. */
-		(void) ruint32 ();	/* Creation feature ID. */
-
-		ctype = rlong ();	/* Static ID of class. */
+		(void) ruint32 ();	/* Creation Routine ID. */
 
 			/* Read Version info if any. */
 		slen = rshort ();
 		while (slen--) {
 			(void) rchar ();
 		}
-
-		if (ctype > ctype_max)
-			ctype_max = ctype;
-
-		if (ctype >= ctype_size)
-		{
-			int old_size = ctype_size;
-			ctype_size = ctype + 256;
-			ctype_names = (char **) realloc ((char *) ctype_names, ctype_size * sizeof (char *));
-			if (ctype_names == (char **) 0) {
-				fprintf (stderr, "Out of memory\n");
-				panic ();
-			} else {
-				memset (ctype_names + old_size, 0, (ctype_size - old_size) * sizeof (char *));
-			}
-		}
-
-		ctype_names [ctype] = dname;
-
 	}
 }
 /*------------------------------------------------------------------*/
@@ -330,7 +308,6 @@ static  void    analyze_file (void)
 	print_line ();
 
 	analyze_cnodes ();
-	analyze_routids ();
 	read_byte_code ();
 	analyze_parents ();
 	analyze_options ();
@@ -345,7 +322,7 @@ static  void    analyze_file (void)
 static  void    analyze_cnodes (void)
 
 {
-	long    count, acount, pers_acount, i, ctype;
+	long    count, acount, pers_acount, i;
 	short   slen, dtype;
 	char    *dname;
 
@@ -460,11 +437,7 @@ static  void    analyze_cnodes (void)
 		fprintf (mfp,"Reference number   : %d\n", rlong ());
 		fprintf (mfp,"Node size          : %d\n", rlong ());
 
-		fprintf (mfp,"Creation id        : %d\n", ruint32 ());
-
-		ctype = rlong ();
-
-		fprintf (mfp,"Class type         : %ld\n", ctype);
+		fprintf (mfp,"Routine creation id: %d\n", ruint32 ());
 
 		fprintf (mfp,"Version            : ");
 		slen = rshort ();
@@ -479,113 +452,6 @@ static  void    analyze_cnodes (void)
 
 		print_line ();
 	}
-}
-/*------------------------------------------------------------------*/
-
-static  void    analyze_routids (void)
-
-{
-	long    class_id, asize, hsize, i, j, dtype, orig_dtype;
-	long    *rids = NULL, rid;
-	short   slen;
-	char    has_cecil;
-
-	printf ("Analyzing Routids\n");
-
-	for (;;)
-	{
-		class_id = rlong ();
-
-		if (class_id == -1)
-			break;
-
-		fprintf (mfp,"Class id   : %ld\n", class_id);
-
-		asize = rlong ();
-/*
-		fprintf (mfp,"Routine ids: %ld\n", asize);
-*/
-		if (asize < 0) {
-			panic ();
-		} else if (asize > 0) {
-			rids = (long *) malloc (asize * sizeof (long));
-			if (rids == (long *) 0) {
-				fprintf (stderr, "Out of memory\n");
-				panic ();
-			}
-		}
-
-		i = 0;
-		j = asize;
-		while (j--) {
-			rid = rlong ();
-			rids [i++] = rid;
-/*
-			fprintf (mfp,"  %5d : %d\n", i, rid);
-*/
-		}
-
-		has_cecil = rchar ();
-
-		if (has_cecil)
-		{
-			fprintf (mfp,"Has cecil  : YES\n");
-
-			hsize = rlong ();
-
-			fprintf (mfp,"Hash size  : %ld\n", hsize);
-
-			i = hsize;
-
-			while (i--)
-			{
-				fprintf (mfp,"   Name : ");
-
-				slen = rshort ();
-
-				while (slen--)
-					fprintf (mfp,"%c", rchar ());
-
-				fprintf (mfp,"\n");
-			}
-
-			rseq ((int) (hsize * sizeof (uint32)));
-		}
-		else
-		{
-			fprintf (mfp,"Has cecil  : No\n");
-		}
-
-		for (;;)
-		{
-			dtype = rlong ();
-
-			if (dtype == -1)
-				break;
-
-			orig_dtype = rlong ();
-
-			fprintf (mfp,"System [%ld].cn_routines =\n", dtype);
-			fprintf (mfp,"Routids [%ld]            =", orig_dtype);
-
-			for (i = 0; i < asize; ++i)
-			{
-				if ((i % 8) == 0)
-					fprintf (mfp, "\n  ");
-
-				fprintf (mfp, "%ld: %ld   ", i, rids [i]);
-			}
-
-			fprintf (mfp, "\n");
-		}
-
-		if (rids != (long *) 0) {
-			free ((char *) rids);
-			rids = NULL;
-		}
-	}
-
-	print_line ();
 }
 /*------------------------------------------------------------------*/
 
@@ -951,7 +817,7 @@ static void analyze_root (void)
 			fprintf (mfp, "%c", rchar());
 			++i;
 		}
-		fprintf (mfp,"\nRoot class origin: %d\n", rlong ());
+		fprintf (mfp,"\nRoot class routine ID: %d\n", rlong ());
 			/* Root type computation */
 		(void) rlong ();	/* Read dynamic type of ANY. */
 		fprintf (mfp,"Root type description: ");
@@ -964,7 +830,6 @@ static void analyze_root (void)
 			fprintf (mfp, "-1}");
 			fprintf (mfp, "\n");
 		}
-		fprintf (mfp,"Root class offset       : %d\n", rlong ());
 		fprintf (mfp,"Root class arguments    : %d\n", rlong ());
 	}
 }

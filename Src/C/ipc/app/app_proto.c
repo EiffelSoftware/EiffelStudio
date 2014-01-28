@@ -129,7 +129,7 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info);
 rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private rt_uint_ptr nb_pushed = 0;
-rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
+rt_private void dynamic_evaluation(EIF_PSTREAM s, int routine_id, int static_dtype, int is_basic_type);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, EIF_TYPE_INDEX typeid);
 rt_private void dbg_dump_rt_object (EIF_PSTREAM sp, EIF_REFERENCE obj);
 
@@ -242,10 +242,10 @@ static int curr_modify = NO_CURRMODIF;
 		}
 		dthread_restore();
 		break;
-	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=dynamic_type / arg4=is_external / arg5=is_precompiled / arg6=is_basic_type / arg7=is_static_call */
+	case DYNAMIC_EVAL: /* arg_1 = routine_id / arg2=dynamic_type / arg3=is_basic_type */
 		{
 			dthread_prepare();
-			dynamic_evaluation(sp, arg_1, arg_2, arg_3, (arg_4 >> 1) & 1, (arg_4 >> 2) & 1, (arg_4 >> 3) & 1);
+			dynamic_evaluation(sp, arg_1, arg_2, arg_3);
 			dthread_restore();
 		}
 		break;
@@ -1842,7 +1842,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 	}
 }
 
-rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
+rt_private void dynamic_evaluation (EIF_PSTREAM sp, int routine_id, int static_dtype, int is_basic_type)
 {
 	EIF_TYPED_VALUE ip;
 	int scp_pid = 0; /* SCOOP PID */
@@ -1851,7 +1851,7 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 
 	exec_recording_enabled = 0; /* Disable execution recording status */
 
-	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occurred, &ip);
+	dynamic_eval_dbg(routine_id, static_dtype, is_basic_type, previous_otop, nb_pushed, &exception_occurred, &ip);
 
 	if ((ip.type & SK_HEAD) == SK_VOID) {
 		app_send_typed_value (sp, NULL, DMP_VOID, 0);

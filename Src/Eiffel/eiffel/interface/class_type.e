@@ -1534,49 +1534,16 @@ feature -- Skeleton generation
 				buffer.put_two_character ('L', ',')
 				buffer.put_new_line
 
-				if
-					not Compilation_modes.is_precompiling and
-					not associated_class.is_precompiled
-				then
-						-- Creation feature id if any.
-					buffer.put_string ("(int32) ")
-					creation_feature := a_class.creation_feature
-					if creation_feature /= Void then
-						buffer.put_integer (creation_feature.feature_id)
-					else
-						buffer.put_integer (0)
-					end
-
-						-- Static type id
-					buffer.put_string (",(int32) ")
-					buffer.put_static_type_id (static_type_id)
+					-- Creation routine ID if any.
+				buffer.put_string ("(int32) ")
+				creation_feature := a_class.creation_feature
+				if creation_feature /= Void then
+					buffer.put_integer (creation_feature.rout_id_set.first)
 				else
-					buffer.put_string ("(int32) ")
-					creation_feature := a_class.creation_feature
-					if creation_feature /= Void then
-						r_id := creation_feature.rout_id_set.first
-						rout_info := System.rout_info_table.item (r_id)
-						buffer.put_integer (rout_info.origin)
-						buffer.put_string (",(int32) ")
-						buffer.put_integer (rout_info.offset)
-					else
-						buffer.put_string ("0,(int32) 0")
-					end
+					buffer.put_integer (0)
 				end
 				buffer.put_character (',')
 				buffer.put_new_line
-
-				if
-					not Compilation_modes.is_precompiling and
-					not associated_class.is_precompiled
-				then
-						-- Generate reference on routine id array
-					buffer.put_string ("ra")
-					buffer.put_integer (associated_class.class_id)
-				else
-					buffer.put_string ("(int32 *) 0")
-				end
-				buffer.put_character (',')
 					-- Generate cecil structure if any
 				generate_cecil (buffer)
 			end
@@ -1801,7 +1768,6 @@ feature -- Cecil generation
 	generate_cecil (buffer: GENERATION_BUFFER)
 			-- Generation of the Cecil table
 		do
-			buffer.put_new_line
 			if associated_class.has_visible then
 				buffer.put_character ('{')
 				buffer.put_string (once "(int32) ")
@@ -1814,6 +1780,7 @@ feature -- Cecil generation
 			else
 				buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 			end
+			buffer.put_new_line
 		end
 
 feature -- Byte code generation
@@ -1859,18 +1826,15 @@ feature -- Byte code generation
 				-- 8. Skeleton size
 			skeleton.make_size_byte_code (ba)
 
-				-- 9. Creation feature id if any.
+				-- 9. Creation routine id if any.
 			creation_feature := associated_class.creation_feature
 			if creation_feature /= Void then
-				ba.append_integer_32 (creation_feature.feature_id)
+				ba.append_integer_32 (creation_feature.rout_id_set.first)
 			else
 				ba.append_integer_32 (0)
 			end
 
-				-- 10. Static type id
-			ba.append_integer_32 (static_type_id - 1)
-
-				-- 11. Storable version if any
+				-- 10. Storable version if any
 			if attached associated_class.storable_version as l_version and then not l_version.is_empty then
 				ba.append_string (associated_class.storable_version)
 			else
@@ -2064,7 +2028,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -762,8 +762,6 @@ feature {NONE} -- Classic specific
 		local
 			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
-			par: INTEGER
-			rout_info: ROUT_INFO
 			l_dtype: CLASS_C
 			l_dyntype: CLASS_TYPE
 		do
@@ -776,7 +774,6 @@ feature {NONE} -- Classic specific
 				if not l_dbg_obj.is_erroneous then
 					l_dtype := l_dbg_obj.dynamic_class
 					if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
-						l_dyntype := l_dbg_obj.class_type
 						if a_feat.is_attribute then
 							l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
 							if l_dbg_val /= Void then
@@ -786,17 +783,9 @@ feature {NONE} -- Classic specific
 							Init_recv_c
 							classic_send_value
 							if last_classic_send_value_succeed then
-								if a_feat.is_external then
-									par := par + 1
-								end
+								l_dyntype := l_dbg_obj.class_type
+								send_rqst_3_integer (Rqst_dynamic_eval, a_feat.rout_id_set.first, l_dyntype.type_id - 1, 0)
 
-								if a_feat.written_class.is_precompiled then
-									par := par + 2
-									rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
-									send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, l_dyntype.type_id - 1, par)
-								else
-									send_rqst_4_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, 0, par)
-								end
 									-- Receive the Result.
 								recv_value (Current)
 								if is_exception then
@@ -1195,7 +1184,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

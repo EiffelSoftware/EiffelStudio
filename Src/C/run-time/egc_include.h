@@ -68,7 +68,6 @@ extern struct p_interface egc_fpattern_init [];
 extern void egc_einit_init (void);
 extern void egc_tabinit_init (void);
 
-extern int32 *egc_fcall_init [];
 extern struct rout_info egc_forg_table_init [];
 
 #else

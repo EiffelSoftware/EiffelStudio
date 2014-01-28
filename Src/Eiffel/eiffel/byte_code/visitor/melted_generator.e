@@ -828,7 +828,6 @@ feature {NONE} -- Visitors
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_nb_expr_address: INTEGER
 			l_pos: INTEGER
-			l_type: TYPE_A
 			l_is_in_creation_call: like is_in_creation_call
 		do
 			l_is_in_creation_call := is_in_creation_call
@@ -1896,27 +1895,18 @@ feature {NONE} -- Visitors
 			l_type := context.real_type (a_node.type)
 			l_type.make_full_type_byte_code (ba, context.context_class_type.type)
 
-			if a_node.is_precompiled then
-				ba.append_integer (a_node.rout_origin)
-				ba.append_integer (a_node.rout_offset)
-			else
-					-- Note that we use `context.current_type' because we do not adapt
-					-- `a_node.class_type' to `context.context_class_type' for the simple reasons
-					-- that `feature_id' is the one from where the agent creation is declared.
-					-- If we were to adapt it, then we would need something like `{CALL_ACCESS_B}.real_feature_id'
-					-- for a proper code generation.
-				ba.append_integer (a_node.class_type.static_type_id (context.current_type) - 1)
-					-- feature_id
-				ba.append_integer (a_node.feature_id)
-			end
-				-- is_precompiled
-			ba.append_boolean (a_node.is_precompiled)
+				-- Routine ID of the routine
+			ba.append_integer_32 (a_node.rout_id)
 				-- is_basic
 			ba.append_boolean (a_node.is_basic)
 				-- is_target_closed
 			ba.append_boolean (a_node.is_target_closed)
 				-- is_inline_agent
-			ba.append_boolean (a_node.is_inline_agent)
+			if a_node.is_inline_agent then
+				ba.append_integer_32 (a_node.class_type.static_type_id (context.current_type) - 1)
+			else
+				ba.append_integer_32 (-1)
+			end
 				-- open_count
 			if a_node.omap /= Void then
 				ba.append_integer (a_node.omap.count)

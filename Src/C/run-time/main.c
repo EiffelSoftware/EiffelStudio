@@ -237,17 +237,6 @@ doc:	</attribute>
 rt_public EIF_TYPE_INDEX fcount;
 
 /*
-doc:	<attribute name="ecall" return_type="int32 **" export="shared">
-doc:		<summary>Routine ID arrays. Used for workbench mode only. Array of routine IDs per class indexed by their feature_id.</summary>
-doc:		<access>Read/Write once</access>
-doc:		<indexing>First index is by class_id, second by feature_id</indexing>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since initialized in `main.c', updated in `update.c'.</synchronization>
-doc:	</attribute>
-*/
-rt_shared int32 **ecall;
-
-/*
 doc:	<attribute name="eorg_table" return_type="struct rout_info *" export="shared">
 doc:		<summary>Routine origin/offset table.</summary>
 doc:		<access>Read/Write once</access>
@@ -926,7 +915,6 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */
 	esystem = egc_fsystem;
-	ecall = egc_fcall;
 	eif_par_table = egc_partab;
 	eif_par_table_size = egc_partab_size;
 	eorg_table = egc_forg_table;

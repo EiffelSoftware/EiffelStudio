@@ -184,7 +184,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
 #define RTLNTY(x)			eif_type_malloc(x)
 #define RTLNSMART(x)		smart_emalloc(x)
-#define RTLNRW(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
+#define RTLNRW(a,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)
 #define RTLNSP2(t,f,n,e,b)	special_malloc(f,t,n,e,b)
@@ -1574,51 +1574,26 @@ RT_LNK void eif_exit_eiffel_code(void);
 #ifdef WORKBENCH
 
 /* Macros used for feature call and various accesses to objects.
- *  RTWF(x,y,z) is a feature call
- *  RTWPF(x,y,z) is a precompiled feature call
- *  RTVF(x,y,z,t) is a nested feature call (dot expression)
- *  RTVPF(x,y,z,t) is a nested precompiled feature call (dot expression)
- *  RTWC(x,y,z) is a creation procedure call
- *  RTWPC(x,y,z) is a precompiled creation procedure call
- *  RTWA(x,y,z) is the access to an attribute
- *  RTWPA(x,y,z) is the access to a precompiled attribute
- *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
- *  RTVPA(x,y,z,t) is a nested access to a precompiled attribute (dot expr)
- *  RTWT(x,y,z) fetches the creation type
- *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
- *  RTWCT(x,y,z) fetches the creation type of a generic features
- *  RTWPCT(st,x,y,z) fetches the creation type of a precompiled generic feature
- *  RTWCTT(x,y,z) same as RTWCT but takes dftype instead of object
- *  RTWPCTT(x,y,z) same as RTWPCT but takes dftype instead of object
+ *  RTWF(rid,dtype) is a feature call
+ *  RTVF(rid,name,obj) is a nested feature call (dot expression)
+ *  RTWC(rid,dtype) is a creation procedure call
+ *  RTWA(rid,dtype) is the access to an attribute
+ *  RTVA(rid,name,obj) is a nested access to an attribute (dot expression)
+ *  RTWCT(rid,dtype,dftype) fetches the creation type of a generic features
+ *  RTWCTT(rid,dftype) same as RTWCT but takes dftype and dtype is computed from dftype
  *  RTWPP(x) returns the feature address ($ or agent operator) of id x. The ids are assigned int ADDRESS_TABLE.
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
-#define RTWF(x,y,z)			wfeat(x,y,z)
-#define RTWPF(x,y,z)		wpfeat(x,y,z)
-#define RTVF(x,y,z,t)		wfeat_inv(x,y,z,t)
-#define RTVPF(x,y,z,t)		wpfeat_inv(x,y,z,t)
-#define RTWC(x,y,z)		wcreat(x,y,z)
-#define RTWPC(x,y,z)		wpcreat(x,y,z)
-#define RTWA(x,y,z)			wattr(x,y,z)
-#define RTWPA(x,y,z)		wpattr(x,y,z)
-#define RTVA(x,y,z,t)		wattr_inv(x,y,z,t)
-#define RTVPA(x,y,z,t)		wpattr_inv(x,y,z,t)
-#define RTWCT(x,y,z)		wtype_gen(x,y,z)
-#define RTWPCT(st,x,y,z)	wptype_gen(st,x,y,z)
-#define RTWCTT(x,y,z)		wttype_gen(x,y,z)
-#define RTWPCTT(st,x,y,z)	wtptype_gen(st,x,y,z)
 
+#define RTWF(rid,dtype)			(nstcall = 0, wfeat(rid,dtype))
+#define RTVF(rid,name,obj)		(nstcall = 1, wfeat_inv(rid,name,obj))
+#define RTWC(rid,dtype)			(nstcall =-1, wfeat(rid,dtype))
+#define RTWA(rid,dtype)			wattr(rid,dtype)
+#define RTVA(rid,name,obj)		wattr_inv(rid,name,obj)
+#define RTWCT(rid,dtype,dftype)	wtype_gen(rid,dtype,dftype)
+#define RTWCTT(rid,dftype)		wtype_gen(rid,To_dtype(dftype),dftype)
 #define RTWPP(x)			(egc_address_table[x])
 #define RTWO(x)
-
-#define RTWF2(rid,dtype)			(nstcall = 0, wfeat2(rid,dtype))
-#define RTVF2(rid,name,obj)			(nstcall = 1, wfeat2_inv(rid,name,obj))
-#define RTWC2(rid,dtype)			(nstcall =-1, wfeat2(rid,dtype))
-#define RTWA2(rid,dtype)			wattr2(rid,dtype)
-#define RTVA2(rid,name,obj)			wattr2_inv(rid,name,obj)
-#define RTWCT2(rid,dtype,dftype)	wtype2_gen(rid,dtype,dftype)
-#define RTWCTT2(rid,dftype)			wtype2_gen(rid,To_dtype(dftype),dftype)
-
 
 #define WDBG(x,y)			eif_is_debug(x,y)				/* Debug option */
 

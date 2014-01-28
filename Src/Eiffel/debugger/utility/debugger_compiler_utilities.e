@@ -343,85 +343,16 @@ feature -- Feature access
 			end
 		end
 
-	frozen agent_feature_for_class_and_type_id (ct_id, fe_id: INTEGER): E_FEATURE
-			-- Agent feature related to `ct_id' and `fe_id'
+	frozen agent_feature_for_routine_id (rid: INTEGER): E_FEATURE
+			-- Agent feature related to `ct_id' and `r_id'
 		require
-			id_valid: ct_id > 0 and fe_id > 0
+			id_valid: rid > 0
 		local
-			l_ct: CLASS_TYPE
-			l_cc: CLASS_C
 			l_fi: FEATURE_I
 		do
-			l_ct := eiffel_system.system.class_type_of_static_type_id (ct_id)
-			if l_ct /= Void then
-				l_cc := l_ct.associated_class
-				if l_cc /= Void and then fe_id /= 0 then
-					check is_not_is_precompiled: not l_cc.is_precompiled end
-					if attached {EIFFEL_CLASS_C} l_cc as l_ecc then
-						Result := l_ecc.feature_with_feature_id (fe_id)
-						if Result = Void then
-							l_fi := l_ecc.inline_agent_of_id (fe_id)
-							if l_fi /= Void then
-									--| Test l_fi.is_fake_inline_agent to deal with agent on attribute
-								Result := l_fi.api_feature (l_ecc.class_id)
-							end
-						end
-					end
-				end
-			end
-		end
-
-	frozen agent_feature_for_origin_and_offset (a_orig, a_offset: INTEGER): E_FEATURE
-			-- Agent feature related to `a_orig' and `a_offset'
-		require
-			id_valid: a_orig > 0 and a_offset > 0
-		local
-			l_ct: CLASS_TYPE
-			l_cc: CLASS_C
-			l_fi: FEATURE_I
-		do
-			l_ct := eiffel_system.system.class_type_of_static_type_id (a_orig)
-			if l_ct /= Void then
-				l_cc := l_ct.associated_class
-				if l_cc /= Void then
-					check is_precompiled: l_cc.is_precompiled end
-					if attached {EIFFEL_CLASS_C} l_cc as l_ecc then
-						l_fi := feature_i_for_class_and_offset (l_cc, a_offset)
-						if l_fi /= Void then
-							Result := l_fi.api_feature (l_ecc.class_id)
-						end
-					end
-				end
-			end
-		end
-
-	feature_i_for_class_and_offset (a_class: CLASS_C; a_offset: INTEGER): FEATURE_I
-			-- Feature associated with `a_class' and `a_offset'
-		require
-			a_class_attached: a_class /= Void
-			a_class_precompiled: a_class.is_precompiled
-		local
-			ri_table: ROUT_INFO_TABLE
-			rid: INTEGER
-		do
-			ri_table := eiffel_system.system.rout_info_table
-			from
-				ri_table.start
-			until
-				ri_table.after or rid /= 0
-			loop
-				if attached ri_table.item_for_iteration as ri then
-					if
-						ri.offset = a_offset and
-						ri.origin = a_class.class_id
-					then
-						rid := ri_table.key_for_iteration
-					end
-				end
-				ri_table.forth
-			end
-			if rid /= 0 then
-				Result := a_class.feature_of_rout_id (rid)
+			l_fi := eiffel_system.system.seed_of_routine_id (rid)
+			if l_fi /= Void then
+				Result := l_fi.api_feature (l_fi.origin_class_id)
 			end
 		end
 
@@ -621,7 +552,7 @@ feature -- Status report
 			-- Invariant's feature name
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

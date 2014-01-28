@@ -25,21 +25,17 @@ feature -- Visitor
 
 feature  -- Initialization
 
-	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
+	init (cl_type: like class_type; f: FEATURE_I;
 		  r_type : like type; args : TUPLE_CONST_B;
 		  omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
-		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN)
+		  a_is_inline_agent, a_is_target_closed, a_is_basic: BOOLEAN)
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
-			valid_id: cl_id /= 0
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
-		local
-			l_rout_info: ROUT_INFO
 		do
 			class_type := cl_type
-			class_id := cl_id
 			if System.il_generation then
 				origin_class_id := f.origin_class_id
 				feature_id := f.origin_feature_id
@@ -54,24 +50,17 @@ feature  -- Initialization
 			open_positions := omap_bc
 			omap := a_omap
 
-			System.address_table.record_agent (cl_id, feature_id, a_is_target_closed, a_is_inline_agent, a_omap)
+			System.address_table.record_agent (class_type.base_class.class_id, feature_id, a_is_target_closed, a_is_inline_agent, a_omap)
 
 			is_inline_agent := a_is_inline_agent
 			is_target_closed := a_is_target_closed
-			is_precompiled := a_is_precompiled
 			is_basic := a_is_basic
-
-			l_rout_info := system.rout_info_table.item (f.rout_id_set.first)
-			if l_rout_info /= Void then
-				rout_origin := l_rout_info.origin
-				rout_offset := l_rout_info.offset
-			end
 		end
 
-	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
+	set_ids (cl_type : like class_type; o_cl_id, r_id, f_id: INTEGER;
 			 r_type : like type; args : TUPLE_CONST_B;
 			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
-			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN)
+			 a_is_inline_agent, a_is_target_closed, a_is_basic: BOOLEAN)
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -79,19 +68,15 @@ feature  -- Initialization
 			valid_type: r_type /= Void
 		do
 			class_type := cl_type
-			class_id := cl_id
 			origin_class_id := o_cl_id
 			rout_id := r_id
 			feature_id := f_id
-			rout_origin := r_origin
-			rout_offset := r_offset
 			type := r_type
 			arguments := args
 			open_positions := omap_bc
 			omap := a_omap
 			is_inline_agent := a_is_inline_agent
 			is_target_closed := a_is_target_closed
-			is_precompiled := a_is_precompile
 			is_basic := a_is_basic
 		end
 
@@ -106,12 +91,6 @@ feature -- Attributes
 
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
-
-	rout_offset: INTEGER
-			-- Routine offset of the addressed feature
-
-	rout_origin: INTEGER
-			-- Routine origin of the addressed feature
 
 	origin_class_id: INTEGER
 			-- Class ID which defines current feature.
@@ -139,9 +118,6 @@ feature -- Attributes
 
 	is_basic: BOOLEAN
 			-- Is the target type of basic
-
-	is_precompiled: BOOLEAN
-			-- Is the target type precompiled
 
 feature -- Status report
 
@@ -195,8 +171,8 @@ feature -- Status report
 				arguments_enl := arguments.enlarged
 			end
 
-			Result.set_ids (class_type, class_id, origin_class_id, rout_id, feature_id, rout_origin, rout_offset,
-							type, arguments_enl, omap_enl, omap, is_inline_agent, is_target_closed, is_precompiled,
+			Result.set_ids (class_type, origin_class_id, rout_id, feature_id,
+							type, arguments_enl, omap_enl, omap, is_inline_agent, is_target_closed,
 							is_basic)
 		end
 
@@ -210,7 +186,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

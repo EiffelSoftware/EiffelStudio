@@ -41,12 +41,10 @@ feature -- Initialization
 			calc_rout_addr := other.calc_rout_addr
 			closed_operands := other.closed_operands
 			operands := other.operands
-			class_id := other.class_id
-			feature_id := other.feature_id
-			is_precompiled := other.is_precompiled
+			routine_id := other.routine_id
 			is_basic := other.is_basic
 			is_target_closed := other.is_target_closed
-			is_inline_agent := other.is_inline_agent
+			written_type_id_inline_agent := other.written_type_id_inline_agent
 			open_count := other.open_count
 		end
 
@@ -74,9 +72,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value.
 		do
-			Result := rout_disp.hash_code.bit_xor (
-				class_id.hash_code).bit_xor (
-					feature_id.hash_code)
+			Result := rout_disp.hash_code.bit_xor (routine_id.hash_code)
 		end
 
 	precondition (args: like operands): BOOLEAN
@@ -118,8 +114,8 @@ feature -- Status report
 				and then operands ~ other.operands
 				and then open_map ~ other.open_map
 				and then (rout_disp = other.rout_disp)
-				and then (class_id = other.class_id)
-				and then (feature_id = other.feature_id)
+				and then (routine_id = other.routine_id)
+				and then (written_type_id_inline_agent = other.written_type_id_inline_agent)
 				and then (encaps_rout_disp = other.encaps_rout_disp)
 				and then (calc_rout_addr = other.calc_rout_addr)
 		end
@@ -311,27 +307,23 @@ feature {ROUTINE} -- Implementation
 	frozen encaps_rout_disp: POINTER
 			-- Eiffel routine dispatcher
 
-	frozen class_id: INTEGER
-
-	frozen feature_id: INTEGER
-
-	frozen is_precompiled: BOOLEAN
+	frozen routine_id: INTEGER
 
 	frozen is_basic: BOOLEAN
 
-	frozen is_inline_agent: BOOLEAN
+	frozen written_type_id_inline_agent: INTEGER
 
 	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER;
-						  a_class_id, a_feature_id: INTEGER; a_open_map: like open_map;
-						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN;
+						  a_routine_id: INTEGER; a_open_map: like open_map;
+						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
 						  a_closed_operands: TUPLE; a_open_count: INTEGER)
 			-- Initialize object.
 		require
 			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
-			set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr, a_class_id, a_feature_id,
-							   a_open_map, a_is_precompiled, a_is_basic, a_is_target_closed,
-							   a_is_inline_agent, a_closed_operands, a_open_count)
+			set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr, a_routine_id,
+							   a_open_map, a_is_basic, a_is_target_closed,
+							   a_written_type_id_inline_agent, a_closed_operands, a_open_count)
 		end
 
 	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
@@ -347,37 +339,32 @@ feature {ROUTINE} -- Implementation
 		end
 
 	frozen set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER;
-						  	  a_class_id, a_feature_id: INTEGER; a_open_map: like open_map;
-	 						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN;
+						  	  a_routine_id: INTEGER; a_open_map: like open_map;
+	 						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
 							  a_closed_operands: TUPLE; a_open_count: INTEGER)
 			-- Initialize object.
 		require
-			a_class_id_valid: a_class_id > -1
-			a_feature_id_valid: a_feature_id > -1
+			a_routine_id_valid: a_routine_id > -1
 		do
 			rout_disp := a_rout_disp
 			encaps_rout_disp := a_encaps_rout_disp
 			calc_rout_addr := a_calc_rout_addr
-			class_id := a_class_id
-			feature_id := a_feature_id
+			routine_id := a_routine_id
 			open_map := a_open_map
-			is_precompiled := a_is_precompiled
 			is_basic := a_is_basic
 			is_target_closed := a_is_target_closed
-			is_inline_agent := a_is_inline_agent
+			written_type_id_inline_agent := a_written_type_id_inline_agent
 			closed_operands := a_closed_operands
 			open_count := a_open_count
 		ensure
 			rout_disp_set: rout_disp = a_rout_disp
 			encaps_rout_disp_set: encaps_rout_disp = a_encaps_rout_disp
 			calc_rout_addr_set: calc_rout_addr = a_calc_rout_addr
-			class_id_set: class_id = a_class_id
-			feature_id_set: feature_id = a_feature_id
+			routine_id_set: routine_id = a_routine_id
 			open_map_set: open_map = a_open_map
 			is_target_closed_set: is_target_closed = a_is_target_closed
-			is_precompiled_set: is_precompiled = a_is_precompiled
 			is_basic_set: is_basic = a_is_basic
-			is_inline_agent_set: is_inline_agent = a_is_inline_agent
+			written_type_id_inline_agent_set: written_type_id_inline_agent = a_written_type_id_inline_agent
 			closed_operands_set: closed_operands = a_closed_operands
 			open_count_set: open_count = a_open_count
 		end
@@ -445,7 +432,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

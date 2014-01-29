@@ -4,6 +4,7 @@ note
 		algorithms. Source can be a file or an array of character, the buffer or
 		file must be the results of a previous zlib compression.
 	]"
+
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -189,7 +190,6 @@ feature {NONE}
 					zstream.set_available_output (area.count)
 					if zstream.available_input = 0 and then attached file as l_file and then not l_file.end_of_file then
 						from
-							l_buffer.clear_all
 							resize_array (l_buffer, 1, buffer_size)
 							idx := 1
 						until

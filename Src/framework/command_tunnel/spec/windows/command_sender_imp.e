@@ -121,12 +121,12 @@ feature {NONE} -- Implementation
 			nb: INTEGER
 			l_string: STRING
 			l_result: BOOLEAN
-			l_hwnd_process_id: POINTER
-			l_pointer: POINTER
+			l_hwnd_process_id: INTEGER
+			l_thread_id: INTEGER
 		do
 			Result := True
-			l_pointer := cwin_get_window_thread_process_id (hwnd, $l_hwnd_process_id)
-			if l_hwnd_process_id.to_integer_32 = last_process then
+			l_thread_id := cwin_get_window_thread_process_id (hwnd, $l_hwnd_process_id)
+			if l_hwnd_process_id = last_process then
 				l_length := cwin_get_window_text_length (hwnd)
 				if l_length > 0 then
 					l_length := l_length + 1

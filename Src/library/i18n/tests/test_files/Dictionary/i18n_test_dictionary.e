@@ -52,12 +52,12 @@ feature {NONE} -- Initialization
 			-- Creation procedure.
 		do
 			set_current_folder(t,plural_form,datalength,seed)
-			if current_folder /= Void then
+			if attached current_folder as l_current_folder then
 				data_generation(t,datalength,seed)
 				data_query(t,datalength,seed)
 				data_get(t,datalength,seed)
-				if not current_folder.is_closed then
-					current_folder.close
+				if not l_current_folder.is_closed then
+					l_current_folder.close
 				end
 			else
 				assert ("current folder not set", False)
@@ -114,8 +114,6 @@ feature {NONE}	-- Data generation
 	data_generation(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			-- generate array of `I18N_DICTIONARY_ENTRY' and fill it in `t'
 			-- fill 't' with datalength of `I18N_DICTIONARY_ENTRY'
-		require
-			current_folder_set: current_folder /= Void
 		local
 			entry:I18N_DICTIONARY_ENTRY
 			random:RANDOM
@@ -126,64 +124,66 @@ feature {NONE}	-- Data generation
 			l_name, l_generated_name: STRING
 			l_fn: STRING
 		do
-			l_fn := "data_file"
-			create random.set_seed (seed)
-			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
-			create file.make_create_read_write (l_generated_name)
-			from
-				i:=1
-				random.start
-			until
-				i>datalength
-			loop
-				--generate a `entry' for its first three items
-				singular:=random.item.out
-				random.forth
-				translated_singular:=random.item.out
-				random.forth
-				original_plural:=random.item.out
-				create entry.make_with_plural (singular, translated_singular, original_plural)
+			if attached current_folder as l_current_folder then
+				l_fn := "data_file"
+				create random.set_seed (seed)
+				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				create file.make_create_read_write (l_generated_name)
+				from
+					i:=1
+					random.start
+				until
+					i>datalength
+				loop
+					--generate a `entry' for its first three items
+					singular:=random.item.out
+					random.forth
+					translated_singular:=random.item.out
+					random.forth
+					original_plural:=random.item.out
+					create entry.make_with_plural (singular, translated_singular, original_plural)
 
-				--fill a `entry' with plural translations
-				-- are added by hand!
+					--fill a `entry' with plural translations
+					-- are added by hand!
 
-				if attached entry.plural_translations as l_trans then
+					if attached entry.plural_translations as l_trans then
+						random.forth
+						l_trans.enter (random.item.out, 0) -- plural translation 0
+						random.forth
+						l_trans.enter (random.item.out, 1) -- plural translation 1
+						random.forth
+						l_trans.enter (random.item.out, 2) -- plural translation 2
+						random.forth
+						l_trans.enter (random.item.out, 3) -- plural translation 3
+					end
+
+
+					--put `entry' in datastructure
+					t.extend (entry)
+
+					-- fill the `file' with the entry
+					if attached entry.original_plural as l_plu and then attached entry.plural_translations as l_trans then
+						file.put_string ("entry "+i.out+": %N%
+										 %original_singular: "+entry.original_singular.out+"%N%
+										 %original_plural: "+l_plu.out+"%N%
+										 %singular_translation: "+entry.singular_translation.out+"%N%
+										 %plural_translations: (0) "+l_trans.item (0)+
+										 " (1) "+l_trans.item (1)+
+										 " (2) "+l_trans.item (2)+
+										 " (3) "+l_trans.item (3)+"%N")
+					end
+
+					-- to continue the loop
+					i:=i+1
 					random.forth
-					l_trans.enter (random.item.out, 0) -- plural translation 0
-					random.forth
-					l_trans.enter (random.item.out, 1) -- plural translation 1
-					random.forth
-					l_trans.enter (random.item.out, 2) -- plural translation 2
-					random.forth
-					l_trans.enter (random.item.out, 3) -- plural translation 3
 				end
+				io.put_string ("data generation is finished")
+				io.put_new_line
+				file.close
 
-
-				--put `entry' in datastructure
-				t.extend (entry)
-
-				-- fill the `file' with the entry
-				if attached entry.original_plural as l_plu and then attached entry.plural_translations as l_trans then
-					file.put_string ("entry "+i.out+": %N%
-									 %original_singular: "+entry.original_singular.out+"%N%
-									 %original_plural: "+l_plu.out+"%N%
-									 %singular_translation: "+entry.singular_translation.out+"%N%
-									 %plural_translations: (0) "+l_trans.item (0)+
-									 " (1) "+l_trans.item (1)+
-									 " (2) "+l_trans.item (2)+
-									 " (3) "+l_trans.item (3)+"%N")
-				end
-
-				-- to continue the loop
-				i:=i+1
-				random.forth
+				l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+				assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 			end
-			io.put_string ("data generation is finished")
-			io.put_new_line
-			file.close
-
-			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
-			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 		end
 
 
@@ -194,8 +194,6 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				-- to store the data in `data_generation' then use it here to check
 				-- use `random' with another `seed' to check whether they are not in `t'
 				-- the data_file could also be used, not try it yet
-		require
-			current_folder_set: current_folder /= Void
 		local
 			i,j: INTEGER
 			singular: READABLE_STRING_GENERAL
@@ -206,105 +204,107 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			l_name, l_generated_name: STRING
 			l_fn: STRING
 		do
-			l_fn := "query_yes_file"
-			create random.set_seed (seed)
-			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
-			create output_file.make_create_read_write (l_generated_name)
-			from
-				i:=1
-				random.start
-			until
-				i > datalength
-			loop
-				singular:=random.item.out
-				random.forth
-				translated_singular:=random.item.out
-				random.forth
-				original_plural:=random.item.out
-				output_file.put_string ("query "+i.out+": %N")
-				if t.has (singular) then
-					output_file.put_string ("data structure has("+singular.out+")%N")
-				else
-					output_file.put_string ("data structure do not has("+singular.out+")%N")
-				end
-
-				-- `plural_number'>=0
-
+			if attached current_folder as l_current_folder then
+				l_fn := "query_yes_file"
+				create random.set_seed (seed)
+				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				create output_file.make_create_read_write (l_generated_name)
 				from
-					j:=0
+					i:=1
+					random.start
 				until
-					j>10
+					i > datalength
 				loop
-					if t.has_plural (singular,original_plural, j.as_integer_32) then
-						output_file.put_string ("data structure has_plural with plural_number: "+j.out+"%N")
+					singular:=random.item.out
+					random.forth
+					translated_singular:=random.item.out
+					random.forth
+					original_plural:=random.item.out
+					output_file.put_string ("query "+i.out+": %N")
+					if t.has (singular) then
+						output_file.put_string ("data structure has("+singular.out+")%N")
 					else
-						output_file.put_string ("data structure do not has_plural with plural_number: "+j.out+"%N")
+						output_file.put_string ("data structure do not has("+singular.out+")%N")
 					end
-					j:=j+1
-				end
 
-				-- to skip the four elements in plural translations
-				random.forth
-				random.forth
-				random.forth
-				random.forth
+					-- `plural_number'>=0
+
+					from
+						j:=0
+					until
+						j>10
+					loop
+						if t.has_plural (singular,original_plural, j.as_integer_32) then
+							output_file.put_string ("data structure has_plural with plural_number: "+j.out+"%N")
+						else
+							output_file.put_string ("data structure do not has_plural with plural_number: "+j.out+"%N")
+						end
+						j:=j+1
+					end
+
+					-- to skip the four elements in plural translations
+					random.forth
+					random.forth
+					random.forth
+					random.forth
+
+					-- to continue the loop
+					random.forth
+					i:=i+1
+				end
+				output_file.close
+				l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+				assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
+
+				-- query with its non-existent elems
+
+				l_fn := "query_non_file"
+				create random.set_seed (seed+1)
+				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				create output_file.make_create_read_write (l_generated_name)
+				from
+					i:=1
+					random.start
+				until
+					i > datalength
+				loop
+					singular:=random.item.out
+					random.forth
+					translated_singular:=random.item.out
+					random.forth
+					original_plural:=random.item.out
+					output_file.put_string ("query "+i.out+": %N")
+					if t.has (singular) then
+						output_file.put_string ("data structure has("+singular.out+")%N")
+					else
+						output_file.put_string ("data structure do not has("+singular.out+")%N")
+					end
+
+
+					-- `plural_number'>=0
+
+					from
+						j:=0
+					until
+						j>10
+					loop
+						if t.has_plural (singular,original_plural, j.as_integer_32) then
+							output_file.put_string ("data structure has_plural with plural_number: "+j.out+"%N")
+						else
+							output_file.put_string ("data structure do not has_plural with plural_number: "+j.out+"%N")
+						end
+						j:=j+1
+					end
 
 				-- to continue the loop
-				random.forth
-				i:=i+1
-			end
-			output_file.close
-			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
-			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
-
-			-- query with its non-existent elems
-
-			l_fn := "query_non_file"
-			create random.set_seed (seed+1)
-			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
-			create output_file.make_create_read_write (l_generated_name)
-			from
-				i:=1
-				random.start
-			until
-				i > datalength
-			loop
-				singular:=random.item.out
-				random.forth
-				translated_singular:=random.item.out
-				random.forth
-				original_plural:=random.item.out
-				output_file.put_string ("query "+i.out+": %N")
-				if t.has (singular) then
-					output_file.put_string ("data structure has("+singular.out+")%N")
-				else
-					output_file.put_string ("data structure do not has("+singular.out+")%N")
+					random.forth
+					i:=i+1
 				end
-
-
-				-- `plural_number'>=0
-
-				from
-					j:=0
-				until
-					j>10
-				loop
-					if t.has_plural (singular,original_plural, j.as_integer_32) then
-						output_file.put_string ("data structure has_plural with plural_number: "+j.out+"%N")
-					else
-						output_file.put_string ("data structure do not has_plural with plural_number: "+j.out+"%N")
-					end
-					j:=j+1
-				end
-
-			-- to continue the loop
-				random.forth
-				i:=i+1
+				output_file.close
+				l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+				assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
+				io.put_string ("data query is finished%N")
 			end
-			output_file.close
-			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
-			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
-			io.put_string ("data query is finished%N")
 		end
 
 feature {NONE} -- Data access
@@ -315,8 +315,6 @@ feature {NONE} -- Data access
 				-- use 'random'  with another `seed' get nothing out
 				-- again `linked_list' to store the data in `data_generation' could be comfortable
 				-- the data_file could also be used, not try it yet
-		require
-			current_folder_set: current_folder /= Void
 		local
 			i,j: INTEGER
 			singular: READABLE_STRING_GENERAL
@@ -327,124 +325,126 @@ feature {NONE} -- Data access
 			l_name, l_generated_name: STRING
 			l_fn: STRING
 		do
-			-- get data with its existent elems
-			l_fn := "get_data_file"
-			create random.set_seed (seed)
-			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
-			create output_file.make_create_read_write (l_generated_name)
-			from
-				i:=1
-				random.start
-			until
-				i > datalength
-			loop
-				singular:=random.item.out
-				random.forth
-				translated_singular:=random.item.out
-				random.forth
-				original_plural:=random.item.out
-				output_file.put_string ("get data iteration " + i.out + ": " + "%N")
-
-				if attached t.singular (singular) as l_singular then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
-				else
-					output_file.put_string ("not has(" + singular.as_string_8 + "): "+ "%N")
-				end
-
-
-				-- i think `plural_number' could be 0,1,2,3
-				-- or 1 2 3 4, i do not know, try them all
-				-- actually plural_number >=0
+			if attached current_folder as l_current_folder then
+				-- get data with its existent elems
+				l_fn := "get_data_file"
+				create random.set_seed (seed)
+				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				create output_file.make_create_read_write (l_generated_name)
 				from
-					j:=0
+					i:=1
+					random.start
 				until
-					j>10
+					i > datalength
 				loop
-					if attached t.plural (singular,original_plural, j) as l_plural then
-						output_file.put_string ("get_plural (" + singular.as_string_8 + ","
-												+ original_plural.as_string_8 + "," + j.out +"): "
-												+ l_plural +"%N")
+					singular:=random.item.out
+					random.forth
+					translated_singular:=random.item.out
+					random.forth
+					original_plural:=random.item.out
+					output_file.put_string ("get data iteration " + i.out + ": " + "%N")
 
+					if attached t.singular (singular) as l_singular then
+						output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
 					else
-
-						output_file.put_string (" not has_plural (" + singular.as_string_8 + ","
-												+ original_plural.as_string_8 + "," + j.out +") %N ")
+						output_file.put_string ("not has(" + singular.as_string_8 + "): "+ "%N")
 					end
-					j:=j+1
-				end
 
-				-- to skip the four elements in plural translations
-				random.forth
-				random.forth
-				random.forth
-				random.forth
+
+					-- i think `plural_number' could be 0,1,2,3
+					-- or 1 2 3 4, i do not know, try them all
+					-- actually plural_number >=0
+					from
+						j:=0
+					until
+						j>10
+					loop
+						if attached t.plural (singular,original_plural, j) as l_plural then
+							output_file.put_string ("get_plural (" + singular.as_string_8 + ","
+													+ original_plural.as_string_8 + "," + j.out +"): "
+													+ l_plural +"%N")
+
+						else
+
+							output_file.put_string (" not has_plural (" + singular.as_string_8 + ","
+													+ original_plural.as_string_8 + "," + j.out +") %N ")
+						end
+						j:=j+1
+					end
+
+					-- to skip the four elements in plural translations
+					random.forth
+					random.forth
+					random.forth
+					random.forth
+
+					-- to continue the loop
+					random.forth
+					i:=i+1
+				end
+				output_file.close
+
+				l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+				assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
+
+				-- get data  with its non-existent elems
+				-- actually we could only get data with its existence
+
+				l_fn := "get_data_non_file"
+				create random.set_seed (seed+1)
+				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				create output_file.make_create_read_write (l_generated_name)
+				from
+					i:=1
+					random.start
+				until
+					i > datalength
+				loop
+					singular:=random.item.out
+					random.forth
+					translated_singular:=random.item.out
+					random.forth
+					original_plural:=random.item.out
+					output_file.put_string ("get_data_iteration " + i.out + ": " + "%N")
+
+
+					if attached t.singular (singular) as l_singular then
+						output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
+					else
+						output_file.put_string (" not has_singular(" + singular.as_string_8 + ") %N ")
+					end
+
+					-- i think `plural_number' could be 0,1,2,3
+					-- or 1 2 3 4, i do not know, try them all
+					-- actually plural_number >=0
+					from
+						j:=0
+					until
+						j>10
+					loop
+						if attached t.plural (singular,original_plural, j) as l_plural then
+							output_file.put_string ("get_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +"): "
+							+ l_plural +"%N")
+
+						else
+
+							output_file.put_string (" not has_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +")%N")
+
+						end
+						j:=j+1
+					end
 
 				-- to continue the loop
-				random.forth
-				i:=i+1
-			end
-			output_file.close
-
-			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
-			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
-
-			-- get data  with its non-existent elems
-			-- actually we could only get data with its existence
-
-			l_fn := "get_data_non_file"
-			create random.set_seed (seed+1)
-			l_generated_name := current_folder.name+Operating_environment.Directory_separator.out+l_fn
-			create output_file.make_create_read_write (l_generated_name)
-			from
-				i:=1
-				random.start
-			until
-				i > datalength
-			loop
-				singular:=random.item.out
-				random.forth
-				translated_singular:=random.item.out
-				random.forth
-				original_plural:=random.item.out
-				output_file.put_string ("get_data_iteration " + i.out + ": " + "%N")
-
-
-				if attached t.singular (singular) as l_singular then
-					output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
-				else
-					output_file.put_string (" not has_singular(" + singular.as_string_8 + ") %N ")
+					random.forth
+					i:=i+1
 				end
+				output_file.close
 
-				-- i think `plural_number' could be 0,1,2,3
-				-- or 1 2 3 4, i do not know, try them all
-				-- actually plural_number >=0
-				from
-					j:=0
-				until
-					j>10
-				loop
-					if attached t.plural (singular,original_plural, j) as l_plural then
-						output_file.put_string ("get_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +"): "
-						+ l_plural +"%N")
+				l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
+				assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
 
-					else
-
-						output_file.put_string (" not has_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +")%N")
-
-					end
-					j:=j+1
-				end
-
-			-- to continue the loop
-				random.forth
-				i:=i+1
+				io.put_string ("data_get is finished")
 			end
-			output_file.close
-
-			l_name := result_file_name (t, attr_plural_form, datalength, seed, l_fn)
-			assert ("Output does not match!", has_same_content_as_path (l_name, l_generated_name))
-
-			io.put_string ("data_get is finished")
 		end
 feature {NONE} -- access
 	attr_plural_form: INTEGER

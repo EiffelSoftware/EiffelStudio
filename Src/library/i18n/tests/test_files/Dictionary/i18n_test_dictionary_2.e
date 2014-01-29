@@ -17,6 +17,9 @@ inherit
 		end
 
 	EQA_SYSTEM_TEST_SET
+		redefine
+			on_prepare
+		end
 
 	I18N_TEST_UTILITIES
 		undefine
@@ -363,16 +366,24 @@ feature {NONE} -- Data access
 			end
 		end
 
+feature {NONE} -- Events
+
+	on_prepare
+			-- Called when `on_prepare_frozen' is called.
+		do
+			create ods.make
+		end
+
 feature {NONE} -- access
 
-	ods: detachable LINKED_LIST [I18N_DICTIONARY_ENTRY] note option: stable attribute end
+	ods: LINKED_LIST [I18N_DICTIONARY_ENTRY] note option: stable attribute end
 			--original_data_set
 
 	faults_counter: INTEGER;
 
 note
 	library: "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

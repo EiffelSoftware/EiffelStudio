@@ -10,9 +10,21 @@ class
 inherit
 
 	MEMORY_STRUCTURE
+		rename
+			make as memory_make
+		end
 
 create
 	make
+
+feature -- Initialization
+	make
+		do
+			memory_make
+			c_set_zalloc (item, {ZLIB_CONSTANTS}.Z_NULL)
+			c_set_zfree (item, {ZLIB_CONSTANTS}.Z_NULL)
+			c_set_opaque (item, {ZLIB_CONSTANTS}.Z_NULL)
+		end
 
 feature -- Measurement
 
@@ -178,5 +190,21 @@ feature -- C external element change
 		external "C [struct %"zlib.h%"] (z_stream, int)"
 		alias "avail_out"
 		end
+
+	c_set_zalloc (a_struct: POINTER; a_val: NATURAL)
+		external "C [struct %"zlib.h%"] (z_stream, int)"
+		alias "zalloc"
+		end
+
+	c_set_zfree (a_struct: POINTER; a_val: NATURAL)
+		external "C [struct %"zlib.h%"] (z_stream, int)"
+		alias "zfree"
+		end
+
+	c_set_opaque (a_struct: POINTER; a_val: NATURAL)
+		external "C [struct %"zlib.h%"] (z_stream, int)"
+		alias "opaque"
+		end
+
 
 end

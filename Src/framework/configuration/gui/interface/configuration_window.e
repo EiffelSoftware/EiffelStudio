@@ -1218,6 +1218,7 @@ feature {NONE} -- Implementation
 				-- Condition.
 			create l_dial.make_with_dialog (conf_interface_names.external_condition_name, create {CONDITION_DIALOG})
 			l_dial.set_description (conf_interface_names.external_condition_description)
+			l_dial.set_display_agent (agent {CONF_CONDITION_LIST}.text)
 			l_dial.set_value (an_external.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent an_external.set_conditions)
@@ -1304,6 +1305,7 @@ feature {NONE} -- Implementation
 				-- condition
 			create l_dial.make_with_dialog (conf_interface_names.task_condition_name, create {CONDITION_DIALOG})
 			l_dial.set_description (conf_interface_names.task_condition_description)
+			l_dial.set_display_agent (agent {CONF_CONDITION_LIST}.text)
 			l_dial.set_value (a_task.internal_conditions)
 			l_dial.disable_text_editing
 			l_dial.change_value_actions.extend (agent a_task.set_conditions)
@@ -1472,7 +1474,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

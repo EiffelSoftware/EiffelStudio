@@ -33,13 +33,13 @@ feature {NONE}
 	make_default
 		do
 			create name.make (0)
-			make (2048)
+			make (Default_buffer)
 		end -- make_default
 
 	initialize
 		do
 			out_position := 0
-			create area.make( 1, buffer_size)
+			create area.make_filled( create {CHARACTER}, 1, buffer_size)
 			create zlib
 			create zstream.make
 			zstream.set_available_input (0)
@@ -58,7 +58,7 @@ feature
 			make_default
 			buffer := a_buffer
 			if buffer_size = 0 then
-				buffer_size := 2048
+				buffer_size := Default_buffer
 			end -- if
 
 			initialize
@@ -78,15 +78,15 @@ feature
 			create file.make_open_read (a_file)
 			if attached file as l_file and then l_file.is_open_read then
 				if buffer_size = 0 then
-					buffer_size := 2048
-				end -- id
+					buffer_size := Default_buffer
+				end
 
-				create buffer.make (1, buffer_size)
+				create buffer.make_filled (create {CHARACTER}, 1, buffer_size)
 				initialize
 				name.copy (a_file)
 			else
 				file := Void
-			end -- if
+			end
 		end
 
 	close
@@ -96,8 +96,8 @@ feature
 				l_file.close
 				file := Void
 				name.copy ("")
-			end -- if
-		end -- close
+			end
+		end
 
 feature
 
@@ -121,7 +121,7 @@ feature
 	is_connected: BOOLEAN
 		do
 			Result := buffer /= Void
-		end -- is_connected
+		end
 
 	last_item: CHARACTER
 
@@ -143,7 +143,7 @@ feature
 		do
 			if zstream /= Void then
 				Result := zstream.total_output
-			end -- if
+			end
 		end
 
 	valid_unread_item (item_: CHARACTER): BOOLEAN
@@ -166,14 +166,14 @@ feature {NONE}
 					zlib.inflate (zstream, False)
 					resize_array (area, 1, buffer_size - zstream.available_output)
 					out_position := area.lower
-				end -- if
-			end -- if
+				end
+			end
 
 			if area.valid_index (out_position) then
 				last_item := area.item (out_position)
 				out_position := out_position + 1
-			end -- if
-		end -- read_character_from_buffer
+			end
+		end
 
 	read_character_from_file
 		local
@@ -189,6 +189,7 @@ feature {NONE}
 					zstream.set_available_output (area.count)
 					if zstream.available_input = 0 and then attached file as l_file and then not l_file.end_of_file then
 						from
+							l_buffer.clear_all
 							resize_array (l_buffer, 1, buffer_size)
 							idx := 1
 						until
@@ -196,26 +197,26 @@ feature {NONE}
 						loop
 							l_file.read_character
 							if not l_file.end_of_file then
-								l_buffer.put (l_file.last_character, idx)
+								l_buffer.force (l_file.last_character, idx)
 								idx := idx + 1
-							end -- if
-						end -- loop
+							end
+						end
 
 						zstream.set_next_input (character_array_to_external (l_buffer))
 						zstream.set_available_input (idx - 1)
-					end -- if
+					end
 
 					zlib.inflate (zstream, False)
 					resize_array (area, 1, buffer_size - zstream.available_output)
 					out_position := area.lower
-				end -- if
-			end -- if
+				end
+			end
 
 			if area.valid_index (out_position) then
 				last_item := area.item (out_position)
 				out_position := out_position + 1
-			end -- if
-		end -- read_character_from_file
+			end
+		end
 
 feature
 
@@ -230,7 +231,7 @@ feature
 					read_character_from_file
 				end
 			end
-		end -- read
+		end
 
 	read_line_in (a_buffer: STRING)
 		do
@@ -242,8 +243,8 @@ feature
 			loop
 				a_buffer.extend (last_item)
 				read
-			end -- loop
-		end -- read_line_in
+			end
+		end
 
 	unread (item_: CHARACTER)
 		do
@@ -268,6 +269,8 @@ feature {NONE}
 
 	zstream: ZLIB_STREAM
 
+	Default_buffer: INTEGER = 2048
+
 feature {NONE}
 
 	resize_array (array_: ARRAY [CHARACTER]; lower_, upper_: INTEGER)
@@ -276,9 +279,9 @@ feature {NONE}
 		do
 			if lower_ > array_.lower or else upper_ < array_.upper then
 				buf := array_.subarray (lower_, upper_)
-				array_.make (lower_, upper_)
+				array_.make_filled (create {CHARACTER}, lower_, upper_)
 				array_.copy (buf)
-			end -- if
-		end -- resize_array
+			end
+		end
 
 end -- class Z_INPUT_STREAM

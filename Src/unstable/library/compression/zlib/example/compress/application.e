@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			create inp.make_empty
 
-			create fle.make_open_read ("index.html")
+			create fle.make_open_read (source_file)
 
 
 			if fle.is_open_read then
@@ -45,12 +45,12 @@ feature {NONE} -- Initialization
 				loop
 					inp.force (fle.last_character, inp.upper + 1)
 					fle.read_character
-				end -- loop
+				end
 
 				fle.close
 
 				from
-					create tou.connect_to_file ("index.bin")
+					create tou.connect_to_file (output_file)
 					idx := inp.lower
 				until
 					idx > inp.upper
@@ -58,19 +58,19 @@ feature {NONE} -- Initialization
 					cin := cin + 1
 					tou.put (inp.item (idx))
 					idx := idx + 1
-				end -- loop
+				end
 
 				tou.close
 
-				create tst.connect_to_file ("index.bin")
-				create l_out.make_create_read_write ("new_index.html")
+				create tst.connect_to_file (output_file)
+				create l_out.make_create_read_write (new_file)
 
 				if tst.has_error then
 					if tst.has_error_message then
 						print (tst.last_error_message)
 					else
 						print (tst.last_error_code)
-					end -- if
+					end
 				else
 					from
 						tst.read
@@ -81,12 +81,12 @@ feature {NONE} -- Initialization
 						cot := cot + 1
 						tst.read
 						l_out.put_character (tst.last_item)
-					end -- loop
-				end -- if
+					end
+				end
 
 				if tst.is_connected then
 					tst.close
-				end -- if
+				end
 
 
 
@@ -107,6 +107,15 @@ feature {NONE} -- Initialization
 				print ("%T")
 				print (tou.total_bytes_compressed)
 				print ("%N%N")
-			end -- if
-		end -- make
+			end
+		end
+
+feature -- Implementation
+
+	source_file: STRING = "ssleay.txt"
+
+	output_file: STRING = "ssl.bin"
+
+	new_file: STRING = "new_ssl.txt"
+
 end

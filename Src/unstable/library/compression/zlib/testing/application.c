@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			create inp.make_empty
 
-			create fle.make_open_read ("application.c")
+			create fle.make_open_read ("index.html")
 
 
 			if fle.is_open_read then
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				fle.close
 
 				from
-					create tou.connect_to_file ("application.bin")
+					create tou.connect_to_file ("index.bin")
 					idx := inp.lower
 				until
 					idx > inp.upper
@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 
 				tou.close
 
-				create tst.connect_to_file ("application.bin")
-				create l_out.make_create_read_write ("application2.c")
+				create tst.connect_to_file ("index.bin")
+				create l_out.make_create_read_write ("index_uncompress.html")
 
 				if tst.has_error then
 					if tst.has_error_message then

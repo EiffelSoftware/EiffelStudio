@@ -35,13 +35,13 @@ feature {NONE} -- Initialization
 	make_default
 		do
 			create name.make (0)
-			make (2048, {ZLIB_CONSTANTS}.z_default_compression)
+			make (Default_buffer, {ZLIB_CONSTANTS}.z_default_compression)
 		end
 
 	initialize
 		do
-			create tmp.make (1, buffer_size)
-			create area.make (1, buffer_size)
+			create tmp.make_filled (create {CHARACTER}, 1, buffer_size)
+			create area.make_filled (create {CHARACTER}, 1, buffer_size)
 			create zlib
 			create zstream.make
 			zlib.deflate_init (zstream, compress_level)
@@ -60,7 +60,7 @@ feature -- Deflate
 			make_default
 			buffer := a_buffer
 			if buffer_size = 0 then
-				buffer_size := 2048
+				buffer_size := Default_buffer
 				compress_level := {ZLIB_CONSTANTS}.z_default_compression
 			end -- if
 
@@ -79,7 +79,7 @@ feature -- Deflate
 			create file.make_create_read_write (a_file)
 			if attached file as l_file and then l_file.is_open_read then
 				if buffer_size = 0 then
-					buffer_size := 2048
+					buffer_size := Default_buffer
 					compress_level := -1
 				end -- id
 
@@ -239,18 +239,18 @@ feature -- Zlib Operations
 							flush_temp_to_file
 						else
 							flush_temp_to_buffer
-						end -- if
+						end
 
 						zstream.set_next_output (character_array_to_external (tmp))
 						zstream.set_available_output (tmp.count)
-					end -- if
+					end
 
 					zlib.deflate (zstream, zlib.Z_no_flush)
-				end -- loop
+				end
 
 				in_position := 1
 				area.put (a_char, in_position)
-			end -- if
+			end
 		end
 
 feature {NONE}
@@ -275,6 +275,8 @@ feature {NONE}
 
 	zstream: ZLIB_STREAM
 
+	Default_buffer: INTEGER = 2048
+
 feature {NONE}
 
 	resize_array (array_: ARRAY [CHARACTER]; lower_, upper_: INTEGER)
@@ -283,7 +285,7 @@ feature {NONE}
 		do
 			if lower_ > array_.lower or else upper_ < array_.upper then
 				buf := array_.subarray (lower_, upper_)
-				array_.make (lower_, upper_)
+				array_.make_filled (create {CHARACTER}, lower_, upper_)
 				array_.copy (buf)
 			end -- if
 		end -- resize_array

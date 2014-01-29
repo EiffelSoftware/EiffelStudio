@@ -117,11 +117,6 @@ remtrace CLI debugger
 cd %EIFFEL_SRC\framework\cli_debugger\Clib
 default_make
 
-remtrace Compiling .NET components
-cdd %INIT_DIR
-call make_dotnet.btm
-cdd %EIFFEL_SRC
-
 REM Compiling EiffelStudio stuff
 iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio
@@ -385,3 +380,7 @@ finalize geyacc.ecf geyacc
 cleanup_eiffel geyacc geyacc.exe
 move geyacc.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
+remtrace Compiling .NET components
+cdd %INIT_DIR
+call make_dotnet.btm
+cdd %EIFFEL_SRC

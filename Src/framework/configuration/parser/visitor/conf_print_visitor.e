@@ -134,15 +134,15 @@ feature -- Visit nodes
 				append_text ("%N")
 			end
 			append_text_indent ("<system")
+			append_text (" xmlns=%"")			
 			if attached namespace as l_namespace then
-				append_text (" xmlns=%"")
 				append_text_escaped (l_namespace, False)
 --Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
-				append_text ("%"")
 			else
 				append_text_escaped (default_namespace, False)
 				check has_namespace: False end
 			end
+			append_text ("%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%"")
 			append_text_escaped (Schema, False)

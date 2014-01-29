@@ -268,10 +268,8 @@ feature -- Access queries
 						l_reverse_classes_cache.force (ic.key, ic.item)
 					end
 				end
-				if l_reverse_classes_cache.has_key (a_class) and then attached l_reverse_classes_cache.found_item as l_found_item then
+				if attached l_reverse_classes_cache.item (a_class) as l_found_item then
 					Result.force (l_found_item )
-				else
-					check has_key: False end
 				end
 			else
 				check precondition__classes_set: False end

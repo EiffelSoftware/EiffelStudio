@@ -352,7 +352,7 @@ feature -- Feature access
 		do
 			l_fi := eiffel_system.system.seed_of_routine_id (rid)
 			if l_fi /= Void then
-				Result := l_fi.api_feature (l_fi.origin_class_id)
+				Result := l_fi.api_feature (l_fi.written_in)
 			end
 		end
 

@@ -777,9 +777,7 @@ feature {NONE} -- Implementation
 					indent := indent + 1
 					last_count := text.count
 
-					if attached l_ext.description as d and then d.is_empty then
-						append_tag ("description", d, Void, Void)
-					end
+					append_description_tag (l_ext.description)
 					append_conditionals (l_ext.internal_conditions, False)
 					indent := indent - 1
 

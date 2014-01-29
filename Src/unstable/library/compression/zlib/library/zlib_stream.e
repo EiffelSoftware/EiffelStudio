@@ -106,6 +106,7 @@ feature -- Change Element
 			c_set_next_in (item, a_val)
 		end
 
+
 	set_next_output (a_val: POINTER)
 		do
 			c_set_next_out (item, a_val)

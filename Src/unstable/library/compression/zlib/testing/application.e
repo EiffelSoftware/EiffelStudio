@@ -157,6 +157,7 @@ feature {NONE} -- Initialization
 				-- 1 Initialize zstream structure, inflate state
 			create l_stream.make
 			l_stream.set_available_input (0)
+
 			create l_zlib
 			l_zlib.inflate_init (l_stream)
 			if l_zlib.last_operation /= z_ok then
@@ -235,8 +236,10 @@ feature -- Implementation
 				a_file.end_of_file or else l_index > chunk
 			loop
 				a_buffer.put (a_file.last_character, l_index)
-				a_file.read_character
 				l_index := l_index + 1
+				if l_index <= chunk then
+					a_file.read_character
+				end
 			end
 			Result := l_index - 1
 		end
@@ -260,8 +263,8 @@ feature -- Implementation
 
 	dest_file: STRING = "output.txt"
 
-	new_source: STRING = "new_ssl.txt"
+	new_source: STRING = "new_ssleay.txt"
 
-	chunk: INTEGER = 262144 -- 2KB
+	chunk: INTEGER = 128
 
 end

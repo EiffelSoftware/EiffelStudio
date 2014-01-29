@@ -8,110 +8,110 @@ class
 
 feature {NONE}
 
-	character_array_from_external (array_: ARRAY [CHARACTER]; memory_: POINTER; size_: INTEGER)
-			-- size given array to [1..size_] and fills it with content from 'memory_'
-			-- NOTE: no way to detect if 'memory_' really references a block of size 'size_'
+	character_array_from_external (a_array: ARRAY [CHARACTER]; a_memory: POINTER; a_size: INTEGER)
+			-- size given array to [1..a_size] and fills it with content from 'a_memory'
+			-- NOTE: no way to detect if 'a_memory' really references a block of size 'a_size'
 		require
-			non_void_array: array_ /= Void
-			non_null_memory: memory_ /= default_pointer
-			positive_size: size_ > 0
+			non_void_array: a_array /= Void
+			non_null_memory: a_memory /= default_pointer
+			positive_size: a_size > 0
 		local
 			arr: ANY
 			ptr: POINTER
 		do
-			array_.resize (1, size_)
-			arr := array_.to_c
+			a_array.conservative_resize_with_default (create {CHARACTER}, 1, a_size)
+			arr := a_array.to_c
 			ptr := $arr
-			ptr.memory_copy (memory_, size_)
-		end -- array_to_external
+			ptr.memory_copy (a_memory, a_size)
+		end
 
-	character_array_to_external (array_: ARRAY [CHARACTER]): POINTER
-			-- give external routines access to the data of 'array_'
+	character_array_to_external (a_array: ARRAY [CHARACTER]): POINTER
+			-- give external routines access to the data of 'a_array'
 		require
-			non_void_array: array_ /= Void
-			non_empty_array: array_.count > 0
+			non_void_array: a_array /= Void
+			non_empty_array: a_array.count > 0
 		local
 			res: ANY
 		do
-			res := array_.to_c
+			res := a_array.to_c
 			Result := $res
 		end
 
-	character_array_to_frozen_external (array_: ARRAY [CHARACTER]): POINTER
-			-- give external routines access to the data of 'array_'
+	character_array_to_frozen_external (a_array: ARRAY [CHARACTER]): POINTER
+			-- give external routines access to the data of 'a_array'
 		require
-			non_void_array: array_ /= Void
-			non_empty_array: array_.count > 0
+			non_void_array: a_array /= Void
+			non_empty_array: a_array.count > 0
 		do
-			Result := freeze (array_.to_c)
+			Result := freeze (a_array.to_c)
 		end
 
-	unfreeze_array (array_: ARRAY [CHARACTER])
+	unfreeze_array (a_array: ARRAY [CHARACTER])
 		local
 			tmp: ANY
 		do
-			tmp := array_.to_c
+			tmp := a_array.to_c
 			unfreeze ($tmp)
 		end
 
-	integer_array_to_external (array_: ARRAY [INTEGER]): POINTER
-			-- give external routines access to the data of 'array_'
+	integer_array_to_external (a_array: ARRAY [INTEGER]): POINTER
+			-- give external routines access to the data of 'a_array'
 		require
-			non_void_array: array_ /= Void
-			non_empty_array: array_.count > 0
+			non_void_array: a_array /= Void
+			non_empty_array: a_array.count > 0
 		local
 			res: ANY
 		do
-			res := array_.to_c
+			res := a_array.to_c
 			Result := $res
 		end
 
-	integer_array_to_frozen_external (array_: ARRAY [INTEGER]): POINTER
-			-- give external routines access to the data of 'array_'
+	integer_array_to_frozen_external (a_array: ARRAY [INTEGER]): POINTER
+			-- give external routines access to the data of 'a_array'
 		require
-			non_void_array: array_ /= Void
-			non_empty_array: array_.count > 0
+			non_void_array: a_array /= Void
+			non_empty_array: a_array.count > 0
 		do
-			Result := freeze (array_.to_c)
+			Result := freeze (a_array.to_c)
 		end
 
-	unfreeze_integer_array (array_: ARRAY [INTEGER])
+	unfreeze_integer_array (a_array: ARRAY [INTEGER])
 		local
 			tmp: ANY
 		do
-			tmp := array_.to_c
+			tmp := a_array.to_c
 			unfreeze ($tmp)
 		end
 
-	string_from_external (c_string_: POINTER): STRING
+	string_from_external (a_cstring: POINTER): STRING
 			-- create a new string from char*
 		require
-			non_null_c_string: c_string_ /= default_pointer
+			non_null_c_string: a_cstring /= default_pointer
 		do
-			create Result.make_from_c (c_string_)
+			create Result.make_from_c (a_cstring)
 		end
 
-	string_fill_from_external (c_string_: POINTER; string_: STRING)
+	string_fill_from_external (a_cstring: POINTER; a_string: STRING)
 			-- fill given string from char*
 		require
-			non_null_c_string: c_string_ /= default_pointer
-			non_void_string: string_ /= Void
+			non_null_c_string: a_cstring /= default_pointer
+			non_void_string: a_string /= Void
 		do
-			string_.from_c (c_string_)
+			a_string.from_c (a_cstring)
 		end
 
-	string_to_external (string_: STRING): POINTER
-			-- make the contents of 'string_' accessible for external routines
+	string_to_external (a_string: STRING): POINTER
+			-- make the contents of 'a_string' accessible for external routines
 		require
-			non_void_string: string_ /= Void
+			non_void_string: a_string /= Void
 		local
 			res: ANY
 		do
-			res := string_.to_c
+			res := a_string.to_c
 			Result := $res
 		end
 
-	freeze (object_: ANY): POINTER
+	freeze (a_object: ANY): POINTER
 		external
 			"C (EIF_OBJECT): EIF_POINTER | %"eif_hector.h%""
 		alias
@@ -120,50 +120,50 @@ feature {NONE}
 			is_frozen: is_frozen (Result) /= 0
 		end
 
-	unfreeze (reference_: POINTER)
+	unfreeze (a_reference: POINTER)
 		require
-			is_frozen: is_frozen (reference_) /= 0
+			is_frozen: is_frozen (a_reference) /= 0
 		external
 			"C (EIF_POINTER) | %"eif_hector.h%""
 		alias
 			"eif_unfreeze"
 		end
 
-	is_frozen (object_: POINTER): INTEGER
+	is_frozen (a_object: POINTER): INTEGER
 		external
 			"C [macro %"eif_hector.h%"] (EIF_REFERENCE): EIF_INTEGER"
 		alias
 			"eif_frozen"
 		end
 
-	string_to_frozen_external (string_: STRING): POINTER
+	string_to_frozen_external (a_string: STRING): POINTER
 		require
-			non_void_string: string_ /= Void
+			non_void_string: a_string /= Void
 		do
-			Result := freeze (string_.to_c)
+			Result := freeze (a_string.to_c)
 		end
 
-	unfreeze_string (string_: STRING)
+	unfreeze_string (a_string: STRING)
 		local
 			tmp: ANY
 		do
-			tmp := string_.to_c
+			tmp := a_string.to_c
 			unfreeze ($tmp)
 		end
 
-	pointer_to_object (ptr_: POINTER): detachable ANY
+	pointer_to_object (a_ptr: POINTER): detachable ANY
 		do
-			if ptr_ /= default_pointer then
-				Result := eif_access (ptr_)
+			if a_ptr /= default_pointer then
+				Result := eif_access (a_ptr)
 			end
 		end
 
-	object_to_pointer (obj_: ANY): POINTER
+	object_to_pointer (a_obj: ANY): POINTER
 		do
-			Result := $obj_
+			Result := $a_obj
 		end
 
-	eif_access (ptr_: POINTER): ANY
+	eif_access (a_ptr: POINTER): ANY
 		external
 			"C [macro %"eif_eiffel.h%"] (void*): EIF_REFERENCE"
 		alias

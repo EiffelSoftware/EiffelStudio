@@ -991,7 +991,7 @@ test	finalize-once-per-object-wrong		incr376 tcf pass incrementality
 test	retry-missing-library-file		incr377 tcf fail incrementality
 test	saving-generic-class-crash		incr378 tcf pass incrementality
 test	change-target-inheritance		incr379 tcf fail incrementality
-test	config-remove-root-element		incr380 tcf fail incrementality
+test	config-remove-root-element		incr380 tcf fail incrementality config
 test	remove-base-library-add-back		incr381 tcf fail incrementality
 test	disk-item-io-error			incr382 tcf fail incrementality
 test	compiler-panic				incr383 tcf fail incrementality
@@ -1039,7 +1039,7 @@ test 	inline-agent-removal-crash		incr424	tcf fail incrementality agents
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agents
 test 	finalization-with-error-crash	incr426	tcf fail incrementality agents finalizing
 test 	create-generic-remove-generic-inheritance incr427 tcf fail incrementality generic
-test	config-remove-library-indirectly	incr428 tcf fail incrementality
+test	config-remove-library-indirectly	incr428 tcf fail incrementality config
 test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
 
 
@@ -1955,19 +1955,19 @@ test	config-unexistent-cluster-with-changes	config038 tcf pass config
 
 -- Lace
 
-test	lace-no-cluster-props		lace003 tcf pass lace
-test	lace-no-creation-proc		lace007 tcf pass lace
-test	lace-empty-include-exclude	lace011 tcf pass lace
-test	chg-cluster-name		lace014 tcf pass lace
-test	remove-unneeded-cluster		lace015 tcf pass lace
-test	root-cluster-case-sensitive	lace016 tcf pass lace
-test	class-named-none		lace021 tcf fail lace
-test	visible-export-nonexistent-feat	lace022 tcf fail lace
-test	lace-debug-key-subset		lace024 tcf pass lace
-test	visible-cluster-case-sensitive	lace025 tcf pass lace
-test	visible-under-same-name		lace029 tcf fail lace
-test	inlining-size-non-integer	lace030 tcf pass lace inlining
-test	lace-system-special-chars	lace031 tcf fail lace special
+test	lace-no-cluster-props		lace003 tcf pass lace config
+test	lace-no-creation-proc		lace007 tcf pass lace config
+test	lace-empty-include-exclude	lace011 tcf pass lace config
+test	chg-cluster-name		lace014 tcf pass lace config
+test	remove-unneeded-cluster		lace015 tcf pass lace config
+test	root-cluster-case-sensitive	lace016 tcf pass lace config
+test	class-named-none		lace021 tcf fail lace config
+test	visible-export-nonexistent-feat	lace022 tcf fail lace config
+test	lace-debug-key-subset		lace024 tcf pass lace config
+test	visible-cluster-case-sensitive	lace025 tcf pass lace config
+test	visible-under-same-name		lace029 tcf fail lace config
+test	inlining-size-non-integer	lace030 tcf pass lace inlining config
+test	lace-system-special-chars	lace031 tcf fail lace special config
 
 -- C code compilation/linking
 

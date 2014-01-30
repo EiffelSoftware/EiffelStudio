@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="testing_library" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<library name="zlib" location="..\zlib.ecf" readonly="false"/>
+		<library name="zlib" location="..\zlib-safe.ecf" readonly="false"/>
 		<cluster name="testing" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

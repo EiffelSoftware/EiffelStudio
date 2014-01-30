@@ -1,0 +1,19 @@
+test_name	config-unexistent-cluster-with-changes
+test_description If you remove a group from an ECF and at the same time you add a group with an invalid path the compiler crashes instead of reporting the VD71 error.
+
+copy_sub 	Ace_rev1 $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error NONE VD71
+
+copy_sub 	Ace $TEST Ace
+resume_compile
+compile_result	ok
+
+copy_sub 	Ace_rev1 $TEST Ace
+
+compile_melted
+compile_result	validity_error NONE VD71
+
+test_end

@@ -475,8 +475,38 @@ feature -- JSON_FROM_FILE
 	json_value: detachable JSON_VALUE
 
    	json_file_from (fn: STRING): detachable STRING
+   		local
+   			f: RAW_FILE
+   			l_path: STRING
+			test_dir: STRING
+			i: INTEGER
 		do
-			Result := file_reader.read_json_from (test_dir + fn)
+			test_dir := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			test_dir.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+
+			l_path := test_dir + fn
+			create f.make_with_name (l_path)
+			if f.exists then
+					-- Found json file
+			else
+				-- before EiffelStudio 7.3 , the current dir of autotest execution was not the parent dir of ecf but something like
+				-- ..json\test\autotest\test_suite\EIFGENs\test_suite\Testing\execution\TEST_JSON_SUITE.test_json_fail1\..\..\..\..\..\fail1.json
+				from
+					i := 5
+				until
+					i = 0
+				loop
+					test_dir.append_character ('.')
+					test_dir.append_character ('.')
+					test_dir.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+					i := i - 1
+				end
+				l_path := test_dir + fn
+			end
+			create f.make_with_name (l_path)
+			if f.exists then
+				Result := file_reader.read_json_from (l_path)
+			end
 			assert ("File contains json data", Result /= Void)
 		end
 
@@ -485,26 +515,6 @@ feature -- JSON_FROM_FILE
 			create Result.make_parser (a_string)
 		end
 
-	test_dir: STRING
-		local
-			i: INTEGER
-		do
-			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
-				-- The should looks like
-				-- ..json\test\autotest\test_suite\EIFGENs\test_suite\Testing\execution\TEST_JSON_SUITE.test_json_fail1\..\..\..\..\..\fail1.json
-			from
-				i := 5
-			until
-				i = 0
-			loop
-				Result.append_character ('.')
-				Result.append_character ('.')
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
-				i := i - 1
-			end
---			Result := "/home/jvelilla/work/project/Eiffel/ejson_dev/trunk/test/autotest/test_suite/"	
-		end
 
 invariant
 	file_reader /= Void

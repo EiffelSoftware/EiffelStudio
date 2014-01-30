@@ -27,34 +27,20 @@ feature -- Access
 feature -- Conversion
 
     from_json (j: attached like to_json): like object
-        local
-            keys: ARRAY [JSON_STRING]
-            i: INTEGER
-            h: detachable HASHABLE
-            jv: detachable JSON_VALUE
-            a: detachable ANY
         do
-            keys := j.current_keys
-            create Result.make (keys.count)
-            from
-                i := 1
-            until
-                i > keys.count
+            create Result.make (j.count)
+            across
+            	j as ic
             loop
-                h ?= json.object (keys [i], Void)
-                check h /= Void end
-                jv := j.item (keys [i])
-                if jv /= Void then
-	                a := json.object (jv, Void)
-	                if a /= Void then
-	                	Result.put (a, h)
-	                else
-	                	check a_attached: a /= Void end
-	                end
-				else
-					check j_has_item: False end
+                if attached json.object (ic.item, Void) as l_object then
+					if attached {HASHABLE} json.object (ic.key, Void) as h then
+						Result.put (l_object, h)
+					else
+						check key_is_hashable: False end
+					end
+                else
+                	check object_attached: False end
                 end
-                i := i + 1
             end
         end
 
@@ -62,7 +48,6 @@ feature -- Conversion
         local
         	c: HASH_TABLE_ITERATION_CURSOR [ANY, HASHABLE]
             js: JSON_STRING
-            jv: detachable JSON_VALUE
             failed: BOOLEAN
         do
             create Result.make
@@ -76,8 +61,7 @@ feature -- Conversion
                 else
                     create js.make_json (c.key.out)
                 end
-                jv := json.value (c.item)
-                if jv /= Void then
+                if attached json.value (c.item) as jv then
                     Result.put (jv, js)
                 else
                     failed := True

@@ -356,7 +356,10 @@ feature -- Utitlity Functions
 			--   insufficient memory to allocate the gzFile state, or if an invalid mode was
 			--   specified (an 'r', 'w', or 'a' was not provided, or '+' was provided).
 			--   errno can be checked to determine if the reason gzopen failed was that the
-			--   file could not be opened.	
+			--   file could not be opened.
+		require
+				non_void_path: a_path /= Void
+				non_void_mode: a_mode /= Void
 		local
 			l_path: C_STRING
 			l_mode: C_STRING

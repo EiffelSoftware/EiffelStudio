@@ -18,7 +18,7 @@ inherit
 create
 	make, make_default, connect_to_buffer, connect_to_file
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (a_buffer_size: INTEGER)
 		require
@@ -269,7 +269,7 @@ feature {NONE}
 
 	zstream: ZLIB_STREAM
 
-	Default_buffer: INTEGER = 2048
+	Default_buffer: INTEGER = 128
 
 feature {NONE}
 

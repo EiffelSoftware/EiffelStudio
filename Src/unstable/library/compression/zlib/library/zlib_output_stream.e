@@ -80,8 +80,8 @@ feature -- Deflate
 			if attached file as l_file and then l_file.is_open_read then
 				if buffer_size = 0 then
 					buffer_size := Default_buffer
-					compress_level := -1
-				end -- id
+					compress_level := {ZLIB_CONSTANTS}.z_default_compression
+				end
 
 				initialize
 				name.copy (a_file)
@@ -275,7 +275,7 @@ feature {NONE}
 
 	zstream: ZLIB_STREAM
 
-	Default_buffer: INTEGER = 2048
+	Default_buffer: INTEGER = 128
 
 feature {NONE}
 

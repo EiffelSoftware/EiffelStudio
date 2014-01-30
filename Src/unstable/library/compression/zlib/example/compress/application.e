@@ -112,10 +112,10 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	source_file: STRING = "ssleay.txt"
+	source_file: STRING = "testing.txt"
 
-	output_file: STRING = "ssl.bin"
+	output_file: STRING = "testing.bin"
 
-	new_file: STRING = "new_ssl.txt"
+	new_file: STRING = "new_testing.txt"
 
 end

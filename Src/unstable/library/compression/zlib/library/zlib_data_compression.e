@@ -177,17 +177,19 @@ feature --Access
 
 feature -- Deflate
 
-	put_file (a_file: STRING)
+	put_file (a_file: FILE)
 			-- Defalte the file content.
+		require
+			open_read: a_file.is_open_read
 		do
-			create user_input_file.make_open_read (a_file)
+			user_input_file := a_file
 			deflate
 			if attached user_input_file as l_file then
 				l_file.close
 			end
-			if attached file as ll_file then
-				ll_file.close
-			end
+			close
+		ensure
+			user_input_file_closed: attached user_input_file as l_user_input_file implies l_user_input_file.is_closed
 		end
 
 	put_buffer (a_buffer: ARRAY[CHARACTER])
@@ -195,7 +197,7 @@ feature -- Deflate
 		do
 			create user_input_buffer.make_from_array (a_buffer)
 			deflate
-			user_input_buffer := Void
+			close
 		end
 
 
@@ -366,6 +368,19 @@ feature {NONE} -- Deflate implementation
 			Result := l_index - 1
 		end
 
+	close
+		require
+			connected: is_connected
+		do
+			if attached file as ll_file then
+				ll_file.close
+				file := Void
+			end
+			if attached buffer as l_buffer then
+				buffer := Void
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	end_of_input: BOOLEAN
@@ -395,7 +410,7 @@ feature {NONE} -- Implementation
 	file: detachable FILE
 		-- file use to write the compressed output
 
-	user_input_file: detachable RAW_FILE
+	user_input_file: detachable FILE
 		-- Input file, content to compress
 
 	buffer: detachable ARRAY[CHARACTER]

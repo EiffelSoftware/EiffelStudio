@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			stream_example_buffer
 		end
 
+feature -- Basic Example Using the ZLIB API
+
 	basic_example_without_streams
 		local
 			l_source: RAW_FILE
@@ -56,18 +58,24 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature -- Basic Examples using ZLIB STREAMS 		
+
 	stream_example_file_to_file
 		local
 			zi: ZLIB_DATA_INFLATE
 			zo: ZLIB_DATA_COMPRESSION
 			l_file: FILE
+			l_src_file: FILE
+			l_new_file: FILE
 		do
 			create {RAW_FILE}l_file.make_create_read_write ("new_test.txt")
+			create {RAW_FILE}l_src_file.make_open_read (source_file)
+			create {RAW_FILE}l_new_file.make_create_read_write ("new_file.txt")
 			create zo.file_stream (l_file)
-			zo.put_file (source_file)
+			zo.put_file (l_src_file)
 			create {RAW_FILE}l_file.make_open_read ("new_test.txt")
 			create zi.file_stream (l_file)
-			zi.to_file ("new_file.txt")
+			zi.to_file (l_new_file)
 
 			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
 			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
@@ -99,6 +107,9 @@ feature {NONE} -- Initialization
 			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
 			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
 		end
+
+
+feature -- Custom Deflate Implementation
 
 	deflate (a_source: RAW_FILE; a_dest: RAW_FILE; a_level: INTEGER): INTEGER
 			--		 Compress from file `a_source' to file `a_dest' until EOF on `a_source'.
@@ -190,6 +201,8 @@ feature {NONE} -- Initialization
 				Result := l_zlib.last_operation
 			end
 		end
+
+feature -- Custom Inflate Implementation
 
 	inflate (a_source: RAW_FILE; a_dest: RAW_FILE): INTEGER
 			--		Decompress from file `a_source' to file `a_dest' until stream ends or EOF.

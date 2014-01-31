@@ -17,6 +17,10 @@ copy_sub	 test1.e $CLUSTER test1.e
 compile_melted
 compile_result 	 syntax_error TEST1 8
 
+resume_compile
+compile_result 	 validity_error NONE VD71
+
+
 define		 CLASS "class TEST1 end"
 copy_sub	 test1.e $CLUSTER test1.e
 resume_compile

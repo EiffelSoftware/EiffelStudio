@@ -1685,9 +1685,9 @@ test	equality-operator-semantics		exec353 tcf pass execution equality attached_t
 test	agent-target-expanded			exec354 tcf pass execution expanded
 test	conditional-expression-smoke-test	exec355 tcf pass execution conditional expression
 test	parenthesis-alias-smoke-test		exec356 tcf pass execution expression parenthesis_alias
-test	parenthesis-alias-tuple-convention	exec357 tcf pass execution expression parenthesis_alias
+test	parenthesis-alias-tuple-convention	exec357 tcf pass execution expression parenthesis_alias conversion tuple conformance
 test	conditional-expression-constant		exec358 tcf pass execution conditional expression conformance
-test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias
+test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias conversion tuple conformance
 
 -- Once specific
 

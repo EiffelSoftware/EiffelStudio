@@ -1,6 +1,6 @@
 
 test_name	config-change-library-location
-test_description Changing the name attribute of a precompile in the configuration file should not trigger a VD57 error
+test_description Changing a library location to an invalid value and then resuming should not cause the Vd00 error to be missed
 
 define		LIBRARY_LOCATION "$$ISE_LIBRARY\library\base\base.ecf"
 copy_sub 	Ace $TEST Ace

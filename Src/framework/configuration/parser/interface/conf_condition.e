@@ -166,8 +166,7 @@ feature -- Update
 		do
 			l_platform := platform
 			if l_platform = Void then
-				create l_platform
-				l_platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				create l_platform.make ([create {ARRAYED_LIST [INTEGER]}.make (1), False])
 				platform := l_platform
 			end
 			l_platform.item.value.force (a_platform)
@@ -183,9 +182,7 @@ feature -- Update
 		do
 			l_platform := platform
 			if l_platform = Void then
-				create l_platform
-				l_platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				l_platform.item.invert := True
+				create l_platform.make ([create {ARRAYED_LIST [INTEGER]}.make (1), True])
 				platform := l_platform
 			end
 			l_platform.item.value.force (a_platform)
@@ -209,8 +206,7 @@ feature -- Update
 		do
 			l_build := build
 			if l_build = Void then
-				create l_build
-				l_build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				create l_build.make ([create {ARRAYED_LIST [INTEGER]}.make (1), False])
 				build := l_build
 			end
 			l_build.item.value.force (a_build)
@@ -226,9 +222,7 @@ feature -- Update
 		do
 			l_build := build
 			if l_build = Void then
-				create l_build
-				l_build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				l_build.item.invert := True
+				create l_build.make ([create {ARRAYED_LIST [INTEGER]}.make (1), True])
 				build := l_build
 			end
 			l_build.item.value.force (a_build)
@@ -252,8 +246,7 @@ feature -- Update
 		do
 			l_concurrency := concurrency
 			if l_concurrency = Void then
-				create l_concurrency
-				l_concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				create l_concurrency.make ([create {ARRAYED_LIST [INTEGER]}.make (1), False])
 				concurrency := l_concurrency
 			end
 			l_concurrency.item.value.force (a_concurrency)
@@ -269,9 +262,7 @@ feature -- Update
 		do
 			l_concurrency := concurrency
 			if l_concurrency = Void then
-				create l_concurrency
-				l_concurrency.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				l_concurrency.item.invert := True
+				create l_concurrency.make ([create {ARRAYED_LIST [INTEGER]}.make (1), True])
 				concurrency := l_concurrency
 			end
 			l_concurrency.item.value.force (a_concurrency)
@@ -368,9 +359,7 @@ feature -- Update
 		local
 			l_vers: EQUALITY_TUPLE [TUPLE [min: detachable CONF_VERSION; max: detachable CONF_VERSION]]
 		do
-			create l_vers
-			l_vers.item.min := a_min
-			l_vers.item.max := a_max
+			create l_vers.make ([a_min, a_max])
 			version.force (l_vers, a_type)
 		ensure
 			version_added: version.has (a_type)

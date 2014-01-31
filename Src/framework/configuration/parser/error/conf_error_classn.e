@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 			a_file_not_void: a_file /= Void
 		do
 			if a_config /= Void then
-				text := locale.formatted_string (locale.translation ("Classfile without a class in $1%NConfiguration: $2"), [a_file, a_config])
+				text := locale.formatted_string (locale.translation ("Eiffel file without a class declaration in $1%NConfiguration: $2"), [a_file, a_config])
 			else
-				text := locale.formatted_string (locale.translation ("Classfile without a class in $1"), [a_file])
+				text := locale.formatted_string (locale.translation ("Eiffel file without a class declaration in $1"), [a_file])
 			end
 		end
 

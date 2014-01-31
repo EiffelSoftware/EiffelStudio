@@ -17,7 +17,9 @@ inherit
 
 create
 	file_stream, file_stream_with_chunk, file_stream_with_level, file_stream_with_level_and_chunk,
-	buffer_stream, buffer_stream_with_chunk, buffer_stream_with_level, buffer_stream_with_level_and_chunk
+	buffer_stream, buffer_stream_with_chunk, buffer_stream_with_level, buffer_stream_with_level_and_chunk,
+	string_stream, string_stream_with_chunk, string_stream_with_level, string_stream_with_level_and_chunk
+
 
 
 feature {NONE}--Initialization
@@ -111,6 +113,49 @@ feature {NONE}--Initialization
 			chunk_set: chunk = a_chunk
 		end
 
+	string_stream (a_string: STRING)
+		require
+			not_connected: not is_connected
+		do
+			make
+			intialize
+			string := a_string
+		ensure
+			string_set: attached string
+		end
+
+	string_stream_with_chunk (a_file: STRING; a_chunk: INTEGER)
+		require
+			greater_than_zero: a_chunk > 0
+		do
+			string_stream (a_file)
+			chunk := a_chunk
+		ensure
+			chunk_set: chunk = a_chunk
+		end
+
+	string_stream_with_level (a_file: STRING; a_level: INTEGER)
+		require
+			known_level: a_level >= Z_default_compression and then a_level <= Z_best_compression
+		do
+			string_stream (a_file)
+			compression_level := a_level
+		ensure
+			compression_level_set: compression_level = a_level
+		end
+
+	string_stream_with_level_and_chunk (a_file: STRING; a_level: INTEGER; a_chunk: INTEGER)
+		require
+			known_level: a_level >= Z_default_compression and then a_level <= Z_best_compression
+		do
+			string_stream (a_file)
+			compression_level := a_level
+			chunk := a_chunk
+		ensure
+			compression_level_set: compression_level = a_level
+			chunk_set: chunk = a_chunk
+		end
+
 
 	make
 		do
@@ -143,7 +188,7 @@ feature --Access
 
 	is_connected: BOOLEAN
 		do
-			Result := file /= Void or else buffer /= Void
+			Result := file /= Void or else buffer /= Void or else string /= Void
 		end
 
 	has_error_message: BOOLEAN
@@ -199,6 +244,15 @@ feature -- Deflate
 			deflate
 			close
 		end
+
+	put_string (a_string: READABLE_STRING_GENERAL)
+			-- Deflate the buffer content.
+		do
+			create user_input_string.make_from_string (a_string.as_string_8)
+			deflate
+			close
+		end
+
 
 
 feature {NONE} -- Deflate implementation
@@ -272,13 +326,15 @@ feature {NONE} -- Deflate implementation
 				Result := file_read (l_file)
 			elseif attached user_input_buffer as l_input_buffer then
 				Result := buffer_read (l_input_buffer)
+			elseif attached user_input_string as l_input_string then
+				Result := string_read (l_input_string)
 			end
+
 		end
 
 	file_read (a_file: FILE): INTEGER
 			-- Read the file by character until EOF or the number of elements (Chunk) was reached.
 			-- Return the number of elements read.
-			-- The `a_buffer' is updated with the file content.
 		local
 			l_index: INTEGER
 		do
@@ -303,7 +359,6 @@ feature {NONE} -- Deflate implementation
 	buffer_read (a_buffer: ARRAY[CHARACTER]): INTEGER
 			-- Read the buffer by character until end of buffer or the number of elements (Chunk) was reached.
 			-- Return the number of elements read.
-			-- The `a_buffer' is updated with the file content.
 		local
 			l_index: INTEGER
 		do
@@ -323,6 +378,31 @@ feature {NONE} -- Deflate implementation
 				end
 			end
 			Result := l_index - 1
+		end
+
+
+	string_read (a_string: STRING): INTEGER
+			-- Read the a_string by character until end of string or the number of elements (Chunk) was reached.
+			-- Return the number of elements read.
+		local
+			l_index: INTEGER
+		do
+			from
+				l_index := 1
+			until
+				l_index > a_string.count or else l_index > chunk
+			loop
+				input_buffer.force (a_string.at (l_index), l_index)
+				l_index := l_index + 1
+			end
+			if l_index > a_string.count then
+				end_of_input := True
+			else
+				if attached user_input_string as l_string then
+				   string := l_string.substring (l_index, l_string.count)
+				end
+			end
+			Result := l_index - 1
 
 		end
 
@@ -333,6 +413,8 @@ feature {NONE} -- Deflate implementation
 				Result := file_write (output_buffer, a_amount, l_file)
 			elseif attached buffer as l_buffer then
 				Result := buffer_write (output_buffer,a_amount, l_buffer)
+			elseif attached string as l_string then
+				Result := string_write (output_buffer,a_amount, l_string)
 			end
 		end
 
@@ -368,6 +450,22 @@ feature {NONE} -- Deflate implementation
 			Result := l_index - 1
 		end
 
+
+	string_write (a_buffer: ARRAY [CHARACTER]; a_amount: INTEGER; a_dest: STRING): INTEGER
+		local
+			l_index: INTEGER
+		do
+			from
+				l_index := a_buffer.lower
+			until
+				l_index > a_amount or l_index > a_buffer.upper
+			loop
+				a_dest.append_character (a_buffer[l_index])
+				l_index := l_index + 1
+			end
+			Result := l_index - 1
+		end
+
 	close
 		require
 			connected: is_connected
@@ -378,6 +476,9 @@ feature {NONE} -- Deflate implementation
 			end
 			if attached buffer as l_buffer then
 				buffer := Void
+			end
+			if attached string as l_string then
+				string := Void
 			end
 		end
 
@@ -418,4 +519,11 @@ feature {NONE} -- Implementation
 
 	user_input_buffer: detachable ARRAY [CHARACTER]
 		-- Content to compress	
+
+	string: detachable STRING
+		-- String used to write the compressed ouput
+
+	user_input_string: detachable STRING
+		-- Content to compress	
+
 end

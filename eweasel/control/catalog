@@ -1041,6 +1041,7 @@ test 	finalization-with-error-crash	incr426	tcf fail incrementality agents final
 test 	create-generic-remove-generic-inheritance incr427 tcf fail incrementality generic
 test	config-remove-library-indirectly	incr428 tcf fail incrementality config
 test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
+test	qat-vwce-sneak			incr430	tcf fail incrementality anchored_type conditional expression
 
 
 -- Melting

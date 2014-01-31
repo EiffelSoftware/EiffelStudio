@@ -533,14 +533,21 @@ feature {NONE} -- Implementation
 				-- set the old target
 			l_old_target := universe.target
 
-				-- if groups in application configuration have changed or if any other configuration file has changed, we are not sure to be group equivalent anymore
-				-- else we can just update the options
-
-				-- changes in application configuration are handled specially so that we don't need to rebuild if we only change an option
+				-- changes in application configuration are handled specially so that we don't
+				-- need to rebuild if we only change an option.
+				-- Note that this has only a small impact for eweasel as only eweasel test#vd10001
+				-- behavior is affected if we remove this call to `set_file_date'.
 			if universe.conf_system /= Void then
 				universe.conf_system.set_file_date
 			end
-			has_group_changed := is_force_new_target or else universe.conf_system = Void or l_old_target = Void or else l_old_target.system.deep_date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
+
+				-- if groups in application configuration have changed or if any other configuration file
+				-- has changed, we are not sure to be group equivalent anymore else we can just update the options.
+				-- Note that we use `l_old_target.system' and not `Universe.conf_system' because the later might be
+				-- the new one already (case of a compilation that has restarted again (think about VD71 error)), and
+				-- we actually perform the options recomputations against `l_old_target' so there was a mismatch.
+				-- This fixes eweasel test#config038.
+			has_group_changed := is_force_new_target or else universe.conf_system = Void or l_old_target = Void or else l_old_target.system.deep_date_has_changed or not conf_system.is_group_equivalent (l_old_target.system)
 			if has_group_changed then
 					-- check if a precompile was modified
 				if l_old_target /= Void then
@@ -603,12 +610,13 @@ feature {NONE} -- Implementation
 				system.set_msil_version (l_new_target.version.version)
 			end
 
-				-- set the new target
-			universe.set_new_target (l_new_target)
-
 			if has_group_changed then
 				parse_target (l_new_target)
 			end
+
+				-- Only set the new target when parsing is ok, otherwise we get a failure,
+				-- See eweasel test#config028 and test#config029.
+			universe.set_new_target (l_new_target)
 
 			successful := True
 		ensure
@@ -1393,7 +1401,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

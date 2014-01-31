@@ -23,6 +23,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		do
+			basic_example_without_streams
+			stream_example_file_to_file
+			stream_example_buffer
+		end
+
+	basic_example_without_streams
 		local
 			l_source: RAW_FILE
 			l_dest: RAW_FILE
@@ -47,6 +54,50 @@ feature {NONE} -- Initialization
 			else
 				print ("%NDempress OK")
 			end
+		end
+
+	stream_example_file_to_file
+		local
+			zi: ZLIB_DATA_INFLATE
+			zo: ZLIB_DATA_COMPRESSION
+			l_file: FILE
+		do
+			create {RAW_FILE}l_file.make_create_read_write ("new_test.txt")
+			create zo.file_stream (l_file)
+			zo.put_file (source_file)
+			create {RAW_FILE}l_file.make_open_read ("new_test.txt")
+			create zi.file_stream (l_file)
+			zi.to_file ("new_file.txt")
+
+			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
+			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
+		end
+
+
+	stream_example_buffer
+		local
+			zi: ZLIB_DATA_INFLATE
+			zo: ZLIB_DATA_COMPRESSION
+			input_buffer: ARRAY[CHARACTER]
+			output_buffer: ARRAY[CHARACTER]
+			new_buffer: ARRAY[CHARACTER]
+		do
+			input_buffer := <<'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+						'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+						'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
+						>>
+			create output_buffer.make_empty
+			create zo.buffer_stream (output_buffer)
+			zo.put_buffer (input_buffer)
+			create zi.buffer_stream (output_buffer)
+			new_buffer := zi.to_buffer
+			new_buffer.compare_objects
+			input_buffer.compare_objects
+			check
+				same_content: new_buffer.is_equal (input_buffer)
+			end
+			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
+			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
 		end
 
 	deflate (a_source: RAW_FILE; a_dest: RAW_FILE; a_level: INTEGER): INTEGER

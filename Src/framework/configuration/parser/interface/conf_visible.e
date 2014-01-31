@@ -91,7 +91,8 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 		local
 			l_v_cl: STRING_TABLE [STRING_32]
 			l_tpl: detachable EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
-			l_visible_name, l_feature_name,
+			l_visible_name: STRING_32
+			l_feature_name,
 			l_class, l_feature: detachable STRING_32
 			l_visible: like visible
 		do
@@ -109,10 +110,9 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			end
 
 			l_tpl := l_visible.item (l_class)
-			if l_tpl = Void then
-				create l_tpl
+			if attached l_tpl then
+				l_v_cl := l_tpl.item.features
 			end
-			l_tpl.item.class_renamed := l_visible_name
 
 			if a_feature /= Void then
 				l_feature := a_feature.as_lower
@@ -122,12 +122,16 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 					l_feature_name := l_feature
 				end
 
-				l_v_cl := l_tpl.item.features
 				if l_v_cl = Void then
 					create l_v_cl.make_equal (1)
-					l_tpl.item.features := l_v_cl
 				end
 				l_v_cl.force (l_feature_name, l_feature)
+			end
+			if attached l_tpl then
+				l_tpl.item.class_renamed := l_visible_name
+				l_tpl.item.features := l_v_cl
+			else
+				create l_tpl.make ([l_visible_name, l_v_cl])
 			end
 			l_visible.force (l_tpl, l_class)
 		end

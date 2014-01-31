@@ -107,10 +107,9 @@ feature -- Access
 
 	is_connected: BOOLEAN
 		do
-			Result := buffer /= Void
+			Result := file /= Void or else buffer /= Void
 		end
-
-
+		
 	last_error_code: INTEGER
 		do
 			Result := zlib.last_operation
@@ -133,14 +132,19 @@ feature -- Access
 feature -- Intflate
 
 
-	to_file (a_file: STRING)
+	to_file (a_file: FILE)
 			-- Inflate the compress data to file `a_file'
+		require
+			open_write: a_file.is_open_write
 		do
-			create user_output_file.make_create_read_write (a_file)
+			user_output_file := a_file
 			inflate
 			if attached user_output_file as l_file then
 				l_file.close
 			end
+			close
+		ensure
+		 	user_output_file_closed: attached user_output_file as l_output_file implies l_output_file.is_closed
 		end
 
 	to_buffer : ARRAY[CHARACTER]
@@ -152,9 +156,10 @@ feature -- Intflate
 			if attached user_output_buffer as l_buffer then
 				Result.copy (l_buffer)
 			end
+			close
 		end
 
-feature -- {NONE} Inflate Implementation
+feature {NONE} -- Inflate Implementation
 
 	inflate
 			--		Decompress from file `a_source' to file `a_dest' until stream ends or EOF.
@@ -314,7 +319,20 @@ feature -- {NONE} Inflate Implementation
 			Result := l_index - 1
 		end
 
-feature -- Implementation
+	close
+		require
+			connected: is_connected
+		do
+			if attached file as ll_file then
+				ll_file.close
+				file := Void
+			end
+			if attached buffer as l_buffer then
+				buffer := Void
+			end
+		end
+
+feature {NONE} -- Implementation
 
 	input_buffer: ARRAY[CHARACTER]
 		-- Input buffer.
@@ -337,7 +355,7 @@ feature -- Implementation
 	file: detachable FILE
 		-- file use to read the compressed output
 
-	user_output_file: detachable RAW_FILE
+	user_output_file: detachable FILE
 		-- Output file, content to inflate
 
 	buffer: detachable ARRAY[CHARACTER]

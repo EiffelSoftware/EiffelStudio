@@ -92,6 +92,8 @@ history.txt.
 
 Version Date            Description
 ------- ----            -----------
+0.5.0   2013-11-dd      Added JSON_ITERATOR, simplified JSON_OBJECT
+0.4.0   2012-12-12      Updated documentation URI
 0.3.0   2011-07-06      JSON Factory Converters
 0.2.0   2010-02-07      Adapted to EiffelStudio 6.4 or later, supports void-safety
 0.1.0   2010-02-07      First release, Adapted to SmartEiffel 1.2r7 and EiffelStudio 6.2 or previous

@@ -6,12 +6,12 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<external_include location="$(EIFFEL_LIBRARY)\zlib\spec\include">
+		<external_include location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\include">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\zlibwapi.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\zlibwapi.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

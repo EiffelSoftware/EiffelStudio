@@ -2765,6 +2765,7 @@ test 	qat-with-secret-features	anchor068 tcf fail anchored_type
 test 	qat-instantiated-in-crash-4 	anchor069 tcf fail finalizing formal generic anchored_type
 test	qat-nested-qualified-type	anchor070 tcf pass anchored_type
 test	qat-generic-inheritance-2	anchor071 tcf fail anchored_type
+test	qat-dotnet-failure			anchor072 tcf fail anchored_type dotnet
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded

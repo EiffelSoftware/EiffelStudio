@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
 <a class="panel-title" href="/repository/{$package.version.value/}/package/{$package.id/}">
-<h4>Package {$package.human_identifier/}
+<h4>{$package.human_identifier/}
 {if condition="$package.was_downloaded" }<span class="label label-success pull-right">{$package.download_count/} downloads</span>{/if}
 </h4>
 </a>
@@ -33,7 +33,7 @@
 {if isset="$edit_uri_url"}<a href="{$edit_uri_url/}"> (manage)</a>{/if}
 </strong>
 <ul class="uri-list">
-{foreach key="uri" item="url" from="$uris" }<li class="uri"><a href="{$url/}">/{$package.version.value/}{$uri/}</a></li>
+{foreach key="uri" item="url" from="$uris" }<li class="uri">/{$package.version.value/}{$uri/}</li>
 {/foreach}
 </ul>
 </div>

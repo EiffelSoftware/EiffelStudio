@@ -69,6 +69,16 @@ feature -- Access
 			end
 		end
 
+	package_title: detachable IMMUTABLE_STRING_32
+		do
+			if
+				has_option (package_title_switch) and then
+				attached option_of_name (package_title_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
 	package_description: detachable IMMUTABLE_STRING_32
 		do
 			if
@@ -200,6 +210,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (repo_switch, "Repository", True, False, "url", "Repository url including the version", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (data_switch, "Data file", True, False, "file", "File describing the data (check documentation for the format)", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_name_switch, "Package name", True, False, "name", "package name, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_title_switch, "Package title", True, False, "name", "package title, override value from 'data file'", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_description_switch, "Package description", True, False, "description", "package description, override value from 'data file'", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override value from 'data file'", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override value from 'data file'", False))
@@ -215,13 +226,14 @@ feature {NONE} -- Switches
 	data_switch: STRING = "d|data"
 
 	package_name_switch: STRING = "package-name"
+	package_title_switch: STRING = "package-title"
 	package_description_switch: STRING = "package-description"
 	package_archive_file_switch: STRING = "package-archive-file"
 	package_archive_source_switch: STRING = "package-archive-source"
 	package_index_switch: STRING = "index"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,6 +12,10 @@ inherit
 
 feature -- Access
 
+	is_info: BOOLEAN
+		deferred
+		end
+
 	is_listing: BOOLEAN
 		deferred
 		end
@@ -31,7 +35,7 @@ feature -- Access
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -329,6 +329,7 @@ feature -- Package
 				end
 				create Result.make (a_id.to_string_8)
 				Result.set_name (inf.item ("name"))
+				Result.set_title (inf.item ("title"))
 				Result.set_description (inf.item ("description"))
 				if attached inf.item ("owner") as s_owner then
 					if attached user (s_owner) as o then
@@ -524,6 +525,7 @@ feature -- Package: change
 
 			inf.put (a_package.id, "id")
 			inf.put (a_package.name, "name")
+			inf.put (a_package.title, "title")
 			inf.put (a_package.description, "description")
 			if attached a_package.last_modified as dt then
 				create hdate.make_from_date_time (dt)
@@ -1301,7 +1303,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

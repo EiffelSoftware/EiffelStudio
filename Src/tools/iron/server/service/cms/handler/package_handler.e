@@ -58,7 +58,7 @@ feature -- Execution
 				r.add_menu_item (lnk)
 				lnk.add_sublink (iron.package_version_edit_web_page (l_package), "Edit")
 				lnk.add_sublink (iron.package_version_map_web_page (l_package, Void), "Map")
-				r.set_title ("Package " + iron.html_encoder.encoded_string (l_package.human_identifier))
+				r.set_title ("Package " + iron.html_encoder.encoded_string (l_package.identifier))
 				r.set_body (s)
 				res.send (r)
 			else
@@ -109,7 +109,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

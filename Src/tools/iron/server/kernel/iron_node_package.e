@@ -62,7 +62,8 @@ feature -- Status report
 
 feature -- Access
 
-	human_identifier: READABLE_STRING_32
+	identifier: READABLE_STRING_32
+			-- Safe package name
 		do
 			if attached name as l_name then
 				Result := l_name
@@ -71,11 +72,36 @@ feature -- Access
 			end
 		end
 
+	human_identifier: READABLE_STRING_32
+		local
+			s32: STRING_32
+		do
+			if attached title as l_title then
+				create s32.make_from_string (l_title)
+			else
+				create s32.make_empty
+			end
+			if attached name as l_name then
+				if s32.is_empty then
+					s32.append (l_name)
+				else
+					s32.append (" (")
+					s32.append (l_name)
+					s32.append (")")
+				end
+			elseif s32.is_empty then
+				create s32.make_from_string_general (id)
+			end
+			Result := s32
+		end
+
 	id: IMMUTABLE_STRING_8
 
 	owner: detachable IRON_NODE_USER
 
 	name: detachable READABLE_STRING_32
+
+	title: detachable READABLE_STRING_32
 
 	description: detachable READABLE_STRING_32
 
@@ -151,6 +177,15 @@ feature -- Change
 				name := v.to_string_32
 			else
 				name := Void
+			end
+		end
+
+	set_title (v: detachable READABLE_STRING_GENERAL)
+		do
+			if v /= Void then
+				title := v.to_string_32
+			else
+				title := Void
 			end
 		end
 
@@ -250,7 +285,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

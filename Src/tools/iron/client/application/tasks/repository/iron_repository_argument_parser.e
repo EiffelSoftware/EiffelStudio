@@ -41,6 +41,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_info: BOOLEAN
+		do
+			Result := has_option (info_switch)
+		end
+
 	is_listing: BOOLEAN
 		do
 			Result := has_option (list_switch)
@@ -116,6 +121,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "List repositories", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (add_switch, "Add repository", True, False, "name", "Registration name for associated url", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (remove_switch, "Remove repository", True, False, "name_or_url", "Registered name or repository url including the version", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (info_switch, "Info on local repository settings", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -125,17 +131,19 @@ feature {NONE} -- Switches
 			-- Valid switch grouping
 		once
 			create Result.make (3)
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (info_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (list_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (add_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (remove_switch)>>, False))
 		end
 
+	info_switch: STRING = "info"
 	list_switch: STRING = "l|list"
 	add_switch: STRING = "a|add"
 	remove_switch: STRING = "d|remove"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

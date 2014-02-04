@@ -212,6 +212,25 @@ feature -- Version Package: Criteria
 								end(?, v)
 							)
 					end)
+			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								local
+									kmp: KMP_WILD
+								do
+									if attached obj.title as l_title then
+										if s.has ('*') or s.has ('?') then
+											create kmp.make (s, l_title)
+											kmp.disable_case_sensitive
+											Result := kmp.pattern_matches
+										else
+											Result := l_title.as_lower.has_substring (s.as_lower)
+										end
+									end
+								end(?, v)
+							)
+					end)
 			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
 						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
@@ -318,7 +337,7 @@ feature -- Version Package/ map,path: change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

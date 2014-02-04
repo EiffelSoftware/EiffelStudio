@@ -134,7 +134,7 @@ feature -- Operation
 
 	last_operation_error_message: detachable READABLE_STRING_8
 
-	publish_package (a_id, a_name, a_description: detachable READABLE_STRING_32;
+	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32;
 				a_archive_path: detachable PATH;
 				a_repo: IRON_REPOSITORY; a_package: detachable IRON_PACKAGE;
 				a_user, a_password: READABLE_STRING_32)
@@ -157,6 +157,9 @@ feature -- Operation
 			end
 			if a_name /= Void then
 				ctx.add_form_parameter ("name", a_name)
+			end
+			if a_title /= Void then
+				ctx.add_form_parameter ("title", a_title)
 			end
 			if a_description /= Void then
 				ctx.add_form_parameter ("description", a_description)
@@ -244,7 +247,7 @@ feature -- Operation
 				if attached res.error_message as errmsg then
 					last_operation_error_message := "[Error] archive uploading failed!%N" + errmsg
 				else
-					last_operation_error_message := "[Error] archive uploading failed!"
+					last_operation_error_message := "[Error] archive uploading failed [" + res.status.out+ "]!"
 				end
 			elseif res.status = 401 then
 				last_operation_succeed := False
@@ -386,7 +389,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -80,7 +80,7 @@ feature -- Execution
 								s.append ("<li class=%"package-inline%">")
 								s.append ("<a href=%""+ iron.package_version_view_web_page (l_package) +"%"> ")
 								s.append (m.html_encoded_string (e.item))
-								if attached l_package.name as l_name and then not l_name.same_string (e.item) then
+								if attached l_package.name as l_name and then not l_package.is_named (e.item) then
 									s.append (" -&gt; package %"")
 									s.append (m.html_encoded_string (l_name))
 									s.append_character ('%"')
@@ -129,7 +129,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

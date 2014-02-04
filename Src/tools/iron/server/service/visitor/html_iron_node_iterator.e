@@ -161,7 +161,7 @@ feature -- Visit
 					across
 						lst as c
 					loop
-						l_uris.force (request.script_url (c.item), c.item)
+						l_uris.force (request.script_url (p.version.value + c.item), c.item)
 					end
 					tpl.add_value (l_uris, "uris")
 				end
@@ -187,6 +187,7 @@ feature -- Visit
 			v: READABLE_STRING_8
 			l_size: INTEGER
 			l_path: READABLE_STRING_8
+			l_name, l_title: detachable READABLE_STRING_32
 			i: INTEGER
 		do
 			if attached package_version_template_to_string (p) as l_tpl_string then
@@ -194,8 +195,16 @@ feature -- Visit
 			else
 				s := buffer
 				s.append ("<li class=%"package version%">")
-				if attached p.name as l_name then
-					s.append ("<span class=%"name%"><a href=%""+ request.script_url (iron.package_version_view_web_page (p)) + "%">" + html_encoder.encoded_string (l_name) + "</a></span>")
+				l_name := p.name
+				l_title := p.title
+				if l_name /= Void then
+					s.append ("<span class=%"name%"><a href=%""+ request.script_url (iron.package_version_view_web_page (p)) + "%">" + html_encoder.encoded_string (l_name))
+					if l_title /= Void then
+						s.append (" &quote;")
+						s.append (html_encoder.encoded_string (l_title))
+						s.append ("&quote;")
+					end
+					s.append ("</a></span>")
 					s.append ("<span class=%"packageid%">(")
 					s.append (p.id)
 					s.append (")</span>")
@@ -337,7 +346,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

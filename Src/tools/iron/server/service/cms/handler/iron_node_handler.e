@@ -244,6 +244,7 @@ feature -- Package form
 			f: WSF_FORM
 			f_id: WSF_FORM_HIDDEN_INPUT
 			f_name: WSF_FORM_TEXT_INPUT
+			f_title: WSF_FORM_TEXT_INPUT
 			f_desc: WSF_FORM_TEXTAREA
 			f_tags: WSF_FORM_TEXT_INPUT
 			f_archive: WSF_FORM_FILE_INPUT
@@ -266,15 +267,25 @@ feature -- Package form
 			f.set_multipart_form_data_encoding_type
 			create f_name.make ("name")
 			f_name.set_label ("Name")
+			f_name.set_size (50)
 			f.extend (f_name)
+
+			create f_title.make ("title")
+			f_title.set_label ("Title")
+			f_title.set_description ("Optional title, if unset, use `name' in user interfaces")
+			f_title.set_size (50)
+			f.extend (f_title)
 
 			create f_desc.make ("description")
 			f_desc.set_label ("Description")
+			f_desc.set_rows (6)
+			f_desc.set_cols (70)
 			f.extend (f_desc)
 
 			create f_tags.make ("tags")
 			f_tags.set_label ("Tags")
 			f_tags.set_description ("Comma separated keywords")
+			f_tags.set_size (50)
 			f.extend (f_tags)
 
 			create f_fieldset.make
@@ -287,6 +298,7 @@ feature -- Package form
 			create f_archive_url.make ("archive-url")
 			f_archive_url.set_label ("Get archive from url")
 			f_archive_url.set_description ("If you have trouble uploading the archive file, the server can download from a public URL.")
+			f_archive_url.set_size (50)
 			f_fieldset.extend (f_archive_url)
 
 			if vp /= Void and then vp.has_archive then
@@ -317,6 +329,9 @@ feature -- Package form
 			elseif vp /= Void then
 				if attached vp.name as l_name then
 					f_name.set_text_value (l_name)
+				end
+				if attached vp.title as l_title then
+					f_title.set_text_value (l_title)
 				end
 				if attached vp.description as l_description then
 					f_desc.set_text_value (l_description)
@@ -445,6 +460,9 @@ feature -- Package form
 					if attached fd.string_item ("name") as l_name then
 						p.set_name (l_name)
 					end
+					if attached fd.string_item ("title") as l_title then
+						p.set_title (l_title)
+					end
 					if attached fd.string_item ("description") as l_description then
 						p.set_description (l_description)
 					end
@@ -544,7 +562,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

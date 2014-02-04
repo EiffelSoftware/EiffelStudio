@@ -238,6 +238,7 @@ feature -- Package form
 			f: WSF_FORM
 			f_id: WSF_FORM_HIDDEN_INPUT
 			f_name: WSF_FORM_TEXT_INPUT
+			f_title: WSF_FORM_TEXT_INPUT
 			f_desc: WSF_FORM_TEXTAREA
 			f_archive: WSF_FORM_FILE_INPUT
 			f_archive_url: WSF_FORM_TEXT_INPUT
@@ -259,6 +260,11 @@ feature -- Package form
 			create f_name.make ("name")
 			f_name.set_label ("Name")
 			f.extend (f_name)
+
+			create f_title.make ("title")
+			f_title.set_label ("Title")
+			f_title.set_description ("Optional title, if unset, use `name' in user interfaces")
+			f.extend (f_title)
 
 			create f_desc.make ("description")
 			f_desc.set_label ("Description")
@@ -294,7 +300,7 @@ feature -- Package form
 				f_name.set_validation_action (agent (fd: WSF_FORM_DATA)
 						do
 							if attached {WSF_STRING} fd.item ("name") as if_name and then if_name.value.count >= 1 then
-
+									-- Non empty string is ok
 							else
 								fd.report_invalid_field ("name", "Package name should contain at least 1 characters!")
 							end
@@ -303,6 +309,9 @@ feature -- Package form
 			elseif p /= Void then
 				if attached p.name as l_name then
 					f_name.set_text_value (l_name)
+				end
+				if attached p.title as l_title then
+					f_title.set_text_value (l_title)
 				end
 				if attached p.description as l_description then
 					f_desc.set_text_value (l_description)
@@ -323,6 +332,7 @@ feature -- Package form
 			l_path_id: detachable READABLE_STRING_32
 			cl_path: CELL [detachable PATH]
 			pv: detachable IRON_NODE_VERSION_PACKAGE
+			l_name: detachable READABLE_STRING_32
 		do
 			m := new_response_message (req)
 			create s.make_empty
@@ -343,6 +353,7 @@ feature -- Package form
 				if attached {WSF_STRING} req.path_parameter ("id") as p_id then
 					l_path_id := p_id.value
 				end
+				l_name := fd.string_item ("name")
 				if attached fd.string_item ("id") as l_id then
 					if l_path_id /= Void then
 						if l_id.is_case_insensitive_equal (l_path_id) then
@@ -361,7 +372,7 @@ feature -- Package form
 						fd.report_error ("Package id is missing from URI!")
 						create p.make (l_id)
 					end
-				elseif attached fd.string_item ("name") as l_name then
+				elseif l_name /= Void then
 					check no_id_item: fd.string_item ("id") = Void end
 					if attached iron.database.package_by_name (l_name) as l_package then
 						p := l_package
@@ -402,8 +413,12 @@ feature -- Package form
 					fd.report_error ("Operation restricted to allowed user.")
 				end
 				if not fd.has_error then
-					if attached fd.string_item ("name") as l_name then
+					l_name := fd.string_item ("name")
+					if l_name /= Void then
 						p.set_name (l_name)
+					end
+					if attached fd.string_item ("title") as l_title then
+						p.set_title (l_title)
 					end
 					if attached fd.string_item ("description") as l_description then
 						p.set_description (l_description)
@@ -489,7 +504,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,17 +27,22 @@ feature {NONE} -- Initialization
 				create p.make_current
 				p := p.extended ("iron")
 			end
-			make_with_path (p)
+			make_with_path (p, p)
 		end
 
-	make_with_path (p: PATH)
+	make_with_path (a_root: PATH; a_installation: PATH)
 		do
-			path := p.absolute_path.canonical_path
+			path := a_root.absolute_path.canonical_path
+			installation_path := a_installation.absolute_path.canonical_path
 		end
 
 feature -- Access
 
 	path: PATH
+			-- root dir for iron.
+
+	installation_path: PATH
+			-- Installation dir.
 
 	binaries_path: detachable PATH
 			-- Binaries path if available.
@@ -53,7 +58,7 @@ feature -- Access
 				s := e
 			end
 			if s /= Void then
-				Result := path.extended ("spec").extended (s).extended ("bin")
+				Result := installation_path.extended ("spec").extended (s).extended ("bin")
 			end
 		end
 
@@ -178,7 +183,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,6 +28,8 @@ feature -- Access
 
 	name: detachable READABLE_STRING_32
 
+	title: detachable READABLE_STRING_32
+
 	description: detachable READABLE_STRING_32
 
 	archive: detachable PATH
@@ -53,6 +55,15 @@ feature -- Change
 				name := Void
 			else
 				name := v
+			end
+		end
+
+	set_title (v: like title)
+		do
+			if v = Void or else v.is_empty then
+				title := Void
+			else
+				title := v
 			end
 		end
 
@@ -133,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -69,8 +69,8 @@ feature -- Access
 			l_reader: like consumed_type_deserializer
 		do
 			l_reader := consumed_type_deserializer
-			if type_file /= Void and then (create {RAW_FILE}.make_with_name (type_file)).exists then
-				l_reader.deserialize (type_file, type_position)
+			if attached type_file as l_type_file and then (create {RAW_FILE}.make_with_name (l_type_file)).exists then
+				l_reader.deserialize (l_type_file, type_position)
 				if l_reader.successful then
 					Result ?= l_reader.deserialized_object
 				end
@@ -180,7 +180,7 @@ feature {NONE} -- Type anchor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -217,7 +217,6 @@ feature -- Access
 	local_path_associated_with_relative_uri (a_package_name: READABLE_STRING_GENERAL; a_relative_uri: READABLE_STRING_GENERAL): detachable PATH
 		local
 			l_package: detachable IRON_PACKAGE
-			iri: IRI
 		do
 			if attached installed_packages as lst then
 				across

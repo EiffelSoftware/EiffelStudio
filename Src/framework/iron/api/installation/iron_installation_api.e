@@ -140,6 +140,31 @@ feature -- Access
 		end
 
 	local_path_associated_with_uri (a_uri: READABLE_STRING_GENERAL): detachable PATH
+			-- Local path for package referenced by `a_uri'.
+		local
+			iri: IRI
+			p: INTEGER
+			l_path: READABLE_STRING_8
+		do
+			if
+				a_uri.starts_with ("http://") or
+				a_uri.starts_with ("https://")
+			then
+				Result := local_path_associated_with_url (a_uri)
+			elseif a_uri.starts_with ("iron:") then
+				create iri.make_from_string (a_uri)
+				l_path := iri.uri_path
+				p := l_path.index_of (':', 1)
+				if p > 0 then
+					Result := local_path_associated_with_relative_uri (l_path.head (p - 1), l_path.substring (p + 1, l_path.count))
+				else
+						-- The tail could be the packagename, and there may be a default .ecf ... depending on the void-safety level.
+						-- status: idea not implemented.
+				end
+			end
+		end
+
+	local_path_associated_with_url (a_url: READABLE_STRING_GENERAL): detachable PATH
 		local
 			s,r: STRING
 			l_pn_item: READABLE_STRING_8
@@ -148,7 +173,7 @@ feature -- Access
 			iri: IRI
 			l_uri: READABLE_STRING_8
 		do
-			create iri.make_from_string (a_uri)
+			create iri.make_from_string (a_url)
 			l_uri := iri.uri_string
 
 			create r.make_empty
@@ -189,6 +214,32 @@ feature -- Access
 			end
 		end
 
+	local_path_associated_with_relative_uri (a_package_name: READABLE_STRING_GENERAL; a_relative_uri: READABLE_STRING_GENERAL): detachable PATH
+		local
+			l_package: detachable IRON_PACKAGE
+			iri: IRI
+		do
+			if attached installed_packages as lst then
+				across
+					lst as p
+				until
+					l_package /= Void
+				loop
+					if p.item.is_named (a_package_name) then
+						l_package := p.item
+					end
+				end
+			end
+			if l_package /= Void then
+				Result := package_installation_path (l_package)
+				if Result /= Void and then (create {DIRECTORY}.make_with_path (Result)).exists then
+					Result := Result.extended (a_relative_uri)
+				else
+					Result := Void
+				end
+			end
+		end
+
 	installed_packages: LIST [IRON_PACKAGE]
 
 feature {NONE} -- Implementation
@@ -205,7 +256,7 @@ invariant
 	installed_packages /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

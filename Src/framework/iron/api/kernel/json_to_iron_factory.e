@@ -80,6 +80,9 @@ feature {NONE} -- Implementation
 				end
 				Result.put_json_item (j_package.representation)
 				Result.set_name (j_name.item)
+				if attached {JSON_STRING} j_package.item ("title") as j_title then
+					Result.set_title (j_title.item)
+				end
 				if attached {JSON_STRING} j_package.item ("description") as j_description then
 					Result.set_description (j_description.item)
 				end
@@ -108,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

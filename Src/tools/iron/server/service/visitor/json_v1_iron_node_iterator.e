@@ -242,6 +242,10 @@ feature -- Visit
 					end
 					j_object.put (create {JSON_NUMBER}.make_integer (p.download_count), "download_count")
 				end
+				if attached p.title as l_title then
+					js := l_title
+					j_object.put (js, "title")
+				end
 				if attached p.description as l_description then
 					js := l_description
 					j_object.put (js, "description")
@@ -322,7 +326,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -37,7 +37,7 @@
 {/foreach}
 </ul>
 </div>
-<p class="howto"><span class="glyphicon glyphicon-cog"></span> iron install {$package.human_identifier/}</p>
+<p class="howto"><span class="glyphicon glyphicon-cog"></span> iron install {$package.identifier/}</p>
 {/if}
 <br/>
 

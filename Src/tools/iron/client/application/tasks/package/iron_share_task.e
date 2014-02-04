@@ -40,7 +40,7 @@ feature -- Execute
 			tgt: PATH
 			l_package: detachable IRON_PACKAGE
 			err, done: BOOLEAN
-			l_name, l_id: detachable READABLE_STRING_32
+			l_title, l_name, l_id: detachable READABLE_STRING_32
 			l_archive_path: detachable PATH
 			remote_node: IRON_REMOTE_NODE
 		do
@@ -57,6 +57,7 @@ feature -- Execute
 					l_data := data_from (args)
 					if l_data /= Void then
 						l_name := l_data.name
+						l_title := l_data.title
 						l_id := l_data.id
 
 						if attached args.package_indexes as l_indexes then
@@ -154,10 +155,10 @@ feature -- Execute
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								remote_node.publish_package (l_id, l_name, l_data.description, l_archive_path, repo, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, repo, l_package, u, p)
 							else
 								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
-								remote_node.publish_package (l_id, l_name, l_data.description, l_archive_path, repo, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, repo, l_package, u, p)
 							end
 							if remote_node.last_operation_succeed then
 								if l_package /= Void then
@@ -263,6 +264,14 @@ feature -- Execute
 				end
 
 				if not args.is_delete then
+					if attached args.package_title as l_title then
+						Result.set_title (l_title)
+					elseif not args.is_batch then
+						print ("Title? >")
+						io.read_line
+						Result.set_title (io.last_string.to_string_32)
+					end
+
 					if attached args.package_description as l_desc then
 						Result.set_description (l_desc)
 					elseif not args.is_batch then
@@ -313,7 +322,7 @@ feature -- Execute
 --		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

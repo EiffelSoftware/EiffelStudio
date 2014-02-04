@@ -1,5 +1,5 @@
 note
-	description : "Objects that ..."
+	description : "Objects that represent an iron package"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -61,9 +61,15 @@ feature -- Comparison
 		end
 
 	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is package named `a_name' ?
+		local
+			s: detachable READABLE_STRING_32
 		do
-			if a_name /= Void and attached name as l_name then
-				Result := a_name.is_case_insensitive_equal (l_name)
+			if a_name /= Void then
+				s := name
+				if s /= Void then
+					Result := a_name.is_case_insensitive_equal (s)
+				end
 			end
 		end
 
@@ -81,18 +87,36 @@ feature -- Access
 			-- Associated repository
 
 	human_identifier: STRING_32
+		local
+			l_title: like title
 		do
 			create Result.make_from_string (repository.url)
 			Result.append_character (' ')
+			l_title := title
 			if attached name as l_name then
 				Result.append (l_name)
+				if l_title /= Void then
+					Result.append_character (' ')
+					Result.append_character ('"')
+					Result.append_string_general (l_title)
+					Result.append_character ('"')
+				end
+				
 				debug
 					Result.append_character (' ')
 					Result.append_string_general (id)
 				end
 			else
+				if l_title /= Void then
+					Result.append_character ('"')
+					Result.append_string_general (l_title)
+					Result.append_character ('"')
+					Result.append_character (' ')
+				end
+
 				Result.append_string_general (id)
 			end
+
 
 			debug
 				across
@@ -103,12 +127,17 @@ feature -- Access
 					Result.append_character (' ')
 				end
 			end
-
 		end
 
 	id: IMMUTABLE_STRING_8
+			-- Unique identifier.
+			--| UUID
 
 	name: detachable READABLE_STRING_32
+			-- Optional unique friendly identifier.
+
+	title: detachable READABLE_STRING_32
+			-- Optional associated title for UI.
 
 	description: detachable READABLE_STRING_32
 
@@ -199,6 +228,15 @@ feature -- Change
 			end
 		end
 
+	set_title (v: detachable READABLE_STRING_GENERAL)
+		do
+			if v /= Void then
+				title := v.to_string_32
+			else
+				title := Void
+			end
+		end
+
 	set_description (v: detachable READABLE_STRING_GENERAL)
 		do
 			if v /= Void then
@@ -240,7 +278,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

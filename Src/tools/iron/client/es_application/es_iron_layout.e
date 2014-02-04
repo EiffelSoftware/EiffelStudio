@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialize with Eiffel layout `e'
 		do
 			eiffel_layout := e
-			make_with_path (e.iron_path)
+			make_with_path (e.iron_path, e.installation_iron_path)
 		end
 
 	eiffel_layout: EIFFEL_ENV
@@ -37,7 +37,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

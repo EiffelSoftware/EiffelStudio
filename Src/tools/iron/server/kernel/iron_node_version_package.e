@@ -54,6 +54,19 @@ feature -- Comparison
 			Result := (package ~ other.package) and then (version ~ other.version)
 		end
 
+	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is package named `a_name' ?
+		local
+			s: detachable READABLE_STRING_32
+		do
+			if a_name /= Void then
+				s := name
+				if s /= Void then
+					Result := a_name.is_case_insensitive_equal (s)
+				end
+			end
+		end
+
 feature -- Status report
 
 	debug_output: READABLE_STRING_GENERAL
@@ -64,13 +77,14 @@ feature -- Status report
 
 feature -- Access
 
+	identifier: READABLE_STRING_32
+		do
+			Result := package.identifier
+		end
+
 	human_identifier: READABLE_STRING_32
 		do
-			if attached name as l_name then
-				Result := l_name
-			else
-				Result := id.to_string_32
-			end
+			Result := package.human_identifier
 		end
 
 	id: IMMUTABLE_STRING_8
@@ -86,6 +100,11 @@ feature -- Access
 	name: detachable READABLE_STRING_32
 		do
 			Result := package.name
+		end
+
+	title: detachable READABLE_STRING_32
+		do
+			Result := package.title
 		end
 
 	description: detachable READABLE_STRING_32
@@ -197,7 +216,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

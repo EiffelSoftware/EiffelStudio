@@ -25,6 +25,8 @@ feature -- Internal data
 					Result := cell_of (obj.id)
 				elseif fn.is_case_insensitive_equal_general ("human_identifier") then
 					Result := cell_of (obj.human_identifier)
+				elseif fn.is_case_insensitive_equal_general ("identifier") then
+					Result := cell_of (obj.identifier)
 				elseif fn.is_case_insensitive_equal_general ("description") then
 					Result := cell_of (obj.description)
 				elseif fn.is_case_insensitive_equal_general ("was_downloaded") then
@@ -33,6 +35,8 @@ feature -- Internal data
 					Result := cell_of (obj.download_count)
 				elseif fn.is_case_insensitive_equal_general ("name") then
 					Result := cell_of (obj.name)
+				elseif fn.is_case_insensitive_equal_general ("title") then
+					Result := cell_of (obj.title)
 				elseif fn.is_case_insensitive_equal_general ("owner") then
 					Result := cell_of (obj.owner)
 				elseif fn.is_case_insensitive_equal_general ("tags") then
@@ -61,7 +65,7 @@ feature -- Internal data
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

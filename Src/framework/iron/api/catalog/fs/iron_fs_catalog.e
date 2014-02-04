@@ -40,12 +40,7 @@ feature {NONE} -- Initialization
 		do
 			create repo_conf.make (layout.repositories_configuration_file)
 
-			create repositories.make (1)
-			across
-				repo_conf.repositories as c
-			loop
-				repositories.force (c.item)
-			end
+			repositories := repo_conf.repositories
 
 			across
 				repositories as c
@@ -74,7 +69,7 @@ feature -- Access
 
 feature -- Access: repository
 
-	repositories: ARRAYED_LIST [IRON_REPOSITORY]
+	repositories: STRING_TABLE [IRON_REPOSITORY]
 
 	register_repository (a_name: READABLE_STRING_8; a_repo: IRON_REPOSITORY)
 		local
@@ -461,7 +456,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

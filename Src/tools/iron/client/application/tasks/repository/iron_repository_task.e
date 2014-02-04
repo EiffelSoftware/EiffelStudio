@@ -36,11 +36,22 @@ feature -- Execute
 	execute (args: IRON_REPOSITORY_ARGUMENTS; a_iron: IRON)
 		local
 			repo: IRON_REPOSITORY
+			l_require_update: BOOLEAN
 		do
-			if args.is_listing then
+			if args.is_info then
+				print ("Iron packages installation:%N  - ")
+				print (a_iron.layout.path.name)
+				print ("%N")
+
+				print ("Iron client installation:%N  - ")
+				print (a_iron.layout.installation_path.name)
+				print ("%N")
+			elseif args.is_listing then
 				across
 					a_iron.catalog_api.repositories as c
 				loop
+					print (c.key)
+					print (" -> ")
 					print (c.item.url)
 					print ("%N")
 				end
@@ -50,19 +61,23 @@ feature -- Execute
 				print_new_line
 				create repo.make_from_version_uri ((create {IRI}.make_from_string (l_repo_url)).to_uri)
 				a_iron.catalog_api.register_repository (v, repo)
+				l_require_update := True
 			end
 			if attached args.repository_to_remove as v then
 				print (m_unregistering_repository (v))
 				print_new_line
 				a_iron.catalog_api.unregister_repository (v)
+				l_require_update := True
 			end
-			print (m_updating_repositories)
-			print_new_line
-			a_iron.catalog_api.update
+			if l_require_update then
+				print (m_updating_repositories)
+				print_new_line
+				a_iron.catalog_api.update
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

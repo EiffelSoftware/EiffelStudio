@@ -1,0 +1,10 @@
+# OpenSSL support for EiffelNet #
+
+Status: working on Windows and Linux
+
+This code is the result of an old patch from Guus Leeuw jr.  (from itpassion.com)
+updated by Jocelyn Fiat to void-safety and provided as an extension to EiffelNet.
+
+This supports only Linux and Windows so far.
+This "project" is open for contribution, and looking for maintainer.
+

@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize `a_iron' if needed
 		local
 			repo: IRON_REPOSITORY
+			l_version: STRING
 		do
 			if
 				a_iron.catalog_api.repositories.is_empty and then
@@ -51,7 +52,15 @@ feature {NONE} -- Initialization
 			then
 					-- Initialize default repo
 				print ("First initialization with default repository...%N")
-				create repo.make (create {URI}.make_from_string ("http://iron.eiffel.com/"), {EIFFEL_CONSTANTS}.major_version.out + "." + {EIFFEL_CONSTANTS}.minor_version.out)
+				create l_version.make (5)
+				l_version.append ({EIFFEL_CONSTANTS}.major_version.out)
+				l_version.append_character ('.')
+				if {EIFFEL_CONSTANTS}.minor_version < 10 then
+					l_version.append_character ('0')
+				end
+				l_version.append ({EIFFEL_CONSTANTS}.minor_version.out)
+
+				create repo.make (create {URI}.make_from_string ("http://iron.eiffel.com/"), l_version)
 				print (m_registering_repository ("iron", repo.url))
 				io.put_new_line
 				a_iron.catalog_api.register_repository ("iron", repo)
@@ -74,7 +83,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

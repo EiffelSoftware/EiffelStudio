@@ -78,7 +78,7 @@ feature -- Initialization: Iron
 					-- Custom mapping for IRON...		
 				if is_eiffel_layout_defined then
 						-- Using ISE Eiffel Environment
-					create lay.make_with_path (eiffel_layout.iron_path)
+					create lay.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path)
 					create l_iron_mapping.make (lay, create {IRON_URL_BUILDER})
 					conf_location_mapper.register (l_iron_mapping)
 					iron_initialized := True
@@ -87,7 +87,7 @@ feature -- Initialization: Iron
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

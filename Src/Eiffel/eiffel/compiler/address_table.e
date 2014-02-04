@@ -1153,14 +1153,11 @@ feature {NONE} -- Generation
 	generate_workbench_c_body (buffer: GENERATION_BUFFER; a_feature: FEATURE_I; l_current_name: STRING;
 						   	   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types)
 		local
-			l_rout_id: INTEGER
-			l_rout_info: ROUT_INFO
 			l_types: ARRAY [STRING]
 			i: INTEGER
 			l_eif_typed_value_str: STRING
 		do
 			buffer.put_character ('(')
-			l_rout_id := a_feature.rout_id_set.first
 			create l_types.make (1, a_types.count)
 			l_types [1] := a_types [1]
 			from
@@ -1175,7 +1172,7 @@ feature {NONE} -- Generation
 			c_return_type.generate_function_cast (buffer, l_types, True)
 
 			buffer.put_string ("RTVF(")
-			buffer.put_integer (l_rout_id)
+			buffer.put_integer (a_feature.rout_id_set.first)
 			buffer.put_string ({C_CONST}.comma_space)
 			buffer.put_string_literal (a_feature.feature_name)
 			buffer.put_string ({C_CONST}.comma_space)

@@ -421,7 +421,6 @@ feature {NONE} -- C code generation
 			c_attached: attached c
 		local
 			is_nested: BOOLEAN
-			rout_info: ROUT_INFO
 			buf: GENERATION_BUFFER
 			cl_type_i: CL_TYPE_A
 			l_type: TYPE_A

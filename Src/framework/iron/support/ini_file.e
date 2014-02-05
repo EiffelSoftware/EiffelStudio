@@ -42,6 +42,17 @@ feature -- Access
 			Result := data.item (n)
 		end
 
+	adjusted_item (n: READABLE_STRING_GENERAL): detachable STRING_32
+		require
+			is_valid: is_valid
+		do
+			if attached data.item (n) as r then
+				create Result.make_from_string (r)
+				Result.left_adjust
+				Result.right_adjust
+			end
+		end
+
 	table_item (a_name: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
 		require
 			is_valid: is_valid

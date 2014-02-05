@@ -1,58 +1,79 @@
 note
-	description: "[
-			Objects that ...
-		]"
-	author: "$Author$"
+	description: "Summary description for {IRON_NODE_CONFIG}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_NODE_FACTORY
+	IRON_NODE_CONFIG
 
-inherit
-	SHARED_EXECUTION_ENVIRONMENT
+create
+	make
 
-	REFACTORING_HELPER
+feature {NONE} -- Initialization
+
+	make (p: PATH)
+			-- Create Current from config file `p'.
+		do
+			path := p
+
+				-- Defaults
+			log_level := 1
+
+				-- Load from file.
+			load
+		end
+
+	path: PATH
 
 feature -- Access
 
-	iron_node: IRON_NODE
-		local
-			db: IRON_NODE_DATABASE
-			obs: IRON_NODE_OBSERVER
-			mailer: NOTIFICATION_MAILER
-			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
-			lay: IRON_NODE_LAYOUT
+	administrator_email: detachable IMMUTABLE_STRING_8
+
+	log_level: NATURAL_8
+
+feature -- Access
+
+	item (a_name: READABLE_STRING_8): detachable READABLE_STRING_32
 		do
-			if attached execution_environment.item ({IRON_NODE_CONSTANTS}.IRON_REPO_variable_name) as s then
-				create lay.make_with_path (create {PATH}.make_from_string (s))
-			else
-				create lay.make_default
+			if attached internal_data as d then
+				Result := d.item (a_name)
 			end
+		end
 
-			if {PLATFORM}.is_windows then
-				create ext_mailer.make (lay.binaries_path.extended ("sendmail.bat").name, Void)
-				mailer := ext_mailer
-			else
-				create {NOTIFICATION_SENDMAIL_MAILER} mailer
+feature {NONE} -- Implementation
+
+	internal_data: detachable IRON_NODE_INFO
+
+	load
+		local
+			l_cfg: detachable IRON_NODE_INFO
+		do
+			create l_cfg.make_with_path (path)
+			if not l_cfg.is_valid then
+				debug ("iron")
+					print ("[DEBUG] Error while loading configuration.%N")
+				end
+				l_cfg := Void
+				check has_error: False end
 			end
-			create {IRON_NODE_FS_DATABASE} db.make_with_layout (lay)
-			create Result.make (db, lay)
-
-				-- Mail notification
-			if attached Result.config.administrator_email as l_email then
-				create {IRON_NODE_MAILER_OBSERVER} obs.make_with_mailer (mailer, l_email)
-				Result.register_observer (obs)
-			else
-					-- No mail notification
+			internal_data := l_cfg
+			if l_cfg /= Void then
+					-- Administrator email address
+				if
+					attached l_cfg.adjusted_item ("admin.email.from") as l_email and then
+					not l_email.is_empty and then l_email.is_valid_as_string_8
+				then
+					create administrator_email.make_from_string (l_email.to_string_8)
+				end
+					-- Log level
+				if
+					attached l_cfg.item ("log.level") as l_level and then
+					l_level.is_natural_8
+				then
+					log_level := l_level.to_natural_8
+				end
 			end
-
-				-- Logs
-			create {IRON_NODE_LOGGING_OBSERVER} obs.make (agent db.save_log, Result.config.log_level) -- Log level unused for now.
-			Result.register_observer (obs)
-
-				-- Callbacks
-			db.register_observer (Result)
 		end
 
 note

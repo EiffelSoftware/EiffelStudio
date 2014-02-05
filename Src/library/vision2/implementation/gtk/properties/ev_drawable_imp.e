@@ -1146,35 +1146,34 @@ feature {NONE} -- Implementation
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				{
-					guint32 x, y;
-					guint32 l_pix_height,l_pix_width;
-					guint32 l_pix_row_stride;
-					guint32 l_mask_row_stride;
-					GdkPixbuf *pixbuf, *mask;
-					guchar *l_mask_pixels, *l_pixbuf_pixels;
-					pixbuf = (GdkPixbuf*) arg1;
-					mask = (GdkPixbuf*) arg2;
-					l_pix_height = gdk_pixbuf_get_height (pixbuf);
-					l_pix_width = gdk_pixbuf_get_width (pixbuf);
-					l_pix_row_stride = gdk_pixbuf_get_rowstride(pixbuf);
-					l_mask_row_stride = gdk_pixbuf_get_rowstride(mask);
-					l_mask_pixels = gdk_pixbuf_get_pixels (mask);
-					l_pixbuf_pixels = gdk_pixbuf_get_pixels (pixbuf);
-					for (y = 0; y < l_pix_height; y++)
-					{
-						guchar *src, *dest;
-						src = (l_mask_pixels + (y * l_mask_row_stride));
-						dest = (l_pixbuf_pixels + (y * l_pix_row_stride));
-						for (x = 0; x < l_pix_width; x++) {
-							if (src [0] == (guchar)0) {
-								dest [3] = (guchar)0;
-							}
-							src += 4;
-							dest += 4;
+			{
+				guint32 x, y;
+				guint32 l_pix_height,l_pix_width;
+				guint32 l_pix_row_stride;
+				guint32 l_mask_row_stride;
+				GdkPixbuf *pixbuf, *mask;
+				guchar *l_mask_pixels, *l_pixbuf_pixels;
+				pixbuf = (GdkPixbuf*) arg1;
+				mask = (GdkPixbuf*) arg2;
+				l_pix_height = gdk_pixbuf_get_height (pixbuf);
+				l_pix_width = gdk_pixbuf_get_width (pixbuf);
+				l_pix_row_stride = gdk_pixbuf_get_rowstride(pixbuf);
+				l_mask_row_stride = gdk_pixbuf_get_rowstride(mask);
+				l_mask_pixels = gdk_pixbuf_get_pixels (mask);
+				l_pixbuf_pixels = gdk_pixbuf_get_pixels (pixbuf);
+				for (y = 0; y < l_pix_height; y++) {
+					guchar *src, *dest;
+					src = (l_mask_pixels + (y * l_mask_row_stride));
+					dest = (l_pixbuf_pixels + (y * l_pix_row_stride));
+					for (x = 0; x < l_pix_width; x++) {
+						if (src [0] == (guchar)0) {
+							dest [3] = (guchar)0;
 						}
+						src += 4;
+						dest += 4;
 					}
 				}
+			}
 			]"
 		end
 
@@ -1241,7 +1240,7 @@ invariant
 	gc_not_void: is_usable implies gc /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

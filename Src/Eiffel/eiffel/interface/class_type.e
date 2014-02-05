@@ -1440,8 +1440,6 @@ feature -- Skeleton generation
 			skeleton_empty: BOOLEAN
 			a_class: CLASS_C
 			creation_feature: FEATURE_I
-			r_id: INTEGER
-			rout_info: ROUT_INFO
 		do
 			a_class := associated_class
 			skeleton_empty := skeleton.empty

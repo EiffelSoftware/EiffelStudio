@@ -16,7 +16,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(EIFFEL_LIBRARY)\eiffel_net_openssl\spec\include">
+		<external_include location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\include">
 			<condition>
 				<platform value="windows"/>
 			</condition>
@@ -26,12 +26,12 @@
 				<platform value="windows"/>
 			</condition>
 		</external_cflag>
-		<external_object location="ssleay32.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\ssleay32.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="libeay32.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libeay32.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

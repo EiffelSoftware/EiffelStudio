@@ -1,6 +1,5 @@
 note
 	description: "SSL context. Define tls protocols and the default one."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +28,7 @@ feature -- Change Element
 			tls_protocol_set:  tls_protocol = a_protocol
 		end
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1045,15 +1045,29 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			Result := {GTK2}.gdk_pixbuf_get_from_drawable (l_null, drawable, l_null, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
 
 			if Result = l_null then
-					-- Cannot get pixbuf from `drawable', just create an empty one 
+					-- Cannot get pixbuf from `drawable', just create an empty one
 					-- to ensure that there is no failure, just a bad display.
 				Result := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
 			elseif mask /= l_null then
 				l_mask_pix := {GTK2}.gdk_pixbuf_get_from_drawable (l_null, mask, l_null, src_x, src_y, dest_x, dest_y, a_width, a_height)
 
 				if l_mask_pix /= l_null then
+						-- Add alpha channel to `l_mask_pix' as required by
+						-- `draw_mask_on_pixbuf' since the creation of `l_mask_pix'
+						-- above will only create a RGB image without alpha channel
 					l_temp_pix := l_mask_pix
-					l_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
+					l_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_mask_pix, True, 255, 255, 255)
+						-- Free the original `l_mask_pix' as it was replaced by a new
+						-- one with alpha channel.
+					{GTK2}.object_unref (l_temp_pix)
+
+						-- Add alpha channel to Result as required by
+						-- `draw_mask_on_pixbuf' since the creation of `Result'
+						-- above will only create a RGB image without alpha channel
+					l_temp_pix := Result
+					Result := {GTK2}.gdk_pixbuf_add_alpha (Result, False, 0, 0, 0)
+						-- Free the original `Result' as it was replaced by a new
+						-- one with alpha channel.
 					{GTK2}.object_unref (l_temp_pix)
 
 						-- Draw mask on top of pixbuf.
@@ -1125,35 +1139,41 @@ feature {NONE} -- Implementation
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
+		require
+			a_pixbuf_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf_ptr)
+			a_mask_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_mask_ptr)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
 				{
-				guint32 x, y;
-
-				GdkPixbuf *pixbuf, *mask;
-
-				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
-				mask = (GdkPixbuf*) $a_mask_ptr;
-
-				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
-				{
-					guchar *src, *dest;
-
-					src = (gdk_pixbuf_get_pixels (mask) + (y * gdk_pixbuf_get_rowstride (mask)));
-					dest = (gdk_pixbuf_get_pixels (pixbuf) + (y * gdk_pixbuf_get_rowstride (pixbuf)));
-
-					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
+					guint32 x, y;
+					guint32 l_pix_height,l_pix_width;
+					guint32 l_pix_row_stride;
+					guint32 l_mask_row_stride;
+					GdkPixbuf *pixbuf, *mask;
+					guchar *l_mask_pixels, *l_pixbuf_pixels;
+					pixbuf = (GdkPixbuf*) arg1;
+					mask = (GdkPixbuf*) arg2;
+					l_pix_height = gdk_pixbuf_get_height (pixbuf);
+					l_pix_width = gdk_pixbuf_get_width (pixbuf);
+					l_pix_row_stride = gdk_pixbuf_get_rowstride(pixbuf);
+					l_mask_row_stride = gdk_pixbuf_get_rowstride(mask);
+					l_mask_pixels = gdk_pixbuf_get_pixels (mask);
+					l_pixbuf_pixels = gdk_pixbuf_get_pixels (pixbuf);
+					for (y = 0; y < l_pix_height; y++)
 					{
-						if (src [0] == (guchar)0)
-							dest [3] = (guchar)0;
-
-						src += 4;
-						dest += 4;
+						guchar *src, *dest;
+						src = (l_mask_pixels + (y * l_mask_row_stride));
+						dest = (l_pixbuf_pixels + (y * l_pix_row_stride));
+						for (x = 0; x < l_pix_width; x++) {
+							if (src [0] == (guchar)0) {
+								dest [3] = (guchar)0;
+							}
+							src += 4;
+							dest += 4;
+						}
 					}
-
-				}
 				}
 			]"
 		end

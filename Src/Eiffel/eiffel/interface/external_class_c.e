@@ -52,9 +52,7 @@ feature -- Initialization
 		local
 			l_ast: CLASS_AS
 		do
-				-- Initialize `external_class' which will be used later by
-				-- `initialize_from_xml_data', then it is discarded to save
-				-- some memory as we do not use it anymore.
+				-- Initialize `external_class'.
 			external_class := lace_class.external_consumed_type
 			if external_class = Void and then assembly.is_partially_consumed then
 					-- No class, try consume assembly
@@ -1617,36 +1615,19 @@ feature {NONE} -- Implementation
 			-- Fully consumes external class' assembly
 		require
 			assembly_attached: assembly /= Void
-			assembly_is_partially_consumed: assembly.is_partially_consumed
 		local
 			l_emitter: IL_EMITTER
 			l_man: CONF_CONSUMER_MANAGER
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 			l_path: STRING_32
-			l_asm: STRING_32
-			l_key: READABLE_STRING_32
 		do
 				-- Create message
-			create l_asm.make (128)
-			l_asm.append (assembly.assembly_name)
-			l_asm.append_string_general (once ", Version=")
-			l_asm.append (assembly.assembly_version)
-			l_asm.append_string_general (once ", Culture=")
-			l_asm.append (assembly.assembly_culture)
-			l_key := assembly.assembly_public_key_token
-			l_asm.append_string_general (once ", PublicKeyToken=")
-			if l_key /= Void and then not l_key.is_empty then
-				l_asm.append (l_key)
-			else
-				l_asm.append_string_general ("null")
-			end
-			degree_output.put_string ("   Consuming required assembly '" + l_asm + "'...")
-
-			create l_path.make (256)
+			degree_output.put_string ({STRING_32} "   Consuming assembly '" + assembly.location.evaluated_path.name + "'...")
 
 			l_assemblies := universe.conf_system.all_assemblies
 			if l_assemblies /= Void then
+				create l_path.make (256)
 					-- Note: All system assemblies are required because they are needed by the consumer
 					-- to resolve dependencies.
 				from l_assemblies.start until l_assemblies.after loop
@@ -1696,7 +1677,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 		do
 			database := db
 			layout := a_layout
+			create config.make (a_layout.config_path)
 		end
 
 feature -- Access
@@ -28,6 +29,8 @@ feature -- Access
 		do
 			Result := database.is_available
 		end
+
+	config: IRON_NODE_CONFIG
 
 	database: IRON_NODE_DATABASE
 
@@ -242,7 +245,7 @@ feature -- Encoders
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

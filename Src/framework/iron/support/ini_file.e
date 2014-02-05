@@ -111,7 +111,7 @@ feature -- Basic operation
 						f.put_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
 						f.put_character (':')
 						s8 := utf.utf_32_string_to_utf_8_string_8 (v)
-						s8.replace_substring_all ("%N", "%N%T")
+						s8.replace_substring_all ("%N", "%N+") -- Support for multi-line value.
 						f.put_string (s8)
 					else
 						f.put_string ("#")
@@ -145,10 +145,11 @@ feature {NONE} -- Implementation
 				loop
 					f.read_line
 					s := f.last_string
+					s.left_adjust
 					if s.is_empty then
 					elseif s[1] = '#' then
 							-- skip
-					elseif s[1].is_space then
+					elseif s[1] = '+' then
 							-- append to previous value as a new line if any
 						if prev_key /= Void then
 							if attached data.item (prev_key) as l_prev_value then
@@ -159,15 +160,14 @@ feature {NONE} -- Implementation
 								end
 								v32.append_character ('%N')
 								if s.count > 1 then
-									v32.append (utf.utf_8_string_8_to_string_32 (s.tail (s.count - 1))) -- remove first space
+									v32.append (utf.utf_8_string_8_to_string_32 (s.tail (s.count - 1))) -- remove first '+' character
 								end
 								data.force (v32, prev_key)
 							end
 						else
-							check False end
+							is_valid := False
 						end
 					else
-						s.left_adjust
 						i := s.index_of (':', 1)
 						i2 := s.index_of ('=', 1)
 						if i = 0 or else (0 < i2 and i2 < i) then

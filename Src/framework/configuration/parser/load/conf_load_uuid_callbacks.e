@@ -17,9 +17,20 @@ inherit
 		end
 
 create
-	make
+	make_with_file
+
+feature {NONE} -- Initialization
+
+	make_with_file (a_file: STRING_32)
+		do
+			file_name := a_file
+			make
+		end
 
 feature -- Access
+
+	file_name: STRING_32
+			-- Path of the file being parsed.
 
 	last_uuid: detachable UUID
 			-- The last parsed uuid.

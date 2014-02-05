@@ -203,23 +203,27 @@ feature -- Access queries
 	accessible_groups: SEARCH_TABLE [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else nothing.
+		local
+			l_accessible_groups_cache: like accessible_groups_cache
 		do
-			if accessible_groups_cache = Void then
-				if dependencies /= Void then
+			l_accessible_groups_cache := accessible_groups_cache
+			if l_accessible_groups_cache = Void then
+				if attached dependencies as l_dependencies then
 					from
-						create accessible_groups_cache.make_map (dependencies.count)
-						dependencies.start
+						create l_accessible_groups_cache.make_map (l_dependencies.count)
+						l_dependencies.start
 					until
-						dependencies.after
+						l_dependencies.after
 					loop
-						accessible_groups_cache.put (dependencies.item_for_iteration)
-						dependencies.forth
+						l_accessible_groups_cache.put (l_dependencies.item_for_iteration)
+						l_dependencies.forth
 					end
 				else
-					create accessible_groups_cache.make_map (0)
+					create l_accessible_groups_cache.make_map (0)
 				end
+				accessible_groups_cache := l_accessible_groups_cache
 			end
-			Result := accessible_groups_cache
+			Result := l_accessible_groups_cache
 		end
 
 	mapping: STRING_TABLE [STRING_32]
@@ -277,15 +281,17 @@ feature -- Access queries
 			Result_empty_or_one_element: Result.is_empty or Result.count = 1
 		end
 
-	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): like class_type
+	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): detachable like class_type
 			-- Get class by dotnet name.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			classes_set: classes_set
 		do
-			if dependencies /= Void and then dependencies.has_key (a_dependency_index) then
-				check not_void: dependencies.found_item /= Void end
-				Result := dependencies.found_item.dotnet_classes.item (a_class)
+			if
+				attached dependencies as l_dependencies and then
+				attached l_dependencies.item (a_dependency_index) as l_found_item
+			then
+				Result := l_found_item.dotnet_classes.item (a_class)
 			else
 				Result := dotnet_classes.item (a_class)
 			end
@@ -433,7 +439,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -25,16 +25,11 @@ feature -- Status
 	date_has_changed: BOOLEAN
 			-- If location is set, has the file modification date of the configuration file change?
 		do
-			Result := attached file_name as f and then file_modified_date (f) /= file_date
+			Result := file_modified_date (file_name) /= file_date
 		end
 
 	is_location_set: BOOLEAN
 			-- Has the location of the configuration file been set?
-		do
-			Result := attached file_name as f and then not f.is_empty
-		ensure
-			set_implies_directory_set: Result implies directory /= Void
-		end
 
 	is_storable: BOOLEAN
 			-- Is current system storable?
@@ -42,26 +37,22 @@ feature -- Status
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			if is_location_set and then attached file_name as l_file_name then
-				create l_file.make_with_name (l_file_name)
-				Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
-			end
+			create l_file.make_with_name (file_name)
+			Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 		end
 
 feature -- Access, in compiled only
 
-	directory: detachable PATH
+	directory: PATH
 			-- Directory where the configuration file is stored in platform specific format.
 
-	file_name: detachable STRING_32
+	file_name: STRING_32
 			-- File name of config file.
 
-	file_path: detachable PATH
+	file_path: PATH
 			-- File path of config file.
 		do
-			if attached file_name as fn then
-				create Result.make_from_string (fn)
-			end
+			create Result.make_from_string (file_name)
 		end
 
 	file_date: INTEGER
@@ -72,22 +63,17 @@ feature -- Update, in compiled only
 	set_file_name (a_file_name: like file_name)
 			-- Set `file_name' to `a_file_name' and set `directory'.
 		require
-			a_file_name_valid: a_file_name /= Void implies not a_file_name.is_empty
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 		local
 			fp: PATH
 		do
-			if a_file_name = Void then
-				file_name := Void
-				directory := Void
-				file_date := 0
-			else
-				file_name := a_file_name
-				create fp.make_from_string (a_file_name)
-				directory := fp.parent
-			end
+			is_location_set := True
+			file_name := a_file_name
+			create fp.make_from_string (a_file_name)
+			directory := fp.parent
 		ensure
 			name_set: file_name = a_file_name
-			is_location_set: a_file_name /= Void implies (is_location_set and directory /= Void)
+			is_location_set: a_file_name /= Void and then (is_location_set and directory /= Void)
 		end
 
 	set_file_date
@@ -95,12 +81,7 @@ feature -- Update, in compiled only
 		require
 			is_location_set: is_location_set
 		do
-			if attached file_name as fn then
-				check is_location_set: not fn.is_empty end
-				file_date := file_modified_date (fn)
-			else
-				file_date := 0
-			end
+			file_date := file_modified_date (file_name)
 		end
 
 feature -- Conversion
@@ -132,10 +113,9 @@ feature -- Store to disk
 			create l_print.make
 			process (l_print)
 			if
-				not l_print.is_error and
-				attached file_name as fn -- implied by precondition `is_location_set'
+				not l_print.is_error
 			then
-				create l_file.make_with_name (fn)
+				create l_file.make_with_name (file_name)
 				if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
 					l_file.open_write
 					l_file.put_string (l_print.text)

@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			redir: detachable ARRAYED_LIST [PATH]
 			l_previous: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID]
 		do
-			create l_callback.make_with_factory (factory)
+			create l_callback.make_with_factory (a_file, factory)
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			l_err: CONF_ERROR_UUID
 			redir: detachable ARRAYED_LIST [PATH]
 		do
-			create l_callback.make
+			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True

@@ -61,6 +61,9 @@ feature -- Status
 
 	is_error: BOOLEAN
 			-- Was there an error?
+		do
+			Result := last_error = Void
+		end
 
 	last_error: detachable CONF_ERROR
 			-- Last error.
@@ -221,11 +224,10 @@ feature -- Status update
 	reset_error
 			-- Reset the error.
 		do
-			is_error := False
 			last_error := Void
 		ensure
 			not_error: not is_error
-			last_error_empty: last_error = Void
+			last_error_void: last_error = Void
 		end
 
 	set_up_to_date
@@ -297,7 +299,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 								end
 								if l_error then
 										-- conflict, conflicting feature renamings
-									is_error := True
 									last_error := create {CONF_ERROR_VISI_CONFL02}.make (l_visible.item.class_renamed)
 								else
 										-- merge
@@ -328,7 +329,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 									end
 									if l_error then
 											-- conflict, all features visible vs some features visible with renaming
-										is_error := True
 										last_error := create {CONF_ERROR_VISI_CONFL01}.make (l_visible.item.class_renamed)
 									else
 											-- done, everything is visible and we had no renamings
@@ -343,7 +343,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					end
 				else
 						-- conflict, different final external class name
-					is_error := True
 					last_error := create {CONF_ERROR_VISI_CONFL03}.make (l_visible.item.class_renamed, a_vis.item.class_renamed)
 				end
 			end
@@ -520,9 +519,12 @@ feature {NONE} -- Implementation
 
 	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
+		require
+			an_error_attached: an_error /= Void
 		do
-			is_error := True
 			last_error := an_error
+		ensure
+			last_error_when_is_error: is_error and (last_error = an_error)
 		end
 
 feature {NONE} -- Type anchors
@@ -543,7 +545,7 @@ invariant
 	file_name_not_void: file_name /= Void
 	group_not_void: group /= Void
 	path_not_void: path /= Void
-	is_error_set: is_error implies last_error /= Void
+	is_error_same_as_last_error: is_error = (last_error /= Void)
 	compiled_or_overrides: is_compiled implies not does_override
 	factory_not_void: factory /= Void
 

@@ -65,7 +65,7 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: READABLE_STRING_GENERAL)
+	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
 			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
 		require
 			exists: exists

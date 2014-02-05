@@ -104,13 +104,7 @@ feature -- Access, in compiled only, not stored to configuration file
 				create l_dir.make (l_item, l_target)
 				Result := l_dir.evaluated_path
 			else
-				if attached system.directory as d then
-						-- implied by precondition `location_set', and meaning of `system.is_location_set'
-					Result := d
-				else
-				   		-- Implied by precondition "system_has_location_set"
-					check system_has_location_set: False end
-				end
+				Result := system.directory
 			end
 		ensure
 			Result_not_void: Result /= Void

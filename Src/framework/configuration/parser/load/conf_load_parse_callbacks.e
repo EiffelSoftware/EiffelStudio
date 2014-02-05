@@ -40,9 +40,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_factory (a_factory: like factory)
+	make_with_factory (a_file: STRING_32; a_factory: like factory)
 			-- Create.
 		do
+			file_name := a_file
 			make
 			create current_tag.make
 			create current_attributes.make (0)
@@ -59,6 +60,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	file_name: STRING_32
+			-- Path of the file being parsed.
 
 	last_system: detachable CONF_SYSTEM
 			-- The last parsed system.
@@ -612,7 +616,7 @@ feature {NONE} -- Implementation attribute processing
 						if l_loc.is_empty then
 							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("location"))
 						else
-							last_redirection := factory.new_redirection (l_loc, l_uu)
+							last_redirection := factory.new_redirection_with_file_name (file_name, l_loc, l_uu)
 						end
 					else
 						report_unknown_attribute ("location")
@@ -660,9 +664,9 @@ feature {NONE} -- Implementation attribute processing
 					end
 					if not is_error then
 						if l_uu = Void then
-							l_last_system := factory.new_system_generate_uuid (l_lower_name)
+							l_last_system := factory.new_system_generate_uuid_with_file_name (file_name, l_lower_name)
 						else
-							l_last_system := factory.new_system (l_lower_name, l_uu)
+							l_last_system := factory.new_system_with_file_name (file_name, l_lower_name, l_uu)
 						end
 						last_system := l_last_system
 						if attached current_attributes.item (at_readonly) as l_readonly then

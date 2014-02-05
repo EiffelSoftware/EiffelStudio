@@ -26,9 +26,10 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_name: like name; a_uuid: UUID)
+	make_with_uuid (a_file_name: like file_name; a_name: like name; a_uuid: UUID)
 			-- Creation with `a_name' and `a_uuid'.
 		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			a_name_ok: a_name /= Void and not a_name.is_empty
 			a_uuid_ok: a_uuid /= Void
 		do
@@ -36,10 +37,12 @@ feature {NONE} -- Initialization
 			create target_order.make (1)
 			create all_libraries.make_equal (0)
 			name := a_name.as_lower
+			set_file_name (a_file_name)
 			uuid := a_uuid
 			is_readonly := True
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name.as_lower)
+			file_name_set: file_name ~ a_file_name
 			uuid_set: uuid = a_uuid
 			is_readonly: is_readonly
 		end

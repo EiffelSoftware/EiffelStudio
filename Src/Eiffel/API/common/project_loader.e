@@ -285,7 +285,7 @@ feature -- Loading
 					-- ecf does not exist, create it
 
 					-- Configuration system
-				l_system := l_factory.new_system_generate_uuid (l_target_name)
+				l_system := l_factory.new_system_generate_uuid_with_file_name (l_config_file_name.name, l_target_name)
 				l_system.set_file_name (l_config_file_name.name)
 
 					-- Add the target for single file compilation
@@ -1207,7 +1207,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

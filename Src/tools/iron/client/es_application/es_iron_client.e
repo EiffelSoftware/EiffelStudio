@@ -35,6 +35,13 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_CONSTANTS
+		rename
+			print as print_any
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -53,12 +60,9 @@ feature {NONE} -- Initialization
 					-- Initialize default repo
 				print ("First initialization with default repository...%N")
 				create l_version.make (5)
-				l_version.append ({EIFFEL_CONSTANTS}.major_version.out)
+				l_version.append (two_digit_minimum_major_version)
 				l_version.append_character ('.')
-				if {EIFFEL_CONSTANTS}.minor_version < 10 then
-					l_version.append_character ('0')
-				end
-				l_version.append ({EIFFEL_CONSTANTS}.minor_version.out)
+				l_version.append (two_digit_minimum_minor_version)
 
 				create repo.make (create {URI}.make_from_string ("http://iron.eiffel.com/"), l_version)
 				print (m_registering_repository ("iron", repo.url))

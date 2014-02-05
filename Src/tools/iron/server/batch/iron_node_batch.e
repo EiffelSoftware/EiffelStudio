@@ -97,7 +97,7 @@ feature -- Execution
 			l_root: READABLE_STRING_32
 			l_ecf_path: READABLE_STRING_32
 		do
-			create l_layout.make_with_path (iron.layout.path.extended ("sandbox"))
+			create l_layout.make_with_path (iron.layout.path.extended ("sandbox"), iron.layout.binaries_path)
 			db := iron.database
 			across
 				db.versions as ic
@@ -161,7 +161,7 @@ feature -- Execution
 		do
 			if attached argument (2) as l_repo_location then
 				if l_repo_location.starts_with ({STRING_32} "http://") or l_repo_location.starts_with ({STRING_32} "https://") then
-					create l_layout.make_with_path (iron.layout.path.extended ("import"))
+					create l_layout.make_with_path (iron.layout.path.extended ("import"), iron.layout.binaries_path)
 					create cat.make_with_layout (l_layout, create {IRON_URL_BUILDER})
 					create l_iri.make_from_string (l_repo_location)
 					create l_repo.make_from_version_uri (l_iri.to_uri)
@@ -183,7 +183,7 @@ feature -- Execution
 							across
 								p.tags as ic_tags
 							loop
-								np.tags.force (ic_tags.item)
+								np.add_tag (ic_tags.item)
 							end
 							create nvp.make (np, l_repo_version)
 							iron.database.force_version_package (nvp)
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

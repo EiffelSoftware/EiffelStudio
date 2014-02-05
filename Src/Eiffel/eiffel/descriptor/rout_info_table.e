@@ -57,10 +57,10 @@ feature -- Insertion
 		local
 			info: ROUT_INFO
 		do
-			if has_key (rout_id) then
+			info := item (rout_id)
+			if info /= Void then
 					-- The routine id has been recorded
 					-- earlier.
-				info := found_item
 				if info.origin /= org.class_id then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
@@ -86,19 +86,18 @@ feature -- Offset processing
 			counter: COUNTER
 		do
 			class_id := c.class_id
-			if not offset_counters.has_key (class_id) then
+			counter := offset_counters.item (class_id)
+			if counter = Void then
 				create counter
 					-- Routine offsets start from 0.
 				counter.set_value (-1)
 				offset_counters.put (counter, class_id)
-			else
-				counter := offset_counters.found_item
 			end
 			Result := counter.next
 		end
 
 	offset_counters: HASH_TABLE [COUNTER, INTEGER]
-			-- Offset counters for feature introducted
+			-- Offset counters for feature introduced
 			-- in the corresponding class
 
 feature -- Query features
@@ -273,7 +272,7 @@ feature -- Merging
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,14 +24,17 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_redirection_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID)
+	make (a_file_name: like file_name; a_redirection_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID)
 			-- Creation with `a_redirection_location' and `a_uuid'.
 		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			a_redirection_location_not_empty: a_redirection_location /= Void and not a_redirection_location.is_empty
 		do
+			set_file_name (a_file_name)
 			redirection_location := a_redirection_location
 			uuid := a_uuid
 		ensure
+			file_name_set: a_file_name ~ file_name
 			redirection_location_set: redirection_location.same_string (a_redirection_location)
 			uuid_set: uuid = a_uuid
 		end
@@ -80,7 +83,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

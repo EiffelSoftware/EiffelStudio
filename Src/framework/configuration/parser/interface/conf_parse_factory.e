@@ -8,37 +8,79 @@ note
 class
 	CONF_PARSE_FACTORY
 
-feature -- Factory
+feature -- Factory: system and redirection
+
+	new_redirection_with_file_name (a_file_name: STRING_32; a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
+			-- Create a {CONF_REDIRECTION} object with `a_location' and optional `a_uuid'.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
+			a_location_ok: a_location /= Void and then not a_location.is_empty
+		do
+			create Result.make (a_file_name, a_location, a_uuid)
+		end
+
+	new_system_generate_uuid_with_file_name (a_file_name: STRING_32; a_name: STRING_32): CONF_SYSTEM
+			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+		do
+			create Result.make_with_uuid (a_file_name, a_name, uuid_generator.generate_uuid)
+			Result.set_is_generated_uuid (True)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_system_with_file_name (a_file_name: STRING_32; a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
+			-- Create a `CONF_SYSTEM' object.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			an_uuid_not_void: an_uuid /= Void
+		do
+			create Result.make_with_uuid (a_file_name, a_name, an_uuid)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Factory: system and redirection OBSOLETE
 
 	new_redirection (a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
 			-- Create a {CONF_REDIRECTION} object with `a_location' and optional `a_uuid'.
+		obsolete
+			"Use new_redirection_with_file_name [Jan/2014]"
 		require
 			a_location_ok: a_location /= Void and then not a_location.is_empty
 		do
-			create Result.make (a_location, a_uuid)
+			Result := new_redirection_with_file_name ("dummy-redirection-file-name.ecf", a_location, a_uuid)
 		end
 
 	new_system_generate_uuid (a_name: STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
+		obsolete
+			"Use new_system_generate_uuid_with_file_name [Jan/2014]"
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			create Result.make_with_uuid (a_name, uuid_generator.generate_uuid)
-			Result.set_is_generated_uuid (True)
+			Result := new_system_generate_uuid_with_file_name ("dummy-system-file-name.ecf", a_name)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	new_system (a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
+		obsolete
+			"Use new_system_file_name [Jan/2014]"
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			an_uuid_not_void: an_uuid /= Void
 		do
-			create Result.make_with_uuid (a_name, an_uuid)
+			Result := new_system_with_file_name ("dummy-system-file-name.ecf", a_name, an_uuid)
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+feature -- Factory			
 
 	new_target (a_name: STRING_32; a_system: CONF_SYSTEM): CONF_TARGET
 			-- Create a `CONF_TARGET' object.

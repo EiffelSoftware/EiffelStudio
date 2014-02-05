@@ -47,6 +47,9 @@ feature -- Status
 
 	is_error: BOOLEAN
 			-- Was there an error during an operation?
+		do
+			Result := last_error /= Void
+		end
 
 	last_error: detachable CONF_ERROR
 			-- The last error.
@@ -111,20 +114,23 @@ feature -- Status
 
 feature -- Status update
 
-	set_error (an_error: detachable CONF_ERROR)
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
+		require
+			an_error_attached: an_error /= Void
 		do
-			is_error := an_error /= Void
 			last_error := an_error
+		ensure
+			last_error_when_is_error: is_error and (last_error = an_error)
 		end
 
 	reset_error
 			-- Reset error.
 		do
-			is_error := False
 			last_error := Void
 		ensure
-			not_is_error: not is_error
+			not_error: not is_error
+			last_error_void: last_error = Void
 		end
 
 	set_internal (a_is_internal: like is_internal)
@@ -664,6 +670,7 @@ invariant
 	name_ok: name /= Void and then not name.is_empty
 	location_not_void: location /= Void
 	target_not_void: target /= Void
+	is_error_same_as_last_error: is_error = (last_error /= Void)
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

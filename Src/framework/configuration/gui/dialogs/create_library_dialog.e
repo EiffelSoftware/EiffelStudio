@@ -440,7 +440,7 @@ feature {NONE} -- Action handlers
 					last_group := factory.new_library (name.text, location.text, target)
 						-- add an empty classes list that it get's displayed in the classes tree
 					last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-					l_sys := factory.new_system_generate_uuid ("dummy")
+					l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy")
 					l_sys.set_application_target (target)
 					last_group.set_library_target (factory.new_target ("dummy", l_sys))
 					target.add_library (last_group)
@@ -741,7 +741,7 @@ feature {NONE} -- Constants
 			-- Index of a column with a library location.
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

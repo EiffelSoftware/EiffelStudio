@@ -83,7 +83,7 @@ feature -- Visit nodes
 		rescue
 			if
 				attached exception_manager.last_exception as e and then
-				attached {CONF_EXCEPTION} e.original 
+				attached {CONF_EXCEPTION} e.original
 			then
 				retry
 			end
@@ -97,7 +97,6 @@ feature -- Visit nodes
 			l_load: CONF_LOAD
 			l_uuid: detachable UUID
 			l_path: like {CONF_LIBRARY}.path
-			l_comparer: FILE_COMPARER
 			l_cond: CONF_CONDITION
 			l_last_warnings: like last_warnings
 		do
@@ -152,23 +151,11 @@ feature -- Visit nodes
 						l_existing_target.base.system.set_level (level + 1)
 					end
 
-					create l_comparer
-					if attached l_existing_target.base.system.file_name as l_base_filename then
-						if
-							application_target.options.is_warning_enabled (w_same_uuid) and then
-							not l_comparer.same_files (l_path, l_base_filename)
-						then
-							if
-								attached a_library.target.system.file_name as l_target_filename and then
-								attached l_existing_target.parent.system.file_name as l_parent_filename
-							then
-								add_warning (create {CONF_ERROR_UUIDFILE}.make (l_target_filename, l_path, l_parent_filename, l_base_filename))
-							else
-								raise_error
-							end
-						end
-					else
-						raise_error
+					if
+						application_target.options.is_warning_enabled (w_same_uuid) and then
+						not (create {PATH}.make_from_string (l_path)).is_same_file_as (l_existing_target.base.system.file_path)
+					then
+						add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
 					end
 				else
 					l_load.retrieve_configuration (l_path)

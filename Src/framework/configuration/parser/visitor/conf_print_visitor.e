@@ -134,7 +134,7 @@ feature -- Visit nodes
 				append_text ("%N")
 			end
 			append_text_indent ("<system")
-			append_text (" xmlns=%"")			
+			append_text (" xmlns=%"")
 			if attached namespace as l_namespace then
 				append_text_escaped (l_namespace, False)
 --Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
@@ -1032,7 +1032,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]])
+	append_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]])
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
@@ -1193,7 +1193,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: detachable SEARCH_TABLE [CONF_GROUP]
-			l_visible: detachable STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]
+			l_visible: detachable STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, detachable STRING_TABLE [STRING_32]]]]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)

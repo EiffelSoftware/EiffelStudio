@@ -52,11 +52,7 @@ feature -- Output
 					st.add_indent
 					st.add (l_ct.item.name)
 					st.add (": ")
-					if attached l_ct.item.system.file_name as l_file then
-						st.add (l_file)
-					else
-						st.add ("Location unknown")
-					end
+					st.add (l_ct.item.system.file_name)
 					st.add_new_line
 				end
 
@@ -78,7 +74,7 @@ feature -- Access
 			-- Cycles
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

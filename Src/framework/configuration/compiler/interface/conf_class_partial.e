@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 			a_group_not_void: a_group /= Void
 			a_base_location_not_void: a_base_location /= Void
 			a_factory_not_void: a_factory /= Void
-		local
-			l_cluster: CONF_CLUSTER
 		do
 			group := a_group
 			base_location := a_base_location
@@ -51,8 +49,10 @@ feature {NONE} -- Initialization
 				build_partial
 			end
 
-			l_cluster ?= a_group
-			if l_cluster /= Void and then l_cluster.visible /= Void then
+			if
+				attached {CONF_CLUSTER} a_group as l_cluster and then
+				l_cluster.visible /= Void
+			then
 				visible := l_cluster.visible.item (name)
 			end
 			is_valid := True
@@ -98,7 +98,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			a_base_location_not_void: a_base_location /= Void
 		local
 			l_old: like partial_classes
-			l_cluster: CONF_CLUSTER
 		do
 			group := a_group
 			base_location := a_base_location
@@ -118,8 +117,10 @@ feature {CONF_ACCESS} -- Update, in compiled only
 				build_partial
 			end
 
-			l_cluster ?= a_group
-			if l_cluster /= Void and then l_cluster.visible /= Void then
+			if
+				attached {CONF_CLUSTER} a_group as l_cluster and then
+ 				l_cluster.visible /= Void
+ 			then
 				visible := l_cluster.visible.item (name)
 			end
 		end
@@ -157,15 +158,18 @@ feature {NONE} -- Implementation
 		local
 			l_lst: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_file: PLAIN_TEXT_FILE
-			l_name: STRING
+			l_name: detachable STRING
 			u: FILE_UTILITIES
 		do
 			if not is_error then
 				create l_lst.make_from_array (partial_classes.current_keys)
 				epc_merger.merge (l_lst)
-				if not epc_merger.successful then
-					is_error := True
-					last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
+				if not epc_merger.successful or epc_merger.class_text.is_empty then
+					if attached epc_merger.error_message as l_err then
+						last_error := create {CONF_ERROR_PARTIAL}.make (l_err)
+					else
+						last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error in merging partial classes.")
+					end
 					name := ""
 					path := ""
 					file_name := ""
@@ -182,22 +186,27 @@ feature {NONE} -- Implementation
 					l_file.close
 
 					l_name := name_from_associated_file
-					check
-						l_name_set: l_name /= Void
-					end
-					set_name (l_name)
+					if l_name /= Void then
+						set_name (l_name)
 
-						-- rename file to class name
-					file_name := name.as_lower + {STRING_32} ".e"
-					l_file.rename_path (full_file_name)
+							-- rename file to class name
+						file_name := name.as_lower + {STRING_32} ".e"
+						l_file.rename_path (full_file_name)
+					else
+						create {CONF_ERROR_PARTIAL} last_error.make ("Unable to find class name from associated file.")
+					end
 				end
 			end
 		ensure
 			name: not is_error implies (not name.is_empty)
 			location: not is_error implies (not path.is_empty and not file_name.is_empty)
 		rescue
-			is_error := True
-			last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
+			if attached epc_merger.error_message as r_err then
+				last_error := create {CONF_ERROR_PARTIAL}.make (r_err)
+			else
+				last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error during merging of partial classes.")
+			end
+
 			retry
 		end
 
@@ -210,7 +219,7 @@ feature {NONE} -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

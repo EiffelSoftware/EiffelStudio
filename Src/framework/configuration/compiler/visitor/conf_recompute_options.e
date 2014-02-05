@@ -39,76 +39,95 @@ feature -- Visit nodes
 		require else
 			new_target_group_equivalent: new_target.is_group_equivalent (a_target)
 		local
-			l_pre, l_old_pre: CONF_PRECOMPILE
+			l_pre, l_old_pre: detachable CONF_PRECOMPILE
 			l_new_target: like new_target
 		do
 			if not is_error then
 					-- process parent target
-				if a_target.extends /= Void then
-					l_new_target := new_target
-					new_target := new_target.system.targets.item (a_target.extends.name)
-					a_target.extends.process (Current)
-					new_target := l_new_target
+				if attached a_target.extends as l_extends then
+					if attached new_target.system.targets.item (l_extends.name) as tmp_new_target then
+						l_new_target := new_target
+						new_target := tmp_new_target
+						l_extends.process (Current)
+						new_target := l_new_target
+					else
+						check has_extend_target: False end
+					end
 				end
 
-				a_target.system.set_name (new_target.system.name)
-				a_target.system.set_description (new_target.system.description)
-				a_target.set_version (new_target.internal_version)
-				a_target.set_settings (new_target.internal_settings)
-				a_target.set_immediate_setting_concurrency (new_target.immediate_setting_concurrency)
-				if new_target.internal_options /= Void then
-					a_target.set_options (new_target.internal_options)
+				l_new_target := new_target
+
+				a_target.system.set_name (l_new_target.system.name)
+				a_target.system.set_description (l_new_target.system.description)
+				a_target.set_version (l_new_target.internal_version)
+				a_target.set_settings (l_new_target.internal_settings)
+				a_target.set_immediate_setting_concurrency (l_new_target.immediate_setting_concurrency)
+				if attached l_new_target.internal_options as l_new_internal_options then
+					a_target.set_options (l_new_internal_options)
 				end
-				a_target.set_description (new_target.description)
-				a_target.set_note_node (new_target.note_node)
-				a_target.set_external_includes (new_target.internal_external_include)
-				a_target.set_external_cflag (new_target.internal_external_cflag)
-				a_target.set_external_objects (new_target.internal_external_object)
-				a_target.set_external_libraries (new_target.internal_external_library)
-				a_target.set_external_resources (new_target.internal_external_resource)
-				a_target.set_external_linker_flag (new_target.internal_external_linker_flag)
-				a_target.set_external_make (new_target.internal_external_make)
-				a_target.set_pre_compile (new_target.internal_pre_compile_action)
-				a_target.set_post_compile (new_target.internal_post_compile_action)
-				a_target.set_file_rules (new_target.internal_file_rule)
+				a_target.set_description (l_new_target.description)
+				a_target.set_note_node (l_new_target.note_node)
+				a_target.set_external_includes (l_new_target.internal_external_include)
+				a_target.set_external_cflag (l_new_target.internal_external_cflag)
+				a_target.set_external_objects (l_new_target.internal_external_object)
+				a_target.set_external_libraries (l_new_target.internal_external_library)
+				a_target.set_external_resources (l_new_target.internal_external_resource)
+				a_target.set_external_linker_flag (l_new_target.internal_external_linker_flag)
+				a_target.set_external_make (l_new_target.internal_external_make)
+				a_target.set_pre_compile (l_new_target.internal_pre_compile_action)
+				a_target.set_post_compile (l_new_target.internal_post_compile_action)
+				a_target.set_file_rules (l_new_target.internal_file_rule)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
-					l_old_pre := new_target.precompile
+					l_old_pre := l_new_target.precompile
 					check
 						l_old_pre_not_void: l_old_pre /= Void
 					end
 					l_pre.set_options (l_old_pre.internal_options)
 					l_pre.set_class_options (l_old_pre.internal_class_options)
 				end
-				process_with_new (a_target.internal_libraries, new_target.internal_libraries)
-				process_with_new (a_target.internal_assemblies, new_target.internal_assemblies)
-				process_with_new (a_target.internal_clusters, new_target.internal_clusters)
-				process_with_new (a_target.internal_overrides, new_target.internal_overrides)
+				process_with_new (a_target.internal_libraries, l_new_target.internal_libraries)
+				process_with_new (a_target.internal_assemblies, l_new_target.internal_assemblies)
+				process_with_new (a_target.internal_clusters, l_new_target.internal_clusters)
+				process_with_new (a_target.internal_overrides, l_new_target.internal_overrides)
 			end
 		end
 
 	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
-		local
-			l_cluster, l_cluster_new: CONF_CLUSTER
-			l_lib, l_lib_new: CONF_LIBRARY
 		do
 			if not is_error then
-				a_group.set_description (new_group.description)
-				a_group.set_options (new_group.internal_options)
-				a_group.set_class_options (new_group.internal_class_options)
-				a_group.set_readonly (new_group.internal_read_only)
-				a_group.set_readonly_set (new_group.is_readonly_set)
-				a_group.set_note_node (new_group.note_node)
-				if a_group.is_cluster then
-					l_cluster ?= a_group
-					l_cluster_new ?= new_group
-					l_cluster.set_file_rule (l_cluster_new.internal_file_rule)
-				elseif a_group.is_library then
-					l_lib ?= a_group
-					l_lib_new ?= new_group
-					l_lib.set_use_application_options (l_lib_new.use_application_options)
+				if attached new_group as l_new_group then
+					a_group.set_description (l_new_group.description)
+					a_group.set_options (l_new_group.internal_options)
+					a_group.set_class_options (l_new_group.internal_class_options)
+					a_group.set_readonly (l_new_group.internal_read_only)
+					a_group.set_readonly_set (l_new_group.is_readonly_set)
+					a_group.set_note_node (l_new_group.note_node)
+					if a_group.is_cluster then
+						if
+							attached {CONF_CLUSTER} a_group as l_cluster and
+							attached {CONF_CLUSTER} l_new_group as l_cluster_new
+						then
+							l_cluster.set_file_rule (l_cluster_new.internal_file_rule)
+						else
+								-- It should not happen because `a_group' and `new_group' should be equivalent
+							check a_group_and_new_group_equivalent: False end
+						end
+					elseif a_group.is_library then
+						if
+							attached {CONF_LIBRARY} a_group as l_lib and
+							attached {CONF_LIBRARY} l_new_group as l_lib_new
+						then
+							l_lib.set_use_application_options (l_lib_new.use_application_options)
+						else
+								-- It should not happen because `a_group' and `new_group' should be equivalent							
+							check a_group_and_new_group_equivalent: False end
+						end
+					end
+				else
+					check has_new_group: False end
 				end
 			end
 		end
@@ -118,7 +137,7 @@ feature -- Access
 	new_target: CONF_TARGET
 			-- The new, compiled target that is group equivalent to the old target.
 
-	new_group: CONF_GROUP
+	new_group: detachable CONF_GROUP
 			-- The new group, for the group we are currently processing.
 
 feature {NONE} -- Implementation
@@ -134,9 +153,13 @@ feature {NONE} -- Implementation
 				an_old_groups.after
 			loop
 				l_group := an_old_groups.item_for_iteration
-				new_group := a_new_groups.item (l_group.name)
-				check
-					new_group_found: new_group /= Void
+				if attached a_new_groups.item (l_group.name) as l_new_group then
+					new_group := l_new_group
+				else
+					check
+						new_group_found: False
+					end
+					new_group := Void
 				end
 				l_group.process (Current)
 				an_old_groups.forth
@@ -144,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

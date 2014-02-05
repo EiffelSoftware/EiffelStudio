@@ -40,8 +40,12 @@ feature -- Access
 		do
 				--| Hardcoded for now, but we can imagine abstracting the "mapping"
 				--| and have Iron out of the configuration lib.
-			if a_location.starts_with ("http:") or a_location.starts_with ("https:") then
-				-- Absolute IRON library URL
+			if
+				a_location.starts_with ("iron:")
+				or a_location.starts_with ("http:")
+				or a_location.starts_with ("https:")
+			then
+					-- Absolute IRON library URL or iron reference
 				create l_uri.make_from_string (a_location)
 				update_location_to_uri (l_uri)
 				l_iron_api := iron_api
@@ -76,7 +80,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

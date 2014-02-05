@@ -77,7 +77,11 @@ feature -- Logs
 			end
 			dt_text.append_integer (dt.day)
 
-			p := layout.logs_path.extended (dt_text)
+			p := layout.logs_path
+			if attached a_log.type as l_log_type then
+				p := p.extended (l_log_type)
+			end
+			p := p.extended (dt_text)
 
 			create d.make_with_path (p)
 			if not d.exists then
@@ -831,6 +835,7 @@ feature -- Version package
 				f.put_new_line
 				f.close
 			end
+			on_version_package_downloaded (a_package)
 		end
 
 feature -- Version Package: change

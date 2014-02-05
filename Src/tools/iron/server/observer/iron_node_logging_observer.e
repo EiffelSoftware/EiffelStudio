@@ -26,6 +26,25 @@ feature {NONE} -- Initialization
 	level: NATURAL_8
 			-- logging level
 
+feature -- Log
+
+	log_event (a_title, a_message: STRING; a_type: detachable READABLE_STRING_8)
+		local
+			l_log: IRON_NODE_LOG
+		do
+			create l_log.make_now (a_title, a_message)
+			if a_type /= Void then
+				l_log.set_type (a_type)
+			end
+			logging.call ([l_log])
+		end
+
+	user_log_type: STRING = "user"
+
+	package_log_type: STRING = "package"
+
+	download_log_type: STRING = "download"
+
 feature -- Event
 
 	on_user_event (a_user: IRON_NODE_USER; a_title: READABLE_STRING_32; a_message: READABLE_STRING_32)
@@ -40,7 +59,7 @@ feature -- Event
 			if flag_is_new then
 				l_title := {STRING_32} "New user [" + a_user.name + {STRING_32} "]"
 				l_message := {STRING_32} "User [" + a_user.name + {STRING_32} "] has just been created.%N"
-				logging.call ([create {IRON_NODE_LOG}.make_now (l_title, l_message)])
+				log_event (l_title, l_message, user_log_type)
 			else
 				if attached {READABLE_STRING_GENERAL} a_user.data_item ("reset_password.url") as l_url then
 					l_title := {STRING_32} "User [" + a_user.name + {STRING_32} "] requested password reset"
@@ -48,7 +67,7 @@ feature -- Event
 					l_message.append_string_general ("Please follow the link to login and change your password")
 					l_message.append_string_general (l_url)
 					l_message.append_string_general (" . %N")
-					logging.call ([create {IRON_NODE_LOG}.make_now (l_title, l_message)])
+					log_event (l_title, l_message, user_log_type)
 				end
 			end
 		end
@@ -67,7 +86,7 @@ feature -- Event
 				l_title := {STRING_32} "[Iron] Updated package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
 				l_body := l_title + {STRING_32} "%N"
 			end
-			logging.call ([create {IRON_NODE_LOG}.make_now (l_title, l_body)])
+			log_event (l_title, l_body, package_log_type)
 		end
 
 	on_version_package_updated (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
@@ -84,11 +103,22 @@ feature -- Event
 				l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] Updated version package [" + p.human_identifier + {STRING_32} "]"
 				l_body := l_title + {STRING_32} "%N"
 			end
-			logging.call ([create {IRON_NODE_LOG}.make_now (l_title, l_body)])
+			log_event (l_title, l_body, package_log_type)
+		end
+
+	on_version_package_downloaded (p: IRON_NODE_VERSION_PACKAGE)
+			-- <Precursor>
+		local
+			l_body: STRING_32
+			l_title: STRING_32
+		do
+			l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] package [" +  p.human_identifier + {STRING_32} "] downloaded"
+			l_body := l_title + {STRING_32} "%N"
+			log_event (l_title, l_body, download_log_type)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -180,12 +180,13 @@ feature -- Users
 		local
 			m: like new_response_message
 			s: STRING
+			u: detachable like current_user
 		do
 			m := new_response_message (req)
 			create s.make_empty
-
+			u := iron.database.user (a_uid)
 			if
-				attached iron.database.user (a_uid) as u and then
+				u /= Void and then
 				attached {READABLE_STRING_GENERAL} u.data_item ("activation.code") as u_code and then
 				a_code.is_case_insensitive_equal (a_code)
 			then
@@ -367,7 +368,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

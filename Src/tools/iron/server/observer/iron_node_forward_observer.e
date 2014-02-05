@@ -62,6 +62,18 @@ feature -- Observers: Package events
 			end
 		end
 
+	on_version_package_downloaded (p: IRON_NODE_VERSION_PACKAGE)
+			-- <Precursor>
+		do
+			if attached observers as lst then
+				across
+					lst as c
+				loop
+					c.item.on_version_package_downloaded (p)
+				end
+			end
+		end
+
 feature -- Observers
 
 	register_observer (o: IRON_NODE_OBSERVER)
@@ -90,7 +102,7 @@ feature -- Observers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

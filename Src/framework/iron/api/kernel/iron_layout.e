@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_path (a_root: PATH; a_installation: PATH)
+			--
 		do
 			path := a_root.absolute_path.canonical_path
 			installation_path := a_installation.absolute_path.canonical_path
@@ -42,10 +43,11 @@ feature -- Access
 			-- root dir for iron.
 
 	installation_path: PATH
-			-- Installation dir.
+			-- Installation dir useful to find client executable and utilities if any.
 
 	binaries_path: detachable PATH
 			-- Binaries path if available.
+			-- contains iron client, and also tool to create package archive.
 			--| Could be $IRON_PATH/spec/$ISE_PLATFORM/bin
 			--| Could be $ISE_EIFFEL/tools/iron/spec/$ISE_PLATFORM/bin
 			--| ...

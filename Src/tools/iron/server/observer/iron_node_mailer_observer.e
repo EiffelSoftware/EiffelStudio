@@ -59,7 +59,7 @@ feature -- Event
 					l_body.append_string_general (l_code)
 					l_body.append ("] . %N")
 				end
-				on_user_event (a_user, "New user [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "]", l_body)
+				on_user_event (a_user, "[Iron] New user [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "]", l_body)
 			else
 				create l_body.make_empty
 				if attached {READABLE_STRING_GENERAL} a_user.data_item ("reset_password.url") as l_url then
@@ -67,7 +67,7 @@ feature -- Event
 					l_body.append ("Please follow the link to login and change your password")
 					l_body.append_string_general (l_url)
 					l_body.append (" . %N")
-					on_user_event (a_user, "User [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "] requested password reset", l_body)
+					on_user_event (a_user, "[Iron] User [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "] requested password reset", l_body)
 				end
 			end
 		end
@@ -112,8 +112,13 @@ feature -- Event
 			end
 		end
 
+	on_version_package_downloaded (p: IRON_NODE_VERSION_PACKAGE)
+			-- <Precursor>
+		do
+		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

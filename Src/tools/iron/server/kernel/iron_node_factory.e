@@ -36,6 +36,7 @@ feature -- Access
 			end
 			create {IRON_NODE_FS_DATABASE} db.make_with_layout (lay)
 			create Result.make (db, lay)
+			
 				-- FIXME: do not hardcode email address.
 			create {IRON_NODE_MAILER_OBSERVER} obs.make_with_mailer (mailer, "jfiat@eiffel.com")
 			Result.register_observer (obs)
@@ -47,7 +48,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

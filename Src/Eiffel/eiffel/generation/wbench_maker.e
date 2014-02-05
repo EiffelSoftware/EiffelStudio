@@ -163,7 +163,6 @@ feature
 			-- tables.
 		local
 			a_class: CLASS_C;
-			eif_class: EIFFEL_CLASS_C
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
 			object_name, file_name: STRING;

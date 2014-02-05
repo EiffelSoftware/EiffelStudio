@@ -3141,6 +3141,17 @@ feature -- Properties
 			-- Set of routine IDs used for anchored type in current class.
 			-- It does not take into accounts inherited one.
 
+	update_anchors_needed: BOOLEAN
+			-- Whenever a new anchor is added to the system, we need to make sure to call `update_anchors'.
+
+	set_update_anchors_needed (v: like update_anchors_needed)
+			-- Set `update_anchors_needed' with `v'.
+		do
+			update_anchors_needed := v
+		ensure
+			update_anchors_needed_set: update_anchors_needed = v
+		end
+
 	topological_id: INTEGER
 			-- Unique number for a class. Could change during a topological
 			-- sort on classes.
@@ -4499,6 +4510,15 @@ feature -- Anchored types
  			end
 
 			anchored_features := l_anchored_features
+
+				-- Since we changed current, we need to change the descendants as well if the
+				-- set of features was modified.
+			if update_anchors_needed and then attached direct_descendants_internal as l_descendants then
+				across l_descendants as d loop
+					d.item.set_update_anchors_needed (True)
+				end
+			end
+			update_anchors_needed := False
 		end
 
 	extend_type_set (r_id: INTEGER)
@@ -4516,6 +4536,7 @@ feature -- Anchored types
 				type_set := l_type_set
 			end
 			l_type_set.force (r_id)
+			update_anchors_needed := True
 		ensure
 			inserted: type_set.has (r_id)
 		end
@@ -5032,7 +5053,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

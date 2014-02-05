@@ -123,6 +123,15 @@ feature -- Processing
 				-- If there was an error, we cannot continue
 			l_error_handler.checksum
 
+				-- Note that we are processing classes in the topological order
+				-- since `update_anchors' might require descendant classes to be
+				-- updated too if needed.
+			across classes as cc loop
+				if attached cc.item as c and then c.update_anchors_needed then
+					c.update_anchors
+				end
+			end
+
 			update_assertions
 
 			l_system.set_current_class (Void)
@@ -149,10 +158,12 @@ feature {NONE} -- Processing
 			if not retried then
 					-- Process creation feature of `a_class'.
 				a_class.process_creation_feature
+					-- Type checking and maybe byte code production for `a_class'.
 				a_class.pass3 (ignored_classes.count = 0 or else not ignored_classes.has (a_class))
 
-					-- Type checking and maybe byte code production for `a_class'.
 				if System.il_generation then
+						-- For .NET code generation, we need to record features
+						-- that are used as anchor or that have generics or are formal.
 					a_class.update_anchors
 				end
 			end
@@ -263,7 +274,7 @@ invariant
 	ignored_classes_not_void: ignored_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

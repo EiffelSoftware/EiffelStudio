@@ -40,6 +40,14 @@ feature -- Settings
 			application_mode := a_mode
 		end
 
+	set_keytip (a_keytip: like keytip)
+			-- Set `keytip' with `a_keytip'.
+		do
+			keytip := a_keytip
+		ensure
+			keytipe_set: keytip = a_keytip
+		end
+
 feature -- Query
 
 	command_name: detachable STRING
@@ -53,6 +61,9 @@ feature -- Query
 
 	large_image: detachable STRING_32
 			-- Large image
+
+	keytip: detachable STRING_32
+			-- Keytip of command.
 
 	application_mode: INTEGER
 			-- Application mode
@@ -125,7 +136,7 @@ feature {NONE} -- Implementation
 	xml_constants: STRING
 			-- XML tree constants		
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

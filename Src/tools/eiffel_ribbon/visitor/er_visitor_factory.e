@@ -29,16 +29,16 @@ feature {NONE} -- Implementation
 			-- All visitors when using applicaiton mode
 		local
 			l_vision2_visitor: ER_LOAD_VISION_TREE_AM_VISITOR
-			l_command_updater: ER_UPDATE_COMMAND_AM_VISITOR
+			l_command_updater: ER_UPDATE_COMMAND_VISITOR
 			l_separate_tab_visitor: ER_SEPARATE_WINDOW_TAB_AM_VISITOR
-			l_drop_down_gallery_visitor: ER_DROP_DOWN_GALLERY_INFO_AM_VISITOR
+			l_drop_down_gallery_visitor: ER_DROP_DOWN_GALLERY_INFO_VISITOR
 			l_update_application_menu: ER_UPDATE_APPLICATION_MENU_INFO_AM_VISITOR
-			l_split_button_gallery_visitor: ER_SPLIT_BUTTON_GALLERY_INFO_AM_VISITOR
+			l_split_button_gallery_visitor: ER_SPLIT_BUTTON_GALLERY_INFO_VISITOR
 			l_update_context_popups_visitor: ER_UPDATE_CONTEXT_POPUP_AM_VISITOR
 			l_load_help_button_visitor: ER_LOAD_HELP_BUTTON_AM_VISITOR
 			l_load_quick_access_toolbar_visitor: ER_LOAD_QUICK_ACCESS_TOOLBAR_AM_VISITOR
-			l_size_definition_visitor: ER_SIZE_DEFINITION_AM_VISITOR
-			l_scaling_policy_visitor: ER_SCALING_POLICY_AM_VISITOR
+			l_size_definition_visitor: ER_SIZE_DEFINITION_VISITOR
+			l_scaling_policy_visitor: ER_SCALING_POLICY_VISITOR
 		do
 			create Result.make (10)
 
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

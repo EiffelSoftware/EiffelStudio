@@ -59,25 +59,33 @@ feature {NONE} -- Implementation
 								l_current_command_data := l_data
 							end
 						end
-					elseif attached {XML_ELEMENT} a_commands.item_for_iteration as l_sub_node then
-						if l_sub_node.name.same_string (constants.command_label_title) then
-							check l_sub_node.count = 1 end
-							if l_current_command_data /= void and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
-								l_current_command_data.set_label_title (l_string_node.content)
-							end
-						elseif l_sub_node.name.same_string (constants.command_large_images) then
-							check l_sub_node.count = 1 end
-							if l_current_command_data /= void and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
-								l_current_command_data.set_large_image (l_string_node.content)
-							end
-						elseif l_sub_node.name.same_string (constants.command_small_images) then
-							check l_sub_node.count = 1 end
-							if l_current_command_data /= void and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
-								l_current_command_data.set_small_image (l_string_node.content)
+					elseif l_current_command_data /= Void then
+						if attached {XML_ELEMENT} a_commands.item_for_iteration as l_sub_node then
+							if l_sub_node.name.same_string (constants.command_label_title) then
+								if l_sub_node.count > 0 and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
+									l_current_command_data.set_keytip (l_string_node.content)
+								elseif attached {ER_XML_TREE_ELEMENT} l_sub_node as l_node then
+									l_current_command_data.set_keytip (l_node.content)
+								end
+							elseif l_sub_node.name.same_string (constants.command_large_images) then
+								check l_sub_node.count = 1 end
+								if attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
+									l_current_command_data.set_large_image (l_string_node.content)
+								end
+							elseif l_sub_node.name.same_string (constants.command_small_images) then
+								check l_sub_node.count = 1 end
+								if attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
+									l_current_command_data.set_small_image (l_string_node.content)
+								end
+							elseif l_sub_node.name.same_string (constants.command_key_tip) then
+								if l_sub_node.count > 0 and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
+									l_current_command_data.set_keytip (l_string_node.content)
+								elseif attached {ER_XML_TREE_ELEMENT} l_sub_node as l_node then
+									l_current_command_data.set_keytip (l_node.content)
+								end
 							end
 						end
 					end
-
 					a_commands.forth
 				end
 			end
@@ -90,7 +98,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

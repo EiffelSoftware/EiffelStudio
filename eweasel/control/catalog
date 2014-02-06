@@ -2774,6 +2774,7 @@ test	inference-multiple-lower-bound	inference002 tcf pass inference
 test	inference-untyped-call-target	inference003 tcf pass inference
 test	inference-direct-dependency	inference004 tcf pass inference
 test	inference-creation-instruction	inference005 tcf pass inference
+test	inference-recursive-tuple	inference006 tcf pass inference
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded

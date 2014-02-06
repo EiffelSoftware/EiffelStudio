@@ -172,44 +172,24 @@ feature -- Visit
 			if attached p.name as l_name then
 				js := l_name
 				j_object.put (js, "name")
---				if attached p.archive_path as l_archive_path then
---					js := request.absolute_script_url (iron.package_archive_web_page (version, p))
---					j_object.put (js, "archive")
---					debug
---						js := l_archive_path.name
---						j_object.put (js, "archive_path")
---					end
---					js := p.archive_file_size.out + " octects"
---					j_object.put (js, "archive_size")
---					if attached p.archive_last_modified as dt then
---						js := date_as_string (dt)
---						j_object.put (js, "archive_date")
---					end
---				end
-				if attached p.description as l_description then
-					js := l_description
-					j_object.put (js, "description")
-				end
-				if attached p.tags as l_tags and then not l_tags.is_empty then
-					create j_array.make_array
-					across
-						l_tags as ic_tags
-					loop
-						j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
-					end
-					j_object.put (j_array, "tags")
-				end
 			end
---			if attached iron.database.path_associated_with_package (version, p) as l_paths then
---				create j_array.make_array
---				across
---					l_paths as c
---				loop
---					js := c.item
---					j_array.add (js)
---				end
---				j_object.put (j_array, "paths")
---			end
+			if attached p.title as l_title then
+				js := l_title
+				j_object.put (js, "title")
+			end
+			if attached p.description as l_description then
+				js := l_description
+				j_object.put (js, "description")
+			end
+			if attached p.tags as l_tags and then not l_tags.is_empty then
+				create j_array.make_array
+				across
+					l_tags as ic_tags
+				loop
+					j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
+				end
+				j_object.put (j_array, "tags")
+			end
 			last_json_value := j_object
 		end
 
@@ -227,39 +207,38 @@ feature -- Visit
 			if attached p.name as l_name then
 				js := l_name
 				j_object.put (js, "name")
-				if attached p.archive_path as l_archive_path then
-					js := request.absolute_script_url (iron.package_version_archive_resource (p))
-					j_object.put (js, "archive")
-					debug
-						js := l_archive_path.name
-						j_object.put (js, "archive_path")
-					end
-					js := p.archive_file_size.out + " octects"
-					j_object.put (js, "archive_size")
-					if attached p.archive_last_modified as dt then
-						js := date_as_string (dt)
-						j_object.put (js, "archive_date")
-					end
-					j_object.put (create {JSON_NUMBER}.make_integer (p.download_count), "download_count")
+			end
+			if attached p.archive_path as l_archive_path then
+				js := request.absolute_script_url (iron.package_version_archive_resource (p))
+				j_object.put (js, "archive")
+				debug
+					js := l_archive_path.name
+					j_object.put (js, "archive_path")
 				end
-				if attached p.title as l_title then
-					js := l_title
-					j_object.put (js, "title")
+				js := p.archive_file_size.out + " octects"
+				j_object.put (js, "archive_size")
+				if attached p.archive_last_modified as dt then
+					js := date_as_string (dt)
+					j_object.put (js, "archive_date")
 				end
-				if attached p.description as l_description then
-					js := l_description
-					j_object.put (js, "description")
+				j_object.put (create {JSON_NUMBER}.make_integer (p.download_count), "download_count")
+			end
+			if attached p.title as l_title then
+				js := l_title
+				j_object.put (js, "title")
+			end
+			if attached p.description as l_description then
+				js := l_description
+				j_object.put (js, "description")
+			end
+			if attached p.tags as l_tags and then not l_tags.is_empty then
+				create j_array.make_array
+				across
+					l_tags as ic_tags
+				loop
+					j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
 				end
-				if attached p.tags as l_tags and then not l_tags.is_empty then
-					create j_array.make_array
-					across
-						l_tags as ic_tags
-					loop
-						j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
-					end
-					j_object.put (j_array, "tags")
-				end
-
+				j_object.put (j_array, "tags")
 			end
 			if attached iron.database.path_associated_with_package (p) as l_paths then
 				create j_array.make_array

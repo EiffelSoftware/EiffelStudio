@@ -4592,15 +4592,14 @@ feature -- Generation
 						cl_type.generate_skeleton2 (buffer)
 					end
 				else
-						-- FIXME
 					if final_mode then
 						buffer.put_string ("%N{0L, 0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 					else
 						buffer.put_string
 							("%N{%N0L,%N0L,%N%"INVALID_TYPE%",%NNULL,%NNULL,%N%
 							%NULL,%NNULL,%N(uint16) 0L,%NNULL,%N0L,%N0L,%N%
-							%(int32) 0L,(int32) 0L,%NNULL,%N%
-							%{(int32) 0, (int) 0, NULL, NULL}}")
+							%(int32) 0L,%N%
+							%{(int32) 0, (int) 0, NULL, NULL}, NULL}")
 					end
 				end
 				buffer.put_character (',')

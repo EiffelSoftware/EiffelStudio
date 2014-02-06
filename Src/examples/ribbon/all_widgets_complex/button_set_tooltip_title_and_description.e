@@ -42,4 +42,3 @@ feature {NONE} -- Initialization
 			create Result.put (0)
 		end
 end
-

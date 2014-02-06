@@ -2772,6 +2772,7 @@ test	qat-dotnet-failure			anchor072 tcf fail anchored_type dotnet
 test	inference-single-lower-bound	inference001 tcf pass inference
 test	inference-multiple-lower-bound	inference002 tcf pass inference
 test	inference-untyped-call-target	inference003 tcf pass inference
+test	inference-direct-dependency	inference004 tcf pass inference
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded

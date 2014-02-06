@@ -1,0 +1,34 @@
+class
+	TEST
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		local
+			b
+			t
+			a: SPECIAL [INTEGER]
+			s
+		do
+			t := Current
+			b := attached t as x and then attached x.out as s and then not s.is_empty
+			create a.make_filled (5, 3)
+			s := a
+			b := across
+				s as c
+			all
+				c.item = 5
+			end
+			across
+				s as c
+			loop
+				if attached c.item as x then
+					print (x)
+				end
+			end
+		end
+
+end

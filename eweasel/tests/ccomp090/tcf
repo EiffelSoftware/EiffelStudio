@@ -1,0 +1,21 @@
+test_name 	 removing-type-c-compilation-error
+test_description After removing a type from a system, the C generated code is wrong.
+
+define attr	"t: detachable TEST1"
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result   ok
+
+define attr	""
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result   ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

@@ -1,0 +1,15 @@
+test_name 	 inference-formal-generic
+test_description An untyped variable may be attached an expression of a formal generic type.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 a.e  $CLUSTER a.e
+
+compile_melted
+compile_result   ok
+
+execute_work     NONE exec_output_m
+execute_result   ok
+compare		 exec_output_m output
+
+test_end

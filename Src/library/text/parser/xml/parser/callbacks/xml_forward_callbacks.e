@@ -11,6 +11,8 @@ class
 	XML_FORWARD_CALLBACKS
 
 inherit
+	XML_CALLBACKS
+
 	XML_CALLBACKS_SOURCE
 
 create
@@ -39,7 +41,7 @@ feature -- Setting
 			callbacks_set: callbacks = a_callbacks
 		end
 
-feature {NONE} -- Document
+feature -- Document
 
 	on_start
 			-- Forward start.
@@ -59,7 +61,7 @@ feature {NONE} -- Document
 			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)
 		end
 
-feature {NONE} -- Errors
+feature -- Errors
 
 	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
@@ -67,7 +69,7 @@ feature {NONE} -- Errors
 			callbacks.on_error (a_message)
 		end
 
-feature {NONE} -- Meta
+feature -- Meta
 
 	on_processing_instruction (a_name, a_content: READABLE_STRING_32)
 			-- Forward PI.
@@ -81,7 +83,7 @@ feature {NONE} -- Meta
 			callbacks.on_comment (a_content)
 		end
 
-feature {NONE} -- Tag
+feature -- Tag
 
 	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
@@ -107,7 +109,7 @@ feature {NONE} -- Tag
 			callbacks.on_end_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-feature {NONE} -- Content
+feature -- Content
 
 	on_content (a_content: READABLE_STRING_32)
 			-- Forward content.
@@ -116,7 +118,7 @@ feature {NONE} -- Content
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

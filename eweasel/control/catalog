@@ -791,7 +791,7 @@ test	resume-ace-syntax-error		incr172  tcf pass incrementality
 test	byte-node-disaster		incr173  tcf pass incrementality
 test	vxrc-sneak			incr174  tcf pass incrementality
 test	set-has-loop-disaster		incr175  tcf pass incrementality
-test	backup-directory-disaster	incr176  tcf fail incrementality
+test	backup-directory-disaster	incr176  tcf fail incrementality config
 test	finalize-then-melt		incr177  tcf pass incrementality
 test	freeze-expanded-finalize	incr179  tcf pass incrementality
 test	make-const-variable-freeze	incr180  tcf pass incrementality
@@ -1813,7 +1813,7 @@ test	static-call-on-none		term109  tcf pass termination
 test	assign-attempt-manifest-array	term110  tcf pass termination
 test	finalize-nested-if		term111  tcf pass termination
 test	inherit-from-chain		term112  tcf pass termination
-test	msil-generation-yes		term113  tcf pass termination
+test	msil-generation-yes		term113  tcf pass termination config
 test	remove-formal-generic		term114  tcf pass termination
 test	change-generic-create		term115  tcf fail termination
 test	change-sysname-and-root		term116  tcf pass termination

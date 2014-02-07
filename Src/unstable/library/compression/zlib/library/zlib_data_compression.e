@@ -1,6 +1,6 @@
 note
 	description: "[
-			Implements basic OUTPUT_STREAM as a stream filtered by the zlib compression
+			Implements basic output stream as a stream filtered by the zlib compression
 			algorithms. Target can be a file or an buffer of character
 			]"
 	date: "$Date$"

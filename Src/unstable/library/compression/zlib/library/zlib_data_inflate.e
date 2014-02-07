@@ -1,6 +1,6 @@
 note
 	description: "[
-		Implements basic INPUT_STREAM as a stream filtered by the zlib compression
+		Implements basic input stream as a stream filtered by the zlib compression
 		algorithms. Source can be a file or an array of character, the buffer or
 		file must be the results of a previous zlib compression.
 	]"

@@ -63,9 +63,9 @@ feature {NONE} -- Implementation
 						if attached {XML_ELEMENT} a_commands.item_for_iteration as l_sub_node then
 							if l_sub_node.name.same_string (constants.command_label_title) then
 								if l_sub_node.count > 0 and then attached {ER_XML_TREE_ELEMENT} l_sub_node.first as l_string_node then
-									l_current_command_data.set_keytip (l_string_node.content)
+									l_current_command_data.set_label_title (l_string_node.content)
 								elseif attached {ER_XML_TREE_ELEMENT} l_sub_node as l_node then
-									l_current_command_data.set_keytip (l_node.content)
+									l_current_command_data.set_label_title (l_node.content)
 								end
 							elseif l_sub_node.name.same_string (constants.command_large_images) then
 								check l_sub_node.count = 1 end

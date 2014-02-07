@@ -63,7 +63,12 @@ feature -- Command
 				l_process.set_separate_console (True)
 				l_process.set_hidden (True)
 				l_process.redirect_output_to_agent (agent on_process_output (?, True))
-				on_output ({STRING_32} "Launching " + uicc_name + "%N", True)
+				on_output ({STRING_32} "Launching " + uicc_name, False)
+				if attached l_info.project_location as l_loc then
+					on_output ({STRING_32} "%NIn `" + l_loc.name + "'%N", False)
+					on_output ({STRING_32} "Args: " + l_process.command_line + "%N", False)
+				end
+				on_output ({STRING_32} "%N", True)
 				l_process.launch
 				l_process.wait_for_exit
 				if not l_process.launched or else l_process.exit_code /= 0 then
@@ -306,7 +311,7 @@ feature -- C compiler
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

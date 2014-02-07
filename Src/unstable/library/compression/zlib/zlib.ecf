@@ -11,7 +11,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\zlibwapi.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\zlibstat.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

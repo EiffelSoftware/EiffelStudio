@@ -1347,6 +1347,14 @@ feature {NONE} -- implementation
 				-- Adding id attribute automatically here?
 			end
 
+			if attached a_tree_node_data.keytip as l_title and then not l_title.is_empty then
+				create l_item.make (a_parent_node, l_constants.command_key_tip, name_space)
+				a_parent_node.put_last (l_item)
+
+				create l_item_text.make (l_item, l_title)
+				l_item.put_last (l_item_text)
+			end
+
 			if attached a_tree_node_data.large_image as l_image and then not l_image.is_empty then
 				create l_item.make (a_parent_node, l_constants.command_large_images, name_space)
 				a_parent_node.put_last (l_item)
@@ -1454,7 +1462,7 @@ feature {NONE} -- implementation
 			-- Root XML element
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

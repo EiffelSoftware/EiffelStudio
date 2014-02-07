@@ -11,15 +11,12 @@ class
 inherit
 	ER_CONTEXT_MENU_NODE_WIDGET_IMP
 
-
 feature {NONE} -- Initialization
 
 	user_create_interface_objects
 			-- Create any auxilliary objects needed for ER_CONTEXT_MENU_NODE_WIDGET.
 			-- Initialization for these objects must be performed in `user_initialization'.
 		do
-				-- Create attached types defined in class here, initialize them in `user_initialization'.
-			create checker
 		end
 
 	user_initialization
@@ -34,40 +31,6 @@ feature -- Command
 	set_tree_node_data (a_data: detachable ER_TREE_NODE_CONTEXT_MENU_DATA)
 			-- Update GUI with tree node data
 		do
-			tree_node_data := a_data
-			if attached a_data as l_data then
-				if attached a_data.command_name as l_command_name then
-					command_name.set_text (l_command_name)
-				else
-					command_name.remove_text
-				end
-
---				if attached a_data.label_title as l_label_title then
---					label.set_text (l_label_title)
---				else
---					label.remove_text
---				end
-
---				if attached a_data.small_image as l_small_image then
---					small_image.set_text (l_small_image)
---				else
---					small_image.remove_text
---				end
-
---				if attached a_data.large_image as l_large_image then
---					large_image.set_text (l_large_image)
---				else
---					large_image.remove_text
---				end
-
---				max_count.set_text (a_data.max_count.out)
---				if a_data.enable_pinning then
---					enable_pinning.enable_select
---				else
---					enable_pinning.disable_select
---				end
-
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -75,24 +38,10 @@ feature {NONE} -- Implementation
 	tree_node_data: detachable ER_TREE_NODE_CONTEXT_MENU_DATA
 			-- Context menu tree node data
 
-	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			-- Identifier uniqueness checker
-
-	on_command_name_change
-			-- Called by `change_actions' of `command_name'.
-		do
-			checker.on_identifier_name_change (command_name, tree_node_data)
-		end
-
-	on_command_name_focus_out
-			-- <Precursor>
-		do
-			checker.on_focus_out (command_name, tree_node_data)
-		end
-
-
+invariant
+	
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

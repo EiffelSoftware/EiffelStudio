@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			add_customize_size_definitions
 
 			add_predefined_size_definitions
+
+			common_node.node_type.set_text ("Group")
 		end
 
 	add_predefined_size_definitions
@@ -94,18 +96,7 @@ feature -- Command
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
-				if attached a_data.command_name as l_command_name then
-					command_name.set_text (l_command_name)
-				else
-					command_name.remove_text
-				end
-
-				if attached a_data.label_title as l_label_title then
-					label.set_text (l_label_title)
-				else
-					label.remove_text
-				end
-
+				common_node.set_tree_node_data (a_data)
 				if attached a_data.size_definition as l_size_definition then
 					size_combo_box.set_text (l_size_definition)
 				else
@@ -224,23 +215,6 @@ feature {NONE} -- Implementation
 	size_definition_checker: ER_GROUP_NODE_SIZE_DEFINITION_CHECKER
 			-- Check if a size definition name valid
 
-	on_command_name_text_change
-			-- <Precursor>
-		local
-			l_checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-		do
-			create l_checker
-			l_checker.on_identifier_name_change (command_name, tree_node_data)
-		end
-
-	on_label_text_changs
-			-- Called by `change_actions' of `label'.
-		do
-			if attached tree_node_data as l_data then
-				l_data.set_label_title (label.text)
-			end
-		end
-
 	on_size_text_change
 			-- <Precursor>
 		do
@@ -353,7 +327,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -17,8 +17,6 @@ feature {NONE} -- Initialization
 			-- Create any auxilliary objects needed for ER_DROP_DOWN_COLOR_PICKER_NODE_WIDGET.
 			-- Initialization for these objects must be performed in `user_initialization'.
 		do
-				-- Create attached types defined in class here, initialize them in `user_initialization'.
-			create checker
 		end
 
 	user_initialization
@@ -36,6 +34,7 @@ feature {NONE} -- Initialization
 			font_type.extend (l_item)
 			font_type.set_text ("")
 
+			common_node.node_type.set_text ("Font control")
 		end
 
 feature -- Command
@@ -45,12 +44,7 @@ feature -- Command
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
-				if attached a_data.command_name as l_command_name then
-					command_name.set_text (l_command_name)
-				else
-					command_name.remove_text
-				end
-
+				common_node.set_tree_node_data (a_data)
 				if attached l_data.font_type as l_font_type then
 					font_type.set_text (l_font_type)
 				end
@@ -59,23 +53,8 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			-- Identifier uniqueness checker
-
 	tree_node_data: detachable ER_TREE_NODE_FONT_CONTROL_DATA
 			-- Font control tree node data
-
-	on_command_name_focus_out
-			-- <Precursor>
-		do
-			checker.on_focus_out (command_name, tree_node_data)
-		end
-
-	on_command_name_change
-			-- <Precursor>
-		do
-			checker.on_identifier_name_change (command_name, tree_node_data)
-		end
 
 	on_font_type_select
 			-- <Precursor>
@@ -85,7 +64,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

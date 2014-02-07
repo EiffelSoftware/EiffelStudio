@@ -18,7 +18,7 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
-
+			
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
 
-
+			
 				-- Build widget structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
@@ -59,7 +59,7 @@ feature {NONE}-- Initialization
 			set_title ("EiffelRibbon")
 
 			set_all_attributes_using_constants
-
+			
 				-- Connect events.
 			new_project_menu.select_actions.extend (agent on_new_project_selected)
 			open_project_menu.select_actions.extend (agent on_open_project_selected)
@@ -74,11 +74,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-
+		
 	frozen create_interface_objects
 			-- Create objects
 		do
-
+			
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
@@ -139,37 +139,37 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-
+	
 	on_new_project_selected
 			-- Called by `select_actions' of `new_project_menu'.
 		deferred
 		end
-
+	
 	on_open_project_selected
 			-- Called by `select_actions' of `open_project_menu'.
 		deferred
 		end
-
+	
 	on_save_project_selected
 			-- Called by `select_actions' of `save_project_menu'.
 		deferred
 		end
-
+	
 	on_new_ribbon_selected
 			-- Called by `select_actions' of `new_ribbon_menu'.
 		deferred
 		end
-
+	
 	on_exit_selected
 			-- Called by `select_actions' of `exit_menu'.
 		deferred
 		end
-
+	
 	on_using_application_mode_selected
 			-- Called by `select_actions' of `using_application_mode'.
 		deferred
 		end
-
+	
 
 feature {NONE} -- Constant setting
 
@@ -266,7 +266,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end
+			end	
 		end
 
 	frozen set_attributes_using_color_constants
@@ -299,19 +299,19 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-
+	
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
-	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_PIXMAP]]
-	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_PIXMAP]]
+	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER_INTERVAL]]]
 	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_FONT]]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
 
 	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
@@ -320,35 +320,4 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
-note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options: "http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

@@ -18,7 +18,7 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
-
+			
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,55 +32,38 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
 
-
+			
 				-- Build widget structure.
+			extend (common_node)
 			extend (l_ev_label_1)
-			extend (l_ev_label_2)
-			extend (l_ev_label_3)
-			extend (command_name)
-			extend (l_ev_label_4)
 			extend (font_type)
 
-			l_ev_label_1.set_text ("Type:")
+			l_ev_label_1.set_text ("Font type:")
 			l_ev_label_1.align_text_left
-			l_ev_label_2.set_text ("Font control")
-			l_ev_label_2.align_text_left
-			l_ev_label_3.set_text ("Identifier:")
-			l_ev_label_3.align_text_left
-			l_ev_label_4.set_text ("Font type:")
-			l_ev_label_4.align_text_left
 			integer_constant_set_procedures.extend (agent set_padding (?))
 			integer_constant_retrieval_functions.extend (agent default_padding)
 			integer_constant_set_procedures.extend (agent set_border_width (?))
 			integer_constant_retrieval_functions.extend (agent default_border_width)
+			disable_item_expand (common_node)
 			disable_item_expand (l_ev_label_1)
-			disable_item_expand (l_ev_label_2)
-			disable_item_expand (l_ev_label_3)
-			disable_item_expand (command_name)
-			disable_item_expand (l_ev_label_4)
 			disable_item_expand (font_type)
 
 			set_all_attributes_using_constants
-
+			
 				-- Connect events.
-			command_name.change_actions.extend (agent on_command_name_change)
-			command_name.focus_out_actions.extend (agent on_command_name_focus_out)
 			font_type.select_actions.extend (agent on_font_type_select)
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
-
+		
 	frozen create_interface_objects
 			-- Create objects
 		do
-
+			
 				-- Create all widgets.
+			create common_node
 			create l_ev_label_1
-			create l_ev_label_2
-			create l_ev_label_3
-			create command_name
-			create l_ev_label_4
 			create font_type
 
 			create string_constant_set_procedures.make (10)
@@ -102,12 +85,12 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	command_name: EV_TEXT_FIELD
+	common_node: ER_NODE_WIDGET
 	font_type: EV_COMBO_BOX
 
 feature {NONE} -- Implementation
 
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
+	l_ev_label_1: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -126,22 +109,12 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-
-	on_command_name_change
-			-- Called by `change_actions' of `command_name'.
-		deferred
-		end
-
-	on_command_name_focus_out
-			-- Called by `focus_out_actions' of `command_name'.
-		deferred
-		end
-
+	
 	on_font_type_select
 			-- Called by `select_actions' of `font_type'.
 		deferred
 		end
-
+	
 
 feature {NONE} -- Constant setting
 
@@ -238,7 +211,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end
+			end	
 		end
 
 	frozen set_attributes_using_color_constants
@@ -271,19 +244,19 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-
+	
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
-	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_PIXMAP]]
-	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_PIXMAP]]
+	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER_INTERVAL]]]
 	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_FONT]]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
 
 	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
@@ -292,35 +265,4 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
-note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options: "http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

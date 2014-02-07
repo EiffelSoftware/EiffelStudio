@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 			-- Initialization for these objects must be performed in `user_initialization'.
 		do
 				-- Create attached types defined in class here, initialize them in `user_initialization'.
-			create checker
 			create large_image.make
 		end
 
@@ -30,12 +29,14 @@ feature {NONE} -- Initialization
 				-- Initialize types defined in current class
 			large_image.set_browse_for_open_file ("")
 
-			go_i_th (7)-- Go to "large image" EV_LABEL
+			go_i_th (2)-- Go to "large image" EV_LABEL
 			put_right (large_image)
 			disable_item_expand (large_image)
 			if attached large_image.field as l_field then
 				l_field.change_actions.extend (agent on_large_image_change)
 			end
+
+			common_node.node_type.set_text ("Split button gallery")
 		end
 
 feature -- Command
@@ -45,23 +46,7 @@ feature -- Command
 		do
 			tree_node_data := a_data
 			if attached a_data as l_data then
-				if attached a_data.command_name as l_command_name then
-					command_name.set_text (l_command_name)
-				else
-					command_name.remove_text
-				end
-
-				if attached a_data.label_title as l_label_title then
-					label.set_text (l_label_title)
-				else
-					label.remove_text
-				end
-
---				if attached a_data.small_image as l_small_image then
---					small_image.set_text (l_small_image)
---				else
---					small_image.remove_text
---				end
+				common_node.set_tree_node_data (a_data)
 
 				if attached a_data.large_image as l_large_image then
 					large_image.set_text (l_large_image)
@@ -79,31 +64,8 @@ feature {NONE} -- Implementation
 	large_image: EV_PATH_FIELD
 			-- Large image path field
 
-	checker: ER_IDENTIFIER_UNIQUENESS_CHECKER
-			-- Identifier uniqueness checker
-
 	tree_node_data: detachable ER_TREE_NODE_SPLIT_BUTTON_GALLERY_DATA
 			-- Split button gallery tree node data
-
-	on_command_name_focus_out
-			-- <Precursor>
-		do
-			checker.on_focus_out (command_name, tree_node_data)
-		end
-
-	on_command_name_text_change
-			-- <Precursor>
-		do
-			checker.on_identifier_name_change (command_name, tree_node_data)
-		end
-
-	on_label_text_change
-			-- Called by `change_actions' of `label'.
-		do
-			if attached tree_node_data as l_data then
-				l_data.set_label_title (label.text)
-			end
-		end
 
 	on_large_image_change
 			-- Called by `change_actions' of `large_image'.
@@ -142,7 +104,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

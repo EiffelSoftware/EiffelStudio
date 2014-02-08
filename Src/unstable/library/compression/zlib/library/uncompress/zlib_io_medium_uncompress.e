@@ -1,27 +1,28 @@
 note
 	description: "[
-			Implements basic output stream as a stream filtered by the zlib compression
-			algorithms. Target IO_MEDIUM.
-			]"
+			Implements basic input stream as a stream filtered by the zlib compression
+		algorithms. Source the results of a previous zlib compression. Target IO_MEDIUM.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ZLIB_IO_MEDIUM_COMPRESS
+	ZLIB_IO_MEDIUM_UNCOMPRESS
+
 inherit
 
-	ZLIB_COMPRESS
+	ZLIB_UNCOMPRESS
 
 create
 	io_medium_stream
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	io_medium_stream (a_medium: IO_MEDIUM)
 		require
 			not_connected: not is_connected
 			non_void_medium: a_medium /= Void
-			medium_open_read_write: a_medium.is_open_read and then a_medium.is_open_write
+			medium_open_read: a_medium.is_open_read
 		do
 			make
 			intialize
@@ -30,45 +31,47 @@ feature -- Initialization
 			medium_set: attached io_medium
 		end
 
-feature -- Deflate
-
-	put_io_medium (a_medium: IO_MEDIUM)
-			-- Deflate the medium content.
-		require
-			open_read: a_medium.is_open_read
-
-		do
-			user_input_io_medium := a_medium
-			deflate
-			if attached user_input_io_medium as l_medium then
-				l_medium.close
-			end
-			close
-		end
-
 feature -- Access
 
 	is_connected: BOOLEAN
-			-- <Precursor>
 		do
 			Result := attached io_medium
 		end
 
-feature {NONE} -- Deflate implementation		
+feature -- Inflate
+
+	to_medium (a_medium: IO_MEDIUM)
+			-- Inflate the compress data to medium `a_medium'
+		require
+			not_null_medium: a_medium /= Void
+			open_write: a_medium.is_open_write
+		do
+			user_output_io_medium := a_medium
+			inflate
+			if attached user_output_io_medium as l_medium then
+				l_medium.close
+			end
+			close
+		ensure
+			 user_output_medium_closed: attached user_output_io_medium as l_output_medium implies l_output_medium.is_closed
+		end
+
+feature	{NONE} -- Inflate Implementation
 
 	read: INTEGER
 			-- <Precursor>
 		do
-			if attached user_input_io_medium as l_input_medium then
+			if attached io_medium as l_input_medium then
 				Result := io_medium_read (l_input_medium)
 			end
 		end
 
 	write (a_amount: INTEGER): INTEGER
-			-- <Precursor>
+			-- Write the `a_amount' of elements to the user_output_io_medium or
+			-- user_output_buffer.
 		do
-			if attached io_medium as l_medium then
-				Result := io_medium_write (output_buffer,a_amount,l_medium)
+			if attached user_output_io_medium as l_medium then
+				Result :=  io_medium_write (output_buffer,a_amount,l_medium)
 			end
 		end
 
@@ -81,7 +84,7 @@ feature {NONE} -- Deflate implementation
 		end
 
 	io_medium_read (a_medium: IO_MEDIUM): INTEGER
-			-- Read the medium by character until end of string or the number of elements (Chunk) was reached.
+			-- Read the a_string by character until end of string or the number of elements (Chunk) was reached.
 			-- Return the number of elements read.
 		local
 			l_index: INTEGER
@@ -118,13 +121,12 @@ feature {NONE} -- Deflate implementation
 			Result := l_index - 1
 		end
 
-
-feature {NONE} -- Implementation
+feature {NONE}-- Implementation
 
 	io_medium: detachable IO_MEDIUM
-		-- Medium used to write the compressed ouput
+		-- used to read the compressed output
 
-	user_input_io_medium: detachable IO_MEDIUM
-		-- Content to compress	
+	user_output_io_medium: detachable IO_MEDIUM
+		-- Content to inflate	
 
 end

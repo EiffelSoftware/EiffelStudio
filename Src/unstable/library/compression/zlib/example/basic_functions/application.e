@@ -23,10 +23,22 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			l_start_time, l_finish_time: TIME
 		do
---			basic_example_without_streams
---			stream_example_file_to_file
---			stream_example_buffer
+			basic_example_without_streams
+			stream_example_memory
+			create l_start_time.make_now
+			stream_example_file_to_file
+			create l_finish_time.make_now
+			print ("%NOld version using arrays as buffers: ")
+			print ((l_finish_time - l_start_time).duration.out)
+			create l_start_time.make_now
+			stream_example_file_to_file2
+			create l_finish_time.make_now
+			print ("%NNew version using MANAGED_POINTERS: ")
+			print ((l_finish_time - l_start_time).duration.out)
+			stream_example_buffer
 			stream_example_string
 			stream_example_string_2
 		end
@@ -84,6 +96,28 @@ feature -- Basic Examples using ZLIB STREAMS
 		end
 
 
+	stream_example_file_to_file2
+		local
+			zi: ZLIB_IO_MEDIUM_UNCOMPRESS
+			zo: ZLIB_IO_MEDIUM_COMPRESS
+			l_file: FILE
+			l_src_file: FILE
+			l_new_file: FILE
+		do
+			create {RAW_FILE}l_file.make_create_read_write ("new_test2.txt")
+			create {RAW_FILE}l_src_file.make_open_read (source_file)
+			create {RAW_FILE}l_new_file.make_create_read_write ("new_file2.txt")
+			create zo.io_medium_stream (l_file)
+			zo.put_io_medium (l_src_file)
+			create {RAW_FILE}l_file.make_open_read ("new_test2.txt")
+			create zi.io_medium_stream (l_file)
+			zi.to_medium (l_new_file)
+
+			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
+			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
+		end
+
+
 	stream_example_buffer
 		local
 			zi: ZLIB_DATA_INFLATE
@@ -101,6 +135,41 @@ feature -- Basic Examples using ZLIB STREAMS
 			zo.put_buffer (input_buffer)
 			create zi.buffer_stream (output_buffer)
 			new_buffer := zi.to_buffer
+			new_buffer.compare_objects
+			input_buffer.compare_objects
+			check
+				same_content: new_buffer.is_equal (input_buffer)
+			end
+			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
+			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
+		end
+
+
+
+	stream_example_memory
+		local
+			zi: ZLIB_MEMORY_UNCOMPRESS
+			zo: ZLIB_MEMORY_COMPRESS
+			input_buffer: ARRAY[NATURAL_8]
+			output_buffer: MANAGED_POINTER
+			new_buffer: ARRAY[NATURAL_8]
+			output: MANAGED_POINTER
+		do
+			input_buffer := <<1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90
+						>>
+			create output_buffer.make (128)
+			create zo.memory_stream (output_buffer)
+			zo.put_memory (create {MANAGED_POINTER}.make_from_array (input_buffer))
+			create zi.memory_stream (output_buffer)
+			output := zi.to_memory
+			new_buffer := output.read_array (0, output.count)
 			new_buffer.compare_objects
 			input_buffer.compare_objects
 			check

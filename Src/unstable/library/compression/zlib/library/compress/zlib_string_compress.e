@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ZLIB_STRING_COMPRESS}."
+	description: "[
+				Implements basic output stream as a stream filtered by the zlib compression
+				algorithms. Target String.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -71,7 +74,7 @@ feature {NONE} -- Deflate implementation
 		end
 
 	string_read (a_string: STRING): INTEGER
-			-- Read the a_string by character until end of string or the number of elements (Chunk) was reached.
+			-- Read the `a_string' by character until end of string or the number of elements (Chunk) was reached.
 			-- Return the number of elements read.
 		local
 			l_index: INTEGER

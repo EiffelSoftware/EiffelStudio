@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {ZLIB_COMPRESS}."
-	author: ""
+	description: "[
+			Abstract class representing basic output stream as a stream filtered by the zlib compression
+			algorithms.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +37,6 @@ feature -- Initialization
 			create input_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
 			create output_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
 		end
-
 
 feature --Access
 
@@ -97,7 +98,6 @@ feature -- Change Element
 		ensure
 			compression_level_set: compression_level = a_level
 		end
-
 
 feature {NONE} -- Deflate implementation
 
@@ -165,12 +165,15 @@ feature {NONE} -- Deflate implementation
 			end
 		end
 
-
 	read: INTEGER
+			-- Read the medium by character until end of it or the number of elements (Chunk) was reached.
+			-- Return the number of elements read.
 		deferred
 		end
 
 	write (a_amount: INTEGER): INTEGER
+			-- Write the `a_amount' of elements from `output_buffer' to a corresponding medium
+			-- Return the number of elements written.
 		deferred
 		end
 

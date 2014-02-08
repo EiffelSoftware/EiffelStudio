@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {ZLIB_STRING_UNCOMPRESS}."
-	author: ""
+	description: "[
+			Implements basic input stream as a stream filtered by the zlib compression
+		algorithms. Source the results of a previous zlib compression. Target String.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -67,7 +69,6 @@ feature	{NONE} -- Inflate Implementation
 			end
 		end
 
-
 	close
 			-- <Precursor>
 		do
@@ -77,7 +78,7 @@ feature	{NONE} -- Inflate Implementation
 		end
 
 	string_read (a_string: STRING): INTEGER
-			-- Read the a_string by character until end of string or the number of elements (Chunk) was reached.
+			-- Read the `a_string' by character until end of string or the number of elements (Chunk) was reached.
 			-- Return the number of elements read.
 		local
 			l_index: INTEGER
@@ -101,6 +102,7 @@ feature	{NONE} -- Inflate Implementation
 		end
 
 	string_write (a_buffer: MANAGED_POINTER; a_amount: INTEGER; a_dest: STRING): INTEGER
+			-- Write `a_amount' characters from `a_buffer' to `a_dest'
 		local
 			l_index: INTEGER
 		do
@@ -115,8 +117,6 @@ feature	{NONE} -- Inflate Implementation
 			Result := l_index - 1
 		end
 
-
-
 feature {NONE}-- Implementation
 
 	string: detachable STRING
@@ -124,6 +124,5 @@ feature {NONE}-- Implementation
 
 	user_output_string: detachable STRING
 		-- Content to inflate	
-
 
 end

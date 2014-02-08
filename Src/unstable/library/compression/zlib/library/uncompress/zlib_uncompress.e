@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {ZLIB_UNCOMPRESS}."
-	author: ""
+	description: "[
+			Abstract class, representing basic input stream as a stream filtered by the zlib compression
+			algorithms. Sourcethe results of a previous zlib compression.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -74,6 +76,7 @@ feature -- Access
 				Result := zstream.total_output
 			end
 		end
+
 feature -- Change Element
 
 	set_chunk (a_chunk: INTEGER)
@@ -156,7 +159,6 @@ feature {NONE} -- Inflate Implementation
 			connected: is_connected
 		deferred
 		end
-
 
 feature {NONE} -- Implementation
 

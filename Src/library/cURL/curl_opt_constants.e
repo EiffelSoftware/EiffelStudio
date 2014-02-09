@@ -492,6 +492,33 @@ feature -- HTTP
 			"return CURLOPT_HTTP_VERSION;"
 		end
 
+	curl_http_version_none: INTEGER
+			-- Value used for CURL_HTTP_VERSION.
+			-- Let the library to choose the best possible.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_HTTP_VERSION_NONE"
+		end
+
+	curl_http_version_1_0: INTEGER
+			-- Value used for CURL_HTTP_VERSION.
+			-- Use CURL_HTTP_VERSION_1_0
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_HTTP_VERSION_1_0"
+		end
+
+	curl_http_version_1_1: INTEGER
+			-- Value used for CURL_HTTP_VERSION.
+			-- Use CURL_HTTP_VERSION_1_1
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_HTTP_VERSION_1_1"
+		end
+
 	curlopt_ignore_content_length: INTEGER
 			-- Declared as CURLOPT_IGNORE_CONTENT_LENGTH
 		external
@@ -1112,7 +1139,7 @@ feature -- Status report
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -234,7 +234,7 @@ feature -- Event
 --| We do not use it anymore, however, we might need to reuse it, with external calls
 --| need to check/test this. Since we don't have hands on what the external could do on the Eiffel objects
 --			r.record_fields
---			if {flds: LIST [RT_DBG_VALUE_RECORD]} r.field_records and then not flds.is_empty then
+--			if attached r.field_records as flds and then not flds.is_empty then
 --				increment_records_count (flds.count)
 --			end
 
@@ -756,7 +756,7 @@ feature -- Replay operation
 					end
 					l_records := changes_between (r, n)
 					if not last_replay_operation_failed then
-						if attached {LIST [RT_DBG_VALUE_RECORD]} l_records as ot_records then
+						if attached l_records as ot_records then
 							create chgs.make (ot_records.count)
 							from
 								ot_records.finish
@@ -823,7 +823,7 @@ feature -- Replay operation
 				until
 					done
 				loop
-					if attached {LIST [RT_DBG_VALUE_RECORD]} r.left_step as ot_records then
+					if attached r.left_step as ot_records then
 						last_replay_operation_failed := False
 
 						create chgs.make (ot_records.count)
@@ -919,7 +919,7 @@ feature -- Replay operation
 
 							--| Replay
 						n := t.call_record
-						if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
+						if attached t.chgs as ot_chgs then
 							from
 								ot_chgs.finish
 							until
@@ -989,7 +989,7 @@ feature -- Replay operation
 
 							--| Replay
 
-						if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
+						if attached t.chgs as ot_chgs then
 							from
 								ot_chgs.finish
 							until
@@ -1058,7 +1058,7 @@ feature -- Replay operation
 
 						--| Replay
 					n := t.call_record
-					if attached {LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]} t.chgs as ot_chgs then
+					if attached t.chgs as ot_chgs then
 						from
 							ot_chgs.finish
 						until
@@ -1112,11 +1112,11 @@ feature -- Measurement
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

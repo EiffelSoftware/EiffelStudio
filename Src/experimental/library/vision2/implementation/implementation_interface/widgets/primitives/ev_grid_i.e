@@ -4435,7 +4435,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			extend (horizontal_box)
 
 				-- Handle default key processing.
-			drawable.default_key_processing_handler :=
+			drawable.set_default_key_processing_handler (
 				agent (a_key: EV_KEY): BOOLEAN
 					do
 						Result := True
@@ -4456,6 +4456,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 											-- and propagate to the next available item if not at the first (unless shift is pressed) or last (unless shift not pressed).
 						end
 					end
+				)
 			set_state_flag (interface_is_initialized_flag, False)
 		end
 
@@ -6791,7 +6792,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

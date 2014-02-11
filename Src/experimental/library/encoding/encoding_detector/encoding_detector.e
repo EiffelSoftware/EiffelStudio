@@ -37,6 +37,8 @@ feature -- Basic operations
 		require
 			a_string_not_void: a_string /= Void
 		deferred
+		ensure
+			detected_encoding_set_when_found: last_detection_successful implies detected_encoding /= Void
 		end
 
 note

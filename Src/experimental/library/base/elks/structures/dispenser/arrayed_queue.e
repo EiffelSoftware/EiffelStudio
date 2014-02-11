@@ -26,8 +26,8 @@ inherit
 		end
 
 	MISMATCH_CORRECTOR
-		export {NONE}
-			all
+		export
+			{NONE} all
 		redefine
 			is_equal, copy, correct_mismatch
 		end
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

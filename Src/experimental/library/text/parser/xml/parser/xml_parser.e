@@ -1,12 +1,13 @@
 note
 	description : "[
-			Simple XML parser
+			XML parser
 
 			It does not perform any strict verification, and does not handle the encoding.
 			This is really a simple xml parser which might answer basic XML parsing.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Extensible Markup Language (XML) 1.0", "protocol=URI", "src=http://www.w3.org/TR/xml/"
 
 deferred class
 	XML_PARSER
@@ -149,7 +150,7 @@ feature {XML_CALLBACKS} -- Error
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

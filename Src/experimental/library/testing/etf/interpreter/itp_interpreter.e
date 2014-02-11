@@ -450,13 +450,12 @@ feature {NONE} -- Socket IPC
 			-- If error occurs, close `socket'.
 		local
 			l_retried: BOOLEAN
-			l_last_response: like last_response
 		do
 			if not l_retried then
 				socket.put_natural_32 (last_response_flag)
-				l_last_response := last_response
-				check l_last_response /= Void end
-				socket.independent_store (l_last_response)
+				if attached last_response as l_last_response then
+					socket.independent_store (l_last_response)
+				end
 			end
 		rescue
 			l_retried := True
@@ -612,7 +611,7 @@ invariant
 	socket_attached: socket /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

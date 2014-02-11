@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
 	<target name="iphone">
 		<description>Eiffel Library for iPhone development.Copyright (c), Eiffel Software.</description>
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/iphone/Clib">
 			<description>iPhone Includes</description>

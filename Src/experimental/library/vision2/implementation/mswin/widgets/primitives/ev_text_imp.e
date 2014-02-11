@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 				counter := 1
 				nb := pos - 1
 			until
-				counter >= nb
+				counter > nb
 			loop
 				if l_text.code (counter) = l_r_code then
 					new_lines := new_lines + 1
@@ -667,7 +667,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

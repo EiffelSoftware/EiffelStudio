@@ -15,8 +15,8 @@ class
 inherit
 
 	INET_ADDRESS_FACTORY
-		export {NONE}
-			All
+		export
+			{NONE} all
 		undefine
 			socket_ok, error, copy, is_equal
 		end
@@ -262,7 +262,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

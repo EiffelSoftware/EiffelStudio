@@ -543,7 +543,7 @@ feature {NONE} -- Implementation
 			l_success: BOOLEAN
 		do
 				-- Post a null message to the main application window.
-			l_success := {WEL_API}.post_message_result_boolean (main_application_window_handle, {WEL_WM_CONSTANTS}.wm_null, to_wparam (0), to_lparam (0))
+			l_success := {WEL_API}.post_message_result (main_application_window_handle, {WEL_WM_CONSTANTS}.wm_null, to_wparam (0), to_lparam (0))
 		end
 
 	theme_window: EV_THEME_WINDOW
@@ -738,7 +738,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

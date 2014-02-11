@@ -124,7 +124,8 @@ feature -- Status report
 			hwnd_not_null: hwnd /= default_pointer
 			is_window_pointer: is_window (hwnd)
 		local
-			l_data, null, window_process_id, current_process_id, l_pointer: POINTER
+			l_data, null: POINTER
+			l_thread_id, current_process_id, window_process_id: INTEGER
 			retried: BOOLEAN
 			l_id: INTEGER
 		do
@@ -134,7 +135,7 @@ feature -- Status report
 					-- it was not one of our windows.
 				if l_data /= null then
 						-- Retreive the process id associated with `hwnd' into `window_process_id'.
-					l_pointer := cwin_get_window_thread_process_id (hwnd, $window_process_id)
+					l_thread_id := cwin_get_window_thread_process_id (hwnd, $window_process_id)
 						-- Retrieve the process id of the current process.
 					current_process_id := cwin_get_current_process_id
 
@@ -409,15 +410,15 @@ feature {NONE} -- Externals
 			"RedrawWindow"
 		end
 
-	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [POINTER]): POINTER
+	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [INTEGER]): INTEGER
 			--
 		external
-			"C [macro %"windows.h%"] (HWND, LPDWORD): LONG_PTR"
+			"C [macro %"windows.h%"] (HWND, LPDWORD): DWORD"
 		alias
 			"GetWindowThreadProcessId"
 		end
 
-	cwin_get_current_process_id: POINTER
+	cwin_get_current_process_id: INTEGER
 			--
 		external
 			"C [macro %"windows.h%"] (): DWORD"
@@ -470,14 +471,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

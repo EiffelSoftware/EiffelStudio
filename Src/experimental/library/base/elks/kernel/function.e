@@ -48,8 +48,8 @@ feature -- Access
 			if c/= Void then
 				l_closed_count :=  c.count
 			end
-			Result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			Result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, routine_id,
+				is_basic, written_type_id_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 	apply
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 
 	fast_item (a_rout_disp, a_calc_rout_addr: POINTER
 		       a_closed_operands: POINTER; a_operands: POINTER
-			   a_class_id, a_feature_id: INTEGER; a_is_precompiled, a_is_basic, a_is_inline_agent: BOOLEAN
+			   a_routine_id: INTEGER; a_is_basic: BOOLEAN; a_class_id_inline_agent: INTEGER;
 			   a_closed_count, a_open_count: INTEGER; a_open_map: POINTER): RESULT_TYPE
 		external
 			"C inline use %"eif_rout_obj.h%""
@@ -138,11 +138,9 @@ feature {NONE} -- Implementation
 						$a_calc_rout_addr, $a_closed_operands, $a_operands).$$_result_value;
 				} else {
 					rout_obj_call_function_dynamic (
-						$a_class_id,
-						$a_feature_id,
-						$a_is_precompiled,
+						$a_routine_id,
 						$a_is_basic,
-						$a_is_inline_agent,
+						$a_class_id_inline_agent,
 						$a_closed_operands,
 						$a_closed_count,
 						$a_operands,
@@ -159,7 +157,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

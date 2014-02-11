@@ -1,35 +1,24 @@
 note
-	description: "TUPLE with different is_equal that checks the values"
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "TUPLE with different is_equal that checks the values."
 
 class
-	EQUALITY_TUPLE [G -> TUPLE create default_create end]
+	EQUALITY_TUPLE [G -> TUPLE]
+
+obsolete "Use TUPLE instead and call {TUPLE}.compare_objects. [2014-Jan-31]"
 
 inherit
 	ANY
 		redefine
-			default_create,
 			is_equal
 		end
 
 create
-	default_create,
 	make
 
 convert
 	make ({G})
 
 feature {NONE} -- Initialization
-
-	default_create
-			-- Process instances of classes with no creation clause.
-		do
-			Precursor {ANY}
-			create item
-		end
 
 	make (a_tuple: G)
 			-- Initialize wrapper with implementation item
@@ -67,7 +56,9 @@ feature -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	date: "$Date$";
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

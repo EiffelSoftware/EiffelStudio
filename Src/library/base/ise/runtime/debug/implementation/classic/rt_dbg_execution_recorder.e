@@ -722,7 +722,7 @@ feature -- Replay operation
 			Result := attached replay_stack as rs and then not rs.is_empty
 		end
 
-	replay_stack: detachable LINKED_LIST [TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]]
+	replay_stack: detachable LINKED_LIST [TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable ARRAYED_LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]]
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
@@ -734,7 +734,7 @@ feature -- Replay operation
 		local
 			rs: like replay_stack
 			n: detachable RT_DBG_CALL_RECORD
-			l_records: detachable LIST [RT_DBG_VALUE_RECORD]
+			l_records: like changes_between
 			chgs: detachable ARRAYED_LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]
 		do
 			debug ("RT_DBG_REPLAY")
@@ -756,28 +756,26 @@ feature -- Replay operation
 					end
 					l_records := changes_between (r, n)
 					if not last_replay_operation_failed then
-						if attached l_records as ot_records then
-							create chgs.make (ot_records.count)
-							from
-								ot_records.finish
-							until
-								ot_records.before
-							loop
-								debug ("RT_DBG_REPLAY")
-									print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
-								end
-								if attached {RT_DBG_VALUE_RECORD} ot_records.item_for_iteration as ot_rec then
-									if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
-										chgs.force ([ot_rec, val])
-										ot_rec.restore (val)
-									else
-										check should_not_occur: False end
-									end
-								end
-								ot_records.back
+						create chgs.make (l_records.count)
+						from
+							l_records.finish
+						until
+							l_records.before
+						loop
+							debug ("RT_DBG_REPLAY")
+								print ("replay_back -> " + l_records.item_for_iteration.debug_output + " %N")
 							end
+							if attached {RT_DBG_VALUE_RECORD} l_records.item_for_iteration as ot_rec then
+								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
+									chgs.extend ([ot_rec, val])
+									ot_rec.restore (val)
+								else
+									check should_not_occur: False end
+								end
+							end
+							l_records.back
 						end
-						rs.force ([r, chgs])
+						rs.extend ([r, chgs])
 						replayed_call := p
 					end
 				else
@@ -837,7 +835,7 @@ feature -- Replay operation
 							end
 							if attached {RT_DBG_VALUE_RECORD} ot_records.item_for_iteration as ot_rec then
 								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
-									chgs.force ([ot_rec, val])
+									chgs.extend ([ot_rec, val])
 									ot_rec.restore (val)
 								else
 									check should_not_occur: False end
@@ -845,7 +843,7 @@ feature -- Replay operation
 							end
 							ot_records.back
 						end
-						rs.force ([r, chgs])
+						rs.extend ([r, chgs])
 					else
 						if r.parent = Void then
 							--| Revert the step left which was supposed to be a step back,
@@ -896,7 +894,7 @@ feature -- Replay operation
 			replay_stack_not_empty: replay_stack_not_empty
 		local
 			n: RT_DBG_CALL_RECORD
-			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
+			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable ARRAYED_LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
 			done: BOOLEAN
 		do
 			debug ("RT_DBG_REPLAY")
@@ -964,7 +962,7 @@ feature -- Replay operation
 			replay_stack_not_empty: replay_stack_not_empty
 		local
 			n: RT_DBG_CALL_RECORD
-			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
+			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable ARRAYED_LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
 			r_pos_line: INTEGER
 			done: BOOLEAN
 		do
@@ -1040,7 +1038,7 @@ feature -- Replay operation
 		local
 			r: like replayed_call
 			n: like callstack_record
-			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
+			t: TUPLE [call_record: RT_DBG_CALL_RECORD; chgs: detachable ARRAYED_LIST [TUPLE [record: RT_DBG_VALUE_RECORD; backup: RT_DBG_VALUE_RECORD]]]
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("revert_replay_stack -start-%N")

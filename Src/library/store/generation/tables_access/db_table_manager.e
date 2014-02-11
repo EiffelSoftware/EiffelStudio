@@ -544,9 +544,13 @@ feature -- Creation
 		do
 			table_descr := an_obj.table_description
 			l_id := new_id_for_tablerow (table_descr)
-			check l_id /= Void end -- FIXME: implied by `new_id_for_tablerow''s postcondition if `not has_error', otherwise... bug...?
-			table_descr.set_id (l_id)
-			create_item_with_tablecode (an_obj, table_descr.table_code)
+			if l_id /= Void then
+				table_descr.set_id (l_id)
+				create_item_with_tablecode (an_obj, table_descr.table_code)
+			else
+					-- It should not happen per-precondition
+				check not_has_id: False end
+			end
 		end
 
 	create_item (an_obj: DB_TABLE)

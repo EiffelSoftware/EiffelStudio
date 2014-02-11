@@ -319,6 +319,9 @@ feature -- Package
 			inf: like iron_info
 			p: like package_path
 			hdate: HTTP_DATE
+			s: STRING_32
+			l_title: detachable STRING_32
+			i: INTEGER
 		do
 			p := package_path (a_id)
 			inf := iron_info (p.extended ("package.info"))
@@ -351,8 +354,22 @@ feature -- Package
 					across
 						s_links as links_ic
 					loop
-						if links_ic.item.is_valid_as_string_8 then
-							Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (links_ic.item.as_string_8, links_ic.key.to_string_32))
+						create s.make_from_string (links_ic.item)
+						s.left_adjust
+						s.right_adjust
+						create l_title.make_from_string_general (links_ic.key)
+						if not s.is_empty then
+							if s.item (1) = '"' then
+								i := s.index_of ('"', 2)
+								if i > 0 then
+									l_title := s.substring (2, i - 1)
+									s := s.substring (i + 1, s.count)
+									s.left_justify
+								end
+							end
+							if s.is_valid_as_string_8 then
+								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (links_ic.item.as_string_8, l_title))
+							end
 						end
 					end
 				end

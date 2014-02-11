@@ -368,7 +368,7 @@ feature -- Package
 								end
 							end
 							if s.is_valid_as_string_8 then
-								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (links_ic.item.as_string_8, l_title))
+								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (s.as_string_8, l_title))
 							end
 						end
 					end

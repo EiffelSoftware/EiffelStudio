@@ -62,7 +62,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error?
 		do
-			Result := last_error = Void
+			Result := last_error /= Void
 		end
 
 	last_error: detachable CONF_ERROR

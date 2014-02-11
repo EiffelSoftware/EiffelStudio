@@ -117,7 +117,7 @@ feature {SKELETON} -- Implementation: Access
 feature {NONE} -- Implementation: Access
 
 	nb_attributes: SPECIAL [INTEGER]
-			-- Record cound for each type of attribute.
+			-- Record count for each type of attribute.
 
 feature -- Status Report
 
@@ -1435,7 +1435,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

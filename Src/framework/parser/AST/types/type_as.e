@@ -18,7 +18,7 @@ feature -- Roundtrip
 	attachment_mark_index: INTEGER
 			-- Index of attachment symbol (if any)
 
-	variant_mark_index: INTEGER
+	variance_mark_index: INTEGER
 			-- Index of variant symbol (if any)
 
 	separate_mark_index: INTEGER
@@ -96,51 +96,50 @@ feature -- Roundtrip
 			end
 		end
 
-	variant_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS
-			-- Attachment mark (if any).
-			-- Use `variant_symbol' or `variant_keyword' for specific representation.
+	variance_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS
+			-- Variance mark (if any).
+			-- Use `variance_symbol' or `variance_keyword' for specific representation.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := variant_mark_index
+			i := variance_mark_index
 			if a_list.valid_index (i) and then attached {LEAF_AS} a_list.i_th (i) as m then
 				Result := m
 			end
 		ensure
-			result_attached: (attached Result) = (attached variant_symbol (a_list) or attached variant_keyword (a_list))
-			result_consistent: Result = variant_symbol (a_list) or Result = variant_keyword (a_list)
+			result_attached: (attached Result) = (attached variance_symbol (a_list) or attached variance_keyword (a_list))
+			result_consistent: Result = variance_symbol (a_list) or Result = variance_keyword (a_list)
 		end
 
-		variant_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Attachment symbol (if any).
-			-- Use `variant_mark' if variant status in a form of keyword is respected.
+	variance_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Variance symbol (if any).
+			-- Use `variance_mark' if variance status in a form of keyword is respected.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := variant_mark_index
+			i := variance_mark_index
 			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as s then
 				Result := s
 			end
 		end
 
-	variant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Attachment keyword (if any).
-			-- Use `variant_mark' if variant status in a form of symbol is respected.
+	variance_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Variance keyword (if any).
+			-- Use `variance_mark' if variance status in a form of symbol is respected.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := variant_mark_index
+			i := variance_mark_index
 			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
 				Result := k
 			end
 		end
-
 
 	separate_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Separate keyword (if any).
@@ -186,8 +185,8 @@ feature -- Roundtrip/Token
 					Result := lcurly_symbol (a_list)
 				elseif attachment_mark_index /= 0 then
 					Result := attachment_mark (a_list)
-				elseif variant_mark_index /= 0 then
-					Result := variant_mark (a_list)
+				elseif variance_mark_index /= 0 then
+					Result := variance_mark (a_list)
 				elseif separate_mark_index /= 0 then
 					Result := separate_keyword (a_list)
 				end
@@ -219,7 +218,7 @@ feature -- Status
 			-- Is frozen mark specified?
 
 	has_variant_mark: BOOLEAN
-	-- Is variant mark specified?
+			-- Is variant mark specified?
 
 	has_anchor: BOOLEAN
 			-- Does this type involve an anchor?
@@ -262,20 +261,20 @@ feature -- Modification
 			has_detachable_mark_set: has_detachable_mark = d
 		end
 
-	set_variant_mark (m: detachable LEAF_AS; f: like has_frozen_mark; v: like has_variant_mark)
+	set_variance_mark (m: detachable LEAF_AS; f: like has_frozen_mark; v: like has_variant_mark)
 		require
 			correct_variant_status: not (f and v)
 			meaningfull_variant_mark: (m /= Void) implies (f or v)
 		do
 			if m = Void then
-				variant_mark_index := 0
+				variance_mark_index := 0
 			else
-				variant_mark_index := m.index
+				variance_mark_index := m.index
 			end
 			has_frozen_mark := f
 			has_variant_mark := v
 		ensure
-			variant_mark_set: (m = Void implies variant_mark_index = 0) and then (m /= Void implies variant_mark_index = m.index)
+			variant_mark_set: (m = Void implies variance_mark_index = 0) and then (m /= Void implies variance_mark_index = m.index)
 			has_frozen_mark_set: has_frozen_mark = f
 			has_variant_mark_set: has_variant_mark = v
 		end
@@ -321,7 +320,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

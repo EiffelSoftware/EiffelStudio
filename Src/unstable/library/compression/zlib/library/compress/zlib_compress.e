@@ -1,8 +1,8 @@
 note
 	description: "[
-			Abstract class representing basic output stream as a stream filtered by the zlib compression
-			algorithms.
-		]"
+		Abstract class representing basic output stream as a stream filtered by the zlib compression
+		algorithms.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,9 +13,6 @@ inherit
 
 	UTIL_EXTERNALS
 
-	ZLIB_CONSTANTS
-
-
 feature -- Initialization
 
 	make
@@ -24,7 +21,7 @@ feature -- Initialization
 			create zstream.make
 			create zlib
 
-			  	-- Setup a default chunk size
+				-- Setup a default chunk size
 			chunk := default_chunk
 
 				-- Setup a default compression level
@@ -34,8 +31,8 @@ feature -- Initialization
 	intialize
 		do
 				-- Initialize buffers
-			create input_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
-			create output_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
+			create input_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk))
+			create output_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk))
 		end
 
 feature --Access
@@ -47,25 +44,30 @@ feature --Access
 		end
 
 	is_connected: BOOLEAN
+			-- Is the corresponding medium to write the compressed output, attached?
 		deferred
 		end
 
 	has_error_message: BOOLEAN
+			-- Is there a message error?
 		do
 			Result := zstream.message /= default_pointer
 		end
 
 	is_closed: BOOLEAN
+			-- Is not connected.
 		do
 			Result := is_connected
 		end
 
 	last_error_code: INTEGER
+			-- Last error code from zlib.
 		do
 			Result := zlib.last_operation
 		end
 
 	last_error_message: STRING
+			-- Message for the last error.
 		require
 			error_message: has_error_message
 		do
@@ -91,8 +93,7 @@ feature -- Change Element
 	set_compression_level (a_level: INTEGER)
 			-- Set `compression_level' to `a_compression_level'
 		require
-			known_level: a_level >= Z_default_compression and then a_level <= Z_best_compression
-
+			known_level: a_level >= {ZLIB_CONSTANTS}.Z_default_compression and then a_level <= {ZLIB_CONSTANTS}.Z_best_compression
 		do
 			compression_level := a_level
 		ensure
@@ -102,13 +103,17 @@ feature -- Change Element
 feature {NONE} -- Deflate implementation
 
 	deflate
-			--  Compress input data to output data.
-			--  the result is set to last_operation
+			--		 Compress from `a_source' to `a_dest' until EOF on `a_source'.
+			--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be
+			--   allocated for processing, Z_STREAM_ERROR if an invalid compression
+			--   level is supplied, Z_VERSION_ERROR if the version of zlib.h and the
+			--   version of the library linked do not match, or Z_ERRNO if there is
+			--   an error reading or writing the files.
 		local
 			l_flush: NATURAL
 				-- current flushing state deflate.
 			l_have: INTEGER
-				-- amount of data return by deflate.
+			-- amount of data return by deflate.
 		do
 			zlib.deflate_init (zstream, compression_level)
 			if not has_error then
@@ -119,9 +124,9 @@ feature {NONE} -- Deflate implementation
 					zstream.set_available_input (read)
 					zstream.set_next_input (input_buffer.item)
 					if end_of_input then
-						l_flush := z_finish
+						l_flush := {ZLIB_CONSTANTS}.z_finish
 					else
-						l_flush := z_no_flush
+						l_flush := {ZLIB_CONSTANTS}.z_no_flush
 					end
 
 						-- run deflate on input until output buffer not full, finish compression if all of source has been read in
@@ -130,7 +135,7 @@ feature {NONE} -- Deflate implementation
 						zstream.set_next_output (output_buffer.item)
 						zlib.deflate (zstream, l_flush)
 						check
-							zlib_ok: zlib.last_operation /= Z_stream_error
+							zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
 						end
 						l_have := Chunk - zstream.available_output
 						if write (l_have) /= l_have then
@@ -143,7 +148,7 @@ feature {NONE} -- Deflate implementation
 						zstream.set_next_output (output_buffer.item)
 						zlib.deflate (zstream, l_flush)
 						check
-							l_zlib_ok: zlib.last_operation /= Z_stream_error
+							l_zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
 						end
 						l_have := Chunk - zstream.available_output
 						if write (l_have) /= l_have then
@@ -157,7 +162,7 @@ feature {NONE} -- Deflate implementation
 				end
 					-- -- All input will be completed
 				check
-					stream_end: zlib.last_operation = z_stream_end
+					stream_end: zlib.last_operation = {ZLIB_CONSTANTS}.z_stream_end
 				end
 
 					-- clean up and return
@@ -188,24 +193,25 @@ feature {NONE} -- Implementation
 	end_of_input: BOOLEAN
 
 	input_buffer: MANAGED_POINTER
-		-- Input buffer.
+			-- Input buffer.
 
 	output_buffer: MANAGED_POINTER
-		-- Output buffer
+			-- Output buffer
 
 	chunk: INTEGER
-		 -- the buffer size for feeding data to and pulling data from the zlib routines.
+			-- the buffer size for feeding data to and pulling data from the zlib routines.
 
 	default_chunk: INTEGER = 2048
-		 -- default buffer size	
+			-- default buffer size
 
 	zlib: ZLIB
-		-- ZLIB Low level API
+			-- ZLIB Low level API
 
 	zstream: ZLIB_STREAM
-		-- structured used to pass information to zlib routines	
+			-- structure used to pass information to zlib routines
 
 	compression_level: INTEGER
-		-- Zlib compression, by default is set to
-		-- Z_default_compression level.
+			-- Zlib compression, by default is set to
+			-- Z_default_compression level.
+
 end

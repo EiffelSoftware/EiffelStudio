@@ -1655,7 +1655,7 @@ Class_or_tuple_type:
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	| TE_VARIANT Unmarked_class_or_tuple_type
@@ -1663,7 +1663,7 @@ Class_or_tuple_type:
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 			}
 	| TE_SEPARATE Unmarked_class_or_tuple_type
@@ -1698,7 +1698,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1709,7 +1709,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1720,7 +1720,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1731,7 +1731,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1745,7 +1745,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1759,7 +1759,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1770,7 +1770,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1781,7 +1781,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1792,7 +1792,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1806,7 +1806,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1849,7 +1849,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	|	TE_VARIANT Unmarked_anchored_type
@@ -1857,7 +1857,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 			}
 	|	TE_SEPARATE Unmarked_anchored_type
@@ -1892,7 +1892,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1903,7 +1903,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1914,7 +1914,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1925,7 +1925,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1939,7 +1939,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1953,7 +1953,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1964,7 +1964,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1975,7 +1975,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1986,7 +1986,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -2000,7 +2000,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)

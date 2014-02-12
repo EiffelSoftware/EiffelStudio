@@ -12,6 +12,23 @@ note
 
 frozen expanded class TYPED_POINTER [G]
 
+convert
+	to_pointer: {POINTER}
+
+feature -- Access
+
+	to_pointer: POINTER
+
+feature -- Settings
+
+	set_item (i: POINTER)
+			-- Make `i' the item value.
+		do
+			to_pointer := i
+		ensure
+			to_pointer_set: to_pointer = i
+		end
+
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

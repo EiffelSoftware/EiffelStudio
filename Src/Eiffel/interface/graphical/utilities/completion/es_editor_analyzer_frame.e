@@ -226,12 +226,16 @@ feature -- Query
 									l_exit
 								loop
 									l_parent_frame := l_parent_frame.parent
-									l_parent_locals := l_parent_frame.locals
-									if l_parent_locals.has (l_anchor_name) then
-										l_solved_type := l_parent_locals.item (l_anchor_name)
-										l_exit := True
+									if l_parent_frame /= Void then
+										l_parent_locals := l_parent_frame.locals
+										if l_parent_locals.has (l_anchor_name) then
+											l_solved_type := l_parent_locals.item (l_anchor_name)
+											l_exit := True
+										else
+											l_exit := l_parent_frame.is_stop_frame
+										end
 									else
-										l_exit := l_parent_frame.is_stop_frame
+										l_exit := True
 									end
 								end
 							end
@@ -477,7 +481,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

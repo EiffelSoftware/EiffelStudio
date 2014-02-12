@@ -1,9 +1,13 @@
 note
 	description: "Values for grouping attributes in object layout of generated code."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SHARED_LEVEL
 
-feature {NONE}
+feature -- Constants
 
 	Reference_level: INTEGER = 1
 
@@ -44,7 +48,7 @@ feature {NONE}
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

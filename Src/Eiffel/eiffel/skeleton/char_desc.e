@@ -20,7 +20,11 @@ feature -- Initialization
 			-- Create instance of CHAR_DESC. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
-			is_wide := w
+			if w then
+				internal_flags := {SHARED_LEVEL}.wide_char_level
+			else
+				internal_flags := {SHARED_LEVEL}.character_level
+			end
 		ensure
 			is_wide_set: is_wide = w
 		end
@@ -29,20 +33,13 @@ feature -- Access
 
 	is_wide: BOOLEAN
 			-- Is current character a wide one?
-
-	level: INTEGER
-			-- Comparison criteria
 		do
-			if is_wide then
-				Result := Wide_char_level
-			else
-				Result := Character_level
-			end
+			Result := level = {SHARED_LEVEL}.wide_char_level
 		end
 
 	sk_value: NATURAL_32
 		do
-			if is_wide then
+			if level = {SHARED_LEVEL}.wide_char_level then
 				Result := {SK_CONST}.sk_char32
 			else
 				Result := {SK_CONST}.sk_char8
@@ -52,7 +49,7 @@ feature -- Access
 	type_i: TYPE_A
 			-- Corresponding TYPE_I instance.
 		do
-			if is_wide then
+			if level = {SHARED_LEVEL}.wide_char_level then
 				Result := wide_char_type
 			else
 				Result := character_type
@@ -65,7 +62,7 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			if is_wide then
+			if level = {SHARED_LEVEL}.wide_char_level then
 				buffer.put_string ({SK_CONST}.sk_char32_string)
 			else
 				buffer.put_string ({SK_CONST}.sk_char8_string)
@@ -73,7 +70,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

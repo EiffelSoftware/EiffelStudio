@@ -9,41 +9,45 @@ deferred class ATTR_DESC
 
 inherit
 	COMPARABLE
-		undefine
-			is_equal
-		end
-
-	SHARED_LEVEL
-		export
-			{NONE} all
-		end
 
 	COMPILER_EXPORTER
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_TYPES
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
-
 	INTERNAL_COMPILER_STRING_EXPORTER
+		undefine
+			is_equal
+		end
 
 	DEBUG_OUTPUT
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 feature -- Access
@@ -69,10 +73,16 @@ feature -- Access
 
 	is_transient: BOOLEAN
 			-- Is Current attribute transient, i.e. not persisted via storable?
+		do
+			Result := (internal_flags & is_transient_mask) /= 0
+		end
 
 	is_hidden: BOOLEAN
 			-- Is current attribute hidden? i.e used for implementation purpose
 			-- such as once per object
+		do
+			Result := (internal_flags & is_hidden_mask) /= 0
+		end
 
 feature -- Status report
 
@@ -115,7 +125,11 @@ feature -- Settings
 	set_is_transient (v: BOOLEAN)
 			-- Assign `v' to `is_transient'.
 		do
-			is_transient := v
+			if v then
+				internal_flags := internal_flags | is_transient_mask
+			else
+				internal_flags := internal_flags & is_transient_mask.bit_not
+			end
 		ensure
 			is_transient_set: is_transient = v
 		end
@@ -123,16 +137,21 @@ feature -- Settings
 	set_is_hidden (v: BOOLEAN)
 			-- Assign `v' to `is_hidden'.
 		do
-			is_hidden := v
+			if v then
+				internal_flags := internal_flags | is_hidden_mask
+			else
+				internal_flags := internal_flags & is_hidden_mask.bit_not
+			end
 		ensure
 			is_hidden_set: is_hidden = v
 		end
 
 feature -- Status report
 
-	level: INTEGER
+	frozen level: INTEGER_32
 			-- Comparison criteria
-		deferred
+		do
+			Result := internal_flags & level_mask
 		end
 
 	sk_value: NATURAL_32
@@ -170,9 +189,8 @@ feature -- Comparison
 		require
 			good_argument: other /= Void
 		do
-			Result := other.level = level and other.feature_id = feature_id and
-				other.rout_id = rout_id and other.is_hidden = is_hidden and
-				other.is_transient = is_transient
+			Result := other.internal_flags = internal_flags and other.feature_id = feature_id and
+				other.rout_id = rout_id
 		end
 
 feature -- Code generation
@@ -216,8 +234,18 @@ feature -- Code generation
 			Result := Current
 		end
 
+	internal_flags: INTEGER_32
+			-- Storage for `is_hidden', `is_transient'.
+
+	is_transient_mask: INTEGER_32 = 0x0100
+	is_hidden_mask: INTEGER_32 = 0x0200
+	level_mask: INTEGER_32 = 0x00FF
+			-- Mask for `internal_flags'.
+
+invariant
+
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

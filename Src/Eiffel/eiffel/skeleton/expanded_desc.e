@@ -9,10 +9,15 @@ class EXPANDED_DESC
 
 inherit
 	ATTR_DESC
-		rename
-			Expanded_level as level
 		redefine
-			is_expanded, same_as, instantiation_in
+			is_expanded, same_as, instantiation_in, default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			internal_flags := {SHARED_LEVEL}.expanded_level
 		end
 
 feature -- Access
@@ -50,15 +55,11 @@ feature -- Comparisons
 
 	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
-		local
-			other_exp: EXPANDED_DESC
 		do
-			if Precursor {ATTR_DESC} (other) then
-				other_exp ?= other
+			if Precursor (other) and then attached {EXPANDED_DESC} other as l_other_exp then
 					-- We have to make sure that they represent the same expanded
 					-- class type and that they have the same types.
-				Result := (other_exp /= Void) and then other_exp.type_id = type_id and then
-					identical_types (other_exp.type_i)
+				Result := l_other_exp.type_id = type_id and then identical_types (l_other_exp.type_i)
 			end
 		end
 
@@ -124,7 +125,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

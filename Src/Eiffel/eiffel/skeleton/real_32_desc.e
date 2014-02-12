@@ -10,8 +10,16 @@ class REAL_32_DESC
 inherit
 	ATTR_DESC
 		rename
-			real_32_level as level,
 			real_32_type as type_i
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			internal_flags := {SHARED_LEVEL}.real_32_level
 		end
 
 feature -- Access
@@ -31,7 +39,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

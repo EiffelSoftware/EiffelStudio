@@ -3,9 +3,10 @@ MacMini with OSX 10.9 (Intel Core i7-3720QM  2.6GHz (Turbo 3.6 GHz))
 14.05
 =====
 Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
-73.527u 5.978s 1:19.54 99.9%	0+0k 25+2249io 0pf+0w
+73.527u 5.978s 1:19.54 99.9% 0+0k 25+2249io 0pf+0w
+70.844u 5.951s 1:16.83 99.9% 0+0k 6+2191io 0pf+0w
 
 13.11
 =====
 Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
-78.704u 7.139s 1:27.33 98.2%    0+0k 0+3165io 2244pf+0w
+78.704u 7.139s 1:27.33 98.2% 0+0k 0+3165io 2244pf+0w

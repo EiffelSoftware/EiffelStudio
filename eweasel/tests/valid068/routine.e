@@ -329,6 +329,11 @@ feature {ROUTINE} -- Implementation
 			-- If open arguments contain some references, we need
 			-- to clean them up after call.
 
+	frozen set_rout_disp_final (p: POINTER; tp: POINTER; args: TUPLE; omap: ARRAY [INTEGER]) is
+		do
+		end
+
+			-- Initialize object. 
 	frozen set_rout_disp (p: POINTER; tp: POINTER; args: TUPLE; 
 						 omap: ARRAY [INTEGER]) is
 			-- Initialize object. 

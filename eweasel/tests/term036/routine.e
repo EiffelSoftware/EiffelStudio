@@ -375,6 +375,11 @@ feature {ROUTINE} -- Implementation
 	frozen eiffel_rout_disp: POINTER
 			-- Eiffel routine dispatcher
 
+	frozen set_rout_disp_final (p: POINTER; tp: POINTER; closed_args: TUPLE; 
+						 omap, cmap: ARRAY [INTEGER]) is
+		do
+		end
+
 	frozen set_rout_disp (p: POINTER; tp: POINTER; closed_args: TUPLE; 
 						 omap, cmap: ARRAY [INTEGER]) is
 			-- Initialize object. 

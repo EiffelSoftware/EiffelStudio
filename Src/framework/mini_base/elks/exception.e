@@ -1,7 +1,6 @@
 note
 	description: "[
-		Sequences of 8-bit characters, accessible through integer indices
-		in a contiguous range.
+		Ancestor of all exception classes.
 		]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -10,35 +9,9 @@ note
 	revision: "$Revision$"
 
 class
-	STRING_8
+	EXCEPTION
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (n: INTEGER)
-		do
-			create area.make_empty (n)
-		end
-
-feature -- Status report
-
-	is_empty: BOOLEAN
-
-	area: SPECIAL [CHARACTER_8]
-
-	set_count (n: INTEGER)
-		do
-
-		end
-
-	internal_hash_code: INTEGER
-
-	count: INTEGER
-			-- Actual number of characters making up the string
-
-;note
+note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

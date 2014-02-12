@@ -35,6 +35,9 @@ feature -- Status report
 
 	internal_hash_code: INTEGER
 
+	count: INTEGER
+			-- Actual number of characters making up the string
+
 ;note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

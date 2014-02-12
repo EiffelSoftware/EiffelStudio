@@ -9,6 +9,8 @@ class STRING_CLASS_B
 
 inherit
 	EIFFEL_CLASS_C
+		rename
+			make as basic_make
 		redefine
 			check_validity
 		end
@@ -18,7 +20,23 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Initialization
+
+	make (l: like original_class; a_is_string_32: BOOLEAN)
+			-- Representation of STRING_8 class if not `a_is_string_32', STRING_32 otherwise.			
+		do
+			basic_make (l)
+			is_string_32 := a_is_string_32
+		ensure
+			is_string_32_set: is_string_32 = a_is_string_32
+		end
+
+feature -- Property
+
+	is_string_32: BOOLEAN
+			-- Is current class the STRING_32 classe?
+
+feature -- Checking
 
 	check_validity
 			-- Check validity of class STRING
@@ -96,6 +114,15 @@ feature
 					create special_error.make (string_case_5, Current)
 					Error_handler.insert_error (special_error)
 				end
+
+					-- Presence of attribute `count'.
+				if
+					not attached feature_table.item_id (Names_heap.count_name_id) as l_feat or else
+					not l_feat.is_attribute or else not l_feat.type.same_as (integer_32_type)
+				then
+					create special_error.make (string_case_5, Current)
+					Error_handler.insert_error (special_error)
+				end
 			end
 		end
 
@@ -119,10 +146,14 @@ feature {NONE} -- Implementation
 			gen: ARRAYED_LIST [TYPE_A]
 		do
 			create gen.make (1)
-			gen.extend (character_type)
+			if is_string_32 then
+				gen.extend (wide_char_type)
+			else
+				gen.extend (character_type)
+			end
 			create Result.make (System.special_id, gen)
 		ensure
-			area_type_not_void: area_type /= Void
+			area_type_not_void: Result /= Void
 		end
 
 	set_count_signature: DYN_PROC_I
@@ -138,7 +169,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

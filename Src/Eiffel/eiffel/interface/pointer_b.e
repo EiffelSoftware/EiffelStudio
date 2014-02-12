@@ -107,26 +107,12 @@ feature -- Validity
 
 					-- Check for `to_pointer' query.
 				l_feat := feature_table.item_id ({PREDEFINED_NAMES}.to_pointer_name_id)
-				if l_feat = Void or else not l_feat.has_return_value then
+				if l_feat = Void or else not l_feat.is_attribute then
 					create special_error.make (typed_pointer_case_3, Current)
 					Error_handler.insert_error (special_error)
-				else
-					l_attr ?= l_feat
-					if l_attr /= Void then
-							-- We are compiling for Eiffel Software implementation
-						skelet := types.first.skeleton
-						if
-							skelet.count /= 1 or else
-							not skelet.first.type_i.same_as (pointer_type)
-						then
-							create special_error.make (typed_pointer_case_2, Current)
-							Error_handler.insert_error (special_error)
-						else
-						end
-					else
-						create special_error.make (typed_pointer_case_3, Current)
-						Error_handler.insert_error (special_error)
-					end
+				elseif not l_feat.type.same_as (pointer_type) then
+					create special_error.make (typed_pointer_case_2, Current)
+					Error_handler.insert_error (special_error)
 				end
 
 					-- Check for a procedure `set_item'.
@@ -134,7 +120,7 @@ feature -- Validity
 				if
 					l_proc = Void or else
 					l_proc.argument_count /= 1 or else
-					not l_proc.arguments.i_th (1).actual_type.same_as (pointer_type)
+					not l_proc.arguments.i_th (1).conformance_type.same_as (pointer_type)
 				then
 					create special_error.make (typed_pointer_case_4, Current)
 					Error_handler.insert_error (special_error)
@@ -143,7 +129,7 @@ feature -- Validity
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

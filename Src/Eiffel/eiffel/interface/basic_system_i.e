@@ -98,31 +98,6 @@ feature -- Access
 	exception_class: CLASS_I
 			-- Class EXCEPTION
 
-feature -- Access: XX_REF classes
-
-	character_8_ref_class, character_32_ref_class: CLASS_I
-			-- Class CHARACTER_REF 8 and 32 bits.
-
-	boolean_ref_class: CLASS_I
-			-- Class BOOLEAN_REF
-
-	integer_8_ref_class, integer_16_ref_class,
-	integer_32_ref_class, integer_64_ref_class: CLASS_I
-			-- Class INTEGER_REF 8, 16, 32 and 64 bits
-
-	natural_8_ref_class, natural_16_ref_class,
-	natural_32_ref_class, natural_64_ref_class: CLASS_I
-			-- Class NATURAL_REF 8, 16, 32 and 64 bits
-
-	real_32_ref_class: CLASS_I
-			-- Class REAL_REF
-
-	real_64_ref_class: CLASS_I
-			-- Class DOUBLE_REF
-
-	pointer_ref_class: CLASS_I
-			-- Class POINTER_REF
-
 feature -- Access
 
 	ancestor_class_to_all_classes_id: INTEGER
@@ -341,118 +316,6 @@ feature -- Access
 			compiled: rt_extension_class.is_compiled
 		do
 			Result := rt_extension_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-feature -- Status report
-
-	pointer_ref_type_id: INTEGER
-			-- Id of class POINTER_REF
-		require
-			pointer_ref_class_exists: pointer_ref_class /= Void
-			compiled: pointer_ref_class.is_compiled
-		do
-			Result := pointer_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	real_64_ref_type_id: INTEGER
-			-- Dynamic type_id of class DOUBLE_REF
-		require
-			real_64_ref_class_exists: real_64_ref_class /= Void
-			compiled: real_64_ref_class.is_compiled
-		do
-			Result := real_64_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	real_32_ref_type_id: INTEGER
-			-- Dynamic type_id of class REAL_REF
-		require
-			real_32_ref_class_exists: real_32_ref_class /= Void
-			compiled: real_32_ref_class.is_compiled
-		do
-			Result := real_32_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	integer_ref_type_id (n: INTEGER): INTEGER
-			-- Dynamic type_id of class INTEGER_REF with `n' bits.
-		require
-			int_ref_class_exists: integer_8_ref_class /= Void and then
-						integer_16_ref_class /= Void and then
-						integer_32_ref_class /= Void and then
-						integer_64_ref_class /= Void
-			compiled: integer_8_ref_class.is_compiled and then
-						integer_16_ref_class.is_compiled and then
-						integer_32_ref_class.is_compiled and then
-						integer_64_ref_class.is_compiled
-		do
-			inspect n
-			when 8 then Result := integer_8_ref_class.compiled_class.types.first.type_id
-			when 16 then Result := integer_16_ref_class.compiled_class.types.first.type_id
-			when 32 then Result := integer_32_ref_class.compiled_class.types.first.type_id
-			when 64 then Result := integer_64_ref_class.compiled_class.types.first.type_id
-			end
-		ensure
-			valid_result: Result > 0
-		end
-
-	natural_ref_type_id (n: INTEGER): INTEGER
-			-- Dynamic type_id of class NATURAL_REF with `n' bits.
-		require
-			int_ref_class_exists: natural_8_ref_class /= Void and then
-						natural_16_ref_class /= Void and then
-						natural_32_ref_class /= Void and then
-						natural_64_ref_class /= Void
-			compiled: natural_8_ref_class.is_compiled and then
-						natural_16_ref_class.is_compiled and then
-						natural_32_ref_class.is_compiled and then
-						natural_64_ref_class.is_compiled
-		do
-			inspect n
-			when 8 then Result := natural_8_ref_class.compiled_class.types.first.type_id
-			when 16 then Result := natural_16_ref_class.compiled_class.types.first.type_id
-			when 32 then Result := natural_32_ref_class.compiled_class.types.first.type_id
-			when 64 then Result := natural_64_ref_class.compiled_class.types.first.type_id
-			end
-		ensure
-			valid_result: Result > 0
-		end
-
-	boolean_ref_type_id: INTEGER
-			-- Dynamic type_id of class BOOLEAN_REF
-		require
-			bool_ref_class_exists: boolean_ref_class /= Void
-			compiled: boolean_ref_class.is_compiled
-		do
-			Result := boolean_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	character_8_ref_type_id: INTEGER
-			-- Dynamic type_id of class CHARACTER_REF
-		require
-			character_8_ref_class_exists: character_8_ref_class /= Void
-			compiled: character_8_ref_class.is_compiled
-		do
-			Result := character_8_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	character_32_ref_type_id: INTEGER
-			-- Dynamic type_id of class UNICODE_CHARACTER_REF
-		require
-			character_32_ref_class_exists: character_32_ref_class /= Void
-			compiled: character_32_ref_class.is_compiled
-		do
-			Result := character_32_ref_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -841,102 +704,6 @@ feature -- Settings
 			rt_extension_class_set: rt_extension_class = c
 		end
 
-feature -- Settings: XX_REF classes
-
-	set_character_ref_class (c: CLASS_I; n: INTEGER)
-			-- Assign `c' to `character_n_ref_class'.
-		require
-			c_not_void: c /= Void
-			n_valid: n = 8 or n = 32
-		do
-			c.set_as_basic_class
-			if n = 32 then
-				character_32_ref_class := c
-			else
-				character_8_ref_class := c
-			end
-		ensure
-			character_32_ref_class_set: n = 32 implies character_32_ref_class = c
-			character_8_ref_class_set: n = 8 implies character_8_ref_class = c
-		end
-
-	set_boolean_ref_class (c: CLASS_I)
-			-- Assign `c' to `boolean_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			boolean_ref_class := c
-		ensure
-			boolean_ref_class_set: boolean_ref_class = c
-		end
-
-	set_integer_ref_class (c: CLASS_I; n: INTEGER)
-			-- Assign `c' to `integer_n_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			inspect n
-			when 8 then integer_8_ref_class := c
-			when 16 then integer_16_ref_class := c
-			when 32 then integer_32_ref_class := c
-			when 64 then integer_64_ref_class := c
-			end
-		ensure
-			integer_8_ref_class_set: n = 8 implies integer_8_ref_class = c
-			integer_16_ref_class_set: n = 16 implies integer_16_ref_class = c
-			integer_32_ref_class_set: n = 32 implies integer_32_ref_class = c
-			integer_64_ref_class_set: n = 64 implies integer_64_ref_class = c
-		end
-
-	set_natural_ref_class (c: CLASS_I; n: INTEGER)
-			-- Assign `c' to `natural_n_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			inspect n
-			when 8 then natural_8_ref_class := c
-			when 16 then natural_16_ref_class := c
-			when 32 then natural_32_ref_class := c
-			when 64 then natural_64_ref_class := c
-			end
-		ensure
-			natural_8_ref_class_set: n = 8 implies natural_8_ref_class = c
-			natural_16_ref_class_set: n = 16 implies natural_16_ref_class = c
-			natural_32_ref_class_set: n = 32 implies natural_32_ref_class = c
-			natural_64_ref_class_set: n = 64 implies natural_64_ref_class = c
-		end
-
-	set_real_ref_class (c: CLASS_I; n: INTEGER)
-			-- Assign `c' to `real_n_ref_class'.
-		require
-			c_not_void: c /= Void
-			n_valid: n = 32 or n = 64
-		do
-			c.set_as_basic_class
-			if n = 32 then
-				real_32_ref_class := c
-			else
-				real_64_ref_class := c
-			end
-		ensure
-			real_32_ref_class_set: n = 32 implies real_32_ref_class = c
-			real_64_ref_class_set: n = 64 implies real_64_ref_class = c
-		end
-
-	set_pointer_ref_class (c: CLASS_I)
-			-- Assign `c' to `pointer_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			pointer_ref_class := c
-		ensure
-			pointer_ref_class_set: pointer_ref_class = c
-		end
-
 feature -- Settings: SCOOP
 
 	set_scoop_manager_class (c: CLASS_I)
@@ -964,7 +731,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

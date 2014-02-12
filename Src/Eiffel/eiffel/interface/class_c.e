@@ -2745,19 +2745,8 @@ feature -- Validity class
 					l_feature = Void or else
 					not l_feature.is_routine or l_feature.argument_count > 0
 				then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))
-				end
-				l_feature := feature_table.item_id (names_heap.equal_name_id)
-				if
-					l_feature = Void or else
-					l_feature.argument_count /= 2 or else
-					not l_feature.arguments.i_th (1).actual_argument_type (l_feature.arguments).is_reference or else
-					not l_feature.arguments.i_th (2).actual_argument_type (l_feature.arguments).is_reference or else
-					not l_feature.type.is_boolean
-				then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ANY must have a boolean query `equal' with 2 reference arguments", Current))
+					error_handler.insert_warning (
+						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments for recoverable storable to work properly", Current))
 				end
 				l_feature := feature_table.item_id (names_heap.is_equal_name_id)
 				if
@@ -2788,6 +2777,48 @@ feature -- Validity class
 				then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `copy' with 1 argument of the type `like Current' or of a reference type", Current))
+				end
+			elseif system.routine_class = original_class then
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_rout_disp_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ROUTINE must have a procedure `set_rout_disp'.", Current))
+				end
+				if
+					not system.il_generation and then
+					not attached feature_of_name_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id)
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ROUTINE must have a procedure `set_rout_disp_final'.", Current))
+				end
+
+			elseif system.ise_exception_manager_class = original_class then
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.last_exception_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a query `last_exception'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_last_exception_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_last_exception'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_exception_data_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_exception_data'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.is_code_ignored_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a query `is_code_ignored'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.once_raise_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `once_raise'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.init_exception_manager_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `init_exception_manager'.", Current))
+				end
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.free_preallocated_trace_name_id) then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `free_preallocated_trace'.", Current))
 				end
 			end
 		end

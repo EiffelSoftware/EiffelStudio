@@ -692,22 +692,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_exceptions.put ("RT_EXTENSION")
 			l_actions.put (agent l_system.set_rt_extension_class, "RT_EXTENSION")
 
-				-- XX_REF classes
-			l_actions.put (agent l_system.set_boolean_ref_class, "BOOLEAN_REF")
-			l_actions.put (agent l_system.set_character_ref_class (?, 8), "CHARACTER_8_REF")
-			l_actions.put (agent l_system.set_character_ref_class (?, 32), "CHARACTER_32_REF")
-			l_actions.put (agent l_system.set_natural_ref_class (?, 8), "NATURAL_8_REF")
-			l_actions.put (agent l_system.set_natural_ref_class (?, 16), "NATURAL_16_REF")
-			l_actions.put (agent l_system.set_natural_ref_class (?, 32), "NATURAL_32_REF")
-			l_actions.put (agent l_system.set_natural_ref_class (?, 64), "NATURAL_64_REF")
-			l_actions.put (agent l_system.set_integer_ref_class (?, 8), "INTEGER_8_REF")
-			l_actions.put (agent l_system.set_integer_ref_class (?, 16), "INTEGER_16_REF")
-			l_actions.put (agent l_system.set_integer_ref_class (?, 32), "INTEGER_32_REF")
-			l_actions.put (agent l_system.set_integer_ref_class (?, 64), "INTEGER_64_REF")
-			l_actions.put (agent l_system.set_real_ref_class (?, 32), "REAL_32_REF")
-			l_actions.put (agent l_system.set_real_ref_class (?, 64), "REAL_64_REF")
-			l_actions.put (agent l_system.set_pointer_ref_class, "POINTER_REF")
-
 				-- SCOOP Manager
 			if l_system.is_scoop then
 				l_actions.put (agent l_system.set_scoop_manager_class, "ISE_SCOOP_MANAGER")
@@ -932,7 +916,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

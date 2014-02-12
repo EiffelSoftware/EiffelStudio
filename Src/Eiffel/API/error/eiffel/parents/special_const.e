@@ -20,6 +20,8 @@ feature -- Access: STRING
 
 	string_case_5: STRING = "Class STRING must have an attribute of type integer named `internal_hash_code'"
 
+	string_case_6: STRING = "Class STRING must have an attribute of type integer named `count'"
+
 feature -- Access: ARRAY
 
 	array_case_1: STRING = "Class ARRAY must have exactly one formal generic parameter"
@@ -83,7 +85,7 @@ feature -- Access: TYPE
 	type_case_1: STRING = "Class TYPE must have one formal generic parameter";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

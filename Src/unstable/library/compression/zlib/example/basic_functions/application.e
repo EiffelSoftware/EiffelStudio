@@ -29,18 +29,12 @@ feature {NONE} -- Initialization
 			basic_example_without_streams
 			stream_example_memory
 			create l_start_time.make_now
-			stream_example_file_to_file
-			create l_finish_time.make_now
-			print ("%NOld version using arrays as buffers: ")
-			print ((l_finish_time - l_start_time).duration.out)
-			create l_start_time.make_now
 			stream_example_file_to_file2
 			create l_finish_time.make_now
 			print ("%NNew version using MANAGED_POINTERS: ")
 			print ((l_finish_time - l_start_time).duration.out)
-			stream_example_buffer
-			stream_example_string
 			stream_example_string_2
+			io.read_line
 		end
 
 feature -- Basic Example Using the ZLIB API
@@ -74,26 +68,6 @@ feature -- Basic Example Using the ZLIB API
 
 feature -- Basic Examples using ZLIB STREAMS 		
 
-	stream_example_file_to_file
-		local
-			zi: ZLIB_DATA_INFLATE
-			zo: ZLIB_DATA_COMPRESSION
-			l_file: FILE
-			l_src_file: FILE
-			l_new_file: FILE
-		do
-			create {RAW_FILE}l_file.make_create_read_write ("new_test.txt")
-			create {RAW_FILE}l_src_file.make_open_read (source_file)
-			create {RAW_FILE}l_new_file.make_create_read_write ("new_file.txt")
-			create zo.file_stream (l_file)
-			zo.put_file (l_src_file)
-			create {RAW_FILE}l_file.make_open_read ("new_test.txt")
-			create zi.file_stream (l_file)
-			zi.to_file (l_new_file)
-
-			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
-			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
-		end
 
 
 	stream_example_file_to_file2
@@ -117,32 +91,6 @@ feature -- Basic Examples using ZLIB STREAMS
 			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
 		end
 
-
-	stream_example_buffer
-		local
-			zi: ZLIB_DATA_INFLATE
-			zo: ZLIB_DATA_COMPRESSION
-			input_buffer: ARRAY[CHARACTER]
-			output_buffer: ARRAY[CHARACTER]
-			new_buffer: ARRAY[CHARACTER]
-		do
-			input_buffer := <<'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-						'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-						'a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
-						>>
-			create output_buffer.make_empty
-			create zo.buffer_stream (output_buffer)
-			zo.put_buffer (input_buffer)
-			create zi.buffer_stream (output_buffer)
-			new_buffer := zi.to_buffer
-			new_buffer.compare_objects
-			input_buffer.compare_objects
-			check
-				same_content: new_buffer.is_equal (input_buffer)
-			end
-			print ("%NBytes compresses:" + zo.total_bytes_compressed.out)
-			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
-		end
 
 
 
@@ -180,34 +128,6 @@ feature -- Basic Examples using ZLIB STREAMS
 		end
 
 
-
-	stream_example_string
-		local
-			di: ZLIB_DATA_INFLATE
-			dc: ZLIB_DATA_COMPRESSION
-			input_string: STRING
-			output_string: STRING
-		do
-			input_string:= "[
-			zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
-zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
-Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
-Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
-The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
-]"
-			create output_string.make_empty
-			create dc.string_stream (output_string)
-			dc.put_string (input_string)
-
-			create di.string_stream (output_string)
-			check
-				same_string: input_string.same_string (di.to_string)
-			end
-			print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
-			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
-		end
-
-
 	stream_example_string_2
 		local
 			di: ZLIB_STRING_UNCOMPRESS
@@ -233,62 +153,6 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 			print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
 			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
 		end
-
-	stream_example_string_3
-		local
-			di: ZLIB_DATA_INFLATE
-			dc: ZLIB_STRING_COMPRESS
-			input_string: STRING
-			output_string: STRING
-		do
-			input_string:= "[
-			zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
-zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
-Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
-Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
-The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
-]"
-			create output_string.make_empty
-			create dc.string_stream (output_string)
-			dc.put_string (input_string)
-
-			create di.string_stream (output_string)
-			check
-				same_string: input_string.same_string (di.to_string)
-			end
-			print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
-			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
-		end
-
-
-	stream_example_string_4
-		local
-			di: ZLIB_STRING_UNCOMPRESS
-			dc: ZLIB_DATA_COMPRESSION
-			input_string: STRING_8
-			output_string: STRING_8
-		do
-			input_string := "[
-							zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
-				zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
-				Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
-				Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
-				The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
-			]"
-			create output_string.make_empty
-			create dc.string_stream (output_string)
-			dc.put_string (input_string)
-			create di.string_stream (output_string.as_string_32)
-			check
-				same_string: input_string.same_string (di.to_string)
-			end
-			print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
-			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
-		end
-
-
-
-
 
 
 feature -- Custom Deflate Implementation
@@ -515,11 +379,11 @@ feature -- Implementation
 			Result := l_index - 1
 		end
 
-	source_file: STRING = "ssleay.txt"
+	source_file: STRING = "file_to_compress.txt"
 
 	dest_file: STRING = "output.txt"
 
-	new_source: STRING = "new_ssleay.txt"
+	new_source: STRING = "new_compress_file.txt"
 
 	chunk: INTEGER = 128
 

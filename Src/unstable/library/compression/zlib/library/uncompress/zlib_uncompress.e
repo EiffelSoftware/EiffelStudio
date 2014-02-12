@@ -1,7 +1,7 @@
 note
 	description: "[
 			Abstract class, representing basic input stream as a stream filtered by the zlib compression
-			algorithms. Sourcethe results of a previous zlib compression.
+			algorithms. Source: the results of a previous zlib compression.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,9 +9,8 @@ note
 deferred class
 	ZLIB_UNCOMPRESS
 inherit
-	UTIL_EXTERNALS
 
-	ZLIB_CONSTANTS
+	UTIL_EXTERNALS
 
 feature -- Initialization
 
@@ -40,11 +39,13 @@ feature -- Access
 	end_of_input: BOOLEAN
 
 	has_error: BOOLEAN
+			-- Is there an error?
 		do
 			Result := zlib.last_operation < 0
 		end
 
 	has_error_message: BOOLEAN
+			-- Is there an error message?
 		do
 			Result := zstream.message /= default_pointer
 		end
@@ -59,11 +60,13 @@ feature -- Access
 		end
 
 	last_error_code: INTEGER
+			-- Last error code from ZLib.
 		do
 			Result := zlib.last_operation
 		end
 
 	last_error_message: STRING
+			-- Message for the last error.
 		require
 			error_message: has_error_message
 		do
@@ -71,6 +74,7 @@ feature -- Access
 		end
 
 	total_bytes_uncompressed: INTEGER
+			-- Number of bytes uncompressed.
 		do
 			if zstream /= Void then
 				Result := zstream.total_output
@@ -91,8 +95,8 @@ feature -- Change Element
 feature {NONE} -- Inflate Implementation
 
 	inflate
-			--		Decompress from file `a_source' to file `a_dest' until stream ends or EOF.
-			--   returns Z_OK on success, Z_MEM_ERROR if memory could not be
+			--		Decompress from file `a_source' to `a_dest' until stream ends.
+			--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be
 			--   allocated for processing, Z_DATA_ERROR if the deflate data is
 			--   invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
 			--   the version of the library linked do not match, or Z_ERRNO if there
@@ -178,6 +182,6 @@ feature {NONE} -- Implementation
 		-- ZLIB Low level API
 
 	zstream: ZLIB_STREAM
-		-- structured used to pass information to zlib routines	
+		-- structure used to pass information to zlib routines	
 
 end

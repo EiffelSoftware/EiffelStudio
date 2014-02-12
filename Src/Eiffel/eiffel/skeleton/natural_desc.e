@@ -20,46 +20,35 @@ feature -- Initialization
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
-			size := n
-		ensure
-			size_set: size = n
+			inspect n
+			when 8 then internal_flags := {SHARED_LEVEL}.natural_8_level
+			when 16 then internal_flags := {SHARED_LEVEL}.natural_16_level
+			when 32 then internal_flags := {SHARED_LEVEL}.natural_32_level
+			when 64 then internal_flags := {SHARED_LEVEL}.natural_64_level
+			end
 		end
 
 feature -- Access
 
-	size: INTEGER
-			-- Current is stored on `size' bits.
-
-	level: INTEGER
-			-- Comparison criteria
-		do
-			inspect size
-			when 8 then Result := natural_8_level
-			when 16 then Result := natural_16_level
-			when 32 then Result := natural_32_level
-			when 64 then Result := natural_64_level
-			end
-		end
-
 	sk_value: NATURAL_32
 			-- Skeleton characteristic value
 		do
-			inspect size
-			when 8 then Result := {SK_CONST}.Sk_uint8
-			when 16 then Result := {SK_CONST}.Sk_uint16
-			when 32 then Result := {SK_CONST}.Sk_uint32
-			when 64 then Result := {SK_CONST}.Sk_uint64
+			inspect level
+			when {SHARED_LEVEL}.natural_8_level then Result := {SK_CONST}.Sk_uint8
+			when {SHARED_LEVEL}.natural_16_level then Result := {SK_CONST}.Sk_uint16
+			when {SHARED_LEVEL}.natural_32_level then Result := {SK_CONST}.Sk_uint32
+			when {SHARED_LEVEL}.natural_64_level then Result := {SK_CONST}.Sk_uint64
 			end
 		end
 
 	type_i: TYPE_A
 			-- Corresponding TYPE_I instance
 		do
-			inspect size
-			when 8 then Result := natural_8_type
-			when 16 then Result := natural_16_type
-			when 32 then Result := natural_32_type
-			when 64 then Result := natural_64_type
+			inspect level
+			when {SHARED_LEVEL}.natural_8_level then Result := natural_8_type
+			when {SHARED_LEVEL}.natural_16_level then Result := natural_16_type
+			when {SHARED_LEVEL}.natural_32_level then Result := natural_32_type
+			when {SHARED_LEVEL}.natural_64_level then Result := natural_64_type
 			end
 		end
 
@@ -69,19 +58,16 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			inspect size
-			when 8 then buffer.put_string ({SK_CONST}.sk_uint8_string)
-			when 16 then buffer.put_string ({SK_CONST}.sk_uint16_string)
-			when 32 then buffer.put_string ({SK_CONST}.sk_uint32_string)
-			when 64 then buffer.put_string ({SK_CONST}.sk_uint64_string)
+			inspect level
+			when {SHARED_LEVEL}.natural_8_level then buffer.put_string ({SK_CONST}.sk_uint8_string)
+			when {SHARED_LEVEL}.natural_16_level then buffer.put_string ({SK_CONST}.sk_uint16_string)
+			when {SHARED_LEVEL}.natural_32_level then buffer.put_string ({SK_CONST}.sk_uint32_string)
+			when {SHARED_LEVEL}.natural_64_level then buffer.put_string ({SK_CONST}.sk_uint64_string)
 			end
 		end
 
-invariant
-	correct_size: size = 8 or size = 16 or size = 32 or size = 64
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

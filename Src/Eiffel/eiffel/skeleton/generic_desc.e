@@ -10,7 +10,14 @@ class GENERIC_DESC
 inherit
 	ATTR_DESC
 		redefine
-			has_formal, instantiation_in, same_as
+			has_formal, instantiation_in, same_as, default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			internal_flags := {SHARED_LEVEL}.reference_level
 		end
 
 feature -- Access
@@ -22,12 +29,6 @@ feature -- Access
 			-- Sk value
 		do
 			Result := {SK_CONST}.sk_ref
-		end
-
-	level: INTEGER
-			-- Sort level
-		do
-			Result := reference_level
 		end
 
 feature -- Settings
@@ -46,12 +47,9 @@ feature -- Comparisons
 
 	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
-		local
-			other_generic: GENERIC_DESC
 		do
-			if Precursor {ATTR_DESC} (other) then
-				other_generic ?= other
-				Result := (other_generic /= Void) and then identical_types (other_generic.type_i)
+			if Precursor (other) and then attached {GENERIC_DESC} other as l_other_generic then
+				Result := identical_types (l_other_generic.type_i)
 			end
 		end
 
@@ -160,7 +158,7 @@ feature -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

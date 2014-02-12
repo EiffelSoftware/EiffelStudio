@@ -9,10 +9,15 @@ class REFERENCE_DESC
 
 inherit
 	ATTR_DESC
-		rename
-			Reference_level as level
 		redefine
-			same_as
+			same_as, default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			internal_flags := {SHARED_LEVEL}.reference_level
 		end
 
 feature -- Access
@@ -41,13 +46,10 @@ feature -- Comparisons
 
 	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
-		local
-			l_ref: REFERENCE_DESC
 		do
-			if Precursor {ATTR_DESC} (other) then
-				l_ref ?= other
-				Result := (l_ref /= void) and then (type_i /= Void and l_ref.type_i /= Void) and then
-					(type_i.is_valid and l_ref.type_i.is_valid) and then type_i.equivalent (type_i, l_ref.type_i)
+			if Precursor (other) and then attached {REFERENCE_DESC} other as l_ref then
+				Result := (type_i /= Void and attached l_ref.type_i as l_ref_type_i) and then
+					(type_i.is_valid and l_ref_type_i.is_valid) and then type_i.equivalent (type_i, l_ref_type_i)
 			end
 		end
 
@@ -61,7 +63,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

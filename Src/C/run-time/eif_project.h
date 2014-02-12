@@ -141,21 +141,6 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
 	RT_LNK EIF_TYPE_INDEX egc_sp_ref;			/* Dynamic type of SPECIAL[ANY] */
 
-	RT_LNK EIF_TYPE_INDEX egc_uint8_ref_dtype;	/* Dynamic type of NATURAL_8_REF */
-	RT_LNK EIF_TYPE_INDEX egc_uint16_ref_dtype;	/* Dynamic type of NATURAL_16_REF */
-	RT_LNK EIF_TYPE_INDEX egc_uint32_ref_dtype;	/* Dynamic type of NATURAL_32_REF */
-	RT_LNK EIF_TYPE_INDEX egc_uint64_ref_dtype;	/* Dynamic type of NATURAL_64_REF */
-	RT_LNK EIF_TYPE_INDEX egc_int8_ref_dtype;	/* Dynamic type of INTEGER_8_REF */
-	RT_LNK EIF_TYPE_INDEX egc_int16_ref_dtype;	/* Dynamic type of INTEGER_16_REF */
-	RT_LNK EIF_TYPE_INDEX egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
-	RT_LNK EIF_TYPE_INDEX egc_int64_ref_dtype;	/* Dynamic type of INTEGER_64_REF */
-	RT_LNK EIF_TYPE_INDEX egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-	RT_LNK EIF_TYPE_INDEX egc_real32_ref_dtype;	/* Dynamic type of REAL_32_REF */
-	RT_LNK EIF_TYPE_INDEX egc_real64_ref_dtype;	/* Dynamic type of REAL_64_REF */
-	RT_LNK EIF_TYPE_INDEX egc_char_ref_dtype;	/* Dynamic type of CHARACTER_8_REF */
-	RT_LNK EIF_TYPE_INDEX egc_wchar_ref_dtype;	/* Dynamic type of CHARACTER_32_REF */
-	RT_LNK EIF_TYPE_INDEX egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
-	
 	RT_LNK EIF_TYPE_INDEX egc_uint8_dtype;	/* Dynamic type of NATURAL_8 */
 	RT_LNK EIF_TYPE_INDEX egc_uint16_dtype;	/* Dynamic type of NATURAL_16 */
 	RT_LNK EIF_TYPE_INDEX egc_uint32_dtype;	/* Dynamic type of NATURAL_32 */

@@ -198,8 +198,8 @@ feature -- Constants
 	once_raise_name_id: INTEGER = 185
 	notify_name_id: INTEGER = 186
 	notify_argument_name_id: INTEGER = 187
-	init_exception_manager_id: INTEGER = 188
-	free_preallocated_trace_id: INTEGER = 189
+	init_exception_manager_name_id: INTEGER = 188
+	free_preallocated_trace_name_id: INTEGER = 189
 	any_name_id: INTEGER = 190
 	system_void_name_id: INTEGER = 191
 	call_name_id: INTEGER = 192
@@ -251,7 +251,7 @@ feature -- Classification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

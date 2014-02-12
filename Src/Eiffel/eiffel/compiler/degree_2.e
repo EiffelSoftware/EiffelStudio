@@ -142,11 +142,10 @@ feature -- Processing
 					if a_class.has_types then
 							-- Process skeleton(s) for `a_class'.
 						a_class.process_skeleton (l_old_skeletons)
-
-							-- Check validity of special classes ARRAY,
-							-- STRING, TO_SPECIAL, SPECIAL.
-						a_class.check_validity
 					end
+						-- Check validity of special classes ARRAY,
+						-- STRING, TO_SPECIAL, SPECIAL.
+					a_class.check_validity
 				end
 				i := i + 1
 			end

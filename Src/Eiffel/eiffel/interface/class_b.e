@@ -54,11 +54,9 @@ feature -- Validity
 	check_validity
 			-- Check validity of a simple type reference class.
 		local
-			skelet: SKELETON
 			special_error: SPECIAL_ERROR
 			l_proc: PROCEDURE_I
 			l_feat: FEATURE_I
-			l_attr: ATTRIBUTE_I
 		do
 				-- First, no generics
 			if generics /= Void then
@@ -68,26 +66,12 @@ feature -- Validity
 
 				-- Check for `item' query.
 			l_feat := feature_table.item_id ({PREDEFINED_NAMES}.item_name_id)
-			if l_feat = Void or else not l_feat.has_return_value then
+			if l_feat = Void or else not l_feat.is_attribute then
 				create special_error.make (basic_case_3, Current)
 				Error_handler.insert_error (special_error)
-			else
-				l_attr ?= l_feat
-				if l_attr /= Void then
-						-- We are compiling for Eiffel Software implementation
-					skelet := types.first.skeleton
-					if
-						skelet.count /= 1 or else
-						not skelet.first.type_i.same_as (actual_type)
-					then
-						create special_error.make (basic_case_2, Current)
-						Error_handler.insert_error (special_error)
-					else
-					end
-				else
-					create special_error.make (basic_case_3, Current)
-					Error_handler.insert_error (special_error)
-				end
+			elseif not l_feat.type.conformance_type.same_as (actual_type) then
+				create special_error.make (basic_case_2, Current)
+				Error_handler.insert_error (special_error)
 			end
 
 				-- Check for a procedure `set_item'.
@@ -95,7 +79,7 @@ feature -- Validity
 			if
 				l_proc = Void or else
 				l_proc.argument_count /= 1 or else
-				not l_proc.arguments.i_th (1).same_as (actual_type)
+				not l_proc.arguments.i_th (1).conformance_type.same_as (actual_type)
 			then
 				create special_error.make (basic_case_4, Current)
 				Error_handler.insert_error (special_error)
@@ -106,7 +90,7 @@ invariant
 	is_expanded: is_expanded
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

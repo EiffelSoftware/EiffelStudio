@@ -292,59 +292,59 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 				new_obj = *(EIF_REFERENCE *) o_ref;
 				break;
 			case SK_CHAR8:
-				new_obj = RTLN(egc_char_ref_dtype);
+				new_obj = RTLN(egc_char_dtype);
 				*(EIF_CHARACTER_8 *) new_obj = * (EIF_CHARACTER_8 *) o_ref;
 				break;
 			case SK_CHAR32:
-				new_obj = RTLN(egc_wchar_ref_dtype);
+				new_obj = RTLN(egc_wchar_dtype);
 				*(EIF_CHARACTER_32 *) new_obj = *(EIF_CHARACTER_32 *) o_ref;
 				break;
 			case SK_BOOL:
-				new_obj = RTLN(egc_bool_ref_dtype);
+				new_obj = RTLN(egc_bool_dtype);
 				*(EIF_BOOLEAN *) new_obj = *(EIF_BOOLEAN *) o_ref;
 				break;
 			case SK_UINT8:
-				new_obj = RTLN(egc_uint8_ref_dtype);
+				new_obj = RTLN(egc_uint8_dtype);
 				*(EIF_NATURAL_8 *) new_obj = *(EIF_NATURAL_8 *) o_ref;
 				break;
 			case SK_UINT16:
-				new_obj = RTLN(egc_uint16_ref_dtype);
+				new_obj = RTLN(egc_uint16_dtype);
 				*(EIF_NATURAL_16 *) new_obj = *(EIF_NATURAL_16 *) o_ref;
 				break;
 			case SK_UINT32:
-				new_obj = RTLN(egc_uint32_ref_dtype);
+				new_obj = RTLN(egc_uint32_dtype);
 				*(EIF_NATURAL_32 *) new_obj = *(EIF_NATURAL_32 *) o_ref;
 				break;
 			case SK_UINT64:
-				new_obj = RTLN(egc_uint64_ref_dtype);
+				new_obj = RTLN(egc_uint64_dtype);
 				*(EIF_NATURAL_64 *) new_obj = *(EIF_NATURAL_64 *) o_ref;
 				break;
 			case SK_INT8:
-				new_obj = RTLN(egc_int8_ref_dtype);
+				new_obj = RTLN(egc_int8_dtype);
 				*(EIF_INTEGER_8 *) new_obj = *(EIF_INTEGER_8 *) o_ref;
 				break;
 			case SK_INT16:
-				new_obj = RTLN(egc_int16_ref_dtype);
+				new_obj = RTLN(egc_int16_dtype);
 				*(EIF_INTEGER_16 *) new_obj = *(EIF_INTEGER_16 *) o_ref;
 				break;
 			case SK_INT32:
-				new_obj = RTLN(egc_int32_ref_dtype);
+				new_obj = RTLN(egc_int32_dtype);
 				*(EIF_INTEGER_32 *) new_obj = *(EIF_INTEGER_32 *) o_ref;
 				break;
 			case SK_INT64:
-				new_obj = RTLN(egc_int64_ref_dtype);
+				new_obj = RTLN(egc_int64_dtype);
 				*(EIF_INTEGER_64 *) new_obj = *(EIF_INTEGER_64 *) o_ref;
 				break;
 			case SK_REAL64:
-				new_obj = RTLN(egc_real64_ref_dtype);
+				new_obj = RTLN(egc_real64_dtype);
 				*(EIF_REAL_64 *) new_obj = *(EIF_REAL_64 *) o_ref;
 				break;
 			case SK_REAL32:
-				new_obj = RTLN(egc_real32_ref_dtype);
+				new_obj = RTLN(egc_real32_dtype);
 				*(EIF_REAL_32 *) new_obj = *(EIF_REAL_32 *) o_ref;
 				break;
 			case SK_POINTER:
-				new_obj = RTLN(egc_point_ref_dtype);
+				new_obj = RTLN(egc_point_dtype);
 				*(fnptr *) new_obj = *(fnptr *) o_ref;
 				break;
 			default:

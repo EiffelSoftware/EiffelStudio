@@ -420,21 +420,6 @@ rt_public EIF_TYPE_INDEX egc_sp_real64;
 rt_public EIF_TYPE_INDEX egc_sp_pointer;
 rt_public EIF_TYPE_INDEX egc_sp_ref;
 
-rt_public EIF_TYPE_INDEX egc_uint8_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_uint16_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_uint32_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_uint64_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_int8_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_int16_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_int32_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_int64_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_bool_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_real32_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_real64_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_char_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_wchar_ref_dtype;	
-rt_public EIF_TYPE_INDEX egc_point_ref_dtype;	
-
 rt_public EIF_TYPE_INDEX egc_uint8_dtype;
 rt_public EIF_TYPE_INDEX egc_uint16_dtype;	
 rt_public EIF_TYPE_INDEX egc_uint32_dtype;	

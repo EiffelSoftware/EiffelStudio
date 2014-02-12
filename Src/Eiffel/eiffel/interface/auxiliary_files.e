@@ -390,9 +390,8 @@ feature -- Plug and Makefile file
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			str32_make_feat, str32_set_count_feat: FEATURE_I
 			str32_count_feat, str32_internal_hash_code_feat: ATTRIBUTE_I
-			creation_feature, correct_mismatch_feat: FEATURE_I
+			creation_feature: FEATURE_I
 			feat: FEATURE_I
-			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, str32_make_name, init_name, exp_init_name,
 			set_count_name, str32_set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
@@ -451,22 +450,19 @@ feature -- Plug and Makefile file
 				-- Extern declarations
 			string_cl := system.class_of_id (system.string_8_id)
 			cl_type := string_cl.types.first
-			creators := string_cl.creators
-			creators.start
 
 			string32_cl := system.class_of_id (system.string_32_id)
-			creators := string32_cl.creators
-			creators.start
 
 				-- Make ANY declaration
 			any_cl := system.any_class.compiled_class
-			correct_mismatch_feat :=
-				any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id)
-			correct_mismatch_name := Encoder.feature_name (any_cl.types.first.type_id,
-				correct_mismatch_feat.body_index).string
-			buffer.put_string ("extern void ")
-			buffer.put_string (correct_mismatch_name)
-			buffer.put_string ("();%N")
+			if attached any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id) as l_feat then
+				correct_mismatch_name := Encoder.feature_name (any_cl.types.first.type_id, l_feat.body_index).string
+				buffer.put_string ("extern void ")
+				buffer.put_string (correct_mismatch_name)
+				buffer.put_string ("();%N")
+			else
+				correct_mismatch_name := "NULL";
+			end
 
 			twin_name :=
 				Encoder.feature_name (any_cl.types.first.type_id,
@@ -525,8 +521,6 @@ feature -- Plug and Makefile file
 				cl_type := System.Instantiator.array_type_a.associated_class_type (Void);
 				id := cl_type.type_id
 				arr_type_id := cl_type.type_id
-				creators := array_cl.creators
-				creators.start
 				creation_feature := array_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).string
 				if not final_mode then
@@ -610,48 +604,70 @@ feature -- Plug and Makefile file
 				-- Make exception manager declaration
 			exception_manager_cl := system.ise_exception_manager_class.compiled_class
 			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
 				id := exception_manager_cl.types.first.type_id
-				set_exception_data_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (set_exception_data_name)
-				buffer.put_string ("();%N")
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.last_exception_name_id)
-				last_exception_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern EIF_REFERENCE ")
-				buffer.put_string (last_exception_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id) as l_feat then
+					set_exception_data_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern void ")
+					buffer.put_string (set_exception_data_name)
+					buffer.put_string ("();%N")
+				else
+					set_exception_data_name := "NULL"
+				end
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_last_exception_name_id)
-				set_last_exception_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern EIF_BOOLEAN ")
-				buffer.put_string (set_last_exception_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.last_exception_name_id) as l_feat then
+					last_exception_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern EIF_REFERENCE ")
+					buffer.put_string (last_exception_name)
+					buffer.put_string ("();%N")
+				else
+					last_exception_name := "NULL"
+				end
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.is_code_ignored_name_id)
-				is_code_ignored_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern EIF_BOOLEAN ")
-				buffer.put_string (is_code_ignored_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.set_last_exception_name_id) as l_feat then
+					set_last_exception_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern EIF_BOOLEAN ")
+					buffer.put_string (set_last_exception_name)
+					buffer.put_string ("();%N")
+				else
+					set_last_exception_name := "NULL"
+				end
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.once_raise_name_id)
-				once_raise_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (once_raise_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.is_code_ignored_name_id) as l_feat then
+					is_code_ignored_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern EIF_BOOLEAN ")
+					buffer.put_string (is_code_ignored_name)
+					buffer.put_string ("();%N")
+				else
+					is_code_ignored_name := "NULL"
+				end
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.init_exception_manager_id)
-				init_exception_manager_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (init_exception_manager_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.once_raise_name_id) as l_feat then
+					once_raise_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern void ")
+					buffer.put_string (once_raise_name)
+					buffer.put_string ("();%N")
+				else
+					once_raise_name := "NULL"
+				end
 
-				feat := exception_manager_cl.feature_table.item_id (Names_heap.free_preallocated_trace_id)
-				free_preallocated_trace_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (free_preallocated_trace_name)
-				buffer.put_string ("();%N")
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.init_exception_manager_name_id) as l_feat then
+					init_exception_manager_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern void ")
+					buffer.put_string (init_exception_manager_name)
+					buffer.put_string ("();%N")
+				else
+					init_exception_manager_name := "NULL"
+				end
+
+				if attached exception_manager_cl.feature_table.item_id (Names_heap.free_preallocated_trace_name_id) as l_feat then
+					free_preallocated_trace_name := Encoder.feature_name (id, l_feat.body_index).string
+					buffer.put_string ("extern void ")
+					buffer.put_string (free_preallocated_trace_name)
+					buffer.put_string ("();%N")
+				else
+					free_preallocated_trace_name := "NULL"
+				end
 			end
 
 				-- RT_EXTENSION declaration
@@ -951,7 +967,7 @@ feature -- Plug and Makefile file
 				-- Copy routine id from class ANY (if compiled)
 			buffer.put_string ("%Tegc_is_equal_rout_id = ")
 			if System.any_class /= Void and System.any_class.is_compiled then
-				buffer.put_integer (System.any_is_equal_id)
+				buffer.put_integer (System.is_equal_rout_id)
 			else
 				buffer.put_string ("-1")
 			end
@@ -1272,36 +1288,6 @@ feature -- Plug and Makefile file
 		require
 			buffer_exists: buffer /= Void
 		do
-			buffer.put_string ("%N%Tegc_uint8_ref_dtype = ")
-			buffer.put_type_id (system.natural_ref_type_id (8))
-			buffer.put_string (";%N%Tegc_uint16_ref_dtype = ")
-			buffer.put_type_id (system.natural_ref_type_id (16))
-			buffer.put_string (";%N%Tegc_uint32_ref_dtype = ")
-			buffer.put_type_id (system.natural_ref_type_id (32))
-			buffer.put_string (";%N%Tegc_uint64_ref_dtype = ")
-			buffer.put_type_id (system.natural_ref_type_id (64))
-			buffer.put_string (";%N%Tegc_int8_ref_dtype = ")
-			buffer.put_type_id (system.integer_ref_type_id (8))
-			buffer.put_string (";%N%Tegc_int16_ref_dtype = ")
-			buffer.put_type_id (system.integer_ref_type_id (16))
-			buffer.put_string (";%N%Tegc_int32_ref_dtype = ")
-			buffer.put_type_id (system.integer_ref_type_id (32))
-			buffer.put_string (";%N%Tegc_int64_ref_dtype = ")
-			buffer.put_type_id (system.integer_ref_type_id (64))
-			buffer.put_string (";%N%Tegc_bool_ref_dtype = ")
-			buffer.put_type_id (system.boolean_ref_type_id)
-			buffer.put_string (";%N%Tegc_real32_ref_dtype = ")
-			buffer.put_type_id (system.real_32_ref_type_id)
-			buffer.put_string (";%N%Tegc_char_ref_dtype = ")
-			buffer.put_type_id (system.character_8_ref_type_id)
-			buffer.put_string (";%N%Tegc_wchar_ref_dtype = ")
-			buffer.put_type_id (system.character_32_ref_type_id)
-			buffer.put_string (";%N%Tegc_real64_ref_dtype = ")
-			buffer.put_type_id (system.real_64_ref_type_id)
-			buffer.put_string (";%N%Tegc_point_ref_dtype = ")
-			buffer.put_type_id (system.pointer_ref_type_id)
-			buffer.put_string (";%N");
-
 			buffer.put_string ("%N%Tegc_uint8_dtype = ")
 			buffer.put_type_id (natural_8_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_uint16_dtype = ")

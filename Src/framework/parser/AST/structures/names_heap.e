@@ -378,8 +378,8 @@ feature {NONE} -- Implementation: access
 			put ("once_raise") check found_item = once_raise_name_id end
 			put ("notify") check found_item = notify_name_id end
 			put ("notify_argument") check found_item = notify_argument_name_id end
-			put ("init_exception_manager") check found_item = init_exception_manager_id end
-			put ("free_preallocated_trace") check found_item = free_preallocated_trace_id end
+			put ("init_exception_manager") check found_item = init_exception_manager_name_id end
+			put ("free_preallocated_trace") check found_item = free_preallocated_trace_name_id end
 			put ("any") check found_item = any_name_id end
 			put ("System.Void") check found_item = system_void_name_id end
 			put ("call") check found_item = call_name_id end
@@ -418,7 +418,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -40,6 +40,8 @@ feature -- Initialization
 feature -- Purge of compilation files
 
 	prepare_before_saving (normal_compilation: BOOLEAN)
+		local
+			i, nb: INTEGER
 		do
 				-- Purges server files only if it is not a precompilation.
 			if normal_compilation then
@@ -56,6 +58,20 @@ feature -- Purge of compilation files
 
 			--| Wipe out all cache information.
 			feature_server.cache.wipe_out
+
+				-- Remove all FEATURE_I's from memory.
+			nb := classes.count
+			i := 0
+			across
+				classes as l_classes
+			until
+				i > nb
+			loop
+				if attached l_classes.item as l_class and then attached l_class.feature_table as l_table then
+					l_table.cleanup_for_saving
+					i := i + 1
+				end
+			end
 		end
 
 feature -- Access

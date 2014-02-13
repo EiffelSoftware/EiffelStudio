@@ -268,6 +268,8 @@ feature
 							Error_handler.insert_error (vfav)
 						end
 					end
+						-- Remove it from memory since we do not need it anymore.
+					inherited_feature := Void
 					local_renaming.forth
 				end
 			end

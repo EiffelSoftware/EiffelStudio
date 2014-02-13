@@ -14,13 +14,14 @@ feature {NONE} -- Initialization
 			r
 		do
 			i := 5
-			i.do_nothing       -- Qualified call.
-			b := -i            -- Unary expression.
-			b := i < 7         -- Binary expression
+			i.do_nothing        -- Qualified call to a procedure.
+			b := i.is_equal (i) -- Qualified call to a function.
+			i := -i             -- Unary expression.
+			b := i < 7          -- Binary expression
 			t := [i, b]
-			t [1].do_nothing   -- Bracket expression.
-			r := agent t.copy
-			r ()               -- Parenthesis alias call.
+			t [1].do_nothing    -- Bracket expression.
+			r := agent t.do_nothing
+			r                   -- Parenthesis alias call.
 		end
 
 end

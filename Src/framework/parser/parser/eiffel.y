@@ -100,7 +100,7 @@ create
 %type <detachable PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
 %type <detachable PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
 %type <detachable IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
-%type <detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
+%type <detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]> Invariant
 %type <detachable PAIR [KEYWORD_AS, EXPR_AS]>	Exit_condition_opt 
 %type <detachable AGENT_TARGET_TRIPLE> Agent_target
 

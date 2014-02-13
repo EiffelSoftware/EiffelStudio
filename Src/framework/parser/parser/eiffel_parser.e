@@ -13112,7 +13112,7 @@ end
 	yy_do_action_368
 			--|#line <not available> "eiffel.y"
 		local
-			yyval20: detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
+			yyval20: detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -13137,7 +13137,7 @@ end
 	yy_do_action_369
 			--|#line <not available> "eiffel.y"
 		local
-			yyval20: detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
+			yyval20: detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -22380,8 +22380,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines19: KL_SPECIAL_ROUTINES [detachable IDENTIFIER_LIST]
 			-- Routines that ought to be in SPECIAL [detachable IDENTIFIER_LIST]
 
-	yyvs20: SPECIAL [detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]]
-			-- Stack for semantic values of type detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
+	yyvs20: SPECIAL [detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]]
+			-- Stack for semantic values of type detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]
 
 	yyvsc20: INTEGER
 			-- Capacity of semantic value stack `yyvs20'
@@ -22389,8 +22389,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp20: INTEGER
 			-- Top of semantic value stack `yyvs20'
 
-	yyspecial_routines20: KL_SPECIAL_ROUTINES [detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]]
-			-- Routines that ought to be in SPECIAL [detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]]
+	yyspecial_routines20: KL_SPECIAL_ROUTINES [detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]]
+			-- Routines that ought to be in SPECIAL [detachable PAIR [KEYWORD_AS, detachable EIFFEL_LIST [TAGGED_AS]]]
 
 	yyvs21: SPECIAL [detachable PAIR [KEYWORD_AS, EXPR_AS]]
 			-- Stack for semantic values of type detachable PAIR [KEYWORD_AS, EXPR_AS]

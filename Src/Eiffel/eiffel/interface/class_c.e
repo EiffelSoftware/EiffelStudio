@@ -2796,29 +2796,31 @@ feature -- Validity class
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a query `last_exception'.", Current))
 				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_last_exception_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_last_exception'.", Current))
-				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_exception_data_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_exception_data'.", Current))
-				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.is_code_ignored_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a query `is_code_ignored'.", Current))
-				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.once_raise_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `once_raise'.", Current))
-				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.init_exception_manager_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `init_exception_manager'.", Current))
-				end
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.free_preallocated_trace_name_id) then
-					error_handler.insert_error (
-						create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `free_preallocated_trace'.", Current))
+				if not system.il_generation then
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_last_exception_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_last_exception'.", Current))
+					end
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_exception_data_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `set_exception_data'.", Current))
+					end
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.is_code_ignored_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a query `is_code_ignored'.", Current))
+					end
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.once_raise_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `once_raise'.", Current))
+					end
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.init_exception_manager_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `init_exception_manager'.", Current))
+					end
+					if not attached feature_of_name_id ({PREDEFINED_NAMES}.free_preallocated_trace_name_id) then
+						error_handler.insert_error (
+							create {SPECIAL_ERROR}.make ("Class ISE_EXCEPTION_MANAGER must have a procedure `free_preallocated_trace'.", Current))
+					end
 				end
 			end
 		end

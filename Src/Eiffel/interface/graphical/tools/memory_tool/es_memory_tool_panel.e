@@ -439,6 +439,75 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+	populate_with_content (a_object: ANY; a_parent_row: EV_GRID_ROW)
+			-- Populates a row with type instances.
+			--
+			-- `a_parent_row': The row to populate with type instance subrows.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_row_attached: a_parent_row /= Void
+			not_a_row_is_destroyed: not a_parent_row.is_destroyed
+		local
+			i, nb: INTEGER
+			l_reflected: REFLECTED_REFERENCE_OBJECT
+			l_item: EV_GRID_LABEL_ITEM
+			l_description: STRING
+			l_reflector: REFLECTOR
+			l_row: EV_GRID_ROW
+			l_obj: ANY
+		do
+			if a_parent_row.subrow_count = 0 then
+				create l_reflected.make (a_object)
+				nb := l_reflected.field_count
+				if nb > 0 then
+					from
+						i := 1
+						create l_reflector
+						memory_map_grid.insert_new_rows_parented (nb, a_parent_row.index + 1, a_parent_row)
+					until
+						i > nb
+					loop
+						l_row := a_parent_row.subrow (i)
+						create l_description.make (30)
+						l_description.append (l_reflected.field_name (i))
+						l_description.append (once ": ")
+						l_description.append (l_reflector.type_name_of_type (l_reflected.field_static_type (i)))
+
+						create l_item.make_with_text (l_description)
+						l_row.set_item (object_column_index, l_item)
+
+						l_row.set_item (count_column_index, create {EV_GRID_ITEM})
+						l_description.append (" = ")
+						if l_reflected.field_type (i) = {REFLECTOR_CONSTANTS}.reference_type then
+							l_obj := l_reflected.field (i)
+							if l_obj = Void then
+								create l_item.make_with_text ("Void")
+							else
+								if attached {READABLE_STRING_GENERAL} l_obj as l_str then
+									create l_item.make_with_text (l_str)
+								elseif attached {DEBUG_OUTPUT} l_obj as l_dbg then
+									create l_item.make_with_text (l_dbg.debug_output)
+								else
+									create l_item.make_with_text (($l_obj).out)
+								end
+								l_row.ensure_expandable
+								l_row.expand_actions.extend (agent populate_with_content (l_obj, l_row))
+							end
+						else
+							create l_item.make_with_text (l_reflected.field (i).out)
+						end
+						l_row.set_item (count_column_index, l_item)
+
+							-- Blank
+						l_row.set_item (delta_column_index, create {EV_GRID_ITEM})
+
+						i := i + 1
+					end
+				end
+			end
+		end
+
 	populate_memory_grid_referer_subrows (a_parent_row: EV_GRID_ROW)
 			-- Populates a row with referring object (object is taken from the supplied row's user data) subrows.
 			--
@@ -456,11 +525,27 @@ feature {NONE} -- Basic operations
 			l_row: EV_GRID_ROW
 			l_row_index, l_count, i, j, nb: INTEGER
 			l_any: ANY
+			l_item: EV_GRID_LABEL_ITEM
+			l_parent_row: EV_GRID_ROW
 		do
 			if a_parent_row.subrow_count = 0 then
 				l_referers := memory.referers (a_parent_row.data)
+				l_grid := memory_map_grid
+
+				i := a_parent_row.index + 1
 				if l_referers /= Void then
-					l_grid := memory_map_grid
+					l_grid.insert_new_rows_parented (2, i, a_parent_row)
+					create l_item.make_with_text ("Referers")
+					l_grid.set_item (1, i, l_item)
+					i := i + 1
+				else
+					l_grid.insert_new_rows_parented (1, i, a_parent_row)
+				end
+				create l_item.make_with_text ("Content")
+				l_grid.set_item (1, i, l_item)
+
+				l_parent_row := l_grid.row (a_parent_row.index + 1)
+				if l_referers /= Void then
 					from
 						i := 0
 						nb := l_referers.count
@@ -480,10 +565,10 @@ feature {NONE} -- Basic operations
 					if l_count > 0 then
 						from
 							create l_int
-							l_row_index := a_parent_row.index
+							l_row_index := l_parent_row.index
 							j := l_row_index + 1
 							i := 0
-							l_grid.insert_new_rows_parented (l_count, j, a_parent_row)
+							l_grid.insert_new_rows_parented (l_count, j, l_parent_row)
 						until
 							i = nb
 						loop
@@ -496,6 +581,13 @@ feature {NONE} -- Basic operations
 							i := i + 1
 						end
 					end
+				end
+
+					-- If there were some referers, we add after the last one that was inserted.
+				if l_row /= Void then
+					populate_with_content (a_parent_row.data, l_grid.row (l_row.index + 1))
+				else
+					populate_with_content (a_parent_row.data, l_parent_row)
 				end
 			end
 		end
@@ -1508,7 +1600,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

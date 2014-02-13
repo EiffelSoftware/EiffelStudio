@@ -144,108 +144,140 @@ feature {NONE} -- Initialization
 
 			create toggle_selected_classes_ancestors_cmd.make_for_ancestors (Current)
 			auto_recycle (toggle_selected_classes_ancestors_cmd)
+			toggle_selected_classes_ancestors_cmd.enable_displayed
 			toggle_selected_classes_ancestors_cmd.enable_sensitive
 
 			create toggle_selected_classes_descendents_cmd.make_for_descendents (Current)
 			auto_recycle (toggle_selected_classes_descendents_cmd)
+			toggle_selected_classes_descendents_cmd.enable_displayed
 			toggle_selected_classes_descendents_cmd.enable_sensitive
 
 			create toggle_selected_classes_clients_cmd.make_for_clients (Current)
 			auto_recycle (toggle_selected_classes_clients_cmd)
+			toggle_selected_classes_clients_cmd.enable_displayed
 			toggle_selected_classes_clients_cmd.enable_sensitive
 
 			create toggle_selected_classes_suppliers_cmd.make_for_suppliers (Current)
 			auto_recycle (toggle_selected_classes_suppliers_cmd)
+			toggle_selected_classes_suppliers_cmd.enable_displayed
 			toggle_selected_classes_suppliers_cmd.enable_sensitive
 
 			create center_diagram_cmd.make (Current)
 			auto_recycle (center_diagram_cmd)
+			center_diagram_cmd.enable_displayed
 			center_diagram_cmd.enable_sensitive
 
 			create create_class_cmd.make (Current)
 			auto_recycle (create_class_cmd)
+			create_class_cmd.enable_displayed
 
 			create delete_cmd.make (Current, develop_window)
 			auto_recycle (delete_cmd)
+			delete_cmd.enable_displayed
 
 			create create_new_links_cmd.make (Current)
 			auto_recycle (create_new_links_cmd)
+			create_new_links_cmd.enable_displayed
 
 			create change_color_cmd.make (Current)
 			auto_recycle (change_color_cmd)
+			change_color_cmd.enable_displayed
 
 			create trash_cmd.make (Current)
 			auto_recycle (trash_cmd)
+			trash_cmd.enable_displayed
 
 			create toggle_inherit_cmd.make (Current)
+			toggle_inherit_cmd.enable_displayed
 			auto_recycle (toggle_inherit_cmd)
 
 			create toggle_supplier_cmd.make (Current)
 			auto_recycle (toggle_supplier_cmd)
+			toggle_supplier_cmd.enable_displayed
 
 			create toggle_labels_cmd.make (Current)
 			auto_recycle (toggle_labels_cmd)
+			toggle_labels_cmd.enable_displayed
 
 			create toggle_quality_cmd.make (Current)
 			auto_recycle (toggle_quality_cmd)
+			toggle_quality_cmd.enable_displayed
 
 			create link_tool_cmd.make (Current)
 			auto_recycle (link_tool_cmd)
+			link_tool_cmd.enable_displayed
 
 			create fill_cluster_cmd.make (Current)
 			auto_recycle (fill_cluster_cmd)
+			fill_cluster_cmd.enable_displayed
 
 			create select_depth_cmd.make (Current)
 			auto_recycle (select_depth_cmd)
+			select_depth_cmd.enable_displayed
 
 			create history_cmd.make (Current)
 			auto_recycle (history_cmd)
+			history_cmd.enable_displayed
 
 			create undo_cmd.make (Current)
 			auto_recycle (undo_cmd)
+			undo_cmd.enable_displayed
 
 			create redo_cmd.make (Current)
 			auto_recycle (redo_cmd)
+			redo_cmd.enable_displayed
 
 			create zoom_in_cmd.make (Current)
 			auto_recycle (zoom_in_cmd)
+			zoom_in_cmd.enable_displayed
 
 			create zoom_out_cmd.make (Current)
 			auto_recycle (zoom_out_cmd)
+			zoom_out_cmd.enable_displayed
 
 			create delete_view_cmd.make (Current)
 			auto_recycle (delete_view_cmd)
+			delete_view_cmd.enable_displayed
 
 			create diagram_to_ps_cmd.make (Current)
 			auto_recycle (diagram_to_ps_cmd)
+			diagram_to_ps_cmd.enable_displayed
 
 			create toggle_force_cmd.make (Current)
 			auto_recycle (toggle_force_cmd)
+			toggle_force_cmd.enable_displayed
 
 			create toggle_cluster_cmd.make (Current)
 			auto_recycle (toggle_cluster_cmd)
+			toggle_cluster_cmd.enable_displayed
 
 			create remove_anchor_cmd.make (Current)
 			auto_recycle (remove_anchor_cmd)
+			remove_anchor_cmd.enable_displayed
 
 			create toggle_cluster_legend_cmd.make (Current)
 			auto_recycle (toggle_cluster_legend_cmd)
+			toggle_cluster_legend_cmd.enable_displayed
 
 			create toggle_uml_cmd.make (Current)
 			auto_recycle (toggle_uml_cmd)
 			toggle_uml_cmd.enable_sensitive
+			toggle_uml_cmd.enable_displayed
 
 			create fit_to_screen_cmd.make (Current)
 			auto_recycle (fit_to_screen_cmd)
+			fit_to_screen_cmd.enable_displayed
 			fit_to_screen_cmd.enable_sensitive
 
 			create reset_view_cmd.make (Current)
 			auto_recycle (reset_view_cmd)
 			reset_view_cmd.enable_sensitive
+			reset_view_cmd.enable_displayed
 
 			create force_settings_cmd.make (Current)
 			auto_recycle (force_settings_cmd)
 			force_settings_cmd.enable_sensitive
+			force_settings_cmd.enable_displayed
 		end
 
 	initialize_accelerators (a_command_list: LINKED_LIST [EB_TOOLBARABLE_COMMAND])
@@ -2471,7 +2503,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

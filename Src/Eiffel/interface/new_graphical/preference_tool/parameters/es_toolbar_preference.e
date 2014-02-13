@@ -86,8 +86,10 @@ feature {NONE} -- Implementation
 							Result.extend (l_button)
 							l_added.extend (l_toolbarable_command)
 							if l_command_visibility then
+								l_toolbarable_command.enable_displayed
 								l_button.enable_displayed
 							else
+								l_toolbarable_command.disable_displayed
 								l_button.disable_displayed
 							end
 						end

@@ -3652,6 +3652,7 @@ feature {NONE} -- Implementation: binary operators
 						-- Compare objects.
 					il_generator.duplicate_top
 					il_generator.generate_local (l_right_value)
+						-- Here we call {ISE_RUNTIME}.equal from the .NET runtime
 					generate_equal_routine ({PREDEFINED_NAMES}.equal_name_id)
 						-- Negate result if required for comparing objects.
 					if an_opcode = il_ne then

@@ -1564,6 +1564,13 @@ feature -- API
 
 feature -- Server storing
 
+	cleanup_for_saving
+			-- Removes reference to `feature_table' so that saving is not clobbered with data
+			-- which is temporary.
+		do
+			feature_table := Void
+		end
+
 	flush
 		local
 			l_old_item: like feature_table

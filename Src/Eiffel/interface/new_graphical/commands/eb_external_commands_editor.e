@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 				loaded.put (True)
 				update_commands_from_ini_file
 			end
+			enable_displayed
 		end
 
 	loaded: CELL [BOOLEAN]

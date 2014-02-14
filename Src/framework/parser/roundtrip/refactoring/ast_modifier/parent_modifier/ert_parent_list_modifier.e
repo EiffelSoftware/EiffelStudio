@@ -41,6 +41,7 @@ feature -- Applicability
 	can_apply: BOOLEAN
 		local
 			l_source_parents, l_destination_parents: detachable PARENT_LIST_AS
+			l_last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER]
 		do
 			l_source_parents := source.parents
 			l_destination_parents := destination.parents
@@ -54,14 +55,16 @@ feature -- Applicability
 			elseif l_destination_parents.is_empty then
 				Result := destination.parents.inherit_keyword (destination_match_list).can_append_text (destination_match_list)
 			else
-				compute_modification
-				Result := last_computed_modifier.for_all (agent {ERT_AST_MODIFIER}.can_apply)
+				create l_last_computed_modifier.make
+				compute_modification (l_last_computed_modifier)
+				Result := l_last_computed_modifier.for_all (agent {ERT_AST_MODIFIER}.can_apply)
 			end
 		end
 
 	apply
 		local
 			l_source_parents, l_destination_parents: detachable PARENT_LIST_AS
+			l_last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER]
 		do
 			l_source_parents := source.parents
 			l_destination_parents := destination.parents
@@ -74,18 +77,16 @@ feature -- Applicability
 			elseif l_destination_parents.is_empty then
 				destination.parents.inherit_keyword (destination_match_list).replace_text (source.parents.text (source_match_list), destination_match_list)
 			else
-				compute_modification
-				last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
+				create l_last_computed_modifier.make
+				compute_modification (l_last_computed_modifier)
+				l_last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
 			end
 			applied := True
 		end
 
 feature{NONE} -- Implementation
 
-	last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER]
-			-- Last computed modifier list
-
-	compute_modification
+	compute_modification (last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER])
 			-- Compute modification
 		require
 			merge_needed: destination.parents /= Void and then not destination.parents.is_empty
@@ -102,7 +103,6 @@ feature{NONE} -- Implementation
 			l_processed: ARRAY [BOOLEAN]
 		do
 			check attached source.parents as l_source_parents and then attached destination.parents as l_destination_parents then
-				create last_computed_modifier.make
 				create l_appended_parents.make (256)
 				create l_processed.make (1, l_destination_parents.count)
 				dest_index := 1
@@ -153,8 +153,6 @@ feature{NONE} -- Implementation
 				l_source_parents.go_i_th (l_index)
 				l_destination_parents.go_i_th (dest_ori_index)
 			end
-		ensure
-			modification_computed: last_computed_modifier /= Void
 		end
 
 feature -- Access

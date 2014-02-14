@@ -58,43 +58,39 @@ feature{NONE} -- Implementation
 feature -- Applicability
 
 	can_apply: BOOLEAN
+		local
+			l_computed_modifier: ERT_PARENT_AS_MODIFIER
 		do
-			compute_modification
-			check
-				last_computed_modifier /= Void
-			end
-			Result := last_computed_modifier.can_apply
+			create l_computed_modifier.make (destination, destination_match_list)
+			compute_modification (l_computed_modifier)
+			Result := l_computed_modifier.can_apply
 		end
 
 	apply
+		local
+			l_computed_modifier: ERT_PARENT_AS_MODIFIER
 		do
-			compute_modification
-			check
-				last_computed_modifier /= Void
-			end
-			last_computed_modifier.apply
+			create l_computed_modifier.make (destination, destination_match_list)
+			compute_modification (l_computed_modifier)
+			l_computed_modifier.apply
 			applied := True
 		end
 
 feature{NONE} -- Modification computation
 
-	last_computed_modifier: ERT_PARENT_AS_MODIFIER
-			-- Last computed modifier with all needed modifications registered
-
-	compute_modification
+	compute_modification (last_computed_modifier: ERT_PARENT_AS_MODIFIER)
 			-- Compute modifications needed to merge text of two PARENT_AS objects.
 		do
-			create last_computed_modifier.make (destination, destination_match_list)
-			compute_renaming_modification
-			compute_export_modification
-			compute_clauses_modification ({ERT_PARENT_AS_MODIFIER}.undefine_clause)
-			compute_clauses_modification ({ERT_PARENT_AS_MODIFIER}.redefine_clause)
-			compute_clauses_modification ({ERT_PARENT_AS_MODIFIER}.select_clause)
+			compute_renaming_modification (last_computed_modifier)
+			compute_export_modification (last_computed_modifier)
+			compute_clauses_modification (last_computed_modifier, {ERT_PARENT_AS_MODIFIER}.undefine_clause)
+			compute_clauses_modification (last_computed_modifier, {ERT_PARENT_AS_MODIFIER}.redefine_clause)
+			compute_clauses_modification (last_computed_modifier, {ERT_PARENT_AS_MODIFIER}.select_clause)
 		ensure
 			last_computed_modifier_set: last_computed_modifier /= Void
 		end
 
-	compute_export_modification
+	compute_export_modification (last_computed_modifier: ERT_PARENT_AS_MODIFIER)
 			-- Compute modifications needed two merge export clauses.
 		local
 			l_index: INTEGER
@@ -102,9 +98,6 @@ feature{NONE} -- Modification computation
 			i: INTEGER
 			done: BOOLEAN
 		do
-			check
-				last_computed_modifier /= Void
-			end
 			if
 				source.internal_exports /= Void and then
 				source.internal_exports.content /= Void and then
@@ -162,14 +155,11 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	compute_renaming_modification
+	compute_renaming_modification (last_computed_modifier: ERT_PARENT_AS_MODIFIER)
 			-- Compute modifications needed two merge rename clauses.
 		local
 			l_index: INTEGER
 		do
-			check
-				last_computed_modifier /= Void
-			end
 			if attached source.internal_renaming as l_renaming and then attached l_renaming.content as l_rename_list then
 				l_index := l_rename_list.index
 				from
@@ -189,7 +179,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	compute_clauses_modification (a_clause: INTEGER)
+	compute_clauses_modification (last_computed_modifier: ERT_PARENT_AS_MODIFIER; a_clause: INTEGER)
 			-- Compute modifications needed two merge undefine, redefine or select clauses.
 			-- Inherit clause to be merged is indicated by `a_clause'.
 		require
@@ -203,9 +193,6 @@ feature{NONE} -- Modification computation
 			l_name_list: LINKED_LIST [STRING]
 			l_name: STRING
 		do
-			check
-				last_computed_modifier /= Void
-			end
 			if a_clause = {ERT_PARENT_AS_MODIFIER}.undefine_clause then
 					-- We are processing undefine clause.
 				if source.internal_undefining /= Void then
@@ -363,17 +350,21 @@ feature{NONE} -- Modification computation
 
 	final_names: HASH_TABLE [STRING, STRING]
 			-- Final names (renamed features) of all renamed features.
+		local
+			l_names: like internal_final_names
 		do
-			if internal_final_names = Void then
-				create internal_final_names.make (10)
-				internal_final_names.compare_objects
-				build_final_names (source.internal_renaming, internal_final_names)
-				build_final_names (destination.internal_renaming, internal_final_names)
+			l_names := internal_final_names
+			if l_names = Void then
+				create l_names.make (10)
+				l_names.compare_objects
+				build_final_names (source.internal_renaming, l_names)
+				build_final_names (destination.internal_renaming, l_names)
+				internal_final_names := l_names
 			end
-			Result := internal_final_names
+			Result := l_names
 		end
 
-	internal_final_names: like final_names
+	internal_final_names: detachable like final_names
 			-- Final names of all renamed features.
 
 	build_final_names (a_rename_clause: detachable RENAME_CLAUSE_AS; a_name_table: like final_names)
@@ -426,7 +417,7 @@ invariant
 	destination_match_list_not_void: destination_match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

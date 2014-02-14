@@ -45,19 +45,21 @@ feature {NONE} -- Initialization
 		require
 			a_factory_not_void: a_factory /= Void
 		do
-			make_eiffel_scanner_with_factory (a_factory)
-			make_parser_skeleton
-			create suppliers
-			create formal_parameters.make (Initial_formal_parameters_capacity)
-			formal_parameters.compare_objects
-			is_supplier_recorded := True
+			create once_manifest_string_counters.make (initial_counters_capacity)
 			create counters.make (Initial_counters_capacity)
 			create counters2.make (Initial_counters_capacity)
-			create once_manifest_string_counters.make (initial_counters_capacity)
-				-- Keep one element in it.
-			once_manifest_string_counters.force (0)
 			create last_rsqure.make (initial_counters_capacity)
 			create feature_stack.make (1)
+			create suppliers
+			create formal_parameters.make (Initial_formal_parameters_capacity)
+
+			make_parser_skeleton
+			make_eiffel_scanner_with_factory (a_factory)
+
+			formal_parameters.compare_objects
+			is_supplier_recorded := True
+				-- Keep one element in it.
+			once_manifest_string_counters.force (0)
 			add_feature_frame
 		end
 
@@ -1139,7 +1141,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

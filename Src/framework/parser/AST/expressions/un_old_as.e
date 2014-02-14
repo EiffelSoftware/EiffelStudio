@@ -21,6 +21,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 	prefix_feature_name: STRING
 			-- Internal name of the prefixed feature
 		do
+			Result := operator_name
 		end
 
 	operator_name: STRING = "old"
@@ -34,7 +35,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

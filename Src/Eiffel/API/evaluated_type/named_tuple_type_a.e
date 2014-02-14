@@ -129,8 +129,8 @@ feature -- Checking
 						if context.current_feature /= Void then
 							l_vreg.set_feature (context.current_feature)
 						end
-						if l_named_tuple_node /= Void then
-							l_vreg.set_location (l_named_tuple_node.i_th_type_declaration (l_pos + 1).start_location)
+						if l_named_tuple_node /= Void and then attached l_named_tuple_node.i_th_type_declaration (l_pos + 1) as l_node  then
+							l_vreg.set_location (l_node.start_location)
 						elseif a_node /= Void then
 							l_vreg.set_location (a_node.start_location)
 						end
@@ -147,8 +147,8 @@ feature -- Checking
 						if context.current_feature /= Void then
 							l_vrft.set_feature (context.current_feature)
 						end
-						if l_named_tuple_node /= Void then
-							l_vrft.set_location (l_named_tuple_node.i_th_type_declaration (i + 1).start_location)
+						if l_named_tuple_node /= Void and then attached l_named_tuple_node.i_th_type_declaration (i + 1) as l_node  then
+							l_vrft.set_location (l_node.start_location)
 						elseif a_node /= Void then
 							l_vrft.set_location (a_node.start_location)
 						end
@@ -193,12 +193,13 @@ feature {NONE} -- Checking
 				if a_context_feature /= Void then
 					l_vrft.set_feature (a_context_feature)
 				end
-				if a_node /= Void then
-					if attached {NAMED_TUPLE_TYPE_AS} a_node as l_tuple_node then
-						l_vrft.set_location (l_tuple_node.i_th_type_declaration (a_pos).start_location)
-					else
-						l_vrft.set_location (a_node.start_location)
-					end
+				if
+					attached {NAMED_TUPLE_TYPE_AS} a_node as l_tuple_node and then
+					attached l_tuple_node.i_th_type_declaration (a_pos) as l_node
+				then
+					l_vrft.set_location (l_node.start_location)
+				elseif a_node /= Void then
+					l_vrft.set_location (a_node.start_location)
 				end
 				l_vrft.set_other_feature (l_feat_tbl.found_item)
 				error_handler.insert_error (l_vrft)
@@ -212,7 +213,7 @@ invariant
 	names_not_empty: names.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -225,21 +226,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

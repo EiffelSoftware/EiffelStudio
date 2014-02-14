@@ -63,26 +63,17 @@ feature {NONE} -- Initialization
 	build_cluster_tree (a_frame: EV_FRAME)
 			-- Initialize `class_tree'.
 		local
-			l_hbox: EV_HORIZONTAL_BOX
 			l_vbox: EV_VERTICAL_BOX
 			l_link_label: EVS_LINK_LABEL
 		do
-			create l_hbox
-			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			l_hbox.set_border_width ({ES_UI_CONSTANTS}.frame_border)
+			create l_vbox
+			l_vbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			l_vbox.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 
 			create class_tree.make_with_options (Void, False, False)
 			class_tree.set_minimum_height (dialog_unit_to_pixels (200))
 			class_tree.refresh
-			l_hbox.extend (class_tree)
-
-			create l_vbox
-			create default_cluster_checkbox
-			default_cluster_checkbox.set_text (locale_formatter.translation (l_default_cluster))
-			l_vbox.extend (default_cluster_checkbox)
-			l_vbox.disable_item_expand (default_cluster_checkbox)
-
-			l_vbox.extend (create {EV_CELL})
+			l_vbox.extend (class_tree)
 
 			create l_link_label.make_with_text (locale_formatter.translation (l_new_cluster))
 			l_link_label.select_actions.extend (agent on_create_cluster)
@@ -90,8 +81,7 @@ feature {NONE} -- Initialization
 			l_vbox.extend (l_link_label)
 			l_vbox.disable_item_expand (l_link_label)
 
-			extend_no_expand (l_hbox, l_vbox)
-			a_frame.extend (l_hbox)
+			a_frame.extend (l_vbox)
 		end
 
 	build_options_interface (a_frame: EV_FRAME)
@@ -121,7 +111,6 @@ feature {NONE} -- Initialization
 			class_name.set_entry_formatter (agent {attached STRING_32}.as_upper)
 			class_name.valid_state_changed_actions.extend (agent on_valid_state_changed)
 			class_tree.select_actions.extend (agent on_select_tree_item)
-			default_cluster_checkbox.select_actions.extend (agent on_default_cluster_change)
 
 			if
 				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.class_name,
@@ -148,9 +137,6 @@ feature {NONE} -- Initialization
 					l_path := l_spath
 				end
 				class_tree.show_subfolder (l_cluster, l_path)
-				default_cluster_checkbox.disable_select
-			else
-				default_cluster_checkbox.enable_select
 			end
 
 			if
@@ -179,9 +165,6 @@ feature {NONE} -- Access
 			create Result
 		end
 
-	default_cluster_checkbox: EV_CHECK_BUTTON
-			-- Checkbox for using default EIFGENs cluster
-
 	selected_cluster: detachable STRING
 			-- Name of selected cluster, Void if no cluster is selected
 
@@ -196,8 +179,7 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := class_name.is_valid and then (default_cluster_checkbox.is_selected or
-				selected_cluster /= Void)
+			Result := class_name.is_valid and then (selected_cluster /= Void)
 		end
 
 feature {NONE} -- Events
@@ -256,13 +238,6 @@ feature {NONE} -- Events
 			on_valid_state_change
 		end
 
-	on_default_cluster_change
-			-- Called when `default_cluster_checkbox' is selected/deselected.
-		do
-			adjust_sensitivity (class_tree, not default_cluster_checkbox.is_selected)
-			on_valid_state_change
-		end
-
 feature {ES_TEST_WIZARD_PAGE} -- Basic operations
 
 	store_to_session (a_service: SESSION_MANAGER_S)
@@ -276,7 +251,7 @@ feature {ES_TEST_WIZARD_PAGE} -- Basic operations
 			l_session.set_value (class_name.text.to_string_8, {TEST_SESSION_CONSTANTS}.class_name)
 			l_cluster := {TEST_SESSION_CONSTANTS}.cluster_name_default
 			l_path := {TEST_SESSION_CONSTANTS}.path_default
-			if attached {STRING} selected_cluster as l_scluster and not default_cluster_checkbox.is_selected then
+			if attached {STRING} selected_cluster as l_scluster then
 				l_cluster := l_scluster
 				if attached {STRING} selected_path as l_spath then
 					l_path := l_spath
@@ -291,13 +266,12 @@ feature {NONE} -- Internationalization
 
 	l_class_name: STRING = "Class name: "
 	l_location: STRING = "Location"
-	l_default_cluster: STRING = "Use EIFGENs cluster"
 	l_new_cluster: STRING = "New Cluster"
 	options_text: STRING = "Options"
 	launch_wizard_text: STRING = "Always show wizard before launching test creation"
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

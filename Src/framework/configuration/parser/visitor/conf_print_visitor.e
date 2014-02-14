@@ -379,7 +379,7 @@ feature -- Visit nodes
 			-- Visit `a_cluster'.
 		do
 				-- ignore subclusters, except if we are handling one.
-			if not a_cluster.is_internal and (a_cluster.parent = Void or current_is_subcluster) then
+			if (a_cluster.parent = Void or current_is_subcluster) then
 				current_is_subcluster := False
 				if a_cluster.is_test_cluster then
 					append_pre_group ("tests", a_cluster)

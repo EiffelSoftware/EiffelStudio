@@ -107,11 +107,6 @@ feature -- Status
 			end
 		end
 
-	is_internal: BOOLEAN
-			-- Is group used internally by the compiler?
-			--
-			-- Note: if `Current' is internal it is not stored in configuration and not visible to user.
-
 feature -- Status update
 
 	set_error (an_error: CONF_ERROR)
@@ -131,12 +126,6 @@ feature -- Status update
 		ensure
 			not_error: not is_error
 			last_error_void: last_error = Void
-		end
-
-	set_internal (a_is_internal: like is_internal)
-			-- Set `is_internal' to `a_is_internal'.
-		do
-			is_internal := a_is_internal
 		end
 
 feature -- Access, stored in configuration file

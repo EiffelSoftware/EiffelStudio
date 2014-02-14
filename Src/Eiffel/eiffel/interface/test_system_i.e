@@ -163,8 +163,6 @@ feature {SYSTEM_I} -- Basic operations
 			-- Check configuration for testing library. If present, prepare system to compile test classes
 			-- and everything needed for test execution, otherwise clean up any previously generated
 			-- directory or classes.
-		local
-			l_path: PATH
 		do
 				-- Set `suppliers_cache' accordingly as it will define from now on
 				-- whether testing is enabled or not
@@ -177,9 +175,7 @@ feature {SYSTEM_I} -- Basic operations
 				suppliers_cache := Void
 			end
 
-			l_path := project_location.eifgens_cluster_path
 			adopt_root_features
-			adopt_eifgens_cluster (a_target, l_path)
 		end
 
 	mark_suppliers (a_mark_table: SEARCH_TABLE [INTEGER])
@@ -302,7 +298,7 @@ feature {DEGREE_5} -- Basic operations
 feature {NONE} -- Implementation
 
 	adopt_root_features
-			-- Add internal {CONF_CLUSTER} to current target if given path exists.
+			-- Add testing root procedure to system.
 		do
 			if is_testing_enabled then
 				system.add_explicit_root (Void, eqa_evaluator_name, eqa_evaluator_creator)
@@ -310,43 +306,6 @@ feature {NONE} -- Implementation
 			else
 				system.remove_explicit_root (eqa_evaluator_name, eqa_evaluator_creator)
 				system.remove_explicit_root (eqa_interpreter_name, eqa_interpreter_creator)
-			end
-		end
-
-	adopt_eifgens_cluster (a_target: CONF_TARGET; a_path: PATH)
-			-- Add internal {CONF_CLUSTER} to current target if testing is enabled.
-			--
-			-- `a_target': Target to which cluster is added if path exists.
-			-- `a_path': Path for which a cluster is added.
-		local
-			l_dir: DIRECTORY
-			l_vis: CONF_FIND_LOCATION_VISITOR
-			l_loc: CONF_DIRECTORY_LOCATION
-			l_cluster: CONF_CLUSTER
-			l_factory: CONF_COMP_FACTORY
-		do
-			create l_vis.make
-			l_vis.set_directory (a_path)
-			l_vis.process_target (a_target)
-			if l_vis.found_clusters.is_empty then
-
-					-- We only perform any actions if the path is not already
-					-- referenced in the configuration				
-				create l_dir.make_with_path (a_path)
-				if is_testing_enabled then
-					if not l_dir.exists then
-						execute_safe (agent l_dir.create_dir)
-					end
-				end
-
-				if l_dir.exists and then (is_testing_enabled or not l_dir.is_empty) then
-					create l_factory
-					l_loc := l_factory.new_location_from_path (a_path.name, a_target)
-					l_cluster := l_factory.new_cluster (eifgens_cluster_name, l_loc, a_target)
-					l_cluster.set_recursive (True)
-					l_cluster.set_internal (True)
-					a_target.add_cluster (l_cluster)
-				end
 			end
 		end
 
@@ -372,7 +331,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

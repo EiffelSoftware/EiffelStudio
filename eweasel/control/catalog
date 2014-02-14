@@ -2768,6 +2768,7 @@ test	qat-nested-qualified-type	anchor070 tcf pass anchored_type
 test	qat-generic-inheritance-2	anchor071 tcf fail anchored_type
 test	qat-dotnet-failure			anchor072 tcf fail anchored_type dotnet
 test	qat-dotnet-failure-2		anchor073 tcf fail anchored_type dotnet
+test	qat-dotnet-failure-3		anchor074 tcf fail anchored_type dotnet
 
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass inference

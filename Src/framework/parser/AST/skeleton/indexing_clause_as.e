@@ -194,7 +194,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			Result := string_value (External_header)
 		end
 
-	property_name: STRING
+	property_name: detachable STRING
 			-- Expression representing custom attributes for a property
 		local
 			i: detachable INDEX_AS
@@ -215,7 +215,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			end
 		end
 
-	dotnet_constructors: ARRAYED_LIST [STRING]
+	dotnet_constructors: detachable ARRAYED_LIST [STRING]
 			-- Dotnet constructors indexing clause value
 		local
 			l_index: detachable INDEX_AS
@@ -243,7 +243,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			end
 		end
 
-	enum_type: STRING
+	enum_type: detachable STRING
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
 		local
@@ -544,7 +544,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

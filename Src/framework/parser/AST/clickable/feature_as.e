@@ -138,7 +138,7 @@ feature -- Roundtrip/Comment
 		local
 			l_start_index, l_end_index: INTEGER
 			l_retried: BOOLEAN
-			l_region: ERT_TOKEN_REGION
+			l_region: detachable ERT_TOKEN_REGION
 			l_routine_first_token: detachable LEAF_AS
 		do
 			if not l_retried then
@@ -296,7 +296,7 @@ feature -- Access
 			Result := feature_names.first.internal_name
 		end
 
-	feature_with_name (n: INTEGER): FEATURE_AS
+	feature_with_name (n: INTEGER): detachable FEATURE_AS
 			-- Feature ast with internal name `n'
 		local
 			l_area: SPECIAL [FEATURE_NAME]
@@ -487,7 +487,7 @@ invariant
 	next_position_non_negative: next_position >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,7 +27,7 @@ feature -- Properties
 
 feature -- Output
 
-	string_value_32: STRING_32
+	string_value_32: detachable STRING_32
 		do
 			if attached string_value as l_str then
 				Result := encoding_converter.utf8_to_utf32 (l_str)
@@ -36,13 +36,13 @@ feature -- Output
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
-	string_value: STRING
+	string_value: detachable STRING
 		deferred
 		end;
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

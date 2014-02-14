@@ -111,7 +111,7 @@ feature -- Status report
 			generic_count_positive: generic_count > 0
 		end
 
-	i_th_type_declaration (i: INTEGER): TYPE_DEC_AS
+	i_th_type_declaration (i: INTEGER): detachable TYPE_DEC_AS
 			-- Extract the type declaration for the `i-th' identifier of Current.
 		require
 			valid_index: i >= 1 and i <= generic_count
@@ -137,8 +137,6 @@ feature -- Status report
 				l_generics.forth
 			end
 			l_generics.go_i_th (l_index)
-		ensure
-			i_th_type_declaration_not_void: Result /= Void
 		end
 
 feature -- Roundtrip/Token
@@ -221,7 +219,7 @@ invariant
 		not parameters.arguments.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -49,23 +49,14 @@ feature {NONE}-- Initialization
 			set_size (800, 400)
 
 				-- Attach Ribbon by COM here
-			ribbon.init_with_window_and_dll (Current, "eiffel_ribbon_1")
-			close_request_actions.extend (agent on_close_requested)
-		end
-
-	on_close_requested
-			-- On close
-		local
-			l_shared: EV_SHARED_RESOURCES
-			l_ch: like {EV_SHARED_RESOURCES}.command_handler_singleton
-		do
-			create l_shared
-			l_ch := l_shared.command_handler_singleton
-
-			close_request_actions.wipe_out
-
-			ribbon.destroy
-			destroy
+			ribbon.init_with_window (Current)
+			close_request_actions.extend (agent ev_application.destroy)
+			show_actions.extend_kamikaze (agent
+									do
+										if attached ev_application as l_app then
+											l_app.destroy_actions.extend (agent ribbon.destroy)
+										end
+									end)
 		end
 
 	create_interface_objects

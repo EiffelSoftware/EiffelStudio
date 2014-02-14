@@ -1,0 +1,10 @@
+test_name 	 qat-dotnet-failure-2
+test_description A qualified anchored type used in a .NET code generation fails.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

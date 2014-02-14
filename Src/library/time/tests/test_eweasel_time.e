@@ -269,7 +269,7 @@ feature -- Test routines
 
 feature {NONE} -- Implementation
 
-	test_true_boolean (v: BOOLEAN) is
+	test_true_boolean (v: BOOLEAN)
 		do
 			assert ("Expect True", v)
 		end
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

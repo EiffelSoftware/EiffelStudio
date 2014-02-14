@@ -112,8 +112,8 @@ feature -- Roundtrip
 			if a_list.valid_index (i) then
 					-- It is not an ID_AS, because the roundtrip parser does not store ID_AS
 					-- but LEAF_STUB_AS, so we reconstruct the associated ID_AS from the LEAF_STUB_AS.
-				if attached {LEAF_STUB_AS} a_list.i_th (i) as l_leaf then
-					create Result.initialize (l_leaf.literal_text (a_list))
+				if attached {LEAF_STUB_AS} a_list.i_th (i) as l_leaf and then attached l_leaf.literal_text (a_list) as l_text then
+					create Result.initialize (l_text)
 					Result.set_position (l_leaf.line, l_leaf.column, l_leaf.position, l_leaf.location_count,
 						l_leaf.character_column, l_leaf.character_position, l_leaf.character_count)
 					Result.set_index (l_leaf.index)
@@ -144,7 +144,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

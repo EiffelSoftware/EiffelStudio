@@ -129,7 +129,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			until
 				il.after
 			loop
-				Result.append (il.item.string_value)
+				Result.append_string (il.item.string_value)
 				il.forth
 				if not il.after then
 					Result.append (", ")
@@ -141,7 +141,7 @@ invariant
 	index_list_not_void: index_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

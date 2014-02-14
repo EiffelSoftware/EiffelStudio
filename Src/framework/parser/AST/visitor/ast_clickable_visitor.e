@@ -22,12 +22,25 @@ inherit
 			process_named_tuple_type_as,
 			process_rename_as,
 			process_client_as,
-			process_convert_feat_as
+			process_convert_feat_as,
+			default_create
 		end
 
 	REFACTORING_HELPER
 		export
 			{NONE} all
+		undefine
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			create internal_click_list.make (1)
 		end
 
 feature -- Clickable
@@ -37,7 +50,7 @@ feature -- Clickable
 		require
 			a_class_not_void: a_class /= Void
 		do
-			create internal_click_list.make (100)
+			internal_click_list.make (100)
 			process_class_as (a_class)
 			Result := internal_click_list
 		end
@@ -191,7 +204,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

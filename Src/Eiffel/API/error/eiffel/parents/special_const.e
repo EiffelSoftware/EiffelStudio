@@ -50,6 +50,8 @@ feature -- Access: SPECIAL
 
 	special_case_7: STRING = "Class SPECIAL must have a feature `to_array: ARRAY [G#1]'"
 
+	special_case_8: STRING = "Class SPECIAL must have an attrbiute `internal_native_array: NATIVE_ARRAY [G#1]'"
+
 feature -- Access: Basic types
 
 	basic_case_1: STRING = "Classes for basic types may not have generic parameters"

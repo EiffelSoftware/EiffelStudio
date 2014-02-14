@@ -25,21 +25,9 @@ feature {NONE} -- Initialization
 			-- `a_arguments': A sequence of attached string arguments.
 		require
 			a_arguments_attached: a_arguments /= Void
-		local
-			l_args: ARRAY [IMMUTABLE_STRING_32]
-			i: INTEGER
 		do
-			create l_args.make_filled ("", 1, a_arguments.count)
-			from
-				i := 1
-				a_arguments.start
-			until
-				a_arguments.after
-			loop
-				l_args.put (a_arguments.item, i)
-				i := i + 1
-			end
-			arguments := l_args
+			create arguments.make_filled (a_arguments.count)
+			arguments.append (a_arguments)
 		ensure
 			arguments_has_same_count: arguments.count = a_arguments.count
 		end
@@ -51,21 +39,21 @@ feature {NONE} -- Initialization
 		require
 			a_arguments_attached: a_arguments /= Void
 		local
-			l_args: ARRAY [IMMUTABLE_STRING_32]
+			l_args: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			l_arg: IMMUTABLE_STRING_32
 			l_upper: INTEGER
-			i, j: INTEGER
+			i: INTEGER
 		do
-			create l_args.make_filled ("", 1, a_arguments.count)
+			create l_args.make (a_arguments.count)
 			from
 				i := a_arguments.lower
 				l_upper := a_arguments.upper
 			until
-				i + j > l_upper
+				i > l_upper
 			loop
-				l_arg := a_arguments[i + j]
-				j := j + 1
-				l_args.put (l_arg, j)
+				l_arg := a_arguments[i]
+				l_args.extend (l_arg)
+				i := i + 1
 			end
 			arguments := l_args
 		ensure
@@ -74,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	arguments: ARRAY [IMMUTABLE_STRING_32]
+	arguments: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- <Precursor>
 
 feature -- Status report
@@ -86,7 +74,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

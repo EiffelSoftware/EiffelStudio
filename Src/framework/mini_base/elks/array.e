@@ -35,6 +35,38 @@ feature {NONE} -- Initialization
 		ensure
 		end
 
+feature -- Access
+
+	item alias "[]", at alias "@" (i: INTEGER): G assign put
+			-- Entry at index `i', if in index interval
+		do
+			Result := area.item (i - lower)
+		end
+
+feature -- Measurement
+
+	lower: INTEGER
+			-- Minimum index
+
+	upper: INTEGER
+			-- Maximum index
+
+	count, capacity: INTEGER
+			-- Number of available indices
+		do
+			Result := upper - lower + 1
+		ensure then
+			consistent_with_bounds: Result = upper - lower + 1
+		end
+
+feature -- Element change
+
+	put (v: like item; i: INTEGER)
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		do
+			area.put (v, i - lower)
+		end
+
 feature {NONE} -- Implementation
 
 	area: SPECIAL [G]

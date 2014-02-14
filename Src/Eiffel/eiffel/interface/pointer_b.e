@@ -90,14 +90,12 @@ feature -- Validity
 	check_validity
 			-- Check validity of a simple type reference class.
 		local
-			skelet: SKELETON
 			special_error: SPECIAL_ERROR
 			l_feat: FEATURE_I
 			l_proc: PROCEDURE_I
-			l_attr: ATTRIBUTE_I
 		do
 			if not is_typed_pointer then
-				Precursor {CLASS_B}
+				Precursor
 			else
 					-- First check there is only one generic.
 				if generics = Void or else generics.count > 1 then

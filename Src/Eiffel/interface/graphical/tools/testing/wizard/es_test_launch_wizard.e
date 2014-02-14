@@ -286,8 +286,6 @@ feature {NONE} -- Implementation
 			l_target.system.store
 
 			if l_target.system.store_successful then
-				create_eifgens_cluster (a_project)
-
 				create l_manager.make (window_manager.last_focused_development_window)
 				l_manager.refresh
 
@@ -302,21 +300,6 @@ feature {NONE} -- Implementation
 				dialog.destroy
 			end
 
-		end
-
-	create_eifgens_cluster (a_project: E_PROJECT)
-			-- Create internal EIFGENs Cluster directory.
-		local
-			l_dir: DIRECTORY
-			l_retried: BOOLEAN
-		do
-			if not l_retried then
-				create l_dir.make_with_path (a_project.project_location.eifgens_cluster_path)
-				l_dir.recursive_create_dir
-			end
-		rescue
-			l_retried := True
-			retry
 		end
 
 feature {NONE} -- Constants
@@ -359,7 +342,7 @@ feature {NONE} -- Internationalization
 	cancel_text: STRING = "Cancel"
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

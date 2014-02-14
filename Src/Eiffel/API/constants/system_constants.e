@@ -163,9 +163,6 @@ feature {NONE}
 	data_directory: STRING = "Data"
 			-- Directory name `Data'
 
-	eifgens_cluster_directory: STRING = "Cluster"
-			-- Directory EIFGENs/[target]/Cluster
-
 	testing_results_directory: STRING = "Testing"
 			-- Directory EIFGENs/[target]/Testing
 
@@ -235,7 +232,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

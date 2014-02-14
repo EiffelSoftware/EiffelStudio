@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Roundtrip
 
-	separator_list: CONSTRUCT_LIST [INTEGER]
+	separator_list: detachable CONSTRUCT_LIST [INTEGER]
 			-- List to store terminals that appear before the first or in between every 2 items of this list.
 		note
 			option: stable
@@ -198,7 +198,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

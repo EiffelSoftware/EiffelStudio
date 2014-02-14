@@ -627,7 +627,7 @@ feature -- Access
 			end
 		end
 
-	parent_with_name (n: STRING): PARENT_AS
+	parent_with_name (n: STRING): detachable PARENT_AS
 			-- Parent AST with class name `n'.
 		require
 			n_not_void: n /= Void
@@ -654,7 +654,7 @@ feature -- Access
 			end
 		end
 
-	conforming_parent_with_name (n: STRING): PARENT_AS
+	conforming_parent_with_name (n: STRING): detachable PARENT_AS
 			-- Conforming Parent AST with class name `n'.
 		require
 			n_not_void: n /= Void
@@ -681,7 +681,7 @@ feature -- Access
 			end
 		end
 
-	non_conforming_parent_with_name (n: STRING): PARENT_AS
+	non_conforming_parent_with_name (n: STRING): detachable PARENT_AS
 			-- Non-conforming Parent AST with class name `n'.
 		require
 			n_not_void: n /= Void
@@ -732,7 +732,7 @@ feature -- Access
 			click_ast_definition: Result /= Void implies Result.node = Current
 		end
 
-	generics_as_string: STRING
+	generics_as_string: detachable STRING
 			-- Output `formal_decs' as string to `generics'.
 			-- `Void' if `generics' `Void'.
 		local
@@ -817,7 +817,7 @@ feature -- Query
 			Result := l_result
 		end
 
-	feature_of_name_32 (a_name: STRING_32; a_reverse_lookup: BOOLEAN): FEATURE_AS
+	feature_of_name_32 (a_name: STRING_32; a_reverse_lookup: BOOLEAN): detachable FEATURE_AS
 			-- Retrieves the first located feature using the supplied feature name.
 			--
 			-- `a_name': The feature name to retrieve a feature AS node for.
@@ -829,7 +829,7 @@ feature -- Query
 			Result := feature_of_name (encoding_converter.utf32_to_utf8 (a_name), a_reverse_lookup)
 		end
 
-	feature_of_position (a_line: INTEGER;): FEATURE_AS
+	feature_of_position (a_line: INTEGER;): detachable FEATURE_AS
 			-- Retrieves the feature located
 			--
 			-- `a_line': One-base line number index to start looking for a feature at.
@@ -887,7 +887,7 @@ feature -- Query
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Comparison
 
-	feature_of_name (a_name: STRING; a_reverse_lookup: BOOLEAN): FEATURE_AS
+	feature_of_name (a_name: STRING; a_reverse_lookup: BOOLEAN): detachable FEATURE_AS
 			-- Retrieves the first located feature using the supplied feature name.
 			--
 			-- `a_name': The feature name to retrieve a feature AS node for.
@@ -1000,7 +1000,7 @@ invariant
 	date_valid: date >= -1
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

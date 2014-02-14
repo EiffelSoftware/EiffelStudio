@@ -68,7 +68,7 @@ feature -- Roundtrip
 	then_keyword_index: INTEGER
 			-- Index of `then' operation AST node.
 
-	then_keyword (a_list: LEAF_AS_LIST): LEAF_AS
+	then_keyword (a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Binary operation AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -82,7 +82,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

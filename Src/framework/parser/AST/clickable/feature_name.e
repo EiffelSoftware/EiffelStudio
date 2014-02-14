@@ -145,7 +145,7 @@ feature -- Status report
 
 feature -- Status report
 
-	visual_name_32: STRING_32
+	visual_name_32: detachable STRING_32
 			-- Named used in Eiffel code
 		do
 			if attached visual_name as l_name then
@@ -241,7 +241,7 @@ invariant
 	consistent_operator_name: (is_bracket or is_parentheses or is_binary or is_unary) = (alias_name /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

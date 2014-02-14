@@ -186,8 +186,13 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	name: STRING
 			-- Name of this id.
 		do
-				-- Per invariant of class.
-			Result := names_heap.item (name_id)
+			if attached names_heap.item (name_id) as l_name then
+				Result := l_name
+			else
+					-- Per invariant of class.
+				check has_name_id: False end
+				Result := "_Invalid_name"
+			end
 		end
 
 feature -- Visitor
@@ -232,7 +237,7 @@ invariant
 	name_id_in_bounds: names_heap.valid_index (name_id)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

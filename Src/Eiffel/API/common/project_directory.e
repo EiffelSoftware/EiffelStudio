@@ -231,18 +231,6 @@ feature -- Directories
 			data_path_not_void: Result /= Void
 		end
 
-	eifgens_cluster_path: like path
-			-- Path to internal cluster located in EIFGENs directory
-		do
-			Result := internal_eifgens_cluster_path
-			if Result = Void then
-				Result := target_path.extended (eifgens_cluster_directory)
-				internal_eifgens_cluster_path := Result
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
 	testing_results_path: like path
 			-- Path to testing result directory in EIFGENs directory
 		do
@@ -539,7 +527,6 @@ feature {NONE} -- Implementation
 			internal_precompilation_file_name := Void
 			internal_lock_file_name := Void
 			internal_project_file_name := Void
-			internal_eifgens_cluster_path := Void
 			internal_testing_results_path := Void
 		end
 
@@ -557,7 +544,6 @@ feature {NONE} -- Implementation: Access
 	internal_workbench_assemblies_path: like workbench_assemblies_path
 	internal_workbench_path: like workbench_path
 	internal_data_path: like data_path
-	internal_eifgens_cluster_path: like eifgens_cluster_path
 	internal_testing_results_path: like testing_results_path
 			-- Placeholders for storing path.
 
@@ -573,7 +559,7 @@ invariant
 	target_not_empty: not target.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

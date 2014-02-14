@@ -43,16 +43,8 @@ feature -- Access
 			-- Cluster in which new tests will be created.
 			--
 			-- Note: we do not store the cluster object directly since that might change after compiling.
-		local
-			l_universe: UNIVERSE_I
-			l_name: like cluster_name
 		do
-			l_name := cluster_name
-			if l_name = Void or else l_name.is_empty then
-				l_name := "internal_eifgen_cluster"
-			end
-			l_universe := etest_suite.project_access.project.universe
-			Result := l_universe.cluster_of_name (l_name)
+			Result := etest_suite.project_access.project.universe.cluster_of_name (cluster_name)
 		end
 
 	path: PATH
@@ -181,81 +173,79 @@ feature {NONE} -- Basic operations
 			u: GOBO_FILE_UTILITIES
 		do
 			l_cluster := cluster
-			if l_cluster /= Void then
+			if l_cluster = Void then
+				error_event.publish ([Current, locale.translation ("No cluster was specified to create the class into.")])
+			else
 				l_location := l_cluster.location.build_path (path.name, "")
-			else
-				l_location := etest_suite.project_access.project.project_directory.eifgens_cluster_path
-			end
-			create l_directory.make_with_path (l_location)
-			if not l_directory.exists then
-				l_directory.recursive_create_dir
-			end
-
-			if l_directory.exists and l_directory.is_writable then
-				from until
-					l_file /= Void
-				loop
-					l_class_name := class_name.as_string_8
-					l_class_name.to_lower
-					if creates_multiple_classes or l_retry then
-						create l_filename.make (l_class_name.count + 6)
-						l_filename.append (l_class_name)
-						l_filename.append_character ('_')
-						if class_name_counter < 10 then
-							l_filename.append ("00")
-						elseif class_name_counter < 100 then
-							l_filename.append ("0")
-						end
-						l_filename.append_natural_32 (class_name_counter)
-					else
-						l_filename := l_class_name
-					end
-					l_filename.append (".e")
-					create l_file.make_with_path (l_location.extended (l_filename))
-					if l_file.exists then
-						class_name_counter := class_name_counter + 1
-						if class_name_counter <= 999 then
-							l_file := Void
-						end
-					end
-					l_retry := True
+				create l_directory.make_with_path (l_location)
+				if not l_directory.exists then
+					l_directory.recursive_create_dir
 				end
 
-				if not l_file.exists then
-					l_file.open_write
-					if l_file.is_open_write then
-						l_class_name := l_filename.substring (1, l_filename.count - 2)
-						check l_class_name /= Void end
-						l_class_name.to_upper
-						print_new_class (l_file, l_class_name)
-						if l_file.is_open_write then
-							l_file.close
-						end
-						if l_cluster /= Void and then l_file.exists and then l_file.count > 0 then
-							-- Only perform quick melt when creating a single manual test
-							-- and when the previous compilation was successful.
-							etest_suite.project_helper.add_class (
-								l_cluster,
-								path,
-								create {PATH}.make_from_string (l_filename),
-								l_class_name,
-								attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful
-							)
-						elseif etest_suite.eiffel_project.system_defined then
-							etest_suite.project_access.project.system.system.rebuild_configuration
-						end
-							-- TODO: add new (uncompiled) tests to {ETEST_SUITE}
-					else
-						error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
-					end
-				else
-					error_event.publish ([Current, locale.formatted_string (e_file_already_exists, [l_location, l_filename])])
-				end
-			else
-				if l_directory.exists then
+				if not l_directory.exists then
+					error_event.publish ([Current, locale.formatted_string (e_directory_does_not_exist, [l_location])])
+				elseif not l_directory.is_writable then
 					error_event.publish ([Current, locale.formatted_string (e_directory_not_writable, [l_location])])
 				else
-					error_event.publish ([Current, locale.formatted_string (e_directory_does_not_exist, [l_location])])
+					from until
+						l_file /= Void
+					loop
+						l_class_name := class_name.as_string_8
+						l_class_name.to_lower
+						if creates_multiple_classes or l_retry then
+							create l_filename.make (l_class_name.count + 6)
+							l_filename.append (l_class_name)
+							l_filename.append_character ('_')
+							if class_name_counter < 10 then
+								l_filename.append ("00")
+							elseif class_name_counter < 100 then
+								l_filename.append ("0")
+							end
+							l_filename.append_natural_32 (class_name_counter)
+						else
+							l_filename := l_class_name
+						end
+						l_filename.append (".e")
+						create l_file.make_with_path (l_location.extended (l_filename))
+						if l_file.exists then
+							class_name_counter := class_name_counter + 1
+							if class_name_counter <= 999 then
+								l_file := Void
+							end
+						end
+						l_retry := True
+					end
+
+					if not l_file.exists then
+						l_file.open_write
+						if l_file.is_open_write then
+							l_class_name := l_filename.substring (1, l_filename.count - 2)
+							check l_class_name /= Void end
+							l_class_name.to_upper
+							print_new_class (l_file, l_class_name)
+							if l_file.is_open_write then
+								l_file.close
+							end
+							if l_cluster /= Void and then l_file.exists and then l_file.count > 0 then
+								-- Only perform quick melt when creating a single manual test
+								-- and when the previous compilation was successful.
+								etest_suite.project_helper.add_class (
+									l_cluster,
+									path,
+									create {PATH}.make_from_string (l_filename),
+									l_class_name,
+									attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful
+								)
+							elseif etest_suite.eiffel_project.system_defined then
+								etest_suite.project_access.project.system.system.rebuild_configuration
+							end
+								-- TODO: add new (uncompiled) tests to {ETEST_SUITE}
+						else
+							error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
+						end
+					else
+						error_event.publish ([Current, locale.formatted_string (e_file_already_exists, [l_location, l_filename])])
+					end
 				end
 			end
 		end
@@ -304,7 +294,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

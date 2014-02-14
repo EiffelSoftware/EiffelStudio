@@ -102,6 +102,15 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
+			if system.il_generation then
+				if
+					not attached feat_table.item_id ({PREDEFINED_NAMES}.internal_native_array_name_id) as l_feat or else
+					not l_feat.is_attribute or else not l_feat.type.actual_type.same_as (native_array_type)
+				then
+					create special_error.make (special_case_8, Current)
+					error_handler.insert_error (special_error)
+				end
+			end
 		end
 
 feature -- Typing
@@ -333,6 +342,21 @@ feature {NONE} -- Implementation
 			to_array_signature_not_void: Result /= Void
 		end
 
+	native_array_type: NATIVE_ARRAY_TYPE_A
+			-- Type of `NATIVE_ARRAY'.
+		local
+			l_generics: ARRAYED_LIST [TYPE_A]
+		do
+			create l_generics.make (1)
+			l_generics.extend (actual_type.generics.first)
+			create Result.make (system.native_array_id, l_generics)
+			if not lace_class.is_void_unsafe then
+				Result.set_is_attached
+			end
+		ensure
+			to_array_signature_not_void: Result /= Void
+		end
+
 	put_signature: DYN_PROC_I
 			-- Required signature for feature `put' of class SPECIAL
 		local
@@ -349,7 +373,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

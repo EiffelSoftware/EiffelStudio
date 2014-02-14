@@ -2779,9 +2779,21 @@ feature -- Validity class
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `copy' with 1 argument of the type `like Current' or of a reference type", Current))
 				end
 			elseif system.routine_class = original_class then
-				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_rout_disp_name_id) then
+				if not attached feature_of_name_id ({PREDEFINED_NAMES}.set_rout_disp_name_id) as l_feat then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ROUTINE must have a procedure `set_rout_disp'.", Current))
+				else
+					if system.il_generation then
+						if l_feat.argument_count /= 4 then
+							error_handler.insert_error (
+								create {SPECIAL_ERROR}.make ("Class ROUTINE must have a procedure `set_rout_disp' with 4 arguments.", Current))
+						end
+					else
+						if l_feat.argument_count /= 10 then
+							error_handler.insert_error (
+								create {SPECIAL_ERROR}.make ("Class ROUTINE must have a procedure `set_rout_disp' with 10 arguments.", Current))
+						end
+					end
 				end
 				if
 					not system.il_generation and then

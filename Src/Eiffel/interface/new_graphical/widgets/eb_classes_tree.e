@@ -919,7 +919,7 @@ feature {NONE} -- Implementation
 				a_grps.after
 			loop
 				l_group := a_grps.item_for_iteration
-				if not l_group.actual_group.is_internal and (has_readonly_items or l_group.is_writable) then
+				if has_readonly_items or l_group.is_writable then
 					l_item := create_folder_item (l_group)
 
 					if textable /= void and not is_show_classes then
@@ -1155,7 +1155,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

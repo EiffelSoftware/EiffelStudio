@@ -71,7 +71,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					content.forth
 				end
 			end
-			if Result.is_empty then
+			if Result /= Void and then Result.is_empty then
 				Result := Void
 			end
 		ensure
@@ -108,7 +108,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

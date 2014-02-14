@@ -85,8 +85,8 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
-			elseif tuple /= Void then
-				Result := tuple.last_token (a_list)
+			elseif attached tuple as l_tuple then
+				Result := l_tuple.last_token (a_list)
 			else
 				Result := creation_expr.last_token (a_list)
 			end
@@ -108,7 +108,7 @@ invariant
 	creation_expr_not_void: creation_expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

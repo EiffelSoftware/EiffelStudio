@@ -80,8 +80,8 @@ feature -- Modification apply
 			Result := True
 			compute_modification
 			if header_text /= Void then
-				if header_ast /= Void then
-					Result := header_ast.can_replace_text (match_list)
+				if attached header_ast as l_ast then
+					Result := l_ast.can_replace_text (match_list)
 				else
 					Result := eiffel_list.can_prepend_text (match_list)
 				end
@@ -90,8 +90,8 @@ feature -- Modification apply
 				Result := modifier_list.for_all (agent {ERT_LIST_ITEM_MODIFIER}.can_apply)
 			end
 			if Result and footer_text /= Void then
-				if footer_ast /= Void then
-					Result := footer_ast.can_replace_text (match_list)
+				if attached footer_ast as l_footer_ast then
+					Result := l_footer_ast.can_replace_text (match_list)
 				else
 					Result := eiffel_list.can_append_text (match_list)
 				end
@@ -214,7 +214,7 @@ feature{NONE} -- Initialization
 			l_cnt := eiffel_list_count
 			create original_item_list.make (l_cnt)
 			create modifier_list.make
-			l_has_separator := eiffel_list.separator_list /= Void and then not eiffel_list.separator_list.is_empty
+			l_has_separator := attached eiffel_list.separator_list as l_seps and then not l_seps.is_empty
 			from
 				i := 1
 			until
@@ -283,7 +283,7 @@ invariant
 	separator_not_void: separator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

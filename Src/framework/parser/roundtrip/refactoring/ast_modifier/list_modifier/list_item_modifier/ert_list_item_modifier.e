@@ -40,7 +40,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Initialization
 			addition_marker := a_marker
 			match_list := a_list
 		ensure
-			text_set: (a_text = Void implies text = Void) and (a_text /= Void implies text.is_equal (a_text))
+			text_set: (a_text = Void implies text = Void) and (a_text /= Void implies text ~ a_text)
 			owner_set: owner = a_owner
 			index_set: index = a_index
 			addition_marker_set: addition_marker = a_marker
@@ -100,11 +100,6 @@ feature -- Status reporting
 	is_separator_needed: BOOLEAN
 			-- Is separator needed?
 
-	has_text_changed: BOOLEAN
-			-- Has text changed?
-		deferred
-		end
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status reporting
 
 	text: detachable STRING
@@ -119,7 +114,7 @@ invariant
 	match_list_not_void: match_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

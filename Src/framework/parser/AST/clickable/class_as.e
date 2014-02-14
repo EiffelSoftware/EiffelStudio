@@ -65,15 +65,13 @@ feature {NONE} -- Initialization
 			convertors := co
 			features := f
 			invariant_part := inv
-			internal_invariant := inv
-			if
-				invariant_part /= Void and then
-				invariant_part.assertion_list = Void
-			then
+			if inv /= Void and then inv.assertion_list = Void then
 					-- The keyword `invariant' followed by no assertion
 					-- at all is not significant.
 				invariant_part := Void
 				has_empty_invariant := True
+			else
+				internal_invariant := inv
 			end
 			suppliers := s
 			obsolete_message := o
@@ -337,20 +335,16 @@ feature -- Attributes
 	top_indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause at top of class.
 		do
-			if internal_top_indexes = Void or else internal_top_indexes.is_empty then
-				Result := Void
-			else
-				Result := internal_top_indexes
+			if attached internal_top_indexes as l_top_indexes and then not l_top_indexes.is_empty then
+				Result := l_top_indexes
 			end
 		end
 
 	bottom_indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause at bottom of class.
 		do
-			if internal_bottom_indexes = Void or else internal_bottom_indexes.is_empty then
-				Result := Void
-			else
-				Result := internal_bottom_indexes
+			if attached internal_bottom_indexes as l_bottom_indexes and then not l_bottom_indexes.is_empty then
+				Result := l_bottom_indexes
 			end
 		end
 
@@ -378,30 +372,26 @@ feature -- Attributes
 	conforming_parents: detachable PARENT_LIST_AS
 			-- Parents from conforming inheritance clause.
 		do
-			Result := internal_conforming_parents
 				-- Return Void if list is empty
-			if Result /= Void and then Result.is_empty then
-				Result := Void
+			if attached internal_conforming_parents as l_parents and then not l_parents.is_empty then
+				Result := l_parents
 			end
 		end
 
 	non_conforming_parents: detachable PARENT_LIST_AS
 			-- Parents from non-conforming inheritance clause.
 		do
-			Result := internal_non_conforming_parents
 				-- Return Void if list is empty
-			if Result /= Void and then Result.is_empty then
-				Result := Void
+			if attached internal_non_conforming_parents as l_parents and then not l_parents.is_empty then
+				Result := l_parents
 			end
 		end
 
 	generics: detachable EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generic parameter list
 		do
-			if internal_generics = Void or else internal_generics.is_empty then
-				Result := Void
-			else
-				Result := internal_generics
+			if attached internal_generics as l_generics and then not l_generics.is_empty then
+				Result := l_generics
 			end
 		end
 
@@ -493,8 +483,8 @@ feature -- Attributes
 			-- Position where new invariant can be inserted (at the end of an invariant
 			-- clause if any, otherwise before the indexing or end keyword).
 		do
-			if invariant_part /= Void then
-				Result := invariant_part.end_location.final_position + 1
+			if attached invariant_part as l_inv then
+				Result := l_inv.end_location.final_position + 1
 			elseif bottom_indexes /= Void then
 					-- We don't have access to the 'note' keyword so we use the 'feature_clause_insert_position' to add a new invariant.
 				Result := feature_clause_insert_position
@@ -521,8 +511,8 @@ feature -- Roundtrip/Token
 			l_break: detachable BREAK_AS
 		do
 			if a_list = Void then
-				if top_indexes /= Void then
-					Result := top_indexes.first_token (a_list)
+				if attached top_indexes as l_top_indexes then
+					Result := l_top_indexes.first_token (a_list)
 				else
 					Result := class_name.first_token (a_list)
 				end
@@ -535,8 +525,8 @@ feature -- Roundtrip/Token
 				if l_break /= Void then
 					Result := l_break
 				else
-					if internal_top_indexes /= Void then
-						Result := internal_top_indexes.first_token (a_list)
+					if attached internal_top_indexes as l_top_indexes then
+						Result := l_top_indexes.first_token (a_list)
 					else
 						Result := first_header_mark (a_list)
 						if Result = Void then
@@ -738,14 +728,14 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			if generics /= Void then
+			if attached generics as l_generics then
 				create Result.make (3)
 				Result.extend ('[')
-				from i := 1 until i > generics.count loop
+				from i := 1 until i > l_generics.count loop
 					if i > 1 then
 						Result.append (", ")
 					end
-					Result.append (generics.i_th (i).constraint_string)
+					Result.append (l_generics.i_th (i).constraint_string)
 					i := i + 1
 				end
 				Result.extend (']')
@@ -755,32 +745,32 @@ feature -- Access
 	custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributse of current class if any.
 		do
-			if top_indexes /= Void then
-				Result := top_indexes.custom_attributes
+			if attached top_indexes as l_top_indexes then
+				Result := l_top_indexes.custom_attributes
 			end
 		end
 
 	class_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
-			if top_indexes /= Void then
-				Result := top_indexes.class_custom_attributes
+			if attached top_indexes as l_top_indexes then
+				Result := l_top_indexes.class_custom_attributes
 			end
 		end
 
 	interface_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
-			if top_indexes /= Void then
-				Result := top_indexes.interface_custom_attributes
+			if attached top_indexes as l_top_indexes then
+				Result := l_top_indexes.interface_custom_attributes
 			end
 		end
 
 	assembly_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
-			if top_indexes /= Void then
-				Result := top_indexes.assembly_custom_attributes
+			if attached top_indexes as l_top_indexes then
+				Result := l_top_indexes.assembly_custom_attributes
 			end
 		end
 
@@ -968,13 +958,15 @@ feature {ABSTRACT_CLASS_C} -- Update
 		require
 			valid_args: counter /= Void and values /= Void
 		do
-			from
-				features.start
-			until
-				features.after
-			loop
-				features.item.assign_unique_values (counter, values)
-				features.forth
+			if attached features as l_fclauses then
+				from
+					l_fclauses.start
+				until
+					l_fclauses.after
+				loop
+					l_fclauses.item.assign_unique_values (counter, values)
+					l_fclauses.forth
+				end
 			end
 		end
 
@@ -996,7 +988,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 invariant
-	convertors_valid: convertors /= Void implies not convertors.is_empty
+	convertors_valid: attached convertors as l_convs implies not l_convs.is_empty
 	date_valid: date >= -1
 
 note

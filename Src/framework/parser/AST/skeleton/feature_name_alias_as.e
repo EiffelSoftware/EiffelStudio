@@ -124,7 +124,11 @@ feature -- Access
 			if is_bracket or else is_parentheses then
 				create Result.initialize (alias_name.value)
 			else
-				create Result.initialize (get_internal_alias_name)
+				if is_binary then
+					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
+				else
+					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
+				end
 			end
 		end
 
@@ -217,7 +221,7 @@ invariant
 	alias_name_not_empty: not alias_name.value.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,9 +28,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Dump
 				Result := "ANY"
 			else
 				Result := first.type.dump
-				if a_dump_renaming and then first.renaming /= Void then
+				if a_dump_renaming and then attached first.renaming as l_renaming then
 					Result.append (" ")
-					Result.append (first.renaming.dump)
+					Result.append (l_renaming.dump)
 				end
 				if count > 1 then
 					Result.prepend ("{")
@@ -42,9 +42,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Dump
 					loop
 						Result.append (", ")
 						Result.append (item.type.dump)
-						if a_dump_renaming and then item.renaming /= Void then
+						if a_dump_renaming and then attached item.renaming as l_renaming then
 							Result.append (" ")
-							Result.append (item.renaming.dump)
+							Result.append (l_renaming.dump)
 						end
 						forth
 					end
@@ -54,7 +54,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Dump
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

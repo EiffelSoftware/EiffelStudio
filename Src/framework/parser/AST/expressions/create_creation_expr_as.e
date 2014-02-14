@@ -78,14 +78,14 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if call /= Void then
-				Result := call.last_token (a_list)
+			if attached call as l_call then
+				Result := l_call.last_token (a_list)
 			else
 				Result := type.last_token (a_list)
 			end
 		end
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

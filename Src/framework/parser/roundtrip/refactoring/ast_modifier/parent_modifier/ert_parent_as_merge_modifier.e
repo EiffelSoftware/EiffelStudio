@@ -99,35 +99,36 @@ feature{NONE} -- Modification computation
 			done: BOOLEAN
 		do
 			if
-				source.internal_exports /= Void and then
-				source.internal_exports.content /= Void and then
-				not source.internal_exports.content.is_empty
+				attached source.internal_exports as l_src_exports and then
+				attached l_src_exports.content as l_src_content and then
+				not l_src_content.is_empty
 			then
 				if
-					destination.internal_exports = Void or else
-					destination.internal_exports.content = Void or else
-					destination.internal_exports.content.is_empty then
+					not attached destination.internal_exports as l_dest_exports or else
+					not attached l_dest_exports.content as l_dest_content or else
+					l_dest_content.is_empty
+				then
 						-- If `destination' doesn't contain export clause or its export clause is empty,
 						-- we just add every export item in `source' into export clause of `destination'.
-					l_index := source.internal_exports.content.index
+					l_index := l_src_content.index
 					from
-						source.internal_exports.content.start
+						l_src_content.start
 					until
-						source.internal_exports.content.after
+						l_src_content.after
 					loop
-						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.export_clause, source.internal_exports.content.item.text (source_match_list))
-						source.internal_exports.content.forth
+						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.export_clause, l_src_content.item.text (source_match_list))
+						l_src_content.forth
 					end
-					source.internal_exports.content.go_i_th (l_index)
+					l_src_content.go_i_th (l_index)
 				else
-					l_str_list := new_exported_items
-					l_index := destination.internal_exports.content.index
+					l_str_list := new_exported_items (l_src_content, l_dest_content)
+					l_index := l_dest_content.index
 					from
-						destination.internal_exports.content.start
+						l_dest_content.start
 						i := 1
 						done := False
 					until
-						destination.internal_exports.content.after
+						l_dest_content.after
 					loop
 						if not done then
 							last_computed_modifier.replace ({ERT_PARENT_AS_MODIFIER}.export_clause, i, l_str_list.i_th (i))
@@ -138,9 +139,9 @@ feature{NONE} -- Modification computation
 						else
 							last_computed_modifier.remove ({ERT_PARENT_AS_MODIFIER}.export_clause, i)
 						end
-						destination.internal_exports.content.forth
+						l_dest_content.forth
 					end
-					destination.internal_exports.content.go_i_th (l_index)
+					l_dest_content.go_i_th (l_index)
 					if i <= l_str_list.count then
 						from
 
@@ -195,37 +196,37 @@ feature{NONE} -- Modification computation
 		do
 			if a_clause = {ERT_PARENT_AS_MODIFIER}.undefine_clause then
 					-- We are processing undefine clause.
-				if source.internal_undefining /= Void then
-					l_sour_list := source.internal_undefining.content
+				if attached source.internal_undefining as l_src_undefining then
+					l_sour_list := l_src_undefining.content
 				else
 					l_sour_list := Void
 				end
-				if destination.internal_undefining /= Void then
-					l_dest_list := destination.internal_undefining.content
+				if attached destination.internal_undefining as l_dest_undefining then
+					l_dest_list := l_dest_undefining.content
 				else
 					l_dest_list := Void
 				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.redefine_clause then
 					-- We are processing redefine clause.				
-				if source.internal_redefining /= Void then
-					l_sour_list := source.internal_redefining.content
+				if attached source.internal_redefining as l_src_redefining then
+					l_sour_list := l_src_redefining.content
 				else
 					l_sour_list := Void
 				end
-				if destination.internal_redefining /= Void then
-					l_dest_list := destination.internal_redefining.content
+				if attached destination.internal_redefining as l_dest_redefining then
+					l_dest_list := l_dest_redefining.content
 				else
 					l_dest_list := Void
 				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.select_clause then
 					-- We are processing select clause.				
-				if source.internal_selecting /= Void then
-					l_sour_list := source.internal_selecting.content
+				if attached source.internal_selecting as l_src_selecting then
+					l_sour_list := l_src_selecting.content
 				else
 					l_sour_list := Void
 				end
-				if destination.internal_selecting /= Void then
-					l_dest_list := destination.internal_selecting.content
+				if attached destination.internal_selecting as l_dest_selecting then
+					l_dest_list := l_dest_selecting.content
 				else
 					l_dest_list := Void
 				end
@@ -292,7 +293,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	new_exported_items: ARRAYED_LIST [STRING]
+	new_exported_items (l_src_content, l_dest_content: EIFFEL_LIST [EXPORT_ITEM_AS]): ARRAYED_LIST [STRING]
 			-- List of string represnets text of merged exported items
 		local
 			l_sour_feature_set: ERT_EXPORT_FEATURE_SET
@@ -301,8 +302,8 @@ feature{NONE} -- Modification computation
 			l_str: STRING
 			l_name: STRING
 		do
-			create l_dest_feature_set.make (destination.internal_exports.content, final_names, destination_match_list)
-			create l_sour_feature_set.make (source.internal_exports.content, final_names, source_match_list)
+			create l_dest_feature_set.make (l_dest_content, final_names, destination_match_list)
+			create l_sour_feature_set.make (l_src_content, final_names, source_match_list)
 			l_dest_feature_set.merge (l_sour_feature_set)
 			l_merged_items := l_dest_feature_set.export_items
 			create Result.make (l_merged_items.count)

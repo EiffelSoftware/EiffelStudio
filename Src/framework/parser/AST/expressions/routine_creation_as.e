@@ -107,7 +107,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_operands = Void implies Result = Void) and
-						 (internal_operands /= Void implies Result = internal_operands.meaningful_content)
+						 (attached internal_operands as l_operands implies Result = l_operands.meaningful_content)
 		end
 
 	has_target: BOOLEAN
@@ -130,11 +130,11 @@ feature -- Comparison
 		end
 
 invariant
-	operands_correct: (internal_operands /= Void implies operands = internal_operands.meaningful_content) and
+	operands_correct: (attached internal_operands as l_operands implies operands = l_operands.meaningful_content) and
 					  (internal_operands = Void implies operands = Void)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

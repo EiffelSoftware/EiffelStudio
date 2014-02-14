@@ -37,7 +37,7 @@ feature -- Roundtrip/Token
 			if a_list /= Void and clause_keyword_index /= 0 then
 				Result := clause_keyword (a_list)
 			end
-			if Result = Void or Result.is_null then
+			if Result = Void or else Result.is_null then
 				Result := content.first_token (a_list)
 			end
 		end
@@ -45,7 +45,7 @@ feature -- Roundtrip/Token
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			Result := content.last_token (a_list)
-			if (Result = Void or Result.is_null) and a_list /= Void and clause_keyword_index /= 0 then
+			if (Result = Void or else Result.is_null) and a_list /= Void and clause_keyword_index /= 0 then
 				Result := clause_keyword (a_list)
 			end
 		end
@@ -86,7 +86,7 @@ invariant
 	content_not_empty: not content.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

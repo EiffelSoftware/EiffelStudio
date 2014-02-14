@@ -88,28 +88,28 @@ feature -- Status report
 	is_detachable_expression: BOOLEAN
 			-- <Precursor>
 		do
-			Result := expr.is_detachable_expression
+			Result := attached expr as l_expr and then l_expr.is_detachable_expression
 		end
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if tag /= Void then
-				Result := tag.first_token (a_list)
-			else
-				Result := expr.first_token (a_list)
+			if attached tag as l_tag then
+				Result := l_tag.first_token (a_list)
+			elseif attached expr as l_expr then
+				Result := l_expr.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if expr /= Void then
-				Result := expr.last_token (a_list)
+			if attached expr as l_expr then
+				Result := l_expr.last_token (a_list)
 			elseif a_list /= Void and colon_symbol_index /= 0 then
 				Result := colon_symbol (a_list)
-			else
-				Result := tag.last_token (a_list)
+			elseif attached tag as l_tag then
+				Result := l_tag.last_token (a_list)
 			end
 		end
 
@@ -132,7 +132,7 @@ invariant
 	not_both_tag_and_expr_void: not (tag = Void and expr = Void)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

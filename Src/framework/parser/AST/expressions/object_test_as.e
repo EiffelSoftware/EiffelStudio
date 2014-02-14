@@ -143,17 +143,16 @@ feature -- Roundtrip/Token
 				if a_list /= Void and attached_keyword_index /= 0 then
 					Result := attached_keyword (a_list)
 				end
-				if Result = Void and type /= Void then
-					Result := type.first_token (a_list)
+				if Result = Void and attached type as l_type then
+					Result := l_type.first_token (a_list)
 				elseif Result = Void then
 					Result := expression.first_token (a_list)
 				end
 			else
 				if a_list /= Void and lcurly_symbol_index /= 0 then
 					Result := lcurly_symbol (a_list)
-				else
-					check name_attached: name /= Void end
-					Result := name.first_token (a_list)
+				elseif attached name as l_name then
+					Result := l_name.first_token (a_list)
 				end
 			end
 		end
@@ -185,7 +184,7 @@ invariant
 	name_and_type_attached: not is_attached_keyword implies name /= Void and then type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

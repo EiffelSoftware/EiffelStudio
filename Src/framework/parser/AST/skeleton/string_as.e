@@ -187,8 +187,8 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := Current
 			else
-				if type /= Void then
-					Result := type.first_token (a_list)
+				if attached type as l_type then
+					Result := l_type.first_token (a_list)
 				else
 					Result := Current
 				end
@@ -199,7 +199,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

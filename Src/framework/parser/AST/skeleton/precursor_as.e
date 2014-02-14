@@ -72,14 +72,14 @@ feature -- Attributes
 			end
 		ensure then
 			good_result: (internal_parameters = Void implies Result = Void) and
-						 (internal_parameters /= Void implies Result = internal_parameters.meaningful_content)
+						 (attached internal_parameters as l_params implies Result = l_params.meaningful_content)
 		end
 
 	parameter_count: INTEGER
 			-- Number of parameters
 		do
-			if parameters /= Void then
-				Result := parameters.count
+			if attached parameters as l_params then
+				Result := l_params.count
 			end
 		end
 
@@ -117,18 +117,18 @@ feature -- Roundtrip/Token
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if parameters /= Void then
-					Result := parameters.last_token (a_list)
-				elseif parent_base_class /= Void then
-					Result := parent_base_class.first_token (a_list)
+				if attached parameters as l_params then
+					Result := l_params.last_token (a_list)
+				elseif attached parent_base_class as l_base_class then
+					Result := l_base_class.first_token (a_list)
 				else
 					Result := precursor_keyword.last_token (a_list)
 				end
 			else
-				if internal_parameters /= Void then
-					Result := internal_parameters.last_token (a_list)
-				elseif parent_base_class /= Void then
-					Result := parent_base_class.last_token (a_list)
+				if attached internal_parameters as l_params then
+					Result := l_params.last_token (a_list)
+				elseif attached parent_base_class as l_base_class then
+					Result := l_base_class.last_token (a_list)
 				else
 					Result := precursor_keyword.last_token (a_list)
 				end
@@ -146,13 +146,13 @@ feature -- Comparison
 
 invariant
 	precursor_keyword_not_void: precursor_keyword /= Void
-	valid_parent_base_class: parent_base_class /= Void implies parent_base_class.generics = Void
-	parameters_set: (internal_parameters /= Void implies parameters = internal_parameters.meaningful_content) and
+	valid_parent_base_class: attached parent_base_class as l_class implies l_class.generics = Void
+	parameters_set: (attached internal_parameters as l_params implies parameters = l_params.meaningful_content) and
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

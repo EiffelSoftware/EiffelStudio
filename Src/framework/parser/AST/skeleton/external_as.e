@@ -123,8 +123,8 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := language_name.last_token (a_list)
 			else
-				if alias_name_literal /= Void then
-					Result := alias_name_literal.last_token (a_list)
+				if attached alias_name_literal as l_alias then
+					Result := l_alias.last_token (a_list)
 				else
 					Result := language_name.last_token (a_list)
 				end
@@ -151,7 +151,7 @@ invariant
 	alias_name_id_valid: alias_name_literal /= Void implies alias_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

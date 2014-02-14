@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="testing" uuid="B77B3A44-A1A9-4050-8DF9-053598561C33" library_target="testing">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="testing" uuid="B77B3A44-A1A9-4050-8DF9-053598561C33" library_target="testing">
 	<target name="testing">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,7 +7,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option profile="false" is_attached_by_default="false" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option profile="false" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard" namespace="EiffelSoftware.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>

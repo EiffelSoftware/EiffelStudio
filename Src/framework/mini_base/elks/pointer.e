@@ -1,5 +1,7 @@
 note
 	description: "References to objects meant to be exchanged with non-Eiffel software."
+	external_name: "System.IntPtr"
+	assembly: "mscorlib"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

@@ -1,5 +1,5 @@
 note
-	description: "Representation of an Eiffel type."
+	description: "Fake abstraction of a .NET SYSTEM_STRING in a non-.NET system"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -7,26 +7,25 @@ note
 	revision: "$Revision$"
 
 class
-	TYPE [G]
+	SYSTEM_STRING
 
-convert
-		-- Conversion useful for the transition period because of the
-		-- modification in ANY:
-		--    generating_type: STRING
-		-- becomes:
-		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8}
+create
+	make
 
-feature -- Conversion
+feature {NONE} -- Initialization
 
-	to_string_8: STRING_8
+	make (c: CHARACTER; n: INTEGER)
 		do
-			create Result.make (0)
+
 		end
+
+feature -- Access
+
+	length: INTEGER do end
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -34,4 +33,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

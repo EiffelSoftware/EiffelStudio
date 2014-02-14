@@ -14,7 +14,8 @@ inherit
 			create_generic_type,
 			initialize_actual_type,
 			is_tuple,
-			partial_actual_type
+			partial_actual_type,
+			check_validity
 		end
 
 create
@@ -47,6 +48,24 @@ feature {NONE} -- Initialization
 			create {TUPLE_TYPE_A} Result.make (class_id, g)
 		end
 
+feature -- Validity class
+
+	check_validity
+			-- Special classes validity check.
+		local
+			l_feature: FEATURE_I
+		do
+			if system.il_generation then
+				if
+					not attached feature_of_name_id ({PREDEFINED_NAMES}.put_name_id) as l_feat or else
+					l_feat.argument_count /= 2 or else l_feat.has_return_value
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class TUPLE must have a procedure `put'.", Current))
+				end
+			end
+		end
+
 feature {CLASS_TYPE_AS} -- Actual class type
 
 	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN): CL_TYPE_A
@@ -74,7 +93,7 @@ invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

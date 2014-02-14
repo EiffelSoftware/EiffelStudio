@@ -110,6 +110,18 @@ feature -- Validity
 					create special_error.make (special_case_8, Current)
 					error_handler.insert_error (special_error)
 				end
+
+				if system.is_using_new_special then
+						-- Check if class has a feature extend (G#1, INTEGER)
+					put_feature := feat_table.item_id ({PREDEFINED_NAMES}.extend_name_id)
+					if put_feature = Void
+						or else not (put_feature.written_in = class_id)
+						or else not put_feature.same_signature (extend_signature)
+					then
+						create special_error.make (special_case_9, Current)
+						Error_handler.insert_error (special_error)
+					end
+				end
 			end
 		end
 
@@ -367,11 +379,24 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.put_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)
 		ensure
 			put_signature_not_void: Result /= Void
 		end
 
+	extend_signature: DYN_PROC_I
+			-- Required signature for feature `extend' of class SPECIAL
+		local
+			args: FEAT_ARG
+		do
+			create args.make (1)
+			args.extend (actual_type.generics [1])
+			create Result
+			Result.set_arguments (args)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.extend_name_id, 0)
+		ensure
+			put_signature_not_void: Result /= Void
+		end
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -255,7 +255,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_attribute (code: INTEGER; value: ANY)
+	set_attribute (code: INTEGER; value: detachable ANY)
 			-- Set attribute with `code' to `value'.
 			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
 			-- DOUBLE or DATE_TIME. References are made automatically from

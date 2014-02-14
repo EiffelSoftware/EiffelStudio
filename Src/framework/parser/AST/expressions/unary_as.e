@@ -129,11 +129,9 @@ feature -- Properties
 			end
 		end
 
-	operator_name_32: detachable STRING_32
+	operator_name_32: STRING_32
 		do
-			if attached operator_name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
-			end
+			Result := encoding_converter.utf8_to_utf32 (operator_name)
 		end
 
 	is_minus: BOOLEAN

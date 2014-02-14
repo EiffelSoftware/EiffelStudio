@@ -81,7 +81,7 @@ feature -- Attributes
 			end
 		ensure
 			good_result: (internal_keys = Void implies Result = Void) and
-						 (internal_keys /= Void implies Result = internal_keys.meaningful_content)
+						 (attached internal_keys as l_keys implies Result = l_keys.meaningful_content)
 		end
 
 	end_keyword: KEYWORD_AS
@@ -97,10 +97,10 @@ feature -- Roundtrip/Token
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if keys /= Void then
-					Result := keys.first_token (a_list)
-				elseif compound /= Void then
-					Result := compound.first_token (a_list)
+				if attached keys as l_keys then
+					Result := l_keys.first_token (a_list)
+				elseif attached compound as l_compound then
+					Result := l_compound.first_token (a_list)
 				else
 					Result := end_keyword.first_token (a_list)
 				end
@@ -125,11 +125,11 @@ feature -- Comparison
 
 invariant
 	end_keyword_not_void: end_keyword /= Void
-	keys_correct: (internal_keys /= Void implies keys = internal_keys.meaningful_content) and
+	keys_correct: (attached internal_keys as l_keys implies keys = l_keys.meaningful_content) and
 				  (internal_keys = Void implies keys = Void)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

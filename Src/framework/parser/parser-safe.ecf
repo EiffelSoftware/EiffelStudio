@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="initialization" syntax="standard" namespace="EiffelSoftware.Language">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Language">
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

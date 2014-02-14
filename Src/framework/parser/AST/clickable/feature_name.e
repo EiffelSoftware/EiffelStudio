@@ -105,8 +105,8 @@ feature -- Status report
 	internal_alias_name_id: INTEGER
 			-- `internal_alias_name' ID in NAMES_HEAP
 		do
-			if alias_name /= Void then
-				Result := internal_alias_name.name_id
+			if attached internal_alias_name as l_alias then
+				Result := l_alias.name_id
 			end
 		ensure
 			has_alias: alias_name /= Void implies Result > 0
@@ -211,24 +211,6 @@ feature -- Location
 
 	frozen_keyword: detachable KEYWORD_AS
 			-- Keyword "frozen" (if any)
-
-feature {NONE} -- Implementation: helper functions
-
-	get_internal_alias_name: STRING
-			-- Internal alias name augmented with arity information
-			-- in the form "prefix ..." or "infix ..."
-		require
-			is_operator: is_binary or is_unary
-			alias_name_not_void: alias_name /= Void
-		do
-			if is_binary then
-				Result := infix_feature_name_with_symbol (alias_name.value)
-			else
-				Result := prefix_feature_name_with_symbol (alias_name.value)
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
 
 invariant
 	consistent_operator_status:

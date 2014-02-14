@@ -148,7 +148,9 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := end_keyword.last_token (a_list)
+			if attached end_keyword as l_keyword then
+				Result := l_keyword.last_token (a_list)
+			end
 		end
 
 feature -- Comparison
@@ -169,7 +171,7 @@ invariant
 	expression_attached: expression /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

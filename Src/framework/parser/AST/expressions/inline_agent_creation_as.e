@@ -104,8 +104,8 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if internal_operands /= Void then
-				Result := internal_operands.last_token (a_list)
+			if attached internal_operands as l_operands then
+				Result := l_operands.last_token (a_list)
 			else
 				Result := body.last_token (a_list)
 			end
@@ -115,7 +115,7 @@ invariant
 	body_not_void: body /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

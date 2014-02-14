@@ -35,7 +35,11 @@ feature {NONE} -- Initialization
 		do
 			is_infix := inf
 			alias_name := op
-			create internal_name.initialize (get_internal_alias_name)
+			if is_infix then
+				create internal_name.initialize (infix_feature_name_with_symbol (alias_name.value))
+			else
+				create internal_name.initialize (prefix_feature_name_with_symbol (alias_name.value))
+			end
 			internal_name.set_index (op.index)
 			if l /= Void then
 				internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count,
@@ -137,7 +141,7 @@ invariant
 	alias_name_not_void: alias_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

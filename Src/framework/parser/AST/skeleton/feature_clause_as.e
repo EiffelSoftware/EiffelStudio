@@ -105,8 +105,11 @@ feature -- Roundtrip/Comments
 				if not a_list.is_empty then
 					if features = Void or else features.is_empty then
 						l_leaf := a_list.item_by_end_position (feature_clause_end_position)
-						check l_leaf /= Void end
-						l_end_index := l_leaf.index
+						if l_leaf /= Void then
+							l_end_index := l_leaf.index
+						else
+							check False end
+						end
 					else
 						l_end_index := features.first_token (a_list).index - 1
 					end
@@ -268,7 +271,7 @@ invariant
 	feature_location_not_void: feature_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

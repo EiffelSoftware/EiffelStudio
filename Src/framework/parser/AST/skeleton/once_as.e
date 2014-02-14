@@ -87,7 +87,7 @@ feature -- Properties
 			end
 		ensure
 			good_result: (internal_keys = Void implies Result = Void) and
-						 (internal_keys /= Void implies Result = internal_keys.meaningful_content)
+						 (attached internal_keys as l_keys implies Result = l_keys.meaningful_content)
 		end
 
 feature -- Status report
@@ -215,7 +215,7 @@ feature -- Roundtrip/Token
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if attached compound as c then
-				Result := compound.last_token (a_list)
+				Result := c.last_token (a_list)
 			elseif attached internal_keys as k then
 				Result := k.last_token (a_list)
 			elseif a_list /= Void then
@@ -240,7 +240,7 @@ feature {NONE} -- Constants
 	once_key_object: STRING = "OBJECT"
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

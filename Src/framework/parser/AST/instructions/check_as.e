@@ -88,8 +88,8 @@ feature -- Roundtrip/Token
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list = Void then
-				if check_list /= Void then
-					Result := check_list.first_token (a_list)
+				if attached check_list as l_check_list then
+					Result := l_check_list.first_token (a_list)
 				else
 					Result := end_keyword.first_token (a_list)
 				end
@@ -115,7 +115,7 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

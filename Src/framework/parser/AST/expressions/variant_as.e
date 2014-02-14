@@ -53,10 +53,10 @@ feature -- Roundtrip/Token
 		do
 			if a_list /= Void and variant_keyword_index /= 0 then
 				Result := variant_keyword (a_list)
-			elseif tag /= Void then
-				Result := tag.first_token (a_list)
-			else
-				Result := expr.first_token (a_list)
+			elseif attached tag as l_tag then
+				Result := l_tag.first_token (a_list)
+			elseif attached expr as l_expr then
+				Result := l_expr.first_token (a_list)
 			end
 		end
 
@@ -69,7 +69,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

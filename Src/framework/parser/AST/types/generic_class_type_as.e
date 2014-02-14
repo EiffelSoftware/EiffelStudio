@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics)
+	initialize (n: like class_name; g: attached like generics)
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -114,7 +114,7 @@ invariant
 	internal_generics_not_void: internal_generics /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

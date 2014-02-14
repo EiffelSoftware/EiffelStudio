@@ -296,7 +296,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Query
 				i > nb
 			loop
 				l_index := i_th (i)
-				if l_index.tag /= Void and then l_index.tag.name ~ tag then
+				if attached l_index.tag as l_tag and then l_tag.name.same_caseless_characters_general (tag, 1, tag.count, 1) then
 					Result := l_index
 						-- Jump out of loop
 					i := nb

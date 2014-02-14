@@ -77,11 +77,11 @@ feature -- Applicability
 				if
 					inherit_clause_modifier.i_th (i).is_empty and
 					not inherit_clause_has_comment (i) and
-					inherit_clause.i_th (i) /= Void
+					attached inherit_clause.i_th (i) as l_clause
 				then
-					inherit_clause.i_th (i).replace_text ("", match_list)
+					l_clause.replace_text ("", match_list)
 				else
-					if not (inherit_clause.i_th (i) = Void and inherit_clause_modifier.i_th (i).is_empty) then
+					if inherit_clause.i_th (i) /= Void or not inherit_clause_modifier.i_th (i).is_empty then
 						inherit_clause_modifier.i_th (i).apply
 					end
 				end
@@ -93,8 +93,8 @@ feature -- Applicability
 					parent_ast.append_text (end_keyword_string, match_list)
 				end
 			else
-				if parent_ast.end_keyword (match_list) /= Void then
-					parent_ast.end_keyword (match_list).replace_text ("", match_list)
+				if attached parent_ast.end_keyword (match_list) as l_keyword then
+					l_keyword.replace_text ("", match_list)
 				end
 			end
 			applied := True
@@ -170,9 +170,9 @@ feature -- Inherit clause indicators
 			a_clause_valid: valid_clause (a_clause)
 		do
 			Result := True
-			if inherit_clause.i_th (a_clause) /= Void then
-				Result := inherit_clause.i_th (a_clause).content /= Void and then
-						 (a_index > 0 and a_index <= inherit_clause.i_th (a_clause).content.count)
+			if attached inherit_clause.i_th (a_clause) as l_clause then
+				Result := attached l_clause.content as l_content and then
+						 (a_index > 0 and a_index <= l_content.count)
 			end
 		end
 
@@ -259,9 +259,9 @@ feature{NONE} -- Implementation
 			if
 				inherit_clause_modifier.i_th (a_clause).is_empty and
 				not inherit_clause_has_comment (a_clause) and
-				inherit_clause.i_th (a_clause) /= Void
+				attached inherit_clause.i_th (a_clause) as l_clause
 			then
-				Result := inherit_clause.i_th (a_clause).can_replace_text (match_list)
+				Result := l_clause.can_replace_text (match_list)
 			else
 				Result := inherit_clause_modifier.i_th (a_clause).can_apply
 			end
@@ -276,8 +276,8 @@ feature{NONE} -- Implementation
 					Result := parent_ast.can_append_text (match_list)
 				end
 			else
-				if parent_ast.end_keyword (match_list) /= Void then
-					Result := parent_ast.end_keyword (match_list).can_replace_text (match_list)
+				if attached parent_ast.end_keyword (match_list) as l_keyword then
+					Result := l_keyword.can_replace_text (match_list)
 				end
 			end
 		end
@@ -290,17 +290,17 @@ feature{NONE} -- Implementation
 		local
 			l_leaf: detachable LEAF_AS
 		do
-			if inherit_clause.i_th (a_clause) = Void then
-				Result := False
-			else
+			if attached inherit_clause.i_th (a_clause) as l_clause then
 				l_leaf := next_inherit_clause_start_token (a_clause)
 				if l_leaf = Void then
 					Result := False
 				else
 					Result := match_list.has_comment (
-						create{ERT_TOKEN_REGION}.make (inherit_clause.i_th (a_clause).first_token (match_list).index,
+						create{ERT_TOKEN_REGION}.make (l_clause.first_token (match_list).index,
 													  l_leaf.first_token (match_list).index - 1))
 				end
+			else
+				Result := False
 			end
 		end
 
@@ -320,7 +320,7 @@ feature{NONE} -- Implementation
 			loop
 				l_result := inherit_clause.i_th (i)
 				if l_result /= Void and then inherit_clause_has_comment (i) then
-					l_result := match_list.i_th (inherit_clause.i_th (i).last_token (match_list).index + 1)
+					l_result := match_list.i_th (l_result.last_token (match_list).index + 1)
 					is_footer_needed := True
 				end
 				i := i - 1
@@ -349,8 +349,8 @@ feature{NONE} -- Implementation
 			until
 				i > 5 or Result /= Void
 			loop
-				if inherit_clause.i_th (i) /= Void then
-					Result := inherit_clause.i_th (i).first_token (match_list)
+				if attached inherit_clause.i_th (i) as l_clause then
+					Result := l_clause.first_token (match_list)
 				end
 				i := i + 1
 			end
@@ -414,7 +414,7 @@ invariant
 	match_list_not_void: match_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

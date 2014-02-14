@@ -162,22 +162,22 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if iteration /= Void then
-				Result := iteration.first_token (a_list)
+			if attached iteration as l_iter then
+				Result := l_iter.first_token (a_list)
 			elseif a_list /= Void and from_keyword_index /= 0 then
 				Result := from_keyword (a_list)
-			elseif from_part /= Void then
-				Result := from_part.first_token (a_list)
+			elseif attached from_part as l_from then
+				Result := l_from.first_token (a_list)
 			elseif a_list /= Void and invariant_keyword_index /= 0 then
 				Result := invariant_keyword (a_list)
-			elseif invariant_part /= Void then
-				Result := invariant_part.first_token (a_list)
-			elseif variant_part /= Void then
-				Result := variant_part.first_token (a_list)
+			elseif attached invariant_part as l_inv then
+				Result := l_inv.first_token (a_list)
+			elseif attached variant_part as l_var then
+				Result := l_var.first_token (a_list)
 			elseif a_list /= Void and until_keyword_index /= 0 then
 				Result := until_keyword (a_list)
-			elseif stop /= Void then
-				Result := stop.first_token (a_list)
+			elseif attached stop as l_stop then
+				Result := l_stop.first_token (a_list)
 			end
 		end
 
@@ -203,7 +203,7 @@ invariant
 	iteration_or_stop_attached: iteration /= Void or stop /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

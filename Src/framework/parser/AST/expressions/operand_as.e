@@ -93,14 +93,14 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if class_type /= Void then
-				Result := class_type.first_token (a_list)
+			if attached class_type as l_class_type then
+				Result := l_class_type.first_token (a_list)
 			elseif a_list /= Void and question_mark_symbol_index /= 0 then
 				Result := question_mark_symbol (a_list)
-			elseif target /= Void then
-				Result := target.first_token (a_list)
-			elseif expression /= Void then
-				Result := expression.first_token (a_list)
+			elseif attached target as l_target then
+				Result := l_target.first_token (a_list)
+			elseif attached expression as l_expr then
+				Result := l_expr.first_token (a_list)
 			else
 				Result := Void
 			end
@@ -108,16 +108,14 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if class_type /= Void then
-				Result := class_type.last_token (a_list)
+			if attached class_type as l_class_type then
+				Result := l_class_type.last_token (a_list)
 			elseif a_list /= Void and question_mark_symbol_index /= 0 then
 				Result := question_mark_symbol (a_list)
-			elseif target /= Void then
-				Result := target.last_token (a_list)
-			elseif expression /= Void then
-				Result := expression.last_token (a_list)
-			else
-				Result := Void
+			elseif attached target as l_target then
+				Result := l_target.last_token (a_list)
+			elseif attached expression as l_expr then
+				Result := l_expr.last_token (a_list)
 			end
 		end
 
@@ -148,14 +146,14 @@ feature -- Conversion
 		do
 				-- Conversion can only make sense when `expression' is not void,
 				-- otherwise what is the point of requesting a conversion.
-			if expression /= Void then
-				expression := expression.converted_expression (a_additional_data)
+			if attached expression as l_expr then
+				expression := l_expr.converted_expression (a_additional_data)
 			end
 			Result := Current
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -53,29 +53,30 @@ feature -- Roundtrip
 	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
 		require
-			valid_index: separator_list.valid_index (i)
+			valid_index: attached separator_list as l_sep implies l_sep.valid_index (i)
 			a_list_not_void: a_list /= Void
 		local
 			n: INTEGER
 		do
-			n := separator_list.i_th (i)
-			if a_list.valid_index (n) then
-				Result := a_list.i_th (n)
+			if attached separator_list as l_sep then
+				n := l_sep.i_th (i)
+				if a_list.valid_index (n) then
+					Result := a_list.i_th (n)
+				end
 			end
 		end
 
 	reverse_extend_separator (l_as: LEAF_AS)
 			-- Add `l_as' into `separator_list'.
+		local
+			l_sep: like separator_list
 		do
-			if separator_list = Void then
-				if capacity >= 2 then
-					create separator_list.make_filled (capacity - 1)
-				else
-						-- One should never get here as this will yield in a call on void.
-					check one_should_never_get_here: False end
-				end
+			l_sep := separator_list
+			if l_sep = Void then
+				create l_sep.make_filled ((capacity - 1).max (0))
+				separator_list := l_sep
 			end
-			separator_list.reverse_extend (l_as.index)
+			l_sep.reverse_extend (l_as.index)
 		end
 
 	extend_separator (l: LEAF_AS)
@@ -83,14 +84,14 @@ feature -- Roundtrip
 		require
 			l_attached: attached l
 		local
-			s: like separator_list
+			l_sep: like separator_list
 		do
-			s := separator_list
-			if not attached s then
-				create s.make (1)
-				separator_list := s
+			l_sep := separator_list
+			if l_sep = Void then
+				create l_sep.make (1)
+				separator_list := l_sep
 			end
-			s.extend (l.index)
+			l_sep.extend (l.index)
 		ensure
 			separator_list_attached: attached separator_list
 			l_added: separator_list.last = l.index

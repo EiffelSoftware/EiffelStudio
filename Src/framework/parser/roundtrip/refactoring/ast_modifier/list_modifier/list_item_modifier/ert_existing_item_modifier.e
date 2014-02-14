@@ -36,16 +36,16 @@ feature -- Applicability
 			-- Can current modifier be applied?
 		do
 			Result := True
-			if has_text_changed then
+			if text /= Void then
 				Result := item_ast.can_replace_text (match_list)
 			end
 			if is_separator_needed then
-				if not already_has_separator then
+				if separator_ast = Void then
 					Result := item_ast.can_append_text (match_list)
 				end
 			else
-				if already_has_separator then
-					Result := separator_ast.can_replace_text (match_list)
+				if attached separator_ast as l_ast then
+					Result := l_ast.can_replace_text (match_list)
 				end
 			end
 		end
@@ -59,12 +59,12 @@ feature -- Operation
 				item_ast.replace_text (l_text, match_list)
 			end
 			if is_separator_needed then
-				if not already_has_separator and attached separator as l_sep then
+				if separator_ast = Void and attached separator as l_sep then
 					item_ast.append_text (l_sep, match_list)
 				end
 			else
-				if already_has_separator then
-					separator_ast.replace_text ("", match_list)
+				if attached separator_ast as l_ast then
+					l_ast.replace_text ("", match_list)
 				end
 			end
 			applied := True
@@ -80,16 +80,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		do
 			text := a_text.twin
 		ensure
-			text_set: text.is_equal (a_text)
+			text_set: text ~ a_text
 		end
 
 feature	-- Status reporting
-
-	has_text_changed: BOOLEAN
-			-- Has text changed?
-		do
-			Result := text /= Void
-		end
 
 	already_has_separator: BOOLEAN
 			-- Does current item already has a separator?
@@ -100,7 +94,7 @@ feature	-- Status reporting
 	is_removed: BOOLEAN
 			-- Is current item removed?
 		do
-			Result := has_text_changed and then text.is_empty
+			Result := attached text as l_text and then l_text.is_empty
 		end
 
 feature
@@ -115,7 +109,7 @@ invariant
 	item_ast_not_void: item_ast /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

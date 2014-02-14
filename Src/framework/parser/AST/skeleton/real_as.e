@@ -87,8 +87,8 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := Current
 			else
-				if constant_type /= Void then
-					Result := constant_type.first_token (a_list)
+				if attached constant_type as l_type then
+					Result := l_type.first_token (a_list)
 				elseif sign_symbol_index /= 0 then
 					Result := sign_symbol (a_list)
 				else
@@ -133,7 +133,7 @@ feature {AST_EIFFEL} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

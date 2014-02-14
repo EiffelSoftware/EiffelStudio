@@ -80,8 +80,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := obsolete_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like obsolete_keyword} a_list.i_th (i) as l_keyword then
+				Result := l_keyword
 			end
 		end
 
@@ -93,8 +93,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := rescue_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like rescue_keyword} a_list.i_th (i) as l_keyword then
+				Result := l_keyword
 			end
 		end
 
@@ -122,12 +122,12 @@ feature -- Attributes
 			-- Local declarations
 		do
 			if
-				internal_locals = Void or else
-				internal_locals.locals = Void
-		 	then
-				Result := Void
+				attached internal_locals as l_internal_locals and then
+				attached l_internal_locals.locals as l_locals
+			then
+				Result := l_locals
 			else
-				Result := internal_locals.locals
+				Result := Void
 			end
 		end
 
@@ -214,11 +214,11 @@ feature -- Properties
 	has_precondition: BOOLEAN
 			-- Has the routine content a preconditions ?
 		do
-			Result := not (	precondition = Void or else
-							precondition.assertions = Void or else
-							precondition.assertions.count = 1 and then
-							attached {BOOL_AS} precondition.assertions.first.expr as b and then
-							b.value /= precondition.is_else)
+			Result := not (not attached precondition as l_prec or else
+							not attached l_prec.assertions as l_assertions or else
+							l_assertions.count = 1 and then
+							attached {BOOL_AS} l_assertions.first.expr as b and then
+							b.value /= l_prec.is_else)
 		end
 
 	has_postcondition: BOOLEAN
@@ -365,18 +365,22 @@ feature -- default rescue
 			def_resc_id   : ID_AS
 			def_resc_call : ACCESS_ID_AS
 			def_resc_instr: INSTR_CALL_AS
+			l_result: like rescue_clause
 		do
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
 				create def_resc_id.initialize_from_id (def_resc_name_id)
-				def_resc_id.set_position (end_keyword.line, end_keyword.column,
-					end_keyword.position, end_keyword.location_count,
-					end_keyword.character_column, end_keyword.character_position,
-					end_keyword.character_count)
+				if attached end_keyword as l_end_keyword then
+					def_resc_id.set_position (l_end_keyword.line, l_end_keyword.column,
+						l_end_keyword.position, l_end_keyword.location_count,
+						l_end_keyword.character_column, l_end_keyword.character_position,
+						l_end_keyword.character_count)
+				end
 				create def_resc_call.initialize (def_resc_id, Void)
 				create def_resc_instr.initialize (def_resc_call)
-				create rescue_clause.make (1)
-				rescue_clause.extend (def_resc_instr)
+				create l_result.make (1)
+				l_result.extend (def_resc_instr)
+				rescue_clause := l_result
 			end
 		end
 
@@ -387,7 +391,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

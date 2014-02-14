@@ -37,7 +37,7 @@ feature -- test for empty body
 
 	is_empty : BOOLEAN
 		do
-			Result := (compound = Void) or else (compound.is_empty)
+			Result := not attached compound as l_compound or else l_compound.is_empty
 		end
 
 feature -- Comparison
@@ -53,31 +53,33 @@ feature -- Access
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does the current routine body has instruction `i'?
 		do
-			from
-				compound.start
-			until
-				Result or else compound.off
-			loop
-				Result := equivalent (compound.item, i)
-				compound.forth
+			if attached compound as l_compound then
+				from
+					l_compound.start
+				until
+					Result or else l_compound.off
+				loop
+					Result := equivalent (l_compound.item, i)
+					l_compound.forth
+				end
 			end
 		end
 
 	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this feature.
 		do
-			from
-				compound.start
-			until
-				compound.off or else equivalent (i, compound.item)
-			loop
-				compound.forth
-			end
+			if attached compound as l_compound then
+				from
+					l_compound.start
+				until
+					l_compound.off or else equivalent (i, l_compound.item)
+				loop
+					l_compound.forth
+				end
 
-			if not compound.off then
-				Result := compound.index
-			else
-				Result := 0
+				if not l_compound.off then
+					Result := l_compound.index
+				end
 			end
 		end
 
@@ -97,7 +99,7 @@ feature {INTERNAL_AS} -- Replication
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

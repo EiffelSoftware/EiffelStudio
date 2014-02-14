@@ -48,11 +48,11 @@ feature -- Applicability
 			-- Can current modifier be applied?
 		do
 			Result := True
-			if header_text /= Void and then header_ast /= Void then
-				Result := header_ast.can_replace_text (match_list)
+			if header_text /= Void and then attached header_ast as l_header_ast then
+				Result := l_header_ast.can_replace_text (match_list)
 			end
-			if footer_text /= Void and then footer_ast /= Void then
-				Result := footer_ast.can_replace_text (match_list)
+			if footer_text /= Void and then attached footer_ast as l_footer_ast then
+				Result := l_footer_ast.can_replace_text (match_list)
 			end
 			if Result then
 				if is_prepended then
@@ -71,10 +71,10 @@ feature -- Applicability
 			l_modifier_list := merge_modifier_list
 			compute_modification (l_modifier_list)
 			if attached header_text as l_header_text and then attached header_ast as l_header_ast then
-				header_ast.replace_text (l_header_text, match_list)
+				l_header_ast.replace_text (l_header_text, match_list)
 			end
 			if attached footer_text as l_footer_text and then attached footer_ast as l_footer_ast then
-				footer_ast.replace_text (l_footer_text, match_list)
+				l_footer_ast.replace_text (l_footer_text, match_list)
 			end
 			l_modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.apply)
 			applied := True
@@ -256,7 +256,7 @@ invariant
 	separator_not_void: separator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

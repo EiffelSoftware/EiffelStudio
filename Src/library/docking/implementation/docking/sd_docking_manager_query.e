@@ -39,19 +39,12 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title (a_unique_title: READABLE_STRING_GENERAL): SD_CONTENT
+	content_by_title (a_unique_title: READABLE_STRING_GENERAL): detachable SD_CONTENT
 			-- Content by a_title
 		require
 			a_title_not_void: a_unique_title /= Void and then not a_unique_title.is_empty
-			has: not is_unique_title_free_to_use (a_unique_title)
-		local
-			l_result: detachable like content_by_title
 		do
-			l_result := content_by_title_for_restore (a_unique_title)
-			check l_result /= Void end -- Implied by precondition `has'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
+			Result := content_by_title_for_restore (a_unique_title)
 		end
 
 	contents_editors: ARRAYED_LIST [SD_CONTENT]
@@ -748,7 +741,7 @@ feature {NONE} -- Implemnetation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

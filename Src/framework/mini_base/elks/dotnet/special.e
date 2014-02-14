@@ -82,6 +82,18 @@ feature -- Measurement
 			same_capacity: capacity = old capacity
 		end
 
+	extend (v: T)
+			-- Add `v' at index `count'.
+		require
+--			count_small_enough: count < capacity
+		external
+			"built_in"
+		ensure
+			count_increased: count = old count + 1
+			same_capacity: capacity = old capacity
+			inserted: item (count - 1) = v
+		end
+
 	lower: INTEGER = 0
 			-- Minimum index of Current
 

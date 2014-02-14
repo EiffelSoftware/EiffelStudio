@@ -64,14 +64,14 @@ feature {NONE} -- Initialization
 			creators := c
 			convertors := co
 			features := f
-			invariant_part := inv
+			internal_invariant := inv
 			if inv /= Void and then inv.assertion_list = Void then
 					-- The keyword `invariant' followed by no assertion
 					-- at all is not significant.
 				invariant_part := Void
 				has_empty_invariant := True
 			else
-				internal_invariant := inv
+				invariant_part := inv
 			end
 			suppliers := s
 			obsolete_message := o

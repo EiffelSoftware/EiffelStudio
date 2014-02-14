@@ -64,8 +64,8 @@ feature -- Measurement
 	item alias "[]" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
-		external
-			"built_in"
+		do
+			Result := internal_native_array.item (i)
 		end
 
 	put (v: T; i: INTEGER)
@@ -74,8 +74,8 @@ feature -- Measurement
 --		require
 --			index_large_enough: i >= 0
 --			index_small_enough: i < count
-		external
-			"built_in"
+		do
+			internal_native_array.put (i, v)
 		ensure
 			inserted: item (i) = v
 			same_count: count = old count
@@ -86,13 +86,15 @@ feature -- Measurement
 			-- Add `v' at index `count'.
 		require
 --			count_small_enough: count < capacity
-		external
-			"built_in"
+		do
+			internal_native_array.put (count, v)
 		ensure
 			count_increased: count = old count + 1
 			same_capacity: capacity = old capacity
 			inserted: item (count - 1) = v
 		end
+
+feature -- Measurement
 
 	lower: INTEGER = 0
 			-- Minimum index of Current
@@ -100,21 +102,18 @@ feature -- Measurement
 	upper: INTEGER
 			-- Maximum index of Current
 		do
---			Result := count - 1
+			Result := count - 1
 		ensure
 --			definition: lower <= Result + 1
 		end
 
 	count: INTEGER
 			-- Count of special area
-		external
-			"built_in"
-		end
 
 	capacity: INTEGER
-			-- Capacity of special area
-		external
-			"built_in"
+			-- Count of special area
+		do
+			Result := internal_native_array.count
 		end
 
 feature {SPECIAL} -- Implementation: Access

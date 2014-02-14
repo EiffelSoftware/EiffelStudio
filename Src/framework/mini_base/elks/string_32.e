@@ -13,13 +13,23 @@ class
 	STRING_32
 
 create
-	make
+	make,
+	make_from_cil
+
+convert
+	to_cil: {SYSTEM_STRING},
+	make_from_cil ({SYSTEM_STRING})
 
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 		do
 			create area.make_empty (n)
+		end
+
+	make_from_cil (a_system_string: detachable SYSTEM_STRING)
+		do
+			create area.make_empty (0)
 		end
 
 feature -- Status report
@@ -37,6 +47,15 @@ feature -- Status report
 
 	count: INTEGER
 			-- Actual number of characters making up the string
+
+feature -- Conversion
+
+	frozen to_cil: SYSTEM_STRING
+			-- Create an instance of SYSTEM_STRING using characters
+			-- of Current between indices `1' and `count'.
+		do
+			create Result.make (' ', 0)
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"

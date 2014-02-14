@@ -1,5 +1,9 @@
 note
-	description: "Representation of an Eiffel type."
+	description: "[
+		Access to command-line arguments. This class 
+		may be used as ancestor by classes needing its facilities.
+		]"
+
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -7,22 +11,7 @@ note
 	revision: "$Revision$"
 
 class
-	TYPE [G]
-
-convert
-		-- Conversion useful for the transition period because of the
-		-- modification in ANY:
-		--    generating_type: STRING
-		-- becomes:
-		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8}
-
-feature -- Conversion
-
-	to_string_8: STRING_8
-		do
-			create Result.make (0)
-		end
+	ARGUMENTS
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"

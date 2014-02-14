@@ -120,7 +120,17 @@ feature -- Checking
 					not attached feature_table.item_id (Names_heap.count_name_id) as l_feat or else
 					not l_feat.is_attribute or else not l_feat.type.same_as (integer_32_type)
 				then
-					create special_error.make (string_case_5, Current)
+					create special_error.make (string_case_6, Current)
+					Error_handler.insert_error (special_error)
+				end
+			else
+					-- Presence of `to_cil'.
+				if
+					not attached feature_table.item_id ({PREDEFINED_NAMES}.to_cil_name_id) as l_feat or else
+					l_feat.has_arguments or else not l_feat.has_return_value or else
+					l_feat.type.base_class.class_id /= system.system_string_id
+				then
+					create special_error.make (string_case_7, Current)
 					Error_handler.insert_error (special_error)
 				end
 			end

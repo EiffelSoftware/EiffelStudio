@@ -22,6 +22,8 @@ feature -- Access: STRING
 
 	string_case_6: STRING = "Class STRING must have an attribute of type integer named `count'"
 
+	string_case_7: STRING = "Class STRING must have a query `to_cil' without arguments of type SYSTEM_STRING."
+
 feature -- Access: ARRAY
 
 	array_case_1: STRING = "Class ARRAY must have exactly one formal generic parameter"

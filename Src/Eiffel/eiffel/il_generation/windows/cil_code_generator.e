@@ -2184,10 +2184,11 @@ feature -- Features info
 					l_declaration_class := system.class_of_id (a_feature_i.origin_class_id)
 				end
 				if
-					l_declaration_class.is_external or else
-					l_declaration_class.is_single and then l_declaration_class /= l_class_type.associated_class
+					l_declaration_class.is_true_external or else
+					(l_declaration_class.is_single and then l_declaration_class /= l_class_type.associated_class)
 				then
-						-- No field is generated because it is inherited.
+						-- No field is generated because it is inherited or if this was a .NET class
+						-- it has already been generated.
 					check
 						is_single_class: is_single_class
 					end
@@ -2512,10 +2513,11 @@ feature -- Features info
 					l_declaration_class := system.class_of_id (feat.origin_class_id)
 				end
 				if
-					l_declaration_class.is_external or else
-					l_declaration_class.is_single and then l_declaration_class /= current_class
+					l_declaration_class.is_true_external or else
+					(l_declaration_class.is_single and then l_declaration_class /= current_class)
 				then
-						-- No field is generated because it is inherited.
+						-- No field is generated because it is inherited or if this was a .NET class
+						-- it has already been generated.
 					check
 						is_single_class: is_single_class
 					end
@@ -4478,6 +4480,11 @@ feature -- Variables access
 					-- Box expanded object.
 				generate_load_from_address_as_object (type_i)
 				generate_metamorphose (type_i)
+			elseif type_i.base_class = any_type.base_class then
+					-- Special case where we need to cast to EIFFEL_TYPE_INFO
+					-- since all routines of ANY are taking System.Object and not ANY as argument.
+					-- This fixes a verification error when generating the code for {ANY}.generating_type.
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, current_module.ise_eiffel_type_info_type_token)
 			end
 		end
 
@@ -8312,7 +8319,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

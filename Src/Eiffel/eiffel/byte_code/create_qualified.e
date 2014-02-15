@@ -270,8 +270,12 @@ feature -- IL code generation
 			qualifier_creation.generate_il
 			il_generator.create_type
 
-			target_type := context.real_type (qualifier_base_type.base_class.anchored_features.item
-				(routine_id).type)
+				-- Save context
+			context.change_class_type_context (qualifier_class_type, qualifier_base_type, qualifier_class_type, qualifier_base_type)
+			target_type := context.real_type (qualifier_base_type.base_class.anchored_features.item (routine_id).type)
+				-- Restore context
+			context.restore_class_type_context
+
 			if target_type.is_expanded then
 					-- Load value of a value type object.
 				il_generator.generate_unmetamorphose (target_type)
@@ -284,12 +288,27 @@ feature -- IL code generation
 			-- Generate IL code to load type of anchored creation type.
 		local
 			c: CL_TYPE_A
+			l_old_type: CLASS_TYPE
+			l_old_type_id: INTEGER
 		do
 				-- Create qualifier object.
 			qualifier_creation.generate_il
 			c := qualifier_class_type.type
+
+				-- Save context
+			l_old_type := il_generator.current_class_type
+			l_old_type_id := il_generator.current_type_id
+			il_generator.set_current_class_type (qualifier_class_type)
+			il_generator.set_current_type_id (qualifier_class_type.static_type_id)
+			context.change_class_type_context (qualifier_class_type, qualifier_base_type, qualifier_class_type, qualifier_base_type)
+
 				-- Generate call to feature that will give the type we want to create.
 			il_generator.generate_type_feature_call_on_type (c.base_class.anchored_features.item (routine_id), c)
+
+				-- Restore context
+			il_generator.set_current_class_type (l_old_type)
+			il_generator.set_current_type_id (l_old_type_id)
+			context.restore_class_type_context
 		end
 
 feature -- Byte code generation

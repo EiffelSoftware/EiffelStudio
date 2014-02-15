@@ -187,6 +187,14 @@ feature {NONE} -- Retrieval
 
 feature -- Output
 
+	io: STD_FILES
+			-- Handle to standard file setup
+		once
+			create Result
+		ensure
+			io_not_void: Result /= Void
+		end
+
 	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
@@ -203,6 +211,15 @@ feature -- Output
 			"built_in"
 		ensure
 			tagged_out_not_void: Result /= Void
+		end
+
+	print (o: detachable ANY)
+			-- Write terse external representation of `o'
+			-- on standard output.
+		do
+			if o /= Void then
+--				io.put_string (o.out)
+			end
 		end
 
 feature {NONE} -- Initialization
@@ -253,7 +270,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

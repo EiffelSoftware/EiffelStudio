@@ -375,29 +375,18 @@ feature {ROUTINE} -- Implementation
 	frozen eiffel_rout_disp: POINTER
 			-- Eiffel routine dispatcher
 
-	frozen set_rout_disp_final (p: POINTER; tp: POINTER; closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
+	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER;
+						  a_routine_id: INTEGER; a_open_map: like open_map;
+						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
+						  a_closed_operands: TUPLE; a_open_count: INTEGER)
+			-- Initialize object.
 		do
 		end
 
-	frozen set_rout_disp (p: POINTER; tp: POINTER; closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
-			-- Initialize object. 
-		require
-			p_not_void: p /= Default_pointer
-			tp_not_void: tp /= Default_pointer
-			consistent_args: (closed_args = Void and cmap = Void)
-										or else
-							 (closed_args /= Void and cmap /= Void)
-										and then
-							 (closed_args.count >= cmap.count)
-			valid_maps: not (omap = Void and cmap = Void)
+	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
+						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER)
+			-- Initialize object.
 		do
-			rout_disp := p
-			eiffel_rout_disp := tp
-			closed_operands := closed_args
-			open_map := omap
-			closed_map := cmap
 		end
 
 	frozen set_lazy_rout_disp (a_class_id, a_feature_id: INTEGER

@@ -329,34 +329,26 @@ feature {ROUTINE} -- Implementation
 			-- If open arguments contain some references, we need
 			-- to clean them up after call.
 
-	frozen set_rout_disp_final (p: POINTER; tp: POINTER; args: TUPLE; omap: ARRAY [INTEGER]) is
+	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER;
+						  a_routine_id: INTEGER; a_open_map: like open_map;
+						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
+						  a_closed_operands: TUPLE; a_open_count: INTEGER)
 		do
-		end
-
-			-- Initialize object. 
-	frozen set_rout_disp (p: POINTER; tp: POINTER; args: TUPLE; 
-						 omap: ARRAY [INTEGER]) is
-			-- Initialize object. 
-		require
-			p_not_void: p /= Default_pointer
-			tp_not_void: tp /= Default_pointer
-			args_not_void: args /= Void
-		do
-			rout_disp := p
-			eiffel_rout_disp := tp
-			internal_operands := args
-			if omap /= Void then
-				open_map := omap.area
+			rout_disp := a_rout_disp
+			eiffel_rout_disp := a_encaps_rout_disp
+			internal_operands := a_closed_operands
+			if a_open_map /= Void then
+				open_map := a_open_map
 			else
 				open_map := Void
 			end
 			compute_is_cleanup_needed
-		ensure
-			rout_disp_set: rout_disp = p
-			eiffel_rout_disp_set: eiffel_rout_disp = tp
-			internal_operands_set: internal_operands = args
-			open_map_set: (omap = Void and open_map = Void) or
-				(omap /= Void and then open_map = omap.area)
+		end
+
+	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
+						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER)
+			-- Initialize object.
+		do
 		end
 
 	frozen set_lazy_rout_disp (a_class_id, a_feature_id: INTEGER

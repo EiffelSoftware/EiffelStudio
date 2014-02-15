@@ -21,6 +21,7 @@
 
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<setting name="inlining" value="false"/>
+		<library name="base" location="$EIFFEL_SRC\framework\mini_base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

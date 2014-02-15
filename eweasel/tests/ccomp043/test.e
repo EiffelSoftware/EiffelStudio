@@ -11,7 +11,6 @@ feature -- Initialization
 
 	make is
 		local
-			mem: MEMORY
 			a: A [INTEGER]
 			b: A3
 		do

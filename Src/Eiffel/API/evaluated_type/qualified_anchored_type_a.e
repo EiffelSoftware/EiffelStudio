@@ -262,7 +262,7 @@ feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A} -- Modification
 			class_id_set: class_id = c.class_id
 		end
 
-feature {TYPE_A_CHECKER} -- Modification
+feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A} -- Modification
 
 	set_routine_id (r: like routine_id)
 			-- Set `routine_id' to `r'.
@@ -459,7 +459,10 @@ feature {NONE} -- Recomputation in a different context
 				from
 					c := chain
 					q := new_qualifier
+						-- Make a copy of the original qualified anchored type with the new qualifier and class ID.
 					create Result.make (q, c, new_class_id)
+					Result.set_routine_id (routine_id)
+						-- Then traverse the feature chain and update it in the `Result' if required.
 					w := system.class_of_id (new_class_id)
 					n := c.count
 				until

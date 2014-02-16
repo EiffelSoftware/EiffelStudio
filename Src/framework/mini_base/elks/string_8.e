@@ -48,6 +48,14 @@ feature -- Status report
 	count: INTEGER
 			-- Actual number of characters making up the string
 
+feature -- Element change
+
+	plus alias "+" (s: STRING_8): like Current
+			-- <Precursor>
+		do
+			create Result.make (10)
+		end
+
 feature -- Conversion
 
 	frozen to_cil: SYSTEM_STRING

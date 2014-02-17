@@ -192,6 +192,8 @@ feature {NONE}
 
 	text_cmd_name: STRING = "text"
 
+	path_cmd_name: STRING = "path"
+
 	Total_sec_cmd_name: STRING = "total"
 
 	yank_cmd_name: STRING = "yank"
@@ -211,7 +213,7 @@ feature {NONE}
 	gc_stats_cmd_name: STRING = "gc_stats";
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

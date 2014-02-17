@@ -144,7 +144,7 @@ feature -- Initialization
 	class_menu: EWB_MENU
 			-- Class menu options
 		once
-			create Result.make (1, 17)
+			create Result.make (1, 18)
 			Result.set_parent (Main_menu)
 			Result.add_entry (create {EWB_ANCESTORS})
 			Result.add_entry (create {EWB_ATTRIBUTES})
@@ -163,6 +163,7 @@ feature -- Initialization
 			Result.add_entry (create {EWB_SHORT})
 			Result.add_entry (create {EWB_SUPPLIERS})
 			Result.add_entry (create {EWB_TEXT})
+			Result.add_entry (create {EWB_SHOW_FILE_PATH})
 		ensure
 			class_menu_not_void: Result /= Void
 		end
@@ -501,7 +502,7 @@ feature -- Command loop
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

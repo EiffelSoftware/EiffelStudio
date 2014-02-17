@@ -145,6 +145,8 @@ feature
 
 	Text_abb: CHARACTER = 't'
 
+	path_abb: CHARACTER = 'w'
+
 	Total_sec_abb: CHARACTER = 't'
 
 	W_compile_abb: CHARACTER = 'w'
@@ -168,7 +170,7 @@ feature
 	Version_abb: CHARACTER = 'v';
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

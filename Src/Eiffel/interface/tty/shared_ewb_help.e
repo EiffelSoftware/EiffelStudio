@@ -198,6 +198,8 @@ feature {NONE}
 
 	text_help: STRING_GENERAL do Result := locale.translation ("show the text of a class") end
 
+	path_help: STRING_GENERAL do Result := locale.translation ("show the path of a class") end
+
 	target_help: STRING_GENERAL do Result := locale.translation ("specify the target") end
 
 	use_settings_help: STRING_GENERAL do Result := locale.translation ("use settings for project location") end
@@ -223,7 +225,7 @@ feature {NONE}
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

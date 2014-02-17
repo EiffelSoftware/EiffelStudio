@@ -242,7 +242,11 @@ feature {NONE} -- Implementation
 				until
 					l_dir_list.after
 				loop
-					l_new_path := a_path + "/" + l_dir_list.item
+					if a_path.is_empty then
+						l_new_path := l_dir_list.item
+					else
+						l_new_path := a_path + "/" + l_dir_list.item
+					end
 					from
 						a_class_table.start
 					until
@@ -519,7 +523,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

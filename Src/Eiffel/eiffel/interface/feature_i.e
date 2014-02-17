@@ -3153,14 +3153,14 @@ feature -- Genericity
 		local
 			i, arg_count: INTEGER
 		do
-			Instantiator.dispatch (type.actual_type, a_class)
+			Instantiator.dispatch (type, a_class)
 			from
 				i := 1
 				arg_count := argument_count
 			until
 				i > arg_count
 			loop
-				Instantiator.dispatch (arguments.i_th (i).actual_type, a_class)
+				Instantiator.dispatch (arguments.i_th (i), a_class)
 				i := i + 1
 			end
 		end

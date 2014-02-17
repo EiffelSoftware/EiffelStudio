@@ -297,22 +297,19 @@ feature -- IL code generation
 	dispatch_anchors (a_context_class: CLASS_C)
 			-- <Precursor>
 		local
-			c: CLASS_C
-			f: FEATURE_I
+			c: detachable CLASS_C
 			i: INTEGER
+			l_rid: INTEGER
 		do
 			qualifier.dispatch_anchors (a_context_class)
 			from
-				c := qualifier.base_class
 			until
-				i >= chain.count
+				i >= routine_id.count
 			loop
-				if attached c then
-					f := c.feature_table.item_id (chain [i])
-					if attached f then
-						c.extend_type_set (f.rout_id_set.first)
-						c := f.type.base_class
-					end
+				l_rid := routine_id [i]
+				c := system.class_of_id (system.rout_info_table.item (l_rid).origin)
+				if c /= Void then
+					c.extend_type_set (l_rid)
 				end
 				i := i + 1
 			end

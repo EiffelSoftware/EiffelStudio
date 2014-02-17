@@ -11,8 +11,4 @@ feature
 			$INSTRUCTION
 		end 
 
-	print (a: ANY)
-		do
-		end
-
 end -- class A2

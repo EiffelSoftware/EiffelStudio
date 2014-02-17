@@ -270,18 +270,24 @@ feature -- IL code generation
 			qualifier_creation.generate_il
 			il_generator.create_type
 
-				-- Save context
-			context.change_class_type_context (qualifier_class_type, qualifier_base_type, qualifier_class_type, qualifier_base_type)
-			target_type := context.real_type (qualifier_base_type.base_class.anchored_features.item (routine_id).type)
-				-- Restore context
-			context.restore_class_type_context
+-- FIXME: The following code has been commented because it causes a crash since we
+-- do not always have the proper context to evaluate the type of the anchors, especially
+-- when swapping generics or reducing the number of generics. Since the code is just there to
+-- make the code verifiable, we have commented it out. This fixes a few eweasel tests such
+-- as test#anchor018, test#anchor050, test#anchor054, test#anchor056, test#anchor059, test#anchor063.
+--
+--				-- Save context
+--			context.change_class_type_context (qualifier_class_type, qualifier_base_type, qualifier_class_type, qualifier_base_type)
+--			target_type := context.real_type (qualifier_base_type.base_class.anchored_features.item (routine_id).type)
+--				-- Restore context
+--			context.restore_class_type_context
 
-			if target_type.is_expanded then
-					-- Load value of a value type object.
-				il_generator.generate_unmetamorphose (target_type)
-			end
+--			if target_type.is_expanded then
+--					-- Load value of a value type object.
+--				il_generator.generate_unmetamorphose (target_type)
+--			end
 
-			il_generator.generate_check_cast (Void, target_type)
+--			il_generator.generate_check_cast (Void, target_type)
 		end
 
 	generate_il_type

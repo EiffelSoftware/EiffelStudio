@@ -1,0 +1,10 @@
+test_name spurious-catcall-errors
+test_description No catcall should be reported but the compiler report them. One because `x.conforms_to (y)' is catcall free and an inline agent should always be monorphic.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

@@ -8,6 +8,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
+			a
 			i
 			b
 			t
@@ -19,7 +20,7 @@ feature {NONE} -- Initialization
 			i := -i             -- Unary expression.
 			b := i < 7          -- Binary expression
 			t := [i, b]
-			t [1].do_nothing    -- Bracket expression.
+			a := t [1]          -- Bracket expression.
 			r := agent t.do_nothing
 			r (i, b)            -- Parenthesis alias call.
 		end

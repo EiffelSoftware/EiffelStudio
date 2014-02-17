@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			t := [i, b]
 			t [1].do_nothing    -- Bracket expression.
 			r := agent t.do_nothing
-			r                   -- Parenthesis alias call.
+			r (i, b)            -- Parenthesis alias call.
 		end
 
 end

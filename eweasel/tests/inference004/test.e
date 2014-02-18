@@ -18,10 +18,13 @@ feature {NONE} -- Initialization
 			i := c
 			b := i < c
 			print (b)
+			io.put_new_line
 			t := [i, b]
 			print (t.generating_type)
+			io.put_new_line
 			p := $t
 			print (p.generating_type)
+			io.put_new_line
 		end
 
 end

@@ -484,6 +484,26 @@ feature -- Status report
 			end
 		end
 
+	is_substring_whitespace (start_index, end_index: INTEGER): BOOLEAN
+			-- <Precursor>
+		local
+			i, n: INTEGER
+			l_prop: like character_properties
+			l_area: like area
+		do
+			from
+				l_area := area
+				i := area_lower + start_index - 1
+				n := area_lower + end_index - 1
+				l_prop := character_properties
+			until
+				i > n or not l_prop.is_space (l_area.item (i))
+			loop
+				i := i + 1
+			end
+			Result := i > n
+		end
+
 	has (c: CHARACTER_32): BOOLEAN
 			-- Does string include `c'?
 		local
@@ -835,7 +855,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

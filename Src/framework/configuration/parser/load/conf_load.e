@@ -364,15 +364,15 @@ feature {NONE} -- Implementation
 					l_parser.set_callbacks (l_ns_cb)
 
 					create l_file.make_with_name (a_file)
-					if l_file.exists and then l_file.is_readable then
+					if l_file.exists and then l_file.is_plain then
 						l_file.open_read
 					end
-					if not l_file.is_open_read or else not l_file.is_plain then
-						is_error := True
-						last_error := create {CONF_ERROR_FILE}.make (a_file)
-					else
+					if l_file.is_open_read then
 						l_parser.parse_from_file (l_file)
 						l_file.close
+					else
+						is_error := True
+						last_error := create {CONF_ERROR_FILE}.make (a_file)
 					end
 				end
 			else

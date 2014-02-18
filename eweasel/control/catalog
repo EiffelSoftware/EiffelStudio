@@ -2780,6 +2780,7 @@ test	inference-creation-instruction	inference005 tcf pass inference
 test	inference-recursive-tuple	inference006 tcf pass inference
 test	inference-formal-generic	inference007 tcf pass inference formal generic
 test	inference-implicit-typing	inference008 tcf pass inference object_test across iteration
+test	inference-boolean-expression	inference009 tcf pass inference across iteration conditional expression check instruction loop invariant
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded

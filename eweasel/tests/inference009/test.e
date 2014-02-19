@@ -28,16 +28,20 @@ feature {NONE} -- Initialization
 			end
 				-- Conditional expression.
 			(if b3 then "" elseif b4 then "" else "" end).do_nothing
-				-- Check instruction.
-			check b5 end
-			check b6 then end
-				-- Loop instruction.
-			from
-			invariant
-				b7
-			until
-				b8
-			loop
+				-- Next constructs are protected from execution
+				-- because they either raise an exception or never terminate.
+			if False then
+					-- Check instruction.
+				check b5 end
+				check b6 then end
+					-- Loop instruction.
+				from
+				invariant
+					b7
+				until
+					b8
+				loop
+				end
 			end
 				-- Loop expression.
 			(across "" as c invariant b9 until b10 all b11 end).do_nothing

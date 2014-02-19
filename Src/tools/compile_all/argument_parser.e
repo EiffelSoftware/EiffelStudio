@@ -65,7 +65,7 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (keep_switch, "Keep EIFGENs related data after compilation? (by default they are removed)", True, False, "status", "{all | passed | failed}", True))
 
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false)%N...", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false),platform=(unix|windows|mac|vxworks)%N...", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (interface_switch, "Comma separated option(s) to customize the output", True, True,
 						"key=value",
 						"for instance key %"template%": using any of #action, #target, #uuid, #system, #ecf , #absolute_ecf variables %N...", False))
@@ -258,6 +258,15 @@ feature -- Access: -options
 			Result := options_has_false ("dotnet")
 		end
 
+	platform_option: IMMUTABLE_STRING_32
+			-- `platform' compiler option for any action.
+		once
+			if attached options_item ("platform") as l_opt then
+				Result := l_opt
+			else
+				create Result.make_empty
+			end
+		end
 	ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option for any action
 		once
@@ -417,7 +426,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

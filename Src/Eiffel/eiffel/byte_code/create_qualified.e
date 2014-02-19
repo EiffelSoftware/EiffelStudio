@@ -260,8 +260,6 @@ feature -- IL code generation
 
 	generate_il
 			-- Generate IL code for an anchored creation type.
-		local
-			target_type: TYPE_A
 		do
 				-- Generate call to feature that will give the type we want to create.
 			generate_il_type

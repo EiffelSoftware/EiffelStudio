@@ -11,7 +11,7 @@ feature {NONE} -- Initialization
 			a: A [INTEGER]
 		do
 			create a
-			a.f
+			a.f (5)
 		end
 
 end

@@ -1,6 +1,6 @@
 note
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Common instances of predefined types."
+
 class SHARED_TYPES
 
 feature -- Access
@@ -110,8 +110,14 @@ feature -- Access
 			create Result
 		end
 
+	unknown_type: UNKNOWN_TYPE_A
+			-- An unknown type.
+		once
+			create Result
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

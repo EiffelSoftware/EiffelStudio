@@ -28,6 +28,8 @@ inherit
 
 	CONF_VALIDITY
 
+	SHARED_COMPILER_PROFILE
+
 create {COMPILER_EXPORTER}
 	make
 
@@ -112,17 +114,37 @@ feature -- Properties
 	platform: INTEGER
 			-- Universe type of platform.
 		do
-			if system.platform /= 0 then
-				Result := system.platform
-			else
-				if {PLATFORM}.is_windows then
+				-- If platform is set from the command line, we use this.
+				-- Otherwise we use the one set in the ECF if set,
+				-- otherwise we use the current running platform.
+			if compiler_profile.is_platform_set then
+				if compiler_profile.is_windows_platform then
 					Result := pf_windows
-				elseif {PLATFORM}.is_mac then
+				elseif compiler_profile.is_unix_platform then
+					Result := pf_unix
+				elseif compiler_profile.is_mac_platform then
 					Result := pf_mac
-				elseif {PLATFORM}.is_vxworks then
+				elseif compiler_profile.is_vxworks_platform then
 					Result := pf_vxworks
 				else
+						-- In the event a new platform is added, we will
+						-- catch the bug if we forget to add it to COMPILER_PROFILE.
+					check known_platform: False end
 					Result := pf_unix
+				end
+			else
+				if system.platform /= 0 then
+					Result := system.platform
+				else
+					if {PLATFORM}.is_windows then
+						Result := pf_windows
+					elseif {PLATFORM}.is_mac then
+						Result := pf_mac
+					elseif {PLATFORM}.is_vxworks then
+						Result := pf_vxworks
+					else
+						Result := pf_unix
+					end
 				end
 			end
 		end

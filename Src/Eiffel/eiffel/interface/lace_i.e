@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 	make
 			-- Lace initialization
 		do
-			(create {CONF_PARSER_CONTROLLER}).prefer_safe (eiffel_layout.is_safe_mode)
+			(create {CONF_PARSER_CONTROLLER}).prefer_safe (eiffel_layout.compiler_profile.is_safe_mode)
 		end
 
 feature -- Status

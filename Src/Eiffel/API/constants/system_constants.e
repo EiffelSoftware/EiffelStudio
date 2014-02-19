@@ -196,11 +196,11 @@ feature-- Versioning
 			Result.append_character (' ')
 			Result.append_string_general (eiffel_layout.eiffel_platform)
 			create l_profile
-			if not l_profile.is_default_mode then
+			if not l_profile.compiler_profile.is_default_mode then
 				Result.append_character (' ')
 				Result.append_character ('-')
 				Result.append_character (' ')
-				Result.append_string_general (l_profile.version_mode)
+				Result.append_string_general (l_profile.compiler_profile.version_mode)
 			end
 		end
 

@@ -166,7 +166,7 @@ feature -- Status update
 			l_is_valid: like is_valid_environment
 			u: FILE_UTILITIES
 		do
-			initialize_from_arguments
+			compiler_profile.initialize_from_arguments
 
 			l_is_valid := True
 
@@ -410,10 +410,10 @@ feature {NONE} -- Helpers
 		local
 			p: PATH
 		do
-			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
+			if compiler_profile.is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
 				create p.make_from_string (a_path)
 				Result := p.extended ("compatible").name
-			elseif is_experimental_mode and a_path.substring_index ("experimental", 1) = 0 then
+			elseif compiler_profile.is_experimental_mode and a_path.substring_index ("experimental", 1) = 0 then
 				create p.make_from_string (a_path)
 				Result := p.extended ("experimental").name
 			else
@@ -1404,9 +1404,9 @@ feature -- Directories (platform independent)
 			else
 				Result := install_path.twin
 			end
-			if is_experimental_mode then
+			if compiler_profile.is_experimental_mode then
 				Result := Result.extended ("experimental")
-			elseif is_compatible_mode then
+			elseif compiler_profile.is_compatible_mode then
 				Result := Result.extended ("compatible")
 			end
 		ensure
@@ -1477,7 +1477,7 @@ feature -- Files (commands)
 				Result.append (ec_command_name.name)
 			end
 			Result.append_character ('%"')
-			l_profile := command_line_profile_option
+			l_profile := compiler_profile.command_line
 			if not l_profile.is_empty then
 				Result.append_character (' ')
 				Result.append_string_general (l_profile)
@@ -2145,7 +2145,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

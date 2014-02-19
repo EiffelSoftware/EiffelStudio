@@ -105,7 +105,7 @@ feature -- Status report
 			-- Is type variant?
 		do
 				-- Either we have the variant mark or we are in traditional mode.
-			Result := has_variant_mark or else not is_experimental_mode
+			Result := has_variant_mark or else not compiler_profile.is_experimental_mode
 		end
 
 feature -- Modification
@@ -133,11 +133,11 @@ feature -- Modification
 		do
 				-- Frozen variant is only understood in experimental mode
 				-- for the time being.
-			if is_experimental_mode then
+			if compiler_profile.is_experimental_mode then
 				variant_bits := has_frozen_mark_mask
 			end
 		ensure
-			has_frozen_mark: is_experimental_mode implies has_frozen_mark
+			has_frozen_mark: compiler_profile.is_experimental_mode implies has_frozen_mark
 		end
 
 	set_variant_mark
@@ -402,7 +402,7 @@ feature -- Duplication
 		do
 			Result := Current
 				-- Only do something in experimental mode.
-			if other /= Result and then is_experimental_mode then
+			if other /= Result and then compiler_profile.is_experimental_mode then
 				if not is_frozen and other.is_frozen then
 					Result := duplicate
 					Result.set_frozen_mark
@@ -495,7 +495,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

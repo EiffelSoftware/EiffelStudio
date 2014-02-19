@@ -111,8 +111,6 @@ inherit
 		end
 
 	SHARED_COMPILER_PROFILE
-		rename
-			reset as reset_compiler_profile
 		export
 			{NONE} all
 		end
@@ -468,13 +466,13 @@ feature -- Status setting
 		do
 			l_different := (not attached title) or else not a_title.same_string (title)
 			Precursor (a_title)
-			l_special_option := not is_default_mode
+			l_special_option := not compiler_profile.is_default_mode
 			if l_different and l_special_option then
 				create l_title.make (a_title.count + 10)
 				l_title.append_string_general (a_title)
 				l_title.append_character (' ')
 				l_title.append_character ('[')
-				if is_experimental_mode then
+				if compiler_profile.is_experimental_mode then
 					l_title.append (locale_formatter.translation (t_experimental))
 				else
 					l_title.append (locale_formatter.translation (t_compatible))
@@ -2580,7 +2578,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

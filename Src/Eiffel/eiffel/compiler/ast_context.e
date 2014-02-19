@@ -922,14 +922,19 @@ feature -- Managing the type stack
 			clear_local_context
 		end
 
+	clear_object_test_locals
+			-- Clear context specific to object test declarations.
+		do
+			object_test_locals.wipe_out
+			object_test_scopes.wipe_out
+		end
+
 	clear_local_context
-			-- Clear context specific to local declarations
-			-- such as object test locals
+			-- Clear context specific to local declarations such as locals.
 		do
 			locals.wipe_out
-			object_test_locals.wipe_out
 			scopes.wipe_out
-			object_test_scopes.wipe_out
+			clear_object_test_locals
 		end
 
 feature	-- Saving contexts
@@ -964,7 +969,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

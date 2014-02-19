@@ -649,6 +649,22 @@ feature -- Properties
 			Result := not is_loose
 		end
 
+	is_known: BOOLEAN
+			-- Is this type known? (Rather than being computed.)
+		do
+			Result := True
+		end
+
+	is_computable: BOOLEAN
+			-- Can this type be computed as a result of direct type analysis or type inference?
+			-- (`False' means the type cannot be computed because of an error or insufficient information.)
+		do
+				-- `True' by default.
+			Result := True
+		ensure
+			known_is_computable: is_known implies Result
+		end
+
 feature -- Comparison
 
 	frozen is_safe_equivalent (other: TYPE_A): BOOLEAN
@@ -742,8 +758,8 @@ feature {CL_TYPE_A} -- Comparison
 
 feature -- Access
 
-	base_class: CLASS_C
-			-- Base class of current type.
+	base_class: detachable CLASS_C
+			-- Base class of current type (if exists).
 		deferred
 		ensure
 			definition: (Result /= Void) = has_associated_class
@@ -1143,8 +1159,24 @@ feature -- Access
 			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			other_not_void: other /= Void
 			other_is_valid: other.is_valid
+			a_context_valid_for_other: other.is_valid_for_class (a_context_class)
 		do
 			Result := internal_conform_to (a_context_class, other, False)
+		end
+
+	backward_conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
+			-- Does `other' conform to `Current' in `a_context_class'?
+			-- The only difference with `conform_to' is that type information is collected for `Current'.
+		require
+			is_valid: is_valid
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
+			other_not_void: other /= Void
+			other_is_valid: other.is_valid
+			a_context_valid_for_other: other.is_valid_for_class (a_context_class)
+		do
+			Result := other.internal_conform_to (a_context_class, Current, False)
 		end
 
 	frozen conforms_to_array: BOOLEAN
@@ -1572,7 +1604,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

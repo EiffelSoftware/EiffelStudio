@@ -52,8 +52,6 @@ feature -- Validity class
 
 	check_validity
 			-- Special classes validity check.
-		local
-			l_feature: FEATURE_I
 		do
 			if system.il_generation then
 				if

@@ -140,6 +140,8 @@ feature -- Access
 			when mac_platform_flag then Result := "mac"
 			when vxworks_platform_flag then Result := "vxworks"
 			else
+				check known_platform: False end
+				Result := "unix"
 			end
 		end
 

@@ -52,9 +52,6 @@ inherit
 	SHARED_BATCH_NAMES
 
 	SHARED_COMPILER_PROFILE
-		rename
-			reset as reset_compiler_profile
-		end
 
 	PREFERENCES_VERSIONS
 
@@ -135,12 +132,14 @@ feature -- Initialization
 			u: FILE_UTILITIES
 		do
 			if not retried then
-						-- Read the resource files
+					-- Read the resource files
 				create new_resources.initialize
 
 				if not new_resources.error_occurred then
+						-- Reset errors
+					option_error_message := Void
 					analyze_options
-					if option_error then
+					if has_error then
 						print_option_error
 					elseif help_only then
 						print_help
@@ -291,6 +290,9 @@ feature -- Properties
 			-- Command to be executed corresponding to
 			-- command line options
 
+	command_option: detachable STRING_32
+			-- Name of option associated to `command'.
+
 	output_window: FILE_WINDOW
 			-- Window where the output is displayed
 
@@ -298,9 +300,14 @@ feature -- Properties
 			-- Has an error been encountered in opening the
 			-- file for redirection?
 
-	option_error: BOOLEAN
-			-- Has an error been encountered in the
-			-- command line options?
+	has_error: BOOLEAN
+			-- Has an error occurred in the procession of the command line?
+		do
+			Result := option_error_message /= Void
+		end
+
+	option_error_message: detachable STRING_32
+			-- Error message when an error occurred.
 
 	current_option: INTEGER
 			-- Current index in the option list
@@ -413,20 +420,6 @@ feature -- Properties
 			create Result
 		end
 
-feature -- Access
-
-	is_precompiled_option: BOOLEAN
-			-- Is the current option `precompile'?
-		do
-			Result := option.same_string_general ("-precompile")
-		end
-
-	is_precompiled_licensed_option: BOOLEAN
-			-- Is the current option `precompile_licensed'?
-		do
-			Result := option.same_string_general ("-precompile_licensed")
-		end
-
 feature -- Setting
 
 	set_file (filename: READABLE_STRING_GENERAL)
@@ -452,14 +445,20 @@ feature -- Output
 	print_option_error
 			-- Print the correct usage of ewb.
 		do
+			print_version
+			localized_print ("%N")
 			localized_print (argument (0))
 			localized_print (ewb_names.incorrect_options);
-			print_usage
+			localized_print ("%N")
+			localized_print (option_error_message)
+			localized_print ("%N")
 		end
 
 	print_usage
 			-- Print the usage of command line options.
 		do
+			print_version
+			localized_print ("%N")
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
 			io.put_string (" [-help | [-compat | -experiment] | -version | -full%N%T")
@@ -627,23 +626,24 @@ feature -- Update
 			-- Analyze the options entered by the user.
 		do
 				-- Reset compiler_profile
-			reset_compiler_profile
+			compiler_profile.reset
 
 				-- Default Project Options
 			from
 				current_option := 1
 			until
-				(current_option > argument_count) or else
-				option_error
+				(current_option > argument_count) or else has_error
 			loop
 				analyze_one_option
 			end
 				-- Default command
-			if (not option_error) and then (command = Void) then
+			if (not has_error) and then (command = Void) then
 				if is_precompiling then
 					create {EWB_PRECOMP} command
+					command_option := "-precompile"
 				else
 					create {EWB_QUICK_MELT} command
+					command_option := "-quick_melt"
 				end
 			end
 		end
@@ -669,9 +669,10 @@ feature -- Update
 				help_only := True
 			elseif option.same_string_general ("-loop") then
 				if command /= Void then
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
 					command := loop_cmd
+					command_option := option
 				end
 			elseif option.same_string_general ("-verbose") then
 				verbose_option := True
@@ -680,205 +681,209 @@ feature -- Update
 			elseif option.same_string_general ("-quick_melt") then
 				if command = Void then
 					create {EWB_QUICK_MELT} command
+					command_option := option
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				end
 			elseif option.same_string_general ("-melt") then
 				if command = Void then
 					create {EWB_COMP} command
+					command_option := option
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				end
 			elseif option.same_string_general ("-" + debug_cmd_name) then
 				if command = Void then
 					create {EWB_DEBUG} command
+					command_option := "-" + debug_cmd_name
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-implementers") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
+
+			elseif
+				eiffel_layout.has_documentation_generation and then
+				(option.same_string_general ("-dversions") or option.same_string_general ("-aversions") or
+				option.same_string_general ("-implementers"))
+			then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					if argument (current_option).same_string_general ("-filter") then
+						if current_option < argument_count then
+							current_option := current_option + 1
+							filter_name := argument (current_option)
 							if current_option < argument_count then
-								cn := argument (current_option)
+									-- Fetch next option
 								current_option := current_option + 1
-								fn := argument (current_option)
-								create {EWB_HISTORY} command.make (cn, fn, filter_name)
 							else
-								option_error := True
+								option_error_message := locale.formatted_string ("Missing class and feature name for option $1.", option)
 							end
+						else
+							option_error_message := locale.translation ("Missing filter name for option -filter.")
 						end
 					end
-				else
-					option_error := True
-				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-aversions") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							if current_option < argument_count then
-								cn := argument (current_option)
-								current_option := current_option + 1
-								fn := argument (current_option)
+					if not has_error then
+						cn := argument (current_option)
+						if current_option < argument_count then
+							current_option := current_option + 1
+							fn := argument (current_option)
+							if option.same_string_general ("-dversions") then
+								create {EWB_FUTURE} command.make (cn, fn, filter_name)
+							elseif option.same_string_general ("-aversions") then
 								create {EWB_PAST} command.make (cn, fn, filter_name)
 							else
-								option_error := True
+								create {EWB_HISTORY} command.make (cn, fn, filter_name)
 							end
+							command_option := option
+						else
+							option_error_message := locale.formatted_string ("Missing feature name for option $1.", option)
 						end
 					end
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ("Missing class and feature name for option $1.", option)
 				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-dversions") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							if current_option < argument_count then
-								cn := argument (current_option)
-								current_option := current_option + 1
-								fn := argument (current_option)
-								create {EWB_FUTURE} command.make (cn, fn, filter_name)
-							else
-								option_error := True
-							end
-						end
-					end
-				else
-					option_error := True
-				end
+
 			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-callers") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					l_arg := argument (current_option)
+					if l_arg.same_string_general ("-filter") then
+						if current_option < argument_count then
+							current_option := current_option + 1
+							filter_name := argument (current_option)
+							if current_option < argument_count then
+									-- Fetch next option
 								current_option := current_option + 1
 							else
-								option_error := True
+								option_error_message := locale.translation ("Missing class and feature name for option -callers")
 							end
+						else
+							option_error_message := locale.translation ("Missing filter name for option -filter.")
 						end
-						if argument (current_option).same_string_general ("-show_all") then
-							show_all := True
+					end
+
+					if not has_error and then argument (current_option).same_string_general ("-show_all") then
+						show_all := True
+						if current_option < argument_count then
+								-- Fetch next option
 							current_option := current_option + 1
+						else
+							option_error_message := locale.translation ("Missing class and feature name for option -callers")
 						end
+					end
+					if
+						not has_error and then
+						(argument (current_option).same_string_general ("-assigners") or
+						argument (current_option).same_string_general ("-creators"))
+					then
 						if argument (current_option).same_string_general ("-assigners") then
 							show_assigners := True
-							current_option := current_option + 1
-						elseif argument (current_option).same_string_general ("-creators") then
+						else
 							show_creators := True
-							current_option := current_option + 1
 						end
-						if not option_error then
-							if current_option < argument_count then
-								cn := argument (current_option)
-								current_option := current_option + 1
-								fn := argument (current_option)
-								create ewb_senders.make (cn, fn, filter_name)
-								if show_all then
-									ewb_senders.set_all_callers
-								end
-								if show_assigners then
-									ewb_senders.set_assigners_only
-								elseif show_creators then
-									ewb_senders.set_creators_only
-								end
-								command := ewb_senders
-							else
-								option_error := True
+						if current_option < argument_count then
+								-- Fetch next option
+							current_option := current_option + 1
+						else
+							option_error_message := locale.translation ("Missing class and feature name for option -callers")
+						end
+					end
+					if not has_error then
+						cn := argument (current_option)
+						if current_option < argument_count then
+							current_option := current_option + 1
+							fn := argument (current_option)
+							create ewb_senders.make (cn, fn, filter_name)
+							if show_all then
+								ewb_senders.set_all_callers
 							end
+							if show_assigners then
+								ewb_senders.set_assigners_only
+							elseif show_creators then
+								ewb_senders.set_creators_only
+							end
+							command := ewb_senders
+							command_option := option
+						else
+							option_error_message := locale.translation ("Missing feature name for option -callers")
 						end
 					end
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing class and feature name for option -callers")
 				end
+
 			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-callees") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					l_arg := argument (current_option)
+					if l_arg.same_string_general ("-filter") then
+						if current_option < argument_count then
+							current_option := current_option + 1
+							filter_name := argument (current_option)
+							if current_option < argument_count then
+									-- Fetch next option
 								current_option := current_option + 1
 							else
-								option_error := True
+								option_error_message := locale.translation ("Missing class and feature name for option -callees")
 							end
+						else
+							option_error_message := locale.translation ("Missing filter name for option -filter.")
 						end
-						if argument (current_option).same_string_general ("-show_all") then
-							show_all := True
+					end
+
+					if not has_error and then argument (current_option).same_string_general ("-show_all") then
+						show_all := True
+						if current_option < argument_count then
+								-- Fetch next option
 							current_option := current_option + 1
+						else
+							option_error_message := locale.translation ("Missing class and feature name for option -callers")
 						end
+					end
+					if
+						not has_error and then
+						(argument (current_option).same_string_general ("-assignees") or
+						argument (current_option).same_string_general ("-creators"))
+					then
 						if argument (current_option).same_string_general ("-assignees") then
 							show_assigners := True
-							current_option := current_option + 1
-						elseif argument (current_option).same_string_general ("-creators") then
+						else
 							show_creators := True
-							current_option := current_option + 1
 						end
-						if not option_error then
-							if current_option < argument_count then
-								cn := argument (current_option)
-								current_option := current_option + 1
-								fn := argument (current_option)
-								create ewb_callees.make (cn, fn, filter_name)
-								if show_all then
-									ewb_callees.set_all_callees
-								end
-								if show_assigners then
-									ewb_callees.set_assignees_only
-								elseif show_creators then
-									ewb_callees.set_creations_only
-								end
-								command := ewb_senders
-							else
-								option_error := True
+						if current_option < argument_count then
+								-- Fetch next option
+							current_option := current_option + 1
+						else
+							option_error_message := locale.translation ("Missing class and feature name for option -callers")
+						end
+					end
+					if not has_error then
+						cn := argument (current_option)
+						if current_option < argument_count then
+							current_option := current_option + 1
+							fn := argument (current_option)
+							create ewb_callees.make (cn, fn, filter_name)
+							if show_all then
+								ewb_callees.set_all_callees
 							end
+							if show_assigners then
+								ewb_callees.set_assignees_only
+							elseif show_creators then
+								ewb_callees.set_creations_only
+							end
+							command := ewb_callees
+							command_option := option
+						else
+							option_error_message := locale.translation ("Missing feature name for options -callees")
 						end
 					end
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing class and feature name for option -callees")
 				end
 --			elseif option.same_string_general ("-dependents") then
 --				if current_option < (argument_count - 1) then
@@ -896,64 +901,33 @@ feature -- Update
 --				end
 			elseif option.same_string_general ("-c_compile") then
 				is_finish_freezing_called := True
+
 			elseif
 				eiffel_layout.has_documentation_generation and then
-				(option.same_string_general ("-short") or else
+				(option.same_string_general ("-flat") or option.same_string_general ("-short") or
 				option.same_string_general ("-flatshort"))
 			then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					cn := argument (current_option)
+					if cn.same_string_general ("-filter") then
+						if current_option < argument_count then
+							current_option := current_option + 1
+							filter_name := argument (current_option)
+							if current_option < argument_count then
 								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
+								cn := argument (current_option)
 							else
-								option_error := True
+								option_error_message := locale.formatted_string ("Missing class name, -all or -all_and_parents for option $1 after filter name.", [option])
 							end
-						end
-						if not option_error then
-							cn := argument (current_option)
-							if option.same_string_general ("-short") then
-								if cn.same_string_general ("-all") then
-									create {EWB_DOCUMENTATION} command.make_short (filter_name, false)
-								elseif cn.same_string_general ("-all_and_parents") then
-									create {EWB_DOCUMENTATION} command.make_short (filter_name, true)
-								else
-									create {EWB_SHORT} command.make (cn, filter_name)
-								end
-							elseif cn.same_string_general ("-all") then
-								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, false)
-							elseif cn.same_string_general ("-all_and_parents") then
-								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, true)
-							else
-								create {EWB_FS} command.make (cn, filter_name)
-							end
+						else
+							option_error_message := locale.translation ("Missing filter name for option -filter.")
 						end
 					end
-				else
-					option_error := True
-				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-flat") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							cn := argument (current_option)
+					if not has_error then
+						if option.same_string_general ("-flat") then
 							if cn.same_string_general ("-all") then
 								create {EWB_DOCUMENTATION} command.make_flat (filter_name, false)
 							elseif cn.same_string_general ("-all_and_parents") then
@@ -961,43 +935,66 @@ feature -- Update
 							else
 								create {EWB_FLAT} command.make (cn, filter_name)
 							end
+						elseif option.same_string_general ("-short") then
+							if cn.same_string_general ("-all") then
+								create {EWB_DOCUMENTATION} command.make_short (filter_name, false)
+							elseif cn.same_string_general ("-all_and_parents") then
+								create {EWB_DOCUMENTATION} command.make_short (filter_name, true)
+							else
+								create {EWB_SHORT} command.make (cn, filter_name)
+							end
+						else
+							check option.same_string_general ("-flatshort") end
+							if cn.same_string_general ("-all") then
+								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, false)
+							elseif cn.same_string_general ("-all_and_parents") then
+								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, true)
+							else
+								create {EWB_FS} command.make (cn, filter_name)
+							end
 						end
+						command_option := option
 					end
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ("Missing class name, -all or -all_and_parents for option $1.", [option])
 				end
 
 			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-pretty") then
-				no_project_needed := True
-
-				if current_option + 1 < argument_count then
-						-- Input filename and output filename are given
-					in_filename := argument (current_option + 1)
-					out_filename := argument (current_option + 2)
-					current_option := current_option + 2
-
-				elseif current_option < argument_count then
-						-- Only input filename given (use STDOUT for output)
-					in_filename := argument (current_option + 1)
-					out_filename := ""
-					current_option := current_option + 1
-
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
-						-- Incorrect number of options	
-					option_error := True
-				end
+					no_project_needed := True
 
-				if not option_error then
-					create {EWB_PRETTY} command.make (in_filename, out_filename)
+					if current_option + 1 < argument_count then
+							-- Input filename and output filename are given
+						in_filename := argument (current_option + 1)
+						out_filename := argument (current_option + 2)
+						current_option := current_option + 2
+
+					elseif current_option < argument_count then
+							-- Only input filename given (use STDOUT for output)
+						in_filename := argument (current_option + 1)
+						out_filename := ""
+						current_option := current_option + 1
+
+					else
+							-- Incorrect number of options	
+						option_error_message := locale.translation ("Missing input class file path for option -pretty")
+					end
+
+					if not has_error then
+						create {EWB_PRETTY} command.make (in_filename, out_filename)
+						command_option := option
+					end
 				end
 
 			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-filter") then
-				if current_option + 1 < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						filter_name := argument (current_option)
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					filter_name := argument (current_option)
+					if current_option < argument_count then
 						current_option := current_option + 1
 						cn := argument (current_option)
 						if cn.same_string_general ("-all") then
@@ -1005,198 +1002,115 @@ feature -- Update
 						else
 							create {EWB_TEXT} command.make (cn, filter_name)
 						end
+						command_option := option
+					else
+						option_error_message := locale.translation ("Missing class name or -all argument following filter name.")
 					end
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing filter name for option -filter.")
 				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-ancestors") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
+			elseif
+				eiffel_layout.has_documentation_generation and then
+				(option.same_string_general ("-ancestors") or option.same_string_general ("-clients") or
+				option.same_string_general ("-suppliers") or option.same_string_general ("-descendants"))
+			then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
+					current_option := current_option + 1
+					if argument (current_option).same_string_general ("-filter") then
+						if current_option < argument_count then
+							current_option := current_option + 1
+							filter_name := argument (current_option)
+							if current_option < argument_count then
+									-- Fetch next option
 								current_option := current_option + 1
 							else
-								option_error := True
+								option_error_message := locale.formatted_string ("Missing class name for option $1.", option)
 							end
+
+						else
+							option_error_message := locale.translation ("Missing filter name for option -filter.")
 						end
-						if not option_error then
-							cn := argument (current_option)
+					end
+					if not has_error then
+						cn := argument (current_option)
+						if option.same_string_general ("-ancestors") then
 							create {EWB_ANCESTORS} command.make (cn, filter_name)
-						end
-					end
-				else
-					option_error := True
-				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-clients") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							cn := argument (current_option)
+						elseif option.same_string_general ("-clients") then
 							create {EWB_CLIENTS} command.make (cn, filter_name)
-						end
-					end
-				else
-					option_error := True
-				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-suppliers") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							cn := argument (current_option)
+						elseif option.same_string_general ("-suppliers") then
 							create {EWB_SUPPLIERS} command.make (cn, filter_name)
-						end
-					end
-				else
-					option_error := True
-				end
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-descendants") then
-				if current_option < argument_count then
-					if command /= Void then
-						option_error := True
-					else
-						current_option := current_option + 1
-						if argument (current_option).same_string_general ("-filter") then
-							if current_option + 1 < argument_count then
-								current_option := current_option + 1
-								filter_name := argument (current_option)
-								current_option := current_option + 1
-							else
-								option_error := True
-							end
-						end
-						if not option_error then
-							cn := argument (current_option)
+						else
+							check option.same_string_general ("-descendants") end
 							create {EWB_DESCENDANTS} command.make (cn, filter_name)
 						end
+						command_option := option
 					end
 				else
-					option_error := True
+					option_error_message := locale.formatted_string ("Missing class name for option $1.", option)
 				end
+
 			elseif option.same_string_general ("-project") then
 				if is_single_file_compilation then
 						-- In single file compilation mode no ace file may be specified
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -project, -config or -target when compiling a system using an Eiffel class as argument")
 				elseif current_option < argument_count then
 					current_option := current_option + 1
-					l_arg := argument (current_option)
-					if l_arg /= Void then
-						create old_project_file.make_from_string (l_arg)
-					else
-						option_error := True
-					end
+					create old_project_file.make_from_string (argument (current_option))
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing project file for option -project.")
 				end
 
 			elseif option.same_string_general ("-output_file") then
 				if current_option < argument_count then
 					current_option := current_option + 1
 					output_file_name := argument (current_option)
-					if output_file_name /= Void and then not output_file_name.is_empty then
-						output_file_option := True
-					end
+					output_file_option := True
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing path for option -output_file.")
 				end
 
 			elseif option.same_string_general ("-project_path") then
-				if current_option < argument_count then
+				if is_user_settings_requested then
+						-- It is an error to use `-project_path' and `use_settings' together.
+					option_error_message := locale.translation ("Argument -project_path conflicts with -use_settings.")
+				elseif current_option < argument_count then
 					current_option := current_option + 1
-					l_arg := argument (current_option)
-					if l_arg /= Void then
-						if not is_user_settings_requested then
-							from
-							until
-								l_arg.is_empty or else l_arg.item (l_arg.count) /= '\'
-							loop
-								l_arg.remove_tail (1)
-							end
-							create project_path.make_from_string (l_arg)
-							is_project_path_requested := True
-						else
-							project_path := Void
-							option_error := True
-						end
-					else
-							-- Unset project path due to error.
-						project_path := Void
-						option_error := True
-					end
+					create project_path.make_from_string (argument (current_option))
+					is_project_path_requested := True
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing project path for option -project_path.")
 				end
 			elseif option.same_string_general ("-ace") then
 				if is_single_file_compilation then
 						-- In single file compilation mode no ace file may be specified
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				elseif current_option < argument_count then
 					current_option := current_option + 1
-					l_arg := argument (current_option)
-					if l_arg /= Void then
-						create old_ace_file.make_from_string (l_arg)
-					else
-						option_error := True
-					end
+					create old_ace_file.make_from_string (argument (current_option))
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing config name for option -ace.")
 				end
 			elseif option.same_string_general ("-config") then
 				if is_single_file_compilation then
 						-- In single file compilation mode no config file may be specified
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				elseif current_option < argument_count then
 					current_option := current_option + 1
-					l_arg := argument (current_option)
-					if l_arg /= Void then
-						create config_file_name.make_from_string (l_arg)
-					else
-						option_error := True
-					end
+					create config_file_name.make_from_string (argument (current_option))
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing config name for option -config.")
 				end
 			elseif option.same_string_general ("-target") then
 				if is_single_file_compilation then
 						-- In single file compilation mode no target may be specified
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				elseif current_option < argument_count then
 					current_option := current_option + 1
-					l_arg := argument (current_option)
-					if l_arg /= Void then
-							-- FIXME: Truncation for the time being
-						target_name := l_arg
-					else
-						option_error := True
-					end
+					target_name := argument (current_option)
+				else
+					option_error_message := locale.translation ("Missing target name for option -target.")
 				end
 			elseif option.same_string_general ("-stop") or else option.same_string_general ("-batch") then
 					-- The compiler stops on errors, useful for batch compilation without
@@ -1217,7 +1131,7 @@ feature -- Update
 					project_path := Void
 				else
 						-- It is an error to use 'project_path' and 'use_settings' together.
-					option_error := True
+					option_error_message := locale.translation ("Argument -use_settings conflicts with -project_path.")
 				end
 			elseif option.same_string_general ("-no_library") then
 					-- Compiler will read user configuration file for that project
@@ -1234,24 +1148,33 @@ feature -- Update
 					current_option := current_option + 1
 					set_file (argument (current_option))
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing file name argument for -file.")
 				end
 			elseif option.same_string_general ("-dumploop") then
-					create {EWB_DUMP_LOOP} command
-			elseif option.same_string_general ("-dumpuniverse") then
-				if current_option < argument_count then
-					create {EWB_DUMP_UNIVERSE} command
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
-					option_error := True
+					create {EWB_DUMP_LOOP} command
+					command_option := option
+				end
+			elseif option.same_string_general ("-dumpuniverse") then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				else
+					create {EWB_DUMP_UNIVERSE} command
+					command_option := option
 				end
 			elseif option.same_string_general ("-dumpclasses") then
-				if current_option < argument_count then
-					create {EWB_DUMP_CLASSES} command
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
-					option_error := True
+					create {EWB_DUMP_CLASSES} command
+					command_option := option
 				end
 			elseif option.same_string_general ("-dumpfeatures") then
-				if current_option < argument_count then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
 					current_option := current_option + 1
 					cn := argument (current_option)
 					if
@@ -1263,37 +1186,35 @@ feature -- Update
 					else
 						create {EWB_DUMP_FEATURES} command.make (cn)
 					end
+					command_option := option
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing class name argument for -dumpfeatures.")
 				end
 			elseif option.same_string_general ("-dumpoperands") then
-				if current_option + 1 < argument_count then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option + 1 < argument_count then
 					current_option := current_option + 1
 					cn := argument (current_option)
 					current_option := current_option + 1
 					fn := argument (current_option)
 					create {EWB_DUMP_OPERANDS} command.make (cn, fn, Void)
+					command_option := option
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing class name and feature name arguments for -dumpoperands.")
 				end
-			elseif is_precompiled_option then
+			elseif option.same_string_general ("-precompile") then
 				if command /= Void then
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
 					is_precompiling := True
-				end
-			elseif is_precompiled_licensed_option then
-				if command /= Void then
-					option_error := True
-				else
-					create {EWB_PRECOMP} command
 				end
 			elseif option.same_string_general ("-metadata_cache_path") then
 				if current_option + 1 < argument_count then
 					current_option := current_option + 1
 					set_overridden_metadata_cache_path (argument (current_option))
 				else
-					option_error := True
+					option_error_message := locale.translation ("Missing path to metadata cache path.")
 				end
 			elseif option.same_string_general ("-library") then
 					-- This option is only valid if no other config options are set
@@ -1307,35 +1228,48 @@ feature -- Update
 						if l_arg /= Void then
 							single_file_compilation_libraries.extend (create {PATH}.make_from_string (l_arg))
 						else
-							option_error := True
+							option_error_message := locale.translation ("Missing library argument.")
 						end
 					end
 				else
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				end
 			elseif option.same_string_general ("-compat") then
 					-- This option enables the default set of options of 6.3 and earlier if not specified
 					-- in the ECF file.
 				if is_experimental_flag_set then
-					option_error := True
+					option_error_message := locale.translation ("Cannot override -experiment with -compat.")
 				else
-					set_compatible_mode
+					compiler_profile.set_compatible_mode
 					is_compatible_flag_set := True
 				end
 			elseif option.same_string_general ("-experiment") then
 					-- This option enables the new options of the compiler that are not mainstream.
 				if is_compatible_flag_set then
-					option_error := True
+					option_error_message := locale.translation ("Cannot override -compat with -experiment.")
 				else
-					set_experimental_mode
+					compiler_profile.set_experimental_mode
 					is_experimental_flag_set := True
 				end
 			elseif option.same_string_general ("-full") then
 					-- This options enables full class checking even if not specified in ECF.
-				set_full_class_checking_mode
+				compiler_profile.set_full_class_checking_mode
 			elseif option.same_string_general ("-safe") then
 					-- Use "-safe" versions of ECFs if available.
-				set_safe_mode
+				compiler_profile.set_safe_mode
+			elseif option.same_string_general ("-platform") then
+					-- This options enables the choice of the platform.
+				if current_option < argument_count then
+					current_option := current_option + 1
+					if compiler_profile.is_platform_valid (argument (current_option)) then
+						compiler_profile.set_platform (argument (current_option))
+					else
+						option_error_message := locale.translation ("Invalid platform argument")
+					end
+				else
+					option_error_message := locale.translation ("Platform option requires a platform name.")
+				end
+
 			elseif option.same_string_general ("-auto_test") then
 				create l_at_args.make
 				from
@@ -1346,9 +1280,17 @@ feature -- Update
 					l_at_args.force (argument (current_option))
 					current_option := current_option + 1
 				end
+					-- FIXME: This only works if `-auto_test' is the last argument, as otherwise it will
+					-- override the compilation option that was previously set.
 				create {EWB_AUTO_TEST} command.make_with_arguments (l_at_args)
+				command_option := option
+
 			elseif option.same_string_general ("-tests") then
+					-- FIXME: This only works if `-tests' is the last argument, as otherwise it will
+					-- override the compilation option that was previously set.
 				create {EWB_TEST_EXECUTION} command
+				command_option := option
+
 			elseif is_eiffel_class_file_name (create {PATH}.make_from_string (option)) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
@@ -1361,7 +1303,7 @@ feature -- Update
 						create single_file_compilation_libraries.make (5)
 					end
 				else
-					option_error := True
+					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				end
 			else
 				process_special_options
@@ -1376,13 +1318,14 @@ feature -- Update
 		do
 			if option.same_string_general ("-freeze") then
 				if command /= Void then
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
 					create {EWB_FREEZE} command
+					command_option := option
 				end
 			elseif option.same_string_general ("-finalize") then
 				if command /= Void then
-					option_error := True
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
 					if current_option < argument_count then
 						if argument (current_option + 1).same_string_general ("-keep") then
@@ -1395,10 +1338,11 @@ feature -- Update
 					else
 						create {EWB_FINALIZE} command.make (keep)
 					end
+					command_option := option
 					is_finalizing := True
 				end
 			else
-				option_error := True
+				option_error_message := locale.formatted_string ({STRING_32} "Unknown option `$1'.", [option])
 			end
 		end
 
@@ -1465,7 +1409,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

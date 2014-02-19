@@ -111,18 +111,15 @@ feature -- Properties
 
 	platform: INTEGER
 			-- Universe type of platform.
-		local
-			l_pf: PLATFORM
 		do
-			create l_pf
 			if system.platform /= 0 then
 				Result := system.platform
 			else
-				if l_pf.is_windows then
+				if {PLATFORM}.is_windows then
 					Result := pf_windows
-				elseif l_pf.is_mac then
+				elseif {PLATFORM}.is_mac then
 					Result := pf_mac
-				elseif l_pf.is_vxworks then
+				elseif {PLATFORM}.is_vxworks then
 					Result := pf_vxworks
 				else
 					Result := pf_unix

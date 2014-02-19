@@ -167,7 +167,7 @@ feature -- Output
 
 			if l_compiled then
 						-- Display if we are in experimental or compatible mode, otherwise nothing.
-				if eiffel_ace.system.is_experimental_mode then
+				if eiffel_ace.system.compiler_profile.is_experimental_mode then
 					a_formatter.add_indent
 					a_formatter.process_indexing_tag_text (l_experimental_mode)
 					a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -177,7 +177,7 @@ feature -- Output
 					end
 					a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
 					a_formatter.add_new_line
-				elseif eiffel_ace.system.is_compatible_mode then
+				elseif eiffel_ace.system.compiler_profile.is_compatible_mode then
 					a_formatter.add_indent
 					a_formatter.process_indexing_tag_text (l_compatible_mode)
 					a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -262,7 +262,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

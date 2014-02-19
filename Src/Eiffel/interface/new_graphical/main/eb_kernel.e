@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			--create prof_setting.make
 			--prof_setting.stop_profiling
 
-			initialize_from_arguments
+			compiler_profile.initialize_from_arguments
 
 			if
 				argument_count > 0 and then
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

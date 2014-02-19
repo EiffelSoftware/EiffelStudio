@@ -67,9 +67,6 @@ inherit
 	CONF_ACCESS
 
 	SHARED_COMPILER_PROFILE
-		rename
-			reset as reset_compiler_profile
-		end
 
 feature -- Loading
 
@@ -728,7 +725,7 @@ feature {NONE} -- Settings
 		do
 			l_target := a_precompile.target
 			create l_args.make (10)
-			across command_line_profile_option_list as c loop
+			across compiler_profile.command_line_list as c loop
 				l_args.extend (c.item)
 			end
 			l_args.extend ("-config")

@@ -72,18 +72,18 @@ feature -- Miscellaneous
 				end
 				text.add_new_line
 
-				if eiffel_ace.system.is_experimental_mode then
+				if eiffel_ace.system.compiler_profile.is_experimental_mode then
 					text.add_indent
 					text.process_indexing_tag_text ("experimental mode: ")
 					text.process_basic_text ("True")
 					text.add_new_line
-				elseif eiffel_ace.system.is_compatible_mode then
+				elseif eiffel_ace.system.compiler_profile.is_compatible_mode then
 					text.add_indent
 					text.process_indexing_tag_text ("compatible mode: ")
 					text.process_basic_text ("True")
 					text.add_new_line
 				end
-				if eiffel_ace.system.is_safe_mode then
+				if eiffel_ace.system.compiler_profile.is_safe_mode then
 					text.add_indent
 					text.process_indexing_tag_text ("safe mode: ")
 					text.process_basic_text ("True")
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

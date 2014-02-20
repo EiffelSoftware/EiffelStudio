@@ -136,15 +136,7 @@ feature -- Properties
 				if system.platform /= 0 then
 					Result := system.platform
 				else
-					if {PLATFORM}.is_windows then
-						Result := pf_windows
-					elseif {PLATFORM}.is_mac then
-						Result := pf_mac
-					elseif {PLATFORM}.is_vxworks then
-						Result := pf_vxworks
-					else
-						Result := pf_unix
-					end
+					Result := current_platform
 				end
 			end
 		end

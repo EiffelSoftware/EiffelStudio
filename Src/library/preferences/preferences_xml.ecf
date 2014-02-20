@@ -25,7 +25,7 @@
 		</library>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
-				<platform excluded_value="windows"/>
+				<platform value="windows"/>
 			</condition>
 		</library>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>

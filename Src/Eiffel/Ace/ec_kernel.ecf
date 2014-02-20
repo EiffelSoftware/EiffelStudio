@@ -133,7 +133,7 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
-				<platform excluded_value="windows"/>
+				<platform value="windows"/>
 			</condition>
 		</library>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">

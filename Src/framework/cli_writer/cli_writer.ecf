@@ -28,7 +28,11 @@
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="cli_writer" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/sample$</exclude>

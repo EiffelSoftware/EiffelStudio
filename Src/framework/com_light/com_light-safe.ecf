@@ -10,7 +10,11 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="com_light" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN.*$</exclude>

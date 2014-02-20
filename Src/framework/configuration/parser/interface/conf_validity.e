@@ -214,6 +214,20 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_concurrency (Result)
 		end
 
+	current_platform: INTEGER
+			-- Get the underlying platform identifier.
+		do
+			if {PLATFORM}.is_windows then
+				Result := pf_windows
+			elseif {PLATFORM}.is_mac then
+				Result := pf_mac
+			elseif {PLATFORM}.is_vxworks then
+				Result := pf_vxworks
+			else
+				Result := pf_unix
+			end
+		end
+
 feature {NONE} -- Onces
 
 	platform_names: HASH_TABLE [STRING, INTEGER]

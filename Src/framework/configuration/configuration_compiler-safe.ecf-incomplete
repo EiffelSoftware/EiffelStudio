@@ -17,7 +17,6 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf-incomplete"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="configuration" location="compiler\" recursive="true">
 			<option namespace="Compiler">
 			</option>

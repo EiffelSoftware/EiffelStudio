@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	G_APPLICATION
+	G_SERVERCONTROL_APPLICATION
 
 inherit
-	XU_SHARED_OUTPUTTER
+	XWA_APPLICATION
 
 create
 	make
@@ -20,47 +20,10 @@ feature-- Access
 
 feature-- Implementation
 
-	make
+	initialize_server_connection_handler
 			--<Precursor>
-		local
-			l_arg_parser: XTAG_ARGUMENT_PARSER
 		do
-			create l_arg_parser.make
-			l_arg_parser.execute (agent run (l_arg_parser))
-		end
-
-	run (a_arg_parser: XTAG_ARGUMENT_PARSER)
-			--<Precursor>
-		local
-			l_path: STRING
-			l_controller_table: HASH_TABLE [TUPLE [STRING, STRING], STRING]
-			l_const_class: XEL_CONSTANTS_CLASS_ELEMENT
-			buf: XU_INDENDATION_FORMATTER
-			constants_file: PLAIN_TEXT_FILE
-			constants_file_name: FILE_NAME
-		do
-			create l_const_class.make_constant
-			log.set_name ("XEBSRVLGEN")
-			log.set_debug_level (10)
-			if not a_arg_parser.is_successful then
-			print ("usage:servlet_gen -o output_path%N")
-			else
-			l_path := a_arg_parser.output_path
-			create l_controller_table.make (1)
-			l_controller_table.put (["MAIN_CONTROLLER", "default_create"], "controller_1")
-			(create {G_INDEX_SERVLET_GENERATOR}.make (l_path, "index", l_controller_table, "./g_index_servlet_generator.e",l_const_class)).generate;
-			create l_controller_table.make (1)
-			l_controller_table.put (["api", "default_create"], "MY_XMLRPC_API")
-			(create {G_DEMO_SERVLET_GENERATOR}.make_xrpc (l_path, "demo", l_controller_table, "./g_demo_servlet_generator.e",l_const_class, "")).generate;
-			create constants_file_name.make_from_string ("./.generated/")
-			constants_file_name.set_file_name ("g_servlet_constants.e")
-			create constants_file.make (constants_file_name)
-			constants_file.open_write
-			create buf.make (constants_file)
-			l_const_class.serialize (buf)
-			constants_file.close
-			end
-			log.iprint ("System generated.")
+			create {G_SERVERCONTROL_SERVER_CONN_HANDLER} server_connection_handler.make
 		end
 
 note

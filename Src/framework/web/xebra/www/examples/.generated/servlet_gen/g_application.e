@@ -47,11 +47,8 @@ feature-- Implementation
 			else
 			l_path := a_arg_parser.output_path
 			create l_controller_table.make (1)
-			l_controller_table.put (["MAIN_CONTROLLER", "default_create"], "controller_1")
+			l_controller_table.put (["MAIN_CONTROLLER", "make"], "controller_1")
 			(create {G_INDEX_SERVLET_GENERATOR}.make (l_path, "index", l_controller_table, "./g_index_servlet_generator.e",l_const_class)).generate;
-			create l_controller_table.make (1)
-			l_controller_table.put (["api", "default_create"], "MY_XMLRPC_API")
-			(create {G_DEMO_SERVLET_GENERATOR}.make_xrpc (l_path, "demo", l_controller_table, "./g_demo_servlet_generator.e",l_const_class, "")).generate;
 			create constants_file_name.make_from_string ("./.generated/")
 			constants_file_name.set_file_name ("g_servlet_constants.e")
 			create constants_file.make (constants_file_name)

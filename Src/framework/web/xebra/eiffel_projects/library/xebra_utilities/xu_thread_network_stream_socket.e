@@ -73,11 +73,11 @@ feature -- Wrapped features
 			mutex.unlock
 		end
 
-	retrieved: ANY
+	retrieved: detachable ANY
 			-- See NETWORK_STREAM_SOCKET
 		do
 			mutex.lock
-				Result := socket.retrieved
+			Result := socket.retrieved
 			mutex.unlock
 
 		end

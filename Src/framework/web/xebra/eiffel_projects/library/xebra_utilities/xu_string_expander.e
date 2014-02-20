@@ -38,15 +38,15 @@ feature {NONE} -- Query
 	variable (a_id: READABLE_STRING_8): detachable STRING
 			-- <Precursor>
 		do
-			Result := environment.get_from_application (a_id.as_string_8, "")
+			if attached environment.get_from_application (a_id, "") as l_string then
+				Result := l_string.to_string_8
+			end
 		end
 
 	variable_32 (a_id: READABLE_STRING_32): detachable STRING_32
 			-- <Precursor>
 		do
-			if attached  {STRING_32}  environment.get_from_application (a_id.as_string_32, "") as l_result then
-				Result := l_result
-			end
+			Result := environment.get_from_application (a_id, "")
 		end
 
 ;note

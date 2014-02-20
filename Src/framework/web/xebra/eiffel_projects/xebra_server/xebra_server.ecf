@@ -7,7 +7,6 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="ejson" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>

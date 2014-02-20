@@ -492,7 +492,7 @@ feature -- From EIFFEL_ENV
 			l_dir_name: DIRECTORY_NAME
 			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
-			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
+			l_variable: TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
 		do
 			Result := True
@@ -503,11 +503,11 @@ feature -- From EIFFEL_ENV
 
 			from l_variables.start until l_variables.after loop
 				l_variable := l_variables.item
-				l_value := get_environment (l_variable.var)
+				l_value := get_environment_32 (l_variable.var)
 
 				if
 					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
-					({PLATFORM}.is_windows or else not (l_value.same_string ("/") or l_value.same_string ("~/")))
+					({PLATFORM}.is_windows or else not (l_value.same_string_general ("/") or l_value.same_string_general ("~/")))
 				then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)
@@ -527,7 +527,7 @@ feature -- From EIFFEL_ENV
 invariant
 		modules_attached: modules /= Void
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

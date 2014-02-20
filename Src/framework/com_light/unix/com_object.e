@@ -68,6 +68,11 @@ feature -- Access
 		do
 		end
 
+	last_string: detachable STRING_32
+			-- Last string from call result
+		do
+		end
+
 feature -- Status report
 
 	exists: BOOLEAN

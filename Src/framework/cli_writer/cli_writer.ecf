@@ -58,6 +58,7 @@
 	</target>
 	<target name="sample" extends="default">
 		<root class="ROOT_CLASS" feature="make"/>
+		<setting name="platform" value="windows"/>
 		<cluster name="sample" location="sample\"/>
 	</target>
 </system>

@@ -29,11 +29,11 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	host: STRING is "localhost"
-	datasource: STRING is "mysql_support_super"
-	database: STRING is "eiffeldb_dbo"
-	username: STRING is "support"
-	password: STRING is "support"
+	host: STRING = "localhost"
+	datasource: STRING = "mysql_support_super"
+	database: STRING = "eiffeldb_dbo"
+	username: STRING = "support"
+	password: STRING = "support"
 
 	session_control: DB_CONTROL
 	base_update: DB_CHANGE
@@ -45,7 +45,7 @@ feature {NONE} -- Access
 
 feature -- Basic database operations
 
-	open: BOOLEAN is
+	open: BOOLEAN
 			-- <Precursor>
 			-- Opens a connection to the database
 		do
@@ -85,14 +85,14 @@ feature -- Basic database operations
 			is_connected := Result
 		end
 
-	close is
+	close
 			-- Terminate session
 		do
 			session_control.disconnect
 			is_connected := False
 		end
 
-	query_not_evil (msg: STRING): BOOLEAN is
+	query_not_evil (msg: STRING): BOOLEAN
 			-- Checks if msg contains harmful sql-keywords
 		require
 			msg_not_Void: msg /= Void
@@ -132,7 +132,7 @@ feature -- Basic database operations
 			Result := ok
 		end
 
-	reset is
+	reset
 				-- Resets the db
 			do
 				session_control.reset
@@ -162,7 +162,6 @@ feature -- Problem report specific data manipulation
 			a_query_attached: attached a_query
 		local
 			temp_advice_list: ARRAYED_LIST [STRING]
-			advice_filling: DB_ACTION [STRING]
 			l_db_advice: STRING
 			l_container: ARRAYED_LIST [DB_RESULT]
 		do
@@ -173,7 +172,7 @@ feature -- Problem report specific data manipulation
 				create base_selection.make
 				--base_selection.object_convert (l_db_advice)
 
-				create advice_filling.make (base_selection, l_db_advice)
+				--create advice_filling.make (base_selection, l_db_advice)
 
 				--base_selection.set_action (advice_filling)
 				create l_container.make (10)

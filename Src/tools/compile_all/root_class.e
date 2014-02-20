@@ -301,6 +301,9 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 			l_file: RAW_FILE
 			l_fn: PATH
+			l_sorter: QUICK_SORTER [PATH]
+			l_comparer: COMPARABLE_COMPARATOR [PATH]
+			l_entries: ARRAYED_LIST [PATH]
 		do
 			if not path_regexp_ignored (a_directory.name) then
 				create l_dir.make_with_path (a_directory)
@@ -309,7 +312,11 @@ feature {NONE} -- Implementation
 				elseif directory_ignores = Void or else not directory_ignores.has (a_directory.name) then
 						-- Process only if the directory is not excluded.
 						-- 1 - process config files with an ecf extension
-					across l_dir.entries as l_entry loop
+					l_entries := l_dir.entries
+					create l_comparer
+					create l_sorter.make (l_comparer)
+					l_sorter.sort (l_entries)
+					across l_entries as l_entry loop
 						if not l_entry.item.is_current_symbol and not l_entry.item.is_parent_symbol then
 							l_fn := a_directory.extended_path (l_entry.item)
 							create l_file.make_with_path (l_fn)

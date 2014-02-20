@@ -1,11 +1,10 @@
 note
-	description: "Summary description for {ESA_DB_ITREATOR}."
-	author: ""
+	description: "External iteration cursor for {ESA_DATABASE_HANDLER}"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_DB_ITREATOR [G]
+	ESA_DATABASE_ITREATION_CURSOR [G]
 
 inherit
 
@@ -49,7 +48,6 @@ feature -- Status report
 			Result := db_handler.after
 		end
 
-
 feature -- Cursor movement
 
 	start
@@ -64,28 +62,22 @@ feature -- Cursor movement
 			db_handler.forth
 		end
 
-
 feature -- Cursor
 
-	new_cursor: ESA_DB_ITREATOR [G]
+	new_cursor: ESA_DATABASE_ITREATION_CURSOR [G]
 			-- <Precursor>
 		do
---			create Result.make (db_handler,action)
 			Result := twin
 			Result.start
 		end
 
-
-
-
 feature -- Action
 
 	action: FUNCTION [ANY,detachable TUPLE[detachable DB_TUPLE],G]
-		-- agent to create a new item of type G.
-
-feature --Tuple
+			-- Agent to create a new item of type G.
 
 feature {NONE} -- Implementation
 
 	db_handler: ESA_DATABASE_HANDLER
+			-- Associated handler used for iteration
 end

@@ -16,6 +16,9 @@ inherit
 		end
 
 	WSF_ROUTED_SERVICE
+		redefine
+			execute_default
+		end
 
 	WSF_URI_HELPER_FOR_ROUTED_SERVICE
 
@@ -32,9 +35,10 @@ feature {NONE} -- Initialization
 			-- Initialize current service.
 		do
 			Precursor
+			initialize_router
 			set_service_option ("port", 9090)
 			create api_service.make
-			initialize_router
+
 		end
 
 	setup_router
@@ -50,7 +54,7 @@ feature {NONE} -- Initialization
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden ("www")
 			fhdl.set_directory_index (<<"index.html">>)
-			router.handle_with_request_methods ("", fhdl, router.methods_GET)
+			router.handle_with_request_methods ("/", fhdl, router.methods_GET)
 		end
 
 feature -- Database Provider
@@ -120,8 +124,11 @@ feature -- Handle Responses
 			if media_variants.is_acceptable then
 				if attached media_variants.media_type as l_type then
 					create l_rhf
-					l_rhf.new_representation_handler (l_type).home_page (req, res)
+					l_rhf.new_representation_handler (l_type,media_variants).home_page (req, res)
 				end
+			else
+				create l_rhf
+				l_rhf.new_representation_handler ("",media_variants).home_page (req, res)
 			end
 		end
 
@@ -227,6 +234,27 @@ feature -- Handle Responses
 					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
 				end
 					--TODO
+			end
+		end
+
+
+feature -- Default Execution
+
+	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Dispatch requests without a matching handler.
+		local
+			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_rhf: REPRESENTATION_HANDLER_FACTORY
+		do
+			media_variants := media_type_variants (req)
+			if media_variants.is_acceptable then
+				if attached media_variants.media_type as l_type then
+					create l_rhf
+					l_rhf.new_representation_handler (l_type,media_variants).not_found_page (req, res)
+				end
+			else
+				create l_rhf
+				l_rhf.new_representation_handler ("",media_variants).not_found_page (req, res)
 			end
 		end
 

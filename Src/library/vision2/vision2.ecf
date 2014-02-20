@@ -242,7 +242,4 @@
 		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
-	<target name="vision2_unix" extends="vision2">
-		<setting name="platform" value="unix"/>
-	</target>
 </system>

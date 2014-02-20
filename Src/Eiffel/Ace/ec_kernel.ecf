@@ -131,7 +131,11 @@
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
 				<exclude>/docs$</exclude>

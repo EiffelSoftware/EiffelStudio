@@ -40,7 +40,11 @@
 		<library name="services_framework" location="$EIFFEL_SRC\framework\services\services.ecf" readonly="false" use_application_options="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf" readonly="false"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf" readonly="false"/>
 		<library name="xml_utility" location="$EIFFEL_SRC\framework\xml\utility\xml_utility.ecf" readonly="false"/>
@@ -84,16 +88,6 @@
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 			<cluster name="none" location="$|none\" recursive="true"/>
 		</cluster>
-	</target>
-	<target name="batch_unix" extends="batch">
-		<description>Compiling UNIX batch compiler on other platforms than Windows</description>
-		<root class="ES" feature="make"/>
-		<setting name="platform" value="unix"/>
-	</target>
-	<target name="batch_windows" extends="batch">
-		<description>Compiling Windows batch compiler on other platforms</description>
-		<root class="ES" feature="make"/>
-		<setting name="platform" value="windows"/>
 	</target>
 	<target name="eclite" extends="batch">
 		<description>Lite version of Eiffel compiler, compiles only. This is primarly for tools that need to use the Eiffel compiler rather than developers</description>
@@ -272,14 +266,6 @@
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
 	</target>
-	<target name="bench_windows" extends="bench">
-		<description>Compiling UNIX bench compiler on other platforms than Windows</description>
-		<setting name="platform" value="windows"/>
-	</target>
-	<target name="bench_unix" extends="bench">
-		<description>Compiling UNIX bench compiler on other platforms than Unices</description>
-		<setting name="platform" value="unix"/>
-	</target>
 	<target name="bench_cocoa" extends="bench">
 		<description>Compile on Mac OS X using the Cocoa framework instead of GTK+</description>
 		<variable name="vision_implementation" value="cocoa"/>
@@ -289,14 +275,5 @@
 	</target>
 	<target name="compile_all_batch" extends="batch">
 		<root all_classes="true"/>
-	</target>
-	<target name="compile_all_batch_unix" extends="compile_all_batch">
-		<setting name="platform" value="unix"/>
-	</target>
-	<target name="compile_all_bench_windows" extends="compile_all_bench">
-		<setting name="platform" value="windows"/>
-	</target>
-	<target name="compile_all_bench_unix" extends="compile_all_bench">
-		<setting name="platform" value="unix"/>
 	</target>
 </system>

@@ -76,7 +76,7 @@ feature -- Status setting
 			-- <Precursor>
 		local
 			l_groups: TAG_SEARCH_TABLE
-			l_group: IMMUTABLE_STRING_8
+			l_group: IMMUTABLE_STRING_32
 			l_count: INTEGER
 		do
 			from
@@ -146,7 +146,7 @@ feature {NONE} -- Basic operations
 	remove_groups (a_test: G)
 		do
 			a_test.serial_groups.linear_representation.do_all (
-				agent (a_group: IMMUTABLE_STRING_8)
+				agent (a_group: IMMUTABLE_STRING_32)
 					do
 						check group_running: running_groups.has (a_group) end
 						running_groups.remove (a_group)
@@ -161,7 +161,7 @@ feature {NONE} -- Access: execution table
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

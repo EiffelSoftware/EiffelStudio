@@ -10,8 +10,11 @@ inherit
 
 	REPRESENTATION_HANDLER
 
+create
+	make
 
 feature -- View
+
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
@@ -23,6 +26,13 @@ feature -- View
 					new_response_get (req, res,l_cj_api)
 				end
 			end
+		end
+
+	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home page representation
+		local
+			l_cj: CJ_API_PAGE
+		do
 		end
 
 feature -- Response
@@ -37,6 +47,9 @@ feature -- Response
 			create l_msg.make_from_string (output)
 			h.put_content_type ("application/vnd.collection+json")
 			h.put_content_length (l_msg.count)
+			if attached media_variants.vary_header_value as l_vary then
+				h.put_header_key_value ("Vary",l_vary)
+			end
 			if attached req.request_time as time then
 				create hdate.make_from_date_time (time)
 				h.add_header ("Date:" + hdate.rfc1123_string)

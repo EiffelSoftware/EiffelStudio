@@ -57,7 +57,7 @@ feature -- Access
 		end
 
 
-	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DB_ITREATOR [REPORT]
+	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DATABASE_ITREATION_CURSOR [REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		require

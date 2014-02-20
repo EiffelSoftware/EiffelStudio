@@ -6,10 +6,30 @@ note
 deferred class
 	REPRESENTATION_HANDLER
 
+feature -- Initialization
+
+	make (a_media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS)
+			-- Create an object with a `a_media_variant'
+		do
+			media_variants := a_media_variants
+		ensure
+			media_set: media_variants = a_media_variants
+		end
+
+feature -- Media Variants
+
+	media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+		-- Media type accepted.
+
 feature -- View
 
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
+		deferred
+		end
+
+	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Not found page
 		deferred
 		end
 

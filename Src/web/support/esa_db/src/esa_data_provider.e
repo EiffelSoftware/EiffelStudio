@@ -57,6 +57,26 @@ feature -- Access
 		end
 
 
+	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DB_ITREATOR [REPORT]
+			-- Problem reports for user with username `a_username'
+			-- Open reports only if `a_open_only', all reports otherwise.
+		require
+			non_void_username: a_username /= Void
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_report : REPORT
+		do
+			create l_parameters.make (4)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReports2", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_report)
+		end
+
+
 	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): ESA_DATA_VALUE
 			-- All Problem reports for guest users
 			-- Only not confidential reports
@@ -274,7 +294,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	new_report (a_tuple: DB_TUPLE): REPORT
+	new_report (a_tuple: detachable DB_TUPLE): REPORT
 		local
 			l_number: INTEGER
 			l_synopsis: STRING_8
@@ -282,21 +302,23 @@ feature {NONE} -- Implementation
 			l_date: DATE_TIME
 		do
 			create Result.make (-1, "Null", False)
-			if attached {INTEGER_32_REF} a_tuple.item (1) as l_item_1 then
-					Result.set_number (l_item_1.item)
-			end
-			if attached {STRING} a_tuple.item (2) as  l_item_2 then
-				Result.set_synopsis (l_item_2)
-			end
-			if attached {STRING} a_tuple.item (3) as  l_item_3 then
-				Result.set_report_category (create {REPORT_CATEGORY}.make (-1,l_item_3, True))
-			end
-			if attached {DATE_TIME} a_tuple.item (4) as  l_item_4 then
-				Result.set_submission_date (l_item_4)
-			end
+			if attached a_tuple as l_tuple then
+				if attached {INTEGER_32_REF} l_tuple.item (1) as l_item_1 then
+						Result.set_number (l_item_1.item)
+				end
+				if attached {STRING} l_tuple.item (2) as  l_item_2 then
+					Result.set_synopsis (l_item_2)
+				end
+				if attached {STRING} l_tuple.item (3) as  l_item_3 then
+					Result.set_report_category (create {REPORT_CATEGORY}.make (-1,l_item_3, True))
+				end
+				if attached {DATE_TIME} l_tuple.item (4) as  l_item_4 then
+					Result.set_submission_date (l_item_4)
+				end
 
-			if attached {INTEGER_32_REF} a_tuple.item (5) as  l_item_5 then
-				Result.set_status (create {REPORT_STATUS}.make (l_item_5.item,""))
+				if attached {INTEGER_32_REF} l_tuple.item (5) as  l_item_5 then
+					Result.set_status (create {REPORT_STATUS}.make (l_item_5.item,""))
+				end
 			end
 		end
 

@@ -35,11 +35,7 @@
 		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="true"/>
 		<cluster name="ribbon" location=".\" recursive="true">
 			<option namespace="Ribbon">
 			</option>

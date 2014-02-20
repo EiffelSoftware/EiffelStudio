@@ -36,7 +36,7 @@ feature -- Access
 	test_set: TET_TEST_SET
 			-- Test set using `Current' to mock some test engine functionality
 
-	name: IMMUTABLE_STRING_8
+	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 
 	serial_groups: TAG_SEARCH_TABLE
@@ -86,7 +86,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

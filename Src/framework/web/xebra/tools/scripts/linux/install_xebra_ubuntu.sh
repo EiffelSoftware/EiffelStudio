@@ -111,7 +111,7 @@ svn export https://svn.eiffel.com/ejson/trunk/json eiffel_projects/library/ejson
 
 #Compile Precompile
 echo "=========================Compiling precompile..."
-ecb -experiment -config $XEBRA_DEV/eiffel_projects/library/xebra_precompile/xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop -project_path $XEBRA_DEV/eiffel_projects/library/xebra_precompile
+ecb -config $XEBRA_DEV/eiffel_projects/library/xebra_precompile/xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop -project_path $XEBRA_DEV/eiffel_projects/library/xebra_precompile
 if [ ! $? == 0 ]; then
 	echo "Error compiling precompile!"
 	exit
@@ -120,7 +120,7 @@ fi;
 
 #Compile Server
 echo "=========================Compiling server..."
-ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf  -target xebra_server -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_server
+ecb -config $XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf  -target xebra_server -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_server
 if [ ! $? == 0 ]; then
 	echo "Error compiling server!"
 	exit
@@ -128,7 +128,7 @@ fi;
 
 #Compile Translator
 echo "=========================Compiling translator..."
-ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator.ecf  -target xebra_translator -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_translator
+ecb -config $XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator.ecf  -target xebra_translator -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_translator
 if [ ! $? == 0 ]; then
 	echo "Error compiling translator!"
 	exit
@@ -176,7 +176,7 @@ echo '  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec",' >> $XEBRA_D
 echo '  "translator": "$XEBRA_DEV/bin/xebra_translator",' >> $XEBRA_DEV/conf/config.srv
 echo '  "managed_webapps": "$XEBRA_DEV/www",' >> $XEBRA_DEV/conf/config.srv
 echo '  "library": "$XEBRA_LIBRARY",' >> $XEBRA_DEV/conf/config.srv
-echo ' "compiler_flags": "-experiment",' >> $XEBRA_DEV/conf/config.srv
+echo ' "compiler_flags": "",' >> $XEBRA_DEV/conf/config.srv
 echo '  "unmanaged_webapps":' >> $XEBRA_DEV/conf/config.srv
 echo '  [' >> $XEBRA_DEV/conf/config.srv
 echo '  ]' >> $XEBRA_DEV/conf/config.srv

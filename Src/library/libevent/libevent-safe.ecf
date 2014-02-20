@@ -102,9 +102,6 @@
 			</cluster>
 		</cluster>
 	</target>
-	<target name="libevent_unix" extends="libevent">
-		<setting name="platform" value="unix"/>
-	</target>
 	<target name="libevent_dotnet" extends="libevent">
 		<setting name="msil_generation" value="true"/>
 	</target>

@@ -1697,7 +1697,7 @@ feature {NONE} -- Configuration of layout
 
 feature -- Environment access
 
-	get_environment_8 (a_var: STRING_8): detachable STRING_8
+	get_environment_8 (a_var: READABLE_STRING_GENERAL): detachable STRING_8
 			-- Get `a_var' from the environment, taking into account the `application_name' to lookup the defaults.
 		require
 			a_var_attached: a_var /= Void

@@ -8,7 +8,11 @@
 			<exclude>/tests$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="com_light" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN.*$</exclude>

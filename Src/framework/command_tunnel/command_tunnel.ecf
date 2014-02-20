@@ -10,7 +10,11 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="command_tunnel" location=".\" recursive="true">
 			<option namespace="CommandTunnel">
 			</option>

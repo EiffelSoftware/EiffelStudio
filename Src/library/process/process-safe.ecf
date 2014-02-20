@@ -67,7 +67,4 @@
 	<target name="process_dotnet" extends="process">
 		<setting name="msil_generation" value="true"/>
 	</target>
-	<target name="process_unix" extends="process">
-		<setting name="platform" value="unix"/>
-	</target>
 </system>

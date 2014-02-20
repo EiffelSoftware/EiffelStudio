@@ -8,21 +8,28 @@
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include"/>
+		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtwel.lib">
 			<condition>
+				<platform value="windows"/>
 				<multithreaded value="true"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\wel.lib">
 			<condition>
+				<platform value="windows"/>
 				<multithreaded value="false"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilwel.lib">
 			<condition>
+				<platform value="windows"/>
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
@@ -38,6 +45,9 @@
 		</assembly>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<cluster name="wel" location=".\" recursive="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
 			<option namespace="Wel">
 			</option>
 			<file_rule>

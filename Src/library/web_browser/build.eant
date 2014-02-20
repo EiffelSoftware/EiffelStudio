@@ -20,7 +20,7 @@
 	
 	<target name="clean">
 		<echo message="- Clean [Web Browser]" />
-		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" />
+		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" if="${is_windows}" />
 	</target>
 
 	<target name="clobber" depend="clean" />

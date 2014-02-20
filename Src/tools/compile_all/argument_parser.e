@@ -65,7 +65,7 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (keep_switch, "Keep EIFGENs related data after compilation? (by default they are removed)", True, False, "status", "{all | passed | failed}", True))
 
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false),platform=(unix|windows|mac|vxworks)%N...", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false),platform=(unix|windows|macintosh|vxworks)%N...", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (interface_switch, "Comma separated option(s) to customize the output", True, True,
 						"key=value",
 						"for instance key %"template%": using any of #action, #target, #uuid, #system, #ecf , #absolute_ecf variables %N...", False))

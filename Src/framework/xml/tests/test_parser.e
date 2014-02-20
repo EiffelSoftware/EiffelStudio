@@ -262,7 +262,7 @@ feature -- Test
 
 feature -- Files
 
-	xml_files (n: STRING): ARRAYED_LIST [STRING]
+	xml_files (n: READABLE_STRING_GENERAL): ARRAYED_LIST [STRING]
 		local
 			d: DIRECTORY
 			fn: PATH
@@ -289,9 +289,9 @@ feature -- Files
 					d.readentry
 				end
 				d.close
-			elseif n.substring (n.count - 3, n.count).same_string_general (".xml") then
+			elseif n.substring (n.count - 3, n.count).same_string (".xml") then
 				create Result.make (1)
-				Result.extend (n)
+				Result.extend (n.to_string_8)
 			else
 				create Result.make (0)
 			end

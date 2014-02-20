@@ -137,7 +137,7 @@ feature -- Access
 			inspect flags & platform_mask
 			when unix_platform_flag then Result := "unix"
 			when windows_platform_flag then Result := "windows"
-			when mac_platform_flag then Result := "mac"
+			when mac_platform_flag then Result := "macintosh"
 			when vxworks_platform_flag then Result := "vxworks"
 			else
 				check known_platform: False end
@@ -189,7 +189,7 @@ feature -- Status report
 		do
 			Result := a_platform.is_case_insensitive_equal ("windows") or
 				a_platform.is_case_insensitive_equal ("unix") or
-				a_platform.is_case_insensitive_equal ("mac") or
+				a_platform.is_case_insensitive_equal ("macintosh") or
 				a_platform.is_case_insensitive_equal ("vxworks")
 		end
 
@@ -276,7 +276,7 @@ feature -- Settings
 				set_is_windows_platform
 			elseif a_platform.is_case_insensitive_equal ("unix") then
 				set_is_unix_platform
-			elseif a_platform.is_case_insensitive_equal ("mac") then
+			elseif a_platform.is_case_insensitive_equal ("macintosh") then
 				set_is_mac_platform
 			elseif a_platform.is_case_insensitive_equal ("vxworks") then
 				set_is_vxworks_platform

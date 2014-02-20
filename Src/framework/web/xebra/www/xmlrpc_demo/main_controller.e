@@ -10,16 +10,9 @@ class
 	MAIN_CONTROLLER
 
 inherit
-	XWA_CONTROLLER redefine	make end
+	XWA_CONTROLLER
 
 create
-	make
+	default_create
 
-feature {NONE} -- Initialization	
-
-	make
-			-- Initializes Current
-		do
-			Precursor
-		end
 end

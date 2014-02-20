@@ -8,23 +8,26 @@ note
 	revision: "$Revision$"
 
 class
-	G_XMLRPC_DEMO_SERVER_CONN_HANDLER
+	G_SERVLET_CONSTANTS
 
 inherit
-	XWA_SERVER_CONN_HANDLER
-
-create
-	make
+	ANY
 
 feature-- Access
 
-feature-- Implementation
+	class_temp_0: STRING = "<html>"
 
-	add_servlets
-			--<Precursor>
-		do
-			stateless_servlets.put (create {G_INDEX_SERVLET}.make, "/xmlrpc_demo/index.xeb")
-		end
+	class_temp_1: STRING = "%N"
+
+	class_temp_2: STRING = "<body>"
+
+	class_temp_3: STRING = "%Nxmlrpc_demo works!%N"
+
+	class_temp_4: STRING = "</body>"
+
+	class_temp_5: STRING = "</html>"
+
+feature-- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

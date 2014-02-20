@@ -16,7 +16,6 @@
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Library.Ribbon">
 		</option>
-		<setting name="platform" value="windows"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="platform" value="windows"/>
 		<external_include location="$(ISE_LIBRARY)\library\ribbon\spec\include">

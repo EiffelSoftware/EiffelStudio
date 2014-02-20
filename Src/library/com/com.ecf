@@ -10,32 +10,24 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="false" syntax="standard">
 		</option>
-		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_include>
+		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include"/>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com_runtime.lib">
 			<condition>
-				<platform value="windows"/>
 				<multithreaded value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com.lib">
 			<condition>
-				<platform value="windows"/>
 				<multithreaded value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom_runtime.lib">
 			<condition>
-				<platform value="windows"/>
 				<multithreaded value="true"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom.lib">
 			<condition>
-				<platform value="windows"/>
 				<multithreaded value="true"/>
 			</condition>
 		</external_object>

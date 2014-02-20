@@ -28,7 +28,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<assembly name="mscorlib_dll" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
 			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
 		</assembly>

@@ -22,7 +22,11 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="unix_wizard" location=".\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>

@@ -17,11 +17,12 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		do
---			execute_read_example
+			execute_read_example
 --			execute_write_example
 --			execute_guest_reports
 --			execute_row_count
-			execute_report_guest
+--			execute_report_guest
+			execute_iterator
 		end
 
 
@@ -39,12 +40,11 @@ feature {NONE} -- Initialization
 	execute_guest_reports
 		local
 			l_prov: ESA_DATA_PROVIDER
-			list: LIST[REPORT]
+			list: ESA_DATA_VALUE
 		do
 			print ("%NGuest Reports")
 			create l_prov.make
 			list := l_prov.problem_reports_guest (1, 2)
-			across list as l loop print (l.item.string_8); io.put_new_line end
 		end
 
 	execute_row_count
@@ -74,6 +74,20 @@ feature {NONE} -- Initialization
 			create l_prov.make
 			print (l_prov.problem_report (18628))
 		end
+
+
+	execute_iterator
+		local
+			l_prov: ESA_DATA_PROVIDER
+		do
+			create l_prov.make
+
+			across l_prov.problem_reports_2 ("jvelilla", False, 15, 3) as c  loop
+				print (c.item)
+				io.put_new_line
+			end
+		end
+
 
 
 end

@@ -47,17 +47,18 @@ feature {NONE} -- Actual Test
 			-- Checks if resize actions are called correctly
 		local
 			window: EV_TITLED_WINDOW
-			flag: BOOLEAN_REF
+			flag: CELL [BOOLEAN]
 		do
 			create window
 
-			flag := (False).to_reference
-			window.resize_actions.extend_kamikaze (agent (a_flag: BOOLEAN_REF; x, y, width, height: INTEGER) do
-				a_flag.set_item (True)
+			create flag.put (False)
+			window.resize_actions.extend_kamikaze (agent (a_flag: CELL [BOOLEAN]; x, y, width, height: INTEGER) do
+				a_flag.put (True)
 			end (flag, ?, ?, ?, ?))
 
-			window.set_size (100, 100)
-			process_events
+			window.show
+			window.set_size (window.width + 10, 100)
+
 			assert ("Resize action called", flag.item)
 		end
 

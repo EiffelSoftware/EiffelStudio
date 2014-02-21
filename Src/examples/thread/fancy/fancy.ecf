@@ -6,6 +6,7 @@
 			<assertions precondition="true"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
+		<setting name="platform" value="windows"/>
 		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>

@@ -6,6 +6,7 @@
 		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="platform" value="windows"/>
 		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf">

@@ -21,12 +21,10 @@ feature -- Initialization
 			create_task_scheduler
 			run
 		end
-			
+
 	run
 			-- Run task Scheduler.
 		local
-			a_clsid_ctask, a_iid_itask: ECOM_GUID
-			a_task_cell: CELL [ECOM_INTERFACE]
 			a_string: STRING
 			retried: BOOLEAN
 		do
@@ -36,7 +34,7 @@ feature -- Initialization
 			until
 				io.last_string.item (1) = 'q'
 			loop
-				inspect 
+				inspect
 					io.last_string.item (1)
 				when 'n', 'N' then
 					io.putstring ("What is the task name?")
@@ -45,7 +43,7 @@ feature -- Initialization
 					a_string := io.last_string
 					create_new_task (a_string)
 					save_task
-					
+
 				when 's', 'S' then
 					io.putstring ("What is the task Comment?")
 					io.put_new_line
@@ -53,18 +51,18 @@ feature -- Initialization
 					a_string := io.last_string
 					a_task.set_comment (a_string)
 					save_task
-					
+
 				when 'c', 'C' then
 					io.put_string (task_comment)
 					io.put_new_line
-					
+
 				when 'a', 'A' then
 					io.put_string (task_account_info)
 					io.put_new_line
-					
+
 				when 'e', 'E' then
 					edit_task
-					
+
 				else
 				end
 				menu
@@ -74,7 +72,7 @@ feature -- Initialization
 			io.put_string (meaning (exception) + " " + tag_name)
 			io.put_new_line
 			retried := True
-			retry		
+			retry
 		end
 
 feature -- Access
@@ -84,10 +82,10 @@ feature -- Access
 
 	iid_itask: STRING = "{148BD524-A2AB-11CE-B11F-00AA00530503}"
 			-- Interface ID of ITask interface.
-	
+
 	task_scheduler: CTASK_SCHEDULER_PROXY
 			-- Tast Scheduler Proxy.
-	
+
 	a_task: CTASK_PROXY
 			-- Task.
 
@@ -132,7 +130,7 @@ feature -- Access
 			create Result.make (0)
 			retry
 		end
-		
+
 feature -- Basic Operations
 
 	create_task_scheduler
@@ -149,7 +147,7 @@ feature -- Basic Operations
 			retried := True
 			retry
 		end
-	
+
 	create_new_task (a_task_name: STRING)
 			-- Create New Task.
 		require
@@ -184,7 +182,7 @@ feature -- Basic Operations
 			retried := True
 			retry
 		end
-		
+
 	save_task
 			-- Save task.
 		require
@@ -218,7 +216,7 @@ feature -- Basic Operations
 			retried := True
 			retry
 		end
-		
+
 feature {NONE} -- Implementation
 
 	menu
@@ -226,7 +224,7 @@ feature {NONE} -- Implementation
 		do
 			io.put_new_line
 			io.put_string ("n: Create new task.")
-			io.put_new_line 
+			io.put_new_line
 			io.put_string ("s: Set Comment.")
 			io.put_new_line
 			io.put_string ("c: Task Comment.")
@@ -234,13 +232,13 @@ feature {NONE} -- Implementation
 			io.put_string ("a: Task Account Information.")
 			io.put_new_line
 			io.put_string ("e: Edit Task.")
-			io.put_new_line 
+			io.put_new_line
 			io.put_string ("q: Quit")
-			io.put_new_line 
-			
+			io.put_new_line
+
 			io.put_new_line
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

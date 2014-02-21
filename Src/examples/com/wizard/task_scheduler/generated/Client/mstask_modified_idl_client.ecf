@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="mstask_modified_idl_client" uuid="1FDDB4DB-4368-4F5C-B88D-F6006671BAD1" library_target="default">
+	<target name="default">
+		<root class="ANY"/>
+		<option void_safety="none">
+			<assertions precondition="true"/>
+		</option>
+		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Include&quot;"/>
+		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Common\Include&quot;"/>
+		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Include&quot;"/>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib&quot;">
+			<condition>
+				<build value="finalize"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom.lib&quot;">
+			<condition>
+				<build value="workbench"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom-mt.lib&quot;">
+			<condition>
+				<build value="finalize"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom-mt.lib&quot;">
+			<condition>
+				<build value="workbench"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom.lib&quot;">
+			<condition>
+				<build value="finalize"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom.lib&quot;">
+			<condition>
+				<build value="workbench"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom-mt.lib&quot;">
+			<condition>
+				<build value="finalize"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom-mt.lib&quot;">
+			<condition>
+				<build value="workbench"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="client" location="C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\" recursive="true">
+			<file_rule>
+				<exclude>EIFGENs</exclude>
+				<exclude>Include</exclude>
+				<exclude>Clib</exclude>
+			</file_rule>
+			<visible class="CTASK_PROXY" feature="make"/>
+			<visible class="CTASK_PROXY" feature="make_from_other"/>
+			<visible class="CTASK_PROXY" feature="make_from_pointer"/>
+			<visible class="CTASK_SCHEDULER_PROXY" feature="make"/>
+			<visible class="CTASK_SCHEDULER_PROXY" feature="make_from_other"/>
+			<visible class="CTASK_SCHEDULER_PROXY" feature="make_from_pointer"/>
+			<visible class="ITASK_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="ITASK_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="ISCHEDULED_WORK_ITEM_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="ISCHEDULED_WORK_ITEM_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="ITASK_TRIGGER_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="ITASK_TRIGGER_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="IPROVIDE_TASK_PAGE_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="IPROVIDE_TASK_PAGE_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="IPERSIST_FILE_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="IPERSIST_FILE_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="IPERSIST_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="IPERSIST_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="ITASK_SCHEDULER_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="ITASK_SCHEDULER_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="IENUM_WORK_ITEMS_IMPL_PROXY" feature="make_from_other"/>
+			<visible class="IENUM_WORK_ITEMS_IMPL_PROXY" feature="make_from_pointer"/>
+			<visible class="PTASK_TRIGGER_ALIAS" feature="make_from_other"/>
+			<visible class="X_TASK_TRIGGER_RECORD"/>
+			<visible class="X_TRIGGER_TYPE_UNION_UNION"/>
+			<visible class="X_DAILY_RECORD"/>
+			<visible class="X_WEEKLY_RECORD"/>
+			<visible class="X_MONTHLYDATE_RECORD"/>
+			<visible class="X_MONTHLYDOW_RECORD"/>
+			<visible class="X_SYSTEMTIME_RECORD"/>
+			<visible class="X__MIDL_IWIN_TYPES_0009_UNION"/>
+			<visible class="ITASK_IMPL_STUB"/>
+			<visible class="ISCHEDULED_WORK_ITEM_IMPL_STUB"/>
+			<visible class="ITASK_TRIGGER_IMPL_STUB"/>
+			<visible class="IPROVIDE_TASK_PAGE_IMPL_STUB"/>
+			<visible class="IPERSIST_FILE_IMPL_STUB"/>
+			<visible class="IPERSIST_IMPL_STUB"/>
+			<visible class="ITASK_SCHEDULER_IMPL_STUB"/>
+			<visible class="IENUM_WORK_ITEMS_IMPL_STUB"/>
+		</cluster>
+	</target>
+</system>

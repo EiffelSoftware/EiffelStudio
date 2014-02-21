@@ -28,6 +28,7 @@ feature -- Modification
 		require
 			same_level: k.nesting_level = nesting_level
 		do
+			collection := collection.aliased_resized_area (collection.count + 1)
 			collection.extend (k)
 		end
 

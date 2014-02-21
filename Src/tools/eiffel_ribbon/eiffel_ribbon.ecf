@@ -8,6 +8,7 @@
 		</option>
 		<setting name="exception_trace" value="true"/>
 		<setting name="concurrency" value="thread"/>
+		<setting name="platform" value="windows"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="c_config_library" location="$EIFFEL_SRC\tools\finish_freezing\finish_freezing.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>

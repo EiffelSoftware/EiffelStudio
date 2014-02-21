@@ -7,6 +7,7 @@
 		<option trace="false" full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
+		<setting name="platform" value="windows"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>

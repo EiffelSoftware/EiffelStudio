@@ -23,6 +23,7 @@
 		</cluster>
 	</target>
 	<target name="registry" extends="common">
+		<setting name="platform" value="windows"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="storage_factory" location="$|spec\registry\"/>

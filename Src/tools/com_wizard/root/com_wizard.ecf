@@ -13,6 +13,7 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
+		<setting name="platform" value="windows"/>
 		<setting name="concurrency" value="thread"/>
 		<external_object location="htmlhelp.lib"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>

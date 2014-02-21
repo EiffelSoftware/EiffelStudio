@@ -8,6 +8,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
+		<setting name="platform" value="windows"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base-safe.ecf"/>
 		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment-safe.ecf"/>

@@ -13,21 +13,8 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<pre_compile_action working_directory=".\parser_v1311" command="nmake" succeed="true">
-			<description>Generate Parser Files</description>
-			<condition>
-				<platform value="windows"/>
-				<custom name="ISE_C_COMPILER" value="msc"/>
-			</condition>
-		</pre_compile_action>
 		<pre_compile_action working_directory=".\parser_v1311\" command="make" succeed="true">
 			<description>Generate Parser Files</description>
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-			<condition>
-				<custom name="ISE_C_COMPILER" excluded_value="msc"/>
-			</condition>
 		</pre_compile_action>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

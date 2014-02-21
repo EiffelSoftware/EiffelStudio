@@ -37,9 +37,7 @@ feature
 	to_tuple: TUPLE [first: A; second: B]
 			-- Conversion routine to tuples.
 		do
-			create Result.make
-			Result.first := first
-			Result.second := second
+			Result := [first, second]
 		end
 
 feature {NONE} -- Initialization

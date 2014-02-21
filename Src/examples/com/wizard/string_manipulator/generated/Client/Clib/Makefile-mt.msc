@@ -1,0 +1,45 @@
+# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File
+
+MV = copy
+CC = cl
+OUTPUT_CMD = -Fo
+CFLAGS = -MT -W0 -Ox -DEIF_THREADS -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I"$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include" -I"$(ISE_LIBRARY)\library\com\spec\windows\include" 
+
+OBJ = ecom_gce_string_manipulator_idl_c.obj \
+ecom_gec_string_manipulator_idl_c.obj \
+ecom_stringmanipulatorlib_stringmanipulator.obj
+
+WOBJ = wecom_gce_string_manipulator_idl_c.obj \
+wecom_gec_string_manipulator_idl_c.obj \
+wecom_stringmanipulatorlib_stringmanipulator.obj
+
+all:: wecom-mt.lib ecom-mt.lib
+
+wecom-mt.lib: $(WOBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(WOBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+ecom-mt.lib: $(OBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(OBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+.cpp.obj::
+	$(CC) $(CFLAGS)  /nologo $<
+
+wecom_gce_string_manipulator_idl_c.obj: ecom_gce_string_manipulator_idl_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_gec_string_manipulator_idl_c.obj: ecom_gec_string_manipulator_idl_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_stringmanipulatorlib_stringmanipulator.obj: ecom_stringmanipulatorlib_stringmanipulator.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+

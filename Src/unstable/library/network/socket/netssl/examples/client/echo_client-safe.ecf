@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
-		<library name="net_ssl" location="..\..\net_ssl-safe.ecf" readonly="false"/>
+		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl-safe.ecf"/>
 		<cluster name="echo_client" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

@@ -57,7 +57,7 @@ feature -- Basic operations
 		do
 			if not retried then
 					-- Set up the parser.
-				create l_callbacks.make_with_factory (create {CONF_PARSE_FACTORY})
+				create l_callbacks.make_with_factory ("", create {CONF_PARSE_FACTORY})
 				create l_resolver.set_next (l_callbacks)
 				create l_parser.make
 				l_parser.set_callbacks (l_resolver)
@@ -98,7 +98,7 @@ feature -- Basic operations
 		require
 			a_system_attached: a_system /= Void
 		local
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_targets: STRING_TABLE [CONF_TARGET]
 		do
 				-- First configuration the void-safe options.
 			l_targets := a_system.targets.twin
@@ -134,7 +134,7 @@ feature {NONE} -- Basic operations
 		require
 			a_target_attached: a_target /= Void
 		local
-			l_libraries: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_libraries: STRING_TABLE [CONF_LIBRARY]
 		do
 			l_libraries := a_target.libraries
 			from l_libraries.start until l_libraries.after loop
@@ -162,7 +162,7 @@ invariant
 	not_last_error_is_empty: has_error implies ((attached last_error as l_error) and then not l_error.is_empty)
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

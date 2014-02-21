@@ -16,7 +16,4 @@
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
 	</target>
-	<target name="cocoa" extends="common">
-		<variable name="vision_implementation" value="cocoa"/>
-	</target>
 </system>

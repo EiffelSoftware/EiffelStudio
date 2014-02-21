@@ -6,6 +6,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
+		<setting name="platform" value="windows"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon-safe.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>

@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 		once
 			create l_constants
-			Result := l_constants.template.extended ("eiffelribbon_ecf_template.ecf")
+			Result := l_constants.template.extended ("eiffelribbon.ecf_template")
 		end
 
 	save_project_info

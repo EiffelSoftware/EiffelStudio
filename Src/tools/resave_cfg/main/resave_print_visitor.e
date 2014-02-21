@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Implementation
 
-	append_options (an_options: CONF_OPTION; a_class: STRING_8)
+	append_options (an_options: CONF_OPTION; a_class: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 --			if an_options /= Void and then an_options.syntax.is_set then

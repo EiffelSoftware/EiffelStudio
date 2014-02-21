@@ -90,7 +90,7 @@ create
 %token <detachable STRING_AS> TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
 %token <detachable STRING_AS> TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
 %token <detachable STRING_AS> TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
-%token <detachable STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
+%token <detachable STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET TE_STR_PARENTHESES
 
 %type <detachable SYMBOL_AS>ASemi
 %type <detachable KEYWORD_AS> Alias_mark Is_keyword
@@ -109,7 +109,6 @@ create
 %type <detachable ACCESS_INV_AS>		Creation_call
 %type <detachable ARRAY_AS>			Manifest_array
 %type <detachable ASSIGN_AS>			Assignment
-%type <detachable ASSIGNER_CALL_AS>	Assigner_call
 %type <detachable ATOMIC_AS>			Index_value Manifest_constant Expression_constant Manifest_value
 %type <detachable BINARY_AS>			Qualified_binary_expression
 %type <detachable BODY_AS>				Declaration_body
@@ -127,9 +126,10 @@ create
 %type <detachable CREATION_EXPR_AS>	Creation_expression
 %type <detachable DEBUG_AS>			Debug
 %type <detachable ELSIF_AS>			Elseif_part
+%type <detachable ELSIF_EXPRESSION_AS>		Elseif_part_expression
 %type <detachable ENSURE_AS>			Postcondition
 %type <detachable EXPORT_ITEM_AS>		New_export_item
-%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_expression Qualified_factor Typed_expression
+%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
 %type <detachable EXTERNAL_AS>			External
 %type <detachable EXTERNAL_LANG_AS>	External_language
 %type <detachable FEATURE_AS>			Feature_declaration
@@ -140,6 +140,7 @@ create
 %type <detachable GUARD_AS>			Guard
 %type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <detachable IF_AS>				Conditional
+%type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
 %type <detachable INSPECT_AS>			Multi_branch
 %type <detachable INSTRUCTION_AS>		Instruction Instruction_impl
@@ -160,7 +161,7 @@ create
 %type <detachable REVERSE_AS>			Reverse_assignment
 %type <detachable ROUT_BODY_AS>		Routine_body
 %type <detachable ROUTINE_AS>			Routine
-%type <detachable ROUTINE_CREATION_AS>	Agent_call
+%type <detachable ROUTINE_CREATION_AS>	Agent
 %type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
@@ -177,6 +178,7 @@ create
 %type <detachable CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
 %type <detachable EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <detachable EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
+%type <detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]>			Elseif_list_expression Elseif_part_list_expression
 %type <detachable EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
 %type <detachable EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
 %type <detachable EIFFEL_LIST [EXPR_AS]>			Expression_list
@@ -211,7 +213,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 373
+%expect 364
 
 %%
 
@@ -293,7 +295,7 @@ Class_declaration:
 		Formal_generics							-- $5
 		External_name							-- $6
 		Obsolete								-- $7
-		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {conforming_inheritance_end_position := position; conforming_inheritance_flag := True} Inheritance {non_conforming_inheritance_end_position := position} -- $8 $9 $10 $11 $12
+		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {set_conforming_inheritance_end_positions; conforming_inheritance_flag := True} Inheritance {set_non_conforming_inheritance_end_positions} -- $8 $9 $10 $11 $12
 		Creators								-- $13
 		Convert_clause							-- $14
 		Features End_features_pos				-- $15 $16
@@ -320,7 +322,11 @@ Class_declaration:
 						formal_generics_end_position,
 						conforming_inheritance_end_position,
 						non_conforming_inheritance_end_position,
-						features_end_position
+						features_end_position,
+						formal_generics_character_end_position,
+						conforming_inheritance_character_end_position,
+						non_conforming_inheritance_character_end_position,
+						features_character_end_position
 					)
 					if attached $6 as l_external then
 						l_root_node.set_alias_keyword (l_external.first)
@@ -334,8 +340,8 @@ Class_declaration:
 			}
 	;
 
-End_features_pos: { features_end_position := position } ;
-End_feature_clause_pos: { feature_clause_end_position := position };
+End_features_pos: { set_features_end_positions } ;
+End_feature_clause_pos: { set_feature_clause_end_positions };
 -- Indexing
 
 
@@ -836,6 +842,8 @@ Alias_name: Infix_operator
 	|	TE_STR_NOT
 			{ $$ := $1 }
 	|	TE_STR_BRACKET
+			{ $$ := $1 }
+	|	TE_STR_PARENTHESES
 			{ $$ := $1 }
 	;
 
@@ -1431,19 +1439,16 @@ Optional_semicolons: -- Empty
 
 Instruction_impl: Creation
 			{ $$ := $1 }
-	|	Expression
-			{
-					-- Call production should be used instead,
-					-- but this complicates the grammar.
-				if has_type then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Expression cannot be used as an instruction"))
-				elseif $1 /= Void then
-					$$ := new_call_instruction_from_expression ($1)
-				end
-			}
-	|	Assigner_call
-			{ $$ := $1 }
+	|	Call
+			{ $$ := ast_factory.new_instr_call_as ($1) }
+	|	Qualified_call TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_expr_call_as ($1), $3, $2) }
+	|	A_static_call TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as ($1, $3, $2) }
+	|	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_bracket_as ($1, $4, $2, $6), $8, $7) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as (ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6), $8, $7) }
 	|	Assignment
 			{ $$ := $1 }
 	|	Reverse_assignment
@@ -1594,7 +1599,7 @@ Class_or_tuple_type:
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	| TE_VARIANT Unmarked_class_or_tuple_type
@@ -1602,7 +1607,7 @@ Class_or_tuple_type:
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 			}
 	| TE_SEPARATE Unmarked_class_or_tuple_type
@@ -1637,7 +1642,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1648,7 +1653,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1659,7 +1664,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1670,7 +1675,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1684,7 +1689,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1698,7 +1703,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1709,7 +1714,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1720,7 +1725,7 @@ Class_or_tuple_type:
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1731,7 +1736,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1745,7 +1750,7 @@ Class_or_tuple_type:
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1788,7 +1793,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	|	TE_VARIANT Unmarked_anchored_type
@@ -1796,7 +1801,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $2
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 			}
 	|	TE_SEPARATE Unmarked_anchored_type
@@ -1831,7 +1836,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1842,7 +1847,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1853,7 +1858,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1864,7 +1869,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1878,7 +1883,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, True, False)
+					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1892,7 +1897,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1903,7 +1908,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -1914,7 +1919,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $3
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_separate_mark and then attached $$ as l_type then
 					l_type.set_separate_mark ($2)
@@ -1925,7 +1930,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
@@ -1939,7 +1944,7 @@ Anchored_type:	Unmarked_anchored_type
 				$$ := $4
 				check_frozen_variant_supported ($1)
 				if attached $$ as l_type then
-					l_type.set_variant_mark ($1, False, True)
+					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
@@ -2214,11 +2219,11 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 Formal_generics:
 			{
 				-- $$ := Void
-				formal_generics_end_position := 0
+				set_formal_generics_end_positions (True)
 			}
 	|	TE_LSQURE TE_RSQURE
 			{
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (True)
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if attached $$ as l_formals then
 					l_formals.set_squre_symbols ($1, $2)
@@ -2226,7 +2231,7 @@ Formal_generics:
 			}
 	|	TE_LSQURE Add_counter Disable_supplier_recording Formal_generic_list Enable_supplier_recording Remove_counter TE_RSQURE
 			{
-				formal_generics_end_position := position
+				set_formal_generics_end_positions (False)
 				$$ := $4
 				if attached $$ as l_formals then
 					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
@@ -2418,8 +2423,8 @@ Creation_constraint: -- Empty
 
 -- Instructions
 
-
-Conditional: TE_IF Expression TE_THEN Compound TE_END
+Conditional:
+		TE_IF Expression TE_THEN Compound TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, Void, Void, $5, $1, $3, Void) }
 	|	TE_IF Expression TE_THEN Compound TE_ELSE Compound TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, Void, $6, $7, $1, $3, $5) }
@@ -2561,7 +2566,6 @@ Loop_instruction:
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
 				end
-				has_type := False
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2570,7 +2574,6 @@ Loop_instruction:
 				else
 					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
 				end
-				has_type := False
 			}
 	| Iteration TE_FROM Compound Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2587,7 +2590,6 @@ Loop_instruction:
 						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
 					end
 				end
-				has_type := False
 			}
 	| Iteration Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
@@ -2604,7 +2606,6 @@ Loop_instruction:
 						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
 					end
 				end
-				has_type := False
 			}
 	;
 
@@ -2624,7 +2625,6 @@ Loop_expression:
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, True, $5, $6, $7)
 					end
 				end
-				has_type := True
 			}
 	| Iteration Invariant Exit_condition_opt TE_SOME Expression Variant_opt TE_END
 			{
@@ -2641,7 +2641,6 @@ Loop_expression:
 						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), False, $5, $6, $7)
 					end
 				end
-				has_type := True
 			}
 	;
 
@@ -2733,21 +2732,6 @@ Rescue: -- Empty
 			}
 	;
 
-Qualified_expression:
-		Qualified_binary_expression
-			{ $$ := $1 }
-	|	Qualified_factor
-			{ $$ := $1 }
-	|	Qualified_call
-			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	A_static_call
-			{ $$ := $1 }
-	;
-
-Assigner_call: Qualified_expression TE_ASSIGNMENT Expression
-			{ $$ := ast_factory.new_assigner_call_as ($1, $3, $2) }
-	;
-
 Assignment: Identifier_as_lower TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as (ast_factory.new_access_id_as ($1, Void), $3, $2) }
 	|	TE_RESULT TE_ASSIGNMENT Expression
@@ -2824,7 +2808,7 @@ Creation_clause:
 			}
 	;
 
-Agent_call: 
+Agent:
 		TE_AGENT Optional_formal_arguments {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
 			$$ := ast_factory.new_inline_agent_creation_as (
@@ -2980,7 +2964,6 @@ Creation_call: -- Empty
 
 -- Instruction call
 
-
 Call: A_feature
 			{ $$ := $1 }
 	|	A_precursor
@@ -3015,33 +2998,31 @@ Typed: TE_LCURLY Type TE_RCURLY
 
 Expression:
 		Nosigned_integer
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Nosigned_real
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Factor
 			{ $$ := $1 }
 	|	Expression TE_TILDE Expression
-			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2) }
 	|	Expression TE_NOT_TILDE Expression
-			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2) }
 	|	Expression TE_EQ Expression
-			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2) }
 	|	Expression TE_NE Expression
-			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
+			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2) }
 	|	Qualified_binary_expression
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
 	|	TE_ATTACHED Expression %prec TE_NOT
 			{
 				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
-				has_type := True
 			}
 	|	TE_ATTACHED Expression TE_AS Identifier_as_lower
 			{
 				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
-				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression %prec TE_NOT
 			{
@@ -3051,7 +3032,6 @@ Expression:
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
-				has_type := True
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
 			{
@@ -3061,7 +3041,6 @@ Expression:
 				end
 				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
-				has_type := True
 				if attached $7 as l_name and attached $3 as l_type then
 					insert_object_test_locals ([l_name, l_type])
 				end
@@ -3070,7 +3049,6 @@ Expression:
 			{
 				check_object_test_expression ($6)
 				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
-				has_type := True
 				if attached $2 as l_name and attached $4 as l_type then
 					insert_object_test_locals ([l_name, l_type])
 				end
@@ -3123,40 +3101,38 @@ Qualified_binary_expression:
 	;
 
 Factor: TE_VOID
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Manifest_array
-			{ $$ := $1; has_type := True }
-	|	Agent_call
-			{ $$ := $1; has_type := False }
+			{ $$ := $1 }
+	|	Agent
+			{ $$ := $1 }
 	|	TE_OLD Expression
-			{ $$ := ast_factory.new_un_old_as ($2, $1); has_type := True }
+			{ $$ := ast_factory.new_un_old_as ($2, $1) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
-			{
-				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4); has_type := True
-			}
+			{ $$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS Feature_name
-			{ $$ := ast_factory.new_address_as ($2, $1); has_type := True }
+			{ $$ := ast_factory.new_address_as ($2, $1) }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
-			{
-				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4); has_type := True
-			}
+			{ $$ := ast_factory.new_expr_address_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS TE_CURRENT
-			{
-				$$ := ast_factory.new_address_current_as ($2, $1); has_type := True
-			}
+			{ $$ := ast_factory.new_address_current_as ($2, $1) }
 	|	TE_ADDRESS TE_RESULT
-			{
-				$$ := ast_factory.new_address_result_as ($2, $1); has_type := True
-			}
+			{ $$ := ast_factory.new_address_result_as ($2, $1) }
 	|	Bracket_target
 			{ $$ := $1 }
+	|	Call
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Qualified_factor
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
+	|	Conditional_expression
+			{ $$ := $1 }
 	;
 
 Qualified_factor:
 		Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
 			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
+			{ $$ := ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6) }
 	|	TE_MINUS Factor
 			{ $$ := ast_factory.new_un_minus_as ($2, $1) }
 	|	TE_PLUS Factor
@@ -3198,6 +3174,8 @@ Qualified_call:
 			{ $$ := ast_factory.new_nested_expr_as ($2, $5, $4, $1, $3) }
 	|	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_bracket_as ($1, $4, $2, $6), $8, $7, Void, Void) }
+	|	Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6), $8, $7, Void, Void) }
 	|	A_precursor TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	A_static_call TE_DOT Remote_call
@@ -3288,23 +3266,21 @@ Feature_access: Feature_name_for_call Parameters
 
 Bracket_target:
 		Expression_constant
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Typed_expression
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	Manifest_tuple
-			{ $$ := $1; has_type := True }
+			{ $$ := $1 }
 	|	TE_CURRENT
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	TE_RESULT
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
-	|	Call
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Creation_expression
-			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Loop_expression
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }
+			{ $$ := ast_factory.new_paran_as ($2, $1, $3) }
 	;
 
 Parameters: -- Empty
@@ -3424,6 +3400,39 @@ Identifier_as_lower: TE_ID
 					-- Keyword used as identifier
 				$$ := extract_id ($1)
 			}
+	;
+
+-- Conditional expression
+
+Conditional_expression:
+		TE_IF Expression TE_THEN Expression TE_ELSE Expression TE_END
+			{ $$ := ast_factory.new_if_expression_as ($2, $4, Void, $6, $7, $1, $3, $5) }
+	|	TE_IF Expression TE_THEN Expression Elseif_list_expression TE_ELSE Expression TE_END
+			{ $$ := ast_factory.new_if_expression_as ($2, $4, $5, $7, $8, $1, $3, $6) }
+	;
+
+Elseif_list_expression: Add_counter Elseif_part_list_expression Remove_counter
+		{ $$ := $2 }
+	;
+
+Elseif_part_list_expression: Elseif_part_expression
+			{
+				$$ := ast_factory.new_eiffel_list_elseif_expression_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	Elseif_part_expression Increment_counter Elseif_part_list_expression
+			{
+				$$ := $3
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	;
+
+Elseif_part_expression: TE_ELSEIF Expression TE_THEN Expression
+			{ $$ := ast_factory.new_elseif_expression_as ($2, $4, $1, $3) }
 	;
 
 -- Constant value without any type qualifier.
@@ -3649,6 +3658,8 @@ Non_empty_string: TE_STRING
 	|	TE_STR_POWER
 			{ $$ := $1 }
 	|	TE_STR_BRACKET
+			{ $$ := $1 }
+	|	TE_STR_PARENTHESES
 			{ $$ := $1 }
 	|	TE_STR_AND
 			{ $$ := $1 }

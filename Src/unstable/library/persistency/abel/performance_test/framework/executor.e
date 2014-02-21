@@ -41,7 +41,7 @@ feature -- Test execution
 		do
 			create gc
 
-			controller.repository.clean_db_for_testing
+--			controller.repository.clean_db_for_testing
 			measure_insert_flat
 			gc.full_collect
 			gc.full_coalesce
@@ -49,7 +49,7 @@ feature -- Test execution
 			measure_query_flat_all
 			measure_query_flat_select
 
-			controller.repository.clean_db_for_testing
+--			controller.repository.clean_db_for_testing
 
 			measure_insert_deep
 			gc.full_collect
@@ -349,7 +349,7 @@ feature -- Query tests
 				loop
 					do_nothing
 				end
-				
+
 				query.close
 				i := i + step
 			variant

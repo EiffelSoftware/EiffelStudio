@@ -25,8 +25,17 @@ feature -- Package
 		do
 		end
 
+	on_version_package_updated (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
+		do
+		end
+
+	on_version_package_downloaded (p: IRON_NODE_VERSION_PACKAGE)
+			-- Whenever a package archive is downloaded.
+		do
+		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

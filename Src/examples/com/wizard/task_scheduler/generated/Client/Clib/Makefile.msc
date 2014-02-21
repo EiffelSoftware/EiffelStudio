@@ -1,0 +1,90 @@
+# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File
+
+MV = copy
+CC = cl
+OUTPUT_CMD = -Fo
+CFLAGS = -MT -W0 -Ox -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I"$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include" -I"$(ISE_LIBRARY)\library\com\spec\windows\include" 
+
+OBJ = ecom_gce_mstask_modified_idl_c.obj \
+ecom_gec_mstask_modified_idl_c.obj \
+ecom_ms_tasksched_lib_ctask.obj \
+ecom_ms_tasksched_lib_ctaskscheduler.obj \
+ecom_ms_tasksched_lib_ienumworkitems_impl_proxy.obj \
+ecom_ms_tasksched_lib_ipersistfile_impl_proxy.obj \
+ecom_ms_tasksched_lib_ipersist_impl_proxy.obj \
+ecom_ms_tasksched_lib_iprovidetaskpage_impl_proxy.obj \
+ecom_ms_tasksched_lib_ischeduledworkitem_impl_proxy.obj \
+ecom_ms_tasksched_lib_itaskscheduler_impl_proxy.obj \
+ecom_ms_tasksched_lib_itasktrigger_impl_proxy.obj \
+ecom_ms_tasksched_lib_itask_impl_proxy.obj
+
+WOBJ = wecom_gce_mstask_modified_idl_c.obj \
+wecom_gec_mstask_modified_idl_c.obj \
+wecom_ms_tasksched_lib_ctask.obj \
+wecom_ms_tasksched_lib_ctaskscheduler.obj \
+wecom_ms_tasksched_lib_ienumworkitems_impl_proxy.obj \
+wecom_ms_tasksched_lib_ipersistfile_impl_proxy.obj \
+wecom_ms_tasksched_lib_ipersist_impl_proxy.obj \
+wecom_ms_tasksched_lib_iprovidetaskpage_impl_proxy.obj \
+wecom_ms_tasksched_lib_ischeduledworkitem_impl_proxy.obj \
+wecom_ms_tasksched_lib_itaskscheduler_impl_proxy.obj \
+wecom_ms_tasksched_lib_itasktrigger_impl_proxy.obj \
+wecom_ms_tasksched_lib_itask_impl_proxy.obj
+
+all:: wecom.lib ecom.lib
+
+wecom.lib: $(WOBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(WOBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+ecom.lib: $(OBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(OBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+.cpp.obj::
+	$(CC) $(CFLAGS)  /nologo $<
+
+wecom_gce_mstask_modified_idl_c.obj: ecom_gce_mstask_modified_idl_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_gec_mstask_modified_idl_c.obj: ecom_gec_mstask_modified_idl_c.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ctask.obj: ecom_ms_tasksched_lib_ctask.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ctaskscheduler.obj: ecom_ms_tasksched_lib_ctaskscheduler.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ienumworkitems_impl_proxy.obj: ecom_ms_tasksched_lib_ienumworkitems_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ipersistfile_impl_proxy.obj: ecom_ms_tasksched_lib_ipersistfile_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ipersist_impl_proxy.obj: ecom_ms_tasksched_lib_ipersist_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_iprovidetaskpage_impl_proxy.obj: ecom_ms_tasksched_lib_iprovidetaskpage_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_ischeduledworkitem_impl_proxy.obj: ecom_ms_tasksched_lib_ischeduledworkitem_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_itaskscheduler_impl_proxy.obj: ecom_ms_tasksched_lib_itaskscheduler_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_itasktrigger_impl_proxy.obj: ecom_ms_tasksched_lib_itasktrigger_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+
+wecom_ms_tasksched_lib_itask_impl_proxy.obj: ecom_ms_tasksched_lib_itask_impl_proxy.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	 -nologo $(OUTPUT_CMD)$@ $?
+

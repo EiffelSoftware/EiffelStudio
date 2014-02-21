@@ -19,6 +19,5 @@
 				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
-		<override name="override" location=".\override\" recursive="true"/>
 	</target>
 </system>

@@ -30,7 +30,7 @@ feature
                         l.compute_agents (init, trns, comb)
                         r.compute_agents (init, trns, comb)
 
-                        Result := comb.item_separate ([l.comp_result, r.comp_result])
+                        Result := comb.item ([l.comp_result, r.comp_result])
                 end
 
 	compute (init: G)

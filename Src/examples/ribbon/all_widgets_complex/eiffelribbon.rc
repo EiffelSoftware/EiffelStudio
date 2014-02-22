@@ -12,7 +12,22 @@ END
 
 STRINGTABLE 
 BEGIN
+    tab_button_Keytip_RESID L"S" /* Keytip tab_button_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    group_button_Keytip_RESID L"G" /* Keytip group_button_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
     button_change_label_title_LabelTitle_RESID L"Change label title" /* LabelTitle button_change_label_title_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_change_label_title_Keytip_RESID L"V" /* Keytip button_change_label_title_Keytip_RESID: (null) */
 END
 
 STRINGTABLE 
@@ -22,7 +37,17 @@ END
 
 STRINGTABLE 
 BEGIN
+    button_change_small_image_Keytip_RESID L"U" /* Keytip button_change_small_image_Keytip_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
     button_set_tooltip_title_LabelTitle_RESID L"Set tooltip title" /* LabelTitle button_set_tooltip_title_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    button_set_tooltip_title_Keytip_RESID L"Z" /* Keytip button_set_tooltip_title_Keytip_RESID: (null) */
 END
 
 STRINGTABLE 
@@ -33,6 +58,11 @@ END
 STRINGTABLE 
 BEGIN
     button_set_tooltip_title_and_description_LabelTitle_RESID L"Set tooltip title and description" /* LabelTitle button_set_tooltip_title_and_description_LabelTitle_RESID: (null) */
+END
+
+STRINGTABLE 
+BEGIN
+    group_button_2_Keytip_RESID L"K" /* Keytip group_button_2_Keytip_RESID: (null) */
 END
 
 STRINGTABLE 

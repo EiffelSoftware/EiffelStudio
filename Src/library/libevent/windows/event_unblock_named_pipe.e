@@ -25,7 +25,13 @@ feature -- Access
 	name: STRING
 			-- Name of the pipe
 
+	read_descriptor: INTEGER
+
 feature -- Operation
+
+	close
+		do
+		end
 
 	create_read
 			-- Open file in read mode;

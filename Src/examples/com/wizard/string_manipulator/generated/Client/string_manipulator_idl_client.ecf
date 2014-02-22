@@ -5,6 +5,7 @@
 		<option void_safety="none">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="platform" value="windows"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Common\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Server\Include;"/>

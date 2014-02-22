@@ -49,7 +49,7 @@ feature {NONE}-- Initialization
 			set_size (800, 400)
 
 				-- Attach Ribbon by COM here
-			ribbon.init_with_window_and_dll (Current, "eiffel_ribbon_1")
+			ribbon.init_with_window (Current)
 			close_request_actions.extend (agent ev_application.destroy)
 			show_actions.extend_kamikaze (agent
 									do

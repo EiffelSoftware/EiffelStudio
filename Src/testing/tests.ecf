@@ -18,7 +18,7 @@
 		<library name="diff-tests" location="$ISE_LIBRARY\library\diff\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor-tests" location="$ISE_LIBRARY\library\editor\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoding-tests" location="$ISE_LIBRARY\library\encoding\tests\tests.ecf" readonly="false" use_application_options="true"/>
-		<library name="i18n-tests" location="$ISE_LIBRARY\library\i18n\tests\tests.ecf" readonly="false" use_application_options="true"/>
+		<!--<library name="i18n-tests" location="$ISE_LIBRARY\library\i18n\tests\tests.ecf" readonly="false" use_application_options="true"/>-->
 		<!--pattern tests currently cause crash (see problem report #16542) -->
 		<!--library name="pattern-tests" location="$EIFFEL_SRC\framework\patterns\tests.ecf" readonly="false" use_application_options="true"/-->
 		<library name="process-tests" location="$ISE_LIBRARY\library\process\tests\tests.ecf" readonly="false" use_application_options="true"/>

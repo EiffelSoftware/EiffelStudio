@@ -104,6 +104,11 @@
 					<platform excluded_value="windows"/>
 				</condition>
 			</cluster>
+			<cluster name="windows" location=".\windows\">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
 		</cluster>
 	</target>
 	<target name="libevent_dotnet" extends="libevent">

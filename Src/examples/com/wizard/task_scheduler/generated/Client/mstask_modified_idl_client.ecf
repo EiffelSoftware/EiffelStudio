@@ -5,52 +5,52 @@
 		<option void_safety="none">
 			<assertions precondition="true"/>
 		</option>
-		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Include&quot;"/>
-		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Common\Include&quot;"/>
-		<external_include location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Include&quot;"/>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib&quot;">
+		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Include"/>
+		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Common\Include"/>
+		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Include"/>
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom-mt.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\ecom-mt.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom-mt.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Clib\$(ISE_C_COMPILER)\wecom-mt.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom-mt.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\ecom-mt.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="&quot;C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom-mt.lib&quot;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Clib\$(ISE_C_COMPILER)\wecom-mt.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency excluded_value="none"/>
@@ -60,7 +60,7 @@
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="client" location="C:\work\14.05_dev\examples\com\wizard\task_scheduler\generated\" recursive="true">
+		<cluster name="client" location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\" recursive="true">
 			<file_rule>
 				<exclude>EIFGENs</exclude>
 				<exclude>Include</exclude>

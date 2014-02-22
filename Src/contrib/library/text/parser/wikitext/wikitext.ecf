@@ -10,6 +10,6 @@
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<cluster name="src" location="." recursive="true"/>
+		<cluster name="src" location="src" recursive="true"/>
 	</target>
 </system>

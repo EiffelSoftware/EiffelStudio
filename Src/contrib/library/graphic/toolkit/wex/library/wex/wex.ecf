@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="wex" uuid="07E81055-A76C-4736-AEEA-A2A67E04E32B" library_target="wex">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wex" uuid="07E81055-A76C-4736-AEEA-A2A67E04E32B" library_target="wex">
 	<target name="wex">
 		<root all_classes="true"/>
-		<option warning="true" is_attached_by_default="false" syntax="transitional">
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
@@ -13,13 +13,13 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
-		<cluster name="wex_framework" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\framework\"/>
-		<cluster name="wex_mci_consants" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Mci_constants\"/>
-		<cluster name="wex_mci_devices" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Mci_devices\"/>
-		<cluster name="wex_mci_structures" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Mci_structures\"/>
-		<cluster name="wex_mci_support" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Mci_support\"/>
-		<cluster name="wex_splash" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\splash\"/>
-		<cluster name="wex_window_extras" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\window_extras\"/>
-		<cluster name="wex_windows" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\windows\"/>
+		<cluster name="wex_framework" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Framework\"/>
+		<cluster name="wex_mci_consants" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\MCI_Constants\"/>
+		<cluster name="wex_mci_devices" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\MCI_Devices\"/>
+		<cluster name="wex_mci_structures" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\MCI_Structures\"/>
+		<cluster name="wex_mci_support" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\MCI_Support\"/>
+		<cluster name="wex_splash" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Splash\"/>
+		<cluster name="wex_window_extras" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Window_Extras\"/>
+		<cluster name="wex_windows" location="$ISE_LIBRARY\contrib\library\graphic\toolkit\wex\library\wex\Windows\"/>
 	</target>
 </system>

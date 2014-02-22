@@ -9,9 +9,10 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
+		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="none"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wikitext" location="..\..\wikitext.ecf"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<cluster name="src" location="./src" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

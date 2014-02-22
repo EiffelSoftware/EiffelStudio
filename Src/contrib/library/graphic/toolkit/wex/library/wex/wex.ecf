@@ -5,6 +5,7 @@
 		<option warning="true" is_attached_by_default="false" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
+		<setting name="platform" value="windows"/>
 		<external_include location="$(ISE_LIBRARY)\contrib\library\graphic\toolkit\wex\library\Wex\spec\windows\include"/>
 		<external_include location="$(ISE_LIBRARY)\contrib\library\graphic\toolkit\wex\library\Wex\clib"/>
 		<external_object location="winmm.lib"/>

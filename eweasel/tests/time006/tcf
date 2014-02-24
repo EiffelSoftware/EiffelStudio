@@ -1,0 +1,19 @@
+test_name mt-date-time-duration-failure
+test_description	Calling relative_duration in a multithreaded program fails.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	calc.e $CLUSTER calc.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output1
+execute_result ok
+
+compare	exec_output1 output
+
+test_end

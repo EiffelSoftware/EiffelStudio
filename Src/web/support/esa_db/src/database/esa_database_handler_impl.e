@@ -11,6 +11,8 @@ inherit
 
 	ESA_DATABASE_CONFIG
 
+	REFACTORING_HELPER
+
 create
 	make,
 	make_common
@@ -74,7 +76,6 @@ feature -- Functionality
 	execute_reader
 			-- Execute stored procedure that returns data
 		local
-			container: ARRAYED_LIST[DB_RESULT]
 			l_db_selection: DB_SELECTION
 		do
 			if not keep_connection then
@@ -85,6 +86,7 @@ feature -- Functionality
 				create l_db_selection.make
 				db_selection := l_db_selection
 				items := l_store.execute_reader (l_db_selection)
+				to_implement ("Handling Error")
 			end
 
 			if not keep_connection then
@@ -95,7 +97,6 @@ feature -- Functionality
 	execute_writer
 			-- Execute stored procedure that update/add data
 		local
-			container: ARRAYED_LIST[DB_RESULT]
 			l_db_change: DB_CHANGE
 		do
 			if not keep_connection and not is_connected then
@@ -106,25 +107,45 @@ feature -- Functionality
 				create l_db_change.make
 				db_update := l_db_change
 				l_store.execute_writer (l_db_change)
+				to_implement ("Handling Error")
 				if not l_store.has_error then
 					db_control.commit
 				end
 			end
-
-
-
 			if not keep_connection then
 				disconnect
 			end
 		end
 
 
+feature -- SQL Queries
+
+	execute_query
+			-- Execute query
+		local
+			l_db_selection: DB_SELECTION
+		do
+			if not keep_connection then
+				connect
+			end
+
+			if attached query as l_query then
+				create l_db_selection.make
+				db_selection := l_db_selection
+				items := l_query.execute_reader (l_db_selection)
+				to_implement ("Handling Error")
+			end
+
+			if not keep_connection then
+				disconnect
+			end
+		end
 feature -- Iteration
 
 	start
 			-- Set the cursor on first element
 		do
-			if attached db_selection as l_db_selection then
+			if attached db_selection as l_db_selection and then l_db_selection.container /= Void then
 				l_db_selection.start
 			end
 		end
@@ -134,25 +155,29 @@ feature -- Iteration
 		do
 			if attached db_selection as l_db_selection then
 				l_db_selection.forth
+			else
+				check False end
 			end
 		end
 
 	after: BOOLEAN
 			-- True for the last element
 		do
-			if attached db_selection as l_db_selection then
-				Result := l_db_selection.after
+			if attached db_selection as l_db_selection and then l_db_selection.container /= Void then
+				Result := l_db_selection.after or else l_db_selection.cursor = Void
+			else
+				Result := True
 			end
 		end
 
 
-	item: detachable DB_TUPLE
+	item: DB_TUPLE
 			-- Current element
 		do
-			if attached db_selection as l_db_selection then
-				if attached l_db_selection.cursor as l_cursor  then
-					Result := create {DB_TUPLE}.copy (l_cursor)
-				end
+			if attached db_selection as l_db_selection and then attached l_db_selection.cursor as l_cursor then
+				create {DB_TUPLE} Result.copy (l_cursor)
+			else
+				check False then end
 			end
 		end
 

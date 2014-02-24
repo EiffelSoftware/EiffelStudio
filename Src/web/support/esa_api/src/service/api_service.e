@@ -108,6 +108,18 @@ feature -- Basic Operations
 
 feature -- Status Report
 
+	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
+		local
+			l_security: ESA_SECURITY_PROVIDER
+			l_sha_password: STRING
+		do
+			if attached data_provider.user_password_salt (a_username) as l_hash and then
+			   attached a_password as l_password then
+				create l_security
+				l_sha_password := l_security.password_hash (l_password, l_hash)
+				Result := data_provider.validate_login (a_username, l_sha_password)
+			end
+		end
 
 feature -- Cache
 

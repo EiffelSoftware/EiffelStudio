@@ -6,6 +6,10 @@ note
 class
 	ESA_DATA_PROVIDER
 
+inherit
+
+	ESA_PARAMETER_NAME_HELPER
+
 create
 	make
 
@@ -29,7 +33,6 @@ feature -- Access
 			non_void_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_report : REPORT
 		do
 			connect
 			create l_parameters.make (4)
@@ -57,14 +60,13 @@ feature -- Access
 		end
 
 
-	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DATABASE_ITREATION_CURSOR [REPORT]
+	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		require
 			non_void_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_report : REPORT
 		do
 			create l_parameters.make (4)
 			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
@@ -82,7 +84,6 @@ feature -- Access
 			-- Only not confidential reports
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_report : REPORT
 		do
 			create l_parameters.make (2)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
@@ -97,7 +98,6 @@ feature -- Access
 			-- Problem report with number `a_number'.
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_res: INTEGER
 		do
 			connect
 			create l_parameters.make (1)
@@ -189,6 +189,99 @@ feature -- Access
 			disconnect
 		end
 
+
+	registration_token_from_username (a_username: READABLE_STRING_32): STRING
+			-- Associated token for a username `a_username', or
+			-- Empty String if the Account not activated.
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			create Result.make_empty
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationTokenFromUsername", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				if attached {DB_TUPLE} db_handler.item as l_item and then attached {STRING} l_item.item (1) as l_item_1 then
+					Result := l_item_1
+				end
+			end
+			disconnect
+		end
+
+
+	user_password_salt (a_username: READABLE_STRING_32): detachable STRING
+			-- Associated password salt for a username `a_username'
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetUserPasswordSalt", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				if attached {DB_TUPLE} db_handler.item as l_item and then attached {STRING} l_item.item (1) as l_item_1 then
+					Result := l_item_1
+				end
+			end
+			disconnect
+		end
+
+	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER): BOOLEAN
+			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
+			--
+		require
+			attached_username: a_username /= Void
+			attached_first_name: a_first_name /= Void
+			attached_last_name: a_last_name /= Void
+		local
+			l_answer_salt, l_password_salt, l_answer_hash, l_password_hash: STRING
+			l_security: ESA_SECURITY_PROVIDER
+			l_exists: BOOLEAN
+			l_int: INTEGER
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+			exist: BOOLEAN
+		do
+			create l_security
+			l_answer_salt := l_security.salt
+			l_answer_hash := l_security.password_hash (a_answer, l_answer_salt)
+			l_password_salt := l_security.salt
+			l_password_hash := l_security.password_hash (a_password, l_password_salt)
+
+			connect
+			create l_parameters.make (10)
+			l_parameters.put (a_first_name, {ESA_DATA_PARAMETERS_NAMES}.firstname_param)
+			l_parameters.put (a_last_name, {ESA_DATA_PARAMETERS_NAMES}.lastname_param)
+			l_parameters.put (a_email, {ESA_DATA_PARAMETERS_NAMES}.email_param)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
+			l_parameters.put (string_parameter (l_password_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.passwordhash_param)
+			l_parameters.put (string_parameter (l_password_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.passwordsalt_param)
+			l_parameters.put (string_parameter (l_answer_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.answerhash_param)
+			l_parameters.put (string_parameter (l_answer_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.answersalt_param)
+			l_parameters.put (a_token, {ESA_DATA_PARAMETERS_NAMES}.registrationtoken_param)
+			l_parameters.put (a_question_id, {ESA_DATA_PARAMETERS_NAMES}.questionid_param)
+
+
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("AddUser2", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				if attached {DB_TUPLE} db_handler.item as l_item  then
+						if attached {INTEGER_REF} l_item.item(1) as l_item_1 then
+							l_int := l_item_1.item
+						end
+						if attached {BOOLEAN_REF} l_item.item(2) as l_item_2 then
+							exist := l_item_2.item
+						end
+				end
+			end
+			Result := not exist
+			disconnect
+		end
 
 feature -- Basic Operations
 
@@ -291,15 +384,30 @@ feature -- Status Report
 			disconnect
 		end
 
+	validate_login (a_username: READABLE_STRING_32; a_password_salt: READABLE_STRING_32): BOOLEAN
+			-- Does account with username `a_username' and password `a_password' exist?
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
+			l_parameters.put (a_password_salt, {ESA_DATA_PARAMETERS_NAMES}.passwordhash_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("ValidateLogin", l_parameters))
+			db_handler.execute_reader
+
+			if not db_handler.after then
+				db_handler.start
+				if attached {DB_TUPLE} db_handler.item as l_item and then attached {BOOLEAN_REF} l_item.item (1) as l_item_1 then
+					Result := l_item_1.item
+				end
+			end
+			disconnect
+		end
 
 feature {NONE} -- Implementation
 
-	new_report (a_tuple: detachable DB_TUPLE): REPORT
-		local
-			l_number: INTEGER
-			l_synopsis: STRING_8
-			l_status: INTEGER
-			l_date: DATE_TIME
+	new_report (a_tuple: DB_TUPLE): REPORT
 		do
 			create Result.make (-1, "Null", False)
 			if attached a_tuple as l_tuple then
@@ -323,11 +431,6 @@ feature {NONE} -- Implementation
 		end
 
 	new_report_detail (a_tuple: DB_TUPLE): REPORT
-		local
-			l_number: INTEGER
-			l_synopsis: STRING_8
-			l_status: INTEGER
-			l_date: DATE_TIME
 		do
 
 			create Result.make (-1, "Null", False)
@@ -400,11 +503,6 @@ feature {NONE} -- Implementation
 
 
 	new_report_interaction (a_tuple: DB_TUPLE; a_report: REPORT): REPORT_INTERACTION
-		local
-			l_number: INTEGER
-			l_synopsis: STRING_8
-			l_status: INTEGER
-			l_date: DATE_TIME
 			-- InteractionDate, Content, Username, FirstName, LastName, StatusSynopsis, Private, InteractionID
 		do
 
@@ -444,10 +542,6 @@ feature {NONE} -- Implementation
 
 	new_interaction_attachment (a_tuple: DB_TUPLE; a_report: REPORT_INTERACTION): REPORT_ATTACHMENT
 		local
-			l_number: INTEGER
-			l_synopsis: STRING_8
-			l_status: INTEGER
-			l_date: DATE_TIME
 			-- AttachmentID, [FileName], BytesCount
 		do
 

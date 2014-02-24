@@ -11,7 +11,25 @@
   </head>
 
   <body>
-
+    <!-- Modal  Login-->
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Login Form</h4>
+          </div>
+          <div class="modal-body">
+              <form>
+                <p><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value=""></p>
+                <p><input type="password" class="span3" id="password" name="password" placeholder="Enter Password"></p>
+                <p><button type="button" class="btn btn-success" onclick="login();">Sign in</button> <button type="button" class="btn btn-default" onclick="logoff();">Reset</button> </p>
+              </form>
+          </div>
+         </div>
+      </div>
+    </div>
+   
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -27,7 +45,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModal">Login</a></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">

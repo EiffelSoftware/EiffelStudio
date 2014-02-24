@@ -105,4 +105,20 @@ feature -- Access
 	Name_param: STRING = "Name"
 
 	Url_param: STRING = "URL"
+
+feature -- Login
+
+--	Passwordhash_param: STRING = "PasswordHash"
+
+--	Registrationtoken_param: STRING = "RegistrationToken"
+
+--	Answerhash_param: STRING = "AnswerHash"
+
+	Passwordsalt_param: STRING = "PasswordSalt"
+
+	Answersalt_param: STRING = "AnswerSalt"
+
+	Questionid_param: STRING = "QuestionID"
+
+
 end

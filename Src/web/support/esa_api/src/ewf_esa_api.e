@@ -48,13 +48,18 @@ feature {NONE} -- Initialization
 		do
 			map_uri_agent_with_request_methods ("/", agent handle_home_page, router.methods_GET)
 			map_uri_agent_with_request_methods ("/reports", agent handle_report_page, router.methods_GET)
+			map_uri_agent_with_request_methods ("/login", agent handle_login, router.methods_GET_POST)
+			map_uri_agent_with_request_methods ("/logoff", agent handle_logoff, router.methods_GET_POST)
 			map_uri_template_agent_with_request_methods ("/reports/{id}", agent handle_report_page, router.methods_GET)
 			map_uri_template_agent_with_request_methods ("/report_detail/{id}", agent handle_report_detail_page, router.methods_GET)
 			map_uri_template_agent_with_request_methods ("/report_interaction/{id}/{name}", agent handle_report_interaction_download, router.methods_GET)
+
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden ("www")
 			fhdl.set_directory_index (<<"index.html">>)
+			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE) do execute_default (ia_req, ia_res) end)
 			router.handle_with_request_methods ("/", fhdl, router.methods_GET)
+
 		end
 
 feature -- Database Provider
@@ -105,7 +110,7 @@ feature -- Handle Responses
 							end
 						elseif l_type.same_string ("text/html") then
 								-- HTML
-							create l_hp.make ("http://" + l_host)
+							create l_hp.make ("http://" + l_host,"")
 							if attached l_hp.representation as l_home_page then
 								compute_response_get (req, res, l_home_page)
 							end
@@ -192,7 +197,9 @@ feature -- Handle Responses
 			l_hp: REPORT_DETAIL_PAGE
 			l_report: detachable REPORT
 			l_cj: CJ_REPORT_DETAIL_PAGE
+			l_auth: HTTP_AUTHORIZATION
 		do
+			create l_auth.make (req.http_authorization)
 			if attached req.http_host as l_host then
 				if attached req.path_parameter ("id") as l_id then
 					if attached req.http_accept as l_accept then
@@ -237,6 +244,72 @@ feature -- Handle Responses
 			end
 		end
 
+
+feature -- Authentication
+
+	handle_login (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute the filter
+		local
+			l_auth: HTTP_AUTHORIZATION
+			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_rhf: REPRESENTATION_HANDLER_FACTORY
+		do
+			create l_auth.make (req.http_authorization)
+				-- A valid user
+			if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
+				attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then
+
+				if api_service.login_valid (l_auth_login, l_auth_password) then
+				else
+					handle_unauthorized ("Access Denied", req, res)
+				end
+
+			else -- Not allowed
+				handle_unauthorized ("Access Denied", req, res)
+			end
+		end
+
+	handle_logoff (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute the filter
+		local
+			l_auth: HTTP_AUTHORIZATION
+			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_rhf: REPRESENTATION_HANDLER_FACTORY
+			l_hp: HOME_PAGE
+		do
+			handle_unauthorized ("Unauthorized",req, res)
+		end
+
+feature {NONE} -- Implementation
+
+	handle_unauthorized (a_description: STRING; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Handle forbidden.
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_type_text_html
+			h.put_content_length (a_description.count)
+			h.put_current_date
+--			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
+			res.put_header_text (h.string)
+			res.put_string (a_description)
+		end
+
+	handle_access_denied (a_description: STRING; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Handle access denied
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_length (a_description.count)
+			h.put_current_date
+			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
+			res.put_header_text (h.string)
+			res.put_string (a_description)
+		end
 
 feature -- Default Execution
 

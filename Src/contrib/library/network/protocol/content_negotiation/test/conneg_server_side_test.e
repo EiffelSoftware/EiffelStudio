@@ -141,10 +141,10 @@ feature -- Test routines
 			compression_supported := l_compression.split(',')
 			conneg.set_default_encoding ("gzip")
 			compression_variants := conneg.encoding_preference (compression_supported, "gzip;q=0.7")
-			assert ("Expected Not Acceptable", not compression_variants.is_acceptable)
+			assert ("Expected Acceptable", compression_variants.is_acceptable)
 			assert ("Variants is set",compression_variants.supported_variants = compression_supported)
 			assert ("Variant Header", attached compression_variants.vary_header_value as l_variant_header and then l_variant_header.same_string ("Accept-Encoding"))
-			assert ("Encoding Type is Void", compression_variants.encoding = Void)
+			assert ("Encoding Type is Identity", attached compression_variants.encoding as l_type and then l_type.same_string ("identity"))
 
 			-- Scenario 5, the server set `identity' and the client mention identity,q=0
 			l_compression := "identity"

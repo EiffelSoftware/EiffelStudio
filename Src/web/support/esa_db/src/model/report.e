@@ -58,6 +58,7 @@ feature -- Optional
 
 	description_encode: detachable READABLE_STRING_32
 			-- workaround to support json encode
+
 	to_reproduce_encode: detachable READABLE_STRING_32
 			-- workaround to support json encode
 
@@ -161,15 +162,6 @@ feature -- Fill
 			interactions := v
 		end
 
-
-feature -- Attachments
-
-	attachments: detachable LIST [REPORT_ATTACHMENT]
-
-	set_attachments (a: like attachments)
-		do
-			attachments := a
-		end
 
 feature --JSON encode
 

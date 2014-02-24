@@ -26,6 +26,10 @@
                 "href": "{$host/}/reports/{$last/}",
                 "rel": "last",
                 "prompt": "Last"
+            >,
+            <
+                "href": "http://alps.io/iana/relations.xml",
+                "rel": "profile"
             >
           ],
      "items": [

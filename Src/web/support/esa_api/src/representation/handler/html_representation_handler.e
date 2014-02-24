@@ -23,7 +23,7 @@ feature -- View
 			l_hp: HOME_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make ("http://"+l_host)
+				create l_hp.make ("http://"+l_host,req.execution_variable ("user"))
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end

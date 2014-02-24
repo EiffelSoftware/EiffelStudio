@@ -17,7 +17,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -27,6 +27,9 @@ feature {NONE} --Initialization
 			set_template_folder (p)
 			set_template_file_name ("home.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user as l_user then
+				template.add_value (l_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output

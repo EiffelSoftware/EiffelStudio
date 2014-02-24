@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_DATABASE_ITREATION_CURSOR [G]
+	ESA_DATABASE_ITERATION_CURSOR [G]
 
 inherit
 
@@ -32,11 +32,13 @@ feature -- Access
 			Result := action.item ([db_item])
 		end
 
-	db_item: detachable DB_TUPLE
+	db_item:  DB_TUPLE
 			-- Current element
 		do
 			if attached {DB_TUPLE} db_handler.item as l_item then
 				Result := l_item
+			else
+				check False then end
 			end
 		end
 
@@ -64,7 +66,7 @@ feature -- Cursor movement
 
 feature -- Cursor
 
-	new_cursor: ESA_DATABASE_ITREATION_CURSOR [G]
+	new_cursor: ESA_DATABASE_ITERATION_CURSOR [G]
 			-- <Precursor>
 		do
 			Result := twin
@@ -73,7 +75,7 @@ feature -- Cursor
 
 feature -- Action
 
-	action: FUNCTION [ANY,detachable TUPLE[detachable DB_TUPLE],G]
+	action: FUNCTION [ANY,detachable TUPLE[DB_TUPLE],G]
 			-- Agent to create a new item of type G.
 
 feature {NONE} -- Implementation

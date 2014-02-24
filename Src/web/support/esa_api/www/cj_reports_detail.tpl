@@ -11,6 +11,10 @@
                 "href": "{$host/}/reports",
                 "rel": "collection",
                 "prompt": "Reports"
+            >,
+             <
+                "href": "http://alps.io/iana/relations.xml",
+                "rel": "profile"
             >
           ],
      "items": [

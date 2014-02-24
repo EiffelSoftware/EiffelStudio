@@ -7,7 +7,8 @@ class
 	ESA_DATABASE_STORE_PROCEDURE
 
 create
-	data_reader
+	data_reader,
+	data_writer
 
 feature -- Intialization
 
@@ -122,6 +123,4 @@ feature {NONE} -- Implementation
 				parameters.forth
 			end
 		end
-
-
 end

@@ -2782,6 +2782,7 @@ test	inference-formal-generic	inference007 tcf pass inference formal generic
 test	inference-implicit-typing	inference008 tcf pass inference object_test across iteration
 test	inference-boolean-expression	inference009 tcf pass inference across iteration conditional expression check instruction loop invariant
 test	inference-manifest-array	inference010 tcf pass inference
+test	inference-agent-expression	inference011 tcf pass inference agents
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop execution multithreaded

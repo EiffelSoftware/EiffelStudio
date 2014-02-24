@@ -193,11 +193,11 @@ feature {NONE} -- Implementation
 				loop
 					range := a_parsed_charsets.item_for_iteration
 					if attached range.value as l_range_common then
-						if 
-							l_target_field.same_string (l_range_common) 
-							or l_target_field.same_string ("*") 
-							or l_range_common.same_string ("*") 
-							or l_range_common.same_string ("identity") 
+						if
+							l_target_field.same_string (l_range_common)
+							or l_target_field.same_string ("*")
+							or l_range_common.same_string ("*")
+							or l_target_field.same_string ("identity")
 						then
 							if l_range_common.same_string (l_target_field) then
 								l_fitness := 100
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 
 end

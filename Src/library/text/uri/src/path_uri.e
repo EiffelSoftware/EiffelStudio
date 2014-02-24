@@ -59,27 +59,22 @@ feature {NONE} -- Initialization
 		local
 			p: PATH
 			s: STRING_32
-			l_name: READABLE_STRING_32
+			l_item_name: READABLE_STRING_32
 			l_components: LIST [PATH]
 			is_abs: BOOLEAN
+			i: INTEGER
 		do
 			p := a_path
 			if a_path.is_absolute then
 				is_abs := True
 			end
 			file_path := p
-			scheme := "file"
+			set_scheme ("file")
 			set_path ("")
 
 			is_absolute := is_abs
---			if is_abs then
---				create uri.make_from_string ("file://")
---			else
---				create uri.make_from_string ("file:")
---			end
 
 			if {PLATFORM}.is_windows then
-				l_name := p.name
 				l_components := p.components
 
 				from
@@ -87,29 +82,44 @@ feature {NONE} -- Initialization
 				until
 					l_components.after
 				loop
+					l_item_name := l_components.item.name
 					if p.has_root and then l_components.isfirst then
 							-- Is root
-						create s.make_from_string (l_components.item.name)
-
-						if is_abs then
-							s.prepend_character ('/')
+						check item_is_root: attached p.root as p_root and then l_item_name.same_string (p_root.name) end
+						if l_item_name.starts_with_general ("\\") then
+							i := l_item_name.index_of ('\', 3)
+							if i > 0 then
+								set_hostname (l_item_name.substring (3, i - 1))
+								l_item_name := l_item_name.substring (i + 1, l_item_name.count)
+							else
+								check invalid_root_value: False end
+							end
 						end
+						create s.make_from_string (l_item_name)
 						if s[s.count] = '\' then
 							if l_components.islast then
 								s[s.count] := '/'
 							else
 								s.remove_tail (1)
 							end
-						elseif not l_components.islast then
+						end
+
+						if is_abs and (s.is_empty or else s[1] /= '/') then
+							s.prepend_character ('/')
+						end
+						if not l_components.islast then
 							l_components.forth
-							s.append (l_components.item.name)
+							if is_abs and s[s.count] /= '/' then
+								s.append_character ('/')
+							end
+							append_percent_encoded_string_to (l_components.item.name, s)
 						end
 						set_path (s)
 					elseif l_components.isfirst then
 						check not is_abs end
-						set_unencoded_path (l_components.item.name)
+						set_unencoded_path (l_item_name)
 					else
-						add_unencoded_path_segment (l_components.item.name)
+						add_unencoded_path_segment (l_item_name)
 					end
 					l_components.forth
 				end

@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 			-- Create the API service
 		do
 			create data_provider.make
+--			create login_provider.make
 		end
 
 feature -- Access
@@ -163,6 +164,8 @@ feature {NONE} -- Factories
 
 feature {NONE} -- Implementation
 
-	data_provider: ESA_DATA_PROVIDER
+	data_provider: ESA_REPORT_DATA_PROVIDER
 			-- Data provider
+
+--	login_provider: ESA_LOGIN_DATA_PROVIDER
 end

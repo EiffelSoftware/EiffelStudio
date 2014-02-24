@@ -16,15 +16,37 @@ inherit
 		end
 
 	WSF_ROUTED_SERVICE
+		rename
+			execute as execute_router
 		redefine
 			execute_default
 		end
+
+	WSF_FILTERED_SERVICE
 
 	WSF_URI_HELPER_FOR_ROUTED_SERVICE
 
 	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
 
+	WSF_HANDLER_HELPER
+
+	WSF_FILTER
+		rename
+			execute as execute_router
+		end
+
+	SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 	APPLICATION_LAUNCHER
+
+	SHARED_API_SERVICE
+
+	SHARED_CONNEG_HELPER
+
+	REFACTORING_HELPER
 
 create
 	make_and_launch
@@ -35,10 +57,9 @@ feature {NONE} -- Initialization
 			-- Initialize current service.
 		do
 			Precursor
+			initialize_filter
 			initialize_router
-			set_service_option ("port", 9090)
-			create api_service.make
-
+			set_service_option ("port", 9990)
 		end
 
 	setup_router
@@ -46,13 +67,20 @@ feature {NONE} -- Initialization
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
 		do
-			map_uri_agent_with_request_methods ("/", agent handle_home_page, router.methods_GET)
-			map_uri_agent_with_request_methods ("/reports", agent handle_report_page, router.methods_GET)
-			map_uri_agent_with_request_methods ("/login", agent handle_login, router.methods_GET_POST)
-			map_uri_agent_with_request_methods ("/logoff", agent handle_logoff, router.methods_GET_POST)
-			map_uri_template_agent_with_request_methods ("/reports/{id}", agent handle_report_page, router.methods_GET)
-			map_uri_template_agent_with_request_methods ("/report_detail/{id}", agent handle_report_detail_page, router.methods_GET)
-			map_uri_template_agent_with_request_methods ("/report_interaction/{id}/{name}", agent handle_report_interaction_download, router.methods_GET)
+
+			to_implement ("Extract Setup to a new Class")
+
+			configure_api_root
+
+			configure_api_report
+
+			configure_api_report_detail
+
+			configure_api_report_interaction
+
+			configure_api_login
+
+			configure_api_logoff
 
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden ("www")
@@ -62,254 +90,104 @@ feature {NONE} -- Initialization
 
 		end
 
-feature -- Database Provider
+feature -- Configure Resources Routes
 
-	api_service: API_SERVICE
 
-feature -- Conneg
-
-	conneg (req: WSF_REQUEST): SERVER_CONTENT_NEGOTIATION
-			-- Content negotiatior for all requests
-		once
-			create Result.make ({HTTP_MIME_TYPES}.text_html, "en", "UTF-8", "identity")
-		end
-
-	mime_types_supported (req: WSF_REQUEST): LIST [STRING]
-			-- All values for Accept header that `Current' can serve
-		do
-			create {ARRAYED_LIST [STRING]} Result.make_from_array (<<{HTTP_MIME_TYPES}.text_html, "application/vnd.collection+json">>)
-			Result.compare_objects
-		ensure
-			mime_types_supported_includes_default: Result.has (conneg (req).default_media_type)
-		end
-
-	media_type_variants (req: WSF_REQUEST): HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			-- Media type negotiation
-		do
-			Result := conneg (req).media_type_preference (mime_types_supported (req), req.http_accept)
-		end
-
-feature -- Handle Responses
-	-- Try to use Policy Framework.
-
-	handle_home_page_old (req: WSF_REQUEST; res: WSF_RESPONSE)
+	configure_api_root
 		local
-			l_hp: HOME_PAGE
-			l_cj: CJ_API_PAGE
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_root_handler: ROOT_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+			l_filter: AUTHENTICATION_FILTER
 		do
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached req.http_host as l_host then
-					if attached media_variants.media_type as l_type then
-						if l_type.same_string ("application/vnd.collection+json") then
-								-- Collection + JSON
-							create l_cj.make ("http://" + l_host)
-							if attached l_cj.representation as l_cj_api then
-								compute_response_cj_get (req, res, l_cj_api)
-							end
-						elseif l_type.same_string ("text/html") then
-								-- HTML
-							create l_hp.make ("http://" + l_host,"")
-							if attached l_hp.representation as l_home_page then
-								compute_response_get (req, res, l_home_page)
-							end
-						end
-					end
-				end
-			end
+			create l_filter
+			create l_root_handler
+			l_filter.set_next (l_root_handler)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_filter.execute), l_methods)
 		end
 
-	handle_home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+	configure_api_report
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			l_rhf: REPRESENTATION_HANDLER_FACTORY
+			l_report_handler: REPORT_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+			l_filter: AUTHENTICATION_FILTER
 		do
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
-					create l_rhf
-					l_rhf.new_representation_handler (l_type,media_variants).home_page (req, res)
-				end
-			else
-				create l_rhf
-				l_rhf.new_representation_handler ("",media_variants).home_page (req, res)
-			end
+			create l_filter
+			create l_report_handler
+			l_filter.set_next (l_report_handler)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/reports", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_filter.execute), l_methods)
 		end
 
-	handle_report_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+
+
+	configure_api_report_detail
 		local
-			l_hp: REPORT_PAGE
-			l_pages: INTEGER
-			l_cp: CJ_REPORT_PAGE
+			l_report_detail_handler: REPORT_DETAIL_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+			l_filter: AUTHENTICATION_FILTER
 		do
-			if attached req.http_host as l_host then
-				l_pages := api_service.row_count_problem_report_guest
-				l_pages := l_pages // 10
-				if attached req.path_parameter ("id") as l_id then
-					if attached req.http_accept as l_accept then
-						if l_accept.as_string_32.has_substring ("application/vnd.collection+json") then
-								-- CJ
-							create l_cp.make ("http://" + l_host, api_service.problem_reports_guest (l_id.as_string.integer_value, 10), l_id.as_string.integer_value, l_pages)
-							if attached l_cp.representation as l_cj_api then
-								compute_response_cj_get (req, res, l_cj_api)
-							end
-						else
-								-- HTML
-							create l_hp.make ("http://" + l_host, api_service.problem_reports_guest (l_id.as_string.integer_value, 10), l_id.as_string.integer_value, l_pages)
-							if attached l_hp.representation as l_home_page then
-								compute_response_get (req, res, l_home_page)
-							end
-						end
-					else
-							-- HTML
-						create l_hp.make ("http://" + l_host, api_service.problem_reports_guest (l_id.as_string.integer_value, 10), l_id.as_string.integer_value, l_pages)
-						if attached l_hp.representation as l_home_page then
-							compute_response_get (req, res, l_home_page)
-						end
-					end
-				else
-					if attached req.http_accept as l_accept then
-						if l_accept.as_string_32.has_substring ("application/vnd.collection+json") then
-								-- CJ
-							create l_cp.make ("http://" + l_host, api_service.problem_reports_guest (1, 10), 1, l_pages)
-							if attached l_cp.representation as l_cj_api then
-								compute_response_cj_get (req, res, l_cj_api)
-							end
-						else
-							create l_hp.make ("http://" + l_host, api_service.problem_reports_guest (1, 10), 1, l_pages)
-							if attached l_hp.representation as l_home_page then
-								compute_response_get (req, res, l_home_page)
-							end
-						end
-					else
-						create l_hp.make ("http://" + l_host, api_service.problem_reports_guest (1, 10), 1, l_pages)
-						if attached l_hp.representation as l_home_page then
-							compute_response_get (req, res, l_home_page)
-						end
-					end
-				end
-			end
+			create l_filter
+			create l_report_detail_handler
+			l_filter.set_next (l_report_detail_handler)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/report_detail/{id}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_filter.execute), l_methods)
 		end
 
-	handle_report_detail_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+
+	configure_api_report_interaction
 		local
-			l_hp: REPORT_DETAIL_PAGE
-			l_report: detachable REPORT
-			l_cj: CJ_REPORT_DETAIL_PAGE
-			l_auth: HTTP_AUTHORIZATION
+			l_report_interaction_handler: REPORT_INTERACTION_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		    l_filter: AUTHENTICATION_FILTER
 		do
-			create l_auth.make (req.http_authorization)
-			if attached req.http_host as l_host then
-				if attached req.path_parameter ("id") as l_id then
-					if attached req.http_accept as l_accept then
-						if l_accept.as_string_32.has_substring ("application/vnd.collection+json") then
-								-- Collection + JSON
-							l_report := api_service.problem_report (l_id.as_string.integer_value)
-							create l_cj.make ("http://" + l_host, l_report)
-							if attached l_cj.representation as l_cj_api then
-								compute_response_cj_get (req, res, l_cj_api)
-							end
-						else
-								-- HTML
-							l_report := api_service.problem_report (l_id.as_string.integer_value)
-							create l_hp.make ("http://" + l_host, l_report)
-							if attached l_hp.representation as l_home_page then
-								compute_response_get (req, res, l_home_page)
-							end
-						end
-					else -- HTML default
-						l_report := api_service.problem_report (l_id.as_string.integer_value)
-						create l_hp.make ("http://" + l_host, l_report)
-						if attached l_hp.representation as l_home_page then
-							compute_response_get (req, res, l_home_page)
-						end
-					end
-				end
-			end
+			create l_filter
+			create l_report_interaction_handler
+			l_filter.set_next (l_report_interaction_handler)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/report_interaction/{id}/{name}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_filter.execute), l_methods)
 		end
 
-	handle_report_interaction_download (req: WSF_REQUEST; res: WSF_RESPONSE)
+
+
+	configure_api_login
 		local
-			l_hp: REPORT_DETAIL_PAGE
-			l_report: detachable REPORT
-			l_interactions: LIST [REPORT_INTERACTION]
-			l_attachments: LIST [REPORT_ATTACHMENT]
+			l_options_filter: WSF_CORS_OPTIONS_FILTER
+			l_authentication_filter: AUTHENTICATION_FILTER
+			l_login_handler: LOGIN_HANDLER
+			l_methods: WSF_REQUEST_METHODS
 		do
-			if attached req.http_host as l_host then
-				if attached req.path_parameter ("id") as l_id and then attached req.path_parameter ("name") as l_name then
-					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
-				end
-					--TODO
-			end
+			create l_options_filter.make (router)
+			create l_authentication_filter
+			create l_login_handler
+
+			l_options_filter.set_next (l_authentication_filter)
+			l_authentication_filter.set_next (l_login_handler)
+
+			create l_methods
+			l_methods.enable_options
+			l_methods.enable_get
+			l_methods.enable_post
+
+			router.handle_with_request_methods ("/login", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_options_filter.execute), l_methods)
 		end
 
 
-feature -- Authentication
-
-	handle_login (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the filter
+	configure_api_logoff
 		local
-			l_auth: HTTP_AUTHORIZATION
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			l_rhf: REPRESENTATION_HANDLER_FACTORY
+			l_logoff_handler: LOGOFF_HANDLER
+			l_methods: WSF_REQUEST_METHODS
 		do
-			create l_auth.make (req.http_authorization)
-				-- A valid user
-			if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
-				attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then
-
-				if api_service.login_valid (l_auth_login, l_auth_password) then
-				else
-					handle_unauthorized ("Access Denied", req, res)
-				end
-
-			else -- Not allowed
-				handle_unauthorized ("Access Denied", req, res)
-			end
+			create l_logoff_handler
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/logoff", l_logoff_handler, l_methods)
 		end
 
-	handle_logoff (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the filter
-		local
-			l_auth: HTTP_AUTHORIZATION
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			l_rhf: REPRESENTATION_HANDLER_FACTORY
-			l_hp: HOME_PAGE
-		do
-			handle_unauthorized ("Unauthorized",req, res)
-		end
-
-feature {NONE} -- Implementation
-
-	handle_unauthorized (a_description: STRING; req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Handle forbidden.
-		local
-			h: HTTP_HEADER
-		do
-			create h.make
-			h.put_content_type_text_html
-			h.put_content_length (a_description.count)
-			h.put_current_date
---			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
-			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
-			res.put_header_text (h.string)
-			res.put_string (a_description)
-		end
-
-	handle_access_denied (a_description: STRING; req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Handle access denied
-		local
-			h: HTTP_HEADER
-		do
-			create h.make
-			h.put_content_length (a_description.count)
-			h.put_current_date
-			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
-			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
-			res.put_header_text (h.string)
-			res.put_string (a_description)
-		end
 
 feature -- Default Execution
 
@@ -331,63 +209,21 @@ feature -- Default Execution
 			end
 		end
 
-feature -- HTML Responses
 
-	compute_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-		local
-			h: HTTP_HEADER
-			l_msg: STRING
-			hdate: HTTP_DATE
+feature -- Filters
+
+
+	setup_filter
+			-- Setup `filter'
 		do
-			create h.make
-			create l_msg.make_from_string (output)
-			h.put_content_type_text_html
-			h.put_content_length (l_msg.count)
-			if attached req.request_time as time then
-				create hdate.make_from_date_time (time)
-				h.add_header ("Date:" + hdate.rfc1123_string)
-			end
-			res.set_status_code ({HTTP_STATUS_CODE}.ok)
-			res.put_header_text (h.string)
-			res.put_string (l_msg)
+			filter.set_next (Current)
 		end
 
-	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-		local
-			h: HTTP_HEADER
-			l_msg: STRING
-			hdate: HTTP_DATE
+	create_filter
+			-- Create `filter'
 		do
-			create h.make
-			create l_msg.make_from_string (output)
-			h.put_content_type_text_plain
-			h.put_content_length (l_msg.count)
-			if attached req.request_time as time then
-				create hdate.make_from_date_time (time)
-				h.add_header ("Date:" + hdate.rfc1123_string)
-			end
-			res.set_status_code ({HTTP_STATUS_CODE}.ok)
-			res.put_header_text (h.string)
-			res.put_string (l_msg)
+			create {WSF_CORS_FILTER} filter
 		end
 
-	compute_response_cj_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-		local
-			h: HTTP_HEADER
-			l_msg: STRING
-			hdate: HTTP_DATE
-		do
-			create h.make
-			create l_msg.make_from_string (output)
-			h.put_content_type ("application/vnd.collection+json")
-			h.put_content_length (l_msg.count)
-			if attached req.request_time as time then
-				create hdate.make_from_date_time (time)
-				h.add_header ("Date:" + hdate.rfc1123_string)
-			end
-			res.set_status_code ({HTTP_STATUS_CODE}.ok)
-			res.put_header_text (h.string)
-			res.put_string (l_msg)
-		end
 
 end

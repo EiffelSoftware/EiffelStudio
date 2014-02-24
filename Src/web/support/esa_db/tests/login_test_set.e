@@ -24,7 +24,7 @@ feature -- Test routines
 	test_password_salt_success
 			-- The user exist
 		local
-			db: ESA_DATA_PROVIDER
+			db: ESA_REPORT_DATA_PROVIDER
 		do
 			create db.make
 			assert("Expected not Void",attached db.user_password_salt ("jvelilla"))
@@ -33,7 +33,7 @@ feature -- Test routines
 	test_password_hash_success
 			-- The user exist
 		local
-			db: ESA_DATA_PROVIDER
+			db: ESA_REPORT_DATA_PROVIDER
 			l_sha_password: STRING
 			l_value: BOOLEAN
 		do

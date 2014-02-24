@@ -26,6 +26,19 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	problem_reports_guest  (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Not found page.
 		do

@@ -136,7 +136,7 @@ feature -- Status Report
 
 	has_error: BOOLEAN
 
-feature {ESA_DATA_PROVIDER, ESA_LOGIN_DATA_PROVIDER} -- Implementation
+feature {ESA_REPORT_DATA_PROVIDER, ESA_LOGIN_DATA_PROVIDER} -- Implementation
 
 	connect
 			-- Connect to the database

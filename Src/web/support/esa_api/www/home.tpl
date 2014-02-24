@@ -45,7 +45,9 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
-            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModal">Login</a></li>
+            <!-- <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModal">Login</a></li> -->
+            <li><a href="{$host/}/login">Login</a></li>
+            <li><a href="{$host/}/logoff">Logoff</a></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">

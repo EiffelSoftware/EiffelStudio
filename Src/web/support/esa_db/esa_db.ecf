@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="crypto" location="C:\home\Eiffel\eiffel_dev\Src\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>

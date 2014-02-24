@@ -6,6 +6,10 @@ note
 deferred class
 	REPRESENTATION_HANDLER
 
+inherit
+
+	SHARED_API_SERVICE
+
 feature -- Initialization
 
 	make (a_media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS)
@@ -27,6 +31,18 @@ feature -- View
 			-- Home page representation
 		deferred
 		end
+
+
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Problem report representation
+		deferred
+		end
+
+	problem_reports_guest  (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Problem reports representation for a guest user
+		deferred
+		end
+
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Not found page

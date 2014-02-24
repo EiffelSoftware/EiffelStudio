@@ -1,5 +1,5 @@
-var loginURL = "/WebServices/LogIn";
-var logoutURL = "/WebServices/LogOff";
+var loginURL = "login";
+var logoutURL = "logoff";
 var userAgent = navigator.userAgent.toLowerCase();
 var firstLogIn = true;
  

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	execute_read_example
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 			list: LIST[REPORT]
 		do
 			create l_prov.make
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 	execute_guest_reports
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 			list: ESA_DATA_VALUE
 		do
 			print ("%NGuest Reports")
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 	execute_row_count
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_prov.make
 			print ("RowCount { ProblemReports } :" + l_prov.row_count ("ProblemReports").out)
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 	execute_write_example
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_prov.make
 			print (l_prov.new_problem_report_id ("jvelilla"))
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 	execute_report_guest
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_prov.make
 			print (l_prov.problem_report (18628))
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 
 	execute_iterator
 		local
-			l_prov: ESA_DATA_PROVIDER
+			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_prov.make
 
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 	test_add_user
 		local
-			ld: ESA_DATA_PROVIDER
+			ld: ESA_REPORT_DATA_PROVIDER
 		do
 			create ld.make
 			if ld.add_user ("test002", "test002","test002", "test002", "test002", "answer", "token", 1) then

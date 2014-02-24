@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_DATA_PROVIDER
+	ESA_REPORT_DATA_PROVIDER
 
 inherit
 

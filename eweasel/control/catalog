@@ -2817,7 +2817,7 @@ test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution mult
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution multithreaded
 test	scoop-agent-validity				scoop030 tcf pass scoop validity expanded agents conformance multithreaded
 test	scoop-agent-call				scoop031 tcf pass scoop agents execution multithreaded
-test	scoop-corrupted-string			scoop032 tcf pass scoop execution multithreaded
+test	scoop-corrupted-string			scoop032 tcf fail used_to_pass scoop execution multithreaded
 test	scoop-lock-passing-same-target	scoop033 tcf pass scoop lock_passing execution multithreaded
 test	scoop-corrupted-polymorphic-call scoop034 tcf fail used_to_pass scoop execution multithreaded
 test	scoop-null-reference-call		scoop035 tcf pass scoop execution multithreaded

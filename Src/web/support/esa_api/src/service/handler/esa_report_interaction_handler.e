@@ -4,9 +4,14 @@ note
 	revision: "$Revision$"
 
 class
-	REPORT_INTERACTION_HANDLER
+	ESA_REPORT_INTERACTION_HANDLER
 
 inherit
+
+	ESA_ABSTRACT_HANDLER
+		rename
+			set_esa_config as make
+		end
 
 	WSF_FILTER
 
@@ -29,10 +34,10 @@ inherit
 			do_get
 		end
 
-	SHARED_API_SERVICE
-
 	REFACTORING_HELPER
 
+create
+	make
 
 feature -- execute
 
@@ -73,12 +78,15 @@ feature -- HTTP Methods
 		end
 
 feature -- Response	
+
 	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+			--Simple response to download content
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
 			hdate: HTTP_DATE
 		do
+			fixme ("Find a better way to handle this!!!")
 			create h.make
 			create l_msg.make_from_string (output)
 			h.put_content_type_text_plain

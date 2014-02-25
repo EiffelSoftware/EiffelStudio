@@ -1,14 +1,17 @@
 note
-	description: "Summary description for {LOGOFF_HANDLER}."
+	description: "Handle Logoff for Basic Authentication"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LOGOFF_HANDLER
+	ESA_LOGOFF_HANDLER
 
 inherit
 
---	WSF_FILTER
+	ESA_ABSTRACT_HANDLER
+		rename
+			set_esa_config as make
+		end
 
 	WSF_URI_HANDLER
 		rename
@@ -16,23 +19,15 @@ inherit
 			new_mapping as new_uri_mapping
 		end
 
---	WSF_URI_TEMPLATE_HANDLER
---		rename
---			execute as uri_template_execute,
---			new_mapping as new_uri_template_mapping
---		select
---			new_uri_template_mapping
---		end
-
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
 			do_get
 		end
 
-	SHARED_API_SERVICE
-
 	REFACTORING_HELPER
 
+create
+	make
 
 feature -- execute
 

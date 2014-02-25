@@ -4,11 +4,11 @@ note
 	revision: "$Revision$"
 
 class
-	CJ_REPRESENTATION_HANDLER
+	ESA_CJ_REPRESENTATION_HANDLER
 
 inherit
 
-	REPRESENTATION_HANDLER
+	ESA_REPRESENTATION_HANDLER
 
 	REFACTORING_HELPER
 create
@@ -19,7 +19,7 @@ feature -- View
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_cj: CJ_API_PAGE
+			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make ("http://"+l_host)
@@ -32,7 +32,7 @@ feature -- View
 	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_cj: CJ_REPORT_DETAIL_PAGE
+			l_cj: ESA_CJ_REPORT_DETAIL_PAGE
 		do
 			if attached req.http_host as l_host then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
@@ -56,7 +56,7 @@ feature -- View
 	problem_reports_guest  (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_hp: CJ_REPORT_PAGE
+			l_hp: ESA_CJ_REPORT_PAGE
 			l_pages: INTEGER
 		do
 			if attached req.http_host as l_host then
@@ -84,7 +84,7 @@ feature -- View
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_cj: CJ_API_PAGE
+			l_cj: ESA_CJ_ROOT_PAGE
 		do
 		end
 

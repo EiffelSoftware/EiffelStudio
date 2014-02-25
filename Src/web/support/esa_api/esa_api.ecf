@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="esa_api" uuid="8B2873E9-8E2A-4490-8B6C-1122B579FD1D" library_target="esa_api">
 	<target name="common" abstract="true">
 		<file_rule>
@@ -7,20 +7,21 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
+			<debug name="esa" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="conneg" location="$ISE_LIBRARY\contrib\library\network\protocol\content_negotiation\conneg-safe.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
-		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
 		<library name="esa_db" location="..\esa_db\esa_db.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 	</target>
 	<target name="esa_api_any" extends="common">
-		<root class="EWF_ESA_API" feature="make_and_launch"/>
+		<root class="ESA_SERVER" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
@@ -28,19 +29,19 @@
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="esa_api_nino" extends="common">
-		<root class="EWF_ESA_API" feature="make_and_launch"/>
+		<root class="ESA_SERVER" feature="make_and_launch"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="esa_api_cgi" extends="common">
-		<root class="EWF_ESA_API" feature="make_and_launch"/>
+		<root class="ESA_SERVER" feature="make_and_launch"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="esa_api_libfcgi" extends="common">
-		<root class="EWF_ESA_API" feature="make_and_launch"/>
+		<root class="ESA_SERVER" feature="make_and_launch"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>

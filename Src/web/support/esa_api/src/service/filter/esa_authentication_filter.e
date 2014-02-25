@@ -5,15 +5,21 @@ note
 	revision: "$Revision$"
 
 class
-	AUTHENTICATION_FILTER
+	ESA_AUTHENTICATION_FILTER
 
 inherit
-
-	WSF_FILTER
-
 	WSF_URI_TEMPLATE_HANDLER
 
-	SHARED_API_SERVICE
+	ESA_ABSTRACT_HANDLER
+		rename
+			set_esa_config as make
+		end
+	WSF_FILTER
+
+
+
+create
+	make
 
 feature -- Basic operations
 

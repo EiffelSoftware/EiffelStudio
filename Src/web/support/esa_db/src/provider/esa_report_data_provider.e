@@ -384,26 +384,6 @@ feature -- Status Report
 			disconnect
 		end
 
-	validate_login (a_username: READABLE_STRING_32; a_password_salt: READABLE_STRING_32): BOOLEAN
-			-- Does account with username `a_username' and password `a_password' exist?
-		local
-			l_parameters: HASH_TABLE[ANY,STRING_32]
-		do
-			connect
-			create l_parameters.make (2)
-			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
-			l_parameters.put (a_password_salt, {ESA_DATA_PARAMETERS_NAMES}.passwordhash_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("ValidateLogin", l_parameters))
-			db_handler.execute_reader
-
-			if not db_handler.after then
-				db_handler.start
-				if attached {DB_TUPLE} db_handler.item as l_item and then attached {BOOLEAN_REF} l_item.item (1) as l_item_1 then
-					Result := l_item_1.item
-				end
-			end
-			disconnect
-		end
 
 feature {NONE} -- Implementation
 

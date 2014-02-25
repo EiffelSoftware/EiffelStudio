@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	TEMPLATE_PAGE
+	ESA_TEMPLATE_PAGE
 
 inherit
 

@@ -4,11 +4,11 @@ note
 	revision: "$Revision$"
 
 class
-	CJ_REPORT_PAGE
+	ESA_CJ_REPORT_PAGE
 
 inherit
 
-	TEMPLATE_PAGE
+	ESA_TEMPLATE_PAGE
 
 	SHARED_TEMPLATE_CONTEXT
 

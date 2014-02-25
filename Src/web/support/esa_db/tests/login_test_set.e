@@ -34,6 +34,7 @@ feature -- Test routines
 			-- The user exist
 		local
 			db: ESA_REPORT_DATA_PROVIDER
+			ld: ESA_LOGIN_DATA_PROVIDER
 			l_sha_password: STRING
 			l_value: BOOLEAN
 		do
@@ -41,7 +42,7 @@ feature -- Test routines
 			if attached db.user_password_salt ("jvelilla") as l_hash and then
 			   attached password as l_password then
 				l_sha_password := sha1_string (l_password + l_hash)
-				l_value := db.validate_login ("jvelilla", l_sha_password)
+				l_value := ld.validate_login ("jvelilla", l_sha_password)
 				assert("Expected True", l_value)
 			else
 				assert("False", False)

@@ -1,13 +1,16 @@
 note
-	description: "Summary description for {LOGIN_HANDLER}."
+	description: "Handle Basic Authentication"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LOGIN_HANDLER
+	ESA_LOGIN_HANDLER
 
 inherit
-	WSF_FILTER
+	ESA_ABSTRACT_HANDLER
+		rename
+			set_esa_config as make
+		end
 
 	WSF_URI_HANDLER
 		rename
@@ -15,23 +18,18 @@ inherit
 			new_mapping as new_uri_mapping
 		end
 
---	WSF_URI_TEMPLATE_HANDLER
---		rename
---			execute as uri_template_execute,
---			new_mapping as new_uri_template_mapping
---		select
---			new_uri_template_mapping
---		end
+	WSF_FILTER
+
 
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
 			do_get
 		end
 
-	SHARED_API_SERVICE
-
 	REFACTORING_HELPER
 
+create
+	make
 
 feature -- execute
 

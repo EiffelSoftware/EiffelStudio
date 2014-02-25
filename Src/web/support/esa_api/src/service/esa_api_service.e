@@ -4,10 +4,11 @@ note
 	revision: "$Revision$"
 
 class
-	API_SERVICE
+	ESA_API_SERVICE
 
 create
-	make
+	make,
+	make_with_database
 
 feature {NONE} -- Initialization
 
@@ -19,6 +20,15 @@ feature {NONE} -- Initialization
 			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.make_common
 			create data_provider.make (l_connection)
 			create login_provider.make (l_connection)
+		end
+
+	make_with_database (a_connection: ESA_DATABASE_CONNECTION)
+			-- Create the API service
+		require
+			is_connected: a_connection.is_connected
+		do
+			create data_provider.make (a_connection)
+			create login_provider.make (a_connection)
 		end
 
 feature -- Access
@@ -113,6 +123,7 @@ feature -- Basic Operations
 feature -- Status Report
 
 	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
+			-- Does account with username `a_username' and password `a_password' exist?
 		local
 			l_security: ESA_SECURITY_PROVIDER
 			l_sha_password: STRING
@@ -121,7 +132,7 @@ feature -- Status Report
 			   attached a_password as l_password then
 				create l_security
 				l_sha_password := l_security.password_hash (l_password, l_hash)
-				Result := data_provider.validate_login (a_username, l_sha_password)
+				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 		end
 

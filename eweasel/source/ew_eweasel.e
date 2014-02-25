@@ -325,8 +325,10 @@ feature  {NONE} -- Implementation
 				suite := new_test_suite (tests, test_suite_options)
 				suite.execute (test_suite_options);
 				if suite.fail_count > 0 then
-						-- Some tests are failing, we exit with an error code.
-					(create {EXCEPTIONS}).die (suite.fail_count)
+						-- Some tests are failing, we exit with an error code
+						-- matching the number of failures (but limited to 255
+						-- since on UNIX it is limited from 0 to 255.
+					(create {EXCEPTIONS}).die (suite.fail_count.max (255))
 				end
 			end
 		end;

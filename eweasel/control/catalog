@@ -1343,7 +1343,7 @@ test	multithreaded-bogus-catcall			thread016	tcf pass multithreaded
 test	main-thread-terminates-before-child	thread017	tcf pass multithreaded
 test    shared-mutex-hang		thread018	tcf pass multithreaded
 test	thread-join-crash			thread019	tcf pass multithreaded
-test	thread-profiling-crash		thread020	tcf fail used_to_path multithreaded profile
+test	thread-profiling-crash		thread020	tcf fail used_to_pass multithreaded profile
 test	thread-crashes-on-die		thread021	tcf pass multithreaded
 if UNIX test	thread-hangs-on-fork	thread022	tcf pass multithreaded
 test	root-thread-exit-continues		thread023	tcf pass multithreaded

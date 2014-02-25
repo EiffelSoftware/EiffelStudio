@@ -305,14 +305,13 @@ move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Getting eweasel source code
 safe_md %EIFFEL_SRC\eweasel
-co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/compilation %EIFFEL_SRC\eweasel\compilation
 co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/source %EIFFEL_SRC\eweasel\source
 remtrace Compiling eweasel
 safe_md %STUDIO_DIR\eweasel
 safe_md %STUDIO_DIR\eweasel\spec
 safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM
 safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
-cdd %EIFFEL_SRC\eweasel\compilation
+cdd %EIFFEL_SRC\eweasel\source
 clean_project
 set OLD_EWEASEL=%EWEASEL
 set EWEASEL=%EIFFEL_SRC\eweasel

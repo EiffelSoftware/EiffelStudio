@@ -9,6 +9,8 @@ class
 inherit
 	XML_CHARACTER_8_INPUT_STREAM
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_empty
@@ -17,6 +19,7 @@ feature {NONE} -- Initialization
 
 	make (a_string: READABLE_STRING_8)
 		do
+			name := {STRING_32} "STRING"
 			source := a_string
 			count := a_string.count
 			start
@@ -29,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING_32 = "STRING"
+	name: STRING_32
 			-- Name of current stream
 
 feature -- Status report
@@ -56,6 +59,14 @@ feature -- Access
 	column: INTEGER
 
 	last_character: CHARACTER
+
+feature -- Change
+
+	set_name (s: like name)
+			-- Set input `name' to `s'.
+		do
+			name := s
+		end
 
 feature -- Basic operation
 
@@ -96,11 +107,25 @@ feature {NONE} -- Implementation
 
 	source: READABLE_STRING_8
 
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			Result.append_integer (source_index)
+			Result.append_character ('/')
+			Result.append_integer (source.count)
+			Result.append_character (' ')
+			Result.append_character ('@')
+			Result.append (name)
+		end
+
 invariant
 	source_attached: source /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -83,7 +83,7 @@ echo "Using $version"
 
 cd $EWEASEL_PLATFORM/project
 echo "Compiling EiffelWeasel (single-threaded version)"
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_st -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config $EWEASEL/source/eweasel.ecf -target eweasel_st -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
 
 # Check compilation results and copy executable to bin directory
 
@@ -108,7 +108,7 @@ fi
 
 cd $EWEASEL_PLATFORM/project
 echo "Compiling EiffelWeasel (multi-threaded version)"
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_mt -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config $EWEASEL/source/eweasel.ecf -target eweasel_mt -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
 
 # Check compilation results and copy executable to bin directory
 

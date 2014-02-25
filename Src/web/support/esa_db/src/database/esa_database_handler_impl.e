@@ -1,5 +1,5 @@
 note
-	description: "Database handler for ODBC"
+	description: "Database handler Implementation"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,65 +9,20 @@ class
 inherit
 	ESA_DATABASE_HANDLER
 
-	ESA_DATABASE_CONFIG
-
 	REFACTORING_HELPER
 
 create
-	make,
-	make_common
+	make
 
 feature {NONE} -- Initialization
 
-	make_common
-			-- Create a database hander for ODBC with common settings
+	make (a_connection: ESA_DATABASE_CONNECTION)
+			-- Create a database handler with connnection `connection'
 		do
-			create db_application.login (username, password)
-			db_application.set_hostname (hostname)
-			db_application.set_data_source (database_name)
-			db_application.set_base
-
-			create db_control.make
+			connection := a_connection
 			create last_query.make_now
-			keep_connection := is_keep_connection
-
-			if keep_connection then
-				connect
-			end
 		ensure
-			db_application_not_void: db_application /= Void
-			db_control_not_void: db_control /= Void
-			last_query_not_void: last_query /= Void
-		end
-
-
-	make (a_username: STRING; a_password: STRING; a_hostname : STRING; a_database_name: STRING; connection: BOOLEAN)
-
-				-- Create a database handler for ODBC
-		require
-			username_not_void: a_username /= Void
-			username_not_empty: not a_username.is_empty
-			password_not_void: a_password /= Void
-			hostname_not_void: a_hostname /= Void
-			hotname_not_empty: not a_hostname.is_empty
-			database_name_not_void: a_database_name /= Void
-			database_name_not_empty: not a_database_name.is_empty
-		do
-			create db_application.login (a_username, a_password)
-			db_application.set_hostname (a_hostname)
-			db_application.set_data_source (a_database_name)
-			db_application.set_base
-
-			create db_control.make
-			create last_query.make_now
-			keep_connection := connection
-
-			if keep_connection then
-				connect
-			end
-		ensure
-			db_application_not_void: db_application /= Void
-			db_control_not_void: db_control /= Void
+			connection_not_void: connection /= Void
 			last_query_not_void: last_query /= Void
 		end
 
@@ -117,7 +72,6 @@ feature -- Functionality
 			end
 		end
 
-
 feature -- SQL Queries
 
 	execute_query
@@ -140,6 +94,7 @@ feature -- SQL Queries
 				disconnect
 			end
 		end
+
 feature -- Iteration
 
 	start
@@ -170,7 +125,6 @@ feature -- Iteration
 			end
 		end
 
-
 	item: DB_TUPLE
 			-- Current element
 		do
@@ -183,14 +137,21 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	db_application: DATABASE_APPL[ODBC]
-		-- Database application
+	connection: ESA_DATABASE_CONNECTION
+		-- Database connection
+
 	db_control: DB_CONTROL
 		-- Database control
+		do
+			Result := connection.db_control
+		end
+
 	db_result: detachable DB_RESULT
 		-- Database query result
+
 	db_selection: detachable DB_SELECTION
 		-- Database selection
+
 	db_update: detachable DB_CHANGE
 		-- Database modification	
 
@@ -225,7 +186,6 @@ feature {NONE} -- Implementation
 			Result := db_control.is_connected
 		end
 
-
 	affected_row_count: INTEGER
 			--  The number of rows changed, deleted, or inserted by the last statement
 		do
@@ -233,6 +193,7 @@ feature {NONE} -- Implementation
 				Result := l_update.affected_row_count
 			end
 		end
+
 feature -- Result
 
 	items : detachable LIST[DB_RESULT]

@@ -26,8 +26,8 @@ feature -- Test routines
 		local
 			db: ESA_REPORT_DATA_PROVIDER
 		do
-			create db.make
-			assert("Expected not Void",attached db.user_password_salt ("jvelilla"))
+			create db.make (connection)
+ 			assert("Expected not Void",attached db.user_password_salt ("jvelilla"))
 		end
 
 	test_password_hash_success
@@ -37,7 +37,7 @@ feature -- Test routines
 			l_sha_password: STRING
 			l_value: BOOLEAN
 		do
-			create db.make
+			create db.make (connection)
 			if attached db.user_password_salt ("jvelilla") as l_hash and then
 			   attached password as l_password then
 				l_sha_password := sha1_string (l_password + l_hash)
@@ -54,7 +54,7 @@ feature -- Test routines
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			across l_db.countries  as c loop
 				print (c.item.ouput)
@@ -77,6 +77,10 @@ feature -- Helpers
 			create Result.make
 		end
 
+	connection: ESA_DATABASE_CONNECTION
+		once
+			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
+		end
 
 end
 

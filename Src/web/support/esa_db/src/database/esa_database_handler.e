@@ -15,20 +15,20 @@ feature -- Access
 
 feature -- Modifiers
 
-	set_store (a_store : ESA_DATABASE_STORE_PROCEDURE)
+	set_store (a_store: ESA_DATABASE_STORE_PROCEDURE)
 			-- Set store to execute
 		require
-				store_not_void: a_store /= Void
+			store_not_void: a_store /= Void
 		do
 			store := a_store
 		ensure
 			store = a_store
 		end
 
-	set_query (a_query : ESA_DATABASE_QUERY)
+	set_query (a_query: ESA_DATABASE_QUERY)
 			-- Set query to execute
 		require
-				query_not_void: a_query /= Void
+			query_not_void: a_query /= Void
 		do
 			query := a_query
 		ensure
@@ -88,12 +88,11 @@ feature -- Iteration
 
 feature -- Access
 
-
 	read_integer_32 (a_index: INTEGER): INTEGER_32
 			-- Retrieved value at `a_index' position in `item'
 		do
 			if attached {DB_TUPLE} item as l_item then
-				if attached {INTEGER_32_REF} l_item.item (a_index) as  ll_item then
+				if attached {INTEGER_32_REF} l_item.item (a_index) as ll_item then
 					Result := ll_item.item
 				end
 			end
@@ -103,7 +102,7 @@ feature -- Access
 			-- Retrieved value at `a_index' position in `item'
 		do
 			if attached {DB_TUPLE} item as l_item then
-				if attached {STRING} l_item.item (a_index) as  ll_item then
+				if attached {STRING} l_item.item (a_index) as ll_item then
 					Result := ll_item
 				end
 			end
@@ -113,20 +112,19 @@ feature -- Access
 			-- Retrieved value at `a_index' position in `item'
 		do
 			if attached {DB_TUPLE} item as l_item then
-				if attached {DATE_TIME} l_item.item (a_index) as  ll_item then
+				if attached {DATE_TIME} l_item.item (a_index) as ll_item then
 					Result := ll_item
 				end
 			end
 		end
 
-
 	read_boolean (a_index: INTEGER): detachable BOOLEAN
 			-- Retrieved value at `a_index' position in `item'
 		do
 			if attached {DB_TUPLE} item as l_item then
-				if attached {BOOLEAN} l_item.item (a_index) as  ll_item then
+				if attached {BOOLEAN} l_item.item (a_index) as ll_item then
 					Result := ll_item
-				elseif attached {BOOLEAN_REF} l_item.item (a_index) as  ll_item then
+				elseif attached {BOOLEAN_REF} l_item.item (a_index) as ll_item then
 					Result := ll_item.item
 				end
 			end

@@ -9,20 +9,21 @@ deferred class
 feature -- Database access
 
 	hostname: STRING = ""
-		-- Database hostname
+			-- Database hostname
 
- 	username: STRING = ""
- 		-- Database username
+	username: STRING = ""
+			-- Database username
 
 	password: STRING = ""
-		-- Database password
+			-- Database password
 
-  	database_name: STRING = "EiffelDB"
-		-- Database name
+	database_name: STRING = "EiffelDB"
+			-- Database name
 
 	is_keep_connection: BOOLEAN
 			-- Keep Connection to database?
 		do
 			Result := True
 		end
+
 end

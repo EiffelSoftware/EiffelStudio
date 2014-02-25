@@ -13,9 +13,12 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create the API service
+		local
+			l_connection: ESA_DATABASE_CONNECTION
 		do
-			create data_provider.make
---			create login_provider.make
+			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.make_common
+			create data_provider.make (l_connection)
+			create login_provider.make (l_connection)
 		end
 
 feature -- Access
@@ -165,7 +168,8 @@ feature {NONE} -- Factories
 feature {NONE} -- Implementation
 
 	data_provider: ESA_REPORT_DATA_PROVIDER
-			-- Data provider
+			-- Report Data provider
 
---	login_provider: ESA_LOGIN_DATA_PROVIDER
+	login_provider: ESA_LOGIN_DATA_PROVIDER
+			-- Login data provider
 end

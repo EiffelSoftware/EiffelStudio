@@ -32,17 +32,18 @@ feature -- Access
 			Result := action.item ([db_item])
 		end
 
-	db_item:  DB_TUPLE
+	db_item: DB_TUPLE
 			-- Current element
 		do
 			if attached {DB_TUPLE} db_handler.item as l_item then
 				Result := l_item
 			else
-				check False then end
+				check False then
+				end
 			end
 		end
 
-feature -- Status report	
+feature -- Status report
 
 	after: BOOLEAN
 			-- Are there no more items to iterate over?
@@ -75,11 +76,12 @@ feature -- Cursor
 
 feature -- Action
 
-	action: FUNCTION [ANY,detachable TUPLE[DB_TUPLE],G]
+	action: FUNCTION [ANY, detachable TUPLE [DB_TUPLE], G]
 			-- Agent to create a new item of type G.
 
 feature {NONE} -- Implementation
 
 	db_handler: ESA_DATABASE_HANDLER
 			-- Associated handler used for iteration
+
 end

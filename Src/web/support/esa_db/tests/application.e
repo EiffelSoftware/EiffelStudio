@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			l_prov: ESA_REPORT_DATA_PROVIDER
 			list: LIST[REPORT]
 		do
-			create l_prov.make
+			create l_prov.make (connection)
 			list := l_prov.problem_reports ("jvelilla", False, 15, 3)
 			across list as l loop print (l.item) end
 		end
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			list: ESA_DATA_VALUE
 		do
 			print ("%NGuest Reports")
-			create l_prov.make
+			create l_prov.make (connection)
 			list := l_prov.problem_reports_guest (1, 2)
 		end
 
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 		local
 			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
-			create l_prov.make
+			create l_prov.make (connection)
 			print ("RowCount { ProblemReports } :" + l_prov.row_count ("ProblemReports").out)
 			print ("RowCount { Contacts } :" + l_prov.row_count ("Contacts").out)
  			print ("RowCount { NotExist } :" + l_prov.row_count ("NotExist").out)
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 		local
 			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
-			create l_prov.make
+			create l_prov.make (connection)
 			print (l_prov.new_problem_report_id ("jvelilla"))
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 		local
 			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
-			create l_prov.make
+			create l_prov.make (connection)
 			print (l_prov.problem_report (18628))
 		end
 
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 		local
 			l_prov: ESA_REPORT_DATA_PROVIDER
 		do
-			create l_prov.make
+			create l_prov.make (connection)
 
 			across l_prov.problem_reports_2 ("jvelilla", False, 15, 3) as c  loop
 				print (c.item)
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 		local
 			ld: ESA_REPORT_DATA_PROVIDER
 		do
-			create ld.make
+			create ld.make (connection)
 			if ld.add_user ("test002", "test002","test002", "test002", "test002", "answer", "token", 1) then
 			end
 		end
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			across l_db.countries  as c loop
 				print (c.item.ouput)
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			print (l_db.token_from_email ("test001"))
 		end
 
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			print (l_db.membership_creation_date ("jvelilla"))
 		end
 
@@ -143,7 +143,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			print (l_db.role ("jvelilla"))
 		end
 
@@ -152,7 +152,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			print (l_db.role_description ("Responsible"))
 		end
 
@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			across l_db.security_questions as c  loop print (c.item.output)  end
 			l_db.disconnect
@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			print (l_db.question_from_email ("javier.hector@gmail.com"))
 		end
@@ -181,7 +181,7 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			print (l_db.user_creation_date ("jvelilla"))
 		end
@@ -191,7 +191,7 @@ feature {NONE} -- Initialization
 			l_db: ESA_LOGIN_DATA_PROVIDER
 			l_tuple: detachable TUPLE[STRING,STRING,STRING]
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			l_tuple := l_db.user_from_email ("javier.hector@gmail.com")
 			print (l_tuple.at (1).out +"%N")
@@ -203,10 +203,15 @@ feature {NONE} -- Initialization
 		local
 			l_db: ESA_LOGIN_DATA_PROVIDER
 		do
-			create l_db.make
+			create l_db.make (connection)
 			l_db.connect
 			print (l_db.user_from_username ("jvelilla").name)
 		end
 
+
+	connection: ESA_DATABASE_CONNECTION
+		once
+			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
+		end
 
 end

@@ -16,7 +16,8 @@ feature -- String
 			if a_value.count <= a_length then
 				Result := a_value
 			else
-				create Result.make_from_string (a_value.substring(1,a_length))
+				create Result.make_from_string (a_value.substring (1, a_length))
 			end
 		end
+
 end

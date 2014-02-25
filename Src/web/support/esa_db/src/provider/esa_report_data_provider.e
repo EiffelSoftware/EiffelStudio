@@ -15,10 +15,10 @@ create
 
 feature -- Initialization
 
-	make
-			-- Create a data provider
+	make (a_connection: ESA_DATABASE_CONNECTION)
+			-- Create a data provider with connection `a_connection'
 		do
-			create {ESA_DATABASE_HANDLER_IMPL} db_handler.make_common
+			create {ESA_DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
 		end
 
 	db_handler: ESA_DATABASE_HANDLER

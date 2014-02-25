@@ -4,20 +4,28 @@ note
 	revision: "$Revision$"
 
 deferred class
-	REPRESENTATION_HANDLER
-
-inherit
-
-	SHARED_API_SERVICE
+	ESA_REPRESENTATION_HANDLER
 
 feature -- Initialization
 
-	make (a_media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS)
+	make (a_esa_config: like esa_config; a_media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS)
 			-- Create an object with a `a_media_variant'
+			-- and `a_esa_config'
 		do
 			media_variants := a_media_variants
+			esa_config := a_esa_config
 		ensure
 			media_set: media_variants = a_media_variants
+			config_set: esa_config = a_esa_config
+		end
+
+feature -- Config
+
+	esa_config: ESA_CONFIG
+
+	api_service: ESA_API_SERVICE
+		do
+			Result := esa_config.api_service
 		end
 
 feature -- Media Variants

@@ -21,10 +21,15 @@ feature {NONE} -- Initialization
 		do
 			connection := a_connection
 			create last_query.make_now
+			create error_handler
 		ensure
 			connection_not_void: connection /= Void
 			last_query_not_void: last_query /= Void
 		end
+
+feature -- Error Handling
+
+	error_handler: ESA_ERROR_HANDLER
 
 feature -- Functionality
 
@@ -33,6 +38,7 @@ feature -- Functionality
 		local
 			l_db_selection: DB_SELECTION
 		do
+			reset_error
 			if not keep_connection then
 				connect
 			end
@@ -41,7 +47,7 @@ feature -- Functionality
 				create l_db_selection.make
 				db_selection := l_db_selection
 				items := l_store.execute_reader (l_db_selection)
-				to_implement ("Handling Error")
+				handle_error
 			end
 
 			if not keep_connection then
@@ -54,6 +60,7 @@ feature -- Functionality
 		local
 			l_db_change: DB_CHANGE
 		do
+			reset_error
 			if not keep_connection and not is_connected then
 				connect
 			end
@@ -66,6 +73,7 @@ feature -- Functionality
 				if not l_store.has_error then
 					db_control.commit
 				end
+				handle_error
 			end
 			if not keep_connection then
 				disconnect
@@ -79,6 +87,7 @@ feature -- SQL Queries
 		local
 			l_db_selection: DB_SELECTION
 		do
+			reset_error
 			if not keep_connection then
 				connect
 			end
@@ -87,7 +96,7 @@ feature -- SQL Queries
 				create l_db_selection.make
 				db_selection := l_db_selection
 				items := l_query.execute_reader (l_db_selection)
-				to_implement ("Handling Error")
+				handle_error
 			end
 
 			if not keep_connection then
@@ -133,6 +142,26 @@ feature -- Iteration
 			else
 				check False then end
 			end
+		end
+
+feature -- Error Handling
+
+	handle_error
+				-- Check if the last operation is_ok.
+		note
+			EIS: "name=EiffelStore Error Handling", "src=http://docs.eiffel.com/book/solutions/database-control", "protocol=uri"
+		do
+			if not db_control.is_ok then
+			   error_handler.set_error_code (db_control.error_code)
+			   error_handler.set_error_message (db_control.error_message_32)
+			   error_handler.set_has_error
+			end
+		end
+
+	reset_error
+				-- Rest the last error
+		do
+			error_handler.reset
 		end
 
 feature {NONE} -- Implementation

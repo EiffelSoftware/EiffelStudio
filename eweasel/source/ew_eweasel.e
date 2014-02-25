@@ -328,7 +328,7 @@ feature  {NONE} -- Implementation
 						-- Some tests are failing, we exit with an error code
 						-- matching the number of failures (but limited to 255
 						-- since on UNIX it is limited from 0 to 255.
-					(create {EXCEPTIONS}).die (suite.fail_count.max (255))
+					(create {EXCEPTIONS}).die (suite.fail_count.min (255))
 				end
 			end
 		end;

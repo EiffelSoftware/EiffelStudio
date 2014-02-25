@@ -81,6 +81,16 @@ feature -- Test routines
 			f.close
 		end
 
+	generate_xml_from_string (fn: PATH; s: READABLE_STRING_8)
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (fn)
+			f.open_write
+			f.put_string (s)
+			f.close
+		end
+
 	doc_to_string_32 (d: XML_DOCUMENT): STRING_32
 		local
 			vis: XML_FORMATTER
@@ -120,8 +130,21 @@ feature -- Test routines
 			s: STRING_32
 			f: RAW_FILE
 		do
-			s :=
-"[
+			s := ecf_content_with_size (0)
+			create f.make_with_path (fn)
+			f.open_write
+			f.put_string (s)
+			f.close
+		end
+
+	ecf_content_with_size (a_size: INTEGER): STRING_32
+		require
+			a_size = 0 or a_size > 1070 -- current content of manifest string, see below
+		local
+			t: STRING_32
+		do
+			Result :=
+{STRING_32} "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="tests" uuid="8E006284-3BDE-4DB9-9F1B-ED1322ABD360">
 	<target name="tests">
@@ -136,15 +159,45 @@ feature -- Test routines
 		</option>
 		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf" readonly="false"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
-
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
 		<tests name="src" location="." recursive="true"/>
 	</target>
 </system>
 ]"
+			check Result.count = 1070 end
+			if a_size > 0 then
+				if Result.count < a_size then
+					t := {STRING_32} "</system>"
+					t.prepend (create {STRING_32}.make_filled (' ', a_size - Result.count))
+					Result.replace_substring_all ({STRING_32} "</system>", t)
+				end
+				check Result.count = a_size end
+			end
+		end
 
+	generate_ecf_with_size (fn: PATH; a_size: INTEGER)
+		local
+			s: STRING_32
+			f: RAW_FILE
+		do
+			s := ecf_content_with_size (a_size)
+			create f.make_with_path (fn)
+			f.open_write
+			f.put_string (s)
+			f.close
+		end
+
+	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_8)
+		local
+			s: STRING_32
+			f: RAW_FILE
+			t: READABLE_STRING_8
+		do
+			t := "</system>"
+
+			s := ecf_content_with_size (a_size - a_end.count + t.count)
+			s.replace_substring_all (t, a_end)
+			check s.count = a_size end
 			create f.make_with_path (fn)
 			f.open_write
 			f.put_string (s)
@@ -269,6 +322,157 @@ feature -- Test routines
 			vis_uc.process_document (doc_cb.document)
 		end
 
+	test_xml_parser_ecf_file_size_as_chunk_size
+			-- New test routine
+		local
+			p: XML_PARSER
+			s: STRING_32
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			l_input: XML_FILE_INPUT_STREAM
+		do
+			p := factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+			create vis_uc
+
+			create l_input.make_with_path (xml_file_name ("file_size_as_chunk_size-ecf.xml"))
+			generate_ecf_with_size (xml_file_name ("file_size_as_chunk_size-ecf.xml"), l_input.chunk_size)
+--			p.parse_from_path (xml_file_name ("ecf.xml"))
+			l_input.open_read
+			l_input.start
+			p.parse_from_stream (l_input)
+			l_input.close
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+		end
+
+	test_xml_parser_ecf_file_size_truncated_at_various_chunk_size
+			-- New test routine
+		local
+			p: XML_PARSER
+			s: STRING_32
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			l_end_checker: XML_END_TAG_CHECKER
+			l_input: XML_FILE_INPUT_STREAM
+			n: INTEGER
+			l_chunk_size: INTEGER
+		do
+			p := factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+			create l_end_checker.make_null
+			l_end_checker.set_associated_parser (p)
+
+			p.set_callbacks (new_callbacks_pipe (s, <<l_end_checker>>, doc_cb))
+			create vis_uc
+
+			s := ecf_content_with_size (2_000)
+			n := s.count
+			generate_xml_from_string (xml_file_name ("truncated_at_various_chunk_size-ecf.xml"), s)
+
+			across
+				(1 |..| (2 * n)) as ic
+			loop
+				l_chunk_size := ic.item
+				print ("Chunk size=" + l_chunk_size.out + "%N")
+				create l_input.make_with_path (xml_file_name ("truncated_at_various_chunk_size-ecf.xml"))
+				l_input.set_chunk_size (l_chunk_size)
+				l_input.open_read
+				l_input.start
+				p.parse_from_stream (l_input)
+				l_input.close
+
+				assert ("parsed", p.is_correct)
+				assert ("succeed", not p.error_occurred)
+			end
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+		end
+
+	test_xml_parser_ecf_file_size_truncated_at_chunk_size
+			-- New test routine
+		local
+			p: XML_PARSER
+			s: STRING_32
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			l_end_checker: detachable XML_END_TAG_CHECKER
+			l_input: XML_FILE_INPUT_STREAM
+		do
+			p := factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+
+			p.set_callbacks (new_callbacks_pipe (s, <<>>, doc_cb))
+			create vis_uc
+
+			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
+			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, "</foo_bar>")
+
+			l_input.open_read
+			l_input.start
+
+--			p.parse_from_path (xml_file_name ("ecf.xml"))
+			p.parse_from_stream (l_input)
+			l_input.close
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			create vis_uc
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+
+
+			create doc_cb.make_null
+			create l_end_checker.make_null
+			l_end_checker.set_associated_parser (p)
+			p.set_callbacks (new_callbacks_pipe (s, <<l_end_checker>>, doc_cb))
+
+
+				-- checking end tags
+			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
+			l_input.open_read
+			l_input.start
+
+--			p.parse_from_path (xml_file_name ("ecf.xml"))
+			p.parse_from_stream (l_input)
+			l_input.close
+			assert ("end tag mismatch", p.error_occurred)
+
+		end
+
+	test_xml_parser_ecf_text_size_4096
+			-- New test routine
+		local
+			p: XML_PARSER
+			s: STRING_32
+			l_content: STRING_32
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+		do
+			p := factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+			create vis_uc
+
+			l_content := ecf_content_with_size (4_096)
+			p.parse_from_string (l_content)
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+		end
+
+
 	test_xml_parser_with_unicode_tag_and_utf8
 			-- New test routine
 		local
@@ -369,8 +573,13 @@ feature -- ASCII
 			create vis_uc
 
 			d := new_doc
-			generate_xml (xml_file_name ("test.xml"), d)
-			p.parse_from_path (xml_file_name ("test.xml"))
+			generate_xml (xml_file_name ("ascii-test.xml"), d)
+			p.parse_from_path (xml_file_name ("ascii-test.xml"))
+
+			if attached p.error_message as err then
+				print (err)
+				print ("%N")
+			end
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
@@ -378,15 +587,211 @@ feature -- ASCII
 			vis_uc.process_document (doc_cb.document)
 			assert ("has no unicode", not vis_uc.has_unicode)
 
-			generate_ecf (xml_file_name ("ecf.xml"))
-			p.parse_from_path (xml_file_name ("ecf.xml"))
+			generate_ecf (xml_file_name ("ascii-ecf.xml"))
+			p.parse_from_path (xml_file_name ("ascii-ecf.xml"))
+			if attached p.error_message as err then
+				print (err)
+				print ("%N")
+			end
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
 			vis_uc.reset
 			vis_uc.process_document (doc_cb.document)
 			assert ("has no unicode", not vis_uc.has_unicode)
+		end
 
+	test_xml_contents
+		do
+			test_xml_content ("case001", False, "<doc><></doc>")
+			test_xml_content ("case002", False, "<doc></></doc>")
+			test_xml_content ("case003", False, "<doc><?></doc>")
+			test_xml_content ("case004", False, "<doc><123></123></doc>")
+			test_xml_content ("case005", False, "<doc><foo'bar/></doc>")
+			test_xml_content ("case006", True, "<doc/>")
+			test_xml_content ("case007", True, "<D/>")
+			test_xml_content ("case008", False, "</>")
+			test_xml_content ("case009", False, "<doc>aa<//doc>")
+			test_xml_content ("case010", False, "<doc>aa</doc><//")
+		end
+
+	test_valid_xml_01
+		do
+			test_xml_content ("valid_xml_01", True, valid_xml_01)
+		end
+
+	test_bad_xml_01
+		do
+			test_xml_content ("bad_xml_01", False, bad_xml_01)
+		end
+
+	test_bad_xml_02
+		do
+			test_xml_content ("bad_xml_02", False, bad_xml_02)
+		end
+
+	test_bad_xml_03
+		do
+			test_xml_content ("bad_xml_03", False, bad_xml_03)
+		end
+
+	test_bad_xml_04
+		do
+			test_xml_content ("bad_xml_04", False, bad_xml_04)
+		end
+
+	test_bad_xml_05
+		do
+			test_xml_content ("bad_xml_05", False, bad_xml_05)
+		end
+
+	test_bad_xml_06
+		do
+			test_xml_content ("bad_xml_06", False, bad_xml_06)
+		end
+
+	test_bad_xml_07
+		do
+			test_xml_content ("bad_xml_07", False, bad_xml_07)
+		end
+
+	test_bad_xml_08
+		do
+			test_xml_content ("bad_xml_08", False, bad_xml_08)
+		end
+
+	test_bad_xml_09
+		do
+			test_xml_content ("bad_xml_08", False, bad_xml_08)
+		end
+
+feature {NONE} -- XML content
+
+	test_xml_content (a_assert_name: READABLE_STRING_8; a_expecting_success: BOOLEAN; a_xml_content: READABLE_STRING_8)
+		local
+			p: XML_PARSER
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			s: STRING
+		do
+			print ("Testing case %"" + a_assert_name + "%"%N")
+			p := factory.new_parser
+
+			create s.make_empty
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+
+				-- As file input
+			generate_xml_from_string (xml_file_name (a_assert_name + "-test.xml"), a_xml_content)
+			p.parse_from_path (xml_file_name (a_assert_name + "-test.xml"))
+			if a_expecting_success then
+				assert (a_assert_name + ":file:parsed", p.is_correct)
+				assert (a_assert_name + ":file:succeed", not p.error_occurred)
+			else
+				if attached p.error_message as err then
+					print (err)
+					print ("%N")
+				elseif p.error_occurred then
+					print ("error without message!%N")
+				end
+
+				assert (a_assert_name + ":file:error", not p.is_correct or p.error_occurred)
+			end
+
+				-- As string input
+			p.parse_from_string (a_xml_content)
+			if a_expecting_success then
+				assert (a_assert_name + ":string:parsed", p.is_correct)
+				assert (a_assert_name + ":string:succeed", not p.error_occurred)
+			else
+				if attached p.error_message as err then
+					print (err)
+					print ("%N")
+				elseif p.error_occurred then
+					print ("error without message!%N")
+				end
+
+				assert (a_assert_name + ":string:error", not p.is_correct or p.error_occurred)
+			end
+		end
+
+	valid_xml_01: STRING
+		do
+			Result :=
+"[
+<DOCUMENT><section name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_01: STRING
+		do
+			Result := -- see name=!TE...
+"[
+<DOCUMENT><section name=!TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_02: STRING
+		do
+			Result := -- see <<desc
+"[
+<DOCUMENT><section name="TEST_XML"><<description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_03: STRING
+		do
+			Result := -- see description//>
+"[
+<DOCUMENT><section name="TEST_XML"><description//>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_04: STRING
+		do
+			Result := -- see name@foo=
+"[
+<DOCUMENT><section name@foo="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_05: STRING
+		do
+			Result := -- see name+foo+bar=
+"[
+<DOCUMENT><section name+foo+bar="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_06: STRING
+		do
+			Result := -- see <foo&#20320;>
+"[
+<DOCUMENT><section name="TEST_XML"><foo&#20320;>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_07: STRING
+		do
+			Result := -- see bad-attrib
+"[
+<DOCUMENT><section bad-attrib name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+]"
+		end
+
+	bad_xml_08: STRING
+		do
+			Result := -- see bad-attrib
+"[
+<DOCUMENT><section name="TEST_XML"?/></DOCUMENT>
+]"
+		end
+
+	bad_xml_09: STRING
+		do
+			Result := -- see bad-attrib
+"[
+<DOCUMENT><section name="TEST_XML"/></DOCUMENT>>
+]"
 		end
 
 end

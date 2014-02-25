@@ -11,6 +11,7 @@ note
 	author: "Jocelyn Fiat"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Extensible Markup Language (XML) 1.0", "protocol=URI", "src=http://www.w3.org/TR/xml/"
 
 class
 	XML_STANDARD_PARSER
@@ -200,6 +201,7 @@ feature -- Element change
 	reset
 			-- Reset parser states
 		do
+			end_of_input := False
 			last_character := '%U'
 			rewinded_character := '%U'
 			parsing_stopped := False
@@ -220,6 +222,7 @@ feature {NONE} -- Access
 			-- Set `buffer' to `buf'
 		do
 			buffer := buf
+			end_of_input := buf.end_of_input
 		end
 
 feature {NONE} -- Implementation
@@ -247,11 +250,9 @@ feature {NONE} -- Implementation: parse
 			l_content: STRING_32
 			l_in_prolog: BOOLEAN
 			l_bom_detection: BOOLEAN
-			buf: like buffer
 			l_callbacks: like callbacks
 		do
 			reset
-			buf := buffer
 			l_callbacks := callbacks
 
 			l_callbacks.on_start
@@ -260,11 +261,16 @@ feature {NONE} -- Implementation: parse
 				l_in_prolog := True
 				create l_content.make_empty
 			until
-				parsing_stopped or buf.end_of_input
+				end_of_input or parsing_stopped -- i.e stop requested or error occurred
 			loop
 				c := next_character
 				inspect
 					c
+				when '%U' then
+					check no_null_char: False end
+					if not end_of_input then
+						report_unexpected_content ("Null character!")
+					end
 				when '<' then
 					if l_in_prolog then
 						if l_bom_detection then
@@ -286,34 +292,40 @@ feature {NONE} -- Implementation: parse
 							l_content.wipe_out
 						end
 					end
-					c := next_character
-					inspect c
-					when '?' then
-						parse_processing_instruction
-					when '/' then
-						parse_end_tag
-					when '!' then
+					if not end_of_input then
 						c := next_character
 						inspect c
-						when '-' then
-							rewind_character
-							parse_comment
-						when '[' then
-							rewind_character
-							parse_cdata
-						when 'D' then
-							rewind_character
-							parse_doctype
+						when '?' then
+							parse_processing_instruction
+						when '/' then
+							parse_end_tag
+						when '!' then
+							if not end_of_input then
+								c := next_character
+								inspect c
+								when '-' then
+									rewind_character
+									parse_comment
+								when '[' then
+									rewind_character
+									parse_cdata
+								when 'D' then
+									rewind_character
+									parse_doctype
+								else
+									report_syntax_error (Void)
+								end
+							end
 						else
-							report_error ({STRING_32} "syntax error")
+							rewind_character
+							l_in_prolog := False
+							parse_start_tag
 						end
-					else
-						rewind_character
-						l_in_prolog := False
-						parse_start_tag
 					end
 				when '&' then
 					l_content.append_string (next_entity)
+				when '>' then
+					report_syntax_error (Void)
 				else
 					l_content.append_character (c)
 				end
@@ -338,56 +350,73 @@ feature {NONE} -- Implementation: parse
 			done: BOOLEAN
 			l_callbacks: like callbacks
 		do
-			t := next_tag
-			l_callbacks := callbacks
-			l_callbacks.on_start_tag (Void, t.prefix_part, t.local_part)
-			c := current_character
-			if c.is_space then
-				c := next_non_space_character
-			end
-			inspect
-				c
-			when '>' then
-				l_callbacks.on_start_tag_finish
-			when '/' then
-				c := next_character
---				c := next_non_space_character -- more flexible?
-				if c = '>' then
-					l_callbacks.on_start_tag_finish
-					l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
-				else
-					report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag")
-				end
+			if end_of_input then
+					-- end parsing
+				report_truncated_content (Void)
 			else
-				rewind_character
-				from
-					done := False
-				until
-					done or parsing_stopped
-				loop
-					att := next_attribute_data
-					if att /= Void then
-						l_callbacks.on_attribute (Void, att.prefix_part, att.local_part, att.value)
-						rewind_character
-					else
-						c := current_character
-						inspect c
-						when '>' then
-							l_callbacks.on_start_tag_finish
-						when '/' then
+				t := next_tag
+				if t.local_part.is_empty then
+					report_error ({STRING_32} "invalid start tag value.")
+				else
+					l_callbacks := callbacks
+					l_callbacks.on_start_tag (Void, t.prefix_part, t.local_part)
+					c := current_character
+					if c.is_space then
+						c := next_non_space_character
+					end
+					inspect
+						c
+					when '>' then
+						l_callbacks.on_start_tag_finish
+					when '/' then
+						if end_of_input then
+							report_truncated_content ({STRING_32} "incomplete start tag")
+						else
 							c := next_character
---							c := next_non_space_character -- more flexible?							
+			--				c := next_non_space_character -- more flexible?
 							if c = '>' then
-								done := True
 								l_callbacks.on_start_tag_finish
 								l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
 							else
-								report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag")
+								report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag.")
 							end
-						else
-							report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in start tag")
 						end
-						done := True
+					else
+						rewind_character
+						from
+							done := False
+						until
+							end_of_input or done or parsing_stopped
+						loop
+							att := next_attribute_data
+							if att /= Void then
+								l_callbacks.on_attribute (Void, att.prefix_part, att.local_part, att.value)
+								rewind_character
+							else
+								c := current_character
+								inspect c
+								when '>' then
+									l_callbacks.on_start_tag_finish
+								when '/' then
+									if end_of_input then
+										report_truncated_content ({STRING_32} "incomplete start tag ending")
+									else
+										c := next_character
+			--							c := next_non_space_character -- more flexible?							
+										if c = '>' then
+											done := True
+											l_callbacks.on_start_tag_finish
+											l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
+										else
+											report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag")
+										end
+									end
+								else
+									report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in start tag")
+								end
+								done := True
+							end
+						end
 					end
 				end
 			end
@@ -399,15 +428,24 @@ feature {NONE} -- Implementation: parse
 			t: like next_tag
 			c: like last_character
 		do
-			t := next_tag
-			c := current_character
-			if c.is_space then
-				c := next_non_space_character
-			end
-			if c = '>' then
-				callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
+			if end_of_input then
+					-- end parsing
+				report_truncated_content (Void)
 			else
-				report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in end tag")
+				t := next_tag
+				if t.local_part.is_empty then
+					report_error ({STRING_32} "invalid end tag value.")
+				else
+					c := current_character
+					if c.is_space then
+						c := next_non_space_character
+					end
+					if c = '>' then
+						callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
+					else
+						report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in end tag")
+					end
+				end
 			end
 		end
 
@@ -431,15 +469,19 @@ feature {NONE} -- Implementation: parse
 					c
 				when '?' then
 --					c := next_non_space_character -- more flexible?
-					c := next_character
-					if c = '>' then
-						if l_version /= Void then
-							on_xml_declaration (l_version, l_encoding, l_standalone)
-						else
-							report_error ({STRING_32} "missing version in xml declaration")
-						end
+					if end_of_input then
+						report_truncated_content ({STRING_32} "incomplete xml declaration")
 					else
-						report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
+						c := next_character
+						if c = '>' then
+							if l_version /= Void then
+								on_xml_declaration (l_version, l_encoding, l_standalone)
+							else
+								report_error ({STRING_32} "missing version in xml declaration")
+							end
+						else
+							report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
+						end
 					end
 				else
 					rewind_character
@@ -464,16 +506,20 @@ feature {NONE} -- Implementation: parse
 						else
 							c := current_character
 							if c = '?' then
-								c := next_non_space_character
-								if c = '>' then
-									done := True
-									if l_version /= Void then
-										on_xml_declaration (l_version, l_encoding, l_standalone)
-									else
-										report_error ({STRING_32} "missing version in xml declaration")
-									end
+								if end_of_input then
+									report_truncated_content ({STRING_32} "incomplete end of xml declaration")
 								else
-									report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
+									c := next_non_space_character
+									if c = '>' then
+										done := True
+										if l_version /= Void then
+											on_xml_declaration (l_version, l_encoding, l_standalone)
+										else
+											report_error ({STRING_32} "missing version in xml declaration")
+										end
+									else
+										report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
+									end
 								end
 							end
 							done := True
@@ -490,47 +536,57 @@ feature {NONE} -- Implementation: parse
 			n, s: STRING_32
 			done: BOOLEAN
 		do
-			c := next_character
-			from
-				create n.make (6)
-			until
-				c.is_space or c = '?'
-			loop
-				n.append_character (c)
-				c := next_character
-			end
-			if n.is_empty then
-				rewind_character
-				report_error ({STRING_32} "Invalid processing instruction syntax <?" + c.out.to_string_32)
-			elseif n.is_case_insensitive_equal (str_xml) then
-				parse_declaration
+			if end_of_input then
+				report_truncated_content ({STRING_32} "incomplete processing instruction")
 			else
-				create s.make_empty
+				c := next_character
 				from
-					c := next_character
+					create n.make (6)
 				until
-					done or parsing_stopped
+					end_of_input or c.is_space or c = '?' or c = '>'
 				loop
-					if c = '?' then
+					n.append_character (c)
+					c := next_character
+				end
+				if n.is_empty then
+					rewind_character
+					report_error ({STRING_32} "Invalid processing instruction syntax <?" + c.out.to_string_32)
+				elseif n.is_case_insensitive_equal (str_xml) then
+					parse_declaration
+				elseif end_of_input then
+					report_truncated_content ({STRING_32} "incomplete processing instruction")
+				else
+					create s.make_empty
+					from
 						c := next_character
-						if c = '>' then
-							done := True
-						elseif c = '?' then
-							s.append_character ('?')
+					until
+						end_of_input or done or parsing_stopped
+					loop
+						if c = '?' then
+							c := next_character
+							if c = '>' then
+								done := True
+							elseif c = '?' then
+								s.append_character ('?')
+							else
+								s.append_character ('?')
+								s.append_character (c)
+								if end_of_input then
+									report_truncated_content ({STRING_32} "incomplete processing instruction")
+								else
+									c := next_character
+								end
+							end
 						else
-							s.append_character ('?')
 							s.append_character (c)
 							c := next_character
 						end
-					else
-						s.append_character (c)
-						c := next_character
 					end
-				end
-				if parsing_stopped then
-					report_error ({STRING_32} "could not find end of Processing Instruction")
-				else
-					callbacks.on_processing_instruction (n, s)
+					if parsing_stopped then
+						report_error ({STRING_32} "could not find end of Processing Instruction")
+					else
+						callbacks.on_processing_instruction (n, s)
+					end
 				end
 			end
 		end
@@ -542,58 +598,66 @@ feature {NONE} -- Implementation: parse
 			s: STRING_32
 			done: BOOLEAN
 		do
-			c := next_character
-			if c /= '[' then
-				report_error ({STRING_32} "invalid syntax <!" + c.out.to_string_32)
+			if end_of_input then
+				report_truncated_content ({STRING_32} "incomplete CDATA syntax")
 			else
 				c := next_character
-				from
-					create s.make (6)
-				until
-					c = '['
-				loop
-					s.append_character (c.as_upper)
+				if c /= '[' then
+					report_error ({STRING_32} "invalid syntax <!" + c.out.to_string_32)
+				elseif end_of_input then
+					report_truncated_content ({STRING_32} "incomplete CDATA syntax")
+				else
 					c := next_character
-				end
-				if s.same_string_general (str_cdata) then
-					s.wipe_out
 					from
-						c := next_character
+						create s.make (6)
 					until
-						done or parsing_stopped
+						end_of_input or c = '['
 					loop
-						if c = ']' then
+						s.append_character (c.as_upper)
+						c := next_character
+					end
+					if s.same_string_general (str_cdata) then
+						s.wipe_out
+						from
 							c := next_character
+						until
+							end_of_input or done or parsing_stopped
+						loop
+								-- In this loop body, no check on end_of_input
+								-- at worst it reports a "No more characters" error
 							if c = ']' then
 								c := next_character
-								if c = '>' then
-									done := True
-								elseif c = '-' then
-									s.append_character (']')
-									rewind_character
+								if c = ']' then
+									c := next_character
+									if c = '>' then
+										done := True
+									elseif c = '-' then
+										s.append_character (']')
+										rewind_character
+									else
+										s.append_character (']')
+										s.append_character (']')
+										s.append_character (c)
+										c := next_character
+									end
 								else
-									s.append_character (']')
 									s.append_character (']')
 									s.append_character (c)
 									c := next_character
 								end
 							else
-								s.append_character (']')
 								s.append_character (c)
 								c := next_character
 							end
-						else
-							s.append_character (c)
-							c := next_character
 						end
-					end
-					if parsing_stopped then
-						report_error ({STRING_32} "could not find end of CDATA content")
+						if parsing_stopped then
+							report_error ({STRING_32} "could not find end of CDATA content")
+						else
+							callbacks.on_content (s)
+						end
 					else
-						callbacks.on_content (s)
+						report_error ({STRING_32} "invalid syntax <![" + s)
 					end
-				else
-					report_error ({STRING_32} "invalid syntax <![" + s)
 				end
 			end
 		end
@@ -605,10 +669,14 @@ feature {NONE} -- Implementation: parse
 			s: like new_string_comment_value
 			done: BOOLEAN
 		do
+				-- At this point, we should not be end_of_input
+				-- and even if it happens, the `c' value will be '%U'
+				-- and the parsing will exit on next "c /= '-'" condition
 			c := next_character
 			if c /= '-' then
 				report_error ({STRING_32} "invalid comment syntax")
 			else
+					-- Same comment, if end_of_input is True, the next instruction will stop the parsing
 				c := next_character
 				if c /= '-' then
 					report_error ({STRING_32} "invalid comment syntax")
@@ -619,7 +687,7 @@ feature {NONE} -- Implementation: parse
 					from
 						c := next_character
 					until
-						done or parsing_stopped
+						end_of_input or done or parsing_stopped
 					loop
 						if c = '-' then
 							c := next_character
@@ -672,6 +740,9 @@ feature {NONE} -- Implementation: parse
 			in_double_quote: BOOLEAN
 			done: BOOLEAN
 		do
+				-- At this point, we should not be end_of_input
+				-- and even if it happens, the `c' value will be '%U'
+				-- and the parsing will exit on next "c /= 'D'" condition
 			c := next_character
 			if c /= 'D' then
 				report_error ({STRING_32} "invalid syntax <!" + c.out.to_string_32)
@@ -679,7 +750,7 @@ feature {NONE} -- Implementation: parse
 				from
 					create s.make (6)
 				until
-					c.is_space or c = '>'
+					end_of_input or c.is_space or c = '>'
 				loop
 					s.append_character (c.as_upper)
 					c := next_character
@@ -689,7 +760,7 @@ feature {NONE} -- Implementation: parse
 					from
 						c := next_character
 					until
-						done or parsing_stopped
+						end_of_input or done or parsing_stopped
 					loop
 						if in_double_quote then
 							if c = '"' then
@@ -732,78 +803,6 @@ feature {NONE} -- Implementation: parse
 					report_error ({STRING_32} "invalid syntax <!" + s)
 				end
 			end
-		end
-
-	report_error (a_message: READABLE_STRING_32)
-			-- Report error with message `a_message'
-		require
-			a_message_attached: a_message /= Void
-		local
-			s: STRING_32
-			p: like position
-		do
-			p := position
-			unset_checkpoint_position
-
-			create s.make (a_message.count)
-			s.append_string_general (a_message)
-
-			create error_message.make_from_string (s)
-
-			if error_position = Void then
-					-- record only first error's position
-				error_position := p
-			end
-			parsing_stopped := True
-
-				--| The following won't be part of `error_message'
-			s.append_character (' ')
-			s.append_character ('(')
-			s.append_string ({STRING_32} "position=")
-			s.append_string (p.to_string_32)
-			callbacks.on_error (s)
-		ensure
-			error_occurred: error_occurred
-		end
-
-	report_warning (a_message: READABLE_STRING_32)
-			-- Report warning with message `a_message'
-		require
-			a_message_attached: a_message /= Void
-		local
-			s: STRING_32
-			p: like position
-		do
-			p := position
-
-			create s.make (a_message.count)
-			s.append_string_general (a_message)
-
-			warning_message := s
-		end
-
-	report_unsupported_bom_value (a_bom: READABLE_STRING_GENERAL)
-			-- Report unsupported BOM value for `a_bom'
-		do
-			report_error ({STRING_32} "Unsupported BOM value %"" + a_bom.to_string_32 + {STRING_32} "%".")
-		end
-
-	report_missing_attribute_value (p: detachable READABLE_STRING_32; n: READABLE_STRING_32)
-			-- Report missing value for attribute `p:n'
-		do
-			report_error ({STRING_32} "Attributes without any value are forbidden")
-		end
-
-	report_unexpected_content (a_content: STRING)
-			-- Report unexpected content `a_content'
-		do
-			report_error ({STRING_32} "Unexpected content (not well-formed XML)")
-		end
-
-	report_unexpected_content_in_prolog (a_content: READABLE_STRING_32)
-			-- Report unexpected content `a_content' in prolog
-		do
-			report_error ({STRING_32} "Unexpected content in prolog (not well-formed XML)")
 		end
 
 	on_xml_declaration (a_version: READABLE_STRING_32; a_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
@@ -858,6 +857,100 @@ feature {NONE} -- Implementation: parse
 			callbacks.on_xml_declaration (a_version, a_encoding, a_standalone)
 		end
 
+feature {NONE} -- Error reporting
+
+	report_error (a_message: READABLE_STRING_32)
+			-- Report error with message `a_message'
+		require
+			a_message_attached: a_message /= Void
+		local
+			s: STRING_32
+			p: like position
+		do
+			p := position
+			unset_checkpoint_position
+
+			create s.make (a_message.count)
+			s.append_string_general (a_message)
+
+			create error_message.make_from_string (s)
+
+			if error_position = Void then
+					-- record only first error's position
+				error_position := p
+			end
+			parsing_stopped := True
+
+				--| The following won't be part of `error_message'
+			s.append_character (' ')
+			s.append_character ('(')
+			s.append_string ({STRING_32} "position=")
+			s.append_string (p.to_string_32)
+			callbacks.on_error (s)
+		ensure
+			error_occurred: error_occurred
+		end
+
+	report_warning (a_message: READABLE_STRING_32)
+			-- Report warning with message `a_message'
+		require
+			a_message_attached: a_message /= Void
+		local
+			s: STRING_32
+			p: like position
+		do
+			p := position
+
+			create s.make (a_message.count)
+			s.append_string_general (a_message)
+
+			warning_message := s
+		end
+
+	report_truncated_content (a_message: detachable READABLE_STRING_GENERAL)
+			-- Report the content is truncated.
+			-- i.e reach end of input inside an XML structure parsing.
+		do
+			if a_message /= Void then
+				report_warning ({STRING_32} "End of input: " + a_message.to_string_32)
+			else
+				report_warning ({STRING_32} "End of input.")
+			end
+		end
+
+	report_syntax_error (a_message: detachable READABLE_STRING_GENERAL)
+			-- Report a syntax error with optional additional message `a_message'.
+		do
+			if a_message /= Void then
+				report_warning ({STRING_32} "Syntax error: " + a_message.to_string_32)
+			else
+				report_error ({STRING_32} "Syntax error.")
+			end
+		end
+
+	report_unsupported_bom_value (a_bom: READABLE_STRING_GENERAL)
+			-- Report unsupported BOM value for `a_bom'
+		do
+			report_error ({STRING_32} "Unsupported BOM value %"" + a_bom.to_string_32 + {STRING_32} "%".")
+		end
+
+	report_missing_attribute_value (p: detachable READABLE_STRING_32; n: READABLE_STRING_32)
+			-- Report missing value for attribute `p:n'
+		do
+			report_error ({STRING_32} "Attributes without any value are forbidden")
+		end
+
+	report_unexpected_content (a_content: STRING)
+			-- Report unexpected content `a_content'
+		do
+			report_error ({STRING_32} "Unexpected content (not well-formed XML)")
+		end
+
+	report_unexpected_content_in_prolog (a_content: READABLE_STRING_32)
+			-- Report unexpected content `a_content' in prolog
+		do
+			report_error ({STRING_32} "Unexpected content in prolog (not well-formed XML)")
+		end
 
 feature {NONE} -- Encoding
 
@@ -944,6 +1037,9 @@ feature {XML_CALLBACKS} -- Error
 
 feature {NONE} -- Query
 
+	end_of_input: BOOLEAN
+			-- Reached end of input?
+
 	last_character: CHARACTER_32
 			-- Last read character
 
@@ -965,26 +1061,25 @@ feature {NONE} -- Query
 			rewinded_character_null: rewinded_character = '%U'
 		do
 			rewinded_character := last_character
+			end_of_input := rewinded_character = '%U'
 		ensure
-			rewinded_character_valid: rewinded_character /= '%R'
+			rewinded_character_valid: rewinded_character /= '%U'
 		end
 
 	next_character: like last_character
 			-- Return next character
 			-- move index
-		local
-			buf: like buffer
 		do
 			Result := rewinded_character
 			if Result = '%U' then
-				buf := buffer
-				if not buf.end_of_input then
-					Result := internal_read_character (buf)
+				if end_of_input then
+					report_error ({STRING_32} "No more characters")
 				else
-					report_error ({STRING_32} "no more characters")
+					Result := internal_read_character (buffer)
 				end
 			else
 				rewinded_character := '%U'
+				end_of_input := buffer.end_of_input
 			end
 			last_character := Result
 		end
@@ -1012,26 +1107,34 @@ feature {NONE} -- Query
 				end
 			end
 			Result := c.to_character_32
+			end_of_input := buf.end_of_input
 		end
 
 	next_non_space_character: like last_character
 			-- Return next character which is not a space
 			-- move index
 		do
-			from
-				Result := next_character
-			until
-				not Result.is_space
-			loop
-				Result := next_character
+			if end_of_input then
+				report_error ("Out of Input data.")
+				Result := '%U'
+			else
+				from
+					Result := next_character
+				until
+					end_of_input or not Result.is_space
+				loop
+					Result := next_character
+				end
 			end
 		ensure
-			not_a_space: not Result.is_space
+			not_a_space: not end_of_input implies not Result.is_space
 		end
 
 	next_tag: TUPLE [prefix_part: detachable STRING_32; local_part: STRING_32]
 			-- Return next tag value
 			-- move index
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: like last_character
 			p: detachable like new_string_tag
@@ -1042,7 +1145,7 @@ feature {NONE} -- Query
 			if is_valid_tag_start_character (c) then
 				from
 				until
-					not is_valid_tag_character (c)
+					end_of_input or not is_valid_tag_character (c)
 				loop
 					if c = ':' and p = Void then
 						p := s.string
@@ -1062,6 +1165,8 @@ feature {NONE} -- Query
 	next_entity: STRING_32
 			-- Return next entity value
 			-- move index
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: like last_character
 			is_char: BOOLEAN
@@ -1082,7 +1187,7 @@ feature {NONE} -- Query
 				if is_hexa then
 					from
 					until
-						not c.is_hexa_digit or c = ';'
+						end_of_input or not c.is_hexa_digit or c = ';'
 					loop
 						s.append_character (c)
 						c := next_character
@@ -1090,7 +1195,7 @@ feature {NONE} -- Query
 				else
 					from
 					until
-						not c.is_digit or c = ';'
+						end_of_input or not c.is_digit or c = ';'
 					loop
 						s.append_character (c)
 						c := next_character
@@ -1099,7 +1204,7 @@ feature {NONE} -- Query
 			else
 				from
 				until
-					not is_valid_entity_character (c) or c = ';'
+					end_of_input or not is_valid_entity_character (c) or c = ';'
 				loop
 					s.append_character (c)
 					c := next_character
@@ -1134,6 +1239,8 @@ feature {NONE} -- Query
 	next_attribute_name: TUPLE [prefix_part: detachable READABLE_STRING_32; local_part: READABLE_STRING_32]
 			-- Return next attribute prefix and local part.
 			-- move index
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: like last_character
 			n: like new_string_attribute_name
@@ -1141,12 +1248,12 @@ feature {NONE} -- Query
 		do
 			n := new_string_attribute_name
 			c := next_non_space_character
-			if is_valid_name_start_character (c) then
+			if is_valid_name_start_character (c) and not end_of_input then
 				from
 					n.append_character (c)
 					c := next_character
 				until
-					not is_valid_name_character (c)
+					end_of_input or not is_valid_name_character (c)
 				loop
 					n.append_character (c)
 					c := next_character
@@ -1166,6 +1273,8 @@ feature {NONE} -- Query
 	next_attribute_value: READABLE_STRING_32
 			-- Return next attribute's value
 			-- move index
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: like last_character
 			l_in_double_quote: BOOLEAN
@@ -1192,7 +1301,7 @@ feature {NONE} -- Query
 				from
 					done := False
 				until
-					done or parsing_stopped
+					end_of_input or done or parsing_stopped
 				loop
 					if
 						not l_in_double_quote and not l_in_single_quote and
@@ -1239,6 +1348,8 @@ feature {NONE} -- Query
 	next_attribute_data: detachable TUPLE [prefix_part: detachable READABLE_STRING_32; local_part: READABLE_STRING_32; value: READABLE_STRING_32]
 			-- Return next attribute's data (prefix,local and value)
 			-- move index
+		require
+			not_end_of_input: not end_of_input
 		local
 			c: like last_character
 			n: READABLE_STRING_32
@@ -1249,7 +1360,14 @@ feature {NONE} -- Query
 			att_name := next_attribute_name
 			n := att_name.local_part
 			p := att_name.prefix_part
-			if not n.is_empty then
+			if n.is_empty then
+				if current_character = '>' or current_character = '/' or current_character = '?' then
+						-- no more attribute
+						-- reached valid end of tag
+				else
+					report_error ("Error with attribute declaration.")
+				end
+			else
 				c := current_character
 				set_checkpoint_position --| record potential error position
 				if c.is_space then
@@ -1290,7 +1408,7 @@ feature {NONE} -- Query
 				end
 			end
 		ensure
-			current_character.is_space or current_character = '>' or current_character = '/' or current_character = '?'
+			not error_occurred implies ( current_character.is_space or current_character = '>' or current_character = '/' or current_character = '?' )
 		end
 
 feature {NONE} -- Implementation
@@ -1551,6 +1669,7 @@ feature {NONE} -- Factory
 			-- (void-safety: keep `buffer' always attached)
 		once
 			create Result.make_empty
+			Result.set_name ("Empty-string-buffer")
 		end
 
 	new_string_tag: STRING_32
@@ -1618,7 +1737,7 @@ feature {NONE} -- Factory: cache
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,7 +16,6 @@ safe_md $INSTALL_DIR/esbuilder/spec/unix/bin
 remtrace Getting eweasel source code
 cd $EIFFEL_SRC
 safe_md $EIFFEL_SRC/eweasel
-co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/compilation $EIFFEL_SRC/eweasel/compilation
 co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/source $EIFFEL_SRC/eweasel/source
 remtrace Compiling eweasel
 safe_md $INSTALL_DIR/eweasel
@@ -25,7 +24,7 @@ safe_md $INSTALL_DIR/eweasel/spec/unix
 safe_md $INSTALL_DIR/eweasel/spec/unix/bin
 EWEASEL=$EIFFEL_SRC/eweasel
 export EWEASEL
-cd $EIFFEL_SRC/eweasel/compilation
+cd $EIFFEL_SRC/eweasel/source
 clean_project
 finalize eweasel.ecf eweasel_st
 tgz_ccode eweasel_st eweasel.tar.bz2

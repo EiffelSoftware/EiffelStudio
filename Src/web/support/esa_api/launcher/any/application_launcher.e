@@ -15,5 +15,10 @@ inherit
 
 feature -- Custom
 
+	is_console_output_supported: BOOLEAN
+		do
+			Result := False
+		end
+
 end
 

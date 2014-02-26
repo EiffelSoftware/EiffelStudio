@@ -21,6 +21,7 @@ inherit
 			make_from_string as make_from_uri_string,
 			userinfo as uri_userinfo,
 			path as uri_path, path_segments as uri_path_segments,
+			path_segment as uri_path_segment, decoded_path_segment as uri_decoded_path_segment,
 			query as uri_query, query_items as uri_query_items,
 			fragment as uri_fragment,
 			username_password as uri_username_password,
@@ -29,6 +30,9 @@ inherit
 			authority as uri_authority,
 			append_to_string as append_uri_to_string,
 			string as uri_string
+		redefine
+			 path_segment_count,
+			 make_from_uri
 		end
 
 create
@@ -53,6 +57,7 @@ feature {NONE} -- Initialization
 	make_from_uri (a_uri: URI)
 			-- Make Current Internationalized resource identifier from `uri' object
 		do
+				-- Is it useful to redefine?
 			make_from_uri_string (a_uri.string)
 		end
 
@@ -90,8 +95,87 @@ feature -- Access
 
 	path_segments: LIST [READABLE_STRING_32]
 			-- Segments composing `path'.
+			--| ex: http://foo.com/a/b/c ->   <<"", "a", "b", "c">>
+			--|		http://foo.com/bar/      ->   <<"", "bar", "">>
+			--|		http://foo.com/bar      ->   <<"", "bar">>
+			--|		http://foo.com/      ->   <<"">>
+			--|		http://foo.com       ->   << >> empty list
+			--|
+		local
+			l_path: like path
 		do
-			Result := path.split ('/')
+			l_path := path
+			if l_path.is_empty then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (0)
+			elseif l_path.count = 1 and then l_path[1] = '/' then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (1)
+				Result.force ({STRING_32} "")
+			else
+				Result := l_path.split ('/')
+			end
+		end
+
+	path_segment_count: INTEGER
+			-- Path segments count.
+		local
+			l_path: like path
+		do
+			l_path := path
+			if l_path.is_empty then
+			elseif l_path.count = 1 and then l_path[1] = '/' then
+				Result := 1
+			else
+				Result := path.occurrences ('/')+ 1
+			end
+		end
+
+	path_segment (i: INTEGER): READABLE_STRING_32
+			-- i_th path Segment, starting index is 0 .
+			--| "http://example.com/a/b/c" -> uri[0] = "" ; uri[1]= "a" ; uri[2] = "b"; uri[3] = "c";  uri[4] violates precondition !
+		require
+			valid_index: i >= 0 and i < path_segment_count
+		local
+			p,q,n: INTEGER
+			l_path: like path
+		do
+			l_path := path
+			if l_path.is_empty then
+				check valid_index: False end
+				create {STRING_32} Result.make_empty
+			else
+				from
+					q := 0
+					p := l_path.index_of ('/', q + 1)
+					n := i
+				until
+					n = 0 or p = 0
+				loop
+					if p > q then
+						q := p
+						p := l_path.index_of ('/', q + 1)
+					end
+					n := n - 1
+				end
+				if p = 0 then
+					if n = 0 then
+						p := l_path.count + 1
+					else
+							-- Most likely out of valid range.
+							-- so this should not occur due to precondition `valid_index'
+						check valid_index: False end
+					end
+				end
+				Result := l_path.substring (q+1, p-1)
+			end
+		end
+
+	decoded_path_segment alias "[]" (i: INTEGER): READABLE_STRING_32
+			-- i_th path Segment, starting index is 0 .
+			--| "http://example.com/a/b/c" -> uri[0] = "" ; uri[1]= "a" ; uri[2] = "b"; uri[3] = "c";  uri[4] violates precondition !
+		require
+			valid_index: i >= 0 and i < path_segment_count
+		do
+			Result := decoded_www_form_urlencoded_string (path_segment (i))
 		end
 
 	query_items: detachable LIST [TUPLE [name: READABLE_STRING_32; value: detachable READABLE_STRING_32]]
@@ -345,7 +429,7 @@ feature {NONE} -- Implementation: Internationalization
 
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

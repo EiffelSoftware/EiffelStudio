@@ -1,4 +1,4 @@
-note
+﻿note
 	EIS: "name=RFC", "protocol=URI", "src=http://tools.ietf.org/html/rfc3986"
 	EIS: "name=wikipedia", "protocol=URI", "src=http://en.wikipedia.org/wiki/URI_scheme"
 
@@ -60,27 +60,71 @@ feature -- Tests
 			assert ("resolved path", same_string (uri.path, ""))
 		end
 
+	test_segments
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://example.com")
+			assert ("is_valid", uri.is_valid)
+			assert ("path", uri.path.same_string (""))
+			assert ("path segment", uri.path_segments.count = 0)
+
+			create uri.make_from_string ("http://example.com/")
+			assert ("is_valid", uri.is_valid)
+			assert ("path", uri.path.same_string ("/"))
+			assert ("path segment", uri.path_segments.count = 1 and then uri[0].is_empty)
+
+			create uri.make_from_string ("http://zyx.def.com/a")
+			assert ("path segment", uri.path_segments.count = 2 and then uri[0].is_empty and then uri[1].same_string ("a"))
+			assert ("is_valid", uri.is_valid)
+
+			create uri.make_from_string ("http://zyx.def.com/a/b/c/d")
+--			assert ("path segment", uri.path_segments.count = 5 and then uri[4].same_string ("d") and then uri[5].same_string (""))
+			assert ("path segment", uri.path_segments.count = 5 and then uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d"))
+			assert ("is_valid", uri.is_valid)
+		end
+
 	test_urls
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://example.com")
+			assert ("is_valid", uri.is_valid)
+			assert ("path", uri.path.same_string (""))
+			assert ("path segment", uri.path_segments.count = 0)
+
 			create uri.make_from_string ("http://example.com/")
 			assert ("is_valid", uri.is_valid)
+			assert ("path", uri.path.same_string ("/"))
+			assert ("path segment", uri.path_segments.count = 1 and then uri[0].is_empty)
 
 			create uri.make_from_string ("http://abc.def.com/")
+			assert ("path segment", uri.path_segments.count = 1 and then uri[0].is_empty)
 			assert ("is_valid", uri.is_valid)
 
 			create uri.make_from_string ("http://zyx.def.com/")
+			assert ("path segment", uri.path_segments.count = 1)
+			assert ("is_valid", uri.is_valid)
+
+			create uri.make_from_string ("http://zyx.def.com/a")
+			assert ("path segment", uri.path_segments.count = 2 and then uri[0].is_empty and then uri[1].same_string ("a"))
+			assert ("is_valid", uri.is_valid)
+
+
+			create uri.make_from_string ("http://zyx.def.com/a/b/c/d")
+			assert ("path segment", uri.path_segments.count = 5 and then uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d"))
 			assert ("is_valid", uri.is_valid)
 
 
 			create uri.make_from_string ("http://user:pass@foo.com:8888/path%%20to%%20foo")
 			assert ("is_valid", uri.is_valid)
 			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
+			assert ("path segment", uri.path_segments.count = 2)
 
 			create uri.make_from_string ("http://user:pass@foo.com:8888/path to foo")
 			assert ("is_valid", uri.is_valid)
 			assert ("path", uri.path.same_string ("/path%%20to%%20foo"))
+			assert ("path segment", uri.path_segments.count = 2)
 
 
 			create uri.make_from_string ("http://www.example.com/foo/bar?id=123&abc=def#page-1")
@@ -88,6 +132,7 @@ feature -- Tests
 			assert ("scheme", uri.scheme.same_string ("http"))
 			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("path", uri.path.same_string ("/foo/bar"))
+			assert ("path segment", uri.path_segments.count = 3)
 			assert ("query", same_string (uri.query, "id=123&abc=def"))
 			assert ("fragment", same_string (uri.fragment, "page-1"))
 
@@ -100,6 +145,7 @@ feature -- Tests
 			assert ("host", same_string (uri.host, "www.example.com"))
 			assert ("port", uri.port = 8080)
 			assert ("path", uri.path.same_string ("/foo/bar"))
+			assert ("path segment", uri.path_segments.count = 3)
 			assert ("query", same_string (uri.query, "id=123&abc=def"))
 			assert ("fragment", same_string (uri.fragment, "page-1"))
 
@@ -112,6 +158,7 @@ feature -- Tests
 			assert ("password", same_string (uri.password, "smith"))
 			assert ("port", uri.port = 8080)
 			assert ("path", uri.path.same_string ("/foo/bar"))
+			assert ("path segment", uri.path_segments.count = 3)
 			assert ("query", same_string (uri.query, "id=123&abc=def"))
 			assert ("fragment", same_string (uri.fragment, "page-1"))
 
@@ -120,11 +167,12 @@ feature -- Tests
 			assert ("scheme", uri.scheme.same_string ("ftp"))
 			assert ("host", same_string (uri.host, "ftp.is.co.za"))
 			assert ("path", uri.path.same_string ("/rfc/rfc1808.txt"))
+			assert ("path segment", uri.path_segments.count = 3)
 			assert ("query", same_string (uri.query, Void))
 			assert ("fragment", same_string (uri.fragment, Void))
 
 			-- Invalid !!			
-			create uri.make_from_string ("http://foo.com/un/�t�")
+			create uri.make_from_string ("http://foo.com/un/été")
 			assert ("is not valid", not uri.is_valid)
 
 		end
@@ -137,7 +185,7 @@ feature -- Tests
 			assert ("query", same_string (uri.query, "q=bar"))
 
 			create uri.make_from_string ("http://foo.com/when/")
-			uri.add_query_parameter ("un", "�t�")
+			uri.add_query_parameter ("un", "été")
 			assert ("query", same_string (uri.query, "un=%%C3%%A9t%%C3%%A9"))
 
 			create uri.make_from_string ("http://www.example.com/foo/bar")
@@ -215,7 +263,6 @@ feature -- Tests
 			assert ("fragment", same_string (uri.fragment, Void))
 		end
 
-
 	test_urns
 		local
 			uri: URI
@@ -290,6 +337,58 @@ feature -- Tests
 			print (uri_split_to_string (uri) + "%N")
 
 			-- reg-name
+
+
+		end
+
+	test_unicode
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://foo.com")
+			assert ("http://foo.com", uri.string.same_string ("http://foo.com"))
+
+			uri.add_unencoded_path_segment ("bar")
+			assert ("http://foo.com + bar", uri.string.same_string ("http://foo.com/bar"))
+
+			create uri.make_from_string ("http://foo.com/")
+			assert ("http://foo.com/", uri.string.same_string ("http://foo.com/"))
+
+			create uri.make_from_string ("http://foo.com/bar/")
+			assert ("http://foo.com/bar", uri.string.same_string ("http://foo.com/bar/"))
+
+			create uri.make_from_string ("http://foo.com/bar")
+			assert ("http://foo.com/bar", uri.string.same_string ("http://foo.com/bar"))
+
+			uri.add_unencoded_path_segment ("summer")
+			assert ("http://foo.com/bar + summer", uri.string.same_string ("http://foo.com/bar/summer"))
+			uri.add_unencoded_path_segment ({STRING_32} "été")
+			assert ("http://foo.com/bar/summer + %%C3%%A9t%%C3%%A9", uri.string.same_string ("http://foo.com/bar/summer/%%C3%%A9t%%C3%%A9"))
+			uri.add_unencoded_path_segment ({STRING_32} "上海")
+			assert ("http://foo.com/bar/summer/%%C3%%A9t%%C3%%A9 + %%E4%%B8%%8A%%E6%%B5%%B7", uri.string.same_string ("http://foo.com/bar/summer/%%C3%%A9t%%C3%%A9/%%E4%%B8%%8A%%E6%%B5%%B7"))
+
+			uri.set_unencoded_path ("")
+			assert ("http://foo.com/", uri.string.same_string ("http://foo.com"))
+
+			uri.set_unencoded_path ("/")
+			assert ("http://foo.com/", uri.string.same_string ("http://foo.com/"))
+
+			uri.set_unencoded_path ("/foo/bar")
+			assert ("http://foo.com/foo/bar", uri.string.same_string ("http://foo.com/foo/bar"))
+
+			uri.set_unencoded_path ("/foo/bar/")
+			assert ("http://foo.com/foo/bar/", uri.string.same_string ("http://foo.com/foo/bar/"))
+
+			uri.set_unencoded_path ("/foo//bar/")
+			assert ("http://foo.com/foo//bar/", uri.string.same_string ("http://foo.com/foo//bar/"))
+
+
+
+			uri.set_unencoded_path ({STRING_32} "/summer/été/message/上海")
+			assert ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7", uri.string.same_string ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7"))
+
+			uri.set_unencoded_path ({STRING_32} "/summer/été/message/上海/extra/")
+			assert ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/", uri.string.same_string ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/"))
 
 
 		end

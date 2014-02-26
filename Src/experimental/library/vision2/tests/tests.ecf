@@ -23,6 +23,7 @@
 	</target>
 	<target name="vision2-tests-cocoa" extends="vision2-tests">
 		<description>Use the cocoa compilation</description>
+		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
 </system>

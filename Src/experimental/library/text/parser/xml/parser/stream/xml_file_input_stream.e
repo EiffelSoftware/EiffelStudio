@@ -9,6 +9,8 @@ class
 inherit
 	XML_CHARACTER_8_INPUT_STREAM
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_with_path,
@@ -68,7 +70,11 @@ feature -- Status report
 
 	count: INTEGER
 
+	is_started: BOOLEAN
+			-- Current stream started?
+
 	end_of_input: BOOLEAN
+			-- Reached end of Current input stream?
 		do
 			Result := (chunk_source_upper > 0) and then --| started reading
 					index >= chunk_source_upper and ((chunk_source_upper - chunk_source_lower + 1) < chunk_size)
@@ -133,11 +139,11 @@ feature -- Basic operation
 				source.open_read
 			end
 			source.start
-			chunk_source_upper := -1
-			chunk_source_lower := -1
 			index := 0
 			line := 1
 			column := 0
+			get_next_chunk
+			is_started := True
 		end
 
 	close
@@ -153,28 +159,36 @@ feature -- Basic operation
 	read_character
 		local
 			c: CHARACTER
+			i: INTEGER
 		do
 			index := index + 1
-			if index > chunk_source_upper then
-				source.read_stream (chunk_size)
-				current_chunk := source.last_string
-				chunk_source_lower := index
-				chunk_source_upper := chunk_source_lower + current_chunk.count - 1
+			if not is_started then
+				start
 			end
+			if index <= chunk_source_upper then
+				i := 1 + index - chunk_source_lower
+				if current_chunk.valid_index (i) then
+					c := current_chunk.item (i)
+				else
+						-- Internal error
+					check should_not_occur: False end
+					c := '%U'
+				end
 
-			if index < chunk_source_lower then
+				if index = chunk_source_upper then
+					get_next_chunk
+				end
+				if last_character = '%N' then
+					line := line + 1
+					column := 0
+				else
+					column := column + 1
+				end
+			else
+					-- End of input ?
+				check current_chunk.is_empty and end_of_input end
 				c := '%U'
-			else
-				c := current_chunk.item (1 + index - chunk_source_lower)
 			end
-
-			if last_character = '%N' then
-				line := line + 1
-				column := 0
-			else
-				column := column + 1
-			end
-
 			last_character := c
 		end
 
@@ -184,6 +198,21 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
+
+	get_next_chunk
+			-- Get next `current_chunk'.
+		require
+			is_open_read: source.is_open_read and source.is_readable
+		do
+			if source.file_readable then
+				source.read_stream (chunk_size)
+				current_chunk := source.last_string
+			else
+				create current_chunk.make_empty
+			end
+			chunk_source_lower := index + 1
+			chunk_source_upper := chunk_source_lower + current_chunk.count - 1
+		end
 
 	chunk_source_lower: INTEGER
 			-- Lower index of current chunk
@@ -210,11 +239,28 @@ feature {NONE} -- Implementation
 			is_inner_source := b
 		end
 
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			Result.append_integer (index)
+			Result.append (" - chunk [")
+			Result.append_integer (chunk_source_lower)
+			Result.append_character (':')
+			Result.append_integer (chunk_source_upper)
+			Result.append_character (']')
+			Result.append_character (' ')
+			Result.append_character ('@')
+			Result.append (name)
+		end
+
 invariant
 	source_attached: source /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

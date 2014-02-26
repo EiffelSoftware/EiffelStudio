@@ -478,6 +478,24 @@ feature -- Status report
 	is_valid_as_string_8: BOOLEAN = True
 			-- <Precursor>
 
+	is_substring_whitespace (start_index, end_index: INTEGER): BOOLEAN
+			-- <Precursor>
+		local
+			i, n: INTEGER
+			l_area: like area
+		do
+			from
+				l_area := area
+				i := area_lower + start_index - 1
+				n := area_lower + end_index - 1
+			until
+				i > n or not l_area.item (i).is_space
+			loop
+				i := i + 1
+			end
+			Result := i > n
+		end
+
 	has (c: CHARACTER_8): BOOLEAN
 			-- Does string include `c'?
 		local

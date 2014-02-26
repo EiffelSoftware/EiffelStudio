@@ -87,7 +87,4 @@
 	<target name="i18n_dotnet" extends="i18n">
 		<setting name="msil_generation" value="true"/>
 	</target>
-	<target name="i18n_unix" extends="i18n">
-		<setting name="platform" value="unix"/>
-	</target>
 </system>

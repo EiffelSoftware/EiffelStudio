@@ -30,11 +30,8 @@ feature -- Access
 			-- `Result' is WINFORMS_CONTROL contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_wel_winform_container: detachable WEL_WINFORM_CONTAINER
 		do
-			l_wel_winform_container ?= wel_item
-			if l_wel_winform_container /= Void then
+			if attached {WEL_WINFORM_CONTAINER} wel_item as l_wel_winform_container then
 				Result := l_wel_winform_container.winform
 			end
 		end
@@ -63,7 +60,7 @@ feature -- Access
 
 feature -- Status setting
 		
-	put, replace  (a_window: like item)
+	put, replace  (a_window: attached like item)
 			-- Replace `child_item' with `a_window'.
 		require
 			not_destroyed: not is_destroyed
@@ -76,7 +73,7 @@ feature -- Status setting
 			wel_replace (l_wel_winform_container)
 		end
 		
-	extend (an_item: like item)
+	extend (an_item: attached like item)
 			-- Ensure that structure includes `an_item'.
 		do	
 			replace (an_item)

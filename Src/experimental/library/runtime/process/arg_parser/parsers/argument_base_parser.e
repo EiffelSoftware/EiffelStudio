@@ -67,7 +67,6 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_valid_items: across Result as l_c all not l_c.item.is_empty end
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 		end
 
 	frozen option_values: LIST [ARGUMENT_OPTION]
@@ -76,7 +75,6 @@ feature -- Access
 			Result := internal_option_values
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 		end
 
 	frozen error_messages: ARRAYED_LIST [READABLE_STRING_GENERAL]
@@ -114,35 +112,32 @@ feature {NONE} -- Access
 		do
 		end
 
-	frozen arguments: ARRAY [IMMUTABLE_STRING_32]
+	frozen arguments: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- The list of actual arguments, which takes into account compounded arguments when using
 			-- Unix-style switches.
 			-- Compunded switches are those single character switches, when `is_using_unix_switch_style' is True,
 			-- that are joined, such as -abcde, where a, b, c, d and e are switches.
 		local
-			l_args: ARRAY [IMMUTABLE_STRING_32]
-			l_result: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			l_args: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			l_arg: IMMUTABLE_STRING_32
 			l_next_arg: detachable STRING_32
 			l_prefixes: like switch_prefixes
 			l_use_separated_switched: BOOLEAN
-			i, l_count: INTEGER
 			j, nb: INTEGER
 		do
 			if is_using_unix_switch_style then
 					-- When using the Unix style switch we can uss
 				l_args := argument_source.arguments
-				create l_result.make (l_args.count)
+				create Result.make (l_args.count)
 
 				l_prefixes := switch_prefixes
 				l_use_separated_switched := is_using_separated_switch_values
 				from
-					i := 1
-					l_count := l_args.count
+					l_args.start
 				until
-					i > l_count
+					l_args.after
 				loop
-					l_arg := l_args[i]
+					l_arg := l_args.item
 					if l_arg.count > 2 then
 						if l_prefixes.has (l_arg.item (1)) and not l_prefixes.has (l_arg.item (2)) then
 								-- This means the argument is a single prefix switched (Unix style uses two (--) for full
@@ -187,31 +182,24 @@ feature {NONE} -- Access
 								end
 
 								if l_next_arg /= Void then
-									l_result.extend (l_next_arg)
+									Result.extend (l_next_arg)
 								end
 
 								j := j + 1
 							end
 						else
-							l_result.extend (l_arg)
+							Result.extend (l_arg)
 						end
 					else
-						l_result.extend (l_arg)
+						Result.extend (l_arg)
 					end
-					i := i + 1
-				end
-
-				create Result.make_filled ("", 1, l_result.count)
-				from l_result.start until l_result.after loop
-					Result.put (l_result.item_for_iteration, l_result.index)
-					l_result.forth
+					l_args.forth
 				end
 			else
 				Result := argument_source.arguments
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.array_contains_attached_items (Result)
 		end
 
 	frozen argument_source: ARGUMENT_SOURCE assign set_argument_source
@@ -532,7 +520,6 @@ feature {NONE} -- Query
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 			not_result_is_empty: not Result.is_empty
 		end
 
@@ -563,7 +550,6 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 			result_contains_attached_valid_items: across Result as l_c all not l_c.item.is_empty end
 		end
 
@@ -608,7 +594,6 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 			result_contains_valid_items: across Result as l_c all not l_c.item.is_empty end
 		end
 
@@ -745,7 +730,6 @@ feature {NONE} -- Parsing
 			l_match_switch: detachable ARGUMENT_SWITCH
 			l_prefixes: like switch_prefixes
 			l_args: like arguments
-			l_upper: INTEGER
 			l_cs: like is_case_sensitive
 			l_match: BOOLEAN
 			l_options: like internal_option_values
@@ -775,13 +759,14 @@ feature {NONE} -- Parsing
 
 					-- Iterate arguments
 				from
-					i := 1
-					l_upper := l_args.count
-				until i > l_upper loop
+					l_args.start
+				until
+					l_args.after
+				loop
 					check
 						l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
 					end
-					l_arg := l_args[i]
+					l_arg := l_args.item
 					if not l_stop_processing and then not l_arg.is_empty and then l_arg.count > 1 and then l_prefixes.has (l_arg.item (1)) then
 						if l_arg.count > 2 and then l_prefixes.has (l_arg.item (2)) then
 							l_option := l_arg.shared_substring (3, l_arg.count)
@@ -924,7 +909,7 @@ feature {NONE} -- Parsing
 						end
 						l_last_switch := Void
 					end
-					i := i + 1
+					l_args.forth
 				end
 			end
 
@@ -1066,7 +1051,6 @@ feature {NONE} -- Validation
 			-- `a_groups': The group of arguments to validate.
 		require
 			a_groups_attached: a_groups /= Void
-			a_groups_contains_attached_items: assertions.sequence_contains_attached_items (a_groups)
 			has_parsed: has_parsed
 		local
 			l_validator: like non_switched_argument_validator
@@ -1205,7 +1189,6 @@ feature {NONE} -- Validation
 			Result := l_extend_groups
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 		end
 
 	frozen expanded_switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
@@ -1235,7 +1218,6 @@ feature {NONE} -- Validation
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attahced_items: assertions.sequence_contains_attached_items (Result)
 			result_count_equal: Result.count = switch_groups.count
 			switch_groups_unmoved: switch_groups.cursor ~ old switch_groups.cursor
 		end
@@ -1703,10 +1685,8 @@ feature {NONE} -- Usage
 			-- Command line option configuration string (to display in usage) for a specific group of options.
 		require
 			a_group_attached: a_group /= Void
-			a_group_contains_attached_items: assertions.sequence_contains_attached_items (a_group)
 			a_src_group_attached: a_src_group /= Void
 			a_group_equals_a_src_group: a_add_appurtenances implies a_group = a_src_group
-			a_src_group_contains_attached_items: assertions.sequence_contains_attached_items (a_src_group)
 		local
 			l_dependencies: like switch_dependencies
 			l_dependent_list: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -1971,8 +1951,6 @@ feature {NONE} -- Switches
 		ensure
 			result_attached: Result /= Void
 			result_consistent: Result = available_switches
-
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 		end
 
 	frozen available_visible_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -2000,8 +1978,6 @@ feature {NONE} -- Switches
 		ensure
 			result_attached: Result /= Void
 			result_consistent: Result = available_visible_switches
-
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -2009,7 +1985,6 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 			result_consistent: Result = switches
 		end
 
@@ -2019,7 +1994,6 @@ feature {NONE} -- Switches
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
 			result_consistent: Result = switch_groups
 		end
 
@@ -2030,19 +2004,7 @@ feature {NONE} -- Switches
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_keys: assertions.array_contains_attached_items (Result.current_keys)
-			result_contains_attached_items: assertions.sequence_contains_attached_items (Result.linear_representation)
 			result_consistent: Result = switch_dependencies
-		end
-
-feature {NONE} -- Temporary
-
-	frozen assertions: attached ASSERTION_HELPER
-			-- Temporary
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Formatting
@@ -2241,7 +2203,7 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

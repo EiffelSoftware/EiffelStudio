@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	arguments: ARRAY [IMMUTABLE_STRING_32]
+	arguments: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- <Precursor>
 		local
 			l_args: ARRAY [IMMUTABLE_STRING_32]
@@ -25,14 +25,11 @@ feature -- Access
 		once
 			l_args := terminal_arguments.argument_array
 			l_count := l_args.upper
-			create Result.make_filled ("", 1, l_count)
+			create Result.make (l_count)
 			from i := 1 until i > l_count
 			loop
 				l_arg := l_args.item (i)
-				if l_arg = Void then
-					create l_arg.make_empty
-				end
-				Result.put (l_arg, i)
+				Result.extend (l_arg)
 				i := i + 1
 			end
 		end
@@ -54,8 +51,8 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

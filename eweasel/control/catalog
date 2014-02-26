@@ -630,6 +630,7 @@ test	catcall-on-tuple-insertion	catcall009 tcf pass catcall tuple
 test	simple-catcall-2			catcall010 tcf fail catcall
 test	catcall-on-tuple-insertion-2	catcall011 tcf fail catcall
 test	spurious-catcall-errors		catcall012 tcf fail catcall
+test	catcall-crash-with-conversion	catcall013 tcf fail catcall
 
 -- Incrementality tests
 

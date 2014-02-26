@@ -264,6 +264,21 @@ feature -- Status report
 		deferred
 		end
 
+	is_whitespace: BOOLEAN
+			-- Is structure containing only whitespace characters?
+		do
+			Result := is_substring_whitespace (1, count)
+		end
+
+	is_substring_whitespace (start_index, end_index: INTEGER): BOOLEAN
+			-- Is substring between `start_index' and `end_index' containing only whitespace characters?
+		require
+			start_index_big_enough: 1 <= start_index
+			end_index_small_enough: end_index <= count
+			consistent_indexes: start_index - 1 <= end_index
+		deferred
+		end
+
 	has (c: like item): BOOLEAN
 			-- Does string include `c'?
 		local
@@ -1239,7 +1254,7 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 			-- Cash for `case_insensitive_hash_code'.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,6 +1,6 @@
 note
 	description : "[
-				Object that represent a URI Scheme
+				Object that represents a URI Scheme
 				
 				See http://en.wikipedia.org/wiki/URI_scheme
 				See http://en.wikipedia.org/wiki/Uniform_resource_identifier
@@ -43,7 +43,8 @@ inherit
 	DEBUG_OUTPUT
 
 create
-	make_from_string
+	make_from_string,
+	make_from_uri
 
 feature {NONE} -- Initialization
 
@@ -155,6 +156,32 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			same_if_valid: is_valid and not is_corrected implies a_string.starts_with (string)
+		end
+
+	make_with_details (a_scheme: READABLE_STRING_8; a_host: detachable READABLE_STRING_8; a_path: READABLE_STRING_8)
+			-- Create Current uri from scheme `a_scheme', host `a_host' and path `a_path'.
+		do
+			create scheme.make_from_string (a_scheme)
+			if a_host /= Void then
+				create host.make_from_string (a_host)
+			else
+				host := Void
+			end
+			create path.make_from_string (a_path)
+		end
+
+	make_from_uri (a_uri: URI)
+			-- Create Current uri from `a_uri'.
+		do
+			scheme := a_uri.scheme
+			userinfo := a_uri.userinfo
+			host := a_uri.host
+			port := a_uri.port
+			path := a_uri.path
+			query := a_uri.query
+			fragment := a_uri.fragment
+			is_valid := a_uri.is_valid
+			is_corrected := a_uri.is_corrected
 		end
 
 feature -- Basic operation		
@@ -295,8 +322,89 @@ feature -- Access
 
 	path_segments: LIST [READABLE_STRING_8]
 			-- Segments composing `path'.
+			--| ex: http://foo.com/a/b/c ->   <<"", "a", "b", "c">>
+			--|		http://foo.com/bar/      ->   <<"", "bar", "">>
+			--|		http://foo.com/bar      ->   <<"", "bar">>
+			--|		http://foo.com/      ->   <<"">>
+			--|		http://foo.com       ->   << >> empty list
+			--|
+		local
+			l_path: like path
 		do
-			Result := path.split ('/')
+			l_path := path
+			if l_path.is_empty then
+				create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
+			elseif l_path.count = 1 and then l_path[1] = '/' then
+				create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (1)
+				Result.force ("")
+			else
+				Result := l_path.split ('/')
+			end
+		ensure
+			Result.count = path_segment_count
+		end
+
+	path_segment_count: INTEGER
+			-- Path segments count.
+		local
+			l_path: like path
+		do
+			l_path := path
+			if l_path.is_empty then
+			elseif l_path.count = 1 and then l_path[1] = '/' then
+				Result := 1
+			else
+				Result := path.occurrences ('/')+ 1
+			end
+		end
+
+	path_segment (i: INTEGER): READABLE_STRING_8
+			-- i_th path Segment, starting index is 0 .
+			--| "http://example.com/a/b/c" -> uri[0] = "" ; uri[1]= "a" ; uri[2] = "b"; uri[3] = "c";  uri[4] violates precondition !
+		require
+			valid_index: i >= 0 and i < path_segment_count
+		local
+			p,q,n: INTEGER
+			l_path: like path
+		do
+			l_path := path
+			if l_path.is_empty then
+				check valid_index: False end
+				create {STRING_8} Result.make_empty
+			else
+				from
+					q := 0
+					p := l_path.index_of ('/', q + 1)
+					n := i
+				until
+					n = 0 or p = 0
+				loop
+					if p > q then
+						q := p
+						p := l_path.index_of ('/', q + 1)
+					end
+					n := n - 1
+				end
+				if p = 0 then
+					if n = 0 then
+						p := l_path.count + 1
+					else
+							-- Most likely out of valid range.
+							-- so this should not occur due to precondition `valid_index'
+						check valid_index: False end
+					end
+				end
+				Result := l_path.substring (q+1, p-1)
+			end
+		end
+
+	decoded_path_segment alias "[]" (i: INTEGER): READABLE_STRING_32
+			-- i_th path Segment, starting index is 0 .
+			--| "http://example.com/a/b/c" -> uri[0] = "" ; uri[1]= "a" ; uri[2] = "b"; uri[3] = "c";  uri[4] violates precondition !
+		require
+			valid_index: i >= 0 and i < path_segment_count
+		do
+			Result := decoded_www_form_urlencoded_string (path_segment (i))
 		end
 
 	decoded_path_segments: LIST [READABLE_STRING_32]
@@ -580,6 +688,73 @@ feature -- Element Change
 			create path.make_from_string (a_path)
 		ensure
 			path_set: path.same_string_general (a_path)
+		end
+
+	set_unencoded_path (a_path: READABLE_STRING_GENERAL)
+			-- Set non encoded `path' to `a_path'	
+			-- note: `a_segment' may contains unicode, and reserved characters apart from '/'
+			--		 that is used as segment separator
+		require
+			a_path_valid: has_authority implies a_path.is_empty or else a_path.starts_with ("/")
+		local
+			i,j,n: INTEGER
+		do
+			if a_path.is_empty then
+				set_path ("")
+			elseif a_path.count = 1 and then a_path[1] = '/' then
+				set_path ("/")
+			else
+				set_path ("") -- Reset path
+				from
+					i := 1
+					j := 1
+					n := a_path.count
+				until
+					i = 0 or j > n
+				loop
+					i := a_path.index_of ('/', j)
+					if i = 1 and then a_path[i] = '/' then
+						j := i + 1
+							-- skipped
+					elseif i > 1 then
+						if a_path[i - 1] = '\' then
+								-- Slash being escaped ... skipped
+						else
+							add_unencoded_path_segment (a_path.substring (j, i - 1))
+						end
+						j := i + 1
+
+						if i = n then
+								-- Ends with a slash
+								-- then j = i + 1 > n
+							add_unencoded_path_segment ("")
+						end
+					elseif j <= n then
+						check i = 0 end
+						add_unencoded_path_segment (a_path.substring (j, n))
+						j := n + 1
+					end
+				end
+			end
+		ensure
+			path_set: decoded_path.same_string_general (a_path) or decoded_path.same_string ({STRING_32} "/" + a_path)
+		end
+
+	add_unencoded_path_segment (a_segment: READABLE_STRING_GENERAL)
+			-- Add a non encoded path segment `a_segment' to `path'.
+			-- note: `a_segment' may contains unicode, and reserved characters such as '/'
+			--       those characters will be percent encoded as expected.
+		local
+			s: STRING_8
+		do
+			if {PLATFORM}.is_windows and then path.is_empty and then not has_authority then
+				set_path (www_form_urlencoded_string (a_segment))
+			else
+				create s.make_from_string (path)
+				s.append_character ('/')
+				append_percent_encoded_string_to (a_segment, s)
+				set_path (s)
+			end
 		end
 
 	set_query (v: detachable READABLE_STRING_8)
@@ -968,7 +1143,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

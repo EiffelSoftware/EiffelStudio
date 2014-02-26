@@ -14,7 +14,11 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<cluster name="independent_gtk" location="independent\" recursive="true">
 			<condition>

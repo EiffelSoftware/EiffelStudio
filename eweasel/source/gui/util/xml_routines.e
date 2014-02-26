@@ -45,7 +45,7 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			l_formatter: XML_FORMATTER
-			l_output: XML_STRING_OUTPUT_STREAM
+			l_output: XML_STRING_8_OUTPUT_STREAM
 		do
 			if not retried then
 				create l_formatter.make

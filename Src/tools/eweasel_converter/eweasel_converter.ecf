@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eweasel" location="$EWEASEL\compilation\eweasel.ecf"/>
+		<library name="eweasel" location="$EWEASEL\source\eweasel.ecf"/>
 		<cluster name="eweasel_converter" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

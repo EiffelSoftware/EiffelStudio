@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 			s
 		do
 			t := Current
-			b := attached t as x and then attached x.out as s and then not s.is_empty
+			b := attached t as x and then attached x.out as o and then not o.is_empty
 			create a.make_filled (5, 3)
 			s := a
 			b := across

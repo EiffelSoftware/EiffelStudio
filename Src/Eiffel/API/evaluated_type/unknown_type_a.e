@@ -70,6 +70,8 @@ feature -- Comparison
 	backward_conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- <Precursor>
 		do
+				-- `Result = true', but type information may be recorded by this call.
+			Precursor (a_context_class, other).do_nothing
 				-- Assume that the code is correct.
 			Result := True
 		end

@@ -2173,7 +2173,7 @@ feature {NONE} -- Visitor
 	process_array_as (l_as: COMPILER_ARRAY_AS)
 		local
 			i, nb: INTEGER
-			l_array_type: GEN_TYPE_A
+			l_array_type: detachable GEN_TYPE_A
 			l_generics: ARRAYED_LIST [TYPE_A]
 			l_type_a, l_element_type: TYPE_A
 			l_list: BYTE_LIST [EXPR_B]
@@ -2184,6 +2184,7 @@ feature {NONE} -- Visitor
 			l_current_class: CLASS_C
 			l_context: like context
 			l_is_attached: BOOLEAN
+			l_is_expression_unknown: BOOLEAN
 		do
 			l_context := context
 			l_current_class := l_context.current_class
@@ -2280,6 +2281,11 @@ feature {NONE} -- Visitor
 							-- Take first element in manifest array and let's suppose
 							-- it is the lowest type.
 						l_type_a := l_last_types.i_th (1)
+						if not l_type_a.is_known then
+							l_is_expression_unknown := True
+								-- Add an upper bound to flag this type as used.
+							unknown_type.backward_conform_to (l_current_class, l_type_a).do_nothing
+						end
 						l_is_attached := l_type_a.is_attached
 						i := 2
 						if is_checking_cas then
@@ -2288,6 +2294,9 @@ feature {NONE} -- Visitor
 								i > nb
 							loop
 								l_element_type := l_last_types.i_th (i)
+								if not l_element_type.is_known then
+									l_is_expression_unknown := True
+								end
 								if l_is_attached and then not l_element_type.is_attached then
 									l_is_attached := False
 								end
@@ -2319,6 +2328,9 @@ feature {NONE} -- Visitor
 								i > nb
 							loop
 								l_element_type := l_last_types.i_th (i)
+								if not l_element_type.is_known then
+									l_is_expression_unknown := True
+								end
 								if l_is_attached and then not l_element_type.is_attached then
 									l_is_attached := False
 								end
@@ -2350,31 +2362,40 @@ feature {NONE} -- Visitor
 						l_is_attached := True
 					end
 					if not l_has_error then
-						if l_is_attached then
-								-- Respect attachment status of the elements.
-							l_type_a := l_type_a.as_attached_in (l_current_class)
+						if l_is_expression_unknown then
+								-- There is an expression of unknown type.
+							l_array_type := Void
+						else
+							if l_is_attached then
+									-- Respect attachment status of the elements.
+								l_type_a := l_type_a.as_attached_in (l_current_class)
+							end
+							create l_generics.make (1)
+							l_generics.extend (l_type_a)
+							create l_array_type.make (system.array_id, l_generics)
+								-- Type of a manifest array is always frozen.
+							l_array_type.set_frozen_mark
+								-- Type of a manifest array is always attached.
+							l_array_type := l_array_type.as_attached_in (l_current_class)
+							instantiator.dispatch (l_array_type, l_current_class)
 						end
-						create l_generics.make (1)
-						l_generics.extend (l_type_a)
-						create l_array_type.make (system.array_id, l_generics)
-							-- Type of a manifest array is always frozen.
-						l_array_type.set_frozen_mark
-							-- Type of a manifest array is always attached.
-						l_array_type := l_array_type.as_attached_in (l_current_class)
-						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
 
-				if not l_has_error then
-						-- Update type stack
+				if l_has_error then
+					fixme ("Insert new validity error saying that manifest array is not valid")
+					reset_types
+				elseif attached l_array_type then
+						-- Update type stack.
 					set_type (l_array_type, l_as)
 					l_as.set_array_type (last_type)
 					if is_byte_node_enabled then
 						create {ARRAY_CONST_B} last_byte_node.make (l_list, l_array_type)
 					end
 				else
-					fixme ("Insert new validity error saying that manifest array is not valid")
-					reset_types
+						-- Unknown type.
+					set_type (unknown_type, l_as)
+					l_as.set_array_type (last_type)
 				end
 			else
 				reset_types
@@ -5269,42 +5290,47 @@ feature {NONE} -- Visitor
 					bracket_feature := last_alias_feature
 				end
 
-				if l_error_level = error_level and then attached bracket_feature then
-						-- Process arguments
-					create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
-					location := l_as.left_bracket_location
-					id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
-						location.character_column, location.character_position, location.character_count)
-						-- Restore assigner call flag
-					is_assigner_call := was_assigner_call
-					constrained_target_type := last_calls_target_type
-						-- Process call to bracket feature
-					l_is_qualified_call := is_qualified_call
-					is_qualified_call := True
-					process_call (last_type, Void, id_feature_name, last_alias_feature, l_as.operands, False, False, True, False, False)
-					is_qualified_call := l_is_qualified_call
-					if error_level = l_error_level and then is_byte_node_enabled then
-						create nested_b
-						create target_access
-						target_access.set_expr (target_expr)
-						target_access.set_parent (nested_b)
-						if l_is_multi_constraint then
-							l_access_b ?= last_byte_node
-								-- Last generated bytenode is from `process_call'.
-							check is_access_b: l_access_b /= Void end
-							l_access_b.set_multi_constraint_static (constrained_target_type)
-							call_b := l_access_b
-						else
-							call_b ?= last_byte_node
-						end
+				if l_error_level = error_level then
+					if attached bracket_feature then
+							-- Process arguments
+						create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
+						location := l_as.left_bracket_location
+						id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
+							location.character_column, location.character_position, location.character_count)
+							-- Restore assigner call flag
+						is_assigner_call := was_assigner_call
+						constrained_target_type := last_calls_target_type
+							-- Process call to bracket feature
+						l_is_qualified_call := is_qualified_call
+						is_qualified_call := True
+						process_call (last_type, Void, id_feature_name, last_alias_feature, l_as.operands, False, False, True, False, False)
+						is_qualified_call := l_is_qualified_call
+						if error_level = l_error_level and then is_byte_node_enabled then
+							create nested_b
+							create target_access
+							target_access.set_expr (target_expr)
+							target_access.set_parent (nested_b)
+							if l_is_multi_constraint then
+								l_access_b ?= last_byte_node
+									-- Last generated bytenode is from `process_call'.
+								check is_access_b: l_access_b /= Void end
+								l_access_b.set_multi_constraint_static (constrained_target_type)
+								call_b := l_access_b
+							else
+								call_b ?= last_byte_node
+							end
 
-						check
-							call_b_not_void: call_b /= Void
+							check
+								call_b_not_void: call_b /= Void
+							end
+							call_b.set_parent (nested_b)
+							nested_b.set_message (call_b)
+							nested_b.set_target (target_access)
+							last_byte_node := nested_b
 						end
-						call_b.set_parent (nested_b)
-						nested_b.set_message (call_b)
-						nested_b.set_target (target_access)
-						last_byte_node := nested_b
+					else
+							-- Target of the bracket expression is unknown.
+						set_type (unknown_type, l_as)
 					end
 				end
 			end

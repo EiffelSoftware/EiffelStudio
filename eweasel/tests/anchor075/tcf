@@ -1,0 +1,11 @@
+test_name 	 qat-on-dotnet-external-failure
+test_description A qualified anchored type on a .NET external causes the compiler to crash at degree 3.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+if not DOTNET copy_raw	system_path.e $CLUSTER system_path.e
+
+compile_melted
+compile_result	ok
+
+test_end

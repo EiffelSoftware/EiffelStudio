@@ -3756,7 +3756,8 @@ feature {NONE} -- Visitor
 
 			if last_type /= Void then
 					-- Check if the type of the expression is integer
-				if not last_type.is_integer then
+					-- We use `actual_type', otherwise eweasel test#valid265 is failing.
+				if not last_type.actual_type.is_integer then
 					create l_vave
 					context.init_error (l_vave)
 					l_vave.set_type (last_type)

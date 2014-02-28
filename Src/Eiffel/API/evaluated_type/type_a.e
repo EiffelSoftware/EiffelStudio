@@ -339,7 +339,7 @@ feature -- Properties
 			-- Is type implicitly frozen?
 			--| Case of a frozen class or an expanded class.
 		do
-			Result := (attached base_class as l_base_class and then l_base_class.is_frozen) or else is_expanded
+			Result := (attached base_class as l_base_class and then (l_base_class.is_frozen or l_base_class.has_descendants)) or else is_expanded
 		end
 
 	is_variant: BOOLEAN

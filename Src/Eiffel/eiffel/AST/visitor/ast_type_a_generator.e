@@ -157,6 +157,7 @@ feature {NONE} -- Visitor implementation
 			i: INTEGER
 			j: INTEGER
 			s: BOOLEAN
+			l_is_frozen: BOOLEAN
 		do
 			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
 			last_type := f
@@ -218,6 +219,9 @@ feature {NONE} -- Visitor implementation
 						i <= 0
 					loop
 						t := l [i].type
+						if t.has_frozen_mark then
+							l_is_frozen := True
+						end
 						if
 							attached {CLASS_TYPE_AS} t as ct and then
 							(ct.is_expanded or else
@@ -296,7 +300,10 @@ feature {NONE} -- Visitor implementation
 			if s then
 				f.set_is_separate
 			end
+			if l_is_frozen then
+				f.set_frozen_mark
 			end
+		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local

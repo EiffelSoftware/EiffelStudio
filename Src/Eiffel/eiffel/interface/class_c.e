@@ -3107,6 +3107,12 @@ feature -- Properties
 	computed_parents: PARENT_LIST
 			-- Computed version of parent clauses.
 
+	has_descendants: BOOLEAN
+			-- Does current class have a direct descendant?
+		do
+			Result := not attached direct_descendants_internal as l_desc or else l_desc.is_empty
+		end
+
 	direct_descendants: ARRAYED_LIST [CLASS_C]
 			-- Direct descendants of the current class
 		do

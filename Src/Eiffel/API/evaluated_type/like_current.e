@@ -391,11 +391,11 @@ feature {TYPE_A} -- Helpers
 			if
 				attached {LIKE_CURRENT} other as a and then
 				(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (a)) and then
-				is_processor_attachable_to (a) and then not a.has_frozen_mark
+				is_processor_attachable_to (a) and then (a.has_frozen_mark implies has_frozen_mark)
 			then
 					-- Other is like Current that is compatible in terms of attachment status, separate status
 					-- and variance status.
-					--| Note that if other is frozen then we have to use the normal conformance rules.
+					--| Note that if other is frozen and we are not frozen, then we have to use the normal conformance rules.
 				Result := True
 			else
 					-- Other is not `like Current' we apply normal rules of conformance.
@@ -445,6 +445,7 @@ feature {COMPILER_EXPORTER} -- Modification
 			else
 				conformance_type := a.to_other_immediate_attachment (Current)
 			end
+			conformance_type := conformance_type.to_other_variant (Current)
 			actual_type := Current
 		end
 

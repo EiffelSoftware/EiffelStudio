@@ -469,7 +469,7 @@ feature -- Initialization/Checking
 				else
 						-- Single constraint, common case.
 						-- (See test#scoop020 for cases when attachment and separateness statuses have to be taken into account.)
-					l_constraint := a_context_class.constraint (a_formal.position).to_other_attachment (a_formal).to_other_separateness (a_formal)
+					l_constraint := a_context_class.constraint (a_formal.position).to_other_attachment (a_formal).to_other_separateness (a_formal).to_other_variant (a_formal)
 					l_convert_ok := l_constraint.conform_to (a_context_class, a_target_type)
 				end
 
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

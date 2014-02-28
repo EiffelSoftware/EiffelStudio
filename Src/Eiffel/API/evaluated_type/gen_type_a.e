@@ -1596,7 +1596,8 @@ feature -- Primitives
 				l_formal_as := l_class.generics.i_th (i).formal
 				if l_generic_parameter.conformance_type.internal_conform_to (a_type_context, l_constraint_item, False) and then
 					(l_formal_as.is_expanded implies l_generic_parameter.is_expanded) and then
-					(l_formal_as.is_reference implies l_generic_parameter.is_reference)
+					(l_formal_as.is_reference implies l_generic_parameter.is_reference) and then
+					(l_formal_as.has_frozen_mark implies l_generic_parameter.is_frozen)
 				then
 						-- Everything is fine, we conform
 				else
@@ -1943,7 +1944,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

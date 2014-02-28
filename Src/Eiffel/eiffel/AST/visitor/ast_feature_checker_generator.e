@@ -10696,9 +10696,9 @@ feature {NONE} -- Implementation: type validation
 					Result := a_last_type.actual_type.generics.i_th (l_formal_type.position)
 				end
 			end
-			if l_formal_type /= Void and then attached {ANNOTATED_TYPE_A} a_type as l_attachable_type then
+			if l_formal_type /= Void and then attached {ANNOTATED_TYPE_A} a_type as l_annotated_type then
 					-- Preserve attachment status of the original type.
-				Result := Result.to_other_attachment (l_attachable_type)
+				Result := Result.to_other_attachment (l_annotated_type).to_other_variant (l_annotated_type).to_other_separateness (l_annotated_type)
 			end
 		ensure
 			adapated_type_not_void: Result /= Void

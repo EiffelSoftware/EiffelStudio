@@ -82,7 +82,7 @@ feature -- Properties
 		do
 				-- `conformance_type' has to be called because
 				-- `actual_type' may yield yet another anchored type.
-			Result := actual_type.conformance_type.to_other_attachment (Current)
+			Result := actual_type.conformance_type.to_other_attachment (Current).to_other_variant (Current)
 		end
 
 feature -- Status report
@@ -599,7 +599,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

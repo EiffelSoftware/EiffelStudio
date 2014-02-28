@@ -30,6 +30,8 @@ feature
 			create Result.make (context.current_type)
 				-- Current is always attached
 			Result.set_attached_mark
+				-- Current is always frozen
+			Result.set_frozen_mark
 		end
 
 	is_current: BOOLEAN

@@ -716,7 +716,7 @@ feature {TYPE_A} -- Helpers
 						i := i + 1
 							-- There are no anchored types in constraints,
 							-- so there is no need to use `conformance_type'.
-						if attached {FORMAL_A} l_constraints.i_th (i).type.to_other_attachment (Current) as g then
+						if attached {FORMAL_A} l_constraints.i_th (i).type.to_other_attachment (Current).to_other_variant (Current) as g then
 							if g.direct_conform_to_formal (a_context_class, f) then
 									-- Types conform.
 								Result := True
@@ -762,7 +762,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

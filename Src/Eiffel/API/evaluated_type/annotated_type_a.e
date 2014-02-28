@@ -399,11 +399,19 @@ feature -- Duplication
 
 	to_other_variant (other: ANNOTATED_TYPE_A): like Current
 			-- <Precursor>
+		local
+			c: TYPE_A
+			l_other_is_frozen: BOOLEAN
 		do
 			Result := Current
 				-- Only do something in experimental mode.
 			if other /= Result and then compiler_profile.is_experimental_mode then
-				if not is_frozen and other.is_frozen then
+				if other.is_like_current then
+					l_other_is_frozen := other.has_frozen_mark or else other.conformance_type.is_frozen
+				else
+					l_other_is_frozen := other.actual_type.is_frozen
+				end
+				if not is_frozen and l_other_is_frozen then
 					Result := duplicate
 					Result.set_frozen_mark
 				else

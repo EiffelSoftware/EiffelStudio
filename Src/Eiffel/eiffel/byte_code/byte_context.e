@@ -1303,7 +1303,7 @@ feature -- Access
 						Result := a_context_type.base_class.constrained_type (formal_position)
 					end
 						-- Preserve attachment and separateness status of the context parameter.
-					Result := Result.to_other_attachment (formal).to_other_separateness (formal)
+					Result := Result.to_other_attachment (formal).to_other_separateness (formal).to_other_variant (formal)
 				end
 			end
 		ensure
@@ -3045,7 +3045,7 @@ invariant
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

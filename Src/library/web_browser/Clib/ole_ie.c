@@ -1074,20 +1074,7 @@ long DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 					if (!SafeArrayAccessData(sfArray, (void**)&pVar))
 					{
 						pVar->vt = VT_BSTR;
-#ifndef UNICODE
-						{
-						wchar_t		*buffer;
-						DWORD		size;
-
-						size = MultiByteToWideChar(CP_ACP, 0, string, -1, 0, 0);
-						if (!(buffer = (wchar_t *)GlobalAlloc(GMEM_FIXED, sizeof(wchar_t) * size))) goto bad;
-						MultiByteToWideChar(CP_ACP, 0, string, -1, buffer, size);
-						bstr = SysAllocString(buffer);
-						GlobalFree(buffer);
-						}
-#else
 						bstr = SysAllocString(string);
-#endif
 						// Store our BSTR pointer in the VARIENT.
 						if ((pVar->bstrVal = bstr))
 						{
@@ -1110,7 +1097,7 @@ long DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 				}
 
 				// Release the IHTMLDocument2 object.
-bad:			htmlDoc2->lpVtbl->Release(htmlDoc2);
+				htmlDoc2->lpVtbl->Release(htmlDoc2);
 			}
 
 			// Release the DISPATCH object.
@@ -1176,23 +1163,9 @@ long DisplayHTMLPage(HWND hwnd, LPTSTR webPageName)
 		VariantInit(&myURL);
 		myURL.vt = VT_BSTR;
 
-#ifndef UNICODE
-		{
-		wchar_t		*buffer;
-		DWORD		size;
-
-		size = MultiByteToWideChar(CP_ACP, 0, webPageName, -1, 0, 0);
-		if (!(buffer = (wchar_t *)GlobalAlloc(GMEM_FIXED, sizeof(wchar_t) * size))) goto badalloc;
-		MultiByteToWideChar(CP_ACP, 0, webPageName, -1, buffer, size);
-		myURL.bstrVal = SysAllocString(buffer);
-		GlobalFree(buffer);
-		}
-#else
 		myURL.bstrVal = SysAllocString(webPageName);
-#endif
-		if (!myURL.bstrVal)
-		{
-badalloc:	webBrowser2->lpVtbl->Release(webBrowser2);
+		if (!myURL.bstrVal) {
+			webBrowser2->lpVtbl->Release(webBrowser2);
 			return(-6);
 		}
 

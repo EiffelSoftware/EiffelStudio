@@ -4833,7 +4833,7 @@ feature {NONE} -- Implementation: helpers
 			a_classs_c_not_void: a_class_c /= Void
 			a_id_set_not_void: a_id_set /= Void
 		do
-			if not has_error_internal and a_id_set.first = 0 then
+			if not has_error_internal and (a_id_set.first <= 0) then
 				has_error_internal := True
 				set_error_message ("Feature with routine id of 0!!!")
 			else

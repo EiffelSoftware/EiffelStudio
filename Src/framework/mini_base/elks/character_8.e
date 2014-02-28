@@ -11,6 +11,9 @@ note
 frozen expanded class
 	CHARACTER_8
 
+convert
+	to_character_32: {CHARACTER_32}
+
 feature -- Access
 
 	item: like Current
@@ -23,6 +26,13 @@ feature -- Settings
 			item := i
 		ensure
 			item_set: item = i
+		end
+
+feature -- Conversion
+
+	to_character_32: CHARACTER_32
+			-- Associated character in 32 bit version
+		do
 		end
 
 note

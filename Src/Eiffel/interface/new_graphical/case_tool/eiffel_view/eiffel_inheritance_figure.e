@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EIFFEL_INHERITANCE_FIGURE
 
 inherit
@@ -20,12 +20,6 @@ inherit
 			model,
 			recycle
 		end
-
-create
-	default_create
-
-create {EIFFEL_INHERITANCE_FIGURE}
-	make_filled
 
 feature {NONE} -- Initialization
 
@@ -79,7 +73,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

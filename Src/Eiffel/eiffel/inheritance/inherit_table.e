@@ -651,7 +651,6 @@ end;
 			from
 				l_inherit_info_cache := inherit_info_cache
 				l_inherit_feat_cache := inherit_feat_cache
-				create parent_type
 				actual_parent_type := parent_c.parent_type
 				if not actual_parent_type.is_attached then
 					if a_class.lace_class.is_attached_by_default then
@@ -666,7 +665,7 @@ end;
 						end
 					end
 				end
-				parent_type.set_actual_type (actual_parent_type)
+				create parent_type.make (actual_parent_type)
 					-- Look for the parent table on the disk
 				parent_table := parent_c.parent.feature_table.features.area
 				check

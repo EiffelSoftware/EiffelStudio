@@ -360,6 +360,13 @@ feature {NONE} -- Generic visitors
 		require
 			t_attached: attached t
 		do
+			if t.has_frozen_mark then
+				text_formatter.process_keyword_text (ti_frozen_keyword, Void)
+				text_formatter.add_space
+			elseif t.has_variant_mark then
+				text_formatter.process_keyword_text (ti_variant_keyword, Void)
+				text_formatter.add_space
+			end
 			if t.has_attached_mark then
 				text_formatter.process_keyword_text (ti_attached_keyword, Void)
 				text_formatter.add_space
@@ -374,7 +381,7 @@ feature {NONE} -- Generic visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

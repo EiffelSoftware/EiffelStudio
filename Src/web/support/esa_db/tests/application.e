@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			print ("%NGuest Reports")
 			create l_prov.make (connection)
-			list := l_prov.problem_reports_guest (1, 2)
+			l_prov.connect
+			across l_prov.problem_reports_guest (1, 2) as c loop
+			 	print (c.item.string_8)
+			end
+			l_prov.disconnect
 		end
 
 	execute_row_count

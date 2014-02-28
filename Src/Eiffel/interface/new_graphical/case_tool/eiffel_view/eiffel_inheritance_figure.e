@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EIFFEL_INHERITANCE_FIGURE
 
 inherit
@@ -20,6 +20,12 @@ inherit
 			model,
 			recycle
 		end
+
+create
+	default_create
+
+create {EIFFEL_INHERITANCE_FIGURE}
+	make_filled
 
 feature {NONE} -- Initialization
 

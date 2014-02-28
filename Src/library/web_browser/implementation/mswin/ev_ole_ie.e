@@ -87,6 +87,20 @@ feature -- Command
 			end
 		end
 
+	display_web_string (a_html_string: READABLE_STRING_GENERAL)
+			-- Displays the html code in 'a_html_string'.
+		require
+			created: hwnd /= default_pointer
+			not_void: a_html_string /= Void and then not a_html_string.is_empty
+		local
+			l_c_string: WEL_STRING
+		do
+			create l_c_string.make (a_html_string)
+			if c_display_web_string (hwnd, l_c_string.item) /= 0 then
+				check not_has_error: False end
+			end
+		end
+
 	do_page_action (a_action: INTEGER)
 			-- Implements the functionality of a "Back". "Forward", "Home", "Search",
 			-- "Refresh", or "Stop" button
@@ -151,6 +165,15 @@ feature {NONE} -- Externals
 			"return (EIF_INTEGER) DisplayHTMLPage((HWND) $a_wel_hwnd, (LPTSTR) $a_url);"
 		end
 
+	c_display_web_string (a_wel_hwnd: POINTER; a_html_string: POINTER): INTEGER
+			-- Displays the html code in 'a_html_string'.
+			-- If 0 success, otherwise failure.
+		external
+			"C inline use %"eif_web_browser.h%""
+		alias
+			"return (EIF_INTEGER) DisplayHTMLStr((HWND) $a_wel_hwnd, (LPTSTR) $a_html_string);"
+		end
+
 	c_do_page_action (a_wel_hwnd: POINTER; a_action: INTEGER)
 			-- Implements the functionality of a "Back". "Forward", "Home", "Search",
 			-- "Refresh", or "Stop" button
@@ -180,5 +203,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class EV_OLE_IE
+end

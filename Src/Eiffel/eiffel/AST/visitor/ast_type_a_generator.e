@@ -95,8 +95,7 @@ feature {NONE} -- Visitor implementation
 		local
 			l_cur: LIKE_CURRENT
 		do
-			create l_cur
-			l_cur.set_actual_type (current_class.actual_type)
+			create l_cur.make (current_class.actual_type)
 			if l_as.has_frozen_mark then
 				l_cur.set_frozen_mark
 			elseif l_as.has_variant_mark then
@@ -297,7 +296,7 @@ feature {NONE} -- Visitor implementation
 			if s then
 				f.set_is_separate
 			end
-		end
+			end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
@@ -474,7 +473,7 @@ feature {NONE} -- Type marks
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

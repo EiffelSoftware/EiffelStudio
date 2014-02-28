@@ -664,8 +664,7 @@ feature -- Setting
 			i: INTEGER
 		do
 			current_class := a_class
-			create current_class_type
-			current_class_type.set_actual_type (a_type)
+			create current_class_type.make (a_type)
 				-- Current is always attached.
 			current_class_type := current_class_type.as_attached_in (current_class)
 			set_written_class (Void)

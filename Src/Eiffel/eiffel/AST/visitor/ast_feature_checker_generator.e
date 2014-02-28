@@ -1,5 +1,9 @@
 ﻿note
 	description: "Type checking and code generation of BYTE_NODE tree."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	AST_FEATURE_CHECKER_GENERATOR
@@ -3226,8 +3230,7 @@ feature {NONE} -- Visitor
 						l_parent_type.set_is_implicitly_attached
 					end
 				end
-				create l_instatiation_type
-				l_instatiation_type.set_actual_type (l_parent_type)
+				create l_instatiation_type.make (l_parent_type)
 				l_orig_result_type := l_feature_i.type
 				l_feature_i := l_feature_i.instantiated (l_instatiation_type)
 					-- Now that we have the fully instantiated type, we need to adapt it to
@@ -11381,8 +11384,6 @@ feature {NONE} -- Type recording
 		end
 
 note
-	date: "$Date$"
-	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

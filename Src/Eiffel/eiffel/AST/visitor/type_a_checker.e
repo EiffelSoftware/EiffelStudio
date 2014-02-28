@@ -838,8 +838,7 @@ feature {NONE} -- Implementation
 							if attached last_type as r and then current_class /= c then
 									-- `r' references a type, relative to parent.
 									-- Let's make it relative to current class.
-								create a
-								a.set_actual_type (c.actual_type)
+								create a.make (c.actual_type)
 								last_type := r.instantiation_in (a, f.written_in)
 							end
 							current_class := saved_class
@@ -945,8 +944,7 @@ feature {NONE} -- Implementation
 						if attached last_type as r and then current_class /= c then
 								-- `r' references a type, relative to parent.
 								-- Let's make it relative to current class.
-							create a
-							a.set_actual_type (c.actual_type)
+							create a.make (c.actual_type)
 							last_type := r.instantiation_in (a, f.written_in)
 						end
 						current_class := saved_class

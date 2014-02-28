@@ -1,11 +1,11 @@
 note
-	description: "Template class to generate an HTML report details page."
+	description: "Summary description for {HTML_406_PAGE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_DETAIL_PAGE
-
+	ESA_HTML_406_PAGE
 inherit
 
 	ESA_TEMPLATE_PAGE
@@ -15,8 +15,9 @@ inherit
 create
 	make
 
-feature -- {Initialization}
-	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT;a_user: detachable ANY)
+feature {NONE} --Initialization
+
+	make (a_host: READABLE_STRING_GENERAL; a_resource: READABLE_STRING_GENERAL; a_accept: detachable READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -24,13 +25,10 @@ feature -- {Initialization}
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("reports_detail.tpl")
+			set_template_file_name ("406.tpl")
 			template.add_value (a_host, "host")
-			template.add_value (a_report, "report")
-			if attached a_user as l_user then
-				 template.add_value (l_user,"user")
-			end
-
+			template.add_value (a_resource, "resource")
+			template.add_value (a_accept, "accept")
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
@@ -39,5 +37,5 @@ feature -- {Initialization}
 				print (representation)
 			end
 		end
-
 end
+

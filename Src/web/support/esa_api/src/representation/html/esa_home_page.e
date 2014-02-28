@@ -1,11 +1,10 @@
 note
-	description: "Summary description for {HTML_404_PAGE}."
-	author: ""
+	description: "Template class to generate an HTML Home page."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	HTML_404_PAGE
+	ESA_HOME_PAGE
 
 inherit
 
@@ -18,7 +17,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -26,8 +25,11 @@ feature {NONE} --Initialization
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("404.tpl")
+			set_template_file_name ("home.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user as l_user then
+				template.add_value (l_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output

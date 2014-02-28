@@ -38,7 +38,6 @@ feature -- View
 			generic_response (req, res)
 		end
 
-
 	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE)
 		-- <Precursor>
 		do
@@ -46,14 +45,27 @@ feature -- View
 		end
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Not found page.
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	login_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Login page
 		do
 			generic_response (req, res)
 		end
 
 	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Not found page
+			-- <Precursor>
 		do
+			generic_response (req, res)
+		end
+
+	bad_request_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
 		end
 
 feature -- Response
@@ -80,7 +92,7 @@ feature -- Response
 
 	generic_response (req: WSF_REQUEST; res: WSF_RESPONSE)
 			local
-				l_np: HTML_406_PAGE
+				l_np: ESA_HTML_406_PAGE
 			do
 				if attached req.http_host as l_host then
 					create l_np.make ("http://"+l_host,req.path_info,req.http_accept)

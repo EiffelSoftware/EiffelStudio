@@ -64,7 +64,7 @@ feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			l_hp: REPORT_DETAIL_PAGE
+			l_hp: ESA_REPORT_DETAIL_PAGE
 			l_report: detachable REPORT
 			l_interactions: LIST [REPORT_INTERACTION]
 			l_attachments: LIST [REPORT_ATTACHMENT]

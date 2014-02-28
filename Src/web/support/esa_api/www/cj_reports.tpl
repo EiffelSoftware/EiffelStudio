@@ -7,6 +7,11 @@
                 "rel": "home",
                 "prompt": "Home"
             >,
+             <
+                "href": "{$host/}/reports",
+                "rel": "collection",
+                "prompt": "Reports"
+            >,
             <
                 "href": "{$host/}/reports",
                 "rel": "first",

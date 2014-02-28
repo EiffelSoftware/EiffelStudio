@@ -62,8 +62,18 @@ feature -- View
 		deferred
 		end
 
+	login_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Login page
+		deferred
+		end
+
 	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Not found page
+			-- Logout page
+		deferred
+		end
+
+	bad_request_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Bad request page
 		deferred
 		end
 

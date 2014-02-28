@@ -53,9 +53,6 @@
               <li><a href="#">Guest</a></li>
          {/unless} 
          
-         <li><a href="#">Dashboard</a></li>
-         <li><a href="#">Settings</a></li>
-         
          {if isset="$user"}
             <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogoff">Logoff</a></li>
          {/if}

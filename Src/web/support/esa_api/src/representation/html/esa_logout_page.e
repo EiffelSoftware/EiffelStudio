@@ -1,10 +1,11 @@
 note
-	description: "Template class to generate an HTML Home page."
+	description: "Summary description for {LOGOUT_PAGE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	HOME_PAGE
+	ESA_LOGOUT_PAGE
 
 inherit
 
@@ -17,7 +18,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -25,11 +26,8 @@ feature {NONE} --Initialization
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("home.tpl")
+			set_template_file_name ("logoff.tpl")
 			template.add_value (a_host, "host")
-			if attached a_user as l_user then
-				template.add_value (l_user, "user")
-			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
@@ -40,3 +38,5 @@ feature {NONE} --Initialization
 		end
 
 end
+
+

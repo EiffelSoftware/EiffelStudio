@@ -33,43 +33,61 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): LIST[REPORT]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
 			l_data_value: ESA_DATA_VALUE
 			l_status: LIST[REPORT_STATUS]
+			l_report: REPORT
+			l_list: LIST[REPORT]
+			l_statistics: REPORT_STATISTICS
 		do
 			l_status := status
+
 			data_provider.connect
-			l_data_value := data_provider.problem_reports_guest (a_page_number, a_rows_per_page)
-
-
-				-- Build List
-			create {ARRAYED_LIST[REPORT]} Result.make (0)
-			from
-				l_data_value.start
-			until
-				l_data_value.after
-			loop
-				if attached l_data_value.item  then
-					Result.force (new_report_guest (l_data_value))
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create l_statistics
+			data_provider.connect
+			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page) as c loop
+				l_report := c.item
+				if attached status_cache as l_cache and then attached l_report.status as ll_status then
+					if attached l_cache.item (ll_status.id) as l_item then
+						update_statistics (l_statistics, l_item)
+						l_report.set_status (l_item)
+					end
 				end
-				l_data_value.forth
+				l_list.force (l_report)
 			end
 			data_provider.disconnect
+			Result := [l_statistics, l_list]
 		end
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST [REPORT]
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
+		local
+			l_status: LIST[REPORT_STATUS]
+			l_report: REPORT
+			l_list: LIST[REPORT]
+			l_statistics: REPORT_STATISTICS
 		do
-			create {ARRAYED_LIST[REPORT]} Result.make (0)
+			l_status := status
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
-				Result.force (c.item)
+				l_report := c.item
+				if attached status_cache as l_cache and then attached l_report.status as ll_status then
+					if attached l_cache.item (ll_status.id) as l_item then
+						update_statistics (l_statistics, l_item)
+						l_report.set_status (l_item)
+					end
+				end
+				l_list.force (l_report)
 			end
 			data_provider.disconnect
+			Result := [l_statistics, l_list]
 		end
 
 	status: LIST[REPORT_STATUS]
@@ -78,27 +96,31 @@ feature -- Access
 			l_data_value: ESA_DATA_VALUE
 			l_report_status: REPORT_STATUS
 		do
-			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
-			create status_cache.make (4)
-			data_provider.connect
-			l_data_value := data_provider.status
+			if attached status_cache as l_cache then
+				Result := l_cache.linear_representation
+			else
+				create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
+				create status_cache.make (4)
+				data_provider.connect
+				l_data_value := data_provider.status
 
-				--Build List
-			from
-				l_data_value.start
-			until
-				l_data_value.after
-			loop
-				if attached l_data_value.item  then
-					l_report_status := new_report_status (l_data_value)
-					Result.force (l_report_status)
-					if attached status_cache as l_cache then
-						l_cache.force (l_report_status,l_report_status.id)
+					--Build List
+				from
+					l_data_value.start
+				until
+					l_data_value.after
+				loop
+					if attached l_data_value.item  then
+						l_report_status := new_report_status (l_data_value)
+						Result.force (l_report_status)
+						if attached status_cache as l_cache then
+							l_cache.force (l_report_status,l_report_status.id)
+						end
 					end
+					l_data_value.forth
 				end
-				l_data_value.forth
+				data_provider.disconnect
 			end
-			data_provider.disconnect
 		end
 
 	problem_report (a_number: INTEGER): detachable REPORT
@@ -193,6 +215,19 @@ feature {NONE} -- Factories
 			end
 		end
 
+feature -- Statistics
+
+	update_statistics (a_statistics: REPORT_STATISTICS; a_status: REPORT_STATUS)
+		do
+			inspect a_status.id
+			when 1 then a_statistics.increment_open
+			when 2 then a_statistics.increment_analyzed
+			when 3 then a_statistics.increment_closed
+			when 4 then a_statistics.increment_suspended
+			when 5 then a_statistics.increment_wont_fix
+			else
+			end
+		end
 
 feature {NONE} -- Implementation
 

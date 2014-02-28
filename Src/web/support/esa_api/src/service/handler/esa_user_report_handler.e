@@ -82,7 +82,7 @@ feature -- HTTP Methods
 					end
 				else
 					create l_rhf
-					l_rhf.new_representation_handler (esa_config,"",media_variants).not_found_page (req, res)
+					l_rhf.new_representation_handler (esa_config,"",media_variants).problem_user_reports (req, res)
 				end
 			else
 				-- Send a forbidden

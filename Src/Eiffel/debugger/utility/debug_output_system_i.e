@@ -23,17 +23,19 @@ feature -- Access
 
 	debuggable_feature_name: STRING = "debug_output"
 
-	debug_output_feature_i (c: CLASS_C): FEATURE_I
+	debug_output_feature_i (c: CLASS_C): detachable FEATURE_I
 		require
 			class_not_void: c /= Void
 		local
 			l_rout_id: INTEGER
 		do
-			l_rout_id := debug_output_feature.rout_id_set.first
-			Result := c.feature_of_rout_id (l_rout_id)
+			if attached debug_output_feature as l_feat then
+				l_rout_id := l_feat.rout_id_set.first
+				Result := c.feature_of_rout_id (l_rout_id)
+			end
 		end
 
-	debuggable_class: CLASS_C
+	debuggable_class: detachable CLASS_C
 			-- Class that provides the `debug_output' interface, if any.
 		local
 			cis: LIST [CLASS_I]
@@ -59,19 +61,19 @@ feature -- Access
 			end
 		end
 
-	debug_output_feature: E_FEATURE
+	debug_output_feature: detachable E_FEATURE
 			-- E_feature that corresponds to {DEBUG_OUTPUT}.debug_output.
 		do
-			if
-				internal_debug_output_feature.item = Void
-			then
-				internal_debug_output_feature.put (
-					debuggable_class.feature_with_name_32 (debuggable_feature_name))
-			end
 			Result := internal_debug_output_feature.item
+			if Result = Void then
+				if attached debuggable_class as l_class then
+					Result := l_class.feature_with_name_32 (debuggable_feature_name)
+					internal_debug_output_feature.put (Result)
+				end
+			end
 		end
 
-	internal_debuggable_class: CELL [CLASS_C]
+	internal_debuggable_class: CELL [detachable CLASS_C]
 			-- Last computed `debuggable_class'.
 		once
 			create Result.put (Void)
@@ -88,7 +90,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

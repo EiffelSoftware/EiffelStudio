@@ -1308,7 +1308,7 @@ feature -- Application change
 	activate_execution_replay_recording (b: BOOLEAN)
 			-- Activate or Deactivate execution replay recording
 		require
-			valid_exec_recording_context: rt_extension_available and is_classic_project
+			valid_exec_recording_context: b implies rt_extension_available and is_classic_project
 		local
 			r: BOOLEAN
 		do
@@ -1763,7 +1763,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

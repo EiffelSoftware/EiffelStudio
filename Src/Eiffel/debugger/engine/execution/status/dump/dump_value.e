@@ -567,9 +567,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						s8_c := comp_data.readable_string_8_class_c
 						s32_c := comp_data.readable_string_32_class_c
 
-						if l_dynamic_class.simple_conform_to (s8_c) then
+						if s8_c /= Void and then l_dynamic_class.simple_conform_to (s8_c) then
 							sc := s8_c
-						elseif l_dynamic_class.simple_conform_to (s32_c) then
+						elseif s32_c /= Void and then l_dynamic_class.simple_conform_to (s32_c) then
 							sc := s32_c
 						end
 						if sc /= Void then
@@ -750,9 +750,9 @@ feature {NONE} -- Classic specific
 			if
 				l_feat /= Void and then
 				attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
-				not l_final_result_value.is_void
+				not l_final_result_value.is_void and then attached l_final_result_value.classic_string_representation (0, -1) as l_result
 			then
-				Result := l_final_result_value.classic_string_representation (0, -1)
+				Result := l_result
 			end
 		end
 

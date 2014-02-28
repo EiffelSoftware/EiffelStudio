@@ -10,6 +10,9 @@ note
 
 frozen expanded class INTEGER_32
 
+inherit
+	COMPARABLE
+
 feature -- Access
 
 	item: like Current
@@ -22,6 +25,13 @@ feature -- Settings
 			item := i
 		ensure
 			item_set: item = i
+		end
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current integer less than `other'?
+		do
 		end
 
 feature -- Basic operations
@@ -70,7 +80,7 @@ feature -- Basic operations
 			-- Integer power of Current by `other'
 		do
 		end
-		
+
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

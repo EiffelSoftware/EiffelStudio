@@ -2345,7 +2345,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($2, True, False, $1)
+					$$ := ast_factory.new_formal_as ($2, True, False, False, $1)
 				end
 			}
 	| TE_EXPANDED Class_identifier
@@ -2359,7 +2359,22 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($2, False, True, $1)
+					$$ := ast_factory.new_formal_as ($2, False, True, False, $1)
+				end
+			}
+
+	| TE_FROZEN Class_identifier
+			{
+				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
+						-- Trigger an error when constraint is NONE.
+						-- Needs to be done manually since current test for
+						-- checking that `$1' is not a class name
+						-- will fail for NONE, whereas before there were some
+						-- syntactic conflict since `NONE' was a keyword and
+						-- therefore not part of `TE_ID'.
+					raise_error
+				else
+					$$ := ast_factory.new_formal_as ($2, False, False, True, $1)
 				end
 			}
 
@@ -2374,7 +2389,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($1, False, False, Void)
+					$$ := ast_factory.new_formal_as ($1, False, False, False, Void)
 				end
 			}
 	;

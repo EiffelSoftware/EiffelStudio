@@ -1435,11 +1435,11 @@ feature -- Access
 			end
 		end
 
-	new_formal_as (n: detachable ID_AS; is_ref, is_exp: BOOLEAN; r_as: detachable KEYWORD_AS): detachable FORMAL_AS
+	new_formal_as (n: detachable ID_AS; is_ref, is_exp, is_frozen: BOOLEAN; r_as: detachable KEYWORD_AS): detachable FORMAL_AS
 			-- New FORMAL AST node
 		do
 			if n /= Void then
-				create Result.initialize (n, is_ref, is_exp, r_as)
+				create Result.initialize (n, is_ref, is_exp, is_frozen, r_as)
 			end
 		end
 

@@ -1671,7 +1671,7 @@ feature {CLASS_AS} -- Types
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
 			process_type_marks (l_as)
-			safe_process_and_print (l_as.reference_or_expanded_keyword (match_list), "", " ")
+			safe_process_and_print (l_as.formal_keyword (match_list), "", " ")
 			safe_process (l_as.name)
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
@@ -1956,7 +1956,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

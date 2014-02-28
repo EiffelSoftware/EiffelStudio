@@ -10,7 +10,7 @@ feature
 			s: G
 		do
 			create tasks
---			s := tasks.i_th (1).task
+			s := tasks.i_th (1).task
 		end
 
 	tasks: TEST2 [like new_task_data]

@@ -1,10 +1,11 @@
 note
-	description: "Template class to generate an HTML report page."
+	description: "Summary description for {USER_REPORT_PAGE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_PAGE
+	USER_REPORT_PAGE
 inherit
 
 	ESA_TEMPLATE_PAGE
@@ -16,7 +17,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_reports: LIST[REPORT]; a_index: INTEGER; a_pages: INTEGER; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_reports: LIST[REPORT]; a_index: INTEGER; a_pages: INTEGER; a_user: STRING)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -39,9 +40,7 @@ feature {NONE} --Initialization
 			end
 			template.add_value (a_pages, "last")
 
-		 	if attached a_user as l_user then
-		 		template.add_value (l_user,"user")
-			end
+		 	template.add_value (a_user,"user")
 
 			template_context.enable_verbose
 			template.analyze

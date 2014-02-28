@@ -80,11 +80,21 @@ feature -- View
 			end
 		end
 
+	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Problem reports representation for a given user
+		do
+		end
+
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
 			l_cj: ESA_CJ_ROOT_PAGE
+		do
+		end
+
+	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		do
 		end
 

@@ -39,10 +39,21 @@ feature -- View
 		end
 
 
+	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE)
+		-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Not found page.
 		do
 			generic_response (req, res)
+		end
+
+	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Not found page
+		do
 		end
 
 feature -- Response

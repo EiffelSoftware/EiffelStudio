@@ -45,10 +45,21 @@ feature -- execute
 
 feature -- HTTP Methods
 
-
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			handle_unauthorized ("Unauthorized",req, res)
+			media_variants := media_type_variants (req)
+			if media_variants.is_acceptable then
+				if attached media_variants.media_type as l_type then
+					create l_rhf
+					l_rhf.new_representation_handler (esa_config, l_type, media_variants).logout_page (req, res)
+				end
+			else
+				create l_rhf
+				l_rhf.new_representation_handler (esa_config, "", media_variants).logout_page (req, res)
+			end
 		end
 
 feature -- Response
@@ -62,9 +73,10 @@ feature -- Response
 			h.put_content_type_text_html
 			h.put_content_length (a_description.count)
 			h.put_current_date
---			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
-			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
+			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+			res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
 			res.put_header_text (h.string)
 			res.put_string (a_description)
 		end
+
 end

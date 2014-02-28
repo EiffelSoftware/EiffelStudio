@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 --			execute_guest_reports
 --			execute_row_count
 --			execute_report_guest
---			execute_iterator
+			execute_iterator
 --			test_add_user
 --			test_countries
 --			test_registration_token
@@ -32,19 +32,21 @@ feature {NONE} -- Initialization
 --			test_security_questions
 --			test_question_from_email
 --			test_user_creation_date
-			test_user_from_email
+--			test_user_from_email
 --			test_user_form_username
+--			test_categories
 		end
 
 
 	execute_read_example
 		local
 			l_prov: ESA_REPORT_DATA_PROVIDER
-			list: LIST[REPORT]
 		do
 			create l_prov.make (connection)
-			list := l_prov.problem_reports ("jvelilla", False, 15, 3)
-			across list as l loop print (l.item) end
+			across l_prov.problem_reports ("jvelilla", False, 15, 3) as c loop
+				print (c.item.string_8)
+				io.put_new_line
+			end
 		end
 
 
@@ -93,7 +95,7 @@ feature {NONE} -- Initialization
 		do
 			create l_prov.make (connection)
 
-			across l_prov.problem_reports_2 ("jvelilla", False, 15, 3) as c  loop
+			across l_prov.problem_reports ("jvelilla", False, 0, 0) as c  loop
 				print (c.item)
 				io.put_new_line
 			end
@@ -208,6 +210,21 @@ feature {NONE} -- Initialization
 			print (l_db.user_from_username ("jvelilla").name)
 		end
 
+	test_categories
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			l_db.connect
+			across l_db.categories ("jvelilla") as c loop
+				print (c.item.string)
+				io.put_new_line
+			end
+			l_db.disconnect
+		end
+
+
+feature -- Implementation
 
 	connection: ESA_DATABASE_CONNECTION
 		once

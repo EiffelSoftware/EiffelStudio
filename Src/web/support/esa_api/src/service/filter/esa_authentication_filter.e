@@ -37,11 +37,9 @@ feature -- Basic operations
 					req.set_execution_variable ("user", l_auth_login)
 					execute_next (req, res)
 				else
-					req.set_execution_variable ("user", "Guest")
 					execute_next (req, res)
 				end
 			else
-				req.set_execution_variable ("user", "Guest")
 				execute_next (req, res)
 			end
 		end

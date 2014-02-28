@@ -50,6 +50,30 @@ feature -- Test routines
 
 		end
 
+	test_is_active_true
+		local
+			l_db: ESA_LOGIN_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			assert("Expected True:", l_db.is_active ("jvelilla"))
+		end
+
+	test_is_active_false
+		local
+			l_db: ESA_LOGIN_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			assert("Expected False:", not l_db.is_active ("raphaels"))
+		end
+
+	test_is_active_user_not_exist
+		local
+			l_db: ESA_LOGIN_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			assert("Expected False:", not l_db.is_active ("notexist_001"))
+		end
+
 
 	test_countries
 		local

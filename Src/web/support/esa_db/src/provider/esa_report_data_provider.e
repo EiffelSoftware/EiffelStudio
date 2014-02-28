@@ -26,41 +26,8 @@ feature -- Initialization
 
 feature -- Access
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST[REPORT]
-			-- Problem reports for user with username `a_username'
-			-- Open reports only if `a_open_only', all reports otherwise.
-		require
-			non_void_username: a_username /= Void
-		local
-			l_parameters: HASH_TABLE[ANY,STRING_32]
-		do
-			connect
-			create l_parameters.make (4)
-			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
-			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
-			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReports2", l_parameters))
-			db_handler.execute_reader
 
-			-- Build list
-			create {ARRAYED_LIST[REPORT]} Result.make (0)
-			from
-				db_handler.start
-			until
-				db_handler.after
-			loop
-				if attached {DB_TUPLE} db_handler.item as l_item then
-					Result.force (new_report (l_item))
-				end
-
-				db_handler.forth
-			end
-			disconnect
-		end
-
-
-	problem_reports_2 (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		require
@@ -281,6 +248,22 @@ feature -- Access
 			end
 			Result := not exist
 			disconnect
+		end
+
+
+	categories (a_username: STRING): ESA_DATABASE_ITERATION_CURSOR[REPORT_CATEGORY]
+			-- Possible problem report categories
+			-- Columns: CategoryID, CategorySynopsis, CategoryGroupSynopsis
+		require
+			non_void_username: a_username /= Void
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportCategories", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_report_category)
 		end
 
 feature -- Basic Operations
@@ -541,9 +524,18 @@ feature {NONE} -- Implementation
 			if attached {INTEGER_32_REF} a_tuple.item (3) as  l_item_3 then
 				Result.set_bytes_count (l_item_3.item)
 			end
-
 		end
 
+	new_report_category (a_tuple: DB_TUPLE): REPORT_CATEGORY
+			-- Create a new report Category if any or a
+			-- default empty category.
+		do
+			create Result.make (0, "", True)
+			Result.set_id (db_handler.read_integer_32 (1))
+			if attached db_handler.read_string (2) as l_synopsis then
+				Result.set_synopsis (l_synopsis)
+			end
+		end
 
 
 feature -- Connection

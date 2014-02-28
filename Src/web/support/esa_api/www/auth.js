@@ -9,17 +9,18 @@ var login = function() {
     var password = form.password.value;
     var _login = function(){
  
+
       //Instantiate HTTP Request
         var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-        request.open("GET", loginURL, true);
-        request.withCredentials = true 
-        request.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+        request.open("GET", loginURL);
         request.send(null);
- 
+        request.open("GET", loginURL, true, username, password);
+        request.send(null);
+    
       //Process Response
         request.onreadystatechange = function(){
             if (request.readyState == 4) {
-                if (request.status==200) { window.location="index.html";
+                if (request.status==200) { window.location="/";
                 }
                 else{
                     if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){
@@ -62,13 +63,12 @@ var logoff = function(callback){
  
               //Login with dummy credentials to clear the auth cache
                 request2.open("GET", logoutURL, true, "logout", "logout");
-                //request2.setRequestHeader("Authorization", "Basic " + btoa("logout" + ":" + "logout"));
                 request2.send("");
  
                 request2.onreadystatechange = function(){
                     if (request2.readyState == 4) {
-                        if (callback!=null) callback.call();
-                    }
+                        if (callback!=null) { callback.call();  } else { window.location="logoff";}
+                    } 
                 }
                  
             }
@@ -77,7 +77,10 @@ var logoff = function(callback){
     else {
         var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
         request.open("GET", logoutURL, true, "logout", "logout");
-        //request.setRequestHeader("Authorization", "Basic " + btoa("logout" + ":" + "logout"));
         request.send("");
+        request.onreadystatechange = function(){
+                   if (request.status==401 || request.status==403 ) { window.location="/logoff";
+                } 
+            }
     }
 }

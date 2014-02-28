@@ -30,6 +30,26 @@ feature -- Access
 
 	is_active: BOOLEAN
 
+feature -- Change Element
+
+	set_id (a_id: INTEGER)
+			-- Set `id' with `a_id'
+		do
+			id := a_id
+		end
+
+	set_synopsis (a_synopsis: like synopsis)
+			-- Set `synopsis' with `a_synopsis'
+		do
+			synopsis := a_synopsis
+		end
+
+	set_is_active (a_val: BOOLEAN)
+			-- Set `is_active' with `a_val'
+		do
+			is_active := a_val
+		end
+
 feature -- Output
 
 	string: STRING_8

@@ -22,6 +22,7 @@ feature -- Initialization
 		do
 			configure_api_root
 			configure_api_report
+			configure_api_reports_user
 			configure_api_report_detail
 			configure_api_report_interaction
 			configure_api_login
@@ -46,6 +47,7 @@ feature -- Configure Resources Routes
 			create l_root_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
+			router.handle_with_request_methods ("", l_root_handler, l_methods) -- IE workaround
 			router.handle_with_request_methods ("/", l_root_handler, l_methods)
 		end
 
@@ -58,6 +60,24 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/reports", l_report_handler, l_methods)
+			router.handle_with_request_methods ("/reports/", l_report_handler, l_methods) --IE workaround
+
+			router.handle_with_request_methods ("/reports/{id}", l_report_handler, l_methods)
+			router.handle_with_request_methods ("/reports/{id}/", l_report_handler, l_methods) -- IE Workaround
+
+
+		end
+
+	configure_api_reports_user
+		local
+			l_user_report_handler: ESA_USER_REPORT_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_user_report_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/user_reports/{user}", l_user_report_handler, l_methods)
+			router.handle_with_request_methods ("/user_reports/{user}/{id}", l_user_report_handler, l_methods)
 		end
 
 	configure_api_report_detail
@@ -91,6 +111,7 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/login", l_login_handler, l_methods)
+			router.handle_with_request_methods ("/login/", l_login_handler, l_methods) -- IE Workaround
 		end
 
 	configure_api_logoff
@@ -102,6 +123,7 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/logoff", l_logoff_handler, l_methods)
+			router.handle_with_request_methods ("/logoff/", l_logoff_handler, l_methods) -- IE workaround
 		end
 
 

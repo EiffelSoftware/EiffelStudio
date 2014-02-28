@@ -51,17 +51,16 @@ feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
+			to_implement ("Check different browsers!!!")
 			if attached {STRING_32} req.execution_variable ("user") as l_user and then
-			  not l_user.is_equal ("Guest") then
-				-- Valid user
+				api_service.is_active (l_user) then
+			 	-- Valid user
 				to_implement ("Add logic when a registered users logged in, maybe Statistics etc!!!.")
 				compute_response_redirect (req, res)
 			else
 				handle_unauthorized ("Unauthorized",req, res)
 			end
 		end
-
-
 
 
 

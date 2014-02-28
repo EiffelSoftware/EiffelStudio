@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {REPORT_HANDLER}."
+	description: "Problem reports reported by user"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_REPORT_HANDLER
+	ESA_USER_REPORT_HANDLER
 
 inherit
 
@@ -73,16 +73,21 @@ feature -- HTTP Methods
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
+			if attached req.execution_variable ("user") as l_user then
+				media_variants := media_type_variants (req)
+				if media_variants.is_acceptable then
+					if attached media_variants.media_type as l_type then
+						create l_rhf
+						l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_user_reports (req, res)
+					end
+				else
 					create l_rhf
-					l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res)
+					l_rhf.new_representation_handler (esa_config,"",media_variants).not_found_page (req, res)
 				end
 			else
-				create l_rhf
-				l_rhf.new_representation_handler (esa_config,"",media_variants).problem_reports_guest (req, res)
+				-- Send a forbidden
 			end
+
 		end
 
 end

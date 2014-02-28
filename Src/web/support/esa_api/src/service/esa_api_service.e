@@ -60,6 +60,18 @@ feature -- Access
 			data_provider.disconnect
 		end
 
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST [REPORT]
+			-- Problem reports for user with username `a_username'
+			-- Open reports only if `a_open_only', all reports otherwise.
+		do
+			create {ARRAYED_LIST[REPORT]} Result.make (0)
+			data_provider.connect
+			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
+				Result.force (c.item)
+			end
+			data_provider.disconnect
+		end
+
 	status: LIST[REPORT_STATUS]
 			-- Possible problem report status
 		local
@@ -121,6 +133,12 @@ feature -- Basic Operations
 		end
 
 feature -- Status Report
+
+	is_active (a_username: STRING): BOOLEAN
+			-- Is membership for user with username `a_username' active?
+		do
+			Result := login_provider.is_active (a_username)
+		end
 
 	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
 			-- Does account with username `a_username' and password `a_password' exist?

@@ -116,6 +116,7 @@ feature -- Filters
 			fh.custom_header.put_header ("X-ESAServer: " + version)
 			l_filter := fh
 
+
 				-- Maintenance
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
@@ -126,6 +127,7 @@ feature -- Filters
 				f.set_next (l_filter)
 				l_filter := f
 			end
+
 			if launcher.is_console_output_supported then
 					-- Logging for nino
 				create {WSF_LOGGING_FILTER} f.make_with_output (io.output)
@@ -133,11 +135,15 @@ feature -- Filters
 				l_filter := f
 			end
 
+			 	-- CORS Authentication
+			create {ESA_CORS_FILTER} f
+			f.set_next (l_filter)
+			l_filter := f
+
 			 	-- Authentication
 			create {ESA_AUTHENTICATION_FILTER} f.make (esa_config)
 			f.set_next (l_filter)
 			l_filter := f
-
 
 			filter := l_filter
 		end

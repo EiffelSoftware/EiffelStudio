@@ -1260,6 +1260,8 @@ feature {NONE} -- Implementation
 				end
 					-- Because no previous routine could be found, this is an origin.
 				a_feat.set_is_origin (True)
+					-- Insertion into the system routine info table.				
+				System.rout_info_table.put (l_rout_id_set.first, Current);
 			end
 
 				-- Insert the computed routine IDs.

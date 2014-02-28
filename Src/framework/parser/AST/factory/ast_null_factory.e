@@ -778,7 +778,7 @@ feature -- Access
 		do
 		end
 
-	new_formal_as (n: detachable ID_AS; is_ref, is_exp: BOOLEAN; r_as: detachable KEYWORD_AS): detachable FORMAL_AS
+	new_formal_as (n: detachable ID_AS; is_ref, is_exp, is_frozen: BOOLEAN; r_as: detachable KEYWORD_AS): detachable FORMAL_AS
 			-- New FORMAL AST node
 		do
 		end
@@ -1162,7 +1162,7 @@ feature -- Access
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

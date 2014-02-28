@@ -131,6 +131,13 @@ feature -- Convenience
 			Result := formal.is_expanded
 		end
 
+	is_frozen: BOOLEAN
+		do
+				-- A formal generic parameter is frozen if it is marked frozen
+				-- or if the constraint is marked frozen.
+			Result := formal.has_frozen_mark
+		end
+
 	position: INTEGER
 			--
 		do
@@ -441,7 +448,7 @@ invariant
 	formal_not_void: formal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

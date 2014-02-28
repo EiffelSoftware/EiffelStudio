@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_or_expanded_keyword)
+	initialize (n: ID_AS; is_ref, is_exp, is_froz: BOOLEAN; r_as: like formal_keyword)
 			-- Create a new FORMAL AST node.
 		require
 			n_not_void: n /= Void
@@ -28,14 +28,18 @@ feature {NONE} -- Initialization
 			name := n
 			is_reference := is_ref
 			is_expanded := is_exp
+			if is_froz then
+				set_variance_mark (r_as, True, False)
+			end
 			if r_as /= Void then
-				reference_or_expanded_keyword_index := r_as.index
+				formal_keyword_index := r_as.index
 			end
 		ensure
 			name_set: name = n
 			is_reference_set: is_reference = is_ref
 			is_expanded_set: is_expanded = is_exp
-			reference_or_expanded_keyword_set: r_as /= Void implies reference_or_expanded_keyword_index = r_as.index
+			is_frozen_set: has_frozen_mark = is_froz
+			formal_keyword_set: r_as /= Void implies formal_keyword_index = r_as.index
 		end
 
 feature -- Visitor
@@ -48,17 +52,17 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	reference_or_expanded_keyword_index: INTEGER
-			-- Index of keyword "reference" or "expanded" associated with this structure
+	formal_keyword_index: INTEGER
+			-- Index of keyword "reference", "expanded" or "frozen" associated with this structure.
 
-	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "reference" or "expanded" associated with this structure
+	formal_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Keyword "reference", "expanded" or "frozen" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := reference_or_expanded_keyword_index
+			i := formal_keyword_index
 			if a_list.valid_index (i) then
 				Result ?= a_list.i_th (i)
 			end
@@ -85,8 +89,8 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list /= Void and then reference_or_expanded_keyword_index /= 0 then
-					Result := reference_or_expanded_keyword (a_list)
+				if a_list /= Void and then formal_keyword_index /= 0 then
+					Result := formal_keyword (a_list)
 				else
 					Result := name.first_token (a_list)
 				end
@@ -126,6 +130,12 @@ feature -- Output
 		do
 			create Result.make (3)
 			dump_marks (Result)
+			if is_expanded then
+				Result.append ("expanded ")
+			end
+			if is_reference then
+				Result.append ("reference ")
+			end
 			Result.append ("G#")
 			Result.append_integer (position)
 		end
@@ -139,7 +149,7 @@ feature {COMPILER_EXPORTER} -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

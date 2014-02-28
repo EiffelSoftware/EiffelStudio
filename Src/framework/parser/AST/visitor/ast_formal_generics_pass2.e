@@ -139,7 +139,7 @@ feature {NONE} -- Visitor implementation
 					l_formal_type := formal_parameters.item
 					if l_class_name.is_equal (l_formal_type.name) then
 						l_new_formal := ast_factory.new_formal_as (l_class_name, l_formal_type.is_reference,
-							l_formal_type.is_expanded, Void)
+							l_formal_type.is_expanded, l_formal_type.has_frozen_mark, Void)
 						if l_new_formal /= Void then
 							l_new_formal.set_position (l_formal_type.position)
 						end
@@ -229,7 +229,7 @@ feature {NONE} -- Types which should not occur
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

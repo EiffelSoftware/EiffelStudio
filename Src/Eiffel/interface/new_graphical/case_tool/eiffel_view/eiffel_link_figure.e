@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EIFFEL_LINK_FIGURE
 
 inherit
@@ -24,6 +24,11 @@ inherit
 			default_create
 		end
 
+create
+	default_create
+
+create {EIFFEL_LINK_FIGURE}
+	make_filled
 
 feature -- Access
 

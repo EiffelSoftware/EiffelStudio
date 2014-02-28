@@ -12,6 +12,9 @@ note
 class
 	STRING_8
 
+inherit
+	COMPARABLE
+
 create
 	make,
 	make_from_cil
@@ -24,7 +27,9 @@ feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 		do
-			create area.make_empty (n)
+			count := 0
+			internal_hash_code := 0
+			create area.make_filled ('%/000/', n + 1)
 		end
 
 	make_from_cil (a_system_string: detachable SYSTEM_STRING)
@@ -32,15 +37,26 @@ feature {NONE} -- Initialization
 			create area.make_empty (0)
 		end
 
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is string lexicographically lower than `other'?
+		do
+
+		end
+
 feature -- Status report
 
 	is_empty: BOOLEAN
+		do
+			Result := count = 0
+		end
 
 	area: SPECIAL [CHARACTER_8]
 
 	set_count (n: INTEGER)
 		do
-
+			count := n
 		end
 
 	internal_hash_code: INTEGER

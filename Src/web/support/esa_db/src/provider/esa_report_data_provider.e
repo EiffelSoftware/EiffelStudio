@@ -46,7 +46,7 @@ feature -- Access
 		end
 
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): ESA_DATA_VALUE
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
 		local
@@ -57,7 +57,7 @@ feature -- Access
 			l_parameters.put (a_page_number, "PageNumber")
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest", l_parameters))
 			db_handler.execute_reader
-			create Result.make (db_handler)
+			create Result.make (db_handler, agent new_report)
 		end
 
 

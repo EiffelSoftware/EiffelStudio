@@ -18,7 +18,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL;)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -31,6 +31,9 @@ feature {NONE} --Initialization
 			set_template_folder (p)
 			set_template_file_name ("collection_json.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user as l_user then
+				template.add_value (l_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
@@ -42,7 +45,7 @@ feature {NONE} --Initialization
 			end
 		end
 
-	make_with_error (a_host: READABLE_STRING_GENERAL; a_error: READABLE_STRING_GENERAL; a_code: INTEGER)
+	make_with_error (a_host: READABLE_STRING_GENERAL; a_error: READABLE_STRING_GENERAL; a_code: INTEGER; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -56,6 +59,9 @@ feature {NONE} --Initialization
 			template.add_value (a_host, "host")
 			template.add_value (a_error, "error")
 			template.add_value (a_code, "code")
+			if attached a_user as l_user then
+				template.add_value (l_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output

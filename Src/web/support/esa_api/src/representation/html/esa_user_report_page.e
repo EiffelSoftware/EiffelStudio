@@ -1,10 +1,11 @@
 note
-	description: "Template class to generate an HTML report page."
+	description: "Summary description for {USER_REPORT_PAGE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_PAGE
+	ESA_USER_REPORT_PAGE
 inherit
 
 	ESA_TEMPLATE_PAGE
@@ -16,7 +17,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_reports: LIST[REPORT]; a_index: INTEGER; a_pages: INTEGER; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_reports: TUPLE[REPORT_STATISTICS,LIST[REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_user: STRING)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -24,9 +25,10 @@ feature {NONE} --Initialization
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("reports.tpl")
+			set_template_file_name ("user_reports.tpl")
 			template.add_value (a_host, "host")
-			template.add_value (a_reports, "reports")
+			template.add_value (a_reports.at (1), "statistics")
+			template.add_value (a_reports.at (2), "reports")
 			if a_index > 1 then
 				template.add_value (a_index-1 , "prev")
 			else
@@ -39,9 +41,7 @@ feature {NONE} --Initialization
 			end
 			template.add_value (a_pages, "last")
 
-		 	if attached a_user as l_user then
-		 		template.add_value (l_user,"user")
-			end
+		 	template.add_value (a_user,"user")
 
 			template_context.enable_verbose
 			template.analyze

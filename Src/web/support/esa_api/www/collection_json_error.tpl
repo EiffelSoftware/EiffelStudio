@@ -12,7 +12,7 @@
                 "rel": "profile"
             >
 
-          ]
+          ],
     "error":<"title":"{$error/}","code":{$code/}>
   >
 >

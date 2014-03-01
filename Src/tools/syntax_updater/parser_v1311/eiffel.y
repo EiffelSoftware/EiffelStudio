@@ -2268,7 +2268,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($2, True, False, $1)
+					$$ := ast_factory.new_formal_as ($2, True, False, False, $1)
 				end
 			}
 	| TE_EXPANDED Class_identifier
@@ -2282,7 +2282,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($2, False, True, $1)
+					$$ := ast_factory.new_formal_as ($2, False, True, False, $1)
 				end
 			}
 
@@ -2297,7 +2297,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
-					$$ := ast_factory.new_formal_as ($1, False, False, Void)
+					$$ := ast_factory.new_formal_as ($1, False, False, False, Void)
 				end
 			}
 	;

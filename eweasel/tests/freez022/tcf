@@ -9,10 +9,18 @@
 test_name 	anchored-double-function
 test_description A class has a routine `value (r: DOUBLE): like r' which just returns the value of `r'.  When the routine is called with an INTEGER_8 actual argument, the result is wrong but only if the system is frozen. Melted code works correctly.
 
+define REAL_TYPE "REAL_32"
 copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test.e $CLUSTER test.e
+
 compile_melted
-compile_result 	ok
+compile_result 	validity_error TEST VJAR
+
+define REAL_TYPE "REAL_64"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
 
 execute_work 	NONE exec_output1
 execute_result 	ok

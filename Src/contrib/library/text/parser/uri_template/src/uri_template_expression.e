@@ -96,7 +96,7 @@ feature -- Processing
 
 					lst := s.split (',')
 					from
-						create {ARRAYED_LIST [like variables.item]} vars.make (lst.count)
+						create {ARRAYED_LIST [URI_TEMPLATE_EXPRESSION_VARIABLE]} vars.make (lst.count)
 						lst.start
 					until
 						lst.after
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 	append_custom_variables_to_string (a_ht: HASH_TABLE [detachable ANY, STRING]; vars: like variables; prefix_char, delimiter_char: CHARACTER; a_include_name: BOOLEAN; a_buffer: STRING)
 			-- If `first_char' is '%U' do not print any first character
 		local
-			vi: like variables.item
+			vi: URI_TEMPLATE_EXPRESSION_VARIABLE
 			l_is_first: BOOLEAN
 			vdata: detachable ANY
 			vstr: detachable STRING
@@ -273,7 +273,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_table (tb: WSF_WIDGET_AGENT_TABLE [detachable ANY])
-		local
-			fct: like {WSF_WIDGET_AGENT_TABLE [detachable ANY]}.compute_item_function
 		do
 			make
 			set_column_count (tb.column_count)
@@ -53,8 +51,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- rows
-			fct := tb.compute_item_function
-			if fct /= Void then
+			if attached tb.compute_item_function as fct then
 				if attached tb.head_data as lst then
 					across lst as d loop
 						add_head_row (fct.item ([d.item]))

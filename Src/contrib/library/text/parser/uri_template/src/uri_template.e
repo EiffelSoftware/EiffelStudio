@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 				tpl := template
 
 					--| Extract expansion parts  "\\{([^\\}]*)\\}"
-				create {ARRAYED_LIST [like expressions.item]} l_expressions.make (tpl.occurrences ('{'))
+				create {ARRAYED_LIST [URI_TEMPLATE_EXPRESSION]} l_expressions.make (tpl.occurrences ('{'))
 				from
 					i := 1
 					n := tpl.count
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

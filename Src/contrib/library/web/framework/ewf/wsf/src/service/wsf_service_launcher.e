@@ -56,12 +56,12 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	frozen make_callback (a_callback: like {WSF_CALLBACK_SERVICE}.callback; a_options: like options)
+	frozen make_callback (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
 		do
 			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
 		end
 
-	frozen make_callback_and_launch (a_callback: like {WSF_CALLBACK_SERVICE}.callback; a_options: like options)
+	frozen make_callback_and_launch (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
 		do
 			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
 		end
@@ -120,7 +120,7 @@ invariant
 	connector_attached: connector /= Void
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

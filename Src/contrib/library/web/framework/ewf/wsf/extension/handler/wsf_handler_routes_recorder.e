@@ -25,14 +25,14 @@ feature {WSF_ROUTER} -- Routes change
 		do
 			l_routes := available_routes
 			if l_routes = Void then
-				create {ARRAYED_LIST [like available_routes.item]} l_routes.make (3)
+				create {ARRAYED_LIST [TUPLE [resource: READABLE_STRING_8; rqst_methods: detachable ARRAY [READABLE_STRING_8]]]} l_routes.make (3)
 				available_routes := l_routes
 			end
 			l_routes.force ([a_resource, a_rqst_methods])
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

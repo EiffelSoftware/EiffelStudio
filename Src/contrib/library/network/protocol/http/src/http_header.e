@@ -285,23 +285,22 @@ feature -- Access
 		require
 			has_header: has_header_named (a_name)
 		local
-			c: like headers.new_cursor
 			n: INTEGER
 			l_line: READABLE_STRING_8
 		do
-			from
-				n := a_name.count
-				c := headers.new_cursor
+			n := a_name.count
+
+			across
+				headers as ic
 			until
-				c.after or Result /= Void
+				Result /= Void
 			loop
-				l_line := c.item
+				l_line := ic.item
 				if has_same_header_name (l_line, a_name) then
 					Result := l_line.substring (n + 2, l_line.count)
 					Result.left_adjust
 					Result.right_adjust
 				end
-				c.forth
 			end
 		end
 
@@ -917,7 +916,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

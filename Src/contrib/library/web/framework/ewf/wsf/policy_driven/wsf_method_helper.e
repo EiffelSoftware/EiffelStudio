@@ -169,10 +169,10 @@ feature -- Content negotiation
 		local
 			l_conneg: SERVER_CONTENT_NEGOTIATION
 			h: HTTP_HEADER
-			l_media: like {SERVER_CONTENT_NEGOTIATION}.media_type_preference
-			l_lang: like {SERVER_CONTENT_NEGOTIATION}.language_preference
-			l_charset: like {SERVER_CONTENT_NEGOTIATION}.charset_preference
-			l_encoding: like {SERVER_CONTENT_NEGOTIATION}.encoding_preference
+			l_media: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_lang: HTTP_ACCEPT_LANGUAGE_VARIANTS
+			l_charset: HTTP_ACCEPT_CHARSET_VARIANTS
+			l_encoding: HTTP_ACCEPT_ENCODING_VARIANTS
 			l_mime_types, l_langs, l_charsets, l_encodings: LIST [STRING]
 			l_vary_star: BOOLEAN
 		do
@@ -586,7 +586,7 @@ feature -- Error reporting
 		end
 
 note
-	copyright: "2011-2013, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -263,7 +263,7 @@ feature -- Types
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
 			process_attachment_mark (l_as)
-			safe_process (l_as.reference_or_expanded_keyword (match_list))
+			safe_process (l_as.formal_keyword (match_list))
 			safe_process (l_as.name)
 			safe_process (l_as.rcurly_symbol (match_list))
 		end

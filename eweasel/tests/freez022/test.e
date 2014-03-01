@@ -13,11 +13,10 @@ feature
 
 	make is
 		local
-			r: REAL_32
+			r: $REAL_TYPE
 		do
-			r := {REAL_32} 50.0
 			r := value (i8)
-			io.put_real (r)
+			io.put_double (r)
 			io.new_line
 		end
 

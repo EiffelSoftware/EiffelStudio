@@ -3327,7 +3327,7 @@ feature {NONE} -- Visitor
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
 		do
-			check attached last_type as c then
+			if attached last_type as c then
 					-- Mask out assigner call flag for target of the call.
 				l_is_assigner_call := is_assigner_call
 				is_assigner_call := False
@@ -3391,6 +3391,13 @@ feature {NONE} -- Visitor
 					end
 					is_qualified_call := l_is_qualified_call
 				end
+			else
+					-- We should not get there, but just in case we generate an internal
+					-- error message.
+				reset_types
+				error_handler.insert_error (create {INTERNAL_ERROR}.make (
+					"In {AST_FEATURE_CHECKER_GENERATOR}.process_nested_as we could%N%
+					%not find `last_type'."))
 			end
 		end
 

@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Type checking and code generation of BYTE_NODE tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1710,6 +1710,9 @@ feature {NONE} -- Implementation
 													l_expr ?= l_arg_nodes.i_th (i)
 													l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
 												end
+													-- Update `l_arg_types' with the converted type.
+													-- This fixes eweasel test#freez022.
+												l_arg_types.put_i_th (l_formal_arg_type, i)
 											end
 										elseif l_warning_count /= error_handler.warning_list.count then
 											error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
@@ -1887,7 +1890,7 @@ feature {NONE} -- Implementation
 							if is_qualified_call then
 								set_type (l_result_type.deep_actual_type, a_name)
 							else
-								set_type (l_result_type, a_name)
+  								set_type (l_result_type, a_name)
 							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
@@ -11024,10 +11027,7 @@ feature {NONE} -- Implementation: catcall check
 								-- Check that `l_arg_type' is compatible to its `like argument'.
 								-- Once this is done, then type checking is done on the real
 								-- type of the routine, not the anchor.
-							if
-								not l_arg_type.conform_to (context.current_class, l_like_arg_type) and then
-								not l_arg_type.convert_to (context.current_class, l_like_arg_type)
-							then
+							if not l_arg_type.conform_to (context.current_class, l_like_arg_type) then
 								insert_vuar2_error (l_descendant_feature, a_parameters, l_desc_class_id, i, l_arg_type,
 									l_like_arg_type)
 							end
@@ -11052,22 +11052,15 @@ feature {NONE} -- Implementation: catcall check
 
 							-- Check if actual parameter conforms to the possible type of the descendant feature if conformance
 							-- was involved in the original call, otherwise nothing to be done.
-							-- We have a workaround for conversion, but it is not perfect.
 						if not l_arg_type.conform_to (context.current_class, l_formal_arg_type) then
-							if
-								not (
-								l_arg_type.convert_to (context.current_class, a_feature.arguments.i_th (i).actual_type) and then
-								a_feature.arguments.i_th (i).actual_type.conform_to (context.current_class, l_formal_arg_type))
-							then
-									-- Conformance is violated. Add notice to warning.
-								if l_tcat = Void then
-									create l_tcat.make (a_location)
-									context.init_error (l_tcat)
-									l_tcat.set_called_feature (a_feature)
-									error_handler.insert_error (l_tcat)
-								end
-								l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.i_th (i), i)
+								-- Conformance is violated. Add notice to warning.
+							if l_tcat = Void then
+								create l_tcat.make (a_location)
+								context.init_error (l_tcat)
+								l_tcat.set_called_feature (a_feature)
+								error_handler.insert_error (l_tcat)
 							end
+							l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.i_th (i), i)
 						end
 						i := i + 1
 					end

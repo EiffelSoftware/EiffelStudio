@@ -514,7 +514,7 @@ test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic 
 test	conversion_without_binary_operator	valid262 tcf fail used_to_pass validity
 test	manifest-real-to-real-32-conformance	valid263 tcf pass validity ieee
 test	generic-rename-with-alias		valid264 tcf fail validity generic rename
-test	variant-with-anchored-type		valid265 tcf fail validity
+test	variant-with-anchored-type		valid265 tcf pass validity
 test	vtcg7-precondition-violation	valid266 tcf pass validity
 test	bogus-vdrd2-error				valid267 tcf fail validity
 test	crash-on-veen2a					valid268 tcf pass validity
@@ -630,7 +630,7 @@ test	catcall-on-tuple-insertion	catcall009 tcf pass catcall tuple
 test	simple-catcall-2			catcall010 tcf fail catcall
 test	catcall-on-tuple-insertion-2	catcall011 tcf fail catcall
 test	spurious-catcall-errors		catcall012 tcf fail catcall
-test	catcall-crash-with-conversion	catcall013 tcf fail catcall
+test	catcall-crash-with-conversion	catcall013 tcf pass catcall
 
 -- Incrementality tests
 
@@ -1169,7 +1169,7 @@ test	frozen-prefix-attribute		freez018  tcf pass freezing
 test	tuple-i16-plus-i8		freez019  tcf pass freezing tuple
 test	minus-minus-double		freez020  tcf pass freezing
 test	dispose-with-rescue		freez021  tcf pass freezing
-test	anchored-double-function	freez022  tcf fail freezing
+test	anchored-double-function	freez022  tcf pass freezing
 test	real-times-real-postcondition	freez023  tcf pass freezing
 test	inspect-high-bit-integer8	freez024  tcf pass freezing
 test	frozen-bitwise-and-local	freez025  tcf pass freezing
@@ -1950,7 +1950,7 @@ test	config-change-library-location		config028 tcf pass config incrementality
 test	config-process-group-crash		config029 tcf pass config incrementality
 test	config-root-class-precursor		config030 tcf pass config
 test	config-extra-trailing-text		config031 tcf pass config
-test	config-4kb-config-file			config032 tcf fail config
+test	config-4kb-config-file			config032 tcf pass config
 test	config-multiple-system-elements		config033 tcf fail config
 test	config-custom-tags-of-the-same-name			config034 tcf pass config
 test	config-variables-with-same-name			config035 tcf fail used_to_pass config
@@ -2052,7 +2052,7 @@ test	missing-protection-in-inline-c-code	ccomp076 tcf pass c_compilation
 test	bad-c-code-from-argument-anchor	ccomp077 tcf fail c_compilation
 test	bad-c-code-on-debug-clause		ccomp078 tcf pass c_compilation
 test	missing-makefile-for-precompile		ccomp079 tcf pass c_compilation
-test	bad-c-code-from-argument-anchor-2	ccomp080 tcf fail c_compilation
+test	bad-c-code-from-argument-anchor-2	ccomp080 tcf pass c_compilation
 test	bad-c-code-for-expanded-definition	ccomp081 tcf pass c_compilation expanded
 test	expanded-generic-object-test	ccomp082 tcf fail c_compilation expanded
 test	c-header-mismatch-3				ccomp083 tcf pass c_compilation
@@ -2777,16 +2777,16 @@ test	qat-on-dotnet-external-failure	anchor075 tcf pass anchored_type dotnet
 test	anchor-to-anchor-lose-named-tuple	anchor076 tcf pass anchored_type tuple
 
 -- Type inference
-test	inference-single-lower-bound	inference001 tcf fail inference
+test	inference-single-lower-bound	inference001 tcf pass inference
 test	inference-multiple-lower-bound	inference002 tcf fail inference
-test	inference-untyped-call-target	inference003 tcf fail inference
-test	inference-direct-dependency	inference004 tcf fail inference
-test	inference-creation-instruction	inference005 tcf fail inference
+test	inference-untyped-call-target	inference003 tcf pass inference
+test	inference-direct-dependency	inference004 tcf pass inference
+test	inference-creation-instruction	inference005 tcf pass inference
 test	inference-recursive-tuple	inference006 tcf fail inference
-test	inference-formal-generic	inference007 tcf fail inference formal generic
+test	inference-formal-generic	inference007 tcf pass inference formal generic
 test	inference-implicit-typing	inference008 tcf fail inference object_test across iteration
-test	inference-boolean-expression	inference009 tcf fail inference across iteration conditional expression check instruction loop invariant
-test	inference-manifest-array	inference010 tcf fail inference
+test	inference-boolean-expression	inference009 tcf pass inference across iteration conditional expression check instruction loop invariant
+test	inference-manifest-array	inference010 tcf pass inference
 test	inference-agent-expression	inference011 tcf fail inference agents
 
 -- SCOOP

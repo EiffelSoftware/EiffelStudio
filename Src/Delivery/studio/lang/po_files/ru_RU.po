@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-11-28 13:22+0400\n"
+"PO-Revision-Date: 2014-03-04 09:19+0400\n"
 "Last-Translator: Alexander Kogtenkov <alexk@eiffel.com>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -2655,7 +2655,7 @@ msgstr "Все теги"
 #. Source code: locale.translation ("All void safety rules are satisfied")
 #: conf_interface_names.e:377
 msgid "All void safety rules are satisfied"
-msgstr "Все правила безопасности удовлетворены."
+msgstr "Все правила ссылочной безопасности удовлетворены."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. <PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-modern</FONT></PREF>
@@ -32664,11 +32664,11 @@ msgid ""
 "Note: Using non-Void-Safe-compatible libraries in a void-safe system can "
 "cause library incompatibilities."
 msgstr ""
-"Выбранная библиотека не является совместимой по безопасности с текущим "
-"заданием. Хотите её использовать?\n"
+"Выбранная библиотека не является совместимой по ссылочной безопасности с "
+"текущим заданием. Хотите её использовать?\n"
 "\n"
-"Примечание: Использование небезопасных библиотек в безопасной системе может "
-"привести к несовместимости библиотек."
+"Примечание: Использование ссылочно-небезопасных библиотек в ссылочно-"
+"безопасной системе может привести к несовместимости библиотек."
 
 #. Source code: w_Invalid_options: STRING_32 do Result := locale.translation ("The selected options are invalid.%N%
 #: warning_messages.e:1093
@@ -36389,17 +36389,17 @@ msgstr "Внешний вид приложения Vision2"
 #. Source code: option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
 #: conf_interface_names.e:342
 msgid "Void safety"
-msgstr "Безопасность"
+msgstr "Ссылочная безопасность"
 
 #. Source code: locale.translation ("Void safety is not guaranteed"),
 #: conf_interface_names.e:373
 msgid "Void safety is not guaranteed"
-msgstr "Безопасность не гарантируется"
+msgstr "Ссылочная безопасность не гарантируется"
 
 #. Source code: Result := locale.translation ("Void safety level the source code provides.") +
 #: conf_interface_names.e:344
 msgid "Void safety level the source code provides."
-msgstr "Уровень безопасности исходного кода."
+msgstr "Уровень ссылочной безопасности исходного кода."
 
 #. Source code: locale.translation ("Void safety rules are satisfied except for initialization checks for unqualified agents and allowing CAPs for preconditions and check instructions"),
 #: conf_interface_names.e:376
@@ -36407,9 +36407,9 @@ msgid ""
 "Void safety rules are satisfied except for initialization checks for "
 "unqualified agents and allowing CAPs for preconditions and check instructions"
 msgstr ""
-"Правила безопасности удовлетворены за исключением проверок инициализации для "
-"неквалифицированных агентов и допущения СШП для предусловий и инструкций "
-"проверки"
+"Правила ссылочной безопасности удовлетворены за исключением проверок "
+"инициализации для неквалифицированных агентов и допущения СШП для "
+"предусловий и инструкций проверки"
 
 #. Source code: do Result := locale.translation ("WARNING: the console based debugger is experimental!!%N") end
 #: debugger_names.e:194
@@ -38331,13 +38331,13 @@ msgstr "{SPECIAL} ещё не поддерживается"
 #~ msgstr "&Открыть\tCtrl+O"
 
 #~ msgid "Complete void safety"
-#~ msgstr "Полная безопасность"
+#~ msgstr "Полная ссылочная безопасность"
 
 #~ msgid "No void safety"
-#~ msgstr "Никакой безопасности"
+#~ msgstr "Никакой ссылочной безопасности"
 
 #~ msgid "On demand void safety"
-#~ msgstr "Безопасность по требованию"
+#~ msgstr "Ссылочная безопасность по требованию"
 
 #~ msgid "Testing Results"
 #~ msgstr "Результаты тестирования"
@@ -38348,10 +38348,10 @@ msgstr "{SPECIAL} ещё не поддерживается"
 #~ "be properly initialized; Complete - all void safety validity rules are "
 #~ "checked"
 #~ msgstr ""
-#~ "Уровень безопасности, обеспечиваемый исходным кодом: Нет - безопасность "
-#~ "совсем не проверяется; По требованию - переменные прикреплённого типа "
-#~ "гарантировано инициализируются; Поланя - проверяются все правила "
-#~ "безопасности"
+#~ "Уровень ссылочной безопасности, обеспечиваемый исходным кодом: Нет - "
+#~ "ссылочная безопасность совсем не проверяется; По требованию - переменные "
+#~ "прикреплённого типа гарантировано инициализируются; Полная - проверяются "
+#~ "все правила ссылочной безопасности"
 
 #~ msgid "Class name already exits. Please choose other names."
 #~ msgstr "Имя класса уже существует. Пожалуйста, выберите другое."
@@ -38590,7 +38590,7 @@ msgstr "{SPECIAL} ещё не поддерживается"
 #~ msgstr "интерфейс"
 
 #~ msgid "void-safety"
-#~ msgstr "безопасность"
+#~ msgstr "ссылочная безопасность"
 
 #~ msgid "-outcome/passes"
 #~ msgstr "-исход/проходы"
@@ -38759,7 +38759,7 @@ msgstr "{SPECIAL} ещё не поддерживается"
 #~ msgstr "Информация (ИСЭ)"
 
 #~ msgid "Is source code void safe?"
-#~ msgstr "Исходный код безопасен по несуществующим вызовам?"
+#~ msgstr "Исходный код ссылочно-безопасен?"
 
 #~ msgid "Items shown in general toolbar."
 #~ msgstr "Элементы, показываемые в общей панели инструментов."

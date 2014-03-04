@@ -1474,48 +1474,43 @@ rt_private void npop(register int nb_items)
 	struct dcall *arena;		/* Base address of current chunk */
 	rt_int_ptr nb = nb_items;
 
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. That would indeed make popping very efficient.
-	 */
-
+		/* Optimization: try to update the top, hoping it will remain in the
+		 * same chunk. That would indeed make popping very efficient.
+		 */
 	arena = db_stack.st_cur->sk_arena;
 	top = db_stack.st_top;
-	top -= nb;				/* Hopefully, we remain in current chunk */
-	if (top >= arena) {
-		db_stack.st_top = top;		/* Yes! Update top */
+	if (((rt_uint_ptr) top > (nb * sizeof(struct dcall))) && ((top - nb) >= arena)) {
+		db_stack.st_top = top - nb;		/* Yes! Update top */
 		return;						/* Done, how lucky we were! */
-	}
-
-	/* Normal case (which should be reasonably rare): we have to pop more
-	 * than the number of items in the current chunk. Loop until we popped
-	 * enough items (one iteration should be the norm).
-	 */
-
-	SIGBLOCK;				/* Critical section begins */
-
-	top = db_stack.st_top;
-	for (s = db_stack.st_cur; nb > 0; /* empty */) {
-		arena = s->sk_arena;
-		nb -= top - arena;
-		if (nb <= 0) {			/* Have we gone too far? */
-			top = arena - nb;		/* Yes, reset top correctly */
-			break;						/* Done */
+	} else {
+			/* Normal case (which should be reasonably rare): we have to pop more
+			 * than the number of items in the current chunk. Loop until we popped
+			 * enough items (one iteration should be the norm).
+			 */
+		SIGBLOCK;				/* Critical section begins */
+		for (s = db_stack.st_cur; nb > 0; /* empty */) {
+			arena = s->sk_arena;
+			nb -= top - arena;
+			if (nb <= 0) {			/* Have we gone too far? */
+				top = arena - nb;		/* Yes, reset top correctly */
+				break;						/* Done */
+			}
+			s = s->sk_prev;					/* Look at previous chunk */
+			if (s)
+				top = s->sk_end;			/* Top at the end of previous chunk */
+			else
+				break;						/* We reached the bottom */
 		}
-		s = s->sk_prev;					/* Look at previous chunk */
-		if (s)
-			top = s->sk_end;			/* Top at the end of previous chunk */
-		else
-			break;						/* We reached the bottom */
+
+		CHECK("s not null", s);
+
+			/* Update the stack structure */
+		db_stack.st_cur = s;
+		db_stack.st_top = top;
+		db_stack.st_end = s->sk_end;
+
+		SIGRESUME;				/* End of critical section */
 	}
-
-	CHECK("s not null", s);
-
-		/* Update the stack structure */
-	db_stack.st_cur = s;
-	db_stack.st_top = top;
-	db_stack.st_end = s->sk_end;
-
-	SIGRESUME;				/* End of critical section */
 }
 
 rt_public struct dcall *dtop(void)
@@ -2013,14 +2008,13 @@ rt_public void c_npop(register int nb_items)
 	EIF_TYPED_ADDRESS *arena;		/* Base address of current chunk */
 	rt_int_ptr nb = nb_items;
 
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. That would indeed make popping very efficient.
-	 */
-
+		/* Optimization: try to update the top, hoping it will remain in the
+		 * same chunk. That would indeed make popping very efficient.
+		 */
 	arena = cop_stack.st_cur->sk_arena;
 	top = cop_stack.st_top;
-	top -= nb;				/* Hopefully, we remain in current chunk */
-	if (top >= arena) {
+	if (((rt_uint_ptr) top > (nb * sizeof(EIF_TYPED_ADDRESS))) && ((top - nb) >= arena)) {
+		top -= nb;
 			/* If `top' is at the bottom of the current chunk, we need
 			 * to update current top to points to the top of previous
 			 * chunk if any. */
@@ -2036,47 +2030,44 @@ rt_public void c_npop(register int nb_items)
 			cop_stack.st_top = top;		/* Yes! Update top */
 		}
 		return;						/* Done, how lucky we were! */
-	}
-
-	/* Normal case (which should be reasonably rare): we have to pop more
-	 * than the number of items in the current chunk. Loop until we popped
-	 * enough items (one iteration should be the norm).
-	 */
-
-	SIGBLOCK;			/* Entering protected section */
-
-	top = cop_stack.st_top;
-	for (s = cop_stack.st_cur; nb > 0; /* empty */) {
-		arena = s->sk_arena;
-		nb -= top - arena;
-		if (nb <= 0) {			/* Have we gone too far? */
-			top = arena - nb;		/* Yes, reset top correctly */
-			break;						/* Done */
+	} else {
+			/* Normal case (which should be reasonably rare): we have to pop more
+			 * than the number of items in the current chunk. Loop until we popped
+			 * enough items (one iteration should be the norm).
+			 */
+		SIGBLOCK;			/* Entering protected section */
+		for (s = cop_stack.st_cur; nb > 0; /* empty */) {
+			arena = s->sk_arena;
+			nb -= top - arena;
+			if (nb <= 0) {			/* Have we gone too far? */
+				top = arena - nb;		/* Yes, reset top correctly */
+				break;						/* Done */
+			}
+			s = s->sk_prev;					/* Look at previous chunk */
+			if (s)
+				top = s->sk_end;			/* Top at the end of previous chunk */
+			else
+				break;						/* We reached the bottom */
 		}
-		s = s->sk_prev;					/* Look at previous chunk */
-		if (s)
-			top = s->sk_end;			/* Top at the end of previous chunk */
-		else
-			break;						/* We reached the bottom */
+
+		CHECK("s not null", s);
+
+		/* Update the stack structure */
+		cop_stack.st_cur = s;
+		cop_stack.st_top = top;
+		cop_stack.st_end = s->sk_end;
+
+		SIGRESUME;						/* End of protected section */
+
+		/* There is not much overhead calling c_stack_truncate(), because this is
+		 * only done when we are popping at a chunk edge. We have to make sure the
+		 * program is running though, as popping done in debugging mode is only
+		 * temporary--RAM.
+		 */
+
+		if (d_cxt.pg_status == PG_RUN)	/* Program is running */
+			c_stack_truncate();			/* Eventually remove unused chunks */
 	}
-
-	CHECK("s not null", s);
-
-	/* Update the stack structure */
-	cop_stack.st_cur = s;
-	cop_stack.st_top = top;
-	cop_stack.st_end = s->sk_end;
-
-	SIGRESUME;						/* End of protected section */
-
-	/* There is not much overhead calling c_stack_truncate(), because this is
-	 * only done when we are popping at a chunk edge. We have to make sure the
-	 * program is running though, as popping done in debugging mode is only
-	 * temporary--RAM.
-	 */
-
-	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-		c_stack_truncate();			/* Eventually remove unused chunks */
 }
 
 rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)

@@ -83,15 +83,17 @@ rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
 	 * than needed, but it keeps the spirit of epush().
 	 */
 	char **top = stk->st_top;		/* Current top of the stack */
-
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. This avoids pointer manipulation (walking along the stack)
-	 * which may induce swapping, who knows?
-	 */
-
-	top -= nb_items;				/* Hopefully, we remain in current chunk */
-	if (top >= stk->st_cur->sk_arena) {
-		stk->st_top = top;			/* Yes! Update top, we are lucky. */
+	
+		/* Optimization: try to update the top, hoping it will remain in the
+		 * same chunk. This avoids pointer manipulation (walking along the stack)
+		 * which may induce swapping, who knows?
+		 *
+		 * In the event where `top' is smaller than what it would take to
+		 * go back by "nb_items x size of items", we need to
+		 * protect the subtraction.
+		 */
+	if (((rt_uint_ptr) top > (nb_items * sizeof(char *))) && ((top - nb_items) >= stk->st_cur->sk_arena)) {
+		stk->st_top = top - nb_items;			/* Yes! Update top, we are lucky. */
 	} else {
 		struct stchunk *s;			/* To walk through stack chunks */
 		char **arena;					/* Base address of current chunk */

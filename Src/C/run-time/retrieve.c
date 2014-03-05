@@ -139,14 +139,14 @@ doc:	</attribute>
 rt_shared struct htable *rt_table;
 
 /*
-doc:	<attribute name="nb_recorded" return_type="int32" export="shared">
+doc:	<attribute name="nb_recorded" return_type="rt_uint_ptr" export="shared">
 doc:		<summary>Number of items recorded in `hec_stack' during retrieval.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared int32 nb_recorded = 0;
+rt_shared rt_uint_ptr nb_recorded = 0;
 
 /*
 doc:	<attribute name="rt_kind" return_type="char" export="shared">

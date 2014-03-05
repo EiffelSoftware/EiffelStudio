@@ -287,7 +287,7 @@ typedef union {
 RT_LNK EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*ret_func) (void));
 
 RT_LNK struct htable *rt_table;	/* Table used for solving references */
-RT_LNK int32 nb_recorded;		/* Number of items recorded in Hector */
+RT_LNK rt_uint_ptr nb_recorded;		/* Number of items recorded in Hector */
 RT_LNK char rt_kind;
 extern char rt_kind_version;
 extern char rt_kind_properties;

@@ -162,7 +162,7 @@ typedef struct tag_rt_globals
 #endif
 		/* retrieve.c */
 	struct htable *rt_table_cx;
-	int32 nb_recorded_cx;
+	rt_uint_ptr nb_recorded_cx;
 	char rt_kind_cx;
 	char rt_kind_version_cx;
 	char rt_kind_properties_cx;

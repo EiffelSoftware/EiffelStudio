@@ -67,26 +67,16 @@ feature -- Roundtrip
 			-- Keyword "alias" associated with this class
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := alias_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, alias_keyword_index)
 		end
 
 	external_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "external" associated with this class
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := external_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, external_keyword_index)
 		end
 
 	alias_name_literal: detachable STRING_AS

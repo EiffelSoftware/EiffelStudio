@@ -53,13 +53,8 @@ feature -- Roundtrip
 			-- Symbol colon associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := colon_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, colon_symbol_index)
 		end
 
 	is_complete: BOOLEAN

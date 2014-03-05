@@ -52,13 +52,8 @@ feature -- Roundtrip
 			-- Keyword "do" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := attribute_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, attribute_keyword_index)
 		end
 
 	index: INTEGER

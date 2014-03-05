@@ -55,14 +55,9 @@ feature -- Attributes
 
 	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
-		local
-			l_internal_paran: like internal_parameters
 		do
-			l_internal_paran := internal_parameters
-			if l_internal_paran /= Void then
-				Result := l_internal_paran.meaningful_content
-			end
-			if Result /= Void then
+			if attached internal_parameters as l_internal_paran then
+				Result := l_internal_paran.parameters
 				Result.start
 			end
 		end
@@ -257,12 +252,12 @@ invariant
 		is_argument and (not is_local and not is_tuple_access) or
 		is_tuple_access and (not is_local and not is_argument) or
 		not is_local and not is_argument and not is_tuple_access
-	parameters_set: (attached internal_parameters as l_parameters implies parameters = l_parameters.meaningful_content) and
+	parameters_set: (attached internal_parameters as l_parameters implies parameters = l_parameters.parameters) and
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters /= Void implies parameter_count > 0) and (parameters = Void implies parameter_count = 0)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

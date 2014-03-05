@@ -59,13 +59,8 @@ feature -- Roundtrip
 			-- Keyword "reference", "expanded" or "frozen" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := formal_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, formal_keyword_index)
 		end
 
 feature -- Properties

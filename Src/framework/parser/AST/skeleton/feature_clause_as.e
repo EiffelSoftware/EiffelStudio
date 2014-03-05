@@ -66,7 +66,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			Result := feature_keyword.first_token (a_list)
@@ -110,17 +110,24 @@ feature -- Roundtrip/Comments
 						else
 							check False end
 						end
+					elseif attached features.first_token (a_list) as l_feature_token then
+						l_end_index := l_feature_token.index - 1
 					else
-						l_end_index := features.first_token (a_list).index - 1
+						check False end
 					end
-					check first_token (a_list).index + 1 <= l_end_index end
-					if l_end_index <= a_list.count then
-						Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
+					if attached first_token (a_list) as l_first_token then
+						check l_first_token.index + 1 <= l_end_index end
+						if l_end_index <= a_list.count then
+							Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
+						else
+								-- Somehow the match list `a_list' is not matching the parsed data.
+								-- We return no comments.
+							create Result.make
+						end
 					else
-							-- Somehow the match list `a_list' is not matching the parsed data.
-							-- We return no comments.
 						create Result.make
 					end
+					check first_token (a_list).index + 1 <= l_end_index end
 				else
 					create Result.make
 				end

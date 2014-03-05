@@ -28,13 +28,8 @@ feature -- Roundtrip
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lcurly_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, lcurly_symbol_index)
 		end
 
 	rcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
@@ -42,13 +37,8 @@ feature -- Roundtrip
 			-- Maybe none, or maybe only left curly appears.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := rcurly_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, rcurly_symbol_index)
 		end
 
 	attachment_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS

@@ -214,7 +214,11 @@ feature -- Roundtrip/Token
 			first_token_exists: first_token (a_list) /= Void
 			last_token_exists: last_token (a_list) /= Void
 		do
-			create Result.make (first_token (a_list).index, last_token (a_list).index)
+			if attached first_token (a_list) as l_first and attached last_token (a_list) as l_last then
+				create Result.make (l_first.index, l_last.index)
+			else
+				create Result.make (1, 1)
+			end
 		ensure
 			token_region_not_void: Result /= Void
 		end
@@ -264,6 +268,22 @@ feature -- Roundtrip/Token
 			-- Index of the construct in a structure to store all tokens (including breaks and comments)
 			-- that can be used to associate unambigously any information with this construct.
 		deferred
+		end
+
+	frozen keyword_from_index (a_list: LEAF_AS_LIST; a_index: INTEGER): detachable KEYWORD_AS
+			-- Keyword at position `a_index' in `a_list'.
+		do
+			if a_list.valid_index (a_index) and then attached {KEYWORD_AS} a_list.i_th (a_index) as l_keyword then
+				Result := l_keyword
+			end
+		end
+
+	frozen symbol_from_index (a_list: LEAF_AS_LIST; a_index: INTEGER): detachable SYMBOL_AS
+			-- Symbol at position `a_index' in `a_list'.
+		do
+			if a_list.valid_index (a_index) and then attached {SYMBOL_AS} a_list.i_th (a_index) as l_symbol then
+				Result := l_symbol
+			end
 		end
 
 feature -- Roundtrip/Text modification
@@ -498,7 +518,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

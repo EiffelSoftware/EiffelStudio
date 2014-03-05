@@ -65,8 +65,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := sign_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like sign_symbol} a_list.i_th (i) as l_symbol then
+				Result := l_symbol
 			end
 		end
 
@@ -82,15 +82,15 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
 			else
-				if attached constant_type as l_type then
-					Result := l_type.first_token (a_list)
-				elseif sign_symbol_index /= 0 then
-					Result := sign_symbol (a_list)
+				if attached constant_type as l_type and then attached l_type.first_token (a_list) as l_result then
+					Result := l_result
+				elseif attached sign_symbol (a_list) as l_symbol then
+					Result := l_symbol
 				else
 					Result := Current
 				end

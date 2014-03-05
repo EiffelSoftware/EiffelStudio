@@ -132,91 +132,56 @@ feature -- Roundtrip
 			-- keyword "alias" associated with this class
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := alias_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, alias_keyword_index)
 		end
 
 	class_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- keyword "class" associated with this class
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := class_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, class_keyword_index)
 		end
 
 	obsolete_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- keyword "obsolete" associated with this class	
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := obsolete_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, obsolete_keyword_index)
 		end
 
 	frozen_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := frozen_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, frozen_keyword_index)
 		end
 
 	expanded_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := expanded_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, expanded_keyword_index)
 		end
 
 	deferred_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := deferred_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, deferred_keyword_index)
 		end
 
 	external_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := external_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, external_keyword_index)
 		end
 
 	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_external_keyword: detachable KEYWORD_AS)
@@ -507,8 +472,6 @@ feature -- Status report
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-		local
-			l_break: detachable BREAK_AS
 		do
 			if a_list = Void then
 				if attached top_indexes as l_top_indexes then
@@ -517,12 +480,7 @@ feature -- Roundtrip/Token
 					Result := class_name.first_token (a_list)
 				end
 			else
-				if not a_list.is_empty then
-					l_break ?= a_list.first.first_token (a_list)
-				else
-					l_break := Void
-				end
-				if l_break /= Void then
+				if not a_list.is_empty and then attached {BREAK_AS} a_list.first.first_token (a_list) as l_break then
 					Result := l_break
 				else
 					if attached internal_top_indexes as l_top_indexes then
@@ -538,18 +496,11 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-		local
-			l_break: detachable BREAK_AS
 		do
 			if a_list = Void then
 				Result := end_keyword.last_token (a_list)
 			else
-				if not a_list.is_empty then
-					l_break ?= a_list.last.last_token (a_list)
-				else
-					l_break := Void
-				end
-				if l_break /= Void then
+				if not a_list.is_empty and then attached {BREAK_AS} a_list.last.last_token (a_list) as l_break then
 					Result := l_break
 				else
 					Result := end_keyword.last_token (a_list)

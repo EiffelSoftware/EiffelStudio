@@ -58,83 +58,58 @@ feature -- Attributes
 
 	renaming: detachable EIFFEL_LIST [RENAME_AS]
 			-- Rename clause
-		local
-			l_internal_renaming: like internal_renaming
 		do
-			l_internal_renaming := internal_renaming
-			if l_internal_renaming /= Void then
-				Result := l_internal_renaming.meaningful_content
-			else
-				Result := Void
+			if attached internal_renaming as l_internal_renaming then
+				Result := l_internal_renaming.content
 			end
 		ensure
 			good_result: (internal_renaming = Void implies Result = Void) and
-						 (attached internal_renaming as l_renaming implies Result = l_renaming.meaningful_content)
+						 (attached internal_renaming as l_renaming implies Result = l_renaming.content)
 		end
 
 	exports: detachable EIFFEL_LIST [EXPORT_ITEM_AS]
 			-- Exports for parent
-		local
-			l_internal_exports: like internal_exports
 		do
-			l_internal_exports := internal_exports
-			if l_internal_exports /= Void then
-				Result := l_internal_exports.meaningful_content
-			else
-				Result := Void
+			if attached internal_exports as l_internal_exports then
+				Result := l_internal_exports.content
 			end
 		ensure
 			good_result: (internal_exports = Void implies Result = Void) and
-						 (attached internal_exports as l_exports implies ((l_exports.meaningful_content = Void implies Result = Void) and
-						 								   (l_exports.meaningful_content /= Void implies (Result /= Void and then Result ~ l_exports.meaningful_content)))
+						 (attached internal_exports as l_exports implies ((l_exports.content = Void implies Result = Void) and
+						 								   (l_exports.content /= Void implies (Result /= Void and then Result ~ l_exports.content)))
 )		end
 
 	undefining: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Undefine clause
-		local
-			l_internal_undefining: like internal_undefining
 		do
-			l_internal_undefining := internal_undefining
-			if l_internal_undefining /= Void then
-				Result := l_internal_undefining.meaningful_content
-			else
-				Result := Void
+			if attached internal_undefining as l_internal_undefining then
+				Result := l_internal_undefining.content
 			end
 		ensure
 			good_result: (internal_undefining = Void implies Result = Void) and
-						 (attached internal_undefining as l_undefining implies Result = l_undefining.meaningful_content)
+						 (attached internal_undefining as l_undefining implies Result = l_undefining.content)
 		end
 
 	redefining: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Redefining clause
-		local
-			l_internal_redefining: like internal_redefining
 		do
-			l_internal_redefining := internal_redefining
-			if l_internal_redefining /= Void then
-				Result := l_internal_redefining.meaningful_content
-			else
-				Result := Void
+			if attached internal_redefining as l_internal_redefining then
+				Result := l_internal_redefining.content
 			end
 		ensure
 			good_result: (internal_redefining = Void implies Result = Void) and
-						 (attached internal_redefining as l_redefining implies Result = l_redefining.meaningful_content)
+						 (attached internal_redefining as l_redefining implies Result = l_redefining.content)
 		end
 
 	selecting: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
-		local
-			l_internal_selecting: like internal_selecting
 		do
-			l_internal_selecting := internal_selecting
-			if l_internal_selecting /= Void then
-				Result := l_internal_selecting.meaningful_content
-			else
-				Result := Void
+			if attached internal_selecting as l_internal_selecting then
+				Result := l_internal_selecting.content
 			end
 		ensure
 			good_result: (internal_selecting = Void implies Result = Void) and
-						 (attached internal_selecting as l_selecting implies Result = l_selecting.meaningful_content)
+						 (attached internal_selecting as l_selecting implies Result = l_selecting.content)
 		end
 
 	end_keyword_index: INTEGER
@@ -146,13 +121,8 @@ feature -- Attributes
 			-- and `select' is present
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := end_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, end_keyword_index)
 		end
 
 feature -- Roundtrip
@@ -223,7 +193,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

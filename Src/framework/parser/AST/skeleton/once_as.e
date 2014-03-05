@@ -50,13 +50,8 @@ feature -- Roundtrip
 			-- Keyword "once" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := once_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, once_keyword_index)
 		end
 
 	internal_keys: detachable KEY_LIST_AS
@@ -83,11 +78,11 @@ feature -- Properties
 			-- Once keys
 		do
 			if attached internal_keys as k then
-				Result := k.meaningful_content
+				Result := k.keys
 			end
 		ensure
 			good_result: (internal_keys = Void implies Result = Void) and
-						 (attached internal_keys as l_keys implies Result = l_keys.meaningful_content)
+						 (attached internal_keys as l_keys implies Result = l_keys.keys)
 		end
 
 feature -- Status report

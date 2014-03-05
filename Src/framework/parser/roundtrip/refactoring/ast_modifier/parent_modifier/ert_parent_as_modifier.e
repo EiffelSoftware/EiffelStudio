@@ -224,7 +224,7 @@ feature{NONE} -- Initialization
 				i > 5
 			loop
 				if not attached inherit_clause.i_th (i) as l_inherit_clause then
-					l_empty_modifier := create {ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
+					create l_empty_modifier.make (attached_ast (i), False, match_list)
 					l_empty_modifier.set_header_text (l_head_list.i_th (i))
 					if is_footer_needed then
 						l_empty_modifier.set_footer_text ("%N%T%T")
@@ -292,20 +292,16 @@ feature{NONE} -- Implementation
 		do
 			if attached inherit_clause.i_th (a_clause) as l_clause then
 				l_leaf := next_inherit_clause_start_token (a_clause)
-				if l_leaf = Void then
-					Result := False
-				else
+				if l_leaf /= Void and attached l_clause.first_token (match_list) as l_clause_token then
 					Result := match_list.has_comment (
-						create{ERT_TOKEN_REGION}.make (l_clause.first_token (match_list).index,
+						create{ERT_TOKEN_REGION}.make (l_clause_token.index,
 													  l_leaf.first_token (match_list).index - 1))
 				end
-			else
-				Result := False
 			end
 		end
 
 	attached_ast (a_clause: INTEGER): AST_EIFFEL
-			-- The AST structure appearing befor `a_index'-th inherit clause
+			-- The AST structure appearing before `a_index'-th inherit clause
 			-- It is used when an inherit clause is present while the one before it is missing.
 		local
 			i: INTEGER
@@ -319,8 +315,8 @@ feature{NONE} -- Implementation
 				i < 1 or (l_result /= Void)
 			loop
 				l_result := inherit_clause.i_th (i)
-				if l_result /= Void and then inherit_clause_has_comment (i) then
-					l_result := match_list.i_th (l_result.last_token (match_list).index + 1)
+				if l_result /= Void and then inherit_clause_has_comment (i) and then attached l_result.last_token (match_list) as l_clause_token then
+					l_result := match_list.i_th (l_clause_token.index + 1)
 					is_footer_needed := True
 				end
 				i := i - 1

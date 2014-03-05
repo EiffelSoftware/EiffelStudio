@@ -66,39 +66,24 @@ feature -- Roundtrip
 			-- Keyword "inherit" associated with current AST node.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := inherit_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, inherit_keyword_index)
 		end
 
 	lcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol '{' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lcurly_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, lcurly_symbol_index)
 		end
 
 	rcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol '}' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := rcurly_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, rcurly_symbol_index)
 		end
 
 	none_id_as (a_list: LEAF_AS_LIST): detachable ID_AS

@@ -57,10 +57,11 @@ feature -- Comparison
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
-			Result := type.first_token (a_list)
-			if Result = Void then
+			if attached type.first_token (a_list) as l_result then
+				Result := l_result
+			else
 				Result := Current
 			end
 		end
@@ -87,7 +88,7 @@ invariant
 	type_attached: type /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

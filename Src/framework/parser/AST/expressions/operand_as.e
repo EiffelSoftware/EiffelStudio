@@ -49,13 +49,8 @@ feature -- Roundtrip
 			-- Symbol "?" associated with thie structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := question_mark_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, question_mark_symbol_index)
 		end
 
 	set_question_mark_symbol (s_as: detachable SYMBOL_AS)

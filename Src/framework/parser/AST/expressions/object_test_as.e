@@ -91,13 +91,8 @@ feature -- Roundtrip
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lcurly_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, lcurly_symbol_index)
 		end
 
 	attached_keyword_index, as_keyword_index: INTEGER
@@ -107,26 +102,16 @@ feature -- Roundtrip
 			-- Keyword "attached" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := attached_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, attached_keyword_index)
 		end
 
 	as_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "as" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := as_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, as_keyword_index)
 		end
 
 	index: INTEGER

@@ -93,26 +93,16 @@ feature -- Roundtrip
 			-- Symbol "[" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lsqure_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, lsqure_symbol_index)
 		end
 
 	rsqure_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "]" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := rsqure_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, rsqure_symbol_index)
 		end
 
 feature -- Settings
@@ -145,7 +135,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

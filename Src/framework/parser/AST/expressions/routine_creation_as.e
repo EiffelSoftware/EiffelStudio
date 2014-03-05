@@ -46,26 +46,15 @@ feature -- Roundtrip
 			-- Symbol "(" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := lparan_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
 		end
 
 	rparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol ")" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := rparan_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, rparan_symbol_index)
 		end
 
 	set_lparan_symbol (s_as: like lparan_symbol)
@@ -98,16 +87,13 @@ feature -- Attributes
 
 	operands : detachable EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
-		local
-			l_internal_operands: like internal_operands
 		do
-			l_internal_operands := internal_operands
-			if l_internal_operands /= Void then
-				Result := l_internal_operands.meaningful_content
+			if attached internal_operands as l_internal_operands then
+				Result := l_internal_operands.operands
 			end
 		ensure
 			good_result: (internal_operands = Void implies Result = Void) and
-						 (attached internal_operands as l_operands implies Result = l_operands.meaningful_content)
+						 (attached internal_operands as l_operands implies Result = l_operands.operands)
 		end
 
 	has_target: BOOLEAN
@@ -130,7 +116,7 @@ feature -- Comparison
 		end
 
 invariant
-	operands_correct: (attached internal_operands as l_operands implies operands = l_operands.meaningful_content) and
+	operands_correct: (attached internal_operands as l_operands implies operands = l_operands.operands) and
 					  (internal_operands = Void implies operands = Void)
 
 note

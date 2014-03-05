@@ -173,7 +173,7 @@ feature -- Roundtrip/Comment
 
 feature -- Roundtrip/Trailing break
 
-	trailing_break_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION
+	trailing_break_region (a_list: LEAF_AS_LIST): detachable ERT_TOKEN_REGION
 			-- Break region after an attribute or a constant
 		require
 			a_list_not_void: a_list /= Void
@@ -184,14 +184,18 @@ feature -- Roundtrip/Trailing break
 		do
 			l_break_included := break_included
 			set_break_included (False)
-			l_end_index1 := last_token (a_list).index
-			set_break_included (True)
-			l_end_index2 := last_token (a_list).index
-			set_break_included (l_break_included)
-			check
-				index_valid: l_end_index1 + 1 <= l_end_index2
+			if attached last_token (a_list) as l_token then
+				l_end_index1 := l_token.index
+				set_break_included (True)
+				if attached last_token (a_list) as l_token_with_break then
+					l_end_index2 := l_token_with_break.index
+					check
+						index_valid: l_end_index1 + 1 <= l_end_index2
+					end
+					create Result.make (l_end_index1 + 1, l_end_index2)
+				end
 			end
-			create Result.make (l_end_index1 + 1, l_end_index2)
+			set_break_included (l_break_included)
 		end
 
 feature -- Property

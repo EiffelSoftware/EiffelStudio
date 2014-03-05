@@ -52,8 +52,8 @@ feature -- Applicability
 				Result := True
 			elseif l_destination_parents = Void then
 				Result := destination.class_name.can_append_text (destination_match_list)
-			elseif l_destination_parents.is_empty then
-				Result := l_destination_parents.inherit_keyword (destination_match_list).can_append_text (destination_match_list)
+			elseif attached l_destination_parents.inherit_keyword (destination_match_list) as l_inherit_token then
+				Result := l_inherit_token.can_append_text (destination_match_list)
 			else
 				create l_last_computed_modifier.make
 				compute_modification (l_last_computed_modifier)
@@ -74,8 +74,8 @@ feature -- Applicability
 			then
 			elseif l_destination_parents = Void then
 				destination.class_name.append_text ("%N" + l_source_parents.text (source_match_list), destination_match_list)
-			elseif l_destination_parents.is_empty then
-				l_destination_parents.inherit_keyword (destination_match_list).replace_text (l_source_parents.text (source_match_list), destination_match_list)
+			elseif attached l_destination_parents.inherit_keyword (destination_match_list) as l_inherit_token then
+				l_inherit_token.replace_text (l_source_parents.text (source_match_list), destination_match_list)
 			else
 				create l_last_computed_modifier.make
 				compute_modification (l_last_computed_modifier)
@@ -104,7 +104,7 @@ feature{NONE} -- Implementation
 		do
 			if attached source.parents as l_source_parents and then attached destination.parents as l_destination_parents then
 				create l_appended_parents.make (256)
-				create l_processed.make (1, l_destination_parents.count)
+				create l_processed.make_filled (False, 1, l_destination_parents.count)
 				dest_index := 1
 				dest_count := l_destination_parents.count
 				dest_ori_index := l_destination_parents.index

@@ -18,12 +18,12 @@ inherit
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Current
 		end
 
-	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Current
 		end
@@ -61,7 +61,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

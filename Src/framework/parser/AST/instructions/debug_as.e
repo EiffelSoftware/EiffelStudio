@@ -50,13 +50,8 @@ feature -- Roundtrip
 			-- Keyword "debug" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := debug_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, debug_keyword_index)
 		end
 
 	index: INTEGER
@@ -72,16 +67,13 @@ feature -- Attributes
 
 	keys: detachable EIFFEL_LIST [STRING_AS]
 			-- Debug keys
-		local
-			l_internal_keys: like internal_keys
 		do
-			l_internal_keys := internal_keys
-			if l_internal_keys /= Void then
-				Result := l_internal_keys.meaningful_content
+			if attached internal_keys as l_internal_keys then
+				Result := l_internal_keys.keys
 			end
 		ensure
 			good_result: (internal_keys = Void implies Result = Void) and
-						 (attached internal_keys as l_keys implies Result = l_keys.meaningful_content)
+						 (attached internal_keys as l_keys implies Result = l_keys.keys)
 		end
 
 	end_keyword: KEYWORD_AS
@@ -125,7 +117,7 @@ feature -- Comparison
 
 invariant
 	end_keyword_not_void: end_keyword /= Void
-	keys_correct: (attached internal_keys as l_keys implies keys = l_keys.meaningful_content) and
+	keys_correct: (attached internal_keys as l_keys implies keys = l_keys.keys) and
 				  (internal_keys = Void implies keys = Void)
 
 note

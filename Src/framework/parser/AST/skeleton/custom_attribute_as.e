@@ -51,13 +51,8 @@ feature -- Roundtrip
 			-- Keyword "end" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := end_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, end_keyword_index)
 		end
 
 	index: INTEGER

@@ -67,13 +67,8 @@ feature -- Roundtrip
 			-- Keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := clause_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, clause_keyword_index)
 		end
 
 	index: INTEGER

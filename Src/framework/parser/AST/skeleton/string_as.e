@@ -154,8 +154,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := once_string_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like once_string_keyword} a_list.i_th (i) as l_keyword then
+				Result := l_keyword
 			end
 		end
 
@@ -182,13 +182,13 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
 			else
-				if attached type as l_type then
-					Result := l_type.first_token (a_list)
+				if attached type as l_type and then attached l_type.first_token (a_list) as l_result then
+					Result := l_result
 				else
 					Result := Current
 				end

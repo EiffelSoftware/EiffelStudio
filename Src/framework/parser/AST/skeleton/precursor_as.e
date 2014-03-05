@@ -60,19 +60,14 @@ feature -- Attributes
 
 	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
-		local
-			l_internal_paran: like internal_parameters
 		do
-			l_internal_paran := internal_parameters
-			if l_internal_paran /= Void then
-				Result := l_internal_paran.meaningful_content
-			end
-			if Result /= Void then
+			if attached internal_parameters as l_internal_paran then
+				Result := l_internal_paran.parameters
 				Result.start
 			end
 		ensure then
 			good_result: (internal_parameters = Void implies Result = Void) and
-						 (attached internal_parameters as l_params implies Result = l_params.meaningful_content)
+						 (attached internal_parameters as l_params implies Result = l_params.parameters)
 		end
 
 	parameter_count: INTEGER
@@ -147,7 +142,7 @@ feature -- Comparison
 invariant
 	precursor_keyword_not_void: precursor_keyword /= Void
 	valid_parent_base_class: attached parent_base_class as l_class implies l_class.generics = Void
-	parameters_set: (attached internal_parameters as l_params implies parameters = l_params.meaningful_content) and
+	parameters_set: (attached internal_parameters as l_params implies parameters = l_params.parameters) and
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 

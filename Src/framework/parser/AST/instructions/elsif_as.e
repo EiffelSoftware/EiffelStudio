@@ -57,26 +57,16 @@ feature -- Roundtrip
 			-- Keyword "elseif" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := elseif_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, elseif_keyword_index)
 		end
 
 	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "then" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := then_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, then_keyword_index)
 		end
 
 	index: INTEGER
@@ -142,7 +132,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

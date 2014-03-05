@@ -69,13 +69,8 @@ feature -- Roundtrip
 			-- Symbol colon associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := colon_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := symbol_from_index (a_list, colon_symbol_index)
 		end
 
 	is_keyword (a_list: LEAF_AS_LIST): detachable LEAF_AS
@@ -87,7 +82,7 @@ feature -- Roundtrip
 		do
 			i := is_keyword_index
 			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+				Result := a_list.i_th (i)
 			end
 		end
 
@@ -95,29 +90,21 @@ feature -- Roundtrip
 			-- Keyword "assign" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := assign_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, assign_keyword_index)
 		end
 
 feature -- Attributes
 
 	arguments: detachable EIFFEL_LIST [TYPE_DEC_AS]
 			-- List (of list) of arguments
-		local
-			l_internal_arguments: like internal_arguments
 		do
-			l_internal_arguments := internal_arguments
-			if l_internal_arguments /= Void then
-				Result := l_internal_arguments.meaningful_content
+			if attached internal_arguments as l_internal_arguments then
+				Result := l_internal_arguments.arguments
 			end
 		ensure
 			good_result: (internal_arguments = Void implies Result = Void) and
-						 (attached internal_arguments as l_args implies Result = l_args.meaningful_content)
+						 (attached internal_arguments as l_args implies Result = l_args.arguments)
 		end
 
 	type: detachable TYPE_AS
@@ -132,13 +119,17 @@ feature -- Attributes
 	as_routine: detachable ROUTINE_AS
 			-- See `content' as an instance of ROUTINE_AS.
 		do
-			Result ?= content
+			if attached {ROUTINE_AS} content as l_routine then
+				Result := l_routine
+			end
 		end
 
 	as_constant: detachable CONSTANT_AS
 			-- See `content' as an instance of CONSTANT_AS.
 		do
-			Result ?= content
+			if attached {CONSTANT_AS} content as l_constant then
+				Result := l_constant
+			end
 		end
 
 feature -- Roundtrip
@@ -335,12 +326,8 @@ feature -- New feature description
 			--|The best way to understand all this, is to draw a two-dimensional
 			--|table, for all possible combinations of the values (CONSTANT_AS,
 			--|ROUTINE_AS, Void) of content and other.content)
-		local
-			r1, r2: detachable ROUTINE_AS
 		do
-			r1 ?= content;
-			r2 ?= other.content
-			if (r1 /= Void) and then (r2 /= Void) then
+			if attached {ROUTINE_AS} content as r1 and attached {ROUTINE_AS} other.content as r2 then
 				Result := r1.is_assertion_equiv (r2)
 			else
 				Result := True
@@ -368,7 +355,7 @@ feature {BODY_AS, FEATURE_AS} -- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,9 +15,10 @@ create
 feature{NONE} -- Implementation
 
 	make (a_start_index, a_end_index: INTEGER)
-			--
+			-- Create a region between indexes `a_start_index' and `a_end_index'.
 		require
-			valid_region: is_valid_region (a_start_index, a_end_index)
+			valid_start: a_start_index >= 1
+			valid_bounds: a_start_index <= a_end_index
 		do
 			start_index := a_start_index
 			end_index := a_end_index
@@ -26,46 +27,81 @@ feature{NONE} -- Implementation
 			end_index_set: end_index = a_end_index
 		end
 
+	make_empty
+			-- Create an empty region.
+		do
+			start_index := 1
+			end_index := 0
+		ensure
+			start_index_set: start_index = 1
+			end_index_set: end_index = 0
+		end
+
 feature -- Status reporting
+
+	is_empty: BOOLEAN
+			-- Is region empty?
+		do
+			Result := start_index = end_index - 1
+		end
 
 	is_valid_region (a_start_index, a_end_index: INTEGER): BOOLEAN
 			-- Is region specified by `a_start_index' and `a_end_index' valid?
+		obsolete
+			"Do not use since per invariant this is always true."
 		do
-			Result := a_start_index > 0 and a_end_index >= a_start_index
+			Result := True
 		end
 
 	is_overlap_region (other: like Current): BOOLEAN
 			-- Is `other' overlap with current?
+			-- False for empty sets.
 		do
-			Result := (other.start_index < start_index and other.end_index > start_index and other.end_index < end_index) or
+			if other.is_empty or else is_empty then
+				Result := False
+			else
+				Result := (other.start_index < start_index and other.end_index > start_index and other.end_index < end_index) or
 					 (other.start_index > start_index and other.start_index < end_index and other.end_index > end_index)
+			end
 		end
 
 	is_disjoint_region (other: like Current): BOOLEAN
 			-- Is `other' disjoint from current?
+			-- True for empty sets.
 		require
 			other_not_void: other /= Void
-			other_valid: is_valid_region (other.start_index, other.end_index)
 		do
-			Result := other.end_index < start_index or other.start_index > end_index
+			if other.is_empty or else is_empty then
+				Result := True
+			else
+				Result := other.end_index < start_index or other.start_index > end_index
+			end
 		end
 
 	is_sub_region (other: like Current): BOOLEAN
 			-- Is current a sub region of `other'?
+			-- False for empty sets.
 		require
 			other_not_void: other /= Void
-			other_valid: is_valid_region (other.start_index, other.end_index)
 		do
-			Result := start_index >= other.start_index and end_index <= other.end_index
+			if other.is_empty or is_empty then
+				Result := False
+			else
+				Result := start_index >= other.start_index and end_index <= other.end_index
+			end
 		end
 
 	is_true_sub_region (other: like Current): BOOLEAN
 			-- Is current a true sub region of `other'?
+			-- False for empty sets.
 		require
 			other_not_void: other /= Void
-			other_valid: is_valid_region (other.start_index, other.end_index)
 		do
-			Result := start_index > other.start_index and end_index < other.end_index
+			if other.is_empty or else is_empty then
+				Result := False
+			else
+				Result := start_index > other.start_index and end_index < other.end_index
+			end
 		end
 
 	is_equivalent (other: like Current): BOOLEAN
@@ -86,8 +122,12 @@ feature -- Access
 	end_index: INTEGER;
 			-- End index (in LEAF_AS_LIST)of current region
 
+invariant
+	definition: start_index <= end_index + 1
+	empty_implies_one_bound: start_index = end_index + 1 implies start_index = 1
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,21 +140,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

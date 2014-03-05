@@ -58,26 +58,16 @@ feature -- Roundtrip
 			-- Keyword "inspect" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := inspect_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, inspect_keyword_index)
 		end
 
 	else_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "else" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := else_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			Result := keyword_from_index (a_list, else_keyword_index)
 		end
 
 	index: INTEGER
@@ -131,7 +121,7 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

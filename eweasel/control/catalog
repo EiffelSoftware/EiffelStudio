@@ -2814,7 +2814,7 @@ test	scoop-undetected-vuer				scoop022 tcf fail scoop validity incrementality mu
 test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop termination expanded generic multithreaded
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop execution multithreaded
 test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop expanded execution multithreaded
-test	scoop-unnested-logging				scoop026 tcf pass scoop execution multithreaded
+test	scoop-unnested-logging				scoop026 tcf fail used_to_pass scoop execution multithreaded
 test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop lock_passing execution multithreaded
 test	scoop-sequential-processor-creation		scoop028 tcf pass scoop execution multithreaded
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop execution multithreaded

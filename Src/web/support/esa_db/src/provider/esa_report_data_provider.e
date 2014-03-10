@@ -42,11 +42,12 @@ feature -- Access
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReports2", l_parameters))
 			db_handler.execute_reader
+			last_row_count := db_handler.count
 			create Result.make (db_handler, agent new_report)
 		end
 
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
 		local
@@ -55,8 +56,11 @@ feature -- Access
 			create l_parameters.make (2)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest", l_parameters))
 			db_handler.execute_reader
+			last_row_count := db_handler.count
 			create Result.make (db_handler, agent new_report)
 		end
 
@@ -266,6 +270,19 @@ feature -- Access
 			create Result.make (db_handler, agent new_report_category)
 		end
 
+
+	all_categories: ESA_DATABASE_ITERATION_CURSOR[REPORT_CATEGORY]
+			-- All report categories
+			-- Columns: CategoryID, CategorySynopsis, CategoryGroupSynopsis
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			create l_parameters.make (0)
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_categories, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report_category )
+		end
+
 feature -- Basic Operations
 
 	new_problem_report_id (a_username: STRING): INTEGER
@@ -312,13 +329,15 @@ feature -- Basic Operations
 			disconnect
 		end
 
-	row_count_problem_report_guest: INTEGER
+	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		local
 				l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
 			connect
-			create l_parameters.make (0)
+			create l_parameters.make (2)
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsRowCountGuest", l_parameters))
 			db_handler.execute_reader
 
@@ -537,6 +556,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Status Report
+
+	last_row_count: INTEGER
+		-- Number of rows retrieved by the last query.
 
 feature -- Connection
 
@@ -553,5 +576,9 @@ feature -- Connection
 				db_handler.disconnect
 			end
 		end
+
+feature -- Queries
+
+	Select_categories: STRING = "select CategoryID, CategorySynopsis from ProblemReportCategories;"
 
 end

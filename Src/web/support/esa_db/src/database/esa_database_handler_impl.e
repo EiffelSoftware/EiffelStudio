@@ -228,4 +228,12 @@ feature -- Result
 	items : detachable LIST[DB_RESULT]
 		-- Query result
 
+	count: INTEGER
+			-- <Precursor>
+		do
+			if attached items as l_items then
+				Result := l_items.count
+			end
+		end
+
 end

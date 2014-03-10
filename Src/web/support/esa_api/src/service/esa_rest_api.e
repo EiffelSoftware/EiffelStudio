@@ -60,12 +60,8 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/reports", l_report_handler, l_methods)
-			router.handle_with_request_methods ("/reports/", l_report_handler, l_methods) --IE workaround
 
 			router.handle_with_request_methods ("/reports/{id}", l_report_handler, l_methods)
-			router.handle_with_request_methods ("/reports/{id}/", l_report_handler, l_methods) -- IE Workaround
-
-
 		end
 
 	configure_api_reports_user
@@ -88,6 +84,7 @@ feature -- Configure Resources Routes
 			create l_report_detail_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
+			router.handle_with_request_methods ("/report_detail/{?search}", l_report_detail_handler, l_methods)
 			router.handle_with_request_methods ("/report_detail/{id}", l_report_detail_handler, l_methods)
 		end
 

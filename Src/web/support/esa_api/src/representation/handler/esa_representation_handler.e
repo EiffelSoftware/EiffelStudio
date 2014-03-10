@@ -31,7 +31,7 @@ feature -- Config
 feature -- Media Variants
 
 	media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-		-- Media type accepted.
+			-- Media type accepted.
 
 feature -- View
 
@@ -40,19 +40,17 @@ feature -- View
 		deferred
 		end
 
-
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: detachable REPORT)
 			-- Problem report representation
 		deferred
 		end
 
-	problem_reports_guest  (req: WSF_REQUEST; res: WSF_RESPONSE)
+	problem_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
 			-- Problem reports representation for a guest user
 		deferred
 		end
 
-
-	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE)
+	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		deferred
 		end
@@ -80,7 +78,17 @@ feature -- View
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-				-- Generate a Reponse based on the Media Type
-			deferred
-			end
+			-- Generate a Reponse based on the Media Type
+		deferred
+		end
+
+	new_response_unauthorized (req: WSF_REQUEST; res: WSF_RESPONSE;)
+			-- Generate a Reponse based on the Media Type
+		deferred
+		end
+
+	new_response_authenticate (req: WSF_REQUEST; res: WSF_RESPONSE)
+		deferred
+		end
+
 end

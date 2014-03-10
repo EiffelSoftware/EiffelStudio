@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
@@ -49,7 +49,7 @@ feature -- Access
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			create l_statistics
 			data_provider.connect
-			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page) as c loop
+			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status) as c loop
 				l_report := c.item
 				if attached status_cache as l_cache and then attached l_report.status as ll_status then
 					if attached l_cache.item (ll_status.id) as l_item then
@@ -123,6 +123,15 @@ feature -- Access
 			end
 		end
 
+	all_categories: LIST[REPORT_CATEGORY]
+			-- Report Categories
+		do
+			create {ARRAYED_LIST[REPORT_CATEGORY]} Result.make (0)
+			data_provider.connect
+			across data_provider.all_categories as c  loop Result.force (c.item) end
+			data_provider.disconnect
+		end
+
 	problem_report (a_number: INTEGER): detachable REPORT
 			-- Problem report with number `a_number'.
 		local
@@ -148,10 +157,10 @@ feature -- Access
 
 feature -- Basic Operations
 
-	row_count_problem_report_guest: INTEGER
+	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
-			Result := data_provider.row_count_problem_report_guest
+			Result := data_provider.row_count_problem_report_guest (a_category, a_status)
 		end
 
 feature -- Status Report
@@ -174,6 +183,13 @@ feature -- Status Report
 				l_sha_password := l_security.password_hash (l_password, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
+		end
+
+
+	is_report_visible_guest (a_report: INTEGER): BOOLEAN
+			-- Can user `guest' see report number `a_number'?
+		do
+			Result := data_provider.report_visible_guest (a_report)
 		end
 
 feature -- Cache

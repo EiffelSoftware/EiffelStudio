@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			print ("%NGuest Reports")
 			create l_prov.make (connection)
 			l_prov.connect
-			across l_prov.problem_reports_guest (1, 2) as c loop
+			across l_prov.problem_reports_guest (1, 2, 0, 0) as c loop
 			 	print (c.item.string_8)
 			end
 			l_prov.disconnect

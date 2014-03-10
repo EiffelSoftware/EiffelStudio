@@ -134,6 +134,11 @@ feature -- Status Report
 
 	has_error: BOOLEAN
 
+	count: INTEGER
+		-- Number of rows, last execution
+		deferred
+		end
+
 feature {ESA_REPORT_DATA_PROVIDER, ESA_LOGIN_DATA_PROVIDER} -- Implementation
 
 	connect

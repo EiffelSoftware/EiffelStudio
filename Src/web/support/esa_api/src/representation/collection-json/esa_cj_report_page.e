@@ -17,7 +17,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_reports: TUPLE[REPORT_STATISTICS, LIST[REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL;a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		local
 			p: PATH
@@ -27,21 +27,21 @@ feature {NONE} --Initialization
 			set_template_folder (p)
 			set_template_file_name ("cj_reports.tpl")
 			template.add_value (a_host, "host")
-			template.add_value (a_reports.at (2), "reports")
-			if a_index > 1 then
-				template.add_value (a_index-1 , "prev")
+			template.add_value (a_view.reports.at (2), "reports")
+			if a_view.index > 1 then
+				template.add_value (a_view.index-1 , "prev")
 			else
-				template.add_value (a_index , "prev")
+				template.add_value (a_view.index , "prev")
 			end
-			if a_index < a_pages then
-				template.add_value (a_index+1, "next")
+			if a_view.index < a_view.pages then
+				template.add_value (a_view.index+1, "next")
 			else
-				template.add_value (a_index, "next")
+				template.add_value (a_view.index, "next")
 			end
-			template.add_value (a_pages, "last")
+			template.add_value (a_view.pages, "last")
 
-			if attached a_user as l_user then
-				template.add_value (a_user, "user")
+			if attached a_view.user as l_user then
+				template.add_value (a_view.user, "user")
 			end
 
 			template_context.enable_verbose

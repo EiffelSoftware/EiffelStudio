@@ -72,17 +72,54 @@ feature -- HTTP Methods
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_row: TUPLE [REPORT_STATISTICS, LIST [REPORT]]
+			l_pages: INTEGER
+			l_category: INTEGER
+			l_status: INTEGER
+			list_status: LIST[REPORT_STATUS]
+			l_categories: LIST[REPORT_CATEGORY]
+			l_report_view: ESA_REPORT_VIEW
 		do
 			media_variants := media_type_variants (req)
 			if media_variants.is_acceptable then
+				create l_rhf
 				if attached media_variants.media_type as l_type then
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res)
+					l_categories := api_service.all_categories
+					list_status:= api_service.status
+					if attached {WSF_STRING} req.query_parameter ("category") as ll_category and then
+					   attached {WSF_STRING} req.query_parameter ("status") as ll_status and then
+				 	  ll_category.is_integer and then ll_status.is_integer then
+				 	  	l_category := ll_category.integer_value
+						l_status := ll_status.integer_value
+					 else
+				 		l_category := 0
+				 		l_status := 0
+				 	end
+					l_pages := api_service.row_count_problem_report_guest (l_category,l_status)
+					if attached {WSF_STRING} req.path_parameter ("id") as l_id then
+						if l_id.is_integer then
+							l_row := api_service.problem_reports_guest (l_id.as_string.integer_value, 10, l_category,l_status)
+							create l_report_view.make (l_row, l_id.as_string.integer_value, l_pages // 10, l_categories, list_status, req.execution_variable ("user"))
+							l_report_view.set_selected_category (l_category)
+							l_report_view.set_selected_status (l_status)
+							l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)
+						else
+							l_rhf.new_representation_handler (esa_config,l_type,media_variants).bad_request_page (req, res)
+						end
+					else
+						l_row := api_service.problem_reports_guest (1, 10, l_category,l_status)
+						create l_report_view.make (l_row, 1, l_pages // 10, l_categories, list_status, req.execution_variable ("user"))
+						l_report_view.set_selected_category (l_category)
+						l_report_view.set_selected_status (l_status)
+						l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)
+					end
 				end
 			else
 				create l_rhf
-				l_rhf.new_representation_handler (esa_config,"",media_variants).problem_reports_guest (req, res)
+				l_rhf.new_representation_handler (esa_config,"",media_variants).problem_reports_guest (req, res,Void)
 			end
 		end
+
+
 
 end

@@ -26,19 +26,20 @@ feature -- View
 			generic_response (req, res)
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: REPORT)
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
 
-	problem_reports_guest  (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- <Precursor>
+	problem_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+			-- Problem reports representation for a guest user
 		do
 			generic_response (req, res)
 		end
 
-	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE)
+
+	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REPORT_VIEW)
 		-- <Precursor>
 		do
 			generic_response (req, res)
@@ -64,6 +65,17 @@ feature -- View
 
 	bad_request_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	new_response_unauthorized(req: WSF_REQUEST; res: WSF_RESPONSE)
+				-- Generate a Reponse based on the Media Type
+		do
+			generic_response (req, res)
+		end
+
+	new_response_authenticate (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
 			generic_response (req, res)
 		end

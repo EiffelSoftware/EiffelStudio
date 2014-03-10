@@ -30,6 +30,13 @@ feature -- Access
 
 	is_active: BOOLEAN
 
+	selected_id: INTEGER
+
+	is_selected : BOOLEAN
+		do
+			Result := id = selected_id
+		end
+
 feature -- Change Element
 
 	set_id (a_id: INTEGER)
@@ -42,6 +49,12 @@ feature -- Change Element
 			-- Set `synopsis' with `a_synopsis'
 		do
 			synopsis := a_synopsis
+		end
+
+	set_selected_id (a_val: INTEGER)
+			-- Set `selected_id' with `a_val'
+		do
+			selected_id := a_val
 		end
 
 	set_is_active (a_val: BOOLEAN)

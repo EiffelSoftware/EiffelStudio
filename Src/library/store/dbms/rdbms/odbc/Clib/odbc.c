@@ -422,7 +422,7 @@ void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_cou
 /* DESCRIPTION:                                                  */
 /*   In DYNAMICALLY EXECUTE mode perform the SQL statement. But  */
 /* this routine only get things ready for dynamic execution:     */
-/*   1. get the SQL statement PREPAREd; and check if there are   */
+/*   1. get the SQL statement PREPARED; and check if there are   */
 /*      warning message for the SQL statement;                   */
 /*   2. DESCRIBE the SQL statement and get enough information to */
 /*      allocate enough memory space for the corresponding       */
@@ -433,15 +433,15 @@ void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_cou
 void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, int argNum)
 {
 	int is_as_primary = 0;
-	int buf_count, found_byte_count;
+	int found_byte_count;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	COUNTABLE_STRING *l_qualifier, *l_owner;
 
-#define COMPARED_BTYES	(9 * sizeof (SQLTCHAR))
+/* Predefined names have at minimum 9 characters (shortest being "sqltables". */
 #define COMPARED_LENGTH	(9)
-#define DB_MAX_TABLE_LEN (50)
+#define COMPARED_BYTES	(COMPARED_LENGTH * sizeof (SQLTCHAR))
 
-	SQLTCHAR tmpBuf[DB_MAX_TABLE_LEN];
+	SQLTCHAR *order_in_lower;
 	SQLTCHAR sqltab[30];
 	SQLTCHAR sqlcol[30];
 	SQLTCHAR sqlproc[30];
@@ -449,11 +449,11 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	SQLTCHAR sqlfk[30];
 	SQLTCHAR sqlfk_as_primary[30];
 
-	ATSTXTCPY(sqltab, "sqltables");
-	ATSTXTCPY(sqlcol, "sqlcolumns");
+	ATSTXTCPY(sqltab,  "sqltables");
+	ATSTXTCPY(sqlcol,  "sqlcolumns");
 	ATSTXTCPY(sqlproc, "sqlprocedu");
-	ATSTXTCPY(sqlpk, "sqlprimary");
-	ATSTXTCPY(sqlfk, "sqlforeign");
+	ATSTXTCPY(sqlpk,   "sqlprimary");
+	ATSTXTCPY(sqlfk,   "sqlforeign");
 	ATSTXTCPY(sqlfk_as_primary, "sqlforeignkeysprimary");
 
 
@@ -468,91 +468,68 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	RESET_STRING(&l_con->warn_message);
 
 	l_con->flag[no_desc] = ODBC_SQL;
-	buf_count = (DB_MAX_TABLE_LEN > order_count ? order_count : DB_MAX_TABLE_LEN);
 
 	if (order_count >= COMPARED_LENGTH) {
-		memcpy(tmpBuf, order, buf_count * sizeof (SQLTCHAR));
-		tmpBuf[buf_count] = (SQLTCHAR)0;
-		change_to_low(tmpBuf, buf_count);
-		if (memcmp(tmpBuf, sqltab, COMPARED_BTYES) == 0)
-		{
+		ODBC_SAFE_ALLOC(order_in_lower, (SQLTCHAR *) malloc ((order_count + 1) * sizeof(SQLTCHAR)));
+		memcpy(order_in_lower , order, order_count * sizeof (SQLTCHAR));
+		order_in_lower [order_count] = (SQLTCHAR)0;
+		change_to_low(order_in_lower , order_count);
+		if (memcmp(order_in_lower , sqltab, COMPARED_BYTES) == 0) {
 			l_con->flag[no_desc] = ODBC_CATALOG_TAB;
-			found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
 
 			l_qualifier = &l_con->odbc_qualifier;
 			l_owner = &l_con->odbc_owner;
-			if (found_byte_count)
-			{
+			if (found_byte_count) {
 				if (l_qualifier->char_count > 0 && l_owner->char_count > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, l_owner->string, (SQLSMALLINT)l_owner->char_count, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count == 0 && l_owner->char_count > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, l_owner->string, (SQLSMALLINT)l_owner->char_count, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count > 0 && l_owner->char_count == 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count == 0 && l_owner->char_count == 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-			}
-			else
-			{
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
+			} else {
 				l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 				RESET_STRING (l_qualifier);
 				RESET_STRING (l_owner);
 			}
-		}
-		else
-		{
-			if (memcmp(tmpBuf, sqlcol, COMPARED_BTYES) == 0)
-			{
-				l_con->flag[no_desc] = ODBC_CATALOG_COL;
-				found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-				if (found_byte_count) {
-					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-				} else {
-					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
-				}
+		} else if (memcmp(order_in_lower , sqlcol, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_CATALOG_COL;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count) {
+				l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
+			} else {
+				l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 			}
-			else
-			{
-				if (memcmp(tmpBuf, sqlproc, COMPARED_BTYES) == 0)
-				{
-					l_con->flag[no_desc] = ODBC_CATALOG_PROC;
-					found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-					if (found_byte_count){
-						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-					}
-					else{
-						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
-					}
-				}
-				else
-				{
-					if (memcmp(tmpBuf, sqlpk, COMPARED_BTYES) == 0)
-					{
-						l_con->flag[no_desc] = ODBC_PK;
-						found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-						if (found_byte_count) {
-							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-						}
-						else {
-							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
-						}
-					}
-					else {
-						if (memcmp(tmpBuf, sqlfk, COMPARED_BTYES) == 0) {
-							is_as_primary = (memcmp(tmpBuf, sqlfk_as_primary, 21) ? 0 : 1);
-							l_con->flag[no_desc] = ODBC_FK;
-							found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-								/* Now let's find what type of primary keys we are looking for. */
-							if (is_as_primary) {
-								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0, NULL, 0, NULL, 0);
-							} else {
-								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-							}
-						}
-					}
-				}
- 			}
+		} else if (memcmp(order_in_lower , sqlproc, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_CATALOG_PROC;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count){
+				l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			} else {
+				l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+			}
+		} else if (memcmp(order_in_lower , sqlpk, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_PK;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count) {
+				l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			} else {
+				l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+			}
+		} else if (memcmp(order_in_lower , sqlfk, COMPARED_BYTES) == 0) {
+			is_as_primary = (memcmp(order_in_lower , sqlfk_as_primary, 21) ? 0 : 1);
+			l_con->flag[no_desc] = ODBC_FK;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+				/* Now let's find what type of primary keys we are looking for. */
+			if (is_as_primary) {
+				l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0, NULL, 0, NULL, 0);
+			} else {
+				l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			}
 		}
+		ODBC_C_FREE(order_in_lower);
 	}
 
 	if (l_con->rc) {
@@ -567,8 +544,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
-	/* Process general ODBC SQL statements    */
-
+			/* Process general ODBC SQL statements    */
 		l_con->rc = SQLPrepare(l_con->hstmt[no_desc], order, order_count);
 		if (l_con->rc) {
 			odbc_error_handler(con, l_con->hstmt[no_desc],4);
@@ -582,7 +558,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	}
 
 	if (argNum > 0) {
-		/* Reset memory to be safe */
+			/* Reset memory to be safe */
 		ODBC_SAFE_ALLOC(l_con->pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
 	} else {
 		ODBC_C_FREE(l_con->pcbValue[no_desc]);

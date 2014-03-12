@@ -102,6 +102,7 @@ feature {NONE} -- Constants
 		end
 
 	Table_name: STRING =
-		"DB_LONG_COLUMN_NAME"
+		"DB_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_LONG_COLUMN_NAME"
+			-- In ODBC SQL Server, there is a hard limit of 128 character for the name of a table.
 
 end

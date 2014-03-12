@@ -7,6 +7,7 @@ cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 call nmake msbuild_20
 copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
 copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer
@@ -18,5 +19,17 @@ iff not exist libEiffelSoftware.MetadataConsumer.dll then
 endiff
 copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Compiling Eiffel Metadata Cosumer Executable
+cdd %EIFFEL_SRC\dotnet\consumer
+finalize consumer.ecf emdc
+cleanup_dotnet_eiffel emdc emdc.exe
+iff not exist libemdc.dll then
+	remtrace Could not compile emdc.exe
+	CANCEL
+endiff
+copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
 
 cdd %EIFFEL_SRC

@@ -1,0 +1,49 @@
+package ise_gobo
+
+project
+	gobo_argument = "gobo_argument.ecf"
+	gobo_gelex = "gobo_gelex-safe.ecf"
+	gobo_gelex = "gobo_gelex.ecf"
+	gobo_geyacc = "gobo_geyacc-safe.ecf"
+	gobo_geyacc = "gobo_geyacc.ecf"
+	gobo_kernel = "gobo_kernel-safe.ecf"
+	gobo_kernel = "gobo_kernel.ecf"
+	gobo_lexical = "gobo_lexical-safe.ecf"
+	gobo_lexical = "gobo_lexical.ecf"
+	gobo_math = "gobo_math-safe.ecf"
+	gobo_math = "gobo_math.ecf"
+	gobo_parse = "gobo_parse-safe.ecf"
+	gobo_parse = "gobo_parse.ecf"
+	gobo_pattern = "gobo_pattern-safe.ecf"
+	gobo_pattern = "gobo_pattern.ecf"
+	gobo_regexp = "gobo_regexp-safe.ecf"
+	gobo_regexp = "gobo_regexp.ecf"
+	gobo_string = "gobo_string-safe.ecf"
+	gobo_string = "gobo_string.ecf"
+	gobo_structure = "gobo_structure-safe.ecf"
+	gobo_structure = "gobo_structure.ecf"
+	gobo_test = "gobo_test.ecf"
+	gobo_time = "gobo_time-safe.ecf"
+	gobo_time = "gobo_time.ecf"
+	gobo_tools = "gobo_tools.ecf"
+	gobo_utility = "gobo_utility-safe.ecf"
+	gobo_utility = "gobo_utility.ecf"
+	gobo_xml = "gobo_xml.ecf"
+note
+	title: Gobo Eiffel for EiffelSoftware
+	description: "[
+		Welcome to the distribution of Gobo from EiffelSoftware.
+		Here are some information on this distribution:
+		 * The Gobo binaries are located in spec/$ISE_PLATFORM/bin.
+		 * The documentation is available from http://www.gobosoft.com
+		 * The samples can be compiled using the gobo_sample.ecf file and replacing the
+		   THE_ROOT_CLASS_HERE by the actual name of the root class for the sample you chose.
+
+		Happy Eiffeling,
+		The EiffelSoftware Team	
+	]"
+	tags:gobo,ise
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

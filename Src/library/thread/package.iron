@@ -1,0 +1,14 @@
+package thread
+
+project
+	thread = "thread-safe.ecf"
+	thread = "thread.ecf"
+	thread-tests = "tests/tests.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

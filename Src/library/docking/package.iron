@@ -1,0 +1,13 @@
+package docking
+
+project
+	docking = "docking-safe.ecf"
+	docking = "docking.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,14 @@
+package editor
+
+project
+	editor = "editor-safe.ecf"
+	editor = "editor.ecf"
+	editor-tests = "tests/tests.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

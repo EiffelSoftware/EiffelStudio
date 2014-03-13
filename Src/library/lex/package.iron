@@ -1,0 +1,13 @@
+package lex
+
+project
+	lex = "lex-safe.ecf"
+	lex = "lex.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

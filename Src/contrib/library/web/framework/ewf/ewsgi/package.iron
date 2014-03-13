@@ -1,0 +1,24 @@
+package ewsgi
+
+project
+	ewsgi = "ewsgi-safe.ecf"
+	ewsgi = "ewsgi.ecf"
+	ewsgi_spec = "ewsgi_spec-safe.ecf"
+	ewsgi_spec = "ewsgi_spec.ecf"
+	connector_cgi = "connectors/cgi/cgi-safe.ecf"
+	connector_cgi = "connectors/cgi/cgi.ecf"
+	connector_libfcgi = "connectors/libfcgi/libfcgi-safe.ecf"
+	connector_libfcgi = "connectors/libfcgi/libfcgi.ecf"
+	connector_nino = "connectors/nino/nino-safe.ecf"
+	connector_nino = "connectors/nino/nino.ecf"
+	connector_null = "connectors/null/null-safe.ecf"
+	connector_null = "connectors/null/null.ecf"
+	hello_world = "examples/hello_world/hello-safe.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

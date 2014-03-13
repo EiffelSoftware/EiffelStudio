@@ -1,0 +1,13 @@
+package Eiffel2Java
+
+project
+	eiffel2java = "Eiffel2Java-safe.ecf"
+	eiffel2java = "Eiffel2Java.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

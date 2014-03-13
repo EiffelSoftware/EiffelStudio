@@ -1,0 +1,13 @@
+package smarty
+
+project
+	template_smarty = "smarty-safe.ecf"
+	template_smarty = "smarty.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

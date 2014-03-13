@@ -1,0 +1,13 @@
+package eclop
+
+project
+	eclop = "eclop/eclop-safe.ecf"
+	eclop = "eclop/eclop.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

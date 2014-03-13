@@ -1,0 +1,13 @@
+package ribbon
+
+project
+	ribbon = "ribbon-safe.ecf"
+	ribbon = "ribbon.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

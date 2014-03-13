@@ -1,0 +1,18 @@
+package time
+
+project
+	time = "time-safe.ecf"
+	time = "time.ecf"
+	time_french = "time_french-safe.ecf"
+	time_french = "time_french.ecf"
+	time_german = "time_german-safe.ecf"
+	time_german = "time_german.ecf"
+	time-tests = "tests/tests.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

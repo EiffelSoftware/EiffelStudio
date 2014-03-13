@@ -1,0 +1,13 @@
+package espec
+
+project
+	espec = "library/espec-safe.ecf"
+	espec = "library/espec.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

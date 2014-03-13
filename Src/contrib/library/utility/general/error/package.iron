@@ -1,0 +1,13 @@
+package error
+
+project
+	error = "error-safe.ecf"
+	error = "error.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,12 @@
+package wex
+
+project
+	wex = "library/wex/wex.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,13 @@
+package eapml
+
+project
+	eapml = "eapml.ecf"
+	eapml = "eapml-safe.ecf"
+note
+	title: Eiffel Arbitrary Precision Mathematics Library
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

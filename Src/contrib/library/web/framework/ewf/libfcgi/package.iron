@@ -1,0 +1,13 @@
+package libfcgi
+
+project
+	libfcgi = "libfcgi-safe.ecf"
+	libfcgi = "libfcgi.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

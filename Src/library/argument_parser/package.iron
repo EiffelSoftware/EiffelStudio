@@ -1,0 +1,13 @@
+package obsolete_arg_parser
+
+project
+	obsolete_arg_parser = "argument_parser-safe.ecf"
+	obsolete_arg_parser = "argument_parser.ecf"
+note
+	title: Obsolete Eiffel Argument Parser
+	description: "Please use the new 'arg_parser' library"
+	tags: obsolete,argument
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

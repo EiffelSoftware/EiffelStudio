@@ -1,0 +1,13 @@
+package notification_email
+
+project
+	notification_email = "notification_email-safe.ecf"
+	notification_email = "notification_email.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

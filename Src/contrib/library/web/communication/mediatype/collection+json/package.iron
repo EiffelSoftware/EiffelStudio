@@ -1,0 +1,13 @@
+package collection+json
+
+project
+	collection_json = "library/collection%2Bjson-safe.ecf"
+	collection_json = "library/collection%2Bjson.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

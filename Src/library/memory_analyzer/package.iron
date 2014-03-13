@@ -1,0 +1,13 @@
+package memory_analyzer
+
+project
+	memory_analyzer = "memory_analyzer-safe.ecf"
+	memory_analyzer = "memory_analyzer.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

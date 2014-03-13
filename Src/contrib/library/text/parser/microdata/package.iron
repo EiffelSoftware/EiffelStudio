@@ -1,0 +1,13 @@
+package microdata
+
+project
+	microdata = "microdata-safe.ecf"
+	microdata = "microdata.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

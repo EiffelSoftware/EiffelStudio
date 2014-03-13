@@ -1,0 +1,13 @@
+package objc_base
+
+project
+	objective_c = "objc_base-safe.ecf"
+	objective_c = "objc_base.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

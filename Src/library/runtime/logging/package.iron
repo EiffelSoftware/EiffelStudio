@@ -1,0 +1,13 @@
+package logging
+
+project
+	logging = "logging-safe.ecf"
+	logging = "logging.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

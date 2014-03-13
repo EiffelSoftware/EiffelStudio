@@ -1,0 +1,14 @@
+package diff
+
+project
+	diff = "diff-safe.ecf"
+	diff = "diff.ecf"
+	diff-tests = "tests/tests.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

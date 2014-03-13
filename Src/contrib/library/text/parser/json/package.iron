@@ -1,0 +1,16 @@
+package json
+
+project
+	json_safe = "library/json-safe.ecf"
+	json = "library/json.ecf"
+	json_gobo_extension = "library/json_gobo_extension.ecf"
+	json = "library/json-safe.ecf"
+	json_gobo = "library/json_gobo_extension.ecf"
+note
+	title: Eiffel JSON
+	description: Eiffel JSON parser and visitors
+	tags: json,parser,text
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

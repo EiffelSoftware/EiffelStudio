@@ -1,0 +1,13 @@
+package svn
+
+project
+	svn = "svn-safe.ecf"
+	svn = "svn.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,13 @@
+package cURL
+
+project
+	curl = "cURL-safe.ecf"
+	curl = "cURL.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

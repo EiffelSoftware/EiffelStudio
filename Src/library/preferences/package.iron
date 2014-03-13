@@ -1,0 +1,15 @@
+package preferences
+
+project
+	preferences_reg = "preferences_reg-safe.ecf"
+	preferences_reg = "preferences_reg.ecf"
+	preferences_xml = "preferences_xml-safe.ecf"
+	preferences_xml = "preferences_xml.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

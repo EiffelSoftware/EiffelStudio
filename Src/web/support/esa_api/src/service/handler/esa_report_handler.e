@@ -72,12 +72,12 @@ feature -- HTTP Methods
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: TUPLE [REPORT_STATISTICS, LIST [REPORT]]
+			l_row: TUPLE [ESA_REPORT_STATISTICS, LIST [ESA_REPORT]]
 			l_pages: INTEGER
 			l_category: INTEGER
 			l_status: INTEGER
-			list_status: LIST[REPORT_STATUS]
-			l_categories: LIST[REPORT_CATEGORY]
+			list_status: LIST[ESA_REPORT_STATUS]
+			l_categories: LIST[ESA_REPORT_CATEGORY]
 			l_report_view: ESA_REPORT_VIEW
 		do
 			media_variants := media_type_variants (req)
@@ -99,7 +99,7 @@ feature -- HTTP Methods
 					if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 						if l_id.is_integer then
 							l_row := api_service.problem_reports_guest (l_id.as_string.integer_value, 10, l_category,l_status)
-							create l_report_view.make (l_row, l_id.as_string.integer_value, l_pages // 10, l_categories, list_status, req.execution_variable ("user"))
+							create l_report_view.make (l_row, l_id.as_string.integer_value, l_pages // 10, l_categories, list_status, current_user_name (req))
 							l_report_view.set_selected_category (l_category)
 							l_report_view.set_selected_status (l_status)
 							l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)
@@ -108,7 +108,7 @@ feature -- HTTP Methods
 						end
 					else
 						l_row := api_service.problem_reports_guest (1, 10, l_category,l_status)
-						create l_report_view.make (l_row, 1, l_pages // 10, l_categories, list_status, req.execution_variable ("user"))
+						create l_report_view.make (l_row, 1, l_pages // 10, l_categories, list_status, current_user_name (req))
 						l_report_view.set_selected_category (l_category)
 						l_report_view.set_selected_status (l_status)
 						l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)

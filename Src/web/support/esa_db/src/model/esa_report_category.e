@@ -1,14 +1,15 @@
 note
 	description: "Summary description for {REPORT_CATEGORY}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_CATEGORY
+	ESA_REPORT_CATEGORY
 
 inherit
-	REPORT_FIELD
+	ESA_REPORT_FIELD
+
+	ESA_REPORT_SELECTABLE
 
 create
 	make
@@ -30,13 +31,6 @@ feature -- Access
 
 	is_active: BOOLEAN
 
-	selected_id: INTEGER
-
-	is_selected : BOOLEAN
-		do
-			Result := id = selected_id
-		end
-
 feature -- Change Element
 
 	set_id (a_id: INTEGER)
@@ -49,12 +43,6 @@ feature -- Change Element
 			-- Set `synopsis' with `a_synopsis'
 		do
 			synopsis := a_synopsis
-		end
-
-	set_selected_id (a_val: INTEGER)
-			-- Set `selected_id' with `a_val'
-		do
-			selected_id := a_val
 		end
 
 	set_is_active (a_val: BOOLEAN)

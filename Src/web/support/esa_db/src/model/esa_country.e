@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	COUNTRY
+	ESA_COUNTRY
 
 create
 	make

@@ -8,7 +8,7 @@
                 "prompt": "Home"
             >,
              <
-                "href": "{$host/}/reports",
+                "href": "{$host/}reports",
                 "rel": "collection",
                 "prompt": "Reports"
             >,

@@ -33,20 +33,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_data_value: ESA_DATA_VALUE
-			l_status: LIST[REPORT_STATUS]
-			l_report: REPORT
-			l_list: LIST[REPORT]
-			l_statistics: REPORT_STATISTICS
+			l_status: LIST[ESA_REPORT_STATUS]
+			l_report: ESA_REPORT
+			l_list: LIST[ESA_REPORT]
+			l_statistics: ESA_REPORT_STATISTICS
 		do
 			l_status := status
 
 			data_provider.connect
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status) as c loop
@@ -63,17 +62,17 @@ feature -- Access
 			Result := [l_statistics, l_list]
 		end
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[REPORT_STATISTICS,LIST[REPORT]]
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_status: LIST[REPORT_STATUS]
-			l_report: REPORT
-			l_list: LIST[REPORT]
-			l_statistics: REPORT_STATISTICS
+			l_status: LIST[ESA_REPORT_STATUS]
+			l_report: ESA_REPORT
+			l_list: LIST[ESA_REPORT]
+			l_statistics: ESA_REPORT_STATISTICS
 		do
 			l_status := status
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
@@ -90,53 +89,42 @@ feature -- Access
 			Result := [l_statistics, l_list]
 		end
 
-	status: LIST[REPORT_STATUS]
+	status: LIST[ESA_REPORT_STATUS]
 			-- Possible problem report status
 		local
-			l_data_value: ESA_DATA_VALUE
-			l_report_status: REPORT_STATUS
+			l_report_status: ESA_REPORT_STATUS
 		do
 			if attached status_cache as l_cache then
 				Result := l_cache.linear_representation
 			else
-				create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
+				create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
 				create status_cache.make (4)
 				data_provider.connect
-				l_data_value := data_provider.status
-
-					--Build List
-				from
-					l_data_value.start
-				until
-					l_data_value.after
-				loop
-					if attached l_data_value.item  then
-						l_report_status := new_report_status (l_data_value)
+				across data_provider.status as c  loop
+						l_report_status := c.item
 						Result.force (l_report_status)
 						if attached status_cache as l_cache then
 							l_cache.force (l_report_status,l_report_status.id)
 						end
-					end
-					l_data_value.forth
 				end
 				data_provider.disconnect
 			end
 		end
 
-	all_categories: LIST[REPORT_CATEGORY]
+	all_categories: LIST[ESA_REPORT_CATEGORY]
 			-- Report Categories
 		do
-			create {ARRAYED_LIST[REPORT_CATEGORY]} Result.make (0)
+			create {ARRAYED_LIST[ESA_REPORT_CATEGORY]} Result.make (0)
 			data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
 			data_provider.disconnect
 		end
 
-	problem_report (a_number: INTEGER): detachable REPORT
+	problem_report (a_number: INTEGER): detachable ESA_REPORT
 			-- Problem report with number `a_number'.
 		local
-			l_interactions: LIST[REPORT_INTERACTION]
-			l_attachments: LIST [REPORT_ATTACHMENT]
+			l_interactions: LIST[ESA_REPORT_INTERACTION]
+			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
 		do
 			if attached data_provider.problem_report (a_number) as l_report then
 				l_interactions := data_provider.interactions_guest (a_number, l_report)
@@ -155,12 +143,139 @@ feature -- Access
 			Result := data_provider.attachments_content (a_attachment_id)
 		end
 
+
+	user_role (a_username: STRING): ESA_USER_ROLE
+			-- Role associated with user with username `a_username'
+		do
+			if attached login_provider.role (a_username) as l_role then
+			  	if attached login_provider.role_description (l_role) as l_description then
+			  		create Result.make (l_role, l_description)
+			  	else
+			  		create Result.make (l_role, "")
+			  	end
+			else
+			create Result.make ("Guest", "Users who only can browse public content")
+			end
+		end
+
+	severities: LIST[ESA_REPORT_SEVERITY]
+			-- Possible problem report severity
+		do
+			create {ARRAYED_LIST[ESA_REPORT_SEVERITY]}Result.make (0)
+			data_provider.connect
+			across data_provider.severities as c  loop Result.force (c.item)  end
+			data_provider.disconnect
+		end
+
+
+	classes: LIST[ESA_REPORT_CLASS]
+			-- Possible problem report classes
+		do
+			create {ARRAYED_LIST[ESA_REPORT_CLASS]}Result.make (0)
+			data_provider.connect
+			across data_provider.classes as c  loop Result.force (c.item)  end
+			data_provider.disconnect
+		end
+
+	priorities: LIST[ESA_REPORT_PRIORITY]
+			-- Possible problem report classes
+		do
+			create {ARRAYED_LIST[ESA_REPORT_PRIORITY]}Result.make (0)
+			data_provider.connect
+			across data_provider.priorities as c  loop Result.force (c.item)  end
+			data_provider.disconnect
+		end
+
+
+	temporary_problem_report (a_report_id: INTEGER): detachable TUPLE[synopsis : detachable STRING;
+															   release: detachable STRING;
+															   confidential: detachable STRING;
+															   environment: detachable STRING;
+															   description: detachable STRING;
+															   toreproduce: detachable STRING;
+															   priority_synopsis: detachable STRING;
+															   category_synopsis: detachable STRING;
+															   severity_synopsis: detachable STRING;
+															   class_synopsis: detachable STRING;
+															   user_name: detachable STRING;
+															   responsible: detachable STRING
+															   ]
+				-- Temporary problem report `a_report_id', if any.
+		do
+			Result := data_provider.temporary_problem_report (a_report_id)
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
 			Result := data_provider.row_count_problem_report_guest (a_category, a_status)
+		end
+
+	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
+			a_release, a_environment, a_description, a_to_reproduce: STRING)
+			-- Initialize temporary problem report row.
+		require
+			attached_priority: a_priority_id /= Void
+			valid_priority_id: a_priority_id.is_integer
+			attached_severity: a_severity_id /= Void
+			valid_severity_id: a_severity_id.is_integer
+			attached_category: a_category_id /= Void
+			valid_category_id: a_category_id.is_integer
+			attached_class: a_class_id /= Void
+			valid_class_id: a_class_id.is_integer
+			attached_confidential: a_confidential /= Void
+			valid_confidential: a_confidential.is_boolean
+			attached_synopsis: a_synopsis /= Void
+			attached_release: a_release /= Void
+			attached_environment: a_environment /= Void
+			attached_description: a_description /= Void
+			attached_to_reproduce: a_to_reproduce /= Void
+		do
+			data_provider.initialize_problem_report (a_report_id, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
+		end
+
+	new_problem_report_id (a_username: STRING): INTEGER
+			-- Initialize new problem report row and returns ReportID.
+		do
+			Result := data_provider.new_problem_report_id (a_username)
+		end
+
+	commit_problem_report (a_report_id: INTEGER)
+			-- Commit a temporary problem report.
+		do
+			data_provider.commit_problem_report (a_report_id)
+		end
+
+	remove_temporary_problem_report (a_report_id: INTEGER_32)
+			-- Remove temporary problem report `a_report_id'
+		do
+			data_provider.remove_temporary_problem_report (a_report_id)
+		end
+
+	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
+			a_release, a_environment, a_description, a_to_reproduce: STRING)
+			-- Handle update report problem
+		require
+			valid_pr: a_pr > 0
+			attached_priority: a_priority_id /= Void
+			valid_priority_id: a_priority_id.is_integer
+			attached_severity: a_severity_id /= Void
+			valid_severity_id: a_severity_id.is_integer
+			attached_category: a_category_id /= Void
+			valid_category_id: a_category_id.is_integer
+			attached_class: a_class_id /= Void
+			valid_class_id: a_class_id.is_integer
+			attached_confidential: a_confidential /= Void
+			valid_confidential: a_confidential.is_boolean
+			attached_synopsis: a_synopsis /= Void
+			attached_release: a_release /= Void
+			attached_environment: a_environment /= Void
+			attached_description: a_description /= Void
+			attached_to_reproduce: a_to_reproduce /= Void
+		do
+			data_provider.update_problem_report (a_pr, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
 		end
 
 feature -- Status Report
@@ -194,46 +309,13 @@ feature -- Status Report
 
 feature -- Cache
 
-	status_cache: detachable HASH_TABLE[REPORT_STATUS,INTEGER_32]
+	status_cache: detachable HASH_TABLE[ESA_REPORT_STATUS,INTEGER_32]
 			-- Cache for Status
 
-feature {NONE} -- Factories
-
-	new_report_guest (a_data_value: ESA_DATA_VALUE): REPORT
-			-- New `Report' guest users
-		do
-			create Result.make (-1, "", False)
-			Result.set_number (a_data_value.read_integer_32 (1))
-			if attached a_data_value.read_string (2) as l_synopsis then
-				Result.set_synopsis (l_synopsis)
-			end
-			if attached a_data_value.read_string (3)as l_category  then
-				Result.set_report_category (create {REPORT_CATEGORY}.make (-1,l_category, True))
-			end
-			Result.set_submission_date (a_data_value.read_date_time (4))
-			if attached a_data_value.read_integer_32 (5) as l_status then
-				if attached status_cache as l_cache and then attached l_cache.item (l_status) as ll_status then
-					Result.set_status (ll_status)
-				else
-					Result.set_status (create {REPORT_STATUS}.make (l_status,""))
-				end
-			end
-		end
-
-
-	new_report_status (a_data_value: ESA_DATA_VALUE): REPORT_STATUS
-			-- New `Report Status'
-		do
-			create Result.make (-1, "")
-			Result.set_id (a_data_value.read_integer_32 (1))
-			if attached a_data_value.read_string (2) as l_synopsis then
-				Result.set_synopsis (l_synopsis)
-			end
-		end
 
 feature -- Statistics
 
-	update_statistics (a_statistics: REPORT_STATISTICS; a_status: REPORT_STATUS)
+	update_statistics (a_statistics: ESA_REPORT_STATISTICS; a_status: ESA_REPORT_STATUS)
 		do
 			inspect a_status.id
 			when 1 then a_statistics.increment_open

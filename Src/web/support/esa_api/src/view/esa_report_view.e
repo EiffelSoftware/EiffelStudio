@@ -12,7 +12,7 @@ create
 
 feature -- Initialization
 
-	make (a_reports: TUPLE[REPORT_STATISTICS,LIST[REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[REPORT_CATEGORY]; a_status: LIST[REPORT_STATUS]; a_user: detachable ANY)
+	make (a_reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[ESA_REPORT_CATEGORY]; a_status: LIST[ESA_REPORT_STATUS]; a_user: detachable ANY)
 		do
 			reports := a_reports
 			index := a_index
@@ -24,15 +24,15 @@ feature -- Initialization
 
 feature -- Access
 
-	reports: TUPLE[REPORT_STATISTICS,LIST[REPORT]]
+	reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 
 	index: INTEGER;
 
 	pages: INTEGER;
 
-	categories: LIST[REPORT_CATEGORY];
+	categories: LIST[ESA_REPORT_CATEGORY];
 
-	status: LIST[REPORT_STATUS]
+	status: LIST[ESA_REPORT_STATUS]
 
 	user: detachable ANY
 

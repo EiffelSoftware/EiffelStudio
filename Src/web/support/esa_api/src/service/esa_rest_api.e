@@ -25,6 +25,8 @@ feature -- Initialization
 			configure_api_reports_user
 			configure_api_report_detail
 			configure_api_report_interaction
+			configure_api_report_form
+			configure_api_report_confirm
 			configure_api_login
 			configure_api_logoff
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
@@ -84,8 +86,8 @@ feature -- Configure Resources Routes
 			create l_report_detail_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
-			router.handle_with_request_methods ("/report_detail/{?search}", l_report_detail_handler, l_methods)
 			router.handle_with_request_methods ("/report_detail/{id}", l_report_detail_handler, l_methods)
+			router.handle_with_request_methods ("/report_detail/{?search}", l_report_detail_handler, l_methods)
 		end
 
 	configure_api_report_interaction
@@ -108,7 +110,6 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/login", l_login_handler, l_methods)
-			router.handle_with_request_methods ("/login/", l_login_handler, l_methods) -- IE Workaround
 		end
 
 	configure_api_logoff
@@ -120,8 +121,33 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/logoff", l_logoff_handler, l_methods)
-			router.handle_with_request_methods ("/logoff/", l_logoff_handler, l_methods) -- IE workaround
 		end
+
+
+	configure_api_report_form
+		local
+			l_form_handler: ESA_REPORT_FORM_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_form_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/report_form", l_form_handler, l_methods)
+			router.handle_with_request_methods ("/report_form/{id}", l_form_handler, l_methods)
+		end
+
+	configure_api_report_confirm
+		local
+			l_confirm_handler: ESA_REPORT_CONFIRM_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_confirm_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/report_confirm/{id}", l_confirm_handler, l_methods)
+		end
+
 
 
 end

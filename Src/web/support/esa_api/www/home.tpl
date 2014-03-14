@@ -20,6 +20,8 @@
             <li><a href="{$host/}/reports">Reports</a></li>
             {if isset="$user"}
                  <li><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
+                 <li><a href="{$host/}/report_form">Report a Problem</a></li>
+
             {/if}
            </ul> 
          </div>

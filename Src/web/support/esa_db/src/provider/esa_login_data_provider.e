@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Access
 
-	countries: ESA_DATABASE_ITERATION_CURSOR [COUNTRY]
+	countries: ESA_DATABASE_ITERATION_CURSOR [ESA_COUNTRY]
 			-- Countries
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -117,7 +117,7 @@ feature -- Access
 			disconnect
 		end
 
-	security_questions: ESA_DATABASE_ITERATION_CURSOR [SECURITY_QUESTION]
+	security_questions: ESA_DATABASE_ITERATION_CURSOR [ESA_SECURITY_QUESTION]
 			--	Security questions
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -184,7 +184,7 @@ feature -- Access
 			disconnect
 		end
 
-	user_from_username (a_username: STRING): detachable USER
+	user_from_username (a_username: STRING): detachable ESA_USER
 			-- User with username `a_username' if any
 		require
 			attached_username: a_username /= Void
@@ -203,7 +203,7 @@ feature -- Access
 			disconnect
 		end
 
-	user_information (a_username: STRING): detachable USER
+	user_information (a_username: STRING): detachable ESA_USER
 			-- Full user information from username
 		require
 			attached_username: a_username /= Void
@@ -224,7 +224,7 @@ feature -- Access
 
 feature -- Factories
 
-	new_country (a_tuple: DB_TUPLE): COUNTRY
+	new_country (a_tuple: DB_TUPLE): ESA_COUNTRY
 			-- Build a new country from a db_tuple,
 			-- by default an empty county
 		do
@@ -234,7 +234,7 @@ feature -- Factories
 			end
 		end
 
-	new_security_question (a_tuple: DB_TUPLE): SECURITY_QUESTION
+	new_security_question (a_tuple: DB_TUPLE): ESA_SECURITY_QUESTION
 			-- Build a new country from a db_tuple,
 			-- by default an empty security question
 		do
@@ -260,7 +260,7 @@ feature -- Factories
 			end
 		end
 
-	new_user_username: USER
+	new_user_username: ESA_USER
 			-- Build a new user from a db_tuple,
 			-- by default an empty user
 		do
@@ -270,7 +270,7 @@ feature -- Factories
 			end
 		end
 
-	new_user_information: USER
+	new_user_information: ESA_USER
 			-- Build a new user from a db_tuple,
 			-- by default an empty user
 		do

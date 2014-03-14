@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	REPORT
+	ESA_REPORT
 
 inherit
 	STRING_HELPER
@@ -32,9 +32,9 @@ feature -- Access
 
 	confidential: BOOLEAN
 
-	status: detachable REPORT_STATUS
+	status: detachable ESA_REPORT_STATUS
 
-	contact: detachable USER
+	contact: detachable ESA_USER
 
 	submission_date: detachable DATE_TIME
 
@@ -42,13 +42,13 @@ feature -- Optional
 
 	release: detachable READABLE_STRING_32
 
-	priority: detachable REPORT_PRIORITY
+	priority: detachable ESA_REPORT_PRIORITY
 
-	severity: detachable REPORT_SEVERITY
+	severity: detachable ESA_REPORT_SEVERITY
 
-	category: detachable REPORT_CATEGORY
+	category: detachable ESA_REPORT_CATEGORY
 
-	report_class: detachable REPORT_CLASS
+	report_class: detachable ESA_REPORT_CLASS
 
 	environment: detachable READABLE_STRING_32
 
@@ -63,7 +63,7 @@ feature -- Optional
 			-- workaround to support json encode
 
 
-	assigned: detachable USER
+	assigned: detachable ESA_USER
 
 
 feature -- Element change
@@ -146,14 +146,14 @@ feature -- Element change
 			submission_date := a_date
 		end
 
-	set_report_category (a_category: report_category)
+	set_report_category (a_category: ESA_REPORT_CATEGORY)
 		do
 			category := a_category
 		end
 
 feature -- Filled data
 
-	interactions: detachable LIST [REPORT_INTERACTION]
+	interactions: detachable LIST [ESA_REPORT_INTERACTION]
 
 feature -- Fill
 

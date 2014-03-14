@@ -104,6 +104,8 @@ feature -- Access
 			if attached {DB_TUPLE} item as l_item then
 				if attached {STRING} l_item.item (a_index) as ll_item then
 					Result := ll_item
+				elseif attached {BOOLEAN_REF} l_item.item (a_index) as ll_item then
+					Result := ll_item.item.out
 				end
 			end
 		end

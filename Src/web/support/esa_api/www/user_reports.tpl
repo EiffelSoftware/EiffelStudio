@@ -20,7 +20,8 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li ><a href="{$host/}/reports">Reports</a></li>
-            <li class="active"><a href="{$host/}/ruser_reports/{$user/}">My Reports</a></li>
+            <li class="active"><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
+             <li><a href="{$host/}/report_form">Report a Problem</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

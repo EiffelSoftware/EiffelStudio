@@ -6,6 +6,10 @@ note
 deferred class
 	ESA_REPRESENTATION_HANDLER
 
+inherit
+
+	ESA_HANDLER
+
 feature -- Initialization
 
 	make (a_esa_config: like esa_config; a_media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS)
@@ -40,7 +44,7 @@ feature -- View
 		deferred
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: detachable REPORT)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: detachable ESA_REPORT)
 			-- Problem report representation
 		deferred
 		end
@@ -52,6 +56,21 @@ feature -- View
 
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
+		deferred
+		end
+
+	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_REPORT_FORM_VIEW)
+			-- Report form
+		deferred
+		end
+
+	report_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_REPORT_FORM_VIEW)
+			-- Report form confirm
+		deferred
+		end
+
+	report_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Report form confirm redirect
 		deferred
 		end
 

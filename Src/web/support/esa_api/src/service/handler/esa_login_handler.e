@@ -57,7 +57,7 @@ feature -- HTTP Methods
 			media_variants := media_type_variants (req)
 			if media_variants.is_acceptable then
 				if attached media_variants.media_type as l_type then
-					if attached {STRING_32} req.execution_variable ("user") as l_user and then api_service.is_active (l_user) then
+					if attached {STRING_32} current_user_name (req) as l_user and then api_service.is_active (l_user) then
 						l_rhf.new_representation_handler (esa_config, l_type, media_variants).login_page (req, res)
 					else
 						l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_authenticate (req, res)

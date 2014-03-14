@@ -24,10 +24,10 @@ feature {NONE} --Initialization
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 
-			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_CATEGORY}).out)
+			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
 			set_selected_category (a_view.categories,a_view.selected_category)
 
-			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_STATUS}).out)
+			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
 			set_selected_status (a_view.status,a_view.selected_status)
 
 			create p.make_current
@@ -64,7 +64,7 @@ feature {NONE} --Initialization
 			end
 		end
 
-		set_selected_category (a_categories: LIST[REPORT_CATEGORY]; a_selected_category:  INTEGER)
+		set_selected_category (a_categories: LIST[ESA_REPORT_CATEGORY]; a_selected_category:  INTEGER)
 				-- Set the current selected category
 			do
 				across a_categories as c  loop
@@ -73,7 +73,7 @@ feature {NONE} --Initialization
 			end
 
 
-		set_selected_status (a_status: LIST[REPORT_STATUS]; a_selected_status:  INTEGER)
+		set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
 				-- Set the current selected status
 			do
 				across a_status as c  loop

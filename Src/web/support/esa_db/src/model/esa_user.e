@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	USER
+	ESA_USER
 
 create
 	make

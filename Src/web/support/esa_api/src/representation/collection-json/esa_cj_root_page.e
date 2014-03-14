@@ -24,7 +24,7 @@ feature {NONE} --Initialization
 			p: PATH
 			l_item: STRING
 			l_template: STRING
-			l_report: REPORT
+			l_report: ESA_REPORT
 		do
 			create p.make_current
 			p := p.appended ("/www")

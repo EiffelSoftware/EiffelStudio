@@ -16,7 +16,7 @@ create
 	make
 
 feature -- {Initialization}
-	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT;a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_report: detachable ESA_REPORT;a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
 			p: PATH

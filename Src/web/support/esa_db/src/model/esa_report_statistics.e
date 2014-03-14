@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	REPORT_STATISTICS
+	ESA_REPORT_STATISTICS
 
 feature -- Access
 

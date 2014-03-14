@@ -9,6 +9,8 @@ deferred class
 inherit
 	WSF_HANDLER
 
+	ESA_HANDLER
+
 	SHARED_CONNEG_HELPER
 
 feature -- Change

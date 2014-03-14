@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	REPORT_INTERACTION
+	ESA_REPORT_INTERACTION
 
 inherit
 	STRING_HELPER
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: INTEGER; a_report: REPORT; a_private: BOOLEAN)
+	make (a_id: INTEGER; a_report: ESA_REPORT; a_private: BOOLEAN)
 		do
 			id := a_id
 			report := a_report
@@ -27,17 +27,17 @@ feature -- Access
 	id: INTEGER
 	 	-- Interaction IS
 
-	report: REPORT
+	report: ESA_REPORT
 
 	private: BOOLEAN
 
-	contact: detachable USER
+	contact: detachable ESA_USER
 
 	content: detachable READABLE_STRING_32
 
 	content_encoded: detachable READABLE_STRING_32
 
-	attachments: detachable LIST [REPORT_ATTACHMENT]
+	attachments: detachable LIST [ESA_REPORT_ATTACHMENT]
 
 	date: detachable DATE_TIME
 		-- interaction date

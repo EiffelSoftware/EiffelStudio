@@ -5,14 +5,14 @@ note
 	revision: "$Revision$"
 
 class
-	REPORT_ATTACHMENT
+	ESA_REPORT_ATTACHMENT
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; int: REPORT_INTERACTION; a_name: like name)
+	make (a_id: like id; int: ESA_REPORT_INTERACTION; a_name: like name)
 		do
 			id := a_id
 			interaction := int
@@ -24,7 +24,7 @@ feature -- Access
 	id: INTEGER
 		-- Attachment ID
 
-	interaction: REPORT_INTERACTION
+	interaction: ESA_REPORT_INTERACTION
 
 	name: READABLE_STRING_32
 			-- file name

@@ -1,10 +1,11 @@
 note
-	description: "Problem reports reported by user"
+	description: "Summary description for {ESA_REPORT_CONFIRM_HANDLER}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_USER_REPORT_HANDLER
+	ESA_REPORT_CONFIRM_HANDLER
 
 inherit
 
@@ -62,46 +63,25 @@ feature -- execute
 
 feature -- HTTP Methods
 
-
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
-			l_view: ESA_REPORT_VIEW
-			l_status: INTEGER
-			l_category: INTEGER
-			list_status: LIST[ESA_REPORT_STATUS]
-			l_categories: LIST[ESA_REPORT_CATEGORY]
-
 		do
+			create l_rhf
 			media_variants := media_type_variants (req)
-			if attached {STRING_32} current_user_name (req) as l_user then
-					-- Logged in user
-				to_implement ("retrieve number of reports by a given user")
+			if attached {STRING_32} current_user_name (req) as l_user and then
+			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
+			   	api_service.commit_problem_report (l_id.integer_value)
+			   	api_service.remove_temporary_problem_report (l_id.integer_value)
+			   	to_implement ("l_number := Data_provider.last_problem_report_number")
+			   	to_implement ("send_new_report_email (l_number)")
 				if media_variants.is_acceptable then
 					if attached media_variants.media_type as l_type then
-						create l_rhf
-						l_categories := api_service.all_categories
-						list_status:= api_service.status
-						if attached {WSF_STRING} req.query_parameter ("category") as ll_category and then
-						   attached {WSF_STRING} req.query_parameter ("status") as ll_status and then
-							  ll_category.is_integer and then ll_status.is_integer then
-						  	l_category := ll_category.integer_value
-						    l_status := ll_status.integer_value
-						 else
-							l_category := 0
-							l_status := 0
-						end
-						l_row := api_service.problem_reports (l_user, False, l_category, l_status)
-						create l_view.make (l_row, 0, 0, l_categories, list_status, l_user)
-						l_view.set_selected_category (l_category)
-						l_view.set_selected_status (l_status)
-						l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_user_reports (req, res, l_view)
+						l_rhf.new_representation_handler (esa_config,l_type,media_variants).report_form_confirm_redirect (req, res)
 					end
 				else
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config,"",media_variants).problem_user_reports (req, res, Void)
+					l_rhf.new_representation_handler (esa_config,"",media_variants).report_form_confirm_redirect (req, res)
 				end
 			else -- Not a logged in user
 				if media_variants.is_acceptable then
@@ -114,7 +94,6 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config,"",media_variants).new_response_unauthorized (req, res)
 				end
 			end
-
 		end
 
 

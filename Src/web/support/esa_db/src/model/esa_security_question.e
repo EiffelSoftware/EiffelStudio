@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	SECURITY_QUESTION
+	ESA_SECURITY_QUESTION
 
 create
 	make

@@ -34,7 +34,7 @@ feature -- Basic operations
 				attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then
 
 				if api_service.login_valid (l_auth_login, l_auth_password) then
-					req.set_execution_variable ("user", l_auth_login)
+					req.set_execution_variable ("user", create {ESA_USER}.make (l_auth_login))
 					execute_next (req, res)
 				else
 					execute_next (req, res)

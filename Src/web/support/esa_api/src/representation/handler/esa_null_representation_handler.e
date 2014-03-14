@@ -26,7 +26,7 @@ feature -- View
 			generic_response (req, res)
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: REPORT)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: ESA_REPORT)
 			-- <Precursor>
 		do
 			generic_response (req, res)
@@ -38,12 +38,31 @@ feature -- View
 			generic_response (req, res)
 		end
 
-
 	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REPORT_VIEW)
 		-- <Precursor>
 		do
 			generic_response (req, res)
 		end
+
+
+	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	report_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- Report form confirm
+		do
+			generic_response (req, res)
+		end
+
+	report_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Report form confirm redirect
+		do
+			generic_response (req, res)
+		end
+
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
@@ -85,20 +104,14 @@ feature -- Response
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
 		local
 			h: HTTP_HEADER
-			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			create h.make
-			create l_msg.make_from_string (output)
 			h.put_content_type_text_html
-			h.put_content_length (l_msg.count)
-			if attached req.request_time as time then
-				create hdate.make_from_date_time (time)
-				h.add_header ("Date:" + hdate.rfc1123_string)
-			end
+			h.put_content_length (output.count)
+			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.not_acceptable)
 			res.put_header_text (h.string)
-			res.put_string (l_msg)
+			res.put_string (output)
 		end
 
 
@@ -107,7 +120,7 @@ feature -- Response
 				l_np: ESA_HTML_406_PAGE
 			do
 				if attached req.http_host as l_host then
-					create l_np.make ("http://"+l_host,req.path_info,req.http_accept)
+					create l_np.make (req.absolute_script_url (""),req.percent_encoded_path_info,req.http_accept)
 					if attached l_np.representation as l_406_page then
 						new_response_get (req, res, l_406_page)
 					end

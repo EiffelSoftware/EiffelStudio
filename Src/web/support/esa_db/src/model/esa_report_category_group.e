@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {REPORT_PRIORITY}."
+	description: "Summary description for {REPORT_CATEGORY_GROUP}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_PRIORITY
+	ESA_REPORT_CATEGORY_GROUP
 
 inherit
-	REPORT_FIELD
+	ESA_REPORT_FIELD
 
 create
 	make

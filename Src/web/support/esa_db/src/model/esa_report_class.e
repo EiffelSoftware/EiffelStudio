@@ -1,14 +1,16 @@
 note
-	description: "Summary description for {REPORT_CATEGORY_GROUP}."
+	description: "Summary description for {REPORT_CLASS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	REPORT_CATEGORY_GROUP
+	ESA_REPORT_CLASS
 
 inherit
-	REPORT_FIELD
+	ESA_REPORT_FIELD
+
+	ESA_REPORT_SELECTABLE
 
 create
 	make
@@ -26,6 +28,20 @@ feature -- Access
 	id: INTEGER
 
 	synopsis: READABLE_STRING_32
+
+feature -- Element Change
+
+	set_id (a_id: INTEGER)
+			-- Set `id' with `a_id'.
+		do
+			id := a_id
+		end
+
+	set_synopsis (a_synopsis: like synopsis)
+			-- Set `synopsis' with `a_synopsis'.
+		do
+			synopsis := a_synopsis
+		end
 
 feature -- Output
 

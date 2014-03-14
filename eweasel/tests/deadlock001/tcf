@@ -1,0 +1,13 @@
+test_name 	 deadlock-simple-cycle
+test_description Deadlock with simple cyclic dependency.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   ok
+
+execute_work     NONE exec_output_m
+execute_result   failed
+
+test_end

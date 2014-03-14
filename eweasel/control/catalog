@@ -2826,6 +2826,8 @@ test	scoop-corrupted-polymorphic-call		scoop034 tcf fail used_to_pass scoop mult
 test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
 test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
 
+test	deadlock-simple-cycle				deadlock001 tcf manual scoop multithreaded deadlock
+
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty
 test	pretty-explicit-creation-space		pretty002 tcf pass pretty

@@ -55,11 +55,26 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Status</th>
-                  <th>Synopsis</th>
-                  <th>Date</th>
-                  <th>Category</th>
+                  <th>#
+                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                  </th>
+                  <th>Status
+                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
+                  </th>
+                  <th>Synopsis
+                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                  </th>
+                  <th>Date
+                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                  </th>
+                  <th>Category
+                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -79,11 +94,15 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                <li><a href="{$host/}/reports?category={$selected_category/}&status={$selected_status/}">First</a></li>
-                <li><a href="{$host/}/reports/{$prev/}?category={$selected_category/}&status={$selected_status/}">Previous</a></li>
-                <li><a href="{$host/}/reports/{$next/}?category={$selected_category/}&status={$selected_status/}">Next</a></li>
-                <li><a href="{$host/}/reports/{$last/}?category={$selected_category/}&status={$selected_status/}">Last</a></li>
-              </ul>
+                  <li><a href="{$host/}/reports?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">First</a></li>
+                  {if isset="$prev"}
+                    <li><a href="{$host/}/reports/{$prev/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Previous</a></li>
+                  {/if}
+                  {if isset="$next"}
+                  <li><a href="{$host/}/reports/{$next/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Next</a></li>
+                  {/if}
+                  <li><a href="{$host/}/reports/{$last/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Last</a></li>
+                </ul>
           </div>
        </div>
 

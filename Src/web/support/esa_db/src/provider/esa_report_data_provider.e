@@ -24,6 +24,14 @@ feature -- Initialization
 	db_handler: ESA_DATABASE_HANDLER
 		-- Db handler
 
+feature -- Status Report
+
+	is_successful: BOOLEAN
+			-- Is the last execution sucessful?
+		do
+			Result := db_handler.successful
+		end
+
 feature -- Access
 
 
@@ -60,10 +68,37 @@ feature -- Access
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest", l_parameters))
 			db_handler.execute_reader
-			last_row_count := db_handler.count
 			create Result.make (db_handler, agent new_report)
 		end
 
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+			-- All Problem reports for guest users
+			-- Only not confidential reports
+			-- Filtered category `a_category' and status `a_status'
+			-- Order by column `a_column' in a DESC or ASC.
+			-- by the default the order by is done on Number.
+		local
+			l_parameters: STRING_TABLE[ANY]
+			l_query: STRING
+		do
+			create l_parameters.make (2)
+			l_parameters.put (a_rows_per_page, "RowsPerPage")
+			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
+			l_parameters.put (string_parameter (a_column, 30), "Column")
+			create l_query.make_from_string (select_problem_resports_template)
+			if a_order = 1 then
+				l_query.replace_substring_all ("$ORD1", "ASC")
+				l_query.replace_substring_all ("$ORD2", "DESC")
+			else
+				l_query.replace_substring_all ("$ORD1", "DESC")
+				l_query.replace_substring_all ("$ORD2", "ASC")
+			end
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report)
+		end
 
 	problem_report (a_number: INTEGER): detachable ESA_REPORT
 			-- Problem report with number `a_number'.
@@ -212,7 +247,6 @@ feature -- Access
 		local
 			l_answer_salt, l_password_salt, l_answer_hash, l_password_hash: STRING
 			l_security: ESA_SECURITY_PROVIDER
-			l_exists: BOOLEAN
 			l_int: INTEGER
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 			exist: BOOLEAN
@@ -382,6 +416,28 @@ feature -- Access
 		end
 
 
+	problem_reports_for_edition (a_username, a_first_name, a_last_name, a_responsible, a_responsible_first_name, a_responsible_last_name: STRING; a_category_id, a_status_id, a_priority_id, a_severity_id: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+			-- Problem reports for edition
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			create l_parameters.make (4)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (string_parameter (a_first_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Firstname_param)
+			l_parameters.put (string_parameter (a_last_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Lastname_param)
+			l_parameters.put (string_parameter (a_responsible, 50), {ESA_DATA_PARAMETERS_NAMES}.Responsible_param)
+			l_parameters.put (string_parameter (a_responsible_first_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Responsible_firstname_param)
+			l_parameters.put (string_parameter (a_responsible_last_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Responsible_lastname_param)
+			l_parameters.put (a_category_id, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			l_parameters.put (a_status_id, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			l_parameters.put (a_priority_id , {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
+			l_parameters.put (a_severity_id , {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsForEdition2", l_parameters))
+			db_handler.execute_reader
+			last_row_count := db_handler.count
+			create Result.make (db_handler, agent new_report)
+		end
+
 feature -- Basic Operations
 
 	new_problem_report_id (a_username: STRING): INTEGER
@@ -478,7 +534,6 @@ feature -- Basic Operations
 			-- Remove temporary problem report `a_report_id'.
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_int: INTEGER
 		do
 			connect
 			create l_parameters.make (1)
@@ -595,6 +650,31 @@ feature -- Status Report
 			Result := l_res > 0
 			disconnect
 		end
+
+
+	is_report_visible ( a_username: READABLE_STRING_32; a_number: INTEGER): BOOLEAN
+			-- Can user `a_username' see report number `a_number'?
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_res: INTEGER
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (a_number, {ESA_DATA_PARAMETERS_NAMES}.Number_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("IsProblemReportVisible", l_parameters))
+			db_handler.execute_reader
+
+			if not db_handler.after then
+				db_handler.start
+				if attached {DB_TUPLE} db_handler.item as l_item and then attached {INTEGER_32_REF} l_item.item (1) as l_item_1 then
+					l_res := l_item_1.item
+				end
+			end
+			Result := l_res > 0
+			disconnect
+		end
+
 
 
 feature {NONE} -- Implementation
@@ -843,5 +923,29 @@ feature -- Connection
 feature -- Queries
 
 	Select_categories: STRING = "select CategoryID, CategorySynopsis from ProblemReportCategories;"
+
+
+	Select_problem_resports_template: STRING = "[
+				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
+			 FROM (
+			    SELECT TOP (:RowsPerPage)
+				   Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, PAG.CategoryID
+			    FROM (
+				SELECT TOP ((:PageNumber)*:RowsPerPage) 
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, ProblemReports.CategoryID
+				FROM ProblemReports
+			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID 
+			    WHERE Confidential = 0 AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+					AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
+				ORDER BY :Column $ORD1
+				) AS PAG
+				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID 
+				ORDER BY :Column $ORD2
+			) AS PAG2
+			INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG2.CategoryID 
+			ORDER BY :Column $ORD1
+	]"
+
+
 
 end

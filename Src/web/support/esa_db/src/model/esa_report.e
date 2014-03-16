@@ -170,7 +170,7 @@ feature -- Output
 
 	string_8: STRING_8
 		do
-			create Result.make_from_string ("(" + id.out + ")")
+			create Result.make_from_string ("%N(" + id.out + ")")
 			Result.append (" #" + number.out + ":")
 			Result.append (synopsis.as_string_8)
 			Result.append_character ('%N')

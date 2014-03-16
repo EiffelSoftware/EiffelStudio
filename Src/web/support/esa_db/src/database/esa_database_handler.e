@@ -6,6 +6,10 @@ note
 deferred class
 	ESA_DATABASE_HANDLER
 
+inherit
+
+	ESA_DATABASE_ERROR
+
 feature -- Access
 
 	store: detachable ESA_DATABASE_STORE_PROCEDURE

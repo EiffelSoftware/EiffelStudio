@@ -6,26 +6,28 @@ note
 class
 	ESA_ERROR_HANDLER
 
+
+create
+	make
+
 feature -- Initialization
 
+	make (a_error_message: READABLE_STRING_32; a_error_location: READABLE_STRING_32)
+		do
+			set_error_message (a_error_message)
+			set_error_location (a_error_location)
+		end
 
 feature -- Access
 
-	error_message: detachable READABLE_STRING_32
+	error_message: READABLE_STRING_32
 			-- Message
-	error_code: INTEGER
+	error_location: READABLE_STRING_32
 			-- Code to represent an error
 
 feature -- Change Element
 
-	reset
-			-- Reset error to default values
-		do
-			error_code := 0
-			has_error := False
-			error_message := Void
-		end
-		
+
 	set_error_message (a_message: like error_message)
 			-- Set error_message with `a_message'
 		do
@@ -34,25 +36,13 @@ feature -- Change Element
 			message_set: error_message = a_message
 		end
 
-	set_error_code (a_code: INTEGER)
-			-- Set error_code with `error_code'
+	set_error_location (a_location: READABLE_STRING_32)
+			-- Set error_location with `a_location'
 		do
-			error_code := a_code
+			error_location := a_location
 		ensure
-			error_code_set: error_code = a_code
+			error_location_set: error_location = a_location
 		end
-
-	set_has_error
-		do
-			has_error := True
-		ensure
-			has_error_set: has_error
-		end
-
-feature -- Status Error
-
-	has_error: BOOLEAN
-
 
 
 end

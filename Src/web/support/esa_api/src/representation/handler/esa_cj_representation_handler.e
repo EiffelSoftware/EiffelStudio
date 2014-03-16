@@ -163,6 +163,11 @@ feature -- View
 			res.put_string (l_msg)
 		end
 
+	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- internal_server_error
+		do
+		end
+
 
 feature -- Response
 

@@ -28,15 +28,12 @@ feature {NONE} --Initialization
 			set_template_file_name ("cj_reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view.reports.at (2), "reports")
+
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
-			else
-				template.add_value (a_view.index , "prev")
 			end
 			if a_view.index < a_view.pages then
 				template.add_value (a_view.index+1, "next")
-			else
-				template.add_value (a_view.index, "next")
 			end
 			template.add_value (a_view.pages, "last")
 

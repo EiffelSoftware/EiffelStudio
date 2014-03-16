@@ -108,15 +108,29 @@ feature -- Default Execution
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config,l_type, media_variants).not_found_page (req, res)
+			if not esa_config.api_service.is_successful then
+				create l_rhf
+				media_variants := media_type_variants (req)
+				if media_variants.is_acceptable then
+					if attached media_variants.media_type as l_type then
+						l_rhf.new_representation_handler (esa_config, l_type, media_variants).internal_server_error (req, res)
+					else
+						l_rhf.new_representation_handler (esa_config, "", media_variants).internal_server_error (req, res)
+					end
+				else
+					l_rhf.new_representation_handler (esa_config, "", media_variants).internal_server_error (req, res)
 				end
 			else
-				create l_rhf
-				l_rhf.new_representation_handler (esa_config,"", media_variants).not_found_page (req, res)
+				media_variants := media_type_variants (req)
+				if media_variants.is_acceptable then
+					if attached media_variants.media_type as l_type then
+						create l_rhf
+						l_rhf.new_representation_handler (esa_config,l_type, media_variants).not_found_page (req, res)
+					end
+				else
+					create l_rhf
+					l_rhf.new_representation_handler (esa_config,"", media_variants).not_found_page (req, res)
+				end
 			end
 		end
 

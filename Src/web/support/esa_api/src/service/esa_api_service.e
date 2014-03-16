@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.make_common
 			create data_provider.make (l_connection)
 			create login_provider.make (l_connection)
+			is_successful := True
 		end
 
 	make_with_database (a_connection: ESA_DATABASE_CONNECTION)
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			create data_provider.make (a_connection)
 			create login_provider.make (a_connection)
+			is_successful := True
 		end
 
 feature -- Access
@@ -59,8 +61,41 @@ feature -- Access
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 			Result := [l_statistics, l_list]
 		end
+
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
+			-- Only not confidential reports
+		local
+			l_status: LIST[ESA_REPORT_STATUS]
+			l_report: ESA_REPORT
+			l_list: LIST[ESA_REPORT]
+			l_statistics: ESA_REPORT_STATISTICS
+		do
+			l_status := status
+
+			data_provider.connect
+			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create l_statistics
+			data_provider.connect
+			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order) as c loop
+				l_report := c.item
+				if attached status_cache as l_cache and then attached l_report.status as ll_status then
+					if attached l_cache.item (ll_status.id) as l_item then
+						update_statistics (l_statistics, l_item)
+						l_report.set_status (l_item)
+					end
+				end
+				l_list.force (l_report)
+			end
+			data_provider.disconnect
+			is_successful := data_provider.is_successful
+			Result := [l_statistics, l_list]
+		end
+
+
 
 	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- Problem reports for user with username `a_username'
@@ -86,6 +121,7 @@ feature -- Access
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 			Result := [l_statistics, l_list]
 		end
 
@@ -109,6 +145,7 @@ feature -- Access
 				end
 				data_provider.disconnect
 			end
+			is_successful := data_provider.is_successful
 		end
 
 	all_categories: LIST[ESA_REPORT_CATEGORY]
@@ -118,6 +155,7 @@ feature -- Access
 			data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 		end
 
 	problem_report (a_number: INTEGER): detachable ESA_REPORT
@@ -135,12 +173,14 @@ feature -- Access
 				end
 				Result := l_report
 			end
+			is_successful := data_provider.is_successful
 		end
 
 	attachments_content (a_attachment_id: INTEGER): STRING
 			-- Attachment content of attachment with ID `a_attachment_id'
 		do
 			Result := data_provider.attachments_content (a_attachment_id)
+			is_successful := data_provider.is_successful
 		end
 
 
@@ -156,6 +196,7 @@ feature -- Access
 			else
 			create Result.make ("Guest", "Users who only can browse public content")
 			end
+			is_successful := login_provider.is_successful
 		end
 
 	severities: LIST[ESA_REPORT_SEVERITY]
@@ -165,6 +206,7 @@ feature -- Access
 			data_provider.connect
 			across data_provider.severities as c  loop Result.force (c.item)  end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 		end
 
 
@@ -175,6 +217,7 @@ feature -- Access
 			data_provider.connect
 			across data_provider.classes as c  loop Result.force (c.item)  end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 		end
 
 	priorities: LIST[ESA_REPORT_PRIORITY]
@@ -184,6 +227,7 @@ feature -- Access
 			data_provider.connect
 			across data_provider.priorities as c  loop Result.force (c.item)  end
 			data_provider.disconnect
+			is_successful := data_provider.is_successful
 		end
 
 
@@ -203,6 +247,20 @@ feature -- Access
 				-- Temporary problem report `a_report_id', if any.
 		do
 			Result := data_provider.temporary_problem_report (a_report_id)
+			is_successful := data_provider.is_successful
+		end
+
+
+	role (a_username: READABLE_STRING_32): ESA_USER_ROLE
+			-- Role associated with username `a_username'
+		do
+			if attached login_provider.role (a_username) as l_role and then
+			   attached login_provider.role_description (a_username) as l_description then
+				create Result.make (l_role, l_description)
+			else
+				create Result.make ("Guest", "Anonymous Users")
+			end
+			is_successful := login_provider.is_successful
 		end
 
 feature -- Basic Operations
@@ -211,6 +269,7 @@ feature -- Basic Operations
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
 			Result := data_provider.row_count_problem_report_guest (a_category, a_status)
+			is_successful := data_provider.is_successful
 		end
 
 	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
@@ -234,24 +293,28 @@ feature -- Basic Operations
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
 			data_provider.initialize_problem_report (a_report_id, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
+			is_successful := data_provider.is_successful
 		end
 
 	new_problem_report_id (a_username: STRING): INTEGER
 			-- Initialize new problem report row and returns ReportID.
 		do
 			Result := data_provider.new_problem_report_id (a_username)
+			is_successful := data_provider.is_successful
 		end
 
 	commit_problem_report (a_report_id: INTEGER)
 			-- Commit a temporary problem report.
 		do
 			data_provider.commit_problem_report (a_report_id)
+			is_successful := data_provider.is_successful
 		end
 
 	remove_temporary_problem_report (a_report_id: INTEGER_32)
 			-- Remove temporary problem report `a_report_id'
 		do
 			data_provider.remove_temporary_problem_report (a_report_id)
+			is_successful := data_provider.is_successful
 		end
 
 	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
@@ -276,6 +339,7 @@ feature -- Basic Operations
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
 			data_provider.update_problem_report (a_pr, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
+			is_successful := data_provider.is_successful
 		end
 
 feature -- Status Report
@@ -284,6 +348,7 @@ feature -- Status Report
 			-- Is membership for user with username `a_username' active?
 		do
 			Result := login_provider.is_active (a_username)
+			is_successful := login_provider.is_successful
 		end
 
 	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
@@ -298,6 +363,7 @@ feature -- Status Report
 				l_sha_password := l_security.password_hash (l_password, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
+			is_successful := login_provider.is_successful
 		end
 
 
@@ -305,6 +371,14 @@ feature -- Status Report
 			-- Can user `guest' see report number `a_number'?
 		do
 			Result := data_provider.report_visible_guest (a_report)
+			is_successful := data_provider.is_successful
+		end
+
+	is_report_visible ( a_username: READABLE_STRING_32; a_number: INTEGER): BOOLEAN
+			-- Can user `a_username' see report number `a_number'?
+		do
+			Result := data_provider.is_report_visible (a_username, a_number)
+			is_successful := data_provider.is_successful
 		end
 
 feature -- Cache
@@ -326,6 +400,10 @@ feature -- Statistics
 			else
 			end
 		end
+
+feature -- Status Report
+
+	is_successful: BOOLEAN
 
 feature {NONE} -- Implementation
 

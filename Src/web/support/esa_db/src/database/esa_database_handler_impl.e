@@ -21,15 +21,10 @@ feature {NONE} -- Initialization
 		do
 			connection := a_connection
 			create last_query.make_now
-			create error_handler
 		ensure
 			connection_not_void: connection /= Void
 			last_query_not_void: last_query /= Void
 		end
-
-feature -- Error Handling
-
-	error_handler: ESA_ERROR_HANDLER
 
 feature -- Functionality
 
@@ -37,47 +32,65 @@ feature -- Functionality
 			-- Execute stored procedure that returns data
 		local
 			l_db_selection: DB_SELECTION
+			l_retried: BOOLEAN
 		do
-			reset_error
-			if not keep_connection then
-				connect
-			end
+			if not l_retried then
+				if not keep_connection then
+					connect
+				end
 
-			if attached store as l_store then
-				create l_db_selection.make
-				db_selection := l_db_selection
-				items := l_store.execute_reader (l_db_selection)
-				handle_error
-			end
+				if attached store as l_store then
+					create l_db_selection.make
+					db_selection := l_db_selection
+					items := l_store.execute_reader (l_db_selection)
+				end
 
-			if not keep_connection then
+				if not keep_connection then
+					disconnect
+				end
+				set_successful
+			end
+		rescue
+			set_last_error_from_exception ("Store procedure execution")
+			if is_connected then
 				disconnect
 			end
+			l_retried := True
+			retry
 		end
 
 	execute_writer
 			-- Execute stored procedure that update/add data
 		local
 			l_db_change: DB_CHANGE
+			l_retried : BOOLEAN
 		do
-			reset_error
-			if not keep_connection and not is_connected then
-				connect
-			end
-
-			if attached store as l_store then
-				create l_db_change.make
-				db_update := l_db_change
-				l_store.execute_writer (l_db_change)
-				to_implement ("Handling Error")
-				if not l_store.has_error then
-					db_control.commit
+		    if not  l_retried then
+				if not keep_connection and not is_connected then
+					connect
 				end
-				handle_error
+
+				if attached store as l_store then
+					create l_db_change.make
+					db_update := l_db_change
+					l_store.execute_writer (l_db_change)
+					to_implement ("Handling Error")
+					if not l_store.has_error then
+						db_control.commit
+					end
+				end
+				if not keep_connection then
+					disconnect
+				end
+				set_successful
 			end
-			if not keep_connection then
+		rescue
+			set_last_error_from_exception ("Store procedure execution")
+			if is_connected then
 				disconnect
 			end
+			l_retried := True
+			retry
 		end
 
 feature -- SQL Queries
@@ -86,23 +99,33 @@ feature -- SQL Queries
 			-- Execute query
 		local
 			l_db_selection: DB_SELECTION
+			l_retried: BOOLEAN
 		do
-			reset_error
-			if not keep_connection then
-				connect
-			end
+			if not l_retried then
+				if not keep_connection then
+					connect
+				end
 
-			if attached query as l_query then
-				create l_db_selection.make
-				db_selection := l_db_selection
-				items := l_query.execute_reader (l_db_selection)
-				handle_error
-			end
+				if attached query as l_query then
+					create l_db_selection.make
+					db_selection := l_db_selection
+					items := l_query.execute_reader (l_db_selection)
+				end
 
-			if not keep_connection then
+				if not keep_connection then
+					disconnect
+				end
+				set_successful
+			end
+		rescue
+			set_last_error_from_exception ("Query execution")
+			if is_connected then
 				disconnect
 			end
+			l_retried := True
+			retry
 		end
+
 
 feature -- Iteration
 
@@ -144,25 +167,6 @@ feature -- Iteration
 			end
 		end
 
-feature -- Error Handling
-
-	handle_error
-				-- Check if the last operation is_ok.
-		note
-			EIS: "name=EiffelStore Error Handling", "src=http://docs.eiffel.com/book/solutions/database-control", "protocol=uri"
-		do
-			if not db_control.is_ok then
-			   error_handler.set_error_code (db_control.error_code)
-			   error_handler.set_error_message (db_control.error_message_32)
-			   error_handler.set_has_error
-			end
-		end
-
-	reset_error
-				-- Rest the last error
-		do
-			error_handler.reset
-		end
 
 feature {NONE} -- Implementation
 

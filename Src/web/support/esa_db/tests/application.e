@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 --			test_countries
 --			test_registration_token
 --			test_membership_creation_date
---			test_user_role
+			test_user_role
 --			test_role_description
 --			test_security_questions
 --			test_question_from_email
@@ -39,7 +39,8 @@ feature {NONE} -- Initialization
 --			test_severities
 --			test_priorities
 --			test_initialize_problem_report
-			test_temporary_problem_report
+--			test_temporary_problem_report
+--			test_problem_reports_guest_2
 		end
 
 
@@ -155,6 +156,7 @@ feature {NONE} -- Initialization
 		do
 			create l_db.make (connection)
 			print (l_db.role ("jvelilla"))
+			print (l_db.role ("raphaels"))
 		end
 
 
@@ -305,7 +307,17 @@ feature {NONE} -- Initialization
 			l_tuple := l_db.temporary_problem_report (l_report_number)
 		end
 
+	test_problem_reports_guest_2
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+				-- Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
+			create l_db.make (connection)
+			across l_db.problem_reports_guest_2 (1, 2, 0, 0, "CategorySynopsis", 1) as c loop
+				print (c.item.string_8)
+			end
 
+		end
 feature -- Implementation
 
 	connection: ESA_DATABASE_CONNECTION

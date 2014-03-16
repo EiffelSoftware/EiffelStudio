@@ -94,6 +94,11 @@ feature -- View
 		deferred
 		end
 
+	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- internal_server_error
+		deferred
+		end
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

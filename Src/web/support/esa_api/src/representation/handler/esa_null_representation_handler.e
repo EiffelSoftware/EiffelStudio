@@ -99,6 +99,13 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- internal_server_error
+		do
+			generic_response (req, res)
+		end
+
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

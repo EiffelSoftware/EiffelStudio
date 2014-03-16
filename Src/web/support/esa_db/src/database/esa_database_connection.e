@@ -10,6 +10,8 @@ inherit
 
 	ESA_DATABASE_CONFIG
 
+	ESA_DATABASE_ERROR
+
 feature {NONE} -- Initialization
 
 	make_common

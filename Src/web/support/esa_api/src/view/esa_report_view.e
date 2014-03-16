@@ -40,6 +40,9 @@ feature -- Access
 
 	selected_category: INTEGER
 
+	order_by: detachable STRING_32
+
+	direction : detachable STRING_32
 
 feature -- Change Element
 
@@ -54,4 +57,17 @@ feature -- Change Element
 			selected_category := a_val
 		end
 
+
+	set_order_by (a_order_by: READABLE_STRING_32)
+			-- Set `orger_by' with `a_order_by'
+		do
+			order_by := a_order_by
+		end
+
+	set_direction (a_direction: STRING)
+			-- Set `direction' with `a_direction'
+			-- direction (ASC|DESC)
+		do
+			direction := a_direction
+		end
 end

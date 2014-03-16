@@ -134,11 +134,17 @@ feature -- Filters
 				f.set_next (l_filter)
 				l_filter := f
 			end
-
 			 	-- CORS Authentication
 			create {ESA_CORS_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
+
+
+			 	-- Error Filter
+			create {ESA_ERROR_FILTER} f.make (esa_config)
+			f.set_next (l_filter)
+			l_filter := f
+
 
 			 	-- Authentication
 			create {ESA_AUTHENTICATION_FILTER} f.make (esa_config)

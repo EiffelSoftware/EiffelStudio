@@ -11,6 +11,7 @@ create
 	make
 
 feature -- Initialization
+
 	make (a_synopsis: STRING; a_description: STRING)
 		do
 			synopsis := a_synopsis

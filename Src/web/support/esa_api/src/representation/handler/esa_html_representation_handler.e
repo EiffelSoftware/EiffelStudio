@@ -167,6 +167,18 @@ feature -- View
 			end
 		end
 
+	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- internal_server_error
+		local
+				l_hp: ESA_HTML_500_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""))
+				if attached l_hp.representation as l_unauthorized then
+					new_response_access_unauthorized (req, res, l_unauthorized)
+				end
+			end
+		end
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

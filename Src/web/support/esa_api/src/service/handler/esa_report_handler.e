@@ -79,7 +79,50 @@ feature -- HTTP Methods
 			list_status: LIST[ESA_REPORT_STATUS]
 			l_categories: LIST[ESA_REPORT_CATEGORY]
 			l_report_view: ESA_REPORT_VIEW
+			l_order_by: STRING
+			l_direction: STRING
+			l_dir: INTEGER
+			l_role: ESA_USER_ROLE
 		do
+
+			if attached current_user_name (req) as l_user then
+				l_role := api_service.role (l_user)
+				if l_role.is_user then
+					-- List of reports visible for registered user.
+					-- They are able to see his own reports and also visible reports.
+					
+				elseif l_role.is_administrator or else l_role.is_responsible then
+					-- List of reports visible for reponsible and admin users
+				else
+					-- Internal Users?
+				end
+			else
+					-- List of reports visisble for Guest Users
+				guest_reports (req, res)
+			end
+		end
+
+
+
+feature -- Implementation
+
+	guest_reports (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- List of reports for guest users	
+		local
+			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_row: TUPLE [ESA_REPORT_STATISTICS, LIST [ESA_REPORT]]
+			l_pages: INTEGER
+			l_category: INTEGER
+			l_status: INTEGER
+			list_status: LIST[ESA_REPORT_STATUS]
+			l_categories: LIST[ESA_REPORT_CATEGORY]
+			l_report_view: ESA_REPORT_VIEW
+			l_order_by: STRING
+			l_direction: STRING
+			l_dir: INTEGER
+		do
+			to_implement ("Validate request parameters!!!")
 			media_variants := media_type_variants (req)
 			if media_variants.is_acceptable then
 				create l_rhf
@@ -95,11 +138,25 @@ feature -- HTTP Methods
 				 		l_category := 0
 				 		l_status := 0
 				 	end
+				 	if attached {WSF_STRING} req.query_parameter ("orderBy") as l_orderby and then
+					   attached {WSF_STRING} req.query_parameter ("dir") as ll_dir  then
+				 		l_order_by := l_orderby.value
+						l_direction := ll_dir.value
+				 		if ll_dir.value.same_string ("ASC") then
+				 			l_dir := 1
+				 		end
+				 	else
+				 		l_order_by := "number"
+				 		l_direction := "ASC"
+				 		l_dir := 1
+				 	end
 					l_pages := api_service.row_count_problem_report_guest (l_category,l_status)
 					if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 						if l_id.is_integer then
-							l_row := api_service.problem_reports_guest (l_id.as_string.integer_value, 10, l_category,l_status)
+							l_row := api_service.problem_reports_guest_2 (l_id.as_string.integer_value, 10, l_category, l_status, l_order_by, l_dir)
 							create l_report_view.make (l_row, l_id.as_string.integer_value, l_pages // 10, l_categories, list_status, current_user_name (req))
+							l_report_view.set_order_by (l_order_by)
+							l_report_view.set_direction (l_direction)
 							l_report_view.set_selected_category (l_category)
 							l_report_view.set_selected_status (l_status)
 							l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)
@@ -107,10 +164,12 @@ feature -- HTTP Methods
 							l_rhf.new_representation_handler (esa_config,l_type,media_variants).bad_request_page (req, res)
 						end
 					else
-						l_row := api_service.problem_reports_guest (1, 10, l_category,l_status)
+						l_row := api_service.problem_reports_guest_2 (1, 10, l_category,l_status, l_order_by, l_dir)
 						create l_report_view.make (l_row, 1, l_pages // 10, l_categories, list_status, current_user_name (req))
 						l_report_view.set_selected_category (l_category)
 						l_report_view.set_selected_status (l_status)
+						l_report_view.set_order_by (l_order_by)
+						l_report_view.set_direction (l_direction)
 						l_rhf.new_representation_handler (esa_config,l_type,media_variants).problem_reports_guest (req, res, l_report_view)
 					end
 				end
@@ -119,7 +178,4 @@ feature -- HTTP Methods
 				l_rhf.new_representation_handler (esa_config,"",media_variants).problem_reports_guest (req, res,Void)
 			end
 		end
-
-
-
 end

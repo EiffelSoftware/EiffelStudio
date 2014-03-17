@@ -133,6 +133,7 @@ feature {NONE} -- Query
 						l_feature := l_class.feature_with_name_32 (l_fstart.wide_image)
 						if attached l_feature as l_feat then
 							create l_viewer.make
+							l_viewer.set_is_showing_comments (True)
 							if attached last_token_widget as l_widget then
 								l_widget.recycle
 							end
@@ -378,7 +379,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

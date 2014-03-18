@@ -1,5 +1,5 @@
-test_name 	 deadlock-simple-symmetric-cycle
-test_description Deadlock with simple cyclic dependency.
+test_name 	 deadlock-simple-asymmetric-cycle
+test_description Deadlock caused by late locking.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
@@ -8,6 +8,6 @@ compile_melted
 compile_result   ok
 
 execute_work     NONE exec_output_m
-execute_result   failed
+execute_result   ok
 
 test_end

@@ -20,7 +20,7 @@ feature -- Access
 
 	author: IMMUTABLE_STRING_8
 
-	very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean: BOOLEAN
+	very_very_very_very_very_very_very_very_very_very_long_boolean: BOOLEAN
 
 feature -- Query
 
@@ -32,7 +32,7 @@ feature -- Query
 				else
 					Result := title ~ other.title and then
 							author ~ other.author and then
-							very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean = other.very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean
+							very_very_very_very_very_very_very_very_very_very_long_boolean = other.very_very_very_very_very_very_very_very_very_very_long_boolean
 				end
 		end
 
@@ -58,10 +58,10 @@ feature -- Element Change
 			author = a
 		end
 
-	set_very_long_boolean (b: like very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean)
-			-- Set `very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean' with `b'
+	set_very_long_boolean (b: like very_very_very_very_very_very_very_very_very_very_long_boolean)
+			-- Set `very_very_very_very_very_very_very_very_very_very_long_boolean' with `b'
 		do
-			very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean := b
+			very_very_very_very_very_very_very_very_very_very_long_boolean := b
 		end
 
 	make
@@ -85,7 +85,7 @@ feature -- Element Change
 				Result.extend ('%N')
 			end
 			Result.append ("Quantity:")
-			Result.append (very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_boolean.out)
+			Result.append (very_very_very_very_very_very_very_very_very_very_long_boolean.out)
 			Result.append ("%N")
 		end
 

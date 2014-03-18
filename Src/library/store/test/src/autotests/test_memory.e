@@ -101,7 +101,6 @@ feature {NONE} -- meory trim
 	memory_trim_load_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like memory_trim_create_data
 			l_table_name: STRING
 		do
 			drop_repository (memory_trim_table_name)
@@ -140,7 +139,6 @@ feature {NONE} -- meory trim
 	memory_trim_load_small_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like memory_trim_create_data
 			l_table_name: STRING
 		do
 			drop_repository (memory_trim_table_name)

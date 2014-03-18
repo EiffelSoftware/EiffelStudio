@@ -318,21 +318,23 @@ feature -- For database types
 						data_type.set_item (c_string_type)
 					elseif r_any.is_equal ("nvarchar") or else r_any.is_equal ("nchar") then
 						data_type.set_item (c_wstring_type)
-					elseif r_any.is_equal ("double") or else r_any.is_equal ("decimal") then
-						data_type.set_item (c_float_type)
+					elseif r_any.is_equal ("double") then
+						data_type.set_item (c_real_64_type)
+					elseif r_any.is_equal ("decimal") then
+						data_type.set_item (c_decimal_type)
 					elseif r_any.is_equal ("float") then
-						data_type.set_item (c_real_type)
+						data_type.set_item (c_real_32_type)
 					elseif
 						r_any.is_equal ("int") or else r_any.is_equal ("bit") or else
 						r_any.is_equal ("tinyint") or else r_any.is_equal ("mediumint")
 					then
 						if not use_extended_types then
-							data_type.set_item (c_integer_type)
+							data_type.set_item (c_integer_32_type)
 						else
 							if r_any.is_equal ("tinyint") then
 								data_type.set_item (c_integer_16_type)
 							else
-								data_type.set_item (c_integer_type)
+								data_type.set_item (c_integer_32_type)
 							end
 						end
 					elseif r_any.is_equal ("smallint") then
@@ -1015,61 +1017,6 @@ feature -- External features
 			Result := ["0", 1, 1, 0]
 		end
 
-	c_string_type: INTEGER
-		do
-			Result := eif_mysql_c_string_type
-		end
-
-	c_wstring_type: INTEGER
-		do
-			Result := eif_mysql_c_wstring_type
-		end
-
-	c_character_type: INTEGER
-		do
-			Result := eif_mysql_c_character_type
-		end
-
-	c_integer_type: INTEGER
-		do
-			Result := eif_mysql_c_int_type
-		end
-
-	c_integer_16_type: INTEGER
-		do
-			Result := eif_mysql_c_int16_type
-		end
-
-	c_integer_64_type: INTEGER
-		do
-			Result := eif_mysql_c_int64_type
-		end
-
-	c_float_type: INTEGER
-		do
-			Result := eif_mysql_c_float_type
-		end
-
-   	c_real_type: INTEGER
-		do
-			Result := eif_mysql_c_real_type
-		end
-
-	c_boolean_type: INTEGER
-		do
-			Result := eif_mysql_c_boolean_type
-		end
-
-	c_date_type: INTEGER
-		do
-			Result := eif_mysql_c_date_type
-		end
-
-	c_decimal_type: INTEGER
-		do
-			--|FIXME: To be implemented.
-		end
-
 	database_make (i: INTEGER)
 		do
 		end
@@ -1322,76 +1269,6 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- C Externals	
 
-	eif_mysql_c_boolean_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_BOOLEAN_TYPE"
-		end
-
-	eif_mysql_c_character_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_CHARACTER_TYPE"
-		end
-
-	eif_mysql_c_date_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_DATE_TYPE"
-		end
-
-	eif_mysql_c_float_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_DOUBLE_TYPE"
-		end
-
-	eif_mysql_c_int_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_INTEGER_TYPE"
-		end
-
-	eif_mysql_c_int16_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_INTEGER_16_TYPE"
-		end
-
-	eif_mysql_c_int64_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_INTEGER_64_TYPE"
-		end
-
-	eif_mysql_c_real_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_REAL_TYPE"
-		end
-
-	eif_mysql_c_string_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_STRING_TYPE"
-		end
-
-	eif_mysql_c_wstring_type: INTEGER
-		external
-			"C [macro %"eif_mysql.h%"]"
-		alias
-			"EIF_MYSQL_C_WSTRING_TYPE"
-		end
-
 	eif_mysql_column_data (row_ptr: POINTER; ind: INTEGER; ar: POINTER
 			len: INTEGER): INTEGER
 		external
@@ -1521,7 +1398,7 @@ feature {NONE} -- C Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

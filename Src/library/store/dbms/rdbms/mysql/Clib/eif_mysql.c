@@ -14,9 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <mysql.h>
-
-
 /* Project Include File */
 #include "eif_except.h"
 #include "eif_mysql.h"
@@ -123,42 +120,44 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 		case MYSQL_TYPE_VAR_STRING:
 		case MYSQL_TYPE_STRING:
 			if (charsetnr == 63) {
-				result = EIF_MYSQL_C_STRING_TYPE;
+				result = EIF_C_STRING_TYPE;
 			} else {
-				result = EIF_MYSQL_C_WSTRING_TYPE;
+				result = EIF_C_WSTRING_TYPE;
 			}
 			break;
 		case MYSQL_TYPE_DATETIME:
-			result = EIF_MYSQL_C_DATE_TYPE;
+			result = EIF_C_DATE_TYPE;
 			break;
 		case MYSQL_TYPE_FLOAT:
-			result = EIF_MYSQL_C_REAL_TYPE;
+			result = EIF_C_REAL_32_TYPE;
 			break;
 		case MYSQL_TYPE_DOUBLE:
+			result = EIF_C_REAL_64_TYPE;
+			break;
 		case MYSQL_TYPE_DECIMAL:
 		case MYSQL_TYPE_NEWDECIMAL:
-			result = EIF_MYSQL_C_DOUBLE_TYPE;
+			result = EIF_C_DECIMAL_TYPE;
 			break;
 		case MYSQL_TYPE_BLOB:
 			if (charsetnr == 63) {
-				result = EIF_MYSQL_C_STRING_TYPE;
+				result = EIF_C_STRING_TYPE;
 			} else {
-				result = EIF_MYSQL_C_WSTRING_TYPE;
+				result = EIF_C_WSTRING_TYPE;
 			}
 			break;
 		case MYSQL_TYPE_TINY:
 		case MYSQL_TYPE_SHORT:
-			result = EIF_MYSQL_C_INTEGER_16_TYPE;
+			result = EIF_C_INTEGER_16_TYPE;
 			break;
 		case MYSQL_TYPE_LONGLONG:
-			result = EIF_MYSQL_C_INTEGER_64_TYPE;
+			result = EIF_C_INTEGER_64_TYPE;
 			break;
 		case MYSQL_TYPE_LONG:
 		case MYSQL_TYPE_INT24:
-			result = EIF_MYSQL_C_INTEGER_TYPE;
+			result = EIF_C_INTEGER_32_TYPE;
 			break;
 		default:
-			result = EIF_MYSQL_C_INTEGER_TYPE;
+			result = EIF_C_INTEGER_32_TYPE;
 			break;
 	}
 

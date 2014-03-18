@@ -16,16 +16,20 @@
 #include "eif_macros.h"
 
 /* Type macros */
-#define EIF_MYSQL_C_STRING_TYPE		1
-#define EIF_MYSQL_C_INTEGER_TYPE	2
-#define EIF_MYSQL_C_DATE_TYPE		3
-#define EIF_MYSQL_C_REAL_TYPE		4
-#define EIF_MYSQL_C_DOUBLE_TYPE		5
-#define EIF_MYSQL_C_BOOLEAN_TYPE	6
-#define EIF_MYSQL_C_CHARACTER_TYPE	7
-#define EIF_MYSQL_C_INTEGER_16_TYPE	8
-#define EIF_MYSQL_C_INTEGER_64_TYPE	9
-#define EIF_MYSQL_C_WSTRING_TYPE	10
+#define EIF_C_NULL_TYPE			-1
+#define EIF_C_UNKNOWN_TYPE		0
+#define EIF_C_STRING_TYPE		1
+#define EIF_C_WSTRING_TYPE		2
+#define EIF_C_INTEGER_32_TYPE	3
+#define EIF_C_INTEGER_16_TYPE	4
+#define EIF_C_INTEGER_64_TYPE	5
+#define EIF_C_DATE_TYPE			6
+#define EIF_C_TIME_TYPE			7
+#define EIF_C_REAL_32_TYPE		8
+#define EIF_C_REAL_64_TYPE		9
+#define EIF_C_BOOLEAN_TYPE		10
+#define EIF_C_CHARACTER_TYPE	11
+#define EIF_C_DECIMAL_TYPE		12
 
 /* Public functions */
 extern int eif_mysql_column_data(MYSQL_ROW row_ptr, int ind, char *ar,

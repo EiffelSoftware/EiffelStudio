@@ -811,61 +811,6 @@ feature -- External
 			Result := [odbc_decimal_get_val (l_c_decimal.item).out, odbc_decimal_get_sign (l_c_decimal.item), odbc_decimal_get_precision (l_c_decimal.item), odbc_decimal_get_scale (l_c_decimal.item)]
 		end
 
-	c_string_type: INTEGER
-		do
-			Result := odbc_c_string_type
-		end
-
-	c_wstring_type: INTEGER
-		do
-			Result := odbc_c_wstring_type
-		end
-
-	c_character_type: INTEGER
-		do
-			Result := odbc_c_character_type
-		end
-
-	c_integer_type: INTEGER
-		do
-			Result := odbc_c_integer_type
-		end
-
-	c_integer_16_type: INTEGER
-		do
-			Result := odbc_c_integer_16_type
-		end
-
-	c_integer_64_type: INTEGER
-		do
-			Result := odbc_c_integer_64_type
-		end
-
-	c_float_type: INTEGER
-		do
-			Result := odbc_c_float_type
-		end
-
-   	c_real_type: INTEGER
-		do
-			Result := odbc_c_real_type
-        	end
-
-	c_boolean_type: INTEGER
-		do
-			Result := odbc_c_boolean_type
-		end
-
-	c_date_type: INTEGER
-		do
-			Result := odbc_c_date_type
-		end
-
-	c_decimal_type: INTEGER
-		do
-			Result := odbc_c_decimal_type
-		end
-
 	database_make (i: INTEGER)
 		do
 			con_context_pointer := c_odbc_make (i)
@@ -1159,83 +1104,6 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_c_string_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"STRING_TYPE"
-		end
-
-	odbc_c_wstring_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"WSTRING_TYPE"
-		end
-
-	odbc_c_character_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"CHARACTER_TYPE"
-		end
-
-	odbc_c_integer_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_TYPE"
-		end
-
-	odbc_c_integer_16_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_16_TYPE"
-		end
-
-	odbc_c_integer_64_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_64_TYPE"
-		end
-
-	odbc_c_float_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"FLOAT_TYPE"
-		end
-
-   	odbc_c_real_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"REAL_TYPE"
-      	end
-
-	odbc_c_boolean_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"BOOLEAN_TYPE"
-		end
-
-	odbc_c_date_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"DATE_TYPE"
-		end
-
-	odbc_c_decimal_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"DECIMAL_TYPE"
-		end
-
 	c_odbc_make (i: INTEGER): POINTER
 		external
 			"C use %"odbc.h%""
@@ -1385,7 +1253,7 @@ feature {NONE} -- External features
 						l_value_count := l_sql_string.bytes_count
 						l_managed_pointer := l_sql_string.managed_data
 					elseif attached {INTEGER_32_REF} l_any as l_val_int then
-						type := c_integer_type
+						type := c_integer_32_type
 						create l_managed_pointer.make (l_platform.integer_32_bytes)
 						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
 						pointers.extend (l_managed_pointer.item)
@@ -1410,13 +1278,13 @@ feature {NONE} -- External features
 							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
 						l_value_count := c_timestamp_struct_size
 					elseif attached {REAL_64_REF} l_any as l_val_double then
-						type := c_float_type
+						type := c_real_64_type
 						create l_managed_pointer.make (l_platform.real_64_bytes)
 						l_managed_pointer.put_real_64 (l_val_double.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.real_64_bytes
 					elseif attached {REAL_32_REF} l_any as l_val_real then
-						type := c_real_type
+						type := c_real_32_type
 						create l_managed_pointer.make (l_platform.real_32_bytes)
 						l_managed_pointer.put_real_32 (l_val_real.item, 0)
 						pointers.extend (l_managed_pointer.item)

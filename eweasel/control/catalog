@@ -2815,19 +2815,20 @@ test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop multithrea
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution
 test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
 test	scoop-unnested-logging				scoop026 tcf fail used_to_pass scoop multithreaded execution
-test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop lock_passing multithreaded execution
+test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop multithreaded execution lock_passing
 test	scoop-sequential-processor-creation		scoop028 tcf pass scoop multithreaded execution
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop multithreaded execution
 test	scoop-agent-validity				scoop030 tcf pass scoop multithreaded validity expanded agents conformance
 test	scoop-agent-call				scoop031 tcf pass scoop multithreaded agents execution
 test	scoop-corrupted-string				scoop032 tcf fail used_to_pass scoop multithreaded execution
-test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded lock_passing execution
+test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded execution lock_passing
 test	scoop-corrupted-polymorphic-call		scoop034 tcf fail used_to_pass scoop multithreaded execution
 test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
 test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock
+test	deadlock-synchronous-cycle			deadlock003 tcf manual scoop multithreaded deadlock lock_passing
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

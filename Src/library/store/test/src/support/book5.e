@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	title: detachable STRING
+	title: detachable STRING_32
 
 	author: detachable IMMUTABLE_STRING_8
 

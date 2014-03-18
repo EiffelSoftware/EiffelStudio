@@ -74,7 +74,8 @@ feature {NONE} -- Implementation
 		local
 			l_repository: DB_REPOSITORY
 			l_db_store: DB_STORE
-			l_change: DB_DYN_CHANGE
+			l_dyn_change: DB_DYN_CHANGE
+			l_change: DB_CHANGE
 			l_book: like new_book
 			l_list: ARRAYED_LIST [like new_book]
 			l_void_book: like new_book
@@ -98,13 +99,67 @@ feature {NONE} -- Implementation
 				assert ("1 - Number of results is not expected", False)
 			end
 
+
+			if not is_mysql then
+					-- Insert a book with a non-void title
+				l_book := new_book
+				l_book.set_author ("Alfred")
+				l_book.set_title ("There is a title")
+				l_db_store.put (l_book)
+					-- Chec that the stored book is valid
+				db_selection.set_map_name ("Alfred", "author_name")
+				l_list := load_list_with_select ("select * from " + sql_table_name (table_name) + " where author=:author_name", new_book)
+				db_selection.unset_map_name ("author_name")
+				if l_list.count = 1 then
+					assert ("2 - Result is not expected", l_list.first ~ l_book)
+				else
+					assert ("2 - Number of results is not expected", False)
+				end
+
+					-- Update the book with all NULL attributes, except for `author' using a dynamic query
+				create l_dyn_change.make
+				l_dyn_change.set_map_name (Void, "quantity_name")
+				l_dyn_change.set_map_name (Void, "title_name")
+				l_dyn_change.set_map_name (Void, "year_name")
+				l_dyn_change.set_map_name (Void, "price_name")
+				l_dyn_change.set_map_name (Void, "double_value_name")
+				l_dyn_change.set_map_name ("Alfred", "author_name")
+
+				l_dyn_change.prepare_32 ("update " + sql_table_name (table_name) + "[
+					 set quantity=:quantity_name,title=:title_name,year=:year_name,
+					 	price=:price_name,double_value=:double_value_name where author=:author_name
+					 ]")
+
+				l_dyn_change.unset_map_name ("quantity_name")
+				l_dyn_change.unset_map_name ("title_name")
+				l_dyn_change.unset_map_name ("year_name")
+				l_dyn_change.unset_map_name ("price_name")
+				l_dyn_change.unset_map_name ("double_value_name")
+				l_dyn_change.unset_map_name ("author_name")
+				l_dyn_change.execute
+				l_dyn_change.terminate
+
+				db_selection.set_map_name ("Alfred", "author_name")
+				l_list := load_list_with_select ("select * from " + sql_table_name (table_name) + " where author=:author_name", new_book)
+				db_selection.unset_map_name ("author_name")
+				if l_list.count = 1 and attached l_list.first as l_retrieved_book then
+					create l_void_book
+					l_void_book.set_author (l_retrieved_book.author)
+					assert ("3 - Result is not expected", l_retrieved_book ~ l_void_book)
+				else
+					assert ("3 - Number of results is not expected", False)
+				end
+
+				execute_query ("DELETE FROM " + table_name + " WHERE author='Alfred'")
+			end
+
 				-- Insert a book with a non-void title
 			l_book := new_book
-			l_book.set_author ("Alfred")
+			l_book.set_author ("Alfredo")
 			l_book.set_title ("There is a title")
 			l_db_store.put (l_book)
 				-- Chec that the stored book is valid
-			db_selection.set_map_name ("Alfred", "author_name")
+			db_selection.set_map_name ("Alfredo", "author_name")
 			l_list := load_list_with_select ("select * from " + sql_table_name (table_name) + " where author=:author_name", new_book)
 			db_selection.unset_map_name ("author_name")
 			if l_list.count = 1 then
@@ -120,12 +175,10 @@ feature {NONE} -- Implementation
 			l_change.set_map_name (Void, "year_name")
 			l_change.set_map_name (Void, "price_name")
 			l_change.set_map_name (Void, "double_value_name")
-			l_change.set_map_name ("Alfred", "author_name")
+			l_change.set_map_name ("Alfredo", "author_name")
 
-			l_change.prepare_32 ("update " + sql_table_name (table_name) + "[
-				 set quantity=:quantity_name,title=:title_name,year=:year_name,
-				 	price=:price_name,double_value=:double_value_name where author=:author_name
-				 ]")
+			l_change.set_query ("update " + sql_table_name (table_name) + " set quantity=:quantity_name,title=:title_name,year=:year_name, price=:price_name,double_value=:double_value_name where author=:author_name")
+			l_change.execute_query
 
 			l_change.unset_map_name ("quantity_name")
 			l_change.unset_map_name ("title_name")
@@ -133,18 +186,17 @@ feature {NONE} -- Implementation
 			l_change.unset_map_name ("price_name")
 			l_change.unset_map_name ("double_value_name")
 			l_change.unset_map_name ("author_name")
-			l_change.execute
-			l_change.terminate
 
-			db_selection.set_map_name ("Alfred", "author_name")
+
+			db_selection.set_map_name ("Alfredo", "author_name")
 			l_list := load_list_with_select ("select * from " + sql_table_name (table_name) + " where author=:author_name", new_book)
 			db_selection.unset_map_name ("author_name")
 			if l_list.count = 1 and attached l_list.first as l_retrieved_book then
 				create l_void_book
 				l_void_book.set_author (l_retrieved_book.author)
-				assert ("3 - Result is not expected", l_retrieved_book ~ l_void_book)
+				assert ("4 - Result is not expected", l_retrieved_book ~ l_void_book)
 			else
-				assert ("3 - Number of results is not expected", False)
+				assert ("4 - Number of results is not expected", False)
 			end
 		end
 

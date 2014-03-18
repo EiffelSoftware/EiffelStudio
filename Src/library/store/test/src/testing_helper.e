@@ -59,7 +59,6 @@ feature {NONE} -- Events
 			not_void: an_obj /= Void
 		local
 			db_actions: DB_ACTION [like an_obj]
-			l_session_control: DB_CONTROL
 			l_result: detachable ARRAYED_LIST [like an_obj]
 			l_db_selection: DB_SELECTION
 		do

@@ -215,7 +215,6 @@ feature {NONE} -- Large string select
 	large_string_select_load_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like basic_select_create_data
 			l_table_name: STRING
 		do
 			drop_repository (large_string_select_table_name)

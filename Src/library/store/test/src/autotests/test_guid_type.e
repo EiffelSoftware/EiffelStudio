@@ -63,8 +63,6 @@ feature {NONE} -- Basic select
 	uuid_type_load_data
 			-- Load data
 		local
-			l_data: like uuid_data
-			l_repository: DB_REPOSITORY
 			l_table_name: STRING
 		do
 			drop_repository (uuid_type_table_name)

@@ -1,4 +1,4 @@
-test_name 	 deadlock-synchronous-cycle
+test_name 	 deadlock-synchronous-2-cycle
 
 test_description Deadlock involving synchronous cycle.
 

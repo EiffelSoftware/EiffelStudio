@@ -1007,6 +1007,12 @@ feature -- External features
 		deferred
 		end
 
+	c_unknown_type: INTEGER = -1
+			-- Unknown type
+
+	c_null_type: INTEGER = 0
+			-- Null type
+
 	c_string_type: INTEGER = 1
 			-- String Eiffel type
 

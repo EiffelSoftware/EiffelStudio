@@ -25,8 +25,8 @@ extern "C" {
 #endif
 
 /* Type macros */
-#define EIF_C_NULL_TYPE			-1
-#define EIF_C_UNKNOWN_TYPE		0
+#define EIF_C_UNKNOWN_TYPE		-1
+#define EIF_C_NULL_TYPE			0
 #define EIF_C_STRING_TYPE		1
 #define EIF_C_WSTRING_TYPE		2
 #define EIF_C_INTEGER_32_TYPE	3

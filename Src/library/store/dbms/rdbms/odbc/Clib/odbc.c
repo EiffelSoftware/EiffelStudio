@@ -664,7 +664,7 @@ void odbc_start_order (void *con, int no_desc)
 
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
-	/* Process general ODBC SQL statements    */
+			/* Process general ODBC SQL statements    */
 		l_con->rc = SQLExecute(l_con->hstmt[no_desc]);
 		if (l_con->rc) {
 			odbc_error_handler(con, l_con->hstmt[no_desc],7);
@@ -1237,6 +1237,11 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 			SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
 			SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
 			SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
+			break;
+		case EIF_C_NULL_TYPE:
+			l_con->pcbValue[no_desc][seriNumber-1] = SQL_NULL_DATA;
+				/* We use SQL_C_DEFAULT, SQL_CHAR, and 1 to describe the NULL value. It seems to work for all datatypes. */
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DEFAULT, SQL_CHAR, 1, 0, NULL, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		default:
 			odbc_error_handler(con, NULL, 204);

@@ -1177,17 +1177,17 @@ feature {NONE} -- External features
 
 	odbc_pre_immediate (a_con: POINTER; desc, argNum: INTEGER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	odbc_free_connection (a_con: POINTER)
 		external
-		    "C blocking use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_set_decimal_presicion_and_scale (a_con: POINTER; a_precision, a_scale: INTEGER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -1235,11 +1235,13 @@ feature {NONE} -- External features
 				until
 					ht_order.off
 				loop
-					type := -1
 					l_string := ht_order.item
 					l_any := uht.item (l_string)
 					if l_any = Void then
 							-- Value was not found, should we attempt to insert NULL?
+						type := c_null_type
+						l_managed_pointer := Void
+						l_value_count := -1
 					elseif attached {READABLE_STRING_8} l_any as l_val_string then
 						type := c_string_type
 						create l_c_string.make (l_val_string)
@@ -1275,7 +1277,7 @@ feature {NONE} -- External features
 						tmp_date := l_tmp_date
 						create l_managed_pointer.make (c_timestamp_struct_size)
 						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
+							tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
 						l_value_count := c_timestamp_struct_size
 					elseif attached {REAL_64_REF} l_any as l_val_double then
 						type := c_real_64_type
@@ -1295,7 +1297,7 @@ feature {NONE} -- External features
 						l_managed_pointer.put_character (l_val_char.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.character_8_bytes
-					elseif attached {BOOLEAN_REF} l_any as l_val_bool  then
+					elseif attached {BOOLEAN_REF} l_any as l_val_bool then
 						type := c_boolean_type
 						create l_managed_pointer.make (l_platform.boolean_bytes)
 						l_managed_pointer.put_boolean (l_val_bool.item, 0)
@@ -1312,15 +1314,13 @@ feature {NONE} -- External features
 						odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_decimal_t.sign, l_decimal_t.precision, l_decimal_t.scale)
 						l_value_count := c_numeric_struct_size
 					else
-						 -- Should we attempt to insert NULL here since the type was not found and hence value was
-						 -- most likely Void?
+							-- Should we attempt to insert NULL here since the type was not found and
+							-- hence value was most likely Void?
+						type := c_unknown_type
+						l_managed_pointer := Void
 					end
 
-					if type = -1 then
-						a_para.set (Void, i)
-					else
-						a_para.set (l_managed_pointer, i)
-					end
+					a_para.set (l_managed_pointer, i)
 
 					tmp_str.wipe_out
 					if l_value_count = 0 then
@@ -1345,14 +1345,14 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-   	odbc_set_parameter (a_con: POINTER; no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
+	odbc_set_parameter (a_con: POINTER; no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	odbc_stru_of_date (a_date: POINTER; year, mon, day, hour, minute, sec, fraction: INTEGER)
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				{
@@ -1370,7 +1370,7 @@ feature {NONE} -- External features
 	odbc_stru_of_numeric (a_numeric: POINTER; digits: POINTER; digits_length: INTEGER; sign, precision, scale: INTEGER)
 			-- `sign' /= 0, positive
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				{
@@ -1385,7 +1385,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_val (a_numeric: POINTER): NATURAL_64
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return (strhextoval((SQL_NUMERIC_STRUCT *)$a_numeric));
@@ -1394,7 +1394,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_sign (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->sign;
@@ -1403,7 +1403,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_precision (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->precision;
@@ -1412,7 +1412,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_scale (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->scale;

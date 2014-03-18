@@ -1,9 +1,6 @@
 class
 	TEST
 
-inherit
-	EXECUTION_ENVIRONMENT
-
 create
 	make,
 	make_with_peer

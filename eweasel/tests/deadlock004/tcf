@@ -1,0 +1,14 @@
+test_name 	 deadlock-synchronous-3-cycle
+
+test_description Deadlock involving synchronous cycle.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   ok
+
+execute_work     NONE exec_output_m
+execute_result   ok
+
+test_end

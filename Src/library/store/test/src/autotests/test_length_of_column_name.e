@@ -15,7 +15,7 @@ inherit
 
 feature -- Test routines
 
-	test
+	test_length_of_column_name
 		do
 				-- We don't do the test for Oracle, because the limit of identifiers is 30 bytes.
 				-- See: http://docs.oracle.com/cd/B28359_01/server.111/b28286/sql_elements008.htm#SQLRF00223
@@ -101,8 +101,15 @@ feature {NONE} -- Constants
 			Result := "select * from " + sql_table_name (Table_name)
 		end
 
-	Table_name: STRING =
-		"DB_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_LONG_COLUMN_NAME"
-			-- In ODBC SQL Server, there is a hard limit of 128 character for the name of a table.
+	Table_name: STRING
+		once
+			if is_mysql then
+					-- In MySQL Server, there is a hard limit of 64 character for the name of a table.
+				Result := "DB_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_LONG_COLUMN_NAME"
+			else
+					-- In ODBC SQL Server, there is a hard limit of 128 character for the name of a table.
+				Result := "DB_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_VERY_LONG_COLUMN_NAME"
+			end
+		end
 
 end

@@ -1195,38 +1195,38 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 	l_con->rc = 0;
 	direction = SQL_PARAM_INPUT;
 	switch (eifType) {
-		case CHARACTER_TYPE:
-		case STRING_TYPE:
+		case EIF_C_CHARACTER_TYPE:
+		case EIF_C_STRING_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case WSTRING_TYPE:
+		case EIF_C_WSTRING_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, SQL_WCHAR, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case INTEGER_TYPE:
+		case EIF_C_INTEGER_32_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case INTEGER_16_TYPE:
+		case EIF_C_INTEGER_16_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, SQL_SMALLINT, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case INTEGER_64_TYPE:
+		case EIF_C_INTEGER_64_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, SQL_BIGINT, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case FLOAT_TYPE:
+		case EIF_C_REAL_64_TYPE:
 			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case REAL_TYPE:
+		case EIF_C_REAL_32_TYPE:
 			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, SQL_REAL, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case BOOLEAN_TYPE:
+		case EIF_C_BOOLEAN_TYPE:
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, SQL_BIT, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case DATE_TYPE:
+		case EIF_C_DATE_TYPE:
 			len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
-		case DECIMAL_TYPE:
+		case EIF_C_DECIMAL_TYPE:
 			l_num = (SQL_NUMERIC_STRUCT *)value;
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 
@@ -1825,37 +1825,37 @@ int odbc_conv_type (int typeCode)
 		case SQL_LONGVARBINARY:
 		case SQL_SS_XML:
 		case SQL_C_GUID:
-			return STRING_TYPE;
+			return EIF_C_STRING_TYPE;
 		case SQL_WCHAR:
 		case SQL_WVARCHAR:
 		case SQL_WLONGVARCHAR:
-			return WSTRING_TYPE;
+			return EIF_C_WSTRING_TYPE;
 		case SQL_DECIMAL:
 		case SQL_NUMERIC:
-			return DECIMAL_TYPE;
+			return EIF_C_DECIMAL_TYPE;
 		case SQL_FLOAT:
 		case SQL_DOUBLE:
-			return FLOAT_TYPE;
+			return EIF_C_REAL_64_TYPE;
 		case SQL_REAL:
-			return REAL_TYPE;
+			return EIF_C_REAL_32_TYPE;
 		case SQL_TINYINT:
 		case SQL_SMALLINT:
-			return INTEGER_16_TYPE;
+			return EIF_C_INTEGER_16_TYPE;
 		case SQL_INTEGER:
-			return INTEGER_TYPE;
+			return EIF_C_INTEGER_32_TYPE;
 		case SQL_BIGINT:
-			return INTEGER_64_TYPE;
+			return EIF_C_INTEGER_64_TYPE;
 		case SQL_BIT:
-			return BOOLEAN_TYPE;
+			return EIF_C_BOOLEAN_TYPE;
 		case SQL_DATE:
 		case SQL_TYPE_DATE:
 		case SQL_TIME:
 		case SQL_TYPE_TIME:
 		case SQL_TIMESTAMP:
 		case SQL_TYPE_TIMESTAMP:
-			return DATE_TYPE;
+			return EIF_C_DATE_TYPE;
 		default:
-			return UNKNOWN_TYPE;
+			return EIF_C_UNKNOWN_TYPE;
 	}
 }
 

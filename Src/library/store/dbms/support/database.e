@@ -1007,60 +1007,41 @@ feature -- External features
 		deferred
 		end
 
-	c_string_type: INTEGER
+	c_string_type: INTEGER = 1
 			-- String Eiffel type
-		deferred
-		end
 
-	c_wstring_type: INTEGER
+	c_wstring_type: INTEGER = 2
 			-- String Eiffel type
-		deferred
-		end
 
-	c_character_type: INTEGER
-			-- Character Eiffel type
-		deferred
-		end
-
-	c_integer_type: INTEGER
+	c_integer_32_type: INTEGER = 3
 			-- Integer Eiffel type
-		deferred
-		end
 
-	c_integer_16_type: INTEGER
+	c_integer_16_type: INTEGER = 4
 			-- Integer Eiffel type
-		deferred
-		end
 
-	c_integer_64_type: INTEGER
+	c_integer_64_type: INTEGER = 5
 			-- Integer Eiffel type
-		deferred
-		end
 
-	c_float_type: INTEGER
-			-- Float Eiffel type
-		deferred
-		end
-
-   	c_real_type: INTEGER
-			-- Real Eiffel type
-		deferred
-       	end
-
-	c_boolean_type: INTEGER
-			-- Boolean Eiffel type
-		deferred
-		end
-
-	c_date_type: INTEGER
+	c_date_type: INTEGER = 6
 			-- Datetime Eiffel type
-		deferred
-		end
 
-	c_decimal_type: INTEGER
+	c_time_type: INTEGER = 7
+			-- Time Eiffel type
+
+   	c_real_32_type: INTEGER = 8
+			-- Real Eiffel type
+
+	c_real_64_type: INTEGER = 9
+			-- Float Eiffel type
+
+	c_boolean_type: INTEGER = 10
+			-- Boolean Eiffel type
+
+	c_character_type: INTEGER = 11
+			-- Character Eiffel type
+
+	c_decimal_type: INTEGER = 12
 			-- Decimal type
-		deferred
-		end
 
 	database_make (i: INTEGER)
 			-- Initialize database c-module

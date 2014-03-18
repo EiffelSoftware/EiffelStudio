@@ -32,10 +32,10 @@ feature -- Conversion
 			Result := db_spec.c_character_type
 		end
 
-	Integer_type_database: INTEGER
+	Integer_type_database, Integer_32_type_database: INTEGER
 			-- Integer type code in Ingres
 		once
-			Result := db_spec.c_integer_type
+			Result := db_spec.c_integer_32_type
 		end
 
 	Integer_16_type_database: INTEGER
@@ -50,16 +50,16 @@ feature -- Conversion
 			Result := db_spec.c_integer_64_type
 		end
 
-	Float_type_database: INTEGER
+	Float_type_database, Real_64_type_database: INTEGER
 			-- Double type code in Ingres
       once
-         Result := db_spec.c_float_type
+         Result := db_spec.c_real_64_type
       end
 
-	Real_type_database: INTEGER
+	Real_type_database, Real_32_type_database: INTEGER
 			-- Real type code in Ingres
         once
-            Result := db_spec.c_real_type
+            Result := db_spec.c_real_32_type
         end
 
 	Boolean_type_database: INTEGER
@@ -81,14 +81,14 @@ feature -- Conversion
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

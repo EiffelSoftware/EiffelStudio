@@ -625,61 +625,6 @@ feature -- External features
 			Result := ["0", 1, 1, 0]
 		end
 
-	c_string_type: INTEGER
-		do
-			Result := ora_c_string_type
-		end
-
-	c_wstring_type: INTEGER
-		do
-			Result := ora_c_wstring_type
-		end
-
-	c_character_type: INTEGER
-		do
-			Result := ora_c_character_type
-		end
-
-	c_integer_type: INTEGER
-		do
-			Result := ora_c_integer_type
-		end
-
-	c_integer_16_type: INTEGER
-		do
-			Result := ora_c_integer_16_type
-		end
-
-	c_integer_64_type: INTEGER
-		do
-			Result := ora_c_integer_64_type
-		end
-
-	c_float_type: INTEGER
-		do
-			Result := ora_c_float_type
-		end
-
-   	c_real_type: INTEGER
-		do
-			Result := ora_c_real_type
-		end
-
-	c_boolean_type: INTEGER
-		do
-			Result := ora_c_boolean_type
-		end
-
-	c_date_type: INTEGER
-		do
-			Result := ora_c_date_type
-		end
-
-	c_decimal_type: INTEGER
-		do
-			--|FIXME: To be implemented.
-		end
-
 	database_make (i: INTEGER)
 		do
 			ora_database_make (i)
@@ -984,11 +929,6 @@ feature {NONE} -- External features
 			"C [macro %"oracle.h%"]"
 		alias
 			"DATE_TYPE"
-		end
-
-	ora_c_string_type: INTEGER
-		external
-			"C | %"oracle.h%""
 		end
 
 	ora_c_wstring_type: INTEGER

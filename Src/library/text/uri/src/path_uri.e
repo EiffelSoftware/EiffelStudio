@@ -40,8 +40,6 @@ feature {NONE} -- Initialization
 	make_from_string (a_string: READABLE_STRING_8)
 			-- Create Current uri from location string `a_string'.
 			--| it can be URI, or PATH name.
-		local
-			iri: IRI
 		do
 			if a_string.starts_with_general ("file:") then
 				Precursor (a_string)

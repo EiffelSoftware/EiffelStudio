@@ -39,6 +39,24 @@ feature -- Access
 			Result := loc
 		end
 
+	expected_action (a_location: READABLE_STRING_32): detachable CONF_LOCATION_MAPPER_ACTION
+			-- If Current mapping is waiting for specific action to handle `a_location', return the needed parameters ?
+			--| for instance with iron, a possible action would be to install related package.
+		local
+			loc: READABLE_STRING_32
+		do
+			loc := a_location
+			across
+				mappings as c
+			until
+				Result /= Void
+			loop
+				if attached c.item.expected_action_parameters (a_location) as l_action then
+					Result := l_action
+				end
+			end
+		end
+
 	mappings: ARRAYED_LIST [CONF_LOCATION_MAPPING]
 			-- Registered location mappings.
 
@@ -67,7 +85,7 @@ feature -- Change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

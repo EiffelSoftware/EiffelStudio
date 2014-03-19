@@ -25,7 +25,8 @@ inherit
 		rename
 			make as make_multi_parser
 		redefine
-			switch_groups
+			switch_groups,
+			sub_system_name
 		end
 
 	IRON_ARGUMENTS
@@ -49,6 +50,12 @@ feature {NONE} -- Initialization
 		do
 			make
 			set_argument_source (src)
+		end
+
+	sub_system_name: IMMUTABLE_STRING_32
+			-- <Precursor>
+		once
+			create Result.make_from_string ({IRON_INFO_TASK}.name)
 		end
 
 feature -- Access

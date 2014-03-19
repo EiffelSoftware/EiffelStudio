@@ -1,0 +1,12 @@
+package
+	sub
+
+project
+	foo_safe = "foo\foo-safe.ecf"
+
+note
+	title: "Sub package"
+	description: "Package to test sub libraries"
+	tags:sub, test
+
+end

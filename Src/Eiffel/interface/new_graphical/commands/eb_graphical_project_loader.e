@@ -153,6 +153,32 @@ feature -- Settings
 			end
 		end
 
+	launch_iron_execution (a_iron_cmd: PATH; a_arguments: LIST [READABLE_STRING_GENERAL])
+			-- <Precursor>
+		local
+			l_prc_factory: PROCESS_FACTORY
+			l_prc_launcher: PROCESS
+			l_dialog: EB_EXTERNAL_OUTPUT_DIALOG
+		do
+			create l_prc_factory
+			l_prc_launcher := l_prc_factory.process_launcher (a_iron_cmd.name, a_arguments, Void)
+			l_prc_launcher.set_separate_console (False)
+			l_prc_launcher.set_hidden (True)
+			create l_dialog
+			l_dialog.set_process (l_prc_launcher)
+			l_dialog.set_title (interface_names.t_precompile_progress)
+			l_prc_launcher.redirect_input_to_stream
+			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
+			l_prc_launcher.redirect_error_to_same_as_output
+			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide_in_gui_thread)
+			l_prc_launcher.set_on_terminate_handler (agent l_dialog.hide_in_gui_thread)
+			l_prc_launcher.launch
+			if l_prc_launcher.launched then
+				l_dialog.show_modal_to_window (parent_window)
+				is_iron_execution_error := l_prc_launcher.exit_code /= 0
+			end
+		end
+
 	open_project (in_new_studio: BOOLEAN)
 			-- Open project.
 		require
@@ -402,6 +428,12 @@ feature {NONE} -- Error reporting
 			report_loading_error (warning_messages.w_project_build_precompile_error)
 		end
 
+	report_iron_packages_installation_error
+			-- <Precursor>
+		do
+			report_loading_error (warning_messages.w_iron_packages_installation_error)
+		end
+
 	report_loading_error (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
@@ -603,6 +635,16 @@ feature {NONE} -- User interaction
 			l_question.show (parent_window)
 		end
 
+	ask_iron_package_installation (a_packages: LIST [READABLE_STRING_32])
+			-- <Precursor>
+		local
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
+		do
+			create l_question.make_standard (warning_messages.w_iron_packages_to_install (a_packages), interface_names.l_Discard_iron_installation_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_iron_packages_installation_preference, True))
+			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent (ia_packages: LIST [READABLE_STRING_32]) do iron_packages_user_wants_to_install := ia_packages end (a_packages))
+			l_question.show (parent_window)
+		end
+
 feature {NONE} -- Actions
 
 	choose_again: BOOLEAN
@@ -716,7 +758,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

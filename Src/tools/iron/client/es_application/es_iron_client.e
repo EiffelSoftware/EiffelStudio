@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	initialize_iron (a_iron: IRON)
 			-- Initialize `a_iron' if needed
 		local
-			repo: IRON_REPOSITORY
+			repo: IRON_WEB_REPOSITORY
 			l_version: STRING
 		do
 			if
@@ -64,10 +64,10 @@ feature {NONE} -- Initialization
 				l_version.append_character ('.')
 				l_version.append (two_digit_minimum_minor_version)
 
-				create repo.make (create {URI}.make_from_string ("http://iron.eiffel.com/"), l_version)
-				print (m_registering_repository ("iron", repo.url))
+				create repo.make_from_version_uri (create {URI}.make_from_string ("http://iron.eiffel.com/" + l_version))
+				print (m_registering_repository (repo.location_string))
 				io.put_new_line
-				a_iron.catalog_api.register_repository ("iron", repo)
+				a_iron.catalog_api.register_repository (repo)
 
 				print (m_updating_repositories)
 				io.put_new_line

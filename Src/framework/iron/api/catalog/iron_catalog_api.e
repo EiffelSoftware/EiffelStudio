@@ -40,19 +40,28 @@ feature -- Change
 
 feature -- Access: repositories		
 
-	repositories: STRING_TABLE [IRON_REPOSITORY]
+	repositories: LIST [IRON_REPOSITORY]
 		do
 			Result := catalog.repositories
 		end
 
-	register_repository (a_name: READABLE_STRING_8; a_repo: IRON_REPOSITORY)
+	register_repository (a_repo: IRON_REPOSITORY)
 		do
-			catalog.register_repository (a_name, a_repo)
+			catalog.register_repository (a_repo)
+			catalog.update_repository (a_repo, False)
 		end
 
-	unregister_repository (a_name_or_uri: READABLE_STRING_GENERAL)
+	unregister_repository (a_uri: READABLE_STRING_GENERAL)
 		do
-			catalog.unregister_repository (a_name_or_uri)
+			if attached repository_at (a_uri) as repo then
+					-- Uninstall any package from the repository.
+				across
+					repo.available_packages as ic
+				loop
+					uninstall_package (ic.item)
+				end
+			end
+			catalog.unregister_repository (a_uri)
 		end
 
 	repository (a_uri: URI): detachable IRON_REPOSITORY
@@ -61,15 +70,34 @@ feature -- Access: repositories
 			Result := catalog.repository (a_uri)
 		end
 
+	repository_at (a_location: READABLE_STRING_GENERAL): detachable IRON_REPOSITORY
+			-- Registered repository related to `a_location'.
+		local
+			uri: PATH_URI
+		do
+			if a_location.has_substring ("://") then
+				Result := catalog.repository_at (a_location)
+			else
+				create uri.make_from_path (create {PATH}.make_from_string (a_location))
+				if uri.is_valid then
+					Result := catalog.repository (uri)
+				end
+			end
+		end
+
 feature -- Access: package	
 
 	available_packages: ARRAYED_LIST [IRON_PACKAGE]
 		do
 			create Result.make (10)
 			across
-				repositories as c
+				repositories as repo_ic
 			loop
-				Result.append (c.item.available_packages)
+				across
+					repo_ic.item.available_packages as ic
+				loop
+					Result.force (ic.item)
+				end
 			end
 		end
 
@@ -86,12 +114,27 @@ feature -- Access: package
 			Result := catalog.packages_associated_with_name (a_name)
 		end
 
-	package_associated_with_uri (a_uri_string: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
+	package_associated_with_uri (a_location: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
 		local
 			iri: IRI
+			l_uri: URI
+			exp: IRON_STRING_VARIABLE_EXPANSER
 		do
-			create iri.make_from_string (a_uri_string)
-			Result := catalog.package_associated_with_uri (iri.to_uri)
+			if
+				a_location.starts_with ("http://") or
+				a_location.starts_with ("https://")
+			then
+				create iri.make_from_string (a_location)
+				l_uri := iri.to_uri
+			elseif a_location.starts_with ("file://") then
+				create iri.make_from_string (a_location)
+				l_uri := iri.to_uri
+			else
+				create {PATH_URI} l_uri.make_from_path (create {PATH}.make_from_string (exp.expanded_string_32 (a_location.to_string_32, agent execution_environment.item)))
+			end
+			if l_uri.is_valid then
+				Result := catalog.package_associated_with_uri (l_uri)
+			end
 		end
 
 	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
@@ -101,14 +144,14 @@ feature -- Access: package
 
 feature -- Operations
 
-	download_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
+	download_package (a_repo: IRON_WEB_REPOSITORY; a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		do
-			catalog.download_package (a_package, ignoring_cache)
+			catalog.download_package (a_repo, a_package, ignoring_cache)
 		end
 
-	install_package (a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
+	install_package (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
 		do
-			catalog.install_package (a_package, ignoring_cache)
+			catalog.install_package (a_repo, a_package, ignoring_cache)
 		end
 
 	uninstall_package (a_package: IRON_PACKAGE)

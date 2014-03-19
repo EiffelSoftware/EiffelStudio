@@ -54,10 +54,10 @@ feature -- Execute
 
 	display_information (a_package: IRON_PACKAGE; args: IRON_ARGUMENTS; a_iron: IRON)
 		do
-			print (m_information_for (a_package.human_identifier, a_package.id, a_package.repository.url))
+			print (m_information_for (a_package.human_identifier, a_package.id, a_package.repository.location_string))
 			print_new_line
 			if
-				a_iron.installation_api.is_installed (a_package) and then
+				a_iron.installation_api.is_package_installed (a_package) and then
 				attached a_iron.installation_api.package_installation_path (a_package) as l_installation_path
 			then
 				print ("  ")
@@ -83,7 +83,7 @@ feature -- Execute
 					l_paths as c
 				loop
 					print ("    - ");
-					print (a_package.repository.url)
+					print (a_package.repository.location_string)
 					print (c.item); print ("%N")
 				end
 			end
@@ -113,7 +113,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,12 @@
+package
+	sub_unicode
+
+project
+	nihaoma_safe = "你好吗\nihaoma-safe.ecf"
+
+note
+	title: "Sub Unicode package"
+	description: "Package to test unicode path in library filename."
+	tags:unicode, test
+
+end

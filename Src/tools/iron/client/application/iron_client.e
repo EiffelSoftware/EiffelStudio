@@ -46,14 +46,21 @@ feature {NONE} -- Initialization
 			cmd: READABLE_STRING_32
 			task: detachable IRON_TASK
 			iron: IRON
+			cmd_task: IRON_COMMAND_TASK
 		do
+			create iron.make (iron_layout)
+			initialize_iron (iron)
+
 			if argument_count > 0 then
 				cmd := argument (1)
 				task := task_by_name (cmd, task_arguments (argument_array))
+				if task = Void then
+					create cmd_task.make (command_task_arguments (argument_array))
+					if cmd_task.is_available (iron) then
+						task := cmd_task
+					end
+				end
 			end
-
-			create iron.make (iron_layout)
-			initialize_iron (iron)
 
 			if task /= Void then
 				task.process (iron)
@@ -97,6 +104,30 @@ feature {NONE} -- Initialization
 			Result.count = args.count - 2
 		end
 
+	command_task_arguments (args: ARRAY [IMMUTABLE_STRING_32]): ARRAY [IMMUTABLE_STRING_32]
+		local
+			i,n: INTEGER
+		do
+			from
+				i := args.lower + 1
+				n := args.upper
+				if args.valid_index (i) then
+					create Result.make_filled (args[i], i, n)
+				else
+					create Result.make_empty
+				end
+			until
+				i > n
+			loop
+				Result[i] := args[i]
+				i := i + 1
+			end
+			Result.rebase (1)
+		ensure
+			Result.lower = 1
+			Result.count = args.count - 1
+		end
+
 	task_by_name (a_name: READABLE_STRING_GENERAL; args: like task_arguments): detachable IRON_TASK
 		do
 			if attached tasks.item (a_name) as t then
@@ -119,6 +150,7 @@ feature {NONE} -- Initialization
 
 			Result.force ([agent (args: like task_arguments): IRON_REPOSITORY_TASK  do create Result.make (args) end, "manage repository list"], "repository")
 			Result.force ([agent (args: like task_arguments): IRON_SHARE_TASK  do create Result.make (args) end, "share and manage your package (auth required)"], "share")
+			Result.force ([agent (args: like task_arguments): IRON_COMMAND_TASK  do create Result.make (args) end, "extension command for iron"], "command")
 
 			debug ("iron")
 				Result.force ([agent (args: like task_arguments): IRON_TESTING_TASK    do create Result.make (args) end, "Testing.."], "testing")
@@ -134,7 +166,7 @@ feature -- Access
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

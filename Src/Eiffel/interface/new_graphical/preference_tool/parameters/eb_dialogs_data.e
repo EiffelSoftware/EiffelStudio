@@ -141,6 +141,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_build_precompile_preference.value
 		end
 
+	confirm_iron_packages_installation: BOOLEAN
+			-- Should we display a dialog before installing missing iron packages?
+		do
+			Result := confirm_iron_packages_installation_preference.value
+		end
+
 	confirm_delete_eis_entries: BOOLEAN
 			-- Should we display a dialog before deleting EIS entries?
 		do
@@ -307,6 +313,9 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	confirm_build_precompile_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before building a needed precompile?
 
+	confirm_iron_packages_installation_preference: BOOLEAN_PREFERENCE
+			-- Should we display a dialog before installing iron missing packages?			
+
 	confirm_delete_eis_entries_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before deleting EIS entries?
 
@@ -385,6 +394,7 @@ feature -- Preference strings
 	confirm_always_compile_before_prettifying_string: STRING = "interface.dialogs.confirm_always_compile_before_prettifying"
 	confirm_convert_project_string: STRING = "interface.dialogs.confirm_convert_project"
 	confirm_build_precompile_string: STRING = "interface.dialogs.confirm_build_precompile"
+	confirm_iron_packages_installation_string: STRING = "interface.dialogs.confirm_iron_package_installation"
 	confirm_delete_eis_entries_string: STRING = "interface.dialogs.confirm_delete_eis_entries"
 	confirm_acknowledge_eis_affected_items_string: STRING = "interface.dialogs.confirm_acknowledge_eis_affected_items"
 	confirm_replace_all_string: STRING = "interface.dialogs.confirm_replace_all"
@@ -455,6 +465,7 @@ feature {NONE} -- Implementation
 			confirm_always_compile_before_executing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_compile_before_executing_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
 			confirm_build_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_build_precompile_string, True)
+			confirm_iron_packages_installation_preference := l_manager.new_boolean_preference_value (l_manager, confirm_iron_packages_installation_string, True)
 			confirm_delete_eis_entries_preference := l_manager.new_boolean_preference_value (l_manager, confirm_delete_eis_entries_string, True)
 			confirm_acknowledge_eis_affected_items_preference := l_manager.new_boolean_preference_value (l_manager, confirm_acknowledge_eis_affected_items_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
@@ -519,6 +530,7 @@ invariant
 	confirm_always_compile_before_executing_preference_not_void: confirm_always_compile_before_executing_preference /= Void
 	confirm_convert_project_preference_not_void: confirm_convert_project_preference /= Void
 	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void
+	confirm_iron_packages_installation_preference_not_void: confirm_iron_packages_installation_preference /= Void
 	confirm_delete_eis_entries_preference_not_void: confirm_delete_eis_entries_preference /= Void
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
@@ -541,7 +553,7 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -107,6 +107,11 @@ def process_package (fn,u,p,repo,v):
 				cmd_call (cmd)
 				#call(['iron', 'share', 'update', '-u', u, '-p', p, '--repository', repo, '--batch', '--package-name', p_name, '--package-archive-source', l_src], shell=True)
 
+		if not dict.has_key ('maps'):
+			if p_source != None:
+				m = p_source.replace ('\\', '/').replace ('../', "/com.eiffel/")
+				print m
+				dict['maps'] = [m]
 		if dict.has_key ('maps'):
 			p_maps = dict['maps']
 			if len(p_maps) > 0:
@@ -114,6 +119,7 @@ def process_package (fn,u,p,repo,v):
 					cmd = "%s --index \"%s\" " % (iron_update_cmd, m)
 					cmd_call (cmd)
 					#call(['iron', 'share', 'update', '-u', u, '-p', p, '--repository', repo, '--batch', '--package-name', p_name, '--index', m], shell=True)
+				
 
 
 def main():

@@ -35,8 +35,7 @@ feature -- Execute
 
 	execute (args: IRON_REPOSITORY_ARGUMENTS; a_iron: IRON)
 		local
-			repo: IRON_REPOSITORY
-			l_require_update: BOOLEAN
+			fac: IRON_REPOSITORY_FACTORY
 		do
 			if args.is_info then
 				print ("Iron packages installation:%N  - ")
@@ -50,29 +49,31 @@ feature -- Execute
 				across
 					a_iron.catalog_api.repositories as c
 				loop
-					print (c.key)
-					print (" -> ")
-					print (c.item.url)
+					print (c.item.location_string)
 					print ("%N")
 				end
+			elseif args.is_cleaning then
+				across
+					a_iron.installation_api.unexpected_installed_packages as ic
+				loop
+					a_iron.catalog_api.uninstall_package (ic.item)
+				end
+				check cleaned: a_iron.installation_api.unexpected_installed_packages.is_empty end
 			end
-			if attached args.repository_to_add as v and then attached args.repository_url as l_repo_url then
-				print (m_registering_repository (v, l_repo_url))
+			if attached args.repository_to_add as l_repo_location then
+				print (m_registering_repository (l_repo_location))
 				print_new_line
-				create repo.make_from_version_uri ((create {IRI}.make_from_string (l_repo_url)).to_uri)
-				a_iron.catalog_api.register_repository (v, repo)
-				l_require_update := True
+				create fac
+				if attached fac.new_repository (l_repo_location) as repo then
+					a_iron.catalog_api.register_repository (repo)
+				else
+					print (m_invalid_repository_location (l_repo_location))
+				end
 			end
-			if attached args.repository_to_remove as v then
-				print (m_unregistering_repository (v))
+			if attached args.repository_to_remove as l_repo_url then
+				print (m_unregistering_repository (l_repo_url))
 				print_new_line
-				a_iron.catalog_api.unregister_repository (v)
-				l_require_update := True
-			end
-			if l_require_update then
-				print (m_updating_repositories)
-				print_new_line
-				a_iron.catalog_api.update
+				a_iron.catalog_api.unregister_repository (l_repo_url)
 			end
 		end
 

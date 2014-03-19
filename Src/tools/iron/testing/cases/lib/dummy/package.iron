@@ -1,0 +1,11 @@
+package
+	dummy
+
+project
+	dummy_safe = "dummy-safe.ecf"
+
+note
+	title: "Dummy package"
+	tags:dummy
+
+end

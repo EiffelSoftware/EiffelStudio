@@ -21,6 +21,14 @@ feature -- Access
 			Result_ot_empty: Result /= Void implies not Result.is_empty
 		end
 
+	expected_action_parameters (a_location: READABLE_STRING_32): detachable CONF_LOCATION_MAPPER_ACTION
+			-- If Current mapping is waiting for specific action to handle `a_location', return the needed parameters ?
+			--| for instance with iron, a possible action would be to install related package.
+		deferred
+		ensure
+			Result /= Void implies mapped_location (a_location) = Void
+		end
+
 feature -- Basic operation
 
 	refresh
@@ -29,7 +37,7 @@ feature -- Basic operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

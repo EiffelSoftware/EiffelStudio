@@ -16,7 +16,7 @@
 {/unless}
 {unless isempty="$package.links" }
 <div class="well well-sm"><strong>Links:</strong>
-{foreach key="lnk_name" item="lnk" from="$package.links" }<a href="{$lnk.url/}"><span class="label label-info">{htmlentities}{$lnk_name/}{/htmlentities}</span></a> {/foreach}
+{foreach key="lnk_name" item="lnk" from="$package.links" }<a href="{$lnk.url/}"><span class="label label-info">{htmlentities}{if isempty="$lnk.title"}{$lnk_name/}{/if}{unless isempty-"$lnk.title"}{$lnk.title/}{/unless}{/htmlentities}</span></a> {/foreach}
 </div>
 {/unless}
 </p>

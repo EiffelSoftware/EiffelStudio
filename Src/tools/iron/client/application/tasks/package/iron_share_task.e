@@ -44,7 +44,6 @@ feature -- Execute
 			l_archive_path: detachable PATH
 			remote_node: IRON_REMOTE_NODE
 		do
-			create remote_node.make (a_iron.urls, a_iron.api_version)
 			err := False
 			if
 				attached args.username as u and
@@ -53,7 +52,11 @@ feature -- Execute
 				attached args.operation as op
 			then
 				create uri.make_from_string (repo_url.to_string_8)
-				if uri.is_valid and then attached a_iron.catalog_api.repository (uri) as repo then
+				if
+					uri.is_valid and then
+					attached {IRON_WEB_REPOSITORY} a_iron.catalog_api.repository (uri) as repo
+				then
+					create remote_node.make_with_repository (a_iron.urls, a_iron.api_version, repo)
 					l_data := data_from (args)
 					if l_data /= Void then
 						l_name := l_data.name
@@ -155,10 +158,10 @@ feature -- Execute
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, repo, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, l_package, u, p)
 							else
 								print ({STRING_32} "Update package %"" + l_package.human_identifier + {STRING_32} "%" %N")
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, repo, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_archive_path, l_package, u, p)
 							end
 							if remote_node.last_operation_succeed then
 								if l_package /= Void then
@@ -234,9 +237,9 @@ feature -- Execute
 						print_new_line
 					end
 				else
-					print ({STRING_32} "repository url [" + repo_url + "] is not known or invalid!")
+					print ({STRING_32} "Repository url [" + repo_url + "] is unknown or invalid!")
 					print_new_line
-					print ({STRING_32} "hint: iron repository --add name " + repo_url + " !")
+					print ({STRING_32} "hint: iron repository --add " + repo_url + " !")
 					print_new_line
 				end
 			else
@@ -308,18 +311,6 @@ feature -- Execute
 				end
 			end
 		end
-
---	new_client_session (repo: IRON_REPOSITORY; u,p: READABLE_STRING_32): HTTP_CLIENT_SESSION
---		local
---			cl: LIBCURL_HTTP_CLIENT
---		do
---			create cl.make
---			Result := cl.new_session (repo.uri.string)
---			Result.set_connect_timeout (-1)
---			Result.set_timeout (50)
---			Result.set_is_insecure (False)
---			Result.set_credentials (u, p)
---		end
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

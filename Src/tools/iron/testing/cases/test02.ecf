@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="test002" uuid="B43216AA-3DD5-434E-8B47-57CA01262FE5">
+	<target name="test002">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option void_safety="transitional">
+		</option>
+		<library name="base" location="iron:base:base-safe.ecf"/>
+		<library name="base_extension" location="iron:base_extension:base_extension-safe.ecf"/>
+		<library name="encoding" location="iron:encoding:encoding-safe.ecf"/>
+		<library name="xml" location="iron:xml:parser\xml_parser-safe.ecf"/>
+	</target>
+</system>

@@ -12,15 +12,16 @@ inherit
 	SHARED_EXECUTION_ENVIRONMENT
 
 create
-	make
+	make_with_repository
 
 feature {NONE} -- Initialization
 
-	make (a_urls: IRON_URL_BUILDER; a_api_version: IMMUTABLE_STRING_8)
+	make_with_repository (a_urls: IRON_URL_BUILDER; a_api_version: IMMUTABLE_STRING_8; a_repo: IRON_WEB_REPOSITORY)
 			-- Initialize `Current'.
 		do
 			urls := a_urls
 			api_version := a_api_version
+			repository := a_repo
 		end
 
 	urls: IRON_URL_BUILDER
@@ -29,14 +30,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	packages (a_repo: IRON_REPOSITORY): detachable LIST [IRON_PACKAGE]
+	repository: IRON_WEB_REPOSITORY
+
+	packages: detachable LIST [IRON_PACKAGE]
 		local
 			sess: like new_session
 			res: HTTP_CLIENT_RESPONSE
 			f: JSON_TO_IRON_FACTORY
 		do
-			sess := new_session (a_repo.uri.string)
-			res := sess.get (urls.path_package_list (a_repo), Void)
+			sess := new_session (repository.server_uri.string)
+			res := sess.get (urls.path_package_list (repository), Void)
 			if res.error_occurred then
 				if not is_silent then
 					print ("ERROR: connection%N")
@@ -44,7 +47,7 @@ feature -- Access
 			elseif attached res.body as l_body then
 				create {ARRAYED_LIST [IRON_PACKAGE]} Result.make (5)
 				create f
-				if attached f.json_to_packages (l_body, a_repo) as lst then
+				if attached f.json_to_packages (l_body, repository) as lst then
 					across
 						lst as p
 					loop
@@ -136,8 +139,10 @@ feature -- Operation
 
 	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32;
 				a_archive_path: detachable PATH;
-				a_repo: IRON_REPOSITORY; a_package: detachable IRON_PACKAGE;
+				a_package: detachable IRON_PACKAGE;
 				a_user, a_password: READABLE_STRING_32)
+		require
+			same_repository: a_package /= Void implies repository.is_same_repository (a_package.repository)
 		local
 			sess: like new_auth_session
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -145,10 +150,10 @@ feature -- Operation
 		do
 			last_operation_succeed := False
 			last_operation_error_message := Void
-			if a_package = Void then
-				sess := new_auth_session (a_repo.uri.string, a_user, a_password)
-			else
-				sess := new_auth_session (a_package.repository.uri.string, a_user, a_password)
+			sess := new_auth_session (repository.server_uri.string, a_user, a_password)
+			if a_package /= Void then
+				check same_repo: repository.is_same_repository (a_package.repository) end
+--				sess := new_auth_session (a_package.repository.remote_repository.server_uri.string, a_user, a_password)
 			end
 			sess.set_timeout (0) -- never timeout
 			create ctx.make_with_credentials_required
@@ -165,9 +170,10 @@ feature -- Operation
 				ctx.add_form_parameter ("description", a_description)
 			end
 			if a_package = Void then
-				res := sess.post (urls.path_create_package (a_repo), ctx, Void)
+				res := sess.post (urls.path_create_package (repository), ctx, Void)
 			else
-				res := sess.post (urls.path_update_package (a_package.repository, a_package), ctx, Void)
+				res := sess.post (urls.path_update_package (repository, a_package), ctx, Void)
+--				res := sess.post (urls.path_update_package (a_package.repository.remote_repository, a_package), ctx, Void)				
 			end
 			if res.error_occurred then
 				last_operation_succeed := False
@@ -195,6 +201,7 @@ feature -- Operation
 			a_user, a_password: READABLE_STRING_32)
 		require
 			a_package_has_id: a_package.has_id
+			same_repository: repository.is_same_repository (a_package.repository)
 		local
 			sess: like new_auth_session
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -202,7 +209,7 @@ feature -- Operation
 		do
 			last_operation_succeed := False
 			last_operation_error_message := Void
-			sess := new_auth_session (a_package.repository.uri.string, a_user, a_password)
+			sess := new_auth_session (repository.server_uri.string, a_user, a_password)
 			create ctx.make_with_credentials_required
 			ctx.add_form_parameter ("id", a_package.id.to_string_32)
 			across
@@ -210,7 +217,7 @@ feature -- Operation
 			loop
 				ctx.add_form_parameter ("map[]", ic.item.to_string_8)
 			end
-			res := sess.post (urls.path_add_package_index (a_package.repository, a_package), ctx, Void)
+			res := sess.post (urls.path_add_package_index (repository, a_package), ctx, Void)
 			if res.error_occurred then
 				last_operation_succeed := False
 				if attached res.error_message as errmsg then
@@ -229,6 +236,7 @@ feature -- Operation
 	upload_package_archive (a_package: IRON_PACKAGE; a_archive_path: PATH; a_user, a_password: READABLE_STRING_32)
 		require
 			a_package_has_id: a_package.has_id
+			same_repository: repository.is_same_repository (a_package.repository)
 		local
 			sess: like new_auth_session
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -236,12 +244,12 @@ feature -- Operation
 		do
 			last_operation_succeed := False
 			last_operation_error_message := Void
-			sess := new_auth_session (a_package.repository.uri.string, a_user, a_password)
+			sess := new_auth_session (repository.server_uri.string, a_user, a_password)
 			create ctx.make_with_credentials_required
 			ctx.set_upload_filename (a_archive_path.name)
 			ctx.add_header ("Content-Type", "application/zip")
 			sess.set_timeout (0) -- Never timeout ...
-			res := sess.post (urls.path_upload_package_archive (a_package.repository, a_package), ctx, Void)
+			res := sess.post (urls.path_upload_package_archive (repository, a_package), ctx, Void)
 			if res.error_occurred then
 				last_operation_succeed := False
 				if attached res.error_message as errmsg then
@@ -262,6 +270,8 @@ feature -- Operation
 			-- Delete package `a_package' using credential `a_user:a_password'
 			-- Set `last_operation_succeed' and `last_operation_error_message'
 			--  accordingly with operation result.
+		require
+			same_repository: repository.is_same_repository (a_package.repository)
 		local
 			sess: like new_auth_session
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -269,9 +279,9 @@ feature -- Operation
 		do
 			last_operation_succeed := False
 			last_operation_error_message := Void
-			sess := new_auth_session (a_package.repository.uri.string, a_user, a_password)
+			sess := new_auth_session (repository.server_uri.string, a_user, a_password)
 			create ctx.make_with_credentials_required
-			res := sess.delete (urls.path_package_delete (a_package.repository, a_package), ctx)
+			res := sess.delete (urls.path_package_delete (repository, a_package), ctx)
 			if res.error_occurred then
 				last_operation_succeed := False
 				if attached res.error_message as errmsg then

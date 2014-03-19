@@ -14,6 +14,7 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="false"/>
+		<library name="iron_support" location="..\support\iron_support.ecf" readonly="false"/>
 		<cluster name="src" location="kernel" recursive="true"/>
 	</target>
 </system>

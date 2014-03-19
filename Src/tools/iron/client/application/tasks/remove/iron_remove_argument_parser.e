@@ -13,29 +13,11 @@ class
 
 inherit
 	IRON_ARGUMENT_MULTI_PARSER
-		rename
-			make as make_parser
-		end
 
 	IRON_REMOVE_ARGUMENTS
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_task: IRON_TASK)
-			-- Initialize argument parser
-		do
-			task := a_task
-			make_parser (False, True)
-			set_argument_source (a_task.argument_source)
-			is_using_builtin_switches := not is_verbose_switch_used
---			set_is_using_separated_switch_values (False)
---			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
-		end
-
-	task: IRON_TASK
 
 feature -- Access
 
@@ -52,13 +34,6 @@ feature -- Access
 			loop
 				Result.force (create {IMMUTABLE_STRING_32}.make_from_string (c.item))
 			end
-		end
-
-feature {NONE} -- Usage
-
-	name: IMMUTABLE_STRING_32
-		once
-			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + task.name)
 		end
 
 feature {NONE} -- Usage
@@ -95,7 +70,7 @@ feature {NONE} -- Switches
 	all_switch: STRING = "a|all"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

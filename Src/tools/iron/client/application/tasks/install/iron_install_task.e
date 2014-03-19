@@ -32,6 +32,8 @@ feature -- Execute
 		local
 			l_package: detachable IRON_PACKAGE
 			lst: ARRAYED_LIST [IRON_PACKAGE]
+			l_conflicts: detachable ITERABLE [IRON_PACKAGE]
+			l_choices: ARRAYED_LIST [TUPLE [prompt: READABLE_STRING_GENERAL; value: IRON_PACKAGE]]
 		do
 			if args.installing_all then
 				lst := a_iron.catalog_api.available_packages
@@ -43,28 +45,52 @@ feature -- Execute
 					print (m_searching (c.item))
 					print_new_line
 					l_package := Void
-					if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
-						-- url
+					if
+						c.item.has ('/') or c.item.has ('\')
+					then -- uri or local path
 						l_package := a_iron.catalog_api.package_associated_with_uri (c.item)
 					else
-						-- name (or uuid) ?
+							-- name (or uuid) ?
 						if attached a_iron.catalog_api.packages_associated_with_name (c.item) as l_packages and then not l_packages.is_empty then
 							if l_packages.count = 1 then
 								l_package := l_packages.first
 							else
-								print ("  -> ")
+								print ("-> ")
 								print (m_several_packages_for_name (c.item))
 								print_new_line
 
+								create l_choices.make (l_packages.count)
+
+								across
+									l_packages as packages_ic
+								loop
+									if l_package = Void then
+											-- Install first the first package found in repository order.
+										l_package := packages_ic.item
+									end
+									a_iron.installation_api.refresh_installed_packages
+									if a_iron.installation_api.is_package_installed (packages_ic.item) then
+										l_choices.force ([packages_ic.item.human_identifier + " [installed]", packages_ic.item])
+									else
+										l_choices.force ([packages_ic.item.human_identifier, packages_ic.item])
+									end
+									if args.is_batch then
+										print ("    - ")
+										print (packages_ic.item.human_identifier)
+										print ("%N")
+									end
+								end
+
 								if args.is_batch then
-									-- skip
+										-- use default `l_package'
 								else
-									-- FIXME: to implement
---									across
---										lst as p
---									loop
---										-- Selection ..
---									end
+									l_package := selected_package ("Select a package", l_choices, l_package)
+								end
+
+								if l_package /= Void then
+									print ("-> Install ")
+									print (l_package.human_identifier)
+									print ("%N")
 								end
 							end
 						end
@@ -86,8 +112,10 @@ feature -- Execute
 					lst as c
 				loop
 					l_package := c.item
+					l_conflicts := a_iron.installation_api.packages_conflicting_with_package (l_package)
+								-- This can occurs if package are referenced by full URI
 					print (m_installing (l_package.human_identifier))
-					if a_iron.installation_api.is_installed (l_package) then
+					if a_iron.installation_api.is_package_installed (l_package) then
 						print (" -> ")
 						print (tk_already_installed)
 						print_new_line
@@ -102,9 +130,10 @@ feature -- Execute
 							print (tk_simulated)
 							print_new_line
 						else
-							a_iron.catalog_api.install_package (l_package, args.ignoring_cache)
+							a_iron.catalog_api.install_package (l_package.repository, l_package, args.ignoring_cache)
 							print (" -> ")
-							if a_iron.installation_api.is_installed (l_package) then
+							a_iron.installation_api.refresh_installed_packages
+							if a_iron.installation_api.is_package_installed (l_package) then
 								print (tk_successfully_installed)
 								print_new_line
 								if args.verbose and attached a_iron.installation_api.package_installation_path (l_package) as l_installation_path then
@@ -118,6 +147,18 @@ feature -- Execute
 							end
 						end
 					end
+					if l_conflicts /= Void then
+						print ("  -> ")
+						print (m_conflicting (l_package.human_identifier))
+						across
+							l_conflicts as ic
+						loop
+							print ("(")
+							print (ic.item.human_identifier)
+							print (") ")
+						end
+						print_new_line
+					end
 				end
 			end
 			if not args.files.is_empty then
@@ -127,7 +168,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

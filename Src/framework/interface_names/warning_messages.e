@@ -97,7 +97,32 @@ feature -- Project file/directory warnings
 						)
 		end
 
+	w_iron_packages_to_install (a_iron_packages: LIST [READABLE_STRING_32]): STRING_32
+		local
+			s: STRING_32
+		do
+			create s.make_empty
+			across
+				a_iron_packages as ic
+			loop
+				if not s.is_empty then
+					s.append_character (',')
+					s.append_character (' ')
+				end
+				s.append (ic.item)
+			end
+			Result := locale.formatted_string (
+							locale.translation (
+			"The project needs to use the following iron packages, which has not been installed.%N%
+			%(packages: %"$1%")%N%
+			%Should the iron packages be installed?"),
+							[s]
+						)
+		end
+
 	w_project_build_precompile_error: STRING_32 do Result := locale.translation ("Could not generate needed precompiled library.") end
+
+	w_iron_packages_installation_error: STRING_32 do Result := locale.translation ("Could not install iron packages.") end
 
 	w_Project_interrupted (dir_name: READABLE_STRING_GENERAL): STRING_32
 		require
@@ -1143,7 +1168,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

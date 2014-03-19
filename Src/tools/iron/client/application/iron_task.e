@@ -61,8 +61,62 @@ feature -- Output
 			io.put_new_line
 		end
 
+feature -- Helper
+
+	selected_package (a_question: READABLE_STRING_GENERAL; a_choice: LIST [TUPLE [prompt: READABLE_STRING_GENERAL; value: IRON_PACKAGE]]; dft: detachable IRON_PACKAGE): detachable IRON_PACKAGE
+			-- Return the selected package according to the choice of the user
+			-- by default it returns `dft'.
+		local
+			i,d,r: INTEGER
+			s: STRING
+		do
+			i := 1
+			across
+				a_choice as ic
+			loop
+				if dft = ic.item.value then
+					d := i
+				end
+				print ("  " + i.out + ") ")
+				print (ic.item.prompt)
+				print ("%N")
+				i := i + 1
+			end
+			from
+				r := -1
+			until
+				r >= 0
+			loop
+				print ("  > ")
+				print (a_question)
+				if d > 0 then
+					print (" [" + d.out + "] ")
+				end
+				print ("(q=cancel): ")
+				io.read_line
+				s := io.last_string
+				s.left_adjust
+				s.right_adjust
+				if s.is_empty then
+					r := d
+				elseif s.is_case_insensitive_equal_general ("q") then
+					r := 0
+				elseif s.is_integer then
+					r := s.to_integer
+					if r >= 1 and r <= a_choice.count then
+							-- Found answer
+					else
+						r := -1 -- Ask again
+					end
+				end
+			end
+			if r > 0 and r <= a_choice.count then
+				Result := a_choice.i_th (r).value
+			end
+		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

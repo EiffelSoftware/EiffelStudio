@@ -51,10 +51,14 @@ feature -- Status report
 
 feature -- Change
 
-	force_parameter (a_value: READABLE_STRING_32; a_key: READABLE_STRING_GENERAL)
+	force_parameter (a_value: detachable READABLE_STRING_32; a_key: READABLE_STRING_GENERAL)
 			-- Set parameter `a_key' to value `a_value'.
 		do
-			parameters.force (a_value, a_key)
+			if a_value /= Void then
+				parameters.force (a_value, a_key)
+			else
+				parameters.force ({STRING_32} "", a_key)
+			end
 		end
 
 note

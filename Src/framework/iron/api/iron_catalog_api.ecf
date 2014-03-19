@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="iron_catalog_api" uuid="3FFE8BB2-86D0-4EAD-86FC-9A860E4E6E84" library_target="iron_catalog_api">
+	<target name="iron_catalog_api">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
+		</option>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+
+
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="false"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf" readonly="false"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true"/>
+			</option>
+		</library>
+		
+		<library name="api" location="iron_api.ecf" readonly="false"/>
+		<library name="installation_api" location="iron_installation_api.ecf" readonly="false"/>
+		<library name="support" location="../support/iron_support.ecf" readonly="false"/>
+		<cluster name="iron_catalog" location="catalog" recursive="true"/>
+	</target>
+</system>

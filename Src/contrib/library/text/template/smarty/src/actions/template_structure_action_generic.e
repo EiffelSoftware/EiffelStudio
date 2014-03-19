@@ -169,9 +169,10 @@ feature {NONE} -- Implementation
 			vn: detachable STRING
 			cond_isset: BOOLEAN
 			cond_isempty: BOOLEAN
-			vv: like resolved_expression
+			vv,vv1,vv2: like resolved_expression
 			cond: BOOLEAN
 			item_output: STRING
+			l_sp_exp: LIST[STRING]
 		do
 			if parameters.has (condition_param_id) then
 				vn := parameters.item (condition_param_id)
@@ -185,8 +186,14 @@ feature {NONE} -- Implementation
 				cond_isempty := True
 			end
 			if vn /= Void and then not vn.is_empty then
-				vv := resolved_expression (vn)
-
+				if vn.has ('=') then
+					l_sp_exp := vn.split ('=')
+					vv1 := resolved_expression (l_sp_exp.at (1))
+					vv2 := resolved_expression (l_sp_exp.at (2))
+					vv := vv1 = vv2
+				else
+					vv := resolved_expression (vn)
+				end
 				if vv = Void then
 					if cond_isempty then
 						cond := True
@@ -230,7 +237,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

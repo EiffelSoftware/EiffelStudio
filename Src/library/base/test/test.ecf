@@ -4,7 +4,7 @@
 	<target name="base_testing">
 		<root all_classes="true"/>
 		<option warning="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="test" location="." recursive="true"/>
 	</target>
 </system>

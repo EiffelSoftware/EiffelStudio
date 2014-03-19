@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {USER_REPORT_PAGE}."
+	description: "Summary description for {ESA_RESPONSIBLE_REPORT_PAGE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_USER_REPORT_PAGE
+	ESA_RESPONSIBLE_REPORT_PAGE
 
 inherit
 
@@ -24,23 +24,26 @@ feature {NONE} --Initialization
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 
-			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
-			set_selected_category (a_view.categories,a_view.selected_category)
+--			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
+--			set_selected_category (a_view.categories,a_view.selected_category)
 
-			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
-			set_selected_status (a_view.status,a_view.selected_status)
+--			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
+--			set_selected_status (a_view.status,a_view.selected_status)
 
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("user_reports.tpl")
+			set_template_file_name ("user_responsible_reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view.reports.at (1), "statistics")
 			template.add_value (a_view.reports.at (2), "reports")
+			template.add_value (a_view.responsibles, "responsibles")
 			template.add_value (a_view.categories, "categories")
+			template.add_value (a_view.priorities, "priorities")
 			template.add_value (a_view.status, "status")
-			template.add_value (a_view.selected_status, "selected_status")
-			template.add_value (a_view.selected_category, "selected_category")
+			template.add_value (a_view.severities, "severities")
+			template.add_value (a_view, "view")
+
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
 			end
@@ -78,3 +81,6 @@ feature {NONE} --Initialization
 			end
 
 end
+
+
+

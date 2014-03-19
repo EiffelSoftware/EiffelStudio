@@ -59,6 +59,11 @@ feature -- View
 		deferred
 		end
 
+	problem_reports_responsible	(req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- Problem reports representation for a given user
+		deferred
+		end
+
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_REPORT_FORM_VIEW)
 			-- Report form
 		deferred

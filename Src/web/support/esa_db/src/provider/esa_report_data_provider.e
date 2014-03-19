@@ -87,7 +87,7 @@ feature -- Access
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
 			l_parameters.put (string_parameter (a_column, 30), "Column")
-			create l_query.make_from_string (select_problem_resports_template)
+			create l_query.make_from_string (Select_problem_reports_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
 				l_query.replace_substring_all ("$ORD2", "DESC")
@@ -99,6 +99,49 @@ feature -- Access
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
 		end
+
+	problem_reports_responsibles (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER;
+								a_column: READABLE_STRING_32; a_order: INTEGER; a_status:  READABLE_STRING_32; a_username: READABLE_STRING_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+			-- All Problem reports for responsible users
+			-- All reports are visible for responsible users
+			-- Filtered category `a_category' and status `a_status'
+			-- Order by column `a_column' in a DESC or ASC.
+			-- by the default the order by is done on Number.
+		local
+			l_parameters: STRING_TABLE[ANY]
+			l_query: STRING
+		do
+			create l_parameters.make (2)
+			l_parameters.put (a_rows_per_page, "RowsPerPage")
+			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
+			l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
+			l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
+			l_parameters.put (string_parameter (a_column, 30), "Column")
+
+			create l_query.make_from_string (Select_problem_reports_responsibles_template)
+
+			if  not a_username.is_empty then
+				l_query.replace_substring_all ("$Submitter","Username = :Username AND")
+			else
+				l_query.replace_substring_all ("$Submitter","")
+			end
+
+			if a_order = 1 then
+				l_query.replace_substring_all ("$ORD1", "ASC")
+				l_query.replace_substring_all ("$ORD2", "DESC")
+			else
+				l_query.replace_substring_all ("$ORD1", "DESC")
+				l_query.replace_substring_all ("$ORD2", "ASC")
+			end
+				--| Need to be updated to build the set based on user selection.
+			l_query.replace_substring_all ("$StatusSet","("+a_status +")")
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report_responsible)
+		end
+
 
 	problem_report (a_number: INTEGER): detachable ESA_REPORT
 			-- Problem report with number `a_number'.
@@ -438,6 +481,20 @@ feature -- Access
 			create Result.make (db_handler, agent new_report)
 		end
 
+	responsibles: ESA_DATABASE_ITERATION_CURSOR [ESA_USER]
+			-- Problem report responsibles
+			-- Columns ContactID, Username, Name
+
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			create l_parameters.make (0)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportResponsibles", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_reponsible)
+		end
+
+
 feature -- Basic Operations
 
 	new_problem_report_id (a_username: STRING): INTEGER
@@ -484,15 +541,17 @@ feature -- Basic Operations
 			disconnect
 		end
 
-	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER): INTEGER
-			-- Row count table `PROBLEM_REPORT table' for guest users
+	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username:READABLE_STRING_32): INTEGER
+			-- Row count table `PROBLEM_REPORT table' for guest users and
+			-- users with role user.
 		local
 				l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
 			connect
 			create l_parameters.make (2)
-			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsRowCountGuest", l_parameters))
 			db_handler.execute_reader
 
@@ -504,6 +563,39 @@ feature -- Basic Operations
 			end
 			disconnect
 		end
+
+
+	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32;a_username: READABLE_STRING_32): INTEGER
+				-- Number of problems reports for responsible users.
+				-- Could be filtered by category, serverity, priority, responsible, and username.
+			local
+				l_parameters: STRING_TABLE[ANY]
+				l_query: STRING
+			do
+				create l_parameters.make (5)
+				l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+				l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
+				l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
+				l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
+				l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				create l_query.make_from_string (select_row_count_problem_reports_responsibles)
+				if  not a_username.is_empty then
+					l_query.replace_substring_all ("$Submitter","Username = :Username AND")
+				else
+					l_query.replace_substring_all ("$Submitter","")
+				end
+					--| Need to be updated to build the set based on user selection.
+				l_query.replace_substring_all ("$StatusSet","("+a_status+")")
+				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+				db_handler.execute_query
+				if not db_handler.after then
+					db_handler.start
+					if attached db_handler.read_integer_32 (1) as l_count then
+						Result := l_count
+					end
+				end
+				disconnect
+			end
 
 	commit_problem_report (a_report_id: INTEGER)
 			-- Commit temporary problem report `a_report_id'.
@@ -689,7 +781,7 @@ feature {NONE} -- Implementation
 
 	new_report (a_tuple: DB_TUPLE): ESA_REPORT
 		do
-			create Result.make (-1, "Null", False)
+			create Result.make (0, "Null", False)
 			if attached a_tuple as l_tuple then
 				if attached {INTEGER_32_REF} l_tuple.item (1) as l_item_1 then
 						Result.set_number (l_item_1.item)
@@ -713,7 +805,7 @@ feature {NONE} -- Implementation
 	new_report_detail (a_tuple: DB_TUPLE): ESA_REPORT
 		do
 
-			create Result.make (-1, "Null", False)
+			create Result.make (0, "Null", False)
 				--SubmissionDate
 			if attached {DATE_TIME} a_tuple.item (1) as  l_item_1 then
 						Result.set_submission_date (l_item_1)
@@ -781,6 +873,61 @@ feature {NONE} -- Implementation
 
 		end
 
+	new_report_responsible (a_tuple: DB_TUPLE): ESA_REPORT
+		do
+
+			create Result.make (0, "Null", False)
+				--Number
+			if attached db_handler.read_integer_32 (1) as l_number then
+					Result.set_number (l_number)
+			end
+				--Synopsis	
+			if attached db_handler.read_string (2) as  l_synopsis then
+				Result.set_synopsis (l_synopsis)
+			end
+				--Submission Date	
+			if attached db_handler.read_date_time (3) as  l_date then
+				Result.set_submission_date (l_date)
+			end
+				--Release	
+			if attached db_handler.read_string (4) as  l_release then
+				Result.set_release (l_release)
+			end
+				--Priority ID
+			if attached db_handler.read_integer_32 (5) as  l_priority then
+				Result.set_priority (create {ESA_REPORT_PRIORITY}.make (l_priority,""))
+			end
+				--Category Synopsis
+			if attached db_handler.read_string (6) as l_category_synopsis then
+				Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (0,l_category_synopsis, True))
+			end
+			 	--Severity ID
+			if attached db_handler.read_integer_32 (7) as  l_severity then
+				Result.set_severity (create {ESA_REPORT_SEVERITY}.make ( l_severity,""))
+			end
+			 	--Status ID
+			if attached db_handler.read_integer_32 (8) as  l_status then
+				Result.set_status (create {ESA_REPORT_STATUS}.make ( l_status,""))
+			end
+				-- Description
+			if attached db_handler.read_string (9) as l_description then
+				Result.set_description (l_description)
+			end
+			 	--User Name
+			if attached db_handler.read_string (10) as  l_name then
+				Result.set_contact (create {ESA_USER}.make (l_name))
+			end
+				-- Responsible ID
+			if attached db_handler.read_integer_32 (11) as l_responsible then
+				Result.set_assigned (create {ESA_USER}.make (""))
+				if attached Result.assigned as l_assigned then
+					l_assigned.set_id (l_responsible)
+				end
+			end
+		end
+
+
+
 
 	new_report_interaction (a_tuple: DB_TUPLE; a_report: ESA_REPORT): ESA_REPORT_INTERACTION
 			-- InteractionDate, Content, Username, FirstName, LastName, StatusSynopsis, Private, InteractionID
@@ -829,7 +976,7 @@ feature {NONE} -- Implementation
 			if attached {INTEGER_32_REF} a_tuple.item (1) as  l_item_1 then
 				create Result.make (l_item_1,a_report,"")
 			else
-				create Result.make (-1, a_report, "")
+				create Result.make (0, a_report, "")
 			end
 
 				--Interaction Date
@@ -857,7 +1004,7 @@ feature {NONE} -- Implementation
 
 	new_report_class (a_tuple: DB_TUPLE): ESA_REPORT_CLASS
 		do
-			create Result.make (-1, "")
+			create Result.make (0, "")
 			if attached db_handler.read_integer_32 (1) as l_id then
 				Result.set_id (l_id)
 			end
@@ -868,7 +1015,7 @@ feature {NONE} -- Implementation
 
 	new_report_severity (a_tuple: DB_TUPLE): ESA_REPORT_SEVERITY
 		do
-			create Result.make (-1, "")
+			create Result.make (0, "")
 			if attached db_handler.read_integer_32 (1) as l_id then
 				Result.set_id (l_id)
 			end
@@ -879,7 +1026,7 @@ feature {NONE} -- Implementation
 
 	new_report_priority (a_tuple: DB_TUPLE): ESA_REPORT_PRIORITY
 		do
-			create Result.make (-1, "")
+			create Result.make (0, "")
 			if attached db_handler.read_integer_32 (1) as l_id then
 				Result.set_id (l_id)
 			end
@@ -892,10 +1039,22 @@ feature {NONE} -- Implementation
 	new_report_status (a_data_value: DB_TUPLE): ESA_REPORT_STATUS
 			-- New `Report Status'
 		do
-			create Result.make (-1, "")
+			create Result.make (0, "")
 			Result.set_id (db_handler.read_integer_32 (1))
 			if attached db_handler.read_string (2) as l_synopsis then
 				Result.set_synopsis (l_synopsis)
+			end
+		end
+
+	new_reponsible (a_data_value: DB_TUPLE): ESA_USER
+			-- New `responsible User'
+		do
+			create Result.make ("")
+			if attached db_handler.read_string (3) as l_name then
+				create Result.make (l_name)
+			end
+			if attached db_handler.read_integer_32 (1) as l_id then
+				Result.set_id (l_id)
 			end
 		end
 
@@ -925,7 +1084,7 @@ feature -- Queries
 	Select_categories: STRING = "select CategoryID, CategorySynopsis from ProblemReportCategories;"
 
 
-	Select_problem_resports_template: STRING = "[
+	Select_problem_reports_template: STRING = "[
 				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
 			 FROM (
 			    SELECT TOP (:RowsPerPage)
@@ -947,5 +1106,90 @@ feature -- Queries
 	]"
 
 
+
+
+ Select_problem_reports_responsibles_template : STRING = "[
+			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,
+					 PAG2.Release, PAG2.PriorityID,
+					 PAG2.CategorySynopsis, PAG2.SeverityID,
+					 PAG2.StatusID, PAG2.Description,
+					 PAG2.Username as 'DisplayName',
+					 PAG2.ResponsibleID, PAG2.Username
+				FROM (SELECT TOP (:RowsPerPage)  
+				     PAG.Number, PAG.Synopsis, SubmissionDate,
+					 PAG.Release, PAG.PriorityID,
+					 PAG.CategorySynopsis, PAG.SeverityID,
+					 PAG.StatusID, PAG.Description,
+					 PAG.Username as 'DisplayName',
+					 PAG.ResponsibleID, PAG.Username,
+					 PAG.CategoryID,
+					 PAG.ReportID,
+					 PAG.ContactID	
+					FROM (SELECT TOP ((:PageNumber)*:RowsPerPage) 
+					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
+						 ProblemReports.Release, ProblemReports.PriorityID,
+						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID,
+						 ProblemReports.StatusID, ProblemReports.Description,
+						 Memberships.Username as 'DisplayName',
+						 ProblemReportResponsibles.ResponsibleID, Memberships.Username,
+						 ProblemReports.CategoryID,
+						 ProblemReports.ReportID,
+						 Memberships.ContactID
+						FROM ProblemReports
+						INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
+						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+																(select max (ReportResponsibleID) as ReportResponsibleID
+										    from ProblemReportResponsibles prr, ProblemReports pr
+										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  
+						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+						WHERE $Submitter
+						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+						AND StatusID in $StatusSet
+						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
+						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
+						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+						ORDER BY :Column $ORD1
+					) AS PAG
+				    INNER JOIN ProblemReportCategories ON PAG.CategoryID = ProblemReportCategories.CategoryID
+					LEFT JOIN Memberships ON PAG.ContactID = Memberships.ContactID
+					LEFT JOIN Contacts ON Contacts.ContactID = PAG.ContactID
+					LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+																	(select max (ReportResponsibleID) as ReportResponsibleID
+											    from ProblemReportResponsibles prr, ProblemReports pr
+											    where prr.ReportID = pr.ReportID )  
+					LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = PAG.ReportID	
+					ORDER by :Column $ORD2
+				 )  as PAG2 
+			   INNER JOIN ProblemReportCategories ON PAG2.CategoryID = ProblemReportCategories.CategoryID
+			   LEFT JOIN Memberships ON PAG2.ContactID = Memberships.ContactID
+			   LEFT JOIN Contacts ON Contacts.ContactID = PAG2.ContactID
+			   LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+														(select max (ReportResponsibleID) as ReportResponsibleID
+								    from ProblemReportResponsibles prr, ProblemReports pr
+								    where prr.ReportID = pr.ReportID )  
+				LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = PAG2.ReportID	
+			   ORDER by :Column $ORD1
+ 		]"
+
+
+
+	Select_row_count_problem_reports_responsibles : STRING = "[
+						SELECT COUNT(DISTINCT(number))
+						FROM ProblemReports
+						INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
+						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
+						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+						WHERE  
+						$Submitter
+						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+						AND StatusID in $StatusSet
+						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
+						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
+						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+		]"
 
 end

@@ -96,6 +96,36 @@ feature -- Access
 		end
 
 
+	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32):TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
+			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
+		local
+			l_status: LIST[ESA_REPORT_STATUS]
+			l_report: ESA_REPORT
+			l_list: LIST[ESA_REPORT]
+			l_statistics: ESA_REPORT_STATISTICS
+		do
+			l_status := status
+
+			data_provider.connect
+			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create l_statistics
+			data_provider.connect
+			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username) as c loop
+				l_report := c.item
+				if attached status_cache as l_cache and then attached l_report.status as ll_status then
+					if attached l_cache.item (ll_status.id) as l_item then
+						update_statistics (l_statistics, l_item)
+						l_report.set_status (l_item)
+					end
+				end
+				l_list.force (l_report)
+			end
+			data_provider.disconnect
+			is_successful := data_provider.is_successful
+			Result := [l_statistics, l_list]
+		end
+
 
 	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- Problem reports for user with username `a_username'
@@ -255,7 +285,7 @@ feature -- Access
 			-- Role associated with username `a_username'
 		do
 			if attached login_provider.role (a_username) as l_role and then
-			   attached login_provider.role_description (a_username) as l_description then
+			   attached login_provider.role_description (l_role) as l_description then
 				create Result.make (l_role, l_description)
 			else
 				create Result.make ("Guest", "Anonymous Users")
@@ -263,12 +293,32 @@ feature -- Access
 			is_successful := login_provider.is_successful
 		end
 
+	responsibles: LIST [ESA_USER]
+			-- Problem report responsibles
+			-- Columns ContactID, Username, Name
+		do
+			create {ARRAYED_LIST[ESA_USER]}Result.make (0)
+			data_provider.connect
+			across data_provider.responsibles as c loop Result.force (c.item)   end
+			data_provider.disconnect
+			is_successful := data_provider.is_successful
+		end
+
 feature -- Basic Operations
 
-	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER): INTEGER
+	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
-			Result := data_provider.row_count_problem_report_guest (a_category, a_status)
+			Result := data_provider.row_count_problem_report_guest (a_category, a_status, a_username)
+			is_successful := data_provider.is_successful
+		end
+
+	row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_status, a_username: READABLE_STRING_32): INTEGER
+			-- Number of problems reports for responsible users.
+			-- With filters by category `a_category', severity 'a_severity', priority `a_priority', responsible `a_responsible',
+			-- status `a_status' and submitter `a_submitter'
+		do
+			Result := data_provider.row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible, a_status, a_username)
 			is_successful := data_provider.is_successful
 		end
 

@@ -7,6 +7,10 @@ note
 class
 	ESA_USER
 
+inherit
+
+	ESA_REPORT_SELECTABLE
+
 create
 	make
 
@@ -15,6 +19,7 @@ feature {NONE} -- Initialization
 	make (a_name: READABLE_STRING_32)
 		do
 			name := a_name
+			set_synopsis (a_name)
 		end
 
 feature -- Access
@@ -28,6 +33,9 @@ feature -- Access
 	is_active: BOOLEAN assign set_is_active
 
 	creation_date: detachable READABLE_STRING_8 assign set_creation_date
+
+	synopsis: READABLE_STRING_32
+
 
 feature -- Element change
 
@@ -50,6 +58,13 @@ feature -- Element change
 		do
 			creation_date := v
 		end
+
+	set_synopsis (a_synopsis: like synopsis)
+			-- Set `synopsis' with `a_synopsis'		
+		do
+			synopsis := a_synopsis
+		end
+
 
 feature -- Output
 

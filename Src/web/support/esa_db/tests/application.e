@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 --			test_countries
 --			test_registration_token
 --			test_membership_creation_date
-			test_user_role
+--			test_user_role
 --			test_role_description
 --			test_security_questions
 --			test_question_from_email
@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 --			test_initialize_problem_report
 --			test_temporary_problem_report
 --			test_problem_reports_guest_2
+--			test_responsibles
+--			test_row_count_responsible_default
+			test_problem_report_responsibles
 		end
 
 
@@ -316,8 +319,38 @@ feature {NONE} -- Initialization
 			across l_db.problem_reports_guest_2 (1, 2, 0, 0, "CategorySynopsis", 1) as c loop
 				print (c.item.string_8)
 			end
-
 		end
+
+
+	test_responsibles
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			across l_db.responsibles as c loop print (c.item.string_8) end
+		end
+
+
+	test_row_count_responsible_default
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			print (l_db.row_count_problem_report_responsible (0,0,0,0,"1,2,3,4,5",""))
+		end
+
+
+	test_problem_report_responsibles
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			across l_db.problem_reports_responsibles (1, 10, 0, 0, 0, 0, "number", 1, "1,2,3,4", "") as c loop
+				print (c.item.string_8)
+			end
+		end
+
+
 feature -- Implementation
 
 	connection: ESA_DATABASE_CONNECTION

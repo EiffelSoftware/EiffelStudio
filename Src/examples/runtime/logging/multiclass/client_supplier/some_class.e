@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	default_create
 		do
 			create log.make
+			log.enable_default_file_log
 			log.write_information ("SOME_CLASS instantiated")
 		end
 
@@ -34,7 +35,7 @@ feature -- Access
 
 feature {NONE} -- Attributes
 
-	log: attached LOG_LOGGING_FACILITY;
+	log: LOG_LOGGING_FACILITY;
 
 note
 	copyright:	"Copyright (C) 2010 by ITPassion Ltd, Eiffel Software and others"

@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Make an instance of APPLICATION, and run the application
 		local
 			l_my_file_log_writer: LOG_WRITER_FILE
-			claptrap: FILE_NAME
+			claptrap: PATH
 		do
 				--| Initialize the logging facility
 			create log.make
@@ -34,11 +34,11 @@ feature {NONE} -- Initialization
 
 			create claptrap.make_from_string ("no_joy.log")
 			create l_my_file_log_writer
-			l_my_file_log_writer.set_file_name (claptrap)
+			l_my_file_log_writer.set_path (claptrap)
 			log.register_log_writer (l_my_file_log_writer)
 			if l_my_file_log_writer.has_errors then
 				log.enable_default_stderr_log
-				log.write_emergency ("Cannot open log file '" + claptrap + "'%N")
+				log.write_emergency ("Cannot open log file '" + claptrap.utf_8_name + "'%N")
 			else
 				log.write_information ("The application now uses this log file as well...%N")
 			end
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Attributes
 
-	log: attached LOG_LOGGING_FACILITY;
+	log: LOG_LOGGING_FACILITY;
 			-- The general logging facility
 
 note

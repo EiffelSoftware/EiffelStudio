@@ -603,71 +603,96 @@ feature -- ASCII
 
 	test_xml_contents
 		do
-			test_xml_content ("case001", False, "<doc><></doc>")
-			test_xml_content ("case002", False, "<doc></></doc>")
-			test_xml_content ("case003", False, "<doc><?></doc>")
-			test_xml_content ("case004", False, "<doc><123></123></doc>")
-			test_xml_content ("case005", False, "<doc><foo'bar/></doc>")
-			test_xml_content ("case006", True, "<doc/>")
-			test_xml_content ("case007", True, "<D/>")
-			test_xml_content ("case008", False, "</>")
-			test_xml_content ("case009", False, "<doc>aa<//doc>")
-			test_xml_content ("case010", False, "<doc>aa</doc><//")
+				-- valid
+			test_xml_content ("case_valid_001", True, False, "<doc/>")
+			test_xml_content ("case_valid_002", True, False, "<D/>")
+			test_xml_content ("case_valid_003", True, False, "<foo><bar></bar></foo>")
+			test_xml_content ("case_valid_004", True, False, "<foo><bar  ></bar></foo>")
+			test_xml_content ("case_valid_005", True, False, "<foo><bar ></bar ></foo>")
+			test_xml_content ("case_valid_006", True, False, "<foo><bar att=%"test%"></bar></foo>")
+			test_xml_content ("case_valid_007", True, False, "<foo><bar att=%"test%" ></bar></foo>")
+			test_xml_content ("case_valid_008", True, False, "<foo><bar att=%"test%" %T></bar></foo>")
+			test_xml_content ("case_valid_009", True, False, "<foo><bar att=%"test%"/></foo>")
+			test_xml_content ("case_valid_010", True, False, "<foo><bar att=%"test%" /></foo>")
+			test_xml_content ("case_valid_011", True, False, "<foo><bar att=%"test%" att2=%"test%"></bar></foo>")
+			test_xml_content ("case_valid_012", True, False, "<foo><bar att=%"test%" %T att2=%"test%"></bar></foo>")
+
+				-- not well formed
+			test_xml_content ("case_invalid_001", False, False, "<doc><></doc>")
+			test_xml_content ("case_invalid_002", False, False, "<doc></></doc>")
+			test_xml_content ("case_invalid_003", False, False, "<doc><?></doc>")
+			test_xml_content ("case_invalid_004", False, False, "<doc><123></123></doc>")
+			test_xml_content ("case_invalid_005", False, False, "<doc><foo'bar/></doc>")
+			test_xml_content ("case_invalid_006", False, False, "</>")
+			test_xml_content ("case_invalid_007", False, False, "<doc>aa<//doc>")
+			test_xml_content ("case_invalid_008", False, False, "<doc>aa</doc><//")
+
+				 -- valid but truncated
+			test_xml_content ("case_truncated_001", True, True, "<doc")
+			test_xml_content ("case_truncated_002", True, True, "<doc ")
+			test_xml_content ("case_truncated_003", True, True, "<doc  %T")
+			test_xml_content ("case_truncated_004", True, True, "<doc foo")
+			test_xml_content ("case_truncated_005", True, True, "<doc foo=")
+			test_xml_content ("case_truncated_006", True, True, "<doc foo=%"")
+			test_xml_content ("case_truncated_007", True, True, "<doc foo=%"bar")
+			test_xml_content ("case_truncated_008", True, True, "<doc foo=%"bar%"")
+			test_xml_content ("case_truncated_009", True, True, "<doc foo=%"bar%"  ")
+			test_xml_content ("case_truncated_010", True, True, "<doc foo=%"bar%"  ><")
 		end
 
 	test_valid_xml_01
 		do
-			test_xml_content ("valid_xml_01", True, valid_xml_01)
+			test_xml_content ("valid_xml_01", True, False, valid_xml_01)
 		end
 
 	test_bad_xml_01
 		do
-			test_xml_content ("bad_xml_01", False, bad_xml_01)
+			test_xml_content ("bad_xml_01", False, False, bad_xml_01)
 		end
 
 	test_bad_xml_02
 		do
-			test_xml_content ("bad_xml_02", False, bad_xml_02)
+			test_xml_content ("bad_xml_02", False, False, bad_xml_02)
 		end
 
 	test_bad_xml_03
 		do
-			test_xml_content ("bad_xml_03", False, bad_xml_03)
+			test_xml_content ("bad_xml_03", False, False, bad_xml_03)
 		end
 
 	test_bad_xml_04
 		do
-			test_xml_content ("bad_xml_04", False, bad_xml_04)
+			test_xml_content ("bad_xml_04", False, False, bad_xml_04)
 		end
 
 	test_bad_xml_05
 		do
-			test_xml_content ("bad_xml_05", False, bad_xml_05)
+			test_xml_content ("bad_xml_05", False, False, bad_xml_05)
 		end
 
 	test_bad_xml_06
 		do
-			test_xml_content ("bad_xml_06", False, bad_xml_06)
+			test_xml_content ("bad_xml_06", False, False, bad_xml_06)
 		end
 
 	test_bad_xml_07
 		do
-			test_xml_content ("bad_xml_07", False, bad_xml_07)
+			test_xml_content ("bad_xml_07", False, False, bad_xml_07)
 		end
 
 	test_bad_xml_08
 		do
-			test_xml_content ("bad_xml_08", False, bad_xml_08)
+			test_xml_content ("bad_xml_08", False, False, bad_xml_08)
 		end
 
 	test_bad_xml_09
 		do
-			test_xml_content ("bad_xml_08", False, bad_xml_08)
+			test_xml_content ("bad_xml_08", False, False, bad_xml_08)
 		end
 
 feature {NONE} -- XML content
 
-	test_xml_content (a_assert_name: READABLE_STRING_8; a_expecting_success: BOOLEAN; a_xml_content: READABLE_STRING_8)
+	test_xml_content (a_assert_name: READABLE_STRING_8; a_expecting_success: BOOLEAN; a_expecting_truncation_reported: BOOLEAN; a_xml_content: READABLE_STRING_8)
 		local
 			p: XML_PARSER
 			doc_cb: XML_CALLBACKS_DOCUMENT
@@ -686,6 +711,7 @@ feature {NONE} -- XML content
 			if a_expecting_success then
 				assert (a_assert_name + ":file:parsed", p.is_correct)
 				assert (a_assert_name + ":file:succeed", not p.error_occurred)
+				assert (a_assert_name + ":file:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
 			else
 				if attached p.error_message as err then
 					print (err)
@@ -702,6 +728,7 @@ feature {NONE} -- XML content
 			if a_expecting_success then
 				assert (a_assert_name + ":string:parsed", p.is_correct)
 				assert (a_assert_name + ":string:succeed", not p.error_occurred)
+				assert (a_assert_name + ":string:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
 			else
 				if attached p.error_message as err then
 					print (err)

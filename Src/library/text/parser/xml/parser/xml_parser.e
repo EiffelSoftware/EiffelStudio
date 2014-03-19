@@ -88,6 +88,12 @@ feature -- Status
 			Result := not error_occurred
 		end
 
+	truncation_reported: BOOLEAN
+			-- Is parsed xml content truncation reported?
+			-- is meaningful only when no error was detected.
+		deferred
+		end
+
 	error_occurred: BOOLEAN
 			-- Error occurred?
 		deferred

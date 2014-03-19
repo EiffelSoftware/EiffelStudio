@@ -3805,15 +3805,23 @@ feature -- Access
 			end
 		end
 
-	feature_of_name_id (a_name_id: INTEGER): FEATURE_I
-			-- Feature whose feature_id is `a_feature_id'.
-			-- Look into `feature_table', `generic_features' and
-			-- `anchored_features'.
+	feature_of_name_id (a_name_id: INTEGER): detachable FEATURE_I
+			-- Feature with name corresponding to `a_name_id'.
 		require
 			a_name_id: a_name_id > 0
 			has_feature_table: has_feature_table
 		do
 			Result := feature_table.item_id (a_name_id)
+		end
+
+	feature_of_alias_id (a_alias_name_id: INTEGER): detachable FEATURE_I
+			-- Feature with alias name corresponding to `a_alias_name_id'.
+			-- Note that a mangled alias name is expected, so that unary and binary plus operator names are different.
+		require
+			a_alias_name_id: a_alias_name_id > 0
+			has_feature_table: has_feature_table
+		do
+			Result := feature_table.item_alias_id (a_alias_name_id)
 		end
 
 	api_feature_table: E_FEATURE_TABLE

@@ -35,39 +35,41 @@ feature -- Basic operation
 		do
 			last_character_code := 0
 			c := source_next_character_code
-			if c <= 0x7F then
-					-- 0xxxxxxx				
-				last_character_code := c
-			elseif c <= 0xDF then
-					-- 110xxxxx 10xxxxxx
-				if not source.end_of_input then
+			if not source.end_of_input then
+				if c <= 0x7F then
+						-- 0xxxxxxx				
+					last_character_code := c
+				elseif c <= 0xDF then
+						-- 110xxxxx 10xxxxxx
 					c2 := source_next_character_code
-					last_character_code := ((c & 0x1F) |<< 6) |
-											(c2 & 0x3F)
-				end
-			elseif c <= 0xEF then
-					-- 1110xxxx 10xxxxxx 10xxxxxx
-				if not source.end_of_input then
+					if not source.end_of_input then
+						last_character_code := ((c & 0x1F) |<< 6) |
+												(c2 & 0x3F)
+					end
+				elseif c <= 0xEF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
 					c2 := source_next_character_code
 					if not source.end_of_input then
 						c3 := source_next_character_code
-						last_character_code := ((c & 0xF) |<< 12) |
-												((c2 & 0x3F) |<< 6) |
-												(c3 & 0x3F)
+						if not source.end_of_input then
+							last_character_code := ((c & 0xF) |<< 12) |
+													((c2 & 0x3F) |<< 6) |
+													(c3 & 0x3F)
+						end
 					end
-				end
-			elseif c <= 0xF7 then
-					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-				if not source.end_of_input then
+				elseif c <= 0xF7 then
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 					c2 := source_next_character_code
 					if not source.end_of_input then
 						c3 := source_next_character_code
 						if not source.end_of_input then
 							c4 := source_next_character_code
-							last_character_code := ((c & 0x7) |<< 18) |
-													((c2 & 0x3F) |<< 12) |
-													((c3 & 0x3F) |<< 6) |
-													(c4 & 0x3F)
+							if not source.end_of_input then
+								last_character_code := ((c & 0x7) |<< 18) |
+														((c2 & 0x3F) |<< 12) |
+														((c3 & 0x3F) |<< 6) |
+														(c4 & 0x3F)
+							end
 						end
 					end
 				end
@@ -84,7 +86,7 @@ feature -- Basic operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -74,10 +74,14 @@ feature -- Status report
 			-- Current stream started?
 
 	end_of_input: BOOLEAN
-			-- Reached end of Current input stream?
+			-- Has the end of input stream been reached?
+			-- i.e: cursor is out of stream range.
+			-- i.e: EOF reached
 		do
-			Result := (chunk_source_upper > 0) and then --| started reading
-					index >= chunk_source_upper and ((chunk_source_upper - chunk_source_lower + 1) < chunk_size)
+			Result := is_started and then (
+						index > chunk_source_upper and --| After the last available input
+						(chunk_source_upper - chunk_source_lower + 1 < chunk_size) --| indeed the last chunk maybe smaller than `chunk_size'
+					)
 		end
 
 	is_open_read: BOOLEAN

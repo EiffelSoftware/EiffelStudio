@@ -16,7 +16,7 @@ inherit
 		redefine
 			make,
 			resolved_entity,
-			internal_read_character
+			internal_next_character
 		end
 
 create
@@ -87,7 +87,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Query
 
-	internal_read_character (buf: like buffer): like last_character
+	internal_next_character (buf: like buffer): like last_character
+			-- <Precursor>
 		local
 			c: NATURAL_32
 			cr_code: NATURAL_32
@@ -95,11 +96,11 @@ feature {NONE} -- Query
 			buf.read_character_code
 			if carriage_return_character_ignored then
 				c := buf.last_character_code
-				cr_code := ('%R').natural_32_code
+				cr_code := carriage_return_character_code
 				if c = cr_code then
 					from
 					until
-						c /= cr_code or buf.end_of_input
+						buf.end_of_input or c /= cr_code
 					loop
 						buf.read_character_code
 						c := buf.last_character_code
@@ -110,7 +111,7 @@ feature {NONE} -- Query
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -57,15 +57,15 @@ feature {NONE} -- Implementation
 			drop_repository (table_name)
 
 			if is_odbc then
-				execute_query ("CREATE TABLE db_null_values (title text, author varchar(80), [year] datetime, quantity int ,[price] float, double_value float)")
+				execute_query ("CREATE TABLE db_null_values (title varchar(255), author varchar(80), [year] datetime, quantity int ,[price] float, double_value float)")
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `DB_NULL_VALUES` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_NULL_VALUES` (`title` varchar(255), `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
 			end
 
 			if is_oracle then
-				execute_query ("CREATE TABLE DB_NULL_VALUES (title CLOB, author varchar(80), year DATE, quantity int ,price float, double_value float)")
+				execute_query ("CREATE TABLE DB_NULL_VALUES (title varchar(255), author varchar(80), year DATE, quantity int ,price float, double_value float)")
 			end
 		end
 

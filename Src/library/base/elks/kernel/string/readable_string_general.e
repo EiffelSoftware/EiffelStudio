@@ -1253,6 +1253,17 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 	internal_case_insensitive_hash_code: INTEGER;
 			-- Cash for `case_insensitive_hash_code'.
 
+
+feature -- Access: Cursor
+
+	new_character_32_cursor: STRING_ITERATION_CURSOR
+			-- Fresh cursor for this string that iterates over code points (see `code')
+			-- exposed as {CHARACTER_32}.
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

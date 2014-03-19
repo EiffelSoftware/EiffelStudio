@@ -261,6 +261,7 @@ feature -- Element change
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (1).is_space
 			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
+			only_spaces_removed_before: elks_checking implies (across (old twin).substring (1, (old twin).substring_index (Current, 1) - 1).new_character_32_cursor as l_c all l_c.item.is_space end)
 		end
 
 	right_adjust
@@ -270,6 +271,21 @@ feature -- Element change
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (count).is_space
 			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
+			only_spaces_removed_after: elks_checking implies across (old twin).substring ((old twin).substring_index (Current, 1) + count, old count).new_character_32_cursor as l_c all l_c.item.is_space end
+		end
+
+	adjust
+			-- Remove leading and/or trailing whitespace.
+		do
+			left_adjust
+			right_adjust
+		ensure
+			valid_count: count <= old count
+			new_count_left: not is_empty implies not item (1).is_space
+			new_count_right: not is_empty implies not item (count).is_space
+			kept: elks_checking implies (old twin).has_substring (Current)
+			only_spaces_removed_before: elks_checking implies (across (old twin).substring (1, (old twin).substring_index (Current, 1) - 1).new_character_32_cursor as l_c all l_c.item.is_space end)
+			only_spaces_removed_after: elks_checking implies across (old twin).substring ((old twin).substring_index (Current, 1) + count, old count).new_character_32_cursor as l_c all l_c.item.is_space end
 		end
 
 feature -- Removal
@@ -304,7 +320,7 @@ invariant
 	mutable: not is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

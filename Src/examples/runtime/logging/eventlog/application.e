@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Attributes
 
-	log: attached LOG_LOGGING_FACILITY;
+	log: LOG_LOGGING_FACILITY;
 			-- The logging facility to use
 
 note

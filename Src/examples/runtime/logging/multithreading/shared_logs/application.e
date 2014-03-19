@@ -26,20 +26,18 @@ feature {NONE} -- Initialization
 		local
 			thread1: THREAD1
 			thread2: THREAD2
-			filename: FILE_NAME
+			filename: PATH
 			lw_file: LOG_WRITER_FILE
 		do
 				--| Enable stderr log output
 			log.enable_default_file_log
-			create filename.make
-			filename.set_file_name ("thread1.log")
+			create filename.make_from_string ("thread1.log")
 			create lw_file
-			lw_file.set_file_name (filename)
+			lw_file.set_path (filename)
 			log.register_log_writer (lw_file)
-			create filename.make
-			filename.set_file_name ("thread2.log")
+			create filename.make_from_string ("thread2.log")
 			create lw_file
-			lw_file.set_file_name (filename)
+			lw_file.set_path (filename)
 			log.register_log_writer (lw_file)
 
 				--| Write an informational message

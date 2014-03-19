@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 		local
 			something_1: SOME_CLASS
 			something_2: SOME_CLASS
-			file_name_1: FILE_NAME
-			file_name_2: FILE_NAME
+			file_name_1: PATH
+			file_name_2: PATH
 			log_file_1: LOG_WRITER_FILE
 			log_file_2: LOG_WRITER_FILE
 		do
@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 				--| Initialize some log writers
 			create log_file_1
 			create file_name_1.make_from_string ("something_1.log")
-			log_file_1.set_file_name (file_name_1)
+			log_file_1.set_path (file_name_1)
 			create log_file_2
 			create file_name_2.make_from_string ("something_2.log")
-			log_file_2.set_file_name (file_name_2)
+			log_file_2.set_path (file_name_2)
 			log.register_log_writer (log_file_1)
 			log.register_log_writer (log_file_2)
 

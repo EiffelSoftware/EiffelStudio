@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 				--| TODO This is then the new way, because of void-safety, we can already
 				--| access the default_log_writer_system, change it's application name, and
 				--| simply use it through enable_default_system_log
-			--log.default_log_writer_system.set_application_name ("MultiPlatform")
-			--log.enable_default_system_log
+--			log.default_log_writer_system.set_application_name ("MultiPlatform")
+--			log.enable_default_system_log
 
 				--| Enable system log output
 			create l_sys_log
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Attributes
 
-	log: attached LOG_LOGGING_FACILITY;
+	log: LOG_LOGGING_FACILITY;
 			-- General Eiffel Logging Facility
 
 note

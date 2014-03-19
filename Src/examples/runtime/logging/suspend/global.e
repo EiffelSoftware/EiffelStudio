@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Access
 
-	log: attached LOG_LOGGING_FACILITY
+	log: LOG_LOGGING_FACILITY
 		once ("PROCESS")
 			create Result.make
 		end

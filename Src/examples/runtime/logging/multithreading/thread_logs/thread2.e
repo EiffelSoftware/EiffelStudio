@@ -21,15 +21,14 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			filename: FILE_NAME
+			filename: PATH
 			lw_file: LOG_WRITER_FILE
 		do
 			Precursor
 			create log.make
-			create filename.make
-			filename.set_file_name ("thread2.log")
+			create filename.make_from_string ("thread2.log")
 			create lw_file
-			lw_file.set_file_name (filename)
+			lw_file.set_path (filename)
 			log.register_log_writer (lw_file)
 			log.write_information ("THREAD2 instantiated")
 		end

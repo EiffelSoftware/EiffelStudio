@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	title: detachable STRING_32
+	title: detachable STRING
 
 	author: detachable IMMUTABLE_STRING_8
 
@@ -46,8 +46,6 @@ feature -- Element Change
 
  	set_title (t: like title)
 			-- Set `title' with `t'
-		require
-			argument_exists: not (t = Void)
 		do
 			title := t
 		ensure
@@ -56,8 +54,6 @@ feature -- Element Change
 
 	set_author (a: like author)
 			-- Set `author' with `a'
-		require
-			argument_exists: not (a = Void)
 		do
 			author := a
 		ensure

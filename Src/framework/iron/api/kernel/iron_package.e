@@ -33,11 +33,27 @@ feature {NONE} -- Initialization
 			create tags.make (0)
 		end
 
+	make_named (a_id: READABLE_STRING_8; a_name: READABLE_STRING_GENERAL; repo: like repository)
+			-- Initialize current with `a_id', `a_name' and a `repo'.
+		require
+			a_name_valid: not a_name.is_empty
+		do
+			make (a_id, repo)
+			set_name (a_name)
+		end
+
 feature -- Status
 
 	has_id: BOOLEAN
 		do
 			Result := not id.is_empty
+		end
+
+	is_local_working_copy: BOOLEAN
+			-- Is Current package from a file system working-copy repository?
+			-- (i.e: local working-copy repository as opposed to package hosted on remote iron server)
+		do
+			Result := attached {IRON_WORKING_COPY_REPOSITORY} repository
 		end
 
 	has_archive_file_uri: BOOLEAN
@@ -57,7 +73,16 @@ feature -- Comparison
 			-- equal to current object?
 			-- (from ANY)
 		do
-			Result := id ~ other.id
+			if id.is_empty and other.id.is_empty then
+				Result := is_same_package (other)
+			else
+				Result := (id ~ other.id) and (repository.is_same_repository (other.repository))
+			end
+		end
+
+	is_same_package (other: IRON_PACKAGE): BOOLEAN
+		do
+			Result := identifier.same_string (other.identifier) and then (repository.is_same_repository (other.repository))
 		end
 
 	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
@@ -86,43 +111,52 @@ feature -- Access
 	repository: IRON_REPOSITORY
 			-- Associated repository
 
+	identifier: READABLE_STRING_32
+			-- Safe package name
+		do
+			if attached name as l_name then
+				Result := l_name
+			else
+				Result := id.to_string_32
+			end
+		end
+
 	human_identifier: STRING_32
 		local
 			l_title: like title
+			l_repo_location: READABLE_STRING_8
 		do
-			create Result.make_from_string (repository.url)
-			Result.append_character (' ')
+			l_repo_location := repository.location_string
 			l_title := title
+
+			create Result.make (l_repo_location.count + 10)
 			if attached name as l_name then
-				Result.append (l_name)
-				if l_title /= Void then
-					Result.append_character (' ')
-					Result.append_character ('"')
-					Result.append_string_general (l_title)
-					Result.append_character ('"')
-				end
-				
 				debug
-					Result.append_character (' ')
 					Result.append_string_general (id)
-				end
-			else
-				if l_title /= Void then
-					Result.append_character ('"')
-					Result.append_string_general (l_title)
-					Result.append_character ('"')
 					Result.append_character (' ')
 				end
 
+				Result.append (l_name)
+			else
 				Result.append_string_general (id)
 			end
+			Result.append_character (' ')
+			Result.append_character ('(')
+			Result.append (l_repo_location)
+			Result.append_character (')')
 
+			if l_title /= Void then
+				Result.append_character (' ')
+				Result.append_character ('"')
+				Result.append_string_general (l_title)
+				Result.append_character ('"')
+			end
 
 			debug
 				across
 					associated_paths as c
 				loop
-					Result.append (repository.url)
+					Result.append (repository.location_string)
 					Result.append (c.item)
 					Result.append_character (' ')
 				end
@@ -141,6 +175,14 @@ feature -- Access
 
 	description: detachable READABLE_STRING_32
 
+	associated_paths: ARRAYED_LIST [READABLE_STRING_8]
+			-- Associated path on the repositories
+
+	tags: ARRAYED_LIST [READABLE_STRING_32]
+			-- Tags
+
+feature -- Access: archive	
+
 	archive_uri: detachable URI
 
 	archive_path: detachable PATH
@@ -149,12 +191,6 @@ feature -- Access
 				Result := uri_to_path (l_uri)
 			end
 		end
-
-	associated_paths: ARRAYED_LIST [READABLE_STRING_8]
-			-- Associated path on the repositories
-
-	tags: ARRAYED_LIST [READABLE_STRING_32]
-			-- Tags
 
 feature -- Access: items	
 
@@ -221,7 +257,7 @@ feature -- Change
 
 	set_name (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v /= Void then
+			if v /= Void and then not v.is_empty then
 				name := v.to_string_32
 			else
 				name := Void
@@ -230,7 +266,7 @@ feature -- Change
 
 	set_title (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v /= Void then
+			if v /= Void and then not v.is_empty then
 				title := v.to_string_32
 			else
 				title := Void
@@ -239,7 +275,7 @@ feature -- Change
 
 	set_description (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v /= Void then
+			if v /= Void and then not v.is_empty then
 				description := v.to_string_32
 			else
 				description := Void

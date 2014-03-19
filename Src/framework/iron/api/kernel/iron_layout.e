@@ -86,38 +86,24 @@ feature -- Access
 
 feature -- Query
 
-	repository_path (a_repo: IRON_REPOSITORY): PATH
+	repository_data_path (a_repo: IRON_REPOSITORY): PATH
 		do
 			Result := repositories_path.extended_path (safe_repository_path (a_repo))
 		end
 
+	repository_packages_data_path (a_repo: IRON_REPOSITORY): PATH
+		do
+			Result := repository_data_path (a_repo).appended_with_extension ("packages")
+		end
+
+	repository_archive_path (a_repo: IRON_REPOSITORY): PATH
+		do
+			Result := archives_path.extended_path (safe_repository_path (a_repo))
+		end
+
 	package_archive_path (a_package: IRON_PACKAGE): PATH
 		do
-			Result := archives_path.extended_path (safe_repository_path (a_package.repository)).extended_path (safe_package_path (a_package, True))
-		end
-
-	package_expected_installation_path (a_package: IRON_PACKAGE): PATH
-		do
-			Result := packages_path.extended_path (safe_package_path (a_package, False))
-		end
-
-	package_installation_path (a_package: IRON_PACKAGE): detachable PATH
-		local
-			f: RAW_FILE
-			utf: UTF_CONVERTER
-			s: STRING_8
-		do
-			Result := package_expected_installation_path (a_package)
-			if attached package_renaming_installation_path (a_package) as p then
-				create f.make_with_path (p)
-				if f.exists and then f.is_access_readable then
-					f.open_read
-					f.read_line_thread_aware
-					s := f.last_string
-					f.close
-					create Result.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (s))
-				end
-			end
+			Result := repository_archive_path (a_package.repository).extended_path (safe_package_path (a_package, True))
 		end
 
 	package_installation_info_path (a_package: IRON_PACKAGE): PATH
@@ -125,9 +111,82 @@ feature -- Query
 			Result := packages_path.extended_path (safe_package_path (a_package, True)).appended_with_extension ("info")
 		end
 
+	package_installation_path (a_package: IRON_PACKAGE): detachable PATH
+		local
+			f: RAW_FILE
+			utf: UTF_CONVERTER
+			s: STRING_8
+			l_uri: URI
+			l_path_uri: PATH_URI
+		do
+			if attached {IRON_WORKING_COPY_REPOSITORY} a_package.repository as l_wc_repo then
+				if not a_package.associated_paths.is_empty then
+					s := a_package.associated_paths.first
+					create l_uri.make_from_string (l_wc_repo.location.string + s)
+					create l_path_uri.make_from_file_uri (l_uri)
+					Result := l_path_uri.file_path
+				end
+			else
+				Result := package_expected_installation_path (a_package)
+				if attached package_renaming_installation_path (a_package) as p then
+					create f.make_with_path (p)
+					if f.exists and then f.is_access_readable then
+						f.open_read
+						f.read_line_thread_aware
+						s := f.last_string
+						f.close
+						create Result.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (s))
+					end
+				end
+			end
+		end
+
+	package_expected_installation_path (a_package: IRON_PACKAGE): PATH
+		do
+			Result := packages_path.extended_path (safe_package_path (a_package, False))
+		end
+
 	package_renaming_installation_path (a_package: IRON_PACKAGE): PATH
 		do
 			Result := packages_path.extended_path (safe_package_path (a_package, True)).appended_with_extension ("renaming")
+		end
+
+feature -- Operation
+
+	iron_safe_delete_folder (p: detachable PATH)
+			-- Delete recursively folder `p' only if this is safe.
+			--| i.e: exist and under the installation iron folder
+		local
+			d: DIRECTORY
+			ip: PATH
+		do
+			if p /= Void then
+				ip := path
+				if p.absolute_path.canonical_path.name.starts_with (ip.absolute_path.canonical_path.name) then
+					create d.make_with_path (p)
+					if d.exists then
+						d.recursive_delete
+					end
+				end
+			end
+		end
+
+	iron_safe_delete_file (p: detachable PATH)
+			-- Delete file `p' only if this is safe.
+			--| i.e: exist and under the installation iron folder
+		local
+			f: RAW_FILE
+			ip: PATH
+		do
+			if p /= Void then
+				ip := path
+				if p.absolute_path.canonical_path.name.starts_with (ip.absolute_path.canonical_path.name) then
+					create f.make_with_path (p)
+					if f.exists then
+						f.delete
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -155,7 +214,7 @@ feature {NONE} -- Implementation
 
 	safe_repository_path (repo: IRON_REPOSITORY): PATH
 		do
-			create Result.make_from_string (safe_name (repo.uri.string + " " + repo.version))
+			create Result.make_from_string (safe_name (repo.location_string))
 		end
 
 	safe_name (a_name: READABLE_STRING_32): STRING_8

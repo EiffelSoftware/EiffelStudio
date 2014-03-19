@@ -1287,6 +1287,7 @@ feature -- Label texts
 	l_discard_cancel_c_compilation_and_external_command: STRING_32 do Result := locale.translation("always cancel C/C++ compilation, terminate external command when exiting.")	end
 	l_discard_cancel_c_compilation: STRING_32	do Result := locale.translation("always cancel C/C++ compilation when exiting.")	end
 	l_discard_terminate_external_command_when_exit: STRING_32	do Result := locale.translation("always terminate external command when exiting.")	end
+	l_Discard_iron_installation_dialog: STRING_32 do Result := locale.translation("always install iron packages.")	end
 
 	l_Display_call_stack_warning: STRING_32	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 	l_Displayed_buttons_text: STRING_32 do Result := locale.translation("Displayed buttons")	end
@@ -2879,7 +2880,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

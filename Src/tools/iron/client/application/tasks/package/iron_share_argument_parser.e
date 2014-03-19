@@ -13,29 +13,11 @@ class
 
 inherit
 	IRON_ARGUMENT_SINGLE_PARSER
-		rename
-			make as make_parser
-		end
 
 	IRON_SHARE_ARGUMENTS
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_task: IRON_TASK)
-			-- Initialize argument parser
-		do
-			task := a_task
-			make_parser (False, False)
-			set_argument_source (a_task.argument_source)
-			is_using_builtin_switches := not is_verbose_switch_used
---			set_is_using_separated_switch_values (False)
---			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
-		end
-
-	task: IRON_TASK
 
 feature -- Access
 
@@ -171,13 +153,6 @@ feature -- Access
 			then
 				create Result.make_from_string (opt.value)
 			end
-		end
-
-feature {NONE} -- Usage
-
-	name: IMMUTABLE_STRING_32
-		once
-			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + task.name)
 		end
 
 feature {NONE} -- Usage

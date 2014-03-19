@@ -20,11 +20,17 @@ feature -- Access
 		deferred
 		end
 
+	is_cleaning: BOOLEAN
+			-- Is cleaning current installation?
+			-- i.e: removing package without any registered repository
+		deferred
+		end
+
 	repository_url: detachable IMMUTABLE_STRING_32
 		deferred
 		end
 
-	repository_to_add: detachable IMMUTABLE_STRING_8
+	repository_to_add: detachable IMMUTABLE_STRING_32
 		deferred
 		end
 

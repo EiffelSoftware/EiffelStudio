@@ -171,9 +171,21 @@ feature -- Loading
 								if is_recompile_from_scrach then
 									eiffel_layout.set_precompile (lace.target.setting_msil_generation)
 								end
+
+								lace.check_location_mappings
+								if attached lace.iron_packages_to_install as l_iron_packages and then not l_iron_packages.is_empty then
+									ask_iron_package_installation (l_iron_packages)
+									if attached iron_packages_user_wants_to_install as l_iron_packages_to_install then
+										install_iron_packages (l_iron_packages_to_install)
+										if is_iron_execution_error then
+											report_iron_packages_installation_error
+										end
+									end
+								end
+
 								lace.check_precompile
 								if lace.is_precompile_invalid then
--- print error message									
+-- print error message
 								elseif lace.is_precompilation_needed then
 									ask_compile_precompile (lace.precompile)
 									if is_user_wants_precompile then
@@ -460,6 +472,13 @@ feature -- Status report
 
 	is_update_environment: BOOLEAN
 			-- Should changed environment variables be used?
+
+	iron_packages_user_wants_to_install: detachable LIST [READABLE_STRING_32]
+			-- Iron packages the user wants to install?
+
+	is_iron_execution_error: BOOLEAN
+			-- Was there an error during the last iron command execution?	
+			-- i.e: iron packages installation.
 
 feature {NONE} -- Status report
 
@@ -762,6 +781,34 @@ feature {NONE} -- Settings
 		deferred
 		end
 
+	install_iron_packages (a_packages: LIST [READABLE_STRING_32])
+			-- Install iron package `a_packages'.
+		require
+			a_packages_not_empty: not a_packages.is_empty
+		local
+			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
+		do
+			create l_args.make (2 + a_packages.count)
+			l_args.extend ("install")
+			l_args.extend ("--batch")
+			across
+				a_packages as ic
+			loop
+				l_args.extend (ic.item)
+			end
+			is_iron_execution_error := False
+			launch_iron_execution (eiffel_layout.iron_command_name, l_args)
+		end
+
+	launch_iron_execution (a_iron_cmd: PATH; a_arguments: LIST [READABLE_STRING_GENERAL])
+			-- Launch iron process `a_iron_cmd' with `a_arguments'.
+		require
+			a_iron_cmd_ok: a_iron_cmd /= Void and then not a_iron_cmd.is_empty
+			a_arguments_ok: a_arguments /= Void
+			not_is_iron_execution_error: is_iron_execution_error = False
+		deferred
+		end
+
 	find_target_name (a_proposed_target: STRING_32; a_system: CONF_SYSTEM)
 			-- Given `a_proposed_target', try to find it in `a_targets'. If not found or if `a_proposed_target'
 			-- is not valid, ask the user to choose a target among `a_targets'.
@@ -960,6 +1007,11 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
+	report_iron_packages_installation_error
+			-- Report that previous iron execution did not work.
+		deferred
+		end
+
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
@@ -1005,6 +1057,13 @@ feature {NONE} -- User interaction
 		require
 			a_key_ok: a_key /= Void and then not a_key.is_empty and then not a_key.has ('%U')
 			a_old_val_ok: a_old_val /= Void and then not a_old_val.has ('%U')
+		deferred
+		end
+
+	ask_iron_package_installation (a_packages: LIST [READABLE_STRING_32])
+			-- Should iron packages `a_packages' be automatically installed?
+		require
+			a_packages_not_empty: not a_packages.is_empty
 		deferred
 		end
 

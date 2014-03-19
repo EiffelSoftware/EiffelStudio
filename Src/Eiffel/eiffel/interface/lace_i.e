@@ -48,6 +48,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_CONF_SETTING
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -75,6 +80,34 @@ feature -- Status
 			-- Should a new target be created even if we didn't have any changes.
 			-- This also ignores warnings as it is expected that such warnings have already been added/reported
 			-- when real changes were done.
+
+feature -- Access: iron packages
+
+	iron_packages_to_install: detachable ARRAYED_LIST [READABLE_STRING_32]
+			-- Does the target has iron package that needs to be installed?
+
+	reset_iron_packages_to_install
+			-- Reset list of iron package to install
+		do
+			iron_packages_to_install := Void
+		end
+
+	suggest_iron_package_installation (a_package_name: READABLE_STRING_32)
+		require
+			a_package_name_valid: a_package_name /= Void and then not a_package_name.is_empty
+		local
+			l_iron_packages_to_install: like iron_packages_to_install
+		do
+			l_iron_packages_to_install := iron_packages_to_install
+			if l_iron_packages_to_install = Void then
+				create l_iron_packages_to_install.make (1)
+				l_iron_packages_to_install.compare_objects
+				iron_packages_to_install := l_iron_packages_to_install
+			end
+			if not l_iron_packages_to_install.has (a_package_name) then
+				l_iron_packages_to_install.force (a_package_name)
+			end
+		end
 
 feature -- Access
 
@@ -153,6 +186,45 @@ feature -- Status setting
 			is_force_new_target := True
 		ensure
 			is_force_new_target: is_force_new_target
+		end
+
+	check_location_mappings
+			-- Check location mappings
+			-- and for iron missing packages, suggest installation.
+		require
+			valid_conf_system: conf_system /= Void
+			valid_target: target /= Void
+		local
+			p: PATH
+			s,fn: READABLE_STRING_32
+		do
+			reset_iron_packages_to_install
+			if attached target as tgt then
+				if attached tgt.precompile as pre then
+					if attached conf_location_mapper.expected_action (pre.location.original_path) as l_map_action then
+						print ("Manual op?%N")
+					end
+					s := pre.location.original_path
+					p := pre.location.evaluated_path
+					fn := pre.path
+				end
+				across
+					tgt.libraries as ic
+				loop
+					s := ic.item.location.original_path
+					p := ic.item.location.evaluated_path
+					fn := ic.item.path
+
+					if attached conf_location_mapper.expected_action (ic.item.location.original_path) as l_action_info then
+						check attached {CONF_LOCATION_IRON_MAPPING} l_action_info.mapping end
+						if l_action_info.is_action ("iron install") then
+							if attached l_action_info.parameter ("package_name") as l_package_name then
+								suggest_iron_package_installation (l_package_name)
+							end
+						end
+					end
+				end
+			end
 		end
 
 	check_precompile

@@ -1,113 +1,55 @@
 note
 	description: "Summary description for {IRON_REPOSITORY}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	IRON_REPOSITORY
 
 inherit
 	ITERABLE [IRON_PACKAGE]
 
-create {IRON_API, IRON_EXPORTER}
-	make, make_from_version_uri
-
 feature {NONE} -- Initialization
 
-	make (a_uri: URI; a_version: READABLE_STRING_8)
-		require
-			valid_uri: a_uri.is_valid
-		local
-			l_path: READABLE_STRING_8
+	initialize
 		do
-			uri := a_uri.twin
-			l_path := a_uri.path
-			if l_path.ends_with ("/") then
-				uri.set_path (l_path.head (l_path.count - 1))
-			end
-			if attached {like version} a_version as v then
-				version := v
-			else
-				create version.make_from_string (a_version)
-			end
-			create available_packages.make (0)
+			create_available_packages
 		end
 
-	make_from_version_uri (a_uri: URI)
-			-- Make from uri containing version
-		require
-			valid_uri: a_uri.is_valid
-			version_included: a_uri.path_segments.count > 0
-		local
-			lst: LIST [READABLE_STRING_8]
-			v: READABLE_STRING_8
-			l_path: STRING_8
-			l_uri: URI
-		do
-			lst := a_uri.path_segments.twin
-			v := lst.last -- attached due to precondition `version_included'
-			lst.finish
-			lst.remove
-			create l_path.make_empty
-			if lst.count > 0 then
-				across
-					lst as c
-				loop
-					l_path.append_character ('/')
-					l_path.append (c.item)
-				end
-			end
-			create l_uri.make_from_string (a_uri.string)
-			l_uri.set_path (l_path)
-			if v.ends_with ("/") then
-				v := v.substring (1, v.count - 1)
-			end
-			make (l_uri, v)
+	create_available_packages
+			-- Create `available_packages'
+		deferred
 		end
 
 feature -- Access
 
-	uri: URI
-
-	version_uri: URI
-		do
-			create Result.make_from_string (uri.string + "/" + version)
+	available_packages_count: INTEGER
+			-- Count of available packages.
+		deferred
 		end
 
-	version: IMMUTABLE_STRING_8
+	available_packages: ITERABLE [IRON_PACKAGE]
+			-- Available package for current repository.
 
-	available_packages: ARRAYED_LIST [IRON_PACKAGE]
-
-	url: STRING
+	location_string: READABLE_STRING_8
 		do
-			create Result.make_empty
-			uri.append_to_string (Result)
-			Result.append_character ('/')
-			Result.append (version)
+			Result := location.string
 		end
 
-	package_associated_with_path (a_path: READABLE_STRING_8; a_relative_path: detachable STRING): detachable IRON_PACKAGE
-		do
-			across
-				available_packages as c
-			until
-				Result /= Void
-			loop
-				across
-					c.item.associated_paths as p
-				until
-					Result /= Void
-				loop
-					if a_path.starts_with (p.item) then
-						Result := c.item
-						if a_relative_path /= Void then
-							a_relative_path.wipe_out
-							a_relative_path.append (a_path.substring (p.item.count + 1, a_path.count))
-						end
-					end
-				end
-			end
+	location: URI
+			-- URI location of Current repository.
+			--| Could be http:// file:// ...
+		deferred
 		end
+
+	new_cursor: ITERATION_CURSOR [IRON_PACKAGE]
+			-- Fresh cursor associated with current structure
+		do
+			Result := available_packages.new_cursor
+		end
+
+feature -- Query
 
 	package_associated_with_id (a_id: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
 		do
@@ -142,11 +84,13 @@ feature -- Access
 
 	package_associated_with_uri (a_uri: URI): detachable IRON_PACKAGE
 		local
-			s: STRING
+			s: READABLE_STRING_8
+			l_location_string: like location_string
 		do
 			s := a_uri.string
-			if s.starts_with (url) then
-				s := s.substring (url.count + 1, s.count)
+			l_location_string := location_string
+			if s.starts_with (l_location_string) then
+				s := s.substring (l_location_string.count + 1, s.count)
 				across
 					available_packages as p
 				until
@@ -165,19 +109,27 @@ feature -- Access
 			end
 		end
 
-feature -- Access
+feature -- Status report
 
-	new_cursor: ITERATION_CURSOR [IRON_PACKAGE]
-			-- Fresh cursor associated with current structure
+	is_located_at (a_location: like location): BOOLEAN
+			-- Is Current repository located at `a_location' ?
 		do
-			Result := available_packages.new_cursor
+			Result := location.is_same_uri (a_location)
+		end
+
+	is_same_repository (other: IRON_REPOSITORY): BOOLEAN
+			-- Is Current and `other' represent the same repository?
+		deferred
 		end
 
 feature -- Change
 
+	reset_available_packages
+		deferred
+		end
+
 	put_package (p: IRON_PACKAGE)
-		do
-			available_packages.force (p)
+		deferred
 		end
 
 feature {IRON_EXPORTER} -- Change		
@@ -187,11 +139,8 @@ feature {IRON_EXPORTER} -- Change
 			available_packages := v
 		end
 
-invariant
-	uri_no_trailing_slash: not uri.path.ends_with ("/")
-
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

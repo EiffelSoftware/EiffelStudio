@@ -15,6 +15,7 @@
 
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="false"/>
 		<library name="api" location="iron_api.ecf" readonly="false"/>
+		<library name="support" location="../support/iron_support.ecf"/>
 		<cluster name="iron_installation" location="installation" recursive="true"/>
 	</target>
 </system>

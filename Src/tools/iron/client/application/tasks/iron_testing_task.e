@@ -37,7 +37,7 @@ feature -- Execute
 			across
 				a_iron.catalog_api.repositories as c
 			loop
-				print ("  Repository [" + c.item.uri.string + c.item.version + ")%N")
+				print ("  Repository [" + c.item.location_string + ")%N")
 				display_packages (Void, c.item)
 				across
 					c.item as p
@@ -68,16 +68,20 @@ feature -- Execute
 				across
 					lst as p
 				loop
-					print ("* Download ["+ p.item.human_identifier +"] ==%N")
-					a_iron.catalog_api.download_package (p.item, True)
+					if attached {IRON_WEB_REPOSITORY} p.item.repository as l_remote_repo then
+						print ("* Download ["+ p.item.human_identifier +"] ==%N")
+						a_iron.catalog_api.download_package (l_remote_repo, p.item, True)
+					end
 				end
 			end
 			if not lst.is_empty then
 				across
 					lst as p
 				loop
-					print ("* Install ["+ p.item.human_identifier +"] ==%N")
-					a_iron.catalog_api.install_package (p.item, True)
+					if attached {IRON_WEB_REPOSITORY} p.item.repository as l_remote_repo then
+						print ("* Install ["+ p.item.human_identifier +"] ==%N")
+						a_iron.catalog_api.install_package (l_remote_repo, p.item, True)
+					end
 				end
 			end
 
@@ -112,13 +116,13 @@ feature -- Execute
 				across
 					c.item.associated_paths as cur
 				loop
-					print ("%T"+ c.item.repository.url + cur.item +"%N")
+					print ("%T"+ c.item.repository.location_string + cur.item +"%N")
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

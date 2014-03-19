@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {IRON_ARGUMENT_SINGLE_PARSER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,14 +8,30 @@ deferred class
 
 inherit
 	ARGUMENT_SINGLE_PARSER
-		undefine
-			sub_system_name
+		rename
+			make as make_parser
 		redefine
+			sub_system_name,
 			is_using_unix_switch_style,
 			switch_prefixes
 		end
 
+feature {NONE} -- Initialization
+
+	make (a_task: like task)
+			-- Initialize argument parser
+		do
+			task := a_task
+			make_parser (False, False)
+			set_argument_source (a_task.argument_source)
+			is_using_builtin_switches := not is_verbose_switch_used
+		end
+
 feature {NONE} -- Status report		
+
+	is_verbose_switch_used: BOOLEAN
+		deferred
+		end
 
 	is_using_unix_switch_style: BOOLEAN = True
 			-- <Precursor>
@@ -30,17 +45,22 @@ feature {NONE} -- Status report
 
 feature -- Access
 
+	task: IRON_TASK
+
 	sub_system_name: IMMUTABLE_STRING_32
 		do
 			Result := task.name
 		end
 
-	task: IRON_TASK
-		deferred
+feature {NONE} -- Usage
+
+	name: IMMUTABLE_STRING_32
+		do
+			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + sub_system_name)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

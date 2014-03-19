@@ -32,6 +32,7 @@ feature -- Execute
 		local
 			l_package: detachable IRON_PACKAGE
 			lst: ARRAYED_LIST [IRON_PACKAGE]
+			l_choices: ARRAYED_LIST [TUPLE [prompt: READABLE_STRING_GENERAL; value: IRON_PACKAGE]]
 		do
 			if args.removing_all then
 				create lst.make (10)
@@ -45,8 +46,9 @@ feature -- Execute
 					print_new_line
 
 					l_package := Void
-					if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
-						-- url
+					if
+						c.item.has ('/') or c.item.has ('\')
+					then -- uri or local path
 						l_package := a_iron.installation_api.package_associated_with_uri (c.item)
 					else
 						-- name (or uuid) ?
@@ -54,23 +56,37 @@ feature -- Execute
 							if l_packages.count = 1 then
 								l_package := l_packages.first
 							else
-								print ("  -> several packages are named %"")
-								print (c.item)
-								print ("%": %N")
-								if args.is_batch then
-									-- FIXME: to implement .. selection
-								else
-									across
-										lst as p
-									loop
-										print ("    ")
-										print (p.cursor_index.out)
-										print (") ")
-										print (p.item.human_identifier)
-										print (": id %"")
-										print (p.item.id)
-										print ("%"%N")
+								print ("-> ")
+								print (m_several_packages_for_name (c.item))
+								print_new_line
+
+								create l_choices.make (l_packages.count)
+
+								across
+									l_packages as packages_ic
+								loop
+									if a_iron.installation_api.is_package_installed (packages_ic.item) then
+											-- Remove first last package in repository order.
+										l_package := packages_ic.item
+										l_choices.force ([packages_ic.item.human_identifier, packages_ic.item])
 									end
+									if args.is_batch then
+										print ("    - ")
+										print (packages_ic.item.human_identifier)
+										print ("%N")
+									end
+								end
+
+								if args.is_batch then
+										-- use default `l_package'
+								else
+									l_package := selected_package ("Select a package", l_choices, l_package)
+								end
+
+								if l_package /= Void then
+									print ("-> Remove ")
+									print (l_package.human_identifier)
+									print ("%N")
 								end
 							end
 						end
@@ -82,7 +98,7 @@ feature -- Execute
 						print ("  -> ")
 						print (tk_not_found)
 						print_new_line
-					elseif not a_iron.installation_api.is_installed (l_package) then
+					elseif not a_iron.installation_api.is_package_installed (l_package) then
 						print ("  -> ")
 						print (tk_not_installed)
 						print_new_line
@@ -112,7 +128,8 @@ feature -- Execute
 					else
 						a_iron.catalog_api.uninstall_package (l_package)
 						print (" -> ")
-						if a_iron.installation_api.is_installed (l_package) then
+						a_iron.installation_api.refresh_installed_packages
+						if a_iron.installation_api.is_package_installed (l_package) then
 							print (tk_failed)
 						else
 							print (tk_successfully_removed)
@@ -124,7 +141,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -90,6 +90,13 @@ feature -- Access
 
 feature -- Change
 
+	reset
+			-- Reset items.
+		do
+			data.wipe_out
+			is_valid := False
+		end
+
 	put (v: detachable READABLE_STRING_GENERAL; k: READABLE_STRING_GENERAL)
 		do
 			if v /= Void then
@@ -109,31 +116,38 @@ feature -- Basic operation
 	save_to (p: PATH)
 		local
 			f: PLAIN_TEXT_FILE
-			utf: UTF_CONVERTER
-			s8: STRING_8
 		do
 			create f.make_with_path (p)
 			if not f.exists or else f.is_access_writable then
 				f.create_read_write
-				across
-					data as c
-				loop
-					if attached c.item as v then
-						f.put_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
-						f.put_character (':')
-						s8 := utf.utf_32_string_to_utf_8_string_8 (v)
-						s8.replace_substring_all ("%N", "%N+") -- Support for multi-line value.
-						f.put_string (s8)
-					else
-						f.put_string ("#")
-						f.put_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
-						f.put_character (':')
-					end
-					f.put_new_line
-				end
+				f.put_string (text)
 				f.close
 			end
 		end
+
+	text: STRING
+		local
+			utf: UTF_CONVERTER
+			s8: STRING_8
+		do
+			create Result.make (0)
+			across
+				data as c
+			loop
+				if attached c.item as v then
+					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
+					Result.append_character (':')
+					s8 := utf.utf_32_string_to_utf_8_string_8 (v)
+					s8.replace_substring_all ("%N", "%N+") -- Support for multi-line value.
+					Result.append_string (s8)
+				else
+					Result.append_string ("#")
+					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
+					Result.append_character (':')
+				end
+				Result.append_string ("%N")
+			end
+		end	
 
 feature {NONE} -- Implementation
 

@@ -161,6 +161,24 @@ feature -- Access
 			end
 		end
 
+	iron_packages_will_automatically_be_installed (a_iron_packages: LIST [READABLE_STRING_32]): STRING_32
+		local
+			s: STRING_32
+		do
+			create s.make_empty
+			across
+				a_iron_packages as ic
+			loop
+				if not s.is_empty then
+					s.append_character (',')
+					s.append_character (' ')
+				end
+				s.append (ic.item)
+			end
+
+			Result := locale.formatted_string (locale.translation ("The following Iron packages [$1] will be automatically installed%Nbecause of the -stop/-batch option.%N"), [s])
+		end
+
 feature -- Documentation
 
 	l_Flat: STRING_32					do Result := locale.translation("Flat view")	end
@@ -250,7 +268,7 @@ feature -- Errors
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

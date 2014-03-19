@@ -45,6 +45,8 @@ feature {NONE} -- Settings
 			l_cmd_line: STRING_32
 			l_exec: EXECUTION_ENVIRONMENT
 		do
+--FIXME: should we add the following line?
+--			is_precompilation_error := False
 			if {PLATFORM}.is_thread_capable then
 				create l_prc_factory
 				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.name, a_arguments, Void)
@@ -71,6 +73,42 @@ feature {NONE} -- Settings
 				l_exec.system (l_cmd_line)
 			end
 		end
+
+	launch_iron_execution (a_iron_cmd: PATH; a_arguments: LIST [READABLE_STRING_GENERAL])
+			-- Launch iron process `a_iron_cmd' with `a_arguments'.
+		local
+			l_prc_factory: PROCESS_FACTORY
+			l_prc_launcher: PROCESS
+			l_cmd_line: STRING_32
+			l_exec: EXECUTION_ENVIRONMENT
+		do
+			if {PLATFORM}.is_thread_capable then
+				create l_prc_factory
+				l_prc_launcher := l_prc_factory.process_launcher (a_iron_cmd.name, a_arguments, Void)
+				l_prc_launcher.set_separate_console (False)
+				l_prc_launcher.launch
+				if l_prc_launcher.launched then
+					l_prc_launcher.wait_for_exit
+					is_iron_execution_error := l_prc_launcher.exit_code /= 0
+				end
+			else
+				create l_cmd_line.make (512)
+				l_cmd_line.append_string (a_iron_cmd.name)
+				across a_arguments as l_args loop
+					l_cmd_line.append_character (' ')
+					if not l_args.item.is_empty and then l_args.item [1] /= '-' then
+						l_cmd_line.append_character ('%"')
+						l_cmd_line.append_string_general (l_args.item)
+						l_cmd_line.append_character ('%"')
+					else
+						l_cmd_line.append_string_general (l_args.item)
+					end
+				end
+				create l_exec
+				l_exec.system (l_cmd_line)
+			end
+		end
+
 
 feature {NONE} -- Error reporting
 
@@ -219,6 +257,14 @@ feature {NONE} -- Error reporting
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
 			localized_print (warning_messages.w_project_build_precompile_error)
+			io.put_new_line
+			set_has_error
+		end
+
+	report_iron_packages_installation_error
+			-- Report that previous iron execution did not work.
+		do
+			localized_print (warning_messages.w_iron_packages_installation_error)
 			io.put_new_line
 			set_has_error
 		end
@@ -438,8 +484,37 @@ feature {NONE} -- User interaction
 			end
 		end
 
+	ask_iron_package_installation (a_packages: LIST [READABLE_STRING_32])
+			-- <Precursor>
+		local
+			l_answered: BOOLEAN
+		do
+			iron_packages_user_wants_to_install := Void
+			if should_stop_on_prompt then
+				localized_print (ewb_names.iron_packages_will_automatically_be_installed (a_packages))
+				iron_packages_user_wants_to_install := a_packages
+			else
+					--FIXME: provide a per package decision.
+				from
+				until
+					l_answered
+				loop
+					localized_print (warning_messages.w_iron_packages_to_install (a_packages).as_string_32 + ewb_names.yes_or_no)
+					io.read_line
+					if io.last_string.is_empty then
+							-- Nothing was read.
+					elseif io.last_string.item (1).as_lower = 'y' then
+						iron_packages_user_wants_to_install := a_packages
+						l_answered := True
+					elseif io.last_string.item (1).as_lower = 'n' then
+						l_answered := True
+					end
+				end
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

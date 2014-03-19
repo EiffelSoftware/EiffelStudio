@@ -40,25 +40,34 @@ feature -- Access
 	json_to_package (a_json_string: READABLE_STRING_8): detachable IRON_PACKAGE
 		local
 			j: JSON_PARSER
-			repo: IRON_REPOSITORY
+			repo: detachable IRON_REPOSITORY
 			u: URI
 			l_version: detachable READABLE_STRING_8
+			fac: IRON_REPOSITORY_FACTORY
 		do
 			create j.make_parser (a_json_string)
 			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
 				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
 					l_version := j_version.item
 				end
+					-- FIXME: any need to support local repository here?
 
 				if attached {JSON_OBJECT} jo.item ("repository") as j_repo then
 					if
 						attached {JSON_STRING} j_repo.item ("uri") as j_uri and
-						attached {JSON_STRING} j_repo.item ("version") as j_version and
 						attached {JSON_OBJECT} jo.item ("package") as j_package
 					then
 						create u.make_from_string (j_uri.item)
-						create repo.make (u, j_version.item)
-						if attached json_object_to_package (j_package, repo, l_version) as p then
+						if attached {JSON_STRING} j_repo.item ("version") as j_version then
+							create {IRON_WEB_REPOSITORY} repo.make (u, j_version.item)
+						else
+							create fac
+							repo := fac.new_repository (u.string)
+						end
+						if
+							repo /= Void and then
+							attached json_object_to_package (j_package, repo, l_version) as p
+						then
 							Result := p
 						end
 					end

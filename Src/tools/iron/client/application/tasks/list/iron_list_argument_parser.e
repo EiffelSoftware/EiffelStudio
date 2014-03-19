@@ -15,35 +15,22 @@ class
 
 inherit
 	IRON_ARGUMENT_BASE_PARSER
-		rename
-			make as make_parser
-		end
 
 	IRON_LIST_ARGUMENTS
 
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_task: IRON_TASK)
-			-- Initialize argument parser
-		do
-			task := a_task
-			make_parser (False, False, False)
-			set_argument_source (a_task.argument_source)
-			is_using_builtin_switches := not is_verbose_switch_used
---			set_is_using_separated_switch_values (False)
---			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
-		end
-
-	task: IRON_TASK
-
 feature -- Access
 
 	only_installed: BOOLEAN
 		once
 			Result := has_option (installed_switch)
+		end
+
+	only_conflicts: BOOLEAN
+		once
+			Result := has_option (conflict_switch)
 		end
 
 feature {NONE} -- Usage
@@ -65,25 +52,22 @@ feature {NONE} -- Usage
 --			create Result.make_from_string ({STRING_32} "")
 --		end
 
-	name: IMMUTABLE_STRING_32
-		once
-			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + task.name)
-		end
-
 feature {NONE} -- Switches
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (12)
+			create Result.make (5)
 			Result.extend (create {ARGUMENT_SWITCH}.make (installed_switch, "Only installed packages", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (conflict_switch, "Only conflict packages ", True, False))
 			add_verbose_switch (Result)
 		end
 
 	installed_switch: STRING = "i|installed"
+	conflict_switch: STRING = "c|conflict"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

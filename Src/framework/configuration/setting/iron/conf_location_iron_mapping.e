@@ -35,7 +35,6 @@ feature -- Access
 	mapped_location (a_location: READABLE_STRING_32): detachable READABLE_STRING_32
 			-- Path mapped with `a_location' if any.
 		local
-			l_iron_api: like iron_api
 			l_uri: STRING_32
 		do
 				--| Hardcoded for now, but we can imagine abstracting the "mapping"
@@ -48,13 +47,33 @@ feature -- Access
 					-- Absolute IRON library URL or iron reference
 				create l_uri.make_from_string (a_location)
 				update_location_to_uri (l_uri)
-				l_iron_api := iron_api
-				if l_iron_api = Void then
-					create l_iron_api.make_with_layout (iron_layout, iron_urls)
-					iron_api := l_iron_api
-				end
-				if attached l_iron_api.local_path_associated_with_uri (l_uri) as p then
+				if attached iron_api.local_path_associated_with_uri (l_uri) as p then
 					Result := p.name
+				end
+			end
+		end
+
+	expected_action_parameters (a_location: READABLE_STRING_32): detachable CONF_LOCATION_MAPPER_ACTION
+			-- <Precursor>
+			--| for instance with iron, a possible action would be to install related package.
+		local
+			l_uri: STRING_32
+		do
+			if
+				a_location.starts_with ("iron:")
+				or a_location.starts_with ("http:")
+				or a_location.starts_with ("https:")
+			then
+					-- Absolute IRON library URL or iron reference
+				create l_uri.make_from_string (a_location)
+				update_location_to_uri (l_uri)
+				if attached iron_api.local_path_associated_with_uri (l_uri) as p then
+						-- mapping exists.
+				elseif
+					attached iron_api.available_package_name_for_uri (l_uri) as l_package_name
+				then
+					create Result.make (Current, l_uri, "iron install")
+					Result.parameters ["package_name"] := l_package_name.to_string_32
 				end
 			end
 		end
@@ -63,12 +82,26 @@ feature -- Change
 
 	refresh
 		do
-			iron_api := Void
+			internal_iron_api := Void
+		end
+
+feature -- Access		
+
+	iron_api: IRON_INSTALLATION_API
+		local
+			l_iron_api: like internal_iron_api
+		do
+			l_iron_api := internal_iron_api
+			if l_iron_api = Void then
+				create l_iron_api.make_with_layout (iron_layout, iron_urls)
+				internal_iron_api := l_iron_api
+			end
+			Result := l_iron_api
 		end
 
 feature {NONE} -- Implementation
 
-	iron_api: detachable IRON_INSTALLATION_API
+	internal_iron_api: detachable like iron_api
 
 	update_location_to_uri (a_location: STRING_32)
 		require

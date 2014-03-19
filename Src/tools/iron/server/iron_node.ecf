@@ -34,9 +34,9 @@
 				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 			</option>
 		</library>
+		<library name="support" location="..\..\..\framework\iron\support\iron_support-safe.ecf"/>
 		<cluster name="kernel" location=".\kernel\" recursive="true"/>
 		<cluster name="observer" location=".\observer\" recursive="true"/>
 		<cluster name="storage" location=".\storage\" recursive="true"/>
-		<cluster name="support" location="..\..\..\framework\iron\support\" recursive="true"/>
 	</target>
 </system>

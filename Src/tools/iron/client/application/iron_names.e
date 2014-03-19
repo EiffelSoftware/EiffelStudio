@@ -24,11 +24,11 @@ feature -- List task
 	tk_package: STRING_32
 		do Result := {STRING_32} "Package" end
 
-	m_repository (a_uri, a_version: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Repository [$1] version=$2", [a_uri, a_version]) end
+	m_repository (a_uri: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Repository [$1]", [a_uri]) end
 
-	m_repository_without_package (a_uri, a_version: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Repository [$1] version=$2 has no package!", [a_uri, a_version]) end
+	m_repository_without_package (a_uri: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Repository [$1] has no package!", [a_uri]) end
 
 feature -- Install task
 
@@ -54,16 +54,19 @@ feature -- Install task
 		do Result := {STRING_32} "failed !" end
 
 	m_installing (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Installing %"$1%" ", [s]) end
+		do Result := string_with_args ("Installing [$1] ", [s]) end
 
 	m_removing (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Removing %"$1%" ", [s]) end
+		do Result := string_with_args ("Removing [$1] ", [s]) end
 
 	m_searching (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Searching %"$1%" ", [s]) end
+		do Result := string_with_args ("Searching [$1] ", [s]) end
 
 	m_several_packages_for_name (s: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("several packages for name %"$1%"!", [s]) end
+		do Result := string_with_args ("several packages for name [$1]!", [s]) end
+
+	m_conflicting (s: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Conflicting with installed packages:", [s]) end
 
 feature -- Info task
 
@@ -84,11 +87,17 @@ feature -- Repository task
 	m_updating_repositories: STRING_32
 		do Result := {STRING_32} "Updating repositories ..." end
 
-	m_registering_repository (a_name: READABLE_STRING_GENERAL; a_url: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Registering repository %"$1%" [$2] ", [a_name, a_url]) end
+	m_updating_repository (a_repo: IRON_REPOSITORY): STRING_32
+		do Result := string_with_args ("Updating repository [$1] ...", [a_repo.location_string]) end
 
-	m_unregistering_repository (a_name_or_uri: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Un-Registering repository [$1] ", [a_name_or_uri]) end
+	m_registering_repository (a_uri: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Registering repository [$1] ", [a_uri]) end
+
+	m_unregistering_repository (a_uri: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Un-Registering repository [$1] ", [a_uri]) end
+
+	m_invalid_repository_location (a_loc: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Invalid repository location [$1] ", [a_loc]) end
 
 feature {NONE} -- Implementation
 
@@ -115,7 +124,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

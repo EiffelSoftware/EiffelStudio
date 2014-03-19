@@ -12,9 +12,7 @@ class
 	IRON_REPOSITORY_ARGUMENT_PARSER
 
 inherit
-	ARGUMENT_SINGLE_PARSER
-		rename
-			make as make_parser
+	IRON_ARGUMENT_SINGLE_PARSER
 		redefine
 			switch_groups
 		end
@@ -23,21 +21,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_task: IRON_TASK)
-			-- Initialize argument parser
-		do
-			task := a_task
-			make_parser (False, False)
-			set_argument_source (a_task.argument_source)
-			is_using_builtin_switches := not is_verbose_switch_used
---			set_is_using_separated_switch_values (False)
---			set_non_switched_argument_validator (create {ARGUMENT_DIRECTORY_VALIDATOR})
-		end
-
-	task: IRON_TASK
 
 feature -- Access
 
@@ -51,6 +34,11 @@ feature -- Access
 			Result := has_option (list_switch)
 		end
 
+	is_cleaning: BOOLEAN
+		do
+			Result := has_option (clean_switch)
+		end
+
 	repository_url: detachable IMMUTABLE_STRING_32
 		do
 			if has_non_switched_argument then
@@ -58,39 +46,18 @@ feature -- Access
 			end
 		end
 
-	repository_to_add: detachable IMMUTABLE_STRING_8
-		local
-			v: IMMUTABLE_STRING_32
+	repository_to_add: detachable IMMUTABLE_STRING_32
 		do
-			if
-				has_option (add_switch) and then
-				attached option_of_name (add_switch) as opt
-			then
-				v := opt.value
-				if v.is_valid_as_string_8 then
-					create Result.make_from_string (v.as_string_8)
-				end
+			if has_option (add_switch) then
+				Result := repository_url
 			end
 		end
 
 	repository_to_remove: detachable IMMUTABLE_STRING_32
-		local
-			v: IMMUTABLE_STRING_32
 		do
-			if
-				has_option (remove_switch) and then
-				attached option_of_name (remove_switch) as opt
-			then
-				v := opt.value
-				create Result.make_from_string (v)
+			if has_option (remove_switch) then
+				Result := repository_url
 			end
-		end
-
-feature {NONE} -- Usage
-
-	name: IMMUTABLE_STRING_32
-		once
-			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + task.name)
 		end
 
 feature {NONE} -- Usage
@@ -118,10 +85,11 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (12)
+			Result.extend (create {ARGUMENT_SWITCH}.make (add_switch, "Add repository", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (remove_switch, "Remove repository", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "List repositories", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (add_switch, "Add repository", True, False, "name", "Registration name for associated url", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (remove_switch, "Remove repository", True, False, "name_or_url", "Registered name or repository url including the version", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (info_switch, "Info on local repository settings", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean installation (remove unexpected packages..)", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -130,15 +98,17 @@ feature {NONE} -- Switches
 	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
-			create Result.make (3)
+			create Result.make (4)
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (info_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (list_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (clean_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (add_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (verbose_switch), switch_of_name (remove_switch)>>, False))
 		end
 
 	info_switch: STRING = "info"
 	list_switch: STRING = "l|list"
+	clean_switch: STRING = "clean"
 	add_switch: STRING = "a|add"
 	remove_switch: STRING = "d|remove"
 

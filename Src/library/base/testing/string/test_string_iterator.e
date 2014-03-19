@@ -76,7 +76,7 @@ feature -- Test string iteration cursor
 			across
 				l_cursor as lc
 			loop
-				l_new_string.append_character (lc.item)
+				l_new_string.append_character (lc.item.to_character_8)
 			end
 			assert ("Same String", l_string.substring (9, 9 + 5).same_string (l_new_string))
 		end

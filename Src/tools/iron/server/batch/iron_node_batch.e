@@ -148,10 +148,10 @@ feature -- Execution
 
 	operate_import
 		local
-			l_iri: IRI
 			cat: IRON_CATALOG_API
 			l_layout: IRON_LAYOUT
-			l_repo: IRON_REPOSITORY
+			l_repo_fac: IRON_REPOSITORY_FACTORY
+			l_repo: detachable IRON_REPOSITORY
 			p: IRON_PACKAGE
 			np: IRON_NODE_PACKAGE
 			nvp: IRON_NODE_VERSION_PACKAGE
@@ -160,14 +160,18 @@ feature -- Execution
 			l_repo_version: IRON_NODE_VERSION
 		do
 			if attached argument (2) as l_repo_location then
-				if l_repo_location.starts_with ({STRING_32} "http://") or l_repo_location.starts_with ({STRING_32} "https://") then
+				create l_repo_fac
+				l_repo := l_repo_fac.new_repository (l_repo_location)
+				if attached {IRON_WEB_REPOSITORY} l_repo as l_web_repo then
 					create l_layout.make_with_path (iron.layout.path.extended ("import"), iron.layout.binaries_path)
 					create cat.make_with_layout (l_layout, create {IRON_URL_BUILDER})
-					create l_iri.make_from_string (l_repo_location)
-					create l_repo.make_from_version_uri (l_iri.to_uri)
+
+
 					cat.update_repository (l_repo, False)
-					create l_repo_version.make (l_repo.version)
-					print ("Importing " + l_repo.url + "%N")
+
+					create l_repo_version.make (l_web_repo.version)
+
+					print ("Importing " + l_repo.location_string + "%N")
 					across
 						l_repo.available_packages as ic
 					loop
@@ -188,7 +192,7 @@ feature -- Execution
 							create nvp.make (np, l_repo_version)
 							iron.database.force_version_package (nvp)
 							if p.has_archive_uri then
-								cat.download_package (p, True)
+								cat.download_package (l_web_repo, p, True)
 								l_archive_path := l_layout.package_archive_path (p)
 								if ut.file_path_exists (l_archive_path) then
 --									np.set_archive_path (l_archive_path)									

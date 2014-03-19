@@ -400,7 +400,6 @@ feature -- Duplication
 	to_other_variant (other: ANNOTATED_TYPE_A): like Current
 			-- <Precursor>
 		local
-			c: TYPE_A
 			l_other_is_frozen: BOOLEAN
 		do
 			Result := Current

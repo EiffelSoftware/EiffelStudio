@@ -663,10 +663,22 @@ feature -- Directories (top-level)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	iron_command_name: PATH
+			-- path where the iron command is located in the installation directory.
+			-- With platform: $ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/iron{.exe}
+			-- Without: /usr/share/eiffelstudio-MM.mm/tools/iron
+		require
+			is_valid_environment: is_valid_environment
+		do
+			Result := shared_path.extended ("tools").extended ("spec").extended (eiffel_platform).extended ("bin").extended (iron_name + executable_suffix)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	installation_iron_path: PATH
 			-- path where the iron is located in the installation directory.
-			-- With platform: $ISE_EIFFEL/iron
-			-- Without: /usr/share/eiffelstudio-MM.mm/iron
+			-- With platform: $ISE_EIFFEL/tools/iron
+			-- Without: /usr/share/eiffelstudio-MM.mm/tools/iron
 		require
 			is_valid_environment: is_valid_environment
 		do

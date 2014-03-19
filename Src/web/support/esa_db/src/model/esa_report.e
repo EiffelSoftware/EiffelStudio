@@ -151,6 +151,12 @@ feature -- Element change
 			category := a_category
 		end
 
+
+	set_assigned (v: like assigned)
+		do
+			assigned := v
+		end
+
 feature -- Filled data
 
 	interactions: detachable LIST [ESA_REPORT_INTERACTION]

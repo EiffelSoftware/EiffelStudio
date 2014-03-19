@@ -70,6 +70,19 @@ feature -- View
 			end
 		end
 
+	problem_reports_responsible  (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+			-- <Precursor>
+		local
+			l_hp: ESA_RESPONSIBLE_REPORT_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				if attached l_hp.representation as l_home_page then
+					new_response_get (req, res, l_home_page)
+				end
+			end
+		end
+
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		local
@@ -265,13 +278,14 @@ feature -- Response
 		end
 
 	compute_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; a_location: READABLE_STRING_32)
+			-- Redirect to `a_location'
 		local
 			h: HTTP_HEADER
 		do
 			create h.make
 			h.put_content_type_text_html
 			h.put_current_date
-			h.add_header ("Location:" + a_location)
+			h.put_location (a_location)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

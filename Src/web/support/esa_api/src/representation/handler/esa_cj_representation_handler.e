@@ -70,6 +70,13 @@ feature -- View
 			end
 		end
 
+	problem_reports_responsible  (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add Implementation")
+		end
+
+
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		do

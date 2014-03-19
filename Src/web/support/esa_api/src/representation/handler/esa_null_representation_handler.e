@@ -39,7 +39,13 @@ feature -- View
 		end
 
 	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REPORT_VIEW)
-		-- <Precursor>
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	problem_reports_responsible	(req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- <Precursor>
 		do
 			generic_response (req, res)
 		end

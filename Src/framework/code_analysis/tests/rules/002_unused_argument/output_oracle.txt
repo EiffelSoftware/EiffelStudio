@@ -1,0 +1,13 @@
+Eiffel Code Analysis
+--------------------
+
+In class 'CAT_UNUSED_ARGUMENT':
+  (6:2): Feature not commented (CA036T): Feature 'unused_argument' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (6:23): Unused argument (CA002T): Arguments 'a1', 'a3' from routine 'unused_argument' are not used.
+  (10:4): Variable not read after assignment (CA020T): The local variable 'a' is not read / used before it gets reassigned or out of scope.
+  (15:2): Attribute is only used inside a single routine (CA054T): The attribute 'b' is used only in
+feature'unused_argument' from the same class. It can be converted into a
+local variable.
+  (15:2): Feature not commented (CA036T): Feature 'b' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.

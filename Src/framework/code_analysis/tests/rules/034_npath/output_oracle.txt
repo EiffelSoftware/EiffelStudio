@@ -1,0 +1,11 @@
+Eiffel Code Analysis
+--------------------
+
+In class 'CAT_NPATH':
+  (6:2): Feature not commented (CA036T): Feature 'npath' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (6:2): Many feature arguments (CA011T): Feature 'npath' has many arguments. The number of arguments of
+9 is greater than or equal to the defined threshold of 4.
+  (6:2): High NPATH (CA034T): Routine 'npath' has an NPATH measure of 256, which is greater than the defined
+maximum of 200.
+  (11:7): Avoid 'not equal' in If-Else instructions (CA046T): Condition of if-else instruction checks for inequality rather than equality.

@@ -1,0 +1,18 @@
+Eiffel Code Analysis
+--------------------
+
+In class 'CAT_SELF_ASSIGNMENT':
+  (6:2): Feature not commented (CA036T): Feature 'self_assignment' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (11:4): Variable not read after assignment (CA020T): The local variable 'a' is not read / used before it gets reassigned or out of scope.
+  (11:4): Self-assignment (CA001T): Variable 'a' is assigned to itself. Assigning a variable to itself is
+a meaningless instruction due to a typing error. Most probably, one of the two
+variable names was misspelled.
+  (12:4): Self-assignment (CA001T): Variable 'b' is assigned to itself. Assigning a variable to itself is
+a meaningless instruction due to a typing error. Most probably, one of the two
+variable names was misspelled.
+  (15:2): Attribute is only used inside a single routine (CA054T): The attribute 'b' is used only in
+feature'self_assignment' from the same class. It can be converted into a
+local variable.
+  (15:2): Feature not commented (CA036T): Feature 'b' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.

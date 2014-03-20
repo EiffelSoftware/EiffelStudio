@@ -56,6 +56,7 @@ copy_raw	reflector_constants.e $CLUSTER reflector_constants.e
 copy_raw	resizable.e $CLUSTER resizable.e 
 copy_raw	set.e $CLUSTER set.e 
 copy_raw	sequence.e $CLUSTER sequence.e 
+copy_raw	string_iteration_cursor.e $CLUSTER string_iteration_cursor.e 
 copy_raw	system_execution.e $CLUSTER system_execution.e 
 copy_raw	table.e $CLUSTER table.e 
 copy_raw	test.e $CLUSTER test.e 

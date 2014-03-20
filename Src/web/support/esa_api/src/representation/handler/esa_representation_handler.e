@@ -79,6 +79,11 @@ feature -- View
 		deferred
 		end
 
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
+			-- Update report responsible
+		deferred
+		end
+
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Not found page
 		deferred

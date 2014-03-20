@@ -719,6 +719,20 @@ feature -- Basic Operations
 			disconnect
 		end
 
+	set_problem_report_responsible (a_number, a_contact_id: INTEGER)
+			-- Assign responsible with id `a_contact_id' to problem report number `a_report_number'.
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (a_number, {ESA_DATA_PARAMETERS_NAMES}.Number_param)
+			l_parameters.put (a_contact_id, {ESA_DATA_PARAMETERS_NAMES}.Contactid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("SetProblemReportResponsible", l_parameters))
+			db_handler.execute_writer
+			disconnect
+		end
+
 feature -- Status Report
 
 	report_visible_guest ( a_number: INTEGER): BOOLEAN
@@ -742,7 +756,6 @@ feature -- Status Report
 			Result := l_res > 0
 			disconnect
 		end
-
 
 	is_report_visible ( a_username: READABLE_STRING_32; a_number: INTEGER): BOOLEAN
 			-- Can user `a_username' see report number `a_number'?

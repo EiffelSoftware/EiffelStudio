@@ -52,11 +52,9 @@ feature -- Access
 			data_provider.connect
 			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status) as c loop
 				l_report := c.item
-				if attached status_cache as l_cache and then attached l_report.status as ll_status then
-					if attached l_cache.item (ll_status.id) as l_item then
-						update_statistics (l_statistics, l_item)
-						l_report.set_status (l_item)
-					end
+				if attached l_report.status as ll_status then
+					update_statistics (l_statistics, ll_status)
+					l_report.set_status (ll_status)
 				end
 				l_list.force (l_report)
 			end
@@ -82,11 +80,9 @@ feature -- Access
 			data_provider.connect
 			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order) as c loop
 				l_report := c.item
-				if attached status_cache as l_cache and then attached l_report.status as ll_status then
-					if attached l_cache.item (ll_status.id) as l_item then
-						update_statistics (l_statistics, l_item)
-						l_report.set_status (l_item)
-					end
+				if attached l_report.status as ll_status then
+						update_statistics (l_statistics, ll_status)
+						l_report.set_status (ll_status)
 				end
 				l_list.force (l_report)
 			end
@@ -113,11 +109,9 @@ feature -- Access
 			data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username) as c loop
 				l_report := c.item
-				if attached status_cache as l_cache and then attached l_report.status as ll_status then
-					if attached l_cache.item (ll_status.id) as l_item then
-						update_statistics (l_statistics, l_item)
-						l_report.set_status (l_item)
-					end
+				if attached l_report.status as ll_status then
+						update_statistics (l_statistics, ll_status)
+						l_report.set_status (ll_status)
 				end
 				l_list.force (l_report)
 			end
@@ -142,11 +136,9 @@ feature -- Access
 			data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
 				l_report := c.item
-				if attached status_cache as l_cache and then attached l_report.status as ll_status then
-					if attached l_cache.item (ll_status.id) as l_item then
-						update_statistics (l_statistics, l_item)
-						l_report.set_status (l_item)
-					end
+				if attached l_report.status as ll_status then
+					update_statistics (l_statistics, ll_status)
+					l_report.set_status (ll_status)
 				end
 				l_list.force (l_report)
 			end
@@ -160,21 +152,13 @@ feature -- Access
 		local
 			l_report_status: ESA_REPORT_STATUS
 		do
-			if attached status_cache as l_cache then
-				Result := l_cache.linear_representation
-			else
-				create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
-				create status_cache.make (4)
-				data_provider.connect
-				across data_provider.status as c  loop
-						l_report_status := c.item
-						Result.force (l_report_status)
-						if attached status_cache as l_cache then
-							l_cache.force (l_report_status,l_report_status.id)
-						end
-				end
-				data_provider.disconnect
+			create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
+			data_provider.connect
+			across data_provider.status as c  loop
+					l_report_status := c.item
+					Result.force (l_report_status)
 			end
+			data_provider.disconnect
 			is_successful := data_provider.is_successful
 		end
 
@@ -392,6 +376,14 @@ feature -- Basic Operations
 			is_successful := data_provider.is_successful
 		end
 
+
+	set_problem_report_responsible (a_number, a_contact_id: INTEGER_32)
+			-- Assign responsible with id `a_contact_id' to problem report number `a_report_number'.
+		do
+			data_provider.set_problem_report_responsible (a_number, a_contact_id)
+			is_successful := data_provider.is_successful
+		end
+		
 feature -- Status Report
 
 	is_active (a_username: STRING): BOOLEAN
@@ -430,11 +422,6 @@ feature -- Status Report
 			Result := data_provider.is_report_visible (a_username, a_number)
 			is_successful := data_provider.is_successful
 		end
-
-feature -- Cache
-
-	status_cache: detachable HASH_TABLE[ESA_REPORT_STATUS,INTEGER_32]
-			-- Cache for Status
 
 
 feature -- Statistics

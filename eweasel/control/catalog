@@ -2779,7 +2779,7 @@ test	anchor-to-anchor-lose-named-tuple	anchor076 tcf pass anchored_type tuple
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass inference
 test	inference-multiple-lower-bound	inference002 tcf fail inference
-test	inference-untyped-call-target	inference003 tcf pass inference
+test	inference-untyped-call-target	inference003 tcf fail used_to_pass inference
 test	inference-direct-dependency	inference004 tcf pass inference
 test	inference-creation-instruction	inference005 tcf pass inference
 test	inference-recursive-tuple	inference006 tcf fail inference

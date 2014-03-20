@@ -1,0 +1,7 @@
+Eiffel Code Analysis
+--------------------
+
+In class 'CAT_VARIABLE_NOT_READ':
+  (6:2): Feature not commented (CA036T): Feature 'variable_not_read' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (10:4): Variable not read after assignment (CA020T): The local variable 'l' is not read / used before it gets reassigned or out of scope.

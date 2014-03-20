@@ -1,0 +1,28 @@
+Eiffel Code Analysis
+--------------------
+
+In class 'CAT_CQ_SEPARATION':
+  (6:2): Feature not commented (CA036T): Feature 'cq_1' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (6:2): No command-query separation (possible function side effect) (CA004T): Function 'cq_1' contains a procedure call, assigns to an attribute, or
+creates an attribute. This indicates that the function changes the state of the
+object, which is a violation of the command-query separation principle.
+  (13:2): Feature not commented (CA036T): Feature 'cq_2' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (13:2): No command-query separation (possible function side effect) (CA004T): Function 'cq_2' contains a procedure call, assigns to an attribute, or
+creates an attribute. This indicates that the function changes the state of the
+object, which is a violation of the command-query separation principle.
+  (20:2): Feature not commented (CA036T): Feature 'cq_3' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (20:2): No command-query separation (possible function side effect) (CA004T): Function 'cq_3' contains a procedure call, assigns to an attribute, or
+creates an attribute. This indicates that the function changes the state of the
+object, which is a violation of the command-query separation principle.
+  (27:2): Feature not commented (CA036T): Feature 'proc' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (32:2): Feature not commented (CA036T): Feature 'int' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.
+  (34:2): Attribute is only used inside a single routine (CA054T): The attribute 'list' is used only in
+feature'cq_3' from the same class. It can be converted into a
+local variable.
+  (34:2): Feature not commented (CA036T): Feature 'list' is not commented. A feature comment is strongly
+recommended to enable clients to understand what the feature does.

@@ -77,6 +77,13 @@ feature -- View
 		end
 
 
+	update_report_responsible  (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32 )
+			-- <Precursor>
+		do
+			to_implement ("Add Implementation")
+		end
+
+
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		do

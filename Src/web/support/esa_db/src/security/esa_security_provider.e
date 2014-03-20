@@ -33,7 +33,7 @@ feature -- Access
 	password_hash (a_password, a_salt: STRING): STRING
 			-- Password hash based on password `a_password' and salt value `a_salt'
 		do
-			Result := sha1_string (a_password + a_salt)
+			Result := sha1_string (a_password + a_salt )
 		end
 
 feature {NONE} -- Implementation

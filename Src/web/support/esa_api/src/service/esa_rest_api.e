@@ -63,6 +63,10 @@ feature -- Configure Resources Routes
 			l_methods.enable_get
 			router.handle_with_request_methods ("/reports", l_report_handler, l_methods)
 
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+
 			router.handle_with_request_methods ("/reports/{id}", l_report_handler, l_methods)
 		end
 

@@ -24,11 +24,7 @@ feature {NONE} --Initialization
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 
---			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
---			set_selected_category (a_view.categories,a_view.selected_category)
-
---			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
---			set_selected_status (a_view.status,a_view.selected_status)
+			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
 
 			create p.make_current
 			p := p.appended ("/www")
@@ -43,6 +39,9 @@ feature {NONE} --Initialization
 			template.add_value (a_view.status, "status")
 			template.add_value (a_view.severities, "severities")
 			template.add_value (a_view, "view")
+			template.add_value (retrieve_status_query (a_view.status),"status_query")
+			template.add_value (a_view.index, "index")
+
 
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
@@ -63,23 +62,18 @@ feature {NONE} --Initialization
 			end
 		end
 
-		set_selected_category (a_categories: LIST[ESA_REPORT_CATEGORY]; a_selected_category:  INTEGER)
-				-- Set the current selected category
-			do
-				across a_categories as c  loop
-					c.item.set_selected_id (a_selected_category)
+
+	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
+		do
+			Result := "status=0&"
+			across a_status as c loop
+				if c.item.is_selected then
+					Result.append_string ("status=")
+					Result.append_string (c.item.id.out)
+					Result.append_character ('&')
 				end
 			end
-
-
-		set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
-				-- Set the current selected status
-			do
-				across a_status as c  loop
-					c.item.set_selected_id (a_selected_status)
-				end
-			end
-
+		end
 end
 
 

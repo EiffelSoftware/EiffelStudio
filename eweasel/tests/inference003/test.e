@@ -15,14 +15,19 @@ feature {NONE} -- Initialization
 			r
 		do
 			i := 5
-			i.do_nothing        -- Qualified call to a procedure.
-			b := i.is_equal (i) -- Qualified call to a function.
-			i := -i             -- Unary expression.
-			b := i < 7          -- Binary expression
-			t := [i, b]
-			a := t [1]          -- Bracket expression.
-			r := agent t.do_nothing
-			r (i, b)            -- Parenthesis alias call.
+			i.do_nothing            -- Qualified call to a procedure.
+			b := i.is_equal (i)     -- Qualified call to a function.
+			i := i.twin             -- Qualified call to a function (with assignment to the same variable).
+			i := - i                -- Unary expression (with assignment to the same variable).
+			i := i + i              -- Binary expression (with assignment to the same variable).
+			b := i < 7              -- Binary expression.
+			t := [i, b, a]
+			a := t [1]              -- Bracket expression.
+			t := [i, b, t [3]]      -- Bracket expression (with assignment to the same variable).
+			r := agent t.do_nothing -- Agent expression.
+			r := agent r.do_nothing -- Agent expression (with assignment to the same variable).
+			r := agent r.item (r)   -- Agent expression (with assignment to the same variable).
+			r (i, b)                -- Parenthesis alias call.
 		end
 
 end

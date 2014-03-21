@@ -739,7 +739,7 @@ feature {NONE} -- Parsing
 			l_use_long_name: BOOLEAN
 			l_stop_processing: BOOLEAN
 			l_count: INTEGER
-			i, j, k: INTEGER
+			j, k: INTEGER
 		do
 			internal_option_values.wipe_out
 			internal_values.wipe_out

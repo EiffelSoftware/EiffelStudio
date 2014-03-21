@@ -169,17 +169,6 @@ feature -- File warnings
 			Result := locale.formatted_string (locale.translation ("File: '$1' cannot be read."), [file_name])
 		end
 
-	w_cannot_read_ace_file_from_epr (epr_name, file_name: READABLE_STRING_GENERAL): STRING_32
-		require
-			epr_name_not_void: epr_name /= Void
-		do
-			if file_name = Void then
-				Result := locale.formatted_string (locale.translation ("Cannot read Ace file from configuration file '$1'.%NSelect a 5.6 or older version of an Eiffel project."), [epr_name])
-			else
-				Result := locale.formatted_string (locale.translation ("Ace file: '$1'%Nreferenced from configuration file: '$2' cannot be read.%NSelect a 5.6 or older version of an Eiffel project."), [file_name, epr_name])
-			end
-		end
-
 	w_file_not_exist (f_name: READABLE_STRING_GENERAL): STRING_32
 			-- Error message when `f_name' does not exist.
 		require
@@ -909,13 +898,6 @@ feature -- Warning messages
 			else
 				Result := locale.translation ("Could not save file to specified location.")
 			end
-		end
-
-	w_cannot_convert_file (a_file_name: READABLE_STRING_GENERAL): STRING_32
-		require
-			a_file_name_not_void: a_file_name /= Void
-		do
-			Result := locale.formatted_string (locale.translation ("Could not convert file '$1' into new configuration format."), [a_file_name])
 		end
 
 	w_cannot_save_png_file (a_file_name: READABLE_STRING_GENERAL): STRING_32

@@ -1,7 +1,5 @@
 note
-	description: "[
-			Convert ace file into ecf file
-		]"
+	description: "Convert ace file into ecf file"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,91 +19,36 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			args: ARGUMENTS_32
-			i,n: INTEGER
-			s: READABLE_STRING_32
-			l_ace, l_ecf: detachable PATH
-			l_err: detachable READABLE_STRING_32
 		do
-			create args
-			from
-				i := 1
-				n := args.argument_count
-			until
-				i > n or l_err /= Void
-			loop
-				s := args.argument (i)
-				if s.starts_with_general ("-") then
-					if s.same_string_general ("-v") or s.same_string_general ("--verbose") then
-						is_verbose := True
-					elseif s.same_string_general ("-b") or s.same_string_general ("--batch") then
-						is_batch := True
-					elseif s.same_string_general ("--library-conversion") then
-						has_library_conversion := True
-					else
-						l_err := {STRING_32} "Invalid flag " + s
-					end
-				else
-					if l_ace = Void then
-						create l_ace.make_from_string (s)
-					elseif l_ecf = Void then
-						create l_ecf.make_from_string (s)
-					else
-						l_err := {STRING_32} "Invalid number of arguments"
-					end
-				end
-				i := i + 1
-			end
-			if l_err /= Void then
-				if l_ace = Void then
-					l_err := {STRING_32} "Missing ace filename"
-				end
-			end
-			if l_err /= Void then
-				io.error.put_string ("ERROR:")
-				io.error.put_string (l_err)
-				io.error.put_new_line
-				display_usage
-			elseif l_ace /= Void then
-				if is_file_readable (l_ace) then
-					if l_ecf = Void or else is_file_writable (l_ecf) then
-						convert_ace_to_ecf (l_ace, l_ecf)
-					else
-						io.error.put_string ("ERROR: the ecf file is not writable")
-						io.error.put_new_line
-						display_usage
-					end
-				else
-					io.error.put_string ("ERROR: the ace file is not readable")
-					io.error.put_new_line
-					display_usage
-				end
-			end
+			create arguments.make
+			arguments.execute (agent process)
 		end
-
-	display_usage
-		do
-			localized_print_error ("usage: ace2ecf {-v|--verbose} ace_filename {ecf_filename} %N")
-			(create {EXCEPTIONS}).die (-1)
-		end
-
-feature -- Settings
-
-	has_library_conversion: BOOLEAN
-
-	should_stop_on_prompt: BOOLEAN
-		do
-			Result := is_batch
-		end
-
-	is_verbose, is_batch: BOOLEAN
 
 feature -- Access	
 
 	config_file_name: detachable PATH
 
-feature -- Operation
+feature {NONE} -- Operation
+
+	arguments: ARGUMENT_PARSER
+			-- Command line argument parser.
+
+	process
+		local
+			l_ace, l_ecf: PATH
+		do
+			create l_ace.make_from_string (arguments.value)
+			if is_file_readable (l_ace) then
+				l_ecf := arguments.output_file_name
+				if l_ecf = Void or else is_file_writable (l_ecf) then
+					convert_ace_to_ecf (l_ace, l_ecf)
+				else
+					localized_print_error ({STRING_32} "ERROR: " + l_ecf.name + " is not writable.%N")
+				end
+			else
+				localized_print_error ({STRING_32} "ERROR: " + l_ace.name + " is not readable.%N")
+			end
+		end
 
 	convert_ace_to_ecf (a_ace_filename: PATH; a_ecf_filename: detachable PATH)
 		require
@@ -121,7 +64,7 @@ feature -- Operation
 				-- load config from ace
 			create l_factory
 			create l_load.make (l_factory, {EIFFEL_CONSTANTS}.config_extension)
-			if not has_library_conversion then
+			if not arguments.has_library_conversion then
 				l_load.disable_library_conversions
 			end
 			l_load.retrieve_configuration (a_ace_filename)
@@ -135,11 +78,7 @@ feature -- Operation
 				else
 					l_ecf := l_last_system.name + "." + {EIFFEL_CONSTANTS}.config_extension
 				end
-				ask_for_config_name (
-						a_ace_filename.parent,
-						l_ecf,
-						agent store_converted ( l_last_system, ?)
-					)
+				ask_for_config_name (a_ace_filename.parent, l_ecf, agent store_converted ( l_last_system, ?))
 			end
 		ensure
 			config_file_name_set: not has_error implies is_config_file_name_valid
@@ -173,7 +112,7 @@ feature -- Operation
 			l_path: PATH
 		do
 			l_path := a_dir_name
-			if should_stop_on_prompt then
+			if arguments.is_batch then
 				localized_print (ace2ecf_names.batch_mode (a_file_name))
 				io.put_new_line
 				a_action.call ([l_path.extended (a_file_name)])
@@ -270,7 +209,6 @@ feature -- Status report
 		end
 
 invariant
---	invariant_clause: True
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

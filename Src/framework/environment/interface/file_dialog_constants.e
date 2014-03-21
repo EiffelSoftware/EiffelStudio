@@ -15,10 +15,6 @@ class
 
 feature -- Access
 
-	Eiffel_project_files_filter: STRING = "*.epr"
-
-	Eiffel_project_files_description: STRING = "Eiffel Project Files (*.epr)"
-
 	All_files_filter: STRING = "*.*"
 
 	All_files_description: STRING = "All Files (*.*)"
@@ -38,10 +34,6 @@ feature -- Access
 	Config_files_filter: STRING = "*.ecf"
 
 	Config_files_description: STRING = "Eiffel Configuration Files (*.ecf)"
-
-	Ace_files_filter: STRING = "*.ace"
-
-	Ace_files_description: STRING = "Eiffel Ace Files (*.ace)"
 
 	Strong_name_key_files_filter: STRING = "*.snk"
 
@@ -80,13 +72,11 @@ feature -- Access
 		do
 			create Result.make (14)
 			Result.compare_objects
-			Result.extend (Eiffel_project_files_filter)
 			Result.extend (Config_files_filter)
 			Result.extend (All_files_filter)
 			Result.extend (Text_files_filter)
 			Result.extend (Png_files_filter)
 			Result.extend (Xml_files_filter)
-			Result.extend (Ace_files_filter)
 			Result.extend (Strong_name_key_files_filter)
 			Result.extend (Eiffel_class_files_filter)
 			Result.extend (Resx_files_filter)
@@ -106,9 +96,7 @@ feature -- Status report
 		require
 			supported_filter: supported_filters.has (a_filter)
 		do
-			if a_filter.is_equal (eiffel_project_files_filter) then
-				Result := eiffel_project_files_description
-			elseif a_filter.is_equal (all_files_filter) then
+			if a_filter.is_equal (all_files_filter) then
 				Result := all_files_description
 			elseif a_filter.is_equal (text_files_filter) then
 				Result := text_files_description
@@ -118,8 +106,6 @@ feature -- Status report
 				Result := xml_files_description
 			elseif a_filter.is_equal (config_files_filter) then
 				Result := config_files_description
-			elseif a_filter.is_equal (ace_files_filter) then
-				Result := ace_files_description
 			elseif a_filter.is_equal (strong_name_key_files_filter) then
 				Result := strong_name_key_files_description
 			elseif a_filter.is_equal (eiffel_class_files_filter) then
@@ -146,7 +132,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

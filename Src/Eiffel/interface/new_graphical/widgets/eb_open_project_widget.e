@@ -924,8 +924,7 @@ feature {NONE} -- Actions
 			create environment_variable
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
 			fod.set_title (Interface_names.t_select_a_file)
-			set_dialog_filters_and_add_all (fod,
-				<<config_files_filter, ace_files_filter, eiffel_project_files_filter>>)
+			set_dialog_filters_and_add_all (fod, <<config_files_filter>>)
 			fod.open_actions.extend (agent file_choice_callback (fod))
 			fod.show_modal_to_window (parent_window)
 		end
@@ -1015,7 +1014,6 @@ feature {NONE} -- Actions
 			i, nb: INTEGER
 			l_conf: CONF_LOAD
 			l_factory: CONF_COMP_FACTORY
-			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			projects_list.remove_selection
 
@@ -1028,14 +1026,8 @@ feature {NONE} -- Actions
 			create l_factory
 			create l_conf.make (l_factory)
 			l_conf.retrieve_configuration (l_filename.name)
-			if l_conf.is_error and (not l_is_ecf and l_conf.is_invalid_xml) then
-				create l_loader.make (parent_window)
-				l_loader.convert_project (l_filename)
-				if l_loader.has_error then
-					l_filename := Void
-				else
-					l_filename := l_loader.converted_file_name
-				end
+			if l_conf.is_error then
+				l_filename := Void
 			end
 
 			if l_filename /= Void then
@@ -1278,7 +1270,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

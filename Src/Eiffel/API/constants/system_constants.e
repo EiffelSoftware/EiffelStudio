@@ -141,9 +141,6 @@ feature {NONE}
 	eiffel_extension: STRING = "e"
 			-- File extension for an Eiffel source file without the dot
 
-	project_extension: STRING = "epr"
-			-- File extension for an Eiffel Studio project file without the dot
-
 	Debug_info_extension: STRING = "edb"
 			-- Eiffel Debug Breakpoints file (extension)
 
@@ -220,16 +217,11 @@ feature {AUXILIARY_FILES} -- Versioning
 
 	Version_tag: INTEGER = 0x026
 
-
-
 	Version_info: STRING = "";
 			-- Information on the version
 			-- Default: ""
 			-- This can be used by developper to add specific information
 			-- displayed on About dialog
-
-	Ace_file_path_tag: STRING = "ace_file_path";
-			-- Tags used in project file header.
 
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"

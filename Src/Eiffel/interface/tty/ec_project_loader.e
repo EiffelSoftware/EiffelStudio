@@ -120,15 +120,6 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: PATH)
-			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
-			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
-		do
-			localized_print (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name.name, a_file_name.name))
-			io.put_new_line
-			set_has_error
-		end
-
 	report_cannot_read_ace_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
@@ -160,15 +151,6 @@ feature {NONE} -- Error reporting
 			-- in file `a_file_name'.
 		do
 			localized_print (warning_messages.w_cannot_save_file (a_file_name.name))
-			io.put_new_line
-			set_has_error
-		end
-
-	report_cannot_convert_project (a_file_name: PATH)
-			-- Report an error when result of a conversion from ace to new format cannot be stored
-			-- in file `a_file_name'.
-		do
-			localized_print (warning_messages.w_cannot_convert_file (a_file_name.name))
 			io.put_new_line
 			set_has_error
 		end
@@ -270,47 +252,6 @@ feature {NONE} -- Error reporting
 		end
 
 feature {NONE} -- User interaction
-
-	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
-			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
-			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
-			-- execute `a_action' with chosen file_name, otherwise do nothing.
-		local
-			l_answered: BOOLEAN
-			l_path: PATH
-		do
-			l_path := a_dir_name
-			if should_stop_on_prompt then
-				localized_print (ewb_names.batch_mode (a_file_name))
-				io.put_new_line
-				a_action.call ([l_path.extended (a_file_name)])
-			else
-				from
-				until
-					l_answered
-				loop
-					localized_print (ewb_names.save_new_configuration_as (a_file_name) + ewb_names.yes_or_no)
-					io.read_line
-					if io.last_string.item (1).as_lower = 'y' then
-						a_action.call ([l_path.extended (a_file_name)])
-						l_answered := True
-					elseif io.last_string.item (1).as_lower = 'n' then
-						from
-							io.put_new_line
-						until
-							l_answered
-						loop
-							localized_print (ewb_names.enter_name_for_configuration_file)
-							io.read_line
-							if not io.last_string.is_empty then
-								a_action.call ([l_path.extended (io.last_string)])
-								l_answered := True
-							end
-						end
-					end
-				end
-			end
-		end
 
 	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Ask user to choose one target among `a_targets'.

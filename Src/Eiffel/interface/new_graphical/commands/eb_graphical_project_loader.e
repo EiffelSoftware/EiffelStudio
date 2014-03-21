@@ -298,13 +298,6 @@ feature {NONE} -- Error reporting
 			report_loading_error (warning_messages.w_cannot_read_file (a_file_name.name))
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: PATH)
-			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
-			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
-		do
-			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name.name, a_file_name.name))
-		end
-
 	report_cannot_read_ace_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
@@ -324,12 +317,6 @@ feature {NONE} -- Error reporting
 			-- in file `a_file_name'.
 		do
 			report_loading_error (warning_messages.w_cannot_save_file (a_file_name.name))
-		end
-
-	report_cannot_convert_project (a_file_name: PATH)
-			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
-		do
-			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name.name))
 		end
 
 	report_cannot_create_project (a_dir_name: PATH)
@@ -450,62 +437,6 @@ feature {NONE} -- Error reporting
 		end
 
 feature {NONE} -- User interaction
-
-	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
-			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
-			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
-			-- execute `a_action' with chosen file_name, otherwise do nothing.
-		local
-			l_save_as: EV_FILE_SAVE_DIALOG
-			l_file_name: PATH
-			l_ev: EV_MESSAGE_DIALOG
-			l_save_as_msg: STRING_32
-		do
-			l_file_name := a_dir_name.extended (a_file_name)
-
-			create l_ev
-			l_save_as_msg := interface_names.b_Save_as
-			l_ev.set_title (interface_names.t_configuration_loading_message)
-			l_ev.set_buttons (<<interface_names.b_ok, l_save_as_msg, interface_names.b_cancel>>)
-			l_ev.set_default_push_button (l_ev.button (interface_names.b_ok))
-			l_ev.set_default_cancel_button (l_ev.button (interface_names.b_ok))
-			l_ev.set_text (warning_messages.w_configuration_files_needs_to_be_converted (a_file_name))
-
-			create l_save_as.make_with_title (interface_names.t_choose_name_for_new_configuration_file)
-			l_save_as.set_start_path (a_dir_name)
-			l_save_as.set_full_file_path (a_dir_name.extended (a_file_name))
-			l_save_as.filters.extend ([config_files_filter, config_files_description])
-			l_save_as.save_actions.extend (agent select_config_file (l_save_as, a_action))
-			l_save_as.cancel_actions.extend (agent set_has_error)
-
-			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
-			l_ev.button (interface_names.b_cancel).select_actions.extend (agent on_cancelled (l_ev))
-			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name]))
-			l_ev.show_modal_to_window (parent_window)
-		end
-
-	select_config_file (a_dlg: EV_FILE_SAVE_DIALOG; a_action: PROCEDURE [ANY, TUPLE])
-			-- Given a save dialog `a_dlg', check if the selected file does not exist, and then
-			-- execute `a_action'. If file exists, display a warning and ask if user wants to
-			-- override that file or not. If overriden, then execute `a_action', otherwise
-			-- bring save dialog one more time.
-		require
-			a_dlg_not_void: a_dlg /= Void
-			a_action_not_void: a_action /= Void
-		local
-			file_name: PATH
-			file: RAW_FILE
-		do
-				-- This is a callback from the name chooser when user click OK.
-			file_name := a_dlg.full_file_path
-			check file_name_not_empty: not file_name.is_empty end
-			create file.make_with_path (file_name)
-			if file.exists then
-				prompts.show_warning_prompt_with_cancel (Warning_messages.w_file_exists (file_name.name), parent_window, agent a_action.call ([file_name]), agent a_dlg.show_modal_to_window (parent_window))
-			else
-				a_action.call ([file_name])
-			end
-		end
 
 	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
 			-- Ask user to choose one target among `a_targets'.

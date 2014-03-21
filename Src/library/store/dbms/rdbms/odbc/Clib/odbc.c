@@ -1026,8 +1026,11 @@ int odbc_next_row (void *con, int no_des)
 			SQLULEN l_terminator_size = 0;
 			l_con->odbc_indicator[no_des][i] = 0;
 				/* String data have an extra character for the null terminating character. */
-			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
-				l_terminator_size = sizeof(SQLTCHAR);
+			if (GetDbCType(dap, i) == SQL_C_WCHAR) {
+				l_terminator_size = sizeof(SQLWCHAR);
+				old_length += l_terminator_size;
+			} else if (GetDbCType(dap, i) == SQL_C_CHAR) {
+				l_terminator_size = sizeof(SQLCHAR);
 				old_length += l_terminator_size;
 			}
 			if (GetDbCType(dap, i) == SQL_C_NUMERIC){

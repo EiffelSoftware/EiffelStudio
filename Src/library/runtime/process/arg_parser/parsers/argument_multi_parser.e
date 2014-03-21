@@ -80,30 +80,27 @@ feature {NONE} -- Query
 	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_non_switch: BOOLEAN; a_non_switch_required: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING_32
 			-- <Precursor>
 		local
-			l_suffix: detachable STRING_32
+			l_suffix: STRING_32
 			l_arg: STRING_32
 			l_args: STRING_32
 		do
 			l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_non_switch, a_non_switch_required, a_add_appurtenances, a_src_group)
 
-			create Result.make (30)
+			create Result.make (l_suffix.count + 50)
+			Result.append (l_suffix)
 			if a_show_non_switch then
-				l_arg := non_switched_argument_name_arg
-				l_args := l_arg + "[ " + l_arg + ", ...]"
+				if not l_suffix.is_empty then
+					Result.append_character (' ')
+				end
 				if not a_non_switch_required then
 					Result.append_character ('[')
 				end
+				l_arg := non_switched_argument_name_arg
+				l_args := l_arg + " [" + l_arg + ", ...]"
 				Result.append (l_args)
 				if not a_non_switch_required then
 					Result.append_character (']')
 				end
-			end
-
-			if l_suffix /= Void then
-				if not Result.is_empty then
-					Result.append_character (' ')
-				end
-				Result.append (l_suffix)
 			end
 		end
 

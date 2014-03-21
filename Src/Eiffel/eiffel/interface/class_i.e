@@ -392,7 +392,7 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+	visible: detachable EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]
 			-- The visible features.
 		deferred
 		end

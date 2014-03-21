@@ -106,7 +106,6 @@ feature -- Basic operations
 
 	next
 			-- Move to next row matching execute clause.
-
 		require else
 			connected: is_connected
 		do
@@ -122,7 +121,6 @@ feature -- Basic operations
 			-- Release cursor descriptor used with last query.
 		require else
 			connected: is_connected
-			is_ok: is_ok
 		do
 			db_spec.terminate_order (descriptor)
 		ensure

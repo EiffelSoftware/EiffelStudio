@@ -9,6 +9,18 @@ class
 
 inherit
 	TEST_BASIC_DATABASE
+		redefine
+			on_prepare
+		end
+
+feature {NONE} -- Prepare
+
+	on_prepare
+			-- Prepare
+		do
+			Precursor;
+			(create {GLOBAL_SETTINGS}).set_use_extended_types (True)
+		end
 
 feature -- Testing
 
@@ -28,32 +40,27 @@ feature -- Testing
 
 feature {NONE} -- Implementation
 
-	new_book: BOOK5
-			-- Filled book to put into database
+	new_data: UNICODE_DATA
+			-- Filled data to put into database
 		do
-			create Result
-			Result.set_author ("Paul")
-			Result.set_price (4.0)
-			Result.set_quantity (50)
-			Result.set_double_value (2.3)
-			Result.set_year (1980)
+			create Result.make
 		end
 
 	test_load_data
-			-- Create table in database with same structure as 'new_book'
+			-- Create table in database with same structure as 'new_data'
 		do
 			drop_repository (table_name)
 
 			if is_odbc then
-				execute_query ("CREATE TABLE db_large_values (title varchar(MAX), author varchar(80), [year] datetime, quantity int ,[price] float, double_value float)")
+				execute_query ("CREATE TABLE db_large_values (unicode nvarchar(MAX), ascii varchar(MAX))")
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `DB_LARGE_VALUES` (`title` varchar(65532), `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_LARGE_VALUES` (`unicode` VARCHAR(65532) CHARSET ucs2, `ascii` varchar(65532))")
 			end
 
 			if is_oracle then
-				execute_query ("CREATE TABLE DB_LARGE_VALUES (title varchar(65535), author varchar(80), year DATE, quantity int ,price float, double_value float)")
+				execute_query ("CREATE TABLE DB_LARGE_VALUES (unicode nvarchar2(65535), ascii varchar(80))")
 			end
 		end
 
@@ -64,10 +71,10 @@ feature {NONE} -- Implementation
 			l_db_store: DB_STORE
 			l_dyn_change: DB_DYN_CHANGE
 			l_change: DB_CHANGE
-			l_book: like new_book
-			l_list: ARRAYED_LIST [like new_book]
-			l_void_book: like new_book
-			l_title: STRING
+			l_data: like new_data
+			l_list: ARRAYED_LIST [like new_data]
+			l_ascii: STRING_8
+			l_unicode: STRING_32
 		do
 				-- Setup repository for adding data.
 			create l_repository.make (table_name)
@@ -75,20 +82,24 @@ feature {NONE} -- Implementation
 			create l_db_store.make
 			l_db_store.set_repository (l_repository)
 
-				-- Adding a book with Void values directly
-			l_book := new_book
-			create l_title.make (5000)
-			l_title.fill_character ('a')
-			l_title.put ('b', 1)
-			l_title.append_character ('c')
-			l_book.set_title (l_title)
-			l_db_store.put (l_book)
-				-- Check that the stored book is valid.
-			db_selection.set_map_name ("Paul", "author_name")
-			l_list := load_list_with_select ("select * from " + sql_table_name (table_name) + " where author=:author_name", new_book)
-			db_selection.unset_map_name ("author_name")
+				-- Adding a data with Void values directly
+			create l_unicode.make (5000)
+			l_unicode.fill_character ('a')
+			l_unicode.put ('b', 1)
+			l_unicode.append_character ('c')
+			create l_ascii.make (5000)
+			l_ascii.fill_character ('a')
+			l_ascii.put ('b', 1)
+			l_ascii.append_character ('c')
+			l_data := new_data
+			l_data.set_ascii (l_ascii)
+			l_data.set_unicode (l_unicode)
+			l_db_store.put (l_data)
+				-- Check that the stored data is valid.
+			l_list := load_list_with_select ("select * from " + sql_table_name (table_name), new_data)
 			if l_list.count = 1 then
-				assert ("1 - Result is not expected", l_list.first.title ~ l_title)
+				assert ("1 - Same Unicode", l_list.first.unicode ~ l_unicode)
+				assert ("1 - Same ASCII", l_list.first.ascii ~ l_ascii)
 			else
 				assert ("1 - Number of results is not expected", False)
 			end

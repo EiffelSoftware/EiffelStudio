@@ -68,7 +68,7 @@ feature {NONE} -- Usage
 	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
 			-- <Precursor>
 
-	name: attached STRING = "Ace file to ECF convertor tool utility"
+	name: STRING = "Ace file to ECF convertor tool utility"
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "ace_file"
@@ -80,16 +80,16 @@ feature {NONE} -- Usage
 	non_switched_argument_type: STRING = "Ace File"
 			-- <Precursor>
 
-	version: attached STRING
+	version: STRING
 			-- <Precursor>
 		once
 			create Result.make (3)
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
-	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (1)

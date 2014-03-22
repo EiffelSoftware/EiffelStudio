@@ -15,7 +15,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
-		<library name="eiffel_identifier" location="C:\work\14.05_dev\framework\eiffel_identifier\eiffel_identifier.ecf"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
@@ -24,7 +24,7 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
-		<library name="pcre" location="C:\work\14.05_dev\unstable\library\text\regexp\pcre\pcre.ecf"/>
+		<library name="pcre" location="$ISE_LIBRARY\unstable\library\text\regexp\pcre\pcre.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

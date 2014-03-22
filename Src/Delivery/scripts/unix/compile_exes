@@ -302,6 +302,11 @@ cd $EXPORT_DIR/bin
 untgz_ccode eiffel_echo
 move eiffel_echo $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel_echo
 
+remtrace Recompile ace2ecf
+cd $EXPORT_DIR/bin
+untgz_ccode ace2ecf
+move ace2ecf $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/ace2ecf
+
 remtrace Compiling Gobo tools
 safe_md $INSTALL_DIR/library/gobo/spec/
 safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM

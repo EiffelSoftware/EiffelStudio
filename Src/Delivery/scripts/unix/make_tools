@@ -73,3 +73,15 @@ if [ ! -f po_generation_tool.tar.bz2 ]; then
 fi
 clean_project
 move po_generation_tool.tar.bz2 $EXPORT_DIR/bin
+
+remtrace Recompile ace2ecf
+cd $EIFFEL_SRC/tools/ace2ecf
+clean_project
+finalize ace2ecf.ecf ace2ecf
+tgz_ccode ace2ecf ace2ecf.tar.bz2
+if [ ! -f ace2ecf.tar.bz2 ]; then
+	echo Could not finalize a new Eiffel Echo
+	CANCEL
+fi
+clean_project
+move ace2ecf.tar.bz2 $EXPORT_DIR/bin

@@ -97,3 +97,16 @@ iff not exist eiffel_ribbon.exe then
 	CANCEL
 endiff
 move eiffel_ribbon.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile ace2ecf
+cdd %EIFFEL_SRC\tools\ace2ecf
+clean_project
+finalize ace2ecf.ecf
+cleanup_eiffel ace2ecf ace2ecf.exe
+iff not exist ace2ecf.exe then
+	remtrace Could not finalize a new ace2ecf
+	CANCEL
+endiff
+move ace2ecf.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+

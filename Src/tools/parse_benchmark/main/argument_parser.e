@@ -39,9 +39,9 @@ feature {NONE} -- Access
 			-- <Precursor>
 		once
 			create Result.make (5)
-			Result.append_natural_16 ({EIFFEL_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_natural_16 ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

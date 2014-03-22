@@ -37,7 +37,7 @@ feature {NONE} -- Access
 			create Result.make (5)
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
 	copyright: STRING_32 = "Copyright Eiffel Software 2006-2011. All Rights Reserved."

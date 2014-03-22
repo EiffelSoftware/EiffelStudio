@@ -138,28 +138,28 @@ feature {NONE} -- Usage
 	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
 			-- <Precursor>
 
-	name: attached STRING = "Eiffel Environment Command Spawn Utility"
+	name: STRING = "Eiffel Environment Command Spawn Utility"
 			-- <Precursor>
 
-	version: attached STRING
+	version: STRING
 			-- <Precursor>
 		once
-			create Result.make (3)
+			create Result.make (5)
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
-	non_switched_argument_description: attached STRING = "Command or application to execute."
+	non_switched_argument_description: STRING = "Command or application to execute."
 			-- <Precursor>
 
-	non_switched_argument_name: attached STRING = "command"
+	non_switched_argument_name: STRING = "command"
 			-- <Precursor>
 
-	non_switched_argument_type: attached STRING = "A command"
+	non_switched_argument_type: STRING = "A command"
 			-- <Precursor>
 
-	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (1)
@@ -175,7 +175,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
 
-	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
 			create Result.make (3)
@@ -186,12 +186,12 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switch names
 
-	manual_switch: attached STRING = "m|manual"
-	x86_switch: attached STRING = "x86"
-	aync_switch: attached STRING = "a|async"
-	ignore_switch: attached STRING = "i|ignore"
-	list_compilers_switch: attached STRING = "l|list"
-	use_compiler_switch: attached STRING = "u|use"
+	manual_switch: STRING = "m|manual"
+	x86_switch: STRING = "x86"
+	aync_switch: STRING = "a|async"
+	ignore_switch: STRING = "i|ignore"
+	list_compilers_switch: STRING = "l|list"
+	use_compiler_switch: STRING = "u|use"
 
 feature {NONE} -- Externals
 

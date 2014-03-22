@@ -112,9 +112,9 @@ feature {NONE} -- Usage
 			--  <Precursor>
 		once
 			create Result.make (5)
-			Result.append_natural_16 ({EIFFEL_CONSTANTS}.major_version)
+			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_natural_16 ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
 	non_switched_argument_name: STRING = "folder"

@@ -297,7 +297,7 @@ feature {NONE} -- Usage
 			create Result.make (10)
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 			Result.append_character ('.')
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
 				-- will get replaced by the delivery scripts (see comments for `svn_revision'.

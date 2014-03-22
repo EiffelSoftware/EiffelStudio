@@ -104,22 +104,22 @@ feature -- Query
 
 feature {NONE} -- Usage
 
-	name: attached STRING = "Eiffel C/C++ Compilation Tool"
+	name: STRING = "Eiffel C/C++ Compilation Tool"
 			-- <Precursor>
 
-	version: attached STRING
+	version: STRING
 			-- <Precursor>
 		once
-			create Result.make (3)
+			create Result.make (5)
 			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
 	copyright: STRING = "Copyright Eiffel Software 1996-2012. All Rights Reserved."
 			-- <Precursor>
 
-	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (4)

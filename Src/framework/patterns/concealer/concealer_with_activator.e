@@ -55,14 +55,11 @@ feature -- Access
 	object: detachable G
 			-- <Precursor>
 		local
-			l_activator: like activator
 			l_events: like internal_activated_event
 		do
 			if is_revealed then
 				Result := internal_object
-			else
-				l_activator := activator
-				check l_activator_attached: attached l_activator end
+			elseif attached activator as l_activator then
 				Result := l_activator.item (Void)
 					-- Detach activator as it is no longer required
 				activator := Void

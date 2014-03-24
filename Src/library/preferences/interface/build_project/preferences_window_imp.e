@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
@@ -81,11 +81,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	frozen create_interface_objects
 			-- Create objects
 		do
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_split_area_1
@@ -255,7 +255,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	frozen set_attributes_using_color_constants
@@ -288,19 +288,19 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
-	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_PIXMAP]]
-	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_PIXMAP]]
+	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER_INTERVAL]]]
 	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_FONT]]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
 
 	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
@@ -309,4 +309,14 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
+note
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -75,22 +75,18 @@ feature {NONE} -- Query
 
 	variable (a_id: READABLE_STRING_8): detachable STRING
 			-- <Precursor>
-		local
-			l_delegate: like value_delegate
 		do
-			l_delegate := value_delegate
-			check l_delegate_attached: l_delegate /= Void end
-			Result := l_delegate.item ([a_id])
+			if attached value_delegate as l_delegate then
+				Result := l_delegate.item ([a_id])
+			end
 		end
 
 	variable_32 (a_id: READABLE_STRING_32): detachable STRING_32
 			-- <Precursor>
-		local
-			l_delegate: like value_delegate_32
 		do
-			l_delegate := value_delegate_32
-			check l_delegate_attached: l_delegate /= Void end
-			Result := l_delegate.item ([a_id])
+			if attached value_delegate_32 as l_delegate then
+				Result := l_delegate.item ([a_id])
+			end
 		end
 
 ;note

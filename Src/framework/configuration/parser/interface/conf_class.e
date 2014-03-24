@@ -252,7 +252,7 @@ feature -- Status update
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	add_visible (a_vis: like visible)
+	add_visible (a_vis: attached like visible)
 			-- Add visible rules to `visible'. Set `is_error' and `last_error' if there is a conflict.
 		require
 			a_vis_not_void: a_vis /= Void

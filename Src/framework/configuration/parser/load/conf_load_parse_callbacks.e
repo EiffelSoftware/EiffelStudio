@@ -318,7 +318,7 @@ feature -- Callbacks
 			l_error: CONF_ERROR_GRUNDEF
 			l_e_ov: CONF_ERROR_OVERRIDE
 			l_element: CONF_NOTE_ELEMENT
-			l_target: like current_target
+			l_current_target: like current_target
 			l_current_cluster: like current_cluster
 		do
 			if not is_error then
@@ -356,12 +356,12 @@ feature -- Callbacks
 					end
 				when t_target then
 						-- check for overrides and precompiles in a library_target
-					l_target := current_target
+					l_current_target := current_target
 					if
 						attached last_system as l_last_system and then
-					 	l_target = l_last_system.library_target
+					 	l_current_target = l_last_system.library_target
 					 then
-						if l_target /= Void and then not l_target.overrides.is_empty then
+						if l_current_target /= Void and then not l_current_target.overrides.is_empty then
 							set_error (create {CONF_ERROR_LIBOVER})
 						end
 					end
@@ -393,18 +393,18 @@ feature -- Callbacks
 					uses_list.wipe_out
 					overrides_list.wipe_out
 					group_list.wipe_out
-					if l_target /= Void and then l_target.extends = Void then
+					if l_current_target /= Void and then l_current_target.extends = Void then
 							-- Set default options for the standalone target in case the old schema is being processed.
 							-- Extension targets do not need it because the options are inherited from the standalone ones.
 						if a_namespace /= Void then
-							set_default_options (current_target, a_namespace)
+							set_default_options (l_current_target, a_namespace)
 						else
 								-- FIXME: is this safe to use default_namespace?
 								-- maybe: check a_namespace /= Void end
-							set_default_options (current_target, default_namespace)
+							set_default_options (l_current_target, default_namespace)
 						end
 					end
-					l_target := Void
+					l_current_target := Void
 					current_target := Void
 				when t_file_rule then
 					current_file_rule := Void
@@ -2178,7 +2178,7 @@ feature {NONE} -- Implementation content processing
 
 feature {NONE} -- Processing of options
 
-	set_default_options (t: like current_target; a_namespace: like latest_namespace)
+	set_default_options (t: attached like current_target; a_namespace: like latest_namespace)
 			-- Set default options depending on the supplied schema.
 		require
 			t_attached: t /= Void

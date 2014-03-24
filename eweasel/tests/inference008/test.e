@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 					print (x)
 				end
 			end
+			io.put_new_line
 		end
 
 end

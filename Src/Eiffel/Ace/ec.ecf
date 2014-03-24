@@ -58,6 +58,7 @@
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
+		<library name="code_analysis" location="$EIFFEL_SRC\framework\code_analysis\code_analysis.ecf" readonly="false"/>		
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
@@ -147,6 +148,7 @@
 		</external_object>
 		<variable name="batch_framework" value="false"/>
 		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf" readonly="false"/>
+		<library name="code_analysis" location="$EIFFEL_SRC\framework\code_analysis\code_analysis.ecf" readonly="false"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf" readonly="false"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>

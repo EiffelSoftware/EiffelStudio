@@ -595,6 +595,7 @@ feature {NONE} -- Menu section, Granularity 2.
 				extend_class_refactoring_menus (a_menu, l_stonec)
 				extend_debug_class_menus (a_menu, l_stonec.e_class)
 				extend_add_to_menu (a_menu, l_stonec)
+				(create {ES_CODE_ANALYSIS_BENCH_HELPER}).build_context_menu_for_class_stone (a_menu, l_stonec)
 			elseif attached {CLASSI_STONE} a_pebble as l_stonei then
 				extend_basic_opening_menus (a_menu, l_stonei, True)
 				extend_separator (a_menu)
@@ -603,6 +604,7 @@ feature {NONE} -- Menu section, Granularity 2.
 			elseif attached {CLUSTER_STONE} a_pebble as l_cluster_stone then
 				extend_basic_opening_menus (a_menu, l_cluster_stone, False)
 				extend_add_to_menu (a_menu, l_cluster_stone)
+				(create {ES_CODE_ANALYSIS_BENCH_HELPER}).build_context_menu_for_cluster_stone (a_menu, l_cluster_stone)
 			elseif attached {TARGET_STONE} a_pebble as l_target_stone then
 				extend_add_to_menu (a_menu, l_target_stone)
 			end

@@ -27,9 +27,7 @@ inherit
 			process_break_as,
 			process_leaf_stub_as,
 			process_symbol_stub_as,
-			process_keyword_stub_as,
-			process_there_exists_as,
-			process_for_all_as
+			process_keyword_stub_as
 		redefine
 			process_access_id_as,
 			process_assign_as,

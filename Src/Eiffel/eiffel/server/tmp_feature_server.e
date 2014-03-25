@@ -45,7 +45,7 @@ feature -- Element access
 			Result := storage.has (a_id) or else delayed_storage.has (a_id) or else aliased_features.has (a_id) or else Precursor (a_id)
 		end
 
-	item (a_id: INTEGER): FEATURE_I
+	item (a_id: INTEGER): detachable FEATURE_I
 			-- Get class with `a_id'.
 		do
 			Result := storage.item (a_id)
@@ -206,7 +206,7 @@ invariant
 	delayed_storage_attached: attached delayed_storage
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

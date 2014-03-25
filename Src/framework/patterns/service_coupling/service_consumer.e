@@ -42,22 +42,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: attached G
+	service: detachable G
 			-- Access to the service
-		require
-			is_service_available: is_service_available
 		local
-			l_service: detachable G
 			l_result: like internal_service
 		do
 			l_result := internal_service
 			if l_result /= Void then
 				Result := l_result
-			else
-				if attached {G} service_provider.service ({detachable G}) as l_other_service then
-					l_service := l_other_service
-				end
-				check l_service_attached: l_service /= Void end
+			elseif attached {G} service_provider.service ({detachable G}) as l_service then
 				Result := l_service
 				internal_service := Result
 			end
@@ -101,7 +94,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

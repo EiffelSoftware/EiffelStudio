@@ -161,8 +161,8 @@ feature {NONE} -- Basic operations
 				end
 				if l_u.file_path_exists (l_template) then
 					create l_wizard
-					if l_wizard.is_service_available then
-						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), a_file_name)
+					if attached l_wizard.service as l_service then
+						l_service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), a_file_name)
 						create l_name.make (class_name.count + test_routine_name.count + 1)
 						l_name.append (class_name)
 						l_name.append_character ('.')
@@ -301,7 +301,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

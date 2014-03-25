@@ -178,8 +178,8 @@ feature {NONE} -- session data
     		consumer: attached SERVICE_CONSUMER [attached SESSION_MANAGER_S]
 		do
 			create consumer
-    		if consumer.is_service_available then
-				if attached {SESSION_I} consumer.service.retrieve (True) as session then
+    		if attached consumer.service as l_service then
+				if attached {SESSION_I} l_service.retrieve (True) as session then
 					if attached {BOOLEAN_REF} session.value (keep_opened_status_session_data_id) as ref then
 						Result := ref.item
 					else
@@ -195,8 +195,8 @@ feature {NONE} -- session data
     		consumer: attached SERVICE_CONSUMER [attached SESSION_MANAGER_S]
 		do
 			create consumer
-    		if consumer.is_service_available then
-				if attached {SESSION_I} consumer.service.retrieve (True) as session then
+    		if attached consumer.service as l_service then
+				if attached {SESSION_I} l_service.retrieve (True) as session then
         			session.set_value (keep_opened_check_button.is_selected, keep_opened_status_session_data_id)
         		end
       		end
@@ -336,7 +336,7 @@ invariant
 	argument_control_not_void: debugging_options_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

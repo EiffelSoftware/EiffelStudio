@@ -357,7 +357,7 @@ feature {NONE} -- Basic operations
 		do
 			if not retried then
 				create l_wizard
-				if l_wizard.is_service_available then
+				if attached l_wizard.service as l_wizard_service then
 					l_source_file := eiffel_layout.templates_path.extended ("defaults")
 					if not empty_check.is_selected then
 						l_source_file := l_source_file.extended ("empty")
@@ -479,10 +479,10 @@ feature {NONE} -- Basic operations
 						l_params.force (l_buffer.twin, init_clause_symbol)
 
 							-- Render the template using the defined parameters
-						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)
+						l_wizard_service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)
 					else
 						prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_source_file.name), target.window, Void)
-						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name)
+						l_wizard_service.render_template_to_file (default_class_template, l_params, a_dest_file_name)
 					end
 				end
 			else

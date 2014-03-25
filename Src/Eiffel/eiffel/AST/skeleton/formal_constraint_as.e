@@ -368,8 +368,6 @@ feature -- Validity checking
 		local
 			l_cluster: CONF_GROUP
 			l_type: TYPE_AS
-			l_named_tuple_type: NAMED_TUPLE_TYPE_AS
-			l_class_type: CLASS_TYPE_AS
 			l_rename_clause: RENAME_CLAUSE_AS
 			l_constraints: like constraints
 			l_constraint_position: INTEGER
@@ -391,11 +389,13 @@ feature -- Validity checking
 					-- Check wether we have a class type.
 				l_constraining_type := l_constraints.item
 				l_type := l_constraining_type.type
-				l_class_type ?= l_type
 
-				if l_class_type = Void then
-					l_named_tuple_type ?= l_type
-					if l_named_tuple_type = Void then
+				if attached {CLASS_TYPE_AS} l_type as l_class_type then
+					l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
+				else
+					if attached {NAMED_TUPLE_TYPE_AS} l_type as l_named_tuple_type then
+						l_class_i := universe.class_named ("TUPLE", l_cluster)
+					else
 						if l_constraining_type.renaming /= Void then
 							create l_vtmc3
 							l_vtmc3.set_class (a_context_class)
@@ -403,11 +403,7 @@ feature -- Validity checking
 							l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic or NONE.")
 							Error_handler.insert_error (l_vtmc3)
 						end
-					else
-						l_class_i := universe.class_named ("TUPLE", l_cluster)
 					end
-				else
-					l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
 				end
 					-- We handle only the case where `class_i' is a valid reference
 					-- because the case has been handled in `check_constraint_type'
@@ -499,7 +495,7 @@ feature -- Validity checking
 		require
 			feature_exists: f /= Void
 		local
-			p: PROCEDURE_I
+			p: detachable PROCEDURE_I
 		do
 			p ?= f
 			Result := p /= Void
@@ -521,7 +517,7 @@ feature {NONE} -- Implementation
 			l_constraining_type: CONSTRAINING_TYPE_AS
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
-			l_type: TYPE_A
+			l_type: detachable TYPE_A
 			l_has_multi_constraints: BOOLEAN
 			l_constraint_class: CLASS_C
 		do
@@ -570,7 +566,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	append_rename_clause (a_text_formatter: TEXT_FORMATTER; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_class: CLASS_C; a_short: BOOLEAN)
+	append_rename_clause (a_text_formatter: TEXT_FORMATTER; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_class: detachable CLASS_C; a_short: BOOLEAN)
 			-- Prints renaming
 			--
 			-- `a_text_formatter': Used to append the renaming to.
@@ -585,7 +581,7 @@ feature {NONE} -- Implementation
 			l_content: EIFFEL_LIST [RENAME_AS]
 			l_old_name, l_new_name: ID_AS
 			l_e_feature: E_FEATURE
-			l_alias_name: STRING_AS
+			l_alias_name: detachable STRING_AS
 		do
 			a_text_formatter.process_keyword_text (ti_rename_keyword, Void)
 			if a_short then
@@ -680,7 +676,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

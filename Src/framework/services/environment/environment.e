@@ -157,7 +157,7 @@ feature {NONE} -- Element change
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_old_value: STRING_32
+			l_old_value: detachable STRING_32
 			l_name: STRING_32
 			l_value: detachable STRING_32
 		do
@@ -285,7 +285,7 @@ invariant
 	table_compare_objects: table.object_comparison
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -185,18 +185,14 @@ feature {NONE} -- Variable expansion
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_vars: like context_variables
-			l_service: ENVIRONMENT_S
 		do
 			l_vars := context_variables
-			if l_vars.has (a_name) then
-				Result := l_vars.item (a_name)
+			if attached l_vars.item (a_name) as l_result then
+				Result := l_result
 			else
 					-- Check the environment service
-				if environment.is_service_available then
-					l_service := environment.service
-					if l_service.is_interface_usable then
-						Result := l_service.variable (a_name)
-					end
+				if attached environment.service as l_service and then l_service.is_interface_usable then
+					Result := l_service.variable (a_name)
 				end
 			end
 		end
@@ -212,7 +208,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

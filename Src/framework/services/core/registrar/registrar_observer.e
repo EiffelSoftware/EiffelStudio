@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	REGISTRAR_OBSERVER [G, K -> HASHABLE]
+	REGISTRAR_OBSERVER [G -> ANY, K -> HASHABLE]
 
 inherit
 	EVENT_OBSERVER_I
@@ -73,7 +73,7 @@ feature {REGISTRAR_I} -- Event handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,7 +20,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	REGISTRAR [G -> detachable ANY, K -> HASHABLE]
+	REGISTRAR [G -> ANY, K -> HASHABLE]
 
 inherit
 	REGISTRAR_I [G, K]
@@ -121,17 +121,12 @@ feature -- Status report
 
 feature -- Query
 
-	registration alias "[]" (a_key: K): G
+	registration alias "[]" (a_key: K): detachable G
 			-- <Precursor>
-		local
-			l_item: CONCEALER_I [G]
-			l_result: detachable G
 		do
-			l_item := table.item (a_key)
-			check l_item_attached: l_item /= Void end
-			l_result := l_item.object
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			if attached table.item (a_key) as l_item and then attached l_item.object as l_result then
+				Result := l_result
+			end
 		end
 
 feature -- Basic operations
@@ -145,7 +140,7 @@ feature -- Basic operations
 			internal_register (l_concealer, a_key)
 		end
 
-	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, attached G]; a_key: K)
+	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, G]; a_key: K)
 			-- <Precursor>
 		local
 			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
@@ -154,36 +149,13 @@ feature -- Basic operations
 			internal_register (l_concealer, a_key)
 		end
 
-	register_with_type_activator (a_type: TYPE [G]; a_key: K)
-			-- <Precursor>
-		do
-			register_with_activator (agent (ia_type: TYPE [G]): attached G
-					-- Activator function to dynamically instantiate type.
-				local
-					l_internal: INTERNAL
-					l_type_id: INTEGER
-					l_result: detachable G
-				do
-					create l_internal
-					l_type_id := l_internal.generic_dynamic_type (ia_type, 1)
-					if attached {G} l_internal.new_instance_of (l_type_id) as l_object then
-						l_result := l_object
-					end
-					check attached l_result end
-					Result := l_result
-				end (a_type), a_key)
-		end
-
 	unregister (a_key: K)
 			-- <Precursor>
 		local
 			l_table: like table
-			l_registration: detachable CONCEALER_I [G]
 		do
 			l_table := table
-			if l_table.has (a_key) then
-				l_registration := l_table.item (a_key)
-				check l_registration_attached: l_registration /= Void end
+			if attached l_table.item (a_key) as l_registration then
 				l_table.remove (a_key)
 
 				if attached internal_unregistered_event as l_event then
@@ -215,7 +187,6 @@ feature {NONE} -- Basic operations
 			if a_item.is_revealed then
 					-- The object has already been revealed, so use it.
 				l_registration := a_item.object
-				check l_registration_attached: l_registration /= Void end
 			else
 				l_registration := a_item
 			end
@@ -226,7 +197,9 @@ feature {NONE} -- Basic operations
 			end
 
 				-- Perform activation setup and notification
-			activate_registration (l_registration, a_key)
+			if l_registration /= Void then
+				activate_registration (l_registration, a_key)
+			end
 		ensure
 			a_key_is_registered: is_registered (a_key)
 		end
@@ -445,7 +418,7 @@ invariant
 	table_attached: table /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

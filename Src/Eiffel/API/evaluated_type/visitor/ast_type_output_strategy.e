@@ -36,7 +36,7 @@ create
 
 feature -- Initialization
 
-	process (a_type: TYPE_A; a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C; a_feature: FEATURE_I)
+	process (a_type: TYPE_A; a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C; a_feature: detachable FEATURE_I)
 			-- Output `a_type' into `a_text_formatter' using context of `a_class' and `a_feature'.
 			-- `a_feature' is only used when resolving anchors to argument.
 		require

@@ -32,14 +32,14 @@ feature -- Access
 			Result := tbl_has (i)
 		end
 
-	server_item, item (an_id: INTEGER): T
+	server_item, item (an_id: INTEGER): detachable T
 			-- Object of id `an_id'
 		require
 			an_id_positive: an_id > 0
 		deferred
 		end
 
-	disk_item (an_id: INTEGER):T
+	disk_item (an_id: INTEGER): detachable T
 			-- Object of id `an_id'
 		require
 			an_id_positive: an_id > 0
@@ -396,7 +396,7 @@ invariant
 	tables_not_void: tables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

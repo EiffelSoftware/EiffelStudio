@@ -240,7 +240,7 @@ feature -- Element access
 			Result := storage.has (a_class_id) or else Precursor (a_class_id)
 		end
 
-	item (a_class_id: INTEGER): CLASS_AS
+	item (a_class_id: INTEGER): detachable CLASS_AS
 			-- Get class with `a_class_id'.
 		do
 			Result := storage.item (a_class_id)
@@ -469,7 +469,7 @@ invariant
 	discardable_classes_attached: attached discardable_classes
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

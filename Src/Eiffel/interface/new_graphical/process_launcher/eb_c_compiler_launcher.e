@@ -246,8 +246,8 @@ feature{NONE}  -- Actions
 			-- Handler called before c compiler starts
 		do
 				-- Remove any event list error items.
-			if event_list.is_service_available then
-				event_list.service.prune_event_items (c_compiler_context)
+			if attached event_list.service as l_service then
+				l_service.prune_event_items (c_compiler_context)
 			end
 
 				-- Rest the switched from output
@@ -280,9 +280,9 @@ feature{NONE}  -- Actions
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
-					if event_list.is_service_available then
+					if attached event_list.service as l_service then
 						create l_error.make (locale_formatter.translation (e_see_output))
-						event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+						l_service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
@@ -308,9 +308,9 @@ feature{NONE}  -- Actions
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
-			if event_list.is_service_available then
+			if attached event_list.service as l_service then
 				create l_error.make (locale_formatter.translation (e_could_not_launch))
-				event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+				l_service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)
@@ -447,7 +447,7 @@ feature {NONE} -- Internationalization
 	e_could_not_launch: STRING = "Could not launch C/C++ compiler."
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

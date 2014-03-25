@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 			a := t [1]              -- Bracket expression.
 			t := [i, b, t [3]]      -- Bracket expression (with assignment to the same variable).
 			r := agent t.do_nothing -- Agent expression.
-			r := agent r.do_nothing -- Agent expression (with assignment to the same variable).
-			r := agent r.item (r)   -- Agent expression (with assignment to the same variable).
 			r (i, b)                -- Parenthesis alias call.
 		end
 

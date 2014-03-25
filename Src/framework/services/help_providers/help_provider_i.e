@@ -100,9 +100,9 @@ feature -- Query
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)
-			if attached a_section.section as l_section then
+			if a_section /= Void then
 				Result.append ({STRING_32} ", ")
-				Result.append_string_general (l_section)
+				Result.append_string_general (a_section.section)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -128,7 +128,7 @@ feature -- Basic operations
 	--kind_attached: kind /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

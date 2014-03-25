@@ -5484,7 +5484,7 @@ feature --option file generation
 
 feature
 
-	set_current_class (a_class: CLASS_C)
+	set_current_class (a_class: detachable CLASS_C)
 		do
 			current_class := a_class
 		end

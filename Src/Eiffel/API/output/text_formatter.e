@@ -289,7 +289,7 @@ feature -- Process
 		deferred
 		end
 
-	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: detachable E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		require
@@ -297,7 +297,7 @@ feature -- Process
 		deferred
 		end
 
-	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: detachable E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		require
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

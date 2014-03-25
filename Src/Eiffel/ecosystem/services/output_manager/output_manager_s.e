@@ -63,8 +63,8 @@ feature -- Query
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			if is_output_available (a_key) then
-				Result := output (a_key)
+			if attached output (a_key) as l_output then
+				Result := l_output
 			else
 				Result := new_output (a_key, a_name)
 				register (Result, a_key)
@@ -100,7 +100,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

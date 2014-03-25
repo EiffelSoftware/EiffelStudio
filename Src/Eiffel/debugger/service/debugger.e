@@ -215,12 +215,9 @@ feature {NONE} -- Clean up
 
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
-		local
-			l_debugger: DEBUGGER_S
 		do
 			if a_explicit then
-				if debugger_consumer.is_service_available then
-					l_debugger := debugger_consumer.service
+				if attached debugger_consumer.service as l_debugger then
 					if l_debugger.is_interface_usable then
 --						l_debugger.connection.disconnect_events (Current)
 					end
@@ -229,7 +226,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

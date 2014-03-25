@@ -445,8 +445,8 @@ feature {NONE} -- Basic operations
 						end
 					else
 							-- Log parse error
-						if logger_service.is_service_available then
-							logger_service.service.put_message_with_severity (
+						if attached logger_service.service as l_service then
+							l_service.put_message_with_severity (
 								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name.name),
 								{ENVIRONMENT_CATEGORIES}.internal_event,
 								{PRIORITY_LEVELS}.high)
@@ -459,8 +459,8 @@ feature {NONE} -- Basic operations
 				end
 
 					-- Log failed load error
-				if logger_service.is_service_available then
-					logger_service.service.put_message_with_severity (
+				if attached logger_service.service as l_logger_service then
+					l_logger_service.put_message_with_severity (
 						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name.name),
 						{ENVIRONMENT_CATEGORIES}.internal_event,
 						{PRIORITY_LEVELS}.high)
@@ -498,7 +498,7 @@ invariant
 	cataloged_template_definitions_attached: attached cataloged_template_definitions
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

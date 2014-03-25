@@ -555,7 +555,6 @@ feature -- Conveniences
 		local
 			p: like parent
 			p_target: ACCESS_B
-			constant_b: CONSTANT_B
 		do
 			p := parent
 			if p = Void then
@@ -567,8 +566,7 @@ feature -- Conveniences
 				else
 						-- Bug fix: CONSTANT_B has a special construct
 						-- for nested calls
-					constant_b ?= p_target
-					Result := constant_b /= Void and then
+					Result := attached {CONSTANT_B} p_target as constant_b and then
 						constant_b.access = Current and then p.parent = Void
 				end
 			end
@@ -680,7 +678,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

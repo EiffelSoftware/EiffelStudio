@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 	frozen on_after_initialized
 			-- <Precursor>
 		do
-			if session_manager.is_service_available then
-				initialize_with_session (session_manager.service)
+			if attached session_manager.service as l_service then
+				initialize_with_session (l_service)
 			else
 					-- TODO: show info dialog and disable input fields
 			end
@@ -70,8 +70,8 @@ feature {ES_TEST_WIZARD_PAGE} -- Basic operations
 		require
 			valid: is_valid
 		do
-			if session_manager.is_service_available then
-				store_to_session (session_manager.service)
+			if attached session_manager.service as l_service then
+				store_to_session (l_service)
 			end
 		end
 
@@ -110,7 +110,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

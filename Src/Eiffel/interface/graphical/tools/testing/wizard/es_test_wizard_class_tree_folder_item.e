@@ -34,9 +34,9 @@ feature {NONE} -- Query
 			-- <Precursor>
 		do
 			if Precursor {EB_CLASSES_TREE_FOLDER_ITEM} (a_class) then
-				if test_suite.is_service_available and attached {EIFFEL_CLASS_I} a_class as l_class then
+				if attached test_suite.service as l_test_suite and attached {EIFFEL_CLASS_I} a_class as l_class then
 					check not_implemented: False end
-					--Result := test_suite.service.is_test_class (l_class)
+					--Result := l_test_suite.is_test_class (l_class)
 				end
 			end
 		end
@@ -56,7 +56,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,11 +18,8 @@ feature -- Basic operations
 
 	execute
 			-- <Precursor>
-		local
-			l_service: TEST_SUITE_S
 		do
-			if test_suite.is_service_available then
-				l_service := test_suite.service
+			if attached test_suite.service as l_service then
 				if l_service.is_interface_usable then
 					execute_with_test_suite (l_service)
 				else
@@ -160,7 +157,7 @@ feature {NONE} -- Internationalization
 	e_test_suite_not_usable: STRING = "The test suite service is currently unavailable."
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

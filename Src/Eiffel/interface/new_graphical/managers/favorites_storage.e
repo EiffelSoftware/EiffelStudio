@@ -27,7 +27,7 @@ feature -- Data
 		do
    					--| Force storage
 			cons := session_manager
-			if cons.is_service_available then
+			if attached cons.service as l_service then
 					-- Effective saving
 				l_session := session_data
 
@@ -35,7 +35,7 @@ feature -- Data
 				l_session.set_value (a_data, Favorites_session_data_id)
 
 					--| Store				
-				cons.service.store (l_session)
+				l_service.store (l_session)
 			end
 		end
 
@@ -57,8 +57,8 @@ feature {NONE} -- session data access
 			Result := internal_session_data
 			if Result = Void then
 				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve (True)
+				if attached cons.service as l_service then
+					Result := l_service.retrieve (True)
 					internal_session_data := Result
 				end
 			end
@@ -68,7 +68,7 @@ feature {NONE} -- session data access
 			-- cached version of `session_data'		
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

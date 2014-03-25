@@ -184,9 +184,10 @@ feature {NONE} -- Events
 			if l_tag.is_empty then
 				l_valid := True
 			elseif
-				test_suite.is_service_available and then
-				test_suite.service.is_interface_usable and then
-				test_suite.service.tag_tree.validator.is_valid_tag (l_tag) then
+				attached test_suite.service as l_test_suite and then
+				l_test_suite.is_interface_usable and then
+				l_test_suite.tag_tree.validator.is_valid_tag (l_tag)
+			then
 				l_valid := True
 				l_enable := True
 			else
@@ -353,7 +354,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

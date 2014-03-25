@@ -36,13 +36,13 @@ feature {NONE} -- Events
 	on_class_removed (a_class: CLASS_I)
 			-- <Precursor>
 		do
-			if attached {EIFFEL_CLASS_I} a_class as l_class and then test_suite.is_service_available then
-				--test_suite.service.synchronize_with_class (l_class)
+			if attached {EIFFEL_CLASS_I} a_class as l_class and then attached test_suite.service as l_test_suite then
+				--l_test_suite.synchronize_with_class (l_class)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

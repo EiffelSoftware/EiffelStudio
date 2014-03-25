@@ -101,7 +101,6 @@ feature {NONE} -- Initialization: widget status
 		local
 			l_app: EV_APPLICATION
 			l_service_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
-			l_service: OUTPUT_MANAGER_S
 			l_key: UUID
 			l_output: ES_EDITOR_OUTPUT_PANE
 		do
@@ -116,8 +115,7 @@ feature {NONE} -- Initialization: widget status
 
 				-- Initialize testing output
 			create l_service_consumer
-			if l_service_consumer.is_service_available then
-				l_service := l_service_consumer.service
+			if attached l_service_consumer.service as l_service then
 				l_key := (create {OUTPUT_MANAGER_KINDS}).testing
 				if
 					l_service.is_interface_usable and then
@@ -344,8 +342,8 @@ feature {NONE} -- Events: test creation
 			else
 				l_launch := True
 			end
-			if l_launch and session_manager.is_service_available then
-				launch_session_type ({ETEST_MANUAL_CREATION}, agent launch_manual_test_creation (?, session_manager.service))
+			if l_launch and attached session_manager.service as l_service then
+				launch_session_type ({ETEST_MANUAL_CREATION}, agent launch_manual_test_creation (?, l_service))
 			end
 		end
 
@@ -384,8 +382,8 @@ feature {NONE} -- Events: test creation
 					end
 				end
 			end
-			if not l_types.is_empty and session_manager.is_service_available then
-				session_manager.service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
+			if not l_types.is_empty and attached session_manager.service as l_session_service then
+				l_session_service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
 				if a_launch_wizard then
 					create l_composition.make (locale.translation (generate_test_text), <<
 						create {ES_TEST_GENERATION_WIZARD_PAGE}.make_using_temporary_types,
@@ -396,8 +394,8 @@ feature {NONE} -- Events: test creation
 				else
 					l_launch := True
 				end
-				if l_launch and session_manager.is_service_available then
-					launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, session_manager.service, True))
+				if l_launch then
+					launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, l_session_service, True))
 				end
 			end
 		end
@@ -421,8 +419,8 @@ feature {NONE} -- Events: test creation
 			else
 				l_launch := True
 			end
-			if l_launch and session_manager.is_service_available then
-				launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, session_manager.service, False))
+			if l_launch and attached session_manager.service as l_session_service then
+				launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, l_session_service, False))
 			end
 		end
 
@@ -434,7 +432,9 @@ feature {NONE} -- Events: test creation
 			l_page: ES_TEST_CALL_STACK_WIZARD_PAGE
 			l_composition: ES_TEST_WIZARD_COMPOSITION
 			l_wizard: ES_TEST_LAUNCH_WIZARD
+			l_session_service: detachable SESSION_MANAGER_S
 		do
+			l_session_service := session_manager.service
 			if a_launch_wizard then
 				create l_page.make (an_app_status)
 				create l_composition.make (locale.translation (extract_test_text), <<
@@ -442,11 +442,11 @@ feature {NONE} -- Events: test creation
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
 				create l_wizard.make (l_composition, develop_window.window)
-				if l_wizard.is_launch_requested and session_manager.is_service_available then
-					launch_session_type ({ETEST_EXTRACTION}, agent launch_test_extraction (?, session_manager.service, l_page.call_stack_elements))
+				if l_wizard.is_launch_requested and l_session_service /= Void then
+					launch_session_type ({ETEST_EXTRACTION}, agent launch_test_extraction (?, l_session_service, l_page.call_stack_elements))
 				end
-			elseif session_manager.is_service_available then
-				launch_session_type ({ETEST_EXTRACTION}, agent launch_default_test_extraction (?, session_manager.service, Void))
+			elseif l_session_service /= Void then
+				launch_session_type ({ETEST_EXTRACTION}, agent launch_default_test_extraction (?, l_session_service, Void))
 			end
 		end
 
@@ -486,10 +486,12 @@ feature {NONE} -- Events: test execution
 		local
 			l_executor: TEST_EXECUTION
 		do
-			create l_executor.make (test_suite.service, is_gui)
-			test_suite.service.tests.do_all (agent l_executor.queue_test)
-			test_suite.service.launch_session (l_executor)
-			--launch_executor (Void, a_type)
+			if attached test_suite.service as l_test_suite then
+				create l_executor.make (l_test_suite, is_gui)
+				l_test_suite.tests.do_all (agent l_executor.queue_test)
+				l_test_suite.launch_session (l_executor)
+				--launch_executor (Void, a_type)
+			end
 		end
 
 	on_run_failing (a_debug: BOOLEAN)
@@ -501,8 +503,8 @@ feature {NONE} -- Events: test execution
 			l_list: ARRAYED_LIST [TEST_I]
 			l_tests: SEQUENCE [TEST_I]
 		do
-			if test_suite.is_service_available then
-				l_tests := test_suite.service.tests
+			if attached test_suite.service as l_test_suite then
+				l_tests := l_test_suite.tests
 				create l_list.make (l_tests.count)
 				from
 					l_tests.start
@@ -768,7 +770,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

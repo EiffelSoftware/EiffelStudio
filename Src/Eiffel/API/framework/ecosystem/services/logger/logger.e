@@ -44,13 +44,10 @@ feature {NONE} -- Initialization
 
 	on_sited
 			-- <Precursor>
-		local
-			l_service: like event_list_service
 		do
-			l_service := event_list_service
-			if l_service.is_service_available then
+			if attached event_list_service.service as l_service then
 					-- Connect observer
-				l_service.service.event_list_connection.connect_events (Current)
+				l_service.event_list_connection.connect_events (Current)
 			end
 			Precursor {LOGGER_S}
 		end
@@ -59,16 +56,11 @@ feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
-		local
-			l_service: like event_list_service
-			l_event_list: EVENT_LIST_S
 		do
 			if a_disposing then
 				clear_log
 
-				l_service := event_list_service
-				if l_service.is_service_available then
-					l_event_list := l_service.service
+				if attached event_list_service.service as l_event_list then
 					if l_event_list.event_list_connection.is_connected (Current) then
 							-- Disconnect observer
 						l_event_list.event_list_connection.disconnect_events (Current)
@@ -113,9 +105,7 @@ feature -- Element change
 			l_service: EVENT_LIST_S
 		do
 			if a_length < log_cache_length then
-				if event_list_service.is_service_available then
-					l_service := event_list_service.service
-				end
+				l_service := event_list_service.service
 				l_items := log_cache
 				if l_items.count > a_length then
 					from l_items.start until l_items.count = a_length loop
@@ -134,14 +124,12 @@ feature -- Extension
 			-- <Precursor>
 		local
 			l_item: like create_event_list_log_item
-			l_service: like event_list_service
 			l_string: STRING_32
 		do
 			l_string := a_msg.as_string_32
-			l_service := event_list_service
-			if l_service.is_service_available then
+			if attached event_list_service.service as l_service then
 				l_item := create_event_list_log_item (l_string, a_cat, a_level)
-				l_service.service.put_event_item (context_cookie, l_item)
+				l_service.put_event_item (context_cookie, l_item)
 			end
 
 				-- Publish events
@@ -158,12 +146,9 @@ feature -- Removal
 
 	clear_log
 			-- <Precursor>
-		local
-			l_service: like event_list_service
 		do
-			l_service := event_list_service
-			if l_service.is_service_available then
-				l_service.service.prune_event_items (context_cookie)
+			if attached event_list_service.service as l_service then
+				l_service.prune_event_items (context_cookie)
 			end
 		end
 
@@ -177,16 +162,14 @@ feature {EVENT_LIST_S} -- Event handlers
 	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
-			l_service: like event_list_service
 			l_cache: like log_cache
 		do
 			if attached {EVENT_LIST_LOG_ITEM_I} a_event_item as l_log_item then
 				l_cache := log_cache
 				if l_cache.count = log_cache_length then
 						-- Too many items, remove the first.
-					l_service := event_list_service
-					if l_service.is_service_available then
-						l_service.service.prune_event_item (l_cache.first)
+					if attached event_list_service.service as l_service then
+						l_service.prune_event_item (l_cache.first)
 					end
 				end
 
@@ -241,7 +224,7 @@ invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -63,7 +63,7 @@ feature -- Attributes
 	precompiled_driver: PATH
 			-- Full file name of the precompilation driver
 
-	melted_file_name: STRING
+	melted_file_name: detachable STRING
 			-- File name of the melted file used by the precompilation driver.
 
 	compilation_counter: INTEGER
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

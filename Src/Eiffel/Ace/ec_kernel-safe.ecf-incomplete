@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="ec_kernel" uuid="8C34810E-D67D-46DF-A13C-F3821FA4FA8E" library_target="compiler_kernel">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="ec_kernel" uuid="8C34810E-D67D-46DF-A13C-F3821FA4FA8E" library_target="compiler_kernel">
 	<target name="compiler_kernel">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="conformance" syntax="standard">
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<external_include location="$(EIFFEL_SRC)/C/bench">
@@ -32,28 +32,28 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="finalize"/>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/bench/libmtwcompiler.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="workbench"/>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/bench/libcompiler.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="finalize"/>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/bench/libwcompiler.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="workbench"/>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/platform/libplatform.a">
@@ -65,28 +65,28 @@
 			<condition>
 				<platform value="windows"/>
 				<build value="finalize"/>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\bench\mtwcompiler.lib">
 			<condition>
 				<platform value="windows"/>
 				<build value="workbench"/>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\bench\compiler.lib">
 			<condition>
 				<platform value="windows"/>
 				<build value="finalize"/>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\bench\wcompiler.lib">
 			<condition>
 				<platform value="windows"/>
 				<build value="workbench"/>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\platform\platform.lib">
@@ -97,16 +97,18 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer-safe.ecf"/>
-		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe.ecf-incomplete"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf-incomplete"/>
-		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding-safe.ecf-incomplete" readonly="false"/>
+		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding-safe.ecf" readonly="false"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer-safe.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper-safe.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
-		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier-safe.ecf-incomplete"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier-safe.ecf"/>
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader-safe.ecf"/>
+		<library name="encoding" location="$EIFFEL_SRC\library\encoding\encoding-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
-		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension-safe.ecf-incomplete"/>
+		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities-safe.ecf"/>
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension-safe.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical-safe.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse-safe.ecf"/>
@@ -114,7 +116,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n-safe.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names-safe.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf-incomplete"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser-safe.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg-safe.ecf">
 			<condition>
 				<platform value="windows"/>
@@ -132,9 +134,9 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
-				<exclude>/com_il_generation$</exclude>
 				<exclude>/docs$</exclude>
 				<exclude>/java_generation/kernel$</exclude>
+				<exclude>/com_il_generation$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/il_generation/windows$</exclude>
@@ -152,9 +154,9 @@
 		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<file_rule>
 				<exclude>/queries$</exclude>
+				<exclude>/framework$</exclude>
 				<exclude>/query_language$</exclude>
 				<exclude>/profiler$</exclude>
-				<exclude>/framework$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

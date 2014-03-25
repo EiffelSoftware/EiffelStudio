@@ -72,7 +72,6 @@ feature -- Execution
 
 				-- Using wizard information to create AutoTest configuration
 			l_session: SERVICE_CONSUMER [SESSION_MANAGER_S]
-			l_manager: SESSION_MANAGER_S
 			l_generator: TEST_GENERATOR
 			l_type, l_types: STRING
 			l_root_group: CONF_GROUP
@@ -103,8 +102,7 @@ feature -- Execution
 				end
 
 				create l_session
-				if l_session.is_service_available then
-					l_manager := l_session.service
+				if attached l_session.service as l_manager then
 					l_manager.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
 					launch_test_generation (l_generator, l_manager, True)
 				end
@@ -186,7 +184,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

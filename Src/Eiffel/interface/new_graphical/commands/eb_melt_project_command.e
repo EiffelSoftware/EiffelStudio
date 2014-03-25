@@ -286,9 +286,11 @@ feature -- Execution
 					end
 						-- Activate the compiler output on the outputs tools.
 					create l_service
-					if l_service.is_service_available then
-						l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-						l_output.activate (False)
+					if attached l_service.service as l_service_output then
+						l_output := l_service_output.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+						if l_output /= Void then
+							l_output.activate (False)
+						end
 					end
 					if preferences.development_window_data.outputs_tool_prompted then
 							-- Request tool be shown.
@@ -518,7 +520,7 @@ feature {NONE} -- Implementation
 			-- Number of compilations done in a certain mode so far.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

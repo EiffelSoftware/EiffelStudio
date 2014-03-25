@@ -340,7 +340,7 @@ feature {NONE} -- Events
 					type_parser.parse_from_string_32 ({STRING_32} "type " + l_types, Void)
 					error_handler.wipe_out
 					if attached type_parser.type_node as l_type_as then
-						if test_suite.is_service_available and then etest_suite.eiffel_project.system_defined then
+						if attached test_suite.service as l_test_suite and then etest_suite.eiffel_project.system_defined then
 							l_system := etest_suite.project_access.project.system.system
 							from
 								l_system.root_creators.start
@@ -582,7 +582,7 @@ feature {NONE} -- Internationalization
 	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

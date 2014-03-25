@@ -213,11 +213,8 @@ feature {NONE} -- Query
 			-- `Result': A help document title for the given help context.
 		require
 			is_context_valid: is_context_valid (a_context)
-		local
-			l_provider: attached HELP_PROVIDER_I
 		do
-			if help_providers.is_service_available and help_providers.service.is_provider_available (a_context.help_provider) then
-				l_provider := help_providers.service.provider (a_context.help_provider)
+			if attached help_providers.service as l_service and then attached l_service.provider (a_context.help_provider) as l_provider then
 				Result := l_provider.help_title (a_context.help_context_id, a_context.help_context_section)
 			else
 				create {STRING_32} Result.make (100)
@@ -349,16 +346,17 @@ feature {NONE} -- Factory
 			a_row_is_parented: a_row.parent /= Void
 		local
 			l_item: attached EV_GRID_LABEL_ITEM
-			l_provider: attached HELP_PROVIDER_I
-			l_available: BOOLEAN
+			l_provider: detachable HELP_PROVIDER_I
 		do
-			l_available := help_providers.is_service_available and then help_providers.service.is_provider_available (a_context.help_provider)
+			if attached help_providers.service as l_service then
+				l_provider := l_service.provider (a_context.help_provider)
+			end
 
 				-- Document title
 			create l_item.make_with_text (help_context_document_title (a_context))
 			l_item.set_pixmap (stock_pixmaps.general_document_icon)
 			l_item.set_tooltip (a_context.help_context_description)
-			if l_available then
+			if l_provider /= Void then
 				l_item.set_foreground_color (colors.grid_item_text_color)
 			else
 				l_item.set_foreground_color (colors.disabled_foreground_color)
@@ -366,8 +364,7 @@ feature {NONE} -- Factory
 			a_row.set_item (document_column_index, l_item)
 
 				-- Document type
-			if l_available then
-				l_provider := help_providers.service.provider (a_context.help_provider)
+			if l_provider /= Void then
 				create l_item.make_with_text (l_provider.document_description)
 				l_item.set_foreground_color (colors.grid_item_text_color)
 			else
@@ -397,7 +394,7 @@ invariant
 	links_contains_valid_items: is_initializing and is_interface_usable implies not links.for_all (agent is_context_valid)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

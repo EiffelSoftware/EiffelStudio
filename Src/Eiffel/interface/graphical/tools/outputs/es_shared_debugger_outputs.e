@@ -27,9 +27,9 @@ feature {NONE} -- Access: Outputs
 		do
 			if attached internal_debugger_output as l_result then
 				Result := l_result
-			elseif output_manager.is_service_available then
+			elseif attached output_manager.service as l_service then
 					-- Query the output manager for the general output.
-				l_output := output_manager.service.output_or_default ((create {OUTPUT_MANAGER_KINDS}).debugger, locale_formatter.translation (lb_debugger))
+				l_output := l_service.output_or_default ((create {OUTPUT_MANAGER_KINDS}).debugger, locale_formatter.translation (lb_debugger))
 				if not l_output.is_interface_usable then
 						-- The debugger output cannot be used, try the general output instead.
 					l_output := output_manager.service.general_output
@@ -80,7 +80,7 @@ feature {NONE} -- Internationalization
 	lb_debugger: STRING = "Debugger"
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

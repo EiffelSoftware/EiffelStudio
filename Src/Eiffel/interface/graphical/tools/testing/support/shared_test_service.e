@@ -71,11 +71,9 @@ feature {NONE} -- Basic operations
 		require
 			a_procedure_attached: a_procedure /= Void
 		local
-			l_service: TEST_SUITE_S
 			l_error: detachable STRING
 		do
-			if test_suite.is_service_available then
-				l_service := test_suite.service
+			if attached test_suite.service as l_service then
 				if l_service.is_interface_usable then
 					a_procedure.call ([l_service])
 				else
@@ -493,7 +491,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

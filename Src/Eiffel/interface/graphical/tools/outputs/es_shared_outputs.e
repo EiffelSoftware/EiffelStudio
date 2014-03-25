@@ -20,16 +20,18 @@ feature {NONE} -- Access: Outputs
 		do
 			if attached internal_general_output as l_result then
 				Result := l_result
-			elseif output_manager.is_service_available then
+			elseif attached output_manager.service as l_service then
 					-- Query the output manager for the general output.
-				l_output := output_manager.service.output ((create {OUTPUT_MANAGER_KINDS}).general)
-				if not l_output.is_interface_usable then
-						-- The general output cannot be used, try the general output instead.
-					l_output := output_manager.service.general_output
-				end
-				if l_output.is_interface_usable then
-					Result := l_output
-					internal_general_output := Result
+				l_output := l_service.output ((create {OUTPUT_MANAGER_KINDS}).general)
+				if l_output /= Void then
+					if not l_output.is_interface_usable then
+							-- The general output cannot be used, try the general output instead.
+						l_output := output_manager.service.general_output
+					end
+					if l_output.is_interface_usable then
+						Result := l_output
+						internal_general_output := Result
+					end
 				end
 			end
 		ensure
@@ -44,16 +46,18 @@ feature {NONE} -- Access: Outputs
 		do
 			if attached internal_compiler_output as l_result then
 				Result := l_result
-			elseif output_manager.is_service_available then
+			elseif attached output_manager.service as l_service then
 					-- Query the output manager for the Eiffel Compiler output.
-				l_output := output_manager.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
-				if not l_output.is_interface_usable then
-						-- The Eiffel output cannot be used, try the general output instead.
-					l_output := output_manager.service.general_output
-				end
-				if l_output.is_interface_usable then
-					Result := l_output
-					internal_compiler_output := Result
+				l_output := l_service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
+				if l_output /= Void then
+					if not l_output.is_interface_usable then
+							-- The Eiffel output cannot be used, try the general output instead.
+						l_output := output_manager.service.general_output
+					end
+					if l_output.is_interface_usable then
+						Result := l_output
+						internal_compiler_output := Result
+					end
 				end
 			end
 		ensure
@@ -68,16 +72,18 @@ feature {NONE} -- Access: Outputs
 		do
 			if attached internal_c_compiler_output as l_result then
 				Result := l_result
-			elseif output_manager.is_service_available then
+			elseif attached output_manager.service as l_service then
 					-- Query the output manager for the C Compiler output.
-				l_output := output_manager.service.output ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
-				if not l_output.is_interface_usable then
-						-- The C output cannot be used, try the general output instead.
-					l_output := output_manager.service.general_output
-				end
-				if l_output.is_interface_usable then
-					Result := l_output
-					internal_c_compiler_output := Result
+				l_output := l_service.output ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
+				if l_output /= Void then
+					if not l_output.is_interface_usable then
+							-- The C output cannot be used, try the general output instead.
+						l_output := output_manager.service.general_output
+					end
+					if l_output.is_interface_usable then
+						Result := l_output
+						internal_c_compiler_output := Result
+					end
 				end
 			end
 		ensure
@@ -181,7 +187,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

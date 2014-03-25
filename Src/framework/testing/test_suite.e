@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			l_rota: ROTA_S
 		do
 			create test_map.make (10)
 			test_map.compare_objects
@@ -40,11 +38,8 @@ feature {NONE} -- Initialization
 
 			create record_repository.make
 
-			if rota.is_service_available then
-				l_rota := rota.service
-				if l_rota.is_interface_usable then
-					l_rota.connection.connect_events (Current)
-				end
+			if attached rota.service as l_rota and then l_rota.is_interface_usable then
+				l_rota.connection.connect_events (Current)
 			end
 			create factories.make (10)
 			create internal_running_sessions.make (10)
@@ -173,21 +168,15 @@ feature {NONE} -- Access: output
 
 	internal_output: like output
 			-- Usable OUTPUT_I instance for `output'
-		local
-			l_output_manager: OUTPUT_MANAGER_S
-			l_output: OUTPUT_I
 		do
-			if output_manager.is_service_available then
-				l_output_manager := output_manager.service
+			if attached output_manager.service as l_output_manager then
 				if
 					l_output_manager.is_interface_usable and then
 					l_output_manager.is_valid_registration_key (output_key) and then
-					l_output_manager.is_output_available (output_key)
+					attached l_output_manager.output (output_key) as l_output and then
+					l_output.is_interface_usable
 				then
-					l_output := l_output_manager.output (output_key)
-					if l_output.is_interface_usable then
-						Result := l_output
-					end
+					Result := l_output
 				end
 			end
 		ensure
@@ -251,11 +240,8 @@ feature -- Status setting: sessions
 				record_repository.append_record (l_record)
 				internal_running_sessions.force ([a_session, l_record])
 				session_launched_event.publish ([Current, a_session])
-				if rota.is_service_available then
-					l_rota := rota.service
-					if l_rota.is_interface_usable and not l_rota.has_task (a_session) then
-						l_rota.run_task (a_session)
-					end
+				if attached rota.service and then l_rota.is_interface_usable and then not l_rota.has_task (a_session) then
+					l_rota.run_task (a_session)
 				end
 			elseif current_output_session = a_session then
 				current_output_session := Void
@@ -338,15 +324,10 @@ feature {NONE} -- Clean up
 
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
-		local
-			l_rota: ROTA_S
 		do
 			if a_explicit then
-				if rota.is_service_available then
-					l_rota := rota.service
-					if l_rota.is_interface_usable then
-						l_rota.connection.disconnect_events (Current)
-					end
+				if attached rota.service as l_rota and then l_rota.is_interface_usable then
+					l_rota.connection.disconnect_events (Current)
 				end
 			end
 		end
@@ -356,7 +337,7 @@ invariant
 	test_map_contains_usables: test_map.linear_representation.for_all (agent {TEST_I}.is_interface_usable)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

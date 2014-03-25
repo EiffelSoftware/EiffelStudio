@@ -137,7 +137,6 @@ feature {ETEST_SUITE} -- Basic operations
 			not_synchronizing: not is_synchronizing
 		local
 			l_map: like old_test_map
-			l_test_suite: TEST_SUITE_S
 			l_test: ETEST
 		do
 			test_class := an_etest_class
@@ -151,8 +150,7 @@ feature {ETEST_SUITE} -- Basic operations
 				safe_process (ast (an_etest_class.eiffel_class))
 			end
 
-			if test_suite.is_service_available and old_test_map = l_map then
-				l_test_suite := test_suite.service
+			if attached test_suite.service as l_test_suite and old_test_map = l_map then
 				from
 					l_map.start
 				until
@@ -187,11 +185,9 @@ feature {NONE} -- Implementation
 		local
 			l_test_class: like test_class
 			l_test: detachable ETEST
-			l_test_suite: TEST_SUITE_S
 			l_name: detachable IMMUTABLE_STRING_8
 		do
-			if test_suite.is_service_available and then test_suite.service.is_interface_usable then
-				l_test_suite := test_suite.service
+			if attached test_suite.service as l_test_suite and then l_test_suite.is_interface_usable then
 				l_test_class := test_class
 				check l_test_class /= Void end
 
@@ -649,7 +645,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

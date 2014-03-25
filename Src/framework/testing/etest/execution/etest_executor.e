@@ -55,8 +55,8 @@ feature {NONE} -- Initialization
 			tasks := empty_tasks
 			create l_service
 			if
-				l_service.is_service_available and then
-				attached l_service.service.retrieve (False) as l_session and then
+				attached l_service.service as l_session_service and then
+				attached l_session_service.retrieve (False) as l_session and then
 				attached {NATURAL} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.concurrent_executors,
 					{TEST_SESSION_CONSTANTS}.concurrent_executors_default) as l_count
 			then
@@ -396,8 +396,8 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				create l_service
-				if l_service.is_service_available and a_result /= Void then
-					l_session := l_service.service.retrieve (False)
+				if a_result /= Void and then attached l_service.service as l_session_service then
+					l_session := l_session_service.retrieve (False)
 					if a_result.is_fail then
 						l_key := {TEST_SESSION_CONSTANTS}.keep_failing
 						l_default := {TEST_SESSION_CONSTANTS}.keep_failing_default

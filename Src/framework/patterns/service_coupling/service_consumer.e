@@ -77,6 +77,8 @@ feature -- Status report
 
 	is_service_available: BOOLEAN
 			-- Indicates if the service is available.
+		obsolete
+			"Use `service' directly to find out if service is available."
 		do
 			Result := internal_service /= Void or else (service_provider.service ({detachable G}) /= Void)
 		ensure

@@ -1,0 +1,14 @@
+test_name 	 inference-untyped-agent-target
+test_description A call on a target of an unknown type in an agent expression should not cause any issues.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   ok
+
+execute_work     NONE exec_output_m
+execute_result   ok
+compare		 exec_output_m output
+
+test_end

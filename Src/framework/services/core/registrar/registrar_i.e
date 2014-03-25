@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	REGISTRAR_I [G, K -> HASHABLE]
+	REGISTRAR_I [G -> ANY, K -> HASHABLE]
 
 inherit
 	USABLE_I
@@ -92,16 +92,15 @@ feature -- Status report
 
 feature -- Query
 
-	registration alias "[]" (a_key: K): G assign register
+	registration alias "[]" (a_key: K): detachable G
 			-- Retrieves an object registered with the supplied registration key.
 			--
 			-- `a_key': The registeration key to retrieve an registration object for.
 			-- `Result': The registeration object, associated with the supplied registration key.
 		require
 			is_interface_usable: is_interface_usable
-			a_key_attached: a_key /= VOid
+			a_key_attached: a_key /= Void
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
-			a_key_is_registered: is_registered (a_key)
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -127,7 +126,7 @@ feature -- Basic operations
 			a_item_sited: (attached {SITE [REGISTRAR_I [G, K]]} a_item as l_site) implies (l_site.is_sited and then l_site.site = Current)
 		end
 
-	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, attached G]; a_key: K)
+	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, G]; a_key: K)
 			-- Registers an activator function, used to retrieve a registration object upon request.
 			--
 			-- `a_item': The object to register.
@@ -141,27 +140,6 @@ feature -- Basic operations
 		deferred
 		ensure
 			a_key_is_registered: is_registered (a_key)
-		end
-
-	register_with_type_activator (a_type: TYPE [G]; a_key: K)
-			-- Registers an activator with the registrar, which will be used to instantiate the registration
-			-- object when the first request is made.
-			--
-			-- Note: The registration object should not have a creation routine because the regisration object
-			--       will be dynamically instatiated. For initialization properties use classes implementing
-			--       {SITE [REGISTRAR_I [..., ...]]}.
-			--
-			-- `a_type': The object type to register.
-			-- `a_key': A unique registeration key to associate with the registration object.
-		require
-			is_interface_usable: is_interface_usable
-			a_type_attached: a_type /= Void
-			a_key_attached: a_key /= Void
-			a_item_is_valid_registration_key: is_valid_registration_key (a_key)
-			not_a_key_is_registered: not is_registered (a_key)
-		deferred
-		ensure
-			is_registered_a_key: is_registered (a_key)
 		end
 
 	unregister (a_key: K)
@@ -225,7 +203,7 @@ feature -- Events
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -75,7 +75,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-feature {UNIVERSE_I, CLUSTER_I, CLUST_REN_SD} -- Setting
+feature {UNIVERSE_I, CLUSTER_I} -- Setting
 
 	set_first (c: like first)
 			-- Assign `c' to `first'.
@@ -98,7 +98,7 @@ feature {UNIVERSE_I, CLUSTER_I, CLUST_REN_SD} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

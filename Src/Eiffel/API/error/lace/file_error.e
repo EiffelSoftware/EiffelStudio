@@ -34,7 +34,7 @@ feature -- Output
 			put_file_name (a_text_formatter)
 		end
 
-feature {AST_LACE, COMPILER_EXPORTER} -- Setting
+feature {COMPILER_EXPORTER} -- Setting
 
 	set_file_name (s: like file_name)
 			-- Assign `s' to `file_name'.
@@ -43,7 +43,7 @@ feature {AST_LACE, COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

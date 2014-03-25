@@ -727,7 +727,7 @@ feature {NONE} -- Exception Info
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_font: EV_FONT
-			l_ignore, l_quit: EV_BUTTON
+			l_ignore: EV_BUTTON
 			l_frame: EV_FRAME
 			l_error_box: EV_HORIZONTAL_BOX
 			l_error_label: EV_LABEL

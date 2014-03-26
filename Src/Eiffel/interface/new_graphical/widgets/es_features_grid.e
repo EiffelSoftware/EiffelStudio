@@ -683,8 +683,8 @@ feature {NONE} -- Event handler
 			end
 		end
 
-	button_go_to (ef: E_FEATURE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+	button_go_to (ef: E_FEATURE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
 						 a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Target `features_tool' to `ef'.
 		require
@@ -692,9 +692,9 @@ feature {NONE} -- Event handler
 		local
 			l_stone: FEATURE_STONE
 		do
-			if attached ef as l_ef then
+			if ef /= Void then
 				if a_button = 1 then
-					navigate_to_feature (l_ef)
+					navigate_to_feature (ef)
 				elseif a_button = 3 then
 					if ev_application.ctrl_pressed then
 						create l_stone.make (ef)
@@ -706,8 +706,8 @@ feature {NONE} -- Event handler
 			end
 		end
 
-	button_go_to_clause (fclause: FEATURE_CLAUSE_AS; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+	button_go_to_clause (fclause: FEATURE_CLAUSE_AS; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
 						 a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Target `features_tool' to `fclause'.
 		do
@@ -716,8 +716,8 @@ feature {NONE} -- Event handler
 			end
 		end
 
-	button_go_to_ast (a_ast: AST_EIFFEL; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
-						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+	button_go_to_ast (a_ast: AST_EIFFEL; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
 						 a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Target `features_tool' to `fclause'.
 		require
@@ -1056,10 +1056,8 @@ feature {NONE} -- Tree item factory
 			create lab.make_with_text (a_text)
 			lab.set_pixmap (pix)
 			lab.set_data (a_text)
-			if is_clickable then
-				if attached ffn as l_feature_name then
-					lab.pointer_button_press_actions.force_extend (agent navigate_to_feature_by_name (l_feature_name))
-				end
+			if is_clickable and ffn /= Void then
+				lab.pointer_button_press_actions.force_extend (agent navigate_to_feature_by_name (ffn))
 			end
 			a_row.set_item (1, lab)
 		end
@@ -1093,7 +1091,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

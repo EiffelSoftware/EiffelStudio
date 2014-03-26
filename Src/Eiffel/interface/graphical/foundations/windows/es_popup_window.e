@@ -369,7 +369,7 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_widget (a_widget: detachable EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
+	show_relative_to_widget (a_widget: detachable EV_WIDGET; a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Displays the pop up window at a position relative to a widget.
 			--
 			-- `a_widget': A widget to show the window relative to.
@@ -867,7 +867,7 @@ invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

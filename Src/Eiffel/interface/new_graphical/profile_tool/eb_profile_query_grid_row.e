@@ -11,11 +11,11 @@ note
 
 class
 	EB_PROFILE_QUERY_GRID_ROW
-	
-create {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} 
+
+create {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}
 	make_parent,
 	make_node
-	
+
 feature {NONE} -- Creation
 
 	make_parent (lower_index, upper_index: INTEGER; a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER)
@@ -30,7 +30,7 @@ feature {NONE} -- Creation
 			profile_data := a_profile_data
 			type := a_type
 		end
-		
+
 	make_node (a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER)
 			-- Make as a node with no subrows.
 		require
@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 			profile_data := a_profile_data
 			type := a_type
 		end
-		
+
 feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 
 	profile_data: PROFILE_DATA
@@ -50,7 +50,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 	child_node_lower_index: INTEGER
 		-- For all parent nodes, this is an index of where the subrow index start in an external structure.
 		-- Used externally to `Current' and may be set to any value as desired by the client.
-	
+
 	child_node_upper_index: INTEGER
 		-- For all parent nodes, this is an index of where the subrow index ends in an external structure.
 		-- Used externally to `Current' and may be set to any value as desired by the client.
@@ -59,56 +59,56 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		-- Text displayed in first column of grid for `Current'.
 		-- This may be Void if `type' is 4 as we have access to
 		-- the cluster, class and feature texts individually.
-	
+
 	calls: INTEGER
 		-- Total amount of calls to function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
-	
+
 	self: REAL_64
 		-- Total amount of seconds spent in the function itself.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
-	
+
 	descendents: REAL_64
 		-- Total amount of seconds spent in the descendants of the function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
-	
+
 	total: REAL_64
 		-- Total amount of seconds spent in the function.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
-	
+
 	percentage: REAL_64
 		-- Percentage of time spent in the function and the descendants.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
-	
+
 	display_agent: PROCEDURE [ANY, TUPLE]
 		-- An agent to display `Current' in a grid.
-	
+
 	feature_grid_item: EV_GRID_DRAWABLE_ITEM
 		-- A grid representation of feature name for display in first column.
-	
+
 	calls_grid_item: EV_GRID_LABEL_ITEM
 		-- A grid representation of `calls'.
-	
+
 	self_grid_item: EV_GRID_LABEL_ITEM
 		-- A grid representation of `self'.
-	
+
 	descendents_grid_item: EV_GRID_LABEL_ITEM
 		-- A grid representation of `descendents'.
-	
+
 	total_grid_item: EV_GRID_LABEL_ITEM
 		-- A grid representation of `total'.
-	
+
 	percentage_grid_item: EV_GRID_LABEL_ITEM
 		-- A grid representation of `percentage'.
-	
+
 	is_expanded: BOOLEAN
 		-- Is grid representation of `Current' expanded?
 		-- Required so that after changing modes we can restore the
 		-- expanded state
-	
+
 	row: EV_GRID_ROW
 		-- Grid row associated to `Current' while `Current' is displayed in a grid.
-	
+
 	type: INTEGER
 		-- Type of row represented by `Current'. May be one
 		-- of the following 5 types:
@@ -117,7 +117,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		-- 3. Cluster
 		-- 4. Cluster.Class.Feature
 		-- 5. Other
-		
+
 	cluster_text, class_text, feature_text: STRING
 		-- Three texts comprising the cluster, class and feature text to
 		-- be displayed in the first column of a grid.
@@ -125,7 +125,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 
 	internal_cluster_text_width, internal_class_text_width, internal_feature_text_width, internal_text_width: INTEGER
 		-- Internal values of string widths to enable buffered access.
-	
+
 	text_width: INTEGER
 			-- Width of `text' in pixels.
 		do
@@ -136,7 +136,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		ensure
 			result_non_negative: result >= 0
 		end
-	
+
 	cluster_text_width: INTEGER
 			-- Width of `cluster_text' in pixels.
 		do
@@ -147,7 +147,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		ensure
 			result_non_negative: result >= 0
 		end
-		
+
 	class_text_width: INTEGER
 			-- Width of `class_text' in pixels.
 		do
@@ -158,7 +158,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		ensure
 			result_non_negative: Result >= 0
 		end
-		
+
 	feature_text_width: INTEGER
 			-- Width of `feature_text' in pixels.
 		do
@@ -169,13 +169,13 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		ensure
 			result_non_negative: Result >= 0
 		end
-		
+
 	drawing_font: EV_FONT
 			-- Once access to Font used for drawing.
 		once
 			Result := (create {EV_LABEL}).font
 		end
-		
+
 	is_feature_renamed: BOOLEAN
 			-- Is feature represented by `Current' renamed?
 		local
@@ -188,7 +188,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 				Result := e_feature = Void
 			end
 		end
-		
+
 feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 
 	set_row (a_row: EV_GRID_ROW)
@@ -200,7 +200,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 		ensure
 			row_set: row = a_row
 		end
-		
+
 	set_is_expanded (expanded_state: BOOLEAN)
 			-- Assign `expanded_state' to `is_expanded'.
 		do
@@ -220,7 +220,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 		do
 			cluster_text := a_cluster
 			class_text := a_class
-			feature_text := a_feature	
+			feature_text := a_feature
 		ensure
 			cluster_set: cluster_text = a_cluster
 			class_set: class_text = a_class
@@ -259,8 +259,8 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 		ensure
 			upper_set: child_node_upper_index = an_upper
 		end
-		
-	set_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL_64)
+
+	set_values (a_calls: INTEGER; a_self, a_descendents, a_total, a_percentage: REAL_64)
 			-- Assign `a_calls' to `calls', `a_self' to `self', `a_descendents' to `descendents',
 			-- `a_total' to `total' and `a_percentage' to `percentage'.
 		do
@@ -273,8 +273,8 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			values_set: calls = a_calls and self = a_self and total = a_total and
 				descendents = a_descendents and percentage = a_percentage
 		end
-		
-	increase_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL_64)
+
+	increase_values (a_calls: INTEGER; a_self, a_descendents, a_total, a_percentage: REAL_64)
 			-- Increase `calls' by `a_calls', `self' by `a_self', `descendents' by `a_descendents',
 			-- `total' by `a_total' and `percentage' by `a_percentage'.
 		do
@@ -287,9 +287,9 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			values_increased: calls = old calls + a_calls and self = old self + a_self and total = old total + a_total and
 				descendents = old descendents + a_descendents and percentage = old percentage + a_percentage
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -302,22 +302,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

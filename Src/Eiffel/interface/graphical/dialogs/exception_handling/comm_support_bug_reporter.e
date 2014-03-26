@@ -266,7 +266,7 @@ feature {NONE}
 			exist: Result /= Void and then Result.is_exists
 		end
 
-	post_string_for_final_submit (a_view_state: STRING_GENERAL a_event_validation: STRING_GENERAL): STRING_GENERAL
+	post_string_for_final_submit (a_view_state: STRING_GENERAL; a_event_validation: STRING_GENERAL): STRING_GENERAL
 			-- Post strings for final bug report submit.
 		require
 			a_view_state_attached: a_view_state /= Void
@@ -288,7 +288,7 @@ feature {NONE}
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

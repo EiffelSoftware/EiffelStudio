@@ -158,8 +158,10 @@ feature -- Analysis interface
 		do
 			system_wide_check := False
 
-			across a_cluster.classes as ic loop
-				add_class (ic.item)
+			if a_cluster.classes /= Void then
+				across a_cluster.classes as ic loop
+					add_class (ic.item)
+				end
 			end
 
 			if a_cluster.sub_clusters /= Void then
@@ -174,8 +176,10 @@ feature -- Analysis interface
 		require
 			a_group_not_void: a_group /= Void
 		do
-			across a_group.classes as ic loop
-				add_class (ic.item)
+			if a_group.classes /= Void then
+				across a_group.classes as ic loop
+					add_class (ic.item)
+				end
 			end
 		end
 

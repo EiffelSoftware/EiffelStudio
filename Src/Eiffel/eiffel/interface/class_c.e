@@ -585,7 +585,7 @@ feature -- Building conformance table
 		local
 			i: INTEGER
 		do
-			if cl.conformance_table.item (topological_id) = False then
+			if not cl.conformance_table.item (topological_id) then
 					-- The parent has not been inserted yet
 				cl.conformance_table.put (True, topological_id)
 				from
@@ -1403,12 +1403,13 @@ feature -- Parent checking
 								until
 									l_parents_classes.after
 								loop
-									if l_parents_classes.item = l_parent_class then
-										if not parents.i_th (l_parents_classes.index).same_as (l_parent_type) then
-												-- Different generic derivations are used in Parent parts.
-											error_handler.insert_error (create {VHPR5_ECMA}.make
-												(Current, l_parent_type, parents.i_th (l_parents_classes.index), l_parent_as.start_location))
-										end
+									if
+										l_parents_classes.item = l_parent_class and then
+										not parents.i_th (l_parents_classes.index).same_as (l_parent_type)
+									then
+											-- Different generic derivations are used in Parent parts.
+										error_handler.insert_error (create {VHPR5_ECMA}.make
+											(Current, l_parent_type, parents.i_th (l_parents_classes.index), l_parent_as.start_location))
 									end
 									l_parents_classes.forth
 								end
@@ -1426,9 +1427,9 @@ feature -- Parent checking
 						l_parents_as.forth
 					end
 				end
-			elseif not (class_id = l_any_id) then
-					-- No parents are syntactically specified: ANY is
-					-- the default parent for Eiffel classes.
+			elseif class_id /= l_any_id then
+					-- Current class is not ANY and no parents are syntactically
+					-- specified: ANY is the default parent for Eiffel classes.
 				create conforming_parents_classes.make (1)
 				create computed_parents.make (1)
 				create conforming_parents.make (1)
@@ -1567,8 +1568,8 @@ feature -- Parent checking
 				end
 
 				if
-					(l_parent_class.is_frozen and then
-					(l_parent_class.is_external or else (non_conforming_parents_classes = Void or else conforming_parents_classes.has (l_parent_class))))
+					l_parent_class.is_frozen and then
+					(l_parent_class.is_external or else (non_conforming_parents_classes = Void or else conforming_parents_classes.has (l_parent_class)))
 						-- We cannot inherit frozen external classes or frozen conforming classes.
 				then
 					create vifi1.make (Current)
@@ -2616,14 +2617,12 @@ end
 			class_filters: like filters
 			filter: CL_TYPE_A
 			class_filters_cursor: INTEGER
-			l_system: like system
 		do
 			class_filters := filters
 				-- Propagation along the filters since we have a new type
 				-- Clean the filters. Some of the filters can be obsolete
 				-- if the base class has been removed from the system
 			class_filters.clean (Current)
-			l_system := system
 			from
 				class_filters.start
 			until
@@ -2658,7 +2657,6 @@ feature {CLASS_C} -- Incrementality
 			class_filters: like filters
 			filter: CL_TYPE_A
 			class_filters_cursor: INTEGER
-			l_system: SYSTEM_I
 		do
 			class_filters := filters
 				-- Propagation along the filters since we have a new type
@@ -2667,7 +2665,6 @@ feature {CLASS_C} -- Incrementality
 			class_filters.clean (Current)
 			from
 				class_filters.start
-				l_system := system
 			until
 				class_filters.after
 			loop
@@ -2699,7 +2696,6 @@ feature -- Meta-type
 			conformance: class_type.associated_class.inherits_from (Current)
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
-			associated_class: CLASS_C
 		do
 			if class_type.type.class_id = class_id then
 					-- Use supplied `class_type' to preserve expandedness status, generic parameters, etc.
@@ -2708,13 +2704,12 @@ feature -- Meta-type
 					-- No instantiation for non-generic class
 				Result := types.first
 			else
-				associated_class := class_type.associated_class
 					-- FIXME: Manu 2007/09/13: This way of finding the class type in descendant
 					-- is clearly not the best way as it is slow since we are creating a new TYPE_A
 					-- instance just to find its associated type id. The better way would be to
 					-- iterate through the generics of Current and find a CLASS_TYPE instances.
 					-- See eweasel test#valid045 to see the slowness.
-				actual_class_type := associated_class.actual_type
+				actual_class_type := class_type.associated_class.actual_type
 					-- General instantiation of the actual class type where
 					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
@@ -3986,7 +3981,6 @@ feature -- Output
 	class_signature: STRING
 			-- Signature of class
 		local
-			formal_dec: FORMAL_DEC_AS
 			old_group: CONF_GROUP
 			gens: like generics
 		do
@@ -4002,8 +3996,7 @@ feature -- Output
 				until
 					gens.after
 				loop
-					formal_dec := gens.item
-					Result.append (formal_dec.constraint_string)
+					Result.append (gens.item.constraint_string)
 					gens.forth
 					if not gens.after then
 						Result.append (", ")
@@ -4275,21 +4268,20 @@ feature -- Genericity
 				until
 					l_old.after
 				loop
+						-- We check that the previous formal was written in the Current class and that
+						-- it is still makes sense. A case where it does not make sense is when the Current
+						-- class has less generics than before.
 					l_formal_type ?= l_old.item_for_iteration.type
-					if l_formal_type /= Void then
-							-- We check that the previous formal was written in the Current class and that
-							-- it is still makes sense. A case where it does not make sense is when the Current
-							-- class has less generics than before.
-						if
-							not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
-							l_old.item_for_iteration.origin_class_id = class_id and then
-							l_formals.valid_index (l_formal_type.position)
-						then
-							check
-								not_inserted: l_formals.item (l_formal_type.position) = Void
-							end
-							l_formals.put (l_old.item_for_iteration, l_formal_type.position)
+					if
+						l_formal_type /= Void and then
+						(not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
+						l_old.item_for_iteration.origin_class_id = class_id and
+						l_formals.valid_index (l_formal_type.position))
+					then
+						check
+							not_inserted: l_formals.item (l_formal_type.position) = Void
 						end
+						l_formals.put (l_old.item_for_iteration, l_formal_type.position)
 					end
 					l_old.forth
 				end

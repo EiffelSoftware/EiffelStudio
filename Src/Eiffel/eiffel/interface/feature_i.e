@@ -1135,20 +1135,20 @@ end
 				if assert_id_set /= Void then
 					Result := assert_id_set.same_as (other.assert_id_set)
 				else
-					Result := (other.assert_id_set = Void)
+					Result := other.assert_id_set = Void
 				end
 			end
 
 			if Result and then rout_id_set.first = System.default_rescue_rout_id then
 				-- This is the default rescue feature.
 				-- Test whether emptiness of body has changed.
-				Result := (is_empty = other.is_empty)
+				Result := is_empty = other.is_empty
 			end
 
 			if Result and then rout_id_set.first = System.default_create_rout_id then
 				-- This is the default create feature.
 				-- Test whether emptiness of body has changed.
-				Result := (is_empty = other.is_empty)
+				Result := is_empty = other.is_empty
 			end
 
 debug ("ACTIVITY")
@@ -1260,7 +1260,7 @@ feature -- creation of default rescue clause
 				is_external or is_deferred)
 			then
 				my_body := body
-				if (my_body /= Void) then
+				if my_body /= Void then
 					my_body.create_default_rescue (def_resc_name_id)
 				end
 			end
@@ -2528,11 +2528,7 @@ end
 			end
 
 				-- Check the argument count
-			if argument_count /= old_feature.argument_count then
-				create vdrd52
-				vdrd52.init (old_feature, Current)
-				Error_handler.insert_error (vdrd52)
-			else
+			if argument_count = old_feature.argument_count then
 					-- Check the argument conformance
 				from
 					i := 1
@@ -2571,6 +2567,10 @@ end
 
 					i := i + 1
 				end
+			else
+				create vdrd52
+				vdrd52.init (old_feature, Current)
+				Error_handler.insert_error (vdrd52)
 			end
 				-- Check aliases
 			if not is_same_alias (old_feature) then
@@ -2643,12 +2643,7 @@ end
 			end
 
 				-- Check the argument count
-			if argument_count /= old_feature.argument_count then
-				create vdjr
-				vdjr.init (old_feature, Current)
-				Error_handler.insert_error (vdjr)
-			else
-
+			if argument_count = old_feature.argument_count then
 					-- Check the argument equality
 				from
 					i := 1
@@ -2669,6 +2664,10 @@ end
 					end
 					i := i + 1
 				end
+			else
+				create vdjr
+				vdjr.init (old_feature, Current)
+				Error_handler.insert_error (vdjr)
 			end
 				-- Check aliases
 			if not is_same_alias (old_feature) then
@@ -3390,15 +3389,16 @@ feature -- Debugging
 		local
 			wc: CLASS_C
 		do
-			if (not is_external)
-				and then (not is_attribute)
-				and then (not is_constant)
-				and then (not is_deferred)
-				and then (not is_unique)
+			if
+				not is_external
+				and then not is_attribute
+				and then not is_constant
+				and then not is_deferred
+				and then not is_unique
 			then
 				wc := written_class
-				Result := (not wc.is_basic)
-					and then (wc.has_types)
+				Result := not wc.is_basic
+					and then wc.has_types
 			end
 		end
 

@@ -238,7 +238,6 @@ feature -- Access
 			disconnect
 		end
 
-
 	registration_token_from_username (a_username: READABLE_STRING_32): STRING
 			-- Associated token for a username `a_username', or
 			-- Empty String if the Account not activated.
@@ -280,7 +279,7 @@ feature -- Access
 			disconnect
 		end
 
-	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER): BOOLEAN
+	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER)
 			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
 			--
 		require
@@ -302,34 +301,22 @@ feature -- Access
 
 			connect
 			create l_parameters.make (10)
-			l_parameters.put (a_first_name, {ESA_DATA_PARAMETERS_NAMES}.firstname_param)
-			l_parameters.put (a_last_name, {ESA_DATA_PARAMETERS_NAMES}.lastname_param)
-			l_parameters.put (a_email, {ESA_DATA_PARAMETERS_NAMES}.email_param)
-			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
-			l_parameters.put (string_parameter (l_password_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.passwordhash_param)
-			l_parameters.put (string_parameter (l_password_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.passwordsalt_param)
-			l_parameters.put (string_parameter (l_answer_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.answerhash_param)
-			l_parameters.put (string_parameter (l_answer_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.answersalt_param)
-			l_parameters.put (a_token, {ESA_DATA_PARAMETERS_NAMES}.registrationtoken_param)
-			l_parameters.put (a_question_id, {ESA_DATA_PARAMETERS_NAMES}.questionid_param)
-
-
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("AddUser2", l_parameters))
-			db_handler.execute_reader
-			if not db_handler.after then
-				db_handler.start
-				if attached {DB_TUPLE} db_handler.item as l_item  then
-						if attached {INTEGER_REF} l_item.item(1) as l_item_1 then
-							l_int := l_item_1.item
-						end
-						if attached {BOOLEAN_REF} l_item.item(2) as l_item_2 then
-							exist := l_item_2.item
-						end
-				end
-			end
-			Result := not exist
+			l_parameters.put (string_parameter (a_first_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Firstname_param)
+			l_parameters.put (string_parameter (a_last_name, 50), {ESA_DATA_PARAMETERS_NAMES}.Lastname_param)
+			l_parameters.put (string_parameter (a_email, 100), {ESA_DATA_PARAMETERS_NAMES}.Email_param)
+			l_parameters.put (string_parameter (a_username, 100), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (string_parameter (l_password_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.Passwordhash_param)
+			l_parameters.put (string_parameter (l_password_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.Passwordsalt_param)
+			l_parameters.put (string_parameter (l_answer_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.Answerhash_param)
+			l_parameters.put (string_parameter (l_answer_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.Answersalt_param)
+			l_parameters.put (string_parameter (a_token, 7), {ESA_DATA_PARAMETERS_NAMES}.Registrationtoken_param)
+			l_parameters.put (a_question_id, {ESA_DATA_PARAMETERS_NAMES}.Questionid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("AddUser2", l_parameters))
+			db_handler.execute_writer
 			disconnect
 		end
+
+
 
 
 	categories (a_username: STRING): ESA_DATABASE_ITERATION_CURSOR[ESA_REPORT_CATEGORY]
@@ -714,8 +701,8 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_environment, 200), {ESA_DATA_PARAMETERS_NAMES}.Environment_param)
 			l_parameters.put (a_description, {ESA_DATA_PARAMETERS_NAMES}.Description_param)
 			l_parameters.put (a_to_reproduce, {ESA_DATA_PARAMETERS_NAMES}.Toreproduce_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("UpdateProblemReport2", l_parameters))
-			db_handler.execute_reader
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdateTemporaryProblemReport", l_parameters))
+			db_handler.execute_writer
 			disconnect
 		end
 

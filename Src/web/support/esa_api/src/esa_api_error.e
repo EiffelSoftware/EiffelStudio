@@ -75,7 +75,4 @@ feature -- Element Settings
 			last_error__reset: last_error = Void
 			successful: successful
 		end
-
-invariant
-	last_error_set_iff_successful: successful = (last_error = Void)
 end

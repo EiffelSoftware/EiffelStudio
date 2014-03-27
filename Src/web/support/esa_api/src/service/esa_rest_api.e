@@ -27,8 +27,10 @@ feature -- Initialization
 			configure_api_report_interaction
 			configure_api_report_form
 			configure_api_report_confirm
+			configure_api_register
 			configure_api_login
 			configure_api_logoff
+			configure_api_activation
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden ("www")
 			fhdl.set_directory_index (<<"index.html">>)
@@ -127,7 +129,6 @@ feature -- Configure Resources Routes
 			router.handle_with_request_methods ("/logoff", l_logoff_handler, l_methods)
 		end
 
-
 	configure_api_report_form
 		local
 			l_form_handler: ESA_REPORT_FORM_HANDLER
@@ -152,6 +153,28 @@ feature -- Configure Resources Routes
 			router.handle_with_request_methods ("/report_confirm/{id}", l_confirm_handler, l_methods)
 		end
 
+	configure_api_register
+		local
+			l_register_handler: ESA_REGISTER_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_register_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/register", l_register_handler, l_methods)
+		end
+
+	configure_api_activation
+		local
+			l_activation_handler: ESA_ACTIVATION_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_activation_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/activation", l_activation_handler, l_methods)
+		end
 
 
 end

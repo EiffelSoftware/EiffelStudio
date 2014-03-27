@@ -25,7 +25,7 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_cj.make (req.absolute_script_url (""), current_user_name (req))
 				if attached l_cj.representation as l_cj_api then
-					new_response_get (req, res,l_cj_api)
+					new_response_get (req, res, l_cj_api)
 				end
 			end
 		end
@@ -56,11 +56,10 @@ feature -- View
 			end
 		end
 
-	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		local
 			l_hp: ESA_CJ_REPORT_PAGE
-			l_pages: INTEGER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (req.absolute_script_url (""), a_report_view)
@@ -70,28 +69,53 @@ feature -- View
 			end
 		end
 
-	problem_reports_responsible  (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+	problem_reports_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
+			-- <Precursor>
+		local
+			l_hp: ESA_CJ_RESPONSIBLE_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				if attached l_hp.representation as l_home_page then
+					new_response_get (req, res, l_home_page)
+				end
+			end
+		end
+
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			to_implement ("Add Implementation")
 		end
-
-
-	update_report_responsible  (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32 )
-			-- <Precursor>
-		do
-			to_implement ("Add Implementation")
-		end
-
 
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
+		local
+			l_hp: ESA_CJ_REPORT_FORM_PAGE
 		do
+			if attached req.http_host as l_host then
+				if a_form.id > 0 then
+					create l_hp.make_with_data (req.absolute_script_url (""), a_form, current_user_name (req))
+				else
+					create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				end
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
 		end
 
 	report_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form confirm
+		local
+			l_hp: ESA_CJ_REPORT_FORM_PAGE
 		do
+			if attached req.http_host as l_host then
+				create l_hp.make_with_data (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_redirect (req, res, l_form_page, req.absolute_script_url ("/report_form/" + a_form.id.out))
+				end
+			end
 		end
 
 	report_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -99,6 +123,18 @@ feature -- View
 		do
 		end
 
+	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- Report form error
+		local
+			l_hp: ESA_CJ_REPORT_FORM_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make_with_error (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
+		end
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
@@ -119,9 +155,9 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), req.execution_variable ("user"))
+				create l_cj.make (req.absolute_script_url (""), current_user_name (req))
 				if attached l_cj.representation as l_cj_api then
-					new_response_get (req, res,l_cj_api)
+					new_response_get (req, res, l_cj_api)
 				end
 			end
 		end
@@ -134,7 +170,7 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_cj.make (req.absolute_script_url (""), Void)
 				if attached l_cj.representation as l_cj_api then
-					new_response_access_denied (req, res,l_cj_api)
+					new_response_access_denied (req, res, l_cj_api)
 				end
 			end
 		end
@@ -154,8 +190,8 @@ feature -- View
 			end
 		end
 
-	new_response_unauthorized(req: WSF_REQUEST; res: WSF_RESPONSE)
-				-- Generate a Reponse based on the Media Type
+	new_response_unauthorized (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Generate a Reponse based on the Media Type
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
@@ -182,6 +218,29 @@ feature -- View
 		do
 		end
 
+	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
+			-- Register form
+		do
+			to_implement ("Add CJ implementation")
+		end
+
+	post_register_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post Register page
+		do
+			to_implement ("Add CJ implementation")
+		end
+
+	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_ACTIVATION_VIEW)
+			-- Activation Page
+		do
+			to_implement ("Add CJ implementation")
+		end
+
+	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Confirmation page
+		do
+			to_implement ("Add CJ implementation")
+		end
 
 feature -- Response
 
@@ -193,10 +252,27 @@ feature -- Response
 			h.put_content_type ("application/vnd.collection+json")
 			h.put_content_length (output.count)
 			if attached media_variants.vary_header_value as l_vary then
-				h.put_header_key_value ("Vary",l_vary)
+				h.put_header_key_value ("Vary", l_vary)
 			end
 			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.ok)
+			res.put_header_text (h.string)
+			res.put_string (output)
+		end
+
+	new_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING; a_location: STRING)
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_type ("application/vnd.collection+json")
+			h.put_content_length (output.count)
+			if attached media_variants.vary_header_value as l_vary then
+				h.put_header_key_value ("Vary", l_vary)
+			end
+			h.put_current_date
+			h.put_location (a_location)
+			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 			res.put_string (output)
 		end
@@ -250,7 +326,6 @@ feature -- Response
 			res.put_header_text (h.string)
 			res.put_string (output)
 		end
-
 
 	new_response_authenticate (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Handle forbidden.

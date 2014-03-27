@@ -26,7 +26,12 @@
          </div>
         <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
 
-        <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST">
+        {if isset="$id"}  
+          <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST">
+        {/if}
+        {unless isset="$id"}
+          <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST">
+        {/unless}
           <fieldset>
             <legend>Problem Report Submission</legend>
             <div class="row">
@@ -34,10 +39,10 @@
                 <label class="control-label" for="input01">Product/Category</label>
                 <select class="form-control"  data-style="btn-primary" name="category" form="report">
                 {foreach from="$categories" item="item"}
-                  {if condition="$item.is_selected"} 
+                  {if condition="$item.id = $category"} 
                     <option value="{$item.id/}" selected>{$item.synopsis/}</option>
                   {/if}
-                  {unless condition="$item.is_selected"}
+                  {unless condition="$item.id = $category"}
                     <option value="{$item.id/}">{$item.synopsis/}</option>
                   {/unless}
                 {/foreach}  
@@ -47,10 +52,10 @@
                <label class="control-label" for="input01">Severity</label>
                <select class="form-control"  data-style="btn-primary" name="severity" form="report">
                 {foreach from="$severities" item="item"}
-                  {if condition="$item.is_selected"} 
+                  {if condition="$item.id = $severity"} 
                     <option value="{$item.id/}" selected>{$item.synopsis/}</option>
                   {/if}
-                  {unless condition="$item.is_selected"}
+                  {unless condition="$item.id = $severity"}
                     <option value="{$item.id/}">{$item.synopsis/}</option>
                   {/unless}
                 {/foreach}  
@@ -60,10 +65,10 @@
                 <label class="control-label" for="input01">Priority</label>
                 <select class="form-control"  data-style="btn-primary" name="priority" form="report">
                 {foreach from="$priorities" item="item"}
-                  {if condition="$item.is_selected"} 
+                  {if condition="$item.id = $priority"} 
                     <option value="{$item.id/}" selected>{$item.synopsis/}</option>
                   {/if}
-                  {unless condition="$item.is_selected"}
+                  {unless condition="$item.id = $priority"}
                     <option value="{$item.id/}">{$item.synopsis/}</option>
                   {/unless}
                 {/foreach}  
@@ -73,10 +78,10 @@
                 <label class="control-label" for="input01">Class</label>
                 <select class="form-control"  data-style="btn-primary" name="class" form="report">
                 {foreach from="$classes" item="item"}
-                  {if condition="$item.is_selected"} 
+                  {if condition="$item.id = $class"} 
                     <option value="{$item.id/}" selected>{$item.synopsis/}</option>
                   {/if}
-                  {unless condition="$item.is_selected"}
+                  {unless condition="$item.id = $class"}
                     <option value="{$item.id/}">{$item.synopsis/}</option>
                   {/unless}
                 {/foreach}  

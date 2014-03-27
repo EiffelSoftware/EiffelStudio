@@ -69,6 +69,12 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- Report form error
+		do
+			generic_response (req, res)
+		end
+
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- Update report responsible
 		do
@@ -117,6 +123,31 @@ feature -- View
 			generic_response (req, res)
 		end
 
+
+	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
+			-- Register form
+		do
+			generic_response (req, res)
+		end
+
+	post_register_page 	(req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post Register page
+		do
+			generic_response (req, res)
+		end
+
+
+	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_ACTIVATION_VIEW)
+			-- Activation page
+		do
+			generic_response (req, res)
+		end
+
+	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Confirmation page
+		do
+			generic_response (req, res)
+		end
 
 feature -- Response
 

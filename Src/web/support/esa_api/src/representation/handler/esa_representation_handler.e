@@ -79,6 +79,11 @@ feature -- View
 		deferred
 		end
 
+	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- Report form error
+		deferred
+		end
+
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- Update report responsible
 		deferred
@@ -106,6 +111,26 @@ feature -- View
 
 	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- internal_server_error
+		deferred
+		end
+
+	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
+			-- Register form
+		deferred
+		end
+
+	post_register_page 	(req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post Register page
+		deferred
+		end
+
+	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_ACTIVATION_VIEW)
+			-- Activation Page
+		deferred
+		end
+
+	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Confirmation page
 		deferred
 		end
 

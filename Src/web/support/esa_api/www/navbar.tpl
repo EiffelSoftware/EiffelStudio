@@ -51,6 +51,7 @@
          {/if}
          {unless isset="$user"}
               <li><a href="#">Guest</a></li>
+              <li><a href="{$host/}/register">Register</a></li> 
          {/unless} 
          
          {if isset="$user"}

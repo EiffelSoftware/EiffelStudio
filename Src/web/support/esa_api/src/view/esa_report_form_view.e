@@ -29,24 +29,100 @@ feature -- Access
 	id: INTEGER
 
  	categories: LIST[ESA_REPORT_CATEGORY]
+ 		-- Possible list of categories.
 
  	severities: LIST[ESA_REPORT_SEVERITY]
+ 		-- Possible list of severities.
 
   	classes: LIST[ESA_REPORT_CLASS]
+  		-- Possible list of classes.
 
   	priorities: LIST[ESA_REPORT_PRIORITY]
+  		-- Possible list of priorities.
+
+  	category: INTEGER
+		-- Current selected severity, 0 by defaukt.
+
+  	severity: INTEGER
+		-- Current selected severity, 0 by default.
+
+  	selected_class: INTEGER
+  		-- Current selected class, 0 by default.
+
+  	priority: INTEGER
+  		-- Current selected priority, 0 by default.
 
 	release: detachable STRING_32
+		-- Release.
 
 	confidential: BOOLEAN
+		-- Is the report confidential?
 
 	environment: detachable STRING_32
+		-- Environment descritpion.
 
 	synopsis: detachable STRING_32
+		-- Problem summary.
 
 	description: detachable STRING_32
+		-- Description of the problem.
 
 	to_reproduce: detachable STRING_32
+		-- How to reproduce the problem.
+
+
+feature -- Status Report
+
+	is_valid_form: BOOLEAN
+			-- Are the current values valid?
+			-- all fields except to_reproduce are required
+			-- category /= 0
+			-- severity /= 0
+			-- selected_class /= 0
+			-- priority /= 0
+
+		local
+			l_errors: STRING_TABLE[READABLE_STRING_32]
+			l_pass: READABLE_STRING_32
+			l_check: READABLE_STRING_32
+		do
+			create l_errors.make (0)
+			if category = 0 then
+				l_errors.put ("Not selected category", "category")
+			end
+			if severity = 0 then
+				l_errors.put ("Not selected severity", "severity")
+			end
+			if selected_class = 0 then
+				l_errors.put ("Not selected class", "selected_class")
+			end
+			if priority = 0 then
+				l_errors.put ("Not selected priority", "priority")
+			end
+			if not attached release then
+				l_errors.put ("Release is required", "release")
+			end
+			if not attached environment then
+				l_errors.put ("Environment is required", "Environment")
+			end
+			if not attached synopsis then
+				l_errors.put ("Synopsis is required", "Synopsis")
+			end
+			if not attached description then
+				l_errors.put ("Description is required", "Description")
+			end
+			if l_errors.is_empty then
+				Result := True
+			else
+				errors := l_errors
+			end
+
+		end
+
+feature -- Errors
+
+	errors: detachable STRING_TABLE[READABLE_STRING_32]
+		-- Hash table with errors and descriptions.				
 
 feature -- Element Change
 
@@ -105,6 +181,37 @@ feature -- Element Change
 			to_reproduce_set:  attached to_reproduce as l_to_reproduce and then l_to_reproduce.same_string (a_to_reproduce)
 		end
 
+	set_category (a_category: INTEGER)
+			-- Set `category' with `a_category'
+		do
+			category := a_category
+		ensure
+			category_set: category = a_category
+		end
+
+	set_severity (a_severity: INTEGER)
+			-- Set `severity' with `a_severity'
+		do
+			severity := a_severity
+		ensure
+			severity_set: severity = a_severity
+		end
+
+	set_selected_class (a_class: INTEGER)
+			-- Set `selected_class' with `a_class'
+		do
+			selected_class := a_class
+		ensure
+			selected_class_set: selected_class = a_class
+		end
+
+	set_priority (a_priority: INTEGER)
+			-- Set `priority' with `a_priority'
+		do
+			priority := a_priority
+		ensure
+			priority_set: priority = a_priority
+		end
 
 
 end

@@ -57,24 +57,57 @@
                     <
                         "name": "status",
                         "prompt": "Status",
-                        "value": "{$item.status.synopsis/}"
+                        "value": "{$item.status.id/}"
                     >,
                     <
+                        "name": "priority",
+                        "prompt": "Priority",
+                        "value": "{$item.priority.id/}"
+                    >,
+                    <
+                        "name": "severity",
+                        "prompt": "Severity",
+                        "value": "{$item.severity.id/}"
+                    >,
+                     <
                         "name": "Synopsis",
                         "prompt": "synopsis",
                         "value": "{$item.synopsis/}"
                     >,
                     <
+                        "name": "submitter",
+                        "prompt": "Submitter",
+                        "value": "{$item.contact.name/}"
+                    >,
+
+                    <
                         "name": "submission date",
                         "prompt": "Submission date",
                         "value": "{$item.submission_date/}"
                     >,
-                      <
+                    <
+                        "name": "responsible",
+                         {foreach from="$responsibles" item="val"}
+                              {if condition="$val.id = $item.assigned.id"}
+                                        "value": "{$val.synopsis/}",                                                 
+                              {/if}
+                         {/foreach}
+                         "prompt": "responsible"     
+                    > ,         
+                    <
                         "name": "Category",
                         "prompt": "category",
                         "value": "{$item.category.synopsis/}"
+                    >,
+                    <
+                        "name": "Release",
+                        "prompt": "release",
+                        "value": "{$item.release/}"
                     >
-                  ]
+                  ],
+                  "links" : [
+                    <"rel" : "item", "href" : "{$host/}/reports/{$item.number/}", "prompt" : "Update Responsible">
+                    ]
                 >,{/foreach}
                 {foreach from="$categories" item="item"}
                 <
@@ -133,11 +166,15 @@
         <
           "href" : "{$host/}/reports/",
           "rel" : "search",
-          "prompt" : "Filter by Category / Status...",
+          "prompt" : "Filter by Category / Status / Priority / Responsible / Severity / Submitter",
           "data" :
             [
                 <"name" : "category", "value" : "">,
-                <"name" : "status", "value" : "">
+                <"name" : "status", "value" : "">,
+                <"name" : "priority", "value" : "">,
+                <"name" : "responsible", "value" : "">,
+                <"name" : "severity", "value" : "">,
+                <"name" : "submitter", "value" : "">
             ]
         >,
         <
@@ -149,7 +186,12 @@
                 <"name" : "orderBy", "value" : "">,
                 <"name" : "dir", "value" : "">,
                 <"name" : "category", "value" : "">,
-                <"name" : "status", "value" : "">
+                <"name" : "status", "value" : "">,
+                <"name" : "priority", "value" : "">,
+                <"name" : "responsible", "value" : "">,
+                <"name" : "severity", "value" : "">,
+                <"name" : "submitter", "value" : "">
+        
             ]
         >
     ]                      

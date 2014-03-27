@@ -248,14 +248,14 @@ feature -- Element change
 					-- Twinning to ensure that the circulation structure is not broken by `deregister_entry'
 				l_entries := lt_entries.twin
 				from
-					lt_entries.start
+					l_entries.start
 				until
-					lt_entries.after
+					l_entries.after
 				loop
-					l_entry := lt_entries.item_for_iteration
+					l_entry := l_entries.item_for_iteration
 					check l_entry_not_void: l_entry /= Void end
 					deregister_entry (l_entry, a_component_id)
-					lt_entries.forth
+					l_entries.forth
 				end
 			end
 		end

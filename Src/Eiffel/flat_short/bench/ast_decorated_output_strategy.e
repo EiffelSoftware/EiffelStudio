@@ -1537,7 +1537,6 @@ feature {NONE} -- Implementation
 	process_un_strip_as (l_as: UN_STRIP_AS)
 		local
 			first_printed: BOOLEAN
-			l_names_heap: like names_heap
 			l_id: INTEGER
 			l_feature: FEATURE_I
 			l_feat: E_FEATURE
@@ -1550,7 +1549,6 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				from
-					l_names_heap := names_heap
 					l_as.id_list.start
 				until
 					l_as.id_list.after
@@ -3297,7 +3295,6 @@ feature {NONE} -- Implementation
 
 	process_list_dec_as (l_as: LIST_DEC_AS)
 		local
-			l_names_heap: like names_heap
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
@@ -3307,7 +3304,6 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
 			from
-				l_names_heap := names_heap
 				l_as.id_list.start
 			until
 				l_as.id_list.after
@@ -3332,7 +3328,6 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
 			from
-				l_names_heap := names_heap
 				l_as.id_list.start
 			until
 				l_as.id_list.after
@@ -3349,6 +3344,7 @@ feature {NONE} -- Implementation
 			l_as.type.process (Current)
 			if processing_locals and last_actual_local_type /= Void then
 				from
+					l_names_heap := names_heap
 					l_as.id_list.start
 				until
 					l_as.id_list.after

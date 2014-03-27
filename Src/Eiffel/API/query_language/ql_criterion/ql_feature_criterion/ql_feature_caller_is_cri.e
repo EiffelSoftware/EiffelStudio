@@ -63,7 +63,6 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_feature_list: like feature_list
 			l_feature: QL_FEATURE
 			l_invariant_list: like invariant_list
-			l_branch_id: INTEGER
 			l_current_domain: like source_domain
 			l_invariant_callee: like callee_list_for_invariant
 			l_feature_callee: like callee_list_for_feature
@@ -96,7 +95,6 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_invariant_list := invariant_list
 			l_invariant_callee := callee_list_for_invariant
 			if not l_invariant_list.is_empty then
-				l_branch_id := 1
 				from
 					l_invariant_list.start
 					l_invariant_callee.start
@@ -277,7 +275,6 @@ feature{NONE} -- Evaluate
 			-- Evaluate `a_item'.
 		local
 			l_invariant_list: like invariant_list
-			l_branch_id: INTEGER
 			l_feature_callee: like callee_list_for_feature
 			l_invariant_callee: like callee_list_for_invariant
 			l_user_data_list: like user_data_list
@@ -308,7 +305,6 @@ feature{NONE} -- Evaluate
 					-- For invariant
 				l_invariant_list := invariant_list
 				l_invariant_callee := callee_list_for_invariant
-				l_branch_id := 1
 				from
 					l_invariant_list.start
 				until

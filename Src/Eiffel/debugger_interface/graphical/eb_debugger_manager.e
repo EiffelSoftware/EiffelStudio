@@ -994,7 +994,6 @@ feature -- tools management
 			-- If all shown, show next one.
 		local
 			l_wt_lst: like watch_tool_list
-			l_shown: BOOLEAN
 			l_watch_tool: ES_WATCH_TOOL
 			l_focused_watch_index: INTEGER
 		do
@@ -1009,7 +1008,6 @@ feature -- tools management
 						l_wt_lst.after
 					loop
 						if l_wt_lst.item.has_focus then
-							l_shown := True
 							l_focused_watch_index := l_wt_lst.index
 						end
 						if l_watch_tool = Void and then not l_wt_lst.item.is_shown then
@@ -1349,7 +1347,7 @@ feature -- Status setting
 	unforce_execution_mode
 			-- unForce debug mode
 		require
-			debug_mode_forced = True
+			debug_mode_forced
 		do
 			debug_mode_forced := False
 			if raised
@@ -1546,7 +1544,6 @@ feature -- Status setting
 			l_watch_tool: ES_WATCH_TOOL
 			l_wt_lst: like watch_tool_list
 			l_tool: ES_WATCH_TOOL
-			l_docking_manager: SD_DOCKING_MANAGER
 			nwt: INTEGER
 			l_unlock: BOOLEAN
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -1571,7 +1568,6 @@ feature -- Status setting
 
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
-			l_docking_manager := debugging_window.docking_manager
 
 				--| Before any objects and watches tools
 			object_viewer_cmd.enable_sensitive

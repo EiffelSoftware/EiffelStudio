@@ -62,11 +62,11 @@ feature -- Evaluate
 				Result := wrapped_criterion.is_satisfied_by (a_item)
 			end
 		ensure then
-			good_result: Result implies (a_item.is_compiled) and then wrapped_criterion.is_satisfied_by (a_item)
+			good_result: Result implies (a_item.is_compiled and then wrapped_criterion.is_satisfied_by (a_item))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

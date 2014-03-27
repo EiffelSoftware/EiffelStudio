@@ -108,8 +108,8 @@ feature -- Execution
 								f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
 							end
 
-							if attached a_target_feat as l_feat then
-								feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
+							if a_target_feat /= Void then
+								feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (a_target_feat)
 							end
 
 							create assert_server.make_for_feature (target_feat, f_ast);
@@ -193,7 +193,7 @@ feature {NONE} -- Feature comments
 	export_status: EXPORT_I;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

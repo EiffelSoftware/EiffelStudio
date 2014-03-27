@@ -147,8 +147,8 @@ feature -- Basic operations
 							l_text.replace_substring_all ("%N", "%R%N")
 						end
 							-- Save with BOM if any.
-						if attached a_bom as l_bom then
-							tmp_file.put_string (l_bom)
+						if a_bom /= Void then
+							tmp_file.put_string (a_bom)
 						end
 						l_stream := convert_to_stream (l_text, a_encoding)
 						tmp_file.put_string (l_stream)
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_wb_button)
 				start_wb_button.set_pixmap (cmd.pixmap)
 				start_wb_button.set_tooltip (cmd.tooltip)
-				if attached {EB_EXEC_WORKBENCH_CMD} eb_debugger_manager.run_workbench_cmd as wbcmd then
+				if attached eb_debugger_manager.run_workbench_cmd as wbcmd then
 					start_wb_button.select_actions.extend (agent execute_operation (agent wbcmd.execute_with_parameters))
 				end
 				Layout_constants.set_default_width_for_button (start_wb_button)
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_final_button)
 				start_final_button.set_pixmap (cmd.pixmap)
 				start_final_button.set_tooltip (cmd.tooltip)
-				if attached {EB_EXEC_FINALIZED_CMD} eb_debugger_manager.run_finalized_cmd as fncmd then
+				if attached eb_debugger_manager.run_finalized_cmd as fncmd then
 					start_final_button.select_actions.extend (agent execute_operation (agent fncmd.execute_with_parameters))
 				end
 				Layout_constants.set_default_width_for_button (start_final_button)

@@ -2097,7 +2097,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				l_dialog.show_modal_to_window (window)
 			elseif
 				attached tools.features_relation_tool as ft and then
-				attached {EB_ROUTINE_FLAT_FORMATTER} ft.flat_formatter as flatf and then
+				attached ft.flat_formatter as flatf and then
 				attached flatf.widget as ftw and then
 				widget_has_recursive_focus (ftw)
 			then

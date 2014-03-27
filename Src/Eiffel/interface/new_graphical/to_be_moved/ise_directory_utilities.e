@@ -42,7 +42,7 @@ feature -- Basic operations
 
 			if a_directory_name_string.count /= 0 then
 					-- Remove any ending separator
-				ending_char := (a_directory_name_string @ a_directory_name_string.count)
+				ending_char := a_directory_name_string.item (a_directory_name_string.count)
 				if ending_char = Operating_environment.Directory_separator and then
 				   a_directory_name_string.count >= 2 and then
 				   a_directory_name_string @ (a_directory_name_string.count - 1) /= ':'
@@ -149,7 +149,7 @@ feature {NONE} -- Validation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

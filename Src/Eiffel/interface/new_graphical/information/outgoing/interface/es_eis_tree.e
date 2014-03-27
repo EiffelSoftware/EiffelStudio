@@ -256,7 +256,7 @@ feature -- Operation
 		do
 			build_tree
 		end
-		
+
 feature -- Query
 
 	is_built: BOOLEAN
@@ -333,7 +333,7 @@ feature {NONE} -- Component view factory
 		do
 			l_item := a_item
 			if l_item /= Void then
-				if attached {ES_EIS_ENTRY_GRID} eis_tool_widget.entry_list as lt_grid and then lt_grid.is_usable then
+				if attached eis_tool_widget.entry_list as lt_grid and then lt_grid.is_usable then
 					if attached {ES_EIS_TREE_TAG_ITEM} l_item as lt_item and then attached lt_item.text as lt_string then
 						if tag_header.first = lt_item then
 								-- Empty string indicates to view entries without tag.
@@ -354,7 +354,7 @@ feature {NONE} -- Component view factory
 						if l_sorted_cluster /= Void then
 							if attached {CONF_CLUSTER} l_sorted_cluster.actual_group as lt_cluster then
 								create {ES_EIS_CONF_VIEW}Result.make (lt_cluster, lt_grid)
-							elseif attached {CONF_LIBRARY} l_sorted_cluster.actual_group as lt_library and then attached {CONF_TARGET} lt_library.library_target as lt_target1 then
+							elseif attached {CONF_LIBRARY} l_sorted_cluster.actual_group as lt_library and then attached lt_library.library_target as lt_target1 then
 								create {ES_EIS_CONF_VIEW}Result.make (lt_target1, lt_grid)
 							end
 						end
@@ -472,7 +472,7 @@ feature {NONE} -- Implemenation
 					if attached {CONF_CLUSTER} l_sorted_cluster.actual_group as lt_cluster then
 						create l_conf_extracter.make (lt_cluster, True)
 						Result := not l_conf_extracter.eis_entries.is_empty
-					elseif attached {CONF_LIBRARY} l_sorted_cluster.actual_group as lt_library and then attached {CONF_TARGET} lt_library.library_target as lt_target1 then
+					elseif attached {CONF_LIBRARY} l_sorted_cluster.actual_group as lt_library and then attached lt_library.library_target as lt_target1 then
 						create l_conf_extracter.make (lt_target1, True)
 						Result := not l_conf_extracter.eis_entries.is_empty
 					end
@@ -524,7 +524,7 @@ invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

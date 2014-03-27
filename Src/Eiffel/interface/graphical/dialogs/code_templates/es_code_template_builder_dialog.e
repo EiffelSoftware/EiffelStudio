@@ -409,7 +409,7 @@ feature {NONE} -- Action handlers
 			check has_id: l_table.has_id (a_id) end
 			if l_table.has_id (a_id) then
 				l_code_value := l_table.item (a_id)
-				if attached {STRING_32} a_sender.text.as_string_32 as l_value then
+				if attached a_sender.text.as_string_32 as l_value then
 					l_code_value.set_value (l_value)
 				end
 			end
@@ -479,7 +479,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -111,7 +111,6 @@ feature {NONE} -- Basic operations
 						else
 							l_message_type := l_position
 						end
-						l_line := 0
 					end
 
 					if attached l_message_type and not l_message_type.is_empty then
@@ -128,7 +127,6 @@ feature {NONE} -- Basic operations
 								message.append_character (' ')
 							end
 							message.append (l_message)
-							message := message
 						end
 					end
 				else

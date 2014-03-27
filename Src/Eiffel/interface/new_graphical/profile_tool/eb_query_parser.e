@@ -104,11 +104,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if error then
-				Result := False
-			else
-				Result := True
-			end
+			Result := not error
 		end
 
 	init_expected_values
@@ -205,11 +201,7 @@ feature {NONE} -- Implementation
 
 	is_computed_value (value: STRING) : BOOLEAN
 		do
-			if value.is_equal (profiler_max) or else value.is_equal (profiler_min) or else value.is_equal (profiler_avg) then
-				Result := true
-			else
-				Result := false
-			end
+			Result := value.is_equal (profiler_max) or else value.is_equal (profiler_min) or else value.is_equal (profiler_avg)
 		end
 
 	is_bounded (value: STRING) : BOOLEAN
@@ -324,7 +316,7 @@ feature {NONE} -- Attributes
 	expects_bounded: BOOLEAN;
 		-- The expected type of the subquery 'value' is a bounded value
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -264,7 +264,7 @@ feature {NONE} -- Sorting
 					Result := not Result
 				end
 			when column_override then
-				Result := (u.override = True or v.override = False)
+				Result := u.override or not v.override
 				if descend_order then
 					Result := not Result
 				end
@@ -1032,15 +1032,13 @@ feature {NONE} -- Target token
 				token_writer.new_line
 				token_writer.process_target_name_text (a_item.name, a_item)
 				l_editable_item := new_listable_item
+				Result := l_editable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<target_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
-			end
-			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
-				Result := lt_item
 			else
 				create Result
 			end
@@ -1088,15 +1086,13 @@ feature {NONE} -- Target token
 				token_writer.new_line
 				token_writer.process_folder_text (a_item.name, a_item.path, a_item.cluster)
 				l_editable_item := new_listable_item
+				Result := l_editable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<folder_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
-			end
-			if attached {EB_GRID_LISTABLE_CHOICE_ITEM} l_editable_item as lt_item then
-				Result := lt_item
 			else
 				create Result
 			end
@@ -1268,7 +1264,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

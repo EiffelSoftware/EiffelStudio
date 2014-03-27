@@ -80,11 +80,8 @@ feature {NONE} -- Implementation
 
 	is_pointer (a_type: STRING): BOOLEAN
 			-- Is `a_type' a pointer type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("pointer")
+			Result := a_type.as_lower.is_equal ("pointer")
 		end
 
 	is_character (a_type: STRING): BOOLEAN
@@ -205,7 +202,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

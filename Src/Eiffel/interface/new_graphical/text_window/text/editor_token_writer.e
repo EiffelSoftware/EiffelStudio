@@ -151,9 +151,9 @@ feature -- Text processing
 					l_pos = 0
 				loop
 					create tok.make (l_t.substring (l_previous, l_pos -1))
-					if attached a_pebble as l_pebble then
+					if a_pebble /= Void then
 						tok.set_is_link (True)
-						tok.set_pebble (l_pebble)
+						tok.set_pebble (a_pebble)
 					end
 					append_token (tok)
 					add_new_line
@@ -165,9 +165,9 @@ feature -- Text processing
 				end
 			else
 				create tok.make (l_t)
-				if attached a_pebble as l_pebble then
+				if a_pebble /= void then
 					tok.set_is_link (True)
-					tok.set_pebble (l_pebble)
+					tok.set_pebble (a_pebble)
 				end
 				append_token (tok)
 			end
@@ -705,7 +705,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

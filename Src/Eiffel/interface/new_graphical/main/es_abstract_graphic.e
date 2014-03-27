@@ -174,7 +174,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			l_project_path: detachable PATH
 			l_target: detachable STRING_32
 			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
-			first_window: EB_DEVELOPMENT_WINDOW
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			initialize_services
@@ -185,7 +184,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 				-- Create a development window
 			window_manager.create_window
-			first_window := window_manager.last_created_window
 
 				-- Initialize the configuration pixmaps
 			create l_conf_constants

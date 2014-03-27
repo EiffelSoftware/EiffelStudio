@@ -38,7 +38,7 @@ feature {NONE} -- Basic operations
 			create Result.make_default
 			if attached {CLASSI_STONE} a_object.stone as lt_class_stone then
 				if a_object.text_is_fully_loaded then
-					if attached {CLASS_I} lt_class_stone.class_i as lt_class then
+					if attached lt_class_stone.class_i as lt_class then
 						create l_class_extractor.make_with_location (a_object.position, lt_class, True)
 						l_entries := l_class_extractor.eis_full_entries
 					end
@@ -64,7 +64,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -818,9 +818,9 @@ feature {NONE} -- Update
 				then
 					stack := l_status.current_call_stack
 					populate_stack_grid (stack)
-					if l_status.is_stopped
-						and then attached stack as l_stack
-						and then not l_stack.is_empty
+					if
+						l_status.is_stopped
+						and then stack /= Void and then not stack.is_empty
 					then
 						select_element_by_level (1) -- ???
 					end
@@ -2443,7 +2443,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

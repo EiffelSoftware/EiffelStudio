@@ -124,11 +124,9 @@ feature -- Basic operations
 			l_saved_item: MSR_ITEM
 			l_replaced_string : STRING
 			l_replace_string: UC_UTF8_STRING
-			l_index: INTEGER
 			l_refresh: BOOLEAN
 		do
 			l_refresh := False
-			l_index := replace_items.index
 			create l_replace_string.make_from_utf8 (utf32_to_utf8 (replace_string))
 			from
 				replace_items.start

@@ -131,7 +131,7 @@ feature {NONE} -- Query
 					if attached {EDITOR_TOKEN_FEATURE_START} a_token as l_fstart then
 							-- Create contract viewer widget
 						l_feature := l_class.feature_with_name_32 (l_fstart.wide_image)
-						if attached l_feature as l_feat then
+						if l_feature /= Void then
 							create l_viewer.make
 							l_viewer.set_is_showing_comments (True)
 							if attached last_token_widget as l_widget then
@@ -147,7 +147,7 @@ feature {NONE} -- Query
 									end
 								end)
 							l_viewer.is_showing_full_contracts := True
-							l_viewer.set_context (l_class, l_feat)
+							l_viewer.set_context (l_class, l_feature)
 							Result := l_viewer.widget
 						end
 					end
@@ -240,8 +240,8 @@ feature -- Basic operations
 
 					if l_can_show and then (l_window = Void or else not l_window.is_interface_usable) then
 							-- Create new window
-						if attached l_token_widget as l_widget then
-							create l_window.make_with_widget (editor, a_token, l_widget)
+						if l_token_widget /= Void then
+							create l_window.make_with_widget (editor, a_token, l_token_widget)
 						else
 							create l_window.make (editor, a_token)
 						end

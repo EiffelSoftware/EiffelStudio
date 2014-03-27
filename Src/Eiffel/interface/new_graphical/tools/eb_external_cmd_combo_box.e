@@ -133,11 +133,7 @@ feature -- Status report
 	is_focus_back_needed: BOOLEAN
 			-- Should focus be set back after code completion?
 		do
-			if is_destroyed then
-				Result := False
-			else
-				Result := True
-			end
+			Result := not is_destroyed
 		end
 
 feature{NONE} -- Implementation
@@ -322,7 +318,7 @@ feature{NONE} -- Position calculation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -519,7 +519,6 @@ feature{NONE} -- Implementation
 			l_count: INTEGER
 			c: CHARACTER
 			l_negation_str: STRING
-			l_criterion_name: STRING
 			l_criterion_valid: BOOLEAN
 			done: BOOLEAN
 		do
@@ -527,10 +526,8 @@ feature{NONE} -- Implementation
 			l_name_str.left_adjust
 			l_name_str.right_adjust
 			if l_name_str.is_empty then
-				l_criterion_name := ""
 				is_negation_used := False
 			else
-				l_criterion_name := l_name_str.twin
 				l_count := l_name_str.count
 				from
 					l_index := 1

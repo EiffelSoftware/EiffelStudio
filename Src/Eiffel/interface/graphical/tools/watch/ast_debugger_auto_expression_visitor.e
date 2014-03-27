@@ -741,7 +741,7 @@ feature -- Conversion
 					a_span.i_start_index = a_other_span.i_start_index and
 					a_span.i_start_line = a_other_span.i_start_line
 			check
-				use_equal_operator: not (a_span = a_other_span)
+				use_equal_operator: a_span /= a_other_span
 			end
 		end
 
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 	leaf_as_list: LEAF_AS_LIST;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

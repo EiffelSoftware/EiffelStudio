@@ -237,7 +237,6 @@ feature -- Initialization
 			end
 			if eiffel_layout.Has_profiler then
 				Result.put (switches_menu, i)
-				i := i + 1
 			end
 		ensure
 			menu_commands_not_void: menu_commands /= Void
@@ -364,7 +363,6 @@ feature -- Update
 			dot_place: INTEGER
 			main_menu_option: EWB_STRING
 			menu_abb : CHARACTER
-			prev: like menu_command_list
 		do
 			last_request_cmd := Void
 			if req.has ('.') then
@@ -386,7 +384,6 @@ feature -- Update
 				option := req.substring (dot_place+1, req.count)
 				next_cmd := main_menu.option_item (menu)
 				if next_cmd /= Void then
-					prev := menu_command_list
 					main_menu_option ?= next_cmd
 					menu_command_list := main_menu_option.sub_menu
 					if not option.is_empty then
@@ -400,14 +397,12 @@ feature -- Update
 					elseif menu.is_equal (help_cmd_name) or menu_abb = help_abb or menu_abb = '?' then
 						display_commands
 					elseif menu.is_equal (main_cmd_name) or menu_abb = main_abb then
-						prev := menu_command_list
 						menu_command_list := main_menu
 						if not option.is_empty then
 							process_request (option)
 						end
 					elseif menu.is_equal (parent_cmd_name) or menu_abb = parent_abb then
 						if not menu_command_list.is_main then
-							prev := menu_command_list
 							menu_command_list := menu_command_list.parent
 						end
 						if not option.is_empty then
@@ -425,7 +420,6 @@ feature -- Update
 				if next_cmd /= Void then
 					main_menu_option ?= next_cmd
 					if main_menu_option /= Void then
-						prev := menu_command_list
 
 							-- Since {EWB_STRING} are also commands, we execute them before displaying the menu.
 						main_menu_option.loop_action
@@ -444,12 +438,10 @@ feature -- Update
 						display_commands
 					elseif req.is_equal (main_cmd_name) or menu_abb = main_abb
 					then
-						prev := menu_command_list
 						menu_command_list := Main_menu
 						display_commands
 					elseif req.is_equal (parent_cmd_name) or menu_abb = parent_abb then
 						if not menu_command_list.is_main then
-							prev := menu_command_list
 							menu_command_list := menu_command_list.parent
 						end
 						if menu_command_list = Void then

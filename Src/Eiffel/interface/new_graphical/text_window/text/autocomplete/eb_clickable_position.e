@@ -73,8 +73,6 @@ feature -- comparison
 			-- Is current object less than `other'?
 		do
 			Result := start < other.start
-		ensure then
-			asymmetric: Result implies not (other < Current)
 		end
 
 invariant
@@ -84,7 +82,7 @@ invariant
 	class_or_feature: not (is_class and is_feature)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

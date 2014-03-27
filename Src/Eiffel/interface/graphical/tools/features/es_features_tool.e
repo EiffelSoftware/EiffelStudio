@@ -46,7 +46,7 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := (attached {CLASSI_STONE} a_stone as l_stone or attached {CLUSTER_STONE} a_stone as l_cluster)
+			Result := attached {CLASSI_STONE} a_stone as l_stone or attached {CLUSTER_STONE} a_stone as l_cluster
 		end
 
 feature -- Basic operations
@@ -80,7 +80,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Features"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

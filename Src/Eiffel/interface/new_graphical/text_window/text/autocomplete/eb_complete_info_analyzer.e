@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 
 				end
 			end
-			if l_swapped = True then
+			if l_swapped then
 					-- Restore faked cursor position so we can complete before '.'
 					-- User is completing before '.'
 				retrieve_cursor_position
@@ -1573,7 +1573,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

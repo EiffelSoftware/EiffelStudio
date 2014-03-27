@@ -54,8 +54,8 @@ feature -- Query
 				preferences.debug_tool_data.show_debug_tooltip and then
 				attached debugger_manager as l_debug_manager and then
 				l_debug_manager.safe_application_is_stopped and then
-				attached a_token as l_token and then
-				attached {READABLE_STRING_GENERAL} l_token.data as l_e and then not l_e.is_empty
+				a_token /= Void and then
+				attached {READABLE_STRING_GENERAL} a_token.data as l_e and then not l_e.is_empty
 		end
 
 feature {NONE} -- Implementation
@@ -273,7 +273,7 @@ feature {NONE} -- Shortcuts
 	goto_end_shortcut: ES_KEY_SHORTCUT;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

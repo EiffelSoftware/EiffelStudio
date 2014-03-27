@@ -827,7 +827,6 @@ feature {NONE} -- Implementation
 		local
 			l_data: TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]
 			views: LINKED_LIST [STRING_32]
-			view_name: STRING_32
 		do
 			l_data ?= row.data
 			views := l_data.views
@@ -838,7 +837,6 @@ feature {NONE} -- Implementation
 				until
 					views.after
 				loop
-					view_name := views.item
 					view_list.extend (create {EV_LIST_ITEM}.make_with_text (views.item))
 					views.forth
 				end

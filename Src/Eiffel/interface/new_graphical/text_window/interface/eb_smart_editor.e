@@ -1838,7 +1838,7 @@ feature {NONE} -- Code completable implementation
 			end
 			completing_automatically := False
 		ensure then
-			completing_automatically_reset: completing_automatically = False
+			completing_automatically_reset: not completing_automatically
 		end
 
 feature {NONE} -- Implementation: Internal cache
@@ -1848,7 +1848,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -91,8 +91,8 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			on_object_radio.enable_select
-			if attached oa as l_add then
-				address_field.set_text (l_add.as_string)
+			if oa /= Void then
+				address_field.set_text (oa.as_string)
 			else
 				address_field.remove_text
 			end
@@ -112,8 +112,8 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			as_object_radio.enable_select
-			if attached oa as l_add then
-				address_field.set_text (l_add.as_string)
+			if oa /= Void then
+				address_field.set_text (oa.as_string)
 			else
 				address_field.remove_text
 			end
@@ -146,8 +146,8 @@ feature {NONE} -- Initialization
 			on_object_context_class := ac
 			make
 			on_object_radio.enable_select
-			if attached oa as l_add then
-				address_field.set_text (l_add.as_string)
+			if oa /= Void then
+				address_field.set_text (oa.as_string)
 			else
 				address_field.remove_text
 			end
@@ -854,7 +854,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -47,21 +47,15 @@ feature -- Query
 			if a_key /= Void then
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
 				check l_shortcut_pref /= Void end
-				if
-					a_key.code = l_shortcut_pref.key.code and
+				Result := a_key.code = l_shortcut_pref.key.code and
 					a_ctrl = l_shortcut_pref.is_ctrl and
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
-				then
-					Result := True
-				else
-					Result := False
-				end
 			end
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2014, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

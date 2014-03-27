@@ -131,26 +131,19 @@ feature -- Access
 
 	environment_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- Environment variables
-		local
-			l_variables: detachable like environment_variables
 		do
-			if attached environment.service as l_service then
-				if attached l_service.variables as l_vars then
-					create l_variables.make (10)
-					from
-						l_vars.start
-					until
-						l_vars.after
-					loop
-						if attached l_service.variable (l_vars.item) as l_value then
-							l_variables.force (l_value, l_vars.item)
-						end
-						l_vars.forth
+			if attached environment.service as l_service and then attached l_service.variables as l_vars then
+				create Result.make (10)
+				from
+					l_vars.start
+				until
+					l_vars.after
+				loop
+					if attached l_service.variable (l_vars.item) as l_value then
+						Result.force (l_value, l_vars.item)
 					end
+					l_vars.forth
 				end
-			end
-			if attached l_variables as l_r then
-				Result := l_r
 			else
 				create Result.make (0)
 			end
@@ -167,7 +160,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

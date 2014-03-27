@@ -190,7 +190,6 @@ feature -- Storage
 		local
 			l_callback: EB_CUSTOMIZED_TOOL_XML_CALLBACK
 			l_desp_tuple: like items_from_file
-			l_id_set: like tool_id_set
 			l_id_list: LINKED_LIST [STRING]
 			l_cursor: DS_HASH_SET_CURSOR [STRING]
 			l_old_id_set: like tool_id_set
@@ -198,7 +197,6 @@ feature -- Storage
 			l_changed_id_set: like tool_id_set
 		do
 			l_old_id_set := tool_id_set
-			l_id_set := tool_id_set
 			tool_descriptors.wipe_out
 			create l_callback.make
 			clear_last_error

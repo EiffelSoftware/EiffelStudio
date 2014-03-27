@@ -275,6 +275,7 @@ feature -- Storage
 					store (l_sessions.item_for_iteration)
 					l_sessions.forth
 				end
+				l_sessions.go_to (l_cursor)
 			end
 		ensure then
 			sessions_are_clean: attached internal_sessions as l_sessions implies l_sessions.for_all (agent (a_ia_session: SESSION_I): BOOLEAN
@@ -568,8 +569,8 @@ feature {NONE} -- Factory
 				else
 					create {SESSION} Result.make_per_window (False, a_window, Current)
 				end
-				if attached a_extension as l_ext then
-					Result.set_extension_name (create {IMMUTABLE_STRING_32}.make_from_string_general (l_ext))
+				if a_extension /= Void then
+					Result.set_extension_name (create {IMMUTABLE_STRING_32}.make_from_string_general (a_extension))
 				end
 			end
 

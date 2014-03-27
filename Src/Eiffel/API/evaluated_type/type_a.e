@@ -1439,17 +1439,18 @@ feature -- Access
 			ass_class: CLASS_C
 			warn: OBS_CLASS_WARN
 		do
-			if not current_class.is_obsolete and (current_feature = Void or else not current_feature.is_obsolete) then
-		   		if actual_type.has_associated_class then
-					ass_class := actual_type.base_class
-					if ass_class.is_obsolete and then ass_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
-						create warn.make_with_class (current_class)
-						if current_feature /= Void then
-							warn.set_feature (current_feature)
-						end
-						warn.set_obsolete_class (ass_class)
-						Error_handler.insert_warning (warn)
+			if
+				not current_class.is_obsolete and (current_feature = Void or else not current_feature.is_obsolete) and then
+		   		actual_type.has_associated_class
+		   	then
+				ass_class := actual_type.base_class
+				if ass_class.is_obsolete and then ass_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
+					create warn.make_with_class (current_class)
+					if current_feature /= Void then
+						warn.set_feature (current_feature)
 					end
+					warn.set_obsolete_class (ass_class)
+					Error_handler.insert_warning (warn)
 				end
 			end
 		end
@@ -1525,7 +1526,7 @@ feature {NONE} -- Implementation
 
 	delayed_convert_constraint_check (
 			context_class: CLASS_C;
-			gen_type: GEN_TYPE_A
+			gen_type: GEN_TYPE_A;
 			a_set_to_check, a_constraint_types: TYPE_SET_A;
 			i: INTEGER;
 			in_constraint: BOOLEAN)

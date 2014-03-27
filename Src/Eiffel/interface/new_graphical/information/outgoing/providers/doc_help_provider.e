@@ -83,9 +83,9 @@ feature -- Basic operations
 										end
 									end
 								end
-								if attached l_active_doc as l_doc then
-									l_doc.call_property_get ("Bookmarks", Void)
-									if attached l_doc.last_object as l_bookmarks then
+								if l_active_doc /= Void then
+									l_active_doc.call_property_get ("Bookmarks", Void)
+									if attached l_active_doc.last_object as l_bookmarks then
 										l_bookmarks.call_method ("Item", [l_bookmark])
 											-- Go to the bookmark
 										if attached l_bookmarks.last_object as l_bookmark_object then
@@ -111,7 +111,7 @@ feature {NONE} -- Constants
 	word_application_string: STRING_32 = "Word.Application"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -42,7 +42,7 @@ feature -- Access
 			else
 				if attached {CONF_TARGET} notable then
 					Result := eis_entries
-				elseif attached {CONF_CLUSTER} notable as lt_group and then attached {CONF_TARGET} lt_group.target as lt_group_target then
+				elseif attached {CONF_CLUSTER} notable as lt_group and then attached lt_group.target as lt_group_target then
 					create l_conf_extractor.make (lt_group_target, True)
 					Result := l_conf_extractor.eis_entries.twin
 					Result.merge (eis_entries.twin)
@@ -76,9 +76,9 @@ feature {NONE} -- Implementation
 			else
 				check not_possible: False end
 			end
-			if attached l_id as lt_id then
+			if l_id /= Void then
 				l_entries := storage.entry_server.entries
-				l_entries.search (lt_id)
+				l_entries.search (l_id)
 				if not l_entries.found or force_extracting then
 					l_notable := notable
 					l_notes := l_notable.note_node
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 							l_notes.after
 						loop
 							l_note := l_notes.item_for_iteration
-							if attached eis_entry_from_conf_note (l_note, lt_id) as lt_entry then
+							if attached eis_entry_from_conf_note (l_note, l_id) as lt_entry then
 								eis_entries.force (lt_entry)
 							end
 							l_notes.forth
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 					end
 						-- Register extracted entries to EIS storage.
 					if not eis_entries.is_empty then
-						storage.register_entries_of_component_id (eis_entries, lt_id, l_date)
+						storage.register_entries_of_component_id (eis_entries, l_id, l_date)
 					end
 				else
 					if attached {like eis_entries} l_entries.found_item as lt_entries then
@@ -121,7 +121,7 @@ feature {NONE} -- Access
 			-- Cached full entries
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

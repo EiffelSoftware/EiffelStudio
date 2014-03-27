@@ -126,15 +126,11 @@ feature {EV_ANY} -- Contract support
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
-			Result := (
-				not is_homogeneous and
-				border_width = 0 and
-				padding = 0
-			)
+			Result := not is_homogeneous and border_width = 0 and padding = 0
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

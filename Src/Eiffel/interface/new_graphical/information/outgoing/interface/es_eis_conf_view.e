@@ -371,15 +371,15 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_source_changed (a_value: STRING_32; a_item: EV_GRID_ITEM)
+	on_source_changed (a_value: detachable STRING_32; a_item: EV_GRID_ITEM)
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
 			l_source: STRING_32
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_value as lt_source then
-				create l_source.make_from_string (lt_source)
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then a_value /= Void then
+				create l_source.make_from_string (a_value)
 				l_source.right_adjust
 				l_source.left_adjust
 				if lt_entry.source /= Void and then l_source.is_equal (lt_entry.source) then
@@ -412,10 +412,8 @@ feature {NONE} -- Callbacks
 			l_tags: ARRAYED_LIST [STRING_32]
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_tags then
-				if attached lt_tags as lt_tags_str then
-					l_tags := parse_tags (lt_tags_str)
-					l_tags.compare_objects
-				end
+				l_tags := parse_tags (lt_tags)
+				l_tags.compare_objects
 				if lt_entry.tags /= Void and then lt_entry.tags.is_equal (l_tags) then
 						-- Do nothing when the tags is not actually changed
 				else
@@ -548,7 +546,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

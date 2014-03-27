@@ -852,7 +852,7 @@ feature {NONE} -- Events handlers
 		do
 			l_outputs := modified_outputs
 			l_name := a_output.name
-			if l_outputs.has (a_output.name) then
+			if l_outputs.has (l_name) then
 				l_tool_bar := modified_outputs_tool_bar
 				l_main_tool_bar := tool_bar_widget
 				check
@@ -861,11 +861,11 @@ feature {NONE} -- Events handlers
 				end
 
 					-- Need to remove the tool bar button
-				l_item := l_outputs.item (a_output.name)
+				l_item := l_outputs.item (l_name)
 				check l_item_attached: attached l_item end
 				unregister_action (l_item.button.select_actions, agent set_output (a_output))
 					-- Remove from the modified list and the button from the toolbar.
-				l_outputs.remove (a_output.name)
+				l_outputs.remove (l_name)
 					-- Remove the tooltip from the button. This addresses bug#16262.
 				l_item.button.set_tooltip (Void)
 					-- Remove button from the tool bar.

@@ -773,7 +773,6 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 			id: STRING
-			cnt: INTEGER
 			keyword_name: STRING
 			l_manager: EB_PREFERENCE_MANAGER
 			l_b_pref1, l_b_pref2: BOOLEAN_PREFERENCE
@@ -784,7 +783,6 @@ feature {NONE} -- Initialization
 		do
 			from
 				create autocomplete_prefs.make (40)
-				cnt := autocomplete_prefs.count
 				complete_keywords_names_keys.start
 			until
 				complete_keywords_names_keys.after

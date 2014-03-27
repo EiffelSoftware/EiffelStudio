@@ -570,8 +570,8 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 					else
 						create dlg.make_with_named_object (ost.object_address, oname, cl)
 					end
-				elseif attached {CLASSC_STONE} s as cst then
-					create dlg.make_with_class (cst.e_class)
+				elseif s /= Void then
+					create dlg.make_with_class (s.e_class)
 				end
 			end
 			if dlg /= Void then
@@ -1957,7 +1957,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

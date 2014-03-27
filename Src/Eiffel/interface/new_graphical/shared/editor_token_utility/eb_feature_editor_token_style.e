@@ -491,8 +491,8 @@ feature{NONE} -- Implementation
 			else
 					-- For normal features
 				token_writer.new_line
-				if attached a_feature as l_feat then
-					l_comments :=  (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
+				if a_feature /= Void then
+					l_comments :=  (create {COMMENT_EXTRACTOR}).feature_comments (a_feature)
 
 					if l_comments /= Void and then l_comments.count > 0 then
 						create l_tokens.make
@@ -537,7 +537,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

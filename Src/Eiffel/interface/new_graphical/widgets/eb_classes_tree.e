@@ -866,13 +866,13 @@ feature {NONE} -- Implementation
 		require
 			a_target_not_void: a_target /= Void
 		do
-			if attached a_parent as l_item then
-				if l_item.data = a_target then
-					l_item.enable_select
-					Result := l_item
+			if a_parent /= Void then
+				if a_parent.data = a_target then
+					a_parent.enable_select
+					Result := a_parent
 				else
 					across
-						l_item as l_c
+						a_parent as l_c
 					until attached Result
 					loop
 						if attached {EB_CLASSES_TREE_TARGET_ITEM} l_c.item as l_target_item then
@@ -880,7 +880,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if attached Result as l_result then
-						l_item.expand
+						a_parent.expand
 					end
 				end
 			else

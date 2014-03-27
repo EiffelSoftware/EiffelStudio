@@ -43,7 +43,6 @@ feature{NONE} -- Initialization
 			widget := l_main_frame
 
 				-- Toolbar
-			create l_toolbar.make
 			create l_toolbar_box
 			l_main_frame.extend (l_toolbar_box)
 			l_main_frame.disable_item_expand (l_toolbar_box)

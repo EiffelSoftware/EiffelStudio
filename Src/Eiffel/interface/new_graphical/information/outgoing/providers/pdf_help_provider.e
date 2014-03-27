@@ -96,9 +96,9 @@ feature -- Basic operations
 		do
 			l_args := pdf_arguments_from_entry (a_entry)
 			a_string.append (acrobat_command_string)
-			if attached l_args as lt_args then
+			if l_args /= Void then
 				a_string.append (acrobat_action_string)
-				a_string.append (quoted_string (lt_args))
+				a_string.append (quoted_string (l_args))
 				a_string.append (" ")
 			end
 		end
@@ -182,7 +182,7 @@ feature {NONE} -- Constants
 	acrobat_nameddest: STRING_32 = "nameddest";
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

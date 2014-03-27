@@ -47,9 +47,7 @@ feature -- Query
 			-- Visit resource attached to `a_token'.
 		do
 			if attached {EIS_LINK_STONE} a_token.pebble as l_pebble then
-				if
-					attached {ES_EIS_ENTRY_HELP_CONTEXT} l_pebble.link as l_context
-				then
+				if attached l_pebble.link as l_context then
 					show_help (l_context)
 				end
 			end
@@ -268,7 +266,7 @@ feature {NONE} -- Implementation
 			-- Last context to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

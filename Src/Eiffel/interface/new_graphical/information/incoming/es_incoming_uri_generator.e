@@ -48,38 +48,38 @@ feature -- Generator
 				l_system_uuid := l_target.system.uuid.out
 			end
 
-			if attached l_system_name as l_sname and then attached l_system_uuid as l_suuid then
+			if l_system_name /= Void and then l_system_uuid /= Void then
 				create Result.make_from_string (eiffel_prefix)
 					-- System name
 				Result.append (system_name)
-				Result.append (l_sname)
+				Result.append (l_system_name)
 				Result.append_character (dot)
 					-- System uuid
-				Result.append (l_suuid)
+				Result.append (l_system_uuid)
 
-				if attached l_target_name as l_tname then
+				if l_target_name /= Void then
 					Result.append_character (separator)
 						-- Target name
 					Result.append (target_name)
-					Result.append (l_tname)
+					Result.append (l_target_name)
 
-					if attached l_group_name as l_gname then
+					if l_group_name /= Void then
 							-- Group name
 						Result.append_character (separator)
 						Result.append (group_name)
-						Result.append (l_gname)
+						Result.append (l_group_name)
 
-						if attached l_class_name as l_cname then
+						if l_class_name /= Void then
 								-- Class name
 							Result.append_character (separator)
 							Result.append (class_name)
-							Result.append (l_cname)
+							Result.append (l_class_name)
 
-							if attached l_feature_name as l_fname then
+							if l_feature_name /= Void then
 									-- Feature name
 								Result.append_character (separator)
 								Result.append (feature_name)
-								Result.append (l_fname)
+								Result.append (l_feature_name)
 							end
 						end
 					end
@@ -106,7 +106,7 @@ feature {NONE} -- Constants
 	separator: CHARACTER_32 = '&'
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

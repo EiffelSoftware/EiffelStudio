@@ -697,10 +697,10 @@ feature {NONE} -- Actions implementation
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
 			if
-				attached a_item as i and then
+				a_item /= Void and then
 				(ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed)
 			then
-				if attached {STONE} grid_pebble_from_cell (i) as l_stone and then l_stone.is_valid then
+				if attached {STONE} grid_pebble_from_cell (a_item) as l_stone and then l_stone.is_valid then
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
@@ -1026,7 +1026,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

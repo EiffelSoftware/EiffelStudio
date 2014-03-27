@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			l_formatter: like general_formatter
 			l_locked: BOOLEAN
 		do
-			if (attached compiler_output as l_output) then
+			if attached compiler_output as l_output then
 				l_output.lock
 				l_locked := True
 			end

@@ -92,7 +92,7 @@ feature {NONE} -- User interface initialization
 			grid.row_deselect_actions.extend (agent row_deselected)
 			grid.key_press_actions.extend (agent (akey: EV_KEY)
 					do
-						if (akey.code = {EV_KEY_CONSTANTS}.key_delete) then
+						if akey.code = {EV_KEY_CONSTANTS}.key_delete then
 							on_del
 						end
 					end)
@@ -604,7 +604,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

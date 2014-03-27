@@ -68,7 +68,7 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := (attached {CALL_STACK_STONE} a_stone as cst or else attached {FEATURE_STONE} a_stone as fst)
+			Result := attached {CALL_STACK_STONE} a_stone as cst or else attached {FEATURE_STONE} a_stone as fst
 		end
 
 feature {NONE} -- Factory
@@ -84,7 +84,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Call Stack"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

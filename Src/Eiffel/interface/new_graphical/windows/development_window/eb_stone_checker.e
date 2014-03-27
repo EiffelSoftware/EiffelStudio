@@ -809,7 +809,6 @@ feature {NONE} -- Implementation functions
 					end
 					l_classes.forth
 				end
-				l_classes := Void
 
 				if l_in_classes.count > 0 then
 					l_format_context.put_new_line
@@ -873,7 +872,6 @@ feature {NONE} -- Implementation functions
 					end
 					l_format_context.exdent
 				end
-				l_in_classes := Void
 
 				if l_out_classes.count > 0 then
 					l_format_context.put_new_line
@@ -901,7 +899,6 @@ feature {NONE} -- Implementation functions
 					end
 					l_format_context.exdent
 				end
-				l_out_classes := Void
 
 				if
 					l_over_classes.count > 0 and then
@@ -940,7 +937,6 @@ feature {NONE} -- Implementation functions
 					l_format_context.exdent
 					l_format_context.put_new_line
 				end
-				l_over_classes := Void
 			end
 
 			l_format_context.exdent
@@ -1165,7 +1161,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

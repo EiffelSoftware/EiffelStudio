@@ -306,8 +306,8 @@ feature {NONE} -- Implementation
 			Result :=
 				(a_str = Void and a_other = Void) or else
 				(attached a_str as l_str and then l_str.is_empty and then a_other = Void) or else
-				(attached a_other as l_other and then l_other.is_empty and then a_str = Void) or else
-				(attached a_str as l_str and then attached a_other as l_other and then l_str.is_case_insensitive_equal (l_other))
+				(a_other /= Void and then a_other.is_empty and then a_str = Void) or else
+				(attached a_str as l_str and then a_other /= Void and then l_str.is_case_insensitive_equal (a_other))
 		end
 
 	updated_fingerprint: like fingerprint
@@ -363,7 +363,7 @@ invariant
 	id_not_void: target_id /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

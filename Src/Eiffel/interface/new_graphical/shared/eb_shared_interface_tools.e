@@ -72,7 +72,7 @@ feature {NONE} -- Shared tools access
 	argument_dialog_is_valid: BOOLEAN
 			-- Is `argument_dialog' valid?
 		do
-			Result := (argument_dialog /= Void)
+			Result := argument_dialog /= Void
 		end
 
 feature {NONE} -- Shared tools change
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

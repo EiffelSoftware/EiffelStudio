@@ -127,13 +127,11 @@ feature -- Update
 		local
 			index: INTEGER
 			f: E_FEATURE
-			body_index: INTEGER
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := bs.routine
 			if f.is_debuggable then
 				index := bs.index
-				body_index := bs.body_index
 				bpm := Debugger_manager.breakpoints_manager
 				bpm.disable_user_breakpoint (f, index)
 

@@ -72,8 +72,7 @@ feature -- Status
 	is_equal (other: like Current): BOOLEAN
 			-- Compare the names
 		do
-			Result := (other /= Void) and then
-				(name.is_equal (other.name))
+			Result := other /= Void and then name.is_equal (other.name)
 		end
 
 feature -- Element change
@@ -115,7 +114,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

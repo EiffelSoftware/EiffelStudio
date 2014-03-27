@@ -232,7 +232,7 @@ feature -- Basic operations
 					action_array := l_arrayed_list.to_array
 				end
 				check action_array /= Void end
-				do_agent := (agent procedure_array_call (action_array))
+				do_agent := agent procedure_array_call (action_array)
 			end
 			undo_proc ?= undo_procedure
 			if undo_proc /= Void then
@@ -245,7 +245,7 @@ feature -- Basic operations
 					undo_array := l_arrayed_list.to_array
 				end
 				check undo_array /= Void end
-				undo_agent := (agent procedure_array_call (undo_array))
+				undo_agent := agent procedure_array_call (undo_array)
 			end
 			create undo_pair.make (undo_agent, do_agent)
 			undo_pair.set_name (a_name)
@@ -408,7 +408,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

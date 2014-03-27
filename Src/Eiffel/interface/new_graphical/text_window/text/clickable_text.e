@@ -404,8 +404,8 @@ feature {NONE} -- Implementation
 	search_eis_entry_in_note_clause (a_index: detachable INDEX_AS; a_class: detachable CLASS_I; a_feat: detachable FEATURE_I)
 			-- Search EIS entry in the context.
 		do
-			if attached a_index as l_index then
-				last_eis_entry_and_source_as := found_eis_entry (l_index, a_class, a_feat)
+			if a_index /= Void then
+				last_eis_entry_and_source_as := found_eis_entry (a_index, a_class, a_feat)
 			else
 				last_eis_entry_and_source_as := Void
 			end
@@ -418,10 +418,10 @@ feature {NONE} -- Implementation
 		local
 			l_eis_extractor: ES_EIS_CLASS_EXTRACTOR
 		do
-			if attached a_class as l_class then
-				create l_eis_extractor.make_no_extract (l_class, True)
-				if attached a_feature as l_f then
-					Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, l_f.feature_name_id)
+			if a_class /= void then
+				create l_eis_extractor.make_no_extract (a_class, True)
+				if a_feature /= Void then
+					Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, a_feature.feature_name_id)
 				else
 					Result := l_eis_extractor.source_ast_from_note_clause_ast (a_index, 0)
 				end
@@ -485,7 +485,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

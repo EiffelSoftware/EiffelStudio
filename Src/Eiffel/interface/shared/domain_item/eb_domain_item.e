@@ -132,7 +132,7 @@ feature -- Comparison
 		local
 			l_target_id: STRING
 		do
-			if (is_target_item and then other.is_target_item) then
+			if is_target_item and then other.is_target_item then
 				l_target_id := id_of_target (workbench.universe.target)
 				Result := (id.is_empty and then other.id.is_equal (l_target_id)) or else
 						  (other.id.is_empty and then id.is_equal (l_target_id)) or else
@@ -314,7 +314,7 @@ invariant
 	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
 note
-        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2014, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

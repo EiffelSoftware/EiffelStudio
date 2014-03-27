@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 		do
 			if is_selected /= an_is_selected then
 				is_selected := an_is_selected
-				if is_selected = True then
+				if is_selected then
 					rectangle.set_line_width (uml_cluster_line_width * 2)
 					label_rectangle.set_line_width (uml_cluster_line_width * 2)
 				else
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

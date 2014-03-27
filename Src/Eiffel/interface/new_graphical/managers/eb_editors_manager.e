@@ -1445,7 +1445,7 @@ feature {NONE} -- Agents
 
 					-- If `l_editor' is fake editor, `editor_drawing_area' is void
 					if
-						attached {EV_DRAWING_AREA} a_editor.editor_drawing_area as draw and then
+						attached a_editor.editor_drawing_area as draw and then
 						(draw.is_displayed and draw.is_sensitive)
 					then
 						a_editor.editor_drawing_area.set_focus
@@ -1897,7 +1897,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

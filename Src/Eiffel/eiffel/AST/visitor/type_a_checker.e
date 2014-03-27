@@ -555,6 +555,12 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
+	process_local (a_type: LOCAL_TYPE_A)
+			-- Process `a_type'.
+		do
+			last_type := a_type
+		end
+
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)
 			-- Process `a_type'.
 		do

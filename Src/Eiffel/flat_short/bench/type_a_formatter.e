@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Process a TYPE_A for formatting in a TEXT_FORMATTER_DECORATOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -119,6 +119,12 @@ feature {TYPE_A} -- Visitors
 
 	process_like_feature (a_type: LIKE_FEATURE)
 			-- Process `a_type'.
+		do
+			ctxt.process_string_text (a_type.dump, Void)
+		end
+
+	process_local (a_type: LOCAL_TYPE_A)
+			-- <Precursor>
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end

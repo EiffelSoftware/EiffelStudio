@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Unknown type of a local variable."
 
 class
@@ -14,6 +14,7 @@ inherit
 			internal_conform_to,
 			is_computable,
 			is_equivalent,
+			process,
 			same_as
 		end
 
@@ -24,20 +25,33 @@ create
 
 feature {NONE} -- Initialization
 
-	make (p: like position)
+	make (p: like position; any_type: TYPE_A; context_class: CLASS_C)
 			-- Initialize a type for a local at position `p'.
 		do
-			create lower_bound.make (0)
-			create upper_bound.make (0)
+			create lower_bound.make (1)
+			create upper_bound.make (1)
 			position := p
+			is_computable := True
+			lower_bound.extend (Void, [context_class, none_type.as_attached_type, False])
+			upper_bound.extend (Void, [context_class, any_type, False])
 		ensure
 			position_set: position = p
 		end
 
 feature -- Status report
 
-	is_computable: BOOLEAN = True
+	is_computable: BOOLEAN
 			-- <Precursor>
+			-- This is set to `False' when type computation depends on types that were not computed yet or when associated type set changes.
+
+feature -- Status setting
+
+	reset
+			-- Prepare this object to a new cycle of type information collection.
+		do
+				-- Assume that the type information collected so far is stable.
+			is_computable := True
+		end
 
 feature -- Access
 
@@ -80,43 +94,109 @@ feature -- Comparison
 			Result := attached {LOCAL_TYPE_A} other as t and then is_equivalent (t)
 		end
 
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR)
+			-- <Precursor>
+		do
+			v.process_local (Current)
+		end
+
+	process_lower (v: TYPE_A_VISITOR)
+			-- Process all lower bounds with `v'.
+		do
+			across
+				lower_bound as i
+			loop
+				i.key.type.process (v)
+			end
+		end
+
 feature -- Type inference
 
 	minimum: detachable TYPE_A
 			-- Minimum type that can replace this type declaration.
-		local
-			t: like lower_bound.key_for_iteration
 		do
-			if lower_bound.count = 0 then
-					-- No assignments to variables of this type.
-					-- Check upper bound.
-				if upper_bound.count = 1 then
-						-- Use this type.
-					t := upper_bound.key_for_iteration
-					Result := t.type
-					if not Result.is_computable then
-							-- The type cannot be computed yet.
-						Result := Void
-					end
+				-- Return non-void result only when the type is computable.
+			if is_computable then
+					-- If upper bound is expanded, it should be used.
+				if attached upper_approximation as u and then u.is_expanded then
+					Result := u
 				else
-						-- No assignments of this variable, use "NONE".
-					Result := none_type
+					Result := lower_approximation
 				end
-			elseif lower_bound.count = 1 then
+			end
+		end
+
+	maximum: detachable TYPE_A
+			-- Maximum type that can replace this type declaration.
+		do
+				-- Return non-void result only when the type is computable.
+			if is_computable then
+				Result := upper_approximation
+			end
+		end
+
+	lower_approximation: detachable TYPE_A
+			-- Approximate type that can replace this type declaration.
+			-- Contrary to `minimum' does not take into account `is_computable' flag.
+		do
+			Result := approximation (lower_bound, upper_bound, conform_to_agent)
+		end
+
+	upper_approximation: detachable TYPE_A
+			-- Approximate type that can replace this type declaration.
+			-- Contrary to `maximum' does not take into account `is_computable' flag.
+		do
+			Result := approximation (upper_bound, lower_bound, reverse_conform_to_agent)
+		end
+
+	approximation (target_bound: like lower_bound; constraint_bound: like lower_bound; is_conforming: like conform_to_agent): detachable TYPE_A
+			-- Approximate type that can replace this type declaration that is the closest one to `target_bound' and matches `constraint_bound'
+			-- using `is_conforming' to check that the types conform.
+		require
+			not target_bound.is_empty
+		do
+			if target_bound.count = 1 then
 					-- All assignments to variables of this type use the same source type.
 					-- Check that this type conforms to all types from `upper_bound'.
-				lower_bound.start
-				t := lower_bound.key_for_iteration
-				Result := t.type
-				if not Result.is_computable then
-						-- The type cannot be computed yet.
-					Result := Void
-				elseif not across upper_bound as c all Result.conform_to (c.key.context, c.key.type) end then
+				target_bound.start
+				Result := target_bound.key_for_iteration.type
+				if not across constraint_bound as c all is_conforming (Result, c.key.type, c.key.context) end then
 						-- There are types to which found type does not conform.
-					Result := none_type
+					Result := unknown_type
 				end
 			else
-					-- Complex case, leave it for future.
+					-- TODO: Find a target  bound to which all known target bounds conform.
+					-- TODO: Check that all target bounds conform to all constraint bounds.
+			end
+		end
+
+	feature_call (name_id: like {FEATURE_I}.feature_name_id; context_class: CLASS_C): detachable TUPLE [descriptor: FEATURE_I; site: CL_TYPE_A; target: TYPE_A]
+			-- Information about a call to a feature with the name correponding to `name_id' called on the current type in `context_class':
+			-- descriptor: feature descriptor
+			-- site: class type with the  feature
+			-- target: target type (may be different from "site" if it is a formal generic, acnhored type, etc.)
+		do
+			if attached lower_approximation as t then
+				feature_finder.find (name_id, t, context_class)
+				if attached feature_finder.found_feature as f then
+					Result := [f, feature_finder.found_site, t]
+				end
+			end
+		end
+
+	operator_call (name_id: like {FEATURE_I}.alias_name_id; context_class: CLASS_C): detachable TUPLE [descriptor: FEATURE_I; site: TYPE_A; target: TYPE_A]
+			-- Information about an operator call with the operator name correponding to `name_id' called on the current type in `context_class':
+			-- descriptor: feature descriptor
+			-- site: class type with the  feature
+			-- target: target type (may be different from "site" if it is a formal generic, acnhored type, etc.)
+		do
+			if attached lower_approximation as t then
+				feature_finder.find_by_alias (name_id, t, context_class)
+				if attached feature_finder.found_feature as f then
+					Result := [f, feature_finder.found_site, t]
+				end
 			end
 		end
 
@@ -149,13 +229,21 @@ feature {TYPE_A} -- Helpers
 			add_upper_bound (a_context_class, other, a_in_generic)
 		end
 
-feature {NONE} -- Type bounds
+feature {LOCAL_TYPE_A} -- Type bounds
 
 	lower_bound: HASH_TABLE [NONE, TUPLE [context: CLASS_C; type: TYPE_A; in_generic: BOOLEAN]]
 			-- Lower bounds of the type.
+		attribute
+		ensure
+			not Result.is_empty
+		end
 
 	upper_bound: like lower_bound
 			-- Upper bounds of the type.
+		attribute
+		ensure
+			not Result.is_empty
+		end
 
 feature {NONE} -- Modification
 
@@ -163,51 +251,82 @@ feature {NONE} -- Modification
 			-- Add type `other' as a lower bound of the type in `context_class'.
 			-- `in_generic' tells whether the type appears in a generic type.
 		do
-			add_bound (lower_bound, context_class, other, in_generic, conform_to_agent)
+			add_bound (lower_bound, context_class, other, in_generic, conform_to_agent, agent (t: LOCAL_TYPE_A): like lower_bound do Result := t.lower_bound end)
 		end
 
 	add_upper_bound (context_class: CLASS_C; other: TYPE_A; in_generic: BOOLEAN)
 			-- Add type `other' as a upper bound of the type in `context_class'.
 			-- `in_generic' tells whether the type appears in a generic type.
 		do
-			add_bound (upper_bound, context_class, other, in_generic, reverse_conform_to_agent)
+			add_bound (upper_bound, context_class, other, in_generic, reverse_conform_to_agent, agent (t: LOCAL_TYPE_A): like lower_bound do Result := t.upper_bound end)
 		end
 
 	add_bound (bound: like lower_bound;
 		context_class: CLASS_C;
 		other: TYPE_A;
 		in_generic: BOOLEAN;
-		is_conforming: like conform_to_agent)
+		is_conforming: like conform_to_agent;
+		other_bound: FUNCTION [ANY, TUPLE [LOCAL_TYPE_A], like lower_bound])
 			-- Add type `other' as a bound of the type in `context_class' to `bound'
-			-- using `conformance_test' to check that one type conforms to another one.
+			-- using `is_conforming' to check that one type conforms to another one
+			-- and a function `other_bound' to access the corresponding bound of `other'
+			-- if it appears to be of type `{LOCAL_TYPE_A}'.
 			-- `in_generic' tells whether the type appears in a generic type.
 		local
-			t: like lower_bound.key_for_iteration
+			new_bound: like lower_bound.key_for_iteration
+			is_new_bound_inserted: BOOLEAN
+			is_old_bound_removed: BOOLEAN
 		do
-				-- Check if the new lower bound is conforms to an existing one.
-			if bound.is_empty or else other.is_computable and then across bound as i all not is_conforming (other, i.key.type, context_class) end then
-					-- This is a new lower bound.
-					-- Remove any existing bound that conform to it.
+			if same_as (other) then
+					-- Nothing to do.
+			elseif attached {LOCAL_TYPE_A} other as t then
+					-- Add bounds from `other'.
+				across
+					other_bound (t) as b
+				loop
+					add_bound (bound, context_class, b.key.type, in_generic, is_conforming, other_bound)
+				end
+			elseif attached {UNKNOWN_TYPE_A} other then
+					-- Record that the type is not computable.
+				is_computable := False
+			else
+					-- Remove any existing bound that conforms to the new one.
 				from
+						-- Check from the beginning of the type list.
 					bound.start
-					if not bound.is_empty and then not bound.key_for_iteration.type.is_computable then
-							-- Remove uncomputable type.
-						bound.remove (bound.key_for_iteration)
-					end
+						-- Insert a new bound if there are none.
+					is_new_bound_inserted := bound.after
 				until
 					bound.after
 				loop
-					if is_conforming (bound.key_for_iteration.type, other, context_class) then
-							-- Existing lower bound can be replaced with a new one.
+					if is_conforming (other, bound.key_for_iteration.type, context_class) then
+							-- `other' conforms to one of the existing types, so no changes to the `bound' are required.
+							-- But `other' may be more precise, so use it instead of existing same type (if any).
+						is_old_bound_removed := other.same_as (bound.key_for_iteration.type)
+					else
+							-- This is a new known bound.
+							-- Record that the type is not computable.
+						is_computable := False
+						is_old_bound_removed := is_conforming (bound.key_for_iteration.type, other, context_class)
+					end
+					if is_old_bound_removed then
+							-- Existing lower bound is replaced with a new one.
+						is_new_bound_inserted := True
+							-- Remove old bound.
 						bound.remove (bound.key_for_iteration)
 					else
+							-- Advance to next bound.
 						bound.forth
 					end
 				end
-					-- Record new information about conforming types.
-				t := [context_class, other, in_generic]
-				t.compare_objects
-				bound.force (Void, t)
+					-- Add a new bound if required.
+				if is_new_bound_inserted then
+						-- Prepare a new dependency tuple.
+					new_bound := [context_class, other, in_generic]
+					new_bound.compare_objects
+						-- Record new information about the conforming type.
+					bound.force (Void, new_bound)
+				end
 			end
 		end
 
@@ -231,6 +350,12 @@ feature {NONE} -- Helper
 					do
 						Result := t.conform_to (c, s)
 					end
+		end
+
+	feature_finder: TYPE_A_FEATURE_FINDER
+			-- Facility to lookup for a feature in a given type.
+		once
+			create Result
 		end
 
 note

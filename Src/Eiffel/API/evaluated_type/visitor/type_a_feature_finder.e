@@ -11,6 +11,7 @@ class
 inherit
 	TYPE_A_VISITOR
 		redefine
+			default_create,
 			is_type_valid,
 			is_valid,
 			process_multi_formal_a
@@ -20,10 +21,31 @@ inherit
 		export
 			{NONE} all
 			{ANY} names_heap
+		redefine
+			default_create
 		end
 
-	SHARED_AST_CONTEXT export {NONE} all end
-	SHARED_WORKBENCH export {NONE} all end
+	SHARED_AST_CONTEXT
+		export {NONE} all
+		redefine
+			default_create
+		end
+
+	SHARED_WORKBENCH
+		export {NONE} all
+		redefine
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Creation
+
+	default_create
+		do
+			create found_features.make (0)
+		end
 
 feature -- Status report
 
@@ -60,20 +82,36 @@ feature -- Status report
 feature -- Access
 
 	found_feature: detachable FEATURE_I
-			-- Feature found by `find' (if any) which is called on the class identified by `found_site'
+			-- A feature found by `find' or `find_bye_routine_id' (if any) which is called on the class type identified by `found_site'.
+		do
+			if not found_features.is_empty then
+				Result := found_features [1].descriptor
+			end
+		end
 
-	found_site: CL_TYPE_A
-			-- Class type on which `found_feature' is called
+	found_site: detachable CL_TYPE_A
+			-- A class type on which `found_feature' is called.
+		do
+			if not found_features.is_empty then
+				Result := found_features [1].site
+			end
+		end
+
+	found_features: ARRAYED_LIST [TUPLE [descriptor: FEATURE_I; site: CL_TYPE_A; context: TYPE_A]]
+			-- Features ("descriptor") found by `find' or `find_bye_routine_id' (if any) at the associated class types ("site") when looking from.
 
 	has_multiple: BOOLEAN
 			-- Were multiple call sites found?
+		do
+			Result := found_features.count > 1
+		end
 
 feature {NONE} -- Context
 
 	context_class: CLASS_C
 			-- Class in which search is performed
 
-	feature_in_class: FUNCTION [TYPE_A_FEATURE_FINDER, TUPLE [CLASS_C], detachable FEATURE_I]
+	feature_in_class: FUNCTION [ANY, TUPLE [CLASS_C], detachable FEATURE_I]
 			-- Lookup procedure for {CL_TYPE_A}
 
 	find_in_renamed_type_a: PROCEDURE [TYPE_A_FEATURE_FINDER, TUPLE [RENAMED_TYPE_A]]
@@ -137,19 +175,12 @@ feature -- Search
 			attached_c: attached c
 			valid_t: is_type_valid_for_class (t, c)
 		do
-			has_multiple := False
-			found_feature := Void
-			found_site := Void
+			found_features.wipe_out
 			context_class := c
 			formal_generics := Void
 			feature_in_class := agent feature_in_class_by_name (n, ?)
 			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
 			t.process (Current)
-			if has_multiple then
-					-- More than one feature is found.
-				found_feature := Void
-				found_site := Void
-			end
 		ensure
 			same_name:
 				attached found_feature as f implies
@@ -162,6 +193,33 @@ feature -- Search
 				(s.base_class.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
 		end
 
+	find_by_alias (n: like {FEATURE_I}.alias_name_id; t: TYPE_A; c: CLASS_C)
+			-- Find feature of alias name ID `n' called on type `t' and make it available in `found_feature'
+			-- assuming that the code is written in `c'.
+		require
+			valid_n: names_heap.has (n)
+			attached_t: attached t
+			attached_c: attached c
+			valid_t: is_type_valid_for_class (t, c)
+		do
+			found_features.wipe_out
+			context_class := c
+			formal_generics := Void
+			feature_in_class := agent {CLASS_C}.feature_of_alias_id (n)
+			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
+			t.process (Current)
+		ensure
+			same_name:
+				attached found_feature as f implies
+				(f.alias_name_id = n or else True) -- Feature can be renamed in formal constraints
+			valid_site:
+				attached found_feature as f implies attached found_site
+			feature_from_class:
+				attached found_feature as f implies
+				attached found_site as s and then
+				(s.base_class.feature_of_alias_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
+		end
+
 	find_by_routine_id (r: INTEGER; t: TYPE_A; c: CLASS_C)
 			-- Find feature of routine ID `r' called on type `t' and make it available in `found_feature'
 			-- assuming that the code is written in `c'.
@@ -171,9 +229,7 @@ feature -- Search
 			attached_c: attached c
 			valid_t: is_type_valid_for_class (t, c)
 		do
-			has_multiple := False
-			found_feature := Void
-			found_site := Void
+			found_features.wipe_out
 			context_class := c
 			formal_generics := Void
 			feature_in_class := agent (f: INTEGER; s: CLASS_C): detachable FEATURE_I
@@ -224,8 +280,13 @@ feature {TYPE_A} -- Visitor
 				attached t.base_class as c and then
 				attached feature_in_class.item ([c]) as f
 			then
-				found_site := t
-				found_feature := f
+				if not attached found_feature as h or else
+					h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set)
+				then
+						-- Found next feature.
+						-- TODO: provide valid context.
+					found_features.extend ([f, t, t])
+				end
 			end
 		end
 
@@ -238,8 +299,6 @@ feature {TYPE_A} -- Visitor
 	process_formal_a (t: FORMAL_A)
 			-- <Precursor>
 		local
-			last_feature: detachable FEATURE_I
-			last_site: like found_site
 			g: like formal_generics
 		do
 			g := formal_generics
@@ -254,18 +313,7 @@ feature {TYPE_A} -- Visitor
 					context_class.constraints (t.position).constraining_types (context_class) as c
 				loop
 					find_in_renamed_type_a.call ([c.item])
-					if attached found_feature as f then
-						if attached last_feature as h and then (h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set)) then
-							has_multiple := True
-						else
-								-- Record found data for future use.
-							last_feature := f
-							last_site := found_site
-						end
-					end
 				end
-				found_feature := last_feature
-				found_site := last_site
 			end
 		ensure then
 			t_registered: attached formal_generics as f and then f.has (t)
@@ -300,6 +348,12 @@ feature {TYPE_A} -- Visitor
 			-- <Precursor>
 		do
 			t.conformance_type.process (Current)
+		end
+
+	process_local (t: LOCAL_TYPE_A)
+			-- <Precursor>
+		do
+			t.process_lower (Current)
 		end
 
 	process_manifest_integer_a (t: MANIFEST_INTEGER_A)
@@ -398,7 +452,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

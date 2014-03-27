@@ -1976,7 +1976,23 @@ feature {NONE} -- Implementation
 									-- Feature is not found.
 								if not is_target_known then
 										-- Unknown target.
-									set_type (unknown_type, a_name)
+									if attached {LOCAL_TYPE_A} a_type.actual_type as t and then
+										attached t.feature_call (a_name.name_id, context.current_class) as f
+									then
+											-- Lookup for a feature in a set of possible types.
+										l_result_type := f.descriptor.type.formal_instantiation_in (f.target.as_implicitly_detachable, f.site.as_implicitly_detachable, context.current_class.class_id)
+										if attached l_arg_types then
+											l_result_type := l_result_type.actual_argument_type (l_arg_types)
+										end
+										set_type (l_result_type, a_name)
+										last_calls_target_type := f.site
+										last_access_writable := f.descriptor.is_attribute
+										last_feature_name_id := f.descriptor.feature_name_id
+										last_routine_id_set := f.descriptor.rout_id_set
+									else
+											-- Propagate information that the result type is unknown.
+										set_type (unknown_type, a_name)
+									end
 								elseif l_is_multiple_constraint_case then
 										-- In case of a multi constraint we throw a VTMC1 error instead of a VEEN.
 									create l_vtmc1
@@ -2123,27 +2139,19 @@ feature {NONE} -- Visitor
 			l_error_level := error_level
 			process_expressions_list_for_tuple (l_as.expressions)
 			if error_level = l_error_level then
-				if across last_expressions_type as e some not e.item.is_known end then
-						-- There is an unknown type in the list, so the resulting type of tuple is not known as well.
-					last_tuple_type := Void
-					set_type (unknown_type, l_as)
-					check
-						not_is_byte_node_enabled: not is_byte_node_enabled
-					end
-				else
-						-- Update type stack
-					create l_tuple_type.make (system.tuple_id, last_expressions_type)
-					l_tuple_type.set_frozen_mark
-						-- Type of tuple is always attached
-					l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
+					-- Update type stack
+				create l_tuple_type.make (system.tuple_id, last_expressions_type)
+				l_tuple_type.set_frozen_mark
+					-- Type of tuple is always attached
+				l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
+				if across last_expressions_type as e all e.item.is_known end then
 					instantiator.dispatch (l_tuple_type, context.current_class)
-					last_tuple_type := l_tuple_type
-					set_type (l_tuple_type, l_as)
-
-					if is_byte_node_enabled then
-						l_list ?= last_byte_node
-						create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type, l_tuple_type.create_info)
-					end
+				end
+				last_tuple_type := l_tuple_type
+				set_type (l_tuple_type, l_as)
+                                if is_byte_node_enabled then
+					l_list ?= last_byte_node
+					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type, l_tuple_type.create_info)
 				end
 			else
 				reset_types
@@ -2290,8 +2298,6 @@ feature {NONE} -- Visitor
 						l_type_a := l_last_types.i_th (1)
 						if not l_type_a.is_known then
 							l_is_expression_unknown := True
-								-- Add an upper bound to flag this type as used.
-							unknown_type.backward_conform_to (l_current_class, l_type_a).do_nothing
 						end
 						l_is_attached := l_type_a.is_attached
 						i := 2
@@ -2369,21 +2375,18 @@ feature {NONE} -- Visitor
 						l_is_attached := True
 					end
 					if not l_has_error then
-						if l_is_expression_unknown then
-								-- There is an expression of unknown type.
-							l_array_type := Void
-						else
-							if l_is_attached then
-									-- Respect attachment status of the elements.
-								l_type_a := l_type_a.as_attached_in (l_current_class)
-							end
-							create l_generics.make (1)
-							l_generics.extend (l_type_a)
-							create l_array_type.make (system.array_id, l_generics)
-								-- Type of a manifest array is always frozen.
-							l_array_type.set_frozen_mark
-								-- Type of a manifest array is always attached.
-							l_array_type := l_array_type.as_attached_in (l_current_class)
+						if l_is_attached then
+								-- Respect attachment status of the elements.
+							l_type_a := l_type_a.as_attached_in (l_current_class)
+						end
+						create l_generics.make (1)
+						l_generics.extend (l_type_a)
+						create l_array_type.make (system.array_id, l_generics)
+							-- Type of a manifest array is always frozen.
+						l_array_type.set_frozen_mark
+							-- Type of a manifest array is always attached.
+						l_array_type := l_array_type.as_attached_in (l_current_class)
+						if not l_is_expression_unknown then
 							instantiator.dispatch (l_array_type, l_current_class)
 						end
 					end
@@ -3417,6 +3420,7 @@ feature {NONE} -- Visitor
 			l_rescue: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			l_check_count: like maximum_inference_count
 			old_is_byte_node_enabled: BOOLEAN
+			had_untyped_local: BOOLEAN
 		do
 			f := current_feature
 			l_needs_byte_node := is_byte_node_enabled
@@ -3578,13 +3582,27 @@ feature {NONE} -- Visitor
 						-- Compute types of local variables.
 						-- Uncomputed types are allowed if this is not the last iteration.
 					resolve_locals (l_check_count > 1)
-						-- Adjust inference count if required.
+						-- Adjust inference count if there are no more untyped locals during this and previous iteration.
 					if not has_untyped_local then
-							-- Perform final iteration.
-						l_check_count := 1
-							-- Restore code generation flags.
-						is_byte_node_enabled := old_is_byte_node_enabled
-						l_needs_byte_node := old_is_byte_node_enabled
+							-- Check if all local types were resolved at the previous step.
+							-- Perform one more iteration to make sure the fixed point is reached.
+							-- Set `has_untyped_local' to `True' to be able to call `resolve_locals'.
+						has_untyped_local := True
+						if not had_untyped_local then
+								-- Assign real types to locals.
+							resolve_locals (False)
+								-- Flag that this is going to be a real pass rather than just type computation.
+							l_check_count := 1
+								-- Restore code generation flags.
+							is_byte_node_enabled := old_is_byte_node_enabled
+							l_needs_byte_node := old_is_byte_node_enabled
+						end
+							-- Record last status of untyped locals.
+							-- If there are no untyped locals during 2 iterations then the fixed-point is reached.
+						had_untyped_local := False
+					else
+							-- Record last status of untyped locals.
+						had_untyped_local := True
 					end
 				end
 			variant
@@ -4062,6 +4080,10 @@ feature {NONE} -- Visitor
 						-- Local found
 					l_local_info.set_is_used (True)
 					l_type := l_local_info.type
+					if attached {LOCAL_TYPE_A} l_type as t and then attached t.minimum as m then
+							-- Use type approximation.
+						l_type := m
+					end
 					if l_type.is_known then
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
@@ -4281,6 +4303,10 @@ feature {NONE} -- Visitor
 								l_feature := a_feature
 							end
 						end
+					elseif attached {LOCAL_TYPE_A} l_target_type as t and then attached t.feature_call (l_feature_name.name_id, context.current_class) as f then
+						l_feature := f.descriptor
+						l_target_type := f.target
+						l_class := f.site.base_class
 					else
 						l_feature := a_feature
 					end
@@ -4331,7 +4357,7 @@ feature {NONE} -- Visitor
 									l_return_type := l_feature.type
 								end
 
-								compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, l_return_type,
+								compute_routine (l_feature, True, False, l_class.class_id, l_target_type, l_return_type,
 										l_as, l_access, l_target_node)
 
 								if l_needs_byte_node then
@@ -4345,10 +4371,12 @@ feature {NONE} -- Visitor
 									end
 								end
 							else
-								compute_routine (l_table, l_feature, not l_feature.type.is_void,l_feature.has_arguments,
+								compute_routine (l_feature, not l_feature.type.is_void,l_feature.has_arguments,
 											l_class.class_id, l_target_type, l_feature.type, l_as, l_access, l_target_node)
 							end
-							instantiator.dispatch (last_type, context.current_class)
+							if last_type.is_known then
+								instantiator.dispatch (last_type, context.current_class)
+							end
 						end
 					end
 				end
@@ -4392,6 +4420,7 @@ feature {NONE} -- Visitor
 			l_vtmc_error: VTMC
 			l_vtmc4: VTMC4
 			l_is_controlled: BOOLEAN
+			l_target_type: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -4402,7 +4431,8 @@ feature {NONE} -- Visitor
 				-- Check operand
 			l_as.expr.process (Current)
 
-			if attached last_type as l_target_type then
+			l_target_type := last_type
+			if attached l_target_type then
 				if l_target_type.is_separate then
 					validate_separate_target (l_as.expr)
 					l_is_controlled := is_controlled
@@ -4507,6 +4537,15 @@ feature {NONE} -- Visitor
 						elseif l_last_constrained.has_associated_class then
 							l_last_class := l_last_constrained.base_class
 							l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
+						elseif
+							attached {LOCAL_TYPE_A} l_last_constrained as t and then
+							attached t.operator_call (names_heap.id_of (l_as.prefix_feature_name), l_context_current_class) as f
+						then
+							l_prefix_feature := f.descriptor
+							l_last_constrained := f.site
+							l_last_class := l_last_constrained.base_class
+							l_target_type := f.target
+							last_calls_target_type := l_last_constrained
 						end
 					end
 				end
@@ -4861,22 +4900,33 @@ feature {NONE} -- Visitor
 								check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
 								l_error := last_alias_error
 							end
-						elseif l_left_type.is_known then
-							if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
-								check last_calls_target_type /= Void end
-								if l_left_constrained = Void then
-									l_left_constrained := last_calls_target_type
-								end
-							else
-								l_error := last_alias_error
-								if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
-									l_target_conv_info := context.last_conversion_info
-									if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
-										l_right_constrained := last_calls_target_type
-										l_left_constrained := l_right_constrained
-										l_error := Void
-									else
-										l_target_conv_info := Void
+						else
+							if
+								attached {LOCAL_TYPE_A} l_left_type as t and then
+								attached t.operator_call (names_heap.id_of (l_as.infix_function_name), l_context_current_class) as f
+							then
+								l_left_constrained := f.site
+								l_class := l_left_constrained.base_class
+								l_left_type := f.target
+								l_target_type := l_left_type
+							end
+							if l_left_type.is_known then
+								if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+									check last_calls_target_type /= Void end
+									if l_left_constrained = Void then
+										l_left_constrained := last_calls_target_type
+									end
+								else
+									l_error := last_alias_error
+									if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
+										l_target_conv_info := context.last_conversion_info
+										if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+											l_right_constrained := last_calls_target_type
+											l_left_constrained := l_right_constrained
+											l_error := Void
+										else
+											l_target_conv_info := Void
+										end
 									end
 								end
 							end
@@ -5128,8 +5178,6 @@ feature {NONE} -- Visitor
 	process_bin_eq_as (l_as: BIN_EQ_AS)
 		local
 			l_left_type, l_right_type: TYPE_A
-			l_attached_left_type: TYPE_A
-			l_attached_right_type: TYPE_A
 			l_left_expr, l_right_expr: EXPR_B
 			l_conv_info: CONVERSION_INFO
 			l_binary: BINARY_B
@@ -5160,19 +5208,15 @@ feature {NONE} -- Visitor
 				if not is_inherited then
 					l_as.set_class_id (class_id_of (l_left_type))
 				end
-				if l_left_type.is_attached then
-					l_attached_left_type := l_left_type
-				else
-					l_attached_left_type := l_left_type.as_attached_type
-				end
-				if l_right_type.is_attached then
-					l_attached_right_type := l_right_type
-				else
-					l_attached_right_type := l_right_type.as_attached_type
-				end
+					-- Check if right/left hand side types conform to their counterparts
+					-- including the case when they conform to the detachable versions.
+					-- The detachable variants are separated and protected for efficiency reasons,
+					-- as otherwise it would be easier to compare to the detachable versions from the beginning.
 				if
-					not (l_attached_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
-					l_attached_right_type.conform_to (context.current_class, l_left_type.actual_type))
+					not (l_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
+					l_right_type.conform_to (context.current_class, l_left_type.actual_type) or else
+					l_right_type.actual_type.is_attached and then l_left_type.conform_to (context.current_class, l_right_type.actual_type.as_detachable_type) or else
+					l_left_type.actual_type.is_attached and then l_right_type.conform_to (context.current_class, l_left_type.actual_type.as_detachable_type))
 				then
 					if not is_inherited then
 						if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
@@ -8499,6 +8543,15 @@ feature {NONE} -- Feature lookup
 					context.init_error (vuex)
 					vuex.set_location (l)
 					last_alias_error := vuex
+				elseif
+					attached {LOCAL_TYPE_A} base_target_type as x and then
+					attached x.operator_call (names_heap.id_of (n), c) as q
+				then
+					base_target_type := q.site
+					target_class := base_target_type.base_class
+					f := q.descriptor
+						-- Update target type.
+					last_type := q.target
 				elseif base_target_type.is_known then
 						-- Check if bracket feature exists.
 					target_class := base_target_type.base_class
@@ -8648,7 +8701,7 @@ feature {NONE} -- Parenthesis alias
 						-- Process call to bracket feature
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
-					process_call (t, Void, id_feature_name, alias_feature, p.meaningful_content, False, False, True, False, False)
+					process_call (constrained_target_type, Void, id_feature_name, alias_feature, p.meaningful_content, False, False, True, False, False)
 					is_qualified_call := l_is_qualified_call
 					if error_level = l_error_level and then attached nested_b then
 						if l_is_multi_constraint then
@@ -8904,6 +8957,13 @@ feature {NONE} -- Implementation
 						current_target_type := Void
 					end
 					l_as.item.process (Current)
+					if attached {LOCAL_TYPE_A} last_type as t and then attached t.minimum as m then
+							-- Use most appropriate type instead of a variable one.
+						last_type := m
+					elseif attached last_type as t and then not last_type.is_known then
+							-- Use NONE for the time being.
+						last_type := unknown_type
+					end
 					l_type_list.extend (last_type)
 					i := i + 1
 					l_as.forth
@@ -9816,11 +9876,10 @@ feature {NONE} -- Implementation: overloading
 feature {NONE} -- Agents
 
 	compute_routine (
-			a_table: FEATURE_TABLE; a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
+			a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
 			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: BYTE_NODE)
 			-- Type of routine object.
 		require
-			valid_table: a_table /= Void
 			a_target_type_not_void: a_target_type /= Void
 			valid_feature: is_byte_node_enabled or a_has_args implies a_feature /= Void;
 			no_byte_code_for_attribute: is_byte_node_enabled implies not a_feature.is_attribute
@@ -10796,7 +10855,8 @@ feature {NONE} -- Implementation: checking locals
 								-- Check an expanded local type
 
 							if l_solved_type.is_void then
-								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i))
+									-- TODO: Add a new standard type descriptor for "detachable separate ANY".
+								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i, system.any_type.as_detachable_type.as_separate, context.current_class))
 							else
 								l_local_info.set_type (l_solved_type)
 							end
@@ -10850,26 +10910,29 @@ feature {NONE} -- Implementation: checking locals
 			loop
 				l := c.item
 				if attached {LOCAL_TYPE_A} l.type as x then
+						-- Update local type information.
 						-- Check if the type was computed earlier.
 					r := t [x]
 					if not attached r then
-							-- The type was not computed yet.
-							-- Compute it now.
-						r := x.minimum
+							-- The type was not computed.
+							-- Compute the type now.
+						local_type_a_resolver.resolve (x)
+						r := local_type_a_resolver.last_type
 					end
-						-- Check if the type is computed.
-					if not attached r then
-							-- The type is not computed.
-						if is_untyped_local_allowed then
-								-- The type may be computed on a next iteration of type inference.
+					if is_untyped_local_allowed then
+							-- The type may be changed on a next iteration of type inference.
+						if not attached r then
+								-- Record that fixed-point is not reached yet.
 							has_untyped_local := True
-								-- Recompute the type on the next iteration.
-							create {LOCAL_TYPE_A} r.make (x.position)
-						else
-								-- The type cannot be computed.
-								-- Force the type to be "NONE".
-							r := none_type
 						end
+							-- Prepare type collector for the next iteration.
+						x.reset
+						r := x
+					elseif not attached r or else not r.is_known then
+							-- Record that fixed-point cannot be reached or does not exist.
+							-- The type cannot be computed.
+							-- Force the type to be "NONE".
+						r := none_type
 					end
 						-- Update local type information.
 					l.set_type (r)
@@ -10914,6 +10977,12 @@ feature {NONE} -- Implementation: checking locals
 			-- Empty locals that are used when processing inherited assertions.
 		once
 			create Result.make (10)
+		end
+
+	local_type_a_resolver: LOCAL_TYPE_A_RESOLVER
+			-- Resolver for types of locals without type declarations.
+		once
+			create Result.make
 		end
 
 feature {NONE} -- Variable initialization

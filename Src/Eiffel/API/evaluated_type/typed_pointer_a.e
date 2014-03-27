@@ -19,7 +19,7 @@ inherit
 			expanded_deferred, valid_expanded_creation, update_dependance,
 			has_expanded, dump, duplicate, reference_type, formal_instantiation_in,
 			is_equivalent, instantiation_of, same_as, instantiation_in,
-			is_full_named_type, evaluated_type_in_descendant, is_explicit,
+			is_full_named_type, evaluated_type_in_descendant, is_explicit, is_known,
 			generate_cid, generate_cid_array, generate_cid_init, has_actual,
 			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			adapted_in, skeleton_adapted_in, is_class_valid, is_valid_generic_derivation,
@@ -127,7 +127,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

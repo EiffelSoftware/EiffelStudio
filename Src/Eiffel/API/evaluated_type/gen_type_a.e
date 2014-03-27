@@ -20,7 +20,7 @@ inherit
 			same_as, is_equivalent, description, description_with_detachable_type, instantiated_description, is_explicit,
 			deep_actual_type, context_free_type, instantiation_in, has_actual,
 			actual_argument_type, update_dependance, hash_code,
-			is_full_named_type, process, evaluated_type_in_descendant,
+			is_full_named_type, is_known, process, evaluated_type_in_descendant,
 			generate_cid, generate_cid_array, generate_cid_init,
 			make_type_byte_code, il_type_name, generic_il_type_name,
 			generate_gen_type_il, adapted_in, internal_generic_derivation,
@@ -1415,6 +1415,23 @@ feature -- Primitives
 				i > count or else Result
 			loop
 				Result := generics.i_th (i).has_like_current
+				i := i + 1
+			end
+		end
+
+	is_known: BOOLEAN
+			-- <Precursor>
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+				Result := True
+			until
+				i > count or else not Result
+			loop
+				Result := generics.i_th (i).is_known
 				i := i + 1
 			end
 		end

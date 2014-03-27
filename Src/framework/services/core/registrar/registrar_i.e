@@ -102,8 +102,6 @@ feature -- Query
 			a_key_attached: a_key /= Void
 			a_key_is_valid_registration_key: is_valid_registration_key (a_key)
 		deferred
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Basic operations

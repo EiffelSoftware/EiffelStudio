@@ -9,7 +9,7 @@ feature {NONE} -- Initialization
 	make
 		local
 			i; j; k
-			x: ARRAY [INTEGER]
+			x
 			y
 		do
 			x := <<i>> -- target and source

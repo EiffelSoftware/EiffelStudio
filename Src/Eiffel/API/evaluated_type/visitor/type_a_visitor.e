@@ -120,6 +120,15 @@ feature {TYPE_A} -- Visitor
 		deferred
 		end
 
+	process_local (a_type: LOCAL_TYPE_A)
+			-- Process `a_type'.
+		require
+			is_valid: is_valid
+			a_type_not_void: a_type /= Void
+			a_type_valid: is_type_valid (a_type)
+		deferred
+		end
+
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)
 			-- Process `a_type'.
 		require
@@ -266,7 +275,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

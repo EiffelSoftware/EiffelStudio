@@ -187,6 +187,14 @@ feature {TYPE_A} -- Visitors
 			l_feat.append_name (text_formatter)
 		end
 
+	process_local (a_type: LOCAL_TYPE_A)
+			-- <Precursor>
+		do
+			text_formatter.add (ti_local_keyword)
+			text_formatter.add_char ({CHARACTER_32} '#')
+			text_formatter.add_int (a_type.position)
+		end
+
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)
 			-- Process `a_type'.
 		do

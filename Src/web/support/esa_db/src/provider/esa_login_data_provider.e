@@ -67,6 +67,27 @@ feature -- Access
 			disconnect
 		end
 
+
+
+	token_from_username (a_username: READABLE_STRING_32): detachable STRING
+			-- Activation token for user with username `a_username', if any.
+		require
+			attached_username: a_username /= Void
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.email_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationTokenFromUsername", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				Result := db_handler.read_string (1)
+			end
+			disconnect
+		end
+
 	membership_creation_date (a_username: STRING): detachable DATE_TIME
 			-- Creation date of membership of user with username `a_username'
 		require
@@ -231,6 +252,40 @@ feature -- Access
 			disconnect
 		end
 
+feature -- Element Settings
+
+	remove_user (a_username: STRING)
+			-- Remove user with username `a_username' from database.
+		require
+			attached_username: a_username /= Void
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveUser", l_parameters))
+			db_handler.execute_writer
+			disconnect
+		end
+
+
+	remove_token (a_token: STRING)
+				-- Remove token  `a_token' from database.
+		require
+			attached_token: a_token /= Void
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_token, 7), {ESA_DATA_PARAMETERS_NAMES}.registrationtoken_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveRegistrationToken", l_parameters))
+			db_handler.execute_writer
+			disconnect
+		end
+
+
 feature -- Factories
 
 	new_country (a_tuple: DB_TUPLE): ESA_COUNTRY
@@ -330,6 +385,35 @@ feature -- Status Report
 			end
 			disconnect
 		end
+
+
+
+	activation_valid (a_email, a_token: STRING): BOOLEAN
+			-- Is activation for user with email `a_email' using token `a_token' valid?
+		require
+			attached_email: a_email /= Void
+			attached_token: a_token /= Void
+		local
+			l_res, l_token: detachable STRING
+		do
+			l_token := token_from_email (a_email)
+			if l_token = Void then
+				if user_from_email(a_email) = Void then
+					--set_last_error ("Account not registered with that email address", "Activation validation")
+				else
+					-- Account already activated
+				    -- set_last_error ("Account with that email address has already been successfully activated", "Activation validation")
+				   Result := False
+				end
+			elseif a_token.same_string (l_token) then
+				remove_token (l_token)
+				Result := True
+			else
+--				set_last_error ("Specified token does not match one sent.", "Activation validation")
+				Result := False
+			end
+		end
+
 
 feature -- Connection
 

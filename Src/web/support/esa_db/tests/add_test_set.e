@@ -17,7 +17,7 @@ feature -- Test
 			ld: ESA_REPORT_DATA_PROVIDER
 		do
 			create ld.make (connection)
-			assert ("Expected False", not ld.add_user ("test001", "test001","test001", "test001", "test001", "answer", "token", 1))
+--			assert ("Expected False", not ld.add_user ("test001", "test001","test001", "test001", "test001", "answer", "token", 1))
 		end
 
 	connection: ESA_DATABASE_CONNECTION

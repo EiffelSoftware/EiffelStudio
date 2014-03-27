@@ -1,10 +1,12 @@
 note
-	description: "Template class to generate an CJ API with reports."
+	description: "Summary description for {ESA_CJ_RESPONSIBLE_PAGE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_CJ_REPORT_PAGE
+	ESA_CJ_RESPONSIBLE_PAGE
+
 
 inherit
 
@@ -25,12 +27,16 @@ feature {NONE} --Initialization
 			create p.make_current
 			p := p.appended ("/www")
 			set_template_folder (p)
-			set_template_file_name ("cj_reports.tpl")
+			set_template_file_name ("cj_responsible_reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view.reports.at (2), "reports")
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.categories, "categories")
+			template.add_value (a_view.priorities, "priorities")
 			template.add_value (a_view.status, "status")
+			template.add_value (a_view.severities, "severities")
+			template.add_value (a_view, "view")
+			template.add_value (a_view.index, "index")
 
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")

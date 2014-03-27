@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_REPORT_PROBLEM_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,8 +75,6 @@ feature -- HTTP Methods
 		end
 
 
-
-
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
@@ -144,6 +141,7 @@ feature -- Edit Report Problem
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			l_tuple := api_service.temporary_problem_report (a_report_id)
+			Result.set_id (a_report_id)
 			if attached l_tuple as l_row then
 				if attached l_row.synopsis as l_synopsis then
 					Result.set_synopsis (l_synopsis)
@@ -164,16 +162,16 @@ feature -- Edit Report Problem
 					Result.set_to_reproduce (l_toreproduce)
 				end
 				if attached l_row.priority_synopsis as l_synopsis then
-					set_selected_item_by_synopsis (Result.priorities, l_synopsis)
+					Result.set_priority (selected_item_by_synopsis (Result.priorities, l_synopsis))
 				end
 				if attached l_row.category_synopsis as l_category then
-					set_selected_item_by_synopsis (Result.categories, l_category)
+					Result.set_category (selected_item_by_synopsis (Result.categories, l_category))
 				end
 				if attached l_row.severity_synopsis as l_severity then
-					set_selected_item_by_synopsis (Result.severities, l_severity)
+					Result.set_severity (selected_item_by_synopsis (Result.severities, l_severity))
 				end
 				if attached l_row.class_synopsis as l_class then
-					set_selected_item_by_synopsis (Result.classes, l_class)
+					Result.set_selected_class (selected_item_by_synopsis (Result.classes, l_class))
 				end
 			end
 		end
@@ -218,6 +216,7 @@ feature -- Update Report Problem
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_report_id: INTEGER
+			l_form: ESA_REPORT_FORM_VIEW
 		do
 			to_implement ("Clean code and make it simpler")
 			create l_rhf
@@ -226,17 +225,21 @@ feature -- Update Report Problem
 				if attached {STRING_32} current_user_name (req) as l_user then
 						-- Logged in user
 					to_implement ("Check user roles")
-					if attached extract_form_data (req) as l_form then
-					 	if is_valid (req) then
-					  		update_report_problem_internal (req, l_id.integer_value)
-							if media_variants.is_acceptable then
-								if attached media_variants.media_type as l_type then
-									l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
-								end
+					if media_variants.is_acceptable then
+						if attached media_variants.media_type as l_type then
+							l_form := extract_form_data (req, l_type)
+							l_form.set_id (l_id.integer_value)
+							if l_form.is_valid_form then
+								update_report_problem_internal (req, l_form)
+								l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
 							else
-								l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+								l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, l_form)
 							end
+						else
+							l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
 						end
+					else
+						l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
 					end
 				else -- Not a logged in user
 					if media_variants.is_acceptable then
@@ -263,19 +266,18 @@ feature -- Update Report Problem
 		end
 
 
-	update_report_problem_internal (req: WSF_REQUEST; a_report_id: INTEGER)
+	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW)
 			-- Update problem report
-		require
-			is_valid: is_valid (req)
 		local
 			l_reproduce: STRING_32
 		do
-			create l_reproduce.make_empty
-			if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer and then attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer and then attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer and then attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer and then attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 and then attached {WSF_STRING} req.form_parameter ("release") as l_release and then attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis and then attached {WSF_STRING} req.form_parameter ("environment") as l_environment and then attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-					create l_reproduce.make_from_string (l_to_reproduce)
-				end
-				api_service.update_problem_report (a_report_id, l_priority.value, l_severity.value, l_category.value, l_class.value, l_confidential.integer_value.to_boolean.out, l_synopsis.value, l_release.value, l_environment.value, l_description.value, l_reproduce)
+			l_reproduce := ""
+			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
+				   attached a_form.environment as l_environment and then attached a_form.description as l_description then
+				   if  attached a_form.to_reproduce as ll_reproduce then
+				     l_reproduce := ll_reproduce
+				   end
+				api_service.update_problem_report (a_form.id, a_form.priority.out, a_form.severity.out, a_form.category.out, a_form.selected_class.out, a_form.confidential.out, l_synopsis, l_release, l_environment, l_description, l_reproduce)
 			end
 		end
 
@@ -287,6 +289,7 @@ feature -- Initialize Report Problem
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_report_id: INTEGER
+			l_form: ESA_REPORT_FORM_VIEW
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
@@ -294,22 +297,21 @@ feature -- Initialize Report Problem
 					-- Logged in user
 					-- Extract data from the req
 				l_temp_report_id := api_service.new_problem_report_id (l_user)
-				if attached extract_form_data (req) as l_form then
-					if is_valid (req) then
-						initialize_report_problem_internal (req, l_temp_report_id)
+				if media_variants.is_acceptable then
+					if attached media_variants.media_type as l_type then
+						l_form := extract_form_data (req, l_type)
 						l_form.set_id (l_temp_report_id)
-						if media_variants.is_acceptable then
-							if attached media_variants.media_type as l_type then
-								l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
-							end
+						if l_form.is_valid_form then
+							initialize_report_problem_internal (req, l_form)
+							l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
 						else
-							l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+							l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_error (req, res, l_form)
 						end
 					else
-							-- Validation Error
+						l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
 					end
 				else
-						-- Validation Error
+					l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
 				end
 			else -- Not a logged in user
 				if media_variants.is_acceptable then
@@ -324,44 +326,29 @@ feature -- Initialize Report Problem
 			end
 		end
 
-	initialize_report_problem_internal (req: WSF_REQUEST; a_report_id: INTEGER)
+	initialize_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW)
 			-- Initialize problem report
 		require
-			is_valid: is_valid (req)
+			is_valid: a_form.is_valid_form
 		local
 			l_reproduce: STRING_32
 		do
-			create l_reproduce.make_empty
-			if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer and then attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer and then attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer and then attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer and then attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 and then attached {WSF_STRING} req.form_parameter ("release") as l_release and then attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis and then attached {WSF_STRING} req.form_parameter ("environment") as l_environment and then attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-					create l_reproduce.make_from_string (l_to_reproduce)
-				end
-				api_service.initialize_problem_report (a_report_id, l_priority.value, l_severity.value, l_category.value, l_class.value, l_confidential.integer_value.to_boolean.out, l_synopsis.value, l_release.value, l_environment.value, l_description.value, l_reproduce)
+		    l_reproduce := ""
+			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
+			   attached a_form.environment as l_environment and then attached a_form.description as l_description then
+
+			    if  attached a_form.to_reproduce as ll_reproduce then
+			      l_reproduce := ll_reproduce
+			    end
+				api_service.initialize_problem_report (a_form.id, a_form.priority.out, a_form.severity.out, a_form.category.out, a_form.selected_class.out, a_form.confidential.out, l_synopsis, l_release, l_environment, l_description, l_reproduce)
 			end
-		end
 
-feature -- Status Report
-
-	is_valid (req: WSF_REQUEST): BOOLEAN
-			-- Are the form values valid?
-		do
-			Result := attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer and then
-					attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer and then
-					attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer and then
-					attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer and then
-					attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then
-						l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 and then
-					attached {WSF_STRING} req.form_parameter ("release") as l_release and then
-					attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis and then
-					attached {WSF_STRING} req.form_parameter ("environment") as l_environment and then
-					attached {WSF_STRING} req.form_parameter ("description") as l_description
 		end
 
 feature {NONE} -- Implementation
 
 
-
-	extract_form_data (req: WSF_REQUEST): ESA_REPORT_FORM_VIEW
+	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_REPORT_FORM_VIEW
 			-- Example form parameters
 			--"category=5"
 			--"severity=1"
@@ -373,81 +360,122 @@ feature {NONE} -- Implementation
 			--"environment=download"
 			--"description=test"
 			--"to_reproduce=test"
+		local
+			l_post: STRING
+			l_parser: JSON_PARSER
 		do
+
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 
-				--Category
-			if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer then
-				set_selected_item (Result.categories, l_category.integer_value)
+			if a_type.same_string ("application/vnd.collection+json") then
+				l_post := retrieve_data (req)
+				create l_parser.make_parser (l_post)
+				if attached {JSON_OBJECT} l_parser.parse as jv and l_parser.is_parsed then
+					if attached {JSON_OBJECT}jv.item ("template") as l_template and then
+						attached {JSON_ARRAY}l_template.item ("data") as l_data then
+								--		 <"name":  "category", "prompt": "Category", "value": "">,
+								--        <"name": "severity", "prompt": "Severity", "value": "">,
+								--        <"name": "priority", "prompt": "Priority", "value": "">,
+								--        <"name": "class", "prompt": "Class", "value": "">,
+								--        <"name": "release", "prompt": "Release", "value": "">,
+								--        <"name": "confidential", "prompt": "Confidential", "value": "">,
+								--        <"name": "synopsis", "prompt": "Synopsis", "value": "">,
+								--        <"name": "environment", "prompt": "Environment", "value": "">,
+								--        <"name": "description", "prompt": "Description", "value": "">,
+								--        <"name": "to_reproduce", "prompt": "To Reproduce", "value": "">
+
+						if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("category") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+							Result.set_category (l_value.item.to_integer)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("severity") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+							Result.set_severity (l_value.item.to_integer)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("priority") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+							Result.set_priority (l_value.item.to_integer)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("class") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+							Result.set_selected_class (l_value.item.to_integer)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("release") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+							Result.set_release (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
+							Result.set_confidential (l_value.item.to_boolean)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("synopsis") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+							Result.set_synopsis (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("environment") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+							Result.set_environment (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (9) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("description") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+							Result.set_description (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+						   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+							Result.set_to_reproduce (l_value.item)
+						end
+
+
+
+					end
+				end
 			else
-				to_implement ("Error Handling")
-			end
-				--Severity
-			if attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer then
-				set_selected_item (Result.severities, l_severity.integer_value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Priority
-			if attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer then
-				set_selected_item (Result.priorities, l_priority.integer_value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Class
-			if attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer then
-				set_selected_item (Result.classes, l_class.integer_value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Confidential
-			if attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 then
-				Result.set_confidential (l_confidential.integer_value.to_boolean)
-			else
-				to_implement ("Error Handling")
-			end
-				--Release
-			if attached {WSF_STRING} req.form_parameter ("release") as l_release then
-				Result.set_release (l_release.value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Synopsis
-			if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
-				Result.set_synopsis (l_synopsis.value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Environment
-			if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then
-				Result.set_environment (l_environment.value)
-			else
-				to_implement ("Error Handling")
-			end
-				--Description
-			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				Result.set_description (l_description.value)
-			else
-				to_implement ("Error Handling")
-			end
-				--To Reproduce (Optional)
-			if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-				Result.set_to_reproduce (l_to_reproduce.value)
+					--Category
+				if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer then
+					Result.set_category (l_category.integer_value)
+				end
+					--Severity
+				if attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer then
+					Result.set_severity (l_severity.integer_value)
+				end
+					--Priority
+				if attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer then
+					Result.set_priority (l_priority.integer_value)
+				end
+					--Class
+				if attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer then
+					Result.set_selected_class (l_class.integer_value)
+				end
+					--Confidential
+				if attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 then
+					Result.set_confidential (l_confidential.integer_value.to_boolean)
+				end
+					--Release
+				if attached {WSF_STRING} req.form_parameter ("release") as l_release then
+					Result.set_release (l_release.value)
+				end
+					--Synopsis
+				if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
+					Result.set_synopsis (l_synopsis.value)
+				end
+					--Environment
+				if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then
+					Result.set_environment (l_environment.value)
+				end
+					--Description
+				if attached {WSF_STRING} req.form_parameter ("description") as l_description then
+					Result.set_description (l_description.value)
+				end
+					--To Reproduce (Optional)
+				if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
+					Result.set_to_reproduce (l_to_reproduce.value)
+				end
 			end
 		end
 
-	set_selected_item (a_items: LIST [ESA_REPORT_SELECTABLE]; a_selected_item: INTEGER)
-			-- Set the current selected item
-		do
-			across
-				a_items as c
-			loop
-				c.item.set_selected_id (a_selected_item)
-			end
-		end
 
-	set_selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32)
-			-- Set the current selected item
+	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
+			-- Retrieve the current selected item
 		local
 			l_found: BOOLEAN
 			l_item: ESA_REPORT_SELECTABLE
@@ -459,7 +487,7 @@ feature {NONE} -- Implementation
 			loop
 				l_item := a_items.item_for_iteration
 				if a_synopsis.is_case_insensitive_equal (l_item.synopsis) then
-					l_item.set_selected_id (l_item.id)
+					Result := l_item.id
 					l_found := True
 				end
 				a_items.forth

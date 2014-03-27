@@ -38,6 +38,14 @@ feature {NONE} --Initialization
 			template.add_value (a_form.to_reproduce,"to_reproduce")
 			template.add_value (a_form.release, "release")
 			template.add_value (a_form.synopsis, "synopsis")
+			template.add_value (a_form.priority, "priority")
+			template.add_value (a_form.category, "category")
+			template.add_value (a_form.severity, "severity")
+			template.add_value (a_form.selected_class, "class")
+
+			if a_form.id > 0 then
+				template.add_value (a_form.id, "id")
+			end
 
 
 			if attached a_user as l_user then

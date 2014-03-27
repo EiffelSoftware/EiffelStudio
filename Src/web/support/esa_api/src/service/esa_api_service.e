@@ -288,6 +288,17 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
+
+	security_questions: LIST[ESA_SECURITY_QUESTION]
+			-- Security questions
+		do
+			create {ARRAYED_LIST[ESA_SECURITY_QUESTION]}Result.make (0)
+			login_provider.connect
+			across login_provider.security_questions as c loop Result.force (c.item)  end
+			login_provider.disconnect
+			is_successful := login_provider.is_successful
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
@@ -383,7 +394,33 @@ feature -- Basic Operations
 			data_provider.set_problem_report_responsible (a_number, a_contact_id)
 			is_successful := data_provider.is_successful
 		end
-		
+
+feature -- Element Settings
+
+	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER): BOOLEAN
+			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
+		require
+			attached_username: a_username /= Void
+			attached_first_name: a_first_name /= Void
+			attached_last_name: a_last_name /= Void
+		do
+			data_provider.add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token, a_question_id)
+			is_successful := data_provider.is_successful
+			if is_successful and then
+			   attached login_provider.user_from_username (a_username) then
+			   	Result := True
+			else
+				is_successful := login_provider.is_successful
+			end
+		end
+
+	remove_user (a_username: STRING_8)
+			-- Remove username `a_username' from database
+		do
+			login_provider.remove_user (a_username)
+			is_successful := login_provider.is_successful
+		end
+
 feature -- Status Report
 
 	is_active (a_username: STRING): BOOLEAN
@@ -408,7 +445,6 @@ feature -- Status Report
 			is_successful := login_provider.is_successful
 		end
 
-
 	is_report_visible_guest (a_report: INTEGER): BOOLEAN
 			-- Can user `guest' see report number `a_number'?
 		do
@@ -421,6 +457,14 @@ feature -- Status Report
 		do
 			Result := data_provider.is_report_visible (a_username, a_number)
 			is_successful := data_provider.is_successful
+		end
+
+
+	activation_valid (a_email, a_token: STRING): BOOLEAN
+			-- Is activation for user with email `a_email' using token `a_token' valid?
+		do
+			Result := login_provider.activation_valid (a_email, a_token)
+			is_successful := login_provider.is_successful
 		end
 
 

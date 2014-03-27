@@ -26,9 +26,15 @@ feature -- Access
 		-- Configuration
 
 	api_service: ESA_API_SERVICE
-			-- Service
+			-- api Service
 		do
 			Result := esa_config.api_service
+		end
+
+	email_service: ESA_EMAIL_SERVICE
+			-- Email Service
+		do
+			Result := esa_config.email_service
 		end
 
 end

@@ -117,6 +117,11 @@ feature -- View
 			end
 		end
 
+	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
+			-- Report form error
+		do
+		end
+
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- Update report responsible
 		do
@@ -199,6 +204,60 @@ feature -- View
 				end
 			end
 		end
+
+	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
+			-- Register form
+		local
+			l_hp: ESA_HTML_REGISTER_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
+				if attached l_hp.representation as l_register_page then
+					new_response_get (req, res, l_register_page)
+				end
+			end
+		end
+
+	post_register_page 	(req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post Register page
+		local
+			l_hp: ESA_HTML_POST_REGISTER_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				if attached l_hp.representation as l_register_page then
+					new_response_get (req, res, l_register_page)
+				end
+			end
+		end
+
+	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_ACTIVATION_VIEW)
+			-- Activation page
+		local
+			l_hp: ESA_ACTIVATION_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
+				if attached l_hp.representation as l_activation_page then
+					new_response_get (req, res, l_activation_page)
+				end
+			end
+		end
+
+	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Confirmation page
+		local
+			l_hp: ESA_CONFIRMATION_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				if attached l_hp.representation as l_confirmation_page then
+					new_response_get (req, res, l_confirmation_page)
+				end
+			end
+		end
+
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

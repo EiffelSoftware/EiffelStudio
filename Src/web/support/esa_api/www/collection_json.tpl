@@ -18,10 +18,16 @@
                 "prompt": "My Reports"
             >,
             <
+                "href": "{$host/}/report_form",
+                "rel": "create-form",
+                "prompt": "Report a Problem"
+            >,
+            <
                 "href": "{$host/}/logoff",
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
+
 
             {/if}
             {unless isset="$user"}
@@ -32,6 +38,18 @@
             >
             {/unless} 
 
-          ]
+          ],
+    "queries" :
+        [
+         <
+          "href" : "{$host/}/report_detail/",
+          "rel" : "search",
+          "prompt" : "Search by Report #...",
+          "data" :
+            [
+                <"name" : "search", "value" : "">
+            ]
+        >
+    ]      
   >
 >

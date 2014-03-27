@@ -43,7 +43,8 @@ feature {NONE} -- Initialization
 --			test_problem_reports_guest_2
 --			test_responsibles
 --			test_row_count_responsible_default
-			test_problem_report_responsibles
+--			test_problem_report_responsibles
+			test_token_from_username
 		end
 
 
@@ -117,12 +118,30 @@ feature {NONE} -- Initialization
 	test_add_user
 		local
 			ld: ESA_REPORT_DATA_PROVIDER
+			ll: ESA_LOGIN_DATA_PROVIDER
 		do
 			create ld.make (connection)
-			if ld.add_user ("test002", "test002","test002", "test002", "test002", "answer", "token", 1) then
+			create ll.make (connection)
+			ld.add_user ("test008", "test008","test006", "test008", "test008", "answer", "token", 1)
+			if attached ll.user_from_username ("test008") then
+				print ("User exist")
+			else
+				print ("user does not exist")
 			end
 		end
 
+
+	test_token_from_username
+		local
+			ll: ESA_LOGIN_DATA_PROVIDER
+		do
+			create ll.make (connection)
+			if attached ll.token_from_username ("jvelilla") as l_token then
+				print ("User activated")
+			else
+				print ("User not activated")
+			end
+		end
 
 	test_countries
 		local

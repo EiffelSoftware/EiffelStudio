@@ -528,6 +528,7 @@ test	non-conforming-equality			valid275 tcf pass validity conformance equality w
 test	missing-assigner-feature		valid276 tcf pass validity fixed
 test	insufficiently-exported-assigner-feature valid277 tcf fail validity assigner
 test	invalid-static-inspect-constant	 	valid278 tcf pass validity
+test	wrong-tuple-type-in-descendants	valid279 tcf fail validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

@@ -1392,7 +1392,7 @@ SQLTCHAR *odbc_qualifier_separator() {
 /* PARAMETER: qfy -- the content of qualifier                    */
 /* DESCRIPTION:                                                  */
 /*   Set qualifier to a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */
+/* to implement command "SQLTable(table_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len) {
@@ -1411,7 +1411,7 @@ void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len) {
 /* PARAMETER: owner- the owner                                   */
 /* DESCRIPTION:                                                  */
 /*   Set owner to     a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */
+/* to implement command "SQLTable(table_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_owner(void *con, SQLTCHAR *owner, int len) {

@@ -242,12 +242,10 @@ feature{NONE} -- Implementation
 		local
 			l_list: LIST [CLASS_C]
 			l_class: QL_CLASS
-			l_source_domain: like source_domain
 		do
 			l_list := candidate_class_table.item (a_class_id)
 			if l_list /= Void and then not l_list.is_empty then
 				create {ARRAYED_LIST [QL_CLASS]}Result.make (l_list.count)
-				l_source_domain := source_domain
 				from
 					l_list.start
 				until

@@ -95,11 +95,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if error then
-				Result := false;
-			else
-				Result := true;
-			end
+			Result := not error
 		end
 
 	init_expected_values
@@ -147,7 +143,6 @@ feature {NONE} -- Implementation
 		local
 			operator: STRING
 		do
-			create operator.make(0)
 			create Result.make(0)
 			operator := str.substring (idx, idx + 1)
 
@@ -196,11 +191,7 @@ feature {NONE} -- Implementation
 
 	is_computed_value ( value: STRING ) : BOOLEAN
 		do
-			if value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg") then
-				Result := true;
-			else
-				Result := false
-			end
+			Result := value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg")
 		end
 
 	is_bounded ( value: STRING ) : BOOLEAN
@@ -315,7 +306,7 @@ feature {NONE} -- Attributes
 	expects_bounded: BOOLEAN;
 		-- The expected type of the subquery 'value' is a bounded value
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

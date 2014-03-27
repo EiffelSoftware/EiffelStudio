@@ -207,7 +207,6 @@ feature {PROFILE_CONVERTER} -- analyzing
 			class_n, feature_n: STRING
 			dtype: INTEGER
 			eclass: CLASS_C
-			a_group: CONF_GROUP
 		do
 			if config.function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -247,7 +246,6 @@ end
 							eclass := Eiffel_system.class_of_dynamic_id (dtype, is_finalized_profile)
 							if eclass /= Void then
 								class_n := eclass.name_in_upper
-								a_group := eclass.group
 							else
 								class_n := dtype.out
 							end
@@ -430,9 +428,9 @@ end
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
 				until
-					not (next_char.is_alpha) and then
-					not (next_char = '_') and then
-					not (next_char.is_digit)
+					next_char.is_alpha and then
+					(next_char /= '_') and then
+					not next_char.is_digit
 				loop
 					token_string.extend (next_char)
 					string_idx := string_idx + 1
@@ -473,9 +471,9 @@ end
 					from
 						next_char := profile_string.item (string_idx)
 					until
-						not (next_char.is_alpha) and then
-						not (next_char = '_') and then
-						not (next_char.is_digit)
+						next_char.is_alpha and then
+						(next_char /= '_') and then
+						next_char.is_digit
 					loop
 						token_string.extend (next_char)
 						string_idx := string_idx + 1
@@ -513,8 +511,7 @@ end
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
 				until
-					not (next_char.is_digit) and then
-					not (next_char = '.')
+					not next_char.is_digit and then (next_char /= '.')
 				loop
 					token_string.extend (next_char)
 					string_idx := string_idx + 1
@@ -801,7 +798,7 @@ feature {NONE} -- Constants
 	Error_token: INTEGER = 7;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

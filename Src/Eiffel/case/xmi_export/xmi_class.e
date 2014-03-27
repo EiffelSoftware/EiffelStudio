@@ -24,7 +24,7 @@ create
 
 feature --Initialization
 
-	make (id: INTEGER; id_package: INTEGER c: CLASS_C)
+	make (id: INTEGER; id_package: INTEGER; c: CLASS_C)
 			-- Initialization of `Current'
 			-- assign `id' to `xmi_id'
 			-- assign `id_package' to `id_model'
@@ -77,7 +77,7 @@ feature -- Status report
 		require
 			current_involved_in_g:	generalizations.has (g)
 		do
-			Result := (g.subtype = Current)
+			Result := g.subtype = Current
 		ensure
 			result_set:	Result = (g.subtype = Current)
 		end
@@ -99,7 +99,7 @@ feature -- Status report
 			from
 				generalizations.start
 			until
-				(Result = true) or else generalizations.after
+				Result or else generalizations.after
 			loop
 				Result := is_subtype (generalizations.item)
 				generalizations.forth
@@ -113,7 +113,7 @@ feature -- Status report
 			from
 				generalizations.start
 			until
-				(Result = true) or else generalizations.after
+				Result or else generalizations.after
 			loop
 				Result := is_supertype (generalizations.item)
 				generalizations.forth
@@ -252,7 +252,7 @@ feature -- Action
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

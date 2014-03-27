@@ -590,7 +590,7 @@ feature {NONE} -- Element Change
 						text_formatter.add_indents (1)
 						text_formatter.add_string (l_string)
 					else
-						if (l_max_count - a_param_info.item.name.count > 0) then
+						if l_max_count - a_param_info.item.name.count > 0 then
 							create l_string.make_filled (' ', l_max_count - a_param_info.item.name.count)
 							text_formatter.add_string (l_string)
 						end
@@ -804,7 +804,7 @@ invariant
 	do_flat: not is_short
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

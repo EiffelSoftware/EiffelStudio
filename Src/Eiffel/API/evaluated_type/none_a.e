@@ -111,8 +111,9 @@ feature {TYPE_A} -- Helpers
 				-- Apply the same conformance rules as for a class type.
 			if
 				attached {ANNOTATED_TYPE_A} other.conformance_type as other_attachable_type and then
-				not other_attachable_type.is_expanded and then
-				(other_attachable_type.is_formal implies other_attachable_type.is_reference)
+				(not other_attachable_type.is_expanded and then
+				(other_attachable_type.is_formal implies other_attachable_type.is_reference) or else
+				is_attached)
 			then
 				Result := True
 				if a_context_class.lace_class.is_void_safe_conformance then
@@ -128,7 +129,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

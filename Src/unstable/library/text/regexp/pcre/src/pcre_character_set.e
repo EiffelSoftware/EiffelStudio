@@ -3,7 +3,7 @@ note
 	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
 	license: "MIT License"
 
-class CHARACTER_SET
+class PCRE_CHARACTER_SET
 
 create
 
@@ -162,7 +162,7 @@ feature -- Removal
 			is_empty: is_empty
 		end
 
-feature {CHARACTER_SET, BYTE_CODE} -- Implementation
+feature {PCRE_CHARACTER_SET, PCRE_BYTE_CODE} -- Implementation
 
 	set: SPECIAL [BOOLEAN]
 			-- Mapping character-code -> true/false

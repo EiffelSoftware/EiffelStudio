@@ -6,12 +6,22 @@ copy_raw test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
 copy_raw test2.e $CLUSTER test2.e
 copy_raw test3.e $CLUSTER test3.e
+copy_raw test4.e $CLUSTER test4.e
 
 compile_melted
 compile_result	ok
 
-execute_work	NONE	exec_output
+execute_work	NONE	exec_output1
 execute_result	ok
-compare		exec_output output
+compare		exec_output1 output1
+
+copy_raw test3_rev1.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output2
+execute_result	ok
+compare		exec_output2 output2
 
 test_end

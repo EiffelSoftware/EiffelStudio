@@ -156,13 +156,13 @@ feature -- Status report
 
 feature -- Access
 
-	byte_code: BYTE_CODE
+	byte_code: PCRE_BYTE_CODE
 			-- Byte code built during compilation
 
 	character_case_mapping: CASE_MAPPING
 			-- Character lower- and upper-case mapping
 
-	word_set: CHARACTER_SET
+	word_set: PCRE_CHARACTER_SET
 			-- Set of characters making up words
 
 feature -- Status setting
@@ -540,10 +540,10 @@ feature {NONE} -- Access
 	maxbackrefs: NATURAL
 			-- Maximum number of back references
 
-	internal_start_bits: CHARACTER_SET
+	internal_start_bits: PCRE_CHARACTER_SET
 			-- To avoid repeated allocations of the `start_bits' character set
 
-	start_bits: detachable CHARACTER_SET
+	start_bits: detachable PCRE_CHARACTER_SET
 			-- A set of starting characters. This will be filled in by the optimizer
 
 	first_character: INTEGER
@@ -1306,7 +1306,7 @@ feature {NONE} -- Compilation
 				-- We have to build a temporary character-map in case the
 				-- class contains only 1 character, because in that
 				-- case the compiled code doesn't use a character class.
-			class_set: CHARACTER_SET
+			class_set: PCRE_CHARACTER_SET
 			tmp_pat_index: INTEGER
 			posix_class, val: INTEGER
 			class_charcount: INTEGER
@@ -1926,7 +1926,7 @@ feature {NONE} -- Posix character classes
 			-- optional ^ and then a sequence of letters, terminated by a matching ":]" or
 			-- ".]" or "=]".
 		local
-			set: CHARACTER_SET
+			set: PCRE_CHARACTER_SET
 			i: INTEGER
 			terminator: INTEGER
 		do
@@ -2827,7 +2827,7 @@ feature {NONE} -- Constants
 			end_of_pattern: Result.item (Result.count) = '%U'
 		end
 
-	actual_set: CHARACTER_SET
+	actual_set: PCRE_CHARACTER_SET
 			-- Shared buffer for charater set
 		once
 			create Result.make_empty

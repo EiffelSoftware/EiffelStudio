@@ -16,7 +16,7 @@ feature -- Defaults
 			default_character_case_mapping_not_void: Result /= Void
 		end
 
-	default_word_set: CHARACTER_SET
+	default_word_set: PCRE_CHARACTER_SET
 			-- Set of characters making up words
 		once
 			create Result.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
@@ -27,7 +27,7 @@ feature -- Defaults
 
 feature -- Character sets
 
-	upper_set: CHARACTER_SET
+	upper_set: PCRE_CHARACTER_SET
 			-- Upper character set
 		once
 			create Result.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -36,7 +36,7 @@ feature -- Character sets
 			upper_set_not_empty: not Result.is_empty
 		end
 
-	lower_set: CHARACTER_SET
+	lower_set: PCRE_CHARACTER_SET
 			-- Lower character set
 		once
 			create Result.make ("abcdefghijklmnopqrstuvwxyz")
@@ -45,7 +45,7 @@ feature -- Character sets
 			lower_set_not_empty: not Result.is_empty
 		end
 
-	alpha_set: CHARACTER_SET
+	alpha_set: PCRE_CHARACTER_SET
 			-- Alphabetical character set
 		once
 			create Result.make_empty
@@ -56,7 +56,7 @@ feature -- Character sets
 			alpha_set_not_empty: not Result.is_empty
 		end
 
-	digit_set: CHARACTER_SET
+	digit_set: PCRE_CHARACTER_SET
 			-- Digit character set
 		once
 			create Result.make ("0123456789")
@@ -65,7 +65,7 @@ feature -- Character sets
 			digit_set_not_empty: not Result.is_empty
 		end
 
-	alnum_set: CHARACTER_SET
+	alnum_set: PCRE_CHARACTER_SET
 			-- Alphanumeric character set
 		once
 			create Result.make_empty
@@ -76,7 +76,7 @@ feature -- Character sets
 			alnum_set_not_empty: not Result.is_empty
 		end
 
-	xdigit_set: CHARACTER_SET
+	xdigit_set: PCRE_CHARACTER_SET
 			-- Hexadecimal digit character set
 		once
 			create Result.make ("0123456789abcdefABCDEF")
@@ -85,7 +85,7 @@ feature -- Character sets
 			xdigit_set_not_empty: not Result.is_empty
 		end
 
-	cntrl_set: CHARACTER_SET
+	cntrl_set: PCRE_CHARACTER_SET
 			-- Control character set
 		local
 			i: INTEGER
@@ -105,7 +105,7 @@ feature -- Character sets
 			cntrl_set_not_empty: not Result.is_empty
 		end
 
-	graph_set: CHARACTER_SET
+	graph_set: PCRE_CHARACTER_SET
 			-- Graph character set
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
@@ -114,7 +114,7 @@ feature -- Character sets
 			graph_set_not_empty: not Result.is_empty
 		end
 
-	print_set: CHARACTER_SET
+	print_set: PCRE_CHARACTER_SET
 			-- Printable character set
 		once
 			create Result.make (" !%"#$%%&%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
@@ -123,7 +123,7 @@ feature -- Character sets
 			print_set_not_empty: not Result.is_empty
 		end
 
-	punct_set: CHARACTER_SET
+	punct_set: PCRE_CHARACTER_SET
 			-- Punctuation character set
 		once
 			create Result.make ("!%"#$%%&%'()*+,-./:;<=>?@[\]^_`{|}~")
@@ -132,7 +132,7 @@ feature -- Character sets
 			punct_set_not_empty: not Result.is_empty
 		end
 
-	ascii_set: CHARACTER_SET
+	ascii_set: PCRE_CHARACTER_SET
 			-- Ascii character set
 		local
 			i: INTEGER
@@ -151,7 +151,7 @@ feature -- Character sets
 			ascii_set_not_empty: not Result.is_empty
 		end
 
-	space_set: CHARACTER_SET
+	space_set: PCRE_CHARACTER_SET
 			-- Space character set
 		once
 			create Result.make ("%T%N%F%R%/11/ ")
@@ -160,7 +160,7 @@ feature -- Character sets
 			space_set_not_empty: not Result.is_empty
 		end
 
-	meta_set: CHARACTER_SET
+	meta_set: PCRE_CHARACTER_SET
 			-- Meta character set
 		once
 			create Result.make ("*+?{^.$|()[")
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 				"print", "punct", "space", "word", "xdigit">>
 		end
 
-	class_sets: ARRAY [CHARACTER_SET]
+	class_sets: ARRAY [PCRE_CHARACTER_SET]
 			-- Must correspond to the list `class_names' above
 		once
 			Result := <<alpha_set, lower_set, upper_set, alnum_set, ascii_set, cntrl_set,

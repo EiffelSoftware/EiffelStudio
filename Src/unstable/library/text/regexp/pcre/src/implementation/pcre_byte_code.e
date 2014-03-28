@@ -3,7 +3,7 @@ note
 	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 
-class BYTE_CODE
+class PCRE_BYTE_CODE
 
 create
 	make
@@ -201,7 +201,7 @@ feature -- Element Change
 			appended: integer_item (old count) = v
 		end
 
-	append_character_set (a_set: CHARACTER_SET; a_negate: BOOLEAN)
+	append_character_set (a_set: PCRE_CHARACTER_SET; a_negate: BOOLEAN)
 			-- Append `a_set' to current byte code.
 		require
 			a_set_not_void: a_set /= Void

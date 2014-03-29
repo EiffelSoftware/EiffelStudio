@@ -141,7 +141,7 @@ feature -- Examples
 			-- Example with localization.
 		local
 			case_mapping: CASE_MAPPING
-			word_set: CHARACTER_SET
+			word_set: PCRE_CHARACTER_SET
 			regexp: REGULAR_EXPRESSION_MATCH_AND_REPLACE
 			res: STRING
 		do

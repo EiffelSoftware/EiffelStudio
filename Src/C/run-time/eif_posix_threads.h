@@ -158,7 +158,7 @@ rt_public typedef struct {
 #define EIF_CS_TYPE				pthread_mutex_t
 #define EIF_MUTEX_TYPE          pthread_mutex_t
 #define EIF_COND_TYPE			pthread_cond_t
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 rt_public typedef struct {
 	EIF_MUTEX_TYPE	*mutex;
 	EIF_COND_TYPE	*cond;

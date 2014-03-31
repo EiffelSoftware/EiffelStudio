@@ -880,7 +880,7 @@ rt_public int eif_pthread_sem_create (EIF_SEM_TYPE **sem, int shared, unsigned i
 	if (*sem == NULL) {
 		Result = T_CANNOT_CREATE_SEMAPHORE;
 	} else {
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 		if (shared) {
 				/* We do not support shared mutexes on Mac OS X. */
 			Result = T_UNSUPPORTED;
@@ -962,7 +962,7 @@ rt_public int eif_pthread_sem_destroy (EIF_SEM_TYPE *sem)
 	int Result;
 	if (sem) {
 #ifdef EIF_POSIX_THREADS
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 		if (eif_pthread_mutex_destroy(sem->mutex) == T_OK) {
 			if (eif_pthread_cond_destroy(sem->cond) == T_OK) {
 				Result = T_OK;
@@ -1016,7 +1016,7 @@ rt_public int eif_pthread_sem_post (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 	Result = eif_pthread_mutex_lock(sem->mutex);
 	if (Result == T_OK) {
 		sem->val += 1;
@@ -1072,7 +1072,7 @@ rt_public int eif_pthread_sem_wait (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 	Result = eif_pthread_mutex_lock(sem->mutex);
 	if (Result == T_OK) {
 		while ((sem->val == 0) && (Result == T_OK)) {
@@ -1135,7 +1135,7 @@ rt_private rt_inline int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, r
 #if defined(__SunOS_5_8) || defined (__SunOS_5_9) || (EIF_OS == EIF_OS_OPENBSD)
 	Result = T_NOT_IMPLEMENTED;
 #else
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 	int other_result;
 	Result = eif_pthread_mutex_lock(sem->mutex);
 	if (Result == T_OK) {
@@ -1208,7 +1208,7 @@ rt_public int eif_pthread_sem_trywait (EIF_SEM_TYPE *sem)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
-#if EIF_OS == EIF_OS_DARWIN
+#if (EIF_OS == EIF_OS_DARWIN) || (EIF_OS == EIF_OS_IPHONE)
 	Result = eif_pthread_sem_wait_with_timeout(sem, 0);
 	if (Result == T_TIMEDOUT) {
 		Result = T_BUSY;

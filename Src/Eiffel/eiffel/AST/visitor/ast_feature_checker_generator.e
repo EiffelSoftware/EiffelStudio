@@ -2435,15 +2435,18 @@ feature {NONE} -- Visitor
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
-				set_type (manifest_string_type, l_as)
-			else
+					l_simplified_string_type := manifest_string_type
+		else
 				check_type (l_as.type)
+				if attached {ANNOTATED_TYPE_A} last_type as l_last_type then
+					l_simplified_string_type := l_last_type.duplicate
+						-- Manifest string are always frozen.
+					l_simplified_string_type.set_frozen_mark
+				end
 			end
-			if attached {ANNOTATED_TYPE_A} last_type as l_last_type then
+			if l_simplified_string_type /= Void then
 					-- Constants are always of an attached type.
-				l_simplified_string_type := l_last_type.as_attached_in (context.current_class)
-					-- Manifest string are always frozen.
-				l_simplified_string_type.set_frozen_mark
+				l_simplified_string_type := l_simplified_string_type.as_attached_in (context.current_class)
 				set_type (l_simplified_string_type, l_as)
 				class_id := l_simplified_string_type.base_class.class_id
 				if attached system.string_8_class as c then
@@ -6751,6 +6754,14 @@ feature {NONE} -- Visitor
 				else
 						-- Type of a creation expression is always attached.
 					l_creation_type := l_creation_type.as_attached_in (context.current_class)
+						-- Type of a creation expression is frozen if this is a class type.
+					if
+						attached {DEANCHORED_TYPE_A} l_creation_type as l_type and then
+						attached l_type.duplicate as l_duplicated_type
+					then
+						l_duplicated_type.set_frozen_mark
+						l_creation_type := l_duplicated_type
+					end
 					set_type (l_creation_type, l_as)
 					instantiator.dispatch (l_creation_type, context.current_class)
 
@@ -8609,7 +8620,7 @@ feature {NONE} -- Predefined types
 	manifest_string_type: CL_TYPE_A
 			-- Actual string type
 		once
-			Result := system.string_8_class.compiled_class.actual_type
+			Result := system.string_8_class.compiled_class.actual_type.duplicate
 				-- Manifest string have a frozen type.
 			Result.set_frozen_mark
 		end

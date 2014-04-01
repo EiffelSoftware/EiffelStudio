@@ -182,6 +182,9 @@ feature {NONE} -- Initialization
 			fragment := a_uri.fragment
 			is_valid := a_uri.is_valid
 			is_corrected := a_uri.is_corrected
+		ensure
+			same_uri_string: string.same_string (a_uri.string)
+			is_same_uri: is_same_uri (a_uri)
 		end
 
 feature -- Basic operation		

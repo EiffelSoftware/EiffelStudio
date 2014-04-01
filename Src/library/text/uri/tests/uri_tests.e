@@ -35,6 +35,17 @@ feature -- Tests
 			assert ("path", uri.path.same_string ("/path"))
 		end
 
+	test_make_from_uri
+		local
+			uri: URI
+			uri2: URI
+		do
+			create uri.make_from_string ("file:///C:/foo/bar")
+			create uri2.make_from_uri (uri)
+			assert ("same uri", uri.is_same_uri (uri))
+			assert ("same string", uri.string.same_string (uri.string))
+		end
+
 	test_resolve
 		local
 			uri: URI

@@ -161,18 +161,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc'
+	cc='clang'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -miphoneos-version-min=7.1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk'
+	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -mios-simulator-version-min=7.1 -isysroot `xcode-select -print-path`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk'
 fi
-ccldflags=''
+ccldflags='-isysroot `xcode-select -print-path`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -mios-simulator-version-min=7.1'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++'
+	cpp='clang++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -210,7 +210,7 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld='$LD'
 else
-	ld='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ld'
+	ld='`xcode-select -print-path`/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ld'
 fi
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"

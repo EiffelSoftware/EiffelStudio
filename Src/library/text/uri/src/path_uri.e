@@ -88,6 +88,7 @@ feature {NONE} -- Initialization
 			p := a_path
 			if a_path.is_absolute then
 				is_abs := True
+				create host.make_empty
 			end
 			file_path := p
 			set_scheme ("file")

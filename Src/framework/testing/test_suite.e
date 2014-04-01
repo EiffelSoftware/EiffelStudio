@@ -224,7 +224,6 @@ feature -- Status setting: sessions
 	launch_session (a_session: TEST_SESSION_I)
 			-- <Precursor>
 		local
-			l_rota: ROTA_S
 			l_record: TEST_SESSION_RECORD
 		do
 			if current_output_session = Void then
@@ -240,7 +239,7 @@ feature -- Status setting: sessions
 				record_repository.append_record (l_record)
 				internal_running_sessions.force ([a_session, l_record])
 				session_launched_event.publish ([Current, a_session])
-				if attached rota.service and then l_rota.is_interface_usable and then not l_rota.has_task (a_session) then
+				if attached rota.service as l_rota and then l_rota.is_interface_usable and then not l_rota.has_task (a_session) then
 					l_rota.run_task (a_session)
 				end
 			elseif current_output_session = a_session then

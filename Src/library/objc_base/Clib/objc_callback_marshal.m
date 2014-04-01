@@ -9,6 +9,13 @@ indexing
 #include "objc_callback_marshal.h"
 #include <Foundation/Foundation.h>
 
+
+#if EIF_OS==EIF_OS_IPHONE
+/* There is no NSRect in iOS, only CGRect, defined in UIKit.h. */
+#include <UIKit/UIKit.h>
+#define NSRect CGRect
+#endif
+
 EIF_OBJECT callback_object;
 boolCallbackTYPE callback_bool;
 voidCallbackTYPE callback_void;

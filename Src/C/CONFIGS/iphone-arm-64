@@ -166,9 +166,9 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-arch armv7s -pipe -std=c99 -miphoneos-version-min=7.1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk'
+	ccflags='-arch arm64 -pipe -std=c99 -miphoneos-version-min=7.1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk'
 fi
-ccldflags='-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk -arch armv7s'
+ccldflags='-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk -arch arm64'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
@@ -201,7 +201,7 @@ warning_level='-Wall'
 wkoptimize="-O0"
 
 #Makefiles
-ar='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar'
+ar='ar'
 boehmgclib='gc'
 command_makefile='make -f'
 concurrent_prefix='c'
@@ -229,7 +229,7 @@ mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
-ranlib='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar ts'
+ranlib='ar ts'
 shared_prefix='lib'
 shared_suffix='.dylib'
 shared_rt_suffix='.dylib'

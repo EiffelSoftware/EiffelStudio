@@ -19,13 +19,13 @@
 #Computation/sizes
 byteorder='1234'
 pagesize='4096'
-alignbytes='4'
+alignbytes='8'
 doublesize='8'
 intsize='4'
 integer_64_size='8'
 floatsize='4'
-ptrsize='4'
-longsize='4'
+ptrsize='8'
+longsize='8'
 integer_32_size='4'
 integer_16_size='2'
 charsize='1'
@@ -37,7 +37,7 @@ lngpad_2='LNGPAD(2)'
 inttypes_include=''
 eif_integer_64_display='"lld"'
 eif_natural_64_display='"llu"'
-eif_pointer_display='"X"'
+eif_pointer_display='"lX"'
 eif_integer_64_constant='CAT2(x,LL)'
 eif_natural_64_constant='CAT2(x,ULL)'
 d_uint64_to_real='define'
@@ -161,18 +161,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang'
+	cc='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-arch armv7s -pipe -std=c99 -miphoneos-version-min=7.1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk'
+	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC -std=c99 -miphoneos-version-min=7.1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk'
 fi
-ccldflags='-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk -arch armv7s'
+ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++'
+	cpp='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/g++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -185,9 +185,9 @@ defvoidused='15'
 eif_sgi='undef'
 eif_solaris='undef'
 eif_windows='undef'
-eif_64_bits='undef'
+eif_64_bits='define'
 eif_os='EIF_OS_IPHONE'
-eif_arch='EIF_ARCH_ARM6'
+eif_arch='EIF_ARCH_X86_64'
 Mcc='Mcc'
 d_tls='undef'
 #Check value for next 2
@@ -201,7 +201,7 @@ warning_level='-Wall'
 wkoptimize="-O0"
 
 #Makefiles
-ar='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar'
+ar='ar'
 boehmgclib='gc'
 command_makefile='make -f'
 concurrent_prefix='c'
@@ -210,7 +210,7 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld='$LD'
 else
-	ld='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ld'
+	ld='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ld'
 fi
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
@@ -229,14 +229,14 @@ mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
-ranlib='/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ar ts'
+ranlib='ar ts'
 shared_prefix='lib'
 shared_suffix='.dylib'
 shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.14.05'
-sharedlink='gcc'
+sharedlink=$cc
 suffix='.a'
 wkeiflib='wkbench'
 

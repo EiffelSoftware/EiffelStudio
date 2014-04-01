@@ -121,6 +121,8 @@ feature
 				cecil_basket.extend ("eif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("idrs.o"); cecil_basket.finish
 				cecil_basket.extend ("posix_threads.o"); cecil_basket.finish
+				cecil_basket.extend ("memory_analyzer.o"); cecil_basket.finish
+				cecil_basket.extend ("offset.o"); cecil_basket.finish
 			else
 				cecil_basket := cecil_rt_basket
 				cecil_basket.extend ("MTmalloc.o"); cecil_basket.finish
@@ -169,6 +171,8 @@ feature
 				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
 				cecil_basket.extend ("MTposix_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTscoop.o"); cecil_basket.finish
+				cecil_basket.extend ("MTmemory_analyzer.o"); cecil_basket.finish
+				cecil_basket.extend ("MToffset.o"); cecil_basket.finish
 			end
 		end;
 
@@ -254,7 +258,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

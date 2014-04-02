@@ -41,13 +41,17 @@ feature {NONE} --Initialization
 			template.add_value (a_view.status, "status")
 			template.add_value (a_view.selected_status, "selected_status")
 			template.add_value (a_view.selected_category, "selected_category")
+			template.add_value (a_view.index, "index")
+			template.add_value (a_view.order_by,"orderBy")
+			template.add_value (a_view.direction,"dir")
+			template.add_value (a_view.size, "size")
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
 			end
 			if a_view.index < a_view.pages then
 				template.add_value (a_view.index+1, "next")
 			end
-			template.add_value (a_view.pages, "last")
+			template.add_value (a_view.pages + 1, "last")
 
 		 	template.add_value (a_view.user,"user")
 

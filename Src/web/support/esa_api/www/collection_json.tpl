@@ -27,14 +27,17 @@
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
-
-
             {/if}
             {unless isset="$user"}
             <
                 "href": "{$host/}/login",
                 "rel": "login",
                 "prompt": "Login"
+            >,
+             <
+                "href": "{$host/}/register",
+                "rel": "register",
+                "prompt": "Register"
             >
             {/unless} 
 

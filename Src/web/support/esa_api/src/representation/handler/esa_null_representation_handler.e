@@ -149,6 +149,62 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_STATUS])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+
+	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_SEVERITY])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+
+	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_CATEGORY])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_PRIORITY])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_USER])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	add_interaction_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
+			-- Interaction Form
+		do
+			generic_response (req, res)
+		end
+
+	interaction_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
+			-- Interaction Form Confirm.
+		do
+			generic_response (req, res)
+		end
+
+	interaction_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	interaction_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Interaction form redirect
+		do
+			generic_response (req, res)
+		end
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

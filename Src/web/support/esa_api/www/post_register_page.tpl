@@ -32,8 +32,6 @@
                   <br />
                   <p> An e-mail with an activation code was sent to your account.<br/>
                    Please check your email and use the provided link to <a href="{$host/}/activation">activate</a> your account.</p>
-                  <p><b>Or you could just press this neat little button to go home:</b></p>
-                  <a href="{$host/}" class="btn btn-large btn-info"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
                 </div>
                 <br />
           

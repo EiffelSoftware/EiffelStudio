@@ -54,6 +54,35 @@ feature -- Access
 			create Result.make (db_handler, agent new_report)
 		end
 
+	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER;a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER;  a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+			-- Problem reports for user with username `a_username'
+			-- Open reports only if `a_open_only', all reports otherwise.
+		local
+			l_parameters: STRING_TABLE[ANY]
+			l_query: STRING
+		do
+			create l_parameters.make (7)
+			l_parameters.put (a_rows_per_page, "RowsPerPage")
+			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
+			l_parameters.put (string_parameter (a_column, 30), "Column")
+			create l_query.make_from_string (Select_problem_reports_by_user_template)
+			if a_order = 1 then
+				l_query.replace_substring_all ("$ORD1", "ASC")
+				l_query.replace_substring_all ("$ORD2", "DESC")
+			else
+				l_query.replace_substring_all ("$ORD1", "DESC")
+				l_query.replace_substring_all ("$ORD2", "ASC")
+			end
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report)
+		end
+
+
 
 	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for guest users
@@ -70,6 +99,7 @@ feature -- Access
 			db_handler.execute_reader
 			create Result.make (db_handler, agent new_report)
 		end
+
 
 	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for guest users
@@ -401,6 +431,10 @@ feature -- Access
 			-- Number of last submitted pr if `commit_problem_report' was called successfully
 			-- 0 otherwise
 
+	last_interaction_id: INTEGER
+			-- Number of last submitted interaction_id if `commit_interaction' was called successfully
+
+
 	temporary_problem_report (a_id: INTEGER): detachable TUPLE[synopsis : detachable STRING;
 															   release: detachable STRING;
 															   confidential: detachable STRING;
@@ -479,6 +513,37 @@ feature -- Access
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportResponsibles", l_parameters))
 			db_handler.execute_reader
 			create Result.make (db_handler, agent new_reponsible)
+		end
+
+
+	temporary_interaction (a_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
+															   username: detachable READABLE_STRING_32;
+															   status: detachable READABLE_STRING_32;
+															   private: detachable READABLE_STRING_32
+															   ]
+			-- Temporary problem report interaction
+			--			Content,
+			--			Username,
+			--			Status,
+			--			Private,
+		local
+				l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				create Result.default_create
+				across 1 |..| 4 as i loop
+					if attached db_handler.read_string (i.item) as l_item then
+						Result[i.item] := l_item.as_string_32
+					end
+				end
+			end
+			disconnect
 		end
 
 
@@ -574,6 +639,31 @@ feature -- Basic Operations
 					--| Need to be updated to build the set based on user selection.
 				l_query.replace_substring_all ("$StatusSet","("+a_status+")")
 				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+				db_handler.execute_query
+				if not db_handler.after then
+					db_handler.start
+					if attached db_handler.read_integer_32 (1) as l_count then
+						Result := l_count
+					end
+				end
+				disconnect
+			end
+
+
+
+	row_count_problem_report_user (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): INTEGER
+				-- Number of problem reports for user with username `a_username'
+				-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status
+			local
+				l_parameters: STRING_TABLE[ANY]
+				l_query: STRING
+			do
+				create l_parameters.make (4)
+				l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+				l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+				l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
+				l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (select_row_count_problem_report_by_user, l_parameters))
 				db_handler.execute_query
 				if not db_handler.after then
 					db_handler.start
@@ -720,6 +810,75 @@ feature -- Basic Operations
 			disconnect
 		end
 
+	new_interaction_id (a_username: STRING; a_pr_number: INTEGER): INTEGER
+			-- Id of added interaction by user `a_username' to interactions of pr with number `a_pr_number'.
+		require
+			attached_username: a_username /= Void
+			valid_pr_number: a_pr_number > 0
+		local
+				l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (a_pr_number, {ESA_DATA_PARAMETERS_NAMES}.Number_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("AddTemporaryProblemReportInteraction", l_parameters))
+			db_handler.execute_reader
+
+			if not db_handler.after then
+				db_handler.start
+				if attached db_handler.read_integer_32 (1) as l_item then
+					Result := l_item
+				end
+			end
+			disconnect
+		end
+
+
+	initialize_interaction (a_interaction_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
+			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
+		require
+			attached_content: a_content /= Void
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (4)
+			l_parameters.put (a_interaction_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			l_parameters.put (a_content, {ESA_DATA_PARAMETERS_NAMES}.Content_param)
+			l_parameters.put (a_new_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			l_parameters.put (a_private, {ESA_DATA_PARAMETERS_NAMES}.Private_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("InitializeInteraction2", l_parameters))
+			db_handler.execute_writer
+			disconnect
+		end
+
+	commit_interaction (a_interaction_id: INTEGER)
+			-- Commit temporary interaction report `a_report_id'.
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_int: INTEGER
+		do
+--			set_last_interaction_id (l_int)
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_interaction_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("CommitInteraction", l_parameters))
+			db_handler.execute_writer
+
+				-- At the moment the following code is not needed
+--			if not db_handler.after then
+--				db_handler.start
+--				if attached db_handler.read_integer_32 (1) as l_item then
+--					l_int := l_item
+--				end
+--			end
+			disconnect
+--			if l_int > 0 then
+--				set_last_interaction_id (l_int)
+--			end
+		end
+
 feature -- Status Report
 
 	report_visible_guest ( a_number: INTEGER): BOOLEAN
@@ -779,6 +938,14 @@ feature {NONE} -- Implementation
 			set: last_problem_report_number = a_number
 		end
 
+	set_last_interaction_id (a_number: INTEGER)
+			-- Set `last_interaction_id' with `a_number'.
+		do
+			last_interaction_id := a_number
+		ensure
+			set: last_interaction_id = a_number
+		end
+
 	new_report (a_tuple: DB_TUPLE): ESA_REPORT
 		do
 			create Result.make (0, "Null", False)
@@ -821,8 +988,8 @@ feature {NONE} -- Implementation
 			end
 
 				--Confidential	
-			if attached {BOOLEAN} a_tuple.item (4) as  l_item_4 then
---				Result.set_confidential (l_item_4)
+			if attached db_handler.read_boolean (4) as l_item_4 then
+				Result.set_confidential (l_item_4)
 			end
 
 				--Environment
@@ -1190,6 +1357,60 @@ feature -- Queries
 						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
 						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
 						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+		]"
+
+
+
+	Select_problem_reports_by_user_template: STRING = "[
+			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, StatusID
+			 FROM(SELECT TOP (:RowsPerPage)
+				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, StatusID
+			FROM (
+				SELECT TOP ((:PageNumber)*:RowsPerPage)
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID,
+				ProblemReports.CategoryID, ProblemReports.ContactID
+				FROM ProblemReports
+				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
+				INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID and Username = :Username
+				WHERE 
+					((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+					AND
+					(
+						(
+							:OpenOnly = 0
+							AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
+						) OR (
+							:OpenOnly = 1
+							AND (((NOT ProblemReports.StatusID = 3) AND (NOT ProblemReports.StatusID = 5)) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE ((NOT StatusID = 3) AND (NOT StatusID = 5)))))
+						)
+					) 
+					ORDER BY :Column $ORD1
+				) as PAG
+				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID
+				INNER JOIN Memberships ON PAG.ContactID = Memberships.ContactID and Username = :Username
+				ORDER BY :Column $ORD2	
+			) as PAG2
+		  ORDER BY :Column $ORD1
+		]"
+
+
+	Select_row_count_problem_report_by_user: STRING = "[
+			SELECT COUNT (*)
+			FROM ProblemReports
+			INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
+			INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID and Username = :Username
+			WHERE 
+				((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+				AND
+				(
+					(
+						:OpenOnly = 0
+						AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
+					) OR (
+						:OpenOnly = 1
+						AND (((NOT ProblemReports.StatusID = 3) AND (NOT ProblemReports.StatusID = 5)) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE ((NOT StatusID = 3) AND (NOT StatusID = 5)))))
+					)
+				)
 		]"
 
 end

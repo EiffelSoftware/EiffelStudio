@@ -100,52 +100,52 @@
               <thead>
                 <tr>
                   <th># <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                   <th>Status
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
                   </th>
                   <th>Priority
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=priorityID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=priorityID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=priorityID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=priorityID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
                   </th>
                   <th>Severity
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=severityID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=severityID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=severityID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=severityID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
                   </th>
                   <th>Synopsis
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                   <th>Submitter
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=username&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=username&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=username&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=username&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                   
                   <th>Date
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                   <th>Responsible
                       <br>
                   </th>
                   <th>Category
                         <br> 
-                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                   <th>Release
                         <br>
-                        <a href="{$host/}/reports/{$index/}?orderBy=release&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=release&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=release&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=release&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                   </th>
                 </tr>
               </thead>
@@ -196,15 +196,14 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                  <!-- TODO fix -->
-                  <li><a href="{$host/}/reports?category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">First</a></li>
+                  <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">First</a></li>
                   {if isset="$prev"}
-                    <li><a href="{$host/}/reports/{$prev/}?category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Previous</a></li>
+                    <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Previous</a></li>
                   {/if}
                   {if isset="$next"}
-                  <li><a href="{$host/}/reports/{$next/}?category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Next</a></li>
+                  <li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Next</a></li>
                   {/if}
-                  <li><a href="{$host/}/reports/{$last/}?category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Last</a></li>
+                  <li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Last</a></li>
                 </ul>
           </div>
        </div>

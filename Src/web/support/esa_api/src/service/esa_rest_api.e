@@ -23,6 +23,8 @@ feature -- Initialization
 			configure_api_root
 			configure_api_report
 			configure_api_reports_user
+			configure_api_interaction_confirm
+			configure_api_interaction_report
 			configure_api_report_detail
 			configure_api_report_interaction
 			configure_api_report_form
@@ -31,6 +33,12 @@ feature -- Initialization
 			configure_api_login
 			configure_api_logoff
 			configure_api_activation
+			configure_api_status
+			configure_api_severity
+			configure_api_category
+			configure_api_priority
+			configure_api_responsible
+
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden ("www")
 			fhdl.set_directory_index (<<"index.html">>)
@@ -174,6 +182,86 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/activation", l_activation_handler, l_methods)
+		end
+
+	configure_api_status
+		local
+			l_status_handler: ESA_STATUS_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_status_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/status", l_status_handler, l_methods)
+		end
+
+	configure_api_severity
+		local
+			l_severity_handler: ESA_SEVERITY_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_severity_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/severity", l_severity_handler, l_methods)
+		end
+
+	configure_api_category
+		local
+			l_category_handler: ESA_CATEGORY_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_category_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/category", l_category_handler, l_methods)
+		end
+
+	configure_api_priority
+		local
+			l_priority_handler: ESA_PRIORITY_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_priority_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/priority", l_priority_handler, l_methods)
+		end
+
+	configure_api_responsible
+		local
+			l_responsible_handler: ESA_RESPONSIBLE_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_responsible_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/responsible", l_responsible_handler, l_methods)
+		end
+
+	configure_api_interaction_report
+		local
+			l_interaction_handler: ESA_INTERACTION_FORM_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_interaction_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_form", l_interaction_handler, l_methods)
+			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_form/{id}", l_interaction_handler, l_methods)
+		end
+
+
+	configure_api_interaction_confirm
+		local
+			l_interaction_handler: ESA_INTERACTION_CONFIRM_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_interaction_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_confirm/{id}", l_interaction_handler, l_methods)
 		end
 
 

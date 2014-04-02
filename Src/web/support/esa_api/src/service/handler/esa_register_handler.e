@@ -56,20 +56,16 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_register_view: ESA_REGISTER_VIEW
 		do
 			create l_register_view
 			create l_rhf
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
-                    l_register_view.set_questions (api_service.security_questions)
-					l_rhf.new_representation_handler (esa_config,l_type,media_variants).register_page (req, res, l_register_view)
-				end
+			if attached current_media_type (req) as l_type then
+                l_register_view.set_questions (api_service.security_questions)
+				l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register_view)
 			else
-				l_rhf.new_representation_handler (esa_config,"",media_variants).register_page (req, res, l_register_view)
+				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).register_page (req, res, l_register_view)
 			end
 		end
 
@@ -77,38 +73,34 @@ feature -- HTTP Methods
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Registe a new user
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_register: ESA_REGISTER_VIEW
 			l_successful: BOOLEAN
 		do
 			create l_rhf
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
-					l_register := extract_data_from_request (req)
-					if l_register.is_valid_form then
-						l_successful := add_user (l_register, req.absolute_script_url (""))
-						if l_successful then
+			if attached current_media_type (req) as l_type then
+				l_register := extract_data_from_request (req, l_type)
+				if l_register.is_valid_form then
+					l_successful := add_user (l_register, req.absolute_script_url (""))
+					if l_successful then
 							-- redirect to post register page
-							l_rhf.new_representation_handler (esa_config,l_type,media_variants).post_register_page (req, res)
-						else
-							--	register_error_ "Unable to send email to " + l_register.email + ". Please check email address or contact administrator."
-							remove_user (l_register)
-							l_register.set_questions (api_service.security_questions)
-							if attached l_register.email as l_email then
-								l_register.add_error ("Email", "Unable to send email to " + l_email + ". Please check email address or contact administrator.")
-							end
-							l_rhf.new_representation_handler (esa_config,l_type,media_variants).register_page (req, res, l_register)
-						end
+						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).post_register_page (req, res)
 					else
-						-- Validation errors				
+							--	register_error_ "Unable to send email to " + l_register.email + ". Please check email address or contact administrator."
+						remove_user (l_register)
+						l_register.set_questions (api_service.security_questions)
+						if attached l_register.email as l_email then
+							l_register.add_error ("Email", "Unable to send email to " + l_email + ". Please check email address or contact administrator.")
+						end
+						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register)
 					end
 				else
-					-- Media type error	
+					l_register.set_questions (api_service.security_questions)
+					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register)
 				end
 			else
-				-- Not acceptable	
+					-- Not acceptable
+				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).bad_request_page (req,res)
 			end
 		end
 
@@ -155,78 +147,86 @@ feature -- HTTP Methods
 		end
 
 
-	extract_data_from_request (req: WSF_REQUEST): ESA_REGISTER_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_REGISTER_VIEW
 			-- Is the form data populated?
 			-- first_name, last_name, user_email, user_name, password, check_password, question, answer_question
+		local
+				l_parser: JSON_PARSER
 		do
 			create Result
-			if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
-				Result.set_first_name (l_first_name.value)
-			end
-			if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
-				Result.set_last_name (l_last_name.value)
-			end
-			if attached {WSF_STRING}req.form_parameter ("user_email") as l_user_email then
-				Result.set_email (l_user_email.value)
-			end
-			if attached {WSF_STRING}req.form_parameter ("user_name") as l_user_name then
-				Result.set_user_name (l_user_name.value)
-			end
-			if attached {WSF_STRING} req.form_parameter ("password") as l_password then
-				Result.set_password (l_password.value)
-			end
-			if  attached {WSF_STRING} req.form_parameter ("check_password") as l_check_password then
-				Result.set_check_password (l_check_password.value)
-			end
-			if attached {WSF_STRING}req.form_parameter ("question") as l_question and then
-			   l_question.is_integer then
-				Result.set_question (l_question.integer_value)
-			end
-			if attached {WSF_STRING}req.form_parameter ("answer_question") as l_answer then
-				Result.set_answer (l_answer.value)
+			if a_type.same_string ("application/vnd.collection+json") then
+				create l_parser.make_parser (retrieve_data (req))
+				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+				   attached {JSON_OBJECT} jv.item ("template") as l_template and then
+				   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+							--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
+							-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
+							--  <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
+							--  <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
+							--  <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
+							--  <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
+							--  <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
+							--  <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
+						if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("first_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_first_name (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("last_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_last_name (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_email (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("user_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_user_name (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_password (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("check_password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_check_password (l_value.item)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("question") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  and then l_value.item.is_integer then
+							Result.set_question (l_value.item.to_integer)
+						end
+						if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+							l_name.item.same_string ("answer") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+							Result.set_answer (l_value.item)
+						end
+				end
+			else
+				create Result
+				if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
+					Result.set_first_name (l_first_name.value)
+				end
+				if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
+					Result.set_last_name (l_last_name.value)
+				end
+				if attached {WSF_STRING}req.form_parameter ("user_email") as l_user_email then
+					Result.set_email (l_user_email.value)
+				end
+				if attached {WSF_STRING}req.form_parameter ("user_name") as l_user_name then
+					Result.set_user_name (l_user_name.value)
+				end
+				if attached {WSF_STRING} req.form_parameter ("password") as l_password then
+					Result.set_password (l_password.value)
+				end
+				if  attached {WSF_STRING} req.form_parameter ("check_password") as l_check_password then
+					Result.set_check_password (l_check_password.value)
+				end
+				if attached {WSF_STRING}req.form_parameter ("question") as l_question and then
+				   l_question.is_integer then
+					Result.set_question (l_question.integer_value)
+				end
+				if attached {WSF_STRING}req.form_parameter ("answer_question") as l_answer then
+					Result.set_answer (l_answer.value)
+				end
 			end
 		end
-
-
-
-
-
-
---			-- Register user.
---		local
---			l_retried: BOOLEAN
---			l_string: SYSTEM_STRING
---			l_token: SYSTEM_STRING
---			l_security: EFA_SECURITY_PROVIDER
---		do
---			if is_valid and not l_retried then
---				register_error_label.set_text ("")
---				create l_security
---				l_token := l_security.token
---				from until {SYSTEM_STRING}.equals (l_token, server.url_encode (l_token)) loop
---						-- Loop ensure that we have a security token that does not contain characters that need encoding.
---						-- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
---						-- but the user will need to use an unencoded token if activation has to be done manually.
---					l_token := l_security.token
---				end
---				Data_provider.add_user (register_first_name.text, register_last_name.text, register_email.text, register_username.text.to_lower, register_password.text, register_answer.text, l_token, {SYSTEM_CONVERT}.to_int_32 (register_questions_list.selected_value))
---				if successful then
---					send_post_registration_email (register_email.text, l_token)
---					if successful then
---						register_error_label.set_text ("")
---						response.redirect (login_root (True) + "secure/post_register.aspx")
---					else
---						register_error_label.set_text ("Unable to send email to " + register_email.text + ". Please check email address or contact administrator.")
---						Data_provider.remove_user (register_username.text)
---					end
---				else
---					register_error_label.set_text (last_error_message)
---				end
---			else
---				register_error_label.set_text ("Registration could not complete, check input for invalid values.")
---			end
---		rescue
---			l_retried := True
---			retry
---		end
 end

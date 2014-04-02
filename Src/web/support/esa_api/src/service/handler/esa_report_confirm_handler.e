@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_REPORT_CONFIRM_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -69,32 +68,23 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			create l_rhf
-			media_variants := media_type_variants (req)
 			if attached {STRING_32} current_user_name (req) as l_user and then
 			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
 			   	api_service.commit_problem_report (l_id.integer_value)
 			   	api_service.remove_temporary_problem_report (l_id.integer_value)
 			   	to_implement ("l_number := Data_provider.last_problem_report_number")
 			   	to_implement ("send_new_report_email (l_number)")
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						l_rhf.new_representation_handler (esa_config,l_type,media_variants).report_form_confirm_redirect (req, res)
-					end
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).report_form_confirm_redirect (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config,"",media_variants).report_form_confirm_redirect (req, res)
+					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).report_form_confirm_redirect (req, res)
 				end
 			else -- Not a logged in user
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						create l_rhf
-						l_rhf.new_representation_handler (esa_config,l_type,media_variants).new_response_unauthorized (req, res)
-					end
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).new_response_unauthorized (req, res)
 				else
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config,"",media_variants).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
-
-
 end

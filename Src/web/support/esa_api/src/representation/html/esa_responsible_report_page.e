@@ -41,6 +41,7 @@ feature {NONE} --Initialization
 			template.add_value (a_view, "view")
 			template.add_value (retrieve_status_query (a_view.status),"status_query")
 			template.add_value (a_view.index, "index")
+			template.add_value (a_view.size, "size")
 
 
 			if a_view.index > 1 then

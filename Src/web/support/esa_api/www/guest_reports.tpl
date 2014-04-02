@@ -56,24 +56,54 @@
               <thead>
                 <tr>
                   <th>#
-                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                     {if isset="$user"}
+                       <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                       <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                     {/if}
+                     {unless isset="$user"}
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                     {/unless}
                   </th>
                   <th>Status
-                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a> 
+                     {if isset="$user"}
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                     {/if}
+                     {unless isset="$user"}
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                     {/unless}   
                   </th>
                   <th>Synopsis
-                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {if isset="$user"}
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/if}
+                      {unless isset="$user"}
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/unless}  
                   </th>
                   <th>Date
-                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {if isset="$user"}
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/if}
+                      {unless isset="$user"}
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/unless}
                   </th>
                   <th>Category
-                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports/{$index/}?orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {if isset="$user"}
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/if}
+                      {unless isset="$user"}
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
+                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                      {/unless}  
                   </th>
                 </tr>
               </thead>
@@ -82,7 +112,7 @@
                {foreach from="$reports" item="item"}
                   <tr>
                        <td><a href="{$host/}/report_detail/{$item.number/}">{$item.number/}</a></td>
-                       <td>{$item.status.synopsis/}</td>
+                       <td>{$item.status.id/}</td>
                        <td>{$item.synopsis/}</td>
                        <td>{$item.submission_date/}</td>
                        <td>{$item.category.synopsis/}</td>
@@ -94,16 +124,28 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                  <li><a href="{$host/}/reports?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">First</a></li>
-                  {if isset="$prev"}
-                    <li><a href="{$host/}/reports/{$prev/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Previous</a></li>
+                  {if isset="$user"}
+                    <li><a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">First</a></li>
+                    {if isset="$prev"}
+                      <li><a href="{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Previous</a></li>
+                    {/if}
+                    {if isset="$next"}
+                    <li><a href="{$host/}/user_reports/{$user/}?page={$next/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Next</a></li>
+                    {/if}
+                    <li><a href="{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Last</a></li>
                   {/if}
-                  {if isset="$next"}
-                  <li><a href="{$host/}/reports/{$next/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Next</a></li>
-                  {/if}
-                  <li><a href="{$host/}/reports/{$last/}?category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Last</a></li>
+                  {unless isset="$user"}
+                    <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">First</a></li>
+                    {if isset="$prev"}
+                      <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Previous</a></li>
+                    {/if}
+                    {if isset="$next"}
+                    <li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Next</a></li>
+                    {/if}
+                    <li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}">Last</a></li>
+                  {/unless}
                 </ul>
           </div>
        </div>
 
-</div>
+</divt

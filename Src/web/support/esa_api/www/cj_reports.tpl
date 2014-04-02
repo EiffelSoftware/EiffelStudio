@@ -1,6 +1,11 @@
 <"collection": <
-    "version": "1.0", 
-    "href": "{$host/}/reports", 
+    "version": "1.0",
+    {if isset="$user"} 
+        "href": "{$host/}/user_reports/{$user/}", 
+    {/if}
+    {unless isset="$user"} 
+        "href": "{$host/}/reports", 
+    {/unless}
     "links": [
             <
                 "href": "{$host/}",
@@ -12,33 +17,89 @@
                 "rel": "collection",
                 "prompt": "Reports"
             >,
-            <
-                "href": "{$host/}/reports",
+            {if isset="$user"}
+               <
+                "href": "{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}",
                 "rel": "first",
                 "prompt": "First"
-            >
-            {if isset="$prev"}
+                >
+                {if isset="$prev"}
                 ,
-            <
-                "href": "{$host/}/reports/{$prev/}",
-                "rel": "previous",
-                "prompt": "Previous"
-            >
+                <
+                    "href": "{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}",
+                    "rel": "previous",
+                    "prompt": "Previous"
+                >
+                {/if}
+                {if isset="$next"}
+                  ,
+                <
+                    "href": "{$host/}/user_reports/{$user/}?page={$next/}&size={$size/}",
+                    "rel": "next",
+                    "prompt": "Next"
+                >     
+                {/if}
+                ,
+                <
+                    "href": "{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}",
+                    "rel": "last",
+                    "prompt": "Last"
+                >,
+                <
+                    "href": "{$host/}/user_reports/{$user/}",
+                    "rel": "author",
+                    "prompt": "My Reports"
+                >,
+                 <
+                    "href": "{$host/}/report_form",
+                    "rel": "create-form",
+                    "prompt": "Report a Problem"
+                >,
+                <
+                    "href": "{$host/}/logoff",
+                    "rel": "logoff",
+                    "prompt": "Logoff"
+                >,
             {/if}
-            {if isset="$next"}
-              ,
-            <
-                "href": "{$host/}/reports/{$next/}",
-                "rel": "next",
-                "prompt": "Next"
-            >     
-            {/if}
-            ,
-            <
-                "href": "{$host/}/reports/{$last/}",
-                "rel": "last",
-                "prompt": "Last"
-            >,
+            {unless isset="$user"}
+                <
+                "href": "{$host/}/reports?page={$index/}&size={$size/}",
+                "rel": "first",
+                "prompt": "First"
+                >
+                {if isset="$prev"}
+                ,
+                <
+                    "href": "{$host/}/reports?page={$prev/}&size={$size/}",
+                    "rel": "previous",
+                    "prompt": "Previous"
+                >
+                {/if}
+                {if isset="$next"}
+                  ,
+                <
+                    "href": "{$host/}/reports?page={$next/}&size={$size/}",
+                    "rel": "next",
+                    "prompt": "Next"
+                >     
+                {/if}
+                ,
+                <
+                    "href": "{$host/}/reports?page={$last/}&size={$size/}",
+                    "rel": "last",
+                    "prompt": "Last"
+                >,
+                <
+                    "href": "{$host/}/login",
+                    "rel": "login",
+                    "prompt": "Login"
+                >,
+                <
+                    "href": "{$host/}/register",
+                    "rel": "register",
+                    "prompt": "Register"
+                >,
+            {/unless}    
             <
                 "href": "http://alps.io/iana/relations.xml",
                 "rel": "profile"
@@ -75,48 +136,6 @@
                         "value": "{$item.category.synopsis/}"
                     >
                   ]
-                >,{/foreach}
-                {foreach from="$categories" item="item"}
-                <
-                "href": "{$host/}/categories/{$item.id/}",
-                "data": [
-                   <
-                        "name": "Group",
-                        "prompt": "Categories",
-                        "value": "category"
-                    >,
-                    <
-                        "name": "Id",
-                        "prompt": "Category Item",
-                        "value": "{$item.id/}"
-                    >,
-                    <
-                        "name": "Synopsis",
-                        "prompt": "Category Item",
-                        "value": "{$item.synopsis/}"
-                    >
-                   ] 
-                >,{/foreach}
-                {foreach from="$status" item="item"}
-                <
-                "href": "{$host/}/status/{$item.id/}",
-                "data": [
-                   <
-                        "name": "Group",
-                        "prompt": "Status",
-                        "value": "status"
-                    >,
-                    <
-                        "name": "Id",
-                        "prompt": "Status Item",
-                        "value": "{$item.id/}"
-                    >,
-                    <
-                        "name": "Synopsis",
-                        "prompt": "Status Item",
-                        "value": "{$item.synopsis/}"
-                    >
-                   ] 
                 >,{/foreach}]
         ,
        "queries" :
@@ -131,7 +150,12 @@
             ]
         >,
         <
-          "href" : "{$host/}/reports/",
+           {if isset="$user"}   
+            "href" : "{$host/}/user_reports/{$user/}",
+           {/if}
+           {unless isset="$user"}
+           "href" : "{$host/}/reports/", 
+           {/unless}
           "rel" : "search",
           "prompt" : "Filter by Category / Status...",
           "data" :
@@ -141,7 +165,12 @@
             ]
         >,
         <
-          "href" : "{$host/}/reports/{$index/}/",
+          {if isset="$user"}
+          "href" : "{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}",
+          {/if}
+          {unless isset="$user"}
+          "href" : "{$host/}/reports?page={$index/}&size={$size/}",
+          {/unless}
           "rel" : "search",
           "prompt" : "Sorting",
           "data" :

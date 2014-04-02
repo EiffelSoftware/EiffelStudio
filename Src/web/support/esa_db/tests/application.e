@@ -44,7 +44,10 @@ feature {NONE} -- Initialization
 --			test_responsibles
 --			test_row_count_responsible_default
 --			test_problem_report_responsibles
-			test_token_from_username
+--			test_token_from_username
+--			test_row_count_responsible_by_user
+--			test_problem_report_by_uer
+			test_temporary_interaction
 		end
 
 
@@ -359,6 +362,15 @@ feature {NONE} -- Initialization
 		end
 
 
+	test_row_count_responsible_by_user
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			print (l_db.row_count_problem_report_user ("jvelilla",False, 0, 0))
+		end
+
+
 	test_problem_report_responsibles
 		local
 			l_db: ESA_REPORT_DATA_PROVIDER
@@ -369,6 +381,37 @@ feature {NONE} -- Initialization
 			end
 		end
 
+
+	test_problem_report_by_uer
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			across l_db.problem_reports_2 (1, 30,"jvelilla", False, 0, 0,"Number", 1) as c loop
+				print (c.item.string_8)
+			end
+		end
+
+	test_temporary_interaction
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			if attached l_db.temporary_interaction (17745) as l_tuple then
+				if attached l_tuple.at(1) as l_item1 then
+					print (l_item1); io.put_new_line
+				end
+				if attached l_tuple.at(2) as l_item1 then
+					print (l_item1); io.put_new_line
+				end
+				if attached l_tuple.at(3) as l_item1 then
+					print (l_item1); io.put_new_line
+				end
+				if attached l_tuple.at(4) as l_item1 then
+					print (l_item1); io.put_new_line
+				end
+			end
+		end
 
 feature -- Implementation
 

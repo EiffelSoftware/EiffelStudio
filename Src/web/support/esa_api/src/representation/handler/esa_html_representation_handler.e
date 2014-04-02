@@ -119,7 +119,15 @@ feature -- View
 
 	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form error
+		local
+			l_hp: ESA_REPORT_FORM_PAGE
 		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get_400 (req, res, l_form_page)
+				end
+			end
 		end
 
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
@@ -127,7 +135,6 @@ feature -- View
 		do
 			compute_response_redirect (req, res, a_redirect_uri )
 		end
-
 
 
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -213,7 +220,11 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
 				if attached l_hp.representation as l_register_page then
-					new_response_get (req, res, l_register_page)
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_register_page)
+					else
+						new_response_get (req, res, l_register_page)
+					end
 				end
 			end
 		end
@@ -239,7 +250,11 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
 				if attached l_hp.representation as l_activation_page then
-					new_response_get (req, res, l_activation_page)
+					if attached a_view as l_view and then (attached l_view.error_message or else not l_view.is_valid_form) then
+						new_response_get_400 (req, res, l_activation_page)
+					else
+						new_response_get (req, res, l_activation_page)
+					end
 				end
 			end
 		end
@@ -256,6 +271,80 @@ feature -- View
 				end
 			end
 		end
+
+
+	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_STATUS])
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+
+	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_SEVERITY])
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_CATEGORY])
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_PRIORITY])
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_USER])
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+	add_interaction_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
+			-- Interaction Form
+		local
+			l_hp: ESA_INTERACTION_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_confirmation_page then
+					new_response_get (req, res, l_confirmation_page)
+				end
+			end
+		end
+
+	interaction_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
+			-- Interaction Form Confirm.
+		local
+				l_hp: ESA_INTERACTION_CONFIRM_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
+		end
+
+	interaction_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add HTML implementation")
+		end
+
+
+	interaction_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Interaction form redirect
+		do
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,"/user_reports/"+l_user)
+			end
+		end
+
 
 
 feature -- Response

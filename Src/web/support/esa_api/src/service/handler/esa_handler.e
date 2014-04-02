@@ -20,7 +20,6 @@ feature -- User
 			end
 		end
 
-
 	current_user (req: WSF_REQUEST): detachable ESA_USER
 			-- Current user or Void in case of Guest user.
 		note
@@ -29,6 +28,16 @@ feature -- User
 		do
 			if attached {ESA_USER} req.execution_variable ("user") as l_user then
 				Result := l_user
+			end
+		end
+
+feature -- Media Type
+
+	current_media_type (req: WSF_REQUEST): detachable READABLE_STRING_32
+			-- Current media type of Void if it's not acceptable.
+		do
+			if attached {STRING} req.execution_variable ("media_type") as l_type then
+				Result := l_type
 			end
 		end
 

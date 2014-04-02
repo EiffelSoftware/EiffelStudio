@@ -27,10 +27,10 @@
         <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
 
         {if isset="$id"}  
-          <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST">
+          <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data">
         {/if}
         {unless isset="$id"}
-          <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST">
+          <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST" enctype="multipart/form-data">
         {/unless}
           <fieldset>
             <legend>Problem Report Submission</legend>
@@ -124,7 +124,7 @@
             <div class="control-group">
               <label class="control-label" for="fileInput">Attachments</label>
               <div class="controls">
-                <input class="form-control input-file" id="fileInput" type="file" multiple>
+                <input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
               </div>
             </div>
             <div class="control-group" has-error>

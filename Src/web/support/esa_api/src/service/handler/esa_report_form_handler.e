@@ -76,10 +76,6 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_temp_report_id: INTEGER
 		do
 			if attached req.path_parameter ("id") then
 					-- Update a Report Problem
@@ -94,43 +90,30 @@ feature -- Edit Report Problem
 
 	edit_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_form: ESA_REPORT_FORM_VIEW
 		do
 			create l_rhf
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
-				media_variants := media_type_variants (req)
 				if attached {STRING_32} current_user_name (req) as l_user then
 						-- Logged in user
-					to_implement ("Check user roles")
-					if media_variants.is_acceptable then
-						if attached media_variants.media_type as l_type then
-							l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form (req, res, edit_form (l_id.integer_value))
-						end
+					if attached  current_media_type (req) as l_type then
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form (req, res, edit_form (l_id.integer_value))
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).report_form (req, res, Void)
+						l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).report_form (req, res, Void)
 					end
 				else -- Not a logged in user
-					if media_variants.is_acceptable then
-						if attached media_variants.media_type as l_type then
-							l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
-						end
+					if attached  current_media_type (req) as l_type then
+						l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).new_response_unauthorized (req, res)
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).new_response_unauthorized (req, res)
+						l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).new_response_unauthorized (req, res)
 					end
 				end
 			else
 				to_implement ("Find a better way to handle not acceptable")
-				media_variants := media_type_variants (req)
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						l_rhf.new_representation_handler (esa_config, l_type, media_variants).bad_request_page (req, res)
-					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).bad_request_page (req, res)
-					end
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_variants).bad_request_page (req, res)
+					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).bad_request_page (req, res)
 				end
 			end
 		end
@@ -189,19 +172,15 @@ feature -- New Report Problem
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				to_implement ("Check user roles")
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						create l_form.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
-						l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form (req, res, l_form)
-					end
+				if attached current_media_type (req) as l_type then
+					create l_form.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
+					l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form (req, res, l_form)
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_variants).report_form (req, res, Void)
 				end
 			else -- Not a logged in user
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
-					end
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_variants).new_response_unauthorized (req, res)
 				end
@@ -213,54 +192,41 @@ feature -- Update Report Problem
 
 	update_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_temp_report_id: INTEGER
 			l_form: ESA_REPORT_FORM_VIEW
 		do
 			to_implement ("Clean code and make it simpler")
 			create l_rhf
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
-				media_variants := media_type_variants (req)
 				if attached {STRING_32} current_user_name (req) as l_user then
 						-- Logged in user
 					to_implement ("Check user roles")
-					if media_variants.is_acceptable then
-						if attached media_variants.media_type as l_type then
-							l_form := extract_form_data (req, l_type)
-							l_form.set_id (l_id.integer_value)
-							if l_form.is_valid_form then
-								update_report_problem_internal (req, l_form)
-								l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
-							else
-								l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, l_form)
-							end
+					if attached current_media_type (req) as l_type then
+						l_form := extract_form_data (req, l_type)
+						l_form.set_id (l_id.integer_value)
+						if l_form.is_valid_form then
+							update_report_problem_internal (req, l_form)
+							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm (req, res, l_form)
 						else
-							l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+								-- Bad request
+							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm (req, res, l_form)
 						end
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+						l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).report_form_confirm (req, res, Void)
 					end
 				else -- Not a logged in user
-					if media_variants.is_acceptable then
-						if attached media_variants.media_type as l_type then
-							l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
-						end
+					if attached current_media_type (req) as l_type then
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).new_response_unauthorized (req, res)
+						l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
 					end
 				end
 			else
 				to_implement ("Find a better way to handle not acceptable")
-				media_variants := media_type_variants (req)
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						l_rhf.new_representation_handler (esa_config, l_type, media_variants).bad_request_page (req, res)
-					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).bad_request_page (req, res)
-					end
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_variants).bad_request_page (req, res)
+					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).bad_request_page (req, res)
 				end
 			end
 		end
@@ -292,36 +258,29 @@ feature -- Initialize Report Problem
 			l_form: ESA_REPORT_FORM_VIEW
 		do
 			create l_rhf
-			media_variants := media_type_variants (req)
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 					-- Extract data from the req
 				l_temp_report_id := api_service.new_problem_report_id (l_user)
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						l_form := extract_form_data (req, l_type)
-						l_form.set_id (l_temp_report_id)
-						if l_form.is_valid_form then
-							initialize_report_problem_internal (req, l_form)
-							l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_confirm (req, res, l_form)
-						else
-							l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form_error (req, res, l_form)
-						end
+				if attached current_media_type (req) as l_type then
+					l_form := extract_form_data (req, l_type)
+					l_form.set_id (l_temp_report_id)
+					if l_form.is_valid_form then
+						initialize_report_problem_internal (req, l_form)
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm (req, res, l_form)
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+							-- Bad Request
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_error (req, res, l_form)
 					end
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_variants).report_form_confirm (req, res, Void)
+					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).report_form_confirm (req, res, Void)
 				end
-			else -- Not a logged in user
-				if media_variants.is_acceptable then
-					if attached media_variants.media_type as l_type then
-						create l_rhf
-						l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
-					end
+			else
+					-- Not a logged in user
+				if attached current_media_type (req) as l_type then
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				else
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config, "", media_variants).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
@@ -370,9 +329,9 @@ feature {NONE} -- Implementation
 			if a_type.same_string ("application/vnd.collection+json") then
 				l_post := retrieve_data (req)
 				create l_parser.make_parser (l_post)
-				if attached {JSON_OBJECT} l_parser.parse as jv and l_parser.is_parsed then
-					if attached {JSON_OBJECT}jv.item ("template") as l_template and then
-						attached {JSON_ARRAY}l_template.item ("data") as l_data then
+				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+				   attached {JSON_OBJECT}jv.item ("template") as l_template and then
+				   attached {JSON_ARRAY}l_template.item ("data") as l_data then
 								--		 <"name":  "category", "prompt": "Category", "value": "">,
 								--        <"name": "severity", "prompt": "Severity", "value": "">,
 								--        <"name": "priority", "prompt": "Priority", "value": "">,
@@ -424,10 +383,6 @@ feature {NONE} -- Implementation
 						   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
 							Result.set_to_reproduce (l_value.item)
 						end
-
-
-
-					end
 				end
 			else
 					--Category

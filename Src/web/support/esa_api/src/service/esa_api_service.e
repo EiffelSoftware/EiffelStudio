@@ -147,6 +147,32 @@ feature -- Access
 			Result := [l_statistics, l_list]
 		end
 
+	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+				-- Problem reports for user with username `a_username'
+				-- Open reports only if `a_open_only', all reports otherwise.
+		local
+			l_status: LIST[ESA_REPORT_STATUS]
+			l_report: ESA_REPORT
+			l_list: LIST[ESA_REPORT]
+			l_statistics: ESA_REPORT_STATISTICS
+		do
+			l_status := status
+			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create l_statistics
+			data_provider.connect
+			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_open_only, a_category, a_status, a_column, a_order) as c loop
+				l_report := c.item
+				if attached l_report.status as ll_status then
+					update_statistics (l_statistics, ll_status)
+					l_report.set_status (ll_status)
+				end
+				l_list.force (l_report)
+			end
+			data_provider.disconnect
+			is_successful := data_provider.is_successful
+			Result := [l_statistics, l_list]
+		end
+
 	status: LIST[ESA_REPORT_STATUS]
 			-- Possible problem report status
 		local
@@ -299,6 +325,22 @@ feature -- Access
 			is_successful := login_provider.is_successful
 		end
 
+	temporary_interaction (a_interaction_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
+															   username: detachable READABLE_STRING_32;
+															   status: detachable READABLE_STRING_32;
+															   private: detachable READABLE_STRING_32
+															   ]
+			-- Temporary problem report interaction
+			--			Content,
+			--			Username,
+			--			Status,
+			--			Private,	
+
+		do
+			Result := data_provider.temporary_interaction (a_interaction_id)
+			is_successful := data_provider.is_successful
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
@@ -317,6 +359,13 @@ feature -- Basic Operations
 			is_successful := data_provider.is_successful
 		end
 
+	row_count_problem_report_user (a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32): INTEGER
+			-- Number of problem reports for user with username `a_username'
+			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status
+		do
+			Result := data_provider.row_count_problem_report_user (a_username, a_open_only, a_category, a_status)
+			is_successful := data_provider.is_successful
+		end
 	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
 			a_release, a_environment, a_description, a_to_reproduce: STRING)
 			-- Initialize temporary problem report row.
@@ -392,6 +441,28 @@ feature -- Basic Operations
 			-- Assign responsible with id `a_contact_id' to problem report number `a_report_number'.
 		do
 			data_provider.set_problem_report_responsible (a_number, a_contact_id)
+			is_successful := data_provider.is_successful
+		end
+
+
+	new_interaction_id (a_username: STRING; a_pr_number: INTEGER): INTEGER
+			-- Id of added interaction by user `a_username' to interactions of pr with number `a_pr_number'.
+		do
+			Result := data_provider.new_interaction_id (a_username, a_pr_number)
+			is_successful := data_provider.is_successful
+		end
+
+	initialize_interaction (a_interaction_id: INTEGER_32; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
+			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
+		do
+			data_provider.initialize_interaction (a_interaction_id, a_content, a_new_status, a_private)
+			is_successful := data_provider.is_successful
+		end
+
+	commit_interaction (a_interaction_id: INTEGER)
+			-- Commit temporary interaction report `a_report_id'.
+		do
+			data_provider.commit_interaction (a_interaction_id)
 			is_successful := data_provider.is_successful
 		end
 

@@ -20,11 +20,12 @@
             <p>The page you requested could not be server because the server is down, either contact your webmaster or try again. Use your browsers <b>Back</b> button to navigate to the page you have prevously come from</p>
             <p><b>Or you could just press this neat little button:</b></p>
             <a href="{$host/}" class="btn btn-large btn-info"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
-          </div>
+        </div>
           <br />
     
     </div>
-  </div>
+    </div>
+   </div> 
     <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/}     
   </body>

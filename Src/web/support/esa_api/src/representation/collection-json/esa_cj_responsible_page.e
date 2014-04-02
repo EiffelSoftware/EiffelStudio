@@ -37,6 +37,9 @@ feature {NONE} --Initialization
 			template.add_value (a_view.severities, "severities")
 			template.add_value (a_view, "view")
 			template.add_value (a_view.index, "index")
+			template.add_value (a_view.size, "size")
+
+
 
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")

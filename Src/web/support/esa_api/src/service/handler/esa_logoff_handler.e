@@ -47,18 +47,13 @@ feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			media_variants := media_type_variants (req)
-			if media_variants.is_acceptable then
-				if attached media_variants.media_type as l_type then
-					create l_rhf
-					l_rhf.new_representation_handler (esa_config, l_type, media_variants).logout_page (req, res)
-				end
+			create l_rhf
+			if attached current_media_type (req) as l_type then
+				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).logout_page (req, res)
 			else
-				create l_rhf
-				l_rhf.new_representation_handler (esa_config, "", media_variants).logout_page (req, res)
+				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).logout_page (req, res)
 			end
 		end
 

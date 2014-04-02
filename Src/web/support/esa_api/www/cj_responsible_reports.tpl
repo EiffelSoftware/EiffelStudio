@@ -13,14 +13,14 @@
                 "prompt": "Reports"
             >,
             <
-                "href": "{$host/}/reports",
+                "href": "{$host/}/reports?page={$index/}&size={$size/}",
                 "rel": "first",
                 "prompt": "First"
             >
             {if isset="$prev"}
                 ,
             <
-                "href": "{$host/}/reports/{$prev/}",
+                "href": "{$host/}/reports?page={$prev/}&size={$size/}",
                 "rel": "previous",
                 "prompt": "Previous"
             >
@@ -28,14 +28,14 @@
             {if isset="$next"}
               ,
             <
-                "href": "{$host/}/reports/{$next/}",
+                "href": "{$host/}/reports?page={$next/}&size={$size/}",
                 "rel": "next",
                 "prompt": "Next"
             >     
             {/if}
             ,
             <
-                "href": "{$host/}/reports/{$last/}",
+                "href": "{$host/}/reports/?page={$last/}&size={$size/}",
                 "rel": "last",
                 "prompt": "Last"
             >,
@@ -164,7 +164,7 @@
             ]
         >,
         <
-          "href" : "{$host/}/reports/",
+          "href" : "{$host/}/reports",
           "rel" : "search",
           "prompt" : "Filter by Category / Status / Priority / Responsible / Severity / Submitter",
           "data" :
@@ -178,7 +178,7 @@
             ]
         >,
         <
-          "href" : "{$host/}/reports/{$index/}/",
+          "href" : "{$host/}/reports?page={$last/}&size={$size/}",
           "rel" : "search",
           "prompt" : "Sorting",
           "data" :

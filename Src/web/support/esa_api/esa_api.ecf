@@ -51,6 +51,23 @@
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
+	<target name="esa_api_test" extends="common">
+		<root class="APPLICATION_TEST" feature="make"/>
+		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>	
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="wgi_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino-safe.ecf"/>
+		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi-safe.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location="src\" recursive="true"/>
+		<cluster name="test" location="test\" recursive="true"/>
+	</target>
+
 	<target name="esa_api" extends="esa_api_nino">
 	</target>
 </system>

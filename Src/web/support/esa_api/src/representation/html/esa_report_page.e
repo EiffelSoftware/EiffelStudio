@@ -43,6 +43,7 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.order_by,"orderBy")
 			template.add_value (a_view.direction,"dir")
+			template.add_value (a_view.size, "size")
 
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
@@ -50,7 +51,7 @@ feature {NONE} --Initialization
 			if a_view.index < a_view.pages then
 				template.add_value (a_view.index+1, "next")
 			end
-			template.add_value (a_view.pages, "last")
+			template.add_value (a_view.pages + 1 , "last")
 
 		 	if attached a_view.user as l_user then
 		 		template.add_value (l_user,"user")

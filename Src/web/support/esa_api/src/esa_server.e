@@ -146,6 +146,12 @@ feature -- Filters
 			l_filter := f
 
 
+			 	-- Conneg Filter
+			create {ESA_CONNEG_FILTER} f.make (esa_config)
+			f.set_next (l_filter)
+			l_filter := f
+
+
 			 	-- Authentication
 			create {ESA_AUTHENTICATION_FILTER} f.make (esa_config)
 			f.set_next (l_filter)

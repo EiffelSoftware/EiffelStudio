@@ -128,10 +128,16 @@
     </div>
     </div>     
     </div>
-
     </div>
     </div>
     </div>
     </div>        
 </details>  
+        {if isset="$user"}
+            <div class="btn-group">
+                <a href="{$host/}/report_detail/{$report.number/}/interaction_form" class="btn btn-primary">
+                    Add Interaction
+                </a>
+            </div> 
+         {/if}
 </div>

@@ -17,7 +17,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="ClickMe_dotnet" extends="ClickMe">
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>

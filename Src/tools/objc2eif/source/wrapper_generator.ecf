@@ -23,7 +23,4 @@
 			<mapping old_name="SIZE_T" new_name="NATURAL_64"/>
 		</cluster>
 	</target>
-	<target name="wrapper_generator_dotnet" extends="wrapper_generator">
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>

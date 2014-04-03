@@ -38,10 +38,10 @@ feature -- Visitor Pattern
 
 feature -- Setters
 
-	set_return_type (a_return_type: attached like return_type)
+	set_return_type (a_return_type: like return_type)
 			-- Set `return_type' with `a_return_type'
 		require
-			a_valid_return_type: not a_return_type.is_empty
+			a_valid_return_type: a_return_type /= Void implies not a_return_type.is_empty
 		do
 			return_type := a_return_type
 		ensure

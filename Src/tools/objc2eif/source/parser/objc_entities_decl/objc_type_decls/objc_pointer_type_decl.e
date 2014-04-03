@@ -17,7 +17,7 @@ create
 
 feature -- Setters
 
-	set_pointed_type (a_pointed_type: attached like pointed_type)
+	set_pointed_type (a_pointed_type: like pointed_type)
 			-- Set `pointed_type' with `a_pointed_type'.
 		do
 			pointed_type := a_pointed_type

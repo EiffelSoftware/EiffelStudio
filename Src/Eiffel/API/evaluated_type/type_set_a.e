@@ -996,7 +996,7 @@ feature -- Access
 
 feature -- Attachment and separateness properties
 
-	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
+	to_other_attachment (other: TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		local
 			i: INTEGER
@@ -1027,7 +1027,7 @@ feature -- Attachment and separateness properties
 			end
 		end
 
-	to_other_separateness (other: ANNOTATED_TYPE_A): like Current
+	to_other_separateness (other: TYPE_A): like Current
 			-- Current type to which separateness status of `other' is applied.
 		local
 			i: INTEGER
@@ -1058,7 +1058,7 @@ feature -- Attachment and separateness properties
 			end
 		end
 
-	to_other_variant (other: ANNOTATED_TYPE_A): like Current
+	to_other_variant (other: TYPE_A): like Current
 			-- Current type to which separateness status of `other' is applied.
 		local
 			i: INTEGER
@@ -1168,7 +1168,7 @@ feature -- Convenience to be removed later
 			types.remove
 		end
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

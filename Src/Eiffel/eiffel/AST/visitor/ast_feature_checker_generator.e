@@ -2426,7 +2426,7 @@ feature {NONE} -- Visitor
 
 	process_string_as (l_as: STRING_AS)
 		local
-			l_simplified_string_type: ANNOTATED_TYPE_A
+			l_simplified_string_type: TYPE_A
 			l_is_string_32: BOOLEAN
 			l_value: detachable STRING
 			class_id: INTEGER
@@ -2438,7 +2438,7 @@ feature {NONE} -- Visitor
 					l_simplified_string_type := manifest_string_type
 		else
 				check_type (l_as.type)
-				if attached {ANNOTATED_TYPE_A} last_type as l_last_type then
+				if attached last_type as l_last_type then
 					l_simplified_string_type := l_last_type.duplicate
 						-- Manifest string are always frozen.
 					l_simplified_string_type.set_frozen_mark
@@ -10776,9 +10776,9 @@ feature {NONE} -- Implementation: type validation
 					Result := a_last_type.actual_type.generics.i_th (l_formal_type.position)
 				end
 			end
-			if l_formal_type /= Void and then attached {ANNOTATED_TYPE_A} a_type as l_annotated_type then
+			if l_formal_type /= Void then
 					-- Preserve attachment status of the original type.
-				Result := Result.to_other_attachment (l_annotated_type).to_other_variant (l_annotated_type).to_other_separateness (l_annotated_type)
+				Result := Result.to_other_attachment (a_type).to_other_variant (a_type).to_other_separateness (a_type)
 			end
 		ensure
 			adapated_type_not_void: Result /= Void
@@ -11416,21 +11416,21 @@ feature {NONE} -- Separateness
 			end
 		end
 
-	adapt_type_to_target (l: TYPE_A; t: TYPE_A; c: BOOLEAN; n: AST_EIFFEL)
+	adapt_type_to_target (l: detachable TYPE_A; t: TYPE_A; c: BOOLEAN; n: AST_EIFFEL)
 			-- Adapt separateness status of the last message type `l' of the AST node `n'
 			-- to the target of type `t' which has a controlled status `c'
 			-- and update `is_controlled' accordingly.
+		require
+			t_not_void: t /= Void
 		do
 			if
 				t.is_separate and then
-				attached {ANNOTATED_TYPE_A} t as a and then
-				attached l and then
-				not l.is_separate
+				l /= Void and then not l.is_separate
 			then
 					-- Separate call is controlled if target is controlled
 					-- and message type is not separate.
 				is_controlled := c
-				set_type (l.to_other_separateness (a), n)
+				set_type (l.to_other_separateness (t), n)
 			else
 				is_controlled := False
 				set_type (l, n)

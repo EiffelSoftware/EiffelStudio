@@ -5,7 +5,7 @@ class
 	UNKNOWN_TYPE_A
 
 inherit
-	ANNOTATED_TYPE_A
+	TYPE_A
 		redefine
 			backward_conform_to,
 			has_associated_class,

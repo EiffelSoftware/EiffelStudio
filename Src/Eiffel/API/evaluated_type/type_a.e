@@ -47,6 +47,8 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	SHARED_COMPILER_PROFILE
+
 feature -- Visitor
 
 	process (v: TYPE_A_VISITOR)
@@ -332,7 +334,7 @@ feature -- Properties
 	is_frozen: BOOLEAN
 			-- Is type frozen?
 		do
-			Result := is_implicitly_frozen
+			Result := has_frozen_mark or else is_implicitly_frozen
 		end
 
 	is_implicitly_frozen: BOOLEAN
@@ -345,7 +347,8 @@ feature -- Properties
 	is_variant: BOOLEAN
 			-- Is type marked `variant'.
 		do
-			Result := False
+				-- Either we have the variant mark or we are in traditional mode.
+			Result := has_variant_mark or else not compiler_profile.is_experimental_mode
 		end
 
 	is_valid_generic_derivation: BOOLEAN
@@ -508,7 +511,7 @@ feature -- Properties
 	is_separate: BOOLEAN
 			-- Is the current actual type a separate one ?
 		do
-			-- Do nothing
+			Result := has_separate_mark and then not is_expanded
 		end
 
 	is_none: BOOLEAN
@@ -623,7 +626,7 @@ feature -- Properties
 	is_attached: BOOLEAN
 			-- Is type attached?
 		do
-				-- False by default
+			Result := is_directly_attached or else is_expanded
 		end
 
 	is_implicitly_attached: BOOLEAN
@@ -632,7 +635,7 @@ feature -- Properties
 			-- to an attached entity without compromizing its
 			-- attachment status.
 		do
-				-- False by default
+			Result := is_directly_implicitly_attached or else is_expanded
 		end
 
 	is_initialization_required: BOOLEAN
@@ -664,6 +667,159 @@ feature -- Properties
 		ensure
 			known_is_computable: is_known implies Result
 		end
+
+feature -- Annotations: status report
+
+	has_attached_mark: BOOLEAN
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_attached_mark_mask /= 0
+		end
+
+	has_detachable_mark: BOOLEAN
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_detachable_mark_mask /= 0
+		end
+
+	is_directly_attached: BOOLEAN
+			-- Is type attached because of its declaration
+			-- without checking its anchor (if any)?
+		do
+			Result := attachment_bits & is_attached_mask /= 0
+		end
+
+	is_directly_implicitly_attached: BOOLEAN
+			-- Is type implicitly attached because of its use
+			-- without checking its anchor (if any)?
+		do
+			Result := attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0
+		end
+
+	is_attachable_to (other: TYPE_A): BOOLEAN
+			-- Does type preserve attachment status of other?
+		do
+			Result := other.is_attached implies is_implicitly_attached
+		end
+
+	has_separate_mark: BOOLEAN
+			-- Is type explicitly marked as separate?
+
+	has_frozen_mark: BOOLEAN
+			-- Is type explicitly marked as frozen?
+		do
+			Result := variant_bits & has_frozen_mark_mask /= 0
+		end
+
+	has_variant_mark: BOOLEAN
+			-- Is type explicitly marked as variant?
+		do
+			Result := variant_bits & has_variant_mark_mask /= 0
+		end
+
+feature -- Annotations: modification
+
+	set_attached_mark
+			-- Mark type declaration as having an explicit attached mark.
+		do
+			attachment_bits := has_attached_mark_mask | is_attached_mask
+		ensure
+			has_attached_mark: has_attached_mark
+			is_attached: is_attached
+		end
+
+	set_detachable_mark
+			-- Mark type declaration as having an explicit detachable mark.
+		do
+			attachment_bits := has_detachable_mark_mask
+		ensure
+			has_detachable_mark: has_detachable_mark
+			not_is_attached: not is_expanded implies not is_attached
+		end
+
+	set_frozen_mark
+			-- Mark type declaration as having an explicit `frozen' mark.
+		do
+				-- Frozen variant is only understood in experimental mode
+				-- for the time being.
+			if compiler_profile.is_experimental_mode then
+				variant_bits := has_frozen_mark_mask
+			end
+		ensure
+			has_frozen_mark: compiler_profile.is_experimental_mode implies has_frozen_mark
+		end
+
+	set_variant_mark
+			-- Mark type declaration as having an explicit `variant' mark.
+		do
+			variant_bits := has_variant_mark_mask
+		ensure
+			has_variant_mark: has_variant_mark
+		end
+
+	set_is_attached
+			-- Set attached type property.
+		require
+			not_has_detachable_mark: is_expanded or else not has_detachable_mark
+		do
+			attachment_bits := attachment_bits | is_attached_mask
+		ensure
+			is_attached: is_attached
+		end
+
+	set_is_implicitly_attached
+			-- Mark type as being implicitly attached, so that
+			-- it is allowed to be attached to an attached type.
+		do
+			attachment_bits := attachment_bits | is_implicitly_attached_mask
+		ensure
+			is_implicitly_attached: is_implicitly_attached
+		end
+
+	unset_is_implicitly_attached
+			-- Mark type as being implicitly detachable, so that
+			-- it is not allowed to be attached to an attached type.
+		require
+			not_is_attached: not is_attached
+			is_implicitly_attached: is_implicitly_attached
+		do
+			attachment_bits := attachment_bits.bit_xor (is_implicitly_attached_mask)
+		ensure
+			not_is_implicitly_attached: not is_implicitly_attached
+		end
+
+	set_separate_mark
+			-- Mark type declaration as having an explicit separate mark.
+		do
+			has_separate_mark := True
+		end
+
+	reset_separate_mark
+			-- Mark type declaration as having no separate mark.
+		do
+			has_separate_mark := False
+		end
+
+	set_marks_from (other: TYPE_A)
+			-- Set attachment marks as they are set in `other'.
+		require
+			other_attached: attached other
+		do
+			if other.has_attached_mark then
+				set_attached_mark
+			elseif other.has_detachable_mark then
+				set_detachable_mark
+			end
+			if other.has_separate_mark then
+				set_separate_mark
+			end
+			if other.has_variant_mark then
+				set_variant_mark
+			elseif other.has_frozen_mark then
+				set_frozen_mark
+			end
+		end
+
 
 feature -- Comparison
 
@@ -737,6 +893,19 @@ feature -- Comparison
 			-- May processor of current type be used as a processor of type `other'?
 		do
 			Result := is_separate implies other.is_separate
+		end
+
+	has_same_marks (other: TYPE_A): BOOLEAN
+			-- Are type marks of `Current' and `other' the same?
+		require
+			other_attached: other /= Void
+		do
+			Result :=
+				has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark and then
+				has_separate_mark = other.has_separate_mark and then
+				has_frozen_mark = other.has_frozen_mark and then
+				has_variant_mark = other.has_variant_mark
 		end
 
 feature {CL_TYPE_A} -- Comparison
@@ -826,14 +995,39 @@ feature -- Access
 			-- Result := Void
 		end
 
-feature -- Attachment properties
+feature -- Duplication
+
+	duplicate: like Current
+			-- Duplication
+		do
+			Result := twin
+		end
+
+	as_separate: like Current
+			-- Separate version of this type
+		require
+			not_separate: not is_separate
+		do
+			Result := duplicate
+			Result.set_separate_mark
+		end
+
+	as_non_separate: like Current
+			-- Non-separate version of this type
+		require
+			is_separate: is_separate
+		do
+			Result := duplicate
+			Result.reset_separate_mark
+		end
 
 	as_attached_type: like Current
 			-- Attached variant of the current type
 		require
 			not_is_attached: not is_attached
 		do
-			Result := Current
+			Result := duplicate
+			Result.set_attached_mark
 		ensure
 			result_attached: Result /= Void
 		end
@@ -844,10 +1038,17 @@ feature -- Attachment properties
 			not_is_attached: not is_attached
 			not_is_implicitly_attached: not is_implicitly_attached
 		do
-			Result := Current
+			if is_implicitly_attached then
+				Result := Current
+			else
+				Result := duplicate
+				Result.set_is_implicitly_attached
+			end
 		ensure
 			result_attached: Result /= Void
 			result_not_attached: not Result.is_attached
+			result_is_implicitly_attached: Result.is_implicitly_attached
+			result_is_attachable_to_attached: Result.is_attachable_to (as_attached_type)
 		end
 
 	as_attached_in (c: CLASS_C): like Current
@@ -872,7 +1073,12 @@ feature -- Attachment properties
 	as_implicitly_detachable: like Current
 			-- Implicitly detachable type
 		do
-			Result := Current
+			if not is_attached and then is_implicitly_attached then
+				Result := duplicate
+				Result.unset_is_implicitly_attached
+			else
+				Result := Current
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -880,62 +1086,158 @@ feature -- Attachment properties
 	as_detachable_type: like Current
 			-- detachable type
 		do
-			Result := Current
+			if not has_detachable_mark then
+				Result := duplicate
+				Result.set_detachable_mark
+			else
+				Result := Current
+			end
 		end
 
 	as_attachment_mark_free: like Current
 			-- Same as Current but without any attachment mark
+		local
+			l_bits: like attachment_bits
 		do
-			Result := Current
+			l_bits := attachment_bits
+			if l_bits = 0 then
+				Result := Current
+			else
+				attachment_bits := 0
+				Result := duplicate
+				attachment_bits := l_bits
+			end
 		ensure
 			as_attachment_mark_free_not_void: Result /= Void
+			result_has_no_attached_mark: not Result.has_attached_mark
+			result_has_no_detachable_mark: not Result.has_detachable_mark
 		end
 
 	as_marks_free: like Current
 			-- Same as Current but without any attachment and separate marks
+		local
+			a: like attachment_bits
+			s: BOOLEAN
 		do
-			Result := Current
+			a := attachment_bits
+			s := has_separate_mark
+			if a = 0 and then not s then
+				Result := Current
+			else
+				has_separate_mark := False
+				attachment_bits := 0
+				Result := duplicate
+				attachment_bits := a
+				has_separate_mark := s
+			end
 		ensure
 			as_marks_free_attached: attached Result
+			result_has_no_attached_mark: not Result.has_attached_mark
+			result_has_no_detachable_mark: not Result.has_detachable_mark
+			result_has_no_separate_mark: not Result.has_separate_mark
 		end
 
-	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
+	to_other_attachment (other: TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		require
 			other_attached: other /= Void
+		local
+			c: TYPE_A
+			o: TYPE_A
 		do
 			Result := Current
+			if other /= Result then
+				if other.is_like_current then
+					c := other.conformance_type
+				else
+					c := other.actual_type
+				end
+				if c /= Void and then c /= Result then
+						-- Apply attachment settings of anchor if applicable and current type has none.
+					o := c
+				else
+					o := other
+				end
+				Result := to_other_immediate_attachment (o)
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	to_other_immediate_attachment (other: ANNOTATED_TYPE_A): like Current
+	to_other_immediate_attachment (other: TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 			-- without taking into consideration attachment status of an anchor (if any)
 		require
 			other_attached: other /= Void
 		do
 			Result := Current
+			if other.has_attached_mark then
+				if not has_attached_mark then
+					Result := duplicate
+					Result.set_attached_mark
+				end
+			elseif other.is_implicitly_attached then
+				if not is_attached and then not is_implicitly_attached then
+					Result := as_implicitly_attached
+				end
+			elseif other.has_detachable_mark then
+				if not is_expanded and then not has_detachable_mark then
+					Result := duplicate
+					Result.set_detachable_mark
+				end
+			elseif not other.is_implicitly_attached and then is_implicitly_attached then
+				Result := as_implicitly_detachable
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	to_other_separateness (other: ANNOTATED_TYPE_A): like Current
+	to_other_separateness (other: TYPE_A): like Current
 			-- Current type to which separateness status of `other' is applied
 		require
 			other_attached: other /= Void
 		do
 			Result := Current
+			if other /= Result then
+				if not other.is_separate then
+					if is_separate then
+						Result := as_non_separate
+					end
+				elseif other.has_separate_mark then
+					if not is_expanded and then not has_separate_mark then
+						Result := duplicate
+						Result.set_separate_mark
+					end
+				elseif not is_separate then
+					Result := as_separate
+				end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	to_other_variant (other: ANNOTATED_TYPE_A): like Current
+	to_other_variant (other: TYPE_A): like Current
 			-- Current type to which frozen/variant status is applied.
 		require
 			other_attached: other /= Void
+		local
+			l_other_is_frozen: BOOLEAN
 		do
 			Result := Current
+				-- Only do something in experimental mode.
+			if other /= Result and then compiler_profile.is_experimental_mode then
+				if other.is_like_current then
+					l_other_is_frozen := other.has_frozen_mark or else other.conformance_type.is_frozen
+				else
+					l_other_is_frozen := other.actual_type.is_frozen
+				end
+				if not is_frozen and l_other_is_frozen then
+					Result := duplicate
+					Result.set_frozen_mark
+				else
+					Result := Current
+				end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -970,6 +1272,56 @@ feature -- Output
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		deferred
+		end
+
+	dump_marks (s: STRING)
+			-- Append leading type marks to `s'.
+		require
+			s_attached: attached s
+		do
+			if has_frozen_mark then
+				s.append ("frozen ")
+			elseif has_variant_mark then
+				s.append ("variant ")
+			end
+
+			if has_attached_mark then
+				s.append_character ('!')
+			elseif has_detachable_mark then
+				s.append_character ('?')
+			end
+
+			if has_separate_mark then
+				s.append ({SHARED_TEXT_ITEMS}.ti_separate_keyword)
+				s.append_character (' ')
+			end
+		end
+
+	ext_append_marks (f: TEXT_FORMATTER)
+			-- Append leading type marks using formatter `t'.
+		require
+			f_attached: attached f
+		do
+			if has_frozen_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_frozen_keyword, Void)
+				f.add_space
+			elseif has_variant_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_variant_keyword, Void)
+				f.add_space
+			end
+
+			if has_attached_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_attached_keyword, Void)
+				f.add_space
+			elseif has_detachable_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
+				f.add_space
+			end
+
+			if has_separate_mark then
+				f.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_separate_keyword, Void)
+				f.add_space
+			end
 		end
 
 feature -- Conversion
@@ -1327,12 +1679,6 @@ feature -- Access
 			same_object: (a_ancestor = a_descendant) implies Result = Current
 		end
 
-	duplicate: like Current
-			-- Duplication
-		do
-			Result := twin
-		end
-
 	good_generics: BOOLEAN
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations ?
@@ -1599,10 +1945,39 @@ feature {NONE} -- Implementation
 			constraint_error_list.extend (constraint_info)
 		end
 
+feature {NONE} -- Attachment properties
+
+	attachment_bits: NATURAL_8
+			-- Associated attachment flags
+
+	has_detachable_mark_mask: NATURAL_8 = 1
+			-- Mask in `attachment_bits' that tells whether the type has an explicit detachable mark
+
+	has_attached_mark_mask: NATURAL_8 = 2
+			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
+
+	is_attached_mask: NATURAL_8 = 4
+			-- Mask in `attachment_bits' that tells whether the type is attached
+
+	is_implicitly_attached_mask: NATURAL_8 = 8
+			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
+
+	variant_bits: NATURAL_8
+			-- Associated variant flags
+
+	has_frozen_mark_mask: NATURAL_8 = 1
+			-- Mask in `variant_bits' that tells whether the type has an explicit frozen mark
+
+	has_variant_mark_mask: NATURAL_8 = 2
+			-- Mask in `variant_bits' that tells whether the type has an explicit variant mark
+
 invariant
 		-- A generic type should at least have one generic parameter.
 		-- A tuple however is an eception and can have no generic parameter.
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
+
+	expanded_consistency: is_expanded implies not is_separate
+	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"

@@ -528,8 +528,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
-		local
-			a: ANNOTATED_TYPE_A
 		do
 				-- Special cases for calls on a target which is a manifest integer
 				-- that might be compatible with _8 or _16. The returned
@@ -555,11 +553,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := Result.to_other_attachment (Current)
 			elseif Result.is_attached then
 					-- Remove explicit "attached" mark.
-				if attached {ANNOTATED_TYPE_A} Result as t then
-					a := t.duplicate
-					a.set_detachable_mark
-					Result := a
-				end
+				Result := Result.duplicate
+				Result.set_detachable_mark
 			elseif Result.is_implicitly_attached then
 				Result := Result.as_implicitly_detachable
 			end

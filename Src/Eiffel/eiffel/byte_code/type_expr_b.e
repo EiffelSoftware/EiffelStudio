@@ -157,12 +157,12 @@ feature -- C code generation
 			buf.put_string (" = RTLNTY(")
 				-- Because `l_type_creator' discards the attachment mark if any, we need
 				-- to take it into account to create the proper type.
-			if attached {ANNOTATED_TYPE_A} l_type_type as l_type and then not l_type.is_expanded then
-				if l_type.is_attached then
+			if not l_type_type.is_expanded then
+				if l_type_type.is_attached then
 					buf.put_string ("eif_attached_type(")
 					l_type_creator.generate_type_id (buf, context.final_mode, 0)
 					buf.put_character (')')
-				elseif l_type.has_detachable_mark then
+				elseif l_type_type.has_detachable_mark then
 					buf.put_string ("eif_non_attached_type(")
 					l_type_creator.generate_type_id (buf, context.final_mode, 0)
 					buf.put_character (')')

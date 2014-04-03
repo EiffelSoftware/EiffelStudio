@@ -38,6 +38,11 @@ feature {NONE} -- Initialization
 	make_with_frame_ (a_frame: NS_RECT)
 			-- <Precursor>
 		do
+			create center.make
+			create text_storage.make_with_string_ ("A cup or two of hot cocoa every once in a while can provide a delicious, warm and healhty way to obtain more antioxidants.")
+			create layout_manager.make
+			create text_container.make
+
 			add_objc_callback ("drawRect:", agent draw_rect_)
 			add_objc_callback ("takeColorFrom:", agent take_color_from)
 			add_objc_callback ("takeRadiusFrom:", agent take_radius_from)
@@ -47,7 +52,6 @@ feature {NONE} -- Initialization
 			add_objc_callback ("performAnimation:", agent perform_animation)
 			Precursor (a_frame)
 				-- First, we set default values for the various parameters.
-			create center.make
 			center.x := a_frame.size.width / 2
 			center.y := a_frame.size.height / 2
 			radius := 115.0
@@ -56,9 +60,6 @@ feature {NONE} -- Initialization
 				-- Next, we create and initialize instances of the three
 				-- basic non-view components of the text system:
 				-- a NS_TEXT_STORAGE, a NS_LAYOUT_MANAGER and an NS_TEXT_CONTAINER.
-			create text_storage.make_with_string_ ("A cup or two of hot cocoa every once in a while can provide a delicious, warm and healhty way to obtain more antioxidants.")
-			create layout_manager.make
-			create text_container.make
 			layout_manager.add_text_container_ (text_container)
 			text_storage.add_layout_manager_ (layout_manager)
 				-- Screen fonts are not suitable for scaled or rotated drawing.

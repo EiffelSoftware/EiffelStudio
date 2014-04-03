@@ -107,20 +107,23 @@ feature {TYPE_A} -- Helpers
 
 	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
 			-- <Precursor>
+		local
+			l_other_attachable_type: TYPE_A
 		do
 				-- Apply the same conformance rules as for a class type.
+			l_other_attachable_type := other.conformance_type
 			if
-				attached {ANNOTATED_TYPE_A} other.conformance_type as other_attachable_type and then
-				(not other_attachable_type.is_expanded and then
-				(other_attachable_type.is_formal implies other_attachable_type.is_reference) or else
+				not l_other_attachable_type.is_void and then
+				(not l_other_attachable_type.is_expanded and then
+				(l_other_attachable_type.is_formal implies l_other_attachable_type.is_reference) or else
 				is_attached)
 			then
 				Result := True
 				if a_context_class.lace_class.is_void_safe_conformance then
 					Result :=
-						is_attachable_to (other_attachable_type) and then
-						(other_attachable_type.is_formal implies
-							(other_attachable_type.has_detachable_mark or else is_implicitly_attached))
+						is_attachable_to (l_other_attachable_type) and then
+						(l_other_attachable_type.is_formal implies
+							(l_other_attachable_type.has_detachable_mark or else is_implicitly_attached))
 				end
 				if Result then
 					Result := is_processor_attachable_to (other)

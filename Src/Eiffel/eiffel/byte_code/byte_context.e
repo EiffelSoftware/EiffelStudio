@@ -2181,35 +2181,27 @@ feature -- Access
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
 				if l_optimized then
-					if attached {ANNOTATED_TYPE_A} a_type as l_type_1 then
-						if l_type_1.is_attached then
-							buf.put_string ("eif_attached_type(")
-							byte_code.feature_origin (buf)
-							buf.put_character (')')
-						elseif l_type_1.has_detachable_mark then
-							buf.put_string ("eif_non_attached_type(")
-							byte_code.feature_origin (buf)
-							buf.put_character (')')
-						else
-							byte_code.feature_origin (buf)
-						end
+					if a_type.is_attached then
+						buf.put_string ("eif_attached_type(")
+						byte_code.feature_origin (buf)
+						buf.put_character (')')
+					elseif a_type.has_detachable_mark then
+						buf.put_string ("eif_non_attached_type(")
+						byte_code.feature_origin (buf)
+						buf.put_character (')')
 					else
 						byte_code.feature_origin (buf)
 					end
 					buf.put_two_character (')', ';')
 				else
-					if attached {ANNOTATED_TYPE_A} a_type as l_type_2 then
-						if l_type_2.is_attached then
-							buf.put_string ("eif_attached_type(")
-							l_info.generate_type_id (buf, final_mode, 0)
-							buf.put_character (')')
-						elseif l_type_2.has_detachable_mark then
-							buf.put_string ("eif_non_attached_type(")
-							l_info.generate_type_id (buf, final_mode, 0)
-							buf.put_character (')')
-						else
-							l_info.generate_type_id (buf, final_mode, 0)
-						end
+					if a_type.is_attached then
+						buf.put_string ("eif_attached_type(")
+						l_info.generate_type_id (buf, final_mode, 0)
+						buf.put_character (')')
+					elseif a_type.has_detachable_mark then
+						buf.put_string ("eif_non_attached_type(")
+						l_info.generate_type_id (buf, final_mode, 0)
+						buf.put_character (')')
 					else
 						l_info.generate_type_id (buf, final_mode, 0)
 					end
@@ -2284,16 +2276,12 @@ feature -- Access
 					-- We sometime need to convert a type to either it associated attached/non-attached
 					-- version. First boolean is to figure out if there is an action to be taken, the
 					-- second which action.
-				if attached {ANNOTATED_TYPE_A} a_type as l_type_1 then
-					if l_type_1.is_attached then
-						ba.append_boolean (True)
-						ba.append_boolean (True)
-					elseif l_type_1.has_detachable_mark then
-						ba.append_boolean (True)
-						ba.append_boolean (False)
-					else
-						ba.append_boolean (False)
-					end
+				if a_type.is_attached then
+					ba.append_boolean (True)
+					ba.append_boolean (True)
+				elseif a_type.has_detachable_mark then
+					ba.append_boolean (True)
+					ba.append_boolean (False)
 				else
 					ba.append_boolean (False)
 				end

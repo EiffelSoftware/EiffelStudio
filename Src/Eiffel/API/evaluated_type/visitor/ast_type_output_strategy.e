@@ -84,7 +84,7 @@ feature {TYPE_A} -- Visitors
 		local
 			l_class: CLASS_C
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
 				text_formatter.add_space
@@ -105,7 +105,7 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			if current_feature /= Void and then current_feature.has_replicated_ast then
 					-- Current feature may be Void.
 					-- If not we check if the feature has a replicated AST, in which case
@@ -152,7 +152,7 @@ feature {TYPE_A} -- Visitors
 	process_like_argument (a_type: LIKE_ARGUMENT)
 			-- Process `a_type'.
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
@@ -166,7 +166,7 @@ feature {TYPE_A} -- Visitors
 	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			text_formatter.process_keyword_text (ti_current, Void)
@@ -177,7 +177,7 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat: E_FEATURE
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.routine_id)
@@ -274,7 +274,7 @@ feature {TYPE_A} -- Visitors
 			n: INTEGER_32
 			i: INTEGER
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			if a_type.qualifier.is_like then
 				a_type.qualifier.process (Current)
 			else
@@ -322,7 +322,7 @@ feature {TYPE_A} -- Visitors
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			text_formatter.process_local_text (a_type.anchor)
@@ -333,7 +333,7 @@ feature {TYPE_A} -- Visitors
 		local
 			i, nb: INTEGER
 		do
-			process_attachable_type_a (a_type)
+			process_annotations (a_type)
 			if a_type.qualifier.is_like then
 				a_type.qualifier.process (Current)
 			else
@@ -363,7 +363,7 @@ feature {TYPE_A} -- Visitors
 
 feature {NONE} -- Generic visitors
 
-	process_attachable_type_a (t: ANNOTATED_TYPE_A)
+	process_annotations (t: TYPE_A)
 			-- Output marks leading marks of `t'.
 		require
 			t_attached: attached t

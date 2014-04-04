@@ -1189,6 +1189,8 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 
 	SQLUSMALLINT seriNumber = (SQLUSMALLINT)seri;
 	SQLSMALLINT direction = (SQLSMALLINT)dir;
+	SQLSMALLINT l_sql_data_type, l_decimal_digits;
+	SQLUINTEGER l_param_size;
 	SQLLEN len;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	SQL_NUMERIC_STRUCT *l_num;
@@ -1197,65 +1199,84 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
 	l_con->rc = 0;
 	direction = SQL_PARAM_INPUT;
-	switch (eifType) {
-		case EIF_C_CHARACTER_TYPE:
-		case EIF_C_STRING_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_WSTRING_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, SQL_WCHAR, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_INTEGER_32_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_INTEGER_16_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, SQL_SMALLINT, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_INTEGER_64_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, SQL_BIGINT, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_REAL_64_TYPE:
-			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_REAL_32_TYPE:
-			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, SQL_REAL, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_BOOLEAN_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, SQL_BIT, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_DATE_TYPE:
-			len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case EIF_C_DECIMAL_TYPE:
-			l_num = (SQL_NUMERIC_STRUCT *)value;
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
+	l_con->rc = SQLDescribeParam(l_con->hstmt[no_desc], seriNumber, &l_sql_data_type, &l_param_size, &l_decimal_digits, NULL);
+	if (!l_con->rc) {
+		switch (eifType) {
+			case EIF_C_CHARACTER_TYPE:
+			case EIF_C_STRING_TYPE:
+					/* Depending on the size of the columnm the SQL data type is different. Because we do not
+					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
+					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
+					 * force the usage of SQL_LONGVARCHAR. See autotests#TEST_LARGE_DATA. */
+				if (l_param_size == 0) {
+						/* Heuristic shows that when it is 0, it means it is unbounded. */
+					l_sql_data_type = SQL_LONGVARCHAR;
+				}
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, l_sql_data_type, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
+				break;
+			case EIF_C_WSTRING_TYPE:
+					/* Depending on the size of the columnm the SQL data type is different. Because we do not
+					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
+					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
+					 * force the usage of SQL_WLONGVARCHAR. See autotests#TEST_LARGE_DATA. */
+				if (l_param_size == 0) {
+						/* Heuristic shows that when it is 0, it means it is unbounded. */
+					l_sql_data_type = SQL_WLONGVARCHAR;
+				}
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, l_sql_data_type, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_32_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, l_sql_data_type, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_16_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, l_sql_data_type, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_64_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, l_sql_data_type, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_REAL_64_TYPE:
+				/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, l_sql_data_type, l_param_size, l_decimal_digits , value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_REAL_32_TYPE:
+				/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, l_sql_data_type, l_param_size, l_decimal_digits, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_BOOLEAN_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, l_sql_data_type, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_DATE_TYPE:
+				len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, l_sql_data_type, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_DECIMAL_TYPE:
+				l_num = (SQL_NUMERIC_STRUCT *)value;
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, l_sql_data_type, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
 
-			/* Modify the fields in the implicit application parameter descriptor */
-			/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
-			SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
-			break;
-		case EIF_C_NULL_TYPE:
-			l_con->pcbValue[no_desc][seriNumber-1] = SQL_NULL_DATA;
-				/* We use SQL_C_DEFAULT, SQL_CHAR, and 1 to describe the NULL value. It seems to work for all datatypes. */
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DEFAULT, SQL_CHAR, 1, 0, NULL, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		default:
-			odbc_error_handler(con, NULL, 204);
-			ATCSTXTCAT(&l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
-			odbc_error_handler(con, NULL, 110);
-			return;
+				/* Modify the fields in the implicit application parameter descriptor */
+				/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
+				SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
+				break;
+			case EIF_C_NULL_TYPE:
+				l_con->pcbValue[no_desc][seriNumber-1] = SQL_NULL_DATA;
+					/* We use SQL_C_DEFAULT, since we are just storing NULL. */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DEFAULT, l_sql_data_type, l_param_size, l_decimal_digits, NULL, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			default:
+				odbc_error_handler(l_con, NULL, 204);
+				ATCSTXTCAT(&l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
+				odbc_error_handler(l_con, NULL, 110);
+				return;
+		}
 	}
 	if (l_con->rc) {
-		odbc_error_handler(con, l_con->hstmt[no_desc], l_con->rc);
-		return;
+		odbc_error_handler(l_con, l_con->hstmt[no_desc], l_con->rc);
 	}
+	return;
 }
 
 /*****************************************************************/

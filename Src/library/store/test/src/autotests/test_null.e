@@ -49,6 +49,7 @@ feature {NONE} -- Implementation
 			Result.set_quantity (50)
 			Result.set_double_value (2.3)
 			Result.set_year (1980)
+			Result.set_text_value ("test")
 		end
 
 	test_null_load_data
@@ -56,16 +57,16 @@ feature {NONE} -- Implementation
 		do
 			drop_repository (table_name)
 
-			if is_odbc then
-				execute_query ("CREATE TABLE db_null_values (title varchar(255), author varchar(80), [year] datetime, quantity int ,[price] float, double_value float)")
+			if is_odbc or is_sybase then
+				execute_query ("CREATE TABLE DB_NULL_VALUES (title varchar(255), author varchar(80), text_value varchar(max), [year] datetime, quantity int ,[price] float, double_value float)")
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `DB_NULL_VALUES` (`title` varchar(255), `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_NULL_VALUES` (`title` varchar(255), `author` varchar(80), `text_value` varchar(65532), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
 			end
 
 			if is_oracle then
-				execute_query ("CREATE TABLE DB_NULL_VALUES (title varchar(255), author varchar(80), year DATE, quantity int ,price float, double_value float)")
+				execute_query ("CREATE TABLE DB_NULL_VALUES (title varchar(255), author varchar(80), text_value varchar(65535), year DATE, quantity int ,price float, double_value float)")
 			end
 		end
 
@@ -123,11 +124,12 @@ feature {NONE} -- Implementation
 				l_dyn_change.set_map_name (Void, "year_name")
 				l_dyn_change.set_map_name (Void, "price_name")
 				l_dyn_change.set_map_name (Void, "double_value_name")
+				l_dyn_change.set_map_name (Void, "text_name")
 				l_dyn_change.set_map_name ("Alfred", "author_name")
 
 				l_dyn_change.prepare_32 ("update " + sql_table_name (table_name) + "[
-					 set quantity=:quantity_name,title=:title_name,year=:year_name,
-					 	price=:price_name,double_value=:double_value_name where author=:author_name
+					 set quantity = :quantity_name, title = :title_name, year = :year_name,
+					 	price = :price_name, double_value = :double_value_name, text_value = :text_name where author=:author_name
 					 ]")
 
 				l_dyn_change.unset_map_name ("quantity_name")
@@ -135,7 +137,9 @@ feature {NONE} -- Implementation
 				l_dyn_change.unset_map_name ("year_name")
 				l_dyn_change.unset_map_name ("price_name")
 				l_dyn_change.unset_map_name ("double_value_name")
+				l_dyn_change.unset_map_name ("text_name")
 				l_dyn_change.unset_map_name ("author_name")
+
 				l_dyn_change.execute
 				l_dyn_change.terminate
 

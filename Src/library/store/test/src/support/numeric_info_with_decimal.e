@@ -20,6 +20,7 @@ feature {NONE} -- Init
 	make
 		do
 			create numeric_t
+			create other_numeric_t
 		end
 
 feature -- Access
@@ -34,7 +35,7 @@ feature -- Access
 
 	real_64_t: REAL_64
 
-	numeric_t: DECIMAL
+	numeric_t, other_numeric_t: DECIMAL
 
 feature -- Query
 
@@ -48,7 +49,8 @@ feature -- Query
 					int_64 = other.int_64 and then
 					real_32_t = other.real_32_t and then
 					real_64_t = other.real_64_t and then
-					numeric_t.is_equal (other.numeric_t)
+					numeric_t ~ other.numeric_t and then
+					other_numeric_t ~ other.other_numeric_t
 		end
 
 feature -- Element Change
@@ -87,6 +89,12 @@ feature -- Element Change
 			-- Set `numeric_t' with `i'.
 		do
 			numeric_t := i
+		end
+
+	set_other_numeric_t (i: DECIMAL)
+			-- Set `numeric_t' with `i'.
+		do
+			other_numeric_t := i
 		end
 
 feature -- Output

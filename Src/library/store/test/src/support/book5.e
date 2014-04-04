@@ -17,6 +17,8 @@ feature -- Access
 
 	author: detachable IMMUTABLE_STRING_8
 
+	text_value: detachable STRING
+
 	quantity: INTEGER
 
 	price: DOUBLE
@@ -58,6 +60,14 @@ feature -- Element Change
 			author := a
 		ensure
 			author = a
+		end
+
+	set_text_value (a: like text_value)
+			-- Set `text_value' with `a'
+		do
+			text_value := a
+		ensure
+			text_value = a
 		end
 
 	set_quantity (q: like quantity)

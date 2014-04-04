@@ -94,24 +94,29 @@ feature -- Access
 			end
 		end
 
-	available_packages: STRING_TABLE [LIST [READABLE_STRING_8]]
+	available_packages: ARRAYED_LIST [IRON_PACKAGE]
 			-- URI indexed by package name.
 		local
-			fp: PATH
+			fp,p: PATH
 			f: PLAIN_TEXT_FILE
 			s: STRING
 			l_name: STRING_32
 			utf: UTF_CONVERTER
-			lst: detachable ARRAYED_LIST [READABLE_STRING_8]
+			pif_fac: IRON_PACKAGE_FILE_FACTORY
+			pif: IRON_PACKAGE_FILE
+			l_package: detachable IRON_PACKAGE
+			l_repo_uri: READABLE_STRING_8
 		do
-			create Result.make_caseless (0)
+			create Result.make (0)
+			create pif_fac
 
 			across
 				repositories as ic
 			loop
-				fp := layout.repository_packages_data_path (ic.item)
+				fp := layout.repository_packages_data_index (ic.item)
 				create f.make_with_path (fp)
 				if f.exists and then f.is_access_readable then
+					l_repo_uri := ic.item.location_string
 					f.open_read
 					from
 						f.read_line_thread_aware
@@ -122,22 +127,31 @@ feature -- Access
 						if s.is_empty then
 								-- ignore
 						elseif s[1].is_space then
-							if lst /= Void then
+							if l_package /= Void then
 								s.left_adjust
-								lst.force (s.string)
+								if s.starts_with_general (l_repo_uri) then
+									s.remove_head (l_repo_uri.count + 1)
+								else
+									check wrong_path: False end
+								end
+								l_package.associated_paths.force (s.string)
 							else
 									-- no parent package -> ignored
 							end
 						else
-							lst := Void
+							l_package := Void
 								-- Package name
 							l_name := utf.utf_8_string_8_to_string_32 (s)
-							if Result.has (l_name) then
-									-- Conflicted ... ignored
-								check lst = Void end
-							else
-								create lst.make (1)
-								Result.force (lst, l_name)
+
+							if across Result as result_ic some result_ic.item.is_identified_by (l_name) end then
+									-- Conflict, but still listed, order matters
+							end
+
+							p := layout.repository_packages_data_folder (ic.item).extended (l_name)
+							pif := pif_fac.new_package_file (p)
+							if pif.exists and then not pif.has_error then
+								l_package := pif.to_package (ic.item)
+								Result.force (l_package)
 							end
 						end
 						f.read_line_thread_aware
@@ -145,57 +159,6 @@ feature -- Access
 					f.close
 				end
 			end
-
---			create Result.make (0)
---			p := layout.repositories_path
---			create d.make_with_path (p)
---			if d.exists then
---				across
---					d.entries as ic
---				loop
---					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
---					else
---						fp := p.extended_path (ic.item)
---						if
---							attached fp.extension as ext and then ext.is_case_insensitive_equal_general ("packages")
---						then
---							create f.make_with_path (p.extended_path (ic.item))
---							if f.exists and then f.is_access_readable then
---								f.open_read
---								from
---									f.read_line_thread_aware
---								until
---									f.exhausted
---								loop
---									s := f.last_string
---									if s.is_empty then
---											-- ignore
---									elseif s[1].is_space then
---										if lst /= Void then
---											s.left_adjust
---											lst.force (s.string)
---										else
---												-- no parent package -> ignored
---										end
---									else
---										lst := Void
---											-- Package name
---										l_name := utf.utf_8_string_8_to_string_32 (s)
---										if Result.has (l_name) then
---												-- Conflicted ...
---										else
---											create lst.make (1)
---											Result.force (lst, l_name)
---										end
---									end
---									f.read_line_thread_aware
---								end
---								f.close
---							end
---						end
---					end
---				end
---			end
 		end
 
 feature -- Change
@@ -225,12 +188,29 @@ feature -- Change
 		local
 			f: RAW_FILE
 			utf: UTF_CONVERTER
+			pif_fac: IRON_PACKAGE_FILE_FACTORY
+			pif: IRON_PACKAGE_FILE
+			dp, p: PATH
+			d: DIRECTORY
 		do
-			create f.make_with_path (layout.repository_packages_data_path (a_repo))
+			create pif_fac
+			p := layout.repository_packages_data_folder (a_repo)
+			dp := p
+			create d.make_with_path (dp)
+			if not d.exists then
+				d.recursive_create_dir
+			end
+			create f.make_with_path (layout.repository_packages_data_index (a_repo))
 			f.create_read_write
 			across
 				a_repo.available_packages as ic
 			loop
+				pif := pif_fac.new_package_file (dp.extended (ic.item.identifier))
+				pif.reset
+				pif.load_package (ic.item)
+				pif.remove ("_json")
+				pif.save
+
 				f.put_string (utf.string_32_to_utf_8_string_8 (ic.item.identifier))
 				f.put_new_line
 				across

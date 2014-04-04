@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	available_packages: STRING_TABLE [LIST [READABLE_STRING_8]]
+	available_packages: LIST [IRON_PACKAGE]
 			-- Associated path indexed by package name.
 			-- It does not include conflicting packages.
 		local
@@ -128,6 +128,9 @@ feature -- Query
 			l_path: READABLE_STRING_8
 			l_package_name: READABLE_STRING_32
 			l_project_path: READABLE_STRING_8
+			l_package_full_path: STRING_8
+			l_repo_uri_string: READABLE_STRING_8
+			l_package: IRON_PACKAGE
 		do
 			if
 				a_uri.starts_with ("http://") or
@@ -139,13 +142,18 @@ feature -- Query
 				until
 					Result /= Void
 				loop
-					across
-						ic.item as path_ic
-					until
-						Result /= Void
-					loop
-						if a_uri.same_string (path_ic.item) then
-							Result := ic.key
+					l_package := ic.item
+					l_repo_uri_string := l_package.repository.location_string
+					if a_uri.starts_with (l_repo_uri_string) then
+						across
+							l_package.associated_paths as path_ic
+						until
+							Result /= Void -- order matters
+						loop
+							l_package_full_path := l_repo_uri_string + path_ic.item
+							if a_uri.same_string (l_package_full_path) then
+								Result := l_package.identifier
+							end
 						end
 					end
 				end
@@ -159,10 +167,11 @@ feature -- Query
 					across
 						available_packages as ic
 					until
-						Result /= Void
+						Result /= Void -- order matters
 					loop
-						if ic.key.is_case_insensitive_equal (l_package_name) then
-							Result := ic.key
+						l_package := ic.item
+						if l_package.is_identified_by (l_package_name) then
+							Result := l_package.identifier
 						end
 					end
 				else
@@ -184,16 +193,65 @@ feature -- Query
 		do
 			across
 				installed_packages as ic
+			until
+				Result
 			loop
-				if a_package.is_same_package (ic.item) then
-					Result := True
-				end
+				Result := a_package.is_same_package (ic.item)
 			end
 			if Result then
 					-- Also check that package is really installed on disk!
 				if attached package_installation_path (a_package) as p then
 					create d.make_with_path (p)
 					Result := d.exists and then not d.is_empty
+				end
+			end
+		end
+
+	conflicting_available_package (p: IRON_PACKAGE): detachable IRON_PACKAGE
+			-- Return eventual available or installed package with same identifier as `p'
+			-- and which exists with priority over `p'.
+		local
+			l_identifier: READABLE_STRING_GENERAL
+		do
+			l_identifier := p.identifier
+			across
+				available_packages as ic
+			until
+				Result /= Void
+			loop
+				if ic.item.is_identified_by (l_identifier) then
+					Result := ic.item
+				end
+			end
+			if Result /= Void and then p.is_same_package (Result) then
+					-- It has top priority
+				Result := Void
+			end
+		end
+
+	projects_from_installed_package (a_package: IRON_PACKAGE): ARRAYED_LIST [PATH]
+		require
+			is_package_installed (a_package)
+		local
+			p: detachable PATH
+			l_scanner: IRON_ECF_SCANNER
+			p_name: READABLE_STRING_32
+			s: STRING_32
+		do
+			p := package_installation_path (a_package)
+			if p = Void then
+				create Result.make (0)
+			else
+				create l_scanner.make
+				l_scanner.process_directory (p)
+				create Result.make (l_scanner.items.count)
+				p_name := p.name
+				across
+					l_scanner.items as ic
+				loop
+					s := ic.item.name
+					s.remove_head (p_name.count + 1)
+					Result.force (create {PATH}.make_from_string (s))
 				end
 			end
 		end
@@ -261,7 +319,7 @@ feature -- Installed package
 				installed_packages as p
 			loop
 				l_package := p.item
-				if l_package.is_named (a_name) then
+				if l_package.is_identified_by (a_name) then
 					Result.force (l_package)
 				end
 			end
@@ -410,7 +468,7 @@ feature -- Local path
 				until
 					l_package /= Void
 				loop
-					if p.item.is_named (a_package_name) then
+					if p.item.is_identified_by (a_package_name) then
 						l_package := p.item
 					end
 				end

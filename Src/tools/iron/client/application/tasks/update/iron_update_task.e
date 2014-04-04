@@ -24,7 +24,7 @@ feature -- Execute
 		local
 			args: IRON_UPDATE_ARGUMENT_PARSER
 		do
-			create args.make (Current)
+			create args.make_with_option (Current, False)
 			args.execute (agent execute (args, a_iron))
 		end
 

@@ -17,7 +17,8 @@ inherit
 	IRON_UPDATE_ARGUMENTS
 
 create
-	make
+	make,
+	make_with_option
 
 feature -- Access
 

@@ -15,9 +15,15 @@ feature -- Access
 		deferred
 		end
 
-	path: PATH
+	remove (a_name: READABLE_STRING_GENERAL)
+			-- Remove data associated with `a_name'
+		deferred
+		ensure
+			removed: item (a_name) = Void
+		end
 
-	has_error: BOOLEAN
+	path: PATH
+			-- Associated path.
 
 	package_name: detachable READABLE_STRING_32
 			-- Associated package name.
@@ -25,6 +31,27 @@ feature -- Access
 		end
 
 	projects: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; relative_uri: READABLE_STRING_8]]
+
+feature -- Status report
+
+	has_error: BOOLEAN
+			-- Has error during loading?
+
+	exists: BOOLEAN
+			-- Does file associated to Current exists?
+		local
+			ut: FILE_UTILITIES
+		do
+			Result := ut.file_path_exists (path)
+		end
+
+feature -- Change
+
+	reset
+			-- Reset Current package file
+			-- except the `path' to the file.
+		deferred
+		end
 
 feature -- Conversion	
 
@@ -49,7 +76,7 @@ feature -- Conversion
 			end
 		end
 
-	to_package (a_repo: IRON_WORKING_COPY_REPOSITORY): IRON_PACKAGE
+	to_package (a_repo: IRON_REPOSITORY): IRON_PACKAGE
 		deferred
 		end
 
@@ -115,6 +142,26 @@ feature -- Storage
 	text: STRING
 			-- Current file representation as string.
 		deferred
+		end
+
+feature -- Helper
+
+	is_assistant_enabled: BOOLEAN
+			-- If True, generated available information as comment.
+			-- mainly used to help building package file from folder.
+
+	enable_assistant
+		do
+			is_assistant_enabled := True
+		ensure
+			is_assistant_enabled: is_assistant_enabled
+		end
+
+	disable_assistant
+		do
+			is_assistant_enabled := False
+		ensure
+			assistant_disabled: not is_assistant_enabled
 		end
 
 note

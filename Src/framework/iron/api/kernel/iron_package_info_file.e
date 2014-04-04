@@ -58,9 +58,24 @@ feature -- Callbacks
 feature -- Access
 
 	item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
-			-- Data associated with `item'
+			-- Data associated with `a_name'
 		do
 			Result := notes.item (a_name)
+		end
+
+	remove (a_name: READABLE_STRING_GENERAL)
+			-- Remove data associated with `a_name'
+		do
+			notes.remove (a_name)
+		end
+
+feature -- Change
+
+	reset
+			-- <Precursor>
+		do
+			package_name := Void
+			notes.wipe_out
 		end
 
 feature {NONE} -- Internal
@@ -71,11 +86,12 @@ feature {NONE} -- Internal
 
 feature -- Conversion	
 
-	to_package (a_repo: IRON_WORKING_COPY_REPOSITORY): IRON_PACKAGE
+	to_package (a_repo: IRON_REPOSITORY): IRON_PACKAGE
 		local
-			s,t: STRING_8
+			s,l_loc: STRING_8
 			l_path_uri: PATH_URI
 			l_name: detachable READABLE_STRING_32
+			t: STRING_32
 		do
 			l_name := package_name
 
@@ -90,18 +106,21 @@ feature -- Conversion
 			Result.set_title (item ("title"))
 			Result.set_description (item ("description"))
 			if attached item ("tags") as l_tags then
+				Result.tags.wipe_out
 				across
 					l_tags.split (',') as ic
 				loop
-					Result.tags.force (ic.item)
+					t := ic.item
+					t.adjust
+					Result.tags.force (t)
 				end
 			end
 			create l_path_uri.make_from_path (path)
 			s := l_path_uri.string
-			t := a_repo.location_string
-			if s.starts_with (t) then
+			l_loc := a_repo.location_string
+			if s.starts_with (l_loc) then
 					-- remove repository dir
-				s := s.substring (t.count + 1, s.count) -- keep first \
+				s := s.substring (l_loc.count + 1, s.count) -- keep first \
 					-- remove repository .iron file
 				if attached path.entry as e then
 					s.remove_tail (e.name.count + 1)
@@ -212,6 +231,8 @@ feature -- Storage
 	text: STRING
 		local
 			utf: UTF_CONVERTER
+			s: STRING_32
+			utf8: STRING
 		do
 			create Result.make (0)
 			if attached package_name as l_name then
@@ -241,28 +262,39 @@ feature -- Storage
 				Result.append_string ("%T")
 				Result.append_string (utf.string_32_to_utf_8_string_8 (ic.key.to_string_32))
 				Result.append_string (": ")
-				Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.to_string_32))
+				s := ic.item.to_string_32
+				utf8 := utf.string_32_to_utf_8_string_8 (s)
+				if s.has ('%N') then
+					Result.append ("[%"%N")
+					Result.append_string (utf8)
+					if not utf8.ends_with_general ("%N") then
+						Result.append_character ('%N')
+					end
+					Result.append_string ("%T%T%T%T")
+					Result.append_string ("]%"%N")
+				else
+					Result.append_string (utf8)
+				end
 				Result.append_string ("%N")
 			end
-			if not notes.has ("title") then
+			if is_assistant_enabled and not notes.has ("title") then
 				Result.append_string ("--%Ttitle: %N")
 			end
-			if not notes.has ("description") then
+			if is_assistant_enabled and not notes.has ("description") then
 				Result.append_string ("--%Tdescription: %N")
 			end
-			if not notes.has ("tags") then
+			if is_assistant_enabled and not notes.has ("tags") then
 				Result.append_string ("--%Ttags: %N")
 			end
-			if not notes.has ("license") then
+			if is_assistant_enabled and not notes.has ("license") then
 				Result.append_string ("--%Tlicense: %N")
 			end
-			if not notes.has ("copyright") then
+			if is_assistant_enabled and not notes.has ("copyright") then
 				Result.append_string ("--%Tcopyright: %N")
 			end
-			if not notes.has ("link[doc]") then
+			if is_assistant_enabled and not notes.has ("link[doc]") then
 				Result.append_string ("--%Tlink[doc]: %"Documentation%" http:// %N")
 			end
-
 
 			Result.append_string ("end%N")
 		end

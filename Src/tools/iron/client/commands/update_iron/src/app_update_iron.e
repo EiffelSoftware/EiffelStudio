@@ -156,6 +156,7 @@ feature {NONE} -- Initialization
 				pac.set_name (p_name)
 				create pif_fac
 				pif := pif_fac.new_package_file (a_iron_file)
+				pif.enable_assistant
 
 				pif.load_package (pac)
 				has_error := pif.has_error
@@ -189,6 +190,7 @@ feature {NONE} -- Initialization
 						pif.save
 						print ("iron file %""+ pif.path.name +"%" updated!%N")
 						pif := pif_fac.new_package_file (a_iron_file)
+						pif.enable_assistant
 						if pif.has_error then
 							io.error.put_string ("Saved file has error in content!%N")
 						end

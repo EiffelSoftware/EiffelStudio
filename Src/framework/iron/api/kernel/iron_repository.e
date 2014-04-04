@@ -73,7 +73,7 @@ feature -- Query
 				available_packages as p
 			loop
 				l_package := p.item
-				if l_package.is_named (a_name) then
+				if l_package.is_identified_by (a_name) then
 					Result.force (l_package)
 				end
 			end

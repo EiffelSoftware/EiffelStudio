@@ -22,8 +22,14 @@ feature {NONE} -- Initialization
 	make (a_task: like task)
 			-- Initialize argument parser
 		do
+			make_with_option (a_task, True)
+		end
+
+	make_with_option (a_task: like task; a_non_switch_required: BOOLEAN)
+			-- Initialize argument parser
+		do
 			task := a_task
-			make_parser (False, True)
+			make_parser (False, a_non_switch_required)
 			set_argument_source (a_task.argument_source)
 			is_using_builtin_switches := not is_verbose_switch_used
 		end

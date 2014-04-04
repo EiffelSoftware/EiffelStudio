@@ -98,6 +98,20 @@ feature -- Comparison
 			end
 		end
 
+	is_identified_by (a_identifier: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is package identified by `a_identifier' ?
+			-- i.e is identifier same as `a_identifier'?
+		local
+			s: detachable READABLE_STRING_32
+		do
+			if a_identifier /= Void then
+				s := identifier
+				if s /= Void then
+					Result := a_identifier.is_case_insensitive_equal (s)
+				end
+			end
+		end
+
 feature -- Status report
 
 	debug_output: READABLE_STRING_GENERAL
@@ -118,6 +132,17 @@ feature -- Access
 				Result := l_name
 			else
 				Result := id.to_string_32
+			end
+		end
+
+	location: URI
+			-- Associated URI.
+		do
+			create Result.make_from_uri (repository.location)
+			if attached associated_paths as l_paths and then not l_paths.is_empty then
+				Result.add_unencoded_path_segment (l_paths.first)
+			else
+				Result.add_unencoded_path_segment (identifier)
 			end
 		end
 
@@ -305,10 +330,11 @@ feature {NONE} -- Implementation
 		do
 			create iri.make_from_uri (u)
 			l_path := iri.decoded_path
-			if {PLATFORM}.is_windows then
-				if l_path.starts_with ("/") then
-					l_path := l_path.substring (2, l_path.count)
-				end
+			if
+				{PLATFORM}.is_windows and then
+				l_path.starts_with ("/")
+			then
+				l_path := l_path.substring (2, l_path.count)
 			end
 			create Result.make_from_string (l_path)
 		end

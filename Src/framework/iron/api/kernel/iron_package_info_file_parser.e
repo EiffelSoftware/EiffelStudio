@@ -56,7 +56,7 @@ feature -- Parse
 			f: PLAIN_TEXT_FILE
 		do
 			create f.make_with_path (fn)
-			if f.exists and then f.is_access_readable then
+			if f.exists and then f.is_readable then
 				f.open_read
 				parse_file (f)
 				f.close

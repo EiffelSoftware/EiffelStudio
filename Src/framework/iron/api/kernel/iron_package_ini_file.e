@@ -37,9 +37,23 @@ feature -- Access
 			Result := item ("name")
 		end
 
+feature -- Change
+
+	reset
+			-- <Precursor>
+		do
+			ini.reset
+		end
+
+	remove (a_name: READABLE_STRING_GENERAL)
+			-- Remove data associated with `a_name'
+		do
+			ini.remove (a_name)
+		end
+
 feature -- Conversion	
 
-	to_package (a_repo: IRON_WORKING_COPY_REPOSITORY): IRON_PACKAGE
+	to_package (a_repo: IRON_REPOSITORY): IRON_PACKAGE
 		local
 			s,t: STRING_8
 			l_path_uri: PATH_URI

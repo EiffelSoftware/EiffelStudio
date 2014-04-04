@@ -86,14 +86,28 @@ feature -- Access
 
 feature -- Query
 
-	repository_data_path (a_repo: IRON_REPOSITORY): PATH
+	repository_data_folder (a_repo: IRON_REPOSITORY): PATH
+			-- Folder containing information related to `a_repo'
 		do
 			Result := repositories_path.extended_path (safe_repository_path (a_repo))
 		end
 
-	repository_packages_data_path (a_repo: IRON_REPOSITORY): PATH
+	repository_data_file (a_repo: IRON_REPOSITORY): PATH
+			-- File caching repository data for `a_repo'.
 		do
-			Result := repository_data_path (a_repo).appended_with_extension ("packages")
+			Result := repository_data_folder (a_repo).extended ("repository.data")
+		end
+
+	repository_packages_data_folder (a_repo: IRON_REPOSITORY): PATH
+			-- Folder storing package info files for `a_repo'.
+		do
+			Result := repository_data_folder (a_repo).extended ("packages")
+		end
+
+	repository_packages_data_index (a_repo: IRON_REPOSITORY): PATH
+			-- Index file of repository packages for `a_repo'.
+		do
+			Result := repository_packages_data_folder (a_repo).appended_with_extension ("index")
 		end
 
 	repository_archive_path (a_repo: IRON_REPOSITORY): PATH
@@ -122,7 +136,8 @@ feature -- Query
 			if attached {IRON_WORKING_COPY_REPOSITORY} a_package.repository as l_wc_repo then
 				if not a_package.associated_paths.is_empty then
 					s := a_package.associated_paths.first
-					create l_uri.make_from_string (l_wc_repo.location.string + s)
+					create l_uri.make_from_string (l_wc_repo.location.string)
+					l_uri.add_unencoded_path_segment (s)
 					create l_path_uri.make_from_file_uri (l_uri)
 					Result := l_path_uri.file_path
 				end

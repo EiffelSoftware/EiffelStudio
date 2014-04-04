@@ -69,10 +69,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: CONF_SYSTEM; a_location: READABLE_STRING_GENERAL)
+	on_library_selected (a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			name.set_text (a_library.library_target.name + "_precompile")
+			name.set_text (a_library.library_target_name + "_precompile")
 			location.set_text (a_location)
 		end
 
@@ -95,7 +95,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

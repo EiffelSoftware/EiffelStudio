@@ -56,26 +56,42 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
-			vb, vb2, l_padding: EV_VERTICAL_BOX
+			main, vb, vb2, l_padding: EV_VERTICAL_BOX
 			hb, hbf, hb1, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
-			l_col: EV_GRID_COLUMN
 			l_filter: like filter
 			l_clear_filter_button: EV_BUTTON
+			l_update_index_button: EV_BUTTON
+			nb: EV_NOTEBOOK
+			iron_box: IRON_PACKAGE_COLLECTION_BOX
 		do
 			Precursor
 
 			set_title (conf_interface_names.dialog_create_library_title)
 			set_icon_pixmap (conf_pixmaps.new_library_icon)
 
+				-- notebook
+			create nb
+			extend (nb)
+
+				-- libraries		
+			create main
+			main.set_padding (layout_constants.default_padding_size)
+			main.set_border_width (layout_constants.default_border_size)
+
+			nb.extend (main)
+
+			if nb.has (main) then
+				nb.item_tab (main).set_text ("Libraries")
+			end
+
 			create vb
-			extend (vb)
-			vb.set_padding (layout_constants.default_padding_size)
-			vb.set_border_width (layout_constants.default_border_size)
+			main.extend (vb)
 
 				-- default libraries
 			create vb2
 			vb.extend (vb2)
+
 			vb2.set_padding (layout_constants.small_padding_size)
 			vb2.set_border_width (layout_constants.small_border_size)
 
@@ -87,8 +103,8 @@ feature {NONE} -- Initialization
 			hb1.extend (l_lbl)
 			hb1.disable_item_expand (l_lbl)
 
+			hb1.extend (create {EV_CELL})
 			create hbf
-			hb1.extend (create {EV_HORIZONTAL_SEPARATOR})
 			hb1.extend (hbf)
 
 			hbf.extend (create {EV_LABEL}.make_with_text (Names.l_filter))
@@ -108,32 +124,42 @@ feature {NONE} -- Initialization
 
 			vb2.extend (hb1)
 			vb2.disable_item_expand (hb1)
+
 				-- Create grid
-			create libraries_grid
-			libraries_grid.set_minimum_size (400, 200)
-			libraries_grid.enable_always_selected
-			libraries_grid.enable_single_row_selection
-			libraries_grid.set_column_count_to (location_column)
-			l_col := libraries_grid.column (name_column)
-			l_col.set_title (conf_interface_names.dialog_create_library_name)
-			l_col.set_width (100)
-			l_col := libraries_grid.column (void_safety_column)
-			l_col.set_title (conf_interface_names.dialog_create_library_void_safety)
-			l_col.set_width (100)
-			l_col := libraries_grid.column (location_column)
-			l_col.set_title (conf_interface_names.dialog_create_library_location)
-			l_col.set_width (100)
-			libraries_grid.disable_column_separators
-			libraries_grid.disable_row_separators
-			libraries_grid.disable_border
+			create libraries_box.make (target)
+			libraries_box.set_minimum_size (400, 200)
+			libraries_box.on_library_selected_actions.extend (agent on_library_selected)
 
 				-- Create border for the grid
 			create l_padding
 			l_padding.set_border_width (1)
 			l_padding.set_background_color ((create {EV_STOCK_COLORS}).color_3d_shadow)
-			l_padding.extend (libraries_grid)
+			l_padding.extend (libraries_box.widget)
 
 			vb2.extend (l_padding)
+
+				-- Libraries cache update
+			create hb1
+			hb1.set_padding (layout_constants.small_padding_size)
+			vb2.extend (hb1)
+			vb2.disable_item_expand (hb1)
+
+			hb1.extend (create {EV_CELL})
+
+			create l_update_index_button
+			l_update_index_button.select_actions.extend (agent update_index)
+			l_update_index_button.set_text ("Update index")
+			l_update_index_button.set_tooltip (names.b_reset)
+			l_update_index_button.enable_sensitive
+			hb1.extend (l_update_index_button)
+			hb1.disable_item_expand (l_update_index_button)
+			libraries_update_button := l_update_index_button
+
+			create l_btn
+			l_btn.set_pixmap (conf_pixmaps.project_settings_advanced_icon)
+			l_btn.select_actions.extend (agent edit_libraries_cfg)
+			hb1.extend (l_btn)
+			hb1.disable_item_expand (l_btn)
 
 				-- name
 			create vb2
@@ -176,9 +202,11 @@ feature {NONE} -- Initialization
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
+			-----------------
+			--| [Ok] [Cancel]
 			create hb
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
+			main.extend (hb)
+			main.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 			hb.set_padding (layout_constants.default_padding_size)
 
@@ -196,10 +224,54 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			layout_constants.set_default_width_for_button (l_btn)
 
+				-- end of notebook tab #1 : Standard libraries
+				-- notebook tab #2: Iron
+
+				-- libraries		
+			create main
+			main.set_padding (layout_constants.default_padding_size)
+			main.set_border_width (layout_constants.default_border_size)
+
+			create vb2
+			main.extend (vb2)
+
+			nb.extend (main)
+			if
+				nb.has (main) and then
+				attached nb.item_tab (main) as iron_tab
+			then
+				iron_tab.set_text ("Iron")
+				create iron_box.make (target)
+				vb2.extend (iron_box.widget)
+
+				-----------------
+				--| [Back to libraries]
+				create hb
+				main.extend (hb)
+				main.disable_item_expand (hb)
+				hb.extend (create {EV_CELL})
+				hb.set_padding (layout_constants.default_padding_size)
+
+				create l_btn.make_with_text ("Back")
+				hb.extend (l_btn)
+				hb.disable_item_expand (l_btn)
+				l_btn.select_actions.extend (agent libraries_box.set_focus)
+				layout_constants.set_default_width_for_button (l_btn)
+
+				nb.selection_actions.extend (agent (ia_nb: EV_NOTEBOOK_TAB; ia_iron_box: IRON_PACKAGE_COLLECTION_BOX)
+						do
+							if ia_nb.is_selected then
+								ia_iron_box.populate
+							end
+						end (iron_tab, iron_box)
+					)
+			end
+
+				-- Initial Event
 			show_actions.extend_kamikaze (agent
 				do
 					populate_libraries
-					libraries_grid.set_focus
+					libraries_box.set_focus
 				end)
 		end
 
@@ -241,20 +313,26 @@ feature {NONE} -- Update filter
 		do
 			l_style := pointer_style
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
-			update_grid
+
+			libraries_box.set_filter_text (filter_text)
+			libraries_box.update_grid
+
 			set_pointer_style (l_style)
 		end
 
 feature {NONE} -- GUI elements
 
-	void_safe_check: detachable EV_CHECK_BUTTON
-			-- Void-safe check button
-
-	libraries_grid: ES_GRID
-			-- Libraries grid
+	libraries_box: EIFFEL_LIBRARY_COLLECTION_BOX
+			-- Libraries collection box.
 
 	filter: EV_TEXT_FIELD
-			-- Filter
+			-- Filter.
+
+	filter_text: detachable STRING_32
+			-- Filter text.
+		do
+			Result := filter.text
+		end
 
 	name: EV_TEXT_FIELD
 			-- Name of the library.
@@ -278,12 +356,150 @@ feature {NONE} -- GUI elements
 			Result_not_void: Result /= Void
 		end
 
+	libraries_update_button: EV_BUTTON
+			-- Update libraries cache.
+
 feature -- Access
 
 	last_group: CONF_LIBRARY
 			-- Last created group.
 
-feature {NONE} -- Access
+feature {NONE} -- Libraries cache.
+
+	edit_libraries_cfg
+		local
+			dlg: EV_DIALOG
+			txt: EV_TEXT
+			v: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			but: EV_BUTTON
+			p: PATH
+			f: RAW_FILE
+			s: STRING_32
+			utf: UTF_CONVERTER
+		do
+
+			p := eiffel_layout.eifinit_path.extended ("libraries.cfg")
+			create f.make_with_path (p)
+			if f.exists and then f.is_readable then
+				create dlg
+				create v
+				dlg.extend (v)
+
+				create txt
+				txt.set_minimum_size (200, 200)
+				v.extend (txt)
+				create hb
+				v.extend (hb)
+				v.disable_item_expand (hb)
+
+				f.open_read
+				from
+					create s.make_empty
+				until
+					f.exhausted
+				loop
+					f.read_line_thread_aware
+					s.append (utf.utf_8_string_8_to_string_32 (f.last_string))
+					s.append_character ('%N')
+				end
+				f.close
+				txt.set_text (s)
+
+				if f.is_writable then
+					txt.enable_edit
+					create but.make_with_text_and_action (names.b_save, agent (ia_dlg: EV_DIALOG; ia_text: EV_TEXTABLE; ia_file: FILE)
+							require
+								ia_file.is_writable
+							do
+								ia_file.open_write
+								ia_file.put_string (ia_text.text)
+								ia_file.put_new_line
+								ia_file.close
+
+								ia_dlg.destroy
+							end (dlg, txt, f))
+				else
+					txt.disable_edit
+					create but.make_with_text (names.b_save)
+					but.disable_sensitive
+				end
+				hb.extend (but)
+				hb.disable_item_expand (but)
+				create but.make_with_text_and_action (names.b_cancel, agent (ia_dlg: EV_DIALOG) do ia_dlg.destroy end(dlg))
+				hb.extend (but)
+				hb.disable_item_expand (but)
+			else
+				create {EV_ERROR_DIALOG} dlg.make_with_text ("Can not edit libraries settings !")
+			end
+			dlg.show_modal_to_window (Current)
+		end
+
+	update_index
+		do
+			cache_data (Void, "iron_configuration_libraries.cache")
+			cache_data (Void, "configuration_libraries.cache")
+			populate_libraries
+		end
+
+	cached_data (a_name: READABLE_STRING_GENERAL): detachable ANY
+		local
+			p: PATH
+			f: RAW_FILE
+			retried: BOOLEAN
+			sed: SED_STORABLE_FACILITIES
+			sed_rw: SED_MEDIUM_READER_WRITER
+		do
+			if not retried then
+				p := eiffel_layout.temporary_path.extended (a_name)
+				create f.make_with_path (p)
+				if f.exists and then f.is_readable then
+					f.open_read
+					create sed
+					create sed_rw.make_for_reading (f)
+					Result := sed.retrieved (sed_rw, False)
+					f.close
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	cache_data (a_data: ANY; a_name: READABLE_STRING_GENERAL)
+		local
+			p: PATH
+			f: RAW_FILE
+			retried: BOOLEAN
+			sed: SED_STORABLE_FACILITIES
+			sed_rw: SED_MEDIUM_READER_WRITER
+		do
+			if not retried then
+				p := eiffel_layout.temporary_path.extended (a_name)
+				create f.make_with_path (p)
+				if a_data /= Void then
+					if f.exists and then not f.is_writable then
+							-- Ignored but should not occured.
+						check False end
+					else
+						f.create_read_write
+						create sed
+						create sed_rw.make_for_writing (f)
+						sed.basic_store (a_data, sed_rw, True)
+						f.close
+					end
+				else
+					if f.exists then
+						f.delete
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+feature {NONE} -- Access		
 
 	libraries: SEARCH_TABLE [STRING_32]
 			-- A set of libraries to display in the dialog
@@ -314,38 +530,83 @@ feature {NONE} -- Access
 				l_dirs.forth
 			end
 		ensure
+			result_attached: Result /= Void
+		end
+
+	conf_system_list_from (libs: ITERABLE [READABLE_STRING_32]; nb: INTEGER): STRING_TABLE [CONF_SYSTEM_VIEW]
+			-- A set of libraries configurations from `lst' path name.
+		require
+			is_eiffel_layout_defined: is_eiffel_layout_defined
+		local
+			l_location: CONF_DIRECTORY_LOCATION
+			l_cfg_data: CONF_SYSTEM_VIEW
+		do
+			create Result.make (nb)
+
+			across libs as ic loop
+				create l_location.make (ic.item, target)
+
+				create l_cfg_data.make (l_location)
+				if l_cfg_data.has_library_target then
+					Result.force (l_cfg_data, ic.item)
+				end
+			end
+		ensure
 			result_attached: attached Result
 		end
 
-	configuration_libraries: STRING_TABLE [CONF_SYSTEM]
+	configuration_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
 			-- A set of libraries configurations to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
 			l_libs: like libraries
-			l_loader: CONF_LOAD
-			l_factory: CONF_PARSE_FACTORY
-			l_location: CONF_DIRECTORY_LOCATION
 		do
-			l_libs := libraries
-			create Result.make (l_libs.count)
-
-			create l_factory
-			from l_libs.start until l_libs.after loop
-				create l_loader.make (l_factory)
-				create l_location.make (l_libs.item_for_iteration, target)
-				l_loader.retrieve_configuration (l_location.evaluated_path.name)
-				if
-					not l_loader.is_error and then
-					attached l_loader.last_system as l_system and then
-					attached l_system.library_target as l_target
-				then
-					Result.force (l_system, l_libs.item_for_iteration)
-				end
-				l_libs.forth
+			if attached {like configuration_libraries} cached_data ("configuration_libraries.cache") as cfg_libs then
+				Result := cfg_libs
+			else
+				l_libs := libraries
+				Result := conf_system_list_from (l_libs, l_libs.count)
+				cache_data (Result, "configuration_libraries.cache")
 			end
 		ensure
 			result_attached: attached Result
+		end
+
+	iron_configuration_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
+		local
+			installation_api: IRON_INSTALLATION_API
+			l_iron_layout: IRON_LAYOUT
+			l_iron_url_builder: IRON_URL_BUILDER
+			lst: ARRAYED_LIST [READABLE_STRING_32]
+			p: PATH
+		do
+			if attached {like configuration_libraries} cached_data ("iron_configuration_libraries.cache") as cfg_libs then
+				Result := cfg_libs
+			else
+				create l_iron_layout.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path)
+				create l_iron_url_builder
+				create installation_api.make_with_layout (l_iron_layout, l_iron_url_builder)
+				if attached installation_api.installed_packages as l_packages then
+					create lst.make (l_packages.count)
+					across
+						l_packages as ic
+					loop
+						p := installation_api.package_installation_path (ic.item)
+						if attached installation_api.projects_from_installed_package (ic.item) as l_projects then
+							across
+								l_projects as proj_ic
+							loop
+								lst.force ({STRING} "iron:" + ic.item.identifier + {STRING_32} ":" + proj_ic.item.name)
+							end
+						end
+					end
+					Result := conf_system_list_from (lst, lst.count)
+				else
+					create Result.make (0)
+				end
+				cache_data (Result, "iron_configuration_libraries.cache")
+			end
 		end
 
 	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
@@ -386,9 +647,9 @@ feature {NONE} -- Actions
 	browse
 			-- Browse for a location.
 		local
-			l_loader: CONF_LOAD
 			l_loc: CONF_FILE_LOCATION
 			l_dir: DIRECTORY
+			l_cfg_data: CONF_SYSTEM_VIEW
 		do
 			if not location.text.is_empty then
 				create l_loc.make (location.text, target)
@@ -400,28 +661,30 @@ feature {NONE} -- Actions
 
 			browse_dialog.show_modal_to_window (Current)
 			if attached browse_dialog.file_name as l_fn and then not l_fn.is_empty then
-				create l_loader.make (create {CONF_PARSE_FACTORY})
-				l_loader.retrieve_configuration (l_fn)
-				if not l_loader.is_error and then attached l_loader.last_system as l_system then
-					if not attached l_system.library_target as l_target then
-						prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
-					elseif l_target.options.is_void_safety_sufficient (target.options) then
-						on_library_selected (l_system, l_fn)
+				create l_cfg_data.make_from_path (create {PATH}.make_from_string (l_fn))
+				if l_cfg_data.has_library_target then
+					if
+						attached l_cfg_data.conf_option as l_options and then
+						l_options.is_void_safety_sufficient (target.options)
+					then
+						on_library_selected (l_cfg_data, l_fn)
 					else
-						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_system, l_fn), Void)
+						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_cfg_data, l_fn), Void)
 					end
+				else
+					prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
 				end
 			end
 		end
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: CONF_SYSTEM; a_location: READABLE_STRING_GENERAL)
+	on_library_selected (a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
 			-- Called when a library is selected
 		require
-			has_library_target: a_library.library_target /= Void
+			is_library_target: a_library.has_library_target
 		do
-			name.set_text (a_library.library_target.name)
+			name.set_text (a_library.library_target_name)
 			location.set_text (a_location)
 		end
 
@@ -460,177 +723,32 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
-	populated_configuration_libraries: detachable like configuration_libraries
-	libraries_table: detachable STRING_TABLE [READABLE_STRING_GENERAL]
-	libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
-
 	populate_libraries
 			-- Populates the list of libraries in the UI
 		local
-			l_libraries: like configuration_libraries
-			l_libraries_table: like libraries_table
-			l_libraries_sorted_keys: like libraries_sorted_keys
-			l_target: CONF_TARGET
-			l_path: READABLE_STRING_GENERAL
-			l_key: STRING_32
+			l_libraries: like configuration_libraries 
+			l_iron_libraries: like iron_configuration_libraries
 			l_style: EV_POINTER_STYLE
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+			libs_box: like libraries_box
+			libs: like configuration_libraries
 		do
 			l_style := pointer_style
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 
 			l_libraries := configuration_libraries
-			populated_configuration_libraries := l_libraries
+			l_iron_libraries := iron_configuration_libraries
 
-				-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
-			create l_libraries_table.make (l_libraries.count)
-			from l_libraries.start until l_libraries.after loop
-				l_target := l_libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					l_path := l_libraries.key_for_iteration
-					create l_key.make (256)
-					l_key.append_string_general (l_target.name)
-					l_key.append_string_general (once " # ")
-					l_key.append_string_general (l_path)
-					l_libraries_table.force (l_path, l_key)
-				end
-				l_libraries.forth
-			end
+			libs_box := libraries_box
+			create libs.make (l_libraries.count + l_iron_libraries.count)
+			libs.merge (l_libraries)
+			libs.merge (l_iron_libraries)
 
-				-- Sort keys
-			create l_libraries_sorted_keys.make_from_array (l_libraries_table.current_keys)
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
-			l_sorter.sort (l_libraries_sorted_keys)
+			libs_box.set_configuration_libraries (libs)
 
-			libraries_table := l_libraries_table
-			libraries_sorted_keys := l_libraries_sorted_keys
+			libs_box.set_filter_text (filter_text)
+			libs_box.update_grid
 
-			update_grid
 			set_pointer_style (l_style)
-		end
-
-	update_grid
-			-- Update grid
-		require
-			libraries_table_attached: libraries_table /= Void
-			libraries_sorted_keys_attached: libraries_sorted_keys /= Void
-			populated_configuration_libraries_attached: populated_configuration_libraries /= Void
-		local
-			l_libraries_sorted_keys: like libraries_sorted_keys
-			l_libraries_table: like libraries_table
-			l_libraries: like populated_configuration_libraries
-			l_libraries_grid: like libraries_grid
-			l_system: CONF_SYSTEM
-			l_target: CONF_TARGET
-			l_row: EV_GRID_ROW
-			l_item: EV_GRID_LABEL_ITEM
-			l_col: EV_GRID_COLUMN
-			l_name_width: INTEGER
-			l_void_safety_width: INTEGER
-			l_path: READABLE_STRING_GENERAL
-			l_description: STRING_32
-			l_filter: detachable STRING_32
-			l_filter_engine: detachable KMP_WILD
-		do
-			l_libraries_grid := libraries_grid
-			l_libraries_grid.remove_and_clear_all_rows
-
-			l_libraries_table := libraries_table
-			l_libraries_sorted_keys := libraries_sorted_keys
-			if l_libraries_table /= Void and l_libraries_sorted_keys /= Void and then l_libraries_sorted_keys.count > 0 then
-
-				l_libraries := populated_configuration_libraries
-
-					-- And filter if pattern specified
-				l_filter := filter.text
-				l_filter.left_adjust
-				l_filter.right_adjust
-				if l_filter.is_empty then
-					l_filter := Void
-				else
-					if l_filter.item (1) /= '*' then
-						l_filter.prepend_character ('*')
-					end
-					if l_filter.item (l_filter.count) /= '*' then
-						l_filter.append_character ('*')
-					end
-					create l_filter_engine.make_empty
-					l_filter_engine.set_pattern (l_filter)
-					l_filter_engine.disable_case_sensitive
-				end
-
-					-- Build libraries list
-				l_libraries_grid.set_row_count_to (l_libraries_sorted_keys.count)
-				from l_libraries_sorted_keys.start until l_libraries_sorted_keys.after loop
-					l_row := l_libraries_grid.row (l_libraries_sorted_keys.index)
-
-						-- Fetch path from sortable key name
-					l_path :=  l_libraries_table.item (l_libraries_sorted_keys.item_for_iteration)
-					check
-						l_path_attached: l_path /= Void
-						l_libraries_has_l_path: l_libraries.has (l_path)
-					end
-
-					l_system := l_libraries.item (l_path)
-					l_target := l_system.library_target
-					check l_target_attached: l_target /= Void end
-
-						-- Extract description
-					l_description := l_system.description
-					if l_description = Void or else l_description.is_empty then
-						l_description := l_target.description
-						if l_description = Void or else l_description.is_empty then
-							l_description := once "No description available for library"
-						end
-					end
-
-					if l_filter_engine /= Void then
-						l_filter_engine.set_text (l_target.name)
-						if not l_filter_engine.pattern_matches then
-							l_row.hide
-						end
-					else
-						l_row.show
-					end
-
-						-- Library name
-					create l_item.make_with_text (l_system.name)
-					l_item.set_tooltip (l_description)
-					l_row.set_item (name_column, l_item)
-					l_name_width := l_name_width.max (l_item.required_width + 10)
-
-						-- Void safety status.
-					create l_item.make_with_text (conf_interface_names.option_void_safety_value [l_target.options.void_safety.index])
-					l_item.set_tooltip (conf_interface_names.option_void_safety_value_description [l_target.options.void_safety.index])
-					if l_target.options.is_void_safety_supported (target.options) then
-							-- Library void-safety setting perfectly matches the one used by the target.
-						l_item.set_pixmap (conf_pixmaps.general_tick_icon)
-					elseif l_target.options.is_void_safety_sufficient (target.options) then
-							-- Library void-safety setting is usable by the target with a warning.
-						l_item.set_pixmap (conf_pixmaps.general_warning_icon)
-					else
-							-- Library void-safety setting is too weak for the target.
-						l_row.hide
-					end
-					l_row.set_item (void_safety_column, l_item)
-					l_void_safety_width := l_void_safety_width.max (l_item.required_width + 10)
-
-						-- Location
-					create l_item.make_with_text (l_path)
-					l_item.set_tooltip (l_path)
-					l_row.set_item (location_column, l_item)
-
-					l_row.select_actions.extend (agent on_library_selected (l_system, l_path))
-					l_row.set_data (l_target)
-
-					l_libraries_sorted_keys.forth
-				end
-
-				l_col := l_libraries_grid.column (name_column)
-				if l_col.width < l_name_width then
-					l_col.set_width (l_name_width)
-				end
-			end
 		end
 
 	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: SEARCH_TABLE [STRING_32])
@@ -739,6 +857,9 @@ feature {NONE} -- Constants
 
 	location_column: INTEGER = 3
 			-- Index of a column with a library location.
+
+invariant
+	target_set_in_boxes: libraries_box.target = target
 
 ;note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

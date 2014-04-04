@@ -74,8 +74,8 @@ feature -- Access: repository
 		do
 			installation_api.db.remove_repository_by_uri (a_uri)
 			if attached repository_at (a_uri) as repo then
-				layout.iron_safe_delete_file (layout.repository_data_path (repo))
-				layout.iron_safe_delete_file (layout.repository_packages_data_path (repo))
+				layout.iron_safe_delete_folder (layout.repository_data_folder (repo))
+--				layout.iron_safe_delete_file (layout.repository_packages_data_path (repo))
 				layout.iron_safe_delete_folder (layout.repository_archive_path (repo))
 			end
 			installation_api.refresh
@@ -241,7 +241,7 @@ feature -- Operation
 			retried: BOOLEAN
 		do
 			if not retried then
-				p := layout.repository_data_path (repo)
+				p := layout.repository_data_file (repo)
 				create f.make_with_path (p)
 				if f.exists and then f.is_access_readable then
 					f.open_read
@@ -266,7 +266,8 @@ feature -- Operation
 			installation_api.db.save_available_repository_packages (repo)
 
 				-- Save repository object
-			p := layout.repository_data_path (repo)
+			p := layout.repository_data_file (repo)
+			ensure_folder_exists (p.parent)
 			create f.make_with_path (p)
 			f.create_read_write
 			f.independent_store (repo)

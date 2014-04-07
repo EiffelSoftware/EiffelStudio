@@ -8478,25 +8478,25 @@ feature {NONE} -- Visitor
 	process_export_clause_as (l_as: EXPORT_CLAUSE_AS)
 			-- Process `l_as'.
 		do
-			safe_process (l_as.meaningful_content)
+			safe_process (l_as.content)
 		end
 
 	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS)
 			-- Process `l_as'.
 		do
-			safe_process (l_as.meaningful_content)
+			safe_process (l_as.content)
 		end
 
 	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS)
 			-- Process `l_as'.
 		do
-			safe_process (l_as.meaningful_content)
+			safe_process (l_as.content)
 		end
 
 	process_select_clause_as (l_as: SELECT_CLAUSE_AS)
 			-- Process `l_as'.
 		do
-			safe_process (l_as.meaningful_content)
+			safe_process (l_as.content)
 		end
 
 	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS)
@@ -8712,7 +8712,7 @@ feature {NONE} -- Parenthesis alias
 						-- Process call to bracket feature
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
-					process_call (constrained_target_type, Void, id_feature_name, alias_feature, p.meaningful_content, False, False, True, False, False)
+					process_call (constrained_target_type, Void, id_feature_name, alias_feature, p.parameters, False, False, True, False, False)
 					is_qualified_call := l_is_qualified_call
 					if error_level = l_error_level and then attached nested_b then
 						if l_is_multi_constraint then

@@ -61,10 +61,10 @@ feature -- Encoder
 					then
 						Result.extend (c)
 					else
-						Result.append (url_encoded_char (l_code))
+						append_url_encoded_char (l_code, Result)
 					end
 				else
-					Result.append (url_encoded_char (l_code))
+					append_url_encoded_char (l_code, Result)
 				end
 				i := i + 1
 			end
@@ -97,14 +97,14 @@ feature -- Encoder
 						if a_ignore.has (c) then
 							s8.extend (c)
 						else
-							s8.append (url_encoded_char (l_code))
+							append_url_encoded_char (l_code, s8)
 						end
 					end
 				else
 					if a_ignore.has (c) then
 						s8.extend (c)
 					else
-						s8.append (url_encoded_char (l_code))
+						append_url_encoded_char (l_code, s8)
 					end
 				end
 				i := i + 1
@@ -113,24 +113,41 @@ feature -- Encoder
 
 feature {NONE} -- encoder character
 
-	url_encoded_char (a_code: NATURAL_32): STRING_8
+	append_url_encoded_char (a_code: NATURAL_32; a_output: STRING_GENERAL)
+		local
+			c: INTEGER
 		do
-			create Result.make (3)
 			if a_code.is_valid_character_8_code then
-				Result.extend ('%%')
-				Result.append (a_code.to_hex_string)
-				from
-				until
-					Result.count < 2 or else Result[2] /= '0'
-				loop
-					Result.remove (2)
-				end
+				c := a_code.to_integer_32
+				a_output.append_code (37) -- 37 '%%'
+				a_output.append_code (hex_digit [c |>> 4])
+				a_output.append_code (hex_digit [c & 0xF])
 			else
 				has_error := True --| Non-ascii escape not currently supported
 			end
-		ensure
-			exists: Result /= Void
 		end
+
+ 	hex_digit: SPECIAL [NATURAL_32]
+ 			-- Hexadecimal digits.
+ 		once
+ 			create Result.make_filled (0, 16)
+ 			Result [0] := {NATURAL_32} 48 -- 48 '0'
+ 			Result [1] := {NATURAL_32} 49 -- 49 '1'
+ 			Result [2] := {NATURAL_32} 50 -- 50 '2'
+ 			Result [3] := {NATURAL_32} 51 -- 51 '3'
+ 			Result [4] := {NATURAL_32} 52 -- 52 '4'
+ 			Result [5] := {NATURAL_32} 53 -- 53 '5'
+ 			Result [6] := {NATURAL_32} 54 -- 54 '6'
+ 			Result [7] := {NATURAL_32} 55 -- 55 '7'
+ 			Result [8] := {NATURAL_32} 56 -- 56 '8'
+ 			Result [9] := {NATURAL_32} 57 -- 57 '9'
+ 			Result [10] := {NATURAL_32} 65 -- 65 'A'
+ 			Result [11] := {NATURAL_32} 66 -- 66 'B'
+ 			Result [12] := {NATURAL_32} 67 -- 67 'C'
+ 			Result [13] := {NATURAL_32} 68 -- 68 'D'
+ 			Result [14] := {NATURAL_32} 69 -- 69 'E'
+ 			Result [15] := {NATURAL_32} 70 -- 70 'F'
+ 		end
 
 feature -- Decoder
 
@@ -365,7 +382,7 @@ feature {NONE} -- Hexadecimal and strings
 		end
 
 note
-	copyright: "2011-2012, Eiffel Software and others"
+	copyright: "2011-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

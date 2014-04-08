@@ -28,17 +28,25 @@ def get_package_id (a_name):
 			return trim(s)
 
 def get_ise_libraries(basedir, v):
+	branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
+	#branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s/Src/library" % (v), d ])
+		call(["svn", "checkout", "%s/Src/library" % (branch_dir), d ])
 
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s/Src/contrib" % (v), d ])
+		call(["svn", "checkout", "%s/Src/contrib" % (branch_dir), d ])
+
+	d = os.path.join (basedir, "unstable")
+	if os.path.exists (d):
+		call(["svn", "update", d ])
+	else:
+		call(["svn", "checkout", "%s/Src/unstable" % (branch_dir), d ])
 
 def process_package (fn,u,p,repo,v):
 	import re;

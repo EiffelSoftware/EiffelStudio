@@ -26,7 +26,7 @@ feature -- Initialization
 			set_geometry (lb_server, 5, 7, 80, 23, "SQL Server")
 			create tb_server.make
 			tb_server.set_parent (main_window)
-			set_geometry (tb_server, 90, 5, 160, 25, "(local)\VSDotNet")
+			set_geometry (tb_server, 90, 5, 160, 25, "localhost")
 
 			create lb_database.make
 			lb_database.set_parent (main_window)

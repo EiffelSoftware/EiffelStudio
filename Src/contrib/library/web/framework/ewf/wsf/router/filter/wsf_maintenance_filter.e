@@ -61,6 +61,7 @@ feature -- Basic operations
 				create h.make_with_count (1)
 				h.put_content_length (s.count)
 				h.put_content_type_text_plain
+				res.set_status_code ({HTTP_STATUS_CODE}.service_unavailable)
 				res.put_header_lines (h)
 				res.put_string (s)
 			else
@@ -69,7 +70,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

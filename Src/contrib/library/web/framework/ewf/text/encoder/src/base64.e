@@ -125,17 +125,17 @@ feature -- Decoder
 				byte_count := 0
 
 				pos := next_encoded_character_position (v, pos)
-				if pos <= n then
+				if pos < n then
 					byte1 := base64chars.index_of (v[pos], 1) - 1
 					byte_count := byte_count + 1
 
 					pos := next_encoded_character_position (v, pos)
-					if pos <= n then
+					if pos < n then
 						byte2 := base64chars.index_of (v[pos], 1) - 1
 						byte_count := byte_count + 1
 
 						pos := next_encoded_character_position (v, pos)
-						if pos <= n then
+						if pos < n then
 							c := v[pos]
 							if c /= '=' then
 								byte3 := base64chars.index_of (c, 1) - 1
@@ -150,8 +150,14 @@ feature -- Decoder
 									byte_count := byte_count + 1
 								end
 							end
+						else
+							has_error := True
 						end
+					else
+						has_error := True
 					end
+				else
+					has_error := True
 				end
 --				pos := pos + byte_count
 
@@ -293,7 +299,7 @@ feature {NONE} -- Constants
 	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 2011-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

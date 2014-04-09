@@ -38,13 +38,15 @@ feature -- Access
 			res: HTTP_CLIENT_RESPONSE
 			f: JSON_TO_IRON_FACTORY
 		do
+			last_operation_succeed := False
+			last_operation_error_message := Void
 			sess := new_session (repository.server_uri.string)
 			res := sess.get (urls.path_package_list (repository), Void)
 			if res.error_occurred then
-				if not is_silent then
-					print ("ERROR: connection%N")
-				end
+				last_operation_succeed := False
+				last_operation_error_message := "ERROR: connection failed"
 			elseif attached res.body as l_body then
+				last_operation_succeed := True
 				create {ARRAYED_LIST [IRON_PACKAGE]} Result.make (5)
 				create f
 				if attached f.json_to_packages (l_body, repository) as lst then
@@ -52,21 +54,15 @@ feature -- Access
 						lst as p
 					loop
 						Result.force (p.item)
-						if not is_silent then
-							print ("- ")
-							print (p.item.human_identifier)
-							print ("%N")
-						end
 					end
-				end
-				if not is_silent and then Result.is_empty then
-					print ("ERROR: invalid data!%N")
+				else
+					last_operation_succeed := False
+					last_operation_error_message := "ERROR: invalid package data"
 					Result := Void
 				end
 			else
-				if not is_silent then
-					print ("ERROR: empty%N")
-				end
+				last_operation_succeed := False
+				last_operation_error_message := "ERROR: empty response body"
 			end
 		end
 
@@ -138,7 +134,6 @@ feature -- Operation
 	last_operation_error_message: detachable READABLE_STRING_8
 
 	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32;
-				a_archive_path: detachable PATH;
 				a_package: detachable IRON_PACKAGE;
 				a_user, a_password: READABLE_STRING_32)
 		require
@@ -184,7 +179,14 @@ feature -- Operation
 				end
 			elseif res.status = 401 then
 				last_operation_succeed := False
-				last_operation_error_message := "[Error] Publish package not authorized!"
+				if attached res.body as l_body then
+					last_operation_error_message := "[Error] Publish package not authorized!" + l_body
+				else
+					last_operation_error_message := "[Error] Publish package not authorized!"
+				end
+			elseif res.status = 500 then
+				last_operation_succeed := False
+				last_operation_error_message := "[Error] Server reported internal error!"
 			else
 				last_operation_succeed := True
 			end
@@ -261,6 +263,7 @@ feature -- Operation
 				last_operation_succeed := False
 				last_operation_error_message := "[Error] archive uploading not authorized!"
 			else
+					--| TODO: check conherence of size and hash value.
 				last_operation_succeed := True
 			end
 			ctx.set_upload_filename (Void)
@@ -295,17 +298,6 @@ feature -- Operation
 			else
 				last_operation_succeed := True
 			end
-		end
-
-feature -- Status report
-
-	is_silent: BOOLEAN
-
-feature -- Change
-
-	set_is_silent (b: BOOLEAN)
-		do
-			is_silent := b
 		end
 
 feature {NONE} -- Implementation

@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			args_has_index_0: args.lower = 0 and not args.is_empty
 		do
 			iron := a_iron
---			connector := server_connector_from_command (args[0])
 		end
 
 feature {NONE} -- Access		
@@ -45,46 +44,11 @@ feature -- Execution
 		local
 			server: detachable IRON_NODE_SERVER
 		do
---			if attached connector as conn then
---				if conn.is_case_insensitive_equal ("cgi") then
---					create server.make_and_launch_cgi (iron)
---				elseif conn.is_case_insensitive_equal ("libfcgi") then
---					create server.make_and_launch_libfcgi (iron)
---				end
---			end
---			if server = Void then
---					-- Default
-				create server.make_and_launch (iron)
---			end
+			create server.make_and_launch (iron)
 		end
 
-feature {NONE} -- Implementation
-
---	server_connector_from_command (cmd: READABLE_STRING_32): detachable READABLE_STRING_8
---		local
---			p: PATH
---			s: STRING_32
---			ext: detachable READABLE_STRING_32
---		do
---			create p.make_from_string (cmd)
---			if attached p.entry as l_entry then
---				s := l_entry.name
---				ext := l_entry.extension
---				if ext /= Void then
---					s.remove_tail (ext.count + 1)
---				else
---					ext := ""
---				end
---				if s.ends_with ("--cgi") or ext.is_case_insensitive_equal_general ("cgi") then
---					Result := "cgi"
---				elseif s.ends_with ("--libfcgi") or ext.is_case_insensitive_equal_general ("fcgi") then
---					Result := "libfcgi"
---				end
---			end
---		end
-
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

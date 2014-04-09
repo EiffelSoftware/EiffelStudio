@@ -18,8 +18,16 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_file (p: PATH)
+			-- Create Current from sharing data file `p'
 		do
 			import (p)
+		end
+
+	make_from_package_file (pf: IRON_PACKAGE_FILE)
+			-- Create Current from package file `pf'
+		do
+			name := pf.package_name
+			title := pf.item ("title")
 		end
 
 feature -- Access
@@ -37,6 +45,35 @@ feature -- Access
 	source: detachable PATH
 
 	indexes: detachable ARRAYED_LIST [READABLE_STRING_32]
+
+feature -- Status report
+
+	has_name: BOOLEAN
+		do
+			Result := not is_whitespace_string (name)
+		end
+
+	has_title: BOOLEAN
+		do
+			Result := not is_whitespace_string (title)
+		end
+
+	has_description: BOOLEAN
+		do
+			Result := not is_whitespace_string (description)
+		end
+
+	has_source_or_archive: BOOLEAN
+		do
+			Result := archive /= Void or source /= Void
+		end
+
+feature {NONE} -- Helper
+
+	is_whitespace_string (s: detachable READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := s = Void or else (s.is_empty or s.is_whitespace)
+		end
 
 feature -- Change
 

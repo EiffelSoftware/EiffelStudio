@@ -95,21 +95,7 @@ feature -- Execution
 			-- Execute the filter.
 		local
 			d: HTTP_DATE
---			conneg: SERVER_MEDIA_TYPE_NEGOTIATION
---			t: detachable READABLE_STRING_8
 		do
---			t := "text/html"
---			create conneg.make (t)
---			if attached conneg.preference (<<"text/html", "application/json">>, req.http_accept) as l_variants then
---				if l_variants.is_acceptable then
---					t := l_variants.media_type
---				end
---			end
---			if t = Void then
---				t := "text/html"
---			end
---			if t.same_string ("application/json") then
-
 			create d.make_now_utc
 			res.put_header_line ("Date: " + d.string)
 
@@ -188,7 +174,7 @@ feature -- Router and Filter
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

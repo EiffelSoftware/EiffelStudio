@@ -45,6 +45,16 @@ feature -- Change
 			ini.reset
 		end
 
+	put (a_value: detachable READABLE_STRING_32; a_name: READABLE_STRING_GENERAL)
+			-- Put `a_value' data associated with `a_name'.
+		do
+			if a_value = Void then
+				remove (a_name)
+			else
+				ini.put (a_value, a_name)
+			end
+		end
+
 	remove (a_name: READABLE_STRING_GENERAL)
 			-- Remove data associated with `a_name'
 		do

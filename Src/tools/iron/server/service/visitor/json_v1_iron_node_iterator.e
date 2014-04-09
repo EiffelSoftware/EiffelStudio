@@ -162,7 +162,6 @@ feature -- Visit
 	visit_package (p: IRON_NODE_PACKAGE)
 		local
 			js: JSON_STRING
---			l_size: INTEGER
 			j_object: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
@@ -217,6 +216,12 @@ feature -- Visit
 				end
 				js := p.archive_file_size.out + " octects"
 				j_object.put (js, "archive_size")
+
+				if attached p.archive_hash as l_hash then
+					js := l_hash.out
+					j_object.put (js, "archive_hash")
+				end
+
 				if attached p.archive_last_modified as dt then
 					js := date_as_string (dt)
 					j_object.put (js, "archive_date")

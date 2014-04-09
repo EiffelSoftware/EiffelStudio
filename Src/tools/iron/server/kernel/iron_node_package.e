@@ -121,8 +121,6 @@ feature -- Access: archive
 			Result := attached name as n and then a_name.is_case_insensitive_equal (n)
 		end
 
-	has_archive: BOOLEAN
-
 feature -- Access: items	
 
 	items: detachable STRING_TABLE [detachable READABLE_STRING_32]

@@ -10,16 +10,9 @@ deferred class
 
 feature -- Access
 
-	item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+	item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32 assign put
 			-- Data associated with `item'
 		deferred
-		end
-
-	remove (a_name: READABLE_STRING_GENERAL)
-			-- Remove data associated with `a_name'
-		deferred
-		ensure
-			removed: item (a_name) = Void
 		end
 
 	path: PATH
@@ -31,6 +24,37 @@ feature -- Access
 		end
 
 	projects: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; relative_uri: READABLE_STRING_8]]
+
+	title: detachable READABLE_STRING_32 assign set_title
+			-- Optional title.
+		do
+			Result := item ("title")
+		end
+
+	description: detachable READABLE_STRING_32 assign set_description
+			-- Optional description.
+		do
+			Result := item ("description")
+		end
+
+	tags: detachable LIST [READABLE_STRING_32] assign set_tags
+			-- Optional list of tags.
+		local
+			l_segments: LIST [READABLE_STRING_32]
+			t: STRING_32
+		do
+			if attached item ("tags") as s_tags then
+				l_segments := s_tags.split (',')
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (l_segments.count)
+				across
+					l_segments as ic
+				loop
+					t := ic.item
+					t.adjust
+					Result.force (t)
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -46,6 +70,61 @@ feature -- Status report
 		end
 
 feature -- Change
+
+	set_title (a_title: like title)
+			-- Set `a_title' to `title'.
+		do
+			if a_title = Void then
+				remove ("title")
+			else
+				put (a_title, "title")
+			end
+		end
+
+	set_description (a_description: like description)
+			-- Set `a_description' to `description'.
+		do
+			if a_description = Void then
+				remove ("description")
+			else
+				put (a_description, "description")
+			end
+		end
+
+	set_tags (a_tags: like tags)
+			-- Set `a_tags' to `tags'.
+		local
+			s: STRING_32
+		do
+			if a_tags = Void or else a_tags.is_empty then
+				remove ("tags")
+			else
+				create s.make_empty
+				across
+					a_tags as ic
+				loop
+					if not s.is_empty then
+						s.append_character (',')
+					end
+					s.append (ic.item)
+				end
+				put (s, "tags")
+			end
+		end
+
+	put (a_value: detachable READABLE_STRING_32; a_name: READABLE_STRING_GENERAL)
+			-- Put `a_value' data associated with `a_name'.
+		deferred
+		ensure
+			added: item (a_name) ~ a_value
+		end
+
+	remove (a_name: READABLE_STRING_GENERAL)
+			-- Remove data associated with `a_name'.
+		deferred
+		ensure
+			removed: item (a_name) = Void
+		end
 
 	reset
 			-- Reset Current package file

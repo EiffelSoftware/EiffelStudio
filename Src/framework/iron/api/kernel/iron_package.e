@@ -206,14 +206,42 @@ feature -- Access
 	tags: ARRAYED_LIST [READABLE_STRING_32]
 			-- Tags
 
-feature -- Access: archive	
+feature -- Access: archive
+
+	archive_hash: detachable READABLE_STRING_8
+			-- Hash of the archive file.
 
 	archive_uri: detachable URI
+			-- URI of the associated archive file.
 
 	archive_path: detachable PATH
+			-- Location of the associated archive file.
 		do
 			if has_archive_file_uri and then attached archive_uri as l_uri then
 				Result := uri_to_path (l_uri)
+			end
+		end
+
+feature {NONE} -- Basic operation: archive
+
+	get_archive_hash
+			-- Get `archive_hash' from `archive_path'.
+		require
+			has_archive_path: archive_path /= Void
+		local
+			sha1: SHA1
+			f: RAW_FILE
+		do
+			archive_hash := Void
+			if attached archive_path as p then
+				create f.make_with_path (p)
+				if f.exists and then f.is_readable then
+					f.open_read
+					create sha1.make
+					sha1.update_from_io_medium (f)
+					f.close
+					archive_hash := "SHA1:" + sha1.digest_as_string
+				end
 			end
 		end
 
@@ -314,8 +342,35 @@ feature -- Change
 			if v /= Void then
 				create iri.make_from_string (v)
 				archive_uri := iri.to_uri
+				get_archive_hash
 			else
 				archive_uri := Void
+				archive_hash := Void
+			end
+		end
+
+	set_archive_path (p: detachable PATH)
+		local
+			path_uri: PATH_URI
+		do
+			if p = Void then
+				set_archive_uri (Void)
+			else
+				create path_uri.make_from_path (p)
+				if path_uri.is_valid then
+					set_archive_uri (path_uri.string)
+				else
+					set_archive_uri (Void)
+				end
+			end
+		end
+
+	set_archive_hash (v: detachable READABLE_STRING_GENERAL)
+		do
+			if v /= Void and then v.is_valid_as_string_8 then
+				archive_hash := v.to_string_8
+			else
+				archive_hash := Void
 			end
 		end
 
@@ -327,16 +382,23 @@ feature {NONE} -- Implementation
 		local
 			l_path: READABLE_STRING_32
 			iri: IRI
+			path_uri: PATH_URI
 		do
-			create iri.make_from_uri (u)
-			l_path := iri.decoded_path
-			if
-				{PLATFORM}.is_windows and then
-				l_path.starts_with ("/")
-			then
-				l_path := l_path.substring (2, l_path.count)
+			create path_uri.make_from_file_uri (u)
+			if path_uri.is_valid then
+				Result := path_uri.file_path
+			else
+					-- Old code
+				create iri.make_from_uri (u)
+				l_path := iri.decoded_path
+				if
+					{PLATFORM}.is_windows and then
+					l_path.starts_with ("/")
+				then
+					l_path := l_path.substring (2, l_path.count)
+				end
+				create Result.make_from_string (l_path)
 			end
-			create Result.make_from_string (l_path)
 		end
 
 note

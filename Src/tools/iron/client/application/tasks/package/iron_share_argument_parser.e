@@ -21,6 +21,18 @@ create
 
 feature -- Access
 
+
+	configuration_file: detachable PATH
+			-- <Precursor>
+		do
+			if
+				has_option (configuration_file_switch) and then
+				attached option_of_name (configuration_file_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
 	username: detachable IMMUTABLE_STRING_32
 		do
 			if
@@ -36,6 +48,17 @@ feature -- Access
 			if
 				has_option (password_switch) and then
 				attached option_of_name (password_switch) as opt
+			then
+				create Result.make_from_string (opt.value)
+			end
+		end
+
+	package_file: detachable PATH
+			-- <Precursor>
+		do
+			if
+				has_option (package_file_switch) and then
+				attached option_of_name (package_file_switch) as opt
 			then
 				create Result.make_from_string (opt.value)
 			end
@@ -183,23 +206,28 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", False, False, "username", "required username", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", False, False, "password", "required password", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (repo_switch, "Repository", True, False, "url", "Repository url including the version", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (configuration_file_switch, "Configuration file location", True, False, "location", "location of configuration file that may set 'username,password,repository' (.ini syntax)", False))
+
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (data_switch, "Data file", True, False, "file", "File describing the data (check documentation for the format)", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_name_switch, "Package name", True, False, "name", "package name, override value from 'data file'", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_title_switch, "Package title", True, False, "name", "package title, override value from 'data file'", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_description_switch, "Package description", True, False, "description", "package description, override value from 'data file'", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override value from 'data file'", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override value from 'data file'", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_file_switch, "Iron package location", True, False, "path to package.iron", "package location, override existing value", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_name_switch, "Package name", True, False, "name", "package name, override existing value", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_title_switch, "Package title", True, False, "name", "package title, override existing value", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_description_switch, "Package description", True, False, "description", "package description, override existing value", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override existing value", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override existing value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_index_switch, "Associated package path (c.f full iron URI)", True, True, "path", "relative path from repository url", False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end
 
+	configuration_file_switch: STRING = "config"
 	username_switch: STRING = "u|username"
 	password_switch: STRING = "p|password"
 	repo_switch: STRING = "r|repository"
 	data_switch: STRING = "d|data"
 
+	package_file_switch: STRING = "package"
 	package_name_switch: STRING = "package-name"
 	package_title_switch: STRING = "package-title"
 	package_description_switch: STRING = "package-description"

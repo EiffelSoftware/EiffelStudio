@@ -76,8 +76,6 @@ feature -- Execution
 	display_status (iron: IRON_NODE)
 			-- Display status on iron installation
 		local
-			ut: FILE_UTILITIES
-			lay: IRON_NODE_LAYOUT
 			l_statuses: ARRAYED_LIST [like folder_status]
 			l_title_len: INTEGER
 			s: STRING
@@ -307,7 +305,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

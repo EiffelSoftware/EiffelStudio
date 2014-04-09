@@ -70,6 +70,12 @@ feature -- Access
 	to_reproduce: detachable STRING_32
 		-- How to reproduce the problem.
 
+	uploaded_files: detachable LIST[ESA_FILE_VIEW]
+		-- Uploaded files
+
+	temporary_files: detachable LIST[ESA_FILE_VIEW]
+		-- Temporary files
+
 
 feature -- Status Report
 
@@ -211,6 +217,22 @@ feature -- Element Change
 			priority := a_priority
 		ensure
 			priority_set: priority = a_priority
+		end
+
+	set_files (a_files: like uploaded_files)
+			-- Set `uploaded_files' with `a_files'
+		do
+			uploaded_files := a_files
+		ensure
+			uploaded_files_set: uploaded_files = a_files
+		end
+
+	set_temporary_files (a_files: like temporary_files )
+			-- Set `temporary_files' with `a_files'
+		do
+			temporary_files := a_files
+		ensure
+			temporary_files_set: temporary_files = a_files
 		end
 
 

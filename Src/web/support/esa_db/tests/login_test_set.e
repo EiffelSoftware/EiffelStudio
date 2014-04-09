@@ -82,7 +82,7 @@ feature -- Test routines
 			create l_db.make (connection)
 			l_db.connect
 			across l_db.countries  as c loop
-				print (c.item.ouput)
+				io.error.put_string (c.item.ouput)
 			end
 			l_db.disconnect
 		end

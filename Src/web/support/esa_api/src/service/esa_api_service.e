@@ -198,8 +198,26 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
-	problem_report (a_number: INTEGER): detachable ESA_REPORT
-			-- Problem report with number `a_number'.
+	problem_report_details (a_username: STRING; a_number: INTEGER): detachable ESA_REPORT
+			-- Problem report details for user `a_user_name' (Interactions and Attachments)with number `a_number'.
+		local
+			l_interactions: LIST[ESA_REPORT_INTERACTION]
+			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
+		do
+			if attached data_provider.problem_report (a_number) as l_report then
+				l_interactions := data_provider.interactions (a_username, a_number, l_report)
+				l_report.set_interactions (l_interactions)
+				across l_interactions as c loop
+					l_attachments := data_provider.attachments_headers (c.item)
+					c.item.set_attachments (l_attachments)
+				end
+				Result := l_report
+			end
+			is_successful := data_provider.is_successful
+		end
+
+	problem_report_details_guest (a_number: INTEGER): detachable ESA_REPORT
+			-- Problem report details for Guest user (Interactions and Attachments)with number `a_number'.
 		local
 			l_interactions: LIST[ESA_REPORT_INTERACTION]
 			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
@@ -208,7 +226,7 @@ feature -- Access
 				l_interactions := data_provider.interactions_guest (a_number, l_report)
 				l_report.set_interactions (l_interactions)
 				across l_interactions as c loop
-					l_attachments := data_provider.attachments_headers (c.item)
+					l_attachments := data_provider.attachments_headers_guest (c.item)
 					c.item.set_attachments (l_attachments)
 				end
 				Result := l_report
@@ -270,7 +288,6 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
-
 	temporary_problem_report (a_report_id: INTEGER): detachable TUPLE[synopsis : detachable STRING;
 															   release: detachable STRING;
 															   confidential: detachable STRING;
@@ -289,7 +306,6 @@ feature -- Access
 			Result := data_provider.temporary_problem_report (a_report_id)
 			is_successful := data_provider.is_successful
 		end
-
 
 	role (a_username: READABLE_STRING_32): ESA_USER_ROLE
 			-- Role associated with username `a_username'
@@ -313,7 +329,6 @@ feature -- Access
 			data_provider.disconnect
 			is_successful := data_provider.is_successful
 		end
-
 
 	security_questions: LIST[ESA_SECURITY_QUESTION]
 			-- Security questions
@@ -340,6 +355,65 @@ feature -- Access
 			Result := data_provider.temporary_interaction (a_interaction_id)
 			is_successful := data_provider.is_successful
 		end
+
+	temporary_problem_report_attachments (a_report_id: INTEGER): LIST[ESA_FILE_VIEW]
+		local
+			l_file: ESA_FILE_VIEW
+		do
+			create {ARRAYED_LIST[ESA_FILE_VIEW]}Result.make (0)
+			across data_provider.temporary_problem_report_attachments (a_report_id) as c loop
+				create l_file.make (c.item.filename, c.item.length, "")
+				l_file.set_id (c.item.id)
+				Result.force (l_file)
+			end
+			is_successful := data_provider.is_successful
+		end
+
+
+	temporary_interation_attachments (a_interaction_id: INTEGER): LIST[ESA_FILE_VIEW]
+			-- Attachments for temporary interaction `a_interaction_id'
+		local
+			l_file: ESA_FILE_VIEW
+		do
+			create {ARRAYED_LIST[ESA_FILE_VIEW]}Result.make (0)
+			across data_provider.temporary_interation_attachments (a_interaction_id) as c loop
+				create l_file.make (c.item.filename, c.item.length, "")
+				l_file.set_id (c.item.id)
+				Result.force (l_file)
+			end
+			is_successful := data_provider.is_successful
+		end
+
+	remove_all_temporary_report_attachments (a_report_id: INTEGER)
+			-- Remove all temporary attachments used by temporary report `a_report_id'.
+		do
+			data_provider.remove_all_temporary_report_attachments (a_report_id)
+			is_successful := data_provider.is_successful
+		end
+
+
+	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: STRING)
+			-- Remove a temporary attachment `a_filename' for the report `a_report_id'
+		do
+			data_provider.remove_temporary_report_attachment (a_report_id, a_filename)
+			is_successful := data_provider.is_successful
+		end
+
+	remove_temporary_interaction_attachment (a_interaction_id: INTEGER; a_filename: STRING)
+			-- Remove a temporary attachment `a_filename' for the interaction `a_interaction_id'
+		do
+			data_provider.remove_temporary_interaction_attachment (a_interaction_id, a_filename)
+			is_successful := data_provider.is_successful
+		end
+
+	remove_all_temporary_interaction_attachments (a_interaction_id: INTEGER)
+			-- Remove all temporary attachments used by temporary interaction `a_interaction_id'.
+		do
+			data_provider.remove_all_temporary_interaction_attachments (a_interaction_id)
+			is_successful := data_provider.is_successful
+		end
+
+
 
 feature -- Basic Operations
 
@@ -466,6 +540,22 @@ feature -- Basic Operations
 			is_successful := data_provider.is_successful
 		end
 
+
+
+	upload_temporary_report_attachment (a_report_id: INTEGER; a_file: ESA_FILE_VIEW)
+			-- Upload attachment in temporary table for temporary report `a_report_id'
+		do
+			data_provider.upload_temporary_report_attachment (a_report_id, a_file.size, a_file.name, a_file.content)
+			is_successful := data_provider.is_successful
+		end
+
+	upload_temporary_interaction_attachment	(a_interaction_id: INTEGER; a_file: ESA_FILE_VIEW)
+			-- Upload attachment in temporary table for temporary interaction `a_interaction_id'
+		do
+			data_provider.upload_temporary_interaction_attachment (a_interaction_id, a_file.size, a_file.name, a_file.content)
+			is_successful := data_provider.is_successful
+		end
+
 feature -- Element Settings
 
 	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER): BOOLEAN
@@ -519,7 +609,7 @@ feature -- Status Report
 	is_report_visible_guest (a_report: INTEGER): BOOLEAN
 			-- Can user `guest' see report number `a_number'?
 		do
-			Result := data_provider.report_visible_guest (a_report)
+			Result := data_provider.is_report_visible_guest (a_report)
 			is_successful := data_provider.is_successful
 		end
 

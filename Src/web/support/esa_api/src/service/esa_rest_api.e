@@ -247,6 +247,7 @@ feature -- Configure Resources Routes
 			create l_interaction_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
+			l_methods.enable_put
 			l_methods.enable_post
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_form", l_interaction_handler, l_methods)
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_form/{id}", l_interaction_handler, l_methods)

@@ -71,7 +71,6 @@ feature -- HTTP Methods
 			if attached {STRING_32} current_user_name (req) as l_user and then
 			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
 			   	api_service.commit_problem_report (l_id.integer_value)
-			   	api_service.remove_temporary_problem_report (l_id.integer_value)
 			   	to_implement ("l_number := Data_provider.last_problem_report_number")
 			   	to_implement ("send_new_report_email (l_number)")
 				if attached current_media_type (req) as l_type then

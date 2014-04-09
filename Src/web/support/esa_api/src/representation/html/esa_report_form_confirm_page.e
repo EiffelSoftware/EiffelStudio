@@ -38,6 +38,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.to_reproduce,"to_reproduce")
 			template.add_value (a_form.release, "release")
 			template.add_value (a_form.synopsis, "synopsis")
+			template.add_value (a_form.uploaded_files, "attachments")
 			template.add_value (a_form.id, "id")
 
 

@@ -79,6 +79,11 @@ feature -- Element change
 			private := a_private
 		end
 
+	set_id (a_id: like id)
+		do
+			id := a_id
+		end
+
 feature -- Output
 
 	string_8: STRING_8

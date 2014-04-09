@@ -81,15 +81,25 @@
                {/if}
                {unless condition="$form.private"}
                  <label>
-                    <input type="checkbox" name="private" value="False"> Private
+                    <input type="checkbox" name="private" value="True"> Private
                  </label>
                {/unless} 
-             </div>  
+             </div> 
+              {if isset="$temporary_files"}  
+                <div class="control-group">
+                <label class="control-label" for="fileInput">Temporary Attachments</label>
+                {foreach from="temporary_files" item="item"}
+                  <div class="controls">
+                       <input type="checkbox" name="temporary_files" value="{$item.name/}" checked />{$item.name/} <br />
+                  </div>
+                 {/foreach}
+               </div> 
+            {/if}  
 
               <div class="control-group">
               <label class="control-label" for="fileInput">Attachments</label>
               <div class="controls">
-                <input class="form-control input-file" id="fileInput" type="file" multiple>
+                 <input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
               </div>
             </div> 
            <hr>

@@ -120,7 +120,7 @@ feature -- Edit Report Problem
 									   private: detachable READABLE_STRING_32]
 		do
 			create Result.make (api_service.status, api_service.all_categories)
-			Result.set_report (api_service.problem_report (a_report_id))
+			Result.set_report (api_service.problem_report_details_guest (a_report_id))
 			if attached Result.report as l_report and then
 			   attached l_report.category as l_category then
 			   	Result.set_category_by_synopsis (l_category.synopsis)
@@ -138,6 +138,7 @@ feature -- Edit Report Problem
 					Result.set_private (l_private.to_boolean)
 				end
 			end
+			Result.set_temporary_files (api_service.temporary_interation_attachments (a_interaction_id))
 		end
 
 feature -- New Report Problem
@@ -154,7 +155,7 @@ feature -- New Report Problem
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				if attached current_media_type (req) as l_type then
-					if attached api_service.problem_report (a_report_id) as l_report then
+					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						create l_form.make (api_service.status, api_service.all_categories)
 						l_form.set_report (l_report)
 						l_form.set_private (l_report.confidential)
@@ -194,7 +195,7 @@ feature -- Update Report Problem
 					-- Logged in user
 				to_implement ("Check user roles")
 				if attached current_media_type (req) as l_type then
-					if attached api_service.problem_report (a_report_id) as l_report then
+					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						l_form := extract_form_data (req, l_type)
 						l_form.set_id (a_interaction_id)
 						l_form.set_report (l_report)
@@ -226,10 +227,42 @@ feature -- Update Report Problem
 	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Update problem report.
 		local
-			l_reproduce: STRING_32
+			l_found: BOOLEAN
 		do
 			if attached a_form.description as l_category then
 				api_service.initialize_interaction (a_form.id, l_category, a_form.selected_status, a_form.private)
+			end
+				-- Update temporary files
+			if req.form_parameter ("temporary_files") = Void then
+				-- remove all the attached files.
+				api_service.remove_all_temporary_interaction_attachments (a_form.id)
+			elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
+					l_file.is_string then
+				across api_service.temporary_interation_attachments (a_form.id) as c loop
+					if not c.item.name.same_string (l_file.value) then
+						api_service.remove_temporary_interaction_attachment (a_form.id, l_file.value)
+					end
+				end
+			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
+				across api_service.temporary_interation_attachments (a_form.id) as c loop
+					across l_files as lf loop
+						if c.item.name.same_string (lf.item.value) then
+							l_found := True
+						end
+					end
+					if not l_found then
+						api_service.remove_temporary_interaction_attachment (a_form.id, c.item.name)
+					else
+						l_found := False
+					end
+				end
+			end
+
+				-- Add new uploaded files
+			if attached a_form.uploaded_files as l_files then
+				across l_files as c loop
+					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
+				end
 			end
 		end
 
@@ -238,7 +271,6 @@ feature -- Initialize Report Problem
 	initialize_interaction_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_id: INTEGER)
 			-- Initialize temporary interaction for the report `a_report_id'.
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_interaction_id: INTEGER
 			l_form: ESA_INTERACTION_FORM_VIEW
@@ -248,7 +280,7 @@ feature -- Initialize Report Problem
 					-- Logged in user
 				l_temp_interaction_id := api_service.new_interaction_id (l_user, a_report_id)
 				if attached current_media_type (req) as l_type then
-					if attached api_service.problem_report (a_report_id) as l_report then
+					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						l_form := extract_form_data (req, l_type)
 						l_form.set_id (l_temp_interaction_id)
 						l_form.set_report (l_report)
@@ -277,11 +309,14 @@ feature -- Initialize Report Problem
 			-- Initialize interaction report problem.
 		require
 			is_valid: a_form.is_valid_form
-		local
-			l_reproduce: STRING_32
 		do
 			if attached a_form.description as l_category then
 				api_service.initialize_interaction (a_form.id, l_category, a_form.selected_status, a_form.private)
+			end
+			if attached a_form.uploaded_files as l_files then
+				across l_files as c loop
+					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
+				end
 			end
 		end
 
@@ -303,6 +338,12 @@ feature {NONE} -- Implementation
 
 	extract_data_from_form_parameters (req: WSF_REQUEST): ESA_INTERACTION_FORM_VIEW
 			-- Extract data from form parameters.
+		local
+			l_size: INTEGER
+			l_name: READABLE_STRING_32
+			l_content: STRING
+			l_file: ESA_FILE_VIEW
+			l_list: LIST[ESA_FILE_VIEW]
 		do
 			create Result.make (api_service.status, api_service.all_categories)
 				--Category
@@ -321,7 +362,18 @@ feature {NONE} -- Implementation
 			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
 				Result.set_description (l_description.value)
 			end
-
+			if req.has_uploaded_file then
+				create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+				across req.uploaded_files as c loop
+					create l_content.make_empty
+					l_size := c.item.size
+					l_name := c.item.filename
+					c.item.append_content_to_string (l_content)
+					create l_file.make (l_name, l_size, l_content)
+					l_list.force (l_file)
+				end
+				Result.set_files (l_list)
+			end
 		end
 
 	extract_data_from_cj (req: WSF_REQUEST): ESA_INTERACTION_FORM_VIEW
@@ -332,27 +384,27 @@ feature {NONE} -- Implementation
 			create Result.make (api_service.status, api_service.all_categories)
 			create l_parser.make_parser (retrieve_data (req))
 			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-				attached {JSON_OBJECT} jv.item ("template") as l_template and then attached {JSON_ARRAY} l_template.item ("data") as l_data then
-						--		 <"name":  "category", "prompt": "Category", "value": "">,
-						--        <"name": "status", "prompt": "Status", "value": "">,
-						--        <"name": "private", "prompt": "Private", "value": "">,
-						--        <"name": "description", "prompt": "Description", "value": "">,
-					if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						l_name.item.same_string ("category") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-						Result.set_category (l_value.item.to_integer)
-					end
-					if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						l_name.item.same_string ("status") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-						Result.set_selected_status (l_value.item.to_integer)
-					end
-					if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						l_name.item.same_string ("private") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
-						Result.set_private (l_value.item.to_boolean)
-					end
-					if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						l_name.item.same_string ("description") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-						Result.set_description (l_value.item)
-					end
+			   attached {JSON_OBJECT} jv.item ("template") as l_template and then attached {JSON_ARRAY} l_template.item ("data") as l_data then
+					--		 <"name":  "category", "prompt": "Category", "value": "">,
+					--        <"name": "status", "prompt": "Status", "value": "">,
+					--        <"name": "private", "prompt": "Private", "value": "">,
+					--        <"name": "description", "prompt": "Description", "value": "">,
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("category") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_category (l_value.item.to_integer)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("status") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_selected_status (l_value.item.to_integer)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("private") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
+					Result.set_private (l_value.item.to_boolean)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("description") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_description (l_value.item)
+				end
 			end
 		end
 

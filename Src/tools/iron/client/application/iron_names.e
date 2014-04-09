@@ -99,6 +99,10 @@ feature -- Repository task
 	m_invalid_repository_location (a_loc: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Invalid repository location [$1] ", [a_loc]) end
 
+	m_already_registered_repository_location (a_loc: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("Repository [$1] is already registered ", [a_loc]) end
+
+
 feature {NONE} -- Implementation
 
 	string_with_args (a_pattern: READABLE_STRING_GENERAL; a_values: detachable TUPLE): STRING_32

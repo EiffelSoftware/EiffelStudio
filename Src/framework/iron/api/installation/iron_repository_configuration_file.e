@@ -74,7 +74,7 @@ feature -- Change
 
 	add_repository (a_repo: IRON_REPOSITORY)
 		require
-			not has_repository (a_repo)
+			repository_not_registered: not has_repository (a_repo)
 		do
 			repositories.force (a_repo)
 		end

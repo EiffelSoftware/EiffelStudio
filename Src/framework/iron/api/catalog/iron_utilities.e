@@ -133,7 +133,7 @@ feature -- Archiving
 				create f.make_with_path (a_target_file)
 				if f.exists then
 					if a_package /= Void then
-						a_package.set_archive_uri (path_to_uri_string (a_target_file))
+						a_package.set_archive_path (a_target_file)
 					end
 				end
 			end
@@ -207,13 +207,20 @@ feature -- Archiving
 feature -- URI
 
 	path_to_uri_string (p: PATH): STRING_32
+		local
+			path_uri: PATH_URI
 		do
-			create Result.make_from_string (p.absolute_path.canonical_path.name)
-			if {PLATFORM}.is_windows then
-				Result.replace_substring_all ("\", "/")
-				Result.prepend ("/")
+			create path_uri.make_from_path (p)
+			if path_uri.is_valid then
+				Result := path_uri.string
+			else
+				create Result.make_from_string (p.absolute_path.canonical_path.name)
+				if {PLATFORM}.is_windows then
+					Result.replace_substring_all ("\", "/")
+					Result.prepend ("/")
+				end
+				Result := {STRING_32} "file://" + Result
 			end
-			Result := {STRING_32} "file://" + Result
 		end
 
 feature -- File and date
@@ -232,7 +239,7 @@ feature -- File and date
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

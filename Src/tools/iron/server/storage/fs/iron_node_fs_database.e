@@ -88,21 +88,6 @@ feature -- Logs
 				d.recursive_create_dir
 			end
 
---			dt_text.append_character ('_')
---			if dt.hour < 10 then
---				dt_text.append_character ('0')
---			end
---			dt_text.append_integer (dt.hour)
---			if dt.minute < 10 then
---				dt_text.append_character ('0')
---			end
---			dt_text.append_integer (dt.minute)
---			if dt.second < 10 then
---				dt_text.append_character ('0')
---			end
---			dt_text.append_integer (dt.second)
---			dt_text.append_character ('-')
---			dt_text.append_double (dt.fractional_second)
 			dt_text := dt.date.ordered_compact_date.out + "-" + dt.time.compact_time.out + "-" + dt.time.nano_second.out
 
 			p := p.extended (dt_text).appended_with_extension ("log")
@@ -967,6 +952,7 @@ feature -- Version package / archive: change
 			b := a_file.move_to (p.name.to_string_8)
 			if b then
 				a_package.set_archive_path (p)
+				a_package.set_archive_hash (a_package.archive_hash)
 				on_version_package_updated (a_package, False)
 			end
 		end
@@ -992,10 +978,12 @@ feature -- Version package / archive: change
 						src.rename_path (p)
 					end
 					a_package.set_archive_path (p)
+					a_package.set_archive_hash (a_package.archive_hash)
 					on_version_package_updated (a_package, False)
 				end
 			else
 				a_package.set_archive_path (Void)
+				a_package.set_archive_hash (Void)
 				on_version_package_updated (a_package, False)
 			end
 		rescue
@@ -1013,6 +1001,7 @@ feature -- Version package / archive: change
 			if f.exists then
 				f.delete
 				a_package.set_archive_path (Void)
+				a_package.set_archive_hash (Void)
 				on_version_package_updated (a_package, False)
 			end
 		end

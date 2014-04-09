@@ -169,6 +169,9 @@ feature -- Change
 			repo_conf: IRON_REPOSITORY_CONFIGURATION_FILE
 		do
 			create repo_conf.make (layout.repositories_configuration_file)
+			if repo_conf.has_repository (a_repo) then
+				repo_conf.remove_repository (a_repo)
+			end
 			repo_conf.add_repository (a_repo)
 			repo_conf.save
 		end

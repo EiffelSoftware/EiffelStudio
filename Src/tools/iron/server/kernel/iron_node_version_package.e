@@ -142,6 +142,53 @@ feature -- Access: archive
 
 	archive_last_modified: detachable DATE_TIME
 
+	archive_md5: detachable STRING
+			-- MD5 hash for associated archive file, if any.
+		local
+			f: RAW_FILE
+			md5: MD5
+		do
+			if attached archive_path as p then
+				create f.make_with_path (p)
+				if f.exists then
+					create md5.make
+					f.open_read
+					md5.update_from_io_medium (f)
+					f.close
+					Result := "MD5:" + md5.digest_as_string
+				end
+			end
+		end
+
+	archive_sha1: detachable STRING
+			-- SHA1 hash for associated archive file, if any.
+		local
+			f: RAW_FILE
+			sha1: SHA1
+		do
+			if attached archive_path as p then
+				create f.make_with_path (p)
+				if f.exists then
+					create sha1.make
+					f.open_read
+					sha1.update_from_io_medium (f)
+					f.close
+					Result := "SHA1:" + sha1.digest_as_string
+				end
+			end
+		end
+
+	archive_hash: detachable STRING
+			-- Default hash for associated archive file, if any.
+		do
+			if attached item ("archive_hash") as h and then h.is_valid_as_string_8 then
+				Result := h.to_string_8
+			else
+				Result := archive_sha1
+				set_archive_hash (Result)
+			end
+		end
+
 feature -- Access: items	
 
 	items: detachable STRING_TABLE [detachable READABLE_STRING_32]
@@ -171,6 +218,16 @@ feature -- Change
 			tb.force (v, k)
 		end
 
+	remove (k: READABLE_STRING_GENERAL)
+		local
+			tb: like items
+		do
+			tb := items
+			if tb /= Void then
+				tb.remove (k)
+			end
+		end
+
 	set_archive_path (v: detachable PATH)
 		do
 			archive_path := v
@@ -182,15 +239,14 @@ feature -- Change
 			download_count := a_count
 		end
 
---	set_last_modified (dt: like last_modified)
---		do
---			last_modified := dt
---		end
---
---	set_last_modified_now
---		do
---			create last_modified.make_now_utc
---		end
+	set_archive_hash (h: detachable READABLE_STRING_GENERAL)
+		do
+			if h = Void then
+				remove ("archive_hash")
+			else
+				put (h.to_string_32, "archive_hash")
+			end
+		end
 
 feature -- Visitor
 

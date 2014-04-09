@@ -53,7 +53,6 @@ feature -- Event
 
 	on_user_updated (a_user: IRON_NODE_USER; flag_is_new: BOOLEAN)
 		local
-			utf: UTF_CONVERTER
 			l_title, l_message: STRING
 		do
 			if flag_is_new then
@@ -77,7 +76,6 @@ feature -- Event
 			utf: UTF_CONVERTER
 			l_body: STRING_32
 			l_title: STRING_32
-			m: NOTIFICATION_EMAIL
 		do
 			if flag_is_new then
 				l_title := {STRING_32} "[Iron] New package [" + p.human_identifier + {STRING_32} "]"
@@ -91,10 +89,8 @@ feature -- Event
 
 	on_version_package_updated (p: IRON_NODE_VERSION_PACKAGE; flag_is_new: BOOLEAN)
 		local
-			utf: UTF_CONVERTER
 			l_body: STRING_32
 			l_title: STRING_32
-			m: NOTIFICATION_EMAIL
 		do
 			if flag_is_new then
 				l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] New version package [" +  p.human_identifier + {STRING_32} "]"

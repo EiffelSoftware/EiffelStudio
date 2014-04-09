@@ -180,6 +180,7 @@ feature -- Operation
 			p: IRON_PACKAGE
 			l_package_file_factory: IRON_PACKAGE_FILE_FACTORY
 			pif: IRON_PACKAGE_FILE
+			l_last_operation_succeed: BOOLEAN
 		do
 			if not is_silent then
 				print ("Updating repository " + repo.location_string + " ...%N")
@@ -188,15 +189,22 @@ feature -- Operation
 			if attached {IRON_WEB_REPOSITORY} repo as l_remote_repo then
 				create remote_node.make_with_repository (urls, api_version, l_remote_repo)
 				if attached remote_node.packages as lst then
-					across lst as ic loop
-						repo.put_package (ic.item)
-					end
-					if
-						not is_silent and then
-						repo.available_packages_count = 0
---						not remote_node.last_operation_succeed
-					then
-						print ("ERROR: no information from repository!%N")
+					l_last_operation_succeed := remote_node.last_operation_succeed
+					if l_last_operation_succeed then
+						across lst as ic loop
+							if not is_silent then
+								print ("- ")
+								print (ic.item.human_identifier)
+								print ("%N")
+							end
+							repo.put_package (ic.item)
+						end
+					elseif not is_silent then
+						if attached remote_node.last_operation_error_message as err then
+							print ("ERROR: " + err + "%N")
+						else
+							print ("ERROR: unable to get packages information!%N")
+						end
 					end
 				end
 			elseif attached {IRON_WORKING_COPY_REPOSITORY} repo as l_wc_repo then
@@ -294,7 +302,7 @@ feature -- Package operations
 				remote_node.download_package_archive (a_package, p, ignoring_cache)
 				create f.make_with_path (p)
 				if f.exists then
-					a_package.set_archive_uri (path_to_uri_string (p.absolute_path.canonical_path))
+					a_package.set_archive_path (p.absolute_path.canonical_path)
 				else
 						-- Failure
 				end

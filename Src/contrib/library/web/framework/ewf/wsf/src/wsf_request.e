@@ -294,24 +294,27 @@ feature -- Access: Input
 				until
 					l_step = 0 or l_input.end_of_input
 				loop
-					l_input.append_to_string (s, l_step)
-					nb := l_input.last_appended_count
-					l_size := l_size + nb.to_natural_64
-					len := len - nb.to_natural_64
-
-					debug ("wsf")
-						io.error.put_string ("   append (s, " + l_step.out + ") -> " + nb.out + " (" + l_size.out + " / "+ content_length_value.out + ")%N")
-					end
-
-					a_file.put_string (s)
-					if l_raw_data /= Void then
-						l_raw_data.append (s)
-					end
-					s.wipe_out
-					if nb < l_step then
-						l_step := 0
-					elseif len < l_step.to_natural_64 then
+					if len < l_step.to_natural_64 then
 						l_step := len.to_integer_32
+					end
+					if l_step > 0 then
+						l_input.append_to_string (s, l_step)
+						nb := l_input.last_appended_count
+						l_size := l_size + nb.to_natural_64
+						len := len - nb.to_natural_64
+
+						debug ("wsf")
+							io.error.put_string ("   append (s, " + l_step.out + ") -> " + nb.out + " (" + l_size.out + " / "+ content_length_value.out + ")%N")
+						end
+
+						a_file.put_string (s)
+						if l_raw_data /= Void then
+							l_raw_data.append (s)
+						end
+						s.wipe_out
+						if nb < l_step then
+							l_step := 0
+						end
 					end
 				end
 				a_file.flush
@@ -2065,7 +2068,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

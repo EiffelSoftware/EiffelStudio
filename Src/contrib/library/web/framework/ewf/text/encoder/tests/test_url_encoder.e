@@ -22,7 +22,7 @@ feature -- Test routines
 			test_url_encoded_encoding ({STRING_32}"http://domain.tld/foo/bar/script.php?test='toto'&foo=bar&title=il était une fois")
 			test_url_encoded_encoding ({STRING_32}"été")
 			test_url_encoded_decoding ({STRING_8}"%%E9t%%E9", {STRING_32}"été")
-			test_url_encoded_decoding ({STRING_8}"Test%0A", {STRING_32}"Test%N")
+			test_url_encoded_decoding ({STRING_8}"Test%%0A", {STRING_32}"Test%N")
 
 			test_utf8_url_encoded_decoding ({STRING_8}"%%C3%%A9t%%C3%%A9", {STRING_32}"été")
 		end

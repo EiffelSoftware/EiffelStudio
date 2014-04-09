@@ -546,20 +546,20 @@ feature -- Query
 
 feature -- Conversion
 
-	append_to_string (s: STRING_8)
+	append_to_string (s: STRING_GENERAL)
 			-- Append string representation of Current into `s'.
 		do
 			if attached scheme as l_scheme and then not l_scheme.is_empty then
 				s.append (l_scheme)
-				s.append_character (':')
+				s.append_code (58) -- ':' = 58
 			end
 			s.append (hier)
 			if attached query as q then
-				s.append_character ('?')
+				s.append_code (63) -- '?' = 53
 				s.append (q)
 			end
 			if attached fragment as f then
-				s.append_character ('#')
+				s.append_code (35) -- '#' = 35
 				s.append (f)
 			end
 		end

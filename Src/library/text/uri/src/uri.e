@@ -35,7 +35,7 @@ class
 inherit
 	ANY
 
-	PERCENT_ENCODER
+	URI_PERCENT_ENCODER
 		export
 			{NONE} all
 		end

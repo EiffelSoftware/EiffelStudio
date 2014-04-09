@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 		rescue
 			l_retry := True
 			retry
-		end
+		end		
 
 note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"

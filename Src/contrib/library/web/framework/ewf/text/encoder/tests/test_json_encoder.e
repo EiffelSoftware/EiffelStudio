@@ -21,6 +21,7 @@ feature -- Test routines
 		do
 			test_json_encoded_encoding ({STRING_32}"il était une fois %"Ni & Hao%" (你好) \a\b\c")
 			test_json_encoded_encoding ({STRING_32}" it's `abc’ ")
+			test_json_encoded_encoding ({STRING_32}"tab%Tnew line%N %"double quote %"")
 		end
 
 	test_json_encoded_encoding (s: STRING_32)

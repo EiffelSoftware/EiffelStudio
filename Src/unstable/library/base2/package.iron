@@ -1,0 +1,12 @@
+package base2
+
+project
+	base2 = "base2.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,12 @@
+package mysqli
+
+project
+	mysqli = "mysqli.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

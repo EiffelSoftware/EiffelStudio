@@ -1,0 +1,13 @@
+package criteria
+
+project
+	criteria = "criteria-safe.ecf"
+	criteria = "criteria.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

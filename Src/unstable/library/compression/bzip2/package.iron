@@ -1,0 +1,12 @@
+package bzip2
+
+project
+	bzip2 = "bzip2.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

@@ -1,0 +1,13 @@
+package zlib
+
+project
+	zlib = "zlib-safe.ecf"
+	zlib = "zlib.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

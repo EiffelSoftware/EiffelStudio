@@ -1,0 +1,18 @@
+package abel
+
+project
+	abel_backend_couchdb = "backend_couchdb/backend_couchdb.ecf"
+	abel_connector_mysql = "connector_mysql/connector_mysql.ecf"
+	abel_connector_sqlite = "connector_sqlite/connector_sqlite.ecf"
+	abel_core = "core/core.ecf"
+	abel_tutorial_api = "examples/tutorial_api/tutorial_api.ecf"
+	abel_plugin_escher = "plugin_escher/plugin_escher.ecf"
+	abel_test = "test/test.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

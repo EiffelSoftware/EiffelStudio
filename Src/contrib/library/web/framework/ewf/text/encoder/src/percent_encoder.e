@@ -66,7 +66,7 @@ feature -- Percent encoding
 			end
 		end
 
-	partial_encoded_string (s: READABLE_STRING_GENERAL; a_ignore: ITERABLE [CHARACTER_32]): STRING_8
+	partial_encoded_string (s: READABLE_STRING_GENERAL; a_ignore: ITERABLE [CHARACTER]): STRING_8
 			-- Return  `s' as percent-encoded value,
 			-- but does not escape character listed in `a_ignore'.
 		do
@@ -74,12 +74,12 @@ feature -- Percent encoding
 			append_partial_percent_encoded_string_to (s, Result, a_ignore)
 		end
 
-	append_partial_percent_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL; a_ignore: ITERABLE [CHARACTER_32])
+	append_partial_percent_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL; a_ignore: ITERABLE [CHARACTER])
 			-- Append `s' as percent-encoded value to `a_result',
 			-- but does not escape character listed in `a_ignore'.
 		local
 			c: NATURAL_32
-			ch: CHARACTER_32
+			ch: CHARACTER_8
 			i,n: INTEGER
 		do
 			has_error := False
@@ -109,15 +109,21 @@ feature -- Percent encoding
 						43, 44, 59, 61, -- reserved = sub-delims: +,;=
 						37 -- percent encoding: %
 					then
-						ch := c.to_character_32
+						check c.is_valid_character_8_code end
+						ch := c.to_character_8
 						if across a_ignore as ic some ic.item = ch end then
 							a_result.append_code (c)
 						else
 							append_percent_encoded_character_code_to (c, a_result)
 						end
 					else
-						if across a_ignore as ic some ic.item = ch end then
-							a_result.append_code (c)
+						if c.is_valid_character_8_code then
+							ch := c.to_character_8
+							if across a_ignore as ic some ic.item = ch end then
+								a_result.append_code (c)
+							else
+								append_percent_encoded_character_code_to (c, a_result)
+							end
 						else
 							append_percent_encoded_character_code_to (c, a_result)
 						end

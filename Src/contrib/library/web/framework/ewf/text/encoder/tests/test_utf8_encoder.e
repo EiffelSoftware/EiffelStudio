@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -18,22 +18,42 @@ feature -- Test routines
 	test_url_encoded_encoder
 		note
 			testing:  "url-encoded"
+		local
+			utf8: STRING_8
 		do
-			test_utf8_decoding ("%%C3%%A9t%%C3%%A9", {STRING_32}"�t�")
+			create utf8.make_empty
+			utf8.append_code (195) --+
+			utf8.append_code (169) --  é
+			utf8.append_code (116) --  t
+			utf8.append_code (195) --+
+			utf8.append_code (169) --  é
+			test_utf8_decoding (utf8, {STRING_32}"été")
+
+			create utf8.make_empty
+			utf8.append_code (228) --+
+			utf8.append_code (189) --+
+			utf8.append_code (160) --  你
+
+			utf8.append_code (229) --+
+			utf8.append_code (165) --+			
+			utf8.append_code (189) --  好			
+
+			utf8.append_code (229) --+
+			utf8.append_code (144) --+			
+			utf8.append_code (151) --  吗			
+
+			test_utf8_decoding (utf8, {STRING_32}"你好吗")
 		end
 
 	test_utf8_decoding (s: STRING_8; e: STRING_32)
 		local
-			url: URL_ENCODER
 			u: STRING_32
 			b: UTF8_ENCODER
 		do
 			create b
-			create url
-			u := b.decoded_string (url.decoded_string (s))
+			u := b.decoded_string (s)
 			assert ("decoded encoded string is same for %"" + s + "%"", u ~ e)
 		end
-
 
 note
 	copyright: "2011-2011, Eiffel Software and others"

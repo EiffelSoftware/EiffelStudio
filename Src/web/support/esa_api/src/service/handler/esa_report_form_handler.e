@@ -119,13 +119,10 @@ feature -- Edit Report Problem
 		end
 
 	edit_form (a_report_id: INTEGER): ESA_REPORT_FORM_VIEW
-		local
-			l_tuple: detachable TUPLE [synopsis: detachable STRING; release: detachable STRING; confidential: detachable STRING; environment: detachable STRING; description: detachable STRING; toreproduce: detachable STRING; priority_synopsis: detachable STRING; category_synopsis: detachable STRING; severity_synopsis: detachable STRING; class_synopsis: detachable STRING; user_name: detachable STRING; responsible: detachable STRING]
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
-			l_tuple := api_service.temporary_problem_report (a_report_id)
 			Result.set_id (a_report_id)
-			if attached l_tuple as l_row then
+			if attached api_service.temporary_problem_report (a_report_id) as l_row then
 				if attached l_row.synopsis as l_synopsis then
 					Result.set_synopsis (l_synopsis)
 				end
@@ -157,6 +154,7 @@ feature -- Edit Report Problem
 					Result.set_selected_class (selected_item_by_synopsis (Result.classes, l_class))
 				end
 			end
+			Result.set_temporary_files (api_service.temporary_problem_report_attachments (a_report_id))
 		end
 
 feature -- New Report Problem
@@ -236,6 +234,7 @@ feature -- Update Report Problem
 			-- Update problem report
 		local
 			l_reproduce: STRING_32
+			l_found: BOOLEAN
 		do
 			l_reproduce := ""
 			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
@@ -244,6 +243,40 @@ feature -- Update Report Problem
 				     l_reproduce := ll_reproduce
 				   end
 				api_service.update_problem_report (a_form.id, a_form.priority.out, a_form.severity.out, a_form.category.out, a_form.selected_class.out, a_form.confidential.out, l_synopsis, l_release, l_environment, l_description, l_reproduce)
+
+					-- Update temporary files
+				if req.form_parameter ("temporary_files") = Void then
+						-- remove all the attached files.
+					api_service.remove_all_temporary_report_attachments (a_form.id)
+				elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
+						l_file.is_string then
+					across api_service.temporary_problem_report_attachments (a_form.id) as c loop
+						if not c.item.name.same_string (l_file.value) then
+							api_service.remove_temporary_report_attachment (a_form.id, l_file.value)
+						end
+					end
+				elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
+					across api_service.temporary_problem_report_attachments (a_form.id) as c loop
+						across l_files as lf loop
+							if c.item.name.same_string (lf.item.value) then
+								l_found := True
+							end
+						end
+						if not l_found then
+							api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
+						else
+							l_found := False
+						end
+					end
+				end
+					-- Add new uploaded files
+				if attached a_form.uploaded_files as l_files then
+					across l_files as c loop
+						api_service.upload_temporary_report_attachment (a_form.id, c.item)
+					end
+				end
+
+
 			end
 		end
 
@@ -300,6 +333,12 @@ feature -- Initialize Report Problem
 			      l_reproduce := ll_reproduce
 			    end
 				api_service.initialize_problem_report (a_form.id, a_form.priority.out, a_form.severity.out, a_form.category.out, a_form.selected_class.out, a_form.confidential.out, l_synopsis, l_release, l_environment, l_description, l_reproduce)
+
+				if attached a_form.uploaded_files as l_files then
+					across l_files as c loop
+						api_service.upload_temporary_report_attachment (a_form.id, c.item)
+					end
+				end
 			end
 
 		end
@@ -320,114 +359,146 @@ feature {NONE} -- Implementation
 			--"description=test"
 			--"to_reproduce=test"
 		local
-			l_post: STRING
 			l_parser: JSON_PARSER
 		do
 
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 
 			if a_type.same_string ("application/vnd.collection+json") then
-				l_post := retrieve_data (req)
-				create l_parser.make_parser (l_post)
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-				   attached {JSON_OBJECT}jv.item ("template") as l_template and then
-				   attached {JSON_ARRAY}l_template.item ("data") as l_data then
-								--		 <"name":  "category", "prompt": "Category", "value": "">,
-								--        <"name": "severity", "prompt": "Severity", "value": "">,
-								--        <"name": "priority", "prompt": "Priority", "value": "">,
-								--        <"name": "class", "prompt": "Class", "value": "">,
-								--        <"name": "release", "prompt": "Release", "value": "">,
-								--        <"name": "confidential", "prompt": "Confidential", "value": "">,
-								--        <"name": "synopsis", "prompt": "Synopsis", "value": "">,
-								--        <"name": "environment", "prompt": "Environment", "value": "">,
-								--        <"name": "description", "prompt": "Description", "value": "">,
-								--        <"name": "to_reproduce", "prompt": "To Reproduce", "value": "">
-
-						if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("category") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-							Result.set_category (l_value.item.to_integer)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("severity") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-							Result.set_severity (l_value.item.to_integer)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("priority") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-							Result.set_priority (l_value.item.to_integer)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("class") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-							Result.set_selected_class (l_value.item.to_integer)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("release") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-							Result.set_release (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
-							Result.set_confidential (l_value.item.to_boolean)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("synopsis") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-							Result.set_synopsis (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("environment") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-							Result.set_environment (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (9) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("description") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-							Result.set_description (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-							Result.set_to_reproduce (l_value.item)
-						end
-				end
+				Result := extract_form_data_cj (req)
 			else
-					--Category
-				if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer then
-					Result.set_category (l_category.integer_value)
+				Result := extract_form_data_form_parameters (req)
+			end
+		end
+
+
+	extract_form_data_cj (req: WSF_REQUEST): ESA_REPORT_FORM_VIEW
+			-- Extract data from collection+json template
+		local
+			l_parser: JSON_PARSER
+		do
+			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
+			create l_parser.make_parser (retrieve_data (req))
+			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			   attached {JSON_OBJECT}jv.item ("template") as l_template and then
+			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+				--		 <"name":  "category", "prompt": "Category", "value": "">,
+				--        <"name": "severity", "prompt": "Severity", "value": "">,
+				--        <"name": "priority", "prompt": "Priority", "value": "">,
+				--        <"name": "class", "prompt": "Class", "value": "">,
+				--        <"name": "release", "prompt": "Release", "value": "">,
+				--        <"name": "confidential", "prompt": "Confidential", "value": "">,
+				--        <"name": "synopsis", "prompt": "Synopsis", "value": "">,
+				--        <"name": "environment", "prompt": "Environment", "value": "">,
+				--        <"name": "description", "prompt": "Description", "value": "">,
+				--        <"name": "to_reproduce", "prompt": "To Reproduce", "value": "">
+
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("category") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_category (l_value.item.to_integer)
 				end
-					--Severity
-				if attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer then
-					Result.set_severity (l_severity.integer_value)
+				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("severity") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_severity (l_value.item.to_integer)
 				end
-					--Priority
-				if attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer then
-					Result.set_priority (l_priority.integer_value)
+				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("priority") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_priority (l_value.item.to_integer)
 				end
-					--Class
-				if attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer then
-					Result.set_selected_class (l_class.integer_value)
+				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("class") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_selected_class (l_value.item.to_integer)
 				end
-					--Confidential
-				if attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 then
-					Result.set_confidential (l_confidential.integer_value.to_boolean)
+				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("release") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_release (l_value.item)
 				end
-					--Release
-				if attached {WSF_STRING} req.form_parameter ("release") as l_release then
-					Result.set_release (l_release.value)
+				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
+					Result.set_confidential (l_value.item.to_boolean)
 				end
-					--Synopsis
-				if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
-					Result.set_synopsis (l_synopsis.value)
+				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("synopsis") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_synopsis (l_value.item)
 				end
-					--Environment
-				if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then
-					Result.set_environment (l_environment.value)
+				if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("environment") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_environment (l_value.item)
 				end
-					--Description
-				if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-					Result.set_description (l_description.value)
+				if attached {JSON_OBJECT} l_data.i_th (9) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("description") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_description (l_value.item)
 				end
-					--To Reproduce (Optional)
-				if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-					Result.set_to_reproduce (l_to_reproduce.value)
+				if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
+					Result.set_to_reproduce (l_value.item)
 				end
 			end
 		end
 
+	extract_form_data_form_parameters (req: WSF_REQUEST): ESA_REPORT_FORM_VIEW
+			-- Extract data from form parameters.
+		local
+			l_size: INTEGER
+			l_name: READABLE_STRING_32
+			l_content: STRING
+			l_file: ESA_FILE_VIEW
+			l_list: LIST[ESA_FILE_VIEW]
+		do
+			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
+				--Category
+			if attached {WSF_STRING} req.form_parameter ("category") as l_category and then l_category.is_integer then
+				Result.set_category (l_category.integer_value)
+			end
+				--Severity
+			if attached {WSF_STRING} req.form_parameter ("severity") as l_severity and then l_severity.is_integer then
+				Result.set_severity (l_severity.integer_value)
+			end
+				--Priority
+			if attached {WSF_STRING} req.form_parameter ("priority") as l_priority and then l_priority.is_integer then
+				Result.set_priority (l_priority.integer_value)
+			end
+				--Class
+			if attached {WSF_STRING} req.form_parameter ("class") as l_class and then l_class.is_integer then
+				Result.set_selected_class (l_class.integer_value)
+			end
+				--Confidential
+			if attached {WSF_STRING} req.form_parameter ("confidential") as l_confidential and then l_confidential.is_integer and then l_confidential.integer_value >= 0 and then l_confidential.integer_value <= 1 then
+				Result.set_confidential (l_confidential.integer_value.to_boolean)
+			end
+				--Release
+			if attached {WSF_STRING} req.form_parameter ("release") as l_release then
+				Result.set_release (l_release.value)
+			end
+				--Synopsis
+			if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
+				Result.set_synopsis (l_synopsis.value)
+			end
+				--Environment
+			if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then
+				Result.set_environment (l_environment.value)
+			end
+				--Description
+			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
+				Result.set_description (l_description.value)
+			end
+				--To Reproduce (Optional)
+			if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
+				Result.set_to_reproduce (l_to_reproduce.value)
+			end
+			if req.has_uploaded_file then
+				create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+				across req.uploaded_files as c loop
+						create l_content.make_empty
+						l_size := c.item.size
+						l_name := c.item.filename
+						c.item.append_content_to_string (l_content)
+						create l_file.make (l_name, l_size, l_content)
+						l_list.force (l_file)
+				end
+				Result.set_files (l_list)
+			end
+		end
 
 	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item

@@ -120,9 +120,20 @@
                 <textarea class="form-control input-xlarge" id="environment"  name="environment" rows="3"  placeholder="Windows XP SP2" required form="report">{$environment/}</textarea>
               </div>
             </div>
- 
+
+           {if isset="$temporary_files"}  
+              <div class="control-group">
+              <label class="control-label" for="fileInput">Temporary Attachments</label>
+              {foreach from="temporary_files" item="item"}
+                <div class="controls">
+                     <input type="checkbox" name="temporary_files" value="{$item.name/}" checked />{$item.name/} <br />
+                </div>
+               {/foreach}
+             </div> 
+            {/if} 
             <div class="control-group">
               <label class="control-label" for="fileInput">Attachments</label>
+
               <div class="controls">
                 <input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
               </div>

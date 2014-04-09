@@ -18,9 +18,10 @@ feature -- Intialization
 			parameters := a_parameters
 		end
 
-	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
+	execute_reader (a_base_selection: DB_DYN_SELECTION): detachable LIST [DB_RESULT]
 			-- Execute the Current store procedure.
 		do
+				-- Check test dynamic sequel. to redesign.
 			create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
 			a_base_selection.set_container (Result)
 			set_map_name (a_base_selection)

@@ -77,6 +77,15 @@
               </div>
             </div>
             <div class="control-group">
+              <label class="control-label" for="textarea">Attachments</label>
+              <div class="controls">
+                {foreach from="attachments" item="item"}
+                    {$item.name/} </br>
+                {/foreach}
+              </div>
+            </div>
+ 
+            <div class="control-group">
               <label class="control-label" for="textarea">Description</label>
               <div class="controls">
                 {$description/}

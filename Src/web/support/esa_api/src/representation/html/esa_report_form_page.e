@@ -43,6 +43,10 @@ feature {NONE} --Initialization
 			template.add_value (a_form.severity, "severity")
 			template.add_value (a_form.selected_class, "class")
 
+			if attached a_form.temporary_files as l_files then
+				template.add_value (l_files, "temporary_files")
+			end
+
 			if a_form.id > 0 then
 				template.add_value (a_form.id, "id")
 			end

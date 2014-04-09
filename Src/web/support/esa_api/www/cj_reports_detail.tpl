@@ -180,16 +180,19 @@
                         >
                       {/foreach}{/foreach}], 
                 "links":[
+                <"rel":"create-form", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">
+   
                 {foreach from="$report.interactions" item="item"}
                    
                     {foreach from="$item.attachments" item="elem"}
+                     ,
                      <
                        "href": "{$host/}/report_interaction/{$elem.id/}/{$elem.name/}",
                        "rel": "download",
                        "prompt": "Attatchment"
-                     >,{/foreach}{/foreach}]      
+                     >{/foreach}{/foreach}]      
 
-               >
+               >  
             ]
      
    >

@@ -360,15 +360,30 @@ feature -- View
 
 	add_interaction_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Interaction Form
+		local
+				l_hp: ESA_CJ_INTERACTION_PAGE
 		do
-			to_implement ("Add CJ implementation")
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_confirmation_page then
+					new_response_get (req, res, l_confirmation_page)
+				end
+			end
 		end
 
-	interaction_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
+	interaction_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Interaction Form Confirm.
+		local
+			l_hp: ESA_CJ_INTERACTION_CONFIRM_PAGE
 		do
-			to_implement ("Add CJ implementation")
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
 		end
+
 
 	interaction_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
 			-- <Precursor>
@@ -379,7 +394,9 @@ feature -- View
 	interaction_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Interaction form redirect
 		do
-			to_implement ("Add CJ implementation")
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,"/user_reports/"+l_user)
+			end
 		end
 
 

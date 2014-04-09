@@ -1,0 +1,13 @@
+package sqlite3
+
+project
+	sqlite = "sqlite-safe.ecf"
+	sqlite = "sqlite.ecf"
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

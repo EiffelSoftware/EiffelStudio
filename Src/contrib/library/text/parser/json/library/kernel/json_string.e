@@ -82,11 +82,20 @@ feature -- Access
 						when '%"' then
 							Result.append_character ('%"')
 							i := i + 2
+						when 'b' then
+							Result.append_character ('%B')
+							i := i + 2
+						when 'f' then
+							Result.append_character ('%F')
+							i := i + 2
 						when 'n' then
 							Result.append_character ('%N')
 							i := i + 2
 						when 'r' then
 							Result.append_character ('%R')
+							i := i + 2
+						when 't' then
+							Result.append_character ('%T')
 							i := i + 2
 						when 'u' then
 							--| Leave Unicode \uXXXX unescaped
@@ -129,11 +138,20 @@ feature -- Access
 						when '%"' then
 							Result.append_character ('%"')
 							i := i + 2
+						when 'b' then
+							Result.append_character ('%B')
+							i := i + 2
+						when 'f' then
+							Result.append_character ('%F')
+							i := i + 2
 						when 'n' then
 							Result.append_character ('%N')
 							i := i + 2
 						when 'r' then
 							Result.append_character ('%R')
+							i := i + 2
+						when 'T' then
+							Result.append_character ('%T')
 							i := i + 2
 						when 'u' then
 							hex := s.substring (i+2, i+2+4 - 1)
@@ -264,8 +282,11 @@ feature {NONE} -- Implementation
 				inspect c
 				when '%"' then Result.append_string ("\%"")
 				when '\' then Result.append_string ("\\")
-				when '%R' then Result.append_string ("\r")
+				when '%B' then Result.append_string ("\b")
+				when '%F' then Result.append_string ("\f")
 				when '%N' then Result.append_string ("\n")
+				when '%R' then Result.append_string ("\r")
+				when '%T' then Result.append_string ("\t")
 				else
 					Result.extend (c)
 				end
@@ -292,8 +313,11 @@ feature {NONE} -- Implementation
 					inspect c
 					when '%"' then Result.append_string ("\%"")
 					when '\' then Result.append_string ("\\")
-					when '%R' then Result.append_string ("\r")
+					when '%B' then Result.append_string ("\b")
+					when '%F' then Result.append_string ("\f")
 					when '%N' then Result.append_string ("\n")
+					when '%R' then Result.append_string ("\r")
+					when '%T' then Result.append_string ("\t")
 					else
 						Result.extend (c)
 					end

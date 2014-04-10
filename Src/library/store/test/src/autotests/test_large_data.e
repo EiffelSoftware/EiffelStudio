@@ -156,8 +156,8 @@ feature {NONE} -- Implementation
 			-- Select books
 		local
 			l_list: ARRAYED_LIST [like new_data]
-			l_ascii, l_small_ascii: STRING_8
-			l_unicode, l_small_unicode: STRING_32
+			l_ascii: STRING_8
+			l_unicode: STRING_32
 			l_change: DB_DYN_CHANGE
 			l_repository: DB_REPOSITORY
 			l_db_store: DB_STORE

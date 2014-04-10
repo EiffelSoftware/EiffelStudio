@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 	bit_count: NATURAL_64
 			-- Bit count
 		do
-			result := byte_count |<< 3
+			Result := byte_count |<< 3
 		end
 
 	message_pad

@@ -4,9 +4,9 @@ note
 
 					Usage:
 						1. Call one or more update* to input source to encode.
-						2. Call *digest* to get the computed result.
+						2. Call *digest* to get the computed Result.
 
-						Note that calls of *digest* does not reset previous result.
+						Note that calls of *digest* does not reset previous Result.
 						To start new computation, `reset' must be called.
 				]"
 	date: "$Date$"
@@ -246,26 +246,26 @@ feature {NONE}
 
 	sigma0 (x1: NATURAL_32): NATURAL_32
 		do
-			result := rotate_right_32 (x1, 2)
-			result := result.bit_xor (rotate_right_32 (x1, 13))
-			result := result.bit_xor (rotate_right_32 (x1, 22))
+			Result := rotate_right_32 (x1, 2)
+			Result := Result.bit_xor (rotate_right_32 (x1, 13))
+			Result := Result.bit_xor (rotate_right_32 (x1, 22))
 		end
 
 	sigma1 (x1: NATURAL_32): NATURAL_32
 		do
-			result := rotate_right_32 (x1, 6)
-			result := result.bit_xor (rotate_right_32 (x1, 11))
-			result := result.bit_xor (rotate_right_32 (x1, 25))
+			Result := rotate_right_32 (x1, 6)
+			Result := Result.bit_xor (rotate_right_32 (x1, 11))
+			Result := Result.bit_xor (rotate_right_32 (x1, 25))
 		end
 
 	lsigma0(x1: NATURAL_32): NATURAL_32
 		do
-			result := (rotate_right_32 (x1, 7)).bit_xor (rotate_right_32 (x1, 18)).bit_xor (x1 |>> 3)
+			Result := (rotate_right_32 (x1, 7)).bit_xor (rotate_right_32 (x1, 18)).bit_xor (x1 |>> 3)
 		end
 
 	lsigma1(x1: NATURAL_32): NATURAL_32
 		do
-			result := (rotate_right_32 (x1, 17)).bit_xor (rotate_right_32 (x1, 19)).bit_xor (x1 |>> 10)
+			Result := (rotate_right_32 (x1, 17)).bit_xor (rotate_right_32 (x1, 19)).bit_xor (x1 |>> 10)
 		end
 
 	expand_blocks
@@ -309,71 +309,71 @@ feature {NONE} -- Access
 
 	k: SPECIAL[NATURAL_32]
 		once
-			create result.make_filled (0, 64)
-			result[0] := 0x428a2f98
-			result[1] := 0x71374491
-			result[2] := 0xb5c0fbcf
-			result[3] := 0xe9b5dba5
-			result[4] := 0x3956c25b
-			result[5] := 0x59f111f1
-			result[6] := 0x923f82a4
-			result[7] := 0xab1c5ed5
-			result[8] := 0xd807aa98
-			result[9] := 0x12835b01
-			result[10] := 0x243185be
-			result[11] := 0x550c7dc3
-			result[12] := 0x72be5d74
-			result[13] := 0x80deb1fe
-			result[14] := 0x9bdc06a7
-			result[15] := 0xc19bf174
-			result[16] := 0xe49b69c1
-			result[17] := 0xefbe4786
-			result[18] := 0x0fc19dc6
-			result[19] := 0x240ca1cc
-			result[20] := 0x2de92c6f
-			result[21] := 0x4a7484aa
-			result[22] := 0x5cb0a9dc
-			result[23] := 0x76f988da
-			result[24] := 0x983e5152
-			result[25] := 0xa831c66d
-			result[26] := 0xb00327c8
-			result[27] := 0xbf597fc7
-			result[28] := 0xc6e00bf3
-			result[29] := 0xd5a79147
-			result[30] := 0x06ca6351
-			result[31] := 0x14292967
-			result[32] := 0x27b70a85
-			result[33] := 0x2e1b2138
-			result[34] := 0x4d2c6dfc
-			result[35] := 0x53380d13
-			result[36] := 0x650a7354
-			result[37] := 0x766a0abb
-			result[38] := 0x81c2c92e
-			result[39] := 0x92722c85
-			result[40] := 0xa2bfe8a1
-			result[41] := 0xa81a664b
-			result[42] := 0xc24b8b70
-			result[43] := 0xc76c51a3
-			result[44] := 0xd192e819
-			result[45] := 0xd6990624
-			result[46] := 0xf40e3585
-			result[47] := 0x106aa070
-			result[48] := 0x19a4c116
-			result[49] := 0x1e376c08
-			result[50] := 0x2748774c
-			result[51] := 0x34b0bcb5
-			result[52] := 0x391c0cb3
-			result[53] := 0x4ed8aa4a
-			result[54] := 0x5b9cca4f
-			result[55] := 0x682e6ff3
-			result[56] := 0x748f82ee
-			result[57] := 0x78a5636f
-			result[58] := 0x84c87814
-			result[59] := 0x8cc70208
-			result[60] := 0x90befffa
-			result[61] := 0xa4506ceb
-			result[62] := 0xbef9a3f7
-			result[63] := 0xc67178f2
+			create Result.make_filled (0, 64)
+			Result [0] := 0x428a2f98
+			Result [1] := 0x71374491
+			Result [2] := 0xb5c0fbcf
+			Result [3] := 0xe9b5dba5
+			Result [4] := 0x3956c25b
+			Result [5] := 0x59f111f1
+			Result [6] := 0x923f82a4
+			Result [7] := 0xab1c5ed5
+			Result [8] := 0xd807aa98
+			Result [9] := 0x12835b01
+			Result [10] := 0x243185be
+			Result [11] := 0x550c7dc3
+			Result [12] := 0x72be5d74
+			Result [13] := 0x80deb1fe
+			Result [14] := 0x9bdc06a7
+			Result [15] := 0xc19bf174
+			Result [16] := 0xe49b69c1
+			Result [17] := 0xefbe4786
+			Result [18] := 0x0fc19dc6
+			Result [19] := 0x240ca1cc
+			Result [20] := 0x2de92c6f
+			Result [21] := 0x4a7484aa
+			Result [22] := 0x5cb0a9dc
+			Result [23] := 0x76f988da
+			Result [24] := 0x983e5152
+			Result [25] := 0xa831c66d
+			Result [26] := 0xb00327c8
+			Result [27] := 0xbf597fc7
+			Result [28] := 0xc6e00bf3
+			Result [29] := 0xd5a79147
+			Result [30] := 0x06ca6351
+			Result [31] := 0x14292967
+			Result [32] := 0x27b70a85
+			Result [33] := 0x2e1b2138
+			Result [34] := 0x4d2c6dfc
+			Result [35] := 0x53380d13
+			Result [36] := 0x650a7354
+			Result [37] := 0x766a0abb
+			Result [38] := 0x81c2c92e
+			Result [39] := 0x92722c85
+			Result [40] := 0xa2bfe8a1
+			Result [41] := 0xa81a664b
+			Result [42] := 0xc24b8b70
+			Result [43] := 0xc76c51a3
+			Result [44] := 0xd192e819
+			Result [45] := 0xd6990624
+			Result [46] := 0xf40e3585
+			Result [47] := 0x106aa070
+			Result [48] := 0x19a4c116
+			Result [49] := 0x1e376c08
+			Result [50] := 0x2748774c
+			Result [51] := 0x34b0bcb5
+			Result [52] := 0x391c0cb3
+			Result [53] := 0x4ed8aa4a
+			Result [54] := 0x5b9cca4f
+			Result [55] := 0x682e6ff3
+			Result [56] := 0x748f82ee
+			Result [57] := 0x78a5636f
+			Result [58] := 0x84c87814
+			Result [59] := 0x8cc70208
+			Result [60] := 0x90befffa
+			Result [61] := 0xa4506ceb
+			Result [62] := 0xbef9a3f7
+			Result [63] := 0xc67178f2
 		end
 
 note

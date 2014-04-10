@@ -1239,72 +1239,72 @@ feature {NONE} -- External features
 					l_any := uht.item (l_string)
 					if l_any = Void then
 							-- Value was not found, should we attempt to insert NULL?
-						type := c_null_type
+						type := {DB_TYPES}.null_type
 						l_managed_pointer := Void
 						l_value_count := -1
 					elseif attached {READABLE_STRING_8} l_any as l_val_string then
-						type := c_string_type
+						type := {DB_TYPES}.string_type
 						create l_c_string.make (l_val_string)
 						pointers.extend (l_c_string.item)
 						l_value_count := l_c_string.bytes_count
 						l_managed_pointer := l_c_string.managed_data
 					elseif attached {READABLE_STRING_32} l_any as l_string_32 then
-						type := c_wstring_type
+						type := {DB_TYPES}.string_32_type
 						create l_sql_string.make (l_string_32)
 						pointers.extend (l_sql_string.item)
 						l_value_count := l_sql_string.bytes_count
 						l_managed_pointer := l_sql_string.managed_data
 					elseif attached {INTEGER_32_REF} l_any as l_val_int then
-						type := c_integer_32_type
+						type := {DB_TYPES}.integer_32_type
 						create l_managed_pointer.make (l_platform.integer_32_bytes)
 						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_32_bytes
 					elseif attached {INTEGER_16_REF} l_any as l_val_int16 then
-						type := c_integer_16_type
+						type := {DB_TYPES}.integer_16_type
 						create l_managed_pointer.make (l_platform.integer_16_bytes)
 						l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_16_bytes
 					elseif attached {INTEGER_64_REF} l_any as l_val_int64 then
-						type := c_integer_64_type
+						type := {DB_TYPES}.integer_64_type
 						create l_managed_pointer.make (l_platform.integer_64_bytes)
 						l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_64_bytes
 					elseif attached {DATE_TIME} l_any as l_tmp_date then
-						type := c_date_type
+						type := {DB_TYPES}.date_type
 						tmp_date := l_tmp_date
 						create l_managed_pointer.make (c_timestamp_struct_size)
 						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
 							tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
 						l_value_count := c_timestamp_struct_size
 					elseif attached {REAL_64_REF} l_any as l_val_double then
-						type := c_real_64_type
+						type := {DB_TYPES}.real_64_type
 						create l_managed_pointer.make (l_platform.real_64_bytes)
 						l_managed_pointer.put_real_64 (l_val_double.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.real_64_bytes
 					elseif attached {REAL_32_REF} l_any as l_val_real then
-						type := c_real_32_type
+						type := {DB_TYPES}.real_32_type
 						create l_managed_pointer.make (l_platform.real_32_bytes)
 						l_managed_pointer.put_real_32 (l_val_real.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.real_32_bytes
 					elseif attached {CHARACTER_8_REF} l_any as l_val_char then
-						type := c_character_type
+						type := {DB_TYPES}.character_type
 						create l_managed_pointer.make (l_platform.character_8_bytes)
 						l_managed_pointer.put_character (l_val_char.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.character_8_bytes
 					elseif attached {BOOLEAN_REF} l_any as l_val_bool then
-						type := c_boolean_type
+						type := {DB_TYPES}.boolean_type
 						create l_managed_pointer.make (l_platform.boolean_bytes)
 						l_managed_pointer.put_boolean (l_val_bool.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.boolean_bytes
 					elseif is_decimal_used and then obj_is_decimal (l_any) then
-						type := c_decimal_type
+						type := {DB_TYPES}.decimal_type
 						l_decimal_t := convert_to_decimal (l_any)
 						create l_managed_pointer.make (c_numeric_struct_size)
 						if l_decimal_t.digits.is_natural_64 then
@@ -1316,7 +1316,7 @@ feature {NONE} -- External features
 					else
 							-- Should we attempt to insert NULL here since the type was not found and
 							-- hence value was most likely Void?
-						type := c_unknown_type
+						type := {DB_TYPES}.unknown_type
 						l_managed_pointer := Void
 					end
 

@@ -9,6 +9,7 @@ class
 	DATABASE_DATA [G -> DATABASE create default_create end]
 
 inherit
+	HANDLE_SPEC [G]
 
 	DB_STATUS_USE
 
@@ -20,8 +21,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	TYPES [G]
 
 	GLOBAL_SETTINGS
 		export
@@ -233,8 +232,9 @@ feature -- Element change
 
 				if not l_db_spec.is_null_data (no_descriptor, ind) then
 
-					-- STRING TYPE
-					if l_value_type.item (ind) = String_type_database then
+					inspect l_value_type.item (ind)
+						-- STRING TYPE
+					when {DB_TYPES}.string_type then
 						l_database_string.get_value (no_descriptor, ind)
 						if attached {STRING_8} l_any as l_string_8_result then
 							l_string_8 := l_string_8_result
@@ -246,7 +246,7 @@ feature -- Element change
 						l_value.put (l_string_8, ind)
 
 						-- STRING_32 TYPE
-					elseif l_value_type.item (ind) = Wide_string_type_database then
+					when {DB_TYPES}.string_32_type then
 						l_database_string_32.get_value (no_descriptor, ind)
 						if attached {STRING_32} l_any as l_string_32_result then
 							l_string_32 := l_string_32_result
@@ -267,7 +267,7 @@ feature -- Element change
 						end
 
 						-- INTEGER type
-					elseif l_value_type.item (ind) = Integer_type_database then
+					when {DB_TYPES}.integer_32_type then
 						if attached {INTEGER_32_REF} l_any as l_integer_result then
 							l_integer_32 := l_integer_result
 						else
@@ -277,7 +277,7 @@ feature -- Element change
 						l_integer_32.set_item (l_db_spec.get_integer_data (no_descriptor, ind))
 
 						-- INTEGER_16 type
-					elseif l_value_type.item (ind) = Integer_16_type_database then
+					when {DB_TYPES}.integer_16_type then
 						if attached {INTEGER_16_REF} l_any as l_integer_16_result then
 							l_integer_16 := l_integer_16_result
 						else
@@ -295,7 +295,7 @@ feature -- Element change
 						end
 
 						-- INTEGER_64 type
-					elseif l_value_type.item (ind) = Integer_64_type_database then
+					when {DB_TYPES}.integer_64_type then
 						if attached {INTEGER_64_REF} l_any as l_integer_64_result then
 							l_integer_64 := l_integer_64_result
 						else
@@ -315,21 +315,8 @@ feature -- Element change
 							l_value.put (l_integer_32, ind)
 						end
 
-						-- REAL_64 type
-					elseif
-						l_value_type.item (ind) = Float_type_database or else
-						(not is_decimal_used and then l_value_type.item (ind) = decimal_type_database)
-					then
-						if attached {REAL_64_REF} l_any as l_real_64_result then
-							l_real_64 := l_real_64_result
-						else
-							create l_real_64
-						end
-						l_real_64.set_item (l_db_spec.get_float_data (no_descriptor, ind))
-						l_value.put (l_real_64, ind)
-
 						-- DATE type
-					elseif l_value_type.item (ind) = Date_type_database then
+					when {DB_TYPES}.date_type then
 						if l_db_spec.get_date_data (no_descriptor, ind) = 1 then
 							create time.make (l_db_spec.get_hour (no_descriptor, ind), l_db_spec.get_min (no_descriptor, ind), l_db_spec.get_sec (no_descriptor, ind))
 							create date.make_month_day_year (l_db_spec.get_month (no_descriptor, ind), l_db_spec.get_day (no_descriptor, ind), l_db_spec.get_year (no_descriptor, ind))
@@ -345,16 +332,8 @@ feature -- Element change
 							l_value.put (Void, ind)
 						end
 
-						-- DECIMAL type
-					elseif is_decimal_used and then l_value_type.item (ind) = decimal_type_database then
-						if attached l_db_spec.get_decimal (no_descriptor, ind) as l_decimal then
-							l_value.put (decimal_creation_function.item (l_decimal), ind)
-						else
-							l_value.put (Void, ind)
-						end
-
-          				-- REAL type
-		           	elseif l_value_type.item (ind) = Real_type_database then
+        				-- REAL type
+		           	when {DB_TYPES}.real_32_type then
 						if attached {REAL_32_REF} l_any as l_real_32_result then
 							l_real_32 := l_real_32_result
 						else
@@ -363,9 +342,36 @@ feature -- Element change
 						l_real_32.set_item (l_db_spec.get_real_data (no_descriptor, ind))
 						l_value.put (l_real_32, ind)
 
-						-- BOOLEAN type
-					else
-						check l_value_type.item (ind) = Boolean_type_database end
+						-- REAL_64 type
+					when {DB_TYPES}.real_64_type then
+						if attached {REAL_64_REF} l_any as l_real_64_result then
+							l_real_64 := l_real_64_result
+						else
+							create l_real_64
+						end
+						l_real_64.set_item (l_db_spec.get_float_data (no_descriptor, ind))
+						l_value.put (l_real_64, ind)
+
+						-- DECIMAL type
+					when {DB_TYPES}.decimal_type then
+						if not is_decimal_used then
+							if attached {REAL_64_REF} l_any as l_real_64_result then
+								l_real_64 := l_real_64_result
+							else
+								create l_real_64
+							end
+							l_real_64.set_item (l_db_spec.get_float_data (no_descriptor, ind))
+							l_value.put (l_real_64, ind)
+						else
+							if attached l_db_spec.get_decimal (no_descriptor, ind) as l_decimal then
+								l_value.put (decimal_creation_function.item (l_decimal), ind)
+							else
+								l_value.put (Void, ind)
+							end
+						end
+
+  						-- BOOLEAN type
+					when {DB_TYPES}.boolean_type then
 						if attached {BOOLEAN_REF} l_any as l_boolean_result then
 							l_boolean := l_boolean_result
 						else
@@ -373,6 +379,10 @@ feature -- Element change
 						end
 						l_boolean.set_item (l_db_spec.get_boolean_data(no_descriptor, ind))
 						l_value.put (l_boolean, ind)
+
+					else
+						check known_type: False end
+						l_value.put (Void, ind)
 					end
 				else
 					l_value.put (Void, ind)

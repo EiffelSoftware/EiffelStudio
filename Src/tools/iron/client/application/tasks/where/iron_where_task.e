@@ -34,29 +34,33 @@ feature -- Execute
 			l_multiple: BOOLEAN
 		do
 			l_resources := args.resources
-			l_multiple := l_resources.count > 1
-			across
-				l_resources as c
-			loop
-				if
-					c.item.starts_with ("http://")
-					or c.item.starts_with ("https://")
-					or c.item.starts_with ("file://")
-				then
-					if attached a_iron.catalog_api.package_associated_with_uri (c.item) as l_package then
-						display_information (l_package, args, a_iron)
-					end
-				else
-					if attached a_iron.catalog_api.packages_associated_with_name (c.item) as lst then
-						across
-							lst as p
-						loop
-							display_information (p.item, args, a_iron)
+			if l_resources.count = 0 then
+				print (a_iron.layout.installation_path.name)
+			else
+				l_multiple := l_resources.count > 1
+				across
+					l_resources as c
+				loop
+					if
+						c.item.starts_with ("http://")
+						or c.item.starts_with ("https://")
+						or c.item.starts_with ("file://")
+					then
+						if attached a_iron.catalog_api.package_associated_with_uri (c.item) as l_package then
+							display_information (l_package, args, a_iron)
+						end
+					else
+						if attached a_iron.catalog_api.packages_associated_with_name (c.item) as lst then
+							across
+								lst as p
+							loop
+								display_information (p.item, args, a_iron)
+							end
 						end
 					end
-				end
-				if l_multiple then
-					io.put_new_line
+					if l_multiple then
+						io.put_new_line
+					end
 				end
 			end
 		end

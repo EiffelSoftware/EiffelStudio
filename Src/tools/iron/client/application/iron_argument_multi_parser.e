@@ -11,11 +11,14 @@ inherit
 	ARGUMENT_MULTI_PARSER
 		rename
 			make as make_parser
-		redefine
+		undefine
 			sub_system_name,
 			is_using_unix_switch_style,
-			switch_prefixes
+			switch_prefixes,
+			help_switch
 		end
+
+	IRON_ARGUMENT_PARSER_I
 
 feature {NONE} -- Initialization
 
@@ -30,40 +33,14 @@ feature {NONE} -- Initialization
 		do
 			task := a_task
 			make_parser (False, a_non_switch_required)
-			set_argument_source (a_task.argument_source)
-			is_using_builtin_switches := not is_verbose_switch_used
+			initialize_with_task (a_task)
 		end
 
-feature {NONE} -- Status report		
+feature -- Change
 
-	is_verbose_switch_used: BOOLEAN
-		deferred
-		end
-
-	is_using_unix_switch_style: BOOLEAN = True
-			-- <Precursor>
-			--| Avoid using /flag ...
-
-	switch_prefixes: ARRAY [CHARACTER_32]
-			-- Prefixes used to indicate a command line switch.
-		once
-			Result := <<'-'>>
-		end
-
-feature -- Access
-
-	task: IRON_TASK
-
-	sub_system_name: IMMUTABLE_STRING_32
+	set_is_using_builtin_switches (b: BOOLEAN)
 		do
-			Result := task.name
-		end
-
-feature {NONE} -- Usage
-
-	name: IMMUTABLE_STRING_32
-		do
-			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + sub_system_name)
+			is_using_builtin_switches := b
 		end
 
 note

@@ -140,6 +140,7 @@ feature -- Conversion
 		local
 			p1,p2: PATH_URI
 			s1,s2: STRING
+			p: READABLE_STRING_8
 		do
 			create p1.make_from_path (path.absolute_path.canonical_path)
 			create p2.make_from_path (path.extended_path (a_relative_ecf_path).absolute_path.canonical_path)
@@ -150,7 +151,8 @@ feature -- Conversion
 				if attached package_name as l_name then
 					create Result.make_from_string ("iron:")
 					Result.set_unencoded_path (l_name)
-					Result.set_path (Result.path + ":" + s2)
+					p := Result.path
+					Result.set_path (p + ":" + s2)
 				end
 			end
 		end

@@ -10,14 +10,65 @@ class
 	IRON_WHERE_ARGUMENT_PARSER
 
 inherit
-	IRON_SEARCH_ARGUMENT_PARSER
+	IRON_ARGUMENT_MULTI_PARSER
+		rename
+			make as old_make
+		end
 
 	IRON_WHERE_ARGUMENTS
 
 create
 	make
 
-note
+feature {NONE} -- Initialization
+
+	make (a_task: like task)
+			-- Initialize argument parser
+		do
+			make_with_option (a_task, False)
+		end
+
+feature -- Access
+
+	resources: LIST [IMMUTABLE_STRING_32]
+		once
+			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} Result.make (values.count)
+			across
+				values as c
+			loop
+				Result.force (create {IMMUTABLE_STRING_32}.make_from_string (c.item))
+			end
+		end
+
+feature {NONE} -- Usage
+
+	non_switched_argument_name: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string ({STRING_32} "package id or uri or name")
+		end
+
+	non_switched_argument_description: IMMUTABLE_STRING_32
+			--  <Precursor>
+		once
+			create Result.make_from_string ({STRING_32} "Package id or full url or name")
+		end
+
+	non_switched_argument_type: IMMUTABLE_STRING_32
+			--  <Precursor>
+		once
+			create Result.make_from_string ({STRING_32} "string")
+		end
+
+feature {NONE} -- Switches
+
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+			-- Retrieve a list of switch used for a specific application
+		once
+			create Result.make (1)
+			add_verbose_switch (Result)
+		end
+
+;note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

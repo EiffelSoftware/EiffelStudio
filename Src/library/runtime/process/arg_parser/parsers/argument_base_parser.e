@@ -1512,6 +1512,9 @@ feature {NONE} -- Output
 					l_arg_name.append (l_def_prefix)
 					l_arg_name.append_character (l_switch.short_name)
 					l_arg_name.append_string_general (" ")
+					if is_using_unix_switch_style then
+						l_arg_name.append (l_def_prefix) --| "--name" instead of "-name"
+					end
 					l_arg_name.append (l_def_prefix)
 					l_arg_name.append (l_switch.long_name)
 				elseif is_using_unix_switch_style then

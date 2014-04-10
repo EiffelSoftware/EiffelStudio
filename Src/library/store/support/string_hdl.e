@@ -11,9 +11,6 @@ feature -- Status setting
 
 	clear_all
 			-- Remove all mapped keys.
-		require
-			ht_not_void: ht /= Void
-			ht_order_not_void: ht_order /= Void
 		do
 			ht.wipe_out
 			ht_order.wipe_out
@@ -23,8 +20,6 @@ feature -- Status setting
 			-- Store item `n' with key `key'.
 			-- `n' can be `Void'.
 		require
-			ht_not_void: ht /= Void
-			ht_order_not_void: ht_order /= Void
 			key_exists: key /= Void
 			not_key_in_table: not is_mapped (key)
 		do
@@ -39,8 +34,6 @@ feature -- Status setting
 	unset_map_name (key: READABLE_STRING_GENERAL)
 			-- Remove item associated with key `key'.
 		require
-			ht_not_void: ht /= Void
-			ht_order_not_void: ht_order /= Void
 			key_exists: key /= Void
 			item_exists: is_mapped (key)
 		do
@@ -74,14 +67,17 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-feature -- Status report
+feature {NONE} -- Status report
 
-	ht: DB_STRING_HASH_TABLE [detachable ANY] note option: stable attribute end
-		-- Correspondence table between object references
-		-- and mapped keys
+	ht: DB_STRING_HASH_TABLE [detachable ANY]
+			-- Correspondence table between object references
+			-- and mapped keys.
 
-	ht_order: ARRAYED_LIST [READABLE_STRING_GENERAL] note option: stable attribute end
-		-- Keys of `ht' in order of mapping
+	ht_order: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Keys of `ht' in order of mapping.
+
+invariant
+	same_count: ht.count = ht_order.count
 
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"

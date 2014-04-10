@@ -32,6 +32,9 @@ cd "%T_INSTALL_DIR%\tools\iron\spec"
 move windows %ISE_PLATFORM%
 cd "%T_HERE%"
 
+echo Compile and install iron commands executables.
+call ..\client\commands\install.bat
+
 goto end
 :failure
 echo failed!

@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	IRON_WHERE_ARGUMENT_PARSER
+	IRON_PATH_ARGUMENT_PARSER
 
 inherit
 	IRON_ARGUMENT_MULTI_PARSER
@@ -15,7 +15,7 @@ inherit
 			make as old_make
 		end
 
-	IRON_WHERE_ARGUMENTS
+	IRON_PATH_ARGUMENTS
 
 create
 	make

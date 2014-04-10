@@ -15,7 +15,7 @@ create
 
 feature -- Access
 
-	name: STRING = "where"
+	name: STRING = "path"
 			-- Iron client task
 
 feature -- Execute

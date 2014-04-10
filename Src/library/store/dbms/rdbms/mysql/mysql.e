@@ -315,34 +315,34 @@ feature -- For database types
 				if class_name.is_equal (("").generator) then
 					create data_type
 					if r_any.is_equal ("varchar") or else r_any.is_equal ("char") then
-						data_type.set_item (c_string_type)
+						data_type.set_item ({DB_TYPES}.string_type)
 					elseif r_any.is_equal ("nvarchar") or else r_any.is_equal ("nchar") then
-						data_type.set_item (c_wstring_type)
+						data_type.set_item ({DB_TYPES}.string_32_type)
 					elseif r_any.is_equal ("double") then
-						data_type.set_item (c_real_64_type)
+						data_type.set_item ({DB_TYPES}.real_64_type)
 					elseif r_any.is_equal ("decimal") then
-						data_type.set_item (c_decimal_type)
+						data_type.set_item ({DB_TYPES}.decimal_type)
 					elseif r_any.is_equal ("float") then
-						data_type.set_item (c_real_32_type)
+						data_type.set_item ({DB_TYPES}.real_32_type)
 					elseif
 						r_any.is_equal ("int") or else r_any.is_equal ("bit") or else
 						r_any.is_equal ("tinyint") or else r_any.is_equal ("mediumint")
 					then
 						if not use_extended_types then
-							data_type.set_item (c_integer_32_type)
+							data_type.set_item ({DB_TYPES}.integer_32_type)
 						else
 							if r_any.is_equal ("tinyint") then
-								data_type.set_item (c_integer_16_type)
+								data_type.set_item ({DB_TYPES}.integer_16_type)
 							else
-								data_type.set_item (c_integer_32_type)
+								data_type.set_item ({DB_TYPES}.integer_32_type)
 							end
 						end
 					elseif r_any.is_equal ("smallint") then
-						data_type.set_item (c_integer_16_type)
+						data_type.set_item ({DB_TYPES}.integer_16_type)
 					elseif r_any.is_equal ("bigint") then
-						data_type.set_item (c_integer_64_type)
+						data_type.set_item ({DB_TYPES}.integer_64_type)
 					elseif r_any.is_equal ("datetime") or else r_any.is_equal ("date") then
-						data_type.set_item (c_date_type)
+						data_type.set_item ({DB_TYPES}.date_type)
 					else
 						io.error.putstring ("Unknown data type '")
 						print (r_any)

@@ -144,31 +144,32 @@ feature {NONE} -- Implementation
 			-- Manage type of attribute in `column': set `type_correspond',
 			-- `type_name' and `type_default_value'.
 		do
-			if column.eiffel_type = column.String_type_database then
+			inspect column.eiffel_type
+			when {DB_TYPES}.string_type then
 				type_correspond := tags.has_string_type_option
 				type_name := String_type_name
 				type_default_value := String_type_default_value
-			elseif column.eiffel_type = column.Integer_type_database then
+			when {DB_TYPES}.integer_32_type then
 				type_correspond := tags.has_integer_type_option
 				type_name := Integer_type_name
 				type_default_value := Integer_type_default_value
-			elseif column.eiffel_type = column.Float_type_database then
+			when {DB_TYPES}.real_64_type then
 				type_correspond := tags.has_double_type_option
 				type_name := Double_type_name
 				type_default_value := Integer_type_default_value
-			elseif column.eiffel_type = column.Real_type_database then
+			when {DB_TYPES}.real_32_type then
 				type_correspond := tags.has_double_type_option
 				type_name := Double_type_name
 				type_default_value := Double_type_default_value
-			elseif column.eiffel_type = column.Date_type_database then
+			when {DB_TYPES}.date_type then
 				type_correspond := tags.has_date_type_option
 				type_name := Date_type_name
 				type_default_value := Date_type_default_value
-			elseif column.eiffel_type = column.Character_type_database then
+			when {DB_TYPES}.character_type then
 				type_correspond := tags.has_character_type_option
 				type_name := Character_type_name
 				type_default_value := Character_type_default_value
-			elseif column.eiffel_type = column.Boolean_type_database then
+			when {DB_TYPES}.boolean_type then
 				type_correspond := tags.has_boolean_type_option
 				type_name := Boolean_type_name
 				type_default_value := Boolean_type_default_value
@@ -181,10 +182,10 @@ feature {NONE} -- Implementation
 	table_description: DB_REPOSITORY
 			-- Description of database table to map in class to generate.
 
-	Integer_type_name: STRING = "INTEGER"
+	Integer_type_name: STRING = "INTEGER_32"
 			-- Integer type name.
 
-	Double_type_name: STRING = "DOUBLE"
+	Double_type_name: STRING = "REAL_64"
 			-- Double type name.
 
 	Boolean_type_name: STRING = "BOOLEAN"
@@ -193,7 +194,7 @@ feature {NONE} -- Implementation
 	Character_type_name: STRING = "CHARACTER"
 			-- Character type name.
 
-	String_type_name: STRING = "STRING"
+	String_type_name: STRING = "STRING_8"
 			-- String type name.
 
 	Date_type_name: STRING = "DATE_TIME"

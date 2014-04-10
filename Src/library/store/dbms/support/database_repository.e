@@ -9,7 +9,8 @@ class
 	DATABASE_REPOSITORY [reference G -> DATABASE create default_create end]
 
 inherit
-
+	HANDLE_SPEC [G]
+	
 	EXCEPTIONS
 		rename
 			class_name as exceptions_class_name
@@ -25,8 +26,6 @@ inherit
 	EXT_INTERNAL
 
 	BASIC_ROUTINES
-
-	TYPES [G]
 
 	GLOBAL_SETTINGS
 
@@ -116,19 +115,21 @@ feature -- Basic operations
 				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
 				s.append ("%T"+col_name+": ")
 				el_type := el.eiffel_type
-				if el_type = Integer_type_database then
+				inspect
+					el_type
+				when {DB_TYPES}.integer_32_type then
 					s2 := "INTEGER"
 					s3.append("%T%T%T"+col_name+" := 0%N")
-				elseif el_type = Boolean_type_database then
+				when {DB_TYPES}.boolean_type then
 					s3.append("%T%T%T"+col_name+" := FALSE%N")
 					s2 := "BOOLEAN"
-				elseif el_type = Real_type_database then
+				when {DB_TYPES}.real_32_type then
 					s3.append("%T%T%T"+col_name+" := 0.0%N")
-					s2 := "DOUBLE"
-				elseif el_type = Float_type_database then
+					s2 := "REAL_32"
+				when {DB_TYPES}.real_64_type then
 					s3.append("%T%T%T"+col_name+" := 0.0%N")
-					s2 := "DOUBLE"
-				elseif el_type = String_type_database or el_type = Character_type_database then
+					s2 := "REAL_64"
+				when {DB_TYPES}.string_type, {DB_TYPES}.character_type then
 					if el.data_length = 1 then
 						s3.append("%T%T%T"+col_name+" := 'a'%N")
 						s2 := "CHARACTER"
@@ -136,25 +137,31 @@ feature -- Basic operations
 						s3.append("%T%T%T"+col_name+" := %"%"%N")
 						s2 := "STRING"
 					end
-				elseif el_type = Wide_string_type_database then
+				when {DB_TYPES}.string_32_type then
 					s3.append("%T%T%T"+col_name+" := {STRING_32}%"%"%N")
 					s2 := "STRING_32"
-				elseif el_type = Date_type_database then
+				when {DB_TYPES}.date_type then
 					s2 := "DATE_TIME"
 					s3.append("%T%T%Tcreate "+col_name+".make_now%N")
-				elseif is_decimal_used and then el_type = decimal_type_database then
-					if attached decimal_creation_function.item (["10", 0, 2, 1]) as l_dec then
-						s2 := l_dec.generating_type.out
+				when {DB_TYPES}.decimal_type then
+					if is_decimal_used then
+						if attached decimal_creation_function.item (["10", 0, 2, 1]) as l_dec then
+							s2 := l_dec.generating_type.out
+						else
+							s2 := "ANY"
+						end
+						s3.append("%T%T%T%T-- Rewrite the following code to create your instance of your own decimal type.%N")
+						s3.append("%T%T%Tcreate "+col_name+"%N")
 					else
-						s2 := "ANY"
+							-- We use a REAL_64 to store decimal
+						s3.append("%T%T%T"+col_name+" := 0.0%N")
+						s2 := "REAL_64"
 					end
-					s3.append("%T%T%T%T-- Rewrite the following code to create your instance of your own decimal type.%N")
-					s3.append("%T%T%Tcreate "+col_name+"%N")
 				else
 					s2 :=  "ANY"
 				end
 
-				if el_type /= Wide_string_type_database then
+				if el_type /= {DB_TYPES}.string_32_type then
 					s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
 				else
 					s4.append("%T%T%TResult.append (" + col_name + " + %"%%N%")%N")
@@ -404,7 +411,7 @@ feature -- Status report
 					i := 1
 					Result := true
 				until
-					i > field_count (object)
+					i > field_count (object) or not Result
 				loop
 					ft := field_type (i, object)
 					if ft = 0 then
@@ -429,23 +436,24 @@ feature -- Status report
 						col_type := el.eiffel_type
 						inspect ft
 						when Integer_type then
-							Result := Result and (col_type = Integer_type_database)
-						when Real_type, Double_type then
-							Result := Result and (col_type = Float_type_database)
+							Result := col_type = {DB_TYPES}.integer_32_type
+						when Real_type then
+							Result := col_type = {DB_TYPES}.real_32_type
+						when double_type then
+							Result := col_type = {DB_TYPES}.real_64_type
 						when Character_type then
-							Result := Result and (col_type = String_type_database
-												and el.data_length = 1)
+							Result := col_type = {DB_TYPES}.string_type and el.data_length = 1
 						when Boolean_type then
-							Result := Result and (col_type = Boolean_type_database)
+							Result := col_type = {DB_TYPES}.boolean_type
 						else
 							if is_string (field (i, object)) then
-								Result := Result and (col_type = String_type_database)
+								Result := col_type = {DB_TYPES}.string_type
 							elseif is_string32 (field (i, object)) then
-								Result := Result and (col_type = Wide_string_type_database)
+								Result := col_type = {DB_TYPES}.string_32_type
 							elseif is_date (field (i,object)) then
-								Result := Result and (col_type = Date_type_database)
+								Result := col_type = {DB_TYPES}.date_type
 							elseif is_decimal_used and then is_decimal (field (i,object)) then
-								Result := Result and (col_type = decimal_type_database)
+								Result := col_type = {DB_TYPES}.decimal_type
 							else
 								Result := false
 							end

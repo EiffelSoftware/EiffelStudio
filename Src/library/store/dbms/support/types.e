@@ -8,77 +8,47 @@ note
 class
 	TYPES [G -> DATABASE create default_create end]
 
-inherit
+obsolete
+	"Use {DB_TYPES} constants instead to access the database types."
 
+inherit
 	HANDLE_SPEC [G]
 
-feature -- Conversion
-
-	String_type_database: INTEGER
-			-- String type code in Ingres
-		once
-			Result := db_spec.c_string_type
+	DB_TYPES
+		rename
+			string_type as string_type_database,
+			string_32_type as wide_string_type_database,
+			character_type as character_type_database,
+			integer_32_type as integer_32_type_database,
+			integer_16_type as integer_16_type_database,
+			integer_64_type as integer_64_type_database,
+			real_64_type as real_64_type_database,
+			real_32_type as real_32_type_database,
+			boolean_type as boolean_type_database,
+			date_type as date_type_database,
+			decimal_type as decimal_type_database,
+			binary_type as binary_type_database
 		end
 
-	Wide_string_type_database: INTEGER
-			-- String type code in Ingres
-		once
-			Result := db_spec.c_wstring_type
-		end
+feature -- Access
 
-	Character_type_database: INTEGER
-			-- Character type code in Ingres
-		once
-			Result := db_spec.c_character_type
-		end
-
-	Integer_type_database, Integer_32_type_database: INTEGER
+	Integer_type_database: INTEGER
 			-- Integer type code in Ingres
-		once
-			Result := db_spec.c_integer_32_type
+		do
+			Result := integer_32_type_database
 		end
 
-	Integer_16_type_database: INTEGER
-			-- Integer type code in Ingres
-		once
-			Result := db_spec.c_integer_16_type
-		end
-
-	Integer_64_type_database: INTEGER
-			-- Integer type code in Ingres
-		once
-			Result := db_spec.c_integer_64_type
-		end
-
-	Float_type_database, Real_64_type_database: INTEGER
+	Float_type_database: INTEGER
 			-- Double type code in Ingres
-      once
-         Result := db_spec.c_real_64_type
+      do
+         Result := real_64_type_database
       end
 
-	Real_type_database, Real_32_type_database: INTEGER
+	Real_type_database: INTEGER
 			-- Real type code in Ingres
-        once
-            Result := db_spec.c_real_32_type
+        do
+            Result := real_32_type_database
         end
-
-	Boolean_type_database: INTEGER
-			-- Boolean type code in Ingres
-		once
-			Result := db_spec.c_boolean_type
-		end
-
-	Date_type_database: INTEGER
-			-- Datetime type code in Ingres
-		once
-			Result := db_spec.c_date_type
-		end
-
-	decimal_type_database: INTEGER
-			-- Decimal type code
-		once
-			Result := db_spec.c_decimal_type
-		end
 
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"

@@ -22,13 +22,13 @@ feature -- Execute
 
 	process (a_iron: IRON)
 		local
-			args: IRON_SEARCH_ARGUMENT_PARSER
+			args: IRON_INFO_ARGUMENT_PARSER
 		do
 			create args.make (Current)
 			args.execute (agent execute (args, a_iron))
 		end
 
-	execute (args: IRON_SEARCH_ARGUMENTS; a_iron: IRON)
+	execute (args: IRON_INFO_ARGUMENTS; a_iron: IRON)
 		do
 			across
 				args.resources as c

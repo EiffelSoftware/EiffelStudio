@@ -26,7 +26,7 @@
 	{if isset="$archive_url"}<a href="{$archive_url/}">Archive
 	<span class="glyphicon glyphicon-floppy-save"></span>
 	</a>{/if}
-	({$package.archive_file_size/} octets -- {$package.archive_last_modified/})
+	({$package.archive_file_size/} octets -- {$package.archive_last_modified/} {$package.archive_hash/})
 </div>
 <div class="well">
 <strong>Associated URIs

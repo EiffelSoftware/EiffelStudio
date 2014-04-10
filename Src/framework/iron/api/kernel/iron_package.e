@@ -201,7 +201,8 @@ feature -- Access
 	description: detachable READABLE_STRING_32
 
 	associated_paths: ARRAYED_LIST [READABLE_STRING_8]
-			-- Associated path on the repositories
+			-- Associated path on the repositories.
+			--| For local working copy repository, the first path is used to locate package inside repository
 
 	tags: ARRAYED_LIST [READABLE_STRING_32]
 			-- Tags
@@ -226,8 +227,6 @@ feature {NONE} -- Basic operation: archive
 
 	get_archive_hash
 			-- Get `archive_hash' from `archive_path'.
-		require
-			has_archive_path: archive_path /= Void
 		local
 			sha1: SHA1
 			f: RAW_FILE

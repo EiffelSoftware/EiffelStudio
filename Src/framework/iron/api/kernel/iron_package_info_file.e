@@ -125,25 +125,29 @@ feature -- Conversion
 					Result.tags.force (t)
 				end
 			end
-			create l_path_uri.make_from_path (path)
-			s := l_path_uri.string
-			l_loc := a_repo.location_string
-			if s.starts_with (l_loc) then
-					-- remove repository dir
-				s := s.substring (l_loc.count + 1, s.count) -- keep first \
-					-- remove repository .iron file
-				if attached path.entry as e then
-					s.remove_tail (e.name.count + 1)
+
+			if Result.is_local_working_copy then
+				create l_path_uri.make_from_path (path)
+				s := l_path_uri.string
+				l_loc := a_repo.location_string
+				if s.starts_with (l_loc) then
+						-- remove repository dir
+					s := s.substring (l_loc.count + 1, s.count) -- keep first \
+						-- remove repository .iron file
+					if attached path.entry as e then
+						s.remove_tail (e.name.count + 1)
+					end
+					Result.associated_paths.force (s)
 				end
-				Result.associated_paths.force (s)
 			end
+
 			across
 				notes as ic
 			loop
 				if
-					ic.key.same_string ("title") or
-					ic.key.same_string ("description") or
-					ic.key.same_string ("tags")
+					ic.key.same_string ("title")
+					or ic.key.same_string ("description")
+					or ic.key.same_string ("tags")
 				then
 						-- Already stored in attributes
 				else

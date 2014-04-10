@@ -250,7 +250,7 @@ feature -- Search
 		ensure
 			same_name:
 				attached found_feature as f implies
-				(f.rout_id_set.has (r))
+				f.rout_id_set.has (r)
 			valid_site:
 				attached found_feature as f implies attached found_site
 			feature_from_class:
@@ -278,15 +278,13 @@ feature {TYPE_A} -- Visitor
 		do
 			if
 				attached t.base_class as c and then
-				attached feature_in_class.item ([c]) as f
+				attached feature_in_class.item ([c]) as f and then
+				(not attached found_feature as h or else
+					h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set))
 			then
-				if not attached found_feature as h or else
-					h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set)
-				then
-						-- Found next feature.
-						-- TODO: provide valid context.
-					found_features.extend ([f, t, t])
-				end
+					-- Found next feature.
+					-- TODO: provide valid context.
+				found_features.extend ([f, t, t])
 			end
 		end
 

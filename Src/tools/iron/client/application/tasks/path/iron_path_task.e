@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {IRON_WHERE_TASK}."
+	description: "Summary description for {IRON_PATH_TASK}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_WHERE_TASK
+	IRON_PATH_TASK
 
 inherit
 	IRON_TASK
@@ -22,13 +22,13 @@ feature -- Execute
 
 	process (a_iron: IRON)
 		local
-			args: IRON_WHERE_ARGUMENT_PARSER
+			args: IRON_PATH_ARGUMENT_PARSER
 		do
 			create args.make (Current)
 			args.execute (agent execute (args, a_iron))
 		end
 
-	execute (args: IRON_WHERE_ARGUMENTS; a_iron: IRON)
+	execute (args: IRON_PATH_ARGUMENTS; a_iron: IRON)
 		local
 			l_resources: LIST [READABLE_STRING_32]
 			l_multiple: BOOLEAN

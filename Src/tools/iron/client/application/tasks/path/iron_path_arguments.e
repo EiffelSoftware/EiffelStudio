@@ -1,19 +1,23 @@
 note
-	description: "Summary description for {IRON_WHERE_ARGUMENTS}."
+	description: "Summary description for {IRON_PATH_ARGUMENTS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	IRON_WHERE_ARGUMENTS
+	IRON_PATH_ARGUMENTS
 
 inherit
-	IRON_SEARCH_ARGUMENTS
+	IRON_ARGUMENTS
 
 feature -- Access
 
+	resources: LIST [IMMUTABLE_STRING_32]
+		deferred
+		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -35,7 +35,11 @@ feature -- Execute
 			loop
 				print (m_title_information_for (c.item))
 				print_new_line
-				if c.item.starts_with ("http://") or c.item.starts_with ("https://") then
+				if
+					c.item.starts_with ("http://")
+					or c.item.starts_with ("https://")
+					or c.item.starts_with ("file://")
+				then
 					if attached a_iron.catalog_api.package_associated_with_uri (c.item) as l_package then
 						display_information (l_package, args, a_iron)
 					end

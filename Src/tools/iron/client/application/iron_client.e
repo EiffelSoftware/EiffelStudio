@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 			Result.force ([agent (args: like task_arguments): IRON_LIST_TASK    do create Result.make (args) end, "list packages.."], "list")
 			Result.force ([agent (args: like task_arguments): IRON_SEARCH_TASK  do create Result.make (args) end, "search package"], "search")
 			Result.force ([agent (args: like task_arguments): IRON_INFO_TASK    do create Result.make (args) end, "information about a package"], "info")
-			Result.force ([agent (args: like task_arguments): IRON_WHERE_TASK    do create Result.make (args) end, "output the installation folder for a package (if installed)"], "where")
+			Result.force ([agent (args: like task_arguments): IRON_PATH_TASK    do create Result.make (args) end, "output the installation folder for a package (if installed)"], "path")
 			Result.force ([agent (args: like task_arguments): IRON_INSTALL_TASK do create Result.make (args) end, "install package"], "install")
 			Result.force ([agent (args: like task_arguments): IRON_REMOVE_TASK  do create Result.make (args) end, "remove a package"], "remove")
 

@@ -66,7 +66,7 @@ feature -- Access
 	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2013. All Rights Reserved.")
+			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2014. All Rights Reserved.")
 		end
 
 	version: IMMUTABLE_STRING_32
@@ -76,7 +76,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

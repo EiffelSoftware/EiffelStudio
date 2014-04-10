@@ -1,41 +1,69 @@
 note
-	description: "Summary description for {IRON_ARGUMENT_SINGLE_PARSER}."
+	description: "Summary description for {IRON_ARGUMENT_PARSER_I}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	IRON_ARGUMENT_SINGLE_PARSER
-
-inherit
-	ARGUMENT_SINGLE_PARSER
-		rename
-			make as make_parser
-		undefine
-			sub_system_name,
-			is_using_unix_switch_style,
-			switch_prefixes,
-			help_switch
-		end
-
 	IRON_ARGUMENT_PARSER_I
 
 feature {NONE} -- Initialization
 
-	make (a_task: like task)
-			-- Initialize argument parser
+	initialize_with_task (a_task: like task)
 		do
-			task := a_task
-			make_parser (False, False)
-			initialize_with_task (a_task)
+			set_argument_source (a_task.argument_source)
+			set_is_using_builtin_switches (not is_verbose_switch_used)
 		end
 
-feature -- Change
-
-	set_is_using_builtin_switches (b: like is_using_builtin_switches)
-		do
-			is_using_builtin_switches := b
+	set_is_using_builtin_switches (b: BOOLEAN)
+		deferred
 		end
 
+	set_argument_source (a_source: like argument_source)
+		deferred
+		end
+
+	argument_source: ARGUMENT_SOURCE
+		deferred
+		end
+
+feature {NONE} -- Status report		
+
+	is_verbose_switch_used: BOOLEAN
+		deferred
+		end
+
+	is_using_unix_switch_style: BOOLEAN = True
+			-- <Precursor>
+			--| Avoid using /flag ...
+
+	switch_prefixes: ARRAY [CHARACTER_32]
+			-- Prefixes used to indicate a command line switch.
+		once
+			Result := <<'-'>>
+		end
+
+	help_switch: IMMUTABLE_STRING_32
+			-- Display usage information switch.
+		once
+			create Result.make_from_string_general ("h|help")
+		end
+
+feature -- Access
+
+	task: IRON_TASK
+
+	sub_system_name: IMMUTABLE_STRING_32
+		do
+			Result := task.name
+		end
+
+feature {NONE} -- Usage
+
+	name: IMMUTABLE_STRING_32
+		do
+			create Result.make_from_string_general ({IRON_CONSTANTS}.executable_name + " " + sub_system_name)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

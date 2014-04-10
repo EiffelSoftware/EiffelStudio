@@ -104,7 +104,6 @@ feature -- Hash password
 			Result implies a_salt.count >= 29
 		end
 
-
 	hashed_password_general (a_password: READABLE_STRING_GENERAL; a_salt: READABLE_STRING_GENERAL): STRING_8
 			-- General version of hashed_password.
 		do

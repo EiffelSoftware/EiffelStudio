@@ -35,7 +35,7 @@ feature -- Execute
 		do
 			l_resources := args.resources
 			if l_resources.count = 0 then
-				print (a_iron.layout.installation_path.name)
+				print (a_iron.layout.path.name)
 			else
 				l_multiple := l_resources.count > 1
 				across

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {TEST_BINARY_CONTENT}."
-	author: ""
+	description: "Testing that insertion of binary content is done properly."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,20 +45,21 @@ feature {NONE} -- Implementation
 			drop_repository (table_name)
 
 			if is_odbc then
-				execute_query ("CREATE TABLE " + table_name + " (item varbinary(max))")
+				execute_query ("CREATE TABLE " + table_name + " (id int, item varbinary(max))")
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE " + table_name + " (`item` BLOB)")
+				execute_query ("CREATE TABLE " + table_name + " (`id` int, `item` BLOB)")
 			end
 
 			if is_oracle then
-				execute_query ("CREATE TABLE " + table_name + " (item BLOB)")
+				execute_query ("CREATE TABLE " + table_name + " (id int, item BLOB)")
 			end
 		end
 
 	test_insert
-			-- Select books
+			-- Insert binary data using a prepared statement. It should take the data as is,
+			-- no prior modification should be done to the binary data we want to store.
 		local
 			l_list: ARRAYED_LIST [CELL [STRING_8]]
 			l_file: STRING_8
@@ -78,18 +78,32 @@ feature {NONE} -- Implementation
 			l_binary_file.append_character ('%/0x03/')
 
 			create l_change.make
+			l_change.set_map_name (1, "id")
 			l_change.set_map_name (l_file, "image")
-			l_change.prepare_32 ("insert into " + table_name + " (item) VALUES (:image)")
-			l_change.unset_map_name ("image")
+			l_change.prepare_32 ("insert into " + table_name + " (id, item) VALUES (:id, :image)")
+			l_change.clear_all
+			l_change.execute
+
+			l_change.set_map_name (2, "id")
+			l_change.set_map_name (l_binary_file, "image")
+			l_change.rebind_arguments
 			l_change.execute
 			l_change.terminate
 
 				-- Check that the stored data is valid.
-			l_list := load_list_with_select ("select * from " + table_name, create {CELL [STRING_8]}.put (""))
+			l_list := load_list_with_select ("select * from " + table_name + " where id = 1", create {CELL [STRING_8]}.put (""))
 			if l_list.count = 1 then
-				assert ("1 - Same Unicode", l_list.first.item ~ l_binary_file)
+				assert ("1 - Same content", l_list.first.item ~ l_file)
 			else
 				assert ("1 - Number of results is not expected", False)
+			end
+
+				-- Check that the stored data is valid.
+			l_list := load_list_with_select ("select * from " + table_name + " where id = 2", create {CELL [STRING_8]}.put (""))
+			if l_list.count = 1 then
+				assert ("2 - Same content", l_list.first.item ~ l_binary_file)
+			else
+				assert ("2 - Number of results is not expected", False)
 			end
 		end
 

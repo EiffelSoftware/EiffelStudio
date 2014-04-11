@@ -137,15 +137,12 @@ feature -- Analysis interface
 	add_whole_system
 			-- Adds all the classes that are part of the current system. Classes of referenced libraries
 			-- will not be added.
-		local
-			l_cluster: CLUSTER_I
 		do
 			across
 				eiffel_universe.groups as l_groups
 			loop
-				l_cluster ?= l_groups.item
 					-- Only load top-level clusters, as the others will be loaded recursively afterwards.
-				if l_cluster /= Void and then l_cluster.parent_cluster = Void then
+				if attached {CLUSTER_I} l_groups.item as l_cluster and then l_cluster.parent_cluster = Void then
 					add_cluster (l_cluster)
 				end
 			end

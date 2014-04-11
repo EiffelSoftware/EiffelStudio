@@ -159,7 +159,6 @@ feature -- Status update
 		local
 			l_product_names: PRODUCT_NAMES
 			l_op_env: like operating_environment
-			l_ise_library, l_eiffel_library: detachable READABLE_STRING_GENERAL
 			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
 			l_variable: TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]
@@ -235,21 +234,44 @@ feature -- Status update
 				end
 			end
 
-				-- Make sure to define ISE_LIBRARY and EIFFEL_LIBRARY if not defined.
-				--  if $ISE_LIBRARY not defined then
-				--      $ISE_LIBRARY=$EIFFEL_LIBRARY
-				--  end
-				--  if $ISE_LIBRARY not defined then
-				--      use ISE_EIFFEL to set ISE_LIBRARY
-				--  else
-				--      make sure ISE_LIBRARY supports compatible
-				--  end
-				--  if $EIFFEL_LIBRARY not defined then
-				--      $EIFFEL_LIBRARY = $ISE_LIBRARY
-				--  end
-				--
-				-- Note: if a value is set, we never change it (apart from "compatible" support))
+				-- Make sure ISE_LIBRARY and EIFFEL_LIBRARY are defined.
+			check_ise_eiffel_library_environment_variables
 
+				-- Make sure to have ISE_IRON_PATH and/or IRON_PATH defined.
+			check_iron_environment_variables
+
+				-- Continue checking and initializing the environement
+			if is_valid_environment then
+				create_directories
+				if is_user_files_supported then
+					is_hidden_files_path_available := directory_path_exists (hidden_files_path)
+				else
+						-- No place for saving hidden files.
+					is_hidden_files_path_available := False
+				end
+			end
+		ensure
+			is_valid_environment: is_valid_environment
+		end
+
+	check_ise_eiffel_library_environment_variables
+			-- Make sure to define ISE_LIBRARY and EIFFEL_LIBRARY if not defined.
+			--  if $ISE_LIBRARY not defined then
+			--      $ISE_LIBRARY=$EIFFEL_LIBRARY
+			--  end
+			--  if $ISE_LIBRARY not defined then
+			--      use ISE_EIFFEL to set ISE_LIBRARY
+			--  else
+			--      make sure ISE_LIBRARY supports compatible
+			--  end
+			--  if $EIFFEL_LIBRARY not defined then
+			--      $EIFFEL_LIBRARY = $ISE_LIBRARY
+			--  end
+			--
+			-- Note: if a value is set, we never change it (apart from "compatible" support))
+		local
+			l_ise_library, l_eiffel_library: detachable READABLE_STRING_GENERAL
+		do
 			l_eiffel_library := get_environment_32 ({EIFFEL_CONSTANTS}.eiffel_library_env)
 			l_ise_library := get_environment_32 ({EIFFEL_CONSTANTS}.ise_library_env)
 
@@ -281,19 +303,47 @@ feature -- Status update
 				-- Ensure environment variables are set
 			set_environment (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
 			set_environment (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
+		end
 
-				-- Continue checking and initializing the environement
-			if is_valid_environment then
-				create_directories
-				if is_user_files_supported then
-					is_hidden_files_path_available := directory_path_exists (hidden_files_path)
-				else
-						-- No place for saving hidden files.
-					is_hidden_files_path_available := False
-				end
+	check_iron_environment_variables
+			-- Make sure to have ISE_IRON_PATH and/or IRON_PATH defined.
+		local
+			l_ise_iron, l_iron: detachable READABLE_STRING_GENERAL
+		do
+			l_iron := get_environment_32 ({EIFFEL_CONSTANTS}.iron_path_env)
+			if l_iron /= Void and then l_iron.is_empty then
+				l_iron := Void
 			end
-		ensure
-			is_valid_environment: is_valid_environment
+			l_ise_iron := get_environment_32 ({EIFFEL_CONSTANTS}.ise_iron_path_env)
+			if l_ise_iron /= Void and then l_ise_iron.is_empty then
+				l_ise_iron := Void
+			end
+
+
+			if l_ise_iron = Void then
+				if l_iron = Void then
+						-- both are Void
+				else
+					l_ise_iron := l_iron
+				end
+			elseif l_iron = Void then
+				l_iron := l_ise_iron -- here l_ise_iron /= Void
+			else
+					-- Conflict, but ISE_IRON_PATH has priority
+					-- thus update IRON_PATH
+				l_iron := l_ise_iron
+			end
+			check same_iron_path: l_iron = l_ise_iron end
+
+			if l_iron = Void or l_ise_iron = Void then
+				check l_ise_iron = Void and l_iron = Void end
+				l_ise_iron := iron_path.name
+				l_iron := l_ise_iron
+			end
+
+				-- Ensure environment variables are set
+			set_environment (l_ise_iron, {EIFFEL_CONSTANTS}.ise_iron_path_env)
+			set_environment (l_iron, {EIFFEL_CONSTANTS}.iron_path_env)
 		end
 
 feature -- Status report

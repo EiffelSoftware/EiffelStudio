@@ -118,7 +118,10 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 			l_dialog: ES_INFORMATION_PROMPT
 		do
 				-- Compile the project and only analyze if the compilation was successful.
-			eiffel_project.quick_melt (True, True, True)
+			if eiffel_project.able_to_compile then
+					-- Avoid recompiling a precompiled library.
+				eiffel_project.quick_melt (True, True, True)
+			end
 			if eiffel_project.successful then
 				create l_helper
 				if l_helper.code_analyzer.is_running then
@@ -159,7 +162,10 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 			l_dialog: ES_INFORMATION_PROMPT
 		do
 				-- Compile the project and only analyze if the compilation was successful.
-			eiffel_project.quick_melt (True, True, True)
+			if eiffel_project.able_to_compile then
+					-- Avoid recompiling a precompiled library.
+				eiffel_project.quick_melt (True, True, True)
+			end
 			if eiffel_project.successful then
 				create l_helper
 				if l_helper.code_analyzer.is_running then
@@ -311,27 +317,29 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 		local
 			l_violation_exists: BOOLEAN
 		do
-				-- First off, remove all event items.
-			event_list.prune_event_items (event_context_cookie)
+			if attached event_list as l then
+					-- First off, remove all event items.
+				l.prune_event_items (event_context_cookie)
 
-			if a_exceptions /= Void then
-				across a_exceptions as ic loop
-					event_list.put_event_item (event_context_cookie, create {CA_EXCEPTION_EVENT}.make (ic.item))
-					l_violation_exists := True
+				if a_exceptions /= Void then
+					across a_exceptions as ic loop
+						l.put_event_item (event_context_cookie, create {CA_EXCEPTION_EVENT}.make (ic.item))
+						l_violation_exists := True
+					end
 				end
-			end
 
-				-- Add an event item for each rule violation.
-			across code_analyzer.rule_violations as l_viol_list loop
-				across l_viol_list.item as l_viol loop
-					event_list.put_event_item (event_context_cookie, create {CA_RULE_VIOLATION_EVENT}.make (l_viol.item))
-					l_violation_exists := True
+					-- Add an event item for each rule violation.
+				across code_analyzer.rule_violations as l_viol_list loop
+					across l_viol_list.item as l_viol loop
+						l.put_event_item (event_context_cookie, create {CA_RULE_VIOLATION_EVENT}.make (l_viol.item))
+						l_violation_exists := True
+					end
 				end
-			end
 
-				-- If there are no violations at all then add a pseudo item indicating this very fact.
-			if not l_violation_exists then
-				event_list.put_event_item (event_context_cookie, create {CA_NO_ISSUES_EVENT}.make)
+					-- If there are no violations at all then add a pseudo item indicating this very fact.
+				if not l_violation_exists then
+					l.put_event_item (event_context_cookie, create {CA_NO_ISSUES_EVENT}.make)
+				end
 			end
 
 			show_ca_tool
@@ -509,13 +517,10 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	frozen event_list: EVENT_LIST_S
+	frozen event_list: detachable EVENT_LIST_S
 			-- Access to an event list service.
 		do
-			check service_consumer.is_service_available end
 			Result := service_consumer.service
-		ensure
-			valid_result: Result /= Void
 		end
 
 	set_up_menu_items
@@ -586,27 +591,25 @@ feature -- GUI preferences
 			-- Initializes the preferences related to the tool panel.
 		local
 			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_factory: GRAPHICAL_PREFERENCE_FACTORY
-			l_manager: PREFERENCE_MANAGER
+			l_manager: EB_PREFERENCE_MANAGER
 		do
 			create l_helper
 			code_analyzer := l_helper.code_analyzer
-			create l_factory
-			l_manager := code_analyzer.preferences.new_manager (code_analysis_namespace)
+			create l_manager.make (code_analyzer.preferences, code_analysis_namespace)
 
-			error_bgcolor := l_factory.new_color_preference_value (l_manager,
+			error_bgcolor := l_manager.new_color_preference_value (l_manager,
 				ca_names.color_category + "." + ca_names.error_bgcolor, default_error_bgcolor)
 			error_bgcolor.set_default_value (color_string (default_error_bgcolor))
-			warning_bgcolor := l_factory.new_color_preference_value (l_manager,
+			warning_bgcolor := l_manager.new_color_preference_value (l_manager,
 				ca_names.color_category + "." + ca_names.warning_bgcolor, default_warning_bgcolor)
 			warning_bgcolor.set_default_value (color_string (default_warning_bgcolor))
-			suggestion_bgcolor := l_factory.new_color_preference_value (l_manager,
+			suggestion_bgcolor := l_manager.new_color_preference_value (l_manager,
 				ca_names.color_category + "." + ca_names.suggestion_bgcolor, default_suggestion_bgcolor)
 			suggestion_bgcolor.set_default_value (color_string (default_suggestion_bgcolor))
-			hint_bgcolor := l_factory.new_color_preference_value (l_manager,
+			hint_bgcolor := l_manager.new_color_preference_value (l_manager,
 				ca_names.color_category + "." + ca_names.suggestion_bgcolor, default_hint_bgcolor)
 			hint_bgcolor.set_default_value (color_string (default_hint_bgcolor))
-			fixed_violation_bgcolor := l_factory.new_color_preference_value (l_manager,
+			fixed_violation_bgcolor := l_manager.new_color_preference_value (l_manager,
 				ca_names.color_category + "." + ca_names.fixed_violation_bgcolor, default_fixed_violation_bgcolor)
 			fixed_violation_bgcolor.set_default_value (color_string (default_fixed_violation_bgcolor))
 		end

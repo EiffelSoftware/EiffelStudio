@@ -26,6 +26,8 @@ feature -- Tests
 			assert ("Same string - 2", l_wstr.string.same_string ({STRING_32} "%R%N"))
 			assert ("Same string - 3", l_wstr.string_discarding_carriage_return.same_string ({STRING_32} "%N"))
 
+				-- We are using Unicode characters that translate to 2 UTF-16 code unit which means
+				-- that the WEL_STRING will have to reallocate its C memory properly.
 			create str1.make (20)
 			str1.append_character ('%/66304/')
 			str1.append_character ('%/66304/')

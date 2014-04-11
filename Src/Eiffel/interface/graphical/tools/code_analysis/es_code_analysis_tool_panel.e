@@ -14,6 +14,7 @@ inherit
 			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
+			create_mini_tool_bar_items,
 			create_right_tool_bar_items,
 			is_event_list_synchronized_on_initialized,
 			is_event_list_scrolled_automatically,
@@ -101,7 +102,6 @@ feature {NONE} -- Initialization
 				-- Scope label.
 			create scope_label.make_with_text (ca_names.analysis_not_run)
 			scope_label.set_foreground_color (dark_gray)
-			scope_label.set_minimum_height (26)
 
 			create Result.make (5)
 				-- Button to analyze whole system.
@@ -112,8 +112,6 @@ feature {NONE} -- Initialization
 			Result.extend (current_item_button)
 			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 				-- Label to display last analyzed scope.
-			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (scope_label))
-			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			Result.extend (errors_button)
 			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			Result.extend (warnings_button)
@@ -122,6 +120,11 @@ feature {NONE} -- Initialization
 			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			Result.extend (hints_button)
 			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+		end
+
+	create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+		do
+			create Result.make_from_array (<<create {SD_TOOL_BAR_WIDGET_ITEM}.make (scope_label)>>)
 		end
 
 	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -186,13 +189,16 @@ feature {NONE} -- Initialization
 			l_col: EV_GRID_COLUMN
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_widget)
-			a_widget.set_column_count_to (last_column)
+
+				-- Enable scrollbars.
+			a_widget.show_horizontal_scroll_bar
+			a_widget.show_vertical_scroll_bar
 
 				-- Create columns.
-			l_col := a_widget.column (1)
-			l_col.set_width (20)
+			a_widget.set_column_count_to (last_column)
+
 			l_col := a_widget.column (category_column)
-			l_col.set_width (20)
+			l_col.set_width (40)
 
 			l_col := a_widget.column (description_column)
 			l_col.set_title (ca_names.description_column)
@@ -360,7 +366,7 @@ feature {NONE} -- Events
 				elseif is_hint_event (a_event_item) then
 					hint_count := hint_count + 1
 				else
-					check false end
+					check is_ok_event (a_event_item) end
 				end
 
 				update_button_titles
@@ -393,7 +399,7 @@ feature {NONE} -- Events
 				elseif is_hint_event (a_event_item) then
 					hint_count := hint_count - 1
 				else
-					check false end
+					check is_ok_event (a_event_item) end
 				end
 
 				update_button_titles
@@ -469,6 +475,11 @@ feature {NONE} -- Query
 			and then l_ev.is_hint_event
 		end
 
+	is_ok_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Does event `a_event_item' correspond to a "no issue" event?
+		do
+			Result := attached {CA_NO_ISSUES_EVENT} a_event_item
+		end
 
 feature {NONE} -- Basic operations
 
@@ -645,7 +656,6 @@ feature {NONE} -- Basic operations
 			a_parent.insert_subrow (l_index)
 			l_row := a_parent.subrow (l_index)
 
-			l_row.set_item (category_column, create {EV_GRID_LABEL_ITEM})
 			l_row.set_item (class_column, create {EV_GRID_LABEL_ITEM})
 			l_row.set_item (location_column, create {EV_GRID_LABEL_ITEM})
 
@@ -664,10 +674,10 @@ feature {NONE} -- Basic operations
 	update_button_titles
 			-- Update button titles with number of events.
 		do
-			errors_button.set_text (error_count.out + " " + ca_names.tool_errors)
-			warnings_button.set_text (warning_count.out + " " + ca_names.tool_warnings)
-			suggestions_button.set_text (suggestion_count.out + " " + ca_names.tool_suggestions)
-			hints_button.set_text (hint_count.out + " " + ca_names.tool_hints)
+			errors_button.set_text (ca_names.tool_errors (error_count))
+			warnings_button.set_text (ca_names.tool_warnings (warning_count))
+			suggestions_button.set_text (ca_names.tool_suggestions (suggestion_count))
+			hints_button.set_text (ca_names.tool_hints (hint_count))
 		end
 
 	find_event_row (a_event_item: EVENT_LIST_ITEM_I): detachable EV_GRID_ROW
@@ -870,13 +880,13 @@ feature {NONE} -- Colors
 
 feature {NONE} -- Constants
 
-	category_column: INTEGER = 2
-	class_column: INTEGER = 3
-	location_column: INTEGER = 4
-	description_column: INTEGER = 5
-	rule_id_column: INTEGER = 6
-	severity_score_column: INTEGER = 7
-	last_column: INTEGER = 7
+	category_column: INTEGER = 1
+	class_column: INTEGER = 2
+	location_column: INTEGER = 3
+	description_column: INTEGER = 4
+	rule_id_column: INTEGER = 5
+	severity_score_column: INTEGER = 6
+	last_column: INTEGER = 6
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

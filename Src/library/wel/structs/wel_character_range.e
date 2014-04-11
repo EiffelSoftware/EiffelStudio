@@ -74,6 +74,14 @@ feature -- Element change
 			maximum_set: maximum = a_maximum
 		end
 
+	update_with_rich_edit (a_rich_edit: WEL_RICH_EDIT)
+			-- Update Current with a selected range from WEL_RICH_EDIT.
+		require
+			exists: exists
+			rich_edit_exists: a_rich_edit.exists
+		do
+			{WEL_API}.send_message (a_rich_edit.item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.em_exgetsel, default_pointer, item)
+		end
 
 feature -- Measurement
 
@@ -117,14 +125,14 @@ invariant
 	valid_minumum_maximum: minimum <= maximum + 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

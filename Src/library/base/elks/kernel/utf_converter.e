@@ -1405,7 +1405,7 @@ feature -- UTF-32 to UTF-16
 		ensure
 			p_count_may_increase: p.count >= old p.count
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_escaped_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string_general (s.substring (start_pos, end_pos))
-			roundtrip: (a_new_upper = Void and then s.substring (start_pos, end_pos).has ('%U')) implies
+			roundtrip: (a_new_upper = Void and then not s.substring (start_pos, end_pos).has ('%U')) implies
 				utf_16_0_subpointer_to_escaped_string_32 (p, p_offset // 2, (p.count // 2) - 1, True).same_string_general (s.substring (start_pos, end_pos))
 		end
 

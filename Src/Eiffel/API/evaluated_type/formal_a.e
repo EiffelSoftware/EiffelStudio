@@ -654,13 +654,17 @@ feature -- Access
 		local
 			l_feat: TYPE_FEATURE_I
 		do
-				-- Get associated feature in parent.
-			l_feat := a_ancestor.formal_at_position (position)
-				-- Get associated feature in descendant.
-			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
-			check l_feat_not_void: l_feat /= Void end
-			Result := separate_adapted (l_feat.type.actual_type.to_other_attachment (Current))
-			Result := Result.to_other_variant (Current)
+			if a_ancestor = a_descendant then
+				Result := Current
+			else
+					-- Get associated feature in parent.
+				l_feat := a_ancestor.formal_at_position (position)
+					-- Get associated feature in descendant.
+				l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
+				check l_feat_not_void: l_feat /= Void end
+				Result := separate_adapted (l_feat.type.actual_type.to_other_attachment (Current))
+				Result := Result.to_other_variant (Current)
+			end
 		end
 
 	create_info: CREATE_FORMAL_TYPE

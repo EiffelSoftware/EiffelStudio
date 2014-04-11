@@ -14,7 +14,7 @@ inherit
 		end
 
 create
-	make, make_common
+	make, make_common, make_basic
 
 feature -- Initialization
 
@@ -28,6 +28,35 @@ feature -- Initialization
 			if not l_retried then
 				db_application.set_hostname (hostname)
 				db_application.set_data_source (database_name)
+				db_application.set_base
+				create db_control.make
+				keep_connection := is_keep_connection
+				if keep_connection then
+					connect
+				end
+				set_successful
+			else
+				create db_control.make
+			end
+		rescue
+			create db_control.make
+			set_last_error_from_exception ("Connection execution")
+			if is_connected then
+				disconnect
+			end
+			l_retried := True
+			retry
+		end
+
+	make_basic (a_database_name: STRING)
+		local
+			l_retried: BOOLEAN
+		do
+			create db_application.login (username, password)
+
+			if not l_retried then
+				db_application.set_hostname (hostname)
+				db_application.set_data_source (a_database_name)
 				db_application.set_base
 				create db_control.make
 				keep_connection := is_keep_connection

@@ -1017,16 +1017,17 @@ feature -- Basic Operations
 			-- Upload attachment in temporary table for temporary report `a_report_id'
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_content_hexa: STRING
 		do
 			connect
 			create l_parameters.make (4)
 			l_parameters.put (a_report_id, {ESA_DATA_PARAMETERS_NAMES}.Reportid_param)
 			l_parameters.put (a_length, {ESA_DATA_PARAMETERS_NAMES}.Length_param)
-			l_parameters.put (a_content, {ESA_DATA_PARAMETERS_NAMES}.content_param)
+			l_parameters.put (a_content, {ESA_DATA_PARAMETERS_NAMES}.Content_param)
 			l_parameters.put (string_parameter(a_name,260), {ESA_DATA_PARAMETERS_NAMES}.Filename_param)
 
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer("AddTemporaryProblemReportAttachment", l_parameters))
-			db_handler.execute_writer
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader("AddTemporaryProblemReportAttachment", l_parameters))
+			db_handler.execute_reader
 			disconnect
 		end
 
@@ -1764,4 +1765,23 @@ feature -- Queries
 				)
 		]"
 
+
+
+feature -- Work Around
+
+	to_hexadecimal (a_string: STRING): STRING
+         -- Convert Current bit sequence into the corresponding
+         -- hexadecimal notation.
+      local
+      	l_ic: STRING_ITERATION_CURSOR
+      	l_string: STRING
+      do
+      	create Result.make_empty
+      	create l_ic.make (a_string)
+      	across l_ic as c  loop
+    		 l_string := c.item.code.to_hex_string
+    		 l_string.prune_all_leading ('0')
+     		 Result.append_string(l_string)
+      	end
+      end
 end

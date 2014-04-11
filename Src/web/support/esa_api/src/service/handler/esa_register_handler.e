@@ -1,6 +1,6 @@
 note
 	description: "[
-					{ESA_REGISTER_HANDLER}. Handle user registration where we query  for the user email, password, first name and last name.
+					{ESA_REGISTER_HANDLER}. Handle user registration where we query for the user email, password, first name and last name.
 				    Also handle create a new user after completing the first step.
 				 ]"
 	date: "$Date$"

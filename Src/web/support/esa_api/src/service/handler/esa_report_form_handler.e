@@ -376,6 +376,10 @@ feature {NONE} -- Implementation
 			-- Extract data from collection+json template
 		local
 			l_parser: JSON_PARSER
+			l_content: STRING
+			l_file: ESA_FILE_VIEW
+			l_list: LIST[ESA_FILE_VIEW]
+
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			create l_parser.make_parser (retrieve_data (req))
@@ -432,6 +436,18 @@ feature {NONE} -- Implementation
 				if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
 					Result.set_to_reproduce (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (11) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
+					create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+					across l_files as c  loop
+						if attached {JSON_OBJECT} c.item as jo and then attached {JSON_STRING} jo.item("name") as l_key and then
+							attached {JSON_STRING} jo.item("value") as ll_content then
+							l_content := (create {BASE64}).decoded_string (ll_content.item)
+							create l_file.make (l_key.item, l_content.count, l_content)
+							l_list.force (l_file)
+						end
+					end
+					Result.set_files (l_list)
 				end
 			end
 		end

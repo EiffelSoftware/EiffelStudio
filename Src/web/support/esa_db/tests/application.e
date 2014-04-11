@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 --			test_row_count_responsible_by_user
 --			test_problem_report_by_uer
 			test_temporary_interaction
+			print ("%N Hexa representation of Hola"+ to_hexadecimal ("hOLA"))
 		end
 
 
@@ -420,4 +421,21 @@ feature -- Implementation
 			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
 		end
 
+
+
+	to_hexadecimal (a_string: STRING): STRING
+         -- Convert Current bit sequence into the corresponding
+         -- hexadecimal notation.
+      local
+      	l_ic: STRING_ITERATION_CURSOR
+      	l_string: STRING
+      do
+      	create Result.make_empty
+      	create l_ic.make (a_string)
+      	across l_ic as c  loop
+    		 l_string := c.item.code.to_hex_string
+    		 l_string.prune_all_leading ('0')
+     		 Result.append_string(l_string)
+      	end
+      end
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #54: Attribute is only used inside a single routine
 	
@@ -71,6 +71,7 @@ feature {NONE} -- Rule checking
 
 					if
 						not l_has_clients
+						and then l_clients.has (current_context.checking_class)
 						and then attached l_feat.item.callers_32 (current_context.checking_class, 0) as l_c
 						and then l_c.count = 1
 					then

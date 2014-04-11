@@ -48,7 +48,8 @@
         <"name": "synopsis", "prompt": "Synopsis", {if isset="$synopsis"}"value": "{$synopsis/}"{/if}{unless isset="$synopsis"}"value" : ""{/unless}>,
         <"name": "environment", "prompt": "Environment",{if isset="$environment"}"value": "{$environment/}"{/if}{unless isset="$environment"}"value" : ""{/unless}>,
         <"name": "description", "prompt": "Description",{if isset="$description"}"value": "{$description/}"{/if}{unless isset="$description"}"value" : ""{/unless}>,
-        <"name": "to_reproduce", "prompt": "To Reproduce", {if isset="$to_reproduce"}"value": "{$to_reproduce/}"{/if}{unless isset="$to_reproduce"}"value" : ""{/unless}>
+        <"name": "to_reproduce", "prompt": "To Reproduce", {if isset="$to_reproduce"}"value": "{$to_reproduce/}"{/if}{unless isset="$to_reproduce"}"value" : ""{/unless}>,
+        <"name" : "attachments", "files" : [] , "prompt" : "Attachments">
       ]
       >
     {if isset="$error_message"}

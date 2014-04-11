@@ -190,8 +190,12 @@ feature {NONE} -- Implementation
 
 	last_query: DATE_TIME
 		-- Last time when a query was executed
+
 	keep_connection: BOOLEAN
 		-- Keep connection alive?
+		do
+			Result := connection.keep_connection
+		end
 
 	connect
 			-- Connect to the database

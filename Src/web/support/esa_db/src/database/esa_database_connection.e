@@ -22,6 +22,18 @@ feature {NONE} -- Initialization
 			db_control_not_void: db_control /= Void
 		end
 
+	make_basic ( a_database_name: STRING)
+			-- Create a database handler with common settings and
+ 			-- database_name `a_database_name'.
+		require
+			database_name_not_void: a_database_name /= Void
+			database_name_not_empty: not a_database_name.is_empty
+		deferred
+		ensure
+			db_application_not_void: db_application /= Void
+			db_control_not_void: db_control /= Void
+		end
+
 	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
 			-- Create a database handler with user `a_username', password `a_password',

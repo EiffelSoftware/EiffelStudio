@@ -16,7 +16,7 @@ inherit
 		end
 
 create
-	make, make_common
+	make, make_common, make_basic
 
 feature -- Initialization
 
@@ -33,6 +33,13 @@ feature -- Initialization
 		end
 
 	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
+
+			-- Create a database handler for ODBC
+		do
+			make_common
+		end
+
+	make_basic (a_database_name: STRING)
 
 			-- Create a database handler for ODBC
 		do

@@ -1189,12 +1189,13 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 
 	SQLUSMALLINT seriNumber = (SQLUSMALLINT)seri;
 	SQLSMALLINT direction = (SQLSMALLINT)dir;
-	SQLSMALLINT l_sql_data_type, l_decimal_digits;
-	SQLUINTEGER l_param_size;
+	SQLSMALLINT l_sql_data_type, l_eiffel_type, l_decimal_digits;
+	SQLULEN l_param_size;
 	SQLLEN len;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	SQL_NUMERIC_STRUCT *l_num;
 	SQLHDESC hdesc = NULL;
+	int l_is_binary;
 
 	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
 	l_con->rc = 0;
@@ -1207,22 +1208,40 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 					/* Depending on the size of the columnm the SQL data type is different. Because we do not
 					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
 					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
-					 * force the usage of SQL_LONGVARCHAR. See autotests#TEST_LARGE_DATA. */
-				if (l_param_size == 0) {
+					 * force the usage of SQL_LONGVARCHAR. See autotests#TEST_LARGE_DATA.
+					 * Note that we can only do that if the computed type was not a binary type
+					 * as otherwise we would get an error as char is incompatible with binary. See
+					 * autotest#TEST_BINARY_CONTENT. */
+				l_is_binary = (l_sql_data_type == SQL_VARBINARY) || (l_sql_data_type == SQL_LONGVARBINARY);
+				if ((l_param_size == 0) && !l_is_binary) {
 						/* Heuristic shows that when it is 0, it means it is unbounded. */
 					l_sql_data_type = SQL_LONGVARCHAR;
 				}
-				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, l_sql_data_type, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
+				if (l_is_binary) {
+						/* To avoid having to encode the binary in hexa decimal on the client side,
+						 * we just tell that the client side has already done the transformation.
+						 * See autotest#TEST_BINARY_CONTENT. */
+					l_eiffel_type = SQL_C_BINARY;
+				} else {
+					l_eiffel_type = SQL_C_CHAR;
+				}
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, l_eiffel_type, l_sql_data_type, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
 				break;
 			case EIF_C_WSTRING_TYPE:
 					/* Depending on the size of the columnm the SQL data type is different. Because we do not
 					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
 					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
-					 * force the usage of SQL_WLONGVARCHAR. See autotests#TEST_LARGE_DATA. */
-				if (l_param_size == 0) {
+					 * force the usage of SQL_WLONGVARCHAR. See autotests#TEST_LARGE_DATA.
+					 * Note that we can only do that if the computed type was not a binary type
+					 * as otherwise we would get an error as char is incompatible with binary. See
+					 * autotest#TEST_BINARY_CONTENT. */
+				l_is_binary = (l_sql_data_type == SQL_VARBINARY) || (l_sql_data_type == SQL_LONGVARBINARY);
+				if ((l_param_size == 0) && !l_is_binary) {
 						/* Heuristic shows that when it is 0, it means it is unbounded. */
 					l_sql_data_type = SQL_WLONGVARCHAR;
 				}
+					/* Note that we always have SQL_C_WCHAR as input even if it is a binary field as it won't make sense
+					 * to use a STRING_32 to store binary data, so we will assume that input has been converted to hexa decimal before. */
 				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, l_sql_data_type, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
 				break;
 			case EIF_C_INTEGER_32_TYPE:

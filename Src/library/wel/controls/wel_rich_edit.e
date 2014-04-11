@@ -106,14 +106,22 @@ feature -- Status report
 
 	selection_start: INTEGER
 			-- Index of the first character selected
+		local
+			l_selection: like internal_selection
 		do
-			Result := selection.minimum
+			l_selection := internal_selection
+			l_selection.update_with_rich_edit (Current)
+			Result := l_selection.minimum
 		end
 
 	selection_end: INTEGER
 			-- Index of the last character selected
+		local
+			l_selection: like internal_selection
 		do
-			Result := selection.maximum
+			l_selection := internal_selection
+			l_selection.update_with_rich_edit (Current)
+			Result := l_selection.maximum
 		end
 
 	selection: WEL_CHARACTER_RANGE
@@ -123,7 +131,7 @@ feature -- Status report
 			exists: exists
 		do
 			create Result.make_empty
-			{WEL_API}.send_message (item, Em_exgetsel, to_wparam (0), Result.item)
+			Result.update_with_rich_edit (Current)
 		end
 
 	caret_position: INTEGER
@@ -140,7 +148,8 @@ feature -- Status report
 		local
 			a_selection: WEL_CHARACTER_RANGE
 		do
-			a_selection := selection
+			a_selection := internal_selection
+			a_selection.update_with_rich_edit (Current)
 			Result := a_selection.minimum /= a_selection.maximum
 		end
 
@@ -178,9 +187,13 @@ feature -- Status report
 		local
 			new_options, old_options: INTEGER
 			previous_selection: WEL_CHARACTER_RANGE
+			l_min, l_max: INTEGER
 		do
 			hide_selection
-			previous_selection := selection
+			previous_selection := internal_selection
+			previous_selection.update_with_rich_edit (Current)
+			l_min := previous_selection.minimum
+			l_max := previous_selection.maximum
 			old_options := options
 			new_options := 0
 			set_options (Ecoop_set, new_options)
@@ -188,7 +201,9 @@ feature -- Status report
 			set_selection (i, i + n)
 			Result := selected_text
 
+				-- Restore the selection
 			set_options (Ecoop_set, old_options)
+			previous_selection.set_range (l_min, l_max)
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), previous_selection.item)
 			show_selection
 		end
@@ -855,6 +870,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	internal_selection: WEL_CHARACTER_RANGE
+			-- Internal selection of Current
+		once
+			create Result.make_empty
+		end
+
 feature {NONE} -- Externals
 
 	Class_name_pointer: POINTER
@@ -865,7 +886,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

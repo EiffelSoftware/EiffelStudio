@@ -70,12 +70,12 @@ feature -- Access
 			i, l_count: INTEGER
 		do
 			from
-				 i := 1
-				 l_count := a_row.count
+				i := 1
+				l_count := a_row.count
 			until
 				i > l_count
 			loop
-				if a_row.item (i) = Void then
+				if a_row.item (i) = Void and then (a_row.is_part_of_tree_structure implies a_row.is_index_valid_for_item_setting_if_tree_node (i)) then
 					a_row.set_item (i, create {EV_GRID_ITEM})
 				end
 				i := i + 1
@@ -330,7 +330,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

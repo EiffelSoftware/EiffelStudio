@@ -63,19 +63,19 @@ feature -- Status report
 						-- Form 0xxxxxxx.
 				elseif (c & 0xE0) = 0xC0 and i < nb then
 						-- Form 110xxxxx 10xxxxxx.
-					Result := (s.code (i + 1) & 0xC0) = 0x80
 					i := i + 1
+					Result := (s.code (i) & 0xC0) = 0x80
 				elseif (c & 0xF0) = 0xE0 and i + 1 < nb then
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
-					Result := (s.code (i + 1) & 0xC0) = 0x80 and
-						(s.code (i + 2) & 0xC0) = 0x80
 					i := i + 2
+					Result := (s.code (i - 1) & 0xC0) = 0x80 and
+						(s.code (i) & 0xC0) = 0x80
 				elseif (c & 0xF8) = 0xF0 and i + 2 < nb then
 					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
-					Result := (s.code (i + 1) & 0xC0) = 0x80 and
-						(s.code (i + 2) & 0xC0) = 0x80 and
-						(s.code (i + 3) & 0xC0) = 0x80
 					i := i + 3
+					Result := (s.code (i - 2) & 0xC0) = 0x80 and
+						(s.code (i - 1) & 0xC0) = 0x80 and
+						(s.code (i) & 0xC0) = 0x80
 				else
 						-- Anything else is not a valid UTF-8 sequence that would yield a valid Unicode character.
 					Result := False
@@ -2112,7 +2112,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

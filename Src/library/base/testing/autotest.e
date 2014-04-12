@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 			t.test_invalid_utf_8
 			t.test_invalid_utf_16
 			t.test_utf_16_with_escape_character
+			t.test_utf_32_with_escape_character_for_utf_16
+			t.test_utf_32_with_escape_character_for_utf_8
 		end
 
 note

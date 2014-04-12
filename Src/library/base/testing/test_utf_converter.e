@@ -268,6 +268,7 @@ feature -- Testing UTF-16
 			u: UTF_CONVERTER
 			l_ptr: MANAGED_POINTER
 			l_cell: detachable like upper
+			l_str8: STRING_8
 			i: INTEGER
 		do
 				-- We do the test twice. The first time without providing `upper',
@@ -277,7 +278,7 @@ feature -- Testing UTF-16
 			until
 				i > 1
 			loop
-					-- Let's escape with what would be an invalid UTF-16 character.
+					-- I -Let's escape with what would be an invalid UTF-16 character.
 				create l_str32.make (10)
 				l_str32.append_character ({UTF_CONVERTER}.escape_character)
 				l_str32.append ("uDC00")
@@ -290,8 +291,14 @@ feature -- Testing UTF-16
 				l_result := u.utf_16_0_pointer_to_escaped_string_32 (l_ptr)
 				assert ("test_utf_32_with_escape_character_for_utf_16 - 2", l_result ~ l_str32)
 
+					-- Same but with STRING_8 output
+				l_str8 := u.escaped_utf_32_string_to_utf_16le_string_8 (l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_16 - 1_bis", l_str8.count = 2 and l_str8 ~ "%U%/220/")
+					-- Roundtrip
+				l_result := u.utf_16le_string_8_to_escaped_string_32 (l_str8)
+				assert ("test_utf_32_with_escape_character_for_utf_16 - 2bis", l_result ~ l_str32)
 
-					-- Let's escape with what would be a valid UTF-16 character.
+					-- II - Let's escape with what would be a valid UTF-16 character.
 				create l_str32.make (10)
 				l_str32.append_character ({UTF_CONVERTER}.escape_character)
 				l_str32.append ("u0061")
@@ -314,7 +321,14 @@ feature -- Testing UTF-16
 
 					-- Roundtrip to see if it is the same as the original
 				l_result := u.utf_16_0_pointer_to_escaped_string_32 (l_ptr)
-				assert ("test_utf_32_with_escape_character_for_utf_16 - 4", l_result ~ l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_16 - 6", l_result ~ l_str32)
+
+					-- Same but with STRING_8 output
+				l_str8 := u.escaped_utf_32_string_to_utf_16le_string_8 (l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_16 - 5bis", l_str8 ~ "%/253/%/255/u%U0%U0%U6%U1%U")
+					-- Roundtrip
+				l_result := u.utf_16le_string_8_to_escaped_string_32 (l_str8)
+				assert ("test_utf_32_with_escape_character_for_utf_16 - 6bis", l_result ~ l_str32)
 				l_cell := upper
 				i := i + 1
 			end
@@ -410,6 +424,7 @@ feature -- UTF-8
 			u: UTF_CONVERTER
 			l_ptr: MANAGED_POINTER
 			l_cell: detachable like upper
+			l_str8: STRING_8
 			i: INTEGER
 		do
 				-- We do the test twice. The first time without providing `upper',
@@ -419,7 +434,7 @@ feature -- UTF-8
 			until
 				i > 1
 			loop
-					-- Let's escape with what would be an invalid UTF-8 character.
+					-- I - Let's escape with what would be an invalid UTF-8 character.
 				create l_str32.make (10)
 				l_str32.append_character ({UTF_CONVERTER}.escape_character)
 				l_str32.append ("8F")
@@ -432,8 +447,15 @@ feature -- UTF-8
 				l_result := u.utf_8_0_pointer_to_escaped_string_32 (l_ptr)
 				assert ("test_utf_32_with_escape_character_for_utf_8 - 2", l_result ~ l_str32)
 
+					-- Same but to a STRING_8 output
+				l_str8 := u.escaped_utf_32_string_to_utf_8_string_8 (l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_8 - 1bis", l_str8.count = 1 and l_str8.code (1) = 0x8F)
+					-- Roundtrip testing
+				l_result := u.utf_8_string_8_to_escaped_string_32 (l_str8)
+				assert ("test_utf_32_with_escape_character_for_utf_8 - 2bis", l_result ~ l_str32)
 
-					-- Let's escape with what would be a valid UTF-8 character.
+
+					-- II - Let's escape with what would be a valid UTF-8 character.
 				create l_str32.make (10)
 				l_str32.append_character ({UTF_CONVERTER}.escape_character)
 				l_str32.append ("61")
@@ -441,7 +463,7 @@ feature -- UTF-8
 				create l_ptr.make (2)
 				u.escaped_utf_32_substring_into_utf_8_0_pointer (l_str32, 1, 3, l_ptr, 0, l_cell)
 				if l_cell /= Void then
-					assert ("test_uft_32_with_escape - 3", l_cell.item <= l_ptr.count)
+					assert ("test_utf_32_with_escape - 3", l_cell.item <= l_ptr.count)
 				else
 					assert ("test_uft_32_with_escape - 4", l_ptr.count >= 6)
 				end
@@ -453,7 +475,14 @@ feature -- UTF-8
 
 					-- Roundtrip to see if it is the same as the original
 				l_result := u.utf_8_0_pointer_to_escaped_string_32 (l_ptr)
-				assert ("test_utf_32_with_escape_character_for_utf_8 - 4", l_result ~ l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_8 - 6", l_result ~ l_str32)
+
+					-- Same but to a STRING_8 output
+				l_str8 := u.escaped_utf_32_string_to_utf_8_string_8 (l_str32)
+				assert ("test_utf_32_with_escape_character_for_utf_8 - 5bis", l_str8 ~ "%/239/%/191/%/189/61")
+					-- Roundtrip testing
+				l_result := u.utf_8_string_8_to_escaped_string_32 (l_str8)
+				assert ("test_utf_32_with_escape_character_for_utf_8 - 6bis", l_result ~ l_str32)
 				l_cell := upper
 				i := i + 1
 			end

@@ -52,6 +52,15 @@ feature {NONE} -- Initialization
 			db_control_not_void: db_control /= Void
 		end
 
+	login_with_connection_string (a_connection_string: STRING; a_database: STRING)
+			-- Login with `a_connection_string'
+			-- and immediately connect to database.
+		deferred
+		ensure
+			db_application_not_void: db_application /= Void
+			db_control_not_void: db_control /= Void
+		end
+
 feature -- Database Setup
 
 	db_application: DATABASE_APPL [DATABASE]

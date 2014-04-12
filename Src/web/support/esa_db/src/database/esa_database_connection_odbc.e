@@ -14,7 +14,7 @@ inherit
 		end
 
 create
-	make, make_common, make_basic
+	make, make_common, make_basic, login_with_connection_string
 
 feature -- Initialization
 
@@ -90,6 +90,21 @@ feature -- Initialization
 			if keep_connection then
 				connect
 			end
+		end
+
+	login_with_connection_string (a_string: STRING; a_database: STRING)
+			-- Login with `a_connection_string'
+			-- and immediately connect to database.
+		do
+			create db_application.login_with_connection_string (a_string)
+			db_application.set_data_source (a_database)
+			db_application.set_base
+			create db_control.make
+			keep_connection := is_keep_connection
+			if keep_connection then
+				connect
+			end
+
 		end
 
 feature -- Databse Connection

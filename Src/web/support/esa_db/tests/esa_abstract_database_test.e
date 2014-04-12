@@ -32,7 +32,9 @@ feature {NONE} -- Events
 			l_rest.execute_command ("create_db.bat",l_list, False, Void)
 			assert ("not_has_error", not l_rest.has_error)
 			l_env.change_working_directory (l_old_dir)
-			l_env.sleep (500000000)
+
+				--
+			create {ESA_DATABASE_CONNECTION_ODBC} connection.login_with_connection_string ("Driver={SQL Server Native Client 11.0};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;", {ESA_DATABASE_TEST_CONFIG}.database_name)
 		end
 
 
@@ -91,9 +93,9 @@ feature -- Configuration
 
 	connection: ESA_DATABASE_CONNECTION
 			-- Database connection
-		once
-			create {ESA_DATABASE_CONNECTION_ODBC} Result.make_basic ({ESA_DATABASE_TEST_CONFIG}.database_name)
-		end
+--		once
+--			create {ESA_DATABASE_CONNECTION_ODBC} Result.login_with_connection_string ("Driver={SQL Server};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;", {ESA_DATABASE_TEST_CONFIG}.database_name)
+--		end
 
 feature -- Script directory
 

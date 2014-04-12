@@ -47,6 +47,14 @@ feature -- Initialization
 		end
 
 
+	login_with_connection_string (a_string: STRING; a_database_name: STRING)
+			-- Login with `a_connection_string'
+			-- and immediately connect to database.
+		do
+			make_common
+		end
+
+
 feature -- Databse Connection
 
 	db_application: DATABASE_APPL[ESA_NULL_DATABASE]

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 	make_and_launch
 		do
-			create esa_config.make
+			setup_config
 			create launcher
 			make_and_launch_service
 		end
@@ -84,6 +84,11 @@ feature -- ESA Configuraion
 
 	esa_config: ESA_CONFIG
 		-- Configuration
+
+ 	setup_config
+ 		do
+ 			create esa_config.make
+		end
 
 feature -- Execute Filter
 

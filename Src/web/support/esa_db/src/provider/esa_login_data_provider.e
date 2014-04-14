@@ -10,6 +10,8 @@ inherit
 
 	ESA_PARAMETER_NAME_HELPER
 
+	ESA_DATABASE_ERROR
+
 	REFACTORING_HELPER
 
 create
@@ -25,7 +27,6 @@ feature -- Initialization
 
 	db_handler: ESA_DATABASE_HANDLER
 			-- Db handler
-
 
 feature -- Status Report
 

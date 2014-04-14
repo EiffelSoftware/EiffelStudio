@@ -29,7 +29,7 @@ feature {NONE} -- Events
 		    l_env.change_working_directory (current_dir)
 			create l_rest
 			create l_list.make_from_array (<<{ESA_DATABASE_TEST_CONFIG}.server_name,{ESA_DATABASE_TEST_CONFIG}.database_name, {ESA_DATABASE_TEST_CONFIG}.schema>>)
-			l_rest.execute_command ("create_db.bat",l_list, False, Void)
+			l_rest.reset_db (l_list, False, Void)
 			assert ("not_has_error", not l_rest.has_error)
 			l_env.change_working_directory (l_old_dir)
 

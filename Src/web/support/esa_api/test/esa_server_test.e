@@ -10,7 +10,8 @@ note
 inherit
 	ESA_SERVER
 		redefine
-			launch
+			launch,
+			setup_config
 		end
 	ESA_HTTP_CLIENT_HELPER
 
@@ -87,5 +88,24 @@ feature -- Access
 			 create l_ctx_factory
 			 Result := l_ctx_factory.cj_context_executor
 		end
+
+
+feature -- ESA configuration
+
+ 	setup_config
+ 		do
+ 			create esa_config.make_with_database ("Driver={SQL Server Native Client 11.0};Server=" + server_name + ";Database=" + database_name + ";Trusted_Connection=Yes;", database_name)
+		end
+
+	server_name: STRING = "JVELILLA\SQLEXPRESS"
+		-- Server Name.
+
+	database_name: STRING = "EiffelDBIntegration"
+		-- Database Name.
+
+	schema : STRING = "eiffeldbintegration"
+	 	-- Database schema.
+
+
 
 end

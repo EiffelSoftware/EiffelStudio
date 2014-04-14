@@ -10,7 +10,10 @@ inherit
 
 	ESA_PARAMETER_NAME_HELPER
 
+	ESA_DATABASE_ERROR
+
 	REFACTORING_HELPER
+
 
 create
 	make
@@ -400,6 +403,7 @@ feature -- Access
 			l_answer_salt, l_password_salt, l_answer_hash, l_password_hash: STRING
 			l_security: ESA_SECURITY_PROVIDER
 			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_int: INTEGER
 		do
 			create l_security
 			l_answer_salt := l_security.salt

@@ -565,13 +565,19 @@ feature -- Element Settings
 			attached_first_name: a_first_name /= Void
 			attached_last_name: a_last_name /= Void
 		do
-			data_provider.add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token, a_question_id)
-			is_successful := data_provider.is_successful
-			if is_successful and then
-			   attached login_provider.user_from_username (a_username) then
-			   	Result := True
+			if login_provider.user_from_username (a_username) = Void and then
+				login_provider.user_from_email (a_email) = Void then
+				data_provider.add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token, a_question_id)
+				is_successful := data_provider.is_successful
+				if is_successful and then
+				   attached login_provider.user_from_username (a_username) then
+				   	Result := True
+				else
+					is_successful := login_provider.is_successful
+				end
 			else
-				is_successful := login_provider.is_successful
+					-- 	"Could not create user: Username/Email address already registered"
+				Result := False
 			end
 		end
 

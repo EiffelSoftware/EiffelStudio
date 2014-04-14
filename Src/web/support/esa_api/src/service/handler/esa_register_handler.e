@@ -86,7 +86,8 @@ feature -- HTTP Methods
 							-- redirect to post register page
 						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).post_register_page (req, res)
 					else
-							--	register_error_ "Unable to send email to " + l_register.email + ". Please check email address or contact administrator."
+							--	"Unable to send email to " + l_register.email + ". Please check email address or contact administrator."
+							-- or "Could not create user: Username/Email address already registered."
 						remove_user (l_register)
 						l_register.set_questions (api_service.security_questions)
 						if attached l_register.email as l_email then
@@ -133,6 +134,8 @@ feature -- HTTP Methods
 			   if Result then
 					email_service.send_post_registration_email (l_email, l_token, a_host)
 					Result := email_service.successful
+			   else
+				   	a_register.add_error ("User Creation", "Could not create user: Username/Email address already registered.")
 			   end
 			end
 		end

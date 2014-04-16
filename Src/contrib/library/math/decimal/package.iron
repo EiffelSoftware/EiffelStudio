@@ -8,8 +8,9 @@ note
 	description: DECIMAL numbers. Following the 'General Decimal Arithmetic Specification'
 	tags: math,decimal
 	license: MIT license
-	copyright: Copyright (c) 2004, Paul G. Crismer and others.
-Copyright (c) 2011, SEL, York University, Toronto and others.
+	copyright: "[
+			Copyright (c) 2004, Paul G. Crismer and others.
+			Copyright (c) 2011, SEL, York University, Toronto and others.
+			]"
 
---	link[doc]: "Documentation" http:// 
 end

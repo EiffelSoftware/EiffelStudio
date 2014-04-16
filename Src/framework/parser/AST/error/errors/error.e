@@ -235,8 +235,8 @@ feature {NONE} -- Compute surrounding text around error
 			-- Surrounding lines where error occurs.
 
 	context_line: detachable STRING
-			-- Like current line but evaluates the surrounding context line if it hasn't
-			-- been determined.
+			-- Like `current_line' but evaluates the surrounding context line
+			-- if it hasn't been determined.
 		local
 			l_count, i: INTEGER
 		do
@@ -279,7 +279,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

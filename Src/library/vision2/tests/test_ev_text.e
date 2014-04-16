@@ -17,6 +17,8 @@ feature -- Test routines
 	test_text_caret_positioning
 			-- Demonstrate that programmatical caret positioning
 			-- at the beginning of a non-first line fails!
+		note
+			testing: "execution/isolated"
 		local
 			txt: EV_TEXT
 			i: INTEGER
@@ -33,6 +35,8 @@ feature -- Test routines
 	test_rich_text_caret_positioning
 			-- Demonstrate that programmatical caret positioning
 			-- at the beginning of a non-first line fails!
+		note
+			testing: "execution/isolated"
 		local
 			txt: EV_RICH_TEXT
 			i: INTEGER
@@ -48,24 +52,30 @@ feature -- Test routines
 
 	test_unicode_selection_ev_text
 			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
+			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
 			-- with unicode points >65532!
+		note
+			testing: "execution/isolated"
 		do
 			run_test (agent unicode_selection (create {EV_TEXT}))
 		end
 
 	test_unicode_selection_ev_text_field
 			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
+			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
 			-- with unicode points >65532!
+		note
+			testing: "execution/isolated"
 		do
 			run_test (agent unicode_selection (create {EV_TEXT_FIELD}))
 		end
 
 	test_unicode_selection_ev_password
 			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
+			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
 			-- with unicode points >65532!
+		note
+			testing: "execution/isolated"
 		do
 			run_test (agent unicode_selection (create {EV_PASSWORD_FIELD}))
 		end
@@ -74,22 +84,18 @@ feature -- Test routines
 			-- Demonstrate that selection of unicode characters
 			-- in an {EV_TEXT} instance is problematic for characters
 			-- with unicode points >65532!
+		note
+			testing: "execution/isolated"
 		do
 			run_test (agent unicode_selection (create {EV_COMBO_BOX}))
 		end
 
-	test_unicode_selection_ev_spin
-			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
-			-- with unicode points >65532!
-		do
-			run_test (agent unicode_selection (create {EV_SPIN_BUTTON}))
-		end
-
 	test_unicode_selection_ev_rich_text
 			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
+			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
 			-- with unicode points >65532!
+		note
+			testing: "execution/isolated"
 		do
 			run_test (agent unicode_selection (create {EV_RICH_TEXT}))
 		end
@@ -98,7 +104,7 @@ feature {NONE} -- Implementation
 
 	unicode_selection (txt: EV_TEXT_COMPONENT)
 			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT} instance is problematic for characters
+			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
 			-- with unicode points >65532!
 		local
 			str: STRING_32
@@ -154,12 +160,13 @@ feature {NONE} -- Implementation
 				assert ("proper end selection", txt.selection_end = i + 1)
 				i := i + 1
 			end
+
+				-- To use to simplify debuging.
 			txt.pointer_leave_actions.extend (agent on_pointer_leave (txt))
 		end
 
 	on_pointer_leave (txt: EV_TEXT_COMPONENT)
 			-- Print some information about selected text in `txt'!
-			-- Related feature: `test_unicode_selection'.
 		local
 			i: INTEGER
 			sel: STRING_32 -- selected substring

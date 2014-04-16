@@ -1,0 +1,12 @@
+package iphone
+
+project
+	iphone = "iphone.ecf"
+note
+	title: Eiffel iPhone Library 
+	description: Eiffel Library for iPhone development
+--	tags: 
+--	license: 
+	copyright: Copyright (c), Eiffel Software.
+--	link[doc]: "Documentation" http:// 
+end

@@ -28,7 +28,36 @@ inherit
 
 feature -- Display
 
-	trace (a_text_formatter: TEXT_FORMATTER; a_error: ERROR; a_kind: INTEGER)
+	trace (a_text_formatter: TEXT_FORMATTER; a_error: ERROR)
+			-- Display `a_error' in `a_text_formatter' using regular formatting.
+		require
+			text_formatter_not_void: a_text_formatter /= Void
+			error_not_void: a_error /= Void
+		do
+			trace_with_style (a_text_formatter, a_error, normal)
+		end
+
+	trace_tersely (a_text_formatter: TEXT_FORMATTER; a_error: ERROR)
+			-- Display `a_error' in `a_text_formatter' tersely in a single line.
+		require
+			text_formatter_not_void: a_text_formatter /= Void
+			error_not_void: a_error /= Void
+		do
+			trace_with_style (a_text_formatter, a_error, single_line)
+		end
+
+	trace_context (a_text_formatter: TEXT_FORMATTER; a_error: ERROR)
+			-- Display source context of `a_error' in `a_text_formatter'.
+		require
+			text_formatter_not_void: a_text_formatter /= Void
+			error_not_void: a_error /= Void
+		do
+			trace_with_style (a_text_formatter, a_error, context)
+		end
+
+feature {NONE} -- Display
+
+	trace_with_style (a_text_formatter: TEXT_FORMATTER; a_error: ERROR; a_kind: INTEGER)
 			-- Display `a_error' in `a_text_formatter'
 		require
 			text_formatter_not_void: a_text_formatter /= Void
@@ -52,9 +81,13 @@ feature -- Display
 feature -- Access
 
 	normal: INTEGER = 0
+			-- A tracing option to show full (potentially multi-line) error message.
+
 	single_line: INTEGER = 1
+			-- A tracing option to show brief single-line error message.
+
 	context: INTEGER = 2
-			-- Various tracing option.
+			-- A tracing option to show a context of an errot.
 
 feature -- Processing
 
@@ -625,7 +658,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

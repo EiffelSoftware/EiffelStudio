@@ -158,6 +158,7 @@ feature -- Status report
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_selected: BOOLEAN
 			l_char: POINTER
+			l_str: EV_GTK_C_STRING
 		do
 			create a_start_iter.make
 			create a_end_iter.make
@@ -165,7 +166,8 @@ feature -- Status report
 			if a_selected then
 				l_char := {GTK2}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
 				if l_char /= default_pointer then
-					create Result.make_from_c (l_char)
+					create l_str.share_from_pointer (l_char)
+					Result := l_str.string
 				else
 					create Result.make_empty
 				end
@@ -679,7 +681,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

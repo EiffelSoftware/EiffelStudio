@@ -58,7 +58,9 @@ feature -- Command
 					if a_error_buffer /= Void then
 						a_error_buffer.append ("Error: can not execute %"" + a_cmd + "%"%N")
 					end
-					io.error.put_string ("Error: can not execute %"" + a_cmd + "%"%N")
+					debug
+						io.error.put_string ("Error: can not execute %"" + a_cmd + "%"%N")
+					end
 				else
 					if p.launched and not p.has_exited then
 						p.wait_for_exit_with_timeout (1_000_000)

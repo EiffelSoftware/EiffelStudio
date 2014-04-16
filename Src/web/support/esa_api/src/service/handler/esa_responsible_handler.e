@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_RESPONSIBLE_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

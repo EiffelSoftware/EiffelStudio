@@ -6,7 +6,7 @@ note
 deferred class
 	ESA_REPORT_SELECTABLE
 
-	inherit
+inherit
 
 	ESA_IDABLE
 

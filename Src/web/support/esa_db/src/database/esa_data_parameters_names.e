@@ -108,12 +108,6 @@ feature -- Access
 
 feature -- Login
 
---	Passwordhash_param: STRING = "PasswordHash"
-
---	Registrationtoken_param: STRING = "RegistrationToken"
-
---	Answerhash_param: STRING = "AnswerHash"
-
 	Passwordsalt_param: STRING = "PasswordSalt"
 
 	Answersalt_param: STRING = "AnswerSalt"

@@ -61,6 +61,4 @@ feature -- Change element
 			wont_fix_incremented: old wont_fix + 1 = wont_fix
 		end
 
-
-
 end

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

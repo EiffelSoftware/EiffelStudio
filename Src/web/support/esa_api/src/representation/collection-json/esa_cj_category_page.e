@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CJ_CATEGORY_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,7 +44,9 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all ("},]", "}]")
 
 				representation := l_output
-				print ("%N===========%N" + l_output)
+				debug
+					print ("%N===========%N" + l_output)
+				end
 			end
 		end
 

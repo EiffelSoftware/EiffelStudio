@@ -48,17 +48,10 @@
             {/unless} 
 
           ],
-     "queries" :
-        [
-         <
-          "href" : "{$host/}/activation",
-          "rel" : "activation",
-          "prompt" : "Account Activation",
-          "data" :
-            [
-                <"name" : "email", "value" : "{$form.email/}">,
-                <"name" : "token", "value" : "{$form.token/}">
-
+    "template": <
+      "data": [
+                <"name" : "email", "value" : "{$form.email/}", "prompt": "Email">,
+                <"name" : "token", "value" : "{$form.token/}", "prompt": "Token">
             ]
         >
       {if isset="$error"}

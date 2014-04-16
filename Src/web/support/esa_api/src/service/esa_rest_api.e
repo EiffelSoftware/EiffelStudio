@@ -181,6 +181,7 @@ feature -- Configure Resources Routes
 			create l_activation_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
+			l_methods.enable_post
 			router.handle_with_request_methods ("/activation", l_activation_handler, l_methods)
 		end
 
@@ -253,7 +254,6 @@ feature -- Configure Resources Routes
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_form/{id}", l_interaction_handler, l_methods)
 		end
 
-
 	configure_api_interaction_confirm
 		local
 			l_interaction_handler: ESA_INTERACTION_CONFIRM_HANDLER
@@ -264,6 +264,5 @@ feature -- Configure Resources Routes
 			l_methods.enable_get
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_confirm/{id}", l_interaction_handler, l_methods)
 		end
-
 
 end

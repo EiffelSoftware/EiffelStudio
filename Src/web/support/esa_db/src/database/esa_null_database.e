@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {NULL_DATABASE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

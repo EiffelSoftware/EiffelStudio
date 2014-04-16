@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CJ_RESPONSIBLE_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,8 +38,6 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.size, "size")
 
-
-
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
 			end
@@ -63,7 +60,9 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all ("},]", "}]")
 
 				representation := l_output
-				print ("%N===========%N" + l_output)
+				debug
+					print ("%N===========%N" + l_output)
+				end
 			end
 
 		end

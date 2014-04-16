@@ -67,5 +67,4 @@ feature -- Databse Connection
 			Result := True
 		end
 
-
 end

@@ -28,7 +28,7 @@ feature  -- HTTP client
 			if b = Void then
 				b := ""
 			end
-			if attached {HTTP_CLIENT_SESSION} h.new_session ("localhost:" + port_number.out + "/" + b) as sess then
+			if attached {HTTP_CLIENT_SESSION} h.new_session ("127.0.0.1:" + port_number.out + "/" + b) as sess then
 				http_session := sess
 				sess.set_timeout (-1)
 				sess.set_is_debug (True)

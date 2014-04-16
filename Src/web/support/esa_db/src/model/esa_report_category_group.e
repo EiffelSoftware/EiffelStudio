@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {REPORT_CATEGORY_GROUP}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

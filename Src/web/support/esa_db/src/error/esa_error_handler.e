@@ -6,7 +6,6 @@ note
 class
 	ESA_ERROR_HANDLER
 
-
 create
 	make
 
@@ -27,7 +26,6 @@ feature -- Access
 
 feature -- Change Element
 
-
 	set_error_message (a_message: like error_message)
 			-- Set error_message with `a_message'
 		do
@@ -43,6 +41,5 @@ feature -- Change Element
 		ensure
 			error_location_set: error_location = a_location
 		end
-
 
 end

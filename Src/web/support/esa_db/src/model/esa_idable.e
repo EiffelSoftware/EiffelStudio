@@ -6,7 +6,6 @@ note
 deferred class
 	ESA_IDABLE
 
-
 feature -- Access
 
 	id: INTEGER

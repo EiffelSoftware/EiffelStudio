@@ -23,9 +23,11 @@ feature -- Intialization
 			end
 			if proc.exists then
 				if proc.text /= Void then
-					io.putstring ("Stored procedure text: ")
-					io.putstring (proc.text_32)
-					io.new_line
+					debug
+						io.putstring ("Stored procedure text: ")
+						io.putstring (proc.text_32)
+						io.new_line
+					end
 				end
 			else
 				has_error := True
@@ -44,9 +46,11 @@ feature -- Intialization
 			proc.set_arguments_32 (a_parameters.current_keys, a_parameters.linear_representation.to_array)
 			if proc.exists then
 				if proc.text /= Void then
-					io.putstring ("Stored procedure text: ")
-					io.putstring (proc.text_32)
-					io.new_line
+					debug
+						io.putstring ("Stored procedure text: ")
+						io.putstring (proc.text_32)
+						io.new_line
+					end
 				end
 			else
 				has_error := True

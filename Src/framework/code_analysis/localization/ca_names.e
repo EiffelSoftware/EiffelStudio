@@ -510,7 +510,7 @@ feature -- GUI: Show Preferences Command
 	pref_tooltip: STRING_32
 		do Result := translation_in_context ("Show Dialog for Inspector Eiffel Preferences", once "code_analyzer.toolbar.item.tooltip") end
 
-feature {NONE} -- translation_in_context
+feature {NONE} -- Translation
 
 	translation_in_context (s: READABLE_STRING_GENERAL; context: READABLE_STRING_GENERAL): STRING_32
 			-- Translation of `s' in the context `context'.

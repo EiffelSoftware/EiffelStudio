@@ -5,10 +5,10 @@ project
 	thread = "thread.ecf"
 	thread-tests = "tests/tests.ecf"
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
+	title: Eiffel Thread
+	description: Multithreading facilities for Eiffel
+	tags: thread, concurrency
+	license:  Eiffel Forum License v2
+	copyright: Copyright (c) 1984-2013, Eiffel Software and others.
 --	link[doc]: "Documentation" http:// 
 end

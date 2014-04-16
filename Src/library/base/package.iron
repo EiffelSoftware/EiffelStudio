@@ -16,5 +16,7 @@ note
 	link[doc]: "Documentation" http://eiffelroom.com/ 
 	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base 
 	link[license]: http://www.eiffel.com/licensing/forum.txt
+	maps: /com.eiffel/library/base
+	maps: /com.eiffel/library/data_structure/adt/base 
 end
 

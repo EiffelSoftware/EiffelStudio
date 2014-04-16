@@ -1,0 +1,12 @@
+package zeromq
+
+project
+	zmq = "zmq.ecf"
+note
+	title: Eiffel ZeroMQ wrapper
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+end

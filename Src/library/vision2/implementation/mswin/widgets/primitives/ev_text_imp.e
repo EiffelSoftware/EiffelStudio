@@ -10,8 +10,6 @@ class
 
 inherit
 	EV_TEXT_I
-		rename
-			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			selected_text
@@ -38,7 +36,7 @@ inherit
 			select_region,
 			selected_text,
 			ignore_character_code,
-			text_component_imp_set_selection,
+			set_selection,
 			is_multiline
 		end
 
@@ -58,6 +56,7 @@ inherit
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end,
+			set_selection as wel_set_selection,
 			line as wel_line,
 			line_index as wel_line_index,
 			current_line_number as wel_current_line_number,
@@ -268,14 +267,14 @@ feature -- Access
 			if has_selection then
 				sel_start := selection_start
 				sel_end := selection_end
-				set_selection (caret_position - 1, caret_position - 1)
+				wel_set_selection (caret_position - 1, caret_position - 1)
 			end
 			previous_caret_position := internal_caret_position
 			--l_wel_string := wel_string_from_string_with_newline_conversion (txt)
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			if has_selection then
-				set_selection (sel_start - 1, sel_end - 1)
+				wel_set_selection (sel_start - 1, sel_end - 1)
 			end
 			wel_set_caret_position (previous_caret_position)
 		end
@@ -408,17 +407,17 @@ feature -- Status Settings
 				actual_end := end_pos
 				new_lines_to_start := l_text.substring (1, actual_start).occurrences ('%N')
 				new_lines_to_end := l_text.substring (actual_start + 1, actual_end).occurrences ('%N')
-				set_selection (actual_start - 1 + new_lines_to_start, actual_end + new_lines_to_start + new_lines_to_end)
+				wel_set_selection (actual_start - 1 + new_lines_to_start, actual_end + new_lines_to_start + new_lines_to_end)
 			else
 				actual_start := start_pos
 				actual_end := end_pos
 				new_lines_to_start := l_text.substring (1, actual_end).occurrences ('%N')
 				new_lines_to_end := l_text.substring (actual_end + 1, actual_start).occurrences ('%N')
-				set_selection (actual_start + new_lines_to_start + new_lines_to_end, actual_end - 1 + new_lines_to_start)
+				wel_set_selection (actual_start + new_lines_to_start + new_lines_to_end, actual_end - 1 + new_lines_to_start)
 			end
 		end
 
-	text_component_imp_set_selection (a_start_pos, a_end_pos: INTEGER)
+	set_selection (a_start_pos, a_end_pos: INTEGER)
 			-- <Precursor>
 		local
 			l_new_lines_to_start: INTEGER
@@ -432,11 +431,11 @@ feature -- Status Settings
 				if a_start_pos <= a_end_pos then
 					l_new_lines_to_start := l_text.substring (1, a_start_pos.min (l_text_length)).occurrences ('%N')
 					l_new_lines_to_end := l_text.substring ((a_start_pos + 1).min (l_text_length), a_end_pos.min (l_text_length)).occurrences ('%N')
-					set_selection (a_start_pos + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_start + l_new_lines_to_end - 1)
+					wel_set_selection (a_start_pos + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_start + l_new_lines_to_end - 1)
 				else
 					l_new_lines_to_end := l_text.substring (1, a_end_pos.min (l_text_length)).occurrences ('%N')
 					l_new_lines_to_start := l_text.substring ((a_end_pos + 1).min (l_text_length), a_start_pos.min (l_text_length)).occurrences ('%N')
-					set_selection (a_start_pos + l_new_lines_to_end + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_end - 1)
+					wel_set_selection (a_start_pos + l_new_lines_to_end + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_end - 1)
 				end
 			end
 		end

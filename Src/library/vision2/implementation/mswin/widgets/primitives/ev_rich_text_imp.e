@@ -13,8 +13,7 @@ class
 inherit
 	EV_RICH_TEXT_I
 		rename
-			last_load_successful as implementation_last_load_successful,
-			set_selection as text_component_imp_set_selection
+			last_load_successful as implementation_last_load_successful
 		redefine
 			interface,
 			selected_text,
@@ -42,7 +41,7 @@ inherit
 			selection_end,
 			wel_selection_start,
 			wel_selection_end,
-			set_selection
+			wel_set_selection
 		redefine
 			interface,
 			old_make,
@@ -108,6 +107,7 @@ inherit
 			item as wel_item,
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end,
+			set_selection as wel_set_selection,
 			first_visible_line as wel_first_visible_line
 		undefine
 			hide,
@@ -318,7 +318,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
-				set_selection (caret_index - 1, caret_index - 1)
+				wel_set_selection (caret_index - 1, caret_index - 1)
 			end
 			Result := internal_selected_character_format
 			if not already_set then
@@ -374,7 +374,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
-				set_selection (caret_index - 1, caret_index - 1)
+				wel_set_selection (caret_index - 1, caret_index - 1)
 			end
 			Result := internal_selected_paragraph_format
 			if not already_set then
@@ -386,7 +386,7 @@ feature -- Status report
 	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		do
-			set_selection (caret_index - 1, caret_index - 1)
+			wel_set_selection (caret_index - 1, caret_index - 1)
 			Result := internal_selected_paragraph_format
 		end
 
@@ -430,7 +430,7 @@ feature -- Status report
 				range_already_selected := True
 			else
 				safe_store_caret
-				set_selection (start_index, end_index - 1)
+				wel_set_selection (start_index, end_index - 1)
 			end
 			create wel_character_format.make
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (scf_selection), wel_character_format.item)
@@ -450,7 +450,7 @@ feature -- Status report
 			wel_character_format: WEL_CHARACTER_FORMAT2
 			mask: INTEGER
 		do
-			set_selection (start_index - 1, end_index - 1)
+			wel_set_selection (start_index - 1, end_index - 1)
 			create wel_character_format.make
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
 			mask := wel_character_format.mask
@@ -462,7 +462,7 @@ feature -- Status report
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
 		do
-			set_selection (pos - 1, pos - 1)
+			wel_set_selection (pos - 1, pos - 1)
 			Result := internal_selected_character_format_i
 		end
 
@@ -544,7 +544,7 @@ feature -- Status report
 				range_already_selected := True
 			else
 				safe_store_caret
-				set_selection (start_position - 1, end_position - 1)
+				wel_set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
 			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
@@ -562,7 +562,7 @@ feature -- Status report
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			mask: INTEGER
 		do
-			set_selection (start_position - 1, end_position - 1)
+			wel_set_selection (start_position - 1, end_position - 1)
 			create wel_paragraph_format.make
 			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
 			mask := wel_paragraph_format.mask
@@ -586,7 +586,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
-				set_selection (start_index - 1, end_index - 1)
+				wel_set_selection (start_index - 1, end_index - 1)
 			end
 			create wel_character_format.make
 			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
@@ -647,7 +647,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
-				set_selection (start_position - 1, end_position - 1)
+				wel_set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
 			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
@@ -822,7 +822,7 @@ feature -- Status setting
 			wel_character_format: detachable WEL_CHARACTER_FORMAT2
 		do
 			safe_store_caret
-			set_selection (first_pos - 1, last_pos - 1)
+			wel_set_selection (first_pos - 1, last_pos - 1)
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void then
@@ -848,7 +848,7 @@ feature -- Status setting
 		do
 			disable_redraw
 			safe_store_caret
-			set_selection (start_position - 1, end_position - 1)
+			wel_set_selection (start_position - 1, end_position - 1)
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void then
@@ -983,7 +983,7 @@ feature -- Status setting
 			else
 					-- We use `end_position' less one, as `select_region' uses
 					-- character positions, and not caret positions.
-				set_selection (start_position - 1, end_position)
+				wel_set_selection (start_position - 1, end_position)
 			end
 			generate_complete_rtf_from_buffering
 			text_up_to_date := False
@@ -1151,7 +1151,7 @@ feature -- Status setting
 					counter := counter + 1
 				end
 				internal_text.append_character ('}')
-				set_selection (lowest_buffered_value - 1, highest_buffered_value - 1)
+				wel_set_selection (lowest_buffered_value - 1, highest_buffered_value - 1)
 				create stream.make (internal_text)
 				insert_rtf_stream_in (stream)
 				stream.release_stream
@@ -1270,7 +1270,7 @@ feature -- Status setting
 				logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
 				screen_dc.release
 
-				set_selection (0, text_length)
+				wel_set_selection (0, text_length)
 				set_tab_stops (mul_div (1440, tab_width, logical_pixels))
 					-- Ensure change is reflected immediately.
 				invalidate
@@ -1322,7 +1322,7 @@ feature -- Status setting
 					counter := counter + 1
 				end
 					-- The formatting is applied to the current selection.
-				set_selection (0, text_length)
+				wel_set_selection (0, text_length)
 				set_tab_stops_array (array)
 
 				safe_restore_caret
@@ -1365,7 +1365,7 @@ feature -- Status setting
 				actual_start := start_pos
 				actual_end := end_pos - 1
 			end
-			set_selection (actual_start, actual_end)
+			wel_set_selection (actual_start, actual_end)
 		end
 
 	set_current_format (format: EV_CHARACTER_FORMAT)
@@ -1406,9 +1406,9 @@ feature -- Status setting
 						-- The direction of the selection is important when selecting with the keyboard
 						-- and originally starting with no selection. See comment of `must_restore_selection'
 						-- for details of problem case.
-					set_selection (original_selection_start, original_selection_end)
+					wel_set_selection (original_selection_start, original_selection_end)
 				else
-					set_selection (original_selection_end, original_selection_start)
+					wel_set_selection (original_selection_end, original_selection_start)
 				end
 			else
 				wel_set_caret_position (original_caret_position)
@@ -1628,7 +1628,7 @@ feature {NONE} -- Implementation
 		do
 			disable_redraw
 			safe_store_caret
-			set_selection (start_position - 1, end_position - 1)
+			wel_set_selection (start_position - 1, end_position - 1)
 			paragraph ?= format.implementation
 			check paragraph /= Void then end
 			paragraph.set_mask (mask)
@@ -1741,7 +1741,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -607,7 +607,7 @@ feature -- EV_TEXT_COMPONENT_I implementation
 	set_selection (a_start_pos, a_end_pos: INTEGER)
 			-- <Precursor>
 		do
-			internal_text_field.text_component_imp_set_selection (a_start_pos, a_end_pos)
+			internal_text_field.set_selection (a_start_pos, a_end_pos)
 		end
 
 	deselect_all
@@ -816,7 +816,7 @@ invariant
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

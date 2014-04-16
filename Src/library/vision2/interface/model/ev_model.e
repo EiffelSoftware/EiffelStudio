@@ -404,7 +404,7 @@ feature -- Element change
 			pebble_function := Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
+	set_pebble_function (a_function: like pebble_function)
 			-- Set `a_function' to compute `pebble'.
 		do
 			pebble_function := a_function
@@ -1050,7 +1050,7 @@ invariant
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

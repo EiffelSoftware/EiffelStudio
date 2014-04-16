@@ -156,80 +156,98 @@ feature -- HTTP Methods
 		local
 				l_parser: JSON_PARSER
 		do
-			create Result
+
 			if a_type.same_string ("application/vnd.collection+json") then
-				create l_parser.make_parser (retrieve_data (req))
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-				   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-				   attached {JSON_ARRAY}l_template.item ("data") as l_data then
-							--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
-							-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
-							--  <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
-							--  <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
-							--  <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
-							--  <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
-							--  <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
-							--  <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
-						if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("first_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_first_name (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("last_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_last_name (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_email (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("user_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_user_name (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_password (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("check_password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_check_password (l_value.item)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("question") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  and then l_value.item.is_integer then
-							Result.set_question (l_value.item.to_integer)
-						end
-						if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-							l_name.item.same_string ("answer") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-							Result.set_answer (l_value.item)
-						end
-				end
+				Result := extract_data_from_cj (req)
 			else
-				create Result
-				if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
-					Result.set_first_name (l_first_name.value)
+				Result :=  extract_data_from_form (req)
+			end
+		end
+
+
+	extract_data_from_cj (req: WSF_REQUEST): ESA_REGISTER_VIEW
+			-- Extract request form CJ data and build a object
+			-- register view.
+		local
+			l_parser: JSON_PARSER
+		do
+			create Result
+			create l_parser.make_parser (retrieve_data (req))
+			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
+			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
+					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
+					--  <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
+					--  <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
+					--  <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
+					--  <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
+					--  <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
+					--  <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("first_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_first_name (l_value.item)
 				end
-				if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
-					Result.set_last_name (l_last_name.value)
+				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("last_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_last_name (l_value.item)
 				end
-				if attached {WSF_STRING}req.form_parameter ("user_email") as l_user_email then
-					Result.set_email (l_user_email.value)
+				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_email (l_value.item)
 				end
-				if attached {WSF_STRING}req.form_parameter ("user_name") as l_user_name then
-					Result.set_user_name (l_user_name.value)
+				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_user_name (l_value.item)
 				end
-				if attached {WSF_STRING} req.form_parameter ("password") as l_password then
-					Result.set_password (l_password.value)
+				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_password (l_value.item)
 				end
-				if  attached {WSF_STRING} req.form_parameter ("check_password") as l_check_password then
-					Result.set_check_password (l_check_password.value)
+				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("check_password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_check_password (l_value.item)
 				end
-				if attached {WSF_STRING}req.form_parameter ("question") as l_question and then
-				   l_question.is_integer then
-					Result.set_question (l_question.integer_value)
+				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("question") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  and then l_value.item.is_integer then
+					Result.set_question (l_value.item.to_integer)
 				end
-				if attached {WSF_STRING}req.form_parameter ("answer_question") as l_answer then
-					Result.set_answer (l_answer.value)
+				if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("answer") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_answer (l_value.item)
 				end
+			end
+		end
+
+	extract_data_from_form (req: WSF_REQUEST): ESA_REGISTER_VIEW
+			-- Extract request form data and build a object
+			-- register view.
+		do
+			create Result
+			if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
+				Result.set_first_name (l_first_name.value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
+				Result.set_last_name (l_last_name.value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("user_email") as l_user_email then
+				Result.set_email (l_user_email.value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("user_name") as l_user_name then
+				Result.set_user_name (l_user_name.value)
+			end
+			if attached {WSF_STRING} req.form_parameter ("password") as l_password then
+				Result.set_password (l_password.value)
+			end
+			if  attached {WSF_STRING} req.form_parameter ("check_password") as l_check_password then
+				Result.set_check_password (l_check_password.value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("question") as l_question and then
+			   l_question.is_integer then
+				Result.set_question (l_question.integer_value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("answer_question") as l_answer then
+				Result.set_answer (l_answer.value)
 			end
 		end
 end

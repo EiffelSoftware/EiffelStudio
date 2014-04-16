@@ -36,13 +36,14 @@ feature -- {Initialization}
 			template.analyze
 			template.get_output
 			if attached template.output as l_output then
-						l_output.replace_substring_all ("<", "{")
-						l_output.replace_substring_all (">", "}")
-						l_output.replace_substring_all ("},]", "}]")
-						l_output.replace_substring_all (",]", "]")
-
-						representation := l_output
-						print ("%N===========%N" + l_output)
+				l_output.replace_substring_all ("<", "{")
+				l_output.replace_substring_all (">", "}")
+				l_output.replace_substring_all ("},]", "}]")
+				l_output.replace_substring_all (",]", "]")
+				representation := l_output
+				debug
+					print ("%N===========%N" + l_output)
+				end
 			end
 		end
 

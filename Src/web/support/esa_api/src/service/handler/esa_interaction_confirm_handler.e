@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_INTERACTION_CONFIRM_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

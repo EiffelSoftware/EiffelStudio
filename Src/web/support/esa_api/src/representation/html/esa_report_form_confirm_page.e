@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_REPORT_FORM_CONFIRM_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,7 +49,9 @@ feature {NONE} --Initialization
 			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
-				print (representation)
+				debug
+					print (representation)
+				end
 			end
 		end
 

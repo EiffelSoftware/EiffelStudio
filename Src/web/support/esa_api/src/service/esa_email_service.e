@@ -43,28 +43,24 @@ feature -- Basic Operations
 		local
 			l_content: STRING
 			l_url: URL_ENCODER
-			m: NOTIFICATION_EMAIL
+ 			m: NOTIFICATION_EMAIL
 			l_path: PATH
 			l_error : detachable STRING
+			l_html: HTML_ENCODER
 		do
 			if successful then
 				create l_path.make_current
 				create l_url
+				create l_html
 				create l_content.make (1024)
 				l_content.append ("Thank you for registering at eiffel.com.%N%NTo complete your registration, please click on this link to activate your account:%N%N")
 				l_content.append (a_host)
-				l_content.append ("/activation?email=")
-				l_content.append (l_url.encoded_string(a_to))
-				l_content.append ("&token=")
-				l_content.append (l_url.encoded_string (a_token))
-				l_content.append ("%N%NIf you are unable to click on the above link, please type the address below into your Web browser:%N%N")
-				l_content.append (a_host)
-				l_content.append ("/activation%N%N")
-				l_content.append ("Once there, please enter the following information and then click the %"Activate Account%" button.%N%N")
+				l_content.append ("/activation")
+				l_content.append ("%N%NOnce there, please enter the following information and then click the Activate Account, button.%N%N")
 				l_content.append ("Your e-mail: ")
-				l_content.append (a_to)
+				l_content.append (l_html.encoded_string (a_to))
 				l_content.append ("%N%NYour activation code: ")
-				l_content.append (a_token)
+				l_content.append (l_html.encoded_string(a_token))
 				l_content.append ("%N%NThank you for joining us.%N%NEiffel Software.")
 				l_content.append (Disclaimer)
 				create l_error.make_empty

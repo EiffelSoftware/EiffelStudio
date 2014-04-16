@@ -112,7 +112,4 @@ feature -- Databse Connection
 	db_application: DATABASE_APPL [ODBC]
 			-- Database application
 
-
-
-
 end

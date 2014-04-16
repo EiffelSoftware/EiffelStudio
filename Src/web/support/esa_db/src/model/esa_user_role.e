@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {USER_ROLE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,6 +59,4 @@ feature -- Status Report
 		do
 			Result := synopsis.same_string ("Guest")
 		end
-
-
 end

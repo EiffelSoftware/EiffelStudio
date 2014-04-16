@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {REPORT_ATTACHMENT}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

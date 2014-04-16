@@ -30,7 +30,6 @@ feature -- Access
 	name: READABLE_STRING_32
 		-- Country name.	
 
-
 	ouput: STRING_8
 			-- Country output
 		do
@@ -39,7 +38,7 @@ feature -- Access
 			Result.append (id)
 			Result.append (" Name: ")
 			Result.append("%N")
-				
+
 			Result.append (name)
 		end
 

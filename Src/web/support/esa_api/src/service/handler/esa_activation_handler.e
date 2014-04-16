@@ -23,7 +23,8 @@ inherit
 
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
-			do_get
+			do_get,
+			do_post
 		end
 
 	REFACTORING_HELPER
@@ -47,7 +48,6 @@ feature -- execute
 		end
 
 feature -- HTTP Methods
-
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
@@ -56,39 +56,89 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-					-- Get request to /activation?email=&token=
-		    	if attached {WSF_STRING} req.query_parameter ("email") and then
-				   attached {WSF_STRING} req.query_parameter ("token") then
-					l_activation_view := build_view (req)
-					if l_activation_view.is_valid_form and then
-						attached l_activation_view.email as l_email and then
-						attached l_activation_view.token as l_token and then
-		    			api_service.activation_valid (l_email, l_token) then
-		    					-- Activation was ok
-							l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_confirmation_page (req, res)
-		    		else
-		    				-- Activation failed
-		    			l_activation_view.set_error_message ("Activation failed, check activation code and e-mail.")
-						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, l_activation_view)
-					end
-				else
-						-- Get request to /activation
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, Void)
-				end
+		    		-- Activation Form
+		    	create l_activation_view
+				l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, l_activation_view)
 			else
+					-- Get request to /activation
 				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).activation_page (req, res, Void)
 			end
 		end
 
+	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_activation_view: ESA_ACTIVATION_VIEW
+		do
+			create l_rhf
+			if attached current_media_type (req) as l_type then
+				l_activation_view := extract_data_from_request (req, l_type)
+				if l_activation_view.is_valid_form and then
+					attached l_activation_view.email as l_email and then
+					attached l_activation_view.token as l_token and then
+		    		api_service.activation_valid (l_email, l_token) then
+		    				-- Activation was ok
+						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_confirmation_page (req, res)
+		    	else
+		    			-- Activation failed
+		    		l_activation_view.set_error_message ("Activation failed, check activation code and e-mail.")
+					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, l_activation_view)
+				end
+			else
+					-- Get request to /activation
+				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).activation_page (req, res, Void)
+			end
+		end
 
-	build_view (req: WSF_REQUEST) : ESA_ACTIVATION_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_ACTIVATION_VIEW
+			-- Is the form data populated?
 			-- Create a new activation view object based on request parameters, if any
+		local
+				l_parser: JSON_PARSER
+		do
+
+			if a_type.same_string ("application/vnd.collection+json") then
+				Result := extract_data_from_cj (req)
+			else
+				Result :=  extract_data_from_form (req)
+			end
+		end
+
+	extract_data_from_cj (req: WSF_REQUEST): ESA_ACTIVATION_VIEW
+			-- Extract request form CJ data and build a object
+			-- register view.
+		local
+			l_parser: JSON_PARSER
 		do
 			create Result
-			if attached {WSF_STRING} req.query_parameter ("email") as l_email and then
-			   attached {WSF_STRING} req.query_parameter ("token") as l_token then
-			   	Result.set_token (l_token.value)
-			   	Result.set_email (l_email.value)
+			create l_parser.make_parser (retrieve_data (req))
+			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
+			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
+					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_email (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("token") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_token (l_value.item)
+				end
+			end
+		end
+
+	extract_data_from_form (req: WSF_REQUEST): ESA_ACTIVATION_VIEW
+			-- Extract request form data and build a object
+			-- register view.
+		do
+			create Result
+			if attached {WSF_STRING}req.form_parameter ("email") as l_email then
+				Result.set_email (l_email.value)
+			end
+			if attached {WSF_STRING}req.form_parameter ("token") as l_token then
+				Result.set_token (l_token.value)
 			end
 		end
 end

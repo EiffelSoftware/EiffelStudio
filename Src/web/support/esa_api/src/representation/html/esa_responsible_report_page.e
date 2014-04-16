@@ -59,7 +59,9 @@ feature {NONE} --Initialization
 			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
-				print (representation)
+				debug
+					print (representation)
+				end
 			end
 		end
 

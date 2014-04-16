@@ -14,6 +14,15 @@ inherit
 
 feature -- Test
 
+	test_register_html_get_request
+			-- New test routine
+		do
+			media_type := "html"
+			if attached execute_get ("reports") as l_resp then
+				assert("Expected status 200", l_resp.status = 200)
+			end
+		end
+
 	test_home_unnaceptable
 			-- New test routine
 		do

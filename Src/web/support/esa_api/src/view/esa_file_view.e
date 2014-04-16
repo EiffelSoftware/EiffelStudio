@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_FILE_VIEW}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

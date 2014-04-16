@@ -48,7 +48,7 @@ feature -- Access
 			loop
 				display_separation_line (st)
 				st.add_new_line
-				tracer.trace (st, error_list.item, {ERROR_TRACER}.normal)
+				tracer.trace (st, error_list.item)
 				st.add_new_line
 
 					-- prepare next iterations.
@@ -66,7 +66,7 @@ feature -- Access
 			loop
 				display_separation_line (st)
 				st.add_new_line
-				tracer.trace (st, warning_list.item, {ERROR_TRACER}.normal)
+				tracer.trace (st, warning_list.item)
 				st.add_new_line
 
 					-- prepare next iterations.

@@ -75,7 +75,7 @@ feature -- Output
 				loop
 					display_separation_line (a_text_formatter);
 					a_text_formatter.add_new_line;
-					tracer.trace (a_text_formatter, warning_list.item, {ERROR_TRACER}.normal)
+					tracer.trace (a_text_formatter, warning_list.item)
 					a_text_formatter.add_new_line;
 					warning_list.forth;
 				end;
@@ -114,7 +114,7 @@ feature -- Output
 				loop
 					display_separation_line (a_text_formatter)
 					a_text_formatter.add_new_line
-					tracer.trace (a_text_formatter, error_list.item, {ERROR_TRACER}.normal)
+					tracer.trace (a_text_formatter, error_list.item)
 					a_text_formatter.add_new_line
 					error_list.forth
 				end
@@ -157,7 +157,7 @@ invariant
 	non_void_output_window: output_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

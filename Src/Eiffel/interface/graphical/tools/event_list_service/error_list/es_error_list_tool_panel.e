@@ -514,7 +514,6 @@ feature {NONE} -- Basic operations
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_gen: EB_EDITOR_TOKEN_GENERATOR
 			l_item: EV_GRID_LABEL_ITEM
-			l_error: ERROR
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_content: LIST [EDITOR_TOKEN]
 			l_pixmap: EV_PIXMAP
@@ -543,10 +542,9 @@ feature {NONE} -- Basic operations
 			a_row.set_item (category_column, l_item)
 
 				-- Set error information
-			l_error ?= a_event_item.data
-			if l_error /= Void then
+			if attached {ERROR} a_event_item.data as l_error then
 				create l_gen.make
-				tracer.trace (l_gen, l_error, {ERROR_TRACER}.single_line)
+				tracer.trace_tersely (l_gen, l_error)
 
 				if l_gen.last_line /= Void and then l_gen.last_line.count > 0 then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
@@ -591,7 +589,7 @@ feature {NONE} -- Basic operations
 
 					-- Context
 				create l_gen.make
-				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
+				tracer.trace_context (l_gen, l_error)
 				if l_gen.last_line /= Void then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
 						-- No extra initialization needed so update `l_editor_item' to reflect settings.
@@ -647,7 +645,12 @@ feature {NONE} -- Basic operations
 					a_row.hide
 				end
 			elseif is_warning_event (a_event_item) then
-				if not is_displaying_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_error) then
+				if
+					not is_displaying_warnings or else
+					filter_widget /= Void and then
+					attached {ERROR} a_event_item.data as l_error and then
+					not filter_widget.is_unfiltered (l_error)
+				then
 					a_row.hide
 				end
 			else
@@ -779,7 +782,7 @@ feature {NONE} -- Basic operations
 			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event and then attached {ERROR} l_event.data as l_error then
 				create l_gen.make
 				l_gen.enable_multiline
-				tracer.trace (l_gen, l_error, {ERROR_TRACER}.normal)
+				tracer.trace (l_gen, l_error)
 				l_lines := l_gen.lines
 				if not l_lines.is_empty then
 					l_grid_item := a_parent_row.item (error_column)
@@ -817,7 +820,7 @@ feature {NONE} -- Basic operations
 		do
 			create l_gen.make
 			l_gen.enable_multiline
-			tracer.trace (l_gen, a_error, {ERROR_TRACER}.normal)
+			tracer.trace (l_gen, a_error)
 			Result := l_gen.lines
 		ensure
 			Result_set: Result /= Void

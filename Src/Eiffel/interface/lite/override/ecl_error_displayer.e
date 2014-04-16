@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 
 			a_window.put_new_line
-			tracer.trace (a_window, a_error, {ERROR_TRACER}.context)
+			tracer.trace_context (a_window, a_error)
 		end
 
 	short_help_file_name (a_error: ERROR): PATH

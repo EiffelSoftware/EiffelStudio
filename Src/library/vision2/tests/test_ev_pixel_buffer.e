@@ -33,15 +33,24 @@ feature -- Testing
 					pixmap1.set_background_color (colors.green)
 					pixmap1.clear
 
+						-- Test for drawing a smaller or larger portion of `pixmap2' with a positive offset.
 					pixmap1.draw_sub_pixel_buffer (5, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 100, 100))
 					pixmap1.draw_sub_pixel_buffer (110, 5, pixmap2, create {EV_RECTANGLE}.make (100, 100, 1024, 100))
-					pixmap1.draw_rectangle (530, 5, 110, 110)
+
+						-- Test for drawing a smaller or larger portion of `pixmap2' with a negative offset.
+					pixmap1.draw_rectangle (530, 5, 100, 100)
 					pixmap1.draw_sub_pixel_buffer (530, 5, pixmap2, create {EV_RECTANGLE}.make (-10, -10, 100, 100))
 
-					pixmap1.draw_rectangle (530, 115, 110, 110)
+						-- Test for drawing the bottom right portion of `pixmap2'.
+					pixmap1.draw_rectangle (650, 5, 100, 100)
+					pixmap1.draw_sub_pixel_buffer (650, 5, pixmap2, create {EV_RECTANGLE}.make (50, 50, 100, 100))
+
+						-- Test for drawing a subpart of `pixmap2' using the same as above.
+					pixmap1.draw_rectangle (530, 115, 100, 100)
 					pixmap1.draw_sub_pixel_buffer (5, 115, pixmap2.sub_pixel_buffer (create {EV_RECTANGLE}.make (100, 100, 100, 100)), create {EV_RECTANGLE}.make (0, 0, 512, 512))
 					pixmap1.draw_sub_pixel_buffer (110, 115, pixmap2.sub_pixel_buffer (create {EV_RECTANGLE}.make (100, 100, 1024, 100)),create {EV_RECTANGLE}.make (0, 0, 512, 512))
 					pixmap1.draw_sub_pixel_buffer (530, 115, pixmap2.sub_pixel_buffer (create {EV_RECTANGLE}.make (-10, -10, 100, 100)), create {EV_RECTANGLE}.make (0, 0, 512, 512))
+					pixmap1.draw_sub_pixel_buffer (650, 115, pixmap2.sub_pixel_buffer (create {EV_RECTANGLE}.make (50, 50, 100, 100)), create {EV_RECTANGLE}.make (0, 0, 512, 512))
 
 					create window
 					window.extend (pixmap1)

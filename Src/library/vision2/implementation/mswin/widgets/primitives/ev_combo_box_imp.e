@@ -10,8 +10,6 @@ class
 
 inherit
 	EV_COMBO_BOX_I
-		rename
-			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			make,
@@ -1119,7 +1117,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	set_selection (start_pos, end_pos: INTEGER)
+	wel_set_selection (start_pos, end_pos: INTEGER)
 			-- Hilight the text between `start_pos' and `end_pos'.
 			-- Both `start_pos' and `end_pos' are selected.
 		do
@@ -1158,7 +1156,7 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

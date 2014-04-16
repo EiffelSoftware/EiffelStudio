@@ -11,8 +11,6 @@ class
 
 inherit
 	EV_TEXT_FIELD_I
-		rename
-			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
 			text_length,
@@ -54,6 +52,7 @@ inherit
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end,
+			set_selection as wel_set_selection,
 			width as wel_width,
 			height as wel_height,
 			set_caret_position as wel_set_caret_position,
@@ -431,7 +430,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

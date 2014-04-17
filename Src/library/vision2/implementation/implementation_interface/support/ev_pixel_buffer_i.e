@@ -149,6 +149,14 @@ feature -- Query
 		deferred
 		end
 
+	area: EV_RECTANGLE
+			-- Dimension of Current as an instance of EV_RECTANGLE.
+		do
+			create Result.make (0, 0, width, height)
+		ensure
+			definition: Result.x = 0 and Result.y = 0 and Result.width = width and Result.height = height
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_PIXEL_BUFFER note option: stable attribute end;
@@ -169,7 +177,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

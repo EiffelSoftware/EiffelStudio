@@ -661,19 +661,29 @@ feature -- Drawing operations
 			l_pixels: POINTER
 			l_rowstride: NATURAL
 			l_back_buffer: POINTER
+			l_x, l_y: INTEGER
+			l_rect: EV_RECTANGLE
 		do
-			a_pixbuf_imp ?= a_pixel_buffer.implementation
-			check a_pixbuf_imp /= Void then end
-			if supports_pixbuf_alpha then
-				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
-			else
-					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
-				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
-				{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
-				l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
-				l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
-				{GTK}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
-				{GTK2}.object_unref (l_back_buffer)
+				-- We can only draw the visible area of `a_pixel_buffer' in `area'.
+			l_rect := area.intersection (a_pixel_buffer.area)
+			if l_rect.width > 0 and l_rect.height > 0 then
+					-- Shift the destination (x,y) where `a_pixel_buffer' will be drawn in
+					-- case the source `area' is not entirely within `a_pixel_buffer'.
+				l_x := a_x + l_rect.x - area.x
+				l_y := a_y + l_rect.y - area.y
+				a_pixbuf_imp ?= a_pixel_buffer.implementation
+				check a_pixbuf_imp /= Void then end
+				if supports_pixbuf_alpha then
+					{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, l_rect.x, l_rect.y, l_x + device_x_offset, l_y + device_y_offset, l_rect.width, l_rect.height, 0, 0, 0)
+				else
+						-- We need to retrieve the source pixmap, composite and then reblit to the same area.
+					l_back_buffer := pixbuf_from_drawable_at_position (l_x, l_y, 0, 0, l_rect.width, l_rect.height)
+					{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, l_rect.width, l_rect.height, 0, 0, 1, 1, 0, 255)
+					l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
+					l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
+					{GTK}.gdk_draw_rgb_32_image (drawable, gc, l_x + device_x_offset, l_y + device_y_offset, l_rect.width, l_rect.height, 0, l_pixels, l_rowstride.as_integer_32)
+					{GTK2}.object_unref (l_back_buffer)
+				end
 			end
 		end
 

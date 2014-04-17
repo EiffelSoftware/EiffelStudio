@@ -275,7 +275,8 @@ feature -- Command
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
-			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
+				-- Share with a size big enough to read at `byte_pos'.
+			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + {PLATFORM}.natural_32_bytes)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
 		end

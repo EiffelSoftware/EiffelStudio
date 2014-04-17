@@ -34,10 +34,8 @@ feature -- Access
 
 	selected_text: STRING_32
 			-- Text currently selected in `Current'.
-		require
-			has_selection: has_selection
 		do
-			Result := text.substring (selection_start, selection_end)
+			Result := text.substring (start_selection, end_selection - 1)
 		end
 
 	maximum_character_width: INTEGER
@@ -67,24 +65,24 @@ feature -- Status report
 		deferred
 		end
 
-	selection_start: INTEGER
-			-- Index of the first character selected.
-		require
-			has_selection: has_selection
+	start_selection: INTEGER
+			-- Caret position of the start of selected text if any,
+			-- otherwise `caret_position'.
 		deferred
 		ensure
 			result_large_enough: Result >= 1
-			result_small_enough: Result <= text_length
+			result_small_enough: Result <= text_length + 1
+			consistent_with_selection_start: Result >= start_selection
 		end
 
-	selection_end: INTEGER
-			-- Index of the last character selected.
-		require
-			has_selection: has_selection
+	end_selection: INTEGER
+			-- Caret position of the end of selected text if any,
+			-- otherwise `caret_position'.
 		deferred
 		ensure
 			result_large_enough: Result >= 1
-			result_small_enough: Result <= text_length
+			result_small_enough: Result <= text_length + 1
+			consistent_with_selection_end: end_selection >= Result
 		end
 
 	valid_caret_position (pos: INTEGER): BOOLEAN
@@ -105,7 +103,7 @@ feature -- Status setting
 	set_caret_position (pos: INTEGER)
 			-- set current insertion position
 		require
-			valid_caret_position: valid_caret_position (pos)
+			valid_caret_position: pos >= 1 and pos <= text_length + 1
 		deferred
 		end
 
@@ -157,8 +155,8 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 		ensure
 			has_selection: has_selection
 			selection_set: (start_pos <= end_pos implies
-				selection_start = start_pos and selection_end = end_pos) or
-				selection_start = end_pos and selection_end = start_pos
+				start_selection = start_pos and end_selection = end_pos + 1) or
+				start_selection = end_pos and end_selection = start_pos + 1
 		end
 
 	set_selection (a_start_pos, a_end_pos: INTEGER)
@@ -179,8 +177,8 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 			select_region (1, text.count)
 		ensure
 			has_selection: has_selection
-			selection_start_set: selection_start = 1
-			selection_end_set: selection_end = text_length
+			selection_start_set: start_selection = 1
+			selection_end_set: end_selection = text_length + 1
 		end
 
 	deselect_all
@@ -236,14 +234,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

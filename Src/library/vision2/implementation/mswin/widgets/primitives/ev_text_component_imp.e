@@ -73,16 +73,16 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			Result := internal_caret_position + 1
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of first character selected.
 		do
 			Result := wel_selection_start + 1
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of last character selected.
 		do
-			Result := wel_selection_end
+			Result := wel_selection_end + 1
 		end
 
 feature {EV_ANY_I}-- Status setting

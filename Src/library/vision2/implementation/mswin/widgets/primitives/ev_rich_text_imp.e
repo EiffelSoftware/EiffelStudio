@@ -37,8 +37,8 @@ inherit
 			wel_set_text,
 			destroy,
 			has_selection,
-			selection_start,
-			selection_end,
+			start_selection,
+			end_selection,
 			wel_selection_start,
 			wel_selection_end,
 			wel_set_selection
@@ -52,8 +52,8 @@ inherit
 			caret_position,
 			set_caret_position,
 			select_region,
-			selection_start,
-			selection_end,
+			start_selection,
+			end_selection,
 			on_erase_background,
 			line_number_from_position,
 			enable_redraw,
@@ -747,16 +747,16 @@ feature -- Status report
 			wel_set_caret_position (pos - 1)
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of first character selected.
 		do
-			Result := (wel_selection_start + 1).min (text_length)
+			Result := wel_selection_start + 1
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of last character selected.
 		do
-			Result := wel_selection_end.min (text_length)
+			Result := wel_selection_end + 1
 		end
 
 	wel_text_length, text_length: INTEGER

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_height_valid: a_height > 0
 		do
 			default_create
-			implementation.make_with_size (a_width, a_height)
+			actual_implementation.make_with_size (a_width, a_height)
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			not_void: a_pixmap /= Void
 		do
 			default_create
-			implementation.make_with_pixmap (a_pixmap)
+			actual_implementation.make_with_pixmap (a_pixmap)
 		end
 
 feature -- Command
@@ -60,7 +60,7 @@ feature -- Command
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
-			implementation.set_with_named_path (a_file_name)
+			actual_implementation.set_with_named_path (a_file_name)
 		end
 
 	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
@@ -70,7 +70,7 @@ feature -- Command
 			not_void: a_pointer /= default_pointer
 			valid: a_size > 0
 		do
-			implementation.set_with_pointer (a_pointer, a_size)
+			actual_implementation.set_with_pointer (a_pointer, a_size)
 		end
 
 	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
@@ -88,13 +88,13 @@ feature -- Command
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
-			implementation.save_to_named_path (a_file_name)
+			actual_implementation.save_to_named_path (a_file_name)
 		end
 
 	save_to_pointer: detachable MANAGED_POINTER
 			-- Save pixel data to Result pointer
 		do
-			Result := implementation.save_to_pointer
+			Result := actual_implementation.save_to_pointer
 		end
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
@@ -103,7 +103,7 @@ feature -- Command
 			not_void: a_rect /= Void
 			not_locked: not is_locked
 		do
-			Result := implementation.sub_pixmap (a_rect)
+			Result := actual_implementation.sub_pixmap (a_rect)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -115,7 +115,7 @@ feature -- Command
 			a_height_positive: a_height > 0
 			not_locked: not is_locked
 		do
-			Result := implementation.stretched (a_width, a_height)
+			Result := actual_implementation.stretched (a_width, a_height)
 		ensure
 			result_not_void: Result /= Void
 			result_not_current: Result /= Current
@@ -129,7 +129,7 @@ feature -- Command
 			not_void: a_rect /= Void
 			not_locked: not is_locked
 		do
-			Result := implementation.sub_pixel_buffer (a_rect)
+			Result := actual_implementation.sub_pixel_buffer (a_rect)
 		ensure
 			result_not_void: Result /= Void
 			result_not_current: Result /= Current
@@ -140,7 +140,7 @@ feature -- Command
 		require
 			not_locked: not is_locked
 		do
-			implementation.lock
+			actual_implementation.lock
 		ensure
 			is_locked: is_locked
 		end
@@ -150,7 +150,7 @@ feature -- Command
 		require
 			is_locked: is_locked
 		do
-			Result := implementation.pixel_iterator
+			Result := actual_implementation.pixel_iterator
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -158,7 +158,7 @@ feature -- Command
 	unlock
 			-- Unlock from data access with `pixel_iterator'.
 		do
-			implementation.unlock
+			actual_implementation.unlock
 		ensure
 			not_locked: not is_locked
 		end
@@ -169,7 +169,7 @@ feature -- Command
 			not_void: a_pixel_buffer /= Void
 			vaild: a_x >= 0 and a_y >= 0 and a_x < width and a_y < height
 		do
-			implementation.draw_pixel_buffer_with_x_y (a_x, a_y, a_pixel_buffer)
+			actual_implementation.draw_pixel_buffer_with_x_y (a_x, a_y, a_pixel_buffer)
 		end
 
 	draw_text (a_text: READABLE_STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
@@ -179,7 +179,7 @@ feature -- Command
 			not_void: a_font /= Void
 			not_void: a_point /= Void
 		do
-			implementation.draw_text (a_text, a_font, a_point)
+			actual_implementation.draw_text (a_text, a_font, a_point)
 		end
 
 	to_pixmap: EV_PIXMAP
@@ -193,7 +193,7 @@ feature -- Query
 	width: INTEGER
 			-- Width of `Current' in pixels.
 		do
-			Result := implementation.width
+			Result := actual_implementation.width
 		ensure
 			valid_width: Result >= 0
 		end
@@ -201,15 +201,23 @@ feature -- Query
 	height: INTEGER
 			-- Height of `Current' in pixels.
 		do
-			Result := implementation.height
+			Result := actual_implementation.height
 		ensure
 			valid_height: Result >= 0
+		end
+
+	area: EV_RECTANGLE
+			-- Dimension of Current as an instance of EV_RECTANGLE.
+		do
+			Result := actual_implementation.area
+		ensure
+			definition: Result.x = 0 and Result.y = 0 and Result.width = width and Result.height = height
 		end
 
 	is_locked: BOOLEAN
 			-- Is buffer locked for data access.
 		do
-			Result := implementation.is_locked
+			Result := actual_implementation.is_locked
 		end
 
 feature {NONE} -- Implementation
@@ -223,13 +231,18 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation
 		do
-			create {EV_PIXEL_BUFFER_IMP} implementation.make
+			create actual_implementation.make
+			implementation := actual_implementation
 		end
 
 feature -- Implementation
 
-	implementation: EV_PIXEL_BUFFER_I;
+	implementation: EV_PIXEL_BUFFER_I
 			-- Implementation interface
+
+feature {EV_ANY_I} -- Implementation
+
+	actual_implementation: EV_PIXEL_BUFFER_IMP
 
 feature -- Obsolete
 
@@ -238,11 +251,11 @@ feature -- Obsolete
 		obsolete
 			"Use draw_pixel_buffer_with_x_y instead"
 		do
-			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
+			actual_implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

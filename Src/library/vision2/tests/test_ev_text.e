@@ -154,12 +154,26 @@ feature {NONE} -- Implementation
 				i > txt.text_length
 			loop
 				txt.set_selection (i, i + 1)
+				assert ("has selection", txt.has_selection)
 				assert ("selection is made of one character", txt.selected_text.count = 1)
 				assert ("proper content selection", txt.selected_text.item (1) ~ str.item (i))
-				assert ("proper start selection", txt.selection_start = i)
-				assert ("proper end selection", txt.selection_end = i + 1)
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i + 1)
+
+				txt.set_selection (i, i)
+				assert ("no selection", not txt.has_selection)
+				assert ("selected_text_empty", txt.selected_text.is_empty)
+				assert ("caret position set", txt.caret_position = i)
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i)
 				i := i + 1
 			end
+			txt.set_selection (i, i)
+			assert ("no selection", not txt.has_selection)
+			assert ("selected_text_empty", txt.selected_text.is_empty)
+			assert ("caret position set", txt.caret_position = i)
+			assert ("proper start selection", txt.start_selection = i)
+			assert ("proper end selection", txt.end_selection = i)
 
 				-- To use to simplify debuging.
 			txt.pointer_leave_actions.extend (agent on_pointer_leave (txt))

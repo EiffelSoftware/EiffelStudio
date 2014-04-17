@@ -389,7 +389,7 @@ feature -- Properties
 			Result.put (implementers_help, implementers_cmd_name)
 			Result.put (library_help, library_cmd_name)
 			Result.put (loop_help, loop_cmd_name)
-			Result.put (debug_help, debug_info_name)
+			Result.put (debug_help, debug_cmd_name)
 			Result.put (melt_help, melt_cmd_name)
 			Result.put (overwrite_old_project_help, overwrite_old_project_cmd_name)
 			Result.put (pretty_help, pretty_cmd_name)

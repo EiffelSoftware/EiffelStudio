@@ -140,16 +140,42 @@ feature -- Status report
 			Result := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
 		end
 
-	selection_start: INTEGER
-			-- Index of the first character selected.
+	start_selection: INTEGER
+			-- <Precursor>
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
 		do
-			Result := selection_start_internal
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.min (a_end_offset) + 1
+			else
+				Result := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item) + 1
+			end
 		end
 
-	selection_end: INTEGER
-			-- Index of the last character selected.
+	end_selection: INTEGER
+			-- <Precursor>
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
 		do
-			Result := selection_end_internal
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.max (a_end_offset) + 1
+			else
+				Result := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item) + 1
+			end
 		end
 
 	selected_text: STRING_32
@@ -591,40 +617,6 @@ feature {NONE} -- Implementation
 			-- Pointer to the GtkWidget representing `Current'
 		do
 			Result := text_view
-		end
-
-	selection_start_internal: INTEGER
-			-- Index of the first character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
-		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.min (a_end_offset) + 1
-			end
-		end
-
-	selection_end_internal: INTEGER
-			-- Index of the last character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
-		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.max (a_end_offset)
-			end
 		end
 
 	dispose

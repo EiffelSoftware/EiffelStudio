@@ -27,8 +27,8 @@ inherit
 			append_text,
 			interface,
 			make,
-			selection_start,
-			selection_end,
+			start_selection,
+			end_selection,
 			set_caret_position,
 			caret_position,
 			insert_text,
@@ -265,8 +265,8 @@ feature -- Access
 			l_wel_string: WEL_STRING
 		do
 			if has_selection then
-				sel_start := selection_start
-				sel_end := selection_end
+				sel_start := wel_selection_start
+				sel_end := wel_selection_end
 				wel_set_selection (caret_position - 1, caret_position - 1)
 			end
 			previous_caret_position := internal_caret_position
@@ -274,7 +274,7 @@ feature -- Access
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			if has_selection then
-				wel_set_selection (sel_start - 1, sel_end - 1)
+				wel_set_selection (sel_start, sel_end)
 			end
 			wel_set_caret_position (previous_caret_position)
 		end
@@ -323,7 +323,7 @@ feature -- Status Report
 				to_wparam (l_actual_caret_position + 1), to_lparam (0)) + 1
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of first character selected.
 		local
 			new_lines_to_start: INTEGER
@@ -332,13 +332,13 @@ feature -- Status Report
 			Result := wel_selection_start + 1 - new_lines_to_start
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of last character selected.
 		local
 			new_lines_to_end: INTEGER
 		do
 			new_lines_to_end := wel_text.substring (1, wel_selection_end).occurrences ('%R')
-			Result := wel_selection_end - new_lines_to_end
+			Result := wel_selection_end + 1 - new_lines_to_end
 		end
 
 	selected_text: STRING_32

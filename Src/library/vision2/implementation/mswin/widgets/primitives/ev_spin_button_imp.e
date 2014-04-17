@@ -536,16 +536,16 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			Result := internal_text_field.has_selection
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of the first character selected.
 		do
-			Result := internal_text_field.selection_start
+			Result := internal_text_field.start_selection
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of the last character selected.
 		do
-			Result := internal_text_field.selection_end
+			Result := internal_text_field.end_selection
 		end
 
 	set_capacity (a_capacity: INTEGER)

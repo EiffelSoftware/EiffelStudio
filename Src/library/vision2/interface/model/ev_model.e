@@ -404,7 +404,7 @@ feature -- Element change
 			pebble_function := Void
 		end
 
-	set_pebble_function (a_function: like pebble_function)
+	set_pebble_function (a_function: attached like pebble_function)
 			-- Set `a_function' to compute `pebble'.
 		do
 			pebble_function := a_function

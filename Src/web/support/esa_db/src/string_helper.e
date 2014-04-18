@@ -43,7 +43,9 @@ feature -- Access
 		do
 			create encode
 			Result := encode.json_encoder.encoded_string (a_string)
-			print ("%NResult" + Result)
+			debug
+				print ("%NResult" + Result)
+			end
 		end
 
 end

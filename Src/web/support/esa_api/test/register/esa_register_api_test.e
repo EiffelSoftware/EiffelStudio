@@ -2,6 +2,7 @@ note
 	description: "Summary description for {ESA_REGISTER_API_TEST}."
 	date: "$Date$"
 	revision: "$Revision$"
+	testing:"execution/serial"
 
 class
 	ESA_REGISTER_API_TEST
@@ -9,7 +10,7 @@ class
 
 inherit
 
-	ESA_ABSTRACT_API_TEST
+	ESA_ABSTRACT_API_TEST_2
 
 
 
@@ -28,7 +29,7 @@ feature -- Test
 			-- New test routine
 		do
 			media_type := "html"
-			if attached execute_post ("register", Void) as l_resp then
+			if attached execute_post ("register", "") as l_resp then
 				assert("Expected status 404", l_resp.status = 404)
 			end
 		end

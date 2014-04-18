@@ -58,8 +58,5 @@
         ,
        "error":<"title":"{$title/}","code":"{$code/}", "message":"{$error/}">
       {/if}  
-      
-
-    ]      
   >
 >

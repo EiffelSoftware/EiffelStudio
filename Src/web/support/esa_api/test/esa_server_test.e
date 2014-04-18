@@ -45,7 +45,7 @@ feature -- Launch
 --					port_number := 0
 --				end
 --			end
-			port_number := 0
+			port_number := 5555
 			create app.make_custom (a_service.to_wgi_service, "")
 			web_app := app
 
@@ -106,6 +106,15 @@ feature -- ESA configuration
 	schema : STRING = "eiffeldbintegration"
 	 	-- Database schema.
 
+
+	db_connection: ESA_DATABASE_CONNECTION
+		do
+			if attached esa_config as l_config then
+				Result := l_config.database
+			else
+				check False then end
+			end
+		end
 
 
 end

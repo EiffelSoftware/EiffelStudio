@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_API_ERROR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,6 +58,16 @@ feature -- Element Settings
 			attached_location: a_location /= Void
 		do
 			create last_error.make (a_message, a_location)
+			successful := False
+		ensure
+			last_error_set: attached last_error
+			failed: not successful
+		end
+
+	set_last_error_from_handler (a_error: detachable ESA_ERROR_HANDLER)
+			-- Set `last_error' with `a_error',
+		do
+			last_error := a_error
 			successful := False
 		ensure
 			last_error_set: attached last_error

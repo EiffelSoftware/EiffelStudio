@@ -47,8 +47,8 @@ feature {NONE} -- Initialization
 --			test_token_from_username
 --			test_row_count_responsible_by_user
 --			test_problem_report_by_uer
-			test_temporary_interaction
-			print ("%N Hexa representation of Hola"+ to_hexadecimal ("hOLA"))
+--			test_temporary_interaction
+			test_row_count_problem_by_user
 		end
 
 
@@ -412,6 +412,14 @@ feature {NONE} -- Initialization
 					print (l_item1); io.put_new_line
 				end
 			end
+		end
+
+	test_row_count_problem_by_user
+		local
+			l_db: ESA_REPORT_DATA_PROVIDER
+		do
+			create l_db.make (connection)
+			print (l_db.row_count_problem_report_user ("jvelilla", False, 0, 0))
 		end
 
 feature -- Implementation

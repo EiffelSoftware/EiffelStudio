@@ -98,7 +98,7 @@ feature -- SQL Queries
 	execute_query
 			-- Execute query
 		local
-			l_db_selection: DB_DYN_SELECTION
+			l_db_selection: DB_SELECTION
 			l_retried: BOOLEAN
 		do
 			if not l_retried then

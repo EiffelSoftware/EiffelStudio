@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_DATABASE_CONNECTION_NULL}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

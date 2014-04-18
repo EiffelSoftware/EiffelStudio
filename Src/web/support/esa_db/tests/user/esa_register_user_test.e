@@ -76,6 +76,19 @@ feature -- Test routines
 			assert ("Activation valid", login_provider.activation_valid ("esapirest@gmail.com", l_token))
 		end
 
+	test_register_activation_already_been_activated
+		local
+			l_token: STRING
+		do
+			l_token := security.token
+			new_user ("esa", "api", "esapirest@gmail.com", "esapi", "pwd123", "testing", l_token, 1)
+			assert ("User active", login_provider.is_active ("esapi"))
+			assert ("Activation valid", login_provider.activation_valid ("esapirest@gmail.com", l_token))
+				--
+				-- Account with that email address has already been successfully activated	
+			assert ("Activation valid", not login_provider.activation_valid ("esapirest@gmail.com", l_token))
+		end
+
 	test_register_activation_invalid
 		local
 			l_token: STRING
@@ -87,7 +100,7 @@ feature -- Test routines
 			assert ("Activation invalid mail", not login_provider.activation_valid ("esapirest@invalid.mail", l_token))
 		end
 
-	test_activation_token_from_wmail_sucess
+	test_activation_token_from_email_success
 		local
 			l_token: STRING
 		do
@@ -98,7 +111,7 @@ feature -- Test routines
 			assert ("Expected same token", attached login_provider.token_from_email ("esapirest@gmail.com") as ll_token and then l_token.same_string (ll_token))
 		end
 
-	test_activation_token_from_username_sucess
+	test_activation_token_from_username_success
 		local
 			l_token: STRING
 		do

@@ -400,17 +400,17 @@ feature -- Status Report
 			l_token := token_from_email (a_email)
 			if l_token = Void then
 				if user_from_email(a_email) = Void then
-					--set_last_error ("Account not registered with that email address", "Activation validation")
+					set_last_error ("Account not registered with that email address", "Activation validation")
 				else
 					-- Account already activated
-				    -- set_last_error ("Account with that email address has already been successfully activated", "Activation validation")
-				   Result := False
+				   	set_last_error ("Account with that email address has already been successfully activated", "Activation validation")
+				   	Result := False
 				end
 			elseif a_token.same_string (l_token) then
 				remove_token (l_token)
 				Result := True
 			else
---				set_last_error ("Specified token does not match one sent.", "Activation validation")
+				set_last_error ("Specified token does not match one sent.", "Activation validation")
 				Result := False
 			end
 		end

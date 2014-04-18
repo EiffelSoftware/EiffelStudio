@@ -85,7 +85,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.to_reproduce,"to_reproduce")
 			template.add_value (a_form.release, "release")
 			template.add_value (a_form.synopsis, "synopsis")
-
+			template.add_value (a_form.temporary_files,"uploaded_files")
 			if a_form.id > 0 then
 				template.add_value (a_form.id, "id")
 			end
@@ -104,9 +104,10 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all ("<", "{")
 				l_output.replace_substring_all (">", "}")
 				l_output.replace_substring_all ("},]", "}]")
-
 				representation := l_output
-				print ("%N===========%N" + l_output)
+				debug
+					print ("%N===========%N" + l_output)
+				end
 			end
 
 		end
@@ -164,7 +165,9 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all ("},]", "}]")
 
 				representation := l_output
-				print ("%N===========%N" + l_output)
+				debug
+					print ("%N===========%N" + l_output)
+				end
 			end
 		end
 

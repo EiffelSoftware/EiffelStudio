@@ -34,6 +34,7 @@ feature -- Execute
 			lst: ARRAYED_LIST [IRON_PACKAGE]
 			l_conflicts: detachable ITERABLE [IRON_PACKAGE]
 			l_choices: ARRAYED_LIST [TUPLE [prompt: READABLE_STRING_GENERAL; value: IRON_PACKAGE]]
+			cl_succeed: CELL [BOOLEAN]
 		do
 			if args.installing_all then
 				lst := a_iron.catalog_api.available_packages
@@ -147,6 +148,26 @@ feature -- Execute
 							end
 						end
 					end
+					if
+						a_iron.installation_api.is_package_installed (l_package) and then
+						args.setup_execution_enabled
+					then
+						print (m_setup_installation (l_package.human_identifier))
+						print (" -> ")
+						if args.is_simulation then
+							print (tk_simulated)
+						else
+							create cl_succeed.put (False)
+							a_iron.catalog_api.setup_package_installation (l_package, cl_succeed, not args.verbose)
+							if cl_succeed.item then
+								print (tk_completed)
+							else
+								print (tk_failed)
+							end
+						end
+						print ("%N")
+					end
+
 					if l_conflicts /= Void then
 						print ("  -> ")
 						print (m_conflicting (l_package.human_identifier))

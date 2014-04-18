@@ -17,6 +17,11 @@ feature -- Access
 		deferred
 		end
 
+	setup_execution_enabled: BOOLEAN
+			-- Allowing execution of scripts during installation?
+		deferred
+		end
+
 	ignoring_cache: BOOLEAN
 			-- Ignore cache and always redownload the archive?
 		deferred
@@ -31,7 +36,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

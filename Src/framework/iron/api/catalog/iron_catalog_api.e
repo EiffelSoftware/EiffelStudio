@@ -87,6 +87,12 @@ feature -- Access: repositories
 
 feature -- Access: package	
 
+	is_package_installed (a_package: IRON_PACKAGE): BOOLEAN
+			-- Is package `a_package' installed?
+		do
+			Result := catalog.is_package_installed (a_package)
+		end
+
 	available_packages: ARRAYED_LIST [IRON_PACKAGE]
 		do
 			create Result.make (10)
@@ -150,15 +156,25 @@ feature -- Operations
 		end
 
 	install_package (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
+			-- Install package `a_package' from repository `a_repo'.
+			-- If `ignoring_cache' is True, the archive will be download again even if it was already download before.
 		do
 			catalog.install_package (a_repo, a_package, ignoring_cache)
+		end
+
+	setup_package_installation (a_package: IRON_PACKAGE; cl_succeed: detachable CELL [BOOLEAN]; is_silent: BOOLEAN)
+			-- Process setup instruction for installed package `a_package'.
+			-- If `cl_succeed' is provided, return True if succeed.
+		require
+			is_package_installed: is_package_installed (a_package)
+		do
+			catalog.setup_package_installation (a_package, cl_succeed, is_silent)
 		end
 
 	uninstall_package (a_package: IRON_PACKAGE)
 		do
 			catalog.uninstall_package (a_package)
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

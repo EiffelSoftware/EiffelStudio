@@ -13,7 +13,7 @@ inherit
 
 	IRON_PACKAGE_INFO_FILE_PARSER_CALLBACKS
 		redefine
-			on_package, on_project, on_note
+			on_package, on_setup, on_project, on_note
 		end
 
 create {IRON_PACKAGE_FILE_FACTORY}
@@ -43,6 +43,11 @@ feature -- Callbacks
 	on_package (a_name: READABLE_STRING_32)
 		do
 			create package_name.make_from_string (a_name)
+		end
+
+	on_setup (a_setup_name: READABLE_STRING_32; a_op: READABLE_STRING_32)
+		do
+			add_setup (a_setup_name, a_op)
 		end
 
 	on_project (a_project_name: READABLE_STRING_32; a_path: READABLE_STRING_32)
@@ -253,23 +258,48 @@ feature -- Storage
 				Result.append_string ("package ")
 				Result.append_string (utf.string_32_to_utf_8_string_8 (l_name))
 				Result.append_string ("%N")
-				Result.append_string ("%N")
 			else
 				check has_name: False end
 			end
+			if attached setup_operations as ops then
+				Result.append_string ("%Nsetup%N")
+				across
+					ops as ic
+				loop
+					Result.append_string ("%T")
+					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.name.to_string_32))
+					Result.append_string (" = ")
+
+					s := ic.item.instruction
+					utf8 := utf.string_32_to_utf_8_string_8 (s)
+
+					if s.has ('%N') then
+						Result.append ("%"[%N")
+						Result.append_string (utf8)
+						if not utf8.ends_with_general ("%N") then
+							Result.append_character ('%N')
+						end
+						Result.append_string ("%T%T%T%T")
+						Result.append_string ("]%"%N")
+					else
+						Result.append_string (utf8)
+					end
+					Result.append_string ("%N")
+				end
+			end
 			if attached projects as projs then
-				Result.append_string ("project%N")
+				Result.append_string ("%Nproject%N")
 				across
 					projs as ic
 				loop
 					Result.append_string ("%T")
 					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.name.to_string_32))
 					Result.append_string (" = %"")
-					Result.append_string (ic.item.relative_uri)
+					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.relative_iri))
 					Result.append_string ("%"%N")
 				end
 			end
-			Result.append_string ("note%N")
+			Result.append_string ("%Nnote%N")
 			across
 				notes as ic
 			loop
@@ -279,7 +309,7 @@ feature -- Storage
 				s := ic.item.to_string_32
 				utf8 := utf.string_32_to_utf_8_string_8 (s)
 				if s.has ('%N') then
-					Result.append ("[%"%N")
+					Result.append ("%"[%N")
 					Result.append_string (utf8)
 					if not utf8.ends_with_general ("%N") then
 						Result.append_character ('%N')
@@ -310,7 +340,7 @@ feature -- Storage
 				Result.append_string ("--%Tlink[doc]: %"Documentation%" http:// %N")
 			end
 
-			Result.append_string ("end%N")
+			Result.append_string ("%Nend%N")
 		end
 
 note

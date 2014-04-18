@@ -25,6 +25,10 @@ feature -- Callbacks
 		do
 		end
 
+	on_setup (a_setup_name: READABLE_STRING_32; a_op: READABLE_STRING_32)
+		do
+		end
+
 	on_note (a_note_name: READABLE_STRING_32; a_value: READABLE_STRING_32)
 		do
 		end

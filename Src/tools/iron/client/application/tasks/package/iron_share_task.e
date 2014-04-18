@@ -98,6 +98,8 @@ feature -- Execute
 						end
 
 						l_upload_new_archive := l_package = Void or else not l_package.has_archive_uri
+											or else l_data.archive /= Void
+											or else args.is_forcing
 
 						if err then
 							-- error
@@ -161,8 +163,6 @@ feature -- Execute
 						end
 
 						if not done and not err then
-
-
 							if l_package = Void then
 								if l_name /= Void then
 									print ({STRING_32} "Create new package %"" + l_name + "%"%N")
@@ -201,68 +201,86 @@ feature -- Execute
 							if not err and l_package /= Void then
 									-- Only on existing package !
 
+									--| About indexes
 								if attached l_data.indexes as l_paths then
 									print ({STRING_32} "Adding indexes:%N")
-									across
-										l_paths as c
+									from
+										l_paths.start
+									until
+										l_paths.after
 									loop
-										print ({STRING_32} "  - " + c.item)
+										print ({STRING_32} "  - " + l_paths.item)
+
+										if across l_package.associated_paths as p_ic some p_ic.item.same_string (l_paths.item) end then
+												-- Already mapped to this index
+											l_paths.remove
+											print (" : already associated (skipped)")
+										else
+											l_paths.forth
+										end
 										print_new_line
 									end
-									remote_node.add_indexes (l_package, l_paths, u, p)
-									if remote_node.last_operation_succeed then
-										if l_paths.count > 1 then
-											print ("Package successfully associated with indexes!")
-										else
-											print ("Package successfully associated with index!")
-										end
-										print_new_line
+									if l_paths.is_empty then
+										print ("Package has no new index.")
 									else
-										if attached remote_node.last_operation_error_message as errmsg then
-											print (errmsg)
+										remote_node.add_indexes (l_package, l_paths, u, p)
+										if remote_node.last_operation_succeed then
+											if l_paths.count > 1 then
+												print ("Package successfully associated with indexes!")
+											else
+												print ("Package successfully associated with index!")
+											end
+											print_new_line
 										else
-											print ("[Error] path association failed!")
+											if attached remote_node.last_operation_error_message as errmsg then
+												print (errmsg)
+											else
+												print ("[Error] path association failed!")
+											end
+											print_new_line
+											err := True
 										end
-										print_new_line
-										err := True
 									end
 								end
 
-								if attached l_data.source as src then
-									create tgt.make_from_string ("tmp_archive")
-									if l_package /= Void then
-										l_package.set_archive_uri (Void)
-									end
-									print ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N");
-
-									(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
-									l_archive_path := tgt.absolute_path
-								elseif attached l_data.archive as l_archive then
-									l_archive_path := l_archive
-									l_package.set_archive_path (l_archive_path)
-								end
-
-								if l_archive_path /= Void and then l_upload_new_archive then
-									check attached l_package.archive_path as l_arch and then l_archive_path.is_same_file_as (l_arch) end
-									print ({STRING_32} "Uploading package archive [size="+ file_size (l_archive_path).out +"]")
-									if attached l_package.archive_hash as l_hash then
-										print (" ["+ l_hash + "]")
-									else
-										print (" ["+ file_sha1 (l_archive_path) + "]")
-									end
-									print ("...%N")
-									remote_node.upload_package_archive (l_package, l_archive_path, u, p)
-									if remote_node.last_operation_succeed then
-										print ("Archive successfully uploaded!")
-										print_new_line
-									else
-										if attached remote_node.last_operation_error_message as errmsg then
-											print (errmsg)
-										else
-											print ("[Error] Archive uploading failed!")
+									-- About archive
+								if l_upload_new_archive then
+									if attached l_data.source as src then
+										create tgt.make_from_string ("tmp_archive_" + (create {UUID_GENERATOR}).generate_uuid.out)
+										if l_package /= Void then
+											l_package.set_archive_uri (Void)
 										end
-										print_new_line
-										err := True
+										print ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N");
+
+										(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
+										l_archive_path := tgt.absolute_path
+									elseif attached l_data.archive as l_archive then
+										l_archive_path := l_archive
+										l_package.set_archive_path (l_archive_path)
+									end
+
+									if l_archive_path /= Void then
+										check attached l_package.archive_path as l_arch and then l_archive_path.is_same_file_as (l_arch) end
+										print ({STRING_32} "Uploading package archive [size="+ file_size (l_archive_path).out +"]")
+										if attached l_package.archive_hash as l_hash then
+											print (" ["+ l_hash + "]")
+										else
+											print (" ["+ file_sha1 (l_archive_path) + "]")
+										end
+										print ("...%N")
+										remote_node.upload_package_archive (l_package, l_archive_path, u, p)
+										if remote_node.last_operation_succeed then
+											print ("Archive successfully uploaded!")
+											print_new_line
+										else
+											if attached remote_node.last_operation_error_message as errmsg then
+												print (errmsg)
+											else
+												print ("[Error] Archive uploading failed!")
+											end
+											print_new_line
+											err := True
+										end
 									end
 								end
 							end

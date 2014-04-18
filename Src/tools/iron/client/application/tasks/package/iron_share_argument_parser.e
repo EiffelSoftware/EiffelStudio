@@ -123,6 +123,11 @@ feature -- Access
 			end
 		end
 
+	is_forcing: BOOLEAN
+		do
+			Result := has_option (force_switch)
+		end
+
 	is_create: BOOLEAN
 		do
 			if attached operation as op then
@@ -216,6 +221,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_file_switch, "Package archive file", True, False, "path-to-archive", "archive file, override existing value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override existing value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_index_switch, "Associated package path (c.f full iron URI)", True, True, "path", "relative path from repository url", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Force operations (such as upload again the archive, ...)", True, True))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -226,6 +232,7 @@ feature {NONE} -- Switches
 	password_switch: STRING = "p|password"
 	repo_switch: STRING = "r|repository"
 	data_switch: STRING = "d|data"
+	force_switch: STRING = "f|force"
 
 	package_file_switch: STRING = "package"
 	package_name_switch: STRING = "package-name"

@@ -189,6 +189,12 @@ feature -- Access: archive
 			end
 		end
 
+	get_archive_hash
+			-- Compute `archive_hash'.
+		do
+			set_archive_hash (archive_sha1)
+		end
+
 feature -- Access: items	
 
 	items: detachable STRING_TABLE [detachable READABLE_STRING_32]

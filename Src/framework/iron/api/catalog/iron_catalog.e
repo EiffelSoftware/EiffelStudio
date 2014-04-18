@@ -56,6 +56,11 @@ feature -- Access: repository
 
 feature -- Access: packages
 
+	is_package_installed (a_package: IRON_PACKAGE): BOOLEAN
+			-- Is package `a_package' installed?
+		deferred
+		end
+
 	installed_packages: LIST [IRON_PACKAGE]
 			-- List of installed packages.
 		deferred
@@ -134,7 +139,15 @@ feature -- Package operations
 		end
 
 	install_package (a_repo: IRON_REPOSITORY; a_package: IRON_PACKAGE; ignoring_cache: BOOLEAN)
-			-- Install `a_package'.
+			-- Install package `a_package' from repository `a_repo'.
+			-- If `ignoring_cache' is True, the archive will be download again even if it was already download before.
+		deferred
+		end
+
+	setup_package_installation (a_package: IRON_PACKAGE; cl_succeed: detachable CELL [BOOLEAN]; is_silent: BOOLEAN)
+			-- Process setup instruction for installed package `a_package'.
+		require
+			is_package_installed: is_package_installed (a_package)
 		deferred
 		end
 

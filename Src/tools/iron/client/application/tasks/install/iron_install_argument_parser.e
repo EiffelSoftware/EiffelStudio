@@ -36,6 +36,12 @@ feature -- Access
 			Result := has_option (all_switch)
 		end
 
+	setup_execution_enabled: BOOLEAN
+			-- Allowing execution of scripts during installation?
+		do
+			Result := has_option (setup_execution_enabled_switch) and not has_option (setup_execution_ignored_switch)
+		end
+
 	ignoring_cache: BOOLEAN
 			-- <Precursor>
 		do
@@ -93,10 +99,12 @@ feature {NONE} -- Switches
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (2)
+			create Result.make (5)
 			Result.extend (create {ARGUMENT_SWITCH}.make (file_switch, "Package file", True, True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Install all available packages", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (no_cache_switch, "Ignore cache and always download iron package.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_cache_switch, "Ignore cache and always download iron package?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_enabled_switch, "Enable execution of package installation setup?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_ignored_switch, "Ignore execution of package installation setup?", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
@@ -105,6 +113,8 @@ feature {NONE} -- Switches
 	file_switch: STRING = "f|file"
 	all_switch: STRING = "a|all"
 	no_cache_switch: STRING = "no_cache"
+	setup_execution_enabled_switch: STRING = "s|setup"
+	setup_execution_ignored_switch: STRING = "S|ignore_setup"
 
 ;note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"

@@ -7,14 +7,17 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+		<option debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+			<debug name="update_ecf" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="none"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
 		<library name="iron_support" location="$EIFFEL_SRC\framework\iron\support\iron_support-safe.ecf" readonly="false"/>
+		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>

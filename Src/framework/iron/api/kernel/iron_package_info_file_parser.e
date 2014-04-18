@@ -49,6 +49,15 @@ feature -- Change
 			callbacks := v
 		end
 
+feature -- Constants
+
+	package_token: STRING = "package"
+	setup_token: STRING = "setup"
+	project_token: STRING = "project"
+	note_token: STRING = "note"
+	end_token: STRING = "end"
+
+
 feature -- Parse
 
 	parse (fn: PATH)
@@ -107,25 +116,33 @@ feature -- Parse
 				when 'p' then
 					c := previous_character
 					s := next_alphabetic
-					if s.is_case_insensitive_equal ("package") then
+					if s.is_case_insensitive_equal (package_token) then
 						parse_package_declaration
-					elseif s.is_case_insensitive_equal ("project") then
+					elseif s.is_case_insensitive_equal (project_token) then
 						parse_projects_declaration
 					else
 						report_error ("Unexpected character [p].")
 					end
+				when 's' then
+					c := previous_character
+					s := next_alphabetic
+					if s.is_case_insensitive_equal_general (setup_token) then
+						parse_setup_declaration
+					else
+						report_error ("Unexpected character [s].")
+					end
 				when 'n' then
 					c := previous_character
 					s := next_alphabetic
-					if s.is_case_insensitive_equal_general ("note") then
+					if s.is_case_insensitive_equal_general (note_token) then
 						parse_notes_declaration
 					else
-						report_error ("Unexpected character [e].")
+						report_error ("Unexpected character [n].")
 					end
 				when 'e' then
 					c := previous_character
 					s := next_alphabetic
-					if not s.is_case_insensitive_equal ("end") then
+					if not s.is_case_insensitive_equal (end_token) then
 						report_error ("Unexpected character [e].")
 					end
 				when '%U' then
@@ -180,10 +197,168 @@ feature -- Parse
 			end
 		end
 
+	parse_setup_declaration
+		local
+			s: READABLE_STRING_32
+			l_parse_notes: BOOLEAN
+			l_parse_projects: BOOLEAN
+			done: BOOLEAN
+			c: like next_character
+		do
+			c := next_non_whitespace_character
+			if c /= '%U' and not end_of_input then
+				c := previous_character
+				from
+					s := next_alpha_numeric_or_dash
+					c := previous_character
+				until
+					end_of_input or done or error_occurred
+				loop
+					if s.is_empty then
+						c := next_character
+						if c = '-' then
+							c := previous_character
+							parse_comment
+							if not error_occurred and not end_of_input then
+								c := next_non_whitespace_character
+								c := previous_character
+								s := next_alpha_numeric_or_dash
+								c := previous_character
+							end
+						else
+							report_error ("Invalid setup name")
+							done := True
+						end
+					elseif s.is_case_insensitive_equal (project_token) then
+							-- End setup ... process projects
+						l_parse_projects := True
+						done := True
+					elseif s.is_case_insensitive_equal (note_token) then
+							-- End project ... process note
+						l_parse_notes := True
+						done := True
+					elseif s.is_case_insensitive_equal (end_token) then
+							-- Reached end of file declaration
+						done := True
+					else
+						parse_setup_item_declaration (s)
+						c := previous_character
+						c := next_non_whitespace_character
+						from until c /= '-' loop
+							c := previous_character
+							parse_comment
+							c := next_non_whitespace_character
+						end
+						c := previous_character
+						s := next_alpha_numeric_or_dash
+						c := previous_character
+					end
+				end
+				if l_parse_notes then
+					parse_notes_declaration
+				elseif l_parse_projects then
+					parse_projects_declaration
+				end
+			end
+		end
+
+	parse_setup_item_declaration (a_setup_name: READABLE_STRING_32)
+		local
+			s: detachable STRING_32
+			l_op: detachable STRING_32
+			l_multiline_op_done: BOOLEAN
+			c: like next_character
+		do
+			c := next_non_whitespace_character
+			if c = '=' then
+				c := next_non_whitespace_character_until_eol
+				if c = '%U' then
+					report_error ("Syntax error in setup declaration")
+				elseif c = '"' then
+					c := next_character
+					if c = '[' then
+							-- detected  "[
+						s := next_text_until_eol
+						if s.is_whitespace then
+								-- now look for ]"
+							create l_op.make_empty
+							from
+							until
+								end_of_input or l_multiline_op_done
+							loop
+								s := next_text_until_eol
+								s.right_adjust
+								if s.ends_with ("]%"") then
+									if s.count = 2 or else s.is_substring_whitespace (1, s.count - 2) then
+										 -- reached end of manifest string ...
+										 l_multiline_op_done := True
+									else
+											-- still in manifest text
+										l_op.append (s)
+										l_op.append_character ('%N')
+									end
+								else
+									l_op.append (s)
+									l_op.append_character ('%N')
+								end
+							end
+							if l_multiline_op_done then
+								normalize_multiline (l_op)
+							end
+						else
+							 	-- maybe syntax error?
+								-- normal quoted text starting with '['
+							s.prepend_character (c)
+							s.right_adjust
+							if s.ends_with ("%"") then
+								s.remove_tail (1)
+							else
+								s.prepend_character ('"') -- maybe syntax error?
+							end
+							l_op := s
+						end
+					else
+							-- starts with '"' ... however [foo: "bar" and so on] is valid note.
+						create s.make_empty
+						s.append_character ('"')
+						s.append_character (c)
+						s.append (next_text_until_eol)
+						s.left_adjust
+						s.right_adjust
+						if s.count >= 2 and s[1] = '"' and s[s.count] = '"' then
+							s.remove_head (1)
+							s.remove_tail (1)
+						end
+						l_op := s
+						c := next_non_whitespace_character
+					end
+				elseif c = '%N' then
+					create s.make_empty
+					l_op := s
+				else
+					c := previous_character
+					s := next_text_until_eol
+					s.left_adjust
+					s.right_adjust
+					l_op := s
+				end
+
+				if attached callbacks as cb then
+					if l_op = Void then
+						l_op := "" -- Error?
+					end
+					cb.on_setup (a_setup_name, l_op)
+				end
+			else
+				report_error ({STRING_32} "Unexpected character ["+  character_to_string (c) +"].")
+			end
+		end
+
 	parse_projects_declaration
 		local
 			s: READABLE_STRING_32
 			l_parse_notes: BOOLEAN
+			l_parse_setup: BOOLEAN
 			done: BOOLEAN
 			c: like next_character
 		do
@@ -211,17 +386,27 @@ feature -- Parse
 							report_error ("Invalid project name")
 							done := True
 						end
-					elseif s.is_case_insensitive_equal ("end") then
-							-- Reached end of file declaration
+					elseif s.is_case_insensitive_equal (setup_token) then
+							-- End project ... process setup
+						l_parse_setup := True
 						done := True
-					elseif s.is_case_insensitive_equal ("note") then
+					elseif s.is_case_insensitive_equal (note_token) then
 							-- End project ... process note
 						l_parse_notes := True
+						done := True
+					elseif s.is_case_insensitive_equal (end_token) then
+							-- Reached end of file declaration
 						done := True
 					else
 						parse_project_item_declaration (s)
 						c := previous_character
 						c := next_non_whitespace_character
+						from until c /= '-' loop
+							c := previous_character
+							parse_comment
+							c := next_non_whitespace_character
+						end
+
 						c := previous_character
 						s := next_alpha_numeric_or_dash
 						c := previous_character
@@ -229,6 +414,8 @@ feature -- Parse
 				end
 				if l_parse_notes then
 					parse_notes_declaration
+				elseif l_parse_setup then
+					parse_setup_declaration
 				end
 			end
 		end
@@ -302,23 +489,36 @@ feature -- Parse
 							report_error ("Invalid note name")
 							done := True
 						end
-					elseif s.is_case_insensitive_equal ("end") then
-							-- Reached end of file declaration
+					elseif s.is_case_insensitive_equal (package_token) then
+							-- Reached end of notes declaration
 						done := True
-					elseif s.is_case_insensitive_equal ("package") then
+					elseif s.is_case_insensitive_equal (setup_token) then
+							-- Reached end of notes declaration
+						done := True
+					elseif s.is_case_insensitive_equal (end_token) then
 							-- Reached end of file declaration
 						done := True
 					else
 						parse_note_item_declaration (s)
 						c := previous_character
 						c := next_non_whitespace_character
+						from until c /= '-' loop
+							c := previous_character
+							parse_comment
+							c := next_non_whitespace_character
+						end
+
 						c := previous_character
 						s := next_alpha_numeric_with_bracket
 						c := previous_character
 					end
 				end
-				if done and s.is_case_insensitive_equal ("package") then
-					parse_package_declaration
+				if done then
+					if s.is_case_insensitive_equal (package_token) then
+						parse_package_declaration
+					elseif s.is_case_insensitive_equal (setup_token) then
+						parse_setup_declaration
+					end
 				end
 			end
 		end

@@ -139,8 +139,11 @@ feature {NONE} -- Initialization
 			pif: detachable IRON_PACKAGE_FILE
 			pif_fac: IRON_PACKAGE_FILE_FACTORY
 			pac: IRON_PACKAGE
+			p_uri, l_uri: PATH_URI
+			s1, s: STRING_32
 
 			vis_ecfs: APP_ECF_SCANNER
+			vis_clibs: APP_CLIB_SCANNER
 		do
 			has_error := False
 			io.error.put_string ("IRON::Updating ")
@@ -160,6 +163,34 @@ feature {NONE} -- Initialization
 
 				pif.load_package (pac)
 				has_error := pif.has_error
+
+				create vis_clibs.make
+				pp := a_iron_file.parent.absolute_path.canonical_path
+				pp_name := pp.name
+				create p_uri.make_from_path (pp)
+				s1 := p_uri.string
+
+				vis_clibs.process_directory (pp)
+				across
+					vis_clibs.items as ic
+				loop
+					p := ic.item.absolute_path.canonical_path
+					create l_uri.make_from_path (p)
+					s := l_uri.string
+					check s.starts_with (s1) end
+					s.remove_head (s1.count + 1)
+					pif.add_setup ("compile_library", s)
+
+--					if attached library_target_name (p) as l_lib_name then
+--						uri_item := uri_from_path (p)
+--						if uri_item.starts_with (uri_root) then
+--							uri_item.remove_head (uri_root.count + 1)
+--							pif.add_project (l_lib_name, uri_item)
+--						else
+--							has_error := True
+--						end
+--					end
+				end
 
 				create vis_ecfs.make
 				pp := a_iron_file.parent.absolute_path.canonical_path

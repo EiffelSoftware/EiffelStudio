@@ -81,11 +81,12 @@ feature -- Execute
 					if attached {IRON_WEB_REPOSITORY} p.item.repository as l_remote_repo then
 						print ("* Install ["+ p.item.human_identifier +"] ==%N")
 						a_iron.catalog_api.install_package (l_remote_repo, p.item, True)
+						a_iron.catalog_api.setup_package_installation (p.item, Void, True)
 					end
 				end
 			end
 
-			create l_uri.make_from_string ("http://localhost:9090/13.11/eiffel.com/library/preferences/xml_pref-safe.ecf")
+			create l_uri.make_from_string ("http://localhost:9090/14.05/eiffel.com/library/preferences/xml_pref-safe.ecf")
 			print ("* Path associated with "+ l_uri.string +" ?%N")
 
 			if attached a_iron.installation_api.local_path_associated_with_uri (l_uri.string) as l_path then

@@ -23,7 +23,12 @@ feature -- Access
 		deferred
 		end
 
-	projects: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; relative_uri: READABLE_STRING_8]]
+	projects: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; relative_iri: READABLE_STRING_32]]
+			-- Associated Eiffel projects (i.e ecf files).
+
+	setup_operations: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; instruction: READABLE_STRING_32]]
+			-- Setup operations.
+			--| potential keys are "before", "after", ...
 
 	title: detachable READABLE_STRING_32 assign set_title
 			-- Optional title.
@@ -167,10 +172,10 @@ feature -- Change
 		deferred
 		end
 
-	add_project (a_proj_name: READABLE_STRING_32; a_relative_uri: READABLE_STRING_8)
+	add_project (a_proj_name: READABLE_STRING_32; a_relative_iri: READABLE_STRING_32)
 		local
 			l_projects: like projects
-			l_proj: detachable TUPLE [name: READABLE_STRING_GENERAL; relative_uri: READABLE_STRING_8]
+			l_proj: detachable TUPLE [name: READABLE_STRING_GENERAL; relative_iri: READABLE_STRING_32]
 		do
 			l_projects := projects
 			if l_projects = Void then
@@ -185,7 +190,7 @@ feature -- Change
 				l_proj := ic.item
 				if
 					a_proj_name.is_case_insensitive_equal_general (l_proj.name) and then
-					a_relative_uri.is_case_insensitive_equal_general (l_proj.relative_uri)
+					a_relative_iri.is_case_insensitive_equal_general (l_proj.relative_iri)
 				then
 						-- Found information
 				else
@@ -193,11 +198,48 @@ feature -- Change
 				end
 			end
 			if l_proj = Void then
-				l_proj := [a_proj_name, a_relative_uri]
-				l_projects.force ([a_proj_name, a_relative_uri])
+				l_proj := [a_proj_name, a_relative_iri]
+				l_projects.force (l_proj)
 			else
 				l_proj.name := a_proj_name
-				l_proj.relative_uri := a_relative_uri
+				l_proj.relative_iri := a_relative_iri
+			end
+		end
+
+	add_setup (a_setup_name: READABLE_STRING_GENERAL; a_instruction: READABLE_STRING_32)
+		local
+			l_setup_operations: like setup_operations
+			l_op: detachable TUPLE [name: READABLE_STRING_GENERAL; instruction: READABLE_STRING_32]
+		do
+			l_setup_operations := setup_operations
+			if l_setup_operations = Void then
+				create l_setup_operations.make (1)
+				setup_operations := l_setup_operations
+			end
+			across
+				l_setup_operations as ic
+			until
+				l_op /= Void
+			loop
+				l_op := ic.item
+				if
+					a_setup_name.is_case_insensitive_equal (l_op.name) and then
+					a_instruction.is_case_insensitive_equal (l_op.instruction)
+				then
+						-- Found information
+				else
+					l_op := Void
+				end
+			end
+			if l_op = Void then
+				l_op := [a_setup_name, a_instruction]
+				l_setup_operations.force (l_op)
+			else
+					-- update value
+				check a_instruction.is_case_insensitive_equal (l_op.instruction) end
+					-- Keep same
+				l_op.name := a_setup_name
+				l_op.instruction := a_instruction
 			end
 		end
 

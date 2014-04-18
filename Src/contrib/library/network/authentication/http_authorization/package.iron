@@ -3,6 +3,7 @@ package http_authorization
 project
 	http_authorization = "http_authorization-safe.ecf"
 	http_authorization = "http_authorization.ecf"
+
 note
 --	title: 
 --	description: 
@@ -10,4 +11,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

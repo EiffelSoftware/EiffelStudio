@@ -5,6 +5,7 @@ project
 	process = "process.ecf"
 	process-tests = "tests/tests-safe.ecf"
 	process-tests = "tests/tests.ecf"
+
 note
 	title: Eiffel Process
 	description: Process execution, output capture, ...
@@ -14,4 +15,5 @@ note
 	links[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/process
 	links[license]: http://www.eiffel.com/licensing/forum.txt
 --	link[doc]: "Documentation" http:// 
+
 end

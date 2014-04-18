@@ -1,13 +1,18 @@
 package libevent
 
+setup
+	compile_library = Clib
+
 project
 	libevent = "libevent-safe.ecf"
 	libevent = "libevent.ecf"
+
 note
 	title: Eiffel libEvent
 	description: libevent wrapper library for Eiffel
---	tags: 
 	license: Eiffel Forum License v2
 	copyright: Copyright (c) 1984-2009, Eiffel Software and others
+--	tags: 
 --	link[doc]: "Documentation" http:// 
+
 end

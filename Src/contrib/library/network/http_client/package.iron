@@ -3,6 +3,7 @@ package http_client
 project
 	http_client = "http_client-safe.ecf"
 	http_client = "http_client.ecf"
+
 note
 --	title: 
 --	description: 
@@ -10,4 +11,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

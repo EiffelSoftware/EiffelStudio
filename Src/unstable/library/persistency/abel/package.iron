@@ -8,6 +8,7 @@ project
 	abel_tutorial_api = "examples/tutorial_api/tutorial_api.ecf"
 	abel_plugin_escher = "plugin_escher/plugin_escher.ecf"
 	abel_test = "test/test.ecf"
+
 note
 --	title: 
 --	description: 
@@ -15,4 +16,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

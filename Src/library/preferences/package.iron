@@ -5,6 +5,7 @@ project
 	preferences_reg = "preferences_reg.ecf"
 	preferences_xml = "preferences_xml-safe.ecf"
 	preferences_xml = "preferences_xml.ecf"
+
 note
 --	title: 
 --	description: 
@@ -12,4 +13,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

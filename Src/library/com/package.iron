@@ -1,5 +1,8 @@
 package com
 
+setup
+	compile_library = Clib
+
 project
 	api_wrapper = "api_wrapper/api_wrapper-safe.ecf"
 	api_wrapper = "api_wrapper/api_wrapper.ecf"
@@ -166,6 +169,8 @@ project
 	wel = "wel/wel.ecf"
 	wizard = "wizard/wizard.ecf"
 	zmq = "zeromq/zmq.ecf"
+	com = "com.ecf"
+
 note
 --	title: 
 --	description: 
@@ -173,4 +178,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

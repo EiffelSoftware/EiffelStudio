@@ -1,13 +1,18 @@
 package objc_base
 
+setup
+	compile_library = Clib
+
 project
 	objective_c = "objc_base-safe.ecf"
 	objective_c = "objc_base.ecf"
+
 note
 	title: Objective-C Base Library
 	description: Wrapper classes for Objective C
 	tags: objective-c
---	license: 
 	copyright: Copyright (c) 2009, Daniel Furrer and others.
+--	license: 
 --	link[doc]: "Documentation" http:// 
+
 end

@@ -1,4 +1,4 @@
-package ise_gobo
+package gobo
 
 project
 	gobo_argument = "gobo_argument.ecf"
@@ -29,6 +29,8 @@ project
 	gobo_utility = "gobo_utility-safe.ecf"
 	gobo_utility = "gobo_utility.ecf"
 	gobo_xml = "gobo_xml.ecf"
+	gobo = "gobo_all.ecf"
+
 note
 	title: Gobo Eiffel for EiffelSoftware
 	description: "[
@@ -40,10 +42,12 @@ note
 		   THE_ROOT_CLASS_HERE by the actual name of the root class for the sample you chose.
 
 		Happy Eiffeling,
-		The EiffelSoftware Team	
-	]"
-	tags:gobo,ise
+		The EiffelSoftware Team
+				]"
+
+	tags: gobo,ise
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

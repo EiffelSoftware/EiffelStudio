@@ -1,7 +1,11 @@
 package wex
 
+setup
+	compile_library = library/wex/Clib
+
 project
 	wex = "library/wex/wex.ecf"
+
 note
 --	title: 
 --	description: 
@@ -9,4 +13,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

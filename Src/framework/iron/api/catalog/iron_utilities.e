@@ -95,6 +95,7 @@ feature -- Archiving
 		end
 
 	build_package_archive (a_package: detachable IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT)
+			--| note: this also update `a_package.archive...' data.
 		require
 			folder_exists: (create {FILE_UTILITIES}).directory_path_exists (a_folder)
 		local
@@ -129,7 +130,7 @@ feature -- Archiving
 				create f.make_with_name (".tmp.output.proc")
 				delete_file (f)
 
-				-- target archive file.
+					-- target archive file.
 				create f.make_with_path (a_target_file)
 				if f.exists then
 					if a_package /= Void then

@@ -54,6 +54,10 @@ feature -- Access
 		deferred
 		end
 
+	is_forcing: BOOLEAN
+		deferred
+		end
+
 	is_create: BOOLEAN
 		deferred
 		end

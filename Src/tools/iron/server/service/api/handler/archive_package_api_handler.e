@@ -84,6 +84,9 @@ feature -- Execution
 							m.add_normal_message ("archive uploaded")
 							if l_package.has_archive then
 								m.add_normal_message ("archive_size=" + l_package.archive_file_size.out)
+								l_package.get_archive_hash
+									-- Save package data .. especially the new hash
+								iron.database.update_version_package (l_package)
 								if attached l_package.archive_hash as l_hash then
 									m.add_normal_message ("archive_hash=" + l_hash.out)
 								end

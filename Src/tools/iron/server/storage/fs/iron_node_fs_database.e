@@ -906,6 +906,7 @@ feature -- Version Package: change
 			end
 
 			inf.put (a_package.id, "id")
+			inf.put (a_package.name, "name")
 
 			inf.save_to (vp.extended ("version.info"))
 			on_version_package_updated (a_package, flag_is_new)
@@ -953,7 +954,7 @@ feature -- Version package / archive: change
 			if b then
 				a_package.set_archive_path (p)
 				a_package.set_archive_hash (a_package.archive_hash)
-				on_version_package_updated (a_package, False)
+				update_version_package (a_package)
 			end
 		end
 
@@ -979,12 +980,12 @@ feature -- Version package / archive: change
 					end
 					a_package.set_archive_path (p)
 					a_package.set_archive_hash (a_package.archive_hash)
-					on_version_package_updated (a_package, False)
+					update_version_package (a_package)
 				end
 			else
 				a_package.set_archive_path (Void)
 				a_package.set_archive_hash (Void)
-				on_version_package_updated (a_package, False)
+				update_version_package (a_package)
 			end
 		rescue
 			retried := True
@@ -1002,7 +1003,7 @@ feature -- Version package / archive: change
 				f.delete
 				a_package.set_archive_path (Void)
 				a_package.set_archive_hash (Void)
-				on_version_package_updated (a_package, False)
+				update_version_package (a_package)
 			end
 		end
 

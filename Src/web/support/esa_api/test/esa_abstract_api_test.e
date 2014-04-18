@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_ABSTRACT_API_TEST}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

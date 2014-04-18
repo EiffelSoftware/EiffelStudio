@@ -203,7 +203,7 @@ feature -- Update Report Problem
 						l_form := extract_form_data (req, l_type)
 						l_form.set_id (l_id.integer_value)
 						if l_form.is_valid_form then
-							update_report_problem_internal (req, l_form)
+							update_report_problem_internal (req, l_form, l_type)
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm (req, res, l_form)
 						else
 								-- Bad request
@@ -230,7 +230,7 @@ feature -- Update Report Problem
 		end
 
 
-	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW)
+	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW; a_type: READABLE_STRING_32)
 			-- Update problem report
 		local
 			l_reproduce: STRING_32
@@ -245,37 +245,12 @@ feature -- Update Report Problem
 				api_service.update_problem_report (a_form.id, a_form.priority.out, a_form.severity.out, a_form.category.out, a_form.selected_class.out, a_form.confidential.out, l_synopsis, l_release, l_environment, l_description, l_reproduce)
 
 					-- Update temporary files
-				if req.form_parameter ("temporary_files") = Void then
-						-- remove all the attached files.
-					api_service.remove_all_temporary_report_attachments (a_form.id)
-				elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
-						l_file.is_string then
-					across api_service.temporary_problem_report_attachments (a_form.id) as c loop
-						if not c.item.name.same_string (l_file.value) then
-							api_service.remove_temporary_report_attachment (a_form.id, l_file.value)
-						end
-					end
-				elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
-					across api_service.temporary_problem_report_attachments (a_form.id) as c loop
-						across l_files as lf loop
-							if c.item.name.same_string (lf.item.value) then
-								l_found := True
-							end
-						end
-						if not l_found then
-							api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
-						else
-							l_found := False
-						end
-					end
-				end
-					-- Add new uploaded files
-				if attached a_form.uploaded_files as l_files then
-					across l_files as c loop
-						api_service.upload_temporary_report_attachment (a_form.id, c.item)
-					end
-				end
+				if a_type.same_string ("application/vnd.collection+json") then
 
+					upload_temporary_files_cj (a_form)
+				else
+					upload_temporary_files_html (req, a_form)
+				end
 
 			end
 		end
@@ -515,6 +490,82 @@ feature {NONE} -- Implementation
 				Result.set_files (l_list)
 			end
 		end
+
+
+	upload_temporary_files_cj (a_form: ESA_REPORT_FORM_VIEW)
+			-- Handle temporary and uploaded files from an CJ template with attachment extensions.
+		local
+			l_found : BOOLEAN
+			l_temporary_files : LIST[ESA_FILE_VIEW]
+		do
+			l_temporary_files := api_service.temporary_problem_report_attachments (a_form.id)
+				-- Remove not selected files
+			across l_temporary_files as c loop
+				across a_form.uploaded_files as lf loop
+					if c.item.name.same_string (lf.item.name) then
+						l_found := True
+					end
+				end
+				if not l_found then
+					api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
+				else
+					l_found := False
+				end
+			end
+
+				-- Upload new files.
+			across a_form.uploaded_files as lf loop
+				across l_temporary_files as c loop
+					if c.item.name.same_string (lf.item.name) then
+						l_found := True
+					end
+				end
+				if not l_found then
+					api_service.upload_temporary_report_attachment (a_form.id, lf.item)
+				else
+					l_found := False
+				end
+
+			end
+		end
+
+	upload_temporary_files_html (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW)
+			-- Handle temporary and uploaded files from an HTML form.
+		local
+			l_found: BOOLEAN
+		do
+			-- text/html
+			if req.form_parameter ("temporary_files") = Void then
+					-- remove all the attached files.
+				api_service.remove_all_temporary_report_attachments (a_form.id)
+			elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
+					l_file.is_string then
+				across api_service.temporary_problem_report_attachments (a_form.id) as c loop
+					if not c.item.name.same_string (l_file.value) then
+						api_service.remove_temporary_report_attachment (a_form.id, l_file.value)
+					end
+				end
+			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
+				across api_service.temporary_problem_report_attachments (a_form.id) as c loop
+					across l_files as lf loop
+						if c.item.name.same_string (lf.item.value) then
+							l_found := True
+						end
+					end
+					if not l_found then
+						api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
+					else
+						l_found := False
+					end
+				end
+			end
+				-- Add new uploaded files
+			if attached a_form.uploaded_files as l_files then
+				across l_files as c loop
+					api_service.upload_temporary_report_attachment (a_form.id, c.item)
+				end
+			end
+  		end
 
 	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item

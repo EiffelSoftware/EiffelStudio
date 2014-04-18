@@ -6,6 +6,10 @@ note
 class
 	ESA_API_SERVICE
 
+inherit
+
+	ESA_API_ERROR
+
 create
 	make,
 	make_with_database
@@ -631,7 +635,11 @@ feature -- Status Report
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		do
 			Result := login_provider.activation_valid (a_email, a_token)
-			is_successful := login_provider.is_successful
+			if login_provider.successful then
+				set_successful
+			else
+				set_last_error_from_handler (login_provider.last_error)
+			end
 		end
 
 

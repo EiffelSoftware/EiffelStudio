@@ -173,12 +173,11 @@
                             "prompt": "attachment",
                             "value": "{$host/}/report_interaction/{$elem.id/}/{$elem.name/}"
                         >,
-                         <
+                        <
                             "name": "Bytes count",
                             "prompt": "bytes count",
                             "value": "{$elem.bytes_count/}"
-                        >
-                      {/foreach}{/foreach}], 
+                        >,{/foreach}{/foreach}], 
                 "links":[
                 <"rel":"create-form", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">
    

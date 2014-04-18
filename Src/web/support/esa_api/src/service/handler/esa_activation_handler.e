@@ -82,7 +82,12 @@ feature -- HTTP Methods
 						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_confirmation_page (req, res)
 		    	else
 		    			-- Activation failed
-		    		l_activation_view.set_error_message ("Activation failed, check activation code and e-mail.")
+		    		if attached api_service.last_error as l_error then
+		    			l_activation_view.set_error_message (l_error.error_message)
+		    		else
+		    				-- Default message
+			    		l_activation_view.set_error_message ("Activation failed, check activation code and e-mail.")
+					end
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, l_activation_view)
 				end
 			else

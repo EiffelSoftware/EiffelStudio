@@ -65,15 +65,16 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE[ANY]
 			l_query: STRING
+			l_encoder: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
 			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number, "PageNumber")
-			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (l_encoder.encode (string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
-			l_parameters.put (string_parameter (a_column, 30), "Column")
+			l_parameters.put (l_encoder.encode (string_parameter (a_column, 30)), "Column")
 			create l_query.make_from_string (Select_problem_reports_by_user_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -112,14 +113,15 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE[ANY]
 			l_query: STRING
+			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
 			to_implement ("Improve the way to generate the prepare statement.")
 			create l_parameters.make (2)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number, "PageNumber")
-			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
-			l_parameters.put (string_parameter (a_column, 30), "Column")
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			l_parameters.put (l_encode.encode ( string_parameter (a_column, 30)), "Column")
 			create l_query.make_from_string (Select_problem_reports_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -143,19 +145,21 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE[ANY]
 			l_query: STRING
+			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
-			create l_parameters.make (2)
+			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number, "PageNumber")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 			l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
 			l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
-			l_parameters.put (string_parameter (a_column, 30), "Column")
+			l_parameters.put (l_encode.encode ( string_parameter (a_column, 30)), "Column")
 
 			create l_query.make_from_string (Select_problem_reports_responsibles_template)
 
 			if  not a_username.is_empty then
+				l_parameters.put (l_encode.encode ( string_parameter (a_username, 50) ), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 				l_query.replace_substring_all ("$Submitter","Username = :Username AND")
 			else
 				l_query.replace_substring_all ("$Submitter","")
@@ -762,13 +766,15 @@ feature -- Basic Operations
 			local
 				l_parameters: STRING_TABLE[ANY]
 				l_query: STRING
+				l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 			do
+				connect
 				create l_parameters.make (5)
 				l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 				l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 				l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
 				l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
-				l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				l_parameters.put (l_encode.encode ( string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 				create l_query.make_from_string (select_row_count_problem_reports_responsibles)
 				if  not a_username.is_empty then
 					l_query.replace_substring_all ("$Submitter","Username = :Username AND")
@@ -795,13 +801,15 @@ feature -- Basic Operations
 				-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status
 			local
 				l_parameters: STRING_TABLE[ANY]
+				l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 			do
+				connect
 				create l_parameters.make (4)
+				l_parameters.put (l_encode.encode ( string_parameter (a_username, 50) ), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 				l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 				l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
 				l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
-				l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
-				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (select_row_count_problem_report_by_user, l_parameters))
+				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_row_count_problem_report_by_user, l_parameters))
 				db_handler.execute_query
 				if not db_handler.after then
 					db_handler.start
@@ -1296,7 +1304,6 @@ feature {NONE} -- Implementation
 
 	new_report_detail (a_tuple: DB_TUPLE): ESA_REPORT
 		do
-
 			create Result.make (0, "Null", False)
 				--SubmissionDate
 			if attached {DATE_TIME} a_tuple.item (1) as  l_item_1 then
@@ -1362,12 +1369,10 @@ feature {NONE} -- Implementation
 				Result.set_contact (create {ESA_USER}.make (l_item_13))
 			end
 
-
 		end
 
 	new_report_responsible (a_tuple: DB_TUPLE): ESA_REPORT
 		do
-
 			create Result.make (0, "Null", False)
 				--Number
 			if attached db_handler.read_integer_32 (1) as l_number then
@@ -1489,8 +1494,6 @@ feature {NONE} -- Implementation
 				Result.set_private (l_item_7)
 			end
 		end
-
-
 
 	new_interaction_attachment (a_tuple: DB_TUPLE; a_report: ESA_REPORT_INTERACTION): ESA_REPORT_ATTACHMENT
 		local

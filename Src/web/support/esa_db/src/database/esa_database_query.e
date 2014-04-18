@@ -18,7 +18,7 @@ feature -- Intialization
 			parameters := a_parameters
 		end
 
-	execute_reader (a_base_selection: DB_DYN_SELECTION): detachable LIST [DB_RESULT]
+	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
 			-- Execute the Current store procedure.
 		do
 				-- Check test dynamic sequel. to redesign.

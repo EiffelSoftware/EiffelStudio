@@ -33,7 +33,26 @@ feature  -- HTTP client
 				sess.set_timeout (-1)
 				sess.set_is_debug (True)
 				sess.set_connect_timeout (-1)
---				sess.set_proxy ("127.0.0.1", 8888) --| inspect traffic with http://www.fiddler2.com/								
+				sess.set_proxy ("127.0.0.1", 8888) --| inspect traffic with http://www.fiddler2.com/								
+			end
+		end
+
+	get_http_session_2 (a_path: READABLE_STRING_32)
+		local
+			h: LIBCURL_HTTP_CLIENT
+			b: like base_url
+		do
+			create h.make
+			b := base_url
+			if b = Void then
+				b := ""
+			end
+			if attached {HTTP_CLIENT_SESSION} h.new_session ("127.0.0.1:" + port_number.out + "/" + a_path ) as sess then
+				http_session := sess
+				sess.set_timeout (-1)
+				sess.set_is_debug (True)
+				sess.set_connect_timeout (-1)
+				sess.set_proxy ("127.0.0.1", 8888) --| inspect traffic with http://www.fiddler2.com/								
 			end
 		end
 
@@ -53,7 +72,7 @@ feature -- HTTP client helpers
 		do
 			get_http_session
 			if attached http_session as sess then
-				Result := sess.get (command_name, context_executor)
+				Result := sess.get ("", context_executor)
 			end
 		end
 
@@ -61,7 +80,7 @@ feature -- HTTP client helpers
 		do
 			get_http_session
 			if attached http_session as sess then
-				Result := sess.post (command_name, context_executor, data)
+				Result := sess.post ("", context_executor, data)
 			end
 		end
 
@@ -69,7 +88,7 @@ feature -- HTTP client helpers
 		do
 			get_http_session
 			if attached http_session as sess then
-				Result := sess.delete (command_name, context_executor)
+				Result := sess.delete ("", context_executor)
 			end
 		end
 
@@ -77,7 +96,7 @@ feature -- HTTP client helpers
 		do
 			get_http_session
 			if attached http_session as sess then
-				Result := sess.put (command_name, context_executor, data)
+				Result := sess.put ("", context_executor, data)
 			end
 		end
 

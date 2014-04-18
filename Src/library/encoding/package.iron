@@ -4,6 +4,7 @@ project
 	encoding = "encoding-safe.ecf"
 	encoding = "encoding.ecf"
 	encoding-tests = "tests/tests.ecf"
+
 note
 --	title: 
 --	description: 
@@ -11,4 +12,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

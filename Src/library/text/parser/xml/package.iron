@@ -5,6 +5,7 @@ project
 	xml_parser = "parser/xml_parser.ecf"
 	xml_tree = "tree/xml_tree-safe.ecf"
 	xml_tree = "tree/xml_tree.ecf"
+
 note
 	title: Eiffel XML
 	description: Collection of Eiffel library to manipulate XML content
@@ -14,4 +15,5 @@ note
 	link[license]: http://www.eiffel.com/licensing/forum.txt
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

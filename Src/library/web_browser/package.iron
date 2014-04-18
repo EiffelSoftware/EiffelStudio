@@ -1,8 +1,12 @@
 package web_browser
 
+setup
+	compile_library = Clib
+
 project
 	web_browser = "web_browser-safe.ecf"
 	web_browser = "web_browser.ecf"
+
 note
 	title: Eiffel Web Browser
 	description: Web browser component
@@ -12,4 +16,5 @@ note
 	links[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/web_browser
 	links[license]: http://www.eiffel.com/licensing/forum.txt
 --	link[doc]: "Documentation" http:// 
+
 end

@@ -3,6 +3,7 @@ package content_negotiation
 project
 	conneg = "conneg-safe.ecf"
 	conneg = "conneg.ecf"
+
 note
 --	title: 
 --	description: 
@@ -10,4 +11,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

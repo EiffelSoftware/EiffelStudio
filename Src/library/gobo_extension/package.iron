@@ -3,6 +3,7 @@ package gobo_extension
 project
 	gobo_extension = "gobo_extension-safe.ecf"
 	gobo_extension = "gobo_extension.ecf"
+
 note
 --	title: 
 --	description: 
@@ -10,4 +11,5 @@ note
 --	license: 
 --	copyright: 
 --	link[doc]: "Documentation" http:// 
+
 end

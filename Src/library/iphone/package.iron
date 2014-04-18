@@ -1,12 +1,17 @@
 package iphone
 
+setup
+	compile_library = Clib
+
 project
 	iphone = "iphone.ecf"
+
 note
-	title: Eiffel iPhone Library 
+	title: Eiffel iPhone Library
 	description: Eiffel Library for iPhone development
+	copyright: Copyright (c), Eiffel Software.
 --	tags: 
 --	license: 
-	copyright: Copyright (c), Eiffel Software.
 --	link[doc]: "Documentation" http:// 
+
 end

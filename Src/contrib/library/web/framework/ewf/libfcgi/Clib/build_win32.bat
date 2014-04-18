@@ -16,3 +16,4 @@ link.exe %LINK_FLAGS%  /DLL %E_libFCGI_OUTDIR%\fcgi_stdio.obj %E_libFCGI_OUTDIR%
 copy %E_libFCGI_OUTDIR%\libfcgi.* %~dp0..\spec\lib\windows\msc
 
 endlocal
+exit 0

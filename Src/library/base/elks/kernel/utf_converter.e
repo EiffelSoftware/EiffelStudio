@@ -196,6 +196,149 @@ feature -- Status report
 			end
 		end
 
+feature -- Measurement
+
+	utf_8_bytes_count (s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
+			-- Number of bytes necessary to encode in UTF-8 `s.substring (start_pos, end_pos)'.
+			-- Note that this feature can be used for both escaped and non-escaped string.
+			-- In the case of escaped strings, the result will be possibly higher than really needed.
+			-- It does not include the terminating null character.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= s.count
+		local
+			i: INTEGER
+			c: NATURAL_32
+		do
+			from
+				i := start_pos
+			until
+				i > end_pos
+			loop
+				c := s.code (i)
+				if c <= 0x7F then
+						-- 0xxxxxxx.
+					Result := Result + 1
+				elseif c <= 0x7FF then
+						-- 110xxxxx 10xxxxxx
+					Result := Result + 2
+				elseif c <= 0xFFFF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					Result := Result + 3
+				else
+						-- c <= 1FFFFF - there are no higher code points
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					Result := Result + 4
+				end
+				i := i + 1
+			end
+		end
+
+	utf_16_characters_count_form_pointer (m: MANAGED_POINTER; start_pos, end_pos: INTEGER): INTEGER
+			-- Number of characters of the UTF-16 encoded `m' starting at `start_pos' in `m' up to `end_pos - 1'.
+			-- It does not include the terminating null character.
+		require
+			start_position_big_enough: start_pos >= 0
+			end_position: start_pos <= end_pos + 2
+			end_pos_small_enought: end_pos < m.count
+			even_start_position: start_pos \\ 2 = 0
+			even_end_position: end_pos \\ 2 = 0
+		local
+			i, n: INTEGER
+			c: NATURAL_32
+		do
+			from
+				i := start_pos
+				n := end_pos
+			until
+				i >= end_pos
+			loop
+				c := m.read_natural_16 (i)
+				if c < 0xD800 or c >= 0xE000 then
+						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
+					i := i + 2
+				elseif i <= n then
+						-- Supplementary Planes: surrogate pair with lead and trail surrogates.						
+					i := i + 4
+				end
+				Result := Result + 1
+			end
+		end
+
+	utf_16_bytes_count (s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
+			-- Number of bytes necessary at the very least to encode in UTF-16 `s.substring (start_pos, end_pos)'.
+			-- Note that this feature can be used for both escaped and non-escaped string.
+			-- In the case of escaped strings, the result will be possibly higher than really needed.
+			-- It does not include the terminating null character.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= s.count
+		local
+			i: INTEGER
+			c: NATURAL_32
+		do
+			from
+				i := start_pos
+			until
+				i > end_pos
+			loop
+				c := s.code (i)
+				if c <= 0xFFFF then
+						-- Code point from Basic Multilingual Plane: one 16-bit code unit.
+					Result := Result + 2
+				else
+					Result := Result + 4
+				end
+				i := i + 1
+			end
+		end
+
+	utf_8_to_string_32_count (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER): INTEGER
+			-- Count of characters corresponding to UTF-8 sequence `s'.
+		require
+			start_position_big_enough: start_pos >= 0
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos < s.count
+		local
+			i: INTEGER
+			n: INTEGER
+			c: INTEGER
+		do
+			from
+				i := start_pos
+				n := end_pos
+			until
+				i > n
+			loop
+				c := s [i].code
+				if c <= 0x7F then
+						-- 0xxxxxxx
+					i := i + 1
+					Result := Result + 1
+				elseif c <= 0xDF then
+						-- 110xxxxx 10xxxxxx
+					i := i + 2
+					if i <= n then
+						Result := Result + 1
+					end
+				elseif c <= 0xEF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					i := i + 3
+					if i <= n then
+						Result := Result + 1
+					end
+				elseif c <= 0xF7 then
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					i := i + 4
+					if i <= n then
+						Result := Result + 1
+					end
+				end
+			end
+		end
+
 feature -- UTF-32 to UTF-8
 
 	string_32_to_utf_8_string_8 (s: READABLE_STRING_32): STRING_8
@@ -323,16 +466,20 @@ feature -- UTF-32 to UTF-8
 						l_encoded_value := s.substring (i + 1, i + 2)
 						if is_hexa_decimal (l_encoded_value) then
 							c := to_natural_32 (l_encoded_value)
-							l_decoded := True
-							i := i + 2
+							if c <= 0x7F then
+									-- Value was encoded when it should not have been
+									-- do nothing, we leave the original content as is.	
+								c := escape_character.natural_32_code
+							else
+								l_decoded := True
+								i := i + 2
+							end
 						else
-								-- Not an hexadecimal value, it was not escaped.
+							-- Not an hexadecimal value, it was not escaped.
 						end
 					else
 						-- Not enough to read to make it valid, it was not escaped.
 					end
-				else
-						-- Nothing more to read, clearly it was not encoded.
 				end
 
 				if not l_decoded then
@@ -446,16 +593,20 @@ feature -- UTF-32 to UTF-8
 						l_encoded_value := s.substring (i + 1, i + 2)
 						if is_hexa_decimal (l_encoded_value) then
 							c := to_natural_32 (l_encoded_value)
-							l_decoded := True
-							i := i + 2
+							if c <= 0x7F then
+									-- Value was encoded when it should not have been
+									-- do nothing, we leave the original content as is.	
+								c := escape_character.natural_32_code
+							else
+								l_decoded := True
+								i := i + 2
+							end
 						else
-								-- Not an hexadecimal value, it was not escaped.
+							-- Not an hexadecimal value, it was not escaped.
 						end
 					else
 						-- Not enough to read to make it valid, it was not escaped.
 					end
-				else
-						-- Nothing more to read, clearly it was not encoded.
 				end
 
 				if not l_decoded then
@@ -764,13 +915,6 @@ feature -- UTF-8 to UTF-32
 								(c3.as_natural_32 & 0x3F)
 								).to_character_32
 							a_result.extend (l_last_char)
-							if l_last_char = escape_character then
-									-- The character that we just read was the `escape_character',
-									-- we need to escape it.
-									-- Note: this is the only place in the UTF-8 decoding where we need
-									-- to check for this character since its UTF-8 encoding is made of 3 bytes.
-								a_result.extend (l_last_char)
-							end
 							i := i + 3
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -948,13 +1092,6 @@ feature -- UTF-8 to UTF-32
 								(c3.as_natural_32 & 0x3F)
 								).to_character_32
 							a_result.extend (l_last_char)
-							if l_last_char = escape_character then
-									-- The character that we just read was the `escape_character',
-									-- we need to escape it.
-									-- Note: this is the only place in the UTF-8 decoding where we need
-									-- to check for this character since its UTF-8 encoding is made of 3 bytes.
-								a_result.extend (l_last_char)
-							end
 							i := i + 2
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -1332,27 +1469,24 @@ feature -- UTF-32 to UTF-16
 								l_encoded_value := s.substring (i + 2, i + 5)
 								if is_hexa_decimal (l_encoded_value) then
 									c := to_natural_32 (l_encoded_value)
-									l_decoded := True
-									i := i + 5
+									if c < 0xD800 or c > 0xDFFF then
+											-- Value was encoded when it should not have been
+											-- do nothing, we leave the original content as is.	
+										c := escape_character.natural_32_code
+									else
+										l_decoded := True
+										i := i + 5
+									end
 								else
 										-- Not an hexadecimal value, it was not escaped.
 								end
 							else
-									-- Not enough characters to make a 2-byte value, it was not escaped.
-							end
-						elseif i + 1 < n then
-								-- We have at least 2 characters to read, make sure they represent an hexadecimal
-								-- value.
-							l_encoded_value := s.substring (i + 1, i + 2)
-							if is_hexa_decimal (l_encoded_value) then
-								c := to_natural_32 (l_encoded_value)
-								l_decoded := True
-								i := i + 2
-							else
-									-- Not an hexadecimal value, it was not escaped.
+								-- Not enough characters to make a 2-byte value, it was not escaped.
 							end
 						else
-							-- Not enough to read to make it valid, it was not escaped.
+							-- Value was most likely not encoded, because if it did, it would be the
+							-- hexadecimal representation of a byte which clearly did not need to
+							-- be escaped
 						end
 					else
 							-- Nothing more to read, clearly it was not encoded.
@@ -1460,27 +1594,24 @@ feature -- UTF-32 to UTF-16
 								l_encoded_value := s.substring (i + 2, i + 5)
 								if is_hexa_decimal (l_encoded_value) then
 									c := to_natural_32 (l_encoded_value)
-									l_decoded := True
-									i := i + 5
+									if c < 0xD800 or c > 0xDFFF then
+											-- Value was encoded when it should not have been
+											-- do nothing, we leave the original content as is.	
+										c := escape_character.natural_32_code
+									else
+										l_decoded := True
+										i := i + 5
+									end
 								else
 										-- Not an hexadecimal value, it was not escaped.
 								end
 							else
 									-- Not enough characters to make a 2-byte value, it was not escaped.
 							end
-						elseif i + 1 < n then
-								-- We have at least 2 characters to read, make sure they represent an hexadecimal
-								-- value.
-							l_encoded_value := s.substring (i + 1, i + 2)
-							if is_hexa_decimal (l_encoded_value) then
-								c := to_natural_32 (l_encoded_value)
-								l_decoded := True
-								i := i + 2
-							else
-									-- Not an hexadecimal value, it was not escaped.
-							end
 						else
-							-- Not enough to read to make it valid, it was not escaped.
+							-- Value was most likely not encoded, because if it did, it would be the
+							-- hexadecimal representation of a byte which clearly did not need to
+							-- be escaped
 						end
 					else
 							-- Nothing more to read, clearly it was not encoded.
@@ -1683,11 +1814,6 @@ feature -- UTF-16 to UTF-32
 					if c1 < 0xD800 or c1 >= 0xE000 then
 							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
 						a_result.extend (c1.to_character_32)
-						if c1.to_character_32 = escape_character then
-								-- The character that we just read was the `escape_character',
-								-- we need to escape it.
-							a_result.extend (c1.to_character_32)
-						end
 					elseif c1 <= 0xDBFF and then i <= n then
 							-- Check if a lead surrogate (value between 0xD800 and 0xDBFF) is followed by a trail surrogate.
 						c2 := p.read_natural_16 (i)
@@ -1825,11 +1951,6 @@ feature -- UTF-16 to UTF-32
 				if c1 < 0xD800 or c1 >= 0xE000 then
 						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
 					a_result.extend (c1.to_character_32)
-					if c1.to_character_32 = escape_character then
-							-- The character that we just read was the `escape_character',
-							-- we need to escape it.
-						a_result.extend (c1.to_character_32)
-					end
 				elseif c1 <= 0xDBFF and i + 2 <= nb then
 						-- Check if a lead surrogate is followed by a trail surrogate.
 					c2 := s.code (i + 1) | (s.code (i + 2) |<< 8)
@@ -1948,118 +2069,6 @@ feature -- Byte Order Mark (BOM)
 
 	utf_32le_bom_to_string_8: STRING_8 = "%/255/%/254/%U%U"
 			-- UTF-32LE BOM sequence.
-
-feature -- Helpers
-
-	utf_8_bytes_count (s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
-			-- Number of bytes necessary at the very least to encode in UTF-8 `s.substring (start_pos, end_pos)'.
-			-- Note that this feature can be used for both escaped and non-escaped string.
-			-- In the case of escaped strings, the result will be possibly higher than really needed.
-			-- It does not include the space for the terminating null character.
-		require
-			start_position_big_enough: start_pos >= 1
-			end_position_big_enough: start_pos <= end_pos + 1
-			end_pos_small_enough: end_pos <= s.count
-		local
-			i: INTEGER
-			c: NATURAL_32
-		do
-			from
-				i := start_pos
-			until
-				i > end_pos
-			loop
-				c := s.code (i)
-				if c <= 0x7F then
-						-- 0xxxxxxx.
-					Result := Result + 1
-				elseif c <= 0x7FF then
-						-- 110xxxxx 10xxxxxx
-					Result := Result + 2
-				elseif c <= 0xFFFF then
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					Result := Result + 3
-				else
-						-- c <= 1FFFFF - there are no higher code points
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					Result := Result + 4
-				end
-				i := i + 1
-			end
-		end
-
-	utf_16_bytes_count (s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
-			-- Number of bytes necessary at the very least to encode in UTF-16 `s.substring (start_pos, end_pos)'.
-			-- Note that this feature can be used for both escaped and non-escaped string.
-			-- In the case of escaped strings, the result will be possibly higher than really needed.
-			-- It does not include the space for the terminating null character.
-		require
-			start_position_big_enough: start_pos >= 1
-			end_position_big_enough: start_pos <= end_pos + 1
-			end_pos_small_enough: end_pos <= s.count
-		local
-			i: INTEGER
-			c: NATURAL_32
-		do
-			from
-				i := start_pos
-			until
-				i > end_pos
-			loop
-				c := s.code (i)
-				if c <= 0xFFFF then
-						-- Code point from Basic Multilingual Plane: one 16-bit code unit.
-					Result := Result + 2
-				else
-					Result := Result + 4
-				end
-				i := i + 1
-			end
-		end
-
-	utf_8_to_string_32_count (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER): INTEGER
-			-- Count of characters corresponding to UTF-8 sequence `s'.
-		require
-			start_position_big_enough: start_pos >= 0
-			end_position_big_enough: start_pos <= end_pos + 1
-			end_pos_small_enough: end_pos < s.count
-		local
-			i: INTEGER
-			n: INTEGER
-			c: INTEGER
-		do
-			from
-				i := start_pos
-				n := end_pos
-			until
-				i > n
-			loop
-				c := s [i].code
-				if c <= 0x7F then
-						-- 0xxxxxxx
-					i := i + 1
-					Result := Result + 1
-				elseif c <= 0xDF then
-						-- 110xxxxx 10xxxxxx
-					i := i + 2
-					if i <= n then
-						Result := Result + 1
-					end
-				elseif c <= 0xEF then
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					i := i + 3
-					if i <= n then
-						Result := Result + 1
-					end
-				elseif c <= 0xF7 then
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					i := i + 4
-					if i <= n then
-						Result := Result + 1
-					end
-				end
-			end
-		end
 
 feature {NONE} -- Implementation
 

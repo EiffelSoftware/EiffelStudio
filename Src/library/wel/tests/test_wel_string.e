@@ -43,6 +43,47 @@ feature -- Tests
 			assert ("Same string - 5", l_wstr.string_discarding_carriage_return.same_string (str1))
 		end
 
+	test_occurrences
+		local
+			l_wstr: WEL_STRING
+			l_str: STRING_32
+		do
+			l_str := "ABCDE_ABCDE_XYZ_ABCDE_"
+
+			create l_wstr.make (l_str)
+
+			assert ("Occurrences A", l_wstr.occurrences ('A') = 3)
+			assert ("Occurrences B", l_wstr.occurrences ('B') = 3)
+			assert ("Occurrences C", l_wstr.occurrences ('C') = 3)
+			assert ("Occurrences D", l_wstr.occurrences ('D') = 3)
+			assert ("Occurrences E", l_wstr.occurrences ('E') = 3)
+			assert ("Occurrences _", l_wstr.occurrences ('_') = 4)
+			assert ("Occurrences X", l_wstr.occurrences ('X') = 1)
+			assert ("Occurrences Y", l_wstr.occurrences ('Y') = 1)
+			assert ("Occurrences Z", l_wstr.occurrences ('Z') = 1)
+
+				-- Let's search for Unicode characters that triggers
+				-- a surrogate.
+			l_str.prepend_character ('%/0x10DFF/')
+			l_str.append_character ('%/0x10B04/')
+			l_str.put ('%/0x10B84/', 6)
+
+			create l_wstr.make (l_str)
+
+			assert ("Occurrences A", l_wstr.occurrences ('A') = 3)
+			assert ("Occurrences B", l_wstr.occurrences ('B') = 3)
+			assert ("Occurrences C", l_wstr.occurrences ('C') = 3)
+			assert ("Occurrences D", l_wstr.occurrences ('D') = 3)
+			assert ("Occurrences E", l_wstr.occurrences ('E') = 2)
+			assert ("Occurrences _", l_wstr.occurrences ('_') = 4)
+			assert ("Occurrences X", l_wstr.occurrences ('X') = 1)
+			assert ("Occurrences Y", l_wstr.occurrences ('Y') = 1)
+			assert ("Occurrences Z", l_wstr.occurrences ('Z') = 1)
+			assert ("Ocurrences 0x10DFF", l_wstr.occurrences ('%/0x10DFF/') = 1)
+			assert ("Ocurrences 0x10B04", l_wstr.occurrences ('%/0x10B04/') = 1)
+			assert ("Ocurrences 0x10B04", l_wstr.occurrences ('%/0x10B84/') = 1)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

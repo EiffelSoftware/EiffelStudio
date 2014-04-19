@@ -256,6 +256,54 @@ feature -- Measurement
 	character_size: INTEGER = 2
 			-- Size of a code unit.
 
+	unicode_character_count: INTEGER
+			-- Size in Unicode character of Current
+		local
+			u: UTF_CONVERTER
+		do
+			Result := u.utf_16_characters_count_form_pointer (managed_data, 0, count * character_size)
+		end
+
+	occurrences (c: CHARACTER_32): INTEGER
+			-- Number of times `c' appears in `string'.
+		local
+			i: INTEGER
+			m: like managed_data
+			l_code: NATURAL_32
+			l_nat1, l_nat2: NATURAL_16
+		do
+			i := count * character_size
+			if i > 0 then
+				l_code := c.natural_32_code
+				m := managed_data
+				if l_code <= 0xFFFF then
+						-- Simple case, one to one mapping.
+					from
+					until
+						i = 0
+					loop
+						i := i - character_size
+						if m.read_natural_16 (i) = l_code then
+							Result := Result + 1
+						end
+					end
+				else
+						-- Character `c' is represented by the surrogate pair (l_nat1, l_nat2).
+					from
+						l_nat1 := (0xD7C0 + (l_code |>> 10)).to_natural_16
+						l_nat2 := (0xDC00 + (l_code & 0x3FF)).to_natural_16
+					until
+						i <= character_size
+					loop
+						i := i - character_size
+						if m.read_natural_16 (i) = l_nat2 and m.read_natural_16 (i - character_size) = l_nat1 then
+							Result := Result + 1
+						end
+					end
+				end
+			end
+		end
+
 feature -- Element change
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)

@@ -125,6 +125,7 @@ feature {NONE} -- Initialization
 			end
 
 				--| HTTPS support
+			is_https := False
 			if attached meta_string_variable ("HTTPS") as l_https and then not l_https.is_empty then
 				is_https := l_https.is_case_insensitive_equal_general ("on")
 						or else l_https.is_case_insensitive_equal_general ("yes")
@@ -172,6 +173,7 @@ feature -- Destroy
 			raw_input_data_recorded := False
 			request_method := empty_string_8
 			set_uploaded_file_path (Void)
+			is_https := False
 		end
 
 feature -- Status report

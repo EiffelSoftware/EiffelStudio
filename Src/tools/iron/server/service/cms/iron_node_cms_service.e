@@ -32,9 +32,7 @@ feature -- Initialization
 			l_iron: like iron
 		do
 				--| Optional
-			debug ("iron")
-				map_uri_template ("/debug/{name}", create {WSF_SELF_DOCUMENTED_URI_TEMPLATE_AGENT_HANDLER}.make_hidden (agent handle_debug))
-			end
+			router.handle ("/debug/", create {WSF_DEBUG_HANDLER}.make_hidden)
 
 			l_iron := iron
 			l_layout := l_iron.layout
@@ -94,7 +92,6 @@ feature -- Initialization
 			router.handle (l_iron.cms_page (""), create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home))
 
 				--| Misc access
-			map_uri_template ("/debug/{name}", create {WSF_SELF_DOCUMENTED_URI_TEMPLATE_AGENT_HANDLER}.make_hidden (agent handle_debug))
 			router.handle ("/favicon.ico", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make_hidden (agent handle_favicon))
 			router.handle ("/", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make (agent handle_home("/", ?, ?), agent  (ia_m: WSF_ROUTER_MAPPING; ia_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
 				do
@@ -174,7 +171,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

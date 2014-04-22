@@ -41,41 +41,6 @@ feature -- Router setup
 		deferred
 		end
 
-feature -- Access
-
-	handle_debug (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			s: STRING_8
-			h: HTTP_HEADER
-		do
-			if req.is_get_request_method then
-				s := "debug"
-				create h.make_with_count (1)
-				h.put_content_type_text_html
-				h.put_content_length (s.count)
-				res.put_header_lines (h)
-				res.put_string (s)
-			else
-				create s.make (30_000)
-				across
-					req.form_parameters as c
-				loop
-					s.append (c.item.url_encoded_name)
-					s.append ("=")
-					s.append (c.item.string_representation)
-					s.append ("<br/>")
-				end
-				if s.is_empty then
-					req.read_input_data_into (s)
-				end
-				create h.make_with_count (1)
-				h.put_content_type_text_html
-				h.put_content_length (s.count)
-				res.put_header_lines (h)
-				res.put_string (s)
-			end
-		end
-
 feature -- Handler
 
 	not_yet_implemented_uri_template_handler (msg: READABLE_STRING_8): WSF_URI_TEMPLATE_HANDLER

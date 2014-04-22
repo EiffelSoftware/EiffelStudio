@@ -12,7 +12,8 @@ inherit
 			on_prepare,
 			on_clean
 		end
-	ESA_SERVER_TEST
+
+	ESA_HTTP_CLIENT_HELPER
 		undefine
 			default_create
 		redefine
@@ -23,28 +24,13 @@ feature {NONE} -- Events
 
 	on_prepare
 			-- <Precursor>
-		local
-			l_rest: ESA_RESET_DB
-			l_list: ARRAYED_LIST[READABLE_STRING_GENERAL]
-			l_old_dir : STRING
-			l_env: EXECUTION_ENVIRONMENT
 		do
-			create l_env
-			l_old_dir := l_env.current_working_directory
-		    l_env.change_working_directory (current_dir)
-			create l_rest
-			create l_list.make_from_array (<<server_name, database_name, schema>>)
-			l_rest.reset_db (l_list, False, Void)
-			assert ("not_has_error", not l_rest.has_error)
-			l_env.change_working_directory (l_old_dir)
-
-			make_and_launch
 		end
 
 	on_clean
 			-- <Precursor>
 		do
-			shutdown
+--			shutdown
 		end
 
 feature -- API Service
@@ -61,6 +47,8 @@ feature -- Security
 		do
 			create Result
 		end
+
+	is_server_prepared : BOOLEAN
 
 feature -- Context Executor
 
@@ -94,6 +82,31 @@ feature -- Context Executor
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append ("mssql")
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+		end
+
+	server_name: STRING = "JVELILLA\SQLEXPRESS"
+		-- Server Name.
+
+	database_name: STRING = "EiffelDBIntegration"
+		-- Database Name.
+
+	schema : STRING = "eiffeldbintegration"
+	 	-- Database schema.
+
+
+	db_connection: ESA_DATABASE_CONNECTION
+		do
+			if attached esa_config as l_config then
+				Result := l_config.database
+			else
+				check False then end
+			end
+		end
+
+
+	esa_config: ESA_CONFIG
+		do
+			create Result.make_with_database ("Driver={SQL Server Native Client 11.0};Server=" + server_name + ";Database=" + database_name + ";Trusted_Connection=Yes;", database_name)
 		end
 
 end

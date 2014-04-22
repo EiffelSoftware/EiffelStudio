@@ -15,7 +15,7 @@ inherit
 create
 	make
 
-feature -- {Initialization}
+feature {NONE} -- Initialization
 
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REGISTER_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
@@ -23,9 +23,7 @@ feature -- {Initialization}
 			p: PATH
 			l_error: STRING
 		do
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (cj_path)
 			set_template_file_name ("cj_register.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_form.questions, "questions")
@@ -49,8 +47,8 @@ feature -- {Initialization}
 				template.add_value ("403", "code")
 			end
 
-			if attached a_user as l_user then
-				template.add_value (l_user,"user")
+			if attached a_user then
+				template.add_value (a_user,"user")
 			end
 
 			template_context.enable_verbose
@@ -67,6 +65,4 @@ feature -- {Initialization}
 				end
 			end
 		end
-
-
 end

@@ -207,10 +207,7 @@ feature -- View
 			if attached media_variants.vary_header_value as l_vary then
 				h.put_header_key_value ("Vary", l_vary)
 			end
-			if attached req.request_time as time then
-				create hdate.make_from_date_time (time)
-				h.add_header ("Date:" + hdate.rfc1123_string)
-			end
+			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
 			res.put_header_text (h.string)
 			res.put_string (l_msg)

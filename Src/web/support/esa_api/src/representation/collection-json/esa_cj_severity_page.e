@@ -25,14 +25,12 @@ feature {NONE} --Initialization
 			l_template: STRING
 			l_report: ESA_REPORT
 		do
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (cj_path)
 			set_template_file_name ("cj_severity.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_list, "severity")
-			if attached a_user as l_user then
-				template.add_value (l_user, "user")
+			if attached a_user then
+				template.add_value (a_user, "user")
 			end
 			template_context.enable_verbose
 			template.analyze

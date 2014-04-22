@@ -59,7 +59,7 @@ feature -- Access
 			create Result.make (db_handler, agent new_report)
 		end
 
-	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER;a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER;  a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
@@ -173,7 +173,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet","("+a_status +")")
+			l_query.replace_substring_all ("$StatusSet","("+l_encode.encode( a_status ) +")")
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report_responsible)
@@ -782,7 +782,7 @@ feature -- Basic Operations
 					l_query.replace_substring_all ("$Submitter","")
 				end
 					--| Need to be updated to build the set based on user selection.
-				l_query.replace_substring_all ("$StatusSet","("+a_status+")")
+				l_query.replace_substring_all ("$StatusSet","("+l_encode.encode (a_status) +")")
 				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 				db_handler.execute_query
 				if not db_handler.after then

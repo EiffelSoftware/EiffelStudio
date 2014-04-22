@@ -13,8 +13,6 @@ inherit
 			launch,
 			setup_config
 		end
-	ESA_HTTP_CLIENT_HELPER
-
 
 create
 	  {ESA_SERVER} make_and_launch
@@ -45,7 +43,7 @@ feature -- Launch
 --					port_number := 0
 --				end
 --			end
-			port_number := 5555
+			port_number := 5050
 			create app.make_custom (a_service.to_wgi_service, "")
 			web_app := app
 
@@ -68,6 +66,7 @@ feature -- Element Change
 --feature {NONE} -- implementation
 --	custom_port : BOOLEAN
 
+	port_number: INTEGER
 
 feature -- Shutdown
 	shutdown
@@ -79,15 +78,6 @@ feature -- Shutdown
 
 feature -- Access
 	web_app: detachable NINO_SERVICE
-
-
-	context_executor: HTTP_CLIENT_REQUEST_CONTEXT
-		local
-			l_ctx_factory: ESA_CONTEXT_FACTORY
-		do
-			 create l_ctx_factory
-			 Result := l_ctx_factory.cj_context_executor
-		end
 
 
 feature -- ESA configuration

@@ -29,9 +29,7 @@ feature {NONE} --Initialization
 			set_selected_status (a_view.status,a_view.selected_status)
 
 
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (html_path)
 			set_template_file_name ("reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view.reports.at (1), "statistics")

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			initialize_router
 		end
 
-feature -- Iron
+feature -- ESA
 
 	esa_config: ESA_CONFIG
 		-- Configuration
@@ -44,6 +44,11 @@ feature -- Router setup
 	setup_router
 			-- Setup `router'
 		deferred
+		end
+
+	layout: ESA_LAYOUT
+		do
+			Result := esa_config.layout
 		end
 
 feature -- Access

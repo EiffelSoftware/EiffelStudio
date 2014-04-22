@@ -40,7 +40,7 @@ feature -- Initialization
 			configure_api_responsible
 
 			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
-			create fhdl.make_hidden ("www")
+			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.set_directory_index (<<"index.html">>)
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do

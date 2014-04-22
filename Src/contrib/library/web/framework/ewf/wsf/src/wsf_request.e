@@ -18,7 +18,7 @@ note
 					--| to keep value attached to the request
 					
 			About https support: `is_https' indicates if the request is made through an https connection or not.
-			
+
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -125,9 +125,7 @@ feature {NONE} -- Initialization
 			end
 
 				--| HTTPS support
-			if attached meta_string_variable ("REQUEST_SCHEME") as l_scheme and then not l_scheme.is_empty then
-				is_https := l_scheme.is_case_insensitive_equal_general ("https")
-			elseif attached execution_environment.item ("HTTPS") as l_https and then not l_https.is_empty then
+			if attached meta_string_variable ("HTTPS") as l_https and then not l_https.is_empty then
 				is_https := l_https.is_case_insensitive_equal_general ("on")
 						or else l_https.is_case_insensitive_equal_general ("yes")
 						or else l_https.is_case_insensitive_equal_general ("true")
@@ -179,8 +177,8 @@ feature -- Destroy
 feature -- Status report
 
 	is_https: BOOLEAN
-			-- Is https scheme or protocol?
-			--| based on REQUEST_SCHEME, or environment variable HTTPS=on
+			-- Is https connection?
+			--| based on meta variable HTTPS=on .
 
 	debug_output: STRING_8
 		do

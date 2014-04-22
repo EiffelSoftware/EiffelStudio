@@ -61,117 +61,29 @@ feature -- Access
     item: STRING
             -- Contents with escaped entities if any
 
+feature -- Conversion
+
 	unescaped_string_8: STRING_8
-			-- Unescaped string from `item'
+			-- Unescaped string from `item'.
+			--| note: valid only if `item' does not encode any unicode character.
 		local
 			s: like item
-			i, n: INTEGER
-			c: CHARACTER
 		do
 			s := item
-			n := s.count
-			create Result.make (n)
-			from i := 1 until i > n loop
-				c := s[i]
-				if c = '\' then
-					if i < n then
-						inspect s[i+1]
-						when '\' then
-							Result.append_character ('\')
-							i := i + 2
-						when '%"' then
-							Result.append_character ('%"')
-							i := i + 2
-						when 'b' then
-							Result.append_character ('%B')
-							i := i + 2
-						when 'f' then
-							Result.append_character ('%F')
-							i := i + 2
-						when 'n' then
-							Result.append_character ('%N')
-							i := i + 2
-						when 'r' then
-							Result.append_character ('%R')
-							i := i + 2
-						when 't' then
-							Result.append_character ('%T')
-							i := i + 2
-						when 'u' then
-							--| Leave Unicode \uXXXX unescaped
-							Result.append_character ('\')
-							i := i + 1
-						else
-							Result.append_character ('\')
-							i := i + 1
-						end
-					else
-						Result.append_character ('\')
-						i := i + 1
-					end
-				else
-					Result.append_character (c)
-					i := i + 1
-				end
-			end
+			create Result.make (s.count)
+			unescape_to_string_8 (Result)
 		end
 
 	unescaped_string_32: STRING_32
 			-- Unescaped string 32 from `item'
+			--| some encoders uses UTF-8 , and not the recommended pure json encoding
+			--| thus, let's support the UTF-8 encoding during decoding.
 		local
-			s: like item
-			i, n: INTEGER
-			c: CHARACTER
-			hex: STRING
+			s: READABLE_STRING_8
 		do
 			s := item
-			n := s.count
-			create Result.make (n)
-			from i := 1 until i > n loop
-				c := s[i]
-				if c = '\' then
-					if i < n then
-						inspect s[i+1]
-						when '\' then
-							Result.append_character ('\')
-							i := i + 2
-						when '%"' then
-							Result.append_character ('%"')
-							i := i + 2
-						when 'b' then
-							Result.append_character ('%B')
-							i := i + 2
-						when 'f' then
-							Result.append_character ('%F')
-							i := i + 2
-						when 'n' then
-							Result.append_character ('%N')
-							i := i + 2
-						when 'r' then
-							Result.append_character ('%R')
-							i := i + 2
-						when 'T' then
-							Result.append_character ('%T')
-							i := i + 2
-						when 'u' then
-							hex := s.substring (i+2, i+2+4 - 1)
-							if hex.count = 4 then
-								Result.append_code (hexadecimal_to_natural_32 (hex))
-							end
-							i := i + 2 + 4
-						else
-							Result.append_character ('\')
-							i := i + 1
-						end
-					else
-						Result.append_character ('\')
-						i := i + 1
-					end
-				else
-					Result.append_character (c.to_character_32)
-					i := i + 1
-				end
-			end
+			create Result.make (s.count)
+			unescape_to_string_32 (Result)
 		end
 
     representation: STRING
@@ -182,6 +94,156 @@ feature -- Access
             Result.append (item)
             Result.append_character ('%"')
         end
+
+	unescape_to_string_8 (a_output: STRING_8)
+			-- Unescape string `item' into `a_output'.
+			--| note: valid only if `item' does not encode any unicode character.
+		local
+			s: like item
+			i, n: INTEGER
+			c: CHARACTER
+		do
+			s := item
+			n := s.count
+			from i := 1 until i > n loop
+				c := s[i]
+				if c = '\' then
+					if i < n then
+						inspect s[i+1]
+						when '\' then
+							a_output.append_character ('\')
+							i := i + 2
+						when '%"' then
+							a_output.append_character ('%"')
+							i := i + 2
+						when 'b' then
+							a_output.append_character ('%B')
+							i := i + 2
+						when 'f' then
+							a_output.append_character ('%F')
+							i := i + 2
+						when 'n' then
+							a_output.append_character ('%N')
+							i := i + 2
+						when 'r' then
+							a_output.append_character ('%R')
+							i := i + 2
+						when 't' then
+							a_output.append_character ('%T')
+							i := i + 2
+						when 'u' then
+							--| Leave Unicode \uXXXX unescaped
+							a_output.append_character ('\')
+							i := i + 1
+						else
+							a_output.append_character ('\')
+							i := i + 1
+						end
+					else
+						a_output.append_character ('\')
+						i := i + 1
+					end
+				else
+					a_output.append_character (c)
+					i := i + 1
+				end
+			end
+		end
+
+	unescape_to_string_32 (a_output: STRING_32)
+			-- Unescape string `item' into `a_output' string 32.
+			--| some encoders uses UTF-8 , and not the recommended pure json encoding
+			--| thus, let's support the UTF-8 encoding during decoding.	
+		local
+			s: READABLE_STRING_8
+			i, n: INTEGER
+			c: NATURAL_32
+			ch: CHARACTER_8
+			hex: READABLE_STRING_8
+		do
+			s := item
+			n := s.count
+			from i := 1 until i > n loop
+				ch := s.item (i)
+				if ch = '\' then
+					if i < n then
+						inspect s[i+1]
+						when '\' then
+							a_output.append_character ('\')
+							i := i + 2
+						when '%"' then
+							a_output.append_character ('%"')
+							i := i + 2
+						when 'b' then
+							a_output.append_character ('%B')
+							i := i + 2
+						when 'f' then
+							a_output.append_character ('%F')
+							i := i + 2
+						when 'n' then
+							a_output.append_character ('%N')
+							i := i + 2
+						when 'r' then
+							a_output.append_character ('%R')
+							i := i + 2
+						when 't' then
+							a_output.append_character ('%T')
+							i := i + 2
+						when 'u' then
+							hex := s.substring (i + 2, i + 5) -- i+2 , i+2+4-1
+							if hex.count = 4 then
+								a_output.append_code (hexadecimal_to_natural_32 (hex))
+							end
+							i := i + 6 -- i +2 +4
+						else
+							a_output.append_character ('\')
+							i := i + 1
+						end
+					else
+						a_output.append_character ('\')
+						i := i + 1
+					end
+				else
+					c := ch.natural_32_code
+					if c <= 0x7F then
+							-- 0xxxxxxx
+						check ch = c.to_character_32 end
+						a_output.append_character (ch)
+					elseif c <= 0xDF then
+							-- 110xxxxx 10xxxxxx
+						i := i + 1
+						if i <= n then
+							a_output.append_code (
+									((c & 0x1F) |<< 6) |
+									(s.code (i) & 0x3F)
+								)
+						end
+					elseif c <= 0xEF then
+							-- 1110xxxx 10xxxxxx 10xxxxxx
+						i := i + 2
+						if i <= n then
+							a_output.append_code (
+									((c & 0xF) |<< 12) |
+									((s.code (i - 1) & 0x3F) |<< 6) |
+									(s.code (i) & 0x3F)
+								)
+						end
+					elseif c <= 0xF7 then
+							-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+						i := i + 3
+						if i <= n then
+							a_output.append_code (
+									((c & 0x7) |<< 18) |
+									((s.code (i - 2) & 0x3F) |<< 12) |
+									((s.code (i - 1) & 0x3F) |<< 6) |
+									(s.code (i) & 0x3F)
+								)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
 
 feature -- Visitor pattern
 
@@ -231,8 +293,18 @@ feature {NONE} -- Implementation
 
 	is_hexadecimal (s: READABLE_STRING_8): BOOLEAN
 			-- Is `s' an hexadecimal value?	
+		local
+			i: INTEGER
 		do
-			Result := across s as scur all scur.item.is_hexa_digit end
+			from
+				Result := True
+				i := 1
+			until
+				i > s.count or not Result
+			loop
+				Result := s[i].is_hexa_digit
+				i := i + 1
+			end
 		end
 
 	hexadecimal_to_natural_32 (s: READABLE_STRING_8): NATURAL_32

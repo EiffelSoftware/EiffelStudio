@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CONSTANTS}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,4 +17,5 @@ feature -- Access
 			Result := major.out + "." + minor.out + "." + built
 		end
 
+	Esa_directory_variable_name: STRING = "ESA_DIR"
 end

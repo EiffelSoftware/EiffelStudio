@@ -32,13 +32,13 @@ feature -- Test
 
 
 	test_escape_data
-			--	set @data = 'data'
+			--	set @data = data
 			--  [data]	
 		local
 			l_enc: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
-			assert ("Expected [data]", (l_enc.encode ("'data'")).same_string("[data]"))
+			assert ("Expected [data]", (l_enc.encode ("data")).same_string("[data]"))
 		end
 
-	
+
 end

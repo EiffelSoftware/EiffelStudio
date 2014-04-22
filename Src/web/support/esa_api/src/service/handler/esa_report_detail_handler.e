@@ -87,8 +87,14 @@ feature -- Implementation
 			if attached current_media_type (req) as l_type then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer and then api_service.is_report_visible (a_user, l_id.integer_value) then
 					retrieve_report_details (req, res, l_type, a_user, l_id.integer_value)
-				elseif attached {WSF_STRING} req.query_parameter ("search") as l_id and then l_id.is_integer and then api_service.is_report_visible (a_user, l_id.integer_value) then
-					retrieve_report_details (req, res, l_type, a_user, l_id.integer_value)
+				elseif attached {WSF_STRING} req.query_parameter ("search") as l_id then
+					if l_id.is_integer and then api_service.is_report_visible (a_user, l_id.integer_value) then
+						retrieve_report_details (req, res, l_type, a_user, l_id.integer_value)
+					elseif not l_id.is_integer then
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
+					else
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					end
 				else
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
@@ -97,7 +103,7 @@ feature -- Implementation
 			end
 		end
 
-	retrieve_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_8; a_user: STRING a_id: INTEGER)
+	retrieve_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_8; a_user: STRING; a_id: INTEGER)
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do

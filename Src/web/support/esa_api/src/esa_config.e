@@ -23,8 +23,15 @@ feature {NONE} -- Initialization
 			mailer: NOTIFICATION_MAILER
 			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
 			l_path: PATH
+			l_env: EXECUTION_ENVIRONMENT
 		do
 			if not l_retried then
+				create l_env
+				if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
+					create layout.make_with_path (create {PATH}.make_from_string (s))
+				else
+					create layout.make_default
+				end
 				create {ESA_DATABASE_CONNECTION_ODBC} database.make_common
 				create api_service.make_with_database (database)
 				if {PLATFORM}.is_windows then
@@ -35,6 +42,12 @@ feature {NONE} -- Initialization
 				create email_service.make_with_mailer (mailer)
 				set_successful
 			else
+				create l_env
+				if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
+					create layout.make_with_path (create {PATH}.make_from_string (s))
+				else
+					create layout.make_default
+				end
 				create {ESA_DATABASE_CONNECTION_NULL} database.make_common
 				create api_service.make_with_database (database)
 				create {NOTIFICATION_SENDMAIL_MAILER} mailer
@@ -54,8 +67,16 @@ feature {NONE} -- Initialization
 			mailer: NOTIFICATION_MAILER
 			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
 			l_path: PATH
+			l_env: EXECUTION_ENVIRONMENT
 		do
 			if not l_retried then
+				create l_env
+				if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
+					create layout.make_with_path (create {PATH}.make_from_string (s))
+				else
+					create layout.make_default
+				end
+
 				create {ESA_DATABASE_CONNECTION_ODBC} database.login_with_connection_string (a_connection_string, a_database)
 				create api_service.make_with_database (database)
 				if {PLATFORM}.is_windows then
@@ -66,6 +87,12 @@ feature {NONE} -- Initialization
 				create email_service.make_with_mailer (mailer)
 				set_successful
 			else
+				create l_env
+				if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
+					create layout.make_with_path (create {PATH}.make_from_string (s))
+				else
+					create layout.make_default
+				end
 				create {ESA_DATABASE_CONNECTION_NULL} database.make_common
 				create api_service.make_with_database (database)
 				create {NOTIFICATION_SENDMAIL_MAILER} mailer
@@ -93,5 +120,8 @@ feature -- Access
 
 	email_service: ESA_EMAIL_SERVICE
 			-- Eiffel email service
+
+	layout: ESA_LAYOUT
+			-- Api layout.		
 
 end

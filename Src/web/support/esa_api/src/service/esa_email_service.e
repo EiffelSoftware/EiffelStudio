@@ -69,8 +69,8 @@ feature -- Basic Operations
 					create m.make (admin_email, a_to, "Eiffel.com Registration Activation", l_content)
 					if {PLATFORM}.is_windows and then attached {WS_NOTIFICATION_SENDMAIL_MAILER} mailer as l_mailer then
 						l_error := l_mailer.process_mail_command (build_mailsend_command (a_to,l_content),l_path.name.out, True, Void)
-						if attached  l_error as ll_error and then ll_error.has_substring ("Error") then
-							set_last_error (ll_error, generator + ".send_post_registration_email")
+						if attached  l_error and then l_error.has_substring ("Error") then
+							set_last_error (l_error, generator + ".send_post_registration_email")
 						else
 							set_successful
 						end

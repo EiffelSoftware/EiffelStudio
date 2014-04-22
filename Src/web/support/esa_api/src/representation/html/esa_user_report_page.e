@@ -30,9 +30,7 @@ feature {NONE} --Initialization
 			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
 			set_selected_status (a_view.status,a_view.selected_status)
 
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (html_path)
 			set_template_file_name ("user_reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view.reports.at (1), "statistics")

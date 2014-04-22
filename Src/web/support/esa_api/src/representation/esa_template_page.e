@@ -31,4 +31,29 @@ feature -- Status
 		end
 
 	template: TEMPLATE_FILE
+
+	layout: ESA_LAYOUT
+		local
+			l_env: EXECUTION_ENVIRONMENT
+		once
+			create l_env
+			if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
+				create Result.make_with_path (create {PATH}.make_from_string (s))
+			else
+				create Result.make_default
+			end
+		end
+
+	html_path: PATH
+			-- Html template paths
+		do
+			Result := layout.html_template_path
+		end
+
+	cj_path:  PATH
+			-- Collection json template paths
+		do
+			Result := layout.cj_template_path
+		end
+
 end

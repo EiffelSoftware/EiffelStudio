@@ -21,12 +21,8 @@ feature {NONE} --Initialization
 
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
-		local
-			p: PATH
 		do
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (cj_path)
 			set_template_file_name ("cj_interaction_confirm.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_form.categories, "categories")
@@ -48,13 +44,14 @@ feature {NONE} --Initialization
 				template.add_value (a_form.id, "id")
 			end
 
-			if attached a_user as l_user then
-				template.add_value (l_user, "user")
+			if attached a_user then
+				template.add_value (a_user, "user")
 			end
 
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
+			
 				-- Workaround
 			if attached template.output as l_output then
 				l_output.replace_substring_all ("<", "{")
@@ -67,7 +64,5 @@ feature {NONE} --Initialization
 					print ("%N===========%N" + l_output)
 				end
 			end
-
 		end
-
 end

@@ -608,9 +608,9 @@ feature -- Status Report
 			l_sha_password: STRING
 		do
 			if attached data_provider.user_password_salt (a_username) as l_hash and then
-			   attached a_password as l_password then
+			   attached a_password then
 				create l_security
-				l_sha_password := l_security.password_hash (l_password, l_hash)
+				l_sha_password := l_security.password_hash (a_password, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 			is_successful := login_provider.is_successful

@@ -10,7 +10,7 @@ class
 
 inherit
 
-	ESA_ABSTRACT_API_TEST_2
+	ESA_ABSTRACT_API_TEST
 
 
 

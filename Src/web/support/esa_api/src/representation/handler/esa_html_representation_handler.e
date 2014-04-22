@@ -250,7 +250,7 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
 				if attached l_hp.representation as l_activation_page then
-					if attached a_view as l_view and then (attached l_view.error_message or else not l_view.is_valid_form) then
+					if attached a_view and then (attached a_view.error_message or else not a_view.is_valid_form) then
 						new_response_get_400 (req, res, l_activation_page)
 					else
 						new_response_get (req, res, l_activation_page)

@@ -16,6 +16,9 @@ note
 			And also has
 				execution_variable (a_name: READABLE_STRING_GENERAL): detachable ANY
 					--| to keep value attached to the request
+					
+			About https support: `is_https' indicates if the request is made through an https connection or not.
+			
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -120,6 +123,21 @@ feature {NONE} -- Initialization
 			if meta_variable ({WSF_META_NAMES}.request_time) = Void then
 				set_meta_string_variable ({WSF_META_NAMES}.request_time, date_time_utilities.unix_time_stamp (Void).out)
 			end
+
+				--| HTTPS support
+			if attached meta_string_variable ("REQUEST_SCHEME") as l_scheme and then not l_scheme.is_empty then
+				is_https := l_scheme.is_case_insensitive_equal_general ("https")
+			elseif attached execution_environment.item ("HTTPS") as l_https and then not l_https.is_empty then
+				is_https := l_https.is_case_insensitive_equal_general ("on")
+						or else l_https.is_case_insensitive_equal_general ("yes")
+						or else l_https.is_case_insensitive_equal_general ("true")
+						or else l_https.is_case_insensitive_equal_general ("1")
+					--| Usually, if not empty, this means this is https
+					--| but it occurs that server (like IIS) sets "off" when this is NOT https
+					--| so, let's be flexible, and accepts other variants of "on"
+			else
+				check is_not_https: is_https = False end
+			end
 		end
 
 	wgi_request: WGI_REQUEST
@@ -159,6 +177,10 @@ feature -- Destroy
 		end
 
 feature -- Status report
+
+	is_https: BOOLEAN
+			-- Is https scheme or protocol?
+			--| based on REQUEST_SCHEME, or environment variable HTTPS=on
 
 	debug_output: STRING_8
 		do
@@ -1738,10 +1760,7 @@ feature -- URL Utility
 		do
 			s := internal_server_url
 			if s = Void then
-				if
-					server_protocol.count >= 5 and then
-					server_protocol.substring (1, 5).is_case_insensitive_equal ("https")
-				then
+				if is_https then
 					create s.make_from_string ("https://")
 				else
 					create s.make_from_string ("http://")
@@ -1749,8 +1768,14 @@ feature -- URL Utility
 				s.append (server_name)
 				p := server_port
 				if p > 0 then
-					s.append_character (':')
-					s.append_integer (p)
+					if is_https and p = 443 then
+							-- :443 is default for https, so no need to put it
+					elseif not is_https and p = 80 then
+							-- :80 is default for http, so no need to put it
+					else
+						s.append_character (':')
+						s.append_integer (p)
+					end
 				end
 			end
 			Result := s

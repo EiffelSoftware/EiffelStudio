@@ -15,7 +15,7 @@ inherit
 
 feature -- Matcher
 
-	test_uri_template_matcher
+	test_uri_template_matcher_01
 		note
 			testing:  "uri-template"
 		local
@@ -78,6 +78,19 @@ feature -- Matcher
 --			uri_template_match (tpl, "/hello/Joce.xml/foo?foo=FOO", <<["name", "Joce"], ["format", "xml"]>>, <<["foo", "FOO"]>>)
 --			uri_template_match (tpl, "/hello/Joce.xml/foo;crazy=IDEA",  <<["name", "Joce"], ["format", "xml"]>>, <<["idea", "IDEA"], ["crazy", "IDEA"]>>)
 
+		end
+
+	test_uri_template_matcher_02
+		note
+			testing:  "uri-template"
+		local
+			tpl: URI_TEMPLATE
+		do
+			create tpl.make ("/test/{vars}")
+			uri_template_match (tpl, "/test/foo%%2Fbar", <<["vars", "foo%%2Fbar"]>>, <<>>)
+
+			create tpl.make ("/test{/vars}")
+			uri_template_match (tpl, "/test/foo%%2Fbar/abc%%2Fdef", <<["vars", "/foo%%2Fbar/abc%%2Fdef"], ["vars[1]", "foo%%2Fbar"], ["vars[2]", "abc%%2Fdef"]>>, <<>>)
 		end
 
 feature {NONE} -- Implementations		

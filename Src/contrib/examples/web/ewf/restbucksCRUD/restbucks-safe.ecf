@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="restbucks" uuid="2773FEAA-448F-410E-BEDE-9298C4749066" library_target="restbucks">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="restbucks" uuid="2773FEAA-448F-410E-BEDE-9298C4749066" library_target="restbucks">
 	<target name="restbucks_common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option full_class_checking="false" void_safety="all">
+		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="connector_nino" location="../../../../library/web/framework/ewf/ewsgi/connectors/nino/nino-safe.ecf" readonly="false">
@@ -14,8 +16,8 @@
 			</option>
 		</library>
 		<library name="conneg" location="../../../../library/network/protocol/content_negotiation/conneg-safe.ecf"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf" readonly="false"/>
+		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="false"/>
 		<library name="encoder" location="../../../../library/web/framework/ewf/text/encoder/encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="false"/>
 		<library name="json" location="../../../../library/text/parser/json/library/json-safe.ecf" readonly="false"/>

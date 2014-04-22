@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -59,6 +59,27 @@ feature -- Tests Pass
 				parse_json := new_json_parser (json_file)
 				json_value := parse_json.parse_json
 				assert ("pass3.json",parse_json.is_parsed = True)
+			end
+		end
+
+	test_json_utf_8_pass1
+		local
+			parse_json: like new_json_parser
+			utf: UTF_CONVERTER
+			s: READABLE_STRING_32
+		do
+			s := {STRING_32} "{ %"nihaoma%": %"你好吗\t?%" }"
+
+			parse_json := new_json_parser (utf.string_32_to_utf_8_string_8 (s))
+			json_value := parse_json.parse_json
+			assert ("utf8.pass1.json", parse_json.is_parsed = True)
+			if
+				attached {JSON_OBJECT} json_value as jo and then
+				attached {JSON_STRING} jo.item ("nihaoma") as js
+			then
+				assert ("utf8.nihaoma", js.unescaped_string_32.same_string ({STRING_32} "你好吗%T?"))
+			else
+				assert ("utf8.nihaoma", False)
 			end
 		end
 

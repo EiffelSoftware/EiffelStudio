@@ -28,7 +28,7 @@ feature {NONE} -- Creation
 			iteration_class := i
 			set_location (l)
 		ensure
-			iteration_feature_set: iteration_feature = f
+			iteration_feature_set: iteration_feature = f.e_feature
 			iteration_class_set: iteration_class = i
 		end
 
@@ -64,7 +64,7 @@ feature -- Output
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

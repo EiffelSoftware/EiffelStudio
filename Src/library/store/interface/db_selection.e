@@ -118,8 +118,7 @@ feature -- Status report
 			Result := attached last_query_32 as l_s and then
 						not l_s.is_empty and then
 						is_connected and then
-						is_ok and then
-						is_allocatable
+						is_ok
 		end
 
 	after: BOOLEAN
@@ -352,7 +351,6 @@ feature -- Basic operations
 			argument_exists: s /= Void
 			argument_is_not_empty: not s.is_empty
 			is_ok: is_ok
-			is_allocatable: is_allocatable
 		local
 			l_last_query_32: STRING_32
 			u: UTF_CONVERTER

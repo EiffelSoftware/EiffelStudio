@@ -119,16 +119,18 @@ feature -- Basic operations
 				unset_map_name ({STRING_32} "XZ7Hj0sb5UU")
 				if tmp_string /= Void then
 					temp_descriptor := db_spec.new_descriptor
-					if immediate_execution then
-						db_spec.pre_immediate (temp_descriptor, 0)
-						db_spec.exec_immediate (temp_descriptor, tmp_string)
-					else
-						db_spec.init_order (temp_descriptor, tmp_string)
-						if is_ok then
-							db_spec.start_order (temp_descriptor)
-						end
-						if is_ok then
-							db_spec.terminate_order (temp_descriptor)
+					if is_ok then
+						if immediate_execution then
+							db_spec.pre_immediate (temp_descriptor, 0)
+							db_spec.exec_immediate (temp_descriptor, tmp_string)
+						else
+							db_spec.init_order (temp_descriptor, tmp_string)
+							if is_ok then
+								db_spec.start_order (temp_descriptor)
+							end
+							if is_ok then
+								db_spec.terminate_order (temp_descriptor)
+							end
 						end
 					end
 				end

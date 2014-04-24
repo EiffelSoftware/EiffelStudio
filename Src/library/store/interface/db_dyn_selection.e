@@ -42,7 +42,6 @@ feature -- Element change
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
 			is_ok: is_ok
-			is_allocatable: is_allocatable
 		do
 			prepare_32 (s)
 		ensure
@@ -56,7 +55,6 @@ feature -- Element change
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
 			is_ok: is_ok
-			is_allocatable: is_allocatable
 		local
 			u: UTF_CONVERTER
 		do
@@ -115,7 +113,7 @@ feature {NONE} -- Implementation
 		-- Handle reference to specific database implementation
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

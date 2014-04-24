@@ -71,7 +71,6 @@ feature -- Basic operations
 			argument_exists: s /= Void
 			connected: is_connected
 			prepare_execute: not immediate_execution
-			descriptor_is_available: db_spec.descriptor_is_available
 		local
 			parsed_s: detachable STRING_32
 			parsed: BOOLEAN
@@ -81,26 +80,28 @@ feature -- Basic operations
 			l_db_spec := db_spec
 			l_status := handle.status
 			descriptor := l_db_spec.new_descriptor
-			if not l_db_spec.normal_parse then
-				parsed := l_db_spec.parse (descriptor, ht, ht_order, handle, s, False)
-			end
-			if not parsed then
-				parsed_s := parse_32 (s)
-				l_db_spec.init_order (descriptor, parsed_s)
-			end
-			last_parsed_query_32 := parsed_s
-			internal_affected_row_count := 0
 			if l_status.is_ok then
-				l_db_spec.start_order (descriptor)
-			end
-			if l_status.is_ok then
-				l_db_spec.result_order (descriptor)
-				if is_affected_row_count_supported then
-					internal_affected_row_count := l_db_spec.affected_row_count
+				if not l_db_spec.normal_parse then
+					parsed := l_db_spec.parse (descriptor, ht, ht_order, handle, s, False)
 				end
+				if not parsed then
+					parsed_s := parse_32 (s)
+					l_db_spec.init_order (descriptor, parsed_s)
+				end
+				last_parsed_query_32 := parsed_s
+				internal_affected_row_count := 0
+				if l_status.is_ok then
+					l_db_spec.start_order (descriptor)
+				end
+				if l_status.is_ok then
+					l_db_spec.result_order (descriptor)
+					if is_affected_row_count_supported then
+						internal_affected_row_count := l_db_spec.affected_row_count
+					end
 
-					-- Move to next row.
-				l_db_spec.next_row (descriptor)
+						-- Move to next row.
+					l_db_spec.next_row (descriptor)
+				end
 			end
 		end
 

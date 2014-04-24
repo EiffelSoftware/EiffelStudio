@@ -72,48 +72,59 @@ feature -- Element change
 		require else
 			argument_exists: sql /= Void
 			connected: is_connected
-			descriptor_is_available: db_spec.descriptor_is_available
 		local
 			tmp_string: detachable STRING_32
 			temp_descriptor: INTEGER
 			parsed: BOOLEAN
+			l_is_ok: BOOLEAN
 		do
 			if not immediate_execution then
 				temp_descriptor := db_spec.new_descriptor
+				l_is_ok := is_ok
+			else
+				l_is_ok := True
 			end
-			if not db_spec.normal_parse then
-			--	handle.execution_type.set_immediate
-				parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql, False)
-				tmp_string := sql.as_string_32
-			end
+			if l_is_ok then
+				if not db_spec.normal_parse then
+				--	handle.execution_type.set_immediate
+					parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql, False)
+					tmp_string := sql.as_string_32
+				end
 
-			if not parsed then
-				tmp_string := parse_32 (sql)
-				if immediate_execution then
-					db_spec.pre_immediate (temp_descriptor, 0)
-				else
-					db_spec.init_order (temp_descriptor, tmp_string)
-				end
-			end
-			last_parsed_query_32 := tmp_string
-			internal_affected_row_count := 0
-			if tmp_string /= Void then
-				if immediate_execution then
-						-- Allocate a new descriptor, just for the exec_immediate.
-					temp_descriptor := db_spec.new_descriptor
-					db_spec.exec_immediate (temp_descriptor, tmp_string)
-					db_spec.terminate_order (temp_descriptor)
-				else
-					if is_ok then
-						db_spec.start_order (temp_descriptor)
-						if is_ok then
-							db_spec.results_order (temp_descriptor).do_nothing
-						end
+				if not parsed then
+					tmp_string := parse_32 (sql)
+					if immediate_execution then
+						db_spec.pre_immediate (temp_descriptor, 0)
+					else
+						db_spec.init_order (temp_descriptor, tmp_string)
 					end
-					db_spec.terminate_order (temp_descriptor)
 				end
+				last_parsed_query_32 := tmp_string
+				internal_affected_row_count := 0
+				if tmp_string /= Void then
+					if immediate_execution then
+							-- Allocate a new descriptor, just for the exec_immediate.
+						temp_descriptor := db_spec.new_descriptor
+						if is_ok then
+							db_spec.exec_immediate (temp_descriptor, tmp_string)
+							db_spec.terminate_order (temp_descriptor)
+						end
+					else
+						if is_ok then
+							db_spec.start_order (temp_descriptor)
+							if is_ok then
+								db_spec.results_order (temp_descriptor).do_nothing
+							end
+						end
+						db_spec.terminate_order (temp_descriptor)
+					end
+					if is_affected_row_count_supported then
+						internal_affected_row_count := db_spec.affected_row_count
+					end
+				end
+			else
 				if is_affected_row_count_supported then
-					internal_affected_row_count := db_spec.affected_row_count
+					internal_affected_row_count := 0
 				end
 			end
 			handle.execution_type.unset_immediate

@@ -113,13 +113,14 @@ feature {NONE} -- Basic select
 					l_selection.set_query (basic_select_select_data)
 					i := 0
 				until
-					i > 1000 or not l_selection.is_allocatable
+					i > 1000 or not l_selection.is_ok
 				loop
 					l_session.reset
 					l_selection.execute_query
 					i := i + 1
 				end
 				assert ("At least ten", i >= 10)
+				assert ("No more descriptor", not l_selection.is_allocatable);
 			end
 		end
 

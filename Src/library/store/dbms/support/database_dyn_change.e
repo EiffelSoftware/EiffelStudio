@@ -68,19 +68,21 @@ feature
 			end
 
 			descriptor := db_spec.new_descriptor
-			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s, True)
-			end
-			if not parsed then
-				parsed_s := s
-				if is_ok then
-					db_spec.init_order (descriptor, parsed_s)
+			if is_ok then
+				if not db_spec.normal_parse then
+					parsed := db_spec.parse (descriptor, ht, ht_order, handle, s, True)
 				end
-				if is_ok then
-					if attached ht as l_ht then
-						arg_num := ht.count
+				if not parsed then
+					parsed_s := s
+					if is_ok then
+						db_spec.init_order (descriptor, parsed_s)
 					end
-					db_spec.pre_immediate (descriptor, arg_num)
+					if is_ok then
+						if attached ht as l_ht then
+							arg_num := ht.count
+						end
+						db_spec.pre_immediate (descriptor, arg_num)
+					end
 				end
 			end
 			set_executed (False)
@@ -134,7 +136,7 @@ feature {NONE} -- Implementation
 	descriptor: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

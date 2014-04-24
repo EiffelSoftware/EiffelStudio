@@ -153,14 +153,14 @@ feature -- Change Element
 			l_errors: like errors
 		do
 			l_errors := errors
-			if attached l_errors as ll_errors then
-				ll_errors.force (a_description, a_key)
-				errors := ll_errors
+			if attached l_errors then
+				l_errors.force (a_description, a_key)
+				errors := l_errors
 			else
 				create l_errors.make (0)
-				if attached l_errors as ll_errors then
-					ll_errors.force (a_description, a_key)
-					errors := ll_errors
+				if attached l_errors  then
+					l_errors.force (a_description, a_key)
+					errors := l_errors
 				end
 			end
 		end

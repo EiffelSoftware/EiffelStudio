@@ -20,7 +20,6 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		local
-			p: PATH
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 

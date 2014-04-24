@@ -234,7 +234,6 @@ feature -- Update Report Problem
 			-- Update problem report
 		local
 			l_reproduce: STRING_32
-			l_found: BOOLEAN
 		do
 			l_reproduce := ""
 			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
@@ -260,7 +259,6 @@ feature -- Initialize Report Problem
 
 	initialize_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_report_id: INTEGER
 			l_form: ESA_REPORT_FORM_VIEW
@@ -333,8 +331,6 @@ feature {NONE} -- Implementation
 			--"environment=download"
 			--"description=test"
 			--"to_reproduce=test"
-		local
-			l_parser: JSON_PARSER
 		do
 
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
@@ -352,9 +348,7 @@ feature {NONE} -- Implementation
 		local
 			l_parser: JSON_PARSER
 			l_content: STRING
-			l_file: ESA_FILE_VIEW
 			l_list: LIST[ESA_FILE_VIEW]
-
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			create l_parser.make_parser (retrieve_data (req))
@@ -418,8 +412,7 @@ feature {NONE} -- Implementation
 						if attached {JSON_OBJECT} c.item as jo and then attached {JSON_STRING} jo.item("name") as l_key and then
 							attached {JSON_STRING} jo.item("value") as ll_content then
 							l_content := (create {BASE64}).decoded_string (ll_content.item)
-							create l_file.make (l_key.item, l_content.count, l_content)
-							l_list.force (l_file)
+							l_list.force (create {ESA_FILE_VIEW}.make (l_key.item, l_content.count, l_content))
 						end
 					end
 					Result.set_files (l_list)
@@ -433,7 +426,6 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 			l_name: READABLE_STRING_32
 			l_content: STRING
-			l_file: ESA_FILE_VIEW
 			l_list: LIST[ESA_FILE_VIEW]
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
@@ -484,8 +476,7 @@ feature {NONE} -- Implementation
 						l_size := c.item.size
 						l_name := c.item.filename
 						c.item.append_content_to_string (l_content)
-						create l_file.make (l_name, l_size, l_content)
-						l_list.force (l_file)
+						l_list.force (create {ESA_FILE_VIEW}.make (l_name, l_size, l_content))
 				end
 				Result.set_files (l_list)
 			end

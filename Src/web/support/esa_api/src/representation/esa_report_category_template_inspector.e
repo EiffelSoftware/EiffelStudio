@@ -25,11 +25,11 @@ feature -- Internal data
 				l_fn := fn.twin
 				l_fn.to_lower
 
-				if fn.is_equal ("is_selected") then
+				if l_fn.is_equal ("is_selected") then
 					Result := cell_of (obj.is_selected)
-				elseif fn.is_equal ("id") then
+				elseif l_fn.is_equal ("id") then
 					Result := cell_of (obj.id)
-				elseif fn.is_equal ("synopsis") then
+				elseif l_fn.is_equal ("synopsis") then
 					Result := cell_of (obj.synopsis)
 				else
 					Result := cell_of ("")

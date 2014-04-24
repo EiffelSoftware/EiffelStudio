@@ -14,7 +14,7 @@ create
 
 	make_with_mailer
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_with_mailer (a_mailer: NOTIFICATION_MAILER; )
 		do

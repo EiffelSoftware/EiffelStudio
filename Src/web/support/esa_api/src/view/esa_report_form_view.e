@@ -9,7 +9,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_categories: like categories; a_severities: like severities; a_classes: like classes; a_priorities: like priorities)
 		do

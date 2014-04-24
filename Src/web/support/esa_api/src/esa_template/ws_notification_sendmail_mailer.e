@@ -19,12 +19,9 @@ create
 feature {NONE} -- Initialization
 
 	default_create
-		local
-			l_path: PATH
 		do
 			Precursor
-			create l_path.make_current
-			make (l_path.name,Void)
+			make ((create {PATH}.make_current).name,Void)
 		end
 
 feature -- Command		
@@ -35,7 +32,6 @@ feature -- Command
 		require
 			cmd_attached: a_cmd /= Void
 		local
-			pf: PROCESS_FACTORY
 			p: PROCESS
 			retried: BOOLEAN
 			err: BOOLEAN
@@ -43,8 +39,7 @@ feature -- Command
 			if not retried then
 				err := False
 				create Result.make (10)
-				create pf
-				p := pf.process_launcher_with_command_line (a_cmd, a_dir )
+				p := (create {PROCESS_FACTORY}).process_launcher_with_command_line (a_cmd, a_dir )
 				p.set_hidden (True)
 				p.set_separate_console (False)
 				p.redirect_input_to_stream

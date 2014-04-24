@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REGISTER_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
-			p: PATH
 			l_error: STRING
 		do
 			set_template_folder (cj_path)

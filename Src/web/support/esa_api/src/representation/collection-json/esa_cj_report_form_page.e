@@ -58,12 +58,8 @@ feature {NONE} --Initialization
 
 	make_with_data (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
-		local
-			p: PATH
 		do
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_form.categories, "categories")
@@ -111,12 +107,9 @@ feature {NONE} --Initialization
 	make_with_error (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		local
-			p: PATH
 			l_message: STRING
 		do
-			create p.make_current
-			p := p.appended ("/www")
-			set_template_folder (p)
+			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_form.categories, "categories")

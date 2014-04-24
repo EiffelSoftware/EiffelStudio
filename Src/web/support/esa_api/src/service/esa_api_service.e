@@ -43,13 +43,10 @@ feature -- Access
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_status: LIST[ESA_REPORT_STATUS]
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
 			l_statistics: ESA_REPORT_STATISTICS
 		do
-			l_status := status
-
 			data_provider.connect
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
@@ -71,13 +68,10 @@ feature -- Access
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_status: LIST[ESA_REPORT_STATUS]
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
 			l_statistics: ESA_REPORT_STATISTICS
 		do
-			l_status := status
-
 			data_provider.connect
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
@@ -129,12 +123,10 @@ feature -- Access
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_status: LIST[ESA_REPORT_STATUS]
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
 			l_statistics: ESA_REPORT_STATISTICS
 		do
-			l_status := status
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
 			data_provider.connect
@@ -179,14 +171,11 @@ feature -- Access
 
 	status: LIST[ESA_REPORT_STATUS]
 			-- Possible problem report status
-		local
-			l_report_status: ESA_REPORT_STATUS
 		do
 			create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
 			data_provider.connect
 			across data_provider.status as c  loop
-					l_report_status := c.item
-					Result.force (l_report_status)
+				Result.force (c.item)
 			end
 			data_provider.disconnect
 			is_successful := data_provider.is_successful
@@ -206,14 +195,12 @@ feature -- Access
 			-- Problem report details for user `a_user_name' (Interactions and Attachments)with number `a_number'.
 		local
 			l_interactions: LIST[ESA_REPORT_INTERACTION]
-			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
 		do
 			if attached data_provider.problem_report (a_number) as l_report then
 				l_interactions := data_provider.interactions (a_username, a_number, l_report)
 				l_report.set_interactions (l_interactions)
 				across l_interactions as c loop
-					l_attachments := data_provider.attachments_headers (c.item)
-					c.item.set_attachments (l_attachments)
+					c.item.set_attachments (data_provider.attachments_headers (c.item))
 				end
 				Result := l_report
 			end
@@ -224,14 +211,12 @@ feature -- Access
 			-- Problem report details for Guest user (Interactions and Attachments)with number `a_number'.
 		local
 			l_interactions: LIST[ESA_REPORT_INTERACTION]
-			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
 		do
 			if attached data_provider.problem_report (a_number) as l_report then
 				l_interactions := data_provider.interactions_guest (a_number, l_report)
 				l_report.set_interactions (l_interactions)
 				across l_interactions as c loop
-					l_attachments := data_provider.attachments_headers_guest (c.item)
-					c.item.set_attachments (l_attachments)
+					c.item.set_attachments (data_provider.attachments_headers_guest (c.item))
 				end
 				Result := l_report
 			end
@@ -604,13 +589,11 @@ feature -- Status Report
 	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
 			-- Does account with username `a_username' and password `a_password' exist?
 		local
-			l_security: ESA_SECURITY_PROVIDER
 			l_sha_password: STRING
 		do
 			if attached data_provider.user_password_salt (a_username) as l_hash and then
 			   attached a_password then
-				create l_security
-				l_sha_password := l_security.password_hash (a_password, l_hash)
+				l_sha_password := (create {ESA_SECURITY_PROVIDER}).password_hash (a_password, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 			is_successful := login_provider.is_successful

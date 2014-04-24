@@ -134,7 +134,6 @@ feature -- Implementation
 	responsible_reports (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- List of reports for users with role Admin or Responsible.
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_pages: INTEGER
 			l_row: TUPLE [ESA_REPORT_STATISTICS, LIST [ESA_REPORT]]
@@ -330,7 +329,6 @@ feature -- Implementation
 
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			create l_rhf

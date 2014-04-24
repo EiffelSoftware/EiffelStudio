@@ -10,7 +10,7 @@ class
 create
 	make
 
-feature -- Intialization
+feature {NONE} -- Intialization
 
 	make (a_status: like status; a_categories: like categories)
 		do

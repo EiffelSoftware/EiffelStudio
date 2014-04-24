@@ -84,7 +84,7 @@ feature -- ESA configuration
 
  	setup_config
  		do
- 			create esa_config.make_with_database ("Driver={SQL Server Native Client 11.0};Server=" + server_name + ";Database=" + database_name + ";Trusted_Connection=Yes;", database_name)
+ 			esa_config := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test
 		end
 
 	server_name: STRING = "JVELILLA\SQLEXPRESS"

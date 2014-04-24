@@ -27,12 +27,12 @@ feature -- Basic operations
 			-- Execute the filter
 		local
 			l_auth: HTTP_AUTHORIZATION
+			retried: BOOLEAN
 		do
 			create l_auth.make (req.http_authorization)
 				-- A valid user
 			if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
 				attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then
-
 				if api_service.login_valid (l_auth_login, l_auth_password) then
 					req.set_execution_variable ("user", create {ESA_USER}.make (l_auth_login))
 					execute_next (req, res)

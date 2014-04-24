@@ -117,6 +117,13 @@ feature -- View
 			end
 		end
 
+	report_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_id: INTEGER)
+			-- Report form confirm page
+		do
+			to_implement ("Implement")
+		end
+
+
 	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form error
 		local

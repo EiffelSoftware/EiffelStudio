@@ -10,7 +10,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[ESA_REPORT_CATEGORY]; a_status: LIST[ESA_REPORT_STATUS]; a_user: detachable ANY)
 			-- Create a new object with reports `a_reports'

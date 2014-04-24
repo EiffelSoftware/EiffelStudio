@@ -1,7 +1,12 @@
 <"collection": <
     "version": "1.0", 
-    "href": "{$host/}", 
+    "href": "{$host/}/report_confirm", 
     "links": [
+             <
+                "href": "{$host/}",
+                "rel": "home",
+                "prompt": "Home"
+            >,
             <
                 "href": "{$host/}/reports",
                 "rel": "collection",
@@ -27,6 +32,7 @@
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
+
             {/if}
             {unless isset="$user"}
             <
@@ -42,17 +48,14 @@
             {/unless} 
 
           ],
-    "queries" :
-        [
-         <
-          "href" : "{$host/}/report_detail/",
-          "rel" : "search",
-          "prompt" : "Search by Report #...",
-          "data" :
-            [
-                <"name" : "search", "value" : "">
+    "template": <
+      "data": [
+                <"name" : "confirm", "value" : "{$confirm/}", "prompt": "Confirm Report">
             ]
         >
-    ]      
+      {if isset="$error"}
+        ,
+       "error":<"title":"{$title/}","code":"{$code/}", "message":"{$error/}">
+      {/if}  
   >
 >

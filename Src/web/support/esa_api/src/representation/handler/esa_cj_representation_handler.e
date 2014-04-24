@@ -126,6 +126,20 @@ feature -- View
 			end
 		end
 
+	report_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_id: INTEGER)
+			-- Report form confirm page
+		local
+			l_hp: ESA_CJ_REPORT_FORM_CONFIRM_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""), a_id, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
+		end
+
+
 	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form error
 		local
@@ -198,7 +212,6 @@ feature -- View
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			create h.make
 			create l_msg.make_from_string ("Unauthorized")
@@ -261,7 +274,7 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_cj.make (req.absolute_script_url (""), a_view, current_user_name (req))
 				if attached l_cj.representation as l_representation then
-					if attached a_view as l_view and then( attached l_view.error_message or else not l_view.is_valid_form )then
+					if attached a_view and then( attached a_view.error_message or else not a_view.is_valid_form )then
 						new_response_400 (req, res, l_representation)
 					else
 						new_response_get (req, res, l_representation)

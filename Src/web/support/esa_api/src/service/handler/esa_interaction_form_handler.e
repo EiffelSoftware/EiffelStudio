@@ -341,7 +341,6 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 			l_name: READABLE_STRING_32
 			l_content: STRING
-			l_file: ESA_FILE_VIEW
 			l_list: LIST[ESA_FILE_VIEW]
 		do
 			create Result.make (api_service.status, api_service.all_categories)
@@ -368,8 +367,7 @@ feature {NONE} -- Implementation
 					l_size := c.item.size
 					l_name := c.item.filename
 					c.item.append_content_to_string (l_content)
-					create l_file.make (l_name, l_size, l_content)
-					l_list.force (l_file)
+					l_list.force (create {ESA_FILE_VIEW}.make (l_name, l_size, l_content))
 				end
 				Result.set_files (l_list)
 			end

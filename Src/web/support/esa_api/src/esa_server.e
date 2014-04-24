@@ -86,20 +86,25 @@ feature -- ESA Configuraion
 		-- Configuration
 
  	setup_config
+ 		local
+ 			l_configuration_factory: ESA_CONFIGURATION_FACTORY
  		do
- 			create esa_config.make
+ 			create l_configuration_factory
+ 			esa_config := l_configuration_factory.esa_config
+			if attached l_configuration_factory.last_error as l_error then
+				esa_config.set_last_error_from_handler (l_error)
+			else
+				esa_config.set_successful
+			end
 		end
 
 feature -- Execute Filter
 
 	execute_filter (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter.
-		local
-			d: HTTP_DATE
 		do
 
-			create d.make_now_utc
-			res.put_header_line ("Date: " + d.string)
+			res.put_header_line ("Date: " + (create {HTTP_DATE}.make_now_utc).string)
 
 			res.put_header_line ("ESAServer: " + version)
 			api_service.execute (req, res)
@@ -144,23 +149,21 @@ feature -- Filters
 			f.set_next (l_filter)
 			l_filter := f
 
+			 	-- Conneg Filter
+			create {ESA_CONNEG_FILTER} f.make (esa_config)
+			f.set_next (l_filter)
+			l_filter := f
+
+			 	-- Authentication
+			create {ESA_AUTHENTICATION_FILTER} f.make (esa_config)
+			f.set_next (l_filter)
+			l_filter := f
 
 			 	-- Error Filter
 			create {ESA_ERROR_FILTER} f.make (esa_config)
 			f.set_next (l_filter)
 			l_filter := f
 
-
-			 	-- Conneg Filter
-			create {ESA_CONNEG_FILTER} f.make (esa_config)
-			f.set_next (l_filter)
-			l_filter := f
-
-
-			 	-- Authentication
-			create {ESA_AUTHENTICATION_FILTER} f.make (esa_config)
-			f.set_next (l_filter)
-			l_filter := f
 
 			filter := l_filter
 		end

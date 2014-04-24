@@ -19,7 +19,6 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		local
-			p: PATH
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)

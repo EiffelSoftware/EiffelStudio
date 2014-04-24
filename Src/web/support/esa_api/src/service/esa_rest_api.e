@@ -157,6 +157,10 @@ feature -- Configure Resources Routes
 		do
 			create l_confirm_handler.make (esa_config)
 			create l_methods
+			l_methods.enable_post
+			router.handle_with_request_methods ("/report_confirm", l_confirm_handler, l_methods)
+
+			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/report_confirm/{id}", l_confirm_handler, l_methods)
 		end

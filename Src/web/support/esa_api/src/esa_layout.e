@@ -38,6 +38,13 @@ feature -- Access: internal
 			Result := path.extended ("config")
 		end
 
+	database_config_path: PATH
+			-- Database Configuration file path.
+		once
+			Result := config_path.extended ("esa_database_configuration.json")
+		end
+
+
 	logs_path: PATH
 		once
 			Result := path.extended ("logs")

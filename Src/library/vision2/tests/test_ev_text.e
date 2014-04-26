@@ -329,17 +329,17 @@ feature {NONE} -- Implementation
 						i := 0xF900
 					end
 					if
-						(i = 0x2028 or i = 0xFFFC) and
+						(i = 0x2028 or i = 0x2029 or i = 0xFFFC) and
 						{PLATFORM}.is_windows and
 						attached {EV_RICH_TEXT} txt
 					then
-							-- On Windows EV_RICH_EDIT, the character 0x2028 is replaced by %N and 0xFFFC
+							-- On Windows EV_RICH_EDIT, the character 0x2028 and 0x2029 are replaced by %N and 0xFFFC
 							-- handled as an object placeholder (see U+FFFC character
 							-- description) and is replaced by the space character
 							-- upon retrieval so we ignore it.
-						i := i + 1
+					else
+						c := i.to_character_32
 					end
-					c := i.to_character_32
 				else
 						-- We ensure it fits into an extended ASCII.
 					c := i.to_character_32

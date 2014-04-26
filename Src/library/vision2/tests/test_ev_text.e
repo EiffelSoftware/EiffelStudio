@@ -50,6 +50,8 @@ feature -- Test routines
 			end
 		end
 
+feature -- Unicode selection
+
 	test_unicode_selection_ev_text
 			-- Demonstrate that selection of unicode characters
 			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
@@ -57,7 +59,19 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			run_test (agent unicode_selection (create {EV_TEXT}))
+			run_test (agent
+				local
+					l_txt: EV_TEXT
+				do
+					create l_txt
+					l_txt.enable_word_wrapping
+					text_selection (l_txt, True)
+					text_large_selection (l_txt, True)
+
+					l_txt.disable_word_wrapping
+					text_selection (l_txt, True)
+					text_large_selection (l_txt, True)
+				end)
 		end
 
 	test_unicode_selection_ev_text_field
@@ -67,7 +81,7 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			run_test (agent unicode_selection (create {EV_TEXT_FIELD}))
+			run_test (agent text_selection (create {EV_TEXT_FIELD}, True))
 		end
 
 	test_unicode_selection_ev_password
@@ -77,7 +91,7 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			run_test (agent unicode_selection (create {EV_PASSWORD_FIELD}))
+			run_test (agent text_selection (create {EV_PASSWORD_FIELD}, True))
 		end
 
 	test_unicode_selection_ev_combo
@@ -87,7 +101,7 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			run_test (agent unicode_selection (create {EV_COMBO_BOX}))
+			run_test (agent text_selection (create {EV_COMBO_BOX}, True))
 		end
 
 	test_unicode_selection_ev_rich_text
@@ -97,61 +111,154 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			run_test (agent unicode_selection (create {EV_RICH_TEXT}))
+			run_test (agent
+				local
+					l_txt: EV_RICH_TEXT
+				do
+					create l_txt
+					l_txt.enable_word_wrapping
+					text_selection (l_txt, True)
+					text_large_selection (l_txt, True)
+
+					l_txt.disable_word_wrapping
+					text_selection (l_txt, True)
+					text_large_selection (l_txt, True)
+				end)
+		end
+
+feature -- ASCII
+
+	test_ascii_selection_ev_text
+			-- Demonstrate that selection of ascii characters
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					l_txt: EV_TEXT
+				do
+					create l_txt
+					l_txt.enable_word_wrapping
+					text_selection (l_txt, False)
+					text_large_selection (l_txt, False)
+
+					l_txt.disable_word_wrapping
+					text_selection (l_txt, False)
+					text_large_selection (l_txt, False)
+				end)
+		end
+
+	test_ascii_selection_ev_text_field
+			-- Demonstrate that selection of ascii characters
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent text_selection (create {EV_TEXT_FIELD}, False))
+		end
+
+	test_ascii_selection_ev_password
+			-- Demonstrate that selection of ascii characters
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent text_selection (create {EV_PASSWORD_FIELD}, False))
+		end
+
+	test_ascii_selection_ev_combo
+			-- Demonstrate that selection of ascii characters
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent text_selection (create {EV_COMBO_BOX}, False))
+		end
+
+	test_ascii_selection_ev_rich_text
+			-- Demonstrate that selection of ascii characters
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					l_txt: EV_RICH_TEXT
+				do
+					create l_txt
+					l_txt.enable_word_wrapping
+					text_selection (l_txt, False)
+					text_large_selection (l_txt, False)
+
+					l_txt.disable_word_wrapping
+					text_selection (l_txt, False)
+					text_large_selection (l_txt, False)
+				end)
 		end
 
 feature {NONE} -- Implementation
 
-	unicode_selection (txt: EV_TEXT_COMPONENT)
-			-- Demonstrate that selection of unicode characters
-			-- in an {EV_TEXT_COMPONENT} instance is problematic for characters
-			-- with unicode points >65532!
+	text_selection (txt: EV_TEXT_COMPONENT; is_unicode: BOOLEAN)
+			-- Demonstrate that selection of characters
+			-- in an {EV_TEXT_COMPONENT} instance can problematic for
+			-- certain characters.
 		local
 			str: STRING_32
-			i: INTEGER_32
+			i, nb: INTEGER_32
 			window: EV_TITLED_WINDOW
 		do
 			create window
 			window.extend (txt)
-			window.set_size (600, 600)
+			window.set_size (200, 600)
 			window.show
 
 			str := ""
 
-			from
-				i := 66_300
-			until
-				i > 66_303
-			loop
-				str.append_character (i.to_character_32)
-				i := i + 1
-			end
+			if is_unicode then
+					-- Greater than UTF-16 limits characters
+				str.append_character ('a')
+				str.append_code (66185)
+				str.append_code (66186)
+				str.append_code (66300)
+				str.append_code (66301)
+				str.append_code (66302)
+				str.append_code (66303)
+				str.append_code (66304)
 
-			str.append ("%N")
+				str.append ("%N")
 
-			from
-				i := 65_530
-			until
-				i > 65_533
-			loop
-					-- On Windows, character 65_532 is handled as an object
-					-- placeholder (see U+FFFC character description) and is
-					-- replaced by the space character upon retrieval.
-				if i /= 65_532 then
-					str.append_character (i.to_character_32)
+					-- Special case of characters around the escape
+					-- character 65_532
+				from
+					i := 65_530
+				until
+					i > 65_533
+				loop
+						-- On Windows EV_RICH_EDIT, the character 65_532 is
+						-- handled as an object placeholder (see U+FFFC character
+						-- description) and is replaced by the space character
+						-- upon retrieval so we ignore it.
+					if
+						i /= 65_532 or else
+						not {PLATFORM}.is_windows or else
+						not attached {EV_RICH_TEXT} txt
+					then
+						str.append_character (i.to_character_32)
+					end
+					i := i + 1
 				end
-				i := i + 1
-			end
 
-			str.append ("%NS")
+				str.append ("%NS")
+			else
+					-- We check ASCII and long strings in case of word wrapping
+				str.append ("123456%N134mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm mmmmmmmmmmmmmmmmm21%N43")
+			end
 
 			txt.append_text (str)
 
 				-- Ensure that selection is correct.
 			from
 				i := 1
+				nb := txt.text_length
+				assert ("valid length", nb = str.count)
 			until
-				i > txt.text_length
+				i > nb
 			loop
 				txt.set_selection (i, i + 1)
 				assert ("has selection", txt.has_selection)
@@ -166,6 +273,13 @@ feature {NONE} -- Implementation
 				assert ("caret position set", txt.caret_position = i)
 				assert ("proper start selection", txt.start_selection = i)
 				assert ("proper end selection", txt.end_selection = i)
+
+				txt.set_caret_position (i)
+				assert ("no selection", not txt.has_selection)
+				assert ("selected_text_empty", txt.selected_text.is_empty)
+				assert ("caret position set", txt.caret_position = i)
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i)
 				i := i + 1
 			end
 			txt.set_selection (i, i)
@@ -175,33 +289,113 @@ feature {NONE} -- Implementation
 			assert ("proper start selection", txt.start_selection = i)
 			assert ("proper end selection", txt.end_selection = i)
 
-				-- To use to simplify debuging.
-			txt.pointer_leave_actions.extend (agent on_pointer_leave (txt))
+			window.prune (txt)
+			txt.remove_text
+			window.destroy
 		end
 
-	on_pointer_leave (txt: EV_TEXT_COMPONENT)
-			-- Print some information about selected text in `txt'!
+	text_large_selection (txt: EV_TEXT_COMPONENT; is_unicode: BOOLEAN)
+			-- Demonstrate that selection of characters
+			-- in an {EV_TEXT_COMPONENT} instance can problematic for
+			-- certain characters.
 		local
-			i: INTEGER
-			sel: STRING_32 -- selected substring
-			str: STRING_8 -- for output
+			str: STRING_32
+			i, nb: INTEGER_32
+			c: CHARACTER_32
+			window: EV_TITLED_WINDOW
 		do
-			if txt.has_selection then
-				str := "Selection <"
-				str.append (txt.selection_start.out + ", ")
-				str.append (txt.selection_end.out + "> unicode point/s: ")
-				from
-					sel := txt.selected_text
-					i := 1
-				until
-					i > sel.count
-				loop
-					str.append (sel.item (i).natural_32_code.out + " ")
-					i := i + 1
+			create window
+			window.extend (txt)
+			window.set_size (200, 600)
+			window.show
+
+			create str.make (66000)
+			from
+					-- We start at character '0' to avoid all control characters
+				i := 48
+			until
+				str.count 66000
+			loop
+				if str.count \\ 100 = 0 then
+						-- So that the text look nice and that we have %N characters.
+					str.append_character ('%N')
 				end
-				str.append ("%N")
-				print (str)
+				if is_unicode then
+					if i >= 0x0300 and i <= 0x036F then
+							-- Ignore diacritical marks
+						i := 0x0370
+					elseif i >= 0xD800 and i <= 0xF8FF then
+							-- Ignore UTF-16 surrogates and private use character
+						i := 0xF900
+					end
+					if
+						(i = 0x2028 or i = 0xFFFC) and
+						{PLATFORM}.is_windows and
+						attached {EV_RICH_TEXT} txt
+					then
+							-- On Windows EV_RICH_EDIT, the character 0x2028 is replaced by %N and 0xFFFC
+							-- handled as an object placeholder (see U+FFFC character
+							-- description) and is replaced by the space character
+							-- upon retrieval so we ignore it.
+						i := i + 1
+					end
+					c := i.to_character_32
+				else
+						-- We ensure it fits into an extended ASCII.
+					c := i.to_character_32
+					if i = 255 then
+						i := 47
+					end
+				end
+				str.append_character (c)
+				i := i + 1
 			end
+
+			txt.append_text (str)
+
+				-- Ensure that selection is correct.
+			from
+				i := 1
+				nb := txt.text_length
+				assert ("valid length", nb = str.count)
+			until
+				i > nb
+			loop
+				txt.set_selection (i, i + 1)
+				assert ("has selection", txt.has_selection)
+				assert ("selection is made of one character", txt.selected_text.count = 1)
+				assert ("proper content selection", txt.selected_text.item (1) ~ str.item (i))
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i + 1)
+
+				txt.set_selection (i, i)
+				assert ("no selection", not txt.has_selection)
+				assert ("selected_text_empty", txt.selected_text.is_empty)
+				assert ("caret position set", txt.caret_position = i)
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i)
+
+				txt.set_caret_position (i)
+				assert ("no selection", not txt.has_selection)
+				assert ("selected_text_empty", txt.selected_text.is_empty)
+				assert ("caret position set", txt.caret_position = i)
+				assert ("proper start selection", txt.start_selection = i)
+				assert ("proper end selection", txt.end_selection = i)
+
+					-- It is to slow to iterate over 65K+ of text,
+					-- so we skip
+				i := i + 2039
+			end
+			txt.set_selection (nb + 1, nb + 1)
+			assert ("no selection", not txt.has_selection)
+			assert ("selected_text_empty", txt.selected_text.is_empty)
+			assert ("caret position set", txt.caret_position = nb + 1)
+			assert ("proper start selection", txt.start_selection = nb + 1)
+			assert ("proper end selection", txt.end_selection = nb + 1)
+
+			window.prune (txt)
+			txt.remove_text
+			window.destroy
 		end
 
 note

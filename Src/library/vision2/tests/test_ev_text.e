@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 					-- We start at character '0' to avoid all control characters
 				i := 48
 			until
-				str.count 66000
+				str.count > 66000
 			loop
 				if str.count \\ 100 = 0 then
 						-- So that the text look nice and that we have %N characters.

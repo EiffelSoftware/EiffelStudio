@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 
 			Result.set_connect_timeout (connect_timeout (30)) -- connect timeout: 10 seconds
 			Result.set_timeout (timeout (60)) -- timeout = 60 seconds
-			Result.set_is_insecure (False)
+			Result.set_is_insecure (True)
 			Result.add_header ("Accept", "application/json")
 			Result.add_header ({IRON_API_CONSTANTS}.iron_http_header_name, api_version)
 		end

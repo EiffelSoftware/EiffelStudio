@@ -384,7 +384,11 @@ feature {NONE} -- Implementation
 
 					-- It is to slow to iterate over 65K+ of text,
 					-- so we skip
-				i := i + 2039
+				if i > 65535 then
+					i := i + 100
+				else
+					i := i + 7919
+				end
 			end
 			txt.set_selection (nb + 1, nb + 1)
 			assert ("no selection", not txt.has_selection)

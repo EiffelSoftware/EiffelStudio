@@ -39,6 +39,7 @@ feature -- Access
 			Result := implementation.text_length
 		ensure
 			bridge_ok: Result = implementation.text_length
+			definition: Result = text.count
 			Result_not_negative: Result >= 0
 		end
 
@@ -50,6 +51,7 @@ feature -- Access
 			Result := implementation.selected_text
 		ensure
 			bridge_ok: Result.is_equal (implementation.selected_text)
+			definition: has_selection implies text.substring (start_selection, end_selection - 1).is_equal (Result)
 		end
 
 feature -- Status report
@@ -394,11 +396,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
-	text_not_void: is_usable implies text /= Void
-	text_length_consistent: text_length = text.count
-	selection_consistent: has_selection implies text.substring (start_selection, end_selection - 1).is_equal (selected_text)
-
-
+	
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

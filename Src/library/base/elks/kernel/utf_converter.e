@@ -426,7 +426,7 @@ feature -- UTF-32 to UTF-8
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= s.count
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		local
 			i, n, m, l_count: INTEGER
 			c: NATURAL_32
@@ -647,7 +647,7 @@ feature -- UTF-32 to UTF-8
 			-- is written to `a_new_upper'.
 			-- The sequence is zero-terminated.
 		require
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		do
 			utf_32_string_into_utf_8_0_pointer (s, p, p_offset, a_new_upper)
 		ensure
@@ -664,7 +664,7 @@ feature -- UTF-32 to UTF-8
 			-- is written to `a_new_upper'.
 			-- The sequence is zero-terminated.
 		require
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		local
 			m: INTEGER
 			i, n, l_count: INTEGER
@@ -1227,7 +1227,7 @@ feature -- UTF-32 to UTF-16
 			-- The sequence is not zero-terminated.
 		require
 			even_p_offset: (p_offset \\ 2) = 0
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		do
 			utf_32_substring_into_utf_16_pointer (s, 1, s.count, p, p_offset, a_new_upper)
 		ensure
@@ -1243,7 +1243,7 @@ feature -- UTF-32 to UTF-16
 			-- The sequence is zero-terminated.
 		require
 			even_p_offset: (p_offset \\ 2) = 0
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		do
 			utf_32_substring_into_utf_16_0_pointer (s, 1, s.count, p, p_offset, a_new_upper)
 		ensure
@@ -1267,7 +1267,7 @@ feature -- UTF-32 to UTF-16
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= s.count
 			even_p_offset: (p_offset \\ 2) = 0
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		local
 			m: INTEGER
 		do
@@ -1302,7 +1302,7 @@ feature -- UTF-32 to UTF-16
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= s.count
 			even_p_offset: (p_offset \\ 2) = 0
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		local
 			i: like {READABLE_STRING_GENERAL}.count
 			c: NATURAL_32
@@ -1432,7 +1432,7 @@ feature -- UTF-32 to UTF-16
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= s.count
 			even_p_offset: (p_offset \\ 2) = 0
-			valid_p_offset: p_offset < p.count
+			p_offset_non_negative: p_offset >= 0
 		local
 			i, n, m, l_count: INTEGER
 			c: NATURAL_32

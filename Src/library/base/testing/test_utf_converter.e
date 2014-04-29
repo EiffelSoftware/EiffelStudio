@@ -33,6 +33,12 @@ feature -- Testing UTF-16
 			then
 				assert ("test_utf_16_roundtrip - 3", False)
 			end
+
+			create s.make (10)
+			s.append_code (66186)
+			create q.make (s.count * 2 + 2)
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (s, 1, s.count, q, 0, Void)
+			assert ("test_utf_16_roundtrip - 4", u.utf_16_0_pointer_to_escaped_string_32 (q).same_string (s))
 		end
 
 	test_utf_16_d834_dd1e
@@ -332,6 +338,35 @@ feature -- Testing UTF-16
 				l_cell := upper
 				i := i + 1
 			end
+		end
+
+	test_utf_16_multiline
+		local
+			str: STRING_32
+			u: UTF_CONVERTER
+			l_ptr: MANAGED_POINTER
+		do
+			create str.make (20)
+			str.append_character ('a')
+			str.append_code (66185)
+			str.append_code (66186)
+			str.append_code (66300)
+			str.append_code (66301)
+			str.append_code (66302)
+			str.append_code (66303)
+			str.append_code (66304)
+			str.append ("%N")
+			str.append_code (65530)
+			str.append_code (65531)
+			str.append_code (65532)
+			str.append_code (65533)
+			str.append ("%NS")
+
+			create l_ptr.make (34)
+				-- We are testing that
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (str, 10, 13, l_ptr, 34, Void)
+
+			assert ("Proper retrieve", u.utf_16_0_subpointer_to_escaped_string_32 (l_ptr, 17, 20, False).same_string (str.substring (10, 13)))
 		end
 
 feature -- UTF-8

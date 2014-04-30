@@ -4622,146 +4622,6 @@ feature -- Icons
 			toolbar_separator_icon_buffer_attached: Result /= Void
 		end
 
-	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
-			-- Access to 'next error' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_next_error_name)
-		once
-			Result := named_icon (errors_and_warnings_next_error_name)
-		ensure
-			errors_and_warnings_next_error_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_next_error_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'next error' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_next_error_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_next_error_name)
-		ensure
-			errors_and_warnings_next_error_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_previous_error_icon: EV_PIXMAP
-			-- Access to 'previous error' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_previous_error_name)
-		once
-			Result := named_icon (errors_and_warnings_previous_error_name)
-		ensure
-			errors_and_warnings_previous_error_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_previous_error_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'previous error' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_previous_error_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_previous_error_name)
-		ensure
-			errors_and_warnings_previous_error_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_next_warning_icon: EV_PIXMAP
-			-- Access to 'next warning' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_next_warning_name)
-		once
-			Result := named_icon (errors_and_warnings_next_warning_name)
-		ensure
-			errors_and_warnings_next_warning_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_next_warning_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'next warning' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_next_warning_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_next_warning_name)
-		ensure
-			errors_and_warnings_next_warning_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_previous_warning_icon: EV_PIXMAP
-			-- Access to 'previous warning' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_previous_warning_name)
-		once
-			Result := named_icon (errors_and_warnings_previous_warning_name)
-		ensure
-			errors_and_warnings_previous_warning_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_previous_warning_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'previous warning' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_previous_warning_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_previous_warning_name)
-		ensure
-			errors_and_warnings_previous_warning_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_filter_icon: EV_PIXMAP
-			-- Access to 'filter' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_filter_name)
-		once
-			Result := named_icon (errors_and_warnings_filter_name)
-		ensure
-			errors_and_warnings_filter_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_filter_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'filter' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_filter_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_filter_name)
-		ensure
-			errors_and_warnings_filter_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_filter_active_icon: EV_PIXMAP
-			-- Access to 'filter active' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_filter_active_name)
-		once
-			Result := named_icon (errors_and_warnings_filter_active_name)
-		ensure
-			errors_and_warnings_filter_active_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_filter_active_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'filter active' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_filter_active_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_filter_active_name)
-		ensure
-			errors_and_warnings_filter_active_icon_buffer_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_expand_errors_icon: EV_PIXMAP
-			-- Access to 'expand errors' pixmap.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_expand_errors_name)
-		once
-			Result := named_icon (errors_and_warnings_expand_errors_name)
-		ensure
-			errors_and_warnings_expand_errors_icon_attached: Result /= Void
-		end
-
-	frozen errors_and_warnings_expand_errors_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'expand errors' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (errors_and_warnings_expand_errors_name)
-		once
-			Result := named_icon_buffer (errors_and_warnings_expand_errors_name)
-		ensure
-			errors_and_warnings_expand_errors_icon_buffer_attached: Result /= Void
-		end
-
 	frozen priority_high_icon: EV_PIXMAP
 			-- Access to 'high' pixmap.
 		require
@@ -8242,6 +8102,186 @@ feature -- Icons
 			overlay_new_icon_buffer_attached: Result /= Void
 		end
 
+	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
+			-- Access to 'next error' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_next_error_name)
+		once
+			Result := named_icon (errors_and_warnings_next_error_name)
+		ensure
+			errors_and_warnings_next_error_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_next_error_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'next error' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_next_error_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_next_error_name)
+		ensure
+			errors_and_warnings_next_error_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_previous_error_icon: EV_PIXMAP
+			-- Access to 'previous error' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_previous_error_name)
+		once
+			Result := named_icon (errors_and_warnings_previous_error_name)
+		ensure
+			errors_and_warnings_previous_error_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_previous_error_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'previous error' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_previous_error_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_previous_error_name)
+		ensure
+			errors_and_warnings_previous_error_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_next_warning_icon: EV_PIXMAP
+			-- Access to 'next warning' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_next_warning_name)
+		once
+			Result := named_icon (errors_and_warnings_next_warning_name)
+		ensure
+			errors_and_warnings_next_warning_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_next_warning_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'next warning' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_next_warning_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_next_warning_name)
+		ensure
+			errors_and_warnings_next_warning_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_previous_warning_icon: EV_PIXMAP
+			-- Access to 'previous warning' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_previous_warning_name)
+		once
+			Result := named_icon (errors_and_warnings_previous_warning_name)
+		ensure
+			errors_and_warnings_previous_warning_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_previous_warning_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'previous warning' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_previous_warning_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_previous_warning_name)
+		ensure
+			errors_and_warnings_previous_warning_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_filter_icon: EV_PIXMAP
+			-- Access to 'filter' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_filter_name)
+		once
+			Result := named_icon (errors_and_warnings_filter_name)
+		ensure
+			errors_and_warnings_filter_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_filter_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'filter' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_filter_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_filter_name)
+		ensure
+			errors_and_warnings_filter_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_filter_active_icon: EV_PIXMAP
+			-- Access to 'filter active' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_filter_active_name)
+		once
+			Result := named_icon (errors_and_warnings_filter_active_name)
+		ensure
+			errors_and_warnings_filter_active_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_filter_active_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'filter active' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_filter_active_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_filter_active_name)
+		ensure
+			errors_and_warnings_filter_active_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_expand_errors_icon: EV_PIXMAP
+			-- Access to 'expand errors' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_expand_errors_name)
+		once
+			Result := named_icon (errors_and_warnings_expand_errors_name)
+		ensure
+			errors_and_warnings_expand_errors_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_expand_errors_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'expand errors' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_expand_errors_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_expand_errors_name)
+		ensure
+			errors_and_warnings_expand_errors_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_fix_ignore_icon: EV_PIXMAP
+			-- Access to 'fix ignore' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_fix_ignore_name)
+		once
+			Result := named_icon (errors_and_warnings_fix_ignore_name)
+		ensure
+			errors_and_warnings_fix_ignore_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_fix_ignore_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'fix ignore' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_fix_ignore_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_fix_ignore_name)
+		ensure
+			errors_and_warnings_fix_ignore_icon_buffer_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_fix_apply_icon: EV_PIXMAP
+			-- Access to 'fix apply' pixmap.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_fix_apply_name)
+		once
+			Result := named_icon (errors_and_warnings_fix_apply_name)
+		ensure
+			errors_and_warnings_fix_apply_icon_attached: Result /= Void
+		end
+
+	frozen errors_and_warnings_fix_apply_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'fix apply' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (errors_and_warnings_fix_apply_name)
+		once
+			Result := named_icon_buffer (errors_and_warnings_fix_apply_name)
+		ensure
+			errors_and_warnings_fix_apply_icon_buffer_attached: Result /= Void
+		end
+
 	frozen information_tag_icon: EV_PIXMAP
 			-- Access to 'tag' pixmap.
 		require
@@ -8893,13 +8933,6 @@ feature -- Constants: Icon names
 	windows_raise_all_unsaved_name: STRING = "windows raise all unsaved"
 	windows_windows_name: STRING = "windows windows"
 	toolbar_separator_name: STRING = "toolbar separator"
-	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
-	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
-	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
-	errors_and_warnings_previous_warning_name: STRING = "errors and warnings previous warning"
-	errors_and_warnings_filter_name: STRING = "errors and warnings filter"
-	errors_and_warnings_filter_active_name: STRING = "errors and warnings filter active"
-	errors_and_warnings_expand_errors_name: STRING = "errors and warnings expand errors"
 	priority_high_name: STRING = "priority high"
 	priority_low_name: STRING = "priority low"
 	tab_close_name: STRING = "tab close"
@@ -9074,6 +9107,15 @@ feature -- Constants: Icon names
 	overlay_packaged_name: STRING = "overlay packaged"
 	overlay_search_name: STRING = "overlay search"
 	overlay_new_name: STRING = "overlay new"
+	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
+	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
+	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
+	errors_and_warnings_previous_warning_name: STRING = "errors and warnings previous warning"
+	errors_and_warnings_filter_name: STRING = "errors and warnings filter"
+	errors_and_warnings_filter_active_name: STRING = "errors and warnings filter active"
+	errors_and_warnings_expand_errors_name: STRING = "errors and warnings expand errors"
+	errors_and_warnings_fix_ignore_name: STRING = "errors and warnings fix ignore"
+	errors_and_warnings_fix_apply_name: STRING = "errors and warnings fix apply"
 	information_tag_name: STRING = "information tag"
 	information_tags_name: STRING = "information tags"
 	information_no_tag_name: STRING = "information no tag"
@@ -9327,19 +9369,12 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 11], windows_raise_all_unsaved_name)
 			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 11], windows_windows_name)
 			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 11], toolbar_separator_name)
-			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 11], errors_and_warnings_next_error_name)
-			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 11], errors_and_warnings_previous_error_name)
-			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 11], errors_and_warnings_next_warning_name)
-			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 11], errors_and_warnings_previous_warning_name)
-			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 11], errors_and_warnings_filter_name)
-			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 11], errors_and_warnings_filter_active_name)
-			a_table.put ([{NATURAL_8} 27, {NATURAL_8} 11], errors_and_warnings_expand_errors_name)
-			a_table.put ([{NATURAL_8} 28, {NATURAL_8} 11], priority_high_name)
-			a_table.put ([{NATURAL_8} 29, {NATURAL_8} 11], priority_low_name)
-			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 11], tab_close_name)
-			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 11], tab_close_all_name)
-			a_table.put ([{NATURAL_8} 32, {NATURAL_8} 11], grid_expand_all_name)
-			a_table.put ([{NATURAL_8} 33, {NATURAL_8} 11], grid_collapse_all_name)
+			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 11], priority_high_name)
+			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 11], priority_low_name)
+			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 11], tab_close_name)
+			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 11], tab_close_all_name)
+			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 11], grid_expand_all_name)
+			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 11], grid_collapse_all_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 12], view_previous_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 12], view_next_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 12], view_editor_name)
@@ -9508,6 +9543,15 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 21], overlay_packaged_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 21], overlay_search_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 21], overlay_new_name)
+			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 22], errors_and_warnings_next_error_name)
+			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 22], errors_and_warnings_previous_error_name)
+			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 22], errors_and_warnings_next_warning_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 22], errors_and_warnings_previous_warning_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 22], errors_and_warnings_filter_name)
+			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 22], errors_and_warnings_filter_active_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 22], errors_and_warnings_expand_errors_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 22], errors_and_warnings_fix_ignore_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 22], errors_and_warnings_fix_apply_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 24], information_tag_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 24], information_tags_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 24], information_no_tag_name)

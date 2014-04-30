@@ -32,6 +32,7 @@ inherit
 			set_tab_stops,
 			set_default_tab_stops,
 			text,
+			text_substring,
 			set_text,
 			process_notification_info,
 			caret_position,
@@ -212,7 +213,6 @@ feature -- Status report
 			-- Currently selected text
 		require
 			exists: exists
-			has_selection: has_selection
 		local
 			a_wel_string: WEL_STRING
 			nb: INTEGER
@@ -222,8 +222,7 @@ feature -- Status report
 			Result := a_wel_string.substring (1, nb)
 		ensure
 			selected_text_not_void: Result /= Void
---			valid_length: Result.count =
---				selection_end - selection_start
+			valid_length: (create {UTF_CONVERTER}).utf_16_bytes_count (Result, 1, Result.count) // 2 = (selection_end - selection_start)
 		end
 
 	position_from_character_index (character_index: INTEGER): WEL_POINT
@@ -310,6 +309,19 @@ feature -- Status report
 			stream.release_stream
 		end
 
+	text_substring (nb: INTEGER): WEL_STRING
+			-- `nb' code units of `text' retrieved as a string.
+		local
+			l_actual_count: INTEGER
+			l_text_range: WEL_TEXT_RANGE
+		do
+				-- Selection is given in code units not in visible characters.
+			create l_text_range.make (nb + 1, 0, nb)
+			l_actual_count := {WEL_API}.send_message_result_integer (item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.em_gettextrange, to_wparam (0), l_text_range.item)
+			Result := l_text_range.text
+			Result.set_count (l_actual_count)
+		end
+
 	count: INTEGER
 			-- Length of text.
 		do
@@ -337,14 +349,15 @@ feature -- Status setting
 		end
 
 	set_caret_position (position: INTEGER)
-   			-- Set the caret position with `position'.
-   			-- If `scroll_caret_at_selection' is True, the
-   			-- caret will be scrolled to `position'.
+   			-- <Precursor>
  		local
 			range: WEL_CHARACTER_RANGE
  		do
 			create range.make (position, position)
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), range.item)
+			if scroll_caret_at_selection then
+				move_to_selection
+			end
   		end
 
 	move_to_selection

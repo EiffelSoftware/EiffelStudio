@@ -11,7 +11,8 @@ deferred class
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
-			interface
+			interface,
+			text_length
 		end
 
 	EV_PRIMITIVE_IMP
@@ -65,46 +66,168 @@ feature -- Status report
 			Result := not read_only
 		end
 
+	is_replacing_nl_by_crnl: BOOLEAN
+			-- Does current text control converts %N into %R%N?
+		do
+			Result := False
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Status report
 
 	caret_position: INTEGER
 			-- Current position of caret.
+		local
+			l_wel_string: WEL_STRING
 		do
-			Result := internal_caret_position + 1
+				-- Caret position is given in code units not in visible characters.			
+			l_wel_string := wel_text_substring (internal_wel_caret_position)
+			Result := l_wel_string.unicode_character_count + 1
+				-- Offset start position of selection to take into account
+				-- the conversion of %R%N into %N.
+			if is_replacing_nl_by_crnl then
+					-- Selection is given in code units not in visible characters.
+				Result := Result - l_wel_string.occurrences ('%R')
+			end
 		end
 
 	start_selection: INTEGER
-			-- Index of first character selected.
+			-- <Precursor>
+		local
+			l_wel_string: WEL_STRING
 		do
-			Result := wel_selection_start + 1
+				-- Selection is given in code units not in visible characters.
+			l_wel_string := wel_text_substring (wel_selection_start)
+			Result := l_wel_string.unicode_character_count + 1
+				-- Offset start position of selection to take into account
+				-- the conversion of %R%N into %N.
+			if is_replacing_nl_by_crnl then
+					-- Selection is given in code units not in visible characters.
+				Result := Result - l_wel_string.occurrences ('%R')
+			end
 		end
 
 	end_selection: INTEGER
-			-- Index of last character selected.
+			-- <Precursor>
+		local
+			l_wel_string: WEL_STRING
 		do
-			Result := wel_selection_end + 1
+				-- Selection is given in code units not in visible characters.
+			l_wel_string := wel_text_substring (wel_selection_end)
+			Result := l_wel_string.unicode_character_count + 1
+				-- Offset start position of selection to take into account
+				-- the conversion of %R%N into %N.
+			if is_replacing_nl_by_crnl then
+					-- Selection is given in code units not in visible characters.
+				Result := Result - l_wel_string.occurrences ('%R')
+			end
+		end
+
+feature -- Access
+
+	text_length: INTEGER
+			-- <Precursor>
+		local
+			l_wel_string: WEL_STRING
+		do
+				-- Most efficient solution, we only count the number of Unicode characters.
+			l_wel_string := wel_text_substring (wel_text_length)
+			Result := l_wel_string.unicode_character_count
+			if is_replacing_nl_by_crnl then
+					-- We have to remove from the count the extra `%R' that Windows insert.
+				Result := Result - l_wel_string.occurrences ('%R')
+			end
 		end
 
 feature {EV_ANY_I}-- Status setting
 
 	set_editable (flag: BOOLEAN)
-				-- If `flag' then make `Current' editable else
-				-- make `Current' component read-only.
-			do
-				if flag then
-					set_read_write
-				else
-					set_read_only
-				end
+			-- If `flag' then make `Current' editable else
+			-- make `Current' component read-only.
+		do
+			if flag then
+				set_read_write
+			else
+				set_read_only
 			end
+		end
 
 	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
-				-- We store `pos' so caret position can be restored
-				-- after operations that should not move caret, but do.
-			internal_set_caret_position (pos - 1)
+			wel_set_caret_position (actual_position_from_caret_position (pos))
+		end
+
+	actual_position_from_caret_position (pos: INTEGER): INTEGER
+			-- Return the actual WEL caret position from the logical caret position.
+		require
+			pos_positive: pos > 0
+		local
+			l_text_length: INTEGER
+			l_wel_string: WEL_STRING
+			m: MANAGED_POINTER
+			l_pos, i: INTEGER
+			l_ignore_cr: BOOLEAN
+			c: NATURAL_32
+		do
+			l_text_length := wel_text_length
+			if l_text_length > 0 then
+				from
+					l_wel_string := wel_text_substring (wel_text_length)
+					m := l_wel_string.managed_data
+					l_ignore_cr := is_replacing_nl_by_crnl
+				until
+					i > l_text_length
+				loop
+					c := m.read_natural_16 (i * 2)
+					i := i + 1
+					if c < 0xD800 or c >= 0xE000 then
+							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
+						if c /= ('%R').natural_32_code or else not l_ignore_cr then
+							l_pos := l_pos + 1
+							if l_pos = pos then
+									-- Get proper result and jump out of the loop
+								Result := i - 1
+								i := l_text_length + 1
+							end
+						end
+					else
+								-- Supplementary Planes: surrogate pair with lead and trail surrogates.						
+						if i <= l_text_length then
+							i := i + 1
+							l_pos := l_pos + 1
+							if l_pos = pos then
+									-- Get proper result and jump out of the loop
+								Result := i - 2
+								i := l_text_length + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
+	occurrences_of_char_in_substring (a_text: STRING_32; c: CHARACTER_32; start_pos, end_pos: INTEGER_32): INTEGER_32
+			-- Number of occurrences of `c' in `a_text' between characters `start_pos' to `end_pos'.
+		require
+			valid_start: start_pos >= 1
+			valid_end: end_pos <= a_text.count
+		local
+			l_area: SPECIAL [CHARACTER_32]
+			i, n: INTEGER
+		do
+			from
+				l_area := a_text.area
+				i := end_pos - 1
+				n := start_pos - 1
+			until
+				i < n
+			loop
+				if l_area.item (i) = c then
+					Result := Result + 1
+				end
+				i := i - 1
+			end
 		end
 
 	set_capacity (value: INTEGER)
@@ -127,7 +250,7 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := internal_caret_position
+			previous_caret_position := internal_wel_caret_position
 			temp_text := text
 			if caret_position > temp_text.count then
 				temp_text.append (txt.as_string_32)
@@ -135,7 +258,7 @@ feature {EV_ANY_I}-- element change
 				temp_text.insert_string (txt.as_string_32, caret_position)
 			end
 			set_text (temp_text)
-			internal_set_caret_position (previous_caret_position)
+			wel_set_caret_position (previous_caret_position)
 		end
 
 	append_text (txt:READABLE_STRING_GENERAL)
@@ -144,11 +267,11 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := internal_caret_position
+			previous_caret_position := internal_wel_caret_position
 			temp_text := text
 			temp_text.append_string_general (txt)
 			set_text (temp_text)
-			internal_set_caret_position (previous_caret_position)
+			wel_set_caret_position (previous_caret_position)
 		end
 
 	prepend_text (txt: READABLE_STRING_GENERAL)
@@ -157,11 +280,11 @@ feature {EV_ANY_I}-- element change
 			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
-			previous_caret_position := internal_caret_position
+			previous_caret_position := internal_wel_caret_position
 			temp_text :=  text
 			temp_text.prepend_string_general (txt)
 			set_text (temp_text)
-			internal_set_caret_position (previous_caret_position)
+			wel_set_caret_position (previous_caret_position)
 		end
 
 	maximum_character_width: INTEGER
@@ -192,24 +315,20 @@ feature -- Basic operation
 	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) text between
 			-- 'start_pos' and 'end_pos'
-		local
-			actual_start, actual_end: INTEGER
 		do
-			if start_pos < end_pos then
-				actual_start := start_pos - 1
-				actual_end := end_pos
-			else
-				actual_start := start_pos
-				actual_end := end_pos - 1
-			end
-			wel_set_selection (actual_start, actual_end)
+				-- Selection is using caret position whereas region is just using
+				-- character indexes, thus the + 1 for the end position.
+			set_selection (start_pos, end_pos + 1)
 		end
 
 	set_selection (a_start_pos, a_end_pos: INTEGER)
 			-- <Precursor>
+		local
+			l_start_position, l_end_position: INTEGER
 		do
-				-- Call WEL set selection taking care of zero-based caret position.
-			wel_set_selection (a_start_pos - 1, a_end_pos - 1)
+			l_start_position := actual_position_from_caret_position (a_start_pos)
+			l_end_position := actual_position_from_caret_position (a_end_pos)
+			wel_set_selection (l_start_position, l_end_position)
 		end
 
 	paste (index: INTEGER)
@@ -236,12 +355,41 @@ feature -- Basic operation
 
 feature {NONE} -- Deferred features
 
-	internal_caret_position: INTEGER
-			-- Caret position.
-		deferred
+	wel_text_item: POINTER
+			-- Actual HWND of the text part of the text component.
+			--| Useful for comboboxes where the main HWND is not a text.
+		do
+			Result := wel_item
 		end
 
-	internal_set_caret_position (a_position: INTEGER)
+	internal_wel_caret_position: INTEGER
+			-- Caret position in WEL units.
+		local
+			l_wel_point: WEL_POINT
+			sel_start, sel_end: INTEGER_32
+			l_send_message_result: POINTER
+			l_success: BOOLEAN
+		do
+			{WEL_API}.send_message (wel_text_item, {WEL_EM_CONSTANTS}.em_getsel, $sel_start, $sel_end)
+			Result := sel_end
+			if sel_start /= sel_end then
+					-- We may have a reverse selection so we need to retrieve the caret position from the control.
+				create l_wel_point.make (0, 0)
+				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
+				if l_success then
+					if attached {WEL_RICH_EDIT} Current then
+						Result := {WEL_API}.send_message_result_integer (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, l_wel_point.item)
+					else
+						l_send_message_result := {WEL_API}.send_message_result (wel_text_item,
+							{WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer,
+							cwin_make_long (l_wel_point.x, l_wel_point.y))
+						Result := {WEL_API}.loword (l_send_message_result)
+					end
+				end
+			end
+		end
+
+	wel_set_caret_position (a_position: INTEGER)
 			-- Set caret position with `a_position'.
 		deferred
 		end
@@ -249,6 +397,10 @@ feature {NONE} -- Deferred features
 	wel_set_selection (start_position, end_position: INTEGER)
 			-- Set selection between `start_position' and `end_position' expressed
 			-- in UTF-16 code units.
+		require
+			exists: exists
+			selection_in_lower_bound: start_position >= 0 and end_position >= 0
+			selection_in_upper_bound: start_position <= wel_text_length and end_position <= wel_text_length
 		deferred
 		end
 
@@ -291,14 +443,24 @@ feature {NONE} -- Deferred features
 	wel_selection_start: INTEGER
 		require
 			exists: exists
-			has_selection: has_selection
 		deferred
 		end
 
 	wel_selection_end: INTEGER
 		require
 			exists: exists
-			has_selection: has_selection
+		deferred
+		end
+
+	wel_text_length: INTEGER
+		require
+			exists: exists
+		deferred
+		end
+
+	wel_text_substring (nb: INTEGER): WEL_STRING
+		require
+			exists: exists
 		deferred
 		end
 

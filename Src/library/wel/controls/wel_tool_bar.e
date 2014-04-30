@@ -20,6 +20,7 @@ inherit
 		redefine
 			process_notification_info,
 			text,
+			text_substring,
 			text_length,
 			set_text
 		end
@@ -678,11 +679,16 @@ feature {NONE} -- Externals
 			"MAKEWPARAM"
 		end
 
-feature {NONE} -- Inapplicable
+feature -- Inapplicable
 
 	text: STRING_32
 		do
 			create Result.make_empty
+		end
+
+	text_substring (nb: INTEGER_32): WEL_STRING
+		do
+			create Result.make_empty (0)
 		end
 
 	text_length: INTEGER
@@ -694,7 +700,7 @@ feature {NONE} -- Inapplicable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -19,6 +19,7 @@ inherit
 		redefine
 			set_text,
 			text,
+			text_substring,
 			text_length
 		end
 
@@ -375,6 +376,12 @@ feature {NONE} -- Inapplicable
 			-- Window text
 		do
 			create Result.make_empty
+		end
+
+	text_substring (nb: INTEGER): WEL_STRING
+			-- <Precursor>
+		do
+			create Result.make_empty (0)
 		end
 
 	text_length: INTEGER

@@ -14,10 +14,11 @@ inherit
 	EV_RICH_TEXT_I
 		rename
 			last_load_successful as implementation_last_load_successful
+		undefine
+			text_length
 		redefine
 			interface,
-			selected_text,
-			text_length
+			selected_text
 		end
 
 	EV_TEXT_IMP
@@ -28,6 +29,7 @@ inherit
 			wel_caret_position,
 			wel_set_caret_position,
 			text,
+			wel_text_substring,
 			wel_text,
 			process_notification_info,
 			set_tab_stops_array,
@@ -37,8 +39,6 @@ inherit
 			wel_set_text,
 			destroy,
 			has_selection,
-			start_selection,
-			end_selection,
 			wel_selection_start,
 			wel_selection_end,
 			wel_set_selection
@@ -49,23 +49,15 @@ inherit
 			disable_word_wrapping,
 			first_position_from_line_number,
 			last_position_from_line_number,
-			caret_position,
-			set_caret_position,
-			select_region,
-			start_selection,
-			end_selection,
 			on_erase_background,
 			line_number_from_position,
 			enable_redraw,
-			on_en_change,
-			text_length,
-			wel_text_length,
 			set_background_color,
 			scroll_to_end,
 			selected_text,
 			make,
 			initialize_text_widget,
-			internal_caret_position
+			is_replacing_nl_by_crnl
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -101,6 +93,7 @@ inherit
 			set_caret_position as wel_set_caret_position,
 			text as wel_text,
 			text_length as wel_text_length,
+			text_substring as wel_text_substring,
 			set_text as wel_set_text,
 			line as wel_line,
 			line_number_from_position as wel_line_number_from_position,
@@ -145,7 +138,6 @@ inherit
 			disable,
 			enable,
 			background_brush,
-			wel_text_length,
 			wel_foreground_color,
 			wel_background_color,
 			class_name,
@@ -163,7 +155,6 @@ inherit
 			rtf_stream_in,
 			on_erase_background,
 			enable_redraw,
-			on_en_change,
 			selected_text
 		end
 
@@ -279,33 +270,31 @@ feature -- Initialization
 			Result := Ws_ex_clientedge
 		end
 
-feature -- Access
-
-	internal_caret_position: INTEGER
-			-- <Precursor>
-		local
-			l_wel_point: WEL_POINT
-			sel_start, sel_end: INTEGER_32
-			l_success: BOOLEAN
-		do
-			{WEL_API}.send_message (wel_item, Em_getsel, $sel_start, $sel_end)
-			Result := sel_end
-			if sel_start /= sel_end then
-				create l_wel_point.make (0, 0)
-				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
-				if l_success then
-					Result := {WEL_API}.send_message_result_integer (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, l_wel_point.item)
-				end
-			end
-		end
-
 feature -- Status report
+
+	is_replacing_nl_by_crnl: BOOLEAN
+		do
+			Result := False
+		end
 
 	text: STRING_32
 			-- text of `Current'.
+		local
+			i, nb: INTEGER
 		do
-			Result := wel_text
-			Result.prune_all ('%R')
+			Result := wel_text_substring (wel_text_length).string
+				-- Replace all %R with %N since that's what we get from Windows.
+			from
+				i := 1
+				nb := Result.count
+			until
+				i > nb
+			loop
+				if Result.item (i) = '%R' then
+					Result.put ('%N', i)
+				end
+				i := i + 1
+			end
 		end
 
 	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT
@@ -318,7 +307,7 @@ feature -- Status report
 			else
 				disable_redraw
 				safe_store_caret
-				wel_set_selection (caret_index - 1, caret_index - 1)
+				set_selection (caret_index, caret_index)
 			end
 			Result := internal_selected_character_format
 			if not already_set then
@@ -422,7 +411,8 @@ feature -- Status report
 			current_selection: WEL_CHARACTER_RANGE
 		do
 			disable_redraw
-			current_selection := selection
+			current_selection := internal_selection
+			current_selection.update_with_rich_edit (Current)
 			if current_selection.minimum /= current_selection.maximum and
 				start_index = current_selection.minimum + 1 and
 				end_index = current_selection.maximum + 1
@@ -536,7 +526,8 @@ feature -- Status report
 			mask: INTEGER
 		do
 			disable_redraw
-			current_selection := selection
+			current_selection := internal_selection
+			current_selection.update_with_rich_edit (Current)
 			if current_selection.minimum /= current_selection.maximum and
 				start_position = current_selection.minimum + 1 and
 				end_position = current_selection.maximum + 1
@@ -638,7 +629,8 @@ feature -- Status report
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			flags, mask: INTEGER
 		do
-			current_selection := selection
+			current_selection := internal_selection
+			current_selection.update_with_rich_edit (Current)
 			if current_selection.minimum /= current_selection.maximum and
 				start_position = current_selection.minimum + 1 and
 				end_position = current_selection.maximum + 1
@@ -714,7 +706,7 @@ feature -- Status report
 			then
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
-				Result := text.count
+				Result := text_length
 			end
 		end
 
@@ -734,53 +726,6 @@ feature -- Status report
 			end
 		end
 
-	caret_position: INTEGER
-			-- Current position of caret.
-		do
-			Result := (wel_caret_position + 1).min (text_length + 1)
-		end
-
-	set_caret_position (pos: INTEGER)
-			-- set current caret position.
-			--| This position is used for insertions.
-		do
-			wel_set_caret_position (pos - 1)
-		end
-
-	start_selection: INTEGER
-			-- Index of first character selected.
-		do
-			Result := wel_selection_start + 1
-		end
-
-	end_selection: INTEGER
-			-- Index of last character selected.
-		do
-			Result := wel_selection_end + 1
-		end
-
-	wel_text_length, text_length: INTEGER
-			-- Number of characters comprising `text'. This is an optimized
-			-- version, which only recomputes the length if not `text_up_to_date'.
-		local
-			l_length: INTEGER
-		do
-			if has_word_wrapping then
-				l_length := cwin_get_window_text_length (wel_item)
-				if not text_up_to_date or l_length /= private_windows_text_length then
-					private_windows_text_length := l_length
-					internal_text_length := text.count
-					Result := internal_text_length
-					text_up_to_date := True
-				else
-					Result := internal_text_length
-				end
-			else
-				-- If no wrapping we can calculate this the quick way.
-				Result := cwin_get_window_text_length (wel_item) - line_count + 1
-			end
-		end
-
 	selected_text: STRING_32
 			-- Text currently selected in `Current'.
 		local
@@ -788,7 +733,7 @@ feature -- Status report
 		do
 				-- Get the text from WEL
 			Result := Precursor {WEL_RICH_EDIT}
-				-- Replace all %R with %N since that's what we have from Windows.
+				-- Replace all %R with %N since that's what we get from Windows.
 			from
 				i := 1
 				nb := Result.count
@@ -815,14 +760,14 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT)
+	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately.
 		local
 			wel_character_format: detachable WEL_CHARACTER_FORMAT2
 		do
 			safe_store_caret
-			wel_set_selection (first_pos - 1, last_pos - 1)
+			set_selection (start_position, end_position)
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void then
@@ -1352,22 +1297,6 @@ feature -- Status setting
 			update_tab_positions (1)
 		end
 
-	select_region (start_pos, end_pos: INTEGER)
-			-- Select (hilight) text between
-			-- 'start_pos' and 'end_pos'
-		local
-			actual_start, actual_end: INTEGER
-		do
-			if start_pos < end_pos then
-				actual_start := start_pos - 1
-				actual_end := end_pos
-			else
-				actual_start := start_pos
-				actual_end := end_pos - 1
-			end
-			wel_set_selection (actual_start, actual_end)
-		end
-
 	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
@@ -1388,7 +1317,7 @@ feature -- Status setting
 		do
 			must_restore_selection := False
 			internal_actions_blocked := True
-			original_caret_position := internal_caret_position.min (text_length)
+			original_caret_position := internal_wel_caret_position.min (text_length)
 			if has_selection then
 				must_restore_selection := True
 				original_selection_start := wel_selection_start
@@ -1482,7 +1411,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 				else
 						-- Store last known caret position, so that `safe_restore_caret' can determine in which
 						-- direction the selection is changing, and set it appropriately.
-					last_known_caret_position := internal_caret_position
+					last_known_caret_position := internal_wel_caret_position
 				end
 				if selection_type = {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
 					if must_fire_final_selection then
@@ -1712,29 +1641,6 @@ feature {NONE} -- Implementation
 			{WEL_API}.send_message (wel_item, wm_setredraw, to_wparam (1), to_lparam (0))
 			invalidate_without_background
 		end
-
-	on_en_change
-			-- `Text' has been modified.
-			--| We call the change_actions.
-		do
-			if change_actions_internal /= Void then
-				change_actions_internal.call (Void)
-			end
-			text_up_to_date := False
-		end
-
-	internal_text_length: INTEGER
-		-- Internal length of `text' in `Current'. This is only recomputed when
-		-- `text_length' is called and `text_up_to_date' is False.
-
-	text_up_to_date: BOOLEAN
-		-- Is `text' of `Current' up to date? Used to buffer calls to `text' and `text_length'.
-
-	private_windows_text_length: INTEGER
-		-- The last value that windows returned as being the text length.
-		-- We cannot use this directly as it includes %R%N but we can use
-		-- it as a final check in `wel_text_length' to see if we must recomupte
-		-- the length.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

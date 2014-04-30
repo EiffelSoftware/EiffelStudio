@@ -45,8 +45,9 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_title: STRING = "Inspector Eiffel"
+	t_title: STRING = "Eiffel Inspector (experimental)"
 			-- The title of this tool.
+			--| FIXME: Manu 2014/04: remove (experimental) when all major issues have been ironed out.
 
 ;note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

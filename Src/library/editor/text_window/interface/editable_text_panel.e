@@ -94,7 +94,7 @@ feature -- Content change
 	display_message (message: STRING_32)
 			-- Display `message' in the editor.
 		local
-			e: ENCODING
+			e: detachable ENCODING
 		do
 				-- Display all messages as UTF-32.
 			e := user_encoding

@@ -709,8 +709,9 @@ feature {NONE} -- User interface manipulation
 					end
 					add_from_template_menu.enable_sensitive
 				else
+						-- No templates were found in our delivery or in the user directory,
+						-- we disable the menu entry.
 					add_from_template_menu.disable_sensitive
-					check corrupt_delivery: False end
 				end
 			else
 				add_from_template_menu.disable_sensitive
@@ -1587,7 +1588,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

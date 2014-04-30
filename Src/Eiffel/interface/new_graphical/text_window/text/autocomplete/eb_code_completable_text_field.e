@@ -197,13 +197,13 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 	selection_start_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN
 			-- Start token in the selection.
 		do
-			Result := token_at_position (selection_start, a_line)
+			Result := token_at_position (start_selection, a_line)
 		end
 
 	selection_end_token_in_line (a_line: EDITOR_LINE) : EDITOR_TOKEN
 			-- Token after end of selection.
 		do
-			Result := token_at_position (selection_end, a_line)
+			Result := token_at_position (end_selection, a_line)
 		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
@@ -420,13 +420,13 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 	go_to_start_of_selection
 			-- Move cursor to the start of the selection.
 		do
-			set_caret_position (selection_start)
+			set_caret_position (start_selection)
 		end
 
 	go_to_end_of_selection
 			-- Move cursor to the end of the selection.
 		do
-			set_caret_position (selection_end + 1)
+			set_caret_position (end_selection)
 		end
 
 	go_to_start_of_line
@@ -630,7 +630,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

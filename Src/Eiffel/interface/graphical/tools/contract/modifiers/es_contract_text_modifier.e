@@ -37,12 +37,9 @@ feature {NONE} -- Access
 
 	template: detachable CODE_TEMPLATE_DEFINITION
 			-- Contract code template
-		local
-			l_service: like code_template_catalog
 		do
-			l_service := code_template_catalog
-			if l_service.is_service_available then
-				Result := l_service.service.template_by_shortcut (template_identifier)
+			if attached code_template_catalog.service as l_service then
+				Result := l_service.template_by_shortcut (template_identifier)
 			end
 		end
 
@@ -148,8 +145,8 @@ feature -- Basic operations
 						insert_code (l_pos, l_renderer.code)
 					else
 							-- Report error
-						if logger.is_service_available then
-							logger.service.put_message_format_with_severity ("No suitable contract template could be found for `{1}' in {2}, for the current version of the compiler.", [template_identifier, context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.high)
+						if attached logger.service as l_logger then
+							l_logger.put_message_format_with_severity ("No suitable contract template could be found for `{1}' in {2}, for the current version of the compiler.", [template_identifier, context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.high)
 						end
 					end
 				end
@@ -163,7 +160,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

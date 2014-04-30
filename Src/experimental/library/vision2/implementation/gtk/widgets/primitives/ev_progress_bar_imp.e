@@ -17,17 +17,10 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			old_make,
 			make
 		end
 
 feature {NONE} -- Implementation
-
-	old_make (an_interface: like interface)
-			-- Create the progress bar.
-		do
-			Precursor {EV_GAUGE_IMP} (an_interface)
-		end
 
 	make
 			-- Create and initialize `Current'
@@ -90,14 +83,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PROGRESS_BAR_IMP

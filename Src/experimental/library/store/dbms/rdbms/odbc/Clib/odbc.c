@@ -422,7 +422,7 @@ void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_cou
 /* DESCRIPTION:                                                  */
 /*   In DYNAMICALLY EXECUTE mode perform the SQL statement. But  */
 /* this routine only get things ready for dynamic execution:     */
-/*   1. get the SQL statement PREPAREd; and check if there are   */
+/*   1. get the SQL statement PREPARED; and check if there are   */
 /*      warning message for the SQL statement;                   */
 /*   2. DESCRIBE the SQL statement and get enough information to */
 /*      allocate enough memory space for the corresponding       */
@@ -433,15 +433,15 @@ void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_cou
 void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, int argNum)
 {
 	int is_as_primary = 0;
-	int buf_count, found_byte_count;
+	int found_byte_count;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	COUNTABLE_STRING *l_qualifier, *l_owner;
 
-#define COMPARED_BTYES	(9 * sizeof (SQLTCHAR))
+/* Predefined names have at minimum 9 characters (shortest being "sqltables". */
 #define COMPARED_LENGTH	(9)
-#define DB_MAX_TABLE_LEN (50)
+#define COMPARED_BYTES	(COMPARED_LENGTH * sizeof (SQLTCHAR))
 
-	SQLTCHAR tmpBuf[DB_MAX_TABLE_LEN];
+	SQLTCHAR *order_in_lower;
 	SQLTCHAR sqltab[30];
 	SQLTCHAR sqlcol[30];
 	SQLTCHAR sqlproc[30];
@@ -449,11 +449,11 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	SQLTCHAR sqlfk[30];
 	SQLTCHAR sqlfk_as_primary[30];
 
-	ATSTXTCPY(sqltab, "sqltables");
-	ATSTXTCPY(sqlcol, "sqlcolumns");
+	ATSTXTCPY(sqltab,  "sqltables");
+	ATSTXTCPY(sqlcol,  "sqlcolumns");
 	ATSTXTCPY(sqlproc, "sqlprocedu");
-	ATSTXTCPY(sqlpk, "sqlprimary");
-	ATSTXTCPY(sqlfk, "sqlforeign");
+	ATSTXTCPY(sqlpk,   "sqlprimary");
+	ATSTXTCPY(sqlfk,   "sqlforeign");
 	ATSTXTCPY(sqlfk_as_primary, "sqlforeignkeysprimary");
 
 
@@ -468,91 +468,68 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	RESET_STRING(&l_con->warn_message);
 
 	l_con->flag[no_desc] = ODBC_SQL;
-	buf_count = (DB_MAX_TABLE_LEN > order_count ? order_count : DB_MAX_TABLE_LEN);
 
 	if (order_count >= COMPARED_LENGTH) {
-		memcpy(tmpBuf, order, buf_count * sizeof (SQLTCHAR));
-		tmpBuf[buf_count] = (SQLTCHAR)0;
-		change_to_low(tmpBuf, buf_count);
-		if (memcmp(tmpBuf, sqltab, COMPARED_BTYES) == 0)
-		{
+		ODBC_SAFE_ALLOC(order_in_lower, (SQLTCHAR *) malloc ((order_count + 1) * sizeof(SQLTCHAR)));
+		memcpy(order_in_lower , order, order_count * sizeof (SQLTCHAR));
+		order_in_lower [order_count] = (SQLTCHAR)0;
+		change_to_low(order_in_lower , order_count);
+		if (memcmp(order_in_lower , sqltab, COMPARED_BYTES) == 0) {
 			l_con->flag[no_desc] = ODBC_CATALOG_TAB;
-			found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
 
 			l_qualifier = &l_con->odbc_qualifier;
 			l_owner = &l_con->odbc_owner;
-			if (found_byte_count)
-			{
+			if (found_byte_count) {
 				if (l_qualifier->char_count > 0 && l_owner->char_count > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, l_owner->string, (SQLSMALLINT)l_owner->char_count, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count == 0 && l_owner->char_count > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, l_owner->string, (SQLSMALLINT)l_owner->char_count, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count > 0 && l_owner->char_count == 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
 				if (l_qualifier->char_count == 0 && l_owner->char_count == 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-			}
-			else
-			{
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
+			} else {
 				l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 				RESET_STRING (l_qualifier);
 				RESET_STRING (l_owner);
 			}
-		}
-		else
-		{
-			if (memcmp(tmpBuf, sqlcol, COMPARED_BTYES) == 0)
-			{
-				l_con->flag[no_desc] = ODBC_CATALOG_COL;
-				found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-				if (found_byte_count) {
-					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-				} else {
-					l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
-				}
+		} else if (memcmp(order_in_lower , sqlcol, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_CATALOG_COL;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count) {
+				l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0);
+			} else {
+				l_con->rc = SQLColumns(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
 			}
-			else
-			{
-				if (memcmp(tmpBuf, sqlproc, COMPARED_BTYES) == 0)
-				{
-					l_con->flag[no_desc] = ODBC_CATALOG_PROC;
-					found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-					if (found_byte_count){
-						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-					}
-					else{
-						l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
-					}
-				}
-				else
-				{
-					if (memcmp(tmpBuf, sqlpk, COMPARED_BTYES) == 0)
-					{
-						l_con->flag[no_desc] = ODBC_PK;
-						found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-						if (found_byte_count) {
-							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-						}
-						else {
-							l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
-						}
-					}
-					else {
-						if (memcmp(tmpBuf, sqlfk, COMPARED_BTYES) == 0) {
-							is_as_primary = (memcmp(tmpBuf, sqlfk_as_primary, 21) ? 0 : 1);
-							l_con->flag[no_desc] = ODBC_FK;
-							found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
-								/* Now let's find what type of primary keys we are looking for. */
-							if (is_as_primary) {
-								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0, NULL, 0, NULL, 0);
-							} else {
-								l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count);
-							}
-						}
-					}
-				}
- 			}
+		} else if (memcmp(order_in_lower , sqlproc, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_CATALOG_PROC;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count){
+				l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			} else {
+				l_con->rc = SQLProcedures(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+			}
+		} else if (memcmp(order_in_lower , sqlpk, COMPARED_BYTES) == 0) {
+			l_con->flag[no_desc] = ODBC_PK;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+			if (found_byte_count) {
+				l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			} else {
+				l_con->rc = SQLPrimaryKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
+			}
+		} else if (memcmp(order_in_lower , sqlfk, COMPARED_BYTES) == 0) {
+			is_as_primary = (memcmp(order_in_lower , sqlfk_as_primary, 21) ? 0 : 1);
+			l_con->flag[no_desc] = ODBC_FK;
+			found_byte_count = find_name (order_in_lower, order_count, order, order_count);
+				/* Now let's find what type of primary keys we are looking for. */
+			if (is_as_primary) {
+				l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count, NULL, 0, NULL, 0, NULL, 0);
+			} else {
+				l_con->rc = SQLForeignKeys(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, order_in_lower , (SQLSMALLINT)found_byte_count);
+			}
 		}
+		ODBC_C_FREE(order_in_lower);
 	}
 
 	if (l_con->rc) {
@@ -567,8 +544,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
-	/* Process general ODBC SQL statements    */
-
+			/* Process general ODBC SQL statements    */
 		l_con->rc = SQLPrepare(l_con->hstmt[no_desc], order, order_count);
 		if (l_con->rc) {
 			odbc_error_handler(con, l_con->hstmt[no_desc],4);
@@ -582,7 +558,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	}
 
 	if (argNum > 0) {
-		/* Reset memory to be safe */
+			/* Reset memory to be safe */
 		ODBC_SAFE_ALLOC(l_con->pcbValue[no_desc], (SQLLEN *) calloc(argNum, sizeof(SQLLEN)));
 	} else {
 		ODBC_C_FREE(l_con->pcbValue[no_desc]);
@@ -688,7 +664,7 @@ void odbc_start_order (void *con, int no_desc)
 
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
-	/* Process general ODBC SQL statements    */
+			/* Process general ODBC SQL statements    */
 		l_con->rc = SQLExecute(l_con->hstmt[no_desc]);
 		if (l_con->rc) {
 			odbc_error_handler(con, l_con->hstmt[no_desc],7);
@@ -1050,8 +1026,11 @@ int odbc_next_row (void *con, int no_des)
 			SQLULEN l_terminator_size = 0;
 			l_con->odbc_indicator[no_des][i] = 0;
 				/* String data have an extra character for the null terminating character. */
-			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
-				l_terminator_size = sizeof(SQLTCHAR);
+			if (GetDbCType(dap, i) == SQL_C_WCHAR) {
+				l_terminator_size = sizeof(SQLWCHAR);
+				old_length += l_terminator_size;
+			} else if (GetDbCType(dap, i) == SQL_C_CHAR) {
+				l_terminator_size = sizeof(SQLCHAR);
 				old_length += l_terminator_size;
 			}
 			if (GetDbCType(dap, i) == SQL_C_NUMERIC){
@@ -1210,68 +1189,113 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 
 	SQLUSMALLINT seriNumber = (SQLUSMALLINT)seri;
 	SQLSMALLINT direction = (SQLSMALLINT)dir;
+	SQLSMALLINT l_sql_data_type, l_eiffel_type, l_decimal_digits;
+	SQLULEN l_param_size;
 	SQLLEN len;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	SQL_NUMERIC_STRUCT *l_num;
 	SQLHDESC hdesc = NULL;
+	int l_is_binary;
 
 	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
 	l_con->rc = 0;
 	direction = SQL_PARAM_INPUT;
-	switch (eifType) {
-		case CHARACTER_TYPE:
-		case STRING_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_CHAR, SQL_CHAR, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case WSTRING_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, SQL_WCHAR, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case INTEGER_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, SQL_INTEGER, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case INTEGER_16_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, SQL_SMALLINT, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case INTEGER_64_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, SQL_BIGINT, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case FLOAT_TYPE:
-			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, SQL_DOUBLE, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case REAL_TYPE:
-			/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, SQL_REAL, 0, 0, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case BOOLEAN_TYPE:
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, SQL_BIT, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case DATE_TYPE:
-			len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
-			break;
-		case DECIMAL_TYPE:
-			l_num = (SQL_NUMERIC_STRUCT *)value;
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
+	l_con->rc = SQLDescribeParam(l_con->hstmt[no_desc], seriNumber, &l_sql_data_type, &l_param_size, &l_decimal_digits, NULL);
+	if (!l_con->rc) {
+		switch (eifType) {
+			case EIF_C_CHARACTER_TYPE:
+			case EIF_C_STRING_TYPE:
+					/* Depending on the size of the columnm the SQL data type is different. Because we do not
+					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
+					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
+					 * force the usage of SQL_LONGVARCHAR. See autotests#TEST_LARGE_DATA.
+					 * Note that we can only do that if the computed type was not a binary type
+					 * as otherwise we would get an error as char is incompatible with binary. See
+					 * autotest#TEST_BINARY_CONTENT. */
+				l_is_binary = (l_sql_data_type == SQL_VARBINARY) || (l_sql_data_type == SQL_LONGVARBINARY);
+				if ((l_param_size == 0) && !l_is_binary) {
+						/* Heuristic shows that when it is 0, it means it is unbounded. */
+					l_sql_data_type = SQL_LONGVARCHAR;
+				}
+				if (l_is_binary) {
+						/* To avoid having to encode the binary in hexa decimal on the client side,
+						 * we just tell that the client side has already done the transformation.
+						 * See autotest#TEST_BINARY_CONTENT. */
+					l_eiffel_type = SQL_C_BINARY;
+				} else {
+					l_eiffel_type = SQL_C_CHAR;
+				}
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, l_eiffel_type, l_sql_data_type, value_count, DB_SIZEOF_CHAR, value, value_count, &(l_con->pcbValue[no_desc][seriNumber-1]));
+				break;
+			case EIF_C_WSTRING_TYPE:
+					/* Depending on the size of the columnm the SQL data type is different. Because we do not
+					 * know this size, we query SQLDescribParam which gives us an answer. However it is not
+					 * perfect because for large strings, the `l_param_size' value will be 0. In which case, we
+					 * force the usage of SQL_WLONGVARCHAR. See autotests#TEST_LARGE_DATA.
+					 * Note that we can only do that if the computed type was not a binary type
+					 * as otherwise we would get an error as char is incompatible with binary. See
+					 * autotest#TEST_BINARY_CONTENT. */
+				l_is_binary = (l_sql_data_type == SQL_VARBINARY) || (l_sql_data_type == SQL_LONGVARBINARY);
+				if ((l_param_size == 0) && !l_is_binary) {
+						/* Heuristic shows that when it is 0, it means it is unbounded. */
+					l_sql_data_type = SQL_WLONGVARCHAR;
+				}
+					/* Note that we always have SQL_C_WCHAR as input even if it is a binary field as it won't make sense
+					 * to use a STRING_32 to store binary data, so we will assume that input has been converted to hexa decimal before. */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_WCHAR, l_sql_data_type, value_count, DB_SIZEOF_WCHAR, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_32_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SLONG, l_sql_data_type, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_16_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SSHORT, l_sql_data_type, value_count, DB_SIZEOF_SHORT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_INTEGER_64_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_SBIGINT, l_sql_data_type, value_count, DB_SIZEOF_BIGINT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_REAL_64_TYPE:
+				/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DOUBLE, l_sql_data_type, l_param_size, l_decimal_digits , value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_REAL_32_TYPE:
+				/* See example: http://msdn.microsoft.com/en-us/library/ms710963%28v=VS.85%29.aspx */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_FLOAT, l_sql_data_type, l_param_size, l_decimal_digits, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_BOOLEAN_TYPE:
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_BIT, l_sql_data_type, value_count, DB_SIZEOF_INT, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_DATE_TYPE:
+				len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, l_sql_data_type, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			case EIF_C_DECIMAL_TYPE:
+				l_num = (SQL_NUMERIC_STRUCT *)value;
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, l_sql_data_type, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
 
-			/* Modify the fields in the implicit application parameter descriptor */
-			/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
-			SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
-			SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
-			break;
-		default:
-			odbc_error_handler(con, NULL, 204);
-			ATCSTXTCAT(&l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
-			odbc_error_handler(con, NULL, 110);
-			return;
+				/* Modify the fields in the implicit application parameter descriptor */
+				/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
+				SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
+				SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
+				break;
+			case EIF_C_NULL_TYPE:
+				l_con->pcbValue[no_desc][seriNumber-1] = SQL_NULL_DATA;
+					/* We use SQL_C_DEFAULT, since we are just storing NULL. */
+				l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_DEFAULT, l_sql_data_type, l_param_size, l_decimal_digits, NULL, 0, &(l_con->pcbValue[no_desc][seriNumber - 1]));
+				break;
+			default:
+				odbc_error_handler(l_con, NULL, 204);
+				ATCSTXTCAT(&l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
+				odbc_error_handler(l_con, NULL, 110);
+				return;
+		}
 	}
 	if (l_con->rc) {
-		odbc_error_handler(con, l_con->hstmt[no_desc], l_con->rc);
-		return;
+		odbc_error_handler(l_con, l_con->hstmt[no_desc], l_con->rc);
 	}
+	return;
 }
 
 /*****************************************************************/
@@ -1408,7 +1432,7 @@ SQLTCHAR *odbc_qualifier_separator() {
 /* PARAMETER: qfy -- the content of qualifier                    */
 /* DESCRIPTION:                                                  */
 /*   Set qualifier to a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */
+/* to implement command "SQLTable(table_name)" conveniently.     */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len) {
@@ -1427,7 +1451,7 @@ void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len) {
 /* PARAMETER: owner- the owner                                   */
 /* DESCRIPTION:                                                  */
 /*   Set owner to     a global variable. The function is used    */
-/* to implement command "SQLTable(tanle_name)" conviently.       */
+/* to implement command "SQLTable(table_name)" conveniently.     */
 /*                                                               */
 /*****************************************************************/
 void odbc_set_owner(void *con, SQLTCHAR *owner, int len) {
@@ -1849,37 +1873,37 @@ int odbc_conv_type (int typeCode)
 		case SQL_LONGVARBINARY:
 		case SQL_SS_XML:
 		case SQL_C_GUID:
-			return STRING_TYPE;
+			return EIF_C_STRING_TYPE;
 		case SQL_WCHAR:
 		case SQL_WVARCHAR:
 		case SQL_WLONGVARCHAR:
-			return WSTRING_TYPE;
+			return EIF_C_WSTRING_TYPE;
 		case SQL_DECIMAL:
 		case SQL_NUMERIC:
-			return DECIMAL_TYPE;
+			return EIF_C_DECIMAL_TYPE;
 		case SQL_FLOAT:
 		case SQL_DOUBLE:
-			return FLOAT_TYPE;
+			return EIF_C_REAL_64_TYPE;
 		case SQL_REAL:
-			return REAL_TYPE;
+			return EIF_C_REAL_32_TYPE;
 		case SQL_TINYINT:
 		case SQL_SMALLINT:
-			return INTEGER_16_TYPE;
+			return EIF_C_INTEGER_16_TYPE;
 		case SQL_INTEGER:
-			return INTEGER_TYPE;
+			return EIF_C_INTEGER_32_TYPE;
 		case SQL_BIGINT:
-			return INTEGER_64_TYPE;
+			return EIF_C_INTEGER_64_TYPE;
 		case SQL_BIT:
-			return BOOLEAN_TYPE;
+			return EIF_C_BOOLEAN_TYPE;
 		case SQL_DATE:
 		case SQL_TYPE_DATE:
 		case SQL_TIME:
 		case SQL_TYPE_TIME:
 		case SQL_TIMESTAMP:
 		case SQL_TYPE_TIMESTAMP:
-			return DATE_TYPE;
+			return EIF_C_DATE_TYPE;
 		default:
-			return UNKNOWN_TYPE;
+			return EIF_C_UNKNOWN_TYPE;
 	}
 }
 

@@ -32,6 +32,7 @@ feature -- Status report
 
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
+			-- i.e: cursor is out of stream range.
 		do
 			Result := source.end_of_input
 		end
@@ -76,7 +77,7 @@ feature -- Basic operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

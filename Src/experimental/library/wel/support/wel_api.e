@@ -46,6 +46,14 @@ feature -- Windows
 			"SetWindowText"
 		end
 
+	get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER
+			-- SDK GetWindowText
+		external
+			"C macro signature (HWND, LPTSTR, int): EIF_INTEGER use <windows.h>"
+		alias
+			"GetWindowText"
+		end
+
 	set_parent (hwnd_child, hwnd_parent: POINTER): POINTER
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.

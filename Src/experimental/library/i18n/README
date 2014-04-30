@@ -23,7 +23,7 @@ Under Windows for use without .NET:
 	If you are using the Borland compiler, you just need to run the 'make_bcb.bat' file in the Clib\ directory.
 	
 	If you are using Microsoft Visual Studio, you'll have to play with environment variables for a bit longer.
-	You can follow the instructions given at http://eiffelsoftware.origo.ethz.ch/index.php/Windows_32-bit_C_compiler , or you can try doing it yourself.
+	You can follow the instructions given at http://dev.eiffel.com/Windows_32-bit_C_compiler , or you can try doing it yourself.
 	In our case this involved:
 		1. Making sure ISE_EIFFEL, ISE_C_COMPILER and ISE_PLATFORM were set.
 		2. Changing the INCLUDE variable to contain something like
@@ -48,8 +48,8 @@ Both a user guide and a developer guide can be found in the "doc" directory. As 
 HTML and text formats are available. 
 
 Up-to-date and/or prettier versions can be found at the following two URLS:
-http://eiffelsoftware.origo.ethz.ch/index.php/Internationalization/User_guide
-http://eiffelsoftware.origo.ethz.ch/index.php/Internationalization/Developer_guide
+http://dev.eiffel.com/Internationalization/User_guide
+http://dev.eiffel.com/Internationalization/Developer_guide
 
 HISTORY
 

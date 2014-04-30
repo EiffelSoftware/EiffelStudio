@@ -35,6 +35,15 @@ feature {NONE} -- Initialization
 			l_socket.set_blocking
 			l_socket.set_nodelay
 			l_socket.connect
+
+				-- In case we could not connect, we have noticed that on IPv6 systems, it is possible
+				-- that EiffelStudio will only create the IPv4 socket on Linux. So we try again in IPv4.
+			if not l_socket.is_connected then
+				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_IMPL_V4}).loopback_address, port)
+				l_socket.set_blocking
+				l_socket.set_nodelay
+				l_socket.connect
+			end
 			socket := l_socket
 			main_loop
 		end
@@ -136,7 +145,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -536,16 +536,16 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			Result := internal_text_field.has_selection
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of the first character selected.
 		do
-			Result := internal_text_field.selection_start
+			Result := internal_text_field.start_selection
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of the last character selected.
 		do
-			Result := internal_text_field.selection_end
+			Result := internal_text_field.end_selection
 		end
 
 	set_capacity (a_capacity: INTEGER)
@@ -607,7 +607,7 @@ feature -- EV_TEXT_COMPONENT_I implementation
 	set_selection (a_start_pos, a_end_pos: INTEGER)
 			-- <Precursor>
 		do
-			internal_text_field.text_component_imp_set_selection (a_start_pos, a_end_pos)
+			internal_text_field.set_selection (a_start_pos, a_end_pos)
 		end
 
 	deselect_all
@@ -816,7 +816,7 @@ invariant
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

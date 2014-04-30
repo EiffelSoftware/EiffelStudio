@@ -26,6 +26,8 @@ feature -- Access
 
 	numeric_t: REAL_64
 
+	other_numeric_t: REAL_32
+
 feature -- Query
 
 	is_equal (other: like Current): BOOLEAN
@@ -38,7 +40,8 @@ feature -- Query
 					int_64 = other.int_64 and then
 					real_32_t = other.real_32_t and then
 					real_64_t = other.real_64_t and then
-					numeric_t = other.numeric_t
+					numeric_t = other.numeric_t and then
+					other_numeric_t = other.other_numeric_t
 		end
 
 feature -- Element Change
@@ -79,6 +82,12 @@ feature -- Element Change
 			numeric_t := i
 		end
 
+	set_other_numeric_t (i: REAL_32)
+			-- Set `other_numeric_t' with `i'.
+		do
+			other_numeric_t := i
+		end
+
 feature -- Output
 
 	out_32: STRING_32
@@ -102,6 +111,9 @@ feature -- Output
 			Result.append_string_general ("%T")
 			Result.append_string_general ("numeric_t:")
 			Result.append_string_general (numeric_t.out)
+			Result.append_string_general ("%T")
+			Result.append_string_general ("other_numeric_t:")
+			Result.append_string_general (other_numeric_t.out)
 			Result.append_string_general ("%T")
 		end
 

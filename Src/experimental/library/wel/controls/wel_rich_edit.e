@@ -32,6 +32,7 @@ inherit
 			set_tab_stops,
 			set_default_tab_stops,
 			text,
+			text_substring,
 			set_text,
 			process_notification_info,
 			caret_position,
@@ -106,14 +107,22 @@ feature -- Status report
 
 	selection_start: INTEGER
 			-- Index of the first character selected
+		local
+			l_selection: like internal_selection
 		do
-			Result := selection.minimum
+			l_selection := internal_selection
+			l_selection.update_with_rich_edit (Current)
+			Result := l_selection.minimum
 		end
 
 	selection_end: INTEGER
 			-- Index of the last character selected
+		local
+			l_selection: like internal_selection
 		do
-			Result := selection.maximum
+			l_selection := internal_selection
+			l_selection.update_with_rich_edit (Current)
+			Result := l_selection.maximum
 		end
 
 	selection: WEL_CHARACTER_RANGE
@@ -123,7 +132,7 @@ feature -- Status report
 			exists: exists
 		do
 			create Result.make_empty
-			{WEL_API}.send_message (item, Em_exgetsel, to_wparam (0), Result.item)
+			Result.update_with_rich_edit (Current)
 		end
 
 	caret_position: INTEGER
@@ -140,7 +149,8 @@ feature -- Status report
 		local
 			a_selection: WEL_CHARACTER_RANGE
 		do
-			a_selection := selection
+			a_selection := internal_selection
+			a_selection.update_with_rich_edit (Current)
 			Result := a_selection.minimum /= a_selection.maximum
 		end
 
@@ -178,9 +188,13 @@ feature -- Status report
 		local
 			new_options, old_options: INTEGER
 			previous_selection: WEL_CHARACTER_RANGE
+			l_min, l_max: INTEGER
 		do
 			hide_selection
-			previous_selection := selection
+			previous_selection := internal_selection
+			previous_selection.update_with_rich_edit (Current)
+			l_min := previous_selection.minimum
+			l_max := previous_selection.maximum
 			old_options := options
 			new_options := 0
 			set_options (Ecoop_set, new_options)
@@ -188,7 +202,9 @@ feature -- Status report
 			set_selection (i, i + n)
 			Result := selected_text
 
+				-- Restore the selection
 			set_options (Ecoop_set, old_options)
+			previous_selection.set_range (l_min, l_max)
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), previous_selection.item)
 			show_selection
 		end
@@ -197,7 +213,6 @@ feature -- Status report
 			-- Currently selected text
 		require
 			exists: exists
-			has_selection: has_selection
 		local
 			a_wel_string: WEL_STRING
 			nb: INTEGER
@@ -207,8 +222,7 @@ feature -- Status report
 			Result := a_wel_string.substring (1, nb)
 		ensure
 			selected_text_not_void: Result /= Void
---			valid_length: Result.count =
---				selection_end - selection_start
+			valid_length: (create {UTF_CONVERTER}).utf_16_bytes_count (Result, 1, Result.count) // 2 = (selection_end - selection_start)
 		end
 
 	position_from_character_index (character_index: INTEGER): WEL_POINT
@@ -295,6 +309,19 @@ feature -- Status report
 			stream.release_stream
 		end
 
+	text_substring (nb: INTEGER): WEL_STRING
+			-- `nb' code units of `text' retrieved as a string.
+		local
+			l_actual_count: INTEGER
+			l_text_range: WEL_TEXT_RANGE
+		do
+				-- Selection is given in code units not in visible characters.
+			create l_text_range.make (nb + 1, 0, nb)
+			l_actual_count := {WEL_API}.send_message_result_integer (item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.em_gettextrange, to_wparam (0), l_text_range.item)
+			Result := l_text_range.text
+			Result.set_count (l_actual_count)
+		end
+
 	count: INTEGER
 			-- Length of text.
 		do
@@ -322,14 +349,15 @@ feature -- Status setting
 		end
 
 	set_caret_position (position: INTEGER)
-   			-- Set the caret position with `position'.
-   			-- If `scroll_caret_at_selection' is True, the
-   			-- caret will be scrolled to `position'.
+   			-- <Precursor>
  		local
 			range: WEL_CHARACTER_RANGE
  		do
 			create range.make (position, position)
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), range.item)
+			if scroll_caret_at_selection then
+				move_to_selection
+			end
   		end
 
 	move_to_selection
@@ -855,6 +883,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	internal_selection: WEL_CHARACTER_RANGE
+			-- Internal selection of Current
+		once
+			create Result.make_empty
+		end
+
 feature {NONE} -- Externals
 
 	Class_name_pointer: POINTER
@@ -865,7 +899,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

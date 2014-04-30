@@ -739,7 +739,7 @@ feature {NONE} -- Parsing
 			l_use_long_name: BOOLEAN
 			l_stop_processing: BOOLEAN
 			l_count: INTEGER
-			i, j, k: INTEGER
+			j, k: INTEGER
 		do
 			internal_option_values.wipe_out
 			internal_values.wipe_out
@@ -1512,6 +1512,9 @@ feature {NONE} -- Output
 					l_arg_name.append (l_def_prefix)
 					l_arg_name.append_character (l_switch.short_name)
 					l_arg_name.append_string_general (" ")
+					if is_using_unix_switch_style then
+						l_arg_name.append (l_def_prefix) --| "--name" instead of "-name"
+					end
 					l_arg_name.append (l_def_prefix)
 					l_arg_name.append (l_switch.long_name)
 				elseif is_using_unix_switch_style then

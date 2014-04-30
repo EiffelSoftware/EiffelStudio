@@ -1,0 +1,15 @@
+package uri
+
+project
+	uri = "uri-safe.ecf"
+	uri = "uri.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

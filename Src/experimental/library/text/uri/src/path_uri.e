@@ -31,13 +31,15 @@ inherit
 		end
 
 create
-	make_from_string,
+	make_from_string, make_from_general_string,
 	make_from_file_uri,
 	make_from_path
 
 feature {NONE} -- Initialization
 
 	make_from_string (a_string: READABLE_STRING_8)
+			-- Create Current uri from location string `a_string'.
+			--| it can be URI, or PATH name.
 		do
 			if a_string.starts_with_general ("file:") then
 				Precursor (a_string)
@@ -47,7 +49,24 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	make_from_general_string (a_string: READABLE_STRING_GENERAL)
+			-- Create Current uri from location string `a_string'.
+			--| it can be URI or IRI string (i.e unicode), or PATH name.
+		local
+			iri: IRI
+		do
+			if a_string.is_valid_as_string_8 then
+				make_from_string (a_string.to_string_8)
+			elseif a_string.starts_with ("file:") then
+				create iri.make_from_string (a_string)
+				make_from_file_uri (iri.to_uri)
+			else
+				make_from_path (create {PATH}.make_from_string (a_string))
+			end
+		end
+
 	make_from_file_uri (a_uri: URI)
+			-- Create Current uri from file uri `a_uri'.
 		require
 			is_file_uri: a_uri.scheme.same_string_general ("file")
 		do
@@ -56,6 +75,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_path (a_path: PATH)
+			-- Create Current uri from path `a_path'.	
 		local
 			p: PATH
 			s: STRING_32
@@ -64,9 +84,11 @@ feature {NONE} -- Initialization
 			is_abs: BOOLEAN
 			i: INTEGER
 		do
+			is_valid := True
 			p := a_path
 			if a_path.is_absolute then
 				is_abs := True
+				create host.make_empty
 			end
 			file_path := p
 			set_scheme ("file")
@@ -114,7 +136,12 @@ feature {NONE} -- Initialization
 							end
 							append_percent_encoded_string_to (l_components.item.name, s)
 						end
-						set_path (s)
+						if s.is_valid_as_string_8 then
+							set_path (s.to_string_8)
+						else
+								-- FIXME: percent encode it preserving the : and /
+							set_path (s.to_string_8)
+						end
 					elseif l_components.isfirst then
 						check not is_abs end
 						set_unencoded_path (l_item_name)
@@ -129,6 +156,7 @@ feature {NONE} -- Initialization
 		end
 
 	get_file_path
+			-- Compute the `file_path' from current URI value.
 		local
 			p: PATH
 			l_segments: LIST [READABLE_STRING_32]

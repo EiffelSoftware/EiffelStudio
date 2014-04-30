@@ -39,6 +39,7 @@ feature -- Access
 			Result := implementation.text_length
 		ensure
 			bridge_ok: Result = implementation.text_length
+			definition: Result = text.count
 			Result_not_negative: Result >= 0
 		end
 
@@ -46,11 +47,11 @@ feature -- Access
 			-- Currently selected text.
 		require
 			not_destroyed: not is_destroyed
-			has_selection: has_selection
 		do
 			Result := implementation.selected_text
 		ensure
 			bridge_ok: Result.is_equal (implementation.selected_text)
+			definition: has_selection implies text.substring (start_selection, end_selection - 1).is_equal (Result)
 		end
 
 feature -- Status report
@@ -73,6 +74,7 @@ feature -- Status report
 			Result := implementation.caret_position
 		ensure
 			bridge_ok: Result = implementation.caret_position
+			within_range: Result >= 1 and Result <= text_length + 1
 		end
 
 	has_selection: BOOLEAN
@@ -83,32 +85,55 @@ feature -- Status report
 			Result := implementation.has_selection
 		ensure
 			bridge_ok: Result = implementation.has_selection
+			definition: Result implies start_selection /= end_selection
+		end
+
+	start_selection: INTEGER
+			-- Caret position of the start of selected text if any,
+			-- otherwise `caret_position'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.start_selection
+		ensure
+			bridge_ok: Result = implementation.start_selection
+			within_range: Result >= 1 and Result <= text_length + 1
+			consistent_with_selection_end: end_selection >= Result
+		end
+
+	end_selection: INTEGER
+			-- Caret position of the end of selected text if any,
+			-- otherwise `caret_position'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.end_selection
+		ensure
+			bridge_ok: Result = implementation.end_selection
+			within_range: Result >= 1 and Result <= text_length + 1
+			consistent_with_selection_start: Result >= start_selection
 		end
 
 	selection_start: INTEGER
 			-- Index of first selected character.
+		obsolete
+			"Use `start_selection' instead."
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection
 		do
-			Result := implementation.selection_start
-		ensure
-			bridge_ok: Result = implementation.selection_start
-			within_range: Result >= 1 and Result <= text_length
-			consistent_with_selection_end: selection_end >= Result
+			Result := implementation.start_selection
 		end
 
 	selection_end: INTEGER
 			-- Index of last character selected.
+		obsolete
+			"Use `end_selection - 1' instead."
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection
 		do
-			Result := implementation.selection_end
-		ensure
-			bridge_ok: Result = implementation.selection_end
-			within_range: Result >= 1 and Result <= text_length
-			consistent_with_selection_start: Result >= selection_start
+			Result := implementation.end_selection - 1
 		end
 
 	valid_caret_position (pos: INTEGER): BOOLEAN
@@ -119,6 +144,7 @@ feature -- Status report
 			Result := implementation.valid_caret_position (pos)
 		ensure
 			bridge_ok: Result = implementation.valid_caret_position (pos)
+			within_range: Result implies (pos >= 1 and pos <= text_length + 1)
 		end
 
 feature -- Status setting
@@ -147,7 +173,7 @@ feature -- Status setting
 			-- Assign `a_caret_position' to `caret_position'.
 		require
 			not_destroyed: not is_destroyed
-			valid_caret_position: valid_caret_position (a_caret_position)
+			valid_caret_position: a_caret_position >= 1 and a_caret_position <= text_length + 1
 		do
 			implementation.set_caret_position (a_caret_position)
 		ensure
@@ -226,8 +252,8 @@ feature -- Basic operation
 		ensure
 			has_selection: has_selection
 			selection_set: (a_start_character_pos <= a_end_character_pos implies
-				selection_start = a_start_character_pos and selection_end = a_end_character_pos) or
-				selection_start = a_end_character_pos and selection_end = a_start_character_pos
+				start_selection = a_start_character_pos and end_selection = a_end_character_pos + 1) or
+				start_selection = a_end_character_pos and end_selection = a_start_character_pos + 1
 		end
 
 	set_selection (a_start_pos, a_end_pos: INTEGER)
@@ -239,6 +265,8 @@ feature -- Basic operation
 			implementation.set_selection (a_start_pos, a_end_pos)
 		ensure
 			selection_set: a_start_pos /= a_end_pos = has_selection
+			caret_set: (a_start_pos = a_end_pos) implies caret_position = a_start_pos
+			selection_bounds_set: start_selection = a_start_pos and end_selection = a_end_pos
 		end
 
 	select_all
@@ -250,8 +278,8 @@ feature -- Basic operation
 			implementation.select_all
 		ensure
 			has_selection: has_selection
-			selection_start_set: selection_start = 1
-			selection_end_set: selection_end = text_length
+			selection_start_set: start_selection = 1
+			selection_end_set: end_selection = text_length + 1
 		end
 
 	deselect_all
@@ -277,8 +305,8 @@ feature -- Basic operation
 		ensure
 			has_no_selection: not has_selection
 			selection_deleted: text.is_equal ((old text).substring
-				(1, old selection_start - 1) + (old text).substring
-				(old selection_end + 1, (old text).count))
+				(1, old start_selection - 1) + (old text).substring
+				(old end_selection, (old text).count))
 		end
 
 	cut_selection
@@ -293,8 +321,8 @@ feature -- Basic operation
 			selection_in_clipboard:
 				clipboard_content.is_equal (old selected_text)
 			selection_cut: text.is_equal ((old text).substring
-				(1, old selection_start - 1) + (old text).substring
-				(old selection_end + 1, (old text).count))
+				(1, old start_selection - 1) + (old text).substring
+				(old end_selection, (old text).count))
 		end
 
 	copy_selection
@@ -368,20 +396,16 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
-	text_not_void: is_usable implies text /= Void
-	text_length_consistent: text_length = text.count
-	selection_consistent: has_selection implies text.substring (selection_start, selection_end).is_equal (selected_text)
-
-
+	
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

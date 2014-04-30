@@ -1,0 +1,15 @@
+package vision2_extension
+
+project
+	vision2_extension = "vision2_extension-safe.ecf"
+	vision2_extension = "vision2_extension.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

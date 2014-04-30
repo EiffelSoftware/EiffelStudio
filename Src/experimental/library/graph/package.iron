@@ -1,0 +1,15 @@
+package graph
+
+project
+	graph = "graph-safe.ecf"
+	graph = "graph.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

@@ -1,0 +1,15 @@
+package api_wrapper
+
+project
+	api_wrapper = "api_wrapper-safe.ecf"
+	api_wrapper = "api_wrapper.ecf"
+
+note
+	title: API wrapper
+	description: library used to wrap external libraries.
+	tags: api,wrapper,external
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

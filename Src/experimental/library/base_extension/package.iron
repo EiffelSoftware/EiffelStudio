@@ -1,0 +1,16 @@
+package base_extension
+
+project
+	base_extension = "base_extension-safe.ecf"
+	base_extension = "base_extension.ecf"
+	base_extension-tests = "tests/tests.ecf"
+
+note
+	title: Eiffel Base Extension
+	description: Extension to Eiffel Base
+	tags: base,structure,support
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

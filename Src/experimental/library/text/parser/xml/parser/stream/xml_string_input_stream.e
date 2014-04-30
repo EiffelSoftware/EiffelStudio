@@ -40,6 +40,8 @@ feature -- Status report
 	count: INTEGER
 
 	end_of_input: BOOLEAN
+			-- <Precursor>
+			-- i.e: index over upper index
 
 	is_open_read: BOOLEAN
 			-- Can items be read from input stream?
@@ -74,19 +76,20 @@ feature -- Basic operation
 		local
 			c: CHARACTER
 		do
-			c := source.item (source_index)
-			source_index := source_index + 1
-
-
-			if last_character = '%N' then
-				line := line + 1
-				column := 0
+			if source_index > count then
+				end_of_input := True
 			else
-				column := column + 1
-			end
-			last_character := c
+				c := source.item (source_index)
+				source_index := source_index + 1
 
-			end_of_input := source_index > count
+				if last_character = '%N' then
+					line := line + 1
+					column := 0
+				else
+					column := column + 1
+				end
+				last_character := c
+			end
 		end
 
 	start

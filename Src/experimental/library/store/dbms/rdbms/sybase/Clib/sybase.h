@@ -24,17 +24,21 @@
 extern "C" {
 #endif
 
-#define STRING_TYPE            10
-#define WSTRING_TYPE			12
-#define CHARACTER_TYPE          4
-#define INTEGER_TYPE            4
-#define INTEGER_16_TYPE			13
-#define INTEGER_64_TYPE			14
-#define FLOAT_TYPE              5
-#define REAL_TYPE 		6
-#define BOOLEAN_TYPE            3
-#define DATE_TYPE              11
-#define UNKNOWN_TYPE            0
+/* Type macros */
+#define EIF_C_UNKNOWN_TYPE		-1
+#define EIF_C_NULL_TYPE			0
+#define EIF_C_STRING_TYPE		1
+#define EIF_C_WSTRING_TYPE		2
+#define EIF_C_INTEGER_32_TYPE	3
+#define EIF_C_INTEGER_16_TYPE	4
+#define EIF_C_INTEGER_64_TYPE	5
+#define EIF_C_DATE_TYPE			6
+#define EIF_C_TIME_TYPE			7
+#define EIF_C_REAL_32_TYPE		8
+#define EIF_C_REAL_64_TYPE		9
+#define EIF_C_BOOLEAN_TYPE		10
+#define EIF_C_CHARACTER_TYPE	11
+#define EIF_C_DECIMAL_TYPE		12
 
 #define ERROR_MESSAGE_SIZE    250
 

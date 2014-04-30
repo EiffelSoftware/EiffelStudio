@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		do
+				-- In order to access the screen, the EV_APPLICATION needs to be created
+			app_implementation.do_nothing
+
 			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 
 			gc := {GTK}.gdk_gc_new (drawable)
@@ -573,7 +576,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

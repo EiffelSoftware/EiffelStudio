@@ -338,25 +338,25 @@ int syb_conv_type (int i)
     case SYBVARCHAR:
     case SYBTEXT:
     case SYBBINARY:  
-      return STRING_TYPE;
+      return EIF_C_STRING_TYPE;
 	case SYBLONGBINARY: /* For type UNICHAR, DB-Library returns type SYBLONGBINARY */
-		return WSTRING_TYPE;
+		return EIF_C_WSTRING_TYPE;
     case SYBINT1:
     case SYBINT2:
-		return INTEGER_16_TYPE;
+		return EIF_C_INTEGER_16_TYPE;
     case SYBINT4:
-      return INTEGER_TYPE;
+      return EIF_C_INTEGER_32_TYPE;
     case SYBREAL:
-	return REAL_TYPE;
+		return EIF_C_REAL_32_TYPE;
     case SYBFLT8:
     case SYBMONEY:
-      return FLOAT_TYPE;
+      return EIF_C_REAL_64_TYPE;
     case SYBBIT:
-      return BOOLEAN_TYPE;
+      return EIF_C_BOOLEAN_TYPE;
     case SYBDATETIME:
-      return DATE_TYPE;
+      return EIF_C_DATE_TYPE;
     default:
-      return UNKNOWN_TYPE;
+      return EIF_C_UNKNOWN_TYPE;
     }
 }
 
@@ -667,64 +667,4 @@ size_t sqlstrlen(const char *str)
 	for (i=0; l_str[i]!=(CS_UNICHAR)0; i++){};
 	return (size_t)i;
 }
-
-/***************/
-/* eiffel_type */
-/***************/
-
-int c_string_type ()
-{
-  return STRING_TYPE;
-}
-
-int c_wstring_type ()
-{
-	return WSTRING_TYPE;
-}
-
-int c_character_type ()
-{
-  return CHARACTER_TYPE;
-}
-
-int c_integer_type ()
-/*char c_integer_type ()*/
-{
-  return INTEGER_TYPE;
-}
-
-int c_integer_16_type ()
-/*char c_integer_type ()*/
-{
-  return INTEGER_16_TYPE;
-}
-
-int c_integer_64_type ()
-/*char c_integer_type ()*/
-{
-  return INTEGER_64_TYPE;
-}
-
-int c_float_type ()
-{
-  return FLOAT_TYPE;
-}
-
-
-int c_real_type ()
-{
-  return REAL_TYPE;
-}
-
-
-int c_boolean_type ()
-{
-  return BOOLEAN_TYPE;
-}
-
-int c_date_type ()
-{
-  return DATE_TYPE;
-}
-
 /* EOF sybase.c */

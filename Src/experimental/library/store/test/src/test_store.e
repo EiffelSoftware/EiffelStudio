@@ -18,10 +18,10 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		local
-			t: TEST_NUMERIC_TYPES
+			t: TEST_LARGE_DATA
 		do
 			create t
-			t.test_numeric_types
+			t.test_large_string
 		end
 
 end

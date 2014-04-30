@@ -1,0 +1,18 @@
+package cocoa
+
+setup
+	compile_library = Clib
+
+project
+	cocoa = "cocoa-safe.ecf"
+	cocoa = "cocoa.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

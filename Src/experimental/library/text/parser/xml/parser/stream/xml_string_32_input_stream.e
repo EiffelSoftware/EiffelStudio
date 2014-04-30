@@ -37,6 +37,7 @@ feature -- Status report
 	count: INTEGER
 
 	end_of_input: BOOLEAN
+			-- <Precursor>
 
 	is_open_read: BOOLEAN
 			-- Can items be read from input stream?
@@ -73,19 +74,20 @@ feature -- Basic operation
 		local
 			c: like last_character
 		do
-			c := source.item (source_index)
-			source_index := source_index + 1
-
-
-			if last_character = '%N' then
-				line := line + 1
-				column := 0
+			if source_index > count then
+				end_of_input := True
 			else
-				column := column + 1
-			end
-			last_character := c
+				c := source.item (source_index)
+				source_index := source_index + 1
 
-			end_of_input := source_index > count
+				if last_character = '%N' then
+					line := line + 1
+					column := 0
+				else
+					column := column + 1
+				end
+				last_character := c
+			end
 		end
 
 	start
@@ -110,7 +112,7 @@ invariant
 	source_attached: source /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -101,7 +101,6 @@ feature {NONE} -- meory trim
 	memory_trim_load_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like memory_trim_create_data
 			l_table_name: STRING
 		do
 			drop_repository (memory_trim_table_name)
@@ -111,7 +110,7 @@ feature {NONE} -- meory trim
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `db_memory_trim` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_MEMORY_TRIM` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
 			end
 
 			if is_oracle then
@@ -140,7 +139,6 @@ feature {NONE} -- meory trim
 	memory_trim_load_small_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like memory_trim_create_data
 			l_table_name: STRING
 		do
 			drop_repository (memory_trim_table_name)
@@ -150,7 +148,7 @@ feature {NONE} -- meory trim
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `db_memory_trim` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_MEMORY_TRIM` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
 			end
 
 			if is_oracle then

@@ -6,6 +6,7 @@ copy_raw a.e $CLUSTER a.e
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_warning A VWEQ; A VWEQ; A VWEQ; A VWEQ; A VWEQ; A VWEQ; A VWEQ; A VWEQ
+compile_result	validity_warning A VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ VWEQ
+
 
 test_end

@@ -118,8 +118,11 @@ feature {NONE} -- Modification: nesting
 feature {NONE} -- Initialization
 
 	new_scope (n: like count): like scope
+		local
+			l: detachable LOCATION_AS
+			f: detachable FEATURE_I
 		do
-			create Result
+			Result := [False, l, f]
 		end
 
 note

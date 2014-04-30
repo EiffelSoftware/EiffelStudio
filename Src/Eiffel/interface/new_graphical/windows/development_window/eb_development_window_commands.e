@@ -185,6 +185,9 @@ feature -- Query
 	go_to_previous_warning_command: ES_PREVIOUS_WARNING_COMMAND
 			-- Go to previous warning command
 
+	apply_fix_command: ES_FIX_COMMAND
+			-- "Apply fix" command
+
 	edit_contracts_command: attached ES_EDIT_CONTRACTS_COMMAND
 			-- Edit contracts command
 
@@ -679,6 +682,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			go_to_previous_warning_command_set: go_to_previous_warning_command = a_command
 		end
 
+	set_apply_fix_command (a_command: like apply_fix_command)
+			-- Sets `apply_fix_command' with `a_command'.
+		do
+			apply_fix_command := a_command
+		ensure
+			apply_fix_command_set: apply_fix_command = a_command
+		end
+
 	set_edit_contracts_command (a_command: like edit_contracts_command)
 			-- Sets `edit_contracts_command' with `a_command'
 		do
@@ -811,6 +822,7 @@ feature -- Recycle
 			go_to_previous_error_command := Void
 			go_to_next_warning_command := Void
 			go_to_previous_warning_command := Void
+			apply_fix_command := Void
 
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end

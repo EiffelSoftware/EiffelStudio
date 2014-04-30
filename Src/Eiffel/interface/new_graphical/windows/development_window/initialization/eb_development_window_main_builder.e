@@ -444,6 +444,7 @@ feature -- Command
 			l_go_to_previous_error_cmd: ES_PREVIOUS_ERROR_COMMAND
 			l_go_to_next_warning_cmd: ES_NEXT_WARNING_COMMAND
 			l_go_to_previous_warning_cmd: ES_PREVIOUS_WARNING_COMMAND
+			l_apply_fix_cmd: ES_FIX_COMMAND
 			l_ear_commander: ES_ERROR_LIST_COMMANDER_I
 			l_maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
 			l_minimize_editor_area_command: EB_MINIMIZE_EDITOR_AREA_COMMAND
@@ -473,6 +474,10 @@ feature -- Command
 				create l_go_to_next_warning_cmd.make (l_ear_commander)
 				l_dev_commands.set_go_to_next_warning_command (l_go_to_next_warning_cmd)
 				l_dev_commands.toolbarable_commands.extend (l_dev_commands.go_to_next_warning_command)
+
+				create l_apply_fix_cmd.make (l_ear_commander)
+				l_dev_commands.set_apply_fix_command (l_apply_fix_cmd)
+				l_dev_commands.toolbarable_commands.extend (l_apply_fix_cmd)
 
 				create l_maximize_editor_area_command.make (develop_window)
 				l_dev_commands.set_maximize_editor_area_command (l_maximize_editor_area_command)

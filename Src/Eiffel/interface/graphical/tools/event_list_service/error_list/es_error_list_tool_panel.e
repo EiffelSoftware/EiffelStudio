@@ -72,7 +72,7 @@ feature {NONE} -- Initialization: User interface
 			l_col: EV_GRID_COLUMN
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_widget)
-			a_widget.set_column_count_to (position_column)
+			a_widget.set_column_count_to (last_column)
 
 				-- Create columns
 			l_col := a_widget.column (1)
@@ -91,6 +91,10 @@ feature {NONE} -- Initialization: User interface
 			l_col := a_widget.column (position_column)
 			l_col.set_title (interface_names.l_position)
 			l_col.set_width (80)
+
+			l_col := a_widget.column (fix_column)
+			l_col.set_title (interface_names.l_fix_suggestion)
+			l_col.set_width (160)
 
 			a_widget.enable_tree
 			a_widget.disable_row_height_fixed
@@ -150,7 +154,7 @@ feature {NONE} -- Initialization: User interface
 			stone_director.bind (grid_events, Current)
 
 				-- Hook up events for session data
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data.session_connection.connect_events (Current)
 				if attached {BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
 					is_expanding_errors := l_expand.item
@@ -173,12 +177,12 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			if is_initialized then
-				if session_manager.is_service_available then
-					if session_data.session_connection.is_connected (Current) then
-						session_data.session_connection.disconnect_events (Current)
-					end
-				end
+			if
+				is_initialized and then
+				attached session_manager.service and then
+				session_data.session_connection.is_connected (Current)
+			then
+				session_data.session_connection.disconnect_events (Current)
 			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
@@ -216,9 +220,6 @@ feature {NONE} -- Access: User interface
 
 	expand_errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to expanded error events automatically
-
---	fix_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
---			-- Automatic fix button
 
 	delete_button: detachable SD_TOOL_BAR_BUTTON
 			-- Delete selected items button
@@ -337,6 +338,14 @@ feature {NONE} -- Command items
 			result_attached: Result /= Void
 		end
 
+	apply_fix_command: ES_FIX_COMMAND
+			-- "Apply fix" command.
+		do
+			Result := develop_window.commands.apply_fix_command
+		ensure
+			result_attached: Result /= Void
+		end
+
 	error_info_command: EB_ERROR_INFORMATION_CMD
 			-- Error information command.
 
@@ -413,16 +422,6 @@ feature {NONE} -- Query
 			Result := l_preference.preferences.error_list_tool_data.show_tooltip
 		end
 
---feature {NONE} -- Helpers
-
---	fix_handlers: ES_ERROR_FIX_HANDLER
---			-- Shared access to fix operations.
---		once
---			create Result
---		ensure
---			result_attached: attached Result
---		end
-
 feature {ES_TOOL} -- Basic operation
 
 	show
@@ -476,23 +475,59 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		local
 			l_menu: EV_MENU
-			l_remove: EV_MENU_ITEM
+			l_menu_item: EV_MENU_ITEM
+			s: ARRAYED_LIST [EV_GRID_ROW]
+			fix_count: INTEGER
 		do
 			if attached {EVENT_LIST_ITEM_I} a_item.row.data as l_item then
 				create l_menu
 
-					-- Remove, singluar
-				create l_remove.make_with_text (interface_names.m_remove)
-				l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
-				l_remove.select_actions.extend (agent remove_event_list_row (a_item.row))
-				l_menu.extend (l_remove)
+				s := grid_events.selected_rows
+				across
+					s as r
+				loop
+					if
+						attached {EVENT_LIST_ITEM_I} r.item.data and then
+						attached r.item.item (fix_column) as f and then
+						attached f.data
+					then
+							-- TODO: check that the fiax has not been applied.
+						fix_count := fix_count + 1
+					end
+				end
+
+				if fix_count > 1 then
+						-- There are several selected fixes.
+					create l_menu_item.make_with_text (locale.formatted_string
+						(locale.plural_translation ("Apply $1 fix", "Apply $1 fixes", fix_count), fix_count))
+					l_menu_item.set_pixmap (stock_pixmaps.errors_and_warnings_fix_apply_icon)
+					l_menu_item.select_actions.extend (agent apply_fix)
+					l_menu.extend (l_menu_item)
+					l_menu.extend (create {EV_MENU_SEPARATOR})
+				elseif
+					attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item.row.item (fix_column) as f and then
+					attached {ES_FIX_UNUSED_LOCAL} f.data as action
+				then
+						-- This is just one selected fix.
+					create l_menu_item.make_with_text (f.text)
+					l_menu_item.set_pixmap (stock_pixmaps.errors_and_warnings_fix_apply_icon)
+					l_menu_item.select_actions.extend (agent apply_single_fix (a_item.row))
+					l_menu.extend (l_menu_item)
+					l_menu.extend (create {EV_MENU_SEPARATOR})
+				end
+
+					-- Remove, singular.
+				create l_menu_item.make_with_text (interface_names.m_remove)
+				l_menu_item.set_pixmap (stock_pixmaps.general_delete_icon)
+				l_menu_item.select_actions.extend (agent remove_event_list_row (a_item.row))
+				l_menu.extend (l_menu_item)
 
 				if grid_events.has_selected_row then
-						-- Remove, multiple
-					create l_remove.make_with_text (interface_names.m_remove_all)
-					l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
-					l_remove.select_actions.extend (agent on_select_delete_button)
-					l_menu.extend (l_remove)
+						-- Remove, multiple.
+					create l_menu_item.make_with_text (interface_names.m_remove_all)
+					l_menu_item.set_pixmap (stock_pixmaps.general_delete_icon)
+					l_menu_item.select_actions.extend (agent on_select_delete_button)
+					l_menu.extend (l_menu_item)
 				end
 				l_menu.show_at (a_item.row.parent, a_x, a_y)
 			else
@@ -502,7 +537,6 @@ feature {NONE} -- Basic operations
 					row_parented: a_item.row.parent_row /= Void
 				end
 			end
-
 		end
 
 	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
@@ -633,6 +667,9 @@ feature {NONE} -- Basic operations
 					l_editor_item.try_call_setting_change_actions
 				end
 				a_row.set_item (position_column, l_editor_item)
+
+					-- Fix option.
+				a_row.set_item (fix_column, fix_option_item (l_error))
 			end
 
 				-- Fill empty items
@@ -672,6 +709,47 @@ feature {NONE} -- Basic operations
 			is_expanding_all_errors_unchanged: is_expanding_all_errors = old is_expanding_all_errors
 		end
 
+	fix_option_item (e: ERROR): detachable EV_GRID_ITEM
+			-- An entry for a fix option column (if any).
+		local
+			fix_item: detachable EB_GRID_EDITOR_TOKEN_ITEM
+			formatter: EB_EDITOR_TOKEN_GENERATOR
+		do
+			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
+				create formatter.make
+					-- TODO: Handle multiple fix options instead of just the first one.
+				across
+					f as o
+				until
+					attached fix_item
+				loop
+						-- Get fix option text.
+					o.item.append_name (formatter)
+					if attached formatter.last_line as l and then l.count > 0 then
+						fix_item := create_clickable_grid_item (l, True)
+							-- Get fix option description.
+						formatter.wipe_out_lines
+						o.item.append_description (formatter)
+						if attached formatter.last_line as d and then d.count > 0 then
+								-- Use fix option description as a tooltip.
+								-- TODO: Use colorful popup window instead.
+							fix_item.set_tooltip (d.wide_image)
+						end
+							-- Associate fix option with the grid item.
+						if attached {FIX_UNUSED_LOCAL} o.item as u then
+							fix_item.set_data (create {ES_FIX_UNUSED_LOCAL}.make (u))
+						else
+							fix_item := Void
+						end
+					end
+				end
+				if attached fix_item then
+					fix_item.set_pixmap (pixmaps.icon_pixmaps.errors_and_warnings_fix_apply_icon)
+					Result := fix_item
+				end
+			end
+		end
+
 	update_tool_title_and_pixmap
 			-- Sets the tool's title an pixmap based on the number of items existing in the list
 		local
@@ -705,12 +783,32 @@ feature {NONE} -- Basic operations
 	update_content_applicable_widgets (a_enable: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_enable and grid_events.has_selected_row then
+			if a_enable then
+					-- There are some errors. Their error codes can be dropped to this button.
 				error_info_command.enable_sensitive
-				delete_button.enable_sensitive
+				if grid_events.has_selected_row then
+						-- Selected errors can be deleted.
+					delete_button.enable_sensitive
+				else
+					delete_button.disable_sensitive
+				end
+					-- Check if there are fixable elements.
+				if
+					across
+						grid_events.selected_rows as r
+					some
+						attached r.item.item (fix_column) as c and then attached c.data
+					end
+				then
+						-- TODO: Check that the fix has not been applied.
+					apply_fix_command.enable_sensitive
+				else
+					apply_fix_command.disable_sensitive
+				end
 			else
+					-- Everything is disabled.
 				error_info_command.disable_sensitive
---				fix_button.disable_sensitive
+				apply_fix_command.disable_sensitive
 				delete_button.disable_sensitive
 			end
 		end
@@ -777,7 +875,6 @@ feature {NONE} -- Basic operations
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
-			l_grid_item: EV_GRID_ITEM
 		do
 			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event and then attached {ERROR} l_event.data as l_error then
 				create l_gen.make
@@ -785,8 +882,6 @@ feature {NONE} -- Basic operations
 				tracer.trace (l_gen, l_error)
 				l_lines := l_gen.lines
 				if not l_lines.is_empty then
-					l_grid_item := a_parent_row.item (error_column)
-
 						-- Sub row full error
 					if a_parent_row.subrow_count = 0 then
 							-- No subrow, add one.
@@ -807,6 +902,34 @@ feature {NONE} -- Basic operations
 					l_row.set_item (error_column, l_editor_item)
 					l_row.set_height (l_row.height + 2)
 					grid_events.grid_row_fill_empty_cells (l_row)
+				end
+			end
+			if
+				attached a_parent_row.item (fix_column) as fix_item and then
+				attached {ES_FIX_UNUSED_LOCAL} fix_item.data as fix_action
+			then
+				create l_gen.make
+				l_gen.enable_multiline
+				fix_action.item.append_description (l_gen)
+					-- Make sure the last line is added to the list of all lines.
+				l_gen.new_line
+				l_lines := l_gen.lines
+				if not l_lines.is_empty then
+						-- Sub row full error
+					if a_parent_row.subrow_count = 0 then
+							-- No subrow, add one.
+							-- Note: A sub row will exist if the information is being updated.
+						a_parent_row.insert_subrow (1)
+					end
+					check
+						from_instruction_above: attached a_parent_row.subrow (1) as r
+					then
+						l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
+						l_editor_item.set_text_wrap (True)
+						r.set_height (r.height.max (l_editor_item.required_height_for_text_and_component))
+						r.set_item (fix_column, l_editor_item)
+						grid_events.grid_row_fill_empty_cells (r)
+					end
 				end
 			end
 		end
@@ -892,6 +1015,34 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 						end)
 				end
 			end
+		end
+
+	apply_fix
+			-- <Precursor>
+		do
+			across
+				grid_events.selected_rows as r
+			loop
+				apply_single_fix (r.item)
+			end
+		end
+
+feature {NONE} -- Fixing
+
+	apply_single_fix (r: EV_GRID_ROW)
+			-- Attempt to apply a fix chosen for row `r'.
+		do
+				if
+					attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (fix_column) as applied_item and then
+					attached {ES_FIX_UNUSED_LOCAL} applied_item.data as fix_action
+				then
+						-- Prevent further applications of the fix.
+						-- TODO: Replace manifest strings with translatable strings.
+					applied_item.set_tooltip ({STRING_32} "Applied the fix: " + applied_item.tooltip)
+					applied_item.set_pixmap (pixmaps.icon_pixmaps.errors_and_warnings_fix_ignore_icon)
+						-- Apply the fix.
+					fix_action.apply
+				end
 		end
 
 feature {NONE} -- Event handlers
@@ -1200,8 +1351,8 @@ feature {NONE} -- Action handlers
 			if is_expanding_errors /= l_expand then
 				is_expanding_all_errors := l_expand
 				is_expanding_errors := l_expand
-				if session_manager.is_service_available then
-					session_manager.service.retrieve (False).set_value (l_expand, expand_errors_session_id)
+				if attached session_manager.service as service then
+					service.retrieve (False).set_value (l_expand, expand_errors_session_id)
 				end
 
 					-- Set applicable grid items and open/closed because on expanded status
@@ -1410,6 +1561,13 @@ feature {NONE} -- Factory
 		do
 			create Result.make (11)
 
+				-- Fix buttons.
+			l_button := apply_fix_command.new_sd_toolbar_item (True)
+			Result.extend (l_button)
+
+				-- Separator
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
 			Result.extend (l_button)
@@ -1503,6 +1661,8 @@ feature {NONE} -- Constants
 	error_column: INTEGER = 3
 	context_column: INTEGER = 4
 	position_column: INTEGER = 5
+	fix_column: INTEGER = 6
+	last_column: INTEGER = 6
 
 	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 

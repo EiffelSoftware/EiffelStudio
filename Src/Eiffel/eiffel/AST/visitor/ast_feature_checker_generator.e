@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Type checking and code generation of BYTE_NODE tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10975,7 +10975,7 @@ feature {NONE} -- Implementation: checking locals
 					if l_warning = Void then
 						create l_warning.make (context.current_class, current_feature.enclosing_feature)
 					end
-					l_warning.add_unused_local (names_heap.item (a_locals.key_for_iteration), l_local.type)
+					l_warning.add_unused_local (a_locals.key_for_iteration, l_local.type)
 				end
 				a_locals.forth
 			end

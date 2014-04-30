@@ -204,29 +204,31 @@ feature {NONE} -- Formatting
 				create l_tab_string.make_filled (' ', l_tab_spaces)
 				l_lines := l_string.split ('%N')
 				from l_lines.start until l_lines.after loop
-					l_line := string_formatter.tabbify_unicode (l_lines.item, l_tab_spaces)
-					l_count := l_line.count
-					if l_count > 0 then
-						l_char_count := 0
-						from i := 1 until i > l_count or else l_line.item (i) /= '%T' loop
-							i := i + 1
-						end
-						i := i - 1
-
-						if l_start_count_set or else i > 0 then
-							if i < l_count then
-								if not l_start_count_set then
-									l_start_count := i
-								end
-								l_line.keep_tail (l_line.count - (i.min (l_start_count)))
+					if not l_lines.item.is_empty then
+						l_line := string_formatter.tabbify_unicode (l_lines.item, l_tab_spaces)
+						l_count := l_line.count
+						if l_count > 0 then
+							l_char_count := 0
+							from i := 1 until i > l_count or else l_line.item (i) /= '%T' loop
+								i := i + 1
 							end
-						end
-						l_start_count_set := True
-					end
+							i := i - 1
 
-					Result.append (l_line)
-					if not l_lines.islast then
-						Result.append_character ('%N')
+							if l_start_count_set or else i > 0 then
+								if i < l_count then
+									if not l_start_count_set then
+										l_start_count := i
+									end
+									l_line.keep_tail (l_line.count - (i.min (l_start_count)))
+								end
+							end
+							l_start_count_set := True
+						end
+
+						Result.append (l_line)
+						if not l_lines.islast then
+							Result.append_character ('%N')
+						end
 					end
 					l_lines.forth
 				end
@@ -269,7 +271,7 @@ invariant
 	not_is_tagless: not tag.is_empty implies not is_tagless
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,20 +24,20 @@ feature -- GUI
 		do Result := translation_in_context ("No issues.", once "code_analyzer.message") end
 
 	class_context_menu_caption (a_class_name: attached READABLE_STRING_GENERAL): STRING_32
-		do Result := locale.formatted_string (translation_in_context ("Run Inspector Eiffel on Class '$1'", once "code_analyzer"), [a_class_name]) end
+		do Result := locale.formatted_string (translation_in_context ("Run Eiffel Inspector on Class '$1'", once "code_analyzer"), [a_class_name]) end
 
 	cluster_context_menu_caption: STRING_32
-		do Result := translation_in_context ("Run Inspector Eiffel on cluster", once "code_analyzer") end
+		do Result := translation_in_context ("Run Eiffel Inspector on cluster", once "code_analyzer") end
 
 	already_running: STRING_32
 		do Result := translation_in_context (" (already running)", once "code_analyzer") end
 
 	already_running_long: STRING_32
-		do Result := translation_in_context	("Inspector Eiffel is already running.%N%
+		do Result := translation_in_context	("Eiffel Inspector is already running.%N%
 				%Please wait until the current analysis has finished.", once "code_analyzer") end
 
 	status_bar_running: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel running...", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector running...", once "code_analyzer") end
 
 	system_scope: STRING_32
 		do Result := translation_in_context ("System", once "code_analyzer") end
@@ -55,7 +55,7 @@ feature -- GUI
 		do Result := translation_in_context ("Configuration group that has been analyzed recently.", once "code_analyzer.tooltip") end
 
 	status_bar_terminated: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel has terminated.", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector has terminated.", once "code_analyzer") end
 
 	analyze_whole_system: STRING_32
 		do Result := translation_in_context ("Analyze whole system", once "code_analyzer.tooltip") end
@@ -67,13 +67,13 @@ feature -- GUI
 		do Result := translation_in_context ("Analyze parent cluster of current item", once "code_analyzer.tooltip") end
 
 	run_code_analysis: STRING_32
-		do Result := translation_in_context ("Run Inspector Eiffel", once "code_analyzer") end
+		do Result := translation_in_context ("Run Eiffel Inspector", once "code_analyzer") end
 
 	no_trace: STRING_32
 		do Result := translation_in_context ("No trace available.", once "code_analyzer") end
 
 	the_following_exception: STRING_32
-		do Result := translation_in_context ("The following exception has occurred while Inspector Eiffel was running:", once "code_analyzer") end
+		do Result := translation_in_context ("The following exception has occurred while Eiffel Inspector was running:", once "code_analyzer") end
 
 	exception_trace: STRING_32
 		do Result := translation_in_context ("Exception Trace", once "code_analyzer") end
@@ -82,7 +82,7 @@ feature -- GUI
 		do Result := translation_in_context ("Close", once "code_analyzer") end
 
 	inspector_eiffel_exception: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel Exception: ", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector Exception: ", once "code_analyzer") end
 
 feature -- Messages for both GUI and command line mode
 
@@ -336,7 +336,7 @@ feature -- Command Line
 		do Result := translation_in_context ("%NIn class '", once "code_analyzer.command") end
 
 	cmd_help_message: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel performs static analyses on the source code and %
+		do Result := translation_in_context ("Eiffel Inspector performs static analyses on the source code and %
 			           %outputs a list of issues found according to a set of rules.", once "code_analyzer.command") end
 
 	cmd_class_not_found_1: STRING_32

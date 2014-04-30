@@ -395,7 +395,7 @@ feature -- Rules
 feature -- Preferences
 
 	preferences_window_title: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel Preferences", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector Preferences", once "code_analyzer") end
 
 	general_category: STRING_32
 		do Result := translation_in_context ("General", once "code_analyzer") end
@@ -473,7 +473,7 @@ feature -- GUI
 		do Result := translation_in_context ("Filter: ", once "code_analyzer.toolbar.item") end
 
 	analysis_not_run: STRING_32
-		do Result := translation_in_context ("(Inspector Eiffel has not run yet.)", once "code_analyzer.toolbar.item") end
+		do Result := translation_in_context ("(Eiffel Inspector has not run yet.)", once "code_analyzer.toolbar.item") end
 
 	go_to_previous_tooltip: STRING_32
 		do Result := translation_in_context ("Go to previous rule violation", once "code_analyzer.toolbar.item.tooltip") end
@@ -482,7 +482,7 @@ feature -- GUI
 		do Result := translation_in_context ("Go to next rule violation", once "code_analyzer.toolbar.item.tooltip") end
 
 	options_tooltip: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel options", once "code_analyzer.toolbar.item.tooltip") end
+		do Result := translation_in_context ("Eiffel Inspector options", once "code_analyzer.toolbar.item.tooltip") end
 
 	description_column: STRING_32
 		do Result := translation_in_context ("Description", once "code_analyzer.column") end
@@ -502,13 +502,13 @@ feature -- GUI
 feature -- GUI: Show Preferences Command
 
 	pref_menu_name: STRING_32
-		do Result := translation_in_context ("Inspector Eiffel Preferences...", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector Preferences...", once "code_analyzer") end
 
 	pref_tooltext: STRING_32
 		do Result := translation_in_context ("Preferences", once "code_analyzer.toolbar.item") end
 
 	pref_tooltip: STRING_32
-		do Result := translation_in_context ("Show Dialog for Inspector Eiffel Preferences", once "code_analyzer.toolbar.item.tooltip") end
+		do Result := translation_in_context ("Show Dialog for Eiffel Inspector Preferences", once "code_analyzer.toolbar.item.tooltip") end
 
 feature {NONE} -- Translation
 

@@ -1020,17 +1020,19 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 	apply_fix
 			-- <Precursor>
 		do
-			across
-				grid_events.selected_rows as r
-			loop
-				apply_single_fix (r.item)
-			end
+			fix_undo_promt (agent apply_fix_without_undo_prompt)
 		end
 
 feature {NONE} -- Fixing
 
 	apply_single_fix (r: EV_GRID_ROW)
 			-- Attempt to apply a fix chosen for row `r'.
+		do
+			fix_undo_promt (agent apply_single_fix_without_undo_prompt (r))
+		end
+
+	apply_single_fix_without_undo_prompt (r: EV_GRID_ROW)
+			-- Attempt to apply a fix chosen for row `r' without notification about "undo" behaviour.
 		do
 				if
 					attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (fix_column) as applied_item and then
@@ -1043,6 +1045,29 @@ feature {NONE} -- Fixing
 						-- Apply the fix.
 					fix_action.apply
 				end
+		end
+
+	apply_fix_without_undo_prompt
+			-- Apply fixes to selected items without notification about "undo" behaviour.
+		do
+			across
+				grid_events.selected_rows as r
+			loop
+				apply_single_fix (r.item)
+			end
+		end
+
+	fix_undo_promt (action: PROCEDURE [ANY, TUPLE])
+			-- Raise a discardable prompt about performing fixes by `action' with the description of "undo" behaviour.
+		local
+			p: ES_DISCARDABLE_WARNING_PROMPT
+		do
+			create p.make_standard_with_cancel
+				(warning_messages.w_fix_undo_warning,
+				interface_names.l_discard_fix_undo_warning,
+				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False))
+			p.set_button_action (p.default_confirm_button, action)
+			p.show_on_active_window
 		end
 
 feature {NONE} -- Event handlers

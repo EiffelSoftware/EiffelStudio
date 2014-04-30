@@ -330,9 +330,8 @@ feature {NONE} -- Events
 			l_types: STRING_32
 			l_system: SYSTEM_I
 			l_error: like validate_type
+			l_message: detachable STRING_32
 		do
-			create Result
-			Result.valid := True
 			if not a_input.is_empty then
 				l_types := a_input
 				l_types.to_upper
@@ -352,17 +351,16 @@ feature {NONE} -- Events
 								l_system.root_creators.forth
 							end
 							if l_error /= Void then
-								Result.valid := False
-								Result.error := locale_formatter.formatted_translation (l_error, [l_types])
+								l_message := locale_formatter.formatted_translation (l_error, [l_types])
 							end
 						else
-							Result := [False, locale_formatter.translation (e_service_not_available)]
+							l_message := locale_formatter.translation (e_service_not_available)
 						end
 					else
-						Result := [False, locale_formatter.formatted_translation (e_no_valid_type_name, [l_types])]
+						l_message := locale_formatter.formatted_translation (e_no_valid_type_name, [l_types])
 					end
 				else
-					Result := [False, locale_formatter.translation (e_attachment_marks_not_supported)]
+					l_message := locale_formatter.translation (e_attachment_marks_not_supported)
 				end
 			end
 			if not a_input.is_empty and Result.valid then
@@ -374,6 +372,7 @@ feature {NONE} -- Events
 					add_type_button.disable_sensitive
 				end
 			end
+			Result := [not attached l_message, l_message]
 		end
 
 	on_selection_change

@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 	process_routine_as (l_as: ROUTINE_AS)
 		do
 			safe_process (l_as.precondition)
-			safe_process (l_as.locals)
+			safe_process (l_as.internal_locals)
 			l_as.routine_body.process (Current)
 			safe_process (l_as.postcondition)
 			safe_process (l_as.rescue_clause)
@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

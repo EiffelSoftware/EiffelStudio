@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_TEXT_I
+		undefine
+			text_length
 		redefine
 			interface,
 			selected_text
@@ -21,23 +23,17 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
-		rename
-			internal_set_caret_position as wel_set_caret_position
 		redefine
 			append_text,
 			interface,
 			make,
-			start_selection,
-			end_selection,
-			set_caret_position,
-			caret_position,
 			insert_text,
 			on_key_down,
-			select_region,
 			selected_text,
 			ignore_character_code,
-			set_selection,
-			is_multiline
+			is_multiline,
+			is_replacing_nl_by_crnl,
+			text_length
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -73,6 +69,7 @@ inherit
 			resize as wel_resize,
 			set_text as wel_set_text,
 			text as wel_text,
+			text_substring as wel_text_substring,
 			has_capture as wel_has_capture,
 			text_length as wel_text_length,
 			line_count as wel_line_count,
@@ -177,6 +174,11 @@ feature -- Access
 			Result := not flag_set (style, Ws_hscroll)
 		end
 
+	is_replacing_nl_by_crnl: BOOLEAN
+		do
+			Result := True
+		end
+
 	line (i: INTEGER): STRING_32
 			-- `Result' is content of the `i'th line.
 		do
@@ -241,22 +243,6 @@ feature -- Access
 			Result := wel_first_visible_line + 1
 		end
 
-	caret_position: INTEGER
-			-- Current position of caret.
-		local
-			new_lines_to_caret_position: INTEGER
-			internal_pos: INTEGER
-		do
-			internal_pos := internal_caret_position
-			if has_word_wrapping then
-				new_lines_to_caret_position := wel_text.substring (1, internal_pos).occurrences ('%R')
-				Result := internal_pos + 1 - new_lines_to_caret_position
-			else
-				new_lines_to_caret_position := current_line_number
-				Result := internal_pos - new_lines_to_caret_position + 2
-			end
-		end
-
 	insert_text (txt: READABLE_STRING_GENERAL)
 			-- Insert `txt' at `caret_position'.
 		local
@@ -264,13 +250,12 @@ feature -- Access
 			sel_start, sel_end: INTEGER
 			l_wel_string: WEL_STRING
 		do
+			previous_caret_position := internal_wel_caret_position
 			if has_selection then
 				sel_start := wel_selection_start
 				sel_end := wel_selection_end
-				wel_set_selection (caret_position - 1, caret_position - 1)
+				wel_set_selection (previous_caret_position, previous_caret_position)
 			end
-			previous_caret_position := internal_caret_position
-			--l_wel_string := wel_string_from_string_with_newline_conversion (txt)
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			if has_selection then
@@ -323,39 +308,43 @@ feature -- Status Report
 				to_wparam (l_actual_caret_position + 1), to_lparam (0)) + 1
 		end
 
-	start_selection: INTEGER
-			-- Index of first character selected.
-		local
-			new_lines_to_start: INTEGER
-		do
-			new_lines_to_start := wel_text.substring (1, wel_selection_start).occurrences ('%R')
-			Result := wel_selection_start + 1 - new_lines_to_start
-		end
-
-	end_selection: INTEGER
-			-- Index of last character selected.
-		local
-			new_lines_to_end: INTEGER
-		do
-			new_lines_to_end := wel_text.substring (1, wel_selection_end).occurrences ('%R')
-			Result := wel_selection_end + 1 - new_lines_to_end
-		end
-
 	selected_text: STRING_32
 			-- Text currently selected in `Current'.
 		local
-			start_pos, end_pos: INTEGER
-				-- starting and ending character positions of the
-				-- current selection in the edit control
+			start_pos, end_pos, nb: INTEGER
+			l_wel_string: WEL_STRING
 		do
+				-- Selection is given in code units not in visible characters.
 			{WEL_API}.send_message (wel_item, Em_getsel, $start_pos, $end_pos)
-				-- Eiffel Strings are indexed from 1 whereas C Strings are indexed from 0
-				-- End position is returned as "position of the first nonselected character" thus it works
-				-- with Eiffel strings out of the box.
-			start_pos := start_pos + 1
-
-			Result := wel_text.substring (start_pos.min (end_pos), end_pos.max (start_pos))
+			check end_greater_than_start: start_pos <= end_pos end
+				-- Create a WEL_STRING big enough to contain up to the end of the selection.
+			create l_wel_string.make_empty (end_pos + 1)
+			nb := cwin_get_window_text (wel_item, l_wel_string.item, end_pos + 1)
+			check valid_count: nb = end_pos  end
+			Result := l_wel_string.substring (start_pos + 1, end_pos)
 			Result.prune_all ('%R')
+		end
+
+	text_length: INTEGER
+			-- Number of characters comprising `text'. This is an optimized
+			-- version, which only recomputes the length if not `text_up_to_date'.
+		local
+			l_length: INTEGER
+		do
+			if not text_up_to_date then
+				Result := Precursor {EV_TEXT_COMPONENT_IMP}
+				internal_text_length := Result
+				text_up_to_date := True
+			else
+				l_length := cwin_get_window_text_length (wel_item)
+				if l_length /= internal_wel_text_length then
+					Result := Precursor {EV_TEXT_COMPONENT_IMP}
+					internal_text_length := Result
+					internal_wel_text_length := l_length
+				else
+					Result := internal_text_length
+				end
+			end
 		end
 
 feature -- Status Settings
@@ -378,66 +367,11 @@ feature -- Status Settings
 			previous_caret_position: INTEGER
 			l_wel_string: WEL_STRING
 		do
-			previous_caret_position := internal_caret_position
+			previous_caret_position := internal_wel_caret_position
 			wel_set_caret_position (wel_text_length)
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			wel_set_caret_position (previous_caret_position)
-		end
-
-	set_caret_position (pos: INTEGER)
-			-- set current caret position.
-			--| This position is used for insertions.
-		do
-			wel_set_caret_position (actual_position_from_caret_position (pos))
-		end
-
-	select_region (start_pos, end_pos: INTEGER)
-			-- Select (hilight) text between
-			-- 'start_pos' and 'end_pos'
-		local
-			new_lines_to_start: INTEGER
-			new_lines_to_end: INTEGER
-			actual_start, actual_end: INTEGER
-			l_text: like text
-		do
-			l_text := text
-			if start_pos < end_pos then
-				actual_start := start_pos
-				actual_end := end_pos
-				new_lines_to_start := l_text.substring (1, actual_start).occurrences ('%N')
-				new_lines_to_end := l_text.substring (actual_start + 1, actual_end).occurrences ('%N')
-				wel_set_selection (actual_start - 1 + new_lines_to_start, actual_end + new_lines_to_start + new_lines_to_end)
-			else
-				actual_start := start_pos
-				actual_end := end_pos
-				new_lines_to_start := l_text.substring (1, actual_end).occurrences ('%N')
-				new_lines_to_end := l_text.substring (actual_end + 1, actual_start).occurrences ('%N')
-				wel_set_selection (actual_start + new_lines_to_start + new_lines_to_end, actual_end - 1 + new_lines_to_start)
-			end
-		end
-
-	set_selection (a_start_pos, a_end_pos: INTEGER)
-			-- <Precursor>
-		local
-			l_new_lines_to_start: INTEGER
-			l_new_lines_to_end: INTEGER
-			l_text: like text
-			l_text_length: INTEGER
-		do
-			l_text := text
-			l_text_length := l_text.count
-			if l_text_length > 0 then
-				if a_start_pos <= a_end_pos then
-					l_new_lines_to_start := l_text.substring (1, a_start_pos.min (l_text_length)).occurrences ('%N')
-					l_new_lines_to_end := l_text.substring ((a_start_pos + 1).min (l_text_length), a_end_pos.min (l_text_length)).occurrences ('%N')
-					wel_set_selection (a_start_pos + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_start + l_new_lines_to_end - 1)
-				else
-					l_new_lines_to_end := l_text.substring (1, a_end_pos.min (l_text_length)).occurrences ('%N')
-					l_new_lines_to_start := l_text.substring ((a_end_pos + 1).min (l_text_length), a_start_pos.min (l_text_length)).occurrences ('%N')
-					wel_set_selection (a_start_pos + l_new_lines_to_end + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_end - 1)
-				end
-			end
 		end
 
 feature -- Basic operation
@@ -454,34 +388,6 @@ feature -- Basic operation
 			scroll_to_line (line_count)
 		end
 
-feature -- Access
-
-	internal_caret_position: INTEGER
-			-- <Precursor>
-		local
-			l_wel_point: WEL_POINT
-			sel_start, sel_end: INTEGER_32
-			l_send_message_result: POINTER
-			l_index_from_beginning, l_line_index: INTEGER_32
-			l_success: BOOLEAN
-		do
-			{WEL_API}.send_message (wel_item, Em_getsel, $sel_start, $sel_end)
-			Result := sel_end
-			if sel_start /= sel_end then
-					-- We may have a reverse selection so we need to retrieve the caret position from the control.
-				create l_wel_point.make (0, 0)
-				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
-				if l_success then
-					l_send_message_result := {WEL_API}.send_message_result (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, cwin_make_long (l_wel_point.x, l_wel_point.y))
-					l_index_from_beginning := {WEL_API}.loword (l_send_message_result)
-					l_line_index := {WEL_API}.hiword (l_send_message_result)
-					if l_index_from_beginning = sel_start or l_index_from_beginning = sel_end then
-						Result := l_index_from_beginning
-					end
-				end
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	ignore_character_code (a_character_code: INTEGER): BOOLEAN
@@ -490,37 +396,20 @@ feature {NONE} -- Implementation
 			-- All characters need to be default processed.
 		end
 
-	actual_position_from_caret_position (pos: INTEGER): INTEGER
-			-- Return the actual caret position from the logical character position.
-		local
-			new_lines: INTEGER
-			counter: INTEGER
-			l_r_code: NATURAL_32
-			nb: INTEGER
-			l_text: like wel_text
-		do
-				-- We cannot simply call `occurrences' on `wel_text' to determine how
-				-- many new line characters there are before `pos' as each time one is
-				-- found, we must increase `pos' by one. This is because from the interface,
-				-- new lines are "%N" but on Windows they are "%R%N".
-			from
-				l_r_code := ('%R').natural_32_code
-				l_text := wel_text
-				counter := 1
-				nb := pos - 1
-			until
-				counter > nb
-			loop
-				if l_text.code (counter) = l_r_code then
-					new_lines := new_lines + 1
-					nb := nb + 1
-					counter := counter + 2
-				else
-					counter := counter + 1
-				end
-			end
-			Result := pos - 1 + new_lines
-		end
+	internal_text_length: INTEGER
+		-- Internal length of `text' in `Current'. This is only recomputed when
+		-- `text_length' is called and `text_up_to_date' is False.
+		-- It is the length in number of characters.
+
+	text_up_to_date: BOOLEAN
+		-- Is `text' of `Current' up to date? Used to buffer calls to `text' and `text_length'.
+
+	internal_wel_text_length: INTEGER
+		-- The last value that windows returned as being the text length.
+		-- We cannot use this directly as it includes %R%N but we can use
+		-- it as a final check in `wel_text_length' to see if we must recomupte
+		-- the length.
+		-- It is the length in number of code units, not characters.
 
 feature {NONE} -- WEL Implementation
 
@@ -567,6 +456,8 @@ feature {NONE} -- WEL Implementation
 			if change_actions_internal /= Void then
 				change_actions_internal.call (Void)
 			end
+				-- Force recomputation of the length for performance.
+			text_up_to_date := False
 		end
 
 	enable

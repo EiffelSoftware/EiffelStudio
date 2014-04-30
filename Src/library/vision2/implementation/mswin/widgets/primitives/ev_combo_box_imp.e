@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_COMBO_BOX_I
+		undefine
+			text_length
 		redefine
 			interface,
 			make,
@@ -68,6 +70,7 @@ inherit
 			on_kill_focus,
 			set_foreground_color,
 			set_background_color,
+			wel_text_item,
 			destroy,
 			propagate_key_event_to_toplevel_window,
 			set_tooltip
@@ -97,6 +100,7 @@ inherit
 			enabled as is_sensitive,
 			count as wel_count,
 			text as wel_text,
+			text_substring as wel_text_substring,
 			has_capture as wel_has_capture,
 			text_length as wel_text_length,
 			list_shown as is_list_shown
@@ -325,23 +329,12 @@ feature -- Status report
 			Result :=  start_pos /= end_pos
 		end
 
-	internal_caret_position: INTEGER
-			-- Caret position.
-		local
-			sel_end: INTEGER
-		do
-			{WEL_API}.send_message (edit_item, Em_getsel, to_wparam (0), $sel_end)
-			Result := sel_end
-		end
-
 	has_focus: BOOLEAN
 			-- Does `Current' have focus?
 		do
 			Result := attached combo as l_combo and then l_combo.has_focus
-			if not Result and then is_editable then
-				if attached text_field as l_text_field then
-					Result := l_text_field.has_focus
-				end
+			if not Result and then is_editable and then attached text_field as l_text_field then
+				Result := l_text_field.has_focus
 			end
 		end
 
@@ -401,10 +394,12 @@ feature -- Status setting
 			end
 		end
 
-	internal_set_caret_position (pos: INTEGER)
+	wel_set_caret_position (pos: INTEGER)
 			-- Set the caret position to `pos'.
 		do
-			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
+			if is_editable and then attached text_field as l_text_field then
+				l_text_field.set_caret_position (pos)
+			end
 		end
 
 	set_tooltip (a_tooltip: READABLE_STRING_GENERAL)
@@ -1145,6 +1140,14 @@ feature {NONE} -- WEL Implementation
 		do
 			wipe_out
 			Precursor {EV_TEXT_COMPONENT_IMP}
+		end
+
+	wel_text_item: POINTER
+			-- <Precursor>
+		do
+			if attached text_field as l_text_field then
+				Result := l_text_field.item
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

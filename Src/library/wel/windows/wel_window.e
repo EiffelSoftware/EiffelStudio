@@ -394,20 +394,33 @@ feature -- Status report
 			exists: exists
 		local
 			length: INTEGER
-			a_wel_string: WEL_STRING
+			l_wel_string: WEL_STRING
 			nb: INTEGER
 		do
 			length := text_length
 			if length > 0 then
 				length := length + 1
-				create a_wel_string.make_empty (length)
-				nb := cwin_get_window_text (item, a_wel_string.item, length)
-				Result := a_wel_string.substring (1, nb)
+				create l_wel_string.make_empty (length)
+				nb := {WEL_API}.get_window_text (item, l_wel_string.item, length)
+				Result := l_wel_string.substring (1, nb)
 			else
 				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	text_substring (nb: INTEGER): WEL_STRING
+			-- `nb' code units of `text' retrieved as a WEL_STRING.
+		require
+			exists: exists
+			valid_upper_bound: nb <= text_length
+		local
+			l_actual_count: INTEGER
+		do
+			create Result.make_empty (nb + 1)
+			l_actual_count := {WEL_API}.send_message_result_integer (item, wm_gettext, to_wparam (nb + 1), Result.item)
+			Result.set_count (l_actual_count)
 		end
 
 	text_length: INTEGER
@@ -2760,7 +2773,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

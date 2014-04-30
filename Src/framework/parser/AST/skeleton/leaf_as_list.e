@@ -417,7 +417,7 @@ feature -- Text status
 			a_region_not_void: a_region /= Void
 			valid_region: valid_region (a_region)
 		do
-			Result := active_modifier_list.for_all (agent {ERT_REGION_MODIFIER}.is_region_disjoint (a_region))
+			Result := not active_modifier_list.for_all (agent {ERT_REGION_MODIFIER}.is_region_disjoint (a_region))
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
@@ -919,7 +919,7 @@ invariant
 	trunks_not_empty: not trunks.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

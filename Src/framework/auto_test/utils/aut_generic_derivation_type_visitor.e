@@ -69,15 +69,9 @@ feature {TYPE_A}
 			l_type := a_type.duplicate
 			create l_derived_generics.make (a_type.generics.count)
 
-			from
-				i := a_type.generics.lower
-				l_upper := a_type.generics.upper
-			until
-				i > l_upper
-			loop
-				a_type.generics.i_th (i).process (Current)
-				l_derived_generics.put_i_th (last_type, i)
-				i := i + 1
+			across a_type.generics as l_generic loop
+				l_generic.item.process (Current)
+				l_derived_generics.extend (last_type)
 			end
 			l_type.set_generics (l_derived_generics)
 			last_type := l_type

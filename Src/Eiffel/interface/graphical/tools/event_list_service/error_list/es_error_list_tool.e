@@ -90,6 +90,14 @@ feature -- Basic operations
 			end
 		end
 
+	apply_fix
+			-- <Precursor>
+		do
+			if is_tool_instantiated then
+				panel.apply_fix
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_tool: ES_ERROR_LIST_TOOL_PANEL

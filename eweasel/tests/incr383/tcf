@@ -29,7 +29,7 @@ compile_result 	validity_error TEST VTCG
 
 copy_raw 	test_rev3.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST1 VEEN VEEN
+compile_result 	validity_error TEST1 VEEN VEEN VWEQ
 
 copy_raw 	test_rev4.e $CLUSTER test.e
 copy_raw 	test1_rev8.e $CLUSTER test1.e

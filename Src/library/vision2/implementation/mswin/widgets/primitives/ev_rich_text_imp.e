@@ -1200,8 +1200,8 @@ feature -- Status setting
 				-- Store contents of `Current' as RTF.
 			create stream_out.make
 			rtf_stream_out (stream_out)
-			stream_out.release_stream
 			old_text_as_rtf := stream_out.text
+			stream_out.release_stream
 
 			l_is_read_only := is_editable
 			wel_destroy

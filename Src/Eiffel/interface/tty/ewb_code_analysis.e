@@ -1,5 +1,5 @@
 note
-	description: "Command-line Inspector Eiffel (code analysis)"
+	description: "Command-line Eiffel Inspector (code analysis)"
 	author: "Stefan Zurfluh"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,7 +73,7 @@ feature -- Execution (declared in EWB_CMD)
 				end
 			end
 
-			output_window.add ("%NInspector Eiffel%N")
+			output_window.add ("%NEiffel Inspector%N")
 			output_window.add ("----------------%N")
 
 			if restore_preferences then
@@ -143,7 +143,7 @@ feature -- Execution (declared in EWB_CMD)
 
 feature -- Info (declared in EWB_CMD)
 
-	name: STRING = "Inspector Eiffel"
+	name: STRING = "Eiffel Inspector"
 			-- Name of this command-line tool.
 
 	help_message: STRING_GENERAL

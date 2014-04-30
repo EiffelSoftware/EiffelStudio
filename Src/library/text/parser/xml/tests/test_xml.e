@@ -271,6 +271,26 @@ feature -- Test routines
 			assert ("has unicode", vis_uc.has_unicode)
 		end
 
+	test_xml_parser_without_start
+			-- If you do not call `start' on input stream and let the parser
+			-- call it for you, it will fail to parse the XML file when it should
+			-- just be ok.
+		local
+			p: XML_PARSER
+			l_input: XML_FILE_INPUT_STREAM
+			l_file: RAW_FILE
+		do
+			p := factory.new_parser
+			create l_file.make_open_write ("test_xml_parser_without_start.xml")
+			l_file.put_string ("<system></system>")
+			l_file.close
+			create l_input.make_with_filename ("test_xml_parser_without_start.xml")
+			p.parse_from_stream (l_input)
+			l_input.close
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+		end
+
 	test_xml_parser_with_unicode_tag
 			-- New test routine
 		local

@@ -209,6 +209,7 @@ feature -- Button texts
 	b_errors: STRING_32							do Result := locale.translation("Errors") end
 	b_warning: STRING_32							do Result := locale.translation("Warning") end
 	b_warnings: STRING_32						do Result := locale.translation("Warnings") end
+	b_apply_fix: STRING_32						do Result := locale.translation("Fix") end
 
 	b_Activate_execution_recording: STRING_32 	do Result := locale.translation("Record Execution")	end
 	b_Deactivate_execution_recording: STRING_32 	do Result := locale.translation("Disable Execution Recording")	end
@@ -797,6 +798,8 @@ feature -- Accelerator, focus label and menu name
 
 feature -- Menu entries
 
+	m_apply_fix: STRING_32 do Result := locale.translation ("Fix") end
+
 	m_go_to_next_error: STRING_32 				do Result := locale.translation ("Go to Next &Error") end
 	m_go_to_previous_error: STRING_32 			do Result := locale.translation ("Go to Previous E&rror") end
 	m_go_to_next_warning: STRING_32 				do Result := locale.translation ("Go to Next &Warning") end
@@ -814,6 +817,8 @@ feature -- Menu entries
 		do Result := locale.formatted_string (locale.translation ("Ed&it Invariants for '$1'"), [a_name]) end
 
 feature -- Tool tips
+
+	f_apply_fix: STRING_32 do Result := locale.translation ("Apply selected fixes to source code") end
 
 	f_go_to_next_error: STRING_32 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end
 	f_go_to_previous_error: STRING_32 			do Result := locale.translation ("Navigates to the previous error or the last error found if the start of the list is reached") end
@@ -1510,6 +1515,7 @@ feature -- Label texts
 	l_Platform: STRING_32				do Result := locale.translation ("Platform") end
 	l_please_select: STRING_32			do Result := locale.translation ("Please select a cluster where test case files will be generated.") end
 	l_position: STRING_32 				do Result := locale.translation ("Position") end
+	l_fix_suggestion: STRING_32 				do Result := locale.translation ("Suggestion") end
 	l_Possible_overflow: STRING_32		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_32				do Result := locale.translation("Precompile")	end
 	l_preferences_delayed_resources: STRING_32 do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.") end
@@ -2140,6 +2146,8 @@ feature -- Label texts
 	l_locale: STRING_32 do Result := locale.translation ("Locale:") end
 	l_target_scope_customzied_formatter_not_saved: STRING_32 do Result := locale.translation ("The customized formatters with target scope will not be saved because a project has not been loaded.") end
 	l_discard_target_scope_customized_formatter: STRING_32 do Result := locale.translation ("Don't ask me again and discard%Nunsaved target scope customized formatters.") end
+
+	l_apply_fix: STRING_32 do Result := locale.translation ("Apply fix") end
 
 	l_go_to_next_error: STRING_32 			do Result := locale.translation ("Go to next error") end
 	l_go_to_previous_error: STRING_32 		do Result := locale.translation ("Go to previous error") end

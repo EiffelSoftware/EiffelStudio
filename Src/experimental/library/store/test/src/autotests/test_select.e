@@ -215,7 +215,6 @@ feature {NONE} -- Large string select
 	large_string_select_load_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_book: like basic_select_create_data
 			l_table_name: STRING
 		do
 			drop_repository (large_string_select_table_name)
@@ -225,7 +224,7 @@ feature {NONE} -- Large string select
 			end
 
 			if is_mysql then
-				execute_query ("CREATE TABLE `db_basic_select` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
+				execute_query ("CREATE TABLE `DB_BASIC_SELECT` (`title` text, `author` varchar(80), `year` datetime, `quantity` int(11) ,`price` double, `double_value` double)")
 			end
 
 			if is_oracle then

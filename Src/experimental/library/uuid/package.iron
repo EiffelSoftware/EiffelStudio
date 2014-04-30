@@ -1,0 +1,16 @@
+package uuid
+
+project
+	uuid = "uuid-safe.ecf"
+	uuid = "uuid.ecf"
+	uuid-tests = "tests/tests.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

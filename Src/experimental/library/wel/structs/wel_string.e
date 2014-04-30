@@ -256,6 +256,54 @@ feature -- Measurement
 	character_size: INTEGER = 2
 			-- Size of a code unit.
 
+	unicode_character_count: INTEGER
+			-- Size in Unicode character of Current
+		local
+			u: UTF_CONVERTER
+		do
+			Result := u.utf_16_characters_count_form_pointer (managed_data, 0, count * character_size)
+		end
+
+	occurrences (c: CHARACTER_32): INTEGER
+			-- Number of times `c' appears in `string'.
+		local
+			i: INTEGER
+			m: like managed_data
+			l_code: NATURAL_32
+			l_nat1, l_nat2: NATURAL_16
+		do
+			i := count * character_size
+			if i > 0 then
+				l_code := c.natural_32_code
+				m := managed_data
+				if l_code <= 0xFFFF then
+						-- Simple case, one to one mapping.
+					from
+					until
+						i = 0
+					loop
+						i := i - character_size
+						if m.read_natural_16 (i) = l_code then
+							Result := Result + 1
+						end
+					end
+				else
+						-- Character `c' is represented by the surrogate pair (l_nat1, l_nat2).
+					from
+						l_nat1 := (0xD7C0 + (l_code |>> 10)).to_natural_16
+						l_nat2 := (0xDC00 + (l_code & 0x3FF)).to_natural_16
+					until
+						i <= character_size
+					loop
+						i := i - character_size
+						if m.read_natural_16 (i) = l_nat2 and m.read_natural_16 (i - character_size) = l_nat1 then
+							Result := Result + 1
+						end
+					end
+				end
+			end
+		end
+
 feature -- Element change
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)
@@ -321,12 +369,19 @@ feature -- Element change
 						a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
 					then
 						u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, i - 1, l_managed_data, j, upper_cell)
-						j := upper_cell.item
-							-- Add %R%N.
-						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j)
-						j := j + character_size
-						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j)
-						j := j + character_size
+							-- Calculate the new location where we will insert the NULL character after
+							-- inserting %R%N. It 2 characters after `uppel_cell.item' which is already
+							-- the location of the NULL character after the convertion to UITF-16.
+						j := upper_cell.item + 2 * character_size
+							-- Do not forget to resize `l_managed_data' to be sure we have
+							-- enough space for the additional %R%N characters. See test#TEST_WEL_STRING.
+						if l_managed_data.count < j then
+								-- Because `j' represents the location where we would insert the NULL character,
+								-- we just need `j + character_size' bytes to hold %R, %N and NULL.
+							l_managed_data.resize (j + character_size)
+						end
+						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j - 2 * character_size)
+						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j - character_size)
 						l_start := i + 1
 					end
 					i := i + 1
@@ -471,7 +526,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

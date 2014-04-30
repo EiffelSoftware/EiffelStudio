@@ -14,9 +14,16 @@ feature
 
 	make
 		local
+			uri: URI
+			path_uri: PATH_URI
 			s32: STRING_32
 			s: READABLE_STRING_GENERAL
 		do
+			create path_uri.make_from_string ("file:///C:/_dev/trunk/Src/library")
+			create uri.make_from_string ("file:///C:/_dev/trunk/Src/library")
+			create uri.make_from_uri (path_uri)
+			print (uri.string)
+
 			print ("Use EiffelStudio to execute the autotests%N")
 			s32 := {STRING_32} "上海"
 			s := s32

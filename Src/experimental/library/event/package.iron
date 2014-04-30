@@ -1,0 +1,15 @@
+package event
+
+project
+	event = "event-safe.ecf"
+	event = "event.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

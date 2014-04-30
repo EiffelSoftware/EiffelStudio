@@ -691,12 +691,10 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			a_position_small_enough: a_position <= keys.count
 		local
 			l_deleted_marks: like deleted_marks
-			l_table_size: INTEGER
 		do
-			Result := a_position - 1
 			l_deleted_marks := deleted_marks
-			l_table_size := content.count
 			from
+				Result := a_position - 1
 			until
 				Result <= 0 or else not l_deleted_marks.item (Result)
 			loop
@@ -1507,7 +1505,6 @@ feature {NONE} -- Implementation
 			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
 			l_first_deleted_position: INTEGER
 			stop: INTEGER
-			l_keys: like keys
 			l_indexes: like indexes_map
 			l_deleted_marks: like deleted_marks
 		do
@@ -1520,7 +1517,6 @@ feature {NONE} -- Implementation
 				item_position := capacity
 			else
 				from
-					l_keys := keys
 					l_indexes := indexes_map
 					l_deleted_marks := deleted_marks
 					l_capacity := capacity

@@ -1,0 +1,18 @@
+package logging
+
+setup
+	compile_library = Clib
+
+project
+	logging = "logging-safe.ecf"
+	logging = "logging.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

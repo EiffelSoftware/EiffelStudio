@@ -811,61 +811,6 @@ feature -- External
 			Result := [odbc_decimal_get_val (l_c_decimal.item).out, odbc_decimal_get_sign (l_c_decimal.item), odbc_decimal_get_precision (l_c_decimal.item), odbc_decimal_get_scale (l_c_decimal.item)]
 		end
 
-	c_string_type: INTEGER
-		do
-			Result := odbc_c_string_type
-		end
-
-	c_wstring_type: INTEGER
-		do
-			Result := odbc_c_wstring_type
-		end
-
-	c_character_type: INTEGER
-		do
-			Result := odbc_c_character_type
-		end
-
-	c_integer_type: INTEGER
-		do
-			Result := odbc_c_integer_type
-		end
-
-	c_integer_16_type: INTEGER
-		do
-			Result := odbc_c_integer_16_type
-		end
-
-	c_integer_64_type: INTEGER
-		do
-			Result := odbc_c_integer_64_type
-		end
-
-	c_float_type: INTEGER
-		do
-			Result := odbc_c_float_type
-		end
-
-   	c_real_type: INTEGER
-		do
-			Result := odbc_c_real_type
-        	end
-
-	c_boolean_type: INTEGER
-		do
-			Result := odbc_c_boolean_type
-		end
-
-	c_date_type: INTEGER
-		do
-			Result := odbc_c_date_type
-		end
-
-	c_decimal_type: INTEGER
-		do
-			Result := odbc_c_decimal_type
-		end
-
 	database_make (i: INTEGER)
 		do
 			con_context_pointer := c_odbc_make (i)
@@ -1159,83 +1104,6 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_c_string_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"STRING_TYPE"
-		end
-
-	odbc_c_wstring_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"WSTRING_TYPE"
-		end
-
-	odbc_c_character_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"CHARACTER_TYPE"
-		end
-
-	odbc_c_integer_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_TYPE"
-		end
-
-	odbc_c_integer_16_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_16_TYPE"
-		end
-
-	odbc_c_integer_64_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"INTEGER_64_TYPE"
-		end
-
-	odbc_c_float_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"FLOAT_TYPE"
-		end
-
-   	odbc_c_real_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"REAL_TYPE"
-      	end
-
-	odbc_c_boolean_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"BOOLEAN_TYPE"
-		end
-
-	odbc_c_date_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"DATE_TYPE"
-		end
-
-	odbc_c_decimal_type: INTEGER
-		external
-			"C [macro %"odbc.h%"]"
-		alias
-			"DECIMAL_TYPE"
-		end
-
 	c_odbc_make (i: INTEGER): POINTER
 		external
 			"C use %"odbc.h%""
@@ -1309,17 +1177,17 @@ feature {NONE} -- External features
 
 	odbc_pre_immediate (a_con: POINTER; desc, argNum: INTEGER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	odbc_free_connection (a_con: POINTER)
 		external
-		    "C blocking use %"odbc.h%""
+			"C blocking use %"odbc.h%""
 		end
 
 	odbc_set_decimal_presicion_and_scale (a_con: POINTER; a_precision, a_scale: INTEGER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	is_binary (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -1367,74 +1235,76 @@ feature {NONE} -- External features
 				until
 					ht_order.off
 				loop
-					type := -1
 					l_string := ht_order.item
 					l_any := uht.item (l_string)
 					if l_any = Void then
 							-- Value was not found, should we attempt to insert NULL?
+						type := {DB_TYPES}.null_type
+						l_managed_pointer := Void
+						l_value_count := -1
 					elseif attached {READABLE_STRING_8} l_any as l_val_string then
-						type := c_string_type
+						type := {DB_TYPES}.string_type
 						create l_c_string.make (l_val_string)
 						pointers.extend (l_c_string.item)
 						l_value_count := l_c_string.bytes_count
 						l_managed_pointer := l_c_string.managed_data
 					elseif attached {READABLE_STRING_32} l_any as l_string_32 then
-						type := c_wstring_type
+						type := {DB_TYPES}.string_32_type
 						create l_sql_string.make (l_string_32)
 						pointers.extend (l_sql_string.item)
 						l_value_count := l_sql_string.bytes_count
 						l_managed_pointer := l_sql_string.managed_data
 					elseif attached {INTEGER_32_REF} l_any as l_val_int then
-						type := c_integer_type
+						type := {DB_TYPES}.integer_32_type
 						create l_managed_pointer.make (l_platform.integer_32_bytes)
 						l_managed_pointer.put_integer_32 (l_val_int.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_32_bytes
 					elseif attached {INTEGER_16_REF} l_any as l_val_int16 then
-						type := c_integer_16_type
+						type := {DB_TYPES}.integer_16_type
 						create l_managed_pointer.make (l_platform.integer_16_bytes)
 						l_managed_pointer.put_integer_16 (l_val_int16.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_16_bytes
 					elseif attached {INTEGER_64_REF} l_any as l_val_int64 then
-						type := c_integer_64_type
+						type := {DB_TYPES}.integer_64_type
 						create l_managed_pointer.make (l_platform.integer_64_bytes)
 						l_managed_pointer.put_integer_64 (l_val_int64.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.integer_64_bytes
 					elseif attached {DATE_TIME} l_any as l_tmp_date then
-						type := c_date_type
+						type := {DB_TYPES}.date_type
 						tmp_date := l_tmp_date
 						create l_managed_pointer.make (c_timestamp_struct_size)
 						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-							 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
+							tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
 						l_value_count := c_timestamp_struct_size
 					elseif attached {REAL_64_REF} l_any as l_val_double then
-						type := c_float_type
+						type := {DB_TYPES}.real_64_type
 						create l_managed_pointer.make (l_platform.real_64_bytes)
 						l_managed_pointer.put_real_64 (l_val_double.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.real_64_bytes
 					elseif attached {REAL_32_REF} l_any as l_val_real then
-						type := c_real_type
+						type := {DB_TYPES}.real_32_type
 						create l_managed_pointer.make (l_platform.real_32_bytes)
 						l_managed_pointer.put_real_32 (l_val_real.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.real_32_bytes
 					elseif attached {CHARACTER_8_REF} l_any as l_val_char then
-						type := c_character_type
+						type := {DB_TYPES}.character_type
 						create l_managed_pointer.make (l_platform.character_8_bytes)
 						l_managed_pointer.put_character (l_val_char.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.character_8_bytes
-					elseif attached {BOOLEAN_REF} l_any as l_val_bool  then
-						type := c_boolean_type
+					elseif attached {BOOLEAN_REF} l_any as l_val_bool then
+						type := {DB_TYPES}.boolean_type
 						create l_managed_pointer.make (l_platform.boolean_bytes)
 						l_managed_pointer.put_boolean (l_val_bool.item, 0)
 						pointers.extend (l_managed_pointer.item)
 						l_value_count := l_platform.boolean_bytes
 					elseif is_decimal_used and then obj_is_decimal (l_any) then
-						type := c_decimal_type
+						type := {DB_TYPES}.decimal_type
 						l_decimal_t := convert_to_decimal (l_any)
 						create l_managed_pointer.make (c_numeric_struct_size)
 						if l_decimal_t.digits.is_natural_64 then
@@ -1444,15 +1314,13 @@ feature {NONE} -- External features
 						odbc_stru_of_numeric (l_managed_pointer.item, l_pointer.item, l_pointer.count, l_decimal_t.sign, l_decimal_t.precision, l_decimal_t.scale)
 						l_value_count := c_numeric_struct_size
 					else
-						 -- Should we attempt to insert NULL here since the type was not found and hence value was
-						 -- most likely Void?
+							-- Should we attempt to insert NULL here since the type was not found and
+							-- hence value was most likely Void?
+						type := {DB_TYPES}.unknown_type
+						l_managed_pointer := Void
 					end
 
-					if type = -1 then
-						a_para.set (Void, i)
-					else
-						a_para.set (l_managed_pointer, i)
-					end
+					a_para.set (l_managed_pointer, i)
 
 					tmp_str.wipe_out
 					if l_value_count = 0 then
@@ -1477,14 +1345,14 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-   	odbc_set_parameter (a_con: POINTER; no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
+	odbc_set_parameter (a_con: POINTER; no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER)
 		external
-		    "C use %"odbc.h%""
+			"C use %"odbc.h%""
 		end
 
 	odbc_stru_of_date (a_date: POINTER; year, mon, day, hour, minute, sec, fraction: INTEGER)
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				{
@@ -1502,7 +1370,7 @@ feature {NONE} -- External features
 	odbc_stru_of_numeric (a_numeric: POINTER; digits: POINTER; digits_length: INTEGER; sign, precision, scale: INTEGER)
 			-- `sign' /= 0, positive
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				{
@@ -1517,7 +1385,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_val (a_numeric: POINTER): NATURAL_64
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return (strhextoval((SQL_NUMERIC_STRUCT *)$a_numeric));
@@ -1526,7 +1394,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_sign (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->sign;
@@ -1535,7 +1403,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_precision (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->precision;
@@ -1544,7 +1412,7 @@ feature {NONE} -- External features
 
 	odbc_decimal_get_scale (a_numeric: POINTER): INTEGER
 		external
-		    "C inline use %"sql.h%""
+			"C inline use %"sql.h%""
 		alias
 			"[
 				return ((SQL_NUMERIC_STRUCT *)$a_numeric)->scale;

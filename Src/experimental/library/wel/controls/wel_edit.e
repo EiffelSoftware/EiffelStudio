@@ -118,7 +118,7 @@ feature -- Basic operations
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = 0
-			selection_end_set: selection_end <= text_length + 2
+			selection_end_set: selection_end <= text_length
 		end
 
 	unselect
@@ -282,7 +282,6 @@ feature -- Status report
 			-- Index of the first character selected
 		require
 			exists: exists
-			has_selection: has_selection
 		do
 			{WEL_API}.send_message (item, Em_getsel, $Result, to_lparam (0))
 		ensure
@@ -294,12 +293,11 @@ feature -- Status report
 			-- Index of the last character selected
 		require
 			exists: exists
-			has_selection: has_selection
 		do
 			{WEL_API}.send_message (item, Em_getsel, to_wparam (0), $Result)
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result <= text_length + 2
+			result_small_enough: Result <= text_length
 		end
 
 	can_undo: BOOLEAN
@@ -448,14 +446,14 @@ feature {NONE} -- Implementation
 invariant
 	consistent_selection: exists and then has_selection implies
 		selection_start >= 0 and then selection_start <= text_length and then
-		selection_end >= 0 and then selection_end <= text_length + 2 and then
+		selection_end >= 0 and then selection_end <= text_length and then
 		selection_start < selection_end
 
 	valid_caret_position: exists implies caret_position >= 0 and then
-		caret_position <= text_length + 2
+		caret_position <= text_length
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

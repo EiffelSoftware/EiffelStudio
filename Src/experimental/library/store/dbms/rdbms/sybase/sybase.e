@@ -558,61 +558,6 @@ feature -- External	features
 			Result := ["0", 1, 1, 0]
 		end
 
-	c_string_type: INTEGER
-		do
-			Result := syb_c_string_type
-		end
-
-	c_wstring_type: INTEGER
-		do
-			Result := syb_c_wstring_type
-		end
-
-	c_character_type: INTEGER
-		do
-			Result := syb_c_character_type
-		end
-
-	c_integer_type: INTEGER
-		do
-			Result := syb_c_integer_type
-		end
-
-	c_integer_16_type: INTEGER
-		do
-			Result := syb_c_integer_16_type
-		end
-
-	c_integer_64_type: INTEGER
-		do
-			Result := syb_c_integer_64_type
-		end
-
-	c_float_type: INTEGER
-		do
-			Result := syb_c_float_type
-		end
-
-   	c_real_type: INTEGER
-		do
-			Result := syb_c_real_type
-        	end
-
-	c_boolean_type: INTEGER
-		do
-			Result := syb_c_boolean_type
-		end
-
-	c_date_type: INTEGER
-		do
-			Result := syb_c_date_type
-		end
-
-	c_decimal_type: INTEGER
-		do
-			--|FIXME: To be implemented.
-		end
-
 	database_make (i: INTEGER)
 		do
 			syb_database_make (i)
@@ -803,83 +748,12 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	syb_c_string_type: INTEGER
-		external
-			"C"
-		alias
-			"c_string_type"
-		end
-
-	syb_c_wstring_type: INTEGER
-		external
-			"C"
-		alias
-			"c_wstring_type"
-		end
-
-	syb_c_character_type: INTEGER
-		external
-			"C"
-		alias
-			"c_character_type"
-		end
-
-	syb_c_integer_type: INTEGER
-		external
-			"C"
-		alias
-			"c_integer_type"
-		end
-
-	syb_c_integer_16_type: INTEGER
-		external
-			"C"
-		alias
-			"c_integer_16_type"
-		end
-
-	syb_c_integer_64_type: INTEGER
-		external
-			"C"
-		alias
-			"c_integer_64_type"
-		end
-
-	syb_c_float_type: INTEGER
-		external
-			"C"
-		alias
-			"c_float_type"
-		end
-
-   	syb_c_real_type: INTEGER
-		external
-			"C"
-		alias
-			"c_real_type"
-        	end
-
-	syb_c_boolean_type: INTEGER
-		external
-			"C"
-		alias
-			"c_boolean_type"
-		end
-
-	syb_c_date_type: INTEGER
-		external
-			"C"
-		alias
-			"c_date_type"
-		end
-
 	syb_database_make (i: INTEGER)
 		external
 			"C"
 		alias
 			"c_syb_make"
 		end
-
 
 	syb_disconnect: INTEGER
 		external
@@ -938,7 +812,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

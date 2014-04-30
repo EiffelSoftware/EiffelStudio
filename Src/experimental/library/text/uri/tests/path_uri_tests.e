@@ -38,6 +38,20 @@ feature -- Test routines
 			end
 		end
 
+	test_make_from_uri
+		local
+			conv: PATH_URI
+			uri: URI
+		do
+			if {PLATFORM}.is_windows then
+				create conv.make_from_path (create {PATH}.make_from_string ("c:\foo\bar"))
+				assert ("c:\foo\bar", conv.string.same_string ("file:///c:/foo/bar"))
+
+				create uri.make_from_uri (conv)
+				assert ("same string", conv.string.same_string (uri.string))
+			end
+		end
+
 	test_relative_path_to_uri
 			-- New test routine
 		local

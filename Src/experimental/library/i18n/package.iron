@@ -1,0 +1,16 @@
+package i18n
+
+project
+	i18n = "i18n-safe.ecf"
+	i18n = "i18n.ecf"
+	i18n-tests = "tests/tests.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

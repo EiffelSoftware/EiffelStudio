@@ -1,0 +1,16 @@
+package encoding
+
+project
+	encoding = "encoding-safe.ecf"
+	encoding = "encoding.ecf"
+	encoding-tests = "tests/tests.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

@@ -19,7 +19,8 @@ inherit
 		export
 			{ANY} set_is_unicode_data
 		redefine
-			make
+			make,
+			release_stream
 		end
 
 create
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create `text'.
 		do
-			create text.make (0)
+			create data.make (0)
 			Precursor {WEL_RICH_EDIT_STREAM_OUT}
 		end
 
@@ -38,35 +39,45 @@ feature -- Access
 
 	text: STRING_32
 			-- Contents of the rich edit control
+		local
+			l_uni_str: WEL_STRING
+			l_c_str: C_STRING
+		do
+			if is_unicode_data then
+				create l_uni_str.share_from_pointer_and_count (data.item, data.count)
+				Result := l_uni_str.substring (1, l_uni_str.count)
+			else
+				create l_c_str.make_shared_from_pointer_and_count (data.item, data.count)
+				Result := l_c_str.substring (1, l_c_str.count)
+			end
+		end
+
+feature -- Basic operations
+
+	release_stream
+			-- <Precursor>
+		do
+			Precursor
+			data.resize (0)
+		end
 
 feature {NONE} -- Implementation
 
 	write_buffer
 			-- Append `a_buffer' in `text'.
-		local
-			l_uni_str: WEL_STRING
-			l_c_str: C_STRING
-			l_text: READABLE_STRING_GENERAL
-			l_buffer: like buffer
 		do
-			l_buffer := buffer
-				-- Per precondition
-			check l_buffer_attached: l_buffer /= Void then end
-			if is_unicode_data then
-				create l_uni_str.share_from_pointer_and_count (l_buffer.item, l_buffer.count)
-				l_text := l_uni_str.substring (1, l_uni_str.count)
-			else
-				create l_c_str.make_shared_from_pointer_and_count (l_buffer.item, l_buffer.count)
-				l_text := l_c_str.substring (1, l_c_str.count)
+			if attached buffer as l_buffer then
+				data.append (l_buffer)
 			end
-			text.append_string_general (l_text)
 		end
 
+	data: MANAGED_POINTER
+			-- Buffer where text will be stored.
+
 invariant
-	text_not_void: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

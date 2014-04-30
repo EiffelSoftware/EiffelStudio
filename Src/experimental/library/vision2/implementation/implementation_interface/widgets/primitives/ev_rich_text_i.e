@@ -30,7 +30,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	selected_character_format: EV_CHARACTER_FORMAT
@@ -45,7 +45,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
@@ -58,7 +58,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	selected_paragraph_format: EV_PARAGRAPH_FORMAT
@@ -73,7 +73,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
@@ -86,7 +86,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
@@ -99,7 +99,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
@@ -117,7 +117,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
@@ -135,7 +135,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	buffer_locked_in_format_mode: BOOLEAN
@@ -155,7 +155,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	position_from_index (an_index: INTEGER): EV_COORDINATE
@@ -170,7 +170,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	character_displayed (an_index: INTEGER): BOOLEAN
@@ -182,7 +182,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	tab_positions: EV_ACTIVE_LIST [INTEGER]
@@ -197,7 +197,7 @@ feature -- Status report
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status setting
@@ -212,7 +212,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
@@ -226,7 +226,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
@@ -241,7 +241,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION)
@@ -256,7 +256,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
@@ -272,7 +272,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
@@ -291,7 +291,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			buffer_locked_for_format: buffer_locked_in_format_mode
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
@@ -312,7 +312,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			buffer_locked_for_append: buffer_locked_in_append_mode
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	flush_buffer
@@ -351,7 +351,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	save_to_named_path (a_filename: PATH)
@@ -465,7 +465,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end
+				old start_selection = start_selection and old end_selection = end_selection
 		end
 
 	set_with_named_path (a_filename: PATH)
@@ -495,7 +495,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed_if_failed: not last_load_successful implies old text.is_equal (text)
 			caret_not_moved_if_failed: not last_load_successful implies caret_position = old caret_position
 			selection_not_changed_if_failed: not last_load_successful implies (old has_selection = has_selection and has_selection implies
-				old selection_start = selection_start and old selection_end = selection_end)
+				old start_selection = start_selection and old end_selection = end_selection)
 		end
 
 	last_load_successful: BOOLEAN

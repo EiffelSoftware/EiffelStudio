@@ -4,8 +4,8 @@ note
 						'system.log' in the application's current working directory (as gathered
 						from EXECUTION_ENVIRONMENT.
 
-						If that is not the appropriate place / file name for your application,
-						please call `set_file_name' to set it to a different location
+						If that is not the appropriate place / path for your application,
+						please call `set_path' to set it to a different location
 					]"
 	legal: "See note at the end of this class"
 	status: "See notice at the end of this class"
@@ -26,12 +26,18 @@ feature {NONE} -- Creation
 	default_create
 			-- Create an instance of {LOG_WRITER_FILE}.
 		local
-			l_exec_env: EXECUTION_ENVIRONMENT
+			p: PATH
 		do
-			create l_exec_env
-			create file_name.make_from_string (l_exec_env.current_working_directory)
-			file_name.set_file_name ("system.log")
-			create log_file.make (file_name)
+			create p.make_from_string ("system.log")
+			p := p.absolute_path
+			path := p
+			create log_file.make_with_path (p)
+
+				-- Date/time object that is reseeded to now every time `write' is called
+			create date_time.make_now_utc
+
+				-- Call set_path in case it is redefined in descendant.
+			set_path (p)
 		end
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
@@ -39,7 +45,7 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 	initialize
 			-- Initialize this FILE_LOG_WRITER instance
 		require else
-			file_name_set: file_name /= Void and then not file_name.is_empty
+			path_set: path /= Void and then not path.is_empty
 		local
 			retried: BOOLEAN
 		do
@@ -57,24 +63,45 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 
 feature -- Access
 
+	set_path (a_path: PATH)
+			-- Set the `path' name of the log file to `a_path'
+		require
+			valid_a_path: a_path /= Void and then not a_path.is_empty
+			not_initialized: not is_initialized
+		do
+			if not is_initialized then
+				path := a_path
+				create log_file.make_with_path (path)
+			end
+		ensure
+			path_set: path.is_same_file_as (a_path)
+		end
+
 	set_file_name (a_file_name: FILE_NAME)
 			-- Set the file name of the log file to `a_file_name'
+		obsolete
+			"Use unicode compliant `set_path' instead [2014/03]"
 		require
 			valid_a_file_name: a_file_name /= Void and then not a_file_name.is_empty
 			not_initialized: not is_initialized
 		do
-			if not is_initialized then
-				file_name := a_file_name.twin
-				create log_file.make (file_name)
-			end
+			set_path (create {PATH}.make_from_string (a_file_name.string))
 		ensure
 			file_name_set: file_name.is_equal (a_file_name)
 		end
 
 feature -- Status Report
 
-	file_name: FILE_NAME;
+	path: PATH
+			-- The path name of the log file
+
+	file_name: FILE_NAME
 			-- The name of the log file, including the absolute path to it
+		obsolete
+			"Use unicode compliant `path' instead [2014/03]"
+		do
+			create Result.make_from_string (path.utf_8_name)
+		end
 
 feature {LOG_LOGGING_FACILITY} -- Output
 
@@ -101,28 +128,23 @@ feature {LOG_LOGGING_FACILITY} -- Status Report
 	log_file: PLAIN_TEXT_FILE
 			-- The actual log file
 
-feature {NONE} -- Attributes
-
 	date_time: DATE_TIME
 			-- Date/time object that is reseeded to now every time `write' is called
-		once
-			create Result.make_now_utc
-		end
 
 feature {NONE} -- Constants
 
 	space_dash_space: STRING = " - "
-		-- " - " constant for writing log data.
+			-- " - " constant for writing log data.
 
 note
-	copyright:	"Copyright (C) 2010 by ITPassion Ltd, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (See http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
-					ITPassion Ltd.
-					5 Anstice Close, Chiswick, Middlesex, W4 2RJ, United Kingdom
-					Telephone 0044-208-742-3422 Fax 0044-208-742-3468
-					Website http://www.itpassion.com
-					Customer Support http://powerdesk.itpassion.com
-				]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

@@ -1,0 +1,15 @@
+package ActiveX_control_container
+
+setup
+	compile_library = Client/Clib
+	compile_library = Server/Clib
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

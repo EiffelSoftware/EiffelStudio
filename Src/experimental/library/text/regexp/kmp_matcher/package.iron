@@ -1,0 +1,15 @@
+package kmp_matcher
+
+project
+	kmp_matcher = "kmp_matcher-safe.ecf"
+	kmp_matcher = "kmp_matcher.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

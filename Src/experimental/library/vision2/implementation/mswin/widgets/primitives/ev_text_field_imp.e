@@ -11,22 +11,19 @@ class
 
 inherit
 	EV_TEXT_FIELD_I
-		rename
-			set_selection as text_component_imp_set_selection
+		undefine
+			text_length
 		redefine
 			interface,
-			text_length,
 			hide_border
 		end
 
 	EV_TEXT_COMPONENT_IMP
-		rename
-			internal_set_caret_position as wel_set_caret_position
+		
 		redefine
 			on_key_down,
 			interface,
 			make,
-			text_length,
 			next_dlgtabitem,
 			ignore_character_code
 		end
@@ -54,6 +51,7 @@ inherit
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end,
+			set_selection as wel_set_selection,
 			width as wel_width,
 			height as wel_height,
 			set_caret_position as wel_set_caret_position,
@@ -67,7 +65,8 @@ inherit
 			move_and_resize as wel_move_and_resize,
 			set_text as wel_set_text,
 			has_capture as wel_has_capture,
-			text_length as wel_text_length
+			text_length as wel_text_length,
+			text_substring as wel_text_substring
 		undefine
 			set_width,
 			set_height,
@@ -155,12 +154,6 @@ feature -- Element Change
 
 feature -- Access
 
-	text_length: INTEGER
-			-- <Precursor>
-		do
-			Result := wel_text_length
-		end
-
 	text: STRING_32
 			-- Text of `Current'.
 		local
@@ -178,28 +171,6 @@ feature -- Access
 				Result := l_wel_string.string
 			else
 				create Result.make (0)
-			end
-		end
-
-	internal_caret_position: INTEGER
-			-- <Precursor>
-		local
-			l_wel_point: WEL_POINT
-			sel_start, sel_end: INTEGER_32
-			l_success: BOOLEAN
-		do
-			{WEL_API}.send_message (wel_item, Em_getsel, $sel_start, $sel_end)
-			Result := sel_end
-			if sel_start /= sel_end then
-					-- We may have a reverse selection so we need to retrieve the caret position from the control.
-				create l_wel_point.make (0, 0)
-				l_success := {WEL_API}.get_caret_pos (l_wel_point.item)
-				if l_success then
-					Result := {WEL_API}.send_message_result_integer (wel_item, {WEL_RICH_EDIT_MESSAGE_CONSTANTS}.Em_charfrompos, default_pointer, cwin_make_long (l_wel_point.x, l_wel_point.y))
-					if Result /= sel_start and Result /= sel_end then
-						Result := sel_end
-					end
-				end
 			end
 		end
 
@@ -291,7 +262,7 @@ feature {NONE} -- WEL Implementation
 			l_tooltip := tooltip
 			l_sensitive := is_sensitive
 
-			l_caret := internal_caret_position
+			l_caret := internal_wel_caret_position
 			l_is_read_only := read_only
 			set_tooltip ("")
 
@@ -431,7 +402,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

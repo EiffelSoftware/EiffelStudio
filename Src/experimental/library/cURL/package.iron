@@ -1,0 +1,18 @@
+package cURL
+
+setup
+	compile_library = Clib
+
+project
+	curl = "cURL-safe.ecf"
+	curl = "cURL.ecf"
+
+note
+	title: Eiffel cURL
+	description: libcURL wrapper library
+	tags: network,curl,wrapper
+	license: Eiffel Forum v2
+	copyright: Copyright (c), Eiffel Software and others.
+--	link[doc]: "Documentation" http:// 
+
+end

@@ -1,0 +1,14 @@
+package patterns
+
+project
+	patterns = "patterns.ecf"
+
+note
+--	title: 
+--	description: 
+--	tags: 
+--	license: 
+--	copyright: 
+--	link[doc]: "Documentation" http:// 
+
+end

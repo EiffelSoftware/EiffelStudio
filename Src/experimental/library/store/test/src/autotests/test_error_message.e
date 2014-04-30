@@ -95,7 +95,6 @@ feature {NONE} -- Implementation
 	basic_select_load_data
 			-- Execute a query without error
 		local
-			l_book: like basic_select_create_data
 			l_table_name: STRING
 		do
 				-- Put more data using direct SQL
@@ -199,8 +198,6 @@ feature {NONE} -- Implementation, Error recovery 1
 
 	error_recovery_make_selection
 			-- Select books
-		local
-			l_result: DB_TUPLE
 		do
 			assert ("No data", attached load_data_with_select (error_recovery_select_data))
 		end

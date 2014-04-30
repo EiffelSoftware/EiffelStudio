@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER_32
 			window: EV_TITLED_WINDOW
 		do
-			create window
+			create window.make_with_title (txt.generating_type.name)
 			window.extend (txt)
 			window.set_size (200, 600)
 			window.show
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			c: CHARACTER_32
 			window: EV_TITLED_WINDOW
 		do
-			create window
+			create window.make_with_title (txt.generating_type.name)
 			window.extend (txt)
 			window.set_size (200, 600)
 			window.show

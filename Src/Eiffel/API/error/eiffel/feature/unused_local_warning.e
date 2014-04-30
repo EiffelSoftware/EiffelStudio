@@ -10,9 +10,14 @@ class UNUSED_LOCAL_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			help_file_name, build_explain, trace_primary_context,
-			print_single_line_error_message
+			build_explain,
+			fix_option,
+			help_file_name,
+			print_single_line_error_message,
+			trace_primary_context
 		end
+
+	SHARED_NAMES_HEAP
 
 create
 	make
@@ -37,7 +42,7 @@ feature -- Properties
 	associated_feature: E_FEATURE
 			-- Feature containing the unused local variable
 
-	unused_locals: LINKED_LIST [TUPLE [name: STRING; type: TYPE_A]]
+	unused_locals: LINKED_LIST [TUPLE [name: INTEGER_32; type: TYPE_A]]
 			-- List of unused local names and type.
 
 	code: STRING = "Unused_local_warning"
@@ -50,7 +55,7 @@ feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
-			l_name: STRING
+			l_name: INTEGER_32
 			l_type: TYPE_A
 			l_group: CONF_GROUP
 		do
@@ -77,11 +82,11 @@ feature -- Output
 				l_name := unused_locals.item.name
 				l_type := unused_locals.item.type
 				check
-					l_name_not_void: l_name /= Void
+					valid_l_name: names_heap.valid_index (l_name)
 					l_type_not_void: l_type /= Void
 				end
 				a_text_formatter.add_indent
-				a_text_formatter.add (l_name)
+				a_text_formatter.add (names_heap.item_32 (l_name))
 				a_text_formatter.add (": ")
 				l_type.append_to (a_text_formatter)
 				a_text_formatter.add_new_line
@@ -104,6 +109,17 @@ feature -- Output
 			end
 		end
 
+feature -- Automated correction
+
+	fix_option: detachable ITERABLE [FIX [TEXT_FORMATTER]]
+			-- <Precursor>
+		do
+			if not associated_class.lace_class.is_read_only then
+				create {SPECIAL [FIX [TEXT_FORMATTER]]} Result.make_filled
+					(create {FIX_UNUSED_LOCAL}.make (Current), 1)
+			end
+		end
+
 feature {NONE} -- Output
 
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
@@ -121,7 +137,7 @@ feature {NONE} -- Output
 			l_cursor := l_locals.cursor
 			from l_locals.start until l_locals.after loop
 				l_text.append_character ('`')
-				l_text.append_string_general (l_locals.item.name)
+				l_text.append_string_general (names_heap.item_32 (l_locals.item.name))
 				l_text.append_character ('%'')
 				if not l_locals.islast then
 					l_text.append_string_general (", ")
@@ -135,10 +151,10 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER}
 
-	add_unused_local (s: STRING; t: TYPE_A)
+	add_unused_local (s: INTEGER_32; t: TYPE_A)
 			-- Extend `unused_locals' with unused local `s' of type `t'.
 		require
-			s_not_void: s /= Void
+			valid_name: names_heap.valid_index (s)
 			t_not_void: t /= Void
 		do
 			unused_locals.extend ([s, t])
@@ -152,7 +168,7 @@ invariant
 	unused_locals_not_void: unused_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -435,6 +435,7 @@ feature {NONE} -- Basic operations
 					check
 						l_parser_callbacks_set: l_parser.callbacks = l_callbacks
 					end
+					l_resolver.last_stream.start
 					l_parser.parse_from_stream (l_resolver.last_stream)
 					l_resolver.last_stream.close
 					if not l_callbacks.has_error then

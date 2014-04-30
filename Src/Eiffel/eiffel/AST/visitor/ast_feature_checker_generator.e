@@ -5246,15 +5246,15 @@ feature {NONE} -- Visitor
 							l_conforming := True
 						end
 						if not l_conforming then
-								-- Report a warning (when enabled) for the following cases in non-inherited code:
-								-- 	exp1 = exp2
-								-- 	exp = ref
-								-- 	ref = exp
+								-- Report a warning (when enabled) except when comparing against
+								-- Void if the other operand is expanded. That is to say it will
+								-- not report an error for `a = Void' and `Void = a' if 
+								-- `a' is not expanded.
 							if
-								context.current_class.is_warning_enabled (w_vweq) and then
 								current_feature.written_in = context.current_class.class_id and then
-								(l_left_type.is_expanded and then not l_right_type.conformance_type.is_formal or else
-								l_right_type.is_expanded and then not l_left_type.conformance_type.is_formal)
+								context.current_class.is_warning_enabled (w_vweq) and then
+								((l_left_type.is_none xor l_right_type.is_none) implies
+									(l_left_type.is_expanded or l_right_type.is_expanded))
 							then
 								create l_vweq
 								context.init_error (l_vweq)

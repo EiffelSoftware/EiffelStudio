@@ -1,11 +1,9 @@
-note
-	description: "Server abstract synax tree on temporary file for AST. This server is%
-				 %used during the compilation. The goal is to merge the file Tmp_ast_file%
-				 %and Ast_file if the compilation is successful. Indexed by class id."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "[
+			Abstract synax tree server on temporary file for AST used during the compilation.
+			The goal is to merge this Tmp_ast_file and Ast_file if the compilation is successful.
+			Indexed by class id.
+		]"
 
 class TMP_AST_SERVER
 
@@ -469,6 +467,8 @@ invariant
 	discardable_classes_attached: attached discardable_classes
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

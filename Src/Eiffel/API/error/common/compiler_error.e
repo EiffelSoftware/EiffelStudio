@@ -24,6 +24,14 @@ inherit
 			{NONE} all
 		end
 
+feature -- Fixing
+
+	fix_option: detachable ITERABLE [FIX [TEXT_FORMATTER]]
+			-- Possible fixes of the error.
+		do
+				-- Void by default.
+		end
+
 feature {NONE} -- Access
 
 	help_text: attached LIST [STRING]
@@ -410,7 +418,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

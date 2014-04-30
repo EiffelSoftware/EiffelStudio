@@ -941,6 +941,17 @@ feature -- Warning messages
 				%supported.%N")
 		end
 
+	w_fix_undo_warning: STRING_32
+		do
+			Result := locale.translation (
+				"[
+					Applying selected fixes causes changes to the source code that cannot be undone.
+					
+					Click Yes to apply fixes.
+					Click No to abort.
+				]")
+		end
+
 	w_target_name_attribute_expected: STRING_32 do Result := locale.translation ("TARGET name attribute expected") end
 
 	w_source_name_attribute_expected: STRING_32 do Result := locale.translation ("SOURCE name attribute expected") end

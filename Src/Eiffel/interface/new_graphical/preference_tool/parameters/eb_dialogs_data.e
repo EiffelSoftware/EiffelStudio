@@ -331,6 +331,9 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	confirm_save_metric_preference: BOOLEAN_PREFERENCE
 			-- Should we save requested metric?
 
+	confirm_fix_without_undo_preference: BOOLEAN_PREFERENCE
+			-- A preference to discard a fix undo warning.
+
 	acknowledge_not_loaded_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
@@ -400,6 +403,7 @@ feature -- Preference strings
 	confirm_replace_all_string: STRING = "interface.dialogs.confirm_replace_all"
 	confirm_remove_metric_string: STRING = "interface.dialogs.confirm_remove_metric"
 	confirm_save_metric_string: STRING = "interface.dialogs.confirm_save_metric"
+	confirm_fix_without_undo_string: STRING = "interface.dialogs.confirm_fix_without_undo"
 	acknowledge_not_loaded_string: STRING = "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING = "interface.dialogs.confirm_finalize_precompile"
 	show_starting_dialog_string: STRING = "interface.dialogs.show_starting_dialog"
@@ -470,6 +474,7 @@ feature {NONE} -- Implementation
 			confirm_acknowledge_eis_affected_items_preference := l_manager.new_boolean_preference_value (l_manager, confirm_acknowledge_eis_affected_items_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
 			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
+			confirm_fix_without_undo_preference := l_manager.new_boolean_preference_value (l_manager, confirm_fix_without_undo_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
 			confirm_finalize_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_precompile_string, True)
 			show_starting_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_starting_dialog_string, True)
@@ -532,6 +537,7 @@ invariant
 	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void
 	confirm_iron_packages_installation_preference_not_void: confirm_iron_packages_installation_preference /= Void
 	confirm_delete_eis_entries_preference_not_void: confirm_delete_eis_entries_preference /= Void
+	confirm_fix_undo_preference_attached: attached confirm_fix_without_undo_preference
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
 	show_starting_dialog_preference_not_void: show_starting_dialog_preference /= Void

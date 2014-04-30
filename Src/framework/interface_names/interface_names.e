@@ -1276,23 +1276,24 @@ feature -- Label texts
 						[a_nclass, a_ncslink, a_nilink, a_ncluster, a_physics, a_draw, a_draws])
 		end
 
-	l_Discard_convert_project_dialog: STRING_32	do Result := locale.translation("always convert old projects.")	end
-	l_Discard_build_precompile_dialog: STRING_32 do Result := locale.translation("always build precompile.")	end
-	l_Discard_finalize_assertions: STRING_32 	do Result := locale.translation("always discard assertions when finalizing.")	end
-	l_Discard_finalize_precompile_dialog: STRING_32 do Result := locale.translation("always finalize.")	end
-	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/C++ code.")	end
-	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("always break into debugger on contract violation.")	end
-	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("always save files before compiling.")	end
-	l_discard_save_before_prettifying_dialog: STRING_32 do Result := locale.translation ("always save class before prettifying.") end
-	l_Discard_starting_dialog: STRING_32			do Result := locale.translation("Hide this dialog at startup")	end
-	l_Discard_replace_all_warning_dialog: STRING_32 do Result := locale.translation("always replace all.")	end
-	l_Discard_terminate_freezing: STRING_32		do Result := locale.translation("always terminate freezing when needed.")	end
-	l_Discard_terminate_external_command: STRING_32 do Result := locale.translation("always terminate running external command.")	end
-	l_Discard_terminate_finalizing: STRING_32 	do Result := locale.translation("always terminate finalizing when needed.")	end
-	l_discard_cancel_c_compilation_and_external_command: STRING_32 do Result := locale.translation("always cancel C/C++ compilation, terminate external command when exiting.")	end
-	l_discard_cancel_c_compilation: STRING_32	do Result := locale.translation("always cancel C/C++ compilation when exiting.")	end
-	l_discard_terminate_external_command_when_exit: STRING_32	do Result := locale.translation("always terminate external command when exiting.")	end
-	l_Discard_iron_installation_dialog: STRING_32 do Result := locale.translation("always install iron packages.")	end
+	l_Discard_convert_project_dialog: STRING_32	do Result := locale.translation("Always convert old projects.")	end
+	l_Discard_build_precompile_dialog: STRING_32 do Result := locale.translation("Always build precompile.")	end
+	l_Discard_finalize_assertions: STRING_32 	do Result := locale.translation("Always discard assertions when finalizing.")	end
+	l_Discard_finalize_precompile_dialog: STRING_32 do Result := locale.translation("Always finalize.")	end
+	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("Always compile C/C++ code.")	end
+	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("Always break into debugger on contract violation.")	end
+	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("Always save files before compiling.")	end
+	l_discard_save_before_prettifying_dialog: STRING_32 do Result := locale.translation ("Always save class before prettifying.") end
+	l_Discard_starting_dialog: STRING_32			do Result := locale.translation("Hide this dialog at startup.")	end
+	l_Discard_replace_all_warning_dialog: STRING_32 do Result := locale.translation("Always replace all.")	end
+	l_Discard_terminate_freezing: STRING_32		do Result := locale.translation("Always terminate freezing when needed.")	end
+	l_Discard_terminate_external_command: STRING_32 do Result := locale.translation("Always terminate running external command.")	end
+	l_Discard_terminate_finalizing: STRING_32 	do Result := locale.translation("Always terminate finalizing when needed.")	end
+	l_discard_cancel_c_compilation_and_external_command: STRING_32 do Result := locale.translation("Always cancel C/C++ compilation, terminate external command when exiting.")	end
+	l_discard_cancel_c_compilation: STRING_32	do Result := locale.translation("Always cancel C/C++ compilation when exiting.")	end
+	l_discard_terminate_external_command_when_exit: STRING_32	do Result := locale.translation("Always terminate external command when exiting.")	end
+	l_Discard_iron_installation_dialog: STRING_32 do Result := locale.translation("Always install iron packages.")	end
+	l_discard_fix_undo_warning: STRING_32 do Result := locale.translation ("Always apply fixes without this prompt.") end
 
 	l_Display_call_stack_warning: STRING_32	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 	l_Displayed_buttons_text: STRING_32 do Result := locale.translation("Displayed buttons")	end

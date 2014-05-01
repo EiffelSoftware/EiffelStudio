@@ -69,7 +69,7 @@ feature {NONE} -- Creation
 				routine_written_in := r.written_in
 			end
 		ensure
-			routine_ids_valid: routine_from_ids ~ a_bp_loc.routine
+			routine_ids_valid: attached routine_from_ids as l_routine implies l_routine ~ a_bp_loc.routine
 		end
 
 feature {BREAK_LIST, BREAKPOINT} -- Copy for saving
@@ -322,7 +322,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

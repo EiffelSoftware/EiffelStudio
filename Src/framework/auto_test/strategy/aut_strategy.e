@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make (a_interpreter: like interpreter; a_system: like system; an_error_handler: like error_handler)
 			-- Create new strategy.
 		require
+			a_interpreter_not_void: a_interpreter /= Void
 			a_system_not_void: a_system /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
@@ -73,7 +74,7 @@ invariant
 	interpreter_not_void: interpreter /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

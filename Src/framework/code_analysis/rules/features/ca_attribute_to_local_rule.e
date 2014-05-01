@@ -41,7 +41,6 @@ feature {NONE} -- Rule checking
 		local
 			l_clients: ARRAYED_LIST [CLASS_C]
 			l_has_clients: BOOLEAN
-			l_callers: LIST [STRING_32]
 		do
 			l_clients := current_context.checking_class.clients
 

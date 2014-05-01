@@ -81,8 +81,6 @@ feature {NONE} -- AST Visit
 
 	process_class (a_class: CLASS_AS)
 			-- Start roundtrip iteration on `a_class'.
-		local
-			l_comments: EIFFEL_COMMENTS
 		do
 			set_parsed_class (a_class)
 			set_match_list (current_context.matchlist)

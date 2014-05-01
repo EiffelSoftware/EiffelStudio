@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="code_analysis" uuid="CBD7B157-995D-4849-B0D5-D14E5CBC0DEA" library_target="code_analysis">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="code_analysis" uuid="CBD7B157-995D-4849-B0D5-D14E5CBC0DEA" library_target="code_analysis">
 	<target name="code_analysis">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="compiler" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
-		<library name="configuration-parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" />
+		<library name="configuration-parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf">
 			<condition>
 				<platform value="windows"/>
@@ -23,6 +24,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<cluster name="code_analysis" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/tests$</exclude>
@@ -30,4 +32,3 @@
 		</cluster>
 	</target>
 </system>
-

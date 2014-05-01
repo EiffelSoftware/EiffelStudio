@@ -192,8 +192,6 @@ feature -- Analysis interface
 
 	add_class (a_class: attached CONF_CLASS)
 			-- Adds class `a_class'.
-		local
-			l_class_c: CLASS_C
 		do
 			system_wide_check := False
 

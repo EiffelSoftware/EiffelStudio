@@ -43,8 +43,6 @@ feature {NONE} -- Rule checking
 			-- Checks if `a_feature' has a feature comment or not.
 		local
 			l_viol: CA_RULE_VIOLATION
-			l_comment: STRING_32
-			l_empty: BOOLEAN
 		do
 			if current_context.matchlist /= Void and then a_feature.comment (current_context.matchlist).count = 0 then
 					-- The comments list is empty.

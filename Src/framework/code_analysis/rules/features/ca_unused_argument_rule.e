@@ -155,8 +155,6 @@ feature {NONE} -- Rule Checking
 	process_converted_expr (a_conv: CONVERTED_EXPR_AS)
 			-- Checks if `a_conv' is an argument used in the
 			-- form `$arg'.
-		local
-			j: INTEGER
 		do
 			if
 				attached {ADDRESS_AS} a_conv.expr as l_address

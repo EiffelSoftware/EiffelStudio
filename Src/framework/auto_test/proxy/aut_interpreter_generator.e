@@ -58,7 +58,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	last_interpreter: AUT_INTERPRETER_PROXY
+	last_interpreter: detachable AUT_INTERPRETER_PROXY
 			-- Proxy for the last interpreter created
 
 feature -- Generation
@@ -107,7 +107,7 @@ feature -- Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

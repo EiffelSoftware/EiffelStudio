@@ -60,13 +60,15 @@ feature {NONE} -- Initialization
 			make (a_generation)
 
 			l_itp := new_interpreter
-			l_itp.add_observer (result_repository_builder)
-			l_itp.set_is_logging_enabled (True)
+			if l_itp /= Void then
+				l_itp.add_observer (result_repository_builder)
+				l_itp.set_is_logging_enabled (True)
 
-			create l_task.make (l_itp, generation.system, generation.error_handler)
-			l_task.add_class_names (a_class_names)
-			test_task := l_task
-			sub_task := l_task
+				create l_task.make (l_itp, generation.system, generation.error_handler)
+				l_task.add_class_names (a_class_names)
+				test_task := l_task
+				sub_task := l_task
+			end
 		ensure
 			generation_set: generation = a_generation
 		end
@@ -173,7 +175,9 @@ feature -- Status setting
 				update_remaining_time
 			end
 			l_generation.error_handler.reset_counters (l_generation.test_count)
-			sub_task.start
+			if attached sub_task as l_sub_task then
+				sub_task.start
+			end
 		end
 
 feature {ROTA_S, ROTA_TASK_I} -- Status setting
@@ -338,7 +342,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	new_interpreter: AUT_INTERPRETER_PROXY
+	new_interpreter: detachable AUT_INTERPRETER_PROXY
 			-- Create a new interpreter proxy, Void if executable did not exist.
 		local
 			l_itp_gen: AUT_INTERPRETER_GENERATOR
@@ -348,7 +352,7 @@ feature {NONE} -- Factory
 			l_itp_gen.create_interpreter
 				(u.make_directory_name_in ({STRING_32} "log", generation.output_dirname))
 
-				-- FIXME: ensure `last_interpreter' is attached, even if executable does not exist!
+				-- If executable does not exist, it is not attached.
 			Result := l_itp_gen.last_interpreter
 		end
 
@@ -404,7 +408,7 @@ invariant
 	minimizing_implies_test_task_has_next_step: minimize_task_cache = sub_task implies test_task.has_next_step
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

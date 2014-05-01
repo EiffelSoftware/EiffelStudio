@@ -363,7 +363,7 @@ feature {NONE} -- Events
 					l_message := locale_formatter.translation (e_attachment_marks_not_supported)
 				end
 			end
-			if not a_input.is_empty and Result.valid then
+			if not a_input.is_empty and l_message = Void then
 				if not add_type_button.is_sensitive then
 					add_type_button.enable_sensitive
 				end

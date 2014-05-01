@@ -213,10 +213,11 @@ feature -- Status setting
 			-- `a_time_out': Timout in minutes for `time_out'.
 		require
 			not_running: not has_next_step
+			a_valid_time_out: a_time_out <= {INTEGER_32}.max_value.as_natural_32
 		do
 			create time_out.make (0, 0, 0, 0, a_time_out.as_integer_32, 0)
 		ensure
-			time_out_set: time_out.minute = a_time_out
+			time_out_set: time_out.minute.as_natural_32 = a_time_out
 		end
 
 	set_test_count (a_test_count: like test_count)
@@ -484,7 +485,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

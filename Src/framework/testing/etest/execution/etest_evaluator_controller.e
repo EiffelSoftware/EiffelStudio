@@ -168,10 +168,14 @@ feature -- Status setting
 				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_creator)
 				start_evaluator (l_args)
 			end
-			connection.send_request (a_request)
-			has_next_step := True
-		ensure
-			running: is_running
+				-- See bug#18686 where if you select a test that was just renamed
+				-- and try to run it, it will cause a compilation that will cause
+				-- the test to be removed and a call to `reset' indirectly which
+				-- will invalidate the connection just made above.
+			if attached internal_connection as l_internal_connection then
+				l_internal_connection.send_request (a_request)
+				has_next_step := True
+			end
 		end
 
 	step
@@ -261,7 +265,7 @@ invariant
 	has_next_step_implies_running: has_next_step implies (is_running and then is_evaluator_launched)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

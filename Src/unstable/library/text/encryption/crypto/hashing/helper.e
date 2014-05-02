@@ -181,7 +181,6 @@ feature -- Conversion
 		require
 			s_is_hexadecimal_string: is_hexadecimal_string (s)
 		local
-			l_key_bytes: SPECIAL [NATURAL_8]
 			i, j, n: INTEGER
 		do
 			n := s.count // 2

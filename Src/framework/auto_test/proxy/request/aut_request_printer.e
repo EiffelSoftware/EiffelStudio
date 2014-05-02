@@ -262,7 +262,6 @@ feature {NONE} -- Byte code generation
 			a_local_type_attached: a_local_type /= Void
 		local
 			l_local_index_param: PARAMETER_B
-			l_object_pool_index_param: PARAMETER_B
 			l_parameters: BYTE_LIST [PARAMETER_B]
 			l_local: LOCAL_B
 		do

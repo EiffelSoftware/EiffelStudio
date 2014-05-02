@@ -100,7 +100,6 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_last_response: AUT_RESPONSE
-			l_response_stream: KL_STRING_INPUT_STREAM
 		do
 			if a_request.response = Void then
 				if attached last_response as l_response then
@@ -142,7 +141,6 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_last_response: AUT_RESPONSE
-			l_response_stream: KL_STRING_INPUT_STREAM
 		do
 			if a_request.target_type = Void then
 				if variable_table.is_variable_defined (a_request.target) then
@@ -163,7 +161,6 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_last_response: AUT_RESPONSE
-			l_response_stream: KL_STRING_INPUT_STREAM
 		do
 			if a_request.response = Void then
 				if attached last_response as l_response then
@@ -179,7 +176,6 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_last_response: AUT_RESPONSE
-			l_response_stream: KL_STRING_INPUT_STREAM
 		do
 			if a_request.response = Void then
 				if attached last_response as l_response then

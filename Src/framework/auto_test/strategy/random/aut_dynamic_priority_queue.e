@@ -125,7 +125,6 @@ feature -- Changing Priority
 			a_type_not_void: a_type /= Void
 			a_priority_valid: a_priority >= 0
 		local
-			feature_: AUT_FEATURE_OF_TYPE
 			class_: CLASS_C
 			feature_i: FEATURE_I
 			l_feat_table: FEATURE_TABLE
@@ -303,7 +302,6 @@ feature {NONE} -- Implementation
 			a_priority_valid: a_priority >= 0
 		local
 			feature_: AUT_FEATURE_OF_TYPE
-			feature_i: FEATURE_I
 		do
 			create feature_.make (a_feature, a_type)
 			if a_creator then

@@ -181,7 +181,6 @@ feature -- Basic routines
 		local
 			source_directory: DIRECTORY
 			sub_directory: DIRECTORY
-			file: RAW_FILE
 			entry_name: STRING_32
 			full_entry_name, target_full_entry_name: PATH
 			dirname: PATH

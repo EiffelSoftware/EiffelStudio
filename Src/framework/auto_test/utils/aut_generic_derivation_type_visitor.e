@@ -64,7 +64,6 @@ feature {TYPE_A}
 		local
 			l_type: GEN_TYPE_A
 			l_derived_generics: ARRAYED_LIST [TYPE_A]
-			i, l_upper: INTEGER
 		do
 			l_type := a_type.duplicate
 			create l_derived_generics.make (a_type.generics.count)

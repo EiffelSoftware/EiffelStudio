@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			benchmark_option: AP_FLAG
 			disable_minimize_option: AP_FLAG
 			minimize_option: AP_STRING_OPTION
-			finalize_option: AP_FLAG
 			output_dir_option: AP_STRING_OPTION
 			time_out_option: AP_INTEGER_OPTION
 			test_count_option: AP_INTEGER_OPTION

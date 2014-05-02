@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	register_feature (a_feature: FEATURE_I; a_type: TYPE_A; a_creator: BOOLEAN; a_priority: INTEGER) is
+	register_feature (a_feature: FEATURE_I; a_type: TYPE_A; a_creator: BOOLEAN; a_priority: INTEGER)
 			-- Register `a_feature' declared in `a_type' to be a test candidate.
 			-- `a_creator' indicates if `a_feature' should be registered as a creator.
 			-- `a_priority' is the priority under which `a_feature' should be tested.
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_exported_creator (a_feature: FEATURE_I; a_type: TYPE_A): BOOLEAN is
+	is_exported_creator (a_feature: FEATURE_I; a_type: TYPE_A): BOOLEAN
 			-- Is `a_feature' declared in `a_type' a creator which is exported to all classes?
 		require
 			a_feature_attached: a_feature /= Void

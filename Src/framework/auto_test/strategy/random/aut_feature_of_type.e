@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_is_creator (b: BOOLEAN) is
+	set_is_creator (b: BOOLEAN)
 			-- Set `is_creator' with `b'.
 		do
 			is_creator := b

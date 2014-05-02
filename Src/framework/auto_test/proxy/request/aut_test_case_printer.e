@@ -156,7 +156,7 @@ feature {NONE} -- Query
 			result_not_none: Result /= none_type
 		end
 
-	should_use_void (a_var: ITP_VARIABLE): BOOLEAN is
+	should_use_void (a_var: ITP_VARIABLE): BOOLEAN
 			-- Use use Void instead `a_var' in feature argument?
 		do
 			if used_vars /= Void then

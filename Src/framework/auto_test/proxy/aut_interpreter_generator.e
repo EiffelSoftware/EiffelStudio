@@ -84,7 +84,6 @@ feature -- Generation
 			a_log_dirname_not_void: a_log_dirname /= Void
 			a_log_dirname_not_empty: not a_log_dirname.is_empty
 		local
-			absolute_pathname: STRING
 			executable_filename: PATH
 			l_new: like last_interpreter
 			u: GOBO_FILE_UTILITIES

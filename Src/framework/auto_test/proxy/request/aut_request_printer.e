@@ -254,7 +254,7 @@ feature {AUT_REQUEST} -- Processing
 
 feature {NONE} -- Byte code generation
 
-	new_check_invariant_feature_call (a_local_index: INTEGER; a_local_type: TYPE_A): CALL_ACCESS_B is
+	new_check_invariant_feature_call (a_local_index: INTEGER; a_local_type: TYPE_A): CALL_ACCESS_B
 			-- New FEATURE_B instance to check class invariant of the `a_local_index'-th local variable.
 			-- `a_local_type' is the type of that local variable.
 		require

@@ -76,7 +76,7 @@ feature -- Change
 			response_set: response = Void
 		end
 
-	set_test_case_index (a_index: like test_case_index) is
+	set_test_case_index (a_index: like test_case_index)
 			-- Set `test_case_index' with `a_index'.
 		require
 			a_index_non_negative: a_index >= 0

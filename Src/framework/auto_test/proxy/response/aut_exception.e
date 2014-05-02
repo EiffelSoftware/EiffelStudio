@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_is_invariant_violation_on_feature_entry (b: BOOLEAN) is
+	set_is_invariant_violation_on_feature_entry (b: BOOLEAN)
 			-- Set `is_invariant_violation_on_feature_entry' with `b'.
 		do
 			is_invariant_violation_on_feature_entry := b

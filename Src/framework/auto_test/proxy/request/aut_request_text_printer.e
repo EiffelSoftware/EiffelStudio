@@ -156,7 +156,7 @@ feature {NONE} -- Printing
 			end
 		end
 
-	print_test_case_index (a_request: AUT_REQUEST) is
+	print_test_case_index (a_request: AUT_REQUEST)
 			-- Print test case index from `a_request'.
 		require
 			a_request_attached: a_request /= Void

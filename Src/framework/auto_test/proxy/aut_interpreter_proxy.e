@@ -232,7 +232,7 @@ feature -- Settings
 			log_line ("-- An existing proxy has switched to this log file.")
 		end
 
-	set_is_test_case_index_logging_enabled (b: BOOLEAN) is
+	set_is_test_case_index_logging_enabled (b: BOOLEAN)
 			-- Set `is_test_case_index_logging_enabled' with `b'.
 		do
 			is_test_case_index_logging_enabled := b
@@ -908,7 +908,7 @@ feature {NONE} -- Logging
 			log_line (duration.millisecond_count.out)
 		end
 
-	log_test_case_index (a_request: like last_request) is
+	log_test_case_index (a_request: like last_request)
 			-- Log `test_case_index' in `a_request' and
 		require
 			a_request_attached: a_request /= Void
@@ -979,7 +979,7 @@ feature{NONE} -- Speed logging
 	test_case_log_count: INTEGER
 			-- Test case count for speed logging
 
-	set_is_speed_logging_enabled (b: BOOLEAN) is
+	set_is_speed_logging_enabled (b: BOOLEAN)
 			-- Set `is_speed_logging_enabled' with `b'.
 		do
 			is_speed_logging_enabled := b
@@ -987,7 +987,7 @@ feature{NONE} -- Speed logging
 			is_speed_logging_enabled_set: is_speed_logging_enabled = b
 		end
 
-	log_speed is
+	log_speed
 			-- Log testing speed when `is_speed_logging_enabled' is True.
 		local
 			l_time_now: DT_DATE_TIME

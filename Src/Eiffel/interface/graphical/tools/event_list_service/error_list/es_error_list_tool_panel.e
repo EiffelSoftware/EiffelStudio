@@ -781,8 +781,10 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		do
 			if a_enable then
-					-- There are some errors. Their error codes can be dropped to this button.
+					-- There are some errors.
+					-- Error codes can be dropped to the error info button.
 				error_info_command.enable_sensitive
+					-- Check if some errors can be deleted.
 				if grid_events.has_selected_row then
 						-- Selected errors can be deleted.
 					delete_button.enable_sensitive
@@ -797,9 +799,10 @@ feature {NONE} -- Basic operations
 						attached r.item.item (fix_column) as c and then attached c.data
 					end
 				then
-						-- TODO: Check that the fix has not been applied.
+						-- Some items can be fixed.
 					apply_fix_command.enable_sensitive
 				else
+						-- No items can be fixed.
 					apply_fix_command.disable_sensitive
 				end
 			else
@@ -1036,6 +1039,7 @@ feature {NONE} -- Fixing
 					attached {ES_FIX_UNUSED_LOCAL} applied_item.data as fix_action
 				then
 						-- Prevent further applications of the fix.
+					applied_item.set_data (Void)
 						-- TODO: Replace manifest strings with translatable strings.
 					applied_item.set_tooltip ({STRING_32} "Applied the fix: " + applied_item.tooltip)
 						-- Apply the fix.
@@ -1062,7 +1066,15 @@ feature {NONE} -- Fixing
 				(warning_messages.w_fix_undo_warning,
 				interface_names.l_discard_fix_undo_warning,
 				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False))
-			p.set_button_action (p.default_confirm_button, action)
+			p.set_button_action
+				(p.default_confirm_button,
+				agent (a: PROCEDURE [ANY, TUPLE])
+					do
+							-- Perform original action.
+						a.call
+							-- Update toolbar buttons state that may be changed by the previous instruction.
+						update_content_applicable_widgets (grid_events.row_count > 0)
+					end (action))
 			p.show_on_active_window
 		end
 

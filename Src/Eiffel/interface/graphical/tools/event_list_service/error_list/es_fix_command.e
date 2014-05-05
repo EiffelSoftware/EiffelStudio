@@ -33,6 +33,7 @@ feature -- Access
 			-- <Precursor>
 		do
 				-- Void here.
+			Result := pixmaps.icon_pixmaps.errors_and_warnings_fix_apply_icon_buffer
 		end
 
 	menu_name: STRING_GENERAL

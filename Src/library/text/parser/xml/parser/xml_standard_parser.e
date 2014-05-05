@@ -887,7 +887,7 @@ feature {NONE} -- Implementation: parse
 
 feature {NONE} -- Error reporting
 
-	report_error (a_message: READABLE_STRING_32)
+	report_error (a_message: READABLE_STRING_GENERAL)
 			-- Report error with message `a_message'
 		require
 			a_message_attached: a_message /= Void
@@ -1064,7 +1064,7 @@ feature {NONE} -- Doctype
 
 feature {XML_CALLBACKS} -- Error
 
-	report_error_from_callback (a_msg: READABLE_STRING_32)
+	report_error_from_callback (a_msg: READABLE_STRING_GENERAL)
 			-- Report error from callbacks
 		do
 			report_error (a_msg)

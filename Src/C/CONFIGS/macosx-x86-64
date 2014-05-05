@@ -197,7 +197,7 @@ mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="-O3"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall'
+warning_level='-Wall -Wparentheses-equality'
 wkoptimize="-O0"
 
 #Makefiles

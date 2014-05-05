@@ -75,10 +75,8 @@ feature {NONE} -- Initialization: User interface
 			a_widget.set_column_count_to (last_column)
 
 				-- Create columns
-			l_col := a_widget.column (1)
-			l_col.set_width (20)
 			l_col := a_widget.column (category_column)
-			l_col.set_width (20)
+			l_col.set_width (39)
 
 			l_col := a_widget.column (error_column)
 			l_col.set_title (interface_names.l_description)
@@ -591,9 +589,9 @@ feature {NONE} -- Basic operations
 
 				l_editor_item.disable_full_select
 				if is_error_event (a_event_item) then
-					l_editor_item.set_pixmap (stock_pixmaps.tool_error_icon)
+					l_item.set_pixmap (stock_pixmaps.tool_error_icon)
 				elseif is_warning_event (a_event_item) then
-					l_editor_item.set_pixmap (stock_pixmaps.tool_warning_icon)
+					l_item.set_pixmap (stock_pixmaps.tool_warning_icon)
 				else
 					check False end
 				end
@@ -1628,12 +1626,12 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	category_column: INTEGER = 2
-	error_column: INTEGER = 3
-	context_column: INTEGER = 4
-	position_column: INTEGER = 5
-	fix_column: INTEGER = 6
-	last_column: INTEGER = 6
+	category_column: INTEGER = 1
+	error_column: INTEGER = 2
+	context_column: INTEGER = 3
+	position_column: INTEGER = 4
+	fix_column: INTEGER = 5
+	last_column: INTEGER = 5
 
 	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 

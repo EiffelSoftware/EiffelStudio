@@ -46,7 +46,11 @@ feature -- Actions
 			l_rect := (create {UI_SCREEN}.make).bounds
 			create window.make (l_rect)
 			create l_rect.make (10, 50, 300, 100)
-			create l_label.make_with_text ("Hello World!", l_rect)
+			if argument_count > 1 then
+				create l_label.make_with_text (argument (argument_count), l_rect)
+			else
+				create l_label.make_with_text ("Hello World!", l_rect)
+			end
 			l_label.set_background_color (create {UI_COLOR}.make_rgba (0, 1, 0, 1))
 			l_label.set_foreground_color (create {UI_COLOR}.make_rgba (1, 0, 1, 1))
 			l_label.align_text_center

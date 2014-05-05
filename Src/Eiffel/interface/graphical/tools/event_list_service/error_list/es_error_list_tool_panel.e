@@ -743,10 +743,7 @@ feature {NONE} -- Basic operations
 						end
 					end
 				end
-				if attached fix_item then
-					fix_item.set_pixmap (pixmaps.icon_pixmaps.errors_and_warnings_fix_apply_icon)
-					Result := fix_item
-				end
+				Result := fix_item
 			end
 		end
 
@@ -1041,7 +1038,6 @@ feature {NONE} -- Fixing
 						-- Prevent further applications of the fix.
 						-- TODO: Replace manifest strings with translatable strings.
 					applied_item.set_tooltip ({STRING_32} "Applied the fix: " + applied_item.tooltip)
-					applied_item.set_pixmap (pixmaps.icon_pixmaps.errors_and_warnings_fix_ignore_icon)
 						-- Apply the fix.
 					fix_action.apply
 				end
@@ -1408,57 +1404,6 @@ feature {NONE} -- Action handlers
 			not_is_expanding_all_errors: not is_expanding_all_errors
 		end
 
---	on_select_fix_button
---			-- Caled when the `fix_errors_button' is selected.
---		require
---			is_interface_usable: is_interface_usable
---			is_initialized: is_initialized
---		local
---			l_selected: ARRAYED_LIST [EV_GRID_ROW]
---			l_errors: ARRAYED_LIST [EIFFEL_ERROR]
---			l_fix_handlers: like fix_handlers
---			l_handler: ES_JIM_ERROR_HANDLER [EIFFEL_ERROR]
---			l_items: ARRAYED_LIST [TUPLE [title: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]]]
---			l_menu_item: EV_MENU_ITEM
---			l_menu: EV_MENU
---		do
---			l_fix_handlers := fix_handlers
---			l_selected := grid_events.selected_rows
---			create l_errors.make (l_selected.count)
---			from l_selected.start until l_selected.after loop
---				if
---					attached {EVENT_LIST_ERROR_ITEM_I} l_selected.item_for_iteration.data as l_error_item and then
---					attached {EIFFEL_ERROR} l_error_item.data as l_error
---				then
---					if l_fix_handlers.is_fixable (l_error) then
---						l_errors.extend (l_error)
---					end
---				end
---				l_selected.forth
---			end
-
---			if not l_errors.is_empty then
---				l_handler := l_fix_handlers.fix_errors (l_errors)
---				l_items := l_handler.solution_actions
---				if attached l_items and not l_items.is_empty then
---					if l_items.count = 1 then
---							-- Only one item, just process the action.
---						l_items.first.action.call (Void)
---					else
---							-- Multiple items, as user to select.
---						l_menu := fix_button.menu
---						l_menu.wipe_out
---						from l_items.start until l_items.after loop
---							create l_menu_item.make_with_text_and_action (l_items.item.title, l_items.item.action)
---							l_menu.extend (l_menu_item)
---							l_items.forth
---						end
---						fix_button.perform_select
---					end
---				end
---			end
---		end
-
 	on_select_delete_button
 			-- Caled when the `delete_button' is selected.
 		require
@@ -1606,17 +1551,6 @@ feature {NONE} -- Factory
 			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
 			Result.extend (l_button)
 
---				-- Separator
---			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
-
---			create fix_button.make
---			fix_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_fix_icon_buffer)
---			fix_button.set_pixmap (stock_pixmaps.errors_and_warnings_fix_icon)
---			fix_button.set_tooltip (locale_formatter.translation (tt_fix_errors))
---			fix_button.set_menu (create {EV_MENU})
---			register_action (fix_button.select_actions, agent on_select_fix_button)
---			Result.extend (fix_button)
-
 			create delete_button.make
 			delete_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
 			delete_button.set_pixmap (stock_pixmaps.general_delete_icon)
@@ -1694,12 +1628,10 @@ feature {NONE} -- Constants
 feature {NONE} -- Internationalization
 
 	tt_delete_items: STRING = "Delete all the selected [completed] items"
---	tt_fix_errors: STRING = "Automatically fix the selected errors."
 
 invariant
 	errors_button_attached: (is_initialized and is_interface_usable) implies attached errors_button
 	warnings_button_attached: (is_initialized and is_interface_usable) implies attached warnings_button
---	fix_button_attached: (is_initialized and is_interface_usable) implies attached fix_button
 	deletebutton_attached: (is_initialized and is_interface_usable) implies attached delete_button
 	expand_errors_button_attached: (is_initialized and is_interface_usable) implies attached expand_errors_button
 	error_info_button_attached: (is_initialized and is_interface_usable) implies attached error_info_button

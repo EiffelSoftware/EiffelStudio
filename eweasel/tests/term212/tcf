@@ -1,0 +1,52 @@
+test_name 	 bad-library-class
+test_description A system with invalid kernel classes should not crash the compiler.
+
+copy_sub	Ace $TEST Ace
+copy_raw	special.e $CLUSTER special.e
+copy_raw	typed_pointer.e $CLUSTER typed_pointer.e
+
+compile_melted
+compile_result	validity_error ARRAY VTUG(1) VTUG(1) VTUG(1) ; ISE_RUNTIME VTUG(1) ; STRING_32 VTUG(1) ; STRING_8 VTUG(1)
+
+copy_raw	special.e-rev1 $CLUSTER special.e
+
+resume_compile
+compile_result	validity_error SPECIAL VGCP(4)
+
+delete	$CLUSTER special.e
+
+resume_compile
+compile_result	validity_error TYPED_POINTER Library_error Library_error Library_error
+
+delete	$CLUSTER typed_pointer.e
+
+resume_compile
+compile_result	ok
+
+
+-- We now repeat the exact same steps, but this time we are starting
+-- from a compiled project
+
+copy_raw	special.e $CLUSTER special.e
+copy_raw	typed_pointer.e $CLUSTER typed_pointer.e
+
+compile_melted
+compile_result	validity_error ARRAY VTUG(1) VTUG(1) VTUG(1) ; ISE_RUNTIME VTUG(1) ; STRING_32 VTUG(1) ; STRING_8 VTUG(1)
+
+copy_raw	special.e-rev1 $CLUSTER special.e
+
+resume_compile
+compile_result	validity_error SPECIAL VGCP(4)
+
+delete	$CLUSTER special.e
+
+resume_compile
+compile_result	validity_error TYPED_POINTER Library_error Library_error Library_error
+
+delete	$CLUSTER typed_pointer.e
+
+resume_compile
+compile_result	ok
+
+
+test_end

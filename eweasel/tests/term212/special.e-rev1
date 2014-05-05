@@ -1,0 +1,37 @@
+expanded class SPECIAL [T]
+
+create
+	make_empty
+
+feature {NONE} -- Initialization
+
+	make_empty (n: INTEGER)
+			-- Create a special object for `n' entries.
+		require
+			non_negative_argument: n >= 0
+		external
+			"built_in"
+		ensure
+			capacity_set: capacity = n
+			count_set: count = 0
+		end
+
+feature -- Access
+
+	item alias "[]" (i: INTEGER): T assign put
+			-- Item at `i'-th position
+			-- (indices begin at 0)
+		external
+			"built_in"
+		end
+
+feature -- Element change
+
+	put (v: T; i: INTEGER)
+			-- Replace `i'-th item by `v'.
+			-- (Indices begin at 0.)
+		external
+			"built_in"
+		end
+
+end

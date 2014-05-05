@@ -14,8 +14,8 @@
         },
         "development": {
             "server": "JVELILLA\\SQLEXPRESS",
-            "name": "EiffelDB",
-            "schema": "eiffeldb"
+            "name": "dbtest",
+            "schema": "dbtest"
         },
         "production": {
             "server": "",

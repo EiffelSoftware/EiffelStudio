@@ -20,11 +20,6 @@ feature {NONE} --Initialization
 
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
-		local
-			p: PATH
-			l_item: STRING
-			l_template: STRING
-			l_report: ESA_REPORT
 		do
 			set_template_folder (cj_path)
 			set_template_file_name ("collection_json.tpl")
@@ -47,8 +42,6 @@ feature {NONE} --Initialization
 
 	make_with_error (a_host: READABLE_STRING_GENERAL; a_error: READABLE_STRING_GENERAL; a_code: INTEGER; a_user: detachable ANY)
 			-- Initialize `Current'.
-		local
-			l_template: STRING
 		do
 			set_template_folder (cj_path)
 			set_template_file_name ("collection_json_error.tpl")

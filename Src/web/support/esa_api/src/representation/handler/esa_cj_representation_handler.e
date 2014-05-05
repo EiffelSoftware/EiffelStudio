@@ -409,6 +409,19 @@ feature -- View
 			end
 		end
 
+	interaction_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_id: INTEGER; a_id: INTEGER)
+			-- Interaction form confirm page
+		local
+			l_hp: ESA_CJ_INTERACTION_FORM_CONFIRM_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (req.absolute_script_url (""),a_report_id, a_id, current_user_name (req))
+				if attached l_hp.representation as l_form_page then
+					new_response_get (req, res, l_form_page)
+				end
+			end
+		end
+
 
 feature -- Response
 

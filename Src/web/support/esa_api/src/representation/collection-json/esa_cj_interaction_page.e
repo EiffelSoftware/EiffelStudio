@@ -28,6 +28,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.status, "status")
 			template.add_value (a_form, "form")
 			template.add_value (a_form.report, "report")
+			template.add_value (a_form.temporary_files,"uploaded_files")
 
 			if a_form.id > 0 then
 				template.add_value (a_form.id, "id")

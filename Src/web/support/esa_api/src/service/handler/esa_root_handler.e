@@ -52,6 +52,7 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
+			log.write_information ("Root Handler:"+ generator+".do_get")
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).home_page (req, res)

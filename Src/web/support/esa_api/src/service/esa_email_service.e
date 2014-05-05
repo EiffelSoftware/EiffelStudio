@@ -202,7 +202,9 @@ feature {NONE} -- Implementation
 		rescue
 			create l_exceptions
 			if attached l_exceptions.exception_trace as l_trace  then
-				io.error.put_string (l_trace)
+				debug
+					io.error.put_string (l_trace)
+				end
 			end
 			l_retry := True
 			retry

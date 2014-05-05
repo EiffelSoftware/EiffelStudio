@@ -6,7 +6,10 @@ note
 class
 	ESA_HANDLER
 
+inherit
 
+	ESA_SHARED_LOGGER
+	
 feature -- User
 
 	current_user_name (req: WSF_REQUEST): detachable READABLE_STRING_32
@@ -38,6 +41,14 @@ feature -- Media Type
 		do
 			if attached {STRING} req.execution_variable ("media_type") as l_type then
 				Result := l_type
+			end
+		end
+
+	absolute_host (req: WSF_REQUEST; a_path:STRING): STRING
+		do
+			Result := req.absolute_script_url (a_path)
+			if Result.last_index_of ('/', Result.count) = Result.count then
+				Result.remove_tail (1)
 			end
 		end
 

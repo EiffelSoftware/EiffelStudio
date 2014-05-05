@@ -89,8 +89,6 @@ feature -- Status Report
 
 		local
 			l_errors: STRING_TABLE[READABLE_STRING_32]
-			l_pass: READABLE_STRING_32
-			l_check: READABLE_STRING_32
 		do
 			create l_errors.make (0)
 			if category = 0 then

@@ -99,8 +99,6 @@ feature -- HTTP Methods
 	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_ACTIVATION_VIEW
 			-- Is the form data populated?
 			-- Create a new activation view object based on request parameters, if any
-		local
-				l_parser: JSON_PARSER
 		do
 
 			if a_type.same_string ("application/vnd.collection+json") then

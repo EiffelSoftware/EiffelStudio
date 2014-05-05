@@ -27,7 +27,6 @@ feature -- Basic operations
 			-- Execute the filter
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
-			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			media_variants := media_type_variants (req)
 			if media_variants.is_acceptable then

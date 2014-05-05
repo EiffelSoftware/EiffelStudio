@@ -21,8 +21,6 @@ feature -- Initialization
 
 	make_common
 			-- Create a database handler for ODBC with common settings
-		local
-			l_retried: BOOLEAN
 		do
 			create db_application.login (username, password)
 			db_application.set_hostname (hostname)
@@ -46,7 +44,7 @@ feature -- Initialization
 		end
 
 
-	login_with_connection_string (a_string: STRING; a_database_name: STRING)
+	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'
 			-- and immediately connect to database.
 		do

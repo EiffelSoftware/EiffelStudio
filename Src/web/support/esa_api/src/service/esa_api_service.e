@@ -10,6 +10,8 @@ inherit
 
 	ESA_API_ERROR
 
+	ESA_SHARED_LOGGER
+
 create
 	make,
 	make_with_database
@@ -32,6 +34,7 @@ feature {NONE} -- Initialization
 		require
 			is_connected: a_connection.is_connected
 		do
+			log.write_information (generator+".make_with_database is database connected?  "+ a_connection.is_connected.out )
 			create data_provider.make (a_connection)
 			create login_provider.make (a_connection)
 			is_successful := True
@@ -184,11 +187,13 @@ feature -- Access
 	all_categories: LIST[ESA_REPORT_CATEGORY]
 			-- Report Categories
 		do
+			log.write_information (generator+".all_categories" )
 			create {ARRAYED_LIST[ESA_REPORT_CATEGORY]} Result.make (0)
 			data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
 			data_provider.disconnect
 			is_successful := data_provider.is_successful
+			log.write_information (generator+".all_categories executed" )
 		end
 
 	problem_report_details (a_username: STRING; a_number: INTEGER): detachable ESA_REPORT

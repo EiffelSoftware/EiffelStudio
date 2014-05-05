@@ -11,6 +11,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	ESA_SHARED_LOGGER
+
 create
 	make
 
@@ -101,6 +103,7 @@ feature -- SQL Queries
 			l_db_selection: DB_SELECTION
 			l_retried: BOOLEAN
 		do
+			log.write_information ( generator+".execute_query")
 			if not l_retried then
 				if not keep_connection then
 					connect
@@ -111,14 +114,15 @@ feature -- SQL Queries
 					db_selection := l_db_selection
 					items := l_query.execute_reader (l_db_selection)
 				end
-
 				if not keep_connection then
 					disconnect
 				end
 				set_successful
+				log.write_information ( generator+".execute_query Successful")
 			end
 		rescue
 			set_last_error_from_exception ("Query execution")
+			log.write_critical ( generator+".execute_query")
 			if is_connected then
 				disconnect
 			end

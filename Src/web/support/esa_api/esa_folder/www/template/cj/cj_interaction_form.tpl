@@ -32,7 +32,12 @@
           ],
       "items": [
                <
-                 "href": "{$host/}/report_detail/{$form.report.number/}/interaction_form/{$id/}", 
+                   {if isset="$id"} 
+                        "href": "{$host/}/report_detail/{$form.report.number/}/interaction_form/{$id/}", 
+                    {/if}
+                    {unless isset="$id"}
+                          "href": "{$host/}/report_detail/{$form.report.number/}/interaction_form",
+                    {/unless}  
                  "data": [
 
                     <
@@ -131,7 +136,8 @@
         <"name": "category", "prompt": "Category", "value" : "{$form.category/}">, 
         <"name": "status", "prompt": "Status", "value" : "{$form.selected_status/}">,
         <"name": "private", "prompt": "Private", "value" : "{$form.private/}">,
-        <"name": "description", "prompt": "Description","value" : "{$form.description/}">
+        <"name": "description", "prompt": "Description","value" : "{$form.description/}">,
+         <"name" : "attachments", "files" : [{foreach from="$uploaded_files", item="file"} <"name":"{$file.name/}", "value":"">,{/foreach}] , "prompt" : "Attachments">
       ]
       >
     {/if}
@@ -142,7 +148,8 @@
         <"name": "category", "prompt": "Category", "value" : "">, 
         <"name": "status", "prompt": "Status", "value" : "">,
         <"name": "private", "prompt": "Private", "value" : "">,
-        <"name": "description", "prompt": "Description", "value" : "">
+        <"name": "description", "prompt": "Description", "value" : "">,
+        <"name" : "attachments", "files" : [<>] , "prompt" : "Attachments">
       ]
       >
     {/unless}

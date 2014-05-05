@@ -33,7 +33,7 @@ feature {NONE} -- Events
 			l_env.change_working_directory (l_old_dir)
 
 				--
-			create {ESA_DATABASE_CONNECTION_ODBC} connection.login_with_connection_string ("Driver={SQL Server Native Client 11.0};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;", {ESA_DATABASE_TEST_CONFIG}.database_name)
+			create {ESA_DATABASE_CONNECTION_ODBC} connection.login_with_connection_string ("Driver={SQL Server Native Client 11.0};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;")
 		end
 
 

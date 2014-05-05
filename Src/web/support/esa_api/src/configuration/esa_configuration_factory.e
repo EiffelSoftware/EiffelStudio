@@ -12,6 +12,8 @@ inherit
 
 	ESA_API_ERROR
 
+	ESA_SHARED_LOGGER
+
 feature -- Factory
 
 	esa_config: ESA_CONFIG
@@ -30,6 +32,7 @@ feature -- Factory
 				else
 					create l_layout.make_default
 				end
+				log.write_information ("Layout:"+ generator+".esa_config " + l_layout.path.name.out)
 				if {PLATFORM}.is_windows then
 					create {WS_NOTIFICATION_SENDMAIL_MAILER} l_mailer
 				else
@@ -38,15 +41,20 @@ feature -- Factory
 				create l_email_service.make_with_mailer (l_mailer)
 
 				if attached (create {ESA_JSON_CONFIGURATION}).new_database_configuration (l_layout.database_config_path) as l_database_config then
-					create {ESA_DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string, l_database_config.name)
+					create {ESA_DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
+			
+					log.write_information ("Database Connection string:" +l_database_config.connection_string )
+					log.write_information ("Database Name:" + l_database_config.name )
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_email_service, l_layout)
 					set_successful
+					log.write_information ("Database Connections:"+ generator+".esa_config")
 				else
 					create {ESA_DATABASE_CONNECTION_NULL} l_database.make_common
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_email_service, l_layout)
 					set_last_error ("Database Connections", generator+".esa_config")
+					log.write_error ("Database Connections:"+ generator+".esa_config")
 				end
 			else
 				if attached Execution_environment.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
@@ -66,6 +74,7 @@ feature -- Factory
 			end
 		rescue
 			set_last_error_from_exception ("Database Connection execution")
+			log.write_critical ("Database Connection execution exceptions")
 			l_retried := True
 			retry
 		end
@@ -94,7 +103,7 @@ feature -- Factory
 				create l_email_service.make_with_mailer (l_mailer)
 
 				if attached (create {ESA_JSON_CONFIGURATION}).new_database_configuration_test (l_layout.database_config_path) as l_database_config then
-					create {ESA_DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string, l_database_config.name)
+					create {ESA_DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_email_service, l_layout)
 					set_successful

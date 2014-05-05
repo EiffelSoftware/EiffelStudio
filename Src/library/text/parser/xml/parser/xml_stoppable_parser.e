@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: parse
 
-	report_error (a_message: READABLE_STRING_32)
+	report_error (a_message: READABLE_STRING_GENERAL)
 			-- Report error with message `a_message'
 		do
 			Precursor (a_message)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation: parse
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

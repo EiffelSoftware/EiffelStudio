@@ -5,7 +5,8 @@ note
 
 class
 	ESA_DATABASE_QUERY
-
+inherit
+	ESA_SHARED_LOGGER
 create
 	data_reader
 
@@ -22,7 +23,8 @@ feature -- Intialization
 			-- Execute the Current store procedure.
 		do
 				-- Check test dynamic sequel. to redesign.
-			create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
+			log.write_information ( generator+".execute_reader")
+					create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
 			a_base_selection.set_container (Result)
 			set_map_name (a_base_selection)
 			a_base_selection.set_query (query)
@@ -31,6 +33,8 @@ feature -- Intialization
 			Result := a_base_selection.container
 			unset_map_name (a_base_selection)
 			a_base_selection.terminate
+			log.write_information ( generator+".execute_reader executed")
+
 		end
 
 feature --  Access

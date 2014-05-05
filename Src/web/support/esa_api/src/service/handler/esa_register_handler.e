@@ -110,7 +110,6 @@ feature -- HTTP Methods
 			-- Add a new user with `a_register' data, if it's ok.
 		local
 			l_token: STRING
-			l_string: STRING
 			l_security: ESA_SECURITY_PROVIDER
 			l_encode: URL_ENCODER
 		do
@@ -153,8 +152,6 @@ feature -- HTTP Methods
 	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_REGISTER_VIEW
 			-- Is the form data populated?
 			-- first_name, last_name, user_email, user_name, password, check_password, question, answer_question
-		local
-				l_parser: JSON_PARSER
 		do
 
 			if a_type.same_string ("application/vnd.collection+json") then

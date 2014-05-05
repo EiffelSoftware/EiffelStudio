@@ -82,21 +82,25 @@ feature -- HTTP Methods
 		local
 			l_role: ESA_USER_ROLE
 		do
+			log.write_information ("Processing request:" +generator+".do_get" )
 			if attached current_user_name (req) as l_user then
 				l_role := api_service.role (l_user)
 				if l_role.is_user then
 						-- List of reports visible for registered user.
 						-- They are able to see his own reports and also visible reports.
 					user_reports (req, res, l_user)
+					log.write_information (generator+".do_get Executed List of reports for registered users" )
 				elseif l_role.is_administrator or else l_role.is_responsible then
 						-- List of reports visible for reponsible and admin users
 					responsible_reports (req, res)
+					log.write_information (generator+".do_get Executed List of reports for reponsible" )
 				else
 						-- Internal Users?
 				end
 			else
 					-- List of reports visisble for Guest Users
 				user_reports (req, res, "")
+				log.write_information (generator+".do_get Executed List of reports visisble for Guest Users" )
 			end
 		end
 
@@ -105,6 +109,7 @@ feature -- HTTP Methods
 		local
 			l_role: ESA_USER_ROLE
 		do
+			log.write_information ("Processing request:" +generator+".do_post" )
 			if attached current_user_name (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then
 				   	l_id.is_integer and then attached {WSF_STRING} req.form_parameter ("user_responsible") as l_responsible and then
@@ -271,6 +276,7 @@ feature -- Implementation
 			--| At the moment the page size is hardcoded as 10 items per page.
 			--| we can set a defaut and then let the user customize it, but it's not
 			--| critical at the moment.
+			log.write_information ( generator+".user_reports" )
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				l_categories := api_service.all_categories
@@ -321,6 +327,7 @@ feature -- Implementation
 				l_report_view.set_order_by (l_order_by)
 				l_report_view.set_direction (l_direction)
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_guest (req, res, l_report_view)
+				log.write_information (generator+".user_reports Executed reports guest" )
 			else
 				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).problem_reports_guest (req, res, Void)
 			end
@@ -402,7 +409,5 @@ feature -- Implementation
 				Result.append_string ("dir")
 				Result.append_string (l_dir.value)
 			end
-
 		end
-
 end

@@ -395,7 +395,7 @@ feature -- Status Report
 			attached_email: a_email /= Void
 			attached_token: a_token /= Void
 		local
-			l_res, l_token: detachable STRING
+			l_token: detachable STRING
 		do
 			l_token := token_from_email (a_email)
 			if l_token = Void then

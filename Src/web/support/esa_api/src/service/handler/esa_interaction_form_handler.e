@@ -32,6 +32,7 @@ inherit
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
 			do_get,
+			do_put,
 			do_post
 		end
 
@@ -73,6 +74,11 @@ feature -- HTTP Methods
 					-- New Report Interaction
 				new_report_interaction (req, res, l_report_id.integer_value)
 			end
+		end
+
+	do_put	(req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			do_post (req, res)
 		end
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -200,7 +206,7 @@ feature -- Update Report Problem
 						l_form.set_report (l_report)
 
 						if l_form.is_valid_form then
-							update_report_problem_internal (req, l_form)
+							update_report_problem_internal (req, l_form, l_type)
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm (req, res, l_form)
 						else
 								-- Bad request
@@ -223,45 +229,17 @@ feature -- Update Report Problem
 
 		end
 
-	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW)
+	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW; a_type: STRING)
 			-- Update problem report.
-		local
-			l_found: BOOLEAN
 		do
 			if attached a_form.description as l_category then
 				api_service.initialize_interaction (a_form.id, l_category, a_form.selected_status, a_form.private)
 			end
 				-- Update temporary files
-			if req.form_parameter ("temporary_files") = Void then
-				-- remove all the attached files.
-				api_service.remove_all_temporary_interaction_attachments (a_form.id)
-			elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
-					l_file.is_string then
-				across api_service.temporary_interation_attachments (a_form.id) as c loop
-					if not c.item.name.same_string (l_file.value) then
-						api_service.remove_temporary_interaction_attachment (a_form.id, l_file.value)
-					end
-				end
-			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
-				across api_service.temporary_interation_attachments (a_form.id) as c loop
-					across l_files as lf loop
-						if c.item.name.same_string (lf.item.value) then
-							l_found := True
-						end
-					end
-					if not l_found then
-						api_service.remove_temporary_interaction_attachment (a_form.id, c.item.name)
-					else
-						l_found := False
-					end
-				end
-			end
-
-				-- Add new uploaded files
-			if attached a_form.uploaded_files as l_files then
-				across l_files as c loop
-					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
-				end
+			if a_type.same_string ("application/vnd.collection+json") then
+				upload_temporary_files_cj (a_form)
+			else
+				upload_temporary_files_html (req, a_form)
 			end
 		end
 
@@ -377,6 +355,8 @@ feature {NONE} -- Implementation
 			-- Extract data from Collection+JSON template.
 		local
 			l_parser: JSON_PARSER
+			l_list: LIST[ESA_FILE_VIEW]
+			l_content: STRING
 		do
 			create Result.make (api_service.status, api_service.all_categories)
 			create l_parser.make_parser (retrieve_data (req))
@@ -402,8 +382,95 @@ feature {NONE} -- Implementation
 					l_name.item.same_string ("description") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
 					Result.set_description (l_value.item)
 				end
+				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
+					create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+					across l_files as c  loop
+						if attached {JSON_OBJECT} c.item as jo and then attached {JSON_STRING} jo.item("name") as l_key and then
+							attached {JSON_STRING} jo.item("value") as ll_content then
+								l_content := (create {BASE64}).decoded_string (ll_content.item)
+								l_list.force (create {ESA_FILE_VIEW}.make (l_key.item, l_content.count, (create {BASE64}).decoded_string (ll_content.item)))
+							end
+						end
+					Result.set_files (l_list)
+				end
 			end
 		end
+
+
+	upload_temporary_files_cj (a_form: ESA_INTERACTION_FORM_VIEW)
+			-- Handle temporary and uploaded files from an CJ template with attachment extensions.
+		local
+			l_found : BOOLEAN
+			l_temporary_files : LIST[ESA_FILE_VIEW]
+		do
+			l_temporary_files := api_service.temporary_interation_attachments (a_form.id)
+				-- Remove not selected files
+			across l_temporary_files as c loop
+				across a_form.uploaded_files as lf loop
+					if c.item.name.same_string (lf.item.name) then
+						l_found := True
+					end
+				end
+				if not l_found then
+					api_service.remove_temporary_interaction_attachment (a_form.id, c.item.name)
+				else
+					l_found := False
+				end
+			end
+
+				-- Upload new files.
+			across a_form.uploaded_files as lf loop
+				across l_temporary_files as c loop
+					if c.item.name.same_string (lf.item.name) then
+						l_found := True
+					end
+				end
+				if not l_found then
+					api_service.upload_temporary_interaction_attachment (a_form.id, lf.item)
+				else
+					l_found := False
+				end
+
+			end
+		end
+
+	upload_temporary_files_html (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW)
+			-- Handle temporary and uploaded files from an HTML form.
+		local
+			l_found: BOOLEAN
+		do
+				-- Update temporary files
+			if req.form_parameter ("temporary_files") = Void then
+				-- remove all the attached files.
+				api_service.remove_all_temporary_interaction_attachments (a_form.id)
+			elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
+				l_file.is_string then
+				across api_service.temporary_interation_attachments (a_form.id) as c loop
+					if not c.item.name.same_string (l_file.value) then
+						api_service.remove_temporary_interaction_attachment (a_form.id, l_file.value)
+					end
+				end
+			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
+				across api_service.temporary_interation_attachments (a_form.id) as c loop
+					across l_files as lf loop
+						if c.item.name.same_string (lf.item.value) then
+							l_found := True
+						end
+					end
+					if not l_found then
+						api_service.remove_temporary_interaction_attachment (a_form.id, c.item.name)
+					else
+						l_found := False
+					end
+				end
+			end
+				-- Add new uploaded files
+			if attached a_form.uploaded_files as l_files then
+				across l_files as c loop
+					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
+				end
+			end
+  		end
 
 	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item.

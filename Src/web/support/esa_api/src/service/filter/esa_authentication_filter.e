@@ -27,7 +27,6 @@ feature -- Basic operations
 			-- Execute the filter
 		local
 			l_auth: HTTP_AUTHORIZATION
-			retried: BOOLEAN
 		do
 			create l_auth.make (req.http_authorization)
 				-- A valid user

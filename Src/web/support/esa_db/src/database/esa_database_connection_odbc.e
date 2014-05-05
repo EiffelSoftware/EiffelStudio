@@ -13,6 +13,8 @@ inherit
 			db_application
 		end
 
+	ESA_SHARED_LOGGER
+
 create
 	make, make_common, make_basic, login_with_connection_string
 
@@ -92,18 +94,25 @@ feature -- Initialization
 			end
 		end
 
-	login_with_connection_string (a_string: STRING; a_database: STRING)
+	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'
 			-- and immediately connect to database.
 		do
+			log.write_information (generator +".login_with_connection_string " + a_string )
 			create db_application.login_with_connection_string (a_string)
-			db_application.set_data_source (a_database)
 			db_application.set_base
 			create db_control.make
+			log.write_information (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
 			keep_connection := is_keep_connection
 			if keep_connection then
 				connect
+				if not db_control.is_ok then
+					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_code.out )
+					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_message_32 )
+				end
+				log.write_information (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
 			end
+			log.write_information (generator +".login_with_connection_string, DbControl:"+ db_control.out )
 
 		end
 

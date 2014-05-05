@@ -45,7 +45,7 @@ feature -- Access
 	connection_string: READABLE_STRING_32
 			-- Connection string
 		do
-			Result := "Driver={"+driver+"};Server=" + server + ";Database=" + name + ";Trusted_Connection=Yes;"
+			Result := "Driver={"+driver+"};Server=" + server + ";Database=" + name + ";Trusted_Connection=yes;user instance=true;"
 		end
 
 feature -- Change Element

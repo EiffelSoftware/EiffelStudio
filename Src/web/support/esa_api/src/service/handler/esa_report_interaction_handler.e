@@ -63,11 +63,6 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			l_hp: ESA_REPORT_DETAIL_PAGE
-			l_report: detachable ESA_REPORT
-			l_interactions: LIST [ESA_REPORT_INTERACTION]
-			l_attachments: LIST [ESA_REPORT_ATTACHMENT]
 		do
 			if attached req.http_host as l_host then
 				if attached req.path_parameter ("id") as l_id and then attached req.path_parameter ("name") as l_name then
@@ -84,7 +79,6 @@ feature -- Response
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			fixme ("Find a better way to handle this!!!")
 			create h.make

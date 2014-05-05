@@ -14,6 +14,7 @@ inherit
 
 	REFACTORING_HELPER
 
+	ESA_SHARED_LOGGER
 
 create
 	make
@@ -407,7 +408,6 @@ feature -- Access
 			l_answer_salt, l_password_salt, l_answer_hash, l_password_hash: STRING
 			l_security: ESA_SECURITY_PROVIDER
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_int: INTEGER
 		do
 			create l_security
 			l_answer_salt := l_security.salt
@@ -457,10 +457,12 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
+			log.write_information ( generator+".all_categories" )
 			create l_parameters.make (0)
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_categories, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report_category )
+			log.write_information ( generator+".all_categories After Execute" )
 		end
 
 	classes: ESA_DATABASE_ITERATION_CURSOR[ESA_REPORT_CLASS]
@@ -1029,7 +1031,6 @@ feature -- Basic Operations
 			-- Upload attachment in temporary table for temporary report `a_report_id'
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
-			l_content_hexa: STRING
 		do
 			connect
 			create l_parameters.make (4)

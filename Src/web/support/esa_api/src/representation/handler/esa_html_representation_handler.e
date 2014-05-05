@@ -23,7 +23,7 @@ feature -- View
 			l_hp: ESA_HOME_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -36,7 +36,7 @@ feature -- View
 			l_hp: ESA_REPORT_DETAIL_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_report, current_user_name (req))
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -48,12 +48,14 @@ feature -- View
 		local
 			l_hp: ESA_REPORT_PAGE
 		do
+			log.write_information (generator+".problem_reports_guest" )
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				create l_hp.make (absolute_host (req, ""), a_report_view)
 				if attached l_hp.representation as l_report_page then
 					new_response_get (req, res, l_report_page)
 				end
 			end
+			log.write_information (generator+".problem_reports_guest executed" )
 		end
 
 
@@ -63,7 +65,7 @@ feature -- View
 			l_hp: ESA_USER_REPORT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_view)
+				create l_hp.make (absolute_host (req, ""), a_view)
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -76,7 +78,7 @@ feature -- View
 			l_hp: ESA_RESPONSIBLE_REPORT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				create l_hp.make (absolute_host (req, ""), a_report_view)
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -89,7 +91,7 @@ feature -- View
 				l_hp: ESA_REPORT_FORM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end
@@ -102,7 +104,7 @@ feature -- View
 				l_hp: ESA_REPORT_FORM_CONFIRM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end
@@ -130,7 +132,7 @@ feature -- View
 			l_hp: ESA_REPORT_FORM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get_400 (req, res, l_form_page)
 				end
@@ -150,7 +152,7 @@ feature -- View
 			l_hp: ESA_HTML_404_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""))
+				create l_hp.make (absolute_host (req, ""))
 				if attached l_hp.representation as l_home_page then
 					new_response_get_404 (req, res, l_home_page)
 				end
@@ -169,7 +171,7 @@ feature -- View
 			l_hp: ESA_LOGOUT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""))
+				create l_hp.make (absolute_host (req, ""))
 				if attached l_hp.representation as l_home_page then
 					if attached req.query_parameter ("prompt") as l_prompt then
 						new_response_access_unauthorized (req, res, l_home_page)
@@ -186,7 +188,7 @@ feature -- View
 			l_hp: ESA_HTML_400_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""))
+				create l_hp.make (absolute_host (req, ""))
 				if attached l_hp.representation as l_bad_page then
 					new_response_get_400 (req, res, l_bad_page)
 				end
@@ -199,7 +201,7 @@ feature -- View
 			l_hp: ESA_HTML_401_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""))
+				create l_hp.make (absolute_host (req, ""))
 				if attached l_hp.representation as l_unauthorized then
 					new_response_access_unauthorized (req, res, l_unauthorized)
 				end
@@ -212,7 +214,7 @@ feature -- View
 				l_hp: ESA_HTML_500_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""))
+				create l_hp.make (absolute_host (req, ""))
 				if attached l_hp.representation as l_unauthorized then
 					new_response_access_unauthorized (req, res, l_unauthorized)
 				end
@@ -225,7 +227,7 @@ feature -- View
 			l_hp: ESA_HTML_REGISTER_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_view, current_user_name (req))
 				if attached l_hp.representation as l_register_page then
 					if attached a_view.errors then
 						new_response_get_400 (req, res, l_register_page)
@@ -242,7 +244,7 @@ feature -- View
 			l_hp: ESA_HTML_POST_REGISTER_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_register_page then
 					new_response_get (req, res, l_register_page)
 				end
@@ -255,7 +257,7 @@ feature -- View
 			l_hp: ESA_ACTIVATION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_view, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_view, current_user_name (req))
 				if attached l_hp.representation as l_activation_page then
 					if attached a_view and then (attached a_view.error_message or else not a_view.is_valid_form) then
 						new_response_get_400 (req, res, l_activation_page)
@@ -272,7 +274,7 @@ feature -- View
 			l_hp: ESA_CONFIRMATION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_confirmation_page then
 					new_response_get (req, res, l_confirmation_page)
 				end
@@ -317,7 +319,7 @@ feature -- View
 			l_hp: ESA_INTERACTION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_confirmation_page then
 					new_response_get (req, res, l_confirmation_page)
 				end
@@ -330,7 +332,7 @@ feature -- View
 				l_hp: ESA_INTERACTION_CONFIRM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end
@@ -352,7 +354,11 @@ feature -- View
 			end
 		end
 
-
+	interaction_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_id: INTEGER; a_id: INTEGER)
+			-- Interaction form confirm page
+		do
+			to_implement ("to be implemented")
+		end
 
 feature -- Response
 

@@ -67,7 +67,10 @@
             </div>
             <hr>
             <div class="form-actions">
-              <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_confirm/{$form.id/}">Confirm</a>
+               <form  action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST">
+                    <button type="submit" class="btn btn-xs btn-primary">Confirm</button>
+                    <input type="hidden" id="confirm" name="confirm" class="form-control" value="{$form.id/}">
+               </form> 
               <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}">Edit</a> 
             </div>
           </fieldset>

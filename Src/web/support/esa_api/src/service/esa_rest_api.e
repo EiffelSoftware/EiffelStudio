@@ -23,8 +23,8 @@ feature -- Initialization
 			configure_api_root
 			configure_api_report
 			configure_api_reports_user
-			configure_api_interaction_confirm
 			configure_api_interaction_report
+			configure_api_interaction_confirm
 			configure_api_report_detail
 			configure_api_report_interaction
 			configure_api_report_form
@@ -59,7 +59,6 @@ feature -- Configure Resources Routes
 			create l_root_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
-			router.handle_with_request_methods ("", l_root_handler, l_methods) -- IE workaround
 			router.handle_with_request_methods ("/", l_root_handler, l_methods)
 		end
 
@@ -267,6 +266,10 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_confirm/{id}", l_interaction_handler, l_methods)
+
+			create l_methods
+			l_methods.enable_post
+			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_confirm", l_interaction_handler, l_methods)
 		end
 
 end

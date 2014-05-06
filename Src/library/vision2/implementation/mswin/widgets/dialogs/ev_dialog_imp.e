@@ -77,10 +77,14 @@ feature -- Initialization
 			l_interface ?= other_imp.interface
 			check l_interface /= Void then end
 
+				-- Connect interface with new implementation but
+				-- not making it initialized yet as we are in the
+				-- process of copying the `other_imp' into Current.
 			assign_interface (l_interface)
+			set_is_initialized (False)
 
-				-- Copy the attributes from the dialog to the window
-			copy_from_real_dialog (other_imp)
+				-- First we copy the windows property
+			copy_ui_from_from_real_dialog (other_imp)
 
 				-- Move the children
 			move_children (other_imp)
@@ -90,6 +94,13 @@ feature -- Initialization
 
 				-- Add this dialog as root window.
 			application_imp.add_root_window (Current)
+
+				-- Finally we copy the attributes from the dialog to the window
+			copy_attributes_from_real_dialog (other_imp)
+				-- Replace the implementation since now Current is initialized
+			attached_interface.replace_implementation (Current)
+				-- Making Current fully initialized.
+			set_is_initialized (True)
 		end
 
 feature -- Status Report
@@ -347,13 +358,35 @@ feature {NONE} -- Implementation
 			attached_interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	copy_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON)
-			-- Fill current with `other_imp' content.
-		local
-			other_menu_bar: detachable EV_MENU_BAR
+	copy_ui_from_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON)
+			-- Copy windows properties of Current with properties of `other_imp'.
 		do
 			internal_class_name := other_imp.internal_class_name
 			create wnd_class.make (internal_class_name)
+			set_state_flag (base_make_called_flag, other_imp.base_make_called)
+			set_icon_pixmap (other_imp.icon_pixmap)
+			set_position (other_imp.x_position, other_imp.y_position)
+				-- Now copy contents of bars.
+			create lower_bar
+			copy_box_attributes (other_imp.lower_bar, lower_bar)
+			create upper_bar
+			copy_box_attributes (other_imp.upper_bar, upper_bar)
+
+				-- Now remove the menu bar from the old implementation.
+				-- If we do not do this, then we will not be able to set
+				-- it in `Current'.
+			if attached other_imp.menu_bar as l_other_menu_bar then
+				other_imp.remove_menu_bar
+				set_menu_bar (l_other_menu_bar)
+			end
+
+			set_is_destroyed (other_imp.is_destroyed)
+			set_ex_style (other_imp.ex_style)
+		end
+
+	copy_attributes_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON)
+			-- Copy attributes of Current with attributes of `other_imp'.
+		do
 			accel_list := other_imp.accel_list
 			if attached other_imp.accelerators_internal as l_event then
 				accelerators_internal := l_event
@@ -364,7 +397,6 @@ feature {NONE} -- Implementation
 			awaiting_movement := other_imp.awaiting_movement
 			background_color_imp := other_imp.background_color_imp
 			background_pixmap_imp := other_imp.background_pixmap_imp
-			set_state_flag (base_make_called_flag, other_imp.base_make_called)
 			child_cell := other_imp.child_cell
 			if attached other_imp.close_request_actions_internal as l_event then
 				close_request_actions_internal := l_event
@@ -376,7 +408,6 @@ feature {NONE} -- Implementation
 			end
 
 			cursor_pixmap := other_imp.cursor_pixmap
-			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
 			if attached other_imp.drop_actions_internal as l_event then
 				drop_actions_internal := l_event
@@ -404,7 +435,6 @@ feature {NONE} -- Implementation
 			internal_title := other_imp.internal_title
 			internal_width := other_imp.internal_width
 			is_closeable := other_imp.is_closeable
-			set_is_destroyed (other_imp.is_destroyed)
 			is_dnd_in_transport := other_imp.is_dnd_in_transport
 			is_in_min_height := other_imp.is_in_min_height
 			is_in_min_width := other_imp.is_in_min_width
@@ -483,24 +513,6 @@ feature {NONE} -- Implementation
 			apply_center_dialog := other_imp.apply_center_dialog
 			call_show_actions := other_imp.call_show_actions
 			scroller := other_imp.scroller
-			set_position (other_imp.x_position, other_imp.y_position)
-
-				-- Now copy contents of bars.
-			create lower_bar
-			copy_box_attributes (other_imp.lower_bar, lower_bar)
-			create upper_bar
-			copy_box_attributes (other_imp.upper_bar, upper_bar)
-
-			other_menu_bar := other_imp.menu_bar
-				-- Now remove the menu bar from the old implementation.
-				-- If we do not do this, then we will not be able to set
-				-- it in `Current'.
-			if other_menu_bar /= Void then
-				other_imp.remove_menu_bar
-				set_menu_bar (other_menu_bar)
-			end
-
-			set_ex_style (other_imp.ex_style)
 		end
 
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
@@ -530,7 +542,7 @@ feature {EV_ANY, EV_ANY_I}
 			-- Interface for `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

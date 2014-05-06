@@ -75,9 +75,6 @@ feature {NONE} -- Initialization: User interface
 			a_widget.set_column_count_to (last_column)
 
 				-- Create columns
-			l_col := a_widget.column (category_column)
-			l_col.set_width (39)
-
 			l_col := a_widget.column (error_column)
 			l_col.set_title (interface_names.l_description)
 			l_col.set_width (100)
@@ -95,6 +92,7 @@ feature {NONE} -- Initialization: User interface
 			l_col.set_width (160)
 
 			a_widget.enable_tree
+			a_widget.hide_tree_node_connectors
 			a_widget.disable_row_height_fixed
 			a_widget.enable_auto_size_best_fit_column (error_column)
 			a_widget.enable_multiple_row_selection
@@ -112,7 +110,7 @@ feature {NONE} -- Initialization: User interface
 				end)
 
 				-- Enable sorting
-			enable_sorting_on_columns (<<a_widget.column (category_column),
+			enable_sorting_on_columns (<<
 				a_widget.column (error_column),
 				a_widget.column (context_column),
 				a_widget.column (position_column)>>)
@@ -548,7 +546,6 @@ feature {NONE} -- Basic operations
 			l_item: EV_GRID_LABEL_ITEM
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_content: LIST [EDITOR_TOKEN]
-			l_pixmap: EV_PIXMAP
 			l_pos_token: EDITOR_TOKEN_NUMBER
 			l_line: EIFFEL_EDITOR_LINE
 			l_context_stone: STONE
@@ -560,18 +557,6 @@ feature {NONE} -- Basic operations
 
 				-- Set expand actions
 			a_row.expand_actions.extend (agent on_row_expanded (a_row))
-
-				-- Set category pixmap item
-			create l_item
-			l_pixmap := category_icon_from_event_item (a_event_item)
-			if l_pixmap /= Void then
-				l_item.set_pixmap (l_pixmap)
-
-					-- Set string data for pixmap index, so it can be sorted.
-				l_item.set_data (a_event_item.category.out)
-				l_item.disable_full_select
-			end
-			a_row.set_item (category_column, l_item)
 
 				-- Set error information
 			if attached {ERROR} a_event_item.data as l_error then
@@ -589,9 +574,9 @@ feature {NONE} -- Basic operations
 
 				l_editor_item.disable_full_select
 				if is_error_event (a_event_item) then
-					l_item.set_pixmap (stock_pixmaps.tool_error_icon)
+					l_editor_item.set_pixmap (stock_pixmaps.tool_error_icon)
 				elseif is_warning_event (a_event_item) then
-					l_item.set_pixmap (stock_pixmaps.tool_warning_icon)
+					l_editor_item.set_pixmap (stock_pixmaps.tool_warning_icon)
 				else
 					check False end
 				end
@@ -872,7 +857,6 @@ feature {NONE} -- Basic operations
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_row: EV_GRID_ROW
-			l_item: EV_GRID_LABEL_ITEM
 		do
 			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event and then attached {ERROR} l_event.data as l_error then
 				create l_gen.make
@@ -889,9 +873,6 @@ feature {NONE} -- Basic operations
 
 					l_row := a_parent_row.subrow (1)
 					l_row.set_data (l_event)
-					create l_item
-					l_item.disable_full_select
-					l_row.set_item (category_column, l_item)
 
 					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
 						-- No extra initialization needed so update `l_editor_item' to reflect settings.
@@ -1626,12 +1607,11 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	category_column: INTEGER = 1
-	error_column: INTEGER = 2
-	context_column: INTEGER = 3
-	position_column: INTEGER = 4
-	fix_column: INTEGER = 5
-	last_column: INTEGER = 5
+	error_column: INTEGER = 1
+	context_column: INTEGER = 2
+	position_column: INTEGER = 3
+	fix_column: INTEGER = 4
+	last_column: INTEGER = 4
 
 	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 
@@ -1649,7 +1629,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

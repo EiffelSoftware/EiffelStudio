@@ -543,7 +543,6 @@ feature {NONE} -- Basic operations
 		local
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_gen: EB_EDITOR_TOKEN_GENERATOR
-			l_item: EV_GRID_LABEL_ITEM
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_content: LIST [EDITOR_TOKEN]
 			l_pos_token: EDITOR_TOKEN_NUMBER
@@ -552,9 +551,6 @@ feature {NONE} -- Basic operations
 			l_expanded: BOOLEAN
 			l_is_updating: BOOLEAN
 		do
-			create l_item
-			a_row.set_item (1, l_item)
-
 				-- Set expand actions
 			a_row.expand_actions.extend (agent on_row_expanded (a_row))
 

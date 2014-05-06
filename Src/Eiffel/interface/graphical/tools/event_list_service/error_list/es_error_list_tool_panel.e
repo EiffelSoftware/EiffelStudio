@@ -693,6 +693,7 @@ feature {NONE} -- Basic operations
 		local
 			fix_item: detachable EB_GRID_EDITOR_TOKEN_ITEM
 			formatter: EB_EDITOR_TOKEN_GENERATOR
+			tooltip: EB_EDITOR_TOKEN_TOOLTIP
 		do
 			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
 				create formatter.make
@@ -711,8 +712,9 @@ feature {NONE} -- Basic operations
 						o.item.append_description (formatter)
 						if attached formatter.last_line as d and then d.count > 0 then
 								-- Use fix option description as a tooltip.
-								-- TODO: Use colorful popup window instead.
-							fix_item.set_tooltip (d.wide_image)
+							create tooltip.make (fix_item.pointer_enter_actions, fix_item.pointer_leave_actions, fix_item.select_actions, agent fix_item.is_destroyed)
+							tooltip.set_tooltip_text (d.content)
+							fix_item.set_general_tooltip (tooltip)
 						end
 							-- Associate fix option with the grid item.
 						if attached {FIX_UNUSED_LOCAL} o.item as u then

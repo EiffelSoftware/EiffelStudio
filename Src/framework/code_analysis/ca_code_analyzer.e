@@ -354,23 +354,25 @@ feature {NONE} -- Class-wide Options (From Indexing Clauses)
 			l_item: STRING_32
 		do
 			across a_clause as ic loop
-				if ic.item.tag.name_32.is_equal ("ca_ignoredby") then
-						-- Class wants to ignore certain rules.
-					across ic.item.index_list as l_list loop
-						l_item := l_list.item.string_value_32
-						l_item.prune_all ('%"')
-						a_ignoredby.extend (l_item)
-					end
-				elseif ic.item.tag.name_32.is_equal ("ca_library") then
-						-- Class has information on whether it is a library class.
-					if not ic.item.index_list.is_empty then
-						l_item := ic.item.index_list.first.string_value_32
-						l_item.to_lower
-						l_item.prune_all ('%"')
-						if l_item.is_equal ("true") then
-							library_class.force (True, a_class)
-						elseif l_item.is_equal ("false") then
-							nonlibrary_class.force (True, a_class)
+				if attached ic.item.tag as l_tag then
+					if l_tag.name_32.same_string_general ("ca_ignoredby") then
+							-- Class wants to ignore certain rules.
+						across ic.item.index_list as l_list loop
+							l_item := l_list.item.string_value_32
+							l_item.prune_all ('%"')
+							a_ignoredby.extend (l_item)
+						end
+					elseif l_tag.name_32.is_equal ("ca_library") then
+							-- Class has information on whether it is a library class.
+						if not ic.item.index_list.is_empty then
+							l_item := ic.item.index_list.first.string_value_32
+							l_item.to_lower
+							l_item.prune_all ('%"')
+							if l_item.is_equal ("true") then
+								library_class.force (True, a_class)
+							elseif l_item.is_equal ("false") then
+								nonlibrary_class.force (True, a_class)
+							end
 						end
 					end
 				end

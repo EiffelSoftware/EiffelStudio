@@ -6,8 +6,15 @@ class
 
 inherit
 	EB_CONSTANTS
+	EB_SHARED_PIXMAPS export {NONE} all end
 	ES_SHARED_PROMPT_PROVIDER export {NONE} all end
+	SHARED_LOCALE
 	INTERNAL_COMPILER_STRING_EXPORTER
+
+	ES_GRID_PIXMAP_COMPONENT
+		rename
+			make as make_component
+		end
 
 create
 	make
@@ -18,20 +25,54 @@ feature {NONE} -- Initialization
 			-- Initialize with a fix `f' that may be applied.
 		require
 			is_class_writable: not f.source_class.is_read_only
+		local
+			formatter: EB_EDITOR_TOKEN_GENERATOR
+			tooltip: EB_EDITOR_TOKEN_TOOLTIP
 		do
 			item := f
+			make_component (icon_pixmaps.errors_and_warnings_fix_apply_icon)
+				-- TODO: handle multi-line fix option description.
+			create formatter.make
+			f.append_description (formatter)
+			if attached formatter.last_line as d and then d.count > 0 then
+					-- Use fix option description as a tooltip.
+				create tooltip.make (pointer_enter_actions, pointer_leave_actions, Void,
+					agent: BOOLEAN do Result := attached grid_item as x implies x.is_destroyed end)
+				tooltip.set_tooltip_text (d.content)
+				set_general_tooltip (tooltip)
+			end
 		ensure
 			item_set: item = f
 		end
 
-feature {ES_ERROR_LIST_TOOL_PANEL} -- Access
+feature {NONE} -- Access
 
 	item: FIX_UNUSED_LOCAL
 			-- The fix to apply.
 
+feature -- Output
+
+	menu_item: EV_MENU_ITEM
+			-- A menu entry describing the fix.
+		local
+			formatter: EB_EDITOR_TOKEN_GENERATOR
+			message: STRING_32
+		do
+			create formatter.make
+			item.append_name (formatter)
+			if attached formatter.last_line as l then
+				message := l.wide_image
+			end
+			if attached message implies message.is_empty then
+				message := locale.translation ("Apply a fix")
+			end
+			create Result.make_with_text (message)
+		end
+
 feature -- Fixing
 
 	apply
+			-- Attempt to apply the fix.
 		local
 			m: ES_FEATURE_TEXT_AST_MODIFIER
 			s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]

@@ -1,0 +1,14 @@
+test_name 	 qualified-anchor-expansion-2
+test_description If you a type which is `like a.f' where `f' is itself another qualified anchor, the compiler crashes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result	validity_warning TEST4 Unused_local_warning
+
+test_end

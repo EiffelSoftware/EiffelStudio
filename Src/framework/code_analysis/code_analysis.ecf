@@ -4,6 +4,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
+		<root all_classes="true"/>
 		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

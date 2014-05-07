@@ -87,10 +87,6 @@ feature {NONE} -- Initialization: User interface
 			l_col.set_title (interface_names.l_position)
 			l_col.set_width (80)
 
-			l_col := a_widget.column (fix_column)
-			l_col.set_title (interface_names.l_fix_suggestion)
-			l_col.set_width (160)
-
 			a_widget.enable_tree
 			a_widget.hide_tree_node_connectors
 			a_widget.disable_row_height_fixed
@@ -474,6 +470,7 @@ feature {NONE} -- Basic operations
 			l_menu_item: EV_MENU_ITEM
 			s: ARRAYED_LIST [EV_GRID_ROW]
 			fix_count: INTEGER
+			fix_action: ES_FIX_UNUSED_LOCAL
 		do
 			if attached {EVENT_LIST_ITEM_I} a_item.row.data as l_item then
 				create l_menu
@@ -484,11 +481,12 @@ feature {NONE} -- Basic operations
 				loop
 					if
 						attached {EVENT_LIST_ITEM_I} r.item.data and then
-						attached r.item.item (fix_column) as f and then
-						attached f.data
+						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (error_column) as e and then
+						e.component_count > 0 and then
+						attached {ES_FIX_UNUSED_LOCAL} e.component (e.component_count) as action
 					then
-							-- TODO: check that the fiax has not been applied.
 						fix_count := fix_count + 1
+						fix_action := action
 					end
 				end
 
@@ -496,18 +494,15 @@ feature {NONE} -- Basic operations
 						-- There are several selected fixes.
 					create l_menu_item.make_with_text (locale.formatted_string
 						(locale.plural_translation ("Apply $1 fix", "Apply $1 fixes", fix_count), fix_count))
-					l_menu_item.set_pixmap (stock_pixmaps.errors_and_warnings_fix_apply_icon)
 					l_menu_item.select_actions.extend (agent apply_fix)
-					l_menu.extend (l_menu_item)
-					l_menu.extend (create {EV_MENU_SEPARATOR})
-				elseif
-					attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item.row.item (fix_column) as f and then
-					attached {ES_FIX_UNUSED_LOCAL} f.data as action
-				then
+				elseif attached fix_action then
 						-- This is just one selected fix.
-					create l_menu_item.make_with_text (f.text)
-					l_menu_item.set_pixmap (stock_pixmaps.errors_and_warnings_fix_apply_icon)
+					l_menu_item := fix_action.menu_item
 					l_menu_item.select_actions.extend (agent apply_single_fix (a_item.row))
+				end
+					-- Add an entry to apply a fix or fixes.
+				if attached l_menu_item then
+					l_menu_item.set_pixmap (stock_pixmaps.errors_and_warnings_fix_apply_icon)
 					l_menu.extend (l_menu_item)
 					l_menu.extend (create {EV_MENU_SEPARATOR})
 				end
@@ -577,6 +572,8 @@ feature {NONE} -- Basic operations
 					check False end
 				end
 				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_editor_item_spacing)
+					-- Add optional fix component.
+				add_fix_component (l_error, l_editor_item)
 
 									-- Unlock editor item and call setting changed actions to signify that settings have changed.
 				l_editor_item.unlock_update
@@ -646,9 +643,6 @@ feature {NONE} -- Basic operations
 					l_editor_item.try_call_setting_change_actions
 				end
 				a_row.set_item (position_column, l_editor_item)
-
-					-- Fix option.
-				a_row.set_item (fix_column, fix_option_item (l_error))
 			end
 
 				-- Fill empty items
@@ -686,46 +680,6 @@ feature {NONE} -- Basic operations
 			end
 		ensure then
 			is_expanding_all_errors_unchanged: is_expanding_all_errors = old is_expanding_all_errors
-		end
-
-	fix_option_item (e: ERROR): detachable EV_GRID_ITEM
-			-- An entry for a fix option column (if any).
-		local
-			fix_item: detachable EB_GRID_EDITOR_TOKEN_ITEM
-			formatter: EB_EDITOR_TOKEN_GENERATOR
-			tooltip: EB_EDITOR_TOKEN_TOOLTIP
-		do
-			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
-				create formatter.make
-					-- TODO: Handle multiple fix options instead of just the first one.
-				across
-					f as o
-				until
-					attached fix_item
-				loop
-						-- Get fix option text.
-					o.item.append_name (formatter)
-					if attached formatter.last_line as l and then l.count > 0 then
-						fix_item := create_clickable_grid_item (l, True)
-							-- Get fix option description.
-						formatter.wipe_out_lines
-						o.item.append_description (formatter)
-						if attached formatter.last_line as d and then d.count > 0 then
-								-- Use fix option description as a tooltip.
-							create tooltip.make (fix_item.pointer_enter_actions, fix_item.pointer_leave_actions, fix_item.select_actions, agent fix_item.is_destroyed)
-							tooltip.set_tooltip_text (d.content)
-							fix_item.set_general_tooltip (tooltip)
-						end
-							-- Associate fix option with the grid item.
-						if attached {FIX_UNUSED_LOCAL} o.item as u then
-							fix_item.set_data (create {ES_FIX_UNUSED_LOCAL}.make (u))
-						else
-							fix_item := Void
-						end
-					end
-				end
-				Result := fix_item
-			end
 		end
 
 	update_tool_title_and_pixmap
@@ -777,7 +731,7 @@ feature {NONE} -- Basic operations
 					across
 						grid_events.selected_rows as r
 					some
-						attached r.item.item (fix_column) as c and then attached c.data
+						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (error_column) as c and then c.component_count > 0
 					end
 				then
 						-- Some items can be fixed.
@@ -881,34 +835,6 @@ feature {NONE} -- Basic operations
 					grid_events.grid_row_fill_empty_cells (l_row)
 				end
 			end
-			if
-				attached a_parent_row.item (fix_column) as fix_item and then
-				attached {ES_FIX_UNUSED_LOCAL} fix_item.data as fix_action
-			then
-				create l_gen.make
-				l_gen.enable_multiline
-				fix_action.item.append_description (l_gen)
-					-- Make sure the last line is added to the list of all lines.
-				l_gen.new_line
-				l_lines := l_gen.lines
-				if not l_lines.is_empty then
-						-- Sub row full error
-					if a_parent_row.subrow_count = 0 then
-							-- No subrow, add one.
-							-- Note: A sub row will exist if the information is being updated.
-						a_parent_row.insert_subrow (1)
-					end
-					check
-						from_instruction_above: attached a_parent_row.subrow (1) as r
-					then
-						l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
-						l_editor_item.set_text_wrap (True)
-						r.set_height (r.height.max (l_editor_item.required_height_for_text_and_component))
-						r.set_item (fix_column, l_editor_item)
-						grid_events.grid_row_fill_empty_cells (r)
-					end
-				end
-			end
 		end
 
 	generate_lines_for_tooltip (a_error: ERROR): LIST [EIFFEL_EDITOR_LINE]
@@ -1002,6 +928,30 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 
 feature {NONE} -- Fixing
 
+	add_fix_component (e: ERROR; i: EB_GRID_EDITOR_TOKEN_ITEM)
+			-- Add a fix option of `e' to the item `i'.
+		local
+			fix_component: detachable ES_FIX_UNUSED_LOCAL
+		do
+			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
+					-- TODO: Handle multiple fix options instead of just the first one.
+				across
+					f as o
+				until
+					attached fix_component
+				loop
+						-- Associate fix option with the grid item.
+					if attached {FIX_UNUSED_LOCAL} o.item as u then
+						create fix_component.make (u)
+							-- Augment `i'  with a notification that a fix is available.
+						i.append_component (fix_component)
+							-- Make sure a notification is always visible.
+						i.ensure_component_display
+					end
+				end
+			end
+		end
+
 	apply_single_fix (r: EV_GRID_ROW)
 			-- Attempt to apply a fix chosen for row `r'.
 		do
@@ -1010,18 +960,25 @@ feature {NONE} -- Fixing
 
 	apply_single_fix_without_undo_prompt (r: EV_GRID_ROW)
 			-- Attempt to apply a fix chosen for row `r' without notification about "undo" behaviour.
+		local
+			i: INTEGER
 		do
-				if
-					attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (fix_column) as applied_item and then
-					attached {ES_FIX_UNUSED_LOCAL} applied_item.data as fix_action
-				then
-						-- Prevent further applications of the fix.
-					applied_item.set_data (Void)
-						-- TODO: Replace manifest strings with translatable strings.
-					applied_item.set_tooltip ({STRING_32} "Applied the fix: " + applied_item.tooltip)
-						-- Apply the fix.
-					fix_action.apply
+			if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (error_column) as e then
+				from
+					i := e.component_count
+				until
+					i <= 0
+				loop
+					if attached {ES_FIX_UNUSED_LOCAL} e.component (i) as f then
+							-- Prevent further applications of the fix and
+							-- remove a notification that a fix is available.
+						e.remove_component (i)
+							-- Apply the fix.
+						f.apply
+					end
+					i := i - 1
 				end
+			end
 		end
 
 	apply_fix_without_undo_prompt
@@ -1030,7 +987,7 @@ feature {NONE} -- Fixing
 			across
 				grid_events.selected_rows as r
 			loop
-				apply_single_fix (r.item)
+				apply_single_fix_without_undo_prompt (r.item)
 			end
 		end
 
@@ -1608,8 +1565,7 @@ feature {NONE} -- Constants
 	error_column: INTEGER = 1
 	context_column: INTEGER = 2
 	position_column: INTEGER = 3
-	fix_column: INTEGER = 4
-	last_column: INTEGER = 4
+	last_column: INTEGER = 3
 
 	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 

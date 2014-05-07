@@ -836,6 +836,12 @@ feature {NONE} -- Implementation
 							saved_actual_type := current_actual_type
 							saved_feature_table := current_feature_table
 							saved_feature := current_feature
+								-- We have already saved `associated_type_ast' in `saved_ast'.
+							if ast /= Void then
+								associated_type_ast := ast.qualifier
+							else
+								associated_type_ast := Void
+							end
 							current_class := f.written_class
 							current_actual_type := current_class.actual_type
 							current_feature_table := current_class.feature_table
@@ -851,6 +857,7 @@ feature {NONE} -- Implementation
 							current_actual_type := saved_actual_type
 							current_feature_table := saved_feature_table
 							current_feature := saved_feature
+							associated_type_ast := saved_ast
 							if attached last_type as r then
 									-- Evaluate type of `f' in the current context.
 									-- Use formal generic constraint instead of the formal general itself.

@@ -2777,7 +2777,8 @@ test	qat-dotnet-failure-2		anchor073 tcf pass anchored_type dotnet
 test	qat-dotnet-failure-3		anchor074 tcf pass anchored_type dotnet
 test	qat-on-dotnet-external-failure	anchor075 tcf pass anchored_type dotnet
 test	anchor-to-anchor-lose-named-tuple	anchor076 tcf pass anchored_type tuple
-test	qualified-anchor-expansion	anchor077 tcf fail anchored_type tuple
+test	qualified-anchor-expansion	anchor077 tcf pass anchored_type
+test	qualified-anchor-expansion-2	anchor078 tcf pass anchored_type
 
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass inference

@@ -57,7 +57,7 @@ feature -- Roundtrip/Token
 			if a_list /= Void and local_keyword_index /= 0 then
 				Result := local_keyword (a_list)
 			elseif locals /= Void then
-				Result := locals.last_token (a_list)
+				Result := locals.first_token (a_list)
 			end
 		end
 
@@ -99,7 +99,7 @@ feature -- Roundtrip
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

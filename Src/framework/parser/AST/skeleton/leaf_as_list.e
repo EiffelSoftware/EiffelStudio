@@ -502,6 +502,20 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
 			Result_non_negative: Result >= 0
 		end
 
+	text_32 (a_region: ERT_TOKEN_REGION): STRING_32
+			-- Text (with all modifications, if any, applied) of `a_region'.
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_text_region: valid_text_region (a_region)
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_8_string_8_to_string_32 (text (a_region))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	out, all_original_text: STRING
 			-- String representation of current match list (without modification applied)
 		do

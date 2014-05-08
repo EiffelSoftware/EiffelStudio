@@ -43,11 +43,14 @@ feature {AST_EIFFEL} -- Visitor
 			j: INTEGER_32
 			n: INTEGER_32
 			m: INTEGER_32
+			k: INTEGER_32
 			r: ERT_TOKEN_REGION
+			s: STRING_8
 		do
 			if attached a.locals as l then
 					-- Iterate over all local declarations.
 				from
+					k := l.count
 					l.start
 				until
 					l.after
@@ -73,11 +76,29 @@ feature {AST_EIFFEL} -- Visitor
 							if m = 0 then
 									-- No identifiers are left.
 									-- Remove the declaration altogether.
-									-- TODO: Remove local declaration clause if it is empty.
-								r := l.item.token_region (token_list)
+								k := k - 1
+								if k = 0 then
+										-- No local declarations are left.
+										-- Remove local declaration clause.
+									r := a.token_region (token_list)
+								else
+										-- Remove this declaration.
+									r := l.item.token_region (token_list)
+								end
 								if token_list.i_th (r.start_index - 1).is_separator then
 										-- Remove leading white space.
-									create r.make (r.start_index - 1, r.end_index)
+									if
+										attached {BREAK_AS} token_list.i_th (r.start_index - 1) as b and then
+										b.has_comment
+									then
+											-- Remove a line that is empty now.
+										s := b.text (token_list).twin
+										s.right_adjust
+										token_list.replace_region (b.token_region (token_list), s)
+									else
+											-- Remove all whitespace.
+										create r.make (r.start_index - 1, r.end_index)
+									end
 								end
 							else
 									-- Remove the identifier.

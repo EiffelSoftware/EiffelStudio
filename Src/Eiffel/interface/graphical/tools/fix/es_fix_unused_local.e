@@ -86,7 +86,7 @@ feature -- Fixing
 					r := a.token_region (m.ast_match_list)
 					item.apply (a, m.ast_match_list)
 					if m.ast_match_list.is_text_modified (r) then
-						m.replace_code (s.start_position, s.end_position, m.ast_match_list.text (r))
+						m.replace_code (s.start_position, s.end_position, m.ast_match_list.text_32 (r))
 						m.commit
 					end
 				else

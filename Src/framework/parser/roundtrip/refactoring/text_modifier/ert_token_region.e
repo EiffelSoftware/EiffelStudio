@@ -42,7 +42,7 @@ feature -- Status reporting
 	is_empty: BOOLEAN
 			-- Is region empty?
 		do
-			Result := start_index = end_index - 1
+			Result := end_index = start_index - 1
 		end
 
 	is_valid_region (a_start_index, a_end_index: INTEGER): BOOLEAN

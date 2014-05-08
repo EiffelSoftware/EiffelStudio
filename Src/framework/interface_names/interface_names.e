@@ -1516,7 +1516,6 @@ feature -- Label texts
 	l_Platform: STRING_32				do Result := locale.translation ("Platform") end
 	l_please_select: STRING_32			do Result := locale.translation ("Please select a cluster where test case files will be generated.") end
 	l_position: STRING_32 				do Result := locale.translation ("Position") end
-	l_fix_suggestion: STRING_32 				do Result := locale.translation ("Suggestion") end
 	l_Possible_overflow: STRING_32		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_32				do Result := locale.translation("Precompile")	end
 	l_preferences_delayed_resources: STRING_32 do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.") end

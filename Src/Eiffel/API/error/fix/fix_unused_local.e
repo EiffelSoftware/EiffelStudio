@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Fix of {UNUSED_LOCAL_WARNING} by removing associated locals."
 
 class	FIX_UNUSED_LOCAL
@@ -44,13 +44,13 @@ feature -- Output
 	append_name (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message_formatter.format (t, "Remove {1|, }", <<message_formatter.list (add_list, locals)>>)
+			message.format_action_unused_local (t, locals)
 		end
 
 	append_description (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message_formatter.format (t, "Remove declarations of the local variables {1|, }.", <<message_formatter.list (add_list, locals)>>)
+			message.format_description_unused_local (t, locals)
 		end
 
 feature -- Basic operations
@@ -63,10 +63,10 @@ feature -- Basic operations
 
 feature {NONE} -- Formatting
 
-	locals: ITERABLE_FUNCTION [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]], TUPLE [name: INTEGER_32; type: TYPE_A]]
+	locals: ITERABLE [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]]]
 			-- Collection of formatters to add unused local variables.
 		do
-			create Result.make
+			create {ITERABLE_FUNCTION [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]], TUPLE [name: INTEGER_32; type: TYPE_A]]} Result.make
 				(agent (local_declaration: TUPLE [name: INTEGER_32; type: TYPE_A]): PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]]
 					do
 						Result := agent (n: READABLE_STRING_GENERAL; t: TEXT_FORMATTER) do t.add_local (n) end (names_heap.item_32 (local_declaration.name), ?)
@@ -74,41 +74,10 @@ feature {NONE} -- Formatting
 				source.unused_locals)
 		end
 
-	add_list: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]]]]
-			-- Agent to add list of items to the output.
-		do
-			Result := agent (f: detachable FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]])
-				local
-					delimiter: detachable READABLE_STRING_GENERAL
-				do
-					across
-						i as c
-					loop
-						if attached delimiter then
-								-- This is not a first iteration, add `delimiter' before item.
-							t.add (delimiter)
-						elseif attached f then
-								-- First iteration, set delimiter for subsequent iterations from the format specification.
-							delimiter := f.item
-						else
-								-- First iteration, set delimiter for subsequent iterations to the default  one.
-							delimiter := {STRING_32} ", "
-						end
-						c.item (t)
-					end
-				end
-		end
-
-	message_formatter: COMPOSITE_FORMATTER [TEXT_FORMATTER]
-			-- Formatter of the fix message(s).
+	message: FIX_MESSAGE
+			-- A message formatter.
 		once
-				-- TODO: Add features to handle substrings to TEXT_FORMATTER.
-			create Result.make (
-				agent (t: TEXT_FORMATTER; s: READABLE_STRING_GENERAL; start_index, end_index: INTEGER_32)
-						-- Add a substring of `s' with valid index positions between `start_index' and `end_index' to `t'.
-					do
-						t.add (s.substring (start_index, end_index))
-					end)
+			create Result
 		end
 
 note

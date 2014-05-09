@@ -605,7 +605,7 @@ feature -- Text processing
 
 feature {NONE} -- Initialisations and File status
 
-	new_line_32: CHARACTER = '%N'
+	new_line_32: CHARACTER_32 = '%N'
 
 	eol_reached: BOOLEAN;
 

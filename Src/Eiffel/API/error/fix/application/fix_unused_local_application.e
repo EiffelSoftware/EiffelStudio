@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Application of {FIX_UNUSED_LOCAL} to a source code."
 
 class
@@ -98,6 +98,17 @@ feature {AST_EIFFEL} -- Visitor
 									else
 											-- Remove all whitespace.
 										create r.make (r.start_index - 1, r.end_index)
+									end
+								end
+									-- Remove trailing comment if it appears on the same line.
+								if
+									token_list.i_th (r.end_index + 1).is_separator and then
+									attached {BREAK_AS} token_list.i_th (r.end_index + 1) as b and then
+									b.has_comment
+								then
+									s := b.text (token_list)
+									if s.index_of ('%N', 1) > 1 then
+										token_list.replace_region (b.token_region (token_list), s.substring (s.index_of ('%N', 1), s.count))
 									end
 								end
 							else

@@ -943,13 +943,13 @@ feature -- Warning messages
 
 	w_fix_undo_warning: STRING_32
 		do
-			Result := locale.translation (
+			Result := locale.translation_in_context (
 				"[
 					Applying selected fixes causes changes to the source code that cannot be undone.
 					
 					Click Yes to apply fixes.
-					Click No to abort.
-				]")
+					Click Cancel to abort.
+				]", "fix")
 		end
 
 	w_target_name_attribute_expected: STRING_32 do Result := locale.translation ("TARGET name attribute expected") end

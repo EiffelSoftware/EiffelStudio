@@ -1293,7 +1293,7 @@ feature -- Label texts
 	l_discard_cancel_c_compilation: STRING_32	do Result := locale.translation("Always cancel C/C++ compilation when exiting.")	end
 	l_discard_terminate_external_command_when_exit: STRING_32	do Result := locale.translation("Always terminate external command when exiting.")	end
 	l_Discard_iron_installation_dialog: STRING_32 do Result := locale.translation("Always install iron packages.")	end
-	l_discard_fix_undo_warning: STRING_32 do Result := locale.translation ("Always apply fixes without this prompt.") end
+	l_discard_fix_undo_warning: STRING_32 do Result := locale.translation_in_context ("Always apply fixes without this prompt.", "fix") end
 
 	l_Display_call_stack_warning: STRING_32	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 	l_Displayed_buttons_text: STRING_32 do Result := locale.translation("Displayed buttons")	end

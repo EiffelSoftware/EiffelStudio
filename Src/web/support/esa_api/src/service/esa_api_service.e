@@ -235,7 +235,6 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
-
 	user_role (a_username: STRING): ESA_USER_ROLE
 			-- Role associated with user with username `a_username'
 		do
@@ -273,8 +272,9 @@ feature -- Access
 		end
 
 	priorities: LIST[ESA_REPORT_PRIORITY]
-			-- Possible problem report classes
+			-- Possible problem report priorities.
 		do
+			log.write_information (generator +".priorities Processing problem report priorities")
 			create {ARRAYED_LIST[ESA_REPORT_PRIORITY]}Result.make (0)
 			data_provider.connect
 			across data_provider.priorities as c  loop Result.force (c.item)  end
@@ -327,6 +327,7 @@ feature -- Access
 	security_questions: LIST[ESA_SECURITY_QUESTION]
 			-- Security questions
 		do
+			log.write_information (generator+".security_questions Retrieve security questions form the storage.")
 			create {ARRAYED_LIST[ESA_SECURITY_QUESTION]}Result.make (0)
 			login_provider.connect
 			across login_provider.security_questions as c loop Result.force (c.item)  end
@@ -407,6 +408,26 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
+	token_from_email (a_email: READABLE_STRING_32): detachable STRING
+			-- Activation token for user with email `a_email' if any.
+		do
+			Result := login_provider.token_from_email (a_email)
+			is_successful := login_provider.is_successful
+		end
+
+	question_from_email (a_email: STRING_8): detachable STRING
+			-- Security question associated with account with email `a_email' if any
+		do
+			Result := login_provider.question_from_email (a_email)
+			is_successful := login_provider.is_successful
+		end
+
+	user_from_email (a_email: STRING): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+			-- User with email `a_email' if any.
+		do
+			Result := login_provider.user_from_email (a_email)
+			is_successful := login_provider.is_successful
+		end
 
 
 feature -- Basic Operations
@@ -559,6 +580,7 @@ feature -- Element Settings
 			attached_first_name: a_first_name /= Void
 			attached_last_name: a_last_name /= Void
 		do
+			log.write_information (generator + ".add_user Add a new user")
 			if login_provider.user_from_username (a_username) = Void and then
 				login_provider.user_from_email (a_email) = Void then
 				data_provider.add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token, a_question_id)
@@ -571,6 +593,7 @@ feature -- Element Settings
 				end
 			else
 					-- 	"Could not create user: Username/Email address already registered"
+				log.write_alert (generator + ".add_user Could not create user: Username/Email address already registered" )
 				Result := False
 			end
 		end
@@ -579,6 +602,13 @@ feature -- Element Settings
 			-- Remove username `a_username' from database
 		do
 			login_provider.remove_user (a_username)
+			is_successful := login_provider.is_successful
+		end
+
+	update_password (a_email: STRING; a_password: STRING)
+			-- Update password of user with email `a_email'.
+		do
+			login_provider.update_password (a_email, a_password)
 			is_successful := login_provider.is_successful
 		end
 
@@ -622,11 +652,14 @@ feature -- Status Report
 	activation_valid (a_email, a_token: STRING): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		do
+			log.write_information (generator + ".activation_valid Processing user activation with email:" + a_email + " token: " + a_token )
 			Result := login_provider.activation_valid (a_email, a_token)
 			if login_provider.successful then
 				set_successful
+				log.write_information (generator + ".activation_valid User activated with email:" + a_email )
 			else
 				set_last_error_from_handler (login_provider.last_error)
+				log.write_error (generator + ".activation_valid " + last_error_message)
 			end
 		end
 

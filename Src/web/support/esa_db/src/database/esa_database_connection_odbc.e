@@ -95,8 +95,7 @@ feature -- Initialization
 		end
 
 	login_with_connection_string (a_string: STRING)
-			-- Login with `a_connection_string'
-			-- and immediately connect to database.
+			-- Login with `a_connection_string'and immediately connect to database.
 		do
 			log.write_information (generator +".login_with_connection_string " + a_string )
 			create db_application.login_with_connection_string (a_string)
@@ -112,8 +111,6 @@ feature -- Initialization
 				end
 				log.write_information (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
 			end
-			log.write_information (generator +".login_with_connection_string, DbControl:"+ db_control.out )
-
 		end
 
 feature -- Databse Connection

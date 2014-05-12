@@ -7,6 +7,7 @@
          <h4 class="modal-title" id="myModalLabel">Login Form</h4>
       </div>
       <div class="modal-body">
+         <a href="{$host/}/reminder">Forgot username or password?</a>
           <form>
             <p><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value=""></p>
             <p><input type="password" class="span3" id="password" name="password" placeholder="Enter Password"></p>

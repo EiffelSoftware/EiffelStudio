@@ -82,8 +82,8 @@ feature -- HTTP Methods
 		local
 			l_role: ESA_USER_ROLE
 		do
-			log.write_information ("Processing request:" +generator+".do_get" )
 			if attached current_user_name (req) as l_user then
+				log.write_information ( generator+".do_get Processing request: user:" + l_user  )
 				l_role := api_service.role (l_user)
 				if l_role.is_user then
 						-- List of reports visible for registered user.
@@ -99,6 +99,7 @@ feature -- HTTP Methods
 				end
 			else
 					-- List of reports visisble for Guest Users
+				log.write_information (generator+".do_get ExecutList of reports visisble for Guest Users" )
 				user_reports (req, res, "")
 				log.write_information (generator+".do_get Executed List of reports visisble for Guest Users" )
 			end
@@ -109,7 +110,7 @@ feature -- HTTP Methods
 		local
 			l_role: ESA_USER_ROLE
 		do
-			log.write_information ("Processing request:" +generator+".do_post" )
+			log.write_information (generator+".do_post Processing request"  )
 			if attached current_user_name (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then
 				   	l_id.is_integer and then attached {WSF_STRING} req.form_parameter ("user_responsible") as l_responsible and then

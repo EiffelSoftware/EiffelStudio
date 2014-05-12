@@ -72,14 +72,17 @@ feature -- HTTP Methods
 			   attached {WSF_STRING} req.path_parameter("report_id") as l_report_id and then l_report_id.is_integer and then
 			   attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer  then
 				if attached current_media_type (req) as l_type then
+					log.write_information (generator + ".do_get Processing request")
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
 				else
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
+					log.write_alert (generator + ".do_get Processing request, not authorized")
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).new_response_unauthorized (req, res)
 				else
+					log.write_alert (generator + ".do_get Processing request, not accepted")
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
@@ -93,16 +96,20 @@ feature -- HTTP Methods
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
 				if attached current_media_type (req) as l_type then
+					log.write_information (generator + ".do_post Processing request")
 					to_implement ("send_new_report_email (l_number)")
 					api_service.commit_interaction (extract_form_data(req, l_type))
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				else
+					log.write_alert (generator + ".do_post Processing request, not acceptable")
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
+					log.write_alert (generator + ".do_post Processing request, not authorized")
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).new_response_unauthorized (req, res)
 				else
+					log.write_alert (generator + ".do_post Processing request, not acceptable")
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end

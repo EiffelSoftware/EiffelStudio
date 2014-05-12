@@ -66,6 +66,7 @@ feature -- HTTP Methods
 		do
 			if attached req.http_host as l_host then
 				if attached req.path_parameter ("id") as l_id and then attached req.path_parameter ("name") as l_name then
+					log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
 					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
 				end
 					--TODO

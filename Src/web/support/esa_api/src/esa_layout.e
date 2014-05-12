@@ -38,10 +38,10 @@ feature -- Access: internal
 			Result := path.extended ("config")
 		end
 
-	database_config_path: PATH
+	application_config_path: PATH
 			-- Database Configuration file path.
 		once
-			Result := config_path.extended ("esa_database_configuration.json")
+			Result := config_path.extended ("esa_application_configuration.json")
 		end
 
 

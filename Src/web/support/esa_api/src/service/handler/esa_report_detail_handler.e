@@ -68,10 +68,12 @@ feature -- HTTP Methods
 			if attached current_user_name (req) as l_user then
 					-- Logged in user
 					-- Report, Interactions, Attachments
+				log.write_information (generator + ".do_get Processing request user_report_details ")
 				user_report_details (req, res, l_user)
 			else
 					-- Guest user
 					-- Report, Interactions, Attachments
+				log.write_information (generator + ".do_get Processing request guest_report_details ")
 				guest_report_details (req, res)
 			end
 		end

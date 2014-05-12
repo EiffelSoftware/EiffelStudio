@@ -360,6 +360,35 @@ feature -- View
 			to_implement ("to be implemented")
 		end
 
+
+	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
+			-- Reminder page
+		local
+			l_hp: ESA_REMINDER_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), a_error)
+				if attached l_hp.representation as l_reminder_page then
+					new_response_get (req, res, l_reminder_page)
+				end
+			end
+		end
+
+	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
+			-- <Precursor>
+		local
+			l_hp: ESA_POST_REMINDER_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), a_email)
+				if attached l_hp.representation as l_post_reminder_page then
+					new_response_get (req, res, l_post_reminder_page)
+				end
+			end
+		end
+
+
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

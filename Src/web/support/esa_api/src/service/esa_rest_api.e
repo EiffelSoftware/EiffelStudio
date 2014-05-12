@@ -38,8 +38,8 @@ feature -- Initialization
 			configure_api_category
 			configure_api_priority
 			configure_api_responsible
+			configure_api_reminder
 
-			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.set_directory_index (<<"index.html">>)
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
@@ -271,5 +271,19 @@ feature -- Configure Resources Routes
 			l_methods.enable_post
 			router.handle_with_request_methods ("/report_detail/{report_id}/interaction_confirm", l_interaction_handler, l_methods)
 		end
+
+
+	configure_api_reminder
+		local
+			l_reminder_handler: ESA_REMINDER_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_reminder_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/reminder", l_reminder_handler, l_methods)
+		end
+
 
 end

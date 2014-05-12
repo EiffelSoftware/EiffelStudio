@@ -422,6 +422,18 @@ feature -- View
 			end
 		end
 
+	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
+			-- Reminder page
+		do
+			to_implement ("Add CJ implementation")
+		end
+
+	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ implementation")
+		end
+
 
 feature -- Response
 

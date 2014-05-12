@@ -1,0 +1,32 @@
+{
+    "database": {
+        "datasource": {
+            "driver": "SQL Server Native Client 11.0",
+            "username": "",
+            "password": "",
+            "environment": "development",
+            "trusted": "yes"
+        },
+        "environments": {
+            "test": {
+                "server": "JVELILLA\\SQLEXPRESS",
+                "name": "EiffelDBIntegration",
+                "schema": "eiffeldbintegration"
+            },
+            "development": {
+                "server": "JVELILLA\\SQLEXPRESS",
+                "name": "dbtest",
+                "schema": "dbtest"
+            },
+            "production": {
+                "server": "",
+                "name": "",
+                "schema": ""
+            }
+        }
+    },
+    "smtp": {
+        "server": "localhost"
+    },
+    "logger": {}
+}

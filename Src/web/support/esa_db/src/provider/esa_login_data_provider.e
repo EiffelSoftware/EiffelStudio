@@ -14,6 +14,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	ESA_SHARED_LOGGER
+
 create
 	make
 
@@ -67,8 +69,6 @@ feature -- Access
 			end
 			disconnect
 		end
-
-
 
 	token_from_username (a_username: READABLE_STRING_32): detachable STRING
 			-- Activation token for user with username `a_username', if any.
@@ -153,6 +153,7 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator+".security_questions Execute store procedure GetSecurityQuestions.")
 			create l_parameters.make (0)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetSecurityQuestions", l_parameters))
 			db_handler.execute_reader
@@ -174,7 +175,6 @@ feature -- Access
 			if not db_handler.after then
 				db_handler.start
 				Result := db_handler.read_string (1)
-				to_implement ("handle error: No results - Security question retrieval")
 			end
 			disconnect
 		end
@@ -282,6 +282,30 @@ feature -- Element Settings
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_token, 7), {ESA_DATA_PARAMETERS_NAMES}.registrationtoken_param)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveRegistrationToken", l_parameters))
+			db_handler.execute_writer
+			disconnect
+		end
+
+	update_password (a_email: STRING; a_password: STRING)
+			-- Update password of user with email `a_email'.
+		require
+			attached_email: a_email /= Void
+			attached_password: a_password /= Void
+		local
+			l_security: ESA_SECURITY_PROVIDER
+			l_password_salt, l_password_hash: STRING
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			create l_security
+			l_password_salt := l_security.salt
+			l_password_hash := l_security.password_hash (a_password, l_password_salt)
+
+			connect
+			create l_parameters.make (3)
+			l_parameters.put (string_parameter (a_email, 100), {ESA_DATA_PARAMETERS_NAMES}.email_param)
+			l_parameters.put (string_parameter (l_password_hash, 40), {ESA_DATA_PARAMETERS_NAMES}.passwordhash_param)
+			l_parameters.put (string_parameter (l_password_salt, 24), {ESA_DATA_PARAMETERS_NAMES}.passwordsalt_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePasswordFromEmail", l_parameters))
 			db_handler.execute_writer
 			disconnect
 		end
@@ -408,6 +432,7 @@ feature -- Status Report
 				end
 			elseif a_token.same_string (l_token) then
 				remove_token (l_token)
+				set_successful
 				Result := True
 			else
 				set_last_error ("Specified token does not match one sent.", "Activation validation")

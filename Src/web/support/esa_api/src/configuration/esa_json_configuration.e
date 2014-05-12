@@ -6,24 +6,41 @@ note
 class
 	ESA_JSON_CONFIGURATION
 
-feature
+feature -- Application Configuration
+
+	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
+			-- Build a new database configuration.
+		local
+			l_parser: JSON_PARSER
+		do
+			Result := ""
+			if attached json_file_from (a_path) as json_file then
+			 l_parser := new_json_parser (json_file)
+			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			     attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
+			     attached {JSON_STRING} l_smtp.item ("server") as l_server then
+			     Result := l_server.item
+			 end
+			end
+		end
 
 	new_database_configuration (a_path: PATH): detachable ESA_DATABASE_CONFIGURATION
-			-- Build a new database configuration
+			-- Build a new database configuration.
 		local
 			l_parser: JSON_PARSER
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
 			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT}jv.item ("datasource") as l_datasource and then
-			     attached {JSON_STRING}l_datasource.item ("driver") as l_driver and then
-			     attached {JSON_STRING}l_datasource.item ("environment") as l_envrionment and then
-			     attached {JSON_STRING}l_datasource.item ("trusted") as l_trusted and then
-			     attached {JSON_OBJECT}jv.item ("environments") as l_environments and then
-				 attached {JSON_OBJECT}l_environments.item (l_envrionment.item) as l_environment_selected and then
-				 attached {JSON_STRING}l_environment_selected.item ("server") as l_server and then
-				 attached {JSON_STRING}l_environment_selected.item ("name") as l_name then
+			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
+			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
+			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
+			     attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
+			     attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
+			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
+				 attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
+				 attached {JSON_STRING} l_environment_selected.item ("server") as l_server and then
+				 attached {JSON_STRING} l_environment_selected.item ("name") as l_name then
 				create Result.make (l_driver.item, l_server.unescaped_string_8, l_name.item)
 				if l_trusted.item.is_boolean and then l_trusted.item.to_boolean then
 					Result.mark_trusted
@@ -33,21 +50,22 @@ feature
 		end
 
 	new_database_configuration_test (a_path: PATH): detachable ESA_DATABASE_CONFIGURATION
-			-- Build a new database configuration
+			-- Build a new database configuration for testing purposes.
 		local
 			l_parser: JSON_PARSER
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
 			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT}jv.item ("datasource") as l_datasource and then
-			     attached {JSON_STRING}l_datasource.item ("driver") as l_driver and then
-			     attached {JSON_STRING}l_datasource.item ("environment") as l_envrionment and then
-			     attached {JSON_STRING}l_datasource.item ("trusted") as l_trusted and then
-			     attached {JSON_OBJECT}jv.item ("environments") as l_environments and then
-				 attached {JSON_OBJECT}l_environments.item ("test") as l_environment_selected and then
-				 attached {JSON_STRING}l_environment_selected.item ("server") as l_server and then
-				 attached {JSON_STRING}l_environment_selected.item ("name") as l_name then
+			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
+			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
+			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
+			     attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
+			     attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
+			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
+				 attached {JSON_OBJECT} l_environments.item ("test") as l_environment_selected and then
+				 attached {JSON_STRING} l_environment_selected.item ("server") as l_server and then
+				 attached {JSON_STRING} l_environment_selected.item ("name") as l_name then
 				create Result.make (l_driver.item, l_server.unescaped_string_8, l_name.item)
 				if l_trusted.item.is_boolean and then l_trusted.item.to_boolean then
 					Result.mark_trusted

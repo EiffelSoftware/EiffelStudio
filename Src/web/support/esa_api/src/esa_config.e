@@ -33,20 +33,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_successful: BOOLEAN
-			-- Is the configuration successfult?
+			-- Is the configuration successful?
 		do
 			Result := successful
 		end
 
 
 	database: ESA_DATABASE_CONNECTION
-			-- Database connection
+			-- Database connection.
 
 	api_service: ESA_API_SERVICE
-			-- Eiffel Support API
+			-- Support API.
 
 	email_service: ESA_EMAIL_SERVICE
-			-- Eiffel email service
+			-- Email service.
 
 	layout: ESA_LAYOUT
 			-- Api layout.		

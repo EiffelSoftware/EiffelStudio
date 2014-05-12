@@ -54,8 +54,10 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
+				log.write_information (generator +".do_get Processing Request")
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).priority_page (req, res, api_service.priorities)
 			else
+				log.write_information (generator +".do_get Processing Request, not acceptable")
 				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).priority_page (req, res, Void)
 			end
 		end

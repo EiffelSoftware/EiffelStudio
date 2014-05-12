@@ -10,27 +10,40 @@ inherit
 
 	ESA_API_ERROR
 
-create
+	ESA_SHARED_LOGGER
 
-	make_with_mailer
+create
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_mailer (a_mailer: NOTIFICATION_MAILER; )
+	make (a_smtp_server: READABLE_STRING_32)
+			-- Create an instance of {ESA_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
+			-- Using "noreplies@eiffel.com" as admin email.
 		do
-			mailer := a_mailer
+
 			admin_email := "noreplies@eiffel.com"
-			credentials
+			smtp_server := a_smtp_server
+					-- Get local host name needed in creation of SMTP_PROTOCOL.
+			create host.make_local
+			create smtp_protocol.make (a_smtp_server, host.local_host_name)
 			set_successful
 		ensure
-			mailer_set: mailer = a_mailer
+			smtp_server_set: smtp_server = a_smtp_server
 		end
 
-	mailer: NOTIFICATION_MAILER
-			-- notification
 
 	admin_email: READABLE_STRING_8
-			-- Administrator email
+			-- Administrator email.
+
+	host: HOST_ADDRESS
+			--  host name of SMTP_PROTOCOL.
+
+	smtp_server: READABLE_STRING_32
+			-- SMTP server address.
+
+	smtp_protocol: SMTP_PROTOCOL
+			-- SMTP protocol.
 
 feature -- Basic Operations
 
@@ -43,12 +56,12 @@ feature -- Basic Operations
 		local
 			l_content: STRING
 			l_url: URL_ENCODER
- 			m: NOTIFICATION_EMAIL
-			l_path: PATH
-			l_error : detachable STRING
+ 			l_path: PATH
 			l_html: HTML_ENCODER
+			l_email: EMAIL
 		do
 			if successful then
+				log.write_information (generator + ".send_post_registration_email to [" + a_to + "]" )
 				create l_path.make_current
 				create l_url
 				create l_html
@@ -63,21 +76,10 @@ feature -- Basic Operations
 				l_content.append (l_html.encoded_string(a_token))
 				l_content.append ("%N%NThank you for joining us.%N%NEiffel Software.")
 				l_content.append (Disclaimer)
-				create l_error.make_empty
-				if mailer.is_available then
-					create l_error.make_empty
-					create m.make (admin_email, a_to, "Eiffel.com Registration Activation", l_content)
-					if {PLATFORM}.is_windows and then attached {WS_NOTIFICATION_SENDMAIL_MAILER} mailer as l_mailer then
-						l_error := l_mailer.process_mail_command (build_mailsend_command (a_to,l_content),l_path.name.out, True, Void)
-						if attached  l_error and then l_error.has_substring ("Error") then
-							set_last_error (l_error, generator + ".send_post_registration_email")
-						else
-							set_successful
-						end
-					else
-						mailer.process_email (m)
-					end
-				end
+					-- Create our message.
+				create l_email.make_with_entry (admin_email, a_to)
+				l_email.set_message (l_content)
+				send_email (l_email)
 			end
 		end
 
@@ -125,97 +127,48 @@ feature -- Basic Operations
 		end
 
 
+	send_password_reset (a_to, a_message, a_host: STRING)
+			-- Send password reset email `a_token' to `a_to'.
+		local
+			l_content: STRING
+			l_url: URL_ENCODER
+ 			l_path: PATH
+			l_html: HTML_ENCODER
+			l_email: EMAIL
+		do
+			if successful then
+				log.write_information (generator + ".send_password_reset to [" + a_to + "]" )
+				create l_path.make_current
+				create l_url
+				create l_html
+				create l_email.make_with_entry (admin_email, a_to)
+				l_email.set_message (a_message)
+				send_email (l_email)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 
-	build_mailsend_command (a_to: STRING; a_content: STRING): STRING
-			-- Workaround for windows.
-			-- Using mailsend.
-			-- "mailsend -to user@gmail.com -from user@gmail.com  -ssl -port 465 -auth -smtp smtp.gmail.com -sub test -v -user user@gmail.com -pass password -M message"
+	send_email (a_email: EMAIL)
+			-- Send the email represented by `a_email'.
+		local
+			l_retried: BOOLEAN
 		do
-			create Result.make_from_string ("mailsend")
-			Result.append (" ")
-			Result.append ("-to")
-			Result.append (" ")
-			Result.append (a_to)
-			Result.append (" ")
-			Result.append ("-from")
-			Result.append (" ")
-			Result.append ("%""+ admin_email+ "%"")
-			Result.append (" ")
-			Result.append ("-ssl -port 465 -auth -smtp smtp.gmail.com ")
-			Result.append (" -sub ")
-			Result.append ("EiffelSupport")
-			Result.append (" ")
-			Result.append (" -user ")
-			if attached gmail_account as l_gmail then
-				Result.append (l_gmail)
+			if not l_retried then
+				log.write_information (generator + ".send_email Process send email.")
+				smtp_protocol.initiate_protocol
+				smtp_protocol.transfer (a_email)
+				smtp_protocol.close_protocol
+				log.write_information (generator + ".send_email Email sent.")
 			else
-				Result.append ("invalidemail")
+				log.write_error (generator + ".send_email Email not send" + last_error_message )
 			end
-			Result.append (" -pass ")
-			if attached password as l_password then
-				Result.append (l_password)
-			else
-				Result.append ("nopassword")
-			end
-			Result.append (" -M ")
-			Result.append ("%""+ a_content +"%"")
-
-		end
-
-	credentials
- 			-- Retrieve a email and password from a file
- 			-- firsline email
- 			-- secondline password
- 		local
- 			f: RAW_FILE
- 			p: PATH
- 			l_retry: BOOLEAN
- 			l_exceptions: EXCEPTIONS
- 		do
- 			if not l_retry then
-	 			create p.make_current
-	 			p := p.extended("src").extended ("esa_template").extended ("bin").extended ("email_credentials.txt")
-	 			create f.make_with_path (p)
-	 			if f.exists and then f.is_access_readable then
-	 					f.open_read
-	 				if not f.end_of_file then
-	 					f.read_line
-		 				create gmail_account.make_from_string (f.last_string)
-		 				if attached gmail_account as l_gmail_account then
-							l_gmail_account.left_adjust
-		 					l_gmail_account.right_adjust
-		 				end
-		 				if not f.end_of_file then
-			 				f.read_line
-			 				create password.make_from_string (f.last_string)
-			 				if attached password as l_password then
-				 				l_password.left_adjust
-			 					l_password.right_adjust
-			 				end
-			 			end
-			 		end
-	 				f.close
-	 			end
-	 		end
 		rescue
-			create l_exceptions
-			if attached l_exceptions.exception_trace as l_trace  then
-				debug
-					io.error.put_string (l_trace)
-				end
-			end
-			l_retry := True
+			set_last_error_from_exception (generator + ".send_email")
+			l_retried := True
 			retry
 		end
-
-
-	gmail_account: detachable STRING
-		-- Gmail account to send SMTP
-
-	password: detachable STRING
-		-- Account password
 
 	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
 		-- Email not monitored disclaimer

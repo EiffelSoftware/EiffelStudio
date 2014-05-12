@@ -69,9 +69,11 @@ feature -- HTTP Methods
 			if attached {WSF_STRING} req.path_parameter ("report_id") as l_report_id and then l_report_id.is_integer and then attached {WSF_STRING} req.path_parameter ("id") as l_interaction_id and then
 				l_interaction_id.is_integer then
 					-- Edit a Report Interaction
+				log.write_information (generator + ".do_get Processing edit_report_interaction")
 				edit_report_interaction (req, res, l_report_id.integer_value, l_interaction_id.integer_value)
 			elseif attached {WSF_STRING} req.path_parameter ("report_id") as l_report_id and then l_report_id.is_integer then
 					-- New Report Interaction
+				log.write_information (generator + ".do_get Processing new_report_interaction")
 				new_report_interaction (req, res, l_report_id.integer_value)
 			end
 		end
@@ -86,9 +88,11 @@ feature -- HTTP Methods
 			if attached {WSF_STRING} req.path_parameter ("report_id") as l_report_id and then l_report_id.is_integer and then attached {WSF_STRING} req.path_parameter ("id") as l_interaction_id and then
 				l_interaction_id.is_integer then
 					-- Update a Report Problem
+				log.write_information (generator + ".do_post Processing update_report_interaction")
 				update_report_interaction (req, res, l_report_id.integer_value, l_interaction_id.integer_value)
 			elseif attached {WSF_STRING} req.path_parameter ("report_id") as l_report_id and then l_report_id.is_integer then
 					-- Initialize Report Problem
+				log.write_information (generator + ".do_post Processing initialize_interaction_report_problem")
 				initialize_interaction_report_problem (req, res, l_report_id.integer_value)
 			end
 		end

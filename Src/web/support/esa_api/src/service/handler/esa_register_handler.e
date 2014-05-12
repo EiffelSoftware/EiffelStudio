@@ -38,14 +38,14 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
@@ -62,9 +62,11 @@ feature -- HTTP Methods
 			create l_register_view
 			create l_rhf
 			if attached current_media_type (req) as l_type then
+				log.write_information (generator + ".do_get Processing request using media type " + l_type )
                 l_register_view.set_questions (api_service.security_questions)
 				l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register_view)
 			else
+				log.write_information (generator + ".do_get Processing request unacceptable media type" )
 				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).register_page (req, res, l_register_view)
 			end
 		end
@@ -79,6 +81,7 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
+				log.write_information (generator + ".do_post Processing request using media type " + l_type )
 				l_register := extract_data_from_request (req, l_type)
 				if l_register.is_valid_form then
 					l_successful := add_user (l_register, req.absolute_script_url (""))

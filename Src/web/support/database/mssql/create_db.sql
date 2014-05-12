@@ -29,6 +29,7 @@ GO
 :r $(curr)data_problem_report_classes.sql
 :r $(curr)data_problem_report_form_fields.sql
 :r $(curr)data_problem_report_severities.sql
+:r $(curr)db_problem_report_priorities.sql
 :r $(curr)data_problem_report_status.sql
 :r $(curr)data_questions.sql
 :r $(curr)data_roles.sql

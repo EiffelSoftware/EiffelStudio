@@ -25,6 +25,7 @@
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 	</target>
 	<target name="esa_api_any" extends="common">
 		<root class="ESA_SERVER" feature="make_and_launch"/>

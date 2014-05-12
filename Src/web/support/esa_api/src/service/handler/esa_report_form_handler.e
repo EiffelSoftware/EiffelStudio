@@ -67,9 +67,11 @@ feature -- HTTP Methods
 		do
 			if attached req.path_parameter ("id") then
 					-- Edit a Report Problem
+				log.write_information (generator+".do_get Processing request edit_report_problem")
 				edit_report_problem (req, res)
 			else
 					-- New Report Problem
+				log.write_information (generator+".do_get Processing request new_report_problem")
 				new_report_problem (req, res)
 			end
 		end
@@ -79,9 +81,11 @@ feature -- HTTP Methods
 		do
 			if attached req.path_parameter ("id") then
 					-- Update a Report Problem
+				log.write_information (generator+".do_post Processing request update_report_problem")
 				update_report_problem (req, res)
 			else
 					-- Initialize Report Problem
+				log.write_information (generator+".do_post Processing request initialize_report_problem")
 				initialize_report_problem (req, res)
 			end
 		end

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			hash_code := a_item.hash_code
 			create last_string.make (256)
 			is_closed := True
+			socket_type := a_socket_type
 		ensure
 			item_set: item = a_item
 			socket_type_set: socket_type = a_socket_type
@@ -233,7 +234,7 @@ feature {NONE} -- Exceptions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

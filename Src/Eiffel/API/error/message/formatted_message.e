@@ -71,8 +71,30 @@ feature {NONE} -- Format: message parsing
 			create Result.make (
 				agent (t: TEXT_FORMATTER; s: READABLE_STRING_GENERAL; start_index, end_index: INTEGER_32)
 						-- Add a substring of `s' with valid index positions between `start_index' and `end_index' to `t'.
+					local
+						i, j: INTEGER
 					do
-						t.add (s.substring (start_index, end_index))
+						from
+							i := start_index
+						until
+							i > end_index
+						loop
+								-- Look for a new line.
+							from
+								j := i
+							until
+								j > end_index or else s [j] = {CHARACTER_32} '%N'
+							loop
+								j := j + 1
+							end
+								-- Add all text before a new line or the end.
+							t.add (s.substring (i, j - 1))
+							if j <= end_index then
+									-- There is a new line.
+								t.add_new_line
+							end
+							i := j + 1
+						end
 					end)
 		end
 

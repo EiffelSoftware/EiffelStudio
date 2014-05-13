@@ -65,7 +65,8 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			on_desactivate as wel_on_desactivate,
-			has_capture as wel_has_capture
+			has_capture as wel_has_capture,
+			count as wel_count
 		undefine
 			set_width,
 			set_height,
@@ -109,8 +110,7 @@ inherit
 			hide_current_selection,
 			on_tcn_selchange,
 			on_wm_theme_changed,
-			on_erase_background,
-			count
+			on_erase_background
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -681,6 +681,7 @@ feature {NONE} -- Implementation
 			create wel_tci.make
 			wel_tci.set_text ("")
 			wel_tci.set_window (wel_win)
+			disable_notebook_assertions
 			insert_item (i - 1, wel_tci)
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
@@ -691,6 +692,7 @@ feature {NONE} -- Implementation
 			if selected_item_index /= i then
 				v_imp.show_window (v_imp.wel_item, Sw_hide)
 			end
+			enable_notebook_assertions
 			notify_change (Nc_minsize, v_imp, False)
 				-- Call `new_item_actions' on `Current'.
 			new_item_actions.call ([v])
@@ -1031,7 +1033,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -238,24 +238,28 @@ feature {NONE} -- Printing for single lines
 
 feature {NONE} -- Print for multiple lines
 
+	print_error_code (t: TEXT_FORMATTER)
+			-- Report error code of the message to `t'.
+		do
+			t.add (Error_string)
+			t.add (" code: ")
+			t.add_error (Current, code)
+			if subcode /= 0 then
+				t.add ("(")
+				t.add_int (subcode)
+				t.add (")")
+			end
+			t.add_new_line
+		end
+
 	print_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Display error in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
 		do
-			a_text_formatter.add (Error_string);
-			a_text_formatter.add (" code: ");
-			a_text_formatter.add_error (Current, code);
-			if subcode /= 0 then
-				a_text_formatter.add ("(");
-				a_text_formatter.add_int (subcode);
-				a_text_formatter.add (")");
-				a_text_formatter.add_new_line
-			else
-				a_text_formatter.add_new_line;
-			end;
-			print_short_help (a_text_formatter);
-		end;
+			print_error_code (a_text_formatter)
+			print_short_help (a_text_formatter)
+		end
 
 	frozen print_short_help (a_text_formatter: TEXT_FORMATTER)
 			-- Display help in `a_text_formatter'.

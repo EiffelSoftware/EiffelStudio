@@ -12,28 +12,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name, a_header: attached STRING)
+	make (a_file_name: PATH; a_header: attached STRING)
 			-- Initialization for `Current'. The csv writer will write to the file with name
 			-- `a_file_name'. `a_header' is the first line containing the column names.
 		require
-			a_file_name.ends_with (".csv")
 			no_new_lines: not a_header.has ('%N')
 		do
-			create output_file.make_open_write (a_file_name)
-			file_open := True
+			create output_file.make_with_path (a_file_name)
+			output_file.open_write
 				-- Write the header.
 			add_line (a_header)
 		ensure
-			file_open
+			is_open: output_file.is_open_write
 		end
 
 feature -- Logging
 
-	add_line (a_line: attached STRING)
+	add_line (a_line: STRING)
 			-- Writes `a_line' to the CSV file. A new line will be
 			-- added automatically afterwards.
 		require
-			file_open
+			is_open: is_file_open
 			no_new_lines: not a_line.has ('%N')
 		do
 			output_file.putstring (a_line + "%N")
@@ -43,20 +42,23 @@ feature -- Logging
 			-- Closes the log file and forbids any further writing to it. (Non-reversible. Create
 			-- new CSV class with same file name in order to append there again.)
 		require
-			file_open
+			is_open: is_file_open
 		do
 			output_file.close
-			file_open := False
 		ensure
-			not file_open
+			is_closed: output_file.is_closed
 		end
 
-			-- Is the file still open?
-	file_open: BOOLEAN
+feature -- Status Report
+
+	is_file_open: BOOLEAN
+		do
+			Result := output_file.is_open_write
+		end
 
 feature {NONE} -- Implementation
 
-			-- The file that is written to.
 	output_file: PLAIN_TEXT_FILE
+			-- The file that is written to.
 
 end

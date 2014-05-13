@@ -40,19 +40,19 @@ feature {NONE} -- Initialization
 			min_feature_name_length := l_factory.new_integer_preference_value (a_pref_manager,
 				preference_namespace + ca_names.min_feature_name_length_option,
 				default_min_feature_name_length)
-			min_feature_name_length.set_default_value (min_feature_name_length.out)
+			min_feature_name_length.set_default_value (default_min_feature_name_length.out)
 			min_feature_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			min_argument_name_length := l_factory.new_integer_preference_value (a_pref_manager,
 				preference_namespace + ca_names.min_argument_name_length_option,
 				default_min_argument_name_length)
-			min_argument_name_length.set_default_value (min_argument_name_length.out)
+			min_argument_name_length.set_default_value (default_min_argument_name_length.out)
 			min_argument_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			min_local_name_length := l_factory.new_integer_preference_value (a_pref_manager,
 				preference_namespace + ca_names.min_local_name_length_option,
 				default_min_local_name_length)
-			min_local_name_length.set_default_value (min_local_name_length.out)
+			min_local_name_length.set_default_value (default_min_local_name_length.out)
 			min_local_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			count_argument_prefix := l_factory.new_boolean_preference_value (a_pref_manager,

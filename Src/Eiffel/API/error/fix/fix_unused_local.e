@@ -69,7 +69,7 @@ feature {NONE} -- Formatting
 			create {ITERABLE_FUNCTION [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]], TUPLE [name: INTEGER_32; type: TYPE_A]]} Result.make
 				(agent (local_declaration: TUPLE [name: INTEGER_32; type: TYPE_A]): PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]]
 					do
-						Result := agent (n: READABLE_STRING_GENERAL; t: TEXT_FORMATTER) do t.add_local (n) end (names_heap.item_32 (local_declaration.name), ?)
+						Result := agent {TEXT_FORMATTER}.add_local (names_heap.item_32 (local_declaration.name))
 					end,
 				source.unused_locals)
 		end

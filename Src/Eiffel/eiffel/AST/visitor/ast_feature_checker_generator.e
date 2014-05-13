@@ -5248,7 +5248,7 @@ feature {NONE} -- Visitor
 						if not l_conforming then
 								-- Report a warning (when enabled) except when comparing against
 								-- Void if the other operand is expanded. That is to say it will
-								-- not report an error for `a = Void' and `Void = a' if 
+								-- not report an error for `a = Void' and `Void = a' if
 								-- `a' is not expanded.
 							if
 								current_feature.written_in = context.current_class.class_id and then
@@ -10807,6 +10807,7 @@ feature {NONE} -- Implementation: checking locals
 			l_vreg: VREG
 			l_curr_feat: FEATURE_I
 			l_vrrr2: VRRR2
+			l_missing_type: MISSING_LOCAL_TYPE_ERROR
 		do
 			if (l_as.is_deferred or l_as.is_external) then
 				create l_vrrr2
@@ -10825,8 +10826,10 @@ feature {NONE} -- Implementation: checking locals
 					if attached l_as.locals.item.type as l_local_type then
 						check_type (l_local_type)
 					else
+						create l_missing_type.make (l_as.locals.item.id_list, context, l_as.locals.first_token (match_list_of_class (context.written_class.class_id)))
+						error_handler.insert_error (l_missing_type)
 						has_untyped_local := True
-						last_type := void_type
+						last_type := Void -- TODO: perform type inference, assign `void_type' here.
 					end
 					if attached last_type as l_solved_type then
 						from

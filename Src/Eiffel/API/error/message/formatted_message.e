@@ -1,40 +1,30 @@
 ﻿note
-	description: "Fix messages that are subject to translation."
+	description: "Optionally parameterized messages that are subject to translation."
 
 class
-	FIX_MESSAGE
+	FORMATTED_MESSAGE
 
-inherit
-	ANY
-	SHARED_LOCALE
-		export {NONE} all end
+feature -- Format: lists
 
-feature -- Format: action
-
-	format_action_unused_local (t: TEXT_FORMATTER; local_list: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]])
-		do
-			format (t, locale.translation_in_context ("Remove {1}", "fix"), <<list (local_list)>>)
-		end
-
-feature -- Format: description
-
-	format_description_unused_local (t: TEXT_FORMATTER; local_list: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]])
-		do
-			format (t, locale.translation_in_context ("Remove declarations of the local variables {1}.", "fix"), <<list (local_list)>>)
-		end
-
-feature {NONE} -- Format: lists
-
-	list (data: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]]): PROCEDURE [ANY, TUPLE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]
+	list (data: like listable): like formattable
 			-- Agent to add a given list `data' to output using a formatter.
 		do
 			Result := message_formatter.list (add_list, data)
 		end
 
-	add_list: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]]]]
+feature {NONE} -- Format: lists
+
+	frozen listable: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]]
+			-- An anchor for a type that can be used to create a formatted list using `list'.
+		do
+		ensure
+			is_used: False
+		end
+
+	add_list: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, like listable]]
 			-- Agent to add an arbitrary list of items to output using a formatter.
 		do
-			Result := agent (f: detachable FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]])
+			Result := agent (f: detachable FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: like listable)
 				local
 					delimiter: detachable READABLE_STRING_GENERAL
 				do
@@ -56,13 +46,22 @@ feature {NONE} -- Format: lists
 				end
 		end
 
-feature {NONE} -- Format: message parsing
+feature -- Format: message parsing
 
-	format (formatter: TEXT_FORMATTER; message: READABLE_STRING_GENERAL; arguments: ITERABLE [PROCEDURE [ANY, TUPLE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]])
+	format (formatter: TEXT_FORMATTER; message: READABLE_STRING_GENERAL; arguments: ITERABLE [like formattable])
 			-- Format `message' replacing placeholders with elements from `arguments' using `formatter'.
 			-- See `{COMPOSITE_FORMATTER}.format'.
 		do
 			message_formatter.format (formatter, message, arguments)
+		end
+
+feature {NONE} -- Format: message parsing
+
+	formattable: PROCEDURE [ANY, TUPLE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]
+			-- An anchor for a type of message parameters accepted by `format'.
+		do
+		ensure
+			is_used: False
 		end
 
 	message_formatter: COMPOSITE_FORMATTER [TEXT_FORMATTER]

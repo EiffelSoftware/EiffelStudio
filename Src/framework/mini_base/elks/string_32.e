@@ -15,6 +15,11 @@ class
 inherit
 	COMPARABLE
 
+	ITERABLE [CHARACTER_32]
+		undefine
+			is_equal
+		end
+
 create
 	make,
 	make_from_cil
@@ -35,6 +40,14 @@ feature {NONE} -- Initialization
 	make_from_cil (a_system_string: detachable SYSTEM_STRING)
 		do
 			create area.make_empty (0)
+		end
+
+feature -- Access
+
+	new_cursor: INDEXABLE_ITERATION_CURSOR [CHARACTER_32]
+			-- <Precursor>
+		do
+			create Result.make
 		end
 
 feature -- Comparison

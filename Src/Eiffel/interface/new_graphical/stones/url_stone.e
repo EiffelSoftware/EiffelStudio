@@ -1,27 +1,26 @@
-note
-	description: 
-		"Stone representing a URL."
+﻿note
+	description: "Stone representing a URL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision $"
 
 class
-	URL_STONE 
+	URL_STONE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_link: STRING)
+	make (a_link: STRING_32)
 			-- Create with URL `a_link'.
 		do
 			--| FIXME To be implemented
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

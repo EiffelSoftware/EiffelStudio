@@ -571,7 +571,7 @@ feature {NONE} -- Basic operations
 				else
 					check False end
 				end
-				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_editor_item_spacing)
+				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_item_spacing)
 					-- Add optional fix component.
 				add_fix_component (l_error, l_editor_item)
 
@@ -814,6 +814,11 @@ feature {NONE} -- Basic operations
 				create l_gen.make
 				l_gen.enable_multiline
 				tracer.trace (l_gen, l_error)
+				if l_gen.last_line.count > 0 then
+						-- Last line is not terminated with a new line.
+						-- Add it anyway.
+					l_gen.add_new_line
+				end
 				l_lines := l_gen.lines
 				if not l_lines.is_empty then
 						-- Sub row full error
@@ -847,6 +852,11 @@ feature {NONE} -- Basic operations
 			create l_gen.make
 			l_gen.enable_multiline
 			tracer.trace (l_gen, a_error)
+			if l_gen.last_line.count > 0 then
+					-- Last line is not terminated with a new line.
+					-- Add it anyway.
+				l_gen.add_new_line
+			end
 			Result := l_gen.lines
 		ensure
 			Result_set: Result /= Void

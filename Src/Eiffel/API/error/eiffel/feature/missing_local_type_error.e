@@ -7,7 +7,7 @@ class
 inherit
 	FEATURE_ERROR
 		redefine
-			build_explain,
+			print_error_message,
 			print_single_line_error_message
 		end
 
@@ -39,18 +39,22 @@ feature -- Properties
 
 feature {NONE} -- Output
 
-	build_explain (t: TEXT_FORMATTER)
+	print_error_message (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			Precursor (t)
+			print_error_code (t)
+			t.add_new_line
 			message.format (t, locale.translation_in_context
 					("[
-						No type declaration is specified for the local declaration list:
-							{1}
+						No type is specified for the local declaration list:
+						  {1}
 					]",
 					"eiffel.error"),
 				<<message.list (locals)>>
 			)
+				-- Make sure any other information about the error comes at a new line.
+			t.add_new_line
+			t.add_new_line
 		end
 
 	print_single_line_error_message (t: TEXT_FORMATTER)

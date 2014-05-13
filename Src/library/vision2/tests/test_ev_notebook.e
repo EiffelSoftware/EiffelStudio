@@ -14,23 +14,30 @@ inherit
 feature -- Test routines
 
 	test_wipe_out
-			-- Set the text and reads it again.
+			-- After creating a few notebook tabs wipe out the whole notebook.
 		note
 			testing: "execution/isolated"
+		local
+			l_book: EV_NOTEBOOK
+			l_button: EV_BUTTON
 		do
-			run_test (agent
-				local
-					l_book: EV_NOTEBOOK
-					l_button: EV_BUTTON
-				do
-					create l_book
-					l_book.extend (create {EV_BUTTON})
-					create l_button.make_with_text ("TEST")
-					l_book.extend (l_button)
-					l_book.select_item (l_button)
-					l_book.wipe_out
-				end
-			)
+				-- Select the first one and wipe out.
+			create l_book
+			create l_button.make_with_text ("TEST")
+			l_book.extend (l_button)
+			l_book.extend (create {EV_BUTTON})
+			l_book.extend (create {EV_BUTTON})
+			l_book.select_item (l_button)
+			l_book.wipe_out
+
+				-- Select the last one and wipe out.
+			create l_book
+			l_book.extend (create {EV_BUTTON})
+			l_book.extend (create {EV_BUTTON})
+			create l_button.make_with_text ("TEST")
+			l_book.extend (l_button)
+			l_book.select_item (l_button)
+			l_book.wipe_out
 		end
 
 note

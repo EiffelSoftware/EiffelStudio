@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 		local
 			l_csv_writer: CA_CSV_WRITER
 		do
-			create l_csv_writer.make (csv_file_name, csv_header)
+			create l_csv_writer.make (eiffel_project.project_location.target_path.extended (csv_file_name), csv_header)
 
 			across rules as l_rules loop
 				across l_rules.item.violations as l_v loop

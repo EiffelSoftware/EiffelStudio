@@ -315,9 +315,9 @@ feature {NONE} -- Click ast exploration
 			c_not_void: c /= Void
 		local
 			l_eiffel_class: EIFFEL_CLASS_C
-			is_retried: BOOLEAN
+			retried: BOOLEAN
 		do
-			if not is_retried then
+			if not retried then
 				if not c.is_precompiled and c.file_is_readable then
 					last_syntax_error := Void
 					l_eiffel_class ?= c
@@ -343,7 +343,7 @@ feature {NONE} -- Click ast exploration
 				end
 			end
 		rescue
-			is_retried := True
+			retried := True
 			retry
 		end
 

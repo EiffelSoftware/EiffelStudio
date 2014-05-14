@@ -862,7 +862,7 @@ feature -- Element change
 			a_class_exists: a_class /= Void
 		local
 			f: RAW_FILE
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 			a_class_graph: ES_CLASS_GRAPH
 			a_class_view: EIFFEL_CLASS_DIAGRAM
 			cf: EIFFEL_CLASS_FIGURE
@@ -872,7 +872,7 @@ feature -- Element change
 			history.wipe_out
 			disable_toolbar
 
-			if not cancelled then
+			if not retried then
 				develop_window.status_bar.reset
 				develop_window.status_bar.display_message (interface_names.l_constructing_diagram_for (a_class.name))
 
@@ -989,7 +989,7 @@ feature -- Element change
 				end
 			end
 		rescue
-			cancelled := True
+			retried := True
 			error_handler.error_list.wipe_out
 			projector.enable_painting
 			world_cell.enable_resize
@@ -1006,7 +1006,7 @@ feature -- Element change
 		require
 			a_group_exists: a_group /= Void
 		local
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 			l_cluster_view: EIFFEL_CLUSTER_DIAGRAM
 			l_cluster_graph: ES_CLUSTER_GRAPH
 			new_cluster: ES_CLUSTER
@@ -1026,7 +1026,7 @@ feature -- Element change
 			history.wipe_out
 			disable_toolbar
 
-			if not cancelled then
+			if not retried then
 				develop_window.status_bar.reset
 				develop_window.status_bar.display_message (interface_names.l_constructing_diagram_for (a_group.name))
 
@@ -1147,7 +1147,7 @@ feature -- Element change
 				end
 			end
 		rescue
-			cancelled := True
+			retried := True
 			error_handler.error_list.wipe_out
 			world.show
 			world_cell.enable_resize
@@ -1842,9 +1842,9 @@ feature {NONE} -- Events
 	on_view_changed
 			-- The user wants to switch to another view.
 		local
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 		do
-			if not cancelled then--and not view_selector.is_empty then
+			if not retried then--and not view_selector.is_empty then
 				reset_history
 
 				develop_window.status_bar.display_message ("Loading diagram for " + view_selector.text)
@@ -1892,7 +1892,7 @@ feature {NONE} -- Events
 				end
 			end
 		rescue
-			cancelled := True
+			retried := True
 			error_handler.error_list.wipe_out
 			develop_window.status_bar.reset
 			projector.enable_painting
@@ -1936,9 +1936,9 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 			a_name_not_void: a_name /= Void
 			not_default: not a_name.has_substring ("DEFAULT")
 		local
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 		do
-			if not cancelled then
+			if not retried then
 
 				if is_force_directed_used then
 					disable_force_directed
@@ -1963,7 +1963,7 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 				view_selector.set_text (world.current_view)
 			end
 		rescue
-			cancelled := True
+			retried := True
 			error_handler.error_list.wipe_out
 			projector.enable_painting
 			world_cell.enable_resize
@@ -2302,9 +2302,9 @@ feature {EIFFEL_WORLD} -- XML Output
 		require
 			f_not_void: f /= Void
 		local
-			is_retried: BOOLEAN
+			retried: BOOLEAN
 		do
-			if not is_retried then
+			if not retried then
 				if f.exists then
 					f.open_read
 					if f.readable then
@@ -2315,7 +2315,7 @@ feature {EIFFEL_WORLD} -- XML Output
 				Result := False
 			end
 		rescue
-			is_retried := True
+			retried := True
 			retry
 		end
 

@@ -400,10 +400,10 @@ feature -- Element change
 			b: BOOLEAN
 			l_persistent_str: STRING
 			l_feature_clause_list: like feature_clause_list
-			l_is_retried: BOOLEAN
+			retried: BOOLEAN
 			l_class_ast: CLASS_AS
 		do
-			if not l_is_retried then
+			if not retried then
 				l_persistent_str := "persistent"
 				if not class_i.is_valid or else (cluster /= Void and then class_i.group /= cluster.group) then
 					if graph /= Void then
@@ -562,7 +562,7 @@ feature -- Element change
 				end
 			end
 		rescue
-			l_is_retried := True
+			retried := True
 			retry
 		end
 

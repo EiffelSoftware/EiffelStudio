@@ -115,11 +115,11 @@ feature -- Command
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		local
-			l_retired: BOOLEAN
+			retried: BOOLEAN
 			l_item: TUPLE [file_path: PATH; is_normal_mode: BOOLEAN]
 			l_file: RAW_FILE
 		do
-			if not l_retired then
+			if not retried then
 				l_item := layouts.item (a_name.as_string_32)
 				if l_item /= Void then
 					create l_file.make_with_path (l_item.file_path)
@@ -132,7 +132,7 @@ feature -- Command
 				end
 			end
 		rescue
-			l_retired := True
+			retried := True
 			retry
 		end
 

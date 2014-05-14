@@ -80,7 +80,7 @@ feature -- Actions
 			cl_name: STRING_32
 			cf: CLASS_FORMAT
 			af: LINEAR [INTEGER]
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 			ir_error: INTERRUPT_ERROR
 			l_groups: like groups
 			l_group: CONF_GROUP
@@ -92,7 +92,7 @@ feature -- Actions
 		do
 			eiffel_system.system.set_current_class (any_class)
 			deg.put_start_output
-			if not cancelled then
+			if not retried then
 				deg.put_initializing_documentation
 
 				create l_filter.make (filter_name)
@@ -236,7 +236,7 @@ feature -- Actions
 				not Error_handler.error_list.is_empty then
 				ir_error ?= Error_handler.error_list.first
 				if ir_error /= Void then
-					cancelled := True
+					retried := True
 					Error_handler.error_list.wipe_out
 					retry
 				end

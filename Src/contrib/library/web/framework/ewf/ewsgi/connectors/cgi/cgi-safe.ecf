@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="connector_cgi" uuid="3BCBC1C5-9D99-45BB-B15D-B03D2C069CED" library_target="connector_cgi">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="connector_cgi" uuid="3BCBC1C5-9D99-45BB-B15D-B03D2C069CED" library_target="connector_cgi">
 	<target name="connector_cgi">
 		<root all_classes="true"/>
 		<file_rule>

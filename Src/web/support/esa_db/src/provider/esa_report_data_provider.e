@@ -100,7 +100,7 @@ feature -- Access
 			l_parameters.put (a_page_number, "PageNumber")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest", l_parameters))
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest3", l_parameters))
 			db_handler.execute_reader
 			create Result.make (db_handler, agent new_report)
 		end

@@ -2,6 +2,11 @@
     "version": "1.0", 
     "href": "{$host/}", 
     "links": [
+             <
+                "href": "{$host/}",
+                "rel": "home",
+                "prompt": "Home"
+            >,
             <
                 "href": "{$host/}/reports",
                 "rel": "collection",
@@ -11,24 +16,6 @@
                 "href": "http://alps.io/iana/relations.xml",
                 "rel": "profile"
             >,
-            {if isset="$user"}
-            <
-                "href": "{$host/}/user_reports/{$user/}",
-                "rel": "author",
-                "prompt": "My Reports"
-            >,
-            <
-                "href": "{$host/}/report_form",
-                "rel": "create-form",
-                "prompt": "Report a Problem"
-            >,
-            <
-                "href": "{$host/}/logoff",
-                "rel": "logoff",
-                "prompt": "Logoff"
-            >
-            {/if}
-            {unless isset="$user"}
             <
                 "href": "{$host/}/login",
                 "rel": "login",
@@ -38,16 +25,21 @@
                 "href": "{$host/}/register",
                 "rel": "register",
                 "prompt": "Register"
-            >,
-            <
-                "href": "{$host/}/reminder",
-                "rel": "reminder",
-                "prompt": "Recover Username/Password"
             >
-
-            {/unless} 
-
+ 
           ],
+    "items":[
+               <
+                "href": "{$host/}/reminder",
+                "data": [
+                    <
+                        "name": "Reminder",
+                        "prompt": "Eiffel Reminder Confirmation",
+                        "value": "Thank you, your new password was successfully sent to your email."
+                    >
+                  ]
+                >
+             ],       
     "queries" :
         [
          <

@@ -114,7 +114,7 @@ feature -- Initialization
 						io.error.put_string (" ")
 						io.error.put_string (ia_map.handler.generator)
 						io.error.put_string (" ")
-						io.error.put_string (ia_map.debug_output)
+						io.error.put_string (ia_map.debug_output.as_string_8) -- eventual truncated information, but ok for debugging
 						io.error.put_new_line
 					end)
 			end

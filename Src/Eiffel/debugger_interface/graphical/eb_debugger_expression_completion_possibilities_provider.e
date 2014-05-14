@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 	prepare_completion
 			-- Prepare completion
 		local
-			rescued: BOOLEAN
+			retried: BOOLEAN
 		do
-			if not rescued then
+			if not retried then
 				Precursor {EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER}
 			else
 				completion_possibilities := Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 				is_prepared := True
 			end
 		rescue
-			rescued := True
+			retried := True
 			retry
 		end
 

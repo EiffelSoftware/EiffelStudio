@@ -22,14 +22,14 @@ feature -- Access
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_GENERAL
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := Precursor + " {" + ({C}).name + "}"
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -260,7 +260,7 @@ feature -- Access
 			has_error_implies_result_attached: has_error implies Result /= Void
 		end
 
-	as_string_representation: STRING
+	as_string_representation: STRING_32
 			-- String representation of all error(s).
 		require
 			has_error
@@ -269,7 +269,7 @@ feature -- Access
 				Result := e.string_representation
 			else
 				check has_error: False end
-				Result := "Error occured"
+				Result := {STRING_32} "Error occured"
 			end
 		end
 

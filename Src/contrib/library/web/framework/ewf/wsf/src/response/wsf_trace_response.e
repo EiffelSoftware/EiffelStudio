@@ -45,7 +45,7 @@ feature {WSF_RESPONSE} -- Output
 			req := request
 			if attached req.raw_header_data as l_header then
 				create s.make (l_header.count)
-				s.append (l_header.to_string_8)
+				s.append (l_header.to_string_8) -- Is valid as string 8, as ensured by req.raw_header_data
 				s.append_character ('%N')
 			else
 				create s.make_empty
@@ -99,7 +99,7 @@ feature {WSF_RESPONSE} -- Output
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

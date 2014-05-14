@@ -68,7 +68,7 @@ feature -- Persistence
 					delete_session (a_session)
 				else
 					ensure_session_folder_exists
-					create f.make_with_path (file_name (a_session.uuid))
+					create f.make_with_path (file_name (a_session.id))
 					if not f.exists or else f.is_writable then
 						f.create_read_write
 						a_session.data.set_expiration (a_session.expiration)
@@ -91,7 +91,7 @@ feature -- Persistence
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create f.make_with_path (file_name (a_session.uuid))
+				create f.make_with_path (file_name (a_session.id))
 				if f.exists then
 					f.delete
 				end

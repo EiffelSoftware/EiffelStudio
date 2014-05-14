@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			create out_edges.make_filled (2)
 			create in_edges.make_filled (1)
 			ast := a_loop
-			stop_condition := a_loop.stop
 			label := a_label
 		end
 

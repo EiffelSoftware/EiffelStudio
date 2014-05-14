@@ -396,7 +396,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 	update_size (fsv: FEATURE_SECTION_VIEW)
 			-- `fsv' was expanded or collabsed.
 		require
-			fsv_not_Void: fsv /= Void
+			fsv_not_void: fsv /= Void
 			has_fsv: has_section (fsv)
 		local
 			l_item: EV_MODEL_GROUP
@@ -454,7 +454,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN
 			-- Is `fsv' a section of the class?
 		require
-			fsv_not_Void: fsv /= Void
+			fsv_not_void: fsv /= Void
 		do
 			Result := queries.has (fsv) or else commands.has (fsv)
 		end
@@ -612,9 +612,9 @@ feature {NONE} -- Implementation
 	fill_group_with_features (a_group: EV_MODEL_GROUP; feature_sections: LIST [FEATURE_SECTION])
 			-- Fill `a_group' with features in `feature_sections'.
 		require
-			group_not_Void: a_group /= Void
+			group_not_void: a_group /= Void
 			group_empty: a_group.is_empty
-			features_not_Void: feature_sections /= Void
+			features_not_void: feature_sections /= Void
 		local
 			l_item: FEATURE_SECTION
 			l_fsv: FEATURE_SECTION_VIEW
@@ -656,9 +656,9 @@ feature {NONE} -- Implementation
 			l_feature: FEATURE_AS
 			l_features_list: like features_list
 			q_section, c_section: FEATURE_SECTION
-			is_retried: BOOLEAN
+			retried: BOOLEAN
 		do
-			if is_retried then
+			if retried then
 				create queries_list.make (0)
 				create commands_list.make (0)
 			else
@@ -704,17 +704,17 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			queries_list_not_Void: queries_list /= Void
-			commands_list_not_Void: commands_list /= Void
+			queries_list_not_void: queries_list /= Void
+			commands_list_not_void: commands_list /= Void
 		rescue
-			is_retried := True
+			retried := True
 			retry
 		end
 
 	features_list (compiled_class: CLASS_C): LIST [FEATURE_SECTION]
 			-- List of features ordered by section name and export status corresponding to `compiled_class'.
 		require
-			compiled_class_not_Void: compiled_class /= Void
+			compiled_class_not_void: compiled_class /= Void
 		local
 			features: EIFFEL_LIST [FEATURE_AS]
 			name: STRING
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 			end
 			eiffel_system.system.set_current_class (Void)
 		ensure
-			Result_not_Void: Result /= Void
+			Result_not_void: Result /= Void
 		rescue
 			retried := True
 			retry
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 	set_properties
 			-- Set porperties of class according to `model'.
 		require
-			model_not_Void: model /= Void
+			model_not_void: model /= Void
 		local
 			prop_text: STRING
 		do

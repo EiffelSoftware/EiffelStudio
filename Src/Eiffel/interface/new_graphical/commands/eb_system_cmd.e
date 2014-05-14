@@ -66,7 +66,7 @@ feature -- Basic operations
 	execute
 			-- Open the Project configuration window.
 		local
-			rescued: BOOLEAN
+			retried: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
 			l_sorted_debugs: ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
@@ -74,7 +74,7 @@ feature -- Basic operations
 			l_config: STRING_32
 			l_sorter: QUICK_SORTER [STRING]
 		do
-			if not rescued then
+			if not retried then
 				if ev_application.ctrl_pressed then
 						-- Displays memory tool.
 					window_manager.last_focused_development_window.shell_tools.show_tool ({ES_MEMORY_TOOL}, True)
@@ -135,7 +135,7 @@ feature -- Basic operations
 		rescue
 			display_error_message (window_manager.last_focused_development_window.window)
 			if catch_exception then
-				rescued := True
+				retried := True
 				retry
 			end
 		end

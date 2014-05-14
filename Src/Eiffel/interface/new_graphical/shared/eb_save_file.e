@@ -94,13 +94,13 @@ feature -- Basic operations
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok, create_backup, new_created: BOOLEAN
 			tmp_name: READABLE_STRING_GENERAL
-			l_retry: BOOLEAN
+			retried: BOOLEAN
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
 			l_stream: STRING
 			l_new_file_name: READABLE_STRING_GENERAL
 		do
-			if not l_retry then
+			if not retried then
 					-- Always assume a saving is successful.
 				last_saving_success := True
 				l_new_file_name := a_file_name
@@ -188,7 +188,7 @@ feature -- Basic operations
 				last_saving_success := False
 			end
 		rescue
-			l_retry := True
+			retried := True
 			retry
 		end
 

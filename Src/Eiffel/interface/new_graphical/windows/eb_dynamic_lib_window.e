@@ -947,11 +947,11 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 		require
 			valid_dynamic_library: dynamic_library /= Void
 		local
-			rescued: BOOLEAN
+			retried: BOOLEAN
 			f: PLAIN_TEXT_FILE
 		do
 			save_ok := False
-			if not rescued then
+			if not retried then
 				if file_name /= Void then
 						-- It is really a save operation.
 					create f.make_with_path (file_name)
@@ -969,7 +969,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				end
 			end
 		rescue
-			rescued := True
+			retried := True
 			retry
 		end
 
@@ -982,10 +982,10 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 	load_dynamic_lib
 			-- Initialize `dynamic_lib' from `file_name'.
 		local
-			rescued: BOOLEAN
+			retried: BOOLEAN
 			f: PLAIN_TEXT_FILE
 		do
-			if not rescued then
+			if not retried then
 				if file_name /= Void then
 					create dynamic_library
 					create f.make_with_path (file_name)
@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				end
 			end
 		rescue
-			rescued := True
+			retried := True
 			retry
 		end
 

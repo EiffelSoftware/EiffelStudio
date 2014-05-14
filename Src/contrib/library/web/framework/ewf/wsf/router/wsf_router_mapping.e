@@ -48,10 +48,10 @@ feature -- Documentation
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_GENERAL
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := description.as_string_8 + " : " + associated_resource
+			Result := description + {STRING_32} " : " + associated_resource.to_string_32
 		end
 
 feature -- Status
@@ -88,7 +88,7 @@ feature -- Helper
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

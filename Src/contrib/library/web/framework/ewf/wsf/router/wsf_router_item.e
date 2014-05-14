@@ -3,8 +3,8 @@ note
 				Entry of WSF_ROUTER
 				It contains
 					- mapping
-					- request methods				
-					
+					- request methods
+
 				]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,20 +40,23 @@ feature	-- Access
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_GENERAL
 			-- String that should be displayed in debugger to represent `Current'.
+		local
+			s: STRING_32
 		do
-			create Result.make_from_string (mapping.debug_output)
+			create s.make_from_string_general (mapping.debug_output)
 			if attached request_methods as mtds then
-				Result.append_string (" [ ")
+				s.append_string (" [ ")
 				across
 					mtds as c
 				loop
-					Result.append_string (c.item)
-					Result.append_string (" ")
+					s.append_string (c.item)
+					s.append_string (" ")
 				end
-				Result.append_string ("]")
+				s.append_string ("]")
 			end
+			Result := s
 		end
 
 feature -- Change
@@ -68,7 +71,7 @@ invariant
 	mapping_attached: mapping /= Void
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			wres: detachable WSF_WGI_DELAYED_HEADER_RESPONSE
 		do
 			transfered_content_length := 0
-			create header.make
+			create internal_header.make
 			wgi_response := r
 			if attached {WSF_WGI_DELAYED_HEADER_RESPONSE} r as r_delayed then
 				r_delayed.update_wsf_response (Current)
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 		do
 			transfered_content_length := 0
 			wgi_response := res.wgi_response
-			header := res.header
+			internal_header := res.internal_header
 			set_status_code ({HTTP_STATUS_CODE}.ok) -- Default value
 		end
 
@@ -62,7 +62,7 @@ feature {WSF_RESPONSE, WSF_RESPONSE_EXPORTER} -- Properties
 	wgi_response: WGI_RESPONSE
 			-- Associated WGI_RESPONSE.
 
-	header: WSF_HEADER
+	internal_header: WSF_HEADER
 			-- Associated response header.	
 
 feature {WSF_RESPONSE_EXPORTER} -- Change		
@@ -158,7 +158,7 @@ feature {WSF_RESPONSE_EXPORTER} -- Header output operation
 					-- commit status code and reason phrase
 				wgi_response.set_status_code (status_code, status_reason_phrase)
 					-- commit header text
-				wgi_response.put_header_text (header.string)
+				wgi_response.put_header_text (internal_header.string)
 			end
 		ensure
 			status_committed: status_committed
@@ -169,6 +169,26 @@ feature {WSF_RESPONSE_EXPORTER} -- Header output operation
 		do
 			put_error ("Content already sent, new header text ignored!")
 		end
+
+feature -- Header access
+
+	header: HTTP_HEADER_MODIFIER
+			-- Associated header builder interface.
+		local
+			res: like internal_response_header
+		do
+			res := internal_response_header
+			if res = Void then
+				create {WSF_RESPONSE_HEADER} res.make_with_response (Current)
+				internal_response_header := res
+			end
+			Result := res
+		end
+
+feature {NONE} -- Header access		
+
+	internal_response_header: detachable like header
+			-- Cached version of `header'.
 
 feature -- Header output operation
 
@@ -181,7 +201,7 @@ feature -- Header output operation
 			if header_committed then
 				report_content_already_sent_and_header_ignored
 			else
-				header.put_header (h)
+				internal_header.put_header (h)
 			end
 		end
 
@@ -194,7 +214,7 @@ feature -- Header output operation
 			if header_committed then
 				report_content_already_sent_and_header_ignored
 			else
-				header.add_header (h)
+				internal_header.add_header (h)
 			end
 		end
 
@@ -209,7 +229,7 @@ feature -- Header output operation
 			if header_committed then
 				report_content_already_sent_and_header_ignored
 			else
-				header.put_raw_header_data (a_text)
+				internal_header.put_raw_header_data (a_text)
 			end
 		ensure
 			message_writable: message_writable
@@ -227,7 +247,7 @@ feature -- Header output operation
 			if header_committed then
 				report_content_already_sent_and_header_ignored
 			else
-				header.append_raw_header_data (a_text)
+				internal_header.append_raw_header_data (a_text)
 			end
 		ensure
 			status_set: status_is_set
@@ -496,7 +516,7 @@ feature -- Error reporting
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

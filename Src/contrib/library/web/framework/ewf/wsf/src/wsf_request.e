@@ -16,9 +16,9 @@ note
 			And also has
 				execution_variable (a_name: READABLE_STRING_GENERAL): detachable ANY
 					--| to keep value attached to the request
-					
-			About https support: `is_https' indicates if the request is made through an https connection or not.
 
+			About https support: `is_https' indicates if the request is made through an https connection or not.
+			
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 					--| so, let's be flexible, and accepts other variants of "on"
 			else
 				check is_not_https: is_https = False end
-			end
+			end			
 		end
 
 	wgi_request: WGI_REQUEST
@@ -180,7 +180,7 @@ feature -- Status report
 
 	is_https: BOOLEAN
 			-- Is https connection?
-			--| based on meta variable HTTPS=on .
+			--| based on meta variable HTTPS=on .	
 
 	debug_output: STRING_8
 		do
@@ -1287,41 +1287,43 @@ feature {NONE} -- Cookies
 		local
 			i,j,p,n: INTEGER
 			l_cookies: like internal_cookies_table
+			s32: READABLE_STRING_32
 			k,v,s: STRING
 		do
 			l_cookies := internal_cookies_table
 			if l_cookies = Void then
+				create l_cookies.make_equal (0)
 				if attached {WSF_STRING} meta_variable ({WSF_META_NAMES}.http_cookie) as val then
-					s := val.value
-					create l_cookies.make_equal (5)
-					from
-						n := s.count
-						p := 1
-						i := 1
-					until
-						p < 1
-					loop
-						i := s.index_of ('=', p)
-						if i > 0 then
-							j := s.index_of (';', i)
-							if j = 0 then
-								j := n + 1
-								k := s.substring (p, i - 1)
-								v := s.substring (i + 1, n)
+					s32 := val.value
+					if s32.is_valid_as_string_8 then
+						s := s32.to_string_8
+						from
+							n := s.count
+							p := 1
+							i := 1
+						until
+							p < 1
+						loop
+							i := s.index_of ('=', p)
+							if i > 0 then
+								j := s.index_of (';', i)
+								if j = 0 then
+									j := n + 1
+									k := s.substring (p, i - 1)
+									v := s.substring (i + 1, n)
 
-								p := 0 -- force termination
-							else
-								k := s.substring (p, i - 1)
-								v := s.substring (i + 1, j - 1)
-								p := j + 1
+									p := 0 -- force termination
+								else
+									k := s.substring (p, i - 1)
+									v := s.substring (i + 1, j - 1)
+									p := j + 1
+								end
+								k.left_adjust
+								k.right_adjust
+								add_value_to_table (k, v, l_cookies)
 							end
-							k.left_adjust
-							k.right_adjust
-							add_value_to_table (k, v, l_cookies)
 						end
 					end
-				else
-					create l_cookies.make_equal (0)
 				end
 				internal_cookies_table := l_cookies
 			end

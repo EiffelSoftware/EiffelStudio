@@ -98,8 +98,8 @@ feature {WSF_RESPONSE} -- Output
 		local
 			h: HTTP_HEADER
 			l_description: STRING_8
-			l_base_url: STRING_8
-			l_api_resource: detachable STRING_8
+			l_base_url: READABLE_STRING_8
+			l_api_resource: detachable READABLE_STRING_8
 		do
 			create h.make
 			h.put_content_type_text_html
@@ -132,7 +132,7 @@ feature {WSF_RESPONSE} -- Output
 			if attached router.base_url as u then
 				l_base_url := u
 			else
-				create l_base_url.make_empty
+				create {STRING_8} l_base_url.make_empty
 			end
 
 			debug
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

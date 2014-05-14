@@ -376,10 +376,11 @@ feature -- Error reporting
 		local
 			h: HTTP_HEADER
 			m: READABLE_STRING_8
+			utf: UTF_CONVERTER
 		do
-			m := req.error_handler.as_string_representation
+			m := utf.string_32_to_utf_8_string_8 (req.error_handler.as_string_representation)
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			h.put_content_length (m.count)
 			res.set_status_code (req.error_handler.primary_error_code)
 			res.put_header_lines (h)

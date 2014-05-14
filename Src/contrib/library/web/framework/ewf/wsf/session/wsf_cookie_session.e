@@ -60,15 +60,16 @@ feature {NONE} -- Initialization
 
 feature -- Cookie
 
-	apply_to (h: HTTP_HEADER; a_request: WSF_REQUEST; a_path: detachable READABLE_STRING_8)
+	apply_to (h: HTTP_HEADER_MODIFIER; a_request: WSF_REQUEST; a_path: detachable READABLE_STRING_8)
+			-- <Precursor>
 		local
 			dt: detachable DATE_TIME
 			l_domain: detachable READABLE_STRING_8
 		do
 			l_domain := a_request.server_name
 			if l_domain.same_string ("localhost") then
-				-- Due to limitation of specific handling of local cookies
-				-- it is recommended to use Void or IP instead of "localhost"
+					-- Due to limitation of specific handling of local cookies
+					-- it is recommended to use Void or IP instead of "localhost"
 				l_domain := Void
 			end
 			if is_destroyed then
@@ -79,13 +80,18 @@ feature -- Cookie
 					create dt.make_now_utc
 					dt.day_add (40)
 				end
-				h.put_cookie_with_expiration_date (cookie_name, uuid, dt, a_path, l_domain, False, True)
+				h.put_cookie_with_expiration_date (cookie_name, id, dt, a_path, l_domain, False, True)
 			end
 		end
 
 	cookie_name: READABLE_STRING_8
 
-feature -- Access		
+feature -- Access	
+
+	id: READABLE_STRING_8
+		do
+			Result := uuid
+		end
 
 	uuid: READABLE_STRING_8
 
@@ -135,8 +141,8 @@ feature {NONE} -- Storage
 
 	load
 		do
-			if manager.session_exists (uuid) then
-				if attached manager.session_data (uuid) as d then
+			if manager.session_exists (id) then
+				if attached manager.session_data (id) as d then
 					data := d
 					set_expiration (data.expiration)
 				else
@@ -177,7 +183,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -199,17 +199,26 @@ feature -- Cross-Origin Resource Sharing
 	header_access_control_allow_origin: STRING = "Access-Control-Allow-Origin"
 			-- Indicates whether a resource can be shared based by returning
 			-- the value of the Origin request header in the response.
-			-- | Example: Access-Control-Allow-Origin: http://example.org
+			--| Example: Access-Control-Allow-Origin: http://example.org
+
+	header_access_control_allow_credentials: STRING = "Access-Control-Allow-Credentials"
+			-- Indicates whether or not the response to the request can be exposed when the credentials flag is true.
+			-- When used as part of a response to a preflight request, this indicates whether or not the actual request can be made using credentials.
+			-- Note that simple GET requests are not preflighted, and so if a request is made for a resource with credentials,
+			-- if this header is not returned with the resource, the response is ignored by the browser and not returned to web content.
+			--| Access-Control-Allow-Credentials: true | false
 
 	header_access_control_allow_methods: STRING = "Access-Control-Allow-Methods"
 			-- Indicates, as part of the response to a preflight request,
 			-- which methods can be used during the actual request.
-			-- | Example: Access-Control-Allow-Methods: PUT, DELETE
+			--| Access-Control-Allow-Methods: <method>[, <method>]*
+			--| Example: Access-Control-Allow-Methods: PUT, DELETE
 
 	header_access_control_allow_headers: STRING = "Access-Control-Allow-Headers"
 			-- Indicates, as part of the response to a preflight request,
 			-- which header field names can be used during the actual request.
-			-- | Example: Access-Control-Allow-Headers: Authorization
+			--| Access-Control-Allow-Headers: <field-name>[, <field-name>]*
+			--| Example: Access-Control-Allow-Headers: Authorization
 
 feature -- Request or Response header name
 
@@ -265,7 +274,7 @@ feature -- MIME related
 	header_content_transfer_encoding: STRING = "Content-Transfer-Encoding"
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

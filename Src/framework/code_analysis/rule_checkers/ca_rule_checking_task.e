@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 				classes := a_classes
 				completed_action := a_completed_action
 				classes.start
-				has_next_step := not classes.is_empty
+				has_next_step := True
 				create type_recorder.make
 				create exceptions.make
 				create context
@@ -92,36 +92,34 @@ feature -- From ROTA
 	step
 			-- <Precursor>
 		do
-			if has_next_step then
-					-- Gather type information
-				type_recorder.clear
-				type_recorder.analyze_class (classes.item)
-				context.set_node_types (type_recorder.node_types)
-				context.set_checking_class (classes.item)
+				-- Gather type information
+			type_recorder.clear
+			type_recorder.analyze_class (classes.item)
+			context.set_node_types (type_recorder.node_types)
+			context.set_checking_class (classes.item)
 
-				across rules as l_rules loop
-						-- If rule is non-standard then it will not be checked by l_rules_checker.
-						-- We will have the rule check the current class here:
-					if
-						l_rules.item.is_enabled.value
-						and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
-					then
-						l_cfg_rule.check_class (classes.item)
-					end
+			across rules as l_rules loop
+					-- If rule is non-standard then it will not be checked by l_rules_checker.
+					-- We will have the rule check the current class here:
+				if
+					l_rules.item.is_enabled.value
+					and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
+				then
+					l_cfg_rule.check_class (classes.item)
 				end
+			end
 
-					-- Status output.
-				if output_actions /= Void then
-					output_actions.call ([ca_messages.analyzing_class (classes.item.name)])
-				end
+				-- Status output.
+			if output_actions /= Void then
+				output_actions.call ([ca_messages.analyzing_class (classes.item.name)])
+			end
 
-				rules_checker.run_on_class (classes.item)
+			rules_checker.run_on_class (classes.item)
 
-				classes.forth
-				has_next_step := not classes.after
-				if not has_next_step then
-					completed_action.call ([exceptions])
-				end
+			classes.forth
+			has_next_step := not classes.after
+			if not has_next_step then
+				completed_action.call ([exceptions])
 			end
 		rescue
 				-- Instant error output.

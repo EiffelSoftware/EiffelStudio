@@ -115,7 +115,18 @@ feature -- Analysis interface
 
 			create l_task.make (l_rules_checker, l_rules_to_check, classes_to_analyze, agent analysis_completed)
 			l_task.set_output_actions (output_actions)
-			rota.run_task (l_task)
+			if attached rota as l_rota then
+				rota.run_task (l_task)
+			else
+					-- No ROTA task is available, we execute the task synchronously.
+				from
+
+				until
+					not l_task.has_next_step
+				loop
+					l_task.step
+				end
+			end
 		end
 
 	is_rule_checkable (a_rule: attached CA_RULE): BOOLEAN

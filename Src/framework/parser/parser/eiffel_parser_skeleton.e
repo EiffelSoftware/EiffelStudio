@@ -229,7 +229,7 @@ feature -- Status report
 	is_type_inference_supported: BOOLEAN
 			-- Is type inference supported so that some type declarations are optional?
 		do
-			Result := syntax_version = provisional_syntax
+			Result := True
 		end
 
 feature -- Parsing (Unknown encoding)

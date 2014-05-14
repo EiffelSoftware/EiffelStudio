@@ -72,12 +72,12 @@ feature -- Actions
 			new_xmi_diagram: XMI_DIAGRAM
 			new_xmi_class_presentation: XMI_CLASS_PRESENTATION
 			new_xmi_cluster_presentation: XMI_CLUSTER_PRESENTATION
-			cancelled: BOOLEAN
+			retried: BOOLEAN
 			ir_error: INTERRUPT_ERROR
 			l_class_i: CLASS_I
 		do
 			deg.put_start_output
-			if not cancelled then
+			if not retried then
 				deg.put_string ("Initializing XMI")
 
 				groups := doc_universe.groups
@@ -182,7 +182,7 @@ feature -- Actions
 				not Error_handler.error_list.is_empty then
 				ir_error ?= Error_handler.error_list.first
 				if ir_error /= Void then
-					cancelled := True
+					retried := True
 					deg.put_string ("XMI generation was cancelled.")
 					Error_handler.error_list.wipe_out
 					retry

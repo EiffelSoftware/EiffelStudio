@@ -488,6 +488,7 @@ feature -- Output
 				%%T[class_file.e [-library library_name]] |%N%
 				%%T-stop | -no_library |%N%
 				%%T-project_path Project_directory_path | -file File |%N%
+				%%T-code-analysis [-cadefaults | -caloadprefs pref_file | -caclasses class ...] | %N%
 				%%T-gc_stats]%N")
 		end
 

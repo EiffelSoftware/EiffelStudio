@@ -25,7 +25,6 @@ feature -- Factory
 			l_api_service: ESA_API_SERVICE
 			l_retried: BOOLEAN
 		do
-
 			if not l_retried then
 				if attached Execution_environment.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
 					create l_layout.make_with_path (create {PATH}.make_from_string (s))
@@ -53,11 +52,6 @@ feature -- Factory
 					create l_layout.make_with_path (create {PATH}.make_from_string (s))
 				else
 					create l_layout.make_default
-				end
-				if {PLATFORM}.is_windows then
-					create {ESA_NOTIFICATION_SENDMAIL_MAILER} l_mailer
-				else
-					create {NOTIFICATION_SENDMAIL_MAILER} l_mailer
 				end
 				create l_email_service.make ((create {ESA_JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 

@@ -9,19 +9,14 @@
         },
         "environments": {
             "test": {
-                "server": "JVELILLA\\SQLEXPRESS",
-                "name": "EiffelDBIntegration",
-                "schema": "eiffeldbintegration"
+                "connection_string":""
             },
             "development": {
-                "server": "JVELILLA\\SQLEXPRESS",
-                "name": "dbtest",
-                "schema": "dbtest"
-            },
+                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=hola;User Id=sa;Password=Pa5mm0rd;Trusted_Connection=yes;"
+                 },
             "production": {
-                "server": "",
-                "name": "",
-                "schema": ""
+                 "connection_string":""
+    
             }
         }
     },

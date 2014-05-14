@@ -39,12 +39,8 @@ feature -- Application Configuration
 			     attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
 			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
 				 attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
-				 attached {JSON_STRING} l_environment_selected.item ("server") as l_server and then
-				 attached {JSON_STRING} l_environment_selected.item ("name") as l_name then
-				create Result.make (l_driver.item, l_server.unescaped_string_8, l_name.item)
-				if l_trusted.item.is_boolean and then l_trusted.item.to_boolean then
-					Result.mark_trusted
-				end
+				 attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string then
+				create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
 			 end
 			end
 		end
@@ -64,12 +60,9 @@ feature -- Application Configuration
 			     attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
 			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
 				 attached {JSON_OBJECT} l_environments.item ("test") as l_environment_selected and then
-				 attached {JSON_STRING} l_environment_selected.item ("server") as l_server and then
+				 attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string and then
 				 attached {JSON_STRING} l_environment_selected.item ("name") as l_name then
-				create Result.make (l_driver.item, l_server.unescaped_string_8, l_name.item)
-				if l_trusted.item.is_boolean and then l_trusted.item.to_boolean then
-					Result.mark_trusted
-				end
+				create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
 			 end
 			end
 		end

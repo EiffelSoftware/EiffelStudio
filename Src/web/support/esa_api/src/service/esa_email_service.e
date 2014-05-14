@@ -130,7 +130,6 @@ feature -- Basic Operations
 	send_password_reset (a_to, a_message, a_host: STRING)
 			-- Send password reset email `a_token' to `a_to'.
 		local
-			l_content: STRING
 			l_url: URL_ENCODER
  			l_path: PATH
 			l_html: HTML_ENCODER

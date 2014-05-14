@@ -206,7 +206,11 @@ feature {NONE} -- Implementation
 		do
 			l_old_count := lv_entry.at (a_from.label).count
 			lv_entry.at (a_from.label).copy (lv_exit.at (a_from.label))
-			if attached a_from.stop_condition as l_stop then
+			if attached a_from.ast.iteration as l_iter then
+				extract_generated (l_iter)
+				lv_entry.at (a_from.label).merge (generated)
+			end
+			if attached a_from.ast.stop as l_stop then
 				extract_generated (l_stop)
 				lv_entry.at (a_from.label).merge (generated)
 			end

@@ -22,7 +22,8 @@ inherit
 			process_debug_as,
 			process_guard_as,
 			process_instr_call_as,
-			process_retry_as
+			process_retry_as,
+			process_routine_as
 		end
 
 create
@@ -91,8 +92,15 @@ feature -- Actions
 feature {NONE} -- AST Visitor
 
 	last_block: detachable CA_CFG_BASIC_BLOCK
+			-- Last processed block. Useful to connect instructions.
 
-	jump_back_block: detachable CA_CFG_SKIP
+	exit_block: detachable CA_CFG_SKIP
+			-- Block of code where all branches of an if or inspect
+			-- statement go to at the end of the last instruction of the branch.
+
+	rescue_block: detachable CA_CFG_SKIP
+			-- Block of code where all instructions of a body are connected to
+			-- when there is a rescue clauses.
 
 	process_if_as (a_if: IF_AS)
 		local
@@ -100,7 +108,7 @@ feature {NONE} -- AST Visitor
 			l_if_block: CA_CFG_IF
 		do
 				-- Save the jump-back of the outer compound.
-			l_old_jump_back := jump_back_block
+			l_old_jump_back := exit_block
 
 			create l_if_block.make_complete (a_if.condition, current_label)
 			current_label := current_label + 1
@@ -108,16 +116,16 @@ feature {NONE} -- AST Visitor
 				-- The following blocks will follow this if block.
 			last_block := l_if_block
 				-- Create a dummy jump-back block.
-			create {CA_CFG_SKIP} jump_back_block.make (current_label)
+			create exit_block.make (current_label)
 			current_label := current_label + 1
 
 				-- Processing the if compound.
 			if a_if.compound = Void then
 					-- Create direct edge to jump-back.
-				add_true_edge (l_if_block, jump_back_block)
+				add_true_edge (l_if_block, exit_block)
 			else
 				safe_process (a_if.compound)
-				add_edge (last_block, jump_back_block)
+				add_edge (last_block, exit_block)
 			end
 
 				-- Insert an intermediate block.
@@ -129,12 +137,12 @@ feature {NONE} -- AST Visitor
 			safe_process (a_if.elsif_list)
 			safe_process (a_if.else_part)
 				-- The last block must be an instruction.
-			add_edge (last_block, jump_back_block)
+			add_edge (last_block, exit_block)
 
-			last_block := jump_back_block
+			last_block := exit_block
 
 				-- Restore the old jump-back.
-			jump_back_block := l_old_jump_back
+			exit_block := l_old_jump_back
 		end
 
 	process_elseif_as (a_elseif: ELSIF_AS)
@@ -151,10 +159,10 @@ feature {NONE} -- AST Visitor
 			last_block := l_elseif_block
 
 			if a_elseif.compound = Void then
-				add_true_edge (l_elseif_block, jump_back_block)
+				add_true_edge (l_elseif_block, exit_block)
 			else
 				safe_process (a_elseif.compound)
-				add_edge (last_block, jump_back_block)
+				add_edge (last_block, exit_block)
 			end
 
 				-- Insert an intermediate block.
@@ -169,6 +177,8 @@ feature {NONE} -- AST Visitor
 			l_after_loop: CA_CFG_SKIP
 			l_loop: CA_CFG_LOOP
 		do
+			safe_process (a_loop.iteration)
+
 			safe_process (a_loop.from_part)
 
 			create l_loop.make (a_loop, current_label)
@@ -198,9 +208,9 @@ feature {NONE} -- AST Visitor
 			l_intervals: LINKED_LIST [EIFFEL_LIST [INTERVAL_AS]]
 			l_old_jump_back, l_skip: CA_CFG_SKIP
 		do
-			l_old_jump_back := jump_back_block
+			l_old_jump_back := exit_block
 				-- Create a dummy jump-back block.
-			create {CA_CFG_SKIP} jump_back_block.make (current_label)
+			create exit_block.make (current_label)
 			current_label := current_label + 1
 
 				-- Extract intervals.
@@ -226,11 +236,11 @@ feature {NONE} -- AST Visitor
 				add_else_edge (l_inspect_block, l_skip)
 				last_block := l_skip
 				safe_process (a_inspect.else_part)
-				add_edge (last_block, jump_back_block)
+				add_edge (last_block, exit_block)
 			end
-			last_block := jump_back_block
+			last_block := exit_block
 
-			jump_back_block := l_old_jump_back
+			exit_block := l_old_jump_back
 		end
 
 	case_number: INTEGER
@@ -242,7 +252,7 @@ feature {NONE} -- AST Visitor
 		do
 			l_inspect_block := last_block
 			safe_process (a_case.compound)
-			add_edge (last_block, jump_back_block)
+			add_edge (last_block, exit_block)
 			last_block := l_inspect_block
 			case_number := case_number + 1
 		end
@@ -283,8 +293,49 @@ feature {NONE} -- AST Visitor
 		end
 
 	process_retry_as (a_retry: RETRY_AS)
+		local
+			l_retry_instr: CA_CFG_INSTRUCTION
 		do
-			build_instruction_block (a_retry)
+			create l_retry_instr.make_complete (a_retry, current_label)
+			current_label := current_label + 1
+				-- Add normal edge between the previous instruction and the retry one.
+			add_edge (last_block, l_retry_instr)
+				-- Add a special edge between the retry and the beginning of the routine.
+			add_edge (l_retry_instr, cfg.start_node)
+		end
+
+	process_routine_as (l_as: ROUTINE_AS)
+		local
+			l_rescue_clause: detachable EIFFEL_LIST [INSTRUCTION_AS]
+		do
+				-- If the rescue clause is missing or empty, we ignore it.
+			l_rescue_clause := l_as.rescue_clause
+			if l_rescue_clause /= Void and l_rescue_clause.is_empty then
+				l_rescue_clause := Void
+			end
+				-- We create a node to represent the beginning of the rescue clauses.
+				-- We will then link all assignment nodes to this one in the body.
+			if l_rescue_clause /= Void then
+				create rescue_block.make (current_label)
+				current_label := current_label + 1
+			end
+			safe_process (l_as.precondition)
+			safe_process (l_as.internal_locals)
+			l_as.routine_body.process (Current)
+			if l_rescue_clause /= Void then
+					-- The last instruction processed in the body
+					-- of the routine goes straight to the end.
+				add_edge (last_block, cfg.end_node)
+					-- When processing a rescue clause, it is as if we were starting
+					-- from the beginning, not from the end of the body of the routine.
+				add_edge (cfg.start_node, rescue_block)
+				last_block := rescue_block
+					-- When handling the rescue clauses, we do not create an edge to go back
+					-- to the beginning of the routine.
+				rescue_block := Void
+				l_rescue_clause.process (Current)
+			end
+			safe_process (l_as.postcondition)
 		end
 
 feature {NONE} -- (New) Implementation
@@ -306,6 +357,11 @@ feature {NONE} -- (New) Implementation
 				add_when_edge (l_inspect, l_new_instr_block, case_number)
 			else
 				add_edge (last_block, l_new_instr_block)
+			end
+			if attached rescue_block as l_block then
+					-- There is a rescue clause, we need to create an edge from
+					-- the current instruction to the beginning of the rescue clause
+				add_edge (l_new_instr_block, l_block)
 			end
 
 			last_block := l_new_instr_block

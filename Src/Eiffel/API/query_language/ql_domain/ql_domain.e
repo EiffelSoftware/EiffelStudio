@@ -624,12 +624,10 @@ feature{NONE} -- Implementation/Set operations
 			a_domain_attached: a_domain /= Void
 		local
 			l_hash_set: SEARCH_TABLE [like item_type]
-			l_content: like content
 			l_domain_content: LIST [like item_type]
 		do
 			create l_hash_set.make (count)
-			l_content := content
-			across l_content as l_content_item loop
+			across content as l_content_item loop
 				l_hash_set.force (l_content_item.item)
 			end
 			from

@@ -10837,7 +10837,7 @@ feature {NONE} -- Implementation: checking locals
 					else
 							-- No type is specified.
 							-- Try to infer it without reporting an error immediately.
-						create l_missing_type.make (l_as.locals.item.id_list, context, l_as.locals.first_token (match_list_of_class (context.written_class.class_id)))
+						create l_missing_type.make (l_as.locals.item.id_list, context, l_as.locals.item.first_token (match_list_of_class (context.written_class.class_id)))
 						last_type := void_type
 					end
 					if attached last_type as l_solved_type then

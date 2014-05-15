@@ -181,6 +181,13 @@ feature {NONE} -- Implementation
 			cwel_choose_color_set_hwndowner (item, a_parent.item)
 		end
 
+	hwnd_parent: POINTER
+		require
+			exists: exists
+		do
+			Result := cwel_choose_color_get_hwndowner (item)
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -230,6 +237,13 @@ feature {NONE} -- Externals
 			"((LPCHOOSECOLOR) $ptr)->lpfnHook = (LPCCHOOKPROC) $value;"
 		end
 
+	cwel_choose_color_get_hwndowner (ptr: POINTER): POINTER
+		external
+			"C inline use <windows.h>"
+		alias
+			"return ((LPCHOOSECOLOR) $ptr)->hwndOwner;"
+		end
+
 	cwel_choose_color_get_rgbresult (ptr: POINTER): INTEGER
 		external
 			"C [macro <chooseco.h>]"
@@ -261,14 +275,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

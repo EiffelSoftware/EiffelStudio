@@ -28,7 +28,12 @@ feature -- Basic operations
 		local
 			l_auth: HTTP_AUTHORIZATION
 		do
+
+
 			create l_auth.make (req.http_authorization)
+			if attached req.raw_header_data as l_raw_data then
+			   log.write_information (generator + ".execute " + l_raw_data )
+			end
 				-- A valid user
 			if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
 				attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then

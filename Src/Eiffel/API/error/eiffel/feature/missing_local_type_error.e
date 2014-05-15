@@ -60,7 +60,7 @@ feature {NONE} -- Output
 	print_single_line_error_message (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format (t, locale.translation_in_context ("Missing type declaration for locals {1}", "eiffel.error"), <<message.list (locals)>>)
+			message.format (t, locale.translation_in_context ("Missing type in local declaration list: {1}", "eiffel.error"), <<message.list (locals)>>)
 		end
 
 feature {NONE} -- Formatting

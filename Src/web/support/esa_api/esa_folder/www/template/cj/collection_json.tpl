@@ -34,7 +34,7 @@
                 "rel": "login",
                 "prompt": "Login"
             >,
-             <
+            <
                 "href": "{$host/}/register",
                 "rel": "register",
                 "prompt": "Register"

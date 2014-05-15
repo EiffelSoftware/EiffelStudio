@@ -3424,6 +3424,7 @@ feature {NONE} -- Visitor
 			l_check_count: like maximum_inference_count
 			old_is_byte_node_enabled: BOOLEAN
 			had_untyped_local: BOOLEAN
+			l_untyped_local: like untyped_local
 		do
 			f := current_feature
 			l_needs_byte_node := is_byte_node_enabled
@@ -3449,6 +3450,7 @@ feature {NONE} -- Visitor
 				-- Check local variables before checking precondition because local count is used to initialize the structures.
 			if l_as.locals /= Void then
 				check_locals (l_as)
+				l_untyped_local := untyped_local
 				l_has_invalid_locals := error_level /= l_error_level
 			end
 				-- Initialize structures to record local scopes.
@@ -3485,8 +3487,9 @@ feature {NONE} -- Visitor
 				if l_has_invalid_locals then
 						-- Do not check code with invalid locals.
 					-- l_check_count := 0
-				elseif has_untyped_local then
+				elseif attached l_untyped_local then
 						-- Compute type of locals and then do real type-checking.
+					has_untyped_local := True
 						-- The maxium inference count is increased by 1 to take the real code generation pass into account.
 					l_check_count := maximum_inference_count + 1
 					old_is_byte_node_enabled := l_needs_byte_node
@@ -3494,6 +3497,7 @@ feature {NONE} -- Visitor
 					l_needs_byte_node := False
 				else
 						-- All locals are declated with types, do normal type checks.
+					has_untyped_local := False
 					l_check_count := 1
 				end
 			until
@@ -3584,7 +3588,7 @@ feature {NONE} -- Visitor
 				if has_untyped_local then
 						-- Compute types of local variables.
 						-- Uncomputed types are allowed if this is not the last iteration.
-					resolve_locals (l_check_count > 1)
+					resolve_locals (l_check_count > 1, l_untyped_local)
 						-- Adjust inference count if there are no more untyped locals during this and previous iteration.
 					if not has_untyped_local then
 							-- Check if all local types were resolved at the previous step.
@@ -3593,7 +3597,7 @@ feature {NONE} -- Visitor
 						has_untyped_local := True
 						if not had_untyped_local then
 								-- Assign real types to locals.
-							resolve_locals (False)
+							resolve_locals (False, l_untyped_local)
 								-- Flag that this is going to be a real pass rather than just type computation.
 							l_check_count := 1
 								-- Restore code generation flags.
@@ -10792,6 +10796,9 @@ feature {NONE} -- Implementation: checking locals
 			-- an argument name of the current analyzed feature.
 			-- Also an external or a deferred routine cannot have
 			-- locals.
+			-- Local variables without type declarations are not reported as an error,
+			-- but are recorded in `untyped_local' instead. If there are no untyped
+			-- local variables, `untyped_local' is detached.
 		require
 			l_as_not_void: l_as /= Void
 			locals_not_void: l_as.locals /= Void
@@ -10807,8 +10814,10 @@ feature {NONE} -- Implementation: checking locals
 			l_vreg: VREG
 			l_curr_feat: FEATURE_I
 			l_vrrr2: VRRR2
-			l_missing_type: MISSING_LOCAL_TYPE_ERROR
+			l_missing_type: detachable MISSING_LOCAL_TYPE_ERROR
+			l_untyped_local: like untyped_local
 		do
+			untyped_local := Void
 			if (l_as.is_deferred or l_as.is_external) then
 				create l_vrrr2
 				context.init_error (l_vrrr2)
@@ -10826,10 +10835,10 @@ feature {NONE} -- Implementation: checking locals
 					if attached l_as.locals.item.type as l_local_type then
 						check_type (l_local_type)
 					else
+							-- No type is specified.
+							-- Try to infer it without reporting an error immediately.
 						create l_missing_type.make (l_as.locals.item.id_list, context, l_as.locals.first_token (match_list_of_class (context.written_class.class_id)))
-						error_handler.insert_error (l_missing_type)
-						has_untyped_local := True
-						last_type := Void -- TODO: perform type inference, assign `void_type' here.
+						last_type := void_type
 					end
 					if attached last_type as l_solved_type then
 						from
@@ -10868,9 +10877,16 @@ feature {NONE} -- Implementation: checking locals
 							create l_local_info
 								-- Check an expanded local type
 
-							if l_solved_type.is_void then
+							if attached l_missing_type then
 									-- TODO: Add a new standard type descriptor for "detachable separate ANY".
 								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i, system.any_type.as_detachable_type.as_separate, context.current_class))
+									-- Record an error for this local.
+								l_untyped_local := untyped_local
+								if not attached l_untyped_local then
+									create l_untyped_local.make (1)
+									untyped_local := l_untyped_local
+								end
+								l_untyped_local [i] := l_missing_type
 							else
 								l_local_info.set_type (l_solved_type)
 							end
@@ -10905,16 +10921,18 @@ feature {NONE} -- Implementation: checking locals
 			end
 		end
 
-	resolve_locals (is_untyped_local_allowed: BOOLEAN)
+	resolve_locals (is_untyped_local_allowed: BOOLEAN; missing_types: like untyped_local)
 			-- Compute types of untyped locals.
 			-- Update `has_untyped_local' accordingly.
 			-- Allow some locals to remain untyped if `is_untyped_local_allowed'.
+			-- Report `missing_types' errors otherwise, with a fix action if possible.
 		require
 			has_untyped_local
 		local
 			l: LOCAL_INFO
 			r: detachable TYPE_A
 			t: HASH_TABLE [TYPE_A, LOCAL_TYPE_A]
+			u: MISSING_LOCAL_TYPE_ERROR
 		do
 				-- Pretend that all types of locals are resolved now.
 			has_untyped_local := False
@@ -10942,11 +10960,23 @@ feature {NONE} -- Implementation: checking locals
 							-- Prepare type collector for the next iteration.
 						x.reset
 						r := x
-					elseif not attached r or else not r.is_known then
-							-- Record that fixed-point cannot be reached or does not exist.
-							-- The type cannot be computed.
-							-- Force the type to be "NONE".
-						r := none_type
+					else
+						if attached missing_types as m and then attached missing_types [x.position] as e then
+							error_handler.insert_error (e)
+							u := e
+						end
+						if not attached r or else not r.is_known then
+								-- Record that fixed-point cannot be reached or does not exist.
+								-- The type cannot be computed.
+								-- Force the type to be "NONE" for mandatory type inference:
+								--    r := none_type
+								-- Behave as if the type is still unresolved for suggestive type inference.
+							x.reset
+							r := x
+						elseif attached u then
+								-- Suggest computed type as a fix.
+								-- TODO: provide the fix.
+						end
 					end
 						-- Update local type information.
 					l.set_type (r)
@@ -10986,6 +11016,11 @@ feature {NONE} -- Implementation: checking locals
 				error_handler.insert_warning (l_warning)
 			end
 		end
+
+	untyped_local: detachable HASH_TABLE [MISSING_LOCAL_TYPE_ERROR, INTEGER]
+			-- Errors about missing type declaration indexed by local indexes.
+			-- Because several locals may be listed in one declaration,
+			-- the same error can appear in the table more than once.
 
 	empty_locals: like {AST_CONTEXT}.locals
 			-- Empty locals that are used when processing inherited assertions.

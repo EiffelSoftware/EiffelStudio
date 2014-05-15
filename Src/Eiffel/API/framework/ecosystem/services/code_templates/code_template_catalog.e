@@ -309,9 +309,7 @@ feature -- Extension
 							end
 						else
 								-- Build code template definition and add to the catalog
-							create l_definition
-							l_definition.definition := build_template (l_file)
-							l_definition.ref_count := 1
+							l_definition := [build_template (l_file), {NATURAL_8} 1]
 							l_definitions.force (l_definition, l_file)
 							l_changed := True
 

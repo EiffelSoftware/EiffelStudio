@@ -105,8 +105,12 @@ feature -- Element change
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 					-- We need to update `real_text' because `Precursor' is only using
 					-- the beginning of `a_text'.
-				real_text.append_character ('%T')
-				real_text.append_string_general (l_split_list @ 2)
+				if attached real_text as l_text then
+					l_text.append_character ('%T')
+					l_text.append_string_general (l_split_list @ 2)
+				else
+					check real_text_set: False end
+				end
 				a_cs :=  {STRING_32} "            " + l_split_list @ 2
 				{GTK}.gtk_label_set_text (accel_label, a_cs.item)
 				{GTK}.gtk_widget_show (accel_label)

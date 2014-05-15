@@ -90,13 +90,16 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
+			l_txt: STRING_32
 		do
 			if accelerators_enabled then
 					-- Make a STRING_32 version of `a_text'. If input
 					-- is already a STRING_32, we make a copy of it.
-				real_text := a_text.as_string_32
-				if real_text = a_text then
-					real_text := real_text.twin
+				l_txt := a_text.as_string_32
+				if l_txt = a_text then
+					real_text := l_txt.twin
+				else
+					real_text := l_txt
 				end
 				a_cs := App_implementation.c_string_from_eiffel_string (u_lined_filter (a_text))
 				{GTK2}.gtk_label_set_text_with_mnemonic (text_label, a_cs.item)

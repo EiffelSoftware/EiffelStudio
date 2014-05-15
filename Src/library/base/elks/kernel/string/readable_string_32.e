@@ -523,11 +523,6 @@ feature -- Status report
 				end
 				Result := (i < nb)
 			end
-		ensure then
-			false_if_empty: count = 0 implies not Result
-			true_if_first: count > 0 and then item (1) = c implies Result
-			recurse: (count > 0 and then item (1) /= c) implies
-				(Result = substring (2, count).has (c))
 		end
 
 	starts_with (s: READABLE_STRING_32): BOOLEAN

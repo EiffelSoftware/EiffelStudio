@@ -106,10 +106,10 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	full_file_path_consistent_with_file_paths: not file_paths.is_empty implies file_paths.first.is_equal (full_file_path)
+	full_file_path_consistent_with_file_paths: (is_usable and then not file_paths.is_empty) implies file_paths.first.is_equal (full_file_path)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

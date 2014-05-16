@@ -793,7 +793,7 @@ feature {NONE} -- Agents
 			l_pointer_position := l_screen.pointer_position
 			if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
 				l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
-				if l_item /= Void then
+				if l_item /= Void and then l_item.is_sensitive then
 					Result := l_item.drop_actions.accepts_pebble (a_any)
 					create l_stock_pixmap
 					if attached l_item.accept_cursor as l_cursor then
@@ -959,7 +959,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

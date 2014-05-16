@@ -40,6 +40,11 @@ feature -- Element change
 
 feature -- Status
 
+	is_single_line: BOOLEAN
+		do
+			Result := not text.has ('%N')
+		end
+
 	is_empty: BOOLEAN
 		do
 			Result := text.is_empty and ((attached parts as l_parts and then l_parts.count = 0) or else parts = Void)
@@ -65,7 +70,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

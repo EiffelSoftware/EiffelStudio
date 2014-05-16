@@ -326,6 +326,14 @@ feature -- Tag
 			set_next_output_appended
 		end
 
+feature -- Entity
+
+	visit_entity (a_entity: WIKI_ENTITY)
+		do
+			output ("&" + a_entity.value + ";")
+			set_next_output_appended
+		end
+
 feature -- Links
 
 	visit_external_link (a_link: WIKI_EXTERNAL_LINK)
@@ -401,6 +409,11 @@ feature -- Table
 	visit_table_row (a_row: WIKI_TABLE_ROW)
 		do
 			visit_composite (a_row)
+		end
+
+	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
+		do
+			a_cell.text.process (Current)
 		end
 
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
@@ -522,7 +535,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -24,6 +24,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_inline: BOOLEAN
+		do
+			Result := text.is_single_line
+		end
+
 	tag: READABLE_STRING_8
 
 	tag_name: READABLE_STRING_8
@@ -46,7 +51,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

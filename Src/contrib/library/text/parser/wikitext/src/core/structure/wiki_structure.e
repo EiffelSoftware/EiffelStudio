@@ -105,13 +105,14 @@ feature -- Basic operation
 			w_list_item: detachable WIKI_LIST
 			w_plist: detachable WIKI_LIST
 			w_block: detachable WIKI_PREFORMATTED_TEXT
---			w_tpl: detachable WIKI_TEMPLATE
 			tpl: detachable ARRAYED_STACK [INTEGER]
+			tbls: detachable ARRAYED_STACK [INTEGER]
 			w_tags: detachable ARRAYED_STACK [STRING]
 			multiline_level: INTEGER
 			ignore_wiki: BOOLEAN
 			keep_formatting: BOOLEAN
 			mt_ln: INTEGER
+			s: STRING
 		do
 			from
 				create {WIKI_PARAGRAPH} w_box.make
@@ -166,7 +167,15 @@ feature -- Basic operation
 					when '*','#',';',':' then
 						w_box := Void
 						w_block := Void
-						w_list_item := new_list_item (t.substring (i, p))
+						s := t.substring (i, p)
+--						if s.substring_index ("{|", 1) > 0 then
+--							p := t.substring_index ("|}", 1)
+--							if p > 0 then
+--								p := index_of_end_of_line (t, p + 1)
+--							end
+--							s := t.substring (i, p)
+--						end
+						w_list_item := new_list_item (s)
 						if
 							w_plist /= Void and then --| has previous section, check if is potential parent
 							attached w_plist.adapted_parent_list (w_list_item) as l_parent_list
@@ -242,6 +251,24 @@ feature -- Basic operation
 						i := i + 1
 						tpl.extend (i + 1)
 						multiline_level := multiline_level + 1
+					elseif safe_character (t, i + 1) = '|' then
+							-- Table
+						if tbls = Void then
+							create tbls.make (3)
+						end
+						i := i + 1
+						tbls.extend (i + 1)
+						multiline_level := multiline_level + 1
+					end
+				when '|' then
+					if multiline_level > 0 and t.item (i + 1) = '}' then
+						i := i + 1
+						if tbls /= Void and then tbls.count > 0 then
+							tbls.remove
+							multiline_level := multiline_level - 1
+						else
+							check multiline_level = 0 end
+						end
 					end
 				when '}' then
 					if multiline_level > 0 and t.item (i + 1) = '}' then
@@ -416,7 +443,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -83,6 +83,19 @@ feature -- Processing
 							--| Ignore this one ..
 							s.extend (c)
 						end
+					elseif safe_character (a_text, i + 1) = '|' then
+						p := next_closing_table (a_text, i + 2)
+						if p > i then
+							flush_buffer (a_parts, s)
+							create {WIKI_TABLE} w_item.make (a_text.substring (i+2, p))
+							a_parts.add_element (w_item)
+							w_item.process (Current) -- Check recursion...							
+							w_item := Void
+							i := p + 2
+						else
+							--| Ignore this one ..
+							s.extend (c)
+						end
 					else
 						s.extend (c)
 					end
@@ -265,6 +278,29 @@ feature -- Processing
 							check should_not_occur: False end
 						end
 					end
+				when '&' then
+					if in_item then
+						s.extend (c)
+					else
+						p := i + 1 + 4
+						if
+							safe_character (a_text, i + 1) = '#' and then
+							safe_character (a_text, p) = ';'
+						then
+							flush_buffer (a_parts, s)
+							a_parts.add_element (create {WIKI_ENTITY}.make (a_text.substring (i + 1, p - 1)))
+							i := p
+						else
+							p := a_text.index_of (';', i + 1)
+							if p > 0  and p - i < 10 then
+								flush_buffer (a_parts, s)
+								a_parts.add_element (create {WIKI_ENTITY}.make (a_text.substring (i + 1, p - 1)))
+								i := p
+							else
+								s.extend (c)
+							end
+						end
+					end
 				else
 					s.extend (c)
 				end
@@ -307,6 +343,36 @@ feature -- Processing
 						v := v + 1
 					end
 				when '}' then
+					if safe_character (s, i + 1) = '}' then
+						if v = 0 then
+							Result := i - 1
+						else
+							v := v - 1
+						end
+					end
+				else
+				end
+				i := i + 1
+			end
+		end
+
+	next_closing_table (s: STRING; a_start: INTEGER): INTEGER
+		local
+			i,n: INTEGER
+			v: INTEGER
+		do
+			from
+				i := a_start
+				n := s.count
+			until
+				Result > a_start or i > n
+			loop
+				inspect s[i]
+				when '{' then
+					if safe_character (s, i + 1) = '|' then
+						v := v + 1
+					end
+				when '|' then
 					if safe_character (s, i + 1) = '}' then
 						if v = 0 then
 							Result := i - 1
@@ -423,13 +489,13 @@ feature {NONE} -- Implementation
 			-- Tag name from  inside of <...>
 			--| for instance ' abc def="geh"' will return abc
 		local
-			i,n,p: INTEGER
+			i,n: INTEGER
 		do
 			i := s.index_of (' ', 2)
 			n := s.index_of ('%T', 2)
 			if i = 0 then
 				i := n
-			elseif n /= Void then
+			elseif n /= 0 then
 				i := i.min (n)
 			end
 			if i > 0 then
@@ -442,7 +508,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

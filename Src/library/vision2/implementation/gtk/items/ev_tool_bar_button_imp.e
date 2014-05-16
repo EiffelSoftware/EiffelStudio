@@ -192,21 +192,7 @@ feature -- Element change
 		end
 
 	enable_sensitive
-			 -- Enable `Current'.
-		do
-			enabled_before := is_sensitive
-			enable_sensitive_internal
-		end
-
-	disable_sensitive
-			 -- Disable `Current'.
-		do
-			enabled_before := is_sensitive
-			disable_sensitive_internal
-		end
-
-	enable_sensitive_internal
-			-- Allow the object to be sensitive to user input.
+			-- Enable `Current'.
 		local
 			l_gdkwin: POINTER
 			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
@@ -229,8 +215,8 @@ feature -- Element change
 			end
 		end
 
-	disable_sensitive_internal
-			-- Set the object to ignore all user input.
+	disable_sensitive
+			-- Disable `Current'.
 		do
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
 			if {GTK}.gtk_is_event_box (c_object) then
@@ -305,14 +291,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TOOL_BAR_BUTTON_IMP

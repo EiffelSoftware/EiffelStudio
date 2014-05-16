@@ -194,38 +194,14 @@ feature -- Status setting
 	enable_sensitive
 			 -- Enable `Current'.
 		do
-			enabled_before := is_sensitive
-			enable_sensitive_internal
-		end
-
-	disable_sensitive
-			 -- Disable `Current'.
-		do
-			enabled_before := is_sensitive
-			disable_sensitive_internal
-		end
-
-	enable_sensitive_internal
-			 -- Enable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `enable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
-		do
 			is_sensitive := True
 			if attached parent_imp as l_parent_imp then
 				l_parent_imp.enable_button (id)
 			end
 		end
 
-	disable_sensitive_internal
+	disable_sensitive
 			 -- Disable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `disable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
 		do
 			is_sensitive := False
 			if attached parent_imp as l_parent_imp then
@@ -561,7 +537,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

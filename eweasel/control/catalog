@@ -1919,6 +1919,7 @@ test	long-string-constants-crash		term209 tcf pass termination
 test	empty-class-file-crash			term210 tcf pass termination
 test	root-class-none				term211 tcf fail termination
 test	bad-library-class			term212 tcf fail termination
+test	across-on-tuple				term213 tcf pass termination across iteration
 
 -- Config
 

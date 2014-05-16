@@ -1,0 +1,11 @@
+test_name 	 across-on-tuple
+test_description A system with root class none and no precompiled library crashes the compiler
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

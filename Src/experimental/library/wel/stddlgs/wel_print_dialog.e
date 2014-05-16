@@ -529,6 +529,13 @@ feature {NONE} -- Implementation
 			cwel_print_dlg_set_hwndowner (item, a_parent.item)
 		end
 
+	hwnd_parent: POINTER
+		require
+			exists: exists
+		do
+			Result := cwel_print_dlg_get_hwndowner (item)
+		end
+
 	private_dc: detachable WEL_PRINTER_DC
 			-- Device context associated to the selected printer
 
@@ -596,6 +603,13 @@ feature {NONE} -- Externals
 			"((LPPRINTDLG) $ptr)->lpfnPrintHook = (LPPRINTHOOKPROC) $value;"
 		end
 
+	cwel_print_dlg_get_hwndowner (ptr: POINTER): POINTER
+		external
+			"C inline use <windows.h>"
+		alias
+			"return ((LPPRINTDLG) $ptr)->hwndOwner;"
+		end
+
 	cwel_print_dlg_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <printdlg.h>]"
@@ -647,7 +661,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

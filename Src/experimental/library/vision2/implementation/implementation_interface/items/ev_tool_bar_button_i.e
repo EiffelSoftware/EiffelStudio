@@ -68,20 +68,21 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
-
 		do
 			if starting then
 				if
+					is_sensitive and then
 					attached application_implementation.pick_and_drop_source as l_pnd_source and then
-					attached l_pnd_source.pebble as l_pebble and then not
-					attached_interface.drop_actions.accepts_pebble (l_pebble)
+					attached l_pnd_source.pebble as l_pebble and then
+					not attached_interface.drop_actions.accepts_pebble (l_pebble)
 				then
-					enabled_before := is_sensitive
-					disable_sensitive_internal
+					enabled_before := True
+					disable_sensitive
 				end
 			else
 				if enabled_before then
-					enable_sensitive_internal
+					enabled_before := False
+					enable_sensitive
 				end
 			end
 		end
@@ -107,26 +108,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	enable_sensitive_internal
-			 -- Enable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `enable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
-		deferred
-		end
-
-	disable_sensitive_internal
-			 -- Disable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `disable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
-		deferred
-		end
-
 	parent_is_sensitive: BOOLEAN
 			-- Is `parent' sensitive?
 		deferred
@@ -142,14 +123,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

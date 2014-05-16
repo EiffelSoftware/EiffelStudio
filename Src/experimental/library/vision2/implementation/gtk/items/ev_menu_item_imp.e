@@ -94,27 +94,29 @@ feature -- Element change
 	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
-			l_split_list: detachable LIST [STRING_32]
+			l_split_list: detachable LIST [READABLE_STRING_GENERAL]
 			a_cs: EV_GTK_C_STRING
-			l_show_label: BOOLEAN
 		do
-			if a_text.has_code (('%T').natural_32_code) then
-				l_split_list := a_text.as_string_32.split ('%T')
+			if a_text.has ('%T') then
+				l_split_list := a_text.split ('%T')
 			end
 
 			if l_split_list /= Void and then l_split_list.count = 2 then
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
-				real_text := a_text
-				a_cs :=  "            " + l_split_list @ 2
-				l_show_label := True
+					-- We need to update `real_text' because `Precursor' is only using
+					-- the beginning of `a_text'.
+				if attached real_text as l_text then
+					l_text.append_character ('%T')
+					l_text.append_string_general (l_split_list @ 2)
+				else
+					check real_text_set: False end
+				end
+				a_cs :=  {STRING_32} "            " + l_split_list @ 2
+				{GTK}.gtk_label_set_text (accel_label, a_cs.item)
+				{GTK}.gtk_widget_show (accel_label)
 			else
 				Precursor {EV_TEXTABLE_IMP} (a_text)
-				a_cs := ""
 				{GTK}.gtk_widget_hide (accel_label)
-			end
-			{GTK}.gtk_label_set_text (accel_label, a_cs.item)
-			if l_show_label then
-				{GTK}.gtk_widget_show (accel_label)
 			end
 		end
 
@@ -158,14 +160,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MENU_ITEM_IMP

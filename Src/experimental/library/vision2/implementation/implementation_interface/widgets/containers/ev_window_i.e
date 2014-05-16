@@ -11,7 +11,8 @@ deferred class
 inherit
 	EV_CELL_I
 		redefine
-			interface
+			interface,
+			update_for_pick_and_drop
 		end
 
 	EV_POSITIONABLE_I
@@ -260,19 +261,27 @@ feature {EV_ANY_I} -- Implementation
 		attribute
 		end
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so notify `item_imp'.
+		do
+			Precursor (starting)
+			upper_bar.implementation.update_for_pick_and_drop (starting)
+			lower_bar.implementation.update_for_pick_and_drop (starting)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

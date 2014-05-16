@@ -69,60 +69,59 @@ feature -- String encoding convertion
 					l_count := a_from_string.count
 				end
 				l_pointer := iconv_imp (a_from_code_page, a_to_code_page, l_managed_pointer.item, l_count, $l_out_count, $l_error)
-				if l_error /= 0 then
-					last_conversion_successful := False
-					conversion_exception (l_error).raise
-				else
+				if l_error = 0 and l_pointer /= default_pointer then
 					last_conversion_successful := True
-				end
-				check l_pointer_set: l_pointer /= default_pointer end
-				if is_four_byte_code_page (a_to_code_page) then
-					l_string_32 := pointer_to_string_32 (l_pointer, l_out_count)
-					if not l_string_32.is_empty then
-						if same_endian (l_string_32.code (1)) then
-							l_string_32 := l_string_32.substring (2, l_string_32.count)
-							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
-							then
-								l_string_32 := string_32_switch_endian (l_string_32)
-							end
-						elseif reverse_endian (l_string_32.code (1)) then
-							l_string_32 := l_string_32.substring (2, l_string_32.count)
-							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
-								not is_endianness_specified (a_to_code_page)
-							then
-								l_string_32 := string_32_switch_endian (l_string_32)
-							end
-						end
-					end
-					l_converted := l_string_32
-				elseif is_two_byte_code_page (a_to_code_page) then
-					l_string_32 := pointer_to_wide_string (l_pointer, l_out_count)
-					if not l_string_32.is_empty then
-						if same_endian (l_string_32.code (1)) then
-							l_string_32 := l_string_32.substring (2, l_string_32.count)
-							if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
-							then
-								l_string_32 := string_16_switch_endian (l_string_32)
-							end
-						elseif reverse_endian (l_string_32.code (1)) then
-							l_string_32 := l_string_32.substring (2, l_string_32.count)
-							if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
-								(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
-								not is_endianness_specified (a_to_code_page)
-							then
-								l_string_32 := string_16_switch_endian (l_string_32)
+					if is_four_byte_code_page (a_to_code_page) then
+						l_string_32 := pointer_to_string_32 (l_pointer, l_out_count)
+						if not l_string_32.is_empty then
+							if same_endian (l_string_32.code (1)) then
+								l_string_32 := l_string_32.substring (2, l_string_32.count)
+								if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
+									(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
+								then
+									l_string_32 := string_32_switch_endian (l_string_32)
+								end
+							elseif reverse_endian (l_string_32.code (1)) then
+								l_string_32 := l_string_32.substring (2, l_string_32.count)
+								if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
+									(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
+									not is_endianness_specified (a_to_code_page)
+								then
+									l_string_32 := string_32_switch_endian (l_string_32)
+								end
 							end
 						end
+						l_converted := l_string_32
+					elseif is_two_byte_code_page (a_to_code_page) then
+						l_string_32 := pointer_to_wide_string (l_pointer, l_out_count)
+						if not l_string_32.is_empty then
+							if same_endian (l_string_32.code (1)) then
+								l_string_32 := l_string_32.substring (2, l_string_32.count)
+								if (is_big_endian_code_page (a_to_code_page) and is_little_endian) or else
+									(is_little_endian_code_page (a_to_code_page) and not is_little_endian)
+								then
+									l_string_32 := string_16_switch_endian (l_string_32)
+								end
+							elseif reverse_endian (l_string_32.code (1)) then
+								l_string_32 := l_string_32.substring (2, l_string_32.count)
+								if (is_little_endian_code_page (a_to_code_page) and is_little_endian) or else
+									(is_big_endian_code_page (a_to_code_page) and not is_little_endian) or else
+									not is_endianness_specified (a_to_code_page)
+								then
+									l_string_32 := string_16_switch_endian (l_string_32)
+								end
+							end
+						end
+						last_was_wide_string := True
+						l_converted := l_string_32
+					else
+						l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
 					end
-					last_was_wide_string := True
-					l_converted := l_string_32
+					last_converted_string := l_converted
 				else
-					l_converted := pointer_to_multi_byte (l_pointer, l_out_count)
+					last_conversion_successful := False
 				end
-				last_converted_string := l_converted
+					-- Even in the case of an error `l_pointer' might not be NULL.
 				if l_pointer /= Void then
 					l_pointer.memory_free
 				end
@@ -266,7 +265,7 @@ feature {NONE} -- Cache
 
 feature {NONE} -- Implementation
 
-	iconv_imp (a_from_code_page, a_to_code_page: STRING; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
+	iconv_imp (a_from_code_page, a_to_code_page: STRING; a_str: POINTER; a_size: INTEGER; a_out_count, a_error_code: TYPED_POINTER [INTEGER]): POINTER
 			-- `iconv' plus setup and caching.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
@@ -280,7 +279,7 @@ feature {NONE} -- Implementation
 			descriptor_cache.search (l_key)
 			check found: descriptor_cache.found end
 			l_cd := descriptor_cache.found_item
-			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_b)
+			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_error_code)
 			descriptor_cache.record_converted_pair (a_from_code_page, a_to_code_page)
 		end
 
@@ -422,8 +421,8 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	c_iconv (a_cd: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
-			-- Code `a_b' could be set when error occurs.
+	c_iconv (a_cd: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_error_code: TYPED_POINTER [INTEGER]): POINTER
+			-- Code `a_error_code' could be set when error occurs.
 			-- See `conversion_exception' for the meaning.
 		external
 			"C inline use <iconv.h>"
@@ -436,55 +435,55 @@ feature {NONE} -- Implementation
 				
 				insize = (size_t)$a_size;
 				alloc = avail = insize + insize/4;
-				*$a_b = 0;
 				
 				if (!(res = malloc(alloc))) {
-					*$a_b = 1;
+					*$a_error_code = 1;
 					return NULL;
-				}
-				
-				wrptr = res;   /* duplicate pointers because they */
-				inptr = $a_str; /* get modified by iconv */
-				
-				/* Reset the descriptor to intial state. */
-				iconv (cd, NULL, 0, NULL, 0);
-				
-				do {				
-					nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
+				} else {
+					*$a_error_code = 0;
+					wrptr = res;   /* duplicate pointers because they */
+					inptr = $a_str; /* get modified by iconv */
 					
-					if (nconv == (size_t)(-1)) {
-						if (errno == E2BIG) { /* need more room for result */							
-							tres = realloc(res, alloc += 20);
-							avail += 20;
-							if (!tres) {
-								*$a_b = 2;
+					/* Reset the descriptor to intial state. */
+					iconv (cd, NULL, 0, NULL, 0);
+					
+					do {				
+						nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
+						
+						if (nconv == (size_t)(-1)) {
+							if (errno == E2BIG) { /* need more room for result */							
+								tres = realloc(res, alloc += 20);
+								avail += 20;
+								if (!tres) {
+									*$a_error_code = 2;
+									break;
+								}
+								wrptr = tres + (wrptr - res);
+								res = tres;
+							}
+							else if (errno == EILSEQ) {
+								*$a_error_code = 4;
 								break;
 							}
-							wrptr = tres + (wrptr - res);
-							res = tres;
+							else if (errno == EINVAL){
+								*$a_error_code = 5;
+								break;
+							}
+							else if (errno == EBADF){
+								*$a_error_code = 6;
+								break;
+							}
+							else{
+								*$a_error_code = 7;
+								break;
+							}
 						}
-						else if (errno == EILSEQ) {
-							*$a_b = 4;
-							break;
-						}
-						else if (errno == EINVAL){
-							*$a_b = 5;
-							break;
-						}
-						else if (errno == EBADF){
-							*$a_b = 6;
-							break;
-						}
-						else{
-							*$a_b = 7;
-							break;
-						}
-					}
-				} while (insize);
-				
-				*$a_out_count = alloc - avail;
-				
-				return res;
+					} while (insize);
+					
+					*$a_out_count = alloc - avail;
+					
+					return res;
+				}
 			]"
 		end
 

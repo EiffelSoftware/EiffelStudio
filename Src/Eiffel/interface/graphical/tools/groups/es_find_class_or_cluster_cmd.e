@@ -12,9 +12,6 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
-		redefine
-			initialize
-		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
@@ -41,24 +38,6 @@ inherit
 
 create
 	make
-
-feature
-
-	initialize
-			-- <Precursor>
-		local
-			l_project_manager: EB_PROJECT_MANAGER
-		do
-			Precursor
-			l_project_manager := workbench.eiffel_project.manager
-			if not workbench.is_already_compiled then
-				disable_sensitive
-				register_action (l_project_manager.load_agents, agent on_project_loaded)
-			else
-				on_project_loaded
-			end
-			register_action (l_project_manager.close_agents, agent on_project_unloaded)
-		end
 
 feature -- Access: User interface
 
@@ -138,24 +117,6 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Basic operations
-
-	on_project_loaded
-			-- Called when a project has been loaded.
-		require
-			is_interface_usable: is_interface_usable
-		do
-			enable_sensitive
-		end
-
-	on_project_unloaded
-			-- Called when a project has been unloaded/closed.
-		require
-			is_interface_usable: is_interface_usable
-		do
-			disable_sensitive
-		end
-
 feature {NONE} -- Internationalization
 
 	l_name: STRING = "Locate"
@@ -163,7 +124,7 @@ feature {NONE} -- Internationalization
 	tt_tool_tip: STRING = "Locate the class or cluster currently in the editor.%NYou can also pick a class or a cluster and drop it here"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -391,6 +391,8 @@ feature {NONE} -- Implementation
 			develop_window.commands.new_library_cmd.enable_sensitive
 			develop_window.commands.new_assembly_cmd.enable_sensitive
 			develop_window.commands.new_cluster_cmd.enable_sensitive
+			develop_window.commands.find_class_or_cluster_command.enable_sensitive
+			develop_window.commands.delete_class_cluster_cmd.enable_sensitive
 		end
 
 	enable_commands_on_project_loaded
@@ -408,7 +410,6 @@ feature {NONE} -- Implementation
 			elseif develop_window.stone /= Void then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive
 			end
-			develop_window.commands.delete_class_cluster_cmd.enable_sensitive
 			develop_window.commands.c_workbench_compilation_cmd.enable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive
 			develop_window.refactoring_manager.enable_sensitive
@@ -429,6 +430,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.new_library_cmd.disable_sensitive
 			develop_window.commands.new_assembly_cmd.disable_sensitive
 			develop_window.commands.new_cluster_cmd.disable_sensitive
+			develop_window.commands.find_class_or_cluster_command.disable_sensitive
 			if not develop_window.project_manager.is_created then
 				develop_window.system_information_cmd.disable_sensitive
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
@@ -449,7 +451,7 @@ invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

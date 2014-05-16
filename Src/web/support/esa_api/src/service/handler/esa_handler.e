@@ -9,7 +9,7 @@ class
 inherit
 
 	ESA_SHARED_LOGGER
-	
+
 feature -- User
 
 	current_user_name (req: WSF_REQUEST): detachable READABLE_STRING_32
@@ -50,6 +50,7 @@ feature -- Media Type
 			if Result.last_index_of ('/', Result.count) = Result.count then
 				Result.remove_tail (1)
 			end
+			log.write_debug (generator + ".absolute_host " + Result )
 		end
 
 end

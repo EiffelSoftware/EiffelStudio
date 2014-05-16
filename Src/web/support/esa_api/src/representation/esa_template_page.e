@@ -10,6 +10,7 @@ inherit
 
 	SHARED_TEMPLATE_CONTEXT
 
+	ESA_SHARED_LOGGER
 
 feature -- Status
 

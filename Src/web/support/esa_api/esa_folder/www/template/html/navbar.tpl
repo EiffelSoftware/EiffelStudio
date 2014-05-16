@@ -11,6 +11,7 @@
           <form>
             <p><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value=""></p>
             <p><input type="password" class="span3" id="password" name="password" placeholder="Enter Password"></p>
+	       <input type="hidden" name="host" value="{$host/}">
             <p><button type="button" class="btn btn-success" onclick="login();">Sign in</button></p>
           </form>
       </div>
@@ -27,6 +28,7 @@
       </div>
       <div class="modal-body">
           <form>
+	    <input type="hidden" name="host" value="{$host/}">
             <p><button type="button" class="btn btn-success" onclick="logoff();">Logoff</button></p>
           </form>
       </div>

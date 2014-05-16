@@ -28,11 +28,10 @@ feature -- Basic operations
 		local
 			l_auth: HTTP_AUTHORIZATION
 		do
-
-
+			log.write_debug (generator + ".execute " )
 			create l_auth.make (req.http_authorization)
 			if attached req.raw_header_data as l_raw_data then
-			   log.write_information (generator + ".execute " + l_raw_data )
+			   log.write_debug (generator + ".execute " + l_raw_data )
 			end
 				-- A valid user
 			if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
@@ -41,9 +40,11 @@ feature -- Basic operations
 					req.set_execution_variable ("user", create {ESA_USER}.make (l_auth_login))
 					execute_next (req, res)
 				else
+					log.write_debug (generator + ".execute login_valid failed for: " + l_auth_login )
 					execute_next (req, res)
 				end
 			else
+				log.write_debug (generator + ".execute Not valid")
 				execute_next (req, res)
 			end
 		end

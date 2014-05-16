@@ -22,6 +22,7 @@ feature -- View
 		local
 			l_hp: ESA_HOME_PAGE
 		do
+
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_home_page then
@@ -162,7 +163,8 @@ feature -- View
 	login_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Login page
 		do
-			compute_response_redirect (req, res, "/")
+
+			compute_response_redirect (req, res, absolute_host (req, "/"))
 		end
 
 	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -390,6 +392,23 @@ feature -- View
 
 
 feature -- Response
+
+	new_response_get_home (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_type_text_html
+			h.put_content_length (output.count)
+			if attached media_variants.vary_header_value as l_vary then
+				h.put_header_key_value ("Vary", l_vary)
+			end
+			h.add_header_key_value ("Cache-Control", "plublic, max-age=0")
+			h.put_current_date
+			res.set_status_code ({HTTP_STATUS_CODE}.ok)
+			res.put_header_text (h.string)
+			res.put_string (output)
+		end
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
 		local

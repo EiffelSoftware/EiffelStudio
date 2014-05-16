@@ -117,20 +117,24 @@ invariant
 		tab_position = attached_interface.Tab_right or
 		tab_position = attached_interface.Tab_bottom or
 		tab_position = attached_interface.Tab_top
-		selected_item_not_void: is_usable and count > 0 implies selected_item /= Void
-		selected_item_index_within_range:
-			is_usable and count > 0 implies (
-			selected_item_index >= attached_interface.index_of (attached_interface.first, 1) and
-			selected_item_index <= attached_interface.index_of (attached_interface.last, 1) )
-		selected_item_is_i_th_of_selected_item_index:
-			count > 0 implies
-			selected_item = attached_interface.i_th (selected_item_index)
-		selected_item_index_is_index_of_selected_item:
-			count > 0 implies attached selected_item as l_selected_item and then
-			selected_item_index = attached_interface.index_of (l_selected_item, 1)
+
+	selected_item_not_void: is_usable and count > 0 implies selected_item /= Void
+
+	selected_item_index_within_range:
+		is_usable and count > 0 implies (
+		selected_item_index >= attached_interface.index_of (attached_interface.first, 1) and
+		selected_item_index <= attached_interface.index_of (attached_interface.last, 1) )
+
+	selected_item_is_i_th_of_selected_item_index:
+		is_usable and count > 0 implies
+		selected_item = attached_interface.i_th (selected_item_index)
+
+	selected_item_index_is_index_of_selected_item:
+		is_usable and count > 0 implies attached selected_item as l_selected_item and then
+		selected_item_index = attached_interface.index_of (l_selected_item, 1)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

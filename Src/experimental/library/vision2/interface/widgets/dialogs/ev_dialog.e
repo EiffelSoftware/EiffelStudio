@@ -172,8 +172,8 @@ feature -- Basic operations
 		do
 			implementation.show_relative_to_window (a_window)
 		ensure then
-			is_relative_to_window: is_relative
-			blocking_window_set: blocking_window = a_window
+			is_relative_to_window: show_actions.is_empty implies is_relative
+			blocking_window_set: show_actions.is_empty implies blocking_window = a_window
 		end
 
 	dialog_key_press_action (a_key: EV_KEY)
@@ -218,14 +218,14 @@ invariant
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

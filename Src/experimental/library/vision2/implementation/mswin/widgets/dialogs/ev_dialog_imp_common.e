@@ -224,9 +224,7 @@ feature {NONE} -- Implementation
 		local
 			dialog_window_imp: EV_DIALOG_IMP
 		do
-			create dialog_window_imp.make
-			dialog_window_imp.make_with_real_dialog (Current)
-			attached_interface.replace_implementation (dialog_window_imp)
+			create dialog_window_imp.make_with_real_dialog (Current)
 		end
 
 	copy_attributes
@@ -661,7 +659,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

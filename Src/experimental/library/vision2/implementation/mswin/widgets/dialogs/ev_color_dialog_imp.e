@@ -121,13 +121,6 @@ feature -- Element change
 			set_rgb_result (w)
 		end
 
-	destroy
-			-- Destroy `Current'.
-		do
-			destroy_item
-			set_is_destroyed (True)
-		end
-
 feature {EV_ANY_I}
 
 	--| FIXME These features are all required by EV_POSITIONED and

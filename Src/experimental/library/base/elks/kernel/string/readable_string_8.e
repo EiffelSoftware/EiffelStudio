@@ -515,7 +515,7 @@ feature -- Status report
 				end
 				Result := (i < nb)
 			end
-		ensure then
+		ensure
 			false_if_empty: count = 0 implies not Result
 			true_if_first: count > 0 and then item (1) = c implies Result
 			recurse: (count > 0 and then item (1) /= c) implies
@@ -842,7 +842,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -119,6 +119,14 @@ feature -- Windows
 			"return (EIF_POINTER) GetParent((HWND) $a_hwnd);"
 		end
 
+	get_window (a_hwnd: POINTER; a_cmd: INTEGER): POINTER
+			-- SDK GetWindow
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) GetWindow ((HWND) $a_hwnd, (UINT) $a_cmd);"
+		end
+
 	destroy_window (hwnd: POINTER): BOOLEAN
 			-- SDK DestroyWindow
 		external
@@ -132,6 +140,13 @@ feature -- Windows
 			"C inline use <windows.h>"
 		alias
 			"return FindWindow((LPCTSTR) $a_class_name, (LPCTSTR) $a_window_name);"
+		end
+
+	find_window_ex (a_parent, a_child_after, a_class_name, a_window_name: POINTER): POINTER
+		external
+			"C inline use <windows.h>"
+		alias
+			"return FindWindowEx((HWND) $a_parent, (HWND) $a_child_after, (LPCTSTR) $a_class_name, (LPCTSTR) $a_window_name);"
 		end
 
 feature -- Data Operations

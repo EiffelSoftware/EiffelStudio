@@ -433,6 +433,13 @@ feature {NONE} -- Implementation
 			cwel_open_file_name_set_hwndowner (item, a_parent.item)
 		end
 
+	hwnd_parent: POINTER
+		require
+			exists: exists
+		do
+			Result := cwel_open_file_name_get_hwndowner (item)
+		end
+
 	str_file_name: WEL_STRING
 			-- C string to save the file name
 
@@ -614,7 +621,7 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

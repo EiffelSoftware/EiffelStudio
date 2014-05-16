@@ -68,20 +68,21 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
-
 		do
 			if starting then
 				if
+					is_sensitive and then
 					attached application_implementation.pick_and_drop_source as l_pnd_source and then
 					attached l_pnd_source.pebble as l_pebble and then
 					not attached_interface.drop_actions.accepts_pebble (l_pebble)
 				then
-					enabled_before := is_sensitive
-					disable_sensitive_internal
+					enabled_before := True
+					disable_sensitive
 				end
 			else
 				if enabled_before then
-					enable_sensitive_internal
+					enabled_before := False
+					enable_sensitive
 				end
 			end
 		end
@@ -104,26 +105,6 @@ feature {NONE} -- Implementation
 
 	disable_sensitive
 			 -- Disable `Current'.
-		deferred
-		end
-
-	enable_sensitive_internal
-			 -- Enable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `enable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
-		deferred
-		end
-
-	disable_sensitive_internal
-			 -- Disable `Current'.
-			 -- This is a special version used internally by the code that updates
-			 -- the pick and drop so that `enabled_before' is not updated. In
-			 -- `disable_sensitive' which is called by a user, we must always updated the
-			 -- state of `enabled_before' so that if it is called during a pick and drop,
-			 -- this new state is respected at the end of the transport.
 		deferred
 		end
 

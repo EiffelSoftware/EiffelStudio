@@ -297,6 +297,12 @@ feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
 		do
+			output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
+			output ("<strong>" + a_template.name + "</strong>: ")
+			if attached a_template.parameters_string as st then
+				st.process (Current)
+			end
+			output ("</div>")
 			debug
 				output ("{{TEMPLATE %"" + a_template.name + "%"")
 				if attached a_template.parameters_string as str then
@@ -311,10 +317,12 @@ feature -- Template
 feature -- Tag
 
 	visit_code (a_code: WIKI_CODE)
-		local
-			n: READABLE_STRING_8
 		do
-			output ("<" + a_code.tag_name + ">")
+			if a_code.is_inline then
+				output ("<" + a_code.tag_name + " class=%"inline%">")
+			else
+				output ("<" + a_code.tag_name + ">")
+			end
 			a_code.text.process (Current)
 			output ("</" + a_code.tag_name + ">")
 		end
@@ -327,6 +335,13 @@ feature -- Tag
 			output ("<" + n + ">")
 			a_tag.text.process (Current)
 			output ("</" + n + ">")
+		end
+
+feature -- Entity
+
+	visit_entity (a_entity: WIKI_ENTITY)
+		do
+			output ("&" + a_entity.value + ";")
 		end
 
 feature -- Links
@@ -396,6 +411,13 @@ feature -- Table
 			output ("<tr>")
 			visit_composite (a_row)
 			output ("</tr>")
+		end
+
+	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
+		do
+			output ("<th>")
+			a_cell.text.process (Current)
+			output ("</th>")
 		end
 
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
@@ -519,7 +541,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -127,6 +127,14 @@ feature -- Tag
 		deferred
 		end
 
+feature -- Entity		
+
+	visit_entity (a_entity: WIKI_ENTITY)
+		require
+			a_entity_attached: a_entity /= Void
+		deferred
+		end
+
 feature -- Links
 
 	visit_external_link (a_link: WIKI_EXTERNAL_LINK)
@@ -173,6 +181,12 @@ feature -- Table
 		deferred
 		end
 
+	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
+		require
+			a_cell_attached: a_cell /= Void
+		deferred
+		end
+
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
 		require
 			a_cell_attached: a_cell /= Void
@@ -181,7 +195,7 @@ feature -- Table
 
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

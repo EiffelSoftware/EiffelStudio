@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {WIKI_TAG}."
+	description: "Summary description for {WIKI_ENTITY}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WIKI_TAG
+	WIKI_ENTITY
 
 inherit
 	WIKI_STRING_ITEM
@@ -17,37 +17,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag_name: STRING; s: STRING)
-		local
-			i,j: INTEGER
+	make (s: STRING)
 		do
-			i := a_tag_name.index_of (' ', 1)
-			j := a_tag_name.index_of ('%T', 1)
-			if i = 0 then
-				i := j
-			elseif j /= 0 then
-				i := i.min (j)
-			end
-			if i > 0 then
-				tag_name := a_tag_name.substring (1, i - 1)
-			else
-				tag_name := a_tag_name
-			end
-
-			text := s
+			value := s
 		end
 
 feature -- Access
 
-	tag_name: STRING
-
-	text: WIKI_STRING
+	value: STRING
 
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
 		do
-			a_visitor.visit_tag (Current)
+			a_visitor.visit_entity (Current)
 		end
 
 feature -- Status report
@@ -55,7 +38,7 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := "<" + tag_name + ">..</" + tag_name + ">"
+			Result := "&" + value + ";"
 		end
 
 note

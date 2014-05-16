@@ -10,6 +10,8 @@ class
 inherit
 	WIKI_STRING_ITEM
 
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -31,8 +33,16 @@ feature -- Visitor
 			a_visitor.visit_raw_string (Current)
 		end
 
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := text
+		end
+
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

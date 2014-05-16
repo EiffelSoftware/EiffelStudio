@@ -21,6 +21,34 @@ feature -- Access
 
 feature -- Status setting
 
+	hide
+			-- <Precursor>
+		local
+			l_null, l_parent: POINTER
+			l_enumerator: WEL_WINDOW_ENUMERATOR
+			l_children: ARRAYED_LIST [POINTER]
+		do
+				-- Get all windows of the system, and find the window which is owned
+				-- by `hwnd_parent'. If found we send the WM_CLOSE message that will
+				-- close it, having the effect of hiding the window.
+			create l_enumerator
+			l_children := l_enumerator.enumerate_all_hwnds
+			l_parent := hwnd_parent
+			from
+				l_children.start
+			until
+				l_children.after
+			loop
+				if {WEL_API}.get_window (l_children.item, {WEL_GW_CONSTANTS}.gw_owner) = l_parent then
+						-- We found our dialog, we can terminate the iteration.
+					{WEL_API}.send_message (l_children.item, {WEL_WM_CONSTANTS}.wm_close, l_null, l_null)
+					l_children.finish
+				else
+					l_children.forth
+				end
+			end
+		end
+
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show the window and wait until the user closed it.
 			--| A window is required for the gtk implementation.
@@ -80,8 +108,28 @@ feature -- Deferred
 		deferred
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	destroy
+			-- <Precursor>
+		do
+			if not is_destroyed then
+					-- No one should be referencing Current anymore.
+				set_is_destroyed (True)
+				dispose
+			end
+		end
+
+	dispose
+		deferred
+		end
+
+	hwnd_parent: POINTER
+		deferred
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

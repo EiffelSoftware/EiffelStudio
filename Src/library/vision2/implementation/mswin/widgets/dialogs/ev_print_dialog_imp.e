@@ -108,13 +108,6 @@ feature -- Element change
 			title_set: title.same_string_general (new_title)
 		end
 
-	destroy
-			-- Destroy `Current'.
-		do
-			destroy_item
-			set_is_destroyed (True)
-		end
-
 feature {EV_ANY_I}
 
 	--| FIXME These features are all required by EV_POSITIONED and

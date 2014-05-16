@@ -36,8 +36,7 @@ inherit
 			set_filter as wel_set_filter,
 			set_filter_index as wel_set_filter_index,
 			set_initial_path as wel_set_initial_path,
-			file_title as wel_file_title,
-			dispose as destroy
+			file_title as wel_file_title
 		end
 
 create

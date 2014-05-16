@@ -237,13 +237,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	destroy
-			-- Destroy `Current'.
-		do
-			destroy_item
-			set_is_destroyed (True)
-		end
-
 	internal_title: detachable STRING_32
 			-- Storage for `title'.
 

@@ -98,7 +98,8 @@ feature {BREAK_LIST, BREAKPOINT} -- Copy for saving
 		do
 			if
 				routine_written_in > 0 and then system.has_class_of_id (routine_written_in) and then
-				attached system.class_of_id (routine_written_in) as cl
+				attached system.class_of_id (routine_written_in) as cl and then
+				cl.has_feature_table
 			then
 				Result := cl.feature_with_body_index (body_index)
 			end

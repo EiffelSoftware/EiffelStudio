@@ -32,7 +32,6 @@ inherit
 	WEL_CHOOSE_FOLDER_DIALOG
 		rename
 			make as wel_make,
-			dispose as destroy,
 			set_starting_path as set_start_path,
 			starting_path as start_path,
 			folder_path as path
@@ -175,7 +174,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

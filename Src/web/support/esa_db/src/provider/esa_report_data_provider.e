@@ -70,7 +70,7 @@ feature -- Access
 		do
 			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
-			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_rows_per_page*a_page_number, "Offset")
 			l_parameters.put (l_encoder.encode (string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
@@ -119,7 +119,7 @@ feature -- Access
 			to_implement ("Improve the way to generate the prepare statement.")
 			create l_parameters.make (2)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
-			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_page_number*a_rows_per_page, "Offset")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
 			l_parameters.put (l_encode.encode ( string_parameter (a_column, 30)), "Column")
@@ -150,7 +150,7 @@ feature -- Access
 		do
 			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
-			l_parameters.put (a_page_number, "PageNumber")
+			l_parameters.put (a_rows_per_page*a_page_number, "Offset")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 			l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
@@ -1616,10 +1616,10 @@ feature -- Queries
 	Select_problem_reports_template: STRING = "[
 				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
 			 FROM (
-			    SELECT TOP (:RowsPerPage)
+			    SELECT TOP :RowsPerPage
 				   Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, PAG.CategoryID
 			    FROM (
-				SELECT TOP ((:PageNumber)*:RowsPerPage) 
+				SELECT TOP :Offset
 				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, ProblemReports.CategoryID
 				FROM ProblemReports
 			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID 
@@ -1642,7 +1642,7 @@ feature -- Queries
 					 PAG2.StatusID, PAG2.Description,
 					 PAG2.Username as 'DisplayName',
 					 PAG2.ResponsibleID, PAG2.Username
-				FROM (SELECT TOP (:RowsPerPage)  
+				FROM (SELECT TOP :RowsPerPage  
 				     PAG.Number, PAG.Synopsis, SubmissionDate,
 					 PAG.Release, PAG.PriorityID,
 					 PAG.CategorySynopsis, PAG.SeverityID,
@@ -1652,7 +1652,7 @@ feature -- Queries
 					 PAG.CategoryID,
 					 PAG.ReportID,
 					 PAG.ContactID	
-					FROM (SELECT TOP ((:PageNumber)*:RowsPerPage) 
+					FROM (SELECT TOP :Offset
 					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
 						 ProblemReports.Release, ProblemReports.PriorityID,
 						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID,
@@ -1723,10 +1723,10 @@ feature -- Queries
 
 	Select_problem_reports_by_user_template: STRING = "[
 			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, StatusID
-			 FROM(SELECT TOP (:RowsPerPage)
+			 FROM(SELECT TOP :RowsPerPage
 				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, StatusID
 			FROM (
-				SELECT TOP ((:PageNumber)*:RowsPerPage)
+				SELECT TOP :Offset
 				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID,
 				ProblemReports.CategoryID, ProblemReports.ContactID
 				FROM ProblemReports

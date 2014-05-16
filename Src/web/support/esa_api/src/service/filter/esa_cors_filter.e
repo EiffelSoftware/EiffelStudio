@@ -17,8 +17,9 @@ feature -- Basic operations
 			l_header: HTTP_HEADER
 		do
 			create l_header.make
-			l_header.add_header_key_value ("Access-Control-Allow-Origin", "*")
-			l_header.add_header_key_value ("Access-Control-Allow-Headers", "authorization")
+--			l_header.add_header_key_value ("Access-Control-Allow-Origin", "localhost")
+			l_header.add_header_key_value ("Access-Control-Allow-Headers", "*")
+			l_header.add_header_key_value ("Access-Control-Allow-Methods", "*")
 			l_header.add_header_key_value ("Access-Control-Allow-Credentials", "true")
 			res.put_header_lines (l_header)
 			execute_next (req, res)

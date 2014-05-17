@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			Precursor
 			create log.make
 			create filename.make_from_string ("thread1.log")
-			create lw_file
-			lw_file.set_path (filename)
+			create lw_file.make_at_location (filename)
+			lw_file.enable_debug_log_level
 			log.register_log_writer (lw_file)
 			log.write_information ("THREAD1 instantiated")
 		end

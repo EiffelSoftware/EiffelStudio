@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			else
 					--| Enable system log output
 				log.enable_default_system_log
+				log.default_log_writer_system.enable_information_log_level
 
 					--| Write an informational message
 				log.write_information ("The application is starting up...")

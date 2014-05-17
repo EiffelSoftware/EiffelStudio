@@ -31,13 +31,14 @@ feature {NONE} -- Initialization
 		do
 				--| Enable stderr log output
 			log.enable_default_file_log
+			log.default_log_writer_file.enable_debug_log_level
 			create filename.make_from_string ("thread1.log")
-			create lw_file
-			lw_file.set_path (filename)
+			create lw_file.make_at_location (filename)
+			lw_file.enable_debug_log_level
 			log.register_log_writer (lw_file)
 			create filename.make_from_string ("thread2.log")
-			create lw_file
-			lw_file.set_path (filename)
+			create lw_file.make_at_location (filename)
+			lw_file.enable_debug_log_level
 			log.register_log_writer (lw_file)
 
 				--| Write an informational message

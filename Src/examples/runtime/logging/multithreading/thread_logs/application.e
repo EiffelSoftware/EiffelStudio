@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 				--| Enable stderr log output
 			create log.make
 			log.enable_default_file_log
+			log.default_log_writer_file.enable_debug_log_level
 
 				--| Write an informational message
 			log.write_information ("The application is starting up...")

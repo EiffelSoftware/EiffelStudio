@@ -36,12 +36,13 @@ feature {NONE} -- Initialization
 			log.write_information ("The application is starting up...")
 
 				--| Initialize some log writers
-			create log_file_1
+
 			create file_name_1.make_from_string ("something_1.log")
-			log_file_1.set_path (file_name_1)
-			create log_file_2
+			create log_file_1.make_at_location (file_name_1)
+			log_file_1.enable_debug_log_level
 			create file_name_2.make_from_string ("something_2.log")
-			log_file_2.set_path (file_name_2)
+			create log_file_2.make_at_location (file_name_2)
+			log_file_2.enable_debug_log_level
 			log.register_log_writer (log_file_1)
 			log.register_log_writer (log_file_2)
 

@@ -1,8 +1,6 @@
 note
 	description:	"[
-						Example application that illustrates the default FILE_LOG_WRITER and how
-						one can simply override the default log file name in a new class, in this
-						case MY_FILE_LOG_WRITER
+						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE
 					]"
 	legal:			"See note at the end of this class"
 	status:			"See notice at the end of this class"
@@ -20,31 +18,32 @@ feature {NONE} -- Initialization
 	make
 			-- Make an instance of APPLICATION, and run the application
 		local
-			l_my_file_log_writer: LOG_WRITER_FILE
-			claptrap: PATH
+			l_my_file_log_writer: LOG_ROLLING_WRITER_FILE
+			i: INTEGER
 		do
 				--| Initialize the logging facility
 			create log.make
 
-				--| Enable log output to go to the default file
-			log.enable_default_file_log
-
-				--| Enable debug log level
-			log.default_log_writer_file.enable_debug_log_level
-
-				--| Write an informational message
-			log.write_information ("The application is starting up...")
-
-			create claptrap.make_from_string ("no_joy.log")
-			create l_my_file_log_writer.make_at_location (claptrap)
+			create l_my_file_log_writer.make_at_location ((create {PATH}.make_current).extended("test.log"))
+			l_my_file_log_writer.set_max_file_size ({NATURAL_64}256*256)
+			l_my_file_log_writer.set_max_backup_count (2)
 			l_my_file_log_writer.enable_debug_log_level
 			log.register_log_writer (l_my_file_log_writer)
-			if l_my_file_log_writer.has_errors then
-				log.enable_default_stderr_log
-				log.write_emergency ("Cannot open log file '" + claptrap.utf_8_name + "'%N")
-			else
-				log.write_information ("The application now uses this log file as well...%N")
+			from
+				i := 10000
+			until
+				i = 0
+			loop
+				log.write_information ("[
+						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it
+						]" + "Index: " + i.out)
+				log.write_debug ("[
+						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it
+						]" + "Index: " + i.out)
+
+				i := i - 1
 			end
+
 		end
 
 feature {NONE} -- Attributes

@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 
 				--| Enable system log output
 			create l_sys_log
+			l_sys_log.enable_debug_log_level
 			l_sys_log.set_application_name ("MultiPlatform")
 			log.register_log_writer (l_sys_log)
 

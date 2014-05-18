@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			initialize
 			from
-				v := {NATURAL_8}1
+				v := {NATURAL_8} 1
 				n := s.index_of ('%N', 1)
 				if n = 0 then
 					n := s.count
@@ -113,7 +113,7 @@ invariant
 	parent_upper: attached {WIKI_SECTION} parent as p implies p.level < level
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

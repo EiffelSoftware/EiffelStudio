@@ -401,7 +401,12 @@ feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)
 		do
-			output ("<table>")
+			if attached a_table.style as st then
+				output ("<table " + st + ">")
+			else
+				output ("<table>")
+			end
+
 			visit_composite (a_table)
 			output ("</table>")
 		end

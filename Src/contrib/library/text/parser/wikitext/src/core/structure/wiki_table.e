@@ -47,6 +47,9 @@ feature -- Access
 
 	text: WIKI_STRING
 
+	style: detachable STRING
+			-- Table style  {| style |-
+
 feature -- Change
 
 	set_text (t: STRING)
@@ -58,6 +61,7 @@ feature -- Change
 			s: STRING
 			l_is_header_cell: BOOLEAN
 			l_was_sep: BOOLEAN
+			l_style: detachable STRING
 		do
 			create text.make (t)
 			from
@@ -76,6 +80,11 @@ feature -- Change
 				elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '|' then
 					tbls_level := tbls_level + 1
 				elseif safe_character (t, i) = '|' or safe_character (t, i) = '!' then
+					if l_style = Void then
+						l_style := s
+						create style.make_from_string (s)
+						create s.make_empty
+					end
 					if safe_character (t, i + 1) = '-' then
 						check safe_character (t, i) = '|' end
 						if r /= Void then

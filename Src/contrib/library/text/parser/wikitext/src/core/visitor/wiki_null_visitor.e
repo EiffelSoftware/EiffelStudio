@@ -80,6 +80,12 @@ feature -- Strings
 		do
 		end
 
+feature -- Entity		
+
+	visit_entity (a_entity: WIKI_ENTITY)
+		do
+		end
+
 feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
@@ -128,12 +134,16 @@ feature -- Table
 		do
 		end
 
+	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
+		do
+		end
+		
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
 		do
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

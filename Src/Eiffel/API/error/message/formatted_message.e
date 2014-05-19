@@ -4,6 +4,17 @@
 class
 	FORMATTED_MESSAGE
 
+feature -- Format: elements
+
+	element (data: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]): like formattable
+			-- Agent to add a given `data' to output using a formatter.
+		do
+			Result := agent (s: FORMAT_SPECIFICATION; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]; t: TEXT_FORMATTER)
+				do
+					v (t)
+				end (?, data, ?)
+		end
+
 feature -- Format: lists
 
 	list (data: like listable): like formattable

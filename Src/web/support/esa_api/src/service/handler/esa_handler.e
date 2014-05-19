@@ -53,4 +53,61 @@ feature -- Media Type
 			log.write_debug (generator + ".absolute_host " + Result )
 		end
 
+feature -- Debug
+
+	debug_request_header (req: WSF_REQUEST)
+		local
+			s: STRING
+		do
+			log.write_debug (generator + ".execute")
+			create s.make (2048)
+			if attached req.content_type as l_type then
+				s.append ("[length=")
+				s.append_natural_64 (req.content_length_value)
+				s.append_character (']')
+				s.append_character (' ')
+				s.append (l_type.debug_output)
+				s.append_character ('%N')
+			end
+				append_iterable_to ("Path parameters", req.path_parameters, s)
+				append_iterable_to ("Query parameters", req.query_parameters, s)
+				append_iterable_to ("Form parameters", req.form_parameters, s)
+
+				if not s.is_empty then
+					log.write_debug (generator + ".execute" + s)
+				end
+			end
+
+feature {NONE} -- Implementations
+
+		append_iterable_to (a_title: READABLE_STRING_8; it: detachable ITERABLE [WSF_VALUE]; s: STRING_8)
+			local
+				n: INTEGER
+			do
+				if it /= Void then
+					across it as c loop
+						n := n + 1
+					end
+					if n > 0 then
+						s.append (a_title)
+						s.append_character (':')
+						s.append_character ('%N')
+						across
+							it as c
+						loop
+							s.append ("  - ")
+							s.append (c.item.url_encoded_name)
+							s.append_character (' ')
+							s.append_character ('{')
+							s.append (c.item.generating_type)
+							s.append_character ('}')
+							s.append_character ('=')
+							s.append (c.item.debug_output.as_string_8)
+							s.append_character ('%N')
+						end
+					end
+				end
+			end
+
+
 end

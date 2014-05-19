@@ -539,11 +539,13 @@ feature -- Basic Operations
 		do
 			Result := data_provider.new_interaction_id (a_username, a_pr_number)
 			is_successful := data_provider.is_successful
+			log.write_debug (generator + ".new_interaction_id " + Result.out + ", is_successful:" + is_successful.out)
 		end
 
 	initialize_interaction (a_interaction_id: INTEGER_32; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		do
+			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
 			data_provider.initialize_interaction (a_interaction_id, a_content, a_new_status, a_private)
 			is_successful := data_provider.is_successful
 		end

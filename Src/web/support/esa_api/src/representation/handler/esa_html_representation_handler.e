@@ -116,7 +116,7 @@ feature -- View
 			-- Report form confirm redirect
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,"/user_reports/"+l_user)
+				compute_response_redirect (req, res,absolute_host(req,"/user_reports/"+l_user))
 			end
 		end
 
@@ -352,7 +352,7 @@ feature -- View
 			-- Interaction form redirect
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,"/user_reports/"+l_user)
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
 			end
 		end
 

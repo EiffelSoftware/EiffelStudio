@@ -1,110 +1,386 @@
-'''IRON user documentation'''
+=Purpose=
 
-= About=
-In the beginning Eiffel users were getting the library source code with archive file, or source control management system such as subversion, git, ...but there were no standard way to install those libraries on the user machine so that any project could reuse it. Thus we built a package repository for Eiffel, named IRON, and had ''ecf'' evolved to use those package in a simple way.
+IRON provides an easy-to-use facility for using and sharing packages of quality Eiffel components, automating many of the tasks involved.
+Most often a package is a library or a set of libraries, but it could also other resources such as tools.
 
-'''IRON consists of '''
-* a default server that runs at [http://iron.eiffel.com/] and publish a REST API to search and get the packages (it can provide more edit service)
-* ''iron'' executable used on the user machine, to help managing the installation of Eiffel packages.
-* and ''ecf'' integration that should be done by the Eiffel compiler (and IDE)
+{{definition|IRON|a package management solution based on repositories.}}
 
-=What is an iron package?=
-This is shared Eiffel code, mostly used for Eiffel libraries. A package can contains one or more libraries (and thus one or more .ecf files), even if this is recommended to have just one library per package. 
+==Package Repository vs Library Repository==
 
-Each package belongs to a specific Iron ecosystem, that's is to say a ''release'' collection. Currently it is synchronized with EiffelStudio releases (i.e 13.11, ...). 
-For instance, a package belongs to [http://iron.eiffel.com/13.11/] collection.
+Certainly the IRON repository is a repository of Eiffel libraries. However, sometimes libraries are used together, or cross reference one another, and thus are appropriate to be delivered together as a unit. 
+Such unit can also include other types of files, such as external .c files that may need to be compiled on the local platform to make .LIB or .OBJ files available to the linker (.a or .o on Unix and Linux systems), scripts or executables that need to be run as part of the installation process (e.g. to generate other files required by the library, install environment variables, generate source code from LEX files), or tool kits that are part of, or needed by, the library.  
+Since the IRON repository permits programmers to install software components in “units”, and since sometimes those units can contain more than one library, as well as other types of files, a new term was required to convey this concept:  package.
 
-=How can I use a library from an iron package?=
-Traditionally, Eiffel user uses path to indicate the location of the library on their machine, typically <code>$ISE_LIBRARY/library/base/base.ecf</code> where <code>$ISE_LIBRARY</code> is usually pointing to 'local-path-to-eiffel-installation'.
+{{Definition|package|a downloadable unit of software from an IRON repository that contains one or more Eiffel libraries and their related files.}}
 
-Now how could one use the ''base'' package hosted on [http://iron.eiffel.com] for version 13.11 of EiffelStudio? 
+==Application to .ecf files==
+: Empowering Teams of Developers
 
-You can see basic information about 'base' package at [http://iron.eiffel.com/access/13.11/package/?name=base] and see the associated URIs that you can use to reference this package from ecf file. For instance the url will point to the ''base'' iron package  [http://iron.eiffel.com/13.11/es/library/base] , which is similar to current <code>$ISE_LIBRARY/library/base</code>.
+To configure Eiffel projects, programmers uses "ECFs" (Eiffel Configuration Files -- Microsoft Visual Studio users can think of "solution files").
 
-The reference location to the base.ecf configuration file is simple the full URI [http://iron.eiffel.com/13.11/es/library/base/base.ecf], so the ecf file could have
-:   <code><library name="base" location="http://iron.eiffel.com/13.11/es/library/base/base.ecf" /></code>
+One application of ECFs is to reference libraries installed in different locations. Without IRON, the usual solution is to use relative or absolute path, and generally using environment variables such as ISE_LIBRARY or EIFFEL_LIBRARY, and a few package specific variables such as GOBO, ...
 
-Note that for convenience, you can simply define the environment variable <code>ISE_LIBRARY</code> to be '''[http://iron.eiffel.com/13.11/es]''', then the existing location <code>''$ISE_LIBRARY/library/base/base.ecf''</code> will use transparently the iron package ''base''.
+Typical library references without IRON in ECF:
+<code><library name="base" location="'''$ISE_LIBRARY\library\base\base.ecf'''"/>
+<library name="xml_parser" location="'''$EIFFEL_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf'''"/>
+<library name="dummy_foobar" location="'''$LIB_DUMMY\src\foo\bar.ecf'''"/>
+</code>
 
-However, it might occurs that a package is not ''installed'' on the local machine, the current iron integration in Eiffel compiler, does not download and install the package automatically.
+As projects grow and multiply, the number of these variables adds up quickly.  A dozen or more such environment variables per system is (prior to IRON) not uncommon. Coordinating their use and evolution among a team of programmers can become a challenge.
 
-=How to use '''iron''' in command line?=
-Using the ''iron'' executable, you can execute various operations such as search, install, remove, and upload.
+IRON has made it possible to simplify this scenario dramatically.  For any commonly used library, it suffices to:
+* Install the related package from an IRON repository.
+* And for any project that uses the library, include an IRON uri in the related ECF.
+** an IRON uri has the form:  <code>iron:package-name:relative-path-to-file.ecf</code>
+** as you can see, no more environment variable, and only a relative path from the root of the package. This simplifies a lot the referencing, and package/library management. No need to know where are located the installed files on the local machine.
 
-Note: the iron executable is available with EiffelStudio in <code>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin</code>.
+That's all!  In the above example, the location of the libraries, in the project, then become something like:
+<code><library name="base" location="'''iron:base:base.ecf'''" />
+<library name="xml_parser" location="'''iron:xml:parser/xml_parser.ecf'''" />
+<library name="foobar" location="'''iron:dummy:src/foo/bar.ecf'''" />
+</code>
 
-==To get quick help for the ''iron'' usage:==
-:  > iron help 
+There is no more need for a set of environment variables.
 
-==To get help on specific action:==
-:  > iron install --help
+IRON and EiffelStudio take care of the remaining details.  And all developers on a project simply share the same ECF file with no further worry about where the libraries are.
 
-==Update the iron repository informations==
-:  > iron update
+However, to get information about IRON location, use the command: <code> iron path ...</code>
+{| class="wikitable"
+|-
+! Command
+! Result
+! Example
+|-
+| <code>iron path</code>
+| Base directory of IRON (~ IRON_PATH variable)
+| C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron
+|-
+| <code>iron path base</code>
+| location of installed package <code>base</code>
+| C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron\packages\base
+|- 
+| <code>iron path xml</code>
+| location of installed package <code>xml</code>
+| C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron\packages\xml
+|}
+
+Notes:
+* It is possible to override the default location of IRON installation directory, by setting the environment variable <code>IRON_PATH</code> or <code>ISE_IRON_PATH</code>.
+* In the scope of the .ecf file, the IRON_PATH variable is always set: to default path or to the value of environment variable IRON_PATH.
+* In addition to the IRON way to reference library, it is also possible to use the absolute URL in the repository, see advanced usage for more details.
+
+<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
+https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
+https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
+</code>
+
+But this implies putting the version in the url (i.e 14.05), or you could set ISE_LIBRARY to <code>https://iron.eiffel.com/14.05/com.eiffel</code>
+
+== IRON client tool ==
+The '''iron''' client executable is a facility that permits Eiffel programmers to easily install, remove, update, list, examine, search and share Eiffel packages.
+Additionally, it permits easy maintenance of a local list of IRON repositories. 
+
+A default IRON server is provided and a default repository is added automatically by the iron executable, based on the version of EiffelStudio that installed the iron executable (<code>example: https://iron.eiffel.com/14.05</code> ).
+
+The IRON facility consists of three parts:
+
+* A default repository at <code>https://iron.eiffel.com/14.05</code> (provides the web API and web interface for the repositories that are stored there; you can add other IRON servers as they become available).
+
+* The '''iron''' executable utility on the local machine (installed with EiffelStudio, the program that interacts with the repositories).
+
+* Within EiffelStudio and the Eiffel compiler, is the ability to read and use IRON references from the Eiffel Configuration File (.ecf). The '''Project settings''' tool, and '''Add Library' dialog also provides support for IRON packages.
+
+==How to Use IRON==
+=== Install wanted Eiffel packages ===
+Using the EiffelStudio command prompt (installed with EiffelStudio), execute the IRON command to install the packages you want to use:
+
+<code>iron install <package_name>
+</code>
+
+Note that the compilation of an Eiffel project that depends on uninstalled Eiffel package(s) will suggest and propose to the user to install the missing packages (this is currently supported with '''ec''' in command line mode, and graphical mode.
+
+=== Add reference to install package libraries ===
+Simply add the library with IRON uri <code>iron:package-name:relative-path-to-file.ecf</code>, as you would have previously for local libraries. This can be done directly by editing the .ecf file, or using the EiffelStudio '''Project Settings''' tool from Eiffel Studio:
+
+<code>Project Settings -> <target_name> -> Groups -> Libraries
+</code>
+
+right-click Libraries and add a library. This will popup the '''Add Library''' dialog, that expects a name and a location, simply select the available library from the grid.
+Note that you have an easy way to install, remove IRON packages from the '''Iron''' tab of the "Add Library" dialog.
+
+* The default and recommended location for a IRON package library is the IRON uri:
+<code>iron:package-name:relative-path-to-file.ecf
+</code>
+
+* It is also possible to use the absolute URL in the IRON repository such as:
+<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
+</code>
+
+* And an other solution, would be to use the <code>IRON_PATH</code> environment variable to locate the install libraries, such as:
+<code>$IRON_PATH\packages\base\base.ecf
+</code>
+This latter method, while it works, is not recommended simply because it defeats some of the advantages of using the IRON repository in the first place.
+
+=== External dependencies ===
+If the package has some other way of linking it with your Eiffel projects, e.g. to an external '''.dll''' or '''.so''' , then instructions for this should be provided within the package.
+
+=== Optional ===
+If you do not define one of these environment variables, the location used is:
+By default the base directory for IRON is under <code><Eiffel User Files>/<EiffelStudio_Version>/iron</code> , but it is possible to overwrite this value by setting the environment variable <code>IRON_PATH</code> (or <code>ISE_IRON_PATH</code>). Note that if the physical location does not exists, the local '''iron''' executable will create it.
+
+Setting IRON_PATH, can be a way to setup different development environments (with different registered repositories, ...)
+
+==How to Get Information About IRON Packages==
+At the website provided by a particular IRON server, you can get information about available packages in a number of ways.  You can start by simply visiting the server’s base address: [https://iron.eiffel.com/] .
+
+* This page lists the repository versions available.  
+* Select the version that matches the version of EiffelStudio you have installed.  
+Example:  clicking on version 14.05 takes you to <code>https://iron.eiffel.com/repository/14.05/</code> where you can list existing packages, or add a new package if you have an account on the server. 
+
+If you click the “Package list” or “All packages” link, it takes you to a list of packages available under that version. 
+
+=== Search/filter===
+To filter this list, you can use the search window.  You can specify search criteria in this format <code>:criterion:search_string</code>
+
+Criteria available:
+
+{| class="wikitable"
+|-
+! Criterion
+! Meaning
+|-
+| name
+| string is contained in package name (wildcards are supported)
+|-
+| title
+| string is contained in title
+|-
+| tag
+| package contains search_string in its tags (i.e. keywords)
+|-
+| downloads
+| has at least N downloads, e.g. downloads:25
+|}
+If a criterion is omitted, '''name''' is used by default.
+'''Operators available''':  or, and, not  (example:  name:er and not name:parser)
+
+Finally, when you have found the package you want, click on its title, and the page displayed will contain detailed information about the package. 
+
+=== Associated paths ===
+Part of the information is a portion of the URI which you can use to define the path to the package.
+For the '''base''' library (title: EiffelBase), these URIs look like this:
+:<code> /14.05/com.eiffel/library/base</code>
+:<code> /14.05/com.eiffel/library/data_structure/adt/base</code>
+
+Given that the server’s HTTP address is (in this example)  <code>https://iron.eiffel.com/</code>,  you can compose full paths from this, and use them in your Eiffel project.  In this case, you can include the EiffelBase library in your project by specifying either:
+:<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf</code>
+:or <code>https://iron.eiffel.com/14.05/com.eiffel/library/data_structure/adt/base/base.ecf</code>
+
+Both will cause your project to compile with the same EiffelBase library provided by this IRON repository, provided you previously issued the follwing command on your system:
+
+:<code>> iron install base</code>
+:or
+:<code>> iron install https://iron.eiffel.com/14.05/com.eiffel/library/base</code>
+
+'''IMPORTANT''': those associated URIs may be deprecated soon with the use of IRON uri <code>iron:base:base.ecf</code>.
+
+==Using IRON from the Command Line==
+The “iron” executable is used to perform various operations such as search, install, remove, update and share.  This executable is installed with EiffelStudio in $ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/.
+
+===Quick Help from the Command Line===
+*<code>iron help</code>
+:lists the actions that are available.
+
+*<code>iron <action> --help</code>
+:displays detailed usage syntax for the action specified.  Note that most of the actions have a -v (verbose) option that will display additional helpful information about the action performed, including (when relevant) the local path to the package.
+
+===Action Summary===
+
+{| class="wikitable"
+|-
+! Action
+! Meaning
+|-
+| update
+| updates cached package information
+|-
+| list
+| displays a list of available packages, and whether they are installed
+|-
+| search
+| searches for a specified packages
+|-
+| info
+| displays information about a specified packages
+|-
+| install
+| installs specified packages
+|-
+| remove
+| removes specified packages
+|-
+| repository
+| manages repository list
+|-
+| share
+| share and manage your packages (an account on the IRON server is required)
+|}
+
+
+===Examples===
+
+Update cached iron repository information:
+<code> iron update</code>
+
+Display information about the api_wrapper package:
+<code> iron info api_wrapper</code>
+:If the package is installed, the installation path will also be displayed.
+
+Search for a package by name, ID or URI (package IDs and URIs are displayed by the "info" action) (future releases will enable searching by other criteria as well, such as by tags [i.e. keywords]):
+<code> iron search base</code>
+
+List available packages:
+<code> iron list</code>
+
+List installed packages:
+<code> iron list --installed</code>
+
+Install a package:
+<code>   iron install base</code>
+
+<code>or iron install https://iron.eiffel.com/14.05/com.eiffel/library/base</code>
+
+:(This latter form is useful in resolving name conflicts when, for instance, you have multiple IRON repositories registered on your system, and two or more contain a packaged called “base”.)
+
+Uninstall a package:
+<code> iron remove  base</code>
+
+Install all available packages:
+<code> iron install --all</code>
+
+Uninstall all installed packages:
+<code> iron remove --all</code>
+
+==Advanced Usage==
+===Managing Multiple Repositories===
+
+It is possible to have more than one IRON repository server registered. 
+Examples:
+<code>iron  repository  --list
+iron  repository  --add https://iron.eiffel.com/14.05
+iron  repository  --add https://custom.example.com/14.05
+iron  repository  --add C:\eiffel\my_repository
+iron  repository  --remove https://custom.example.com/14.05
+</code>
+
+====Multiple-Repository Name Conflict Resolution====
+
+If you have more than one IRON repository registered on your system, it is possible that the same package name may exist on more than one repository.  If this is the case, and you attempt to perform operations using that name only, the repository that will be used will be the first repository in the list that contains a package with that name.  If you need the package with that name from a different repository, then use the “id” or “uri” form of the identifying the package you want.
+
+If the sequence of repositories is not to your liking, you can change it in three ways:
+
+:* use the iron executable to remove and add repositories to re-sequence them, or
+:* delete the repositories.conf file and use the iron executable to add them again in the sequence you want them.
+:* edit the file repositories.conf with a plain text editor in the directory indicated by your IRON_PATH (or ISE_IRON_PATH) environment variable (or <code><Eiffel User Files>/<EiffelStudio_Version>/iron/</code> if one of these environment variables are not defined on your system). (Note that this latter method, while possible, is not recommended, since the syntax of that file can change with new releases.)
+
+===Building a package===
+An IRON package has to provide, at its root, a file <code>package.iron</code>. This file describes the package with name, description, and various other information.
+See for instance, the package.iron for Eiffel Base package:
+<code>'''package''' base
+
+'''project'''
+	base_safe = "base-safe.ecf"
+	base = "base.ecf"
+	base_testing = "testing/testing-safe.ecf"
+	base_testing = "testing/testing.ecf"
+
+'''note'''
+	title: Eiffel Base
+	description: "Eiffel Base: kernel library classes, data structure, Input and Output"
+
+	tags: base,kernel,structure,io
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 1984-2013 Eiffel Software and others
+	link<nowiki>[doc]</nowiki>: "Documentation" http://eiffelroom.com/
+	link<nowiki>[source]</nowiki>: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base
+	link<nowiki>[license]</nowiki>: http://www.eiffel.com/licensing/forum.txt
+	maps: /com.eiffel/library/data_structure/adt/base
+
+'''end'''</code>
+
+Note: online version at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron] .
+
+Only the name of the package is required for now, but the section "project" list the various available .ecf projects, and the section "note" contains the title, description, tags, ... informations.
+The tag under the '''note''' section is free, and for now, only '''title, description, tags, link<nowiki[...]</nowiki>, and maps''' have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.
+
+A few packages may require post installation operations, such as compiling C code, or others. 
+For that, use the section '''setup''', and in particular the '''compile_library''' information.
+During installation, '''iron''' will launch the <code>compile_library</code> tool delivered with EiffelStudio on the provided directory.
+Example at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL/package.iron] :
+<code>package cURL
+
+setup
+	compile_library = Clib
+...
+</code>.
+This <code>compile_library</code> tool relies on <code>finish_freezing -library</code> and thus process the <code>Makefile-win.SH or Makefile.SH</code>.
+
+===Sharing Your Packages===
+To build and share your own packages on an IRON server, you will need a user account on that IRON server which will host your packages.
+Please visit [https://iron.eiffel.com/repository/account/?register] to create a new account.
+
+As usual, to see the available options, use:
+<code> iron share --help</code>
+
 Example:
-:  Updating iron data ...
-:  Updating repository http://iron.eiffel.com version=13.11 ...
-:  - http://iron.eiffel.com/13.11 base
-:  - http://iron.eiffel.com/13.11 api_wrapper
-:  - ...
 
-==Display information on specific package==
-:  > iron info base
-If the package is installed, you will also get the local path installation
+To build the '''gps_nmea''' package from your library <code>c:\eiffel\library\gps_nmea\</code> :
 
-==To search a package by name, id or uri==
-:  > iron search base
-(this action will be improved in the future)
+<code>iron share create --username <your_id> --password <your_password>
+    --repository https://iron.eiffel.com/14.05 
+    --package "c:\eiffel\library\gps_nmea\package.iron" --name “gps_nmea” 
+</code>
 
-==List available packages==
-:  > iron list	
+This command will:
+* create a new package named '''gps_nmea''' on iron repository <code>https://iron.eiffel.com/14.05</code>,
+* using the local package <code>c:\eiffel\library\gps_nmea</code> (i.e: you need to provide the package.iron file)
 
-==Install a package==
-:  > iron install base
-Or also
-:  > iron install http://iron.eiffel.com/13.11/es/library/base
+Note:
+* the --package-name is for now required, even if the package.iron already provides such information.
+* see the <code>iron share --help</code> for advanced usage (such as --index, --package-archive-source, ...).
 
-Note: if you use ''iron install -v base'', it will display the location of the installation for the package ''base''.
-This is usually under the ''Eiffel User Files'' folder, example
-    <code>C:\Users\{your-login}\Documents\Eiffel User Files\13.11\iron</code>
+After adding such a package to the library, it is recommended that you go to the website, double check that the package was created they way you wanted it to be, and you can edit its information.
+Then, using the iron executable, install the package on your system, and go through the steps of using it in an Eiffel project, and correct any problems discovered, to verify that end users will be able to productively use your package.
 
-If the environment variables <code>ISE_IRON_PATH</code> or else <code>IRON_PATH</code> are defined, the location for the iron package installation will use their value.
+It is also '''''strongly''''' encouraged to include (or provide a link to) documentation that orients the user to its use, and answers basic questions such as:  What is the package? What motivated you to create it?  What problem(s) does it address?  Under what circumstances can the package be productively used?  Under what circumstances should it ''not'' be used (if applicable)?  And some basic examples of its use.  If the package is complex, it can be very helpful to include a well-commented  application that demonstrates intended reuse of the package in software.
 
-==List installed packages==
-:  > iron list --installed
+Important note:  having clear documentation that enables end users to easily learn how to use your package is a VITAL link in the ability to reuse software components as is so aptly described in ''[[uuid:496983ef-b86e-772e-16b9-39b37ef80e37|Object&#8209;Oriented&nbsp;Software&nbsp;Construction,&nbsp;2nd&nbsp;Edition]]'', in the Modular Understandability criterion:
 
-==Uninstall or remove a package==
-:  > iron remove base
+:'''''“A method favors Modular Understandability if it helps produce software in which a human reader can understand each module without having to know the others, or, at worst, by having to examine only a few of the others.”'''''
 
-==Advanced usage==
-===You can have more than one iron repository server registered===
-:  > iron repository --list
-:  > iron repository --add iron http://iron.eiffel.com/13.11
-:  > iron repository --add custom http://iron.example.com/13.11
-:  > iron repository --remove http://iron.eiffel.com/13.11
+and the Self-Documentation Principle:
 
-===To build and share your own package, use ''iron package''===
-:  > iron share --help
-For that, you need an iron user account on the related iron server, please visit [http://iron.eiffel.com/access/]
+:'''''“The designer of a module should strive to make all information about the module part of the module itself.”'''''
 
-For example to build the ''foobar'' package from your library c:\eiffel\library\foobar
-:  > iron share --username {your-login} --password {your-password} --repository http://iron.eiffel.com/13.11 create --package-archive-source ''c:\eiffel\library\foobar'' --name ''foobar'' --description ''foobar package for testing iron'' --index ''/dummy/lib/foobar''
+The point:  reuse is only possible when end users can easily and quickly learn how to reuse software components available to them.
 
-This command will create a new package named ''foobar'' on iron repository [http://iron.eiffel.com/13.11], and using the local folder ''c:\eiffel\library\foobar'' as the source code for the package.
-Then associate this package with uri [http://iron.eiffel.com/13.11/dummy/lib/foobar]
+==Origin of the Name IRON==
 
-=Future enhancements=
-The version of iron published at the same time of EiffelStudio 13.11 is a first implementation, it covers the basic functionalities, but the goal of iron is also to improve quality and ensure the ecosystem as a whole is coherent.
+As many readers will know, the name "Eiffel" was chosen to reflect the elegance and soundness of constructing large, complex software systems, with '''simple, individual components, each of which is a unit by itself and has its own existence, and can be tested for integrity as a separate unit, but its role in the larger scheme of things is to be used as a "building block"''' for constructing high-integrity software systems.  The picture on the front of the book ''[[uuid:496983ef-b86e-772e-16b9-39b37ef80e37|Object&#8209;Oriented&nbsp;Software&nbsp;Construction,&nbsp;2nd&nbsp;Edition]]'' illustrates this.
 
-* additional meta data to describe the package
-* analyze the content of the archive, to extract information related to the various existing ecf
-* improved search facilities
-* ensure the package compiles in the iron+version ecosystem
-* package dependencies
-* package versioning
-* upgrade of the installed package
-* post-installation operations
-* testsuite supports
-* stronger iron support in compiler  (auto installation, ...)
-* more features that users may request or suggest ...
+This of course is intentionally meant as a direct parallel to the famous structure built by the architect and civil engineer Alexandre Gustave Eiffel.  This structure was constructed with '''simple, individual components, each of which is a unit by itself and has its own existence, and can be tested for integrity as a separate unit, but its role in the larger scheme of things is to be used as a "building block"''' for constructing a high-integrity structure:  the Eiffel Tower.
+
+As a parallel to this, "IRON", as a name, was chosen to reflect the fact that the individual building blocks were themselves made from iron.  In the Eiffel world, constructing a large complex software system is done with libraries of high-quality reusable components.  Thus, the "building blocks" are made from iron, and software systems are made from those building blocks.  Hence, IRON provides the "raw material" from which complex Eiffel systems are developed.
+
+==Planned Enhancements==
+This documentation describes the version of iron released with EiffelStudio 14.05.
+More features are planned or are already under development:
+:* the ability to analyze the contents of the package, to extract information related to its .ECF file(s)
+:* a way of ensuring that the package compiles under the specified version of EiffelStudio
+:* support for test suite
+:* detection and actions related to package dependencies
+:* package versioning
+:* ability to upgrade of packages already installed
+:* extended post-installation operations
+:* more features that users may request or suggest.
 

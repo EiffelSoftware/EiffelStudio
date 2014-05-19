@@ -311,7 +311,7 @@ See for instance, the package.iron for Eiffel Base package:
 Note: online version at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron] .
 
 Only the name of the package is required for now, but the section "project" list the various available .ecf projects, and the section "note" contains the title, description, tags, ... informations.
-The tag under the '''note''' section is free, and for now, only '''title, description, tags, link<nowiki[...]</nowiki>, and maps''' have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.
+The tag under the '''note''' section is free, and for now, only '''title, description, tags, link<nowiki>[...]</nowiki>, and maps''' have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.
 
 A few packages may require post installation operations, such as compiling C code, or others. 
 For that, use the section '''setup''', and in particular the '''compile_library''' information.
@@ -324,6 +324,47 @@ setup
 ...
 </code>.
 This <code>compile_library</code> tool relies on <code>finish_freezing -library</code> and thus process the <code>Makefile-win.SH or Makefile.SH</code>.
+
+==Using your own IRON packages locally==
+There are various ways to use your own Eiffel package libraries:
+* Using local location as it was currently done before 14.05 (i.e relative or absolute path, and eventually using an environment variable...).
+* Sharing the package on an IRON server, and then install it from that server:
+** The default https://iron.eiffel.com/ is the recommended server
+** But it is possible to host your own server easily. (server how-to documentation will be provided soon).
+* And there is another solution: local repository.
+
+Local repositories rely heavily on the <code>package.iron</code> files. So if a folder is registered as iron repository, internally iron will search this folder recursively for package.iron files.
+
+Example on Windows:
+<code>iron repository --add %ISE_LIBRARY%\library
+</code>
+
+It should find and list all the official ISE IRON packages.
+Now if you want to install the '''time''' package from it, just do
+
+<code>> iron install time
+Searching [time]
+-> several packages for name [time]!
+  1) time (https://iron.eiffel.com/14.05) "EiffelTime"
+  2) time (file:///C:/EiffelDev/Src/library)
+  > Select a package [1] (q=cancel): 2
+-> Install time (file:///C:/EiffelDev/Src/library)
+Installing [time (file:///C:/EiffelDev/Src/library)]  -> successfully installed.
+</code>
+
+To make development easier, you may want to edit/update the repositories.conf file, in order to put that file://... local repository on the top.
+<code>> iron path
+C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron
+and then edit "C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron\repositories.conf"
+</code>
+
+*However, unless you are using the iron tool in batch mode ( <code>--batch</code> flag ), you will be asked to choose which package you want to install. 
+*You can also use the EiffelStudio "Add Library" dialog via the "Iron" tab, to install, uninstall the various packages.
+*And last solution, you can use the full url as:
+<code>> iron install file:///C:/EiffelDev/Src/library/time
+</code>
+
+Of course, do not forget that local repository should be used only for code in progress, otherwise you should share that library and use it as a simple user. One of the goal of IRON is to encourage people sharing their libraries with other Eiffel users.
 
 ==Sharing Your Packages==
 To build and share your own packages on an IRON server, you will need a user account on that IRON server which will host your packages.

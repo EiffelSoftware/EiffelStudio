@@ -38,6 +38,11 @@ feature -- Status report
 			Result := text.is_empty
 		end
 
+	is_whitespace: BOOLEAN
+		do
+			Result := text.is_whitespace
+		end
+
 feature -- Element change
 
 	set_line_count (n: like line_count)
@@ -63,7 +68,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

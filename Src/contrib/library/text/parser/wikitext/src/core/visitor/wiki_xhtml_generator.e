@@ -22,6 +22,18 @@ feature {NONE} -- Initialization
 --			create list_indexes.make_filled (0, 0, 50)
 		end
 
+feature -- Basic operation
+
+	reset
+		do
+			level := 0
+			list_level := 0
+			section_level := 0
+			pre_block_level := 0
+			next_output_require_newline := False
+			next_newline_ignored := False
+		end
+
 feature -- Output
 
 	buffer: STRING
@@ -31,8 +43,15 @@ feature -- Output
 			buf: like buffer
 		do
 			buf := buffer
-			if next_output_require_newline then
-				buf.append ("<br/>%N")
+			if next_newline_ignored then
+				reset_ignore_next_newline
+				next_output_require_newline := False
+			elseif next_output_require_newline then
+				if in_pre_block then
+					buf.append ("%N")
+				else
+					buf.append ("<br/>%N")
+				end
 				next_output_require_newline := False
 			else
 --				buf.append_character ('%N')
@@ -40,6 +59,16 @@ feature -- Output
 --				buf.append (create {STRING}.make_filled (' ', level * 2))
 			end
 			buf.append (s)
+		end
+
+	ignore_next_newline
+		do
+			next_newline_ignored := True
+		end
+
+	reset_ignore_next_newline
+		do
+			next_newline_ignored := False
 		end
 
 	unset_next_output_require_newline
@@ -51,6 +80,8 @@ feature -- Output
 		do
 			next_output_require_newline := True
 		end
+
+	next_newline_ignored: BOOLEAN
 
 	next_output_require_newline: BOOLEAN
 
@@ -69,6 +100,25 @@ feature -- Output
 	set_level (v: like level)
 		do
 			level := v
+		end
+
+feature -- status: pre block	
+
+	pre_block_level: INTEGER
+
+	in_pre_block: BOOLEAN
+		do
+			Result := pre_block_level > 0
+		end
+
+	enter_pre_block
+		do
+			pre_block_level := pre_block_level + 1
+		end
+
+	exit_pre_block
+		do
+			pre_block_level := pre_block_level - 1
 		end
 
 feature -- Book processing
@@ -203,9 +253,17 @@ feature -- Processing
 
 	visit_preformatted_text (a_block: WIKI_PREFORMATTED_TEXT)
 		do
-			output ("<pre>")
-			visit_composite (a_block)
-			output ("</pre>")
+			if a_block.is_empty then
+				output ("")
+				set_next_output_require_newline
+			else
+				output ("<pre>")
+				enter_pre_block
+				visit_composite (a_block)
+				output ("</pre>")
+				exit_pre_block
+				ignore_next_newline
+			end
 		end
 
 --	process_indented_text (a_text: WIKI_INDENTED_TEXT)
@@ -317,14 +375,18 @@ feature -- Template
 feature -- Tag
 
 	visit_code (a_code: WIKI_CODE)
+		local
+			l_is_inline: BOOLEAN
 		do
-			if a_code.is_inline then
+			l_is_inline := a_code.is_inline
+			if l_is_inline then
 				output ("<" + a_code.tag_name + " class=%"inline%">")
 			else
 				output ("<" + a_code.tag_name + ">")
 			end
 			a_code.text.process (Current)
 			output ("</" + a_code.tag_name + ">")
+			ignore_next_newline
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
@@ -409,6 +471,7 @@ feature -- Table
 
 			visit_composite (a_table)
 			output ("</table>")
+			ignore_next_newline
 		end
 
 	visit_table_row (a_row: WIKI_TABLE_ROW)

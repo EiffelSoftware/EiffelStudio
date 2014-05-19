@@ -159,8 +159,8 @@ Criteria available:
 | downloads
 | has at least N downloads, e.g. downloads:25
 |}
-If a criterion is omitted, '''name''' is used by default.
-'''Operators available''':  or, and, not  (example:  name:er and not name:parser)
+:If a criterion is omitted, '''name''' is used by default.
+:'''Operators available''':  or, and, not  (example:  name:er and not name:parser)
 
 Finally, when you have found the package you want, click on its title, and the page displayed will contain detailed information about the package. 
 

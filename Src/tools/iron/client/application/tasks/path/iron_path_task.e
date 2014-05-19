@@ -31,13 +31,12 @@ feature -- Execute
 	execute (args: IRON_PATH_ARGUMENTS; a_iron: IRON)
 		local
 			l_resources: LIST [READABLE_STRING_32]
-			l_multiple: BOOLEAN
 		do
 			l_resources := args.resources
 			if l_resources.count = 0 then
 				print (a_iron.layout.path.name)
+				io.put_new_line
 			else
-				l_multiple := l_resources.count > 1
 				across
 					l_resources as c
 				loop
@@ -58,9 +57,6 @@ feature -- Execute
 							end
 						end
 					end
-					if l_multiple then
-						io.put_new_line
-					end
 				end
 			end
 		end
@@ -72,6 +68,7 @@ feature -- Execute
 				attached a_iron.installation_api.package_installation_path (a_package) as l_installation_path
 			then
 				print (l_installation_path.name)
+				io.put_new_line
 			end
 		end
 

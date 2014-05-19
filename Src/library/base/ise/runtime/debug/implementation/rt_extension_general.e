@@ -46,7 +46,6 @@ feature -- Evaluation helper
 			Result := a.is_equal (b)
 		end
 
-	equal_evaluation, --| `equal_evaluation' is obsolete [2009-11-05] bad name, and will be removed in 6.6
 	equal_sign_evaluation (a,b: detachable ANY): BOOLEAN
 			-- Return the evaluation of `a = b'
 		do
@@ -112,7 +111,7 @@ feature -- Object storage Access
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

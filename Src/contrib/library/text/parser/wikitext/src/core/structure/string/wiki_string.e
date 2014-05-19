@@ -50,6 +50,11 @@ feature -- Status
 			Result := text.is_empty and ((attached parts as l_parts and then l_parts.count = 0) or else parts = Void)
 		end
 
+	is_whitespace: BOOLEAN
+		do
+			Result := text.is_whitespace and ((attached parts as l_parts and then l_parts.count = 0) or else parts = Void)
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)

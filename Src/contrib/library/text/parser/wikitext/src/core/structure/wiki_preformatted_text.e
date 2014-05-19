@@ -27,6 +27,19 @@ feature {NONE} -- Initialization
 			add_element (create {WIKI_LINE}.make (s.substring (2, s.count)))
 		end
 
+feature -- Status
+
+	is_empty: BOOLEAN
+		do
+			if count = 0 then
+				Result := True
+			elseif count = 1 then
+				if attached elements.first as e then
+					Result := e.is_empty
+				end
+			end
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -35,7 +48,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

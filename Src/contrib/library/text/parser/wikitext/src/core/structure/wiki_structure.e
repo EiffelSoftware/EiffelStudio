@@ -323,7 +323,7 @@ feature -- Basic operation
 									do_nothing
 									w_tags.remove
 									multiline_level := multiline_level - 1
-									i := i + 2 + l_tag.count + 1
+									i := i + 1 + l_tag.count + 1  --| /tag>
 								end
 							end
 						end

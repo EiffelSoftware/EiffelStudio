@@ -49,7 +49,6 @@ feature -- Element change
 		local
 			fn: PATH
 			f: RAW_FILE
-			lst: LIST [STRING]
 			t: STRING
 			ln, p: INTEGER
 			s: STRING

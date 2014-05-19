@@ -123,6 +123,9 @@ feature {NONE} -- Initialization
 							end
 
 							wp.get_structure (p)
+							debug
+								wp.process (create {WIKI_DEBUG_VISITOR}.make);
+							end
 							wp.process (vis)
 
 							if l_header_tpl /= Void then

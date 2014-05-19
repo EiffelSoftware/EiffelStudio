@@ -3671,6 +3671,10 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 				not_processing_locals: not processing_locals
 			end
+			if l_as.is_frozen then
+				l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
+				l_text_formatter_decorator.put_space
+			end
 			if l_as.is_reference then
 				l_text_formatter_decorator.process_keyword_text (ti_reference_keyword, Void)
 				l_text_formatter_decorator.put_space

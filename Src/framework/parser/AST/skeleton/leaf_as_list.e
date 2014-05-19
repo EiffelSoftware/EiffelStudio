@@ -378,7 +378,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text modification
 		end
 
 	replace_region (a_region: ERT_TOKEN_REGION; a_text: STRING)
-			-- Prepend `a_region' by `a_text'.
+			-- Replace `a_region' by `a_text'.
 			-- A replace modifier will be registered.			
 		require
 			a_region_not_void: a_region /= Void

@@ -1,0 +1,42 @@
+body { 
+	max-width: 1000px; margin: 5px 20px 5px 20px; margin-left: auto; margin-right: auto; 
+	background-color: #fff;
+}
+code { 
+	display: block; 
+	overflow: auto;
+	line-height: 1.3;
+	font-family: monospace;
+	white-space: pre-wrap;
+	border: solid 1px #999; 
+	background-color: #ffffef; 
+	padding: 10px; 
+	margin: 2px 5px 2px 20px; 
+	color: #900;
+	font-size: 1.1em;
+}
+code.inline {
+	display: inline; 
+	font-family: monospace;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+}
+div.wiki-template {
+	margin-left: 20px;
+	border: solid 1px #9f9;
+	background-color: #cfc;
+	padding: 5px;
+}
+table.wikitable {
+	margin: 5px 0 2px 20px;
+	border: solid 1px #ccc;
+	border-collapse:collapse;
+}
+table.wikitable th,
+table.wikitable td {
+	border: solid 1px #ccc;
+	text-align: left;
+	padding: 2px 5px 2px 5px;
+}

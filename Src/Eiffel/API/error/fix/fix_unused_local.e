@@ -4,7 +4,7 @@
 class	FIX_UNUSED_LOCAL
 
 inherit
-	FIX_CLASS
+	FIX_FEATURE
 	SHARED_NAMES_HEAP
 
 create {UNUSED_LOCAL_WARNING}
@@ -13,7 +13,7 @@ create {UNUSED_LOCAL_WARNING}
 feature {NONE} -- Creation
 
 	make (w: UNUSED_LOCAL_WARNING)
-			-- Associate a fix with the given warning.
+			-- Associate a fix with the warning `w'.
 		require
 			is_class_writable: not w.associated_class.lace_class.is_read_only
 		do
@@ -28,13 +28,13 @@ feature {NONE} -- Access
 feature -- Access
 
 	source_class: CLASS_I
-			-- Descriptor of a class to be fixed.
+			-- <Precursor>
 		do
 			Result := source.associated_class.lace_class
 		end
 
 	source_feature: E_FEATURE
-			-- Descriptor of a feature to be fixed.
+			-- <Precursor>
 		do
 			Result := source.associated_feature
 		end

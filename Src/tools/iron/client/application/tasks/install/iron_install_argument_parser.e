@@ -38,8 +38,13 @@ feature -- Access
 
 	setup_execution_enabled: BOOLEAN
 			-- Allowing execution of scripts during installation?
+			-- Default is True
 		do
-			Result := has_option (setup_execution_enabled_switch) and not has_option (setup_execution_ignored_switch)
+			if has_option (setup_execution_ignored_switch) then
+				Result := has_option (setup_execution_enabled_switch)
+			else
+				Result := True
+			end
 		end
 
 	ignoring_cache: BOOLEAN
@@ -103,7 +108,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_SWITCH}.make (file_switch, "Package file", True, True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Install all available packages", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (no_cache_switch, "Ignore cache and always download iron package?", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_enabled_switch, "Enable execution of package installation setup?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_enabled_switch, "Enable execution of package installation setup? (Default:enabled)", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_ignored_switch, "Ignore execution of package installation setup?", True, False))
 			add_verbose_switch (Result)
 			add_simulation_switch (Result)

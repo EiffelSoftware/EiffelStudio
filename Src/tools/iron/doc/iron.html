@@ -307,7 +307,7 @@ See for instance, the package.iron for Eiffel Base package:<br/>
 Note: online version at <a href="https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron" class="wiki_ext_link">https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron</a> .<br/>
 <br/>
 Only the name of the package is required for now, but the section "project" list the various available .ecf projects, and the section "note" contains the title, description, tags, ... informations.<br/>
-The tag under the <strong>note</strong> section is free, and for now, only <strong>title, description, tags, link&lt;nowiki<a href="..." class="wiki_ext_link">...</a>&lt;/nowiki&gt;, and maps</strong> have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.<br/>
+The tag under the <strong>note</strong> section is free, and for now, only <strong>title, description, tags, link[...], and maps</strong> have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.<br/>
 <br/>
 A few packages may require post installation operations, such as compiling C code, or others. <br/>
 For that, use the section <strong>setup</strong>, and in particular the <strong>compile_library</strong> information.<br/>
@@ -320,6 +320,45 @@ setup
 ...
 </code>.<br/>
 This <code class="inline">compile_library</code> tool relies on <code class="inline">finish_freezing -library</code> and thus process the <code class="inline">Makefile-win.SH or Makefile.SH</code>.<br/>
+
+<h2>
+Using your own IRON packages locally</h2>
+There are various ways to use your own Eiffel package libraries:<ul><li> Using local location as it was currently done before 14.05 (i.e relative or absolute path, and eventually using an environment variable...).</li>
+<li> Sharing the package on an IRON server, and then install it from that server:<br/>
+<li> The default https://iron.eiffel.com/ is the recommended server</li>
+<li> But it is possible to host your own server easily. (server how-to documentation will be provided soon).</li>
+</li>
+<li> And there is another solution: local repository.</li>
+</ul>
+<br/>
+Local repositories rely heavily on the <code class="inline">package.iron</code> files. So if a folder is registered as iron repository, internally iron will search this folder recursively for package.iron files.<br/>
+<br/>
+Example on Windows:<br/>
+<code>iron repository --add %ISE_LIBRARY%\library
+</code><br/>
+It should find and list all the official ISE IRON packages.<br/>
+Now if you want to install the <strong>time</strong> package from it, just do<br/>
+<br/>
+<code>&gt; iron install time
+Searching <a href="time" class="wiki_ext_link">time</a>
+-&gt; several packages for name <a href="time" class="wiki_ext_link">time</a>!
+  1) time (https://iron.eiffel.com/14.05) "EiffelTime"
+  2) time (file:///C:/EiffelDev/Src/library)
+  &gt; Select a package <a href="1" class="wiki_ext_link">1</a> (q=cancel): 2
+-&gt; Install time (file:///C:/EiffelDev/Src/library)
+Installing <a href="time" class="wiki_ext_link">(file:///C:/EiffelDev/Src/library)</a>  -&gt; successfully installed.
+</code><br/>
+To make development easier, you may want to edit/update the repositories.conf file, in order to put that file://... local repository on the top.<br/>
+<code>&gt; iron path
+C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron
+and then edit "C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron\repositories.conf"
+</code><ul><li>However, unless you are using the iron tool in batch mode ( <code class="inline">--batch</code> flag ), you will be asked to choose which package you want to install. </li>
+<li>You can also use the EiffelStudio "Add Library" dialog via the "Iron" tab, to install, uninstall the various packages.</li>
+<li>And last solution, you can use the full url as:</li>
+</ul>
+<code>&gt; iron install file:///C:/EiffelDev/Src/library/time
+</code><br/>
+Of course, do not forget that local repository should be used only for code in progress, otherwise you should share that library and use it as a simple user. One of the goal of IRON is to encourage people sharing their libraries with other Eiffel users.<br/>
 
 <h2>
 Sharing Your Packages</h2>

@@ -305,6 +305,10 @@ feature -- Output
 			l_type_set: TYPE_SET_A
 			l_feature: E_FEATURE
 		do
+			if is_frozen then
+				a_text_formatter.process_keyword_text (ti_frozen_keyword, Void)
+				a_text_formatter.add_space
+			end
 			if is_reference then
 				a_text_formatter.process_keyword_text (ti_reference_keyword, Void)
 				a_text_formatter.add_space

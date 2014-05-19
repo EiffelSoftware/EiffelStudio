@@ -11008,9 +11008,9 @@ feature {NONE} -- Implementation: checking locals
 								-- Behave as if the type is still unresolved for suggestive type inference.
 							x.reset
 							r := x
-						elseif attached u then
+						elseif attached u and then not r.is_none then
 								-- Suggest computed type as a fix.
-								-- TODO: provide the fix.
+							u.set_suggested_type (r)
 						end
 					end
 						-- Update local type information.

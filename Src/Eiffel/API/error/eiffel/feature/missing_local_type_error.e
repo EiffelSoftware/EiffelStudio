@@ -7,6 +7,7 @@ class
 inherit
 	FEATURE_ERROR
 		redefine
+			fix_option,
 			print_error_message,
 			print_single_line_error_message
 		end
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 			set_location (l)
 		end
 
-feature {NONE} -- Access
+feature {FIX_MISSING_LOCAL_TYPE} -- Access
 
 	identifiers: ITERABLE [INTEGER_32]
 			-- Identifiers of local variables without type declaration.
@@ -36,6 +37,30 @@ feature -- Properties
 
 	code: STRING = "Syntax Error"
 			-- <Precursor>
+
+feature -- Modification
+
+	set_suggested_type (t: TYPE_A)
+			-- Associate suggested type `t' used for fix suggestions of the error.
+		do
+			suggested_type := t
+		end
+
+feature {FIX_MISSING_LOCAL_TYPE} -- Automated correction
+
+	suggested_type: TYPE_A
+			-- A type that may be used to fix the error.
+
+feature -- Automated correction
+
+	fix_option: detachable ITERABLE [FIX [TEXT_FORMATTER]]
+			-- <Precursor>
+		do
+			if attached suggested_type and then not written_class.lace_class.is_read_only then
+				create {SPECIAL [FIX [TEXT_FORMATTER]]} Result.make_filled
+					(create {FIX_MISSING_LOCAL_TYPE}.make (Current), 1)
+			end
+		end
 
 feature {NONE} -- Output
 

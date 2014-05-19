@@ -1,8 +1,8 @@
 ﻿note
-	description: "Fix of an unused local warning."
+	description: "Automated fix for an issue in a feature."
 
 class
-	ES_FIX_UNUSED_LOCAL
+	ES_FIX_FEATURE
 
 inherit
 	EB_CONSTANTS
@@ -21,8 +21,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: FIX_UNUSED_LOCAL)
-			-- Initialize with a fix `f' that may be applied.
+	make (f: FIX_FEATURE)
+			-- Initialize GUI component with a fix `f' that may be applied.
 		require
 			is_class_writable: not f.source_class.is_read_only
 		local
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	item: FIX_UNUSED_LOCAL
+	item: FIX_FEATURE
 			-- The fix to apply.
 
 feature -- Output

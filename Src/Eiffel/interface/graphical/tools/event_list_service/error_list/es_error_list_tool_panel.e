@@ -470,7 +470,7 @@ feature {NONE} -- Basic operations
 			l_menu_item: EV_MENU_ITEM
 			s: ARRAYED_LIST [EV_GRID_ROW]
 			fix_count: INTEGER
-			fix_action: ES_FIX_UNUSED_LOCAL
+			fix_action: ES_FIX_FEATURE
 		do
 			if attached {EVENT_LIST_ITEM_I} a_item.row.data as l_item then
 				create l_menu
@@ -483,7 +483,7 @@ feature {NONE} -- Basic operations
 						attached {EVENT_LIST_ITEM_I} r.item.data and then
 						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (error_column) as e and then
 						e.component_count > 0 and then
-						attached {ES_FIX_UNUSED_LOCAL} e.component (e.component_count) as action
+						attached {ES_FIX_FEATURE} e.component (e.component_count) as action
 					then
 						fix_count := fix_count + 1
 						fix_action := action
@@ -941,7 +941,7 @@ feature {NONE} -- Fixing
 	add_fix_component (e: ERROR; i: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Add a fix option of `e' to the item `i'.
 		local
-			fix_component: detachable ES_FIX_UNUSED_LOCAL
+			fix_component: detachable ES_FIX_FEATURE
 		do
 			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
 					-- TODO: Handle multiple fix options instead of just the first one.
@@ -951,8 +951,12 @@ feature {NONE} -- Fixing
 					attached fix_component
 				loop
 						-- Associate fix option with the grid item.
-					if attached {FIX_UNUSED_LOCAL} o.item as u then
-						create fix_component.make (u)
+						-- TODO: Handle other types of fixes by adding a factory class based on a visitor pattern,
+						-- so that adding a new fix class does not pass unnoticed.
+					if attached {FIX_FEATURE} o.item as u then
+						create {ES_FIX_FEATURE} fix_component.make (u)
+					end
+					if attached fix_component then
 							-- Augment `i'  with a notification that a fix is available.
 						i.append_component (fix_component)
 							-- Make sure a notification is always visible.
@@ -979,7 +983,7 @@ feature {NONE} -- Fixing
 				until
 					i <= 0
 				loop
-					if attached {ES_FIX_UNUSED_LOCAL} e.component (i) as f then
+					if attached {ES_FIX_FEATURE} e.component (i) as f then
 							-- Prevent further applications of the fix and
 							-- remove a notification that a fix is available.
 						e.remove_component (i)

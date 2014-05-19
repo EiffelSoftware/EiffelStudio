@@ -343,13 +343,13 @@ It should find and list all the official ISE IRON packages.
 Now if you want to install the '''time''' package from it, just do
 
 <code>> iron install time
-Searching [time]
--> several packages for name [time]!
+Searching <nowiki>[time]</nowiki>
+-> several packages for name <nowiki>[time]</nowiki>!
   1) time (https://iron.eiffel.com/14.05) "EiffelTime"
   2) time (file:///C:/EiffelDev/Src/library)
-  > Select a package [1] (q=cancel): 2
+  > Select a package <nowiki>[1]</nowiki> (q=cancel): 2
 -> Install time (file:///C:/EiffelDev/Src/library)
-Installing [time (file:///C:/EiffelDev/Src/library)]  -> successfully installed.
+Installing <nowiki>[time (file:///C:/EiffelDev/Src/library)]</nowiki>  -> successfully installed.
 </code>
 
 To make development easier, you may want to edit/update the repositories.conf file, in order to put that file://... local repository on the top.

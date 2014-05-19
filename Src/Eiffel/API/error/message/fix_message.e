@@ -12,15 +12,29 @@ inherit
 feature -- Format: action
 
 	format_action_unused_local (t: TEXT_FORMATTER; local_list: like listable)
+			-- Add a name of an action to remove unused locals `local_list' to `t'.
 		do
 			format (t, locale.translation_in_context ("Remove {1}", "fix"), <<list (local_list)>>)
+		end
+
+	format_action_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
+			-- Add a name of an action to add a local type `v' to `t'.
+		do
+			format (t, locale.translation_in_context ("Add type {1}", "fix"), <<element (v)>>)
 		end
 
 feature -- Format: description
 
 	format_description_unused_local (t: TEXT_FORMATTER; local_list: like listable)
+			-- Add a description of an action to remove unused locals `local_list' to `t'.
 		do
 			format (t, locale.translation_in_context ("Remove declarations of the local variables {1}.", "fix"), <<list (local_list)>>)
+		end
+
+	format_description_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
+			-- Add a description of an action to add a local type `v' to `t'.
+		do
+			format (t, locale.translation_in_context ("Add type declaration {1} to the local declaration list.", "fix"), <<element (v)>>)
 		end
 
 note

@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 		require
 			v_not_void: v /= Void
 		do
-			set_item (v)
+			set_item (v.item)
 		ensure
 			item_set: item = v.item
 		end
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	is_space_flag: NATURAL_8 = 0x80;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

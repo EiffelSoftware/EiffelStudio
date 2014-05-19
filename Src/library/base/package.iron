@@ -3,17 +3,6 @@ package base
 project
 	base_safe = "base-safe.ecf"
 	base = "base.ecf"
-	base = "base-safe.ecf"
-	base = "foobase-safe.ecf"
-	base = "foobase0-safe.ecf"
-	base = "foobase1-safe.ecf"
-	base = "foobase2-safe.ecf"
-	base = "foobase3-safe.ecf"
-	base = "new_base-safe.ecf"
-	base = "old_base-safe.ecf"
-	base = "red-base.ecf"
-	base_testing = "test/test-safe.ecf"
-	base_testing = "test/test.ecf"
 	base_testing = "testing/testing-safe.ecf"
 	base_testing = "testing/testing.ecf"
 

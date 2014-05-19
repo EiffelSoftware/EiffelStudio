@@ -504,9 +504,9 @@ feature -- Bit operations
 			n_greater_or_equal_to_minus_32: n >= -32
 		do
 			if n > 0 then
-				Result := bit_shift_right (n)
+				Result := bit_shift_right (n).item
 			else
-				Result := bit_shift_left (- n)
+				Result := bit_shift_left (- n).item
 			end
 		end
 
@@ -578,7 +578,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

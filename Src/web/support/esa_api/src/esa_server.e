@@ -131,12 +131,6 @@ feature -- Filters
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
-			debug ("esa")
-					-- Debug
-				create {WSF_DEBUG_FILTER} f
-				f.set_next (l_filter)
-				l_filter := f
-			end
 
 			if launcher.is_console_output_supported then
 					-- Logging for nino
@@ -146,6 +140,11 @@ feature -- Filters
 			end
 			 	-- CORS Authentication
 			create {ESA_CORS_FILTER} f
+			f.set_next (l_filter)
+			l_filter := f
+
+				-- Logger Filter
+			create {ESA_LOGGER_FILTER} f.make (esa_config)
 			f.set_next (l_filter)
 			l_filter := f
 

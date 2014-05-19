@@ -23,7 +23,7 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), current_user_name (req))
+				create l_cj.make (absolute_host(req,""), current_user_name (req))
 				if attached l_cj.representation as l_cj_api then
 					new_response_get (req, res, l_cj_api)
 				end
@@ -36,7 +36,7 @@ feature -- View
 			l_cj: ESA_CJ_REPORT_DETAIL_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), a_report, current_user_name (req))
+				create l_cj.make (absolute_host(req,""), a_report, current_user_name (req))
 				if attached l_cj.representation as l_cj_api then
 					new_response_get (req, res, l_cj_api)
 				end
@@ -49,7 +49,7 @@ feature -- View
 			l_hp: ESA_CJ_REPORT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				create l_hp.make (absolute_host(req,""), a_report_view)
 				if attached l_hp.representation as l_report_page then
 					new_response_get (req, res, l_report_page)
 				end
@@ -62,7 +62,7 @@ feature -- View
 			l_hp: ESA_CJ_REPORT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				create l_hp.make (absolute_host(req,""), a_report_view)
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -75,7 +75,7 @@ feature -- View
 			l_hp: ESA_CJ_RESPONSIBLE_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_report_view)
+				create l_hp.make (absolute_host(req,""), a_report_view)
 				if attached l_hp.representation as l_home_page then
 					new_response_get (req, res, l_home_page)
 				end
@@ -95,9 +95,9 @@ feature -- View
 		do
 			if attached req.http_host as l_host then
 				if a_form.id > 0 then
-					create l_hp.make_with_data (req.absolute_script_url (""), a_form, current_user_name (req))
+					create l_hp.make_with_data (absolute_host(req,""), a_form, current_user_name (req))
 				else
-					create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+					create l_hp.make (absolute_host(req,""), a_form, current_user_name (req))
 				end
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
@@ -111,18 +111,18 @@ feature -- View
 			l_hp: ESA_CJ_REPORT_FORM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make_with_data (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make_with_data (absolute_host(req,""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
-					new_response_redirect (req, res, l_form_page, req.absolute_script_url ("/report_form/" + a_form.id.out))
+					new_response_redirect (req, res, l_form_page, absolute_host(req,"/report_form/" + a_form.id.out))
 				end
 			end
 		end
 
 	report_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Report form confirm redirect
+			-- Report form confirm redirect.
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,req.absolute_script_url ("/user_reports/"+l_user))
+				compute_response_redirect (req, res, absolute_host(req,"/user_reports/" + l_user))
 			end
 		end
 
@@ -132,7 +132,7 @@ feature -- View
 			l_hp: ESA_CJ_REPORT_FORM_CONFIRM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_id, current_user_name (req))
+				create l_hp.make (absolute_host(req , ""), a_id, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end
@@ -146,7 +146,7 @@ feature -- View
 			l_hp: ESA_CJ_REPORT_FORM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make_with_error (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make_with_error (absolute_host(req, ""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_400 (req, res, l_form_page)
 				end
@@ -159,7 +159,7 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make_with_error (req.absolute_script_url (""), "The resource " + req.percent_encoded_path_info + "was not found", 404, current_user_name (req))
+				create l_cj.make_with_error (absolute_host(req, ""), "The resource " + req.percent_encoded_path_info + "was not found", 404, current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					new_response_get_404 (req, res, l_representation)
 				end
@@ -172,7 +172,7 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), current_user_name (req))
+				create l_cj.make (absolute_host(req,""), current_user_name (req))
 				if attached l_cj.representation as l_cj_api then
 					new_response_get (req, res, l_cj_api)
 				end
@@ -185,7 +185,7 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), Void)
+				create l_cj.make (absolute_host(req,""), Void)
 				if attached l_cj.representation as l_cj_api then
 					new_response_access_denied (req, res, l_cj_api)
 				end
@@ -198,7 +198,7 @@ feature -- View
 			l_cj: ESA_CJ_ROOT_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make_with_error (req.absolute_script_url (""), "Bad Request " + req.path_info.as_string_8, 400, current_user_name (req))
+				create l_cj.make_with_error (absolute_host(req,""), "Bad Request " + req.path_info.as_string_8, 400, current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					new_response_400 (req, res, l_representation)
 				else
@@ -237,7 +237,7 @@ feature -- View
 				l_cj: ESA_CJ_REGISTER_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), a_view , current_user_name (req))
+				create l_cj.make (absolute_host(req,""), a_view , current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					if attached a_view.errors  then
 						new_response_400 (req, res, l_representation)
@@ -256,7 +256,7 @@ feature -- View
 				l_cj: ESA_CJ_POST_REGISTER_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""),  current_user_name (req))
+				create l_cj.make (absolute_host(req,""),  current_user_name (req))
 				if attached l_cj.representation as l_representation then
 						new_response_get (req, res, l_representation)
 				else
@@ -272,7 +272,7 @@ feature -- View
 				l_cj: ESA_CJ_ACTIVATION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make (req.absolute_script_url (""), a_view, current_user_name (req))
+				create l_cj.make (absolute_host(req,""), a_view, current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					if attached a_view and then( attached a_view.error_message or else not a_view.is_valid_form )then
 						new_response_400 (req, res, l_representation)
@@ -292,7 +292,7 @@ feature -- View
 			l_hp: ESA_CJ_CONFIRMATION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), current_user_name (req))
+				create l_hp.make (absolute_host(req,""), current_user_name (req))
 				if attached l_hp.representation as l_confirmation_page then
 					new_response_get (req, res, l_confirmation_page)
 				end
@@ -306,7 +306,7 @@ feature -- View
 			l_hp: ESA_CJ_STATUS_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_list,current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
 				if attached l_hp.representation as l_status_page then
 					new_response_get (req, res, l_status_page)
 				end
@@ -320,7 +320,7 @@ feature -- View
 			l_hp: ESA_CJ_SEVERITY_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_list,current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
 				if attached l_hp.representation as l_severity_page then
 					new_response_get (req, res, l_severity_page)
 				end
@@ -334,7 +334,7 @@ feature -- View
 			l_hp: ESA_CJ_CATEGORY_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_list,current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
 				if attached l_hp.representation as l_category_page then
 					new_response_get (req, res, l_category_page)
 				end
@@ -348,7 +348,7 @@ feature -- View
 			l_hp: ESA_CJ_PRIORITY_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_list,current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
 				if attached l_hp.representation as l_priority_page then
 					new_response_get (req, res, l_priority_page)
 				end
@@ -361,7 +361,7 @@ feature -- View
 			l_hp: ESA_CJ_USER_RESPONSIBLE_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_list,current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
 				if attached l_hp.representation as l_responsible_page then
 					new_response_get (req, res, l_responsible_page)
 				end
@@ -374,7 +374,7 @@ feature -- View
 				l_hp: ESA_CJ_INTERACTION_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host(req,""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_confirmation_page then
 					new_response_get (req, res, l_confirmation_page)
 				end
@@ -387,7 +387,7 @@ feature -- View
 			l_hp: ESA_CJ_INTERACTION_CONFIRM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""), a_form, current_user_name (req))
+				create l_hp.make (absolute_host(req,""), a_form, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end
@@ -405,7 +405,7 @@ feature -- View
 			-- Interaction form redirect
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,"/user_reports/"+l_user)
+				compute_response_redirect (req, res, absolute_host(req,"/user_reports/"+l_user))
 			end
 		end
 
@@ -415,7 +415,7 @@ feature -- View
 			l_hp: ESA_CJ_INTERACTION_FORM_CONFIRM_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (req.absolute_script_url (""),a_report_id, a_id, current_user_name (req))
+				create l_hp.make (absolute_host(req,""),a_report_id, a_id, current_user_name (req))
 				if attached l_hp.representation as l_form_page then
 					new_response_get (req, res, l_form_page)
 				end

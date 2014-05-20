@@ -49,7 +49,7 @@ feature -- Event
 		do
 			if flag_is_new then
 				create l_body.make_empty
-				l_body.append ("User [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "] has just been created.%N")
+				l_body.append ("User %"" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "%" has just been created.%N")
 				if attached {READABLE_STRING_GENERAL} a_user.data_item ("activation.url") as l_url then
 					l_body.append ("Please activate your account at ")
 					l_body.append_string_general (l_url)
@@ -63,11 +63,11 @@ feature -- Event
 			else
 				create l_body.make_empty
 				if attached {READABLE_STRING_GENERAL} a_user.data_item ("reset_password.url") as l_url then
-					l_body.append ("User [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "] requested password reset.%N")
-					l_body.append ("Please follow the link to login and change your password")
+					l_body.append ("User %"" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "%" requested password reset.%N")
+					l_body.append ("Please follow the link to login and change your password ")
 					l_body.append_string_general (l_url)
 					l_body.append (" . %N")
-					on_user_event (a_user, "[Iron] User [" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "] requested password reset", l_body)
+					on_user_event (a_user, "[Iron] User %"" + utf.utf_32_string_to_utf_8_string_8 (a_user.name) + "%" requested password reset", l_body)
 				end
 			end
 		end
@@ -80,10 +80,10 @@ feature -- Event
 			m: NOTIFICATION_EMAIL
 		do
 			if flag_is_new then
-				l_title := "[Iron] New package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_title := "[Iron] New package %"" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "%""
 				l_body := l_title + "%N"
 			else
-				l_title := "[Iron] Updated package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_title := "[Iron] Updated package %"" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "%""
 				l_body := l_title + "%N"
 			end
 			if mailer.is_available then
@@ -100,10 +100,10 @@ feature -- Event
 			m: NOTIFICATION_EMAIL
 		do
 			if flag_is_new then
-				l_title := "[Iron:"+ p.version.value +"] New version package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_title := "[Iron:"+ p.version.value +"] New version package %"" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "%""
 				l_body := l_title + "%N"
 			else
-				l_title := "[Iron:"+ p.version.value +"] Updated version package [" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "]"
+				l_title := "[Iron:"+ p.version.value +"] Updated version package %"" + utf.utf_32_string_to_utf_8_string_8 (p.human_identifier) + "%""
 				l_body := l_title + "%N"
 			end
 			if mailer.is_available then

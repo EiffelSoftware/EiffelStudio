@@ -6,6 +6,10 @@ note
 expanded class
 	ESA_DATABASE_SQL_SERVER_ENCODER
 
+inherit
+
+	ESA_SHARED_LOGGER
+
 feature -- Escape SQL input
 
 	encode (a_string:READABLE_STRING_32): READABLE_STRING_32
@@ -25,5 +29,6 @@ feature -- Escape SQL input
 				end
 			end
 			Result := l_string
+			log.write_debug (generator + ".encode for : " + a_string + " result: " + Result )
 		end
 end

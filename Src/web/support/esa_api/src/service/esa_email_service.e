@@ -144,7 +144,7 @@ feature -- Basic Operations
 				create l_email.make_with_entry (admin_email, a_to)
 				l_email.set_message (a_message)
 				l_email.set_signature (disclaimer)
-				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Eiffel Support Site: Password Resset")
+				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Eiffel Support Site: Password Reset")
 				send_email (l_email)
 			end
 		end

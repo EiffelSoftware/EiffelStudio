@@ -52,7 +52,6 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			debug_request_header (req)
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				log.write_information (generator+".do_get Processing request using media_type:" + l_type)

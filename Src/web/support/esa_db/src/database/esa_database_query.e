@@ -13,17 +13,17 @@ create
 feature -- Intialization
 
 	data_reader (a_query: STRING; a_parameters: STRING_TABLE [ANY])
-			-- SQL data reader for the stored query `a_query' with arguments `a_parameters'
+			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
 			query := a_query
 			parameters := a_parameters
 		end
 
 	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
-			-- Execute the Current store procedure.
+			-- Execute the Current sql query.
 		do
 				-- Check test dynamic sequel. to redesign.
-			log.write_information ( generator+".execute_reader")
+			log.write_information ( generator+".execute_reader for query:" + query)
 					create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
 			a_base_selection.set_container (Result)
 			set_map_name (a_base_selection)
@@ -33,8 +33,15 @@ feature -- Intialization
 			Result := a_base_selection.container
 			unset_map_name (a_base_selection)
 			a_base_selection.terminate
-			log.write_information ( generator+".execute_reader executed")
+		end
 
+	execute_change (a_base_CAHNGE: DB_CHANGE)
+			-- Execute the Current sql query .
+		do
+				-- Check test dynamic sequel. to redesign.
+			log.write_information ( generator+".execute_change for query:" + query)
+			a_base_cahnge.set_query (query)
+			a_base_cahnge.execute_query
 		end
 
 feature --  Access

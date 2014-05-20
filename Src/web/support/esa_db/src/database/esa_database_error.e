@@ -10,6 +10,15 @@ feature -- Access
 
 	last_error: detachable ESA_ERROR_HANDLER
 
+	last_error_message: READABLE_STRING_32
+		do
+			if attached last_error as ll_error then
+				Result := ll_error.error_message
+			else
+				Result := ""
+			end
+		end
+
 feature -- Status Report
 
 	successful: BOOLEAN

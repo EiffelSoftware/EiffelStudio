@@ -48,7 +48,8 @@ feature {NONE} -- Initialization
 --			test_row_count_responsible_by_user
 --			test_problem_report_by_uer
 --			test_temporary_interaction
-			test_row_count_problem_by_user
+--			test_row_count_problem_by_user
+			db_setup ("EiffelFromDB")
 		end
 
 
@@ -446,4 +447,70 @@ feature -- Implementation
      		 Result.append_string(l_string)
       	end
       end
+
+
+	db_setup (a_database_name: STRING)
+		local
+			l_connection: ESA_DATABASE_CONNECTION
+			l_handler: ESA_DATABASE_HANDLER
+			l_parameters: STRING_TABLE[ANY]
+			l_sql: STRING
+		do
+
+			create l_parameters.make (0)
+
+				 -- Connection
+			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.login_with_connection_string ("Driver={SQL Server};Server=JVELILLA;Database=test;Uid=sa;Pwd=Eiffel1405;")
+
+			l_sql := read_file ("create_db_sql2000.sql")
+			l_sql.replace_substring_all ("$(database_name)", a_database_name)
+				 -- Create Database
+			create {ESA_DATABASE_HANDLER_IMPL} l_handler.make (l_connection)
+
+			l_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_sql, l_parameters))
+
+			l_handler.execute_change
+
+			 	-- Table, SP, View and User Defined Functions
+
+			 	-- Initilize Basic Data
+
+		end
+
+	read_file (a_name: STRING): STRING
+		local
+				f: RAW_FILE
+				content: STRING
+			do
+			create f.make_open_read (Current_dir + a_name)
+			if f.exists and then f.is_readable then
+				f.read_stream (f.count)
+				f.close
+				content := f.last_string
+				print("%N Content of the file:%N" + content)
+			else
+				print("%N the file does not exist")
+			end
+			Result := content
+		end
+
+
+	current_dir: STRING
+		local
+			l_path: PATH
+			l_env: EXECUTION_ENVIRONMENT
+		do
+			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result.append ("..")
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result.append ("..")
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result.append ("database")
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result.append ("mssql")
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+		end
+
+
 end

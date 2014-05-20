@@ -64,6 +64,14 @@ feature -- SQL Queries
 		deferred
 		end
 
+	execute_change
+			-- Execute sqlquery that update/add data
+		require
+			query_not_void: query /= void
+		deferred
+		end
+
+
 feature -- Iteration
 
 	start

@@ -257,7 +257,7 @@ feature -- Status report
 				l_item := l_cursor.item
 				l_type := l_internal.type_of (a_warning)
 				if l_item.exact_only then
-					l_matched := l_type.is_equal (l_item.type)
+					l_matched := l_type ~ l_item.type
 				else
 					l_matched := l_type.conforms_to (l_item.type)
 				end
@@ -375,7 +375,7 @@ invariant
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

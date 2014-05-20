@@ -22,6 +22,8 @@ inherit
 
 	SHARED_CONNEG_HELPER
 
+	ESA_SHARED_LOGGER
+
 feature {NONE} -- Initialization
 
 	make (a_esa_config: ESA_CONFIG; a_server: ESA_SERVER)
@@ -114,6 +116,7 @@ feature -- Default Execution
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			if not esa_config.api_service.is_successful then
+				log.write_critical (generator + ".execute_default " + esa_config.api_service.last_error_message)
 				create l_rhf
 				media_variants := media_type_variants (req)
 				if media_variants.is_acceptable then

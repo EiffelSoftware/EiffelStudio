@@ -311,7 +311,7 @@ feature -- Element change
 			set_mask (set_flag (mask, Rbbim_colors))
 			cwel_rebarbandinfo_set_clrfore (item, color.item)
 		ensure
-			color_set: foreground_color.is_equal (color)
+			color_set: foreground_color.same_color (color)
 		end
 
 	set_background_color (color: WEL_COLOR_REF)
@@ -323,7 +323,7 @@ feature -- Element change
 			set_mask (set_flag (mask, Rbbim_colors))
 			cwel_rebarbandinfo_set_clrback (item, color.item)
 		ensure
-			color_set: background_color.is_equal (color)
+			color_set: background_color.same_color (color)
 		end
 
 	set_background_bitmap (bmp: WEL_BITMAP)
@@ -541,7 +541,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -144,14 +144,19 @@ feature -- Access
 	old_version, new_version: detachable IMMUTABLE_STRING_8
 			-- Version in stored system and retrieving system.
 
-	mismatches_by_name: HASH_TABLE [attached like attribute_info, STRING]
+	mismatches_by_name: HASH_TABLE [like attribute_info, STRING]
 			-- Store information about mismatch based on the attribute name.
 
-	mismatches_by_stored_position: HASH_TABLE [attached like attribute_info, INTEGER]
+	mismatches_by_stored_position: HASH_TABLE [like attribute_info, INTEGER]
 			-- Store information about mismatch based on the store position.
 
-	attribute_info: detachable TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+	attribute_info: TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+			-- For typing purposes.
+		require
+			callable: False
 		do
+			check False then
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -168,7 +173,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -17,27 +17,20 @@ class
 
 inherit
 	LOG_WRITER
-		redefine
-			default_create
-		end
+
+create
+	make_at_location
 
 feature {NONE} -- Creation
 
-	default_create
-			-- Create an instance of {LOG_WRITER_FILE}.
-		local
-			p: PATH
+	make_at_location (a_file: PATH)
+			-- Create log file using the location `a_file'.
 		do
-			create p.make_from_string ("system.log")
-			p := p.absolute_path
-			path := p
-			create log_file.make_with_path (p)
+			path := a_file
+			create log_file.make_with_path (a_file)
 
-				-- Date/time object that is reseeded to now every time `write' is called
+				-- Date/time object that is reseeded to now every time `write' is called.
 			create date_time.make_now_utc
-
-				-- Call set_path in case it is redefined in descendant.
-			set_path (p)
 		end
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
@@ -105,7 +98,7 @@ feature -- Status Report
 
 feature {LOG_LOGGING_FACILITY} -- Output
 
-	write (priority: INTEGER; msg: STRING)
+	do_write (priority: INTEGER; msg: STRING)
 			-- Write `msg' under `priority' to the `log_file' also noting the
 			-- current date and time, and adding a newline character if needed
 		do

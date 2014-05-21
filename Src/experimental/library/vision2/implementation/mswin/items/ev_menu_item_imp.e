@@ -574,7 +574,7 @@ feature {NONE} -- WEL Implementation
 					background_color := system_color_highlight
 					if disabled_state then
 						foreground_color := system_color_btnshadow
-						if foreground_color.is_equal (background_color) then
+						if foreground_color.same_color (background_color) then
 							foreground_color := system_color_btnhighlight
 						end
 					else
@@ -615,7 +615,7 @@ feature {NONE} -- WEL Implementation
 					-- Draw the text
 				if disabled_state and not selected_state then
 							-- Draw highlighted text if needed
-					if system_color_menu.is_equal (system_color_btnface) then
+					if system_color_menu.same_color (system_color_btnface) then
 						draw_dc.set_text_color (system_color_btnhighlight)
 
 						rect.set_rect (1 + left_pos + plain_text_position, 1 + text_top_pos, right_plain_text_pos, bottom_pos)
@@ -982,7 +982,7 @@ feature {NONE} -- Constants
 			-- Space between the text and the pixmap in a menu bar item
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

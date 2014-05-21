@@ -36,21 +36,26 @@ feature {NONE} -- Creation
 			create l_path.make_current
 			l_path := l_path.extended ("system.log")
 			make_at_location (l_path)
+		ensure then
+			default_log_level_set: log_level = Log_error
 		end
 
 	make_at_location (a_file: PATH)
 			-- Create log file using the location `a_file'.
 		do
+			log_level := Log_error
 			path := a_file
 			create log_file.make_with_path (a_file)
 
 				-- Date/time object that is reseeded to now every time `write' is called.
 			create date_time.make_now_utc
+		ensure
+			default_log_level_set: log_level = Log_error
 		end
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
-	do_initialize
+	initialize
 			-- Initialize this FILE_LOG_WRITER instance
 		require else
 			path_set: path /= Void and then not path.is_empty

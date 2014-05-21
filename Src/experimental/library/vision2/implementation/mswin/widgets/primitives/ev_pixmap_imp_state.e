@@ -28,12 +28,6 @@ inherit
 				expose_actions_internal
 		end
 
-	WEL_COLOR_REF
-		rename
-			make as col_ref_make,
-			make_by_pointer as col_ref_make_by_pointer
-		end
-
 feature -- Access
 
 	get_bitmap: WEL_BITMAP
@@ -502,7 +496,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

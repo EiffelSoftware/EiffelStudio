@@ -34,8 +34,8 @@ feature -- Initialization
 			default_create
 
 
-			resize_actions.force_extend (agent resized)
-			column_resized_actions.force_extend (agent resized)
+			resize_actions.extend (agent resized)
+			column_resized_actions.extend (agent resized (?, 0, 0, 0))
 			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
 			end_edit_actions.extend (agent on_change_widget_deselected)
 			set_non_empty_column_values (True)
@@ -374,7 +374,7 @@ feature {NONE} -- Actions
 			loop
 				button_press_actions := a_container.item.pointer_button_press_actions
 				if adding then
-					button_press_actions.force_extend (agent hide_window)
+					button_press_actions.extend (agent hide_window)
 				else
 					button_press_actions.go_i_th (button_press_actions.count)
 					button_press_actions.remove
@@ -468,7 +468,7 @@ feature {NONE} -- Commands
 			l_internal_dialog.set_position (x_offset, y_offset)
 		end
 
-	hide_window
+	hide_window (a_x, a_y: INTEGER; a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Hide
 		do
 			update_actions
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 			loop
 				if empty_column_values and a_string.is_empty then
 				else
-					if (a_string.is_equal (item @ c) and not (index = r)) then
+					if (a_string.same_string (item @ c) and not (index = r)) then
 						Result := False
 					elseif (not empty_column_values) and (a_string.is_empty) then
 						Result := False
@@ -581,8 +581,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resized
-			-- Current was resized	
+	resized (a_x, a_y, a_width, a_height: INTEGER)
+			-- Current was resized.
+			-- None of the arguments are used since we just want a notification.
 		local
 			cnt,
 			l_total: INTEGER
@@ -636,7 +637,7 @@ invariant
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

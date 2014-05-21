@@ -176,7 +176,7 @@ feature -- Element change
 			add_flag (Cf_effects)
 			cwel_choose_font_set_rgbcolors (item, a_color.item)
 		ensure
-			color_set: color.is_equal (a_color)
+			color_set: color.same_color (a_color)
 		end
 
 	set_flags (a_flags: INTEGER)

@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP; a_is_size_forced: BOOLEAN)
+	notify_change (type: INTEGER; child: detachable EV_ANY_I; a_is_size_forced: BOOLEAN)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -255,8 +255,8 @@ feature {NONE} -- Implementation
 		do
 			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
 				Precursor {EV_WIDGET_LIST_IMP} (type, child, a_is_size_forced)
-			else
-				child.parent_ask_resize (child.child_cell.width, child.child_cell.height)
+			elseif attached {EV_SIZEABLE_IMP} child as l_child then
+				l_child.parent_ask_resize (l_child.child_cell.width, l_child.child_cell.height)
 			end
 		end
 
@@ -404,7 +404,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

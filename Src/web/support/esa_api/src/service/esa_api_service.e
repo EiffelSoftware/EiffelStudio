@@ -10,8 +10,6 @@ inherit
 
 	ESA_API_ERROR
 
-	ESA_SHARED_LOGGER
-
 create
 	make,
 	make_with_database

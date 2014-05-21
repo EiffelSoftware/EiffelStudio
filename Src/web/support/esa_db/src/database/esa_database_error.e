@@ -6,6 +6,10 @@ note
 class
 	ESA_DATABASE_ERROR
 
+inherit
+
+	ESA_SHARED_LOGGER
+
 feature -- Access
 
 	last_error: detachable ESA_ERROR_HANDLER
@@ -50,8 +54,10 @@ feature -- Element Settings
 					l_message.append ("An unknown exception was raised.")
 				end
 				set_last_error (l_message, a_location)
+				log.write_critical (generator + ".set_last_error_from_exception " + l_message)
 			else
 				set_last_error ("Generic error", "")
+				log.write_critical (generator + ".set_last_error_from_exception Generic Error")
 			end
 		rescue
 			l_retried := True
@@ -67,6 +73,7 @@ feature -- Element Settings
 			attached_location: a_location /= Void
 		do
 			create last_error.make (a_message, a_location)
+			log.write_critical (generator + ".set_last_error " + a_message)
 			successful := False
 		ensure
 			last_error_set: attached last_error

@@ -11,8 +11,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	ESA_SHARED_LOGGER
-
 create
 	make
 

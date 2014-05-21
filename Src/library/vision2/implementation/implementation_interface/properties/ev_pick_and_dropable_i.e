@@ -416,7 +416,7 @@ feature {EV_WIDGET, EV_WIDGET_I}
 		deferred
 		end
 
-	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
+	internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to `pointer_style'
 		deferred
 		end
@@ -460,7 +460,7 @@ invariant
 		attached pebble_function as l_pebble_function implies l_pebble_function.valid_operands ([1,1])
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

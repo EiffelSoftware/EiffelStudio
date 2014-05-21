@@ -973,7 +973,7 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.set_pointer_style (c)
 		end
 
-	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
+	internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		do

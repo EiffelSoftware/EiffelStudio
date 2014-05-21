@@ -897,7 +897,7 @@ feature -- Delegated features
 			new_imp.set_pointer_style(c)
 		end
 
-	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
+	internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		local

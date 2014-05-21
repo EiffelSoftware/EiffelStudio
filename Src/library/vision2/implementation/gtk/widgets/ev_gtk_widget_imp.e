@@ -215,7 +215,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	internal_set_pointer_style (a_cursor: detachable EV_POINTER_STYLE)
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
@@ -223,11 +223,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			if a_cursor /= previously_set_pointer_style then
-				if a_cursor /= Void then
-					a_cursor_imp ?= a_cursor.implementation
-					check a_cursor_imp /= Void then end
-					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
-				end
+				a_cursor_imp ?= a_cursor.implementation
+				check a_cursor_imp /= Void then end
+				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				a_window := {GTK}.gtk_widget_struct_window (c_object)
 				if a_window /= default_pointer then
 					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
@@ -419,7 +417,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

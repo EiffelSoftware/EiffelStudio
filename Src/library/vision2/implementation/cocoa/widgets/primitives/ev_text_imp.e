@@ -98,7 +98,7 @@ feature -- Status report
 
 	has_selection: BOOLEAN
 
-	selection_start, selection_end: INTEGER
+	start_selection, end_selection: INTEGER
 
 	is_editable: BOOLEAN
 			-- Is the text editable by the user?
@@ -301,7 +301,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -13,8 +13,6 @@ inherit
 			db_application
 		end
 
-	ESA_SHARED_LOGGER
-
 create
 	make, make_common, make_basic, login_with_connection_string
 

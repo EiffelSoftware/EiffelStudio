@@ -39,9 +39,9 @@ feature -- Initialization
 			configure_api_priority
 			configure_api_responsible
 			configure_api_reminder
+			configure_api_logger
 
 			create fhdl.make_hidden_with_path (layout.www_path)
-			fhdl.set_directory_index (<<"index.html">>)
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)
@@ -60,6 +60,7 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/", l_root_handler, l_methods)
+			router.handle_with_request_methods ("", l_root_handler, l_methods) -- Workaround!!!.
 		end
 
 	configure_api_report
@@ -283,6 +284,19 @@ feature -- Configure Resources Routes
 			l_methods.enable_get
 			l_methods.enable_post
 			router.handle_with_request_methods ("/reminder", l_reminder_handler, l_methods)
+		end
+
+
+	configure_api_logger
+		local
+			l_logger_handler: ESA_LOGGER_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_logger_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/logger", l_logger_handler, l_methods)
 		end
 
 

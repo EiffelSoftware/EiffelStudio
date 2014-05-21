@@ -100,7 +100,6 @@ feature -- Users
 		local
 			f: WSF_FORM
 			i: WSF_FORM_TEXT_INPUT
-			pwd: WSF_FORM_PASSWORD_INPUT
 			sub: WSF_FORM_SUBMIT_INPUT
 			m: like new_response_message
 			s: STRING

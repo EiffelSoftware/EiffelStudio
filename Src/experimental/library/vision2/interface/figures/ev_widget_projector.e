@@ -250,10 +250,10 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void end
-				call_actions (event_fig, event_fig.internal_pointer_button_press_actions,
-					[w_x - world.point.x, w_y - world.point.y, button,
-					x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_press_actions as l_actions then
+					l_actions.call ([w_x - world.point.x, w_y - world.point.y, button,
+						x_tilt, y_tilt, pressure, screen_x, screen_y])
+				end
 				event_fig := event_fig.group
 				p := True
 			end
@@ -277,10 +277,10 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void end
-				call_actions (event_fig, event_fig.internal_pointer_double_press_actions,
-					[w_x - world.point.x, w_y - world.point.y, button,
-					x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_double_press_actions as l_actions then
+					l_actions.call ([w_x - world.point.x, w_y - world.point.y, button,
+						x_tilt, y_tilt, pressure, screen_x, screen_y])
+				end
 				event_fig := event_fig.group
 				p := True
 			end
@@ -304,10 +304,10 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig,
-					event_fig.internal_pointer_button_release_actions,
-					[w_x - world.point.x, w_y - world.point.y, button,
-					x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_release_actions as l_actions then
+					l_actions.call ([w_x - world.point.x, w_y - world.point.y, button,
+						x_tilt, y_tilt, pressure, screen_x, screen_y])
+				end
 				event_fig := event_fig.group
 				p := True
 			end
@@ -367,8 +367,9 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = Void or else has_focus (event_fig)
 					loop
-						call_actions (event_fig,
-							event_fig.internal_pointer_leave_actions, Void)
+						if event_fig.is_sensitive and attached event_fig.internal_pointer_leave_actions as l_actions then
+							l_actions.call (Void)
+						end
 						p := True
 						event_fig := event_fig.group
 					end
@@ -378,11 +379,11 @@ feature {NONE} -- Event implementation
 					from
 						event_fig := current_figure
 					until
-						event_fig = same_fig
+						event_fig = Void or else event_fig = same_fig
 					loop
-						check event_fig /= Void then end
-						call_actions (event_fig,
-							event_fig.internal_pointer_enter_actions, Void)
+						if event_fig.is_sensitive and attached event_fig.internal_pointer_enter_actions as l_actions then
+							l_actions.call (Void)
+						end
 						p := True
 						event_fig := event_fig.group
 					end
@@ -415,9 +416,10 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, event_fig.internal_pointer_motion_actions,
-					[w_x - world.point.x, w_y - world.point.y, x_tilt, y_tilt,
-					pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_motion_actions as l_actions then
+					l_actions.call ([w_x - world.point.x, w_y - world.point.y, x_tilt, y_tilt,
+						pressure, screen_x, screen_y])
+				end
 				event_fig := event_fig.group
 				p := True
 			end
@@ -427,7 +429,9 @@ feature {NONE} -- Event implementation
 		end
 
 	call_actions (f: EV_FIGURE; actions: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: detachable TUPLE)
-			-- Call `actions' on `f' with `arg'.
+			-- Call `actions' on `f' with `arg' if `f' is sensitive.
+		obsolete
+			"Use `actions' directly."
 		do
 			if actions /= Void and then f.is_sensitive then
 				actions.call (arg)
@@ -535,7 +539,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

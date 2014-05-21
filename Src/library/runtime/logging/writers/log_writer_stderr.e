@@ -13,7 +13,7 @@ inherit
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
-	initialize
+	do_initialize
 			-- Initialize this LOG_WRITER_STDERR instance
 		do
 			is_initialized := not io.error.is_closed

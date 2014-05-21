@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Initialize the log application
 		do
 			create log_writer_list.make (0)
-			create default_log_writer_file.make_at_location ((create {PATH}.make_current).extended("system.log"))
+			create default_log_writer_file
 			create default_log_writer_stderr
 			create default_log_writer_system
 		ensure

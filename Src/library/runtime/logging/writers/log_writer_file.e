@@ -17,11 +17,26 @@ class
 
 inherit
 	LOG_WRITER
+		redefine
+			default_create
+		end
 
 create
-	make_at_location
+	make_at_location,
+	default_create
 
 feature {NONE} -- Creation
+
+	default_create
+			-- Create an instance of {LOG_WRITER_FILE}
+			-- Create a default log file called `system.log' using the current working location `a_path'	
+		local
+			l_path: PATH
+		do
+			create l_path.make_current
+			l_path := l_path.extended ("system.log")
+			make_at_location (l_path)
+		end
 
 	make_at_location (a_file: PATH)
 			-- Create log file using the location `a_file'.
@@ -35,7 +50,7 @@ feature {NONE} -- Creation
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
-	initialize
+	do_initialize
 			-- Initialize this FILE_LOG_WRITER instance
 		require else
 			path_set: path /= Void and then not path.is_empty

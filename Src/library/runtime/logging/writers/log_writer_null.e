@@ -12,7 +12,7 @@ inherit
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
-	initialize
+	do_initialize
 			-- Initialize the {LOG_WRITER_NULL}.
 		do
 			is_initialized := True

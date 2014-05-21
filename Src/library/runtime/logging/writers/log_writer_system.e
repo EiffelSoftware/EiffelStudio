@@ -56,7 +56,7 @@ feature {NONE} -- Creation
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
-	initialize
+	do_initialize
 			-- Initialize this LOG_WRITER_SYSTEM instance
 		require else
 			valid_application_name: application_name /= Void and then not application_name.is_empty

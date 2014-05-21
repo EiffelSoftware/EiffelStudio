@@ -2793,7 +2793,7 @@ test	inference-formal-generic	inference007 tcf pass used_to_pass inference forma
 test	inference-implicit-typing	inference008 tcf pass used_to_pass inference object_test across iteration
 test	inference-boolean-expression	inference009 tcf pass used_to_pass inference across iteration conditional expression check instruction loop invariant
 test	inference-manifest-array	inference010 tcf pass used_to_pass inference
-test	inference-agent-expression	inference011 tcf pass inference agents
+test	inference-agent-expression	inference011 tcf fail inference agents
 test	inference-untyped-agent-target	inference012 tcf pass inference agents
 test	inference-inspect-instruction	inference013 tcf fail inference
 

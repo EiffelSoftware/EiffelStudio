@@ -24,9 +24,11 @@ var login = function() {
                 }
                 else{
                     if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){
-                        logoff();
+                        //logoff();
+			window.location=host.concat("/");	
                     }
-                    alert("Invalid Credentials!");
+                    //alert("Invalid Credentials!");
+		  window.location=host.concat("/");		
                 }
             }
         }
@@ -48,6 +50,7 @@ var login = function() {
 var logoff = function(callback){
 	  var form = document.forms[0];
       var host = form.host.value;
+	  alert (host);
  
     if (userAgent.indexOf("msie") != -1) {
         document.execCommand("ClearAuthenticationCache");

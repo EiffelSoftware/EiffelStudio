@@ -271,7 +271,6 @@ feature {NONE} -- Event implementation
 			event_fig: detachable EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -287,10 +286,8 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void then end
-				action := event_fig.internal_pointer_button_press_actions
-				if action /= Void and then event_fig.is_sensitive then
-					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_press_actions as l_actions then
+					l_actions.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
@@ -313,7 +310,6 @@ feature {NONE} -- Event implementation
 			event_fig: detachable EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -325,10 +321,8 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void then end
-				action := event_fig.internal_pointer_double_press_actions
-				if action /= Void and then event_fig.is_sensitive then
-					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_double_press_actions as l_actions then
+					l_actions.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
@@ -351,7 +345,6 @@ feature {NONE} -- Event implementation
 			event_fig: detachable EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -364,10 +357,8 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				check event_fig /= Void then end
-				action := event_fig.internal_pointer_button_release_actions
-				if action /= Void and then event_fig.is_sensitive then
-					action.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
+				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_release_actions as l_actions then
+					l_actions.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
@@ -487,7 +478,6 @@ feature {NONE} -- Event implementation
 			event_fig: detachable EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			if not is_projecting then
 				w_x := x + area_x
@@ -504,10 +494,8 @@ feature {NONE} -- Event implementation
 				until
 					event_fig = Void
 				loop
-					check event_fig /= Void then end
-					action := event_fig.internal_pointer_motion_actions
-					if action /= Void and then event_fig.is_sensitive then
-						action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
+					if event_fig.is_sensitive and attached event_fig.internal_pointer_motion_actions as l_actions then
+						l_actions.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
 						p := p or else not event_fig.valid
 						if event_fig.are_events_sent_to_group then
 							event_fig := event_fig.group
@@ -671,7 +659,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

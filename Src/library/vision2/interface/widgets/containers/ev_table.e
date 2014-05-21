@@ -371,7 +371,7 @@ feature -- Status settings
 		ensure
 			columns_set: columns = a_column
 			rows_set: rows = a_row
-			items_untouched: linear_representation.is_equal (old linear_representation)
+			items_untouched: linear_representation ~ old linear_representation
 		end
 
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
@@ -554,7 +554,7 @@ feature -- Iteration.
 		do
 			Result := implementation.cursor
 		ensure then
-			bridge_ok: Result.is_equal (implementation.cursor)
+			bridge_ok: Result ~ implementation.cursor
 		end
 
 	valid_cursor (p: CURSOR): BOOLEAN
@@ -611,7 +611,7 @@ invariant
 	rows_positive: rows >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -18,18 +18,34 @@ deferred class
 
 inherit
 	USER_DEFINED_ERROR
+		redefine
+			process
+		end
 
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
 
-feature -- Fixing
+feature {ERROR_VISITOR} -- Visitor
 
-	fix_option: detachable ITERABLE [FIX [TEXT_FORMATTER]]
-			-- Possible fixes of the error.
+	process (v: ERROR_VISITOR)
+			-- <Precursor>
+			-- Use `process_issue' in descendants.
 		do
-				-- Void by default.
+			if attached {COMPILER_ERROR_VISITOR} v as c then
+				process_issue (c)
+			else
+				Precursor (v)
+			end
+		end
+
+feature {COMPILER_ERROR_VISITOR} -- Visitor
+
+	process_issue (v: COMPILER_ERROR_VISITOR)
+			-- Visit current object by `v'.
+		do
+			v.process_user_defined_error (Current)
 		end
 
 feature {NONE} -- Access

@@ -149,7 +149,7 @@ feature {NONE} -- WEL Implementation
 				background_color := system_color_menu
 			end
 
-			if disabled and not selected and system_color_menu.is_equal (system_color_btnface) then
+			if disabled and not selected and system_color_menu.same_color (system_color_btnface) then
 					-- Draw the embossed check mark
 				draw_dc.set_background_color (background_color)
 				draw_dc.set_text_color (system_color_btnhighlight)
@@ -166,7 +166,7 @@ feature {NONE} -- WEL Implementation
 			else
 				if disabled then
 					foreground_color := system_color_btnshadow
-					if foreground_color.is_equal (system_color_highlight) then
+					if foreground_color.same_color (system_color_highlight) then
 						foreground_color := system_color_btnhighlight
 					end
 				elseif selected then
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

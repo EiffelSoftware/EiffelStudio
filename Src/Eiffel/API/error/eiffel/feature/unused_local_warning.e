@@ -11,9 +11,9 @@ inherit
 	EIFFEL_WARNING
 		redefine
 			build_explain,
-			fix_option,
 			help_file_name,
 			print_single_line_error_message,
+			process_issue,
 			trace_primary_context
 		end
 
@@ -109,15 +109,12 @@ feature -- Output
 			end
 		end
 
-feature -- Automated correction
+feature {COMPILER_ERROR_VISITOR} -- Visitor
 
-	fix_option: detachable ITERABLE [FIX [TEXT_FORMATTER]]
+	process_issue (v: COMPILER_ERROR_VISITOR)
 			-- <Precursor>
 		do
-			if not associated_class.lace_class.is_read_only then
-				create {SPECIAL [FIX [TEXT_FORMATTER]]} Result.make_filled
-					(create {FIX_UNUSED_LOCAL}.make (Current), 1)
-			end
+			v.process_unused_local (Current)
 		end
 
 feature {NONE} -- Output

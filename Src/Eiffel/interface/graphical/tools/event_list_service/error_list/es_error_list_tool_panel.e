@@ -943,7 +943,7 @@ feature {NONE} -- Fixing
 		local
 			fix_component: detachable ES_FIX_FEATURE
 		do
-			if attached {COMPILER_ERROR} e as ce and then attached ce.fix_option as f then
+			if attached {COMPILER_ERROR} e as ce and then attached fix_factory.fix_option (ce) as f then
 					-- TODO: Handle multiple fix options instead of just the first one.
 				across
 					f as o
@@ -1024,6 +1024,12 @@ feature {NONE} -- Fixing
 						update_content_applicable_widgets (grid_events.row_count > 0)
 					end (action))
 			p.show_on_active_window
+		end
+
+	fix_factory: FIX_FACTORY
+			-- A factory to compuile fixes for errors.
+		do
+			create Result.make
 		end
 
 feature {NONE} -- Event handlers

@@ -17,11 +17,13 @@ create
 
 feature {NONE} -- Creation
 
-	make (local_type: TYPE_A; identifiers: ITERABLE [INTEGER_32]; ast: FEATURE_AS; tokens: LEAF_AS_LIST)
-			-- Add type `local_type' for untyped locals with identifiers `identifiers' to `tokens' corresponding to `ast'.
+	make (local_type: TYPE_A; source_class: CLASS_C; source_feature: FEATURE_I; identifiers: ITERABLE [INTEGER_32]; ast: FEATURE_AS; tokens: LEAF_AS_LIST)
+			-- Add type `local_type' for untyped locals with identifiers `identifiers' written in `source_class' to `tokens' corresponding to `ast'.
 		do
 			type := local_type
 			locals := identifiers
+			written_class := source_class
+			written_feature := source_feature
 			token_list := tokens
 			ast.process (Current)
 		end
@@ -30,6 +32,12 @@ feature {NONE} -- Access
 
 	type: TYPE_A
 			-- Type of `locals'.
+
+	written_class: CLASS_C
+			-- Class where the type `type' is written.
+
+	written_feature: FEATURE_I
+			-- Feature where the type `type' is written.
 
 	locals: ITERABLE [INTEGER_32]
 			-- List of unused local variables.
@@ -41,6 +49,10 @@ feature {AST_EIFFEL} -- Visitor
 
 	process_local_dec_list_as (a: LOCAL_DEC_LIST_AS)
 			-- <Precursor>
+		local
+			t: AST_TYPE_OUTPUT_STRATEGY
+			y: YANK_STRING_WINDOW
+			u: UTF_CONVERTER
 		do
 			if attached a.locals as l then
 					-- Iterate over all local declarations.
@@ -56,8 +68,10 @@ feature {AST_EIFFEL} -- Visitor
 							across locals as j all j.item = i.item end
 						end
 					then
-							-- TODO: Provide better handling of type names.
-						l.item.append_text (": " + type.dump, token_list)
+						create y.make
+						create t
+						t.process (type, y, written_class, written_feature)
+						l.item.append_text (": " + u.string_32_to_utf_8_string_8 (y.stored_output), token_list)
 					end
 						-- Advance to the next declaration.
 					l.forth

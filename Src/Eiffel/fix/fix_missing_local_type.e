@@ -7,7 +7,7 @@ inherit
 	FIX_FEATURE
 	SHARED_NAMES_HEAP
 
-create {MISSING_LOCAL_TYPE_ERROR}
+create
 	make
 
 feature {NONE} -- Creation
@@ -44,13 +44,15 @@ feature -- Output
 	append_name (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format_action_missing_local_type (t, agent (source.suggested_type).append_to)
+			message.format_action_missing_local_type
+				(t, agent (create {AST_TYPE_OUTPUT_STRATEGY}).process (source.suggested_type, ?, source_class.compiled_class, source_feature.associated_feature_i))
 		end
 
 	append_description (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format_description_missing_local_type (t, agent (source.suggested_type).append_to)
+			message.format_description_missing_local_type
+				(t, agent (create {AST_TYPE_OUTPUT_STRATEGY}).process (source.suggested_type, ?, source_class.compiled_class, source_feature.associated_feature_i))
 		end
 
 feature -- Basic operations
@@ -58,7 +60,7 @@ feature -- Basic operations
 	apply (s: FEATURE_AS; l: LEAF_AS_LIST)
 			-- Attempt to apply the fix to the source AST `s'.
 		do
-			(create {FIX_MISSING_LOCAL_TYPE_APPLICATION}.make (source.suggested_type, source.identifiers, s, l)).do_nothing
+			(create {FIX_MISSING_LOCAL_TYPE_APPLICATION}.make (source.suggested_type, source_class.compiled_class, source_feature.associated_feature_i, source.identifiers, s, l)).do_nothing
 		end
 
 feature {NONE} -- Formatting

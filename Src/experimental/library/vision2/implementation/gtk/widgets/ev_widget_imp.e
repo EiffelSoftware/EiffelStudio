@@ -373,9 +373,15 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	destroy
 			-- Destroy `Current'
+		local
+			l_window: POINTER
 		do
 			if not is_destroyed then
-				internal_set_pointer_style (Void)
+					-- Remove previously set pointer.
+				l_window := {GTK}.gtk_widget_struct_window (c_object)
+				if l_window /= default_pointer then
+					{GTK}.gdk_window_set_cursor (l_window, default_pointer)
+				end
 				if attached parent_imp as l_parent_imp then
 					l_parent_imp.attached_interface.prune_all (attached_interface)
 				end
@@ -394,8 +400,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 		do
 				-- Make sure that the pointer style is correctly set when the widget is mapped.
 				-- This is needed for gtkwidgets that have not yet been realized.
-			if previously_set_pointer_style = Void and then pointer_style /= Void then
-				internal_set_pointer_style (pointer_style)
+			if previously_set_pointer_style = Void and then attached pointer_style as l_pointer_style then
+				internal_set_pointer_style (l_pointer_style)
 			end
 		end
 
@@ -501,14 +507,14 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WIDGET_IMP

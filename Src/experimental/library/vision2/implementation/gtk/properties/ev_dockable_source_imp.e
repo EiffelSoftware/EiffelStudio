@@ -107,9 +107,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 			-- Terminate the pick and drop mechanism.
 		do
 			if is_dock_executing then
-				if orig_cursor /= Void then
+				if attached orig_cursor as l_orig_cursor then
 						-- Restore the cursor style of `Current' if necessary.
-					internal_set_pointer_style (orig_cursor)
+					internal_set_pointer_style (l_orig_cursor)
 				else
 					internal_set_pointer_style (default_pixmaps.standard_cursor)
 				end
@@ -175,14 +175,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DOCKABLE_SOURCE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

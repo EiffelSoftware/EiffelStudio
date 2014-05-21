@@ -262,11 +262,24 @@ feature -- Access: -options
 			-- `platform' compiler option for any action.
 		once
 			if attached options_item ("platform") as l_opt then
-				Result := l_opt
+				if not l_opt.is_empty and then l_opt.item (l_opt.count) = '!' then
+					Result := l_opt.head (l_opt.count - 1)
+				else
+					Result := l_opt
+				end
 			else
 				create Result.make_empty
 			end
 		end
+
+	is_platform_exclusive: BOOLEAN
+			-- If `platform' option exclusive? That is to say, only ECF that specifies the platform
+			-- will be compiled?
+		once
+			Result := attached options_item ("platform") as l_opt and then
+				not l_opt.is_empty and then l_opt.item (l_opt.count) = '!'
+		end
+
 	ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option for any action
 		once

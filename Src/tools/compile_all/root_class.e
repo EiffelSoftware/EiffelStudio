@@ -376,6 +376,11 @@ feature {NONE} -- Implementation
 								else
 									l_is_ignored := get_platform (l_target.setting_platform) /= current_platform
 								end
+							else
+									-- If we have requested an exclusive platform, e.g. via `macosx!', and that the ECF
+									-- is not specifying any platform, then we should ignore it since we requested
+									-- to only process ECF which targets a specific platform.
+								l_is_ignored := arguments.is_platform_exclusive
 							end
 						end
 

@@ -176,12 +176,11 @@ feature {NONE} -- Implementation
 		end
 
 	tool_bar_imp: EV_DRAWING_AREA_IMP
-		local
+		do
 			check attached {EV_DRAWING_AREA_IMP} tool_bar.implementation as l_tool_bar_imp then
 				Result := l_tool_bar_imp
 			end
 		end
-
 
 	to_cocoa_state (a_state: INTEGER): INTEGER
 			-- Convert from SD_TOOL_BAR_ITEM_STATE to WEL_THEME_TS_CONSTANTS.
@@ -193,7 +192,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

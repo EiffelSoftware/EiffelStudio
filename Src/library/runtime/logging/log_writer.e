@@ -17,17 +17,9 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 			-- Initialize the log writer, set the default log level to ERROR.
 		require
 			not_is_initialized: not is_initialized
-		do
-			enable_error_log_level
-			do_initialize
+		deferred
 		ensure
 			is_initialized_or_has_errors: is_initialized or has_errors
-			default_log_level_set: log_level = Log_error
-		end
-
-	do_initialize
-			-- Initialize the log writer.
-		deferred
 		end
 
 feature -- Status Report

@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 				l_choice_list.focus_out_actions.extend (agent deactivate)
 				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_press)
 				l_choice_list.pointer_button_release_item_actions.extend (agent on_mouse_release)
-				l_choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
+				l_choice_list.pointer_motion_actions.extend (agent on_mouse_move)
 				l_choice_list.key_press_actions.extend (agent on_key)
 			else
 					-- Something wrong occurred, we should deactivate if possible.
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_move (a_x, a_y: INTEGER)
+	on_mouse_move (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle mouse moving actions.
 		local
 			l_item: detachable EV_GRID_ITEM
@@ -555,7 +555,7 @@ invariant
 	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

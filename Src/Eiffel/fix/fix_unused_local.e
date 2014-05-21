@@ -7,7 +7,7 @@ inherit
 	FIX_FEATURE
 	SHARED_NAMES_HEAP
 
-create {UNUSED_LOCAL_WARNING}
+create
 	make
 
 feature {NONE} -- Creation

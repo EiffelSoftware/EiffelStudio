@@ -897,7 +897,7 @@ feature -- Delegated features
 			new_imp.set_pointer_style(c)
 		end
 
-	internal_set_pointer_style (c: EV_POINTER_STYLE)
+	internal_set_pointer_style (c: detachable EV_POINTER_STYLE)
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		local
@@ -1153,7 +1153,7 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

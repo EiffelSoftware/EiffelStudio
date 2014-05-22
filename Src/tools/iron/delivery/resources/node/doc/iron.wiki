@@ -386,7 +386,7 @@ To build the '''gps_nmea''' package from your library <code>c:\eiffel\library\gp
 
 <code>iron share create --username <your_id> --password <your_password>
     --repository https://iron.eiffel.com/14.05 
-    --package "c:\eiffel\library\gps_nmea\package.iron" --name “gps_nmea” 
+    --package "c:\eiffel\library\gps_nmea\package.iron" --package-name “gps_nmea” 
 </code>
 
 This command will:

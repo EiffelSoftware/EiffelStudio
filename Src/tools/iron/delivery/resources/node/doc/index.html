@@ -10,6 +10,7 @@
 <div>
 <h1>
 Purpose</h1>
+<br/>
 IRON provides an easy-to-use facility for using and sharing packages of quality Eiffel components, automating many of the tasks involved.<br/>
 Most often a package is a library or a set of libraries, but it could also other resources such as tools.<br/>
 <br/>
@@ -17,6 +18,7 @@ Most often a package is a library or a set of libraries, but it could also other
 
 <h1>
 Package Repository vs Library Repository</h1>
+<br/>
 Certainly the IRON repository is a repository of Eiffel libraries. However, sometimes libraries are used together, or cross reference one another, and thus are appropriate to be delivered together as a unit. <br/>
 Such unit can also include other types of files, such as external .c files that may need to be compiled on the local platform to make .LIB or .OBJ files available to the linker (.a or .o on Unix and Linux systems), scripts or executables that need to be run as part of the installation process (e.g. to generate other files required by the library, install environment variables, generate source code from LEX files), or tool kits that are part of, or needed by, the library.  <br/>
 Since the IRON repository permits programmers to install software components in “units”, and since sometimes those units can contain more than one library, as well as other types of files, a new term was required to convey this concept:  package.<br/>
@@ -33,9 +35,9 @@ To configure Eiffel projects, programmers uses "ECFs" (Eiffel Configuration File
 One application of ECFs is to reference libraries installed in different locations. Without IRON, the usual solution is to use relative or absolute path, and generally using environment variables such as ISE_LIBRARY or EIFFEL_LIBRARY, and a few package specific variables such as GOBO, ...<br/>
 <br/>
 Typical library references without IRON in ECF:<br/>
-<code>&lt;library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/&gt;
-&lt;library name="xml_parser" location="$EIFFEL_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/&gt;
-&lt;library name="dummy_foobar" location="$LIB_DUMMY\src\foo\bar.ecf"/&gt;
+<code>&lt;library name="base" location="<strong>$ISE_LIBRARY\library\base\base.ecf</strong>"/&gt;
+&lt;library name="xml_parser" location="<strong>$EIFFEL_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf</strong>"/&gt;
+&lt;library name="dummy_foobar" location="<strong>$LIB_DUMMY\src\foo\bar.ecf</strong>"/&gt;
 </code><br/>
 As projects grow and multiply, the number of these variables adds up quickly.  A dozen or more such environment variables per system is (prior to IRON) not uncommon. Coordinating their use and evolution among a team of programmers can become a challenge.<br/>
 <br/>
@@ -47,15 +49,16 @@ IRON has made it possible to simplify this scenario dramatically.  For any commo
 </ul>
 <br/>
 That's all!  In the above example, the location of the libraries, in the project, then become something like:<br/>
-<code>&lt;library name="base" location="iron:base:base.ecf" /&gt;
-&lt;library name="xml_parser" location="iron:xml:parser/xml_parser.ecf" /&gt;
-&lt;library name="foobar" location="iron:dummy:src/foo/bar.ecf" /&gt;
+<code>&lt;library name="base" location="<strong>iron:base:base.ecf</strong>" /&gt;
+&lt;library name="xml_parser" location="<strong>iron:xml:parser/xml_parser.ecf</strong>" /&gt;
+&lt;library name="foobar" location="<strong>iron:dummy:src/foo/bar.ecf</strong>" /&gt;
 </code><br/>
 There is no more need for a set of environment variables.<br/>
 <br/>
 IRON and EiffelStudio take care of the remaining details.  And all developers on a project simply share the same ECF file with no further worry about where the libraries are.<br/>
 <br/>
-However, to get information about IRON location, use the command: <code class="inline"> iron path ...</code><table  class="wikitable"
+However, to get information about IRON location, use the command: <code class="inline"> iron path ...</code>
+<table  class="wikitable"
 ><tr><th> Command
 </th><th> Result
 </th><th> Example
@@ -69,6 +72,7 @@ However, to get information about IRON location, use the command: <code class="i
 </td><td> location of installed package <code class="inline">xml</code>
 </td><td> C:\Users\jfiat\Documents\Eiffel User Files\14.05\iron\packages\xml
 </td></tr></table><br/>
+<br/>
 Notes:<ul><li> It is possible to override the default location of IRON installation directory, by setting the environment variable <code class="inline">IRON_PATH</code> or <code class="inline">ISE_IRON_PATH</code>.</li>
 <li> In the scope of the .ecf file, the IRON_PATH variable is always set: to default path or to the value of environment variable IRON_PATH.</li>
 <li> In addition to the IRON way to reference library, it is also possible to use the absolute URL in the repository, see advanced usage for more details.</li>
@@ -122,7 +126,7 @@ Note that you have an easy way to install, remove IRON packages from the <strong
 </code><ul><li> And an other solution, would be to use the <code class="inline">IRON_PATH</code> environment variable to locate the install libraries, such as:</li>
 </ul>
 <code>$IRON_PATH\packages\base\base.ecf
-</code>This latter method, while it works, is not recommended simply because it defeats some of the advantages of using the IRON repository in the first place.<br/>
+</code><br/>
 
 <h2>
 External dependencies</h2>
@@ -161,29 +165,29 @@ Criteria available:<br/>
 </td><td> package contains search_string in its tags (i.e. keywords)
 </td></tr><tr><td> downloads
 </td><td> has at least N downloads, e.g. downloads:25
-</td></tr></table><ul><div>If a criterion is omitted, <strong>name</strong> is used by default.</div>
-<div><strong>Operators available</strong>:  or, and, not  (example:  name:er and not name:parser)</div>
-</ul>
+</td></tr></table><br/>
+If a criterion is omitted, <strong>name</strong> is used by default.<br/>
+<strong>Operators available</strong>:  or, and, not  (example:  name:er and not name:parser)<br/>
 <br/>
 Finally, when you have found the package you want, click on its title, and the page displayed will contain detailed information about the package. <br/>
 
 <h2>
 Associated paths</h2>
 Part of the information is a portion of the URI which you can use to define the path to the package.<br/>
-For the <strong>base</strong> library (title: EiffelBase), these URIs look like this:<br/>
-<pre>/14.05/com.eiffel/library/base
-/14.05/com.eiffel/library/data_structure/adt/base
-</pre><br/>
-Given that the server’s HTTP address is (in this example)  <code class="inline">https://iron.eiffel.com/</code>,  you can compose full paths from this, and use them in your Eiffel project.  In this case, you can include the EiffelBase library in your project by specifying either:<br/>
-<pre>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
-or https://iron.eiffel.com/14.05/com.eiffel/library/data_structure/adt/base/base.ecf
-</pre><br/>
-Both will cause your project to compile with the same EiffelBase library provided by this IRON repository, provided you previously issued the follwing command on your system:<br/>
+For the <strong>base</strong> library (title: EiffelBase), these URIs look like this:<ul><div><code class="inline"> /14.05/com.eiffel/library/base</code></div>
+<div><code class="inline"> /14.05/com.eiffel/library/data_structure/adt/base</code></div>
+</ul>
 <br/>
-<pre>&gt; iron install base
-or
-&gt; iron install https://iron.eiffel.com/14.05/com.eiffel/library/base
-</pre><br/>
+Given that the server’s HTTP address is (in this example)  <code class="inline">https://iron.eiffel.com/</code>,  you can compose full paths from this, and use them in your Eiffel project.  In this case, you can include the EiffelBase library in your project by specifying either:<ul><div><code class="inline">https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf</code></div>
+<div>or <code class="inline">https://iron.eiffel.com/14.05/com.eiffel/library/data_structure/adt/base/base.ecf</code></div>
+</ul>
+<br/>
+Both will cause your project to compile with the same EiffelBase library provided by this IRON repository, provided you previously issued the follwing command on your system:<br/>
+<ul><div><code class="inline">&gt; iron install base</code></div>
+<div>or</div>
+<div><code class="inline">&gt; iron install https://iron.eiffel.com/14.05/com.eiffel/library/base</code></div>
+</ul>
+<br/>
 <strong>IMPORTANT</strong>: those associated URIs may be deprecated soon with the use of IRON uri <code class="inline">iron:base:base.ecf</code>.<br/>
 
 <h1>
@@ -221,55 +225,34 @@ Action Summary</h2>
 </td><td> manages repository list
 </td></tr><tr><td> share
 </td><td> share and manage your packages (an account on the IRON server is required)
-</td></tr></table>
+</td></tr></table><br/>
+<br/>
+
 <h2>
 Examples</h2>
-
-<h3>
-Update cached iron repository information</h3>
-<code> iron update
-</code>
-<h3>
-Display information about package</h3>
-<ul><div>For instance about the <em>api_wrapper</em> package:</div>
+<br/>
+Update cached iron repository information:<br/>
+<code class="inline"> iron update</code><br/>
+Display information about the api_wrapper package:<br/>
+<code class="inline"> iron info api_wrapper</code><br/>
+<br/>
+Search for a package by name, ID or URI (package IDs and URIs are displayed by the "info" action) (future releases will enable searching by other criteria as well, such as by tags <a href="i.e." class="wiki_ext_link">keywords</a>):<br/>
+<code class="inline"> iron search base</code><br/>
+List available packages:<br/>
+<code class="inline"> iron list</code><br/>
+List installed packages:<br/>
+<code class="inline"> iron list --installed</code><br/>
+Install a package:<br/>
+<code class="inline">   iron install base</code><br/>
+<code class="inline">or iron install https://iron.eiffel.com/14.05/com.eiffel/library/base</code><ul><div>(This latter form is useful in resolving name conflicts when, for instance, you have multiple IRON repositories registered on your system, and two or more contain a packaged called “base”.)</div>
 </ul>
-<code> iron info api_wrapper
-</code><ul><div>If the package is installed, the installation path will also be displayed.</div>
-</ul>
-
-<h3>
-Search for package by name, ID or URI</h3>
-<ul><div>package IDs and URIs are displayed by the "info" action. </div>
-</ul>
-<code> iron search base
-</code>
-<h3>
-List available packages</h3>
-<code> iron list
-</code>
-<h3>
-List installed packages</h3>
-<code> iron list --installed
-</code>
-<h3>
-Install a package</h3>
-<code> iron install base
-</code><code>or iron install https://iron.eiffel.com/14.05/com.eiffel/library/base
-</code><ul><div>(This latter form is useful in resolving name conflicts when, for instance, you have multiple IRON repositories registered on your system, and two or more contain a packaged called “base”.)</div>
-</ul>
-
-<h3>
-Uninstall a package</h3>
-<code> iron remove  base
-</code>
-<h3>
-Install all available packages</h3>
-<code> iron install --all
-</code>
-<h3>
-Uninstall all installed packages</h3>
-<code> iron remove --all
-</code>
+<br/>
+Uninstall a package:<br/>
+<code class="inline"> iron remove  base</code><br/>
+Install all available packages:<br/>
+<code class="inline"> iron install --all</code><br/>
+Uninstall all installed packages:<br/>
+<code class="inline"> iron remove --all</code>
 <h1>
 Advanced Usage</h1>
 
@@ -363,7 +346,7 @@ Searching [time]
   2) time (file:///C:/EiffelDev/Src/library)
   &gt; Select a package [1] (q=cancel): 2
 -&gt; Install time (file:///C:/EiffelDev/Src/library)
-Installing [time (file:///C:/EiffelDev/Src/library)]  -&gt; successfully installed.
+Installing [time (file:///C:/EiffelDev/Src/library)]  -&gt; successfully installed.<br/>
 </pre><br/>
 To make development easier, you may want to edit/update the repositories.conf file, in order to put that file://... local repository on the top.<br/>
 <code>&gt; iron path

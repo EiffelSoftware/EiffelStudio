@@ -71,7 +71,6 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_email: READABLE_STRING_32
-			l_successful: BOOLEAN
 			l_error: detachable STRING;
 			l_security: ESA_SECURITY_PROVIDER
 			l_token: STRING

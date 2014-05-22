@@ -46,10 +46,6 @@ feature -- Command
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- <Precursor>
-		local
-			l_pixmap_imp: EV_PIXMAP_IMP
-			l_segmented_control: NS_SEGMENTED_CONTROL
-			icon: NS_IMAGE
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			expose (a_width, a_tab_info)
@@ -70,7 +66,9 @@ feature -- Command
 		do
 			start_draw
 
-			check attached {EV_PIXMAP_IMP} buffer_pixmap.implementation as l_pixmap_imp then
+			if
+				attached buffer_pixmap as l_buffer_pixmap and then
+				attached {EV_PIXMAP_IMP} l_buffer_pixmap.implementation as l_pixmap_imp then
 
 				l_pixmap_imp.prepare_drawing
 
@@ -95,22 +93,20 @@ feature -- Command
 					l_segmented_control.set_image_for_segment (icon, 0)
 				end
 
-				l_segmented_control.set_frame (create {NS_RECT}.make_rect (0, 0, a_width, buffer_pixmap.height + 1))
-				l_segmented_control.draw_rect (create {NS_RECT}.make_rect (0, 0, a_width, buffer_pixmap.height + 1))
+				l_segmented_control.set_frame (create {NS_RECT}.make_rect (0, 0, a_width, l_buffer_pixmap.height + 1))
+				l_segmented_control.draw_rect (create {NS_RECT}.make_rect (0, 0, a_width, l_buffer_pixmap.height + 1))
 
 				l_pixmap_imp.finish_drawing
+--				pixmap.stretch (20, 20)
+--				l_buffer_pixmap.draw_pixmap (0, 0, pixmap)
+--				draw_pixmap_text_selected (l_buffer_pixmap, 20, a_width)
+--				draw_close_button (l_buffer_pixmap, pixmap)
 			end
-
-
---			pixmap.stretch (20, 20)
---			buffer_pixmap.draw_pixmap (0, 0, pixmap)
---			draw_pixmap_text_selected (buffer_pixmap, 20, a_width)
---			draw_close_button (buffer_pixmap, pixmap)
 
 			end_draw
 
-			if internal_tab.parent.has_focus then
-				internal_tab.draw_focus_rect
+			if attached internal_tab as l_tab and then attached l_tab.parent as l_parent and then l_parent.has_focus then
+				l_tab.draw_focus_rect
 			end
 		end
 
@@ -129,13 +125,17 @@ feature -- Command
 	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		do
-			buffer_pixmap.draw_text (a_start_x, 0, text)
+			if attached buffer_pixmap as l_pixmap then
+				l_pixmap.draw_text (a_start_x, 0, text)
+			end
 		end
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		do
-			buffer_pixmap.draw_text (a_start_x, 0, text)
+			if attached buffer_pixmap as l_pixmap then
+				l_pixmap.draw_text (a_start_x, 0, text)
+			end
 		end
 
 feature {NONE}  -- Implementation	
@@ -153,7 +153,7 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

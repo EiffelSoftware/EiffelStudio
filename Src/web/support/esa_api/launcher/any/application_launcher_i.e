@@ -20,7 +20,7 @@ feature -- Execution
 
 	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			nature: like launcher_nature
+--			nature: like launcher_nature
 		do
 --			nature := launcher_nature
 --			if nature = Void or else nature = nature_nino then
@@ -44,7 +44,6 @@ feature {NONE} -- Access
 			--| and we could use WSF_DEFAULT_SERVICE_LAUNCHER to configure this at compilation time.
 		local
 			p: PATH
-			l_entry_name: READABLE_STRING_32
 			ext: detachable READABLE_STRING_32
 		do
 			create p.make_from_string (execution_environment.arguments.command_name)

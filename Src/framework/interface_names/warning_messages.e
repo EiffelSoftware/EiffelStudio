@@ -945,7 +945,7 @@ feature -- Warning messages
 		do
 			Result := locale.translation_in_context (
 				"[
-					Applying selected fixes causes changes to the source code that cannot be undone.
+					Applying selected fixes causes changes to the source code that cannot be undone automatically.
 					
 					Click Yes to apply fixes.
 					Click Cancel to abort.

@@ -6,12 +6,12 @@
          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
          <h4 class="modal-title" id="myModalLabel">Login Form</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="myModalForm">
          <a href="{$host/}/reminder">Forgot username or password?</a>
           <form>
-            <p><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value=""></p>
-            <p><input type="password" class="span3" id="password" name="password" placeholder="Enter Password"></p>
-	       <input type="hidden" name="host" value="{$host/}">
+            <p><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
+            <p><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>
+	    <input type="hidden" name="host" value="{$host/}">
             <p><button type="button" class="btn btn-success" onclick="login();">Sign in</button></p>
           </form>
       </div>
@@ -45,7 +45,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-         <a class="navbar-brand" href="{$host/}">Eiffel Support API</a>
+         <a class="navbar-brand" href="/">Eiffel Support API</a>
      </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -61,8 +61,8 @@
             <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogoff">Logoff</a></li>
          {/if}
          {unless isset="$user"}
-            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>   <!-- Custome Modal -->
-            <!--<li><a href="{$host/}/login">Login</a></li> -->   <!--Browser pop up -->
+            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
+            <!-- <li><a href="{$host/}/login">Login</a></li> -->   <!--Browser pop up -->
          {/unless} 
          <li><a href="#">Help</a></li>
         </ul>

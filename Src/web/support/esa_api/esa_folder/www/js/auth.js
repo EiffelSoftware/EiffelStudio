@@ -9,27 +9,39 @@ var login = function() {
     var password = form.password.value;
 	var host = form.host.value;
   	var _login = function(){
- 
-	
-      //Instantiate HTTP Request
-        var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-    	var tok = "Basic " + btoa(username + ':' + password);
-    	request.open("GET", host.concat(loginURL), true, username, password);
-	    request.send(null);
+
+	if (username === "" || password === "") {
+             if (document.getElementById('myModalFormId') === null ) {		
+                    var newdiv = document.createElement('div');
+	            newdiv.innerHTML = "<br>Invalid Credentials</br>";
+                    newdiv.id = 'myModalFormId';
+                    document.getElementById("myModalForm").appendChild(newdiv);
+               }
+	}else{        
+
+          //Instantiate HTTP Request
+          var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
+    	  var tok = "Basic " + btoa(username + ':' + password);
+    	  request.open("GET", host.concat(loginURL), true, username, password);
+	  request.send(null);
     
-      //Process Response
-        request.onreadystatechange = function(){
-            if (request.readyState == 4) {
-                if (request.status==200) { window.location=host.concat("/");
-                }
+          //Process Response
+          request.onreadystatechange = function(){
+             if (request.readyState == 4) {
+                 if (request.status==200) { window.location=host.concat("/");
+ 		}
                 else{
-                    if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){
-                        //logoff();
-			window.location=host.concat("/");	
-                    }
-                    //alert("Invalid Credentials!");
-		  window.location=host.concat("/");		
-                }
+                  if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
+                     }
+                   
+		  if (document.getElementById('myModalFormId') === null ) {		
+                    var newdiv = document.createElement('div');
+	            newdiv.innerHTML = "<br>Invalid Credentials</br>";
+                    newdiv.id = 'myModalFormId';
+                    document.getElementById("myModalForm").appendChild(newdiv);
+                   }
+                  }
+               }
             }
         }
     }

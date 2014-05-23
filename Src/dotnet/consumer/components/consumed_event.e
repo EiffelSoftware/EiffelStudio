@@ -60,10 +60,19 @@ feature -- ConsumerWrapper functions
 
 feature -- Access
 
-	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_PROCEDURE]
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- List of eiffelized Consumed Entities relative to `Current'.
 		do
-			create Result.make (0)
+			create Result.make (3)
+			across eiffelized_consumed_procedures as l_procs loop
+				Result.extend (l_procs.item)
+			end
+		end
+
+	eiffelized_consumed_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+			-- List of eiffelized procedures relative to `Current'.
+		do
+			create Result.make (3)
 			if attached adder as l_adder then
 				Result.extend (l_adder)
 			end

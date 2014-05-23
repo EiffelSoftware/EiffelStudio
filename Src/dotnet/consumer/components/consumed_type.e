@@ -138,7 +138,7 @@ feature -- Access
 					until
 						l_events.after
 					loop
-						Result.append (l_events.item.eiffelized_consumed_entities)
+						Result.append (l_events.item.eiffelized_consumed_procedures)
 						l_events.forth
 					end
 				end

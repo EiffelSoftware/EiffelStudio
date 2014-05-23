@@ -230,7 +230,7 @@ feature -- Element change
 			implementation.replace (v)
 		ensure
 			has_v: has (v)
-			not_has_old_item: old readable implies not has (old item)
+			not_has_old_item: old readable implies (attached old implementation.item as l_item and then not has (l_item))
 		end
 
 	prune (v: like item)
@@ -421,7 +421,7 @@ invariant
 	items_unique: is_usable implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

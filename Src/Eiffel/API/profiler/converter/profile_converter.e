@@ -236,8 +236,7 @@ debug("PROFILE_CONVERT")
 	io.error.put_string (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count))
 	io.error.put_new_line
 end
-						dtype := function_name.substring (function_name.substring_index
-							(" from ", 1) + 6, function_name.count).to_integer + 1
+						dtype := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count).to_integer + 1
 						if
 							Eiffel_project.initialized and then
 							Eiffel_project.system_defined and then
@@ -428,7 +427,7 @@ end
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
 				until
-					next_char.is_alpha and then
+					not next_char.is_alpha and then
 					(next_char /= '_') and then
 					not next_char.is_digit
 				loop
@@ -471,9 +470,9 @@ end
 					from
 						next_char := profile_string.item (string_idx)
 					until
-						next_char.is_alpha and then
+						not next_char.is_alpha and then
 						(next_char /= '_') and then
-						next_char.is_digit
+						not next_char.is_digit
 					loop
 						token_string.extend (next_char)
 						string_idx := string_idx + 1

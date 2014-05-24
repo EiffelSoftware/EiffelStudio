@@ -43,6 +43,9 @@ feature -- Converting
 			-- Converts the profile-tool-output listing.
 		do
 			analyse
+		rescue
+				-- A crash occurred, make sure to flag the conversion as unsuccessful.
+			is_conversion_ok := False
 		end
 
 feature {PROFILE_CONVERTER} -- analyzing
@@ -59,6 +62,7 @@ feature {PROFILE_CONVERTER} -- analyzing
 				retrieve_first_next_token
 				if token_type = Error_token then
 					resync_line
+					is_conversion_ok := False
 				elseif token_type = Whitespace_token then
 					get_next_column
 					if column_nr > config.number_of_columns then
@@ -83,7 +87,7 @@ feature {PROFILE_CONVERTER} -- analyzing
 			columns_seen := 0
 			columns_of_interest := config.columns_of_interest
 			get_next_column
-			is_conversion_ok := False
+			is_conversion_ok := True
 		end
 
 	end_analyse
@@ -109,8 +113,6 @@ feature {PROFILE_CONVERTER} -- analyzing
 				io_except.set_description ("write permission failure")
 				io_except.raise
 			end
-
-			is_conversion_ok := True
 		end
 
 	redo_cyclics
@@ -182,6 +184,7 @@ feature {PROFILE_CONVERTER} -- analyzing
 				percentage := token_string.to_double
 				columns_seen := columns_seen + 1
 			else
+				is_conversion_ok := False
 				skip_line
 			end
 		end
@@ -194,6 +197,7 @@ feature {PROFILE_CONVERTER} -- analyzing
 				number_of_calls := token_string.to_integer
 				columns_seen := columns_seen + 1
 			else
+				is_conversion_ok := False
 				skip_line
 			end
 		end
@@ -308,6 +312,8 @@ end
 				end
 				columns_seen := columns_seen + 1
 			else
+					-- An error occurred
+				is_conversion_ok := False
 				skip_line
 			end
 		end
@@ -319,6 +325,7 @@ end
 			if config.index_column = column_nr then
 				columns_seen := columns_seen + 1
 			else
+				is_conversion_ok := False
 				skip_line
 			end
 		end

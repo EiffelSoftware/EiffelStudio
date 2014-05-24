@@ -134,13 +134,11 @@ feature {NONE} -- Implementation
 			-- Is the supplied execution profile a valid file?
 		local
 			execution_profile_file: RAW_FILE
-			execution_profile_text: STRING_32
+			l_profile_path: PATH
 		do
-			execution_profile_text := execution_profile_text_field.text
-			if execution_profile_text.is_empty then
-				Result := False
-			else
-				create execution_profile_file.make_with_path (create {PATH}.make_from_string (execution_profile_text))
+			create l_profile_path.make_from_string (execution_profile_text_field.text)
+			if not l_profile_path.is_empty then
+				create execution_profile_file.make_with_path (l_profile_path)
 				Result := execution_profile_file.exists and then execution_profile_file.is_readable
 			end
 		end
@@ -173,7 +171,7 @@ feature {NONE} -- Vision2 controls
 			-- Path where the execution profile to use is located.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -205,27 +205,37 @@ feature {TYPE_A} -- Helpers
 	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		local
-			tuple_type: TUPLE_TYPE_A
 			i, count, other_count: INTEGER
 			other_generics: like generics
 		do
-			tuple_type ?= other
-
-			if tuple_type /= Void then
+			if attached {TUPLE_TYPE_A} other as l_other_tuple_type then
 					-- Conformance TUPLE -> TUPLE
-				other_generics := tuple_type.generics
-				from
-					i := 1
-					count := generics.count
-					other_count := other_generics.count
-					Result := count >= other_count and then
-						(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (tuple_type)) and then
-						is_processor_attachable_to (tuple_type)
-				until
-					(i > other_count) or else (not Result)
-				loop
-					Result := generics.i_th (i).internal_conform_to (a_context_class, other_generics.i_th (i), True)
-					i := i + 1
+				other_generics := l_other_tuple_type.generics
+				count := generics.count
+				other_count := other_generics.count
+				if a_in_generic then
+					if l_other_tuple_type.is_frozen then
+						Result := is_frozen and then count = other_count
+					elseif not l_other_tuple_type.is_variant then
+						Result := not is_variant and then count = other_count
+					else
+						check is_variant: l_other_tuple_type.is_variant end
+						Result := count >= other_count
+					end
+				else
+					Result := count >= other_count
+				end
+				if Result then
+					from
+						i := 1
+						Result := (a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (l_other_tuple_type)) and then
+							is_processor_attachable_to (l_other_tuple_type)
+					until
+						(i > other_count) or else (not Result)
+					loop
+						Result := generics.i_th (i).internal_conform_to (a_context_class, other_generics.i_th (i), True)
+						i := i + 1
+					end
 				end
 			else
 					-- Conformance TUPLE -> other classtypes
@@ -259,7 +269,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

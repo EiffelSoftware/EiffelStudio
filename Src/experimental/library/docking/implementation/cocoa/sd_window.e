@@ -16,6 +16,11 @@ inherit
 			show_relative_to_window
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			copy, default_create
+		end
+
 feature {NONE} -- Implementation
 
 	create_implementation
@@ -34,14 +39,12 @@ feature {NONE} -- Implementation
 
 	initialize
 			-- Redefine
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			Precursor {EV_WINDOW}
 
-			-- We do it later to make sure contract `is_in_default_state' not borken.
-			create l_env
-			l_env.application.do_once_on_idle (agent
+				-- We do it later to make sure contract `is_in_default_state' not borken.
+			if attached {EV_APPLICATION} ev_application as l_app then
+				l_app.do_once_on_idle (agent
 													do
 														if not is_destroyed then
 															disable_border
@@ -49,6 +52,7 @@ feature {NONE} -- Implementation
 														end
 													end
 												)
+			end
 		end
 
 feature -- Command
@@ -69,14 +73,14 @@ feature -- Command
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

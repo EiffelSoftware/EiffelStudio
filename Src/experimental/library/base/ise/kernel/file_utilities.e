@@ -122,7 +122,8 @@ feature {NONE} -- Query
 								(e.count = 2 and then e [1] = '.' and then e [2] = '.')
 							then
 									-- This is a reference to the current or to the parent directory.
-							else
+							elseif a_levels > 0 or else a_levels = -1 then
+									-- Check recursiverly  if `a_levels' asks for recursion.
 								create d.make_with_path (l_path)
 								if d.exists and then d.is_readable then
 									Result.append (internal_files_end_with (l_path, a_end_with, (a_levels - 1).max (-1), False))
@@ -405,7 +406,7 @@ feature -- File operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

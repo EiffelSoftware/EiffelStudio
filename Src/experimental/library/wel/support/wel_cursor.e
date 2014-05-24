@@ -116,6 +116,16 @@ feature -- Basic operations
 			internal_previous_cursor := cwin_set_cursor (item)
 		end
 
+	remove
+			-- Remove current cursor for entire application and
+			-- save old one in `previous_cursor' if there was
+			-- one.
+		require
+			exists: exists
+		do
+			internal_previous_cursor := cwin_set_cursor (default_pointer)
+		end
+
 	restore_previous
 			-- Restore `previous_cursor'.
 		require
@@ -194,14 +204,14 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

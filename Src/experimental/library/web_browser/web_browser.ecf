@@ -47,6 +47,12 @@
 				<custom name="vision_implementation" excluded_value="cocoa"/>
 			</condition>
 		</cluster>
+		<cluster name="implementation_cocoa" location="implementation\cocoa\" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" value="cocoa"/>
+			</condition>
+		</cluster>
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">
 			<option namespace="Vision2.$$Implementation.Interface">
 			</option>
@@ -76,5 +82,12 @@
 			<option namespace="Vision2">
 			</option>
 		</cluster>
+	</target>
+	<target name="web_browser_dotnet" extends="web_browser">
+		<setting name="msil_generation" value="true"/>
+	</target>
+	<target name="web_browser_cocoa" extends="web_browser">
+		<setting name="platform" value="macintosh"/>
+		<variable name="vision_implementation" value="cocoa"/>
 	</target>
 </system>

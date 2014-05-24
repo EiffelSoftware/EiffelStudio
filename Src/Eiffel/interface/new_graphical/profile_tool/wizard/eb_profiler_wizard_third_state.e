@@ -80,9 +80,9 @@ feature -- Basic Operation
 	proceed_with_current_info
 		do
 			if is_supplied_runtime_information_record_valid then
-				proceed_with_new_state(create {EB_PROFILER_WIZARD_FOURTH_STATE}.make (wizard_information))
+				proceed_with_new_state (create {EB_PROFILER_WIZARD_FOURTH_STATE}.make (wizard_information))
 			else
-				proceed_with_new_state(create {EB_PROFILER_WIZARD_RUNTIME_INFO_RECORD_ERROR_STATE}.make (wizard_information))
+				proceed_with_new_state (create {EB_PROFILER_WIZARD_RUNTIME_INFO_RECORD_ERROR_STATE}.make (wizard_information))
 			end
 		end
 
@@ -161,32 +161,14 @@ feature {NONE} -- Implementation
 			-- Is the supplied Runtime information record a valid file?
 		local
 			rtir_file: RAW_FILE
-			rtir_text: STRING_32
-			index_sep: INTEGER
-			rtir_path: STRING_32
+			rtir_path: PATH
 		do
-			rtir_text := runtime_information_record_textfield.text
-			Result := True
-
-				-- Check that the filename is not empty
-			if rtir_text.is_empty then
-				Result := False
-			end
-
+			create rtir_path.make_from_string (runtime_information_record_textfield.text)
 				-- Check that the filename indicate a valid and readable file
-			if Result then
-				create rtir_file.make_with_name (rtir_text)
-				Result := rtir_file.exists and then rtir_file.is_readable
-			end
-
-				-- Check that the file is located in the W_CODE or F_CODE
-				-- Directory
-			if Result then
-				index_sep := rtir_text.last_index_of (Operating_environment.Directory_separator, rtir_text.count)
-				if index_sep /= 0 then
-					rtir_path := rtir_text.substring (1, index_sep - 1)
-					Result := rtir_path.same_string (information.generation_path.name)
-				end
+			if not rtir_path.is_empty then
+				create rtir_file.make_with_path (rtir_path)
+				Result := rtir_file.exists and then rtir_file.is_readable and then
+					rtir_path.parent.same_as (information.generation_path)
 			end
 		end
 
@@ -199,7 +181,7 @@ feature {NONE} -- Vision2 controls
 			-- Type of the profiler used to generate the record.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

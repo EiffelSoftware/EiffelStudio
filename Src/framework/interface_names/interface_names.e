@@ -2855,8 +2855,8 @@ feature -- Wizard texts
 
 	wt_Execution_profile_error: STRING_32 do Result := locale.translation("Execution Profile Error")	end
 	wb_Execution_profile_error: STRING_32
-				do Result := locale.translation("The file you have supplied as existring Execution Provide does%N%
-				%not exist or is not valid. Please provide a valid file or generate%N%
+				do Result := locale.translation("The file you have supplied as existing Execution Profile does%N%
+				%not exist. Please provide a valid file or generate%N%
 				%a new one.%N%
 				%Click Back and select a valid file or choose the generate option.")	end;
 

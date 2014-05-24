@@ -582,11 +582,7 @@ feature {TYPE_A} -- Helpers
 							Result := base_class.conform_to (other_class_type.base_class)
 						end
 					else
-						if other.is_frozen then
-							Result := is_frozen and then base_class = other_class_type.base_class
-						else
-							Result := base_class.conform_to (other_class_type.base_class)
-						end
+						Result := base_class.conform_to (other_class_type.base_class)
 					end
 					Result := Result and then other_class_type.valid_generic (a_context_class, Current, a_in_generic)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
@@ -1035,7 +1031,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -341,7 +341,7 @@ feature -- Properties
 			-- Is type implicitly frozen?
 			--| Case of a frozen class or an expanded class.
 		do
-			Result := (attached base_class as l_base_class and then (l_base_class.is_frozen or l_base_class.has_descendants)) or else is_expanded
+			Result := (attached base_class as l_base_class and then l_base_class.is_frozen) or else is_expanded
 		end
 
 	is_variant: BOOLEAN
@@ -1135,6 +1135,23 @@ feature -- Duplication
 			result_has_no_attached_mark: not Result.has_attached_mark
 			result_has_no_detachable_mark: not Result.has_detachable_mark
 			result_has_no_separate_mark: not Result.has_separate_mark
+		end
+
+	as_variant_free: like Current
+			-- Same as Current but without any variance mark.
+		local
+			a: like variant_bits
+		do
+			if variant_bits = 0 then
+				Result := Current
+			else
+				a := variant_bits
+				variant_bits := 0
+				Result := duplicate
+				variant_bits := a
+			end
+		ensure
+			has_no_variance_mark: not Result.has_variant_mark and not Result.has_frozen_mark
 		end
 
 	to_other_attachment (other: TYPE_A): like Current

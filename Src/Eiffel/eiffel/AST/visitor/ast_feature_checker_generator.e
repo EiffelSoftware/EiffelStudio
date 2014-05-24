@@ -1670,7 +1670,7 @@ feature {NONE} -- Implementation
 										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
 											-- check if `l_formal_arg_type' involves some generics whose actuals
-											-- are marked `variant'. only do this when `is_inherited' is false, since
+											-- are marked `variant'. Only do this when `is_inherited' is false, since
 											-- all descendants are checked in `check_cat_call'.
 										if
 											not is_inherited and then is_qualified and then
@@ -1930,6 +1930,19 @@ feature {NONE} -- Implementation
 								end
 							end
 
+							if is_qualified and then attached last_type then
+									-- If result type is declared frozen, then it keeps its status only if target is frozen.
+									-- Also if `last_type' is expanded or frozen or if the routine is frozen, we know for sure
+									-- there will not be any redeclaration so we can keep the `frozen' status of the query.
+								if 
+									not (a_type.is_frozen or a_type.is_expanded or (attached a_type.base_class as l_class and then l_class.is_frozen)) and then
+									(l_feature.type.is_frozen and not l_feature.is_frozen)
+								then
+										-- Remove frozen status of type.
+									set_type (last_type.as_variant_free, a_name)
+								end
+							end
+
 							if l_needs_byte_node then
 								if l_generated_result_type = Void then
 									l_generated_result_type := last_type
@@ -2101,6 +2114,7 @@ feature {NONE} -- Type checks
 			if not formal_type.backward_conform_to (current_class, actual_type) then
 				if
 					(not is_inherited and then
+					is_frozen_type_compatible (actual_type, formal_type, True) and then
 					actual_type.convert_to (current_class, formal_type.deep_actual_type))
 				then
 				elseif
@@ -2110,6 +2124,8 @@ feature {NONE} -- Type checks
 				else
 					Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, formal_type, location)
 				end
+			elseif not is_frozen_type_compatible (actual_type, formal_type, False) then
+				Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, formal_type, location)
 			elseif warning_count /= error_handler.warning_list.count then
 				error_handler.warning_list.last.set_location (location)
 			end
@@ -9447,7 +9463,11 @@ feature {NONE} -- Implementation
 				--|    a VNCE error.
 				--| 2- if target was a BIT type, we should generate a VNCB error.
 			if not l_target_type.backward_conform_to (context.current_class, l_source_type) then
-				if not is_inherited and then l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type) then
+				if
+					not is_inherited and then
+					is_frozen_type_compatible (l_source_type, l_target_type, True) and then
+					l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type)
+				then
 					l_conv_info := context.last_conversion_info
 					is_type_compatible.conversion_info := l_conv_info
 					if l_conv_info.has_depend_unit then
@@ -9474,10 +9494,36 @@ feature {NONE} -- Implementation
 						-- about non-conforming types.
 					is_type_compatible.is_compatible := False
 				end
+			else
+					-- Check that if `target' is frozen, `source' is also frozen.
+				is_type_compatible.is_compatible := is_frozen_type_compatible (l_source_type, l_target_type, False)
 			end
 		ensure
 			last_type_unchanged: last_type = old last_type
 			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
+		end
+
+	is_frozen_type_compatible (a_source_type, a_target_type: TYPE_A; a_for_conversion: BOOLEAN): BOOLEAN
+			-- Is `a_source_type' compatible with `a_target_type' with respect to the frozen mark?
+		require
+			a_source_type_not_void: a_source_type /= Void
+			a_target_type_not_void: a_target_type /= Void
+			type_conforms: not a_for_conversion implies a_source_type.conform_to (context.current_class, a_target_type)
+		do
+			if a_target_type.actual_type.has_frozen_mark then
+				if a_source_type.actual_type.is_none then
+						-- Assignment `a := Void' where `a' is frozen detachable,
+						-- this is ok.
+					Result := True
+				elseif a_source_type.actual_type.has_frozen_mark then
+						-- Both source and target are frozen.
+					Result := a_for_conversion or else a_source_type.conformance_type.as_attachment_mark_free.same_type (a_target_type.conformance_type.as_attachment_mark_free)
+				else
+					Result := False
+				end
+			else
+				Result := True
+			end
 		end
 
 	process_assigner_command (a_target_type, a_target_constrained_type: TYPE_A; target_query: FEATURE_I)
@@ -11158,7 +11204,7 @@ feature {NONE} -- Implementation: catcall check
 				l_tcat.set_called_feature (a_feature)
 				l_tcat.add_compiler_limitation (a_callee_type)
 				error_handler.insert_error (L_tcat)
-			else
+			elseif not l_descendants.is_empty then
 					-- Loop through all descendants
 				from
 					l_descendants.start
@@ -11198,18 +11244,6 @@ feature {NONE} -- Implementation: catcall check
 							-- Actual type of feature argument
 						l_formal_arg_type := l_formal_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
 
-							-- Check if `l_formal_arg_type' involves some generics. If it does then we need to trigger
-							-- an error if target's actual generic are covariant.
-						if l_formal_arg_type.is_variant then
-							if l_tcat = Void then
-								create l_tcat.make (a_location)
-								context.init_error (l_tcat)
-								l_tcat.set_called_feature (a_feature)
-								error_handler.insert_error (l_tcat)
-							end
-							l_tcat.add_covariant_generic_violation
-						end
-
 							-- Check if actual parameter conforms to the possible type of the descendant feature if conformance
 							-- was involved in the original call, otherwise nothing to be done.
 						if not l_arg_type.conform_to (context.current_class, l_formal_arg_type) then
@@ -11221,7 +11255,17 @@ feature {NONE} -- Implementation: catcall check
 								error_handler.insert_error (l_tcat)
 							end
 							l_tcat.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.i_th (i), i)
+						elseif l_formal_arg_type.is_variant then
+								-- Check if the formal parameter is a formal, then the actual generic parameter has to be frozen.
+							if l_tcat = Void then
+								create l_tcat.make (a_location)
+								context.init_error (l_tcat)
+								l_tcat.set_called_feature (a_feature)
+								error_handler.insert_error (l_tcat)
+							end
+							l_tcat.add_covariant_generic_violation
 						end
+
 						i := i + 1
 					end
 

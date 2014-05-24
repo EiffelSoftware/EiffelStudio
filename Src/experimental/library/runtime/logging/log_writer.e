@@ -14,7 +14,7 @@ inherit
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
 	initialize
-			-- Initialize the log writer
+			-- Initialize the log writer, set the default log level to ERROR.
 		require
 			not_is_initialized: not is_initialized
 		deferred
@@ -144,8 +144,6 @@ feature {LOG_LOGGING_FACILITY} -- Access
 		do
 			suspended := False
 		end
-
-
 
 feature {LOG_LOGGING_FACILITY} -- Status Report
 

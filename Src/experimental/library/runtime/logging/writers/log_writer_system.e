@@ -44,6 +44,7 @@ feature {NONE} -- Creation
 	default_create
 			-- Create system logger.
 		do
+			log_level := Log_error
 				-- This is the default name for logging.
 			application_name := "EiffelSyslog"
 			options := Log_ndelay + Log_pid
@@ -52,6 +53,8 @@ feature {NONE} -- Creation
 			else
 				facility := Log_local6
 			end
+		ensure then
+			default_log_level_set: log_level = Log_error
 		end
 
 feature {LOG_LOGGING_FACILITY} -- Initialization

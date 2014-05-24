@@ -10,6 +10,19 @@ class
 
 inherit
 	LOG_WRITER
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Creation
+
+	default_create
+			-- Create system logger.
+		do
+			log_level := Log_error
+		ensure then
+			default_log_level_set: log_level = Log_error
+		end
 
 feature {LOG_LOGGING_FACILITY} -- Initialization
 

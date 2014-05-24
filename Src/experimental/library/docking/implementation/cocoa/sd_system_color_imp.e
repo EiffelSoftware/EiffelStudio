@@ -43,10 +43,13 @@ feature -- Access
 			-- Focused selection color for title bar.
 			-- SD_TITE_BAR background of the focused window Blue
 		local
-			l_color: NS_COLOR
+			l_color: detachable NS_COLOR
 		do
 			create l_color.keyboard_focus_indicator_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
+			if l_color = Void then
+				create l_color.keyboard_focus_indicator_color
+			end
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
@@ -157,7 +160,7 @@ feature {NONE} -- Cocoa text_aa colors.
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

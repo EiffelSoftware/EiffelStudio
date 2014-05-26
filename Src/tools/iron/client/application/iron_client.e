@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		local
-			cmd: READABLE_STRING_32
 			task: detachable IRON_TASK
 			iron: IRON
 			cmd_task: IRON_COMMAND_TASK
@@ -52,8 +51,7 @@ feature {NONE} -- Initialization
 			initialize_iron (iron)
 
 			if argument_count > 0 then
-				cmd := argument (1)
-				task := task_by_name (cmd, task_arguments (argument_array))
+				task := task_by_name (argument (1), task_arguments (argument_array))
 				if task = Void then
 					create cmd_task.make (command_task_arguments (argument_array))
 					if cmd_task.is_available (iron) then

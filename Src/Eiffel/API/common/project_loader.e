@@ -159,6 +159,11 @@ feature -- Loading
 										install_iron_packages (l_iron_packages_to_install)
 										if is_iron_execution_error then
 											report_iron_packages_installation_error
+										else
+											install_iron_packages_dependencies_from_project (config_file_name.name, target_name)
+											if is_iron_execution_error then
+												report_iron_packages_installation_error
+											end
 										end
 									end
 								end
@@ -734,6 +739,23 @@ feature {NONE} -- Settings
 			loop
 				l_args.extend (ic.item)
 			end
+			is_iron_execution_error := False
+			launch_iron_execution (eiffel_layout.iron_command_name, l_args)
+		end
+
+	install_iron_packages_dependencies_from_project (a_ecf, a_target: READABLE_STRING_32)
+			-- Install iron packages on which depends `a_ecf.a_target'.
+		local
+			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
+		do
+			create l_args.make (6)
+			l_args.extend ("install")
+			l_args.extend ("--setup")
+			l_args.extend ("--batch")
+			l_args.extend ("--ecf")
+			l_args.extend (a_ecf)
+			l_args.extend ("--target")
+			l_args.extend (a_target)
 			is_iron_execution_error := False
 			launch_iron_execution (eiffel_layout.iron_command_name, l_args)
 		end

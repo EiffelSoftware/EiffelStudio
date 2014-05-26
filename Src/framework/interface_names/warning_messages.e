@@ -115,7 +115,7 @@ feature -- Project file/directory warnings
 							locale.translation (
 			"The project needs to use the following iron packages, which has not been installed.%N%
 			%(packages: %"$1%")%N%
-			%Should the iron packages be installed?"),
+			%Should the iron packages (and their dependencies) be installed?"),
 							[s]
 						)
 		end

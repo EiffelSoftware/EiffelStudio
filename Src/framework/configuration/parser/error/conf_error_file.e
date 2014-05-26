@@ -50,14 +50,34 @@ feature -- Access
 
 	text: STRING_32
 			-- The error message.
+		local
+			i: INTEGER
 		do
 			check
 				file_not_void: file /= Void
 			end
-			Result := {STRING_32} "Could not open file: " + file
-			if attached orig_file as l_orig_file then
-				Result.append ({STRING_32} "%N" + l_orig_file)
+			if
+				attached orig_file as l_orig_file and then
+				l_orig_file.starts_with_general ("iron:")
+			then
+				Result := {STRING_32} "Could find location related to: " + l_orig_file
+				Result.append ({STRING_32} "%N")
+				i := l_orig_file.index_of (':', 6)
+				if i > 0 then
+					Result.append ({STRING} "Missing iron package %"" + l_orig_file.substring (6, i - 1) + {STRING_32} "%".%N")
+					Result.append ({STRING} "To fix, install from command line: iron install " + l_orig_file.substring (6, i - 1))
+					Result.append ({STRING_32} "%N")
+				else
+					Result.append ({STRING} "Fix iron location, install missing package, or fix the configuration file.")
+					Result.append ({STRING_32} "%N")
+				end
+			else
+				Result := {STRING_32} "Could not open file: " + file
+				if attached orig_file as l_orig_file then
+					Result.append ({STRING_32} "%N" + l_orig_file)
+				end
 			end
+
 			if attached config as l_config then
 				Result.append ({STRING_32} "%NConfiguration: " + l_config)
 			end

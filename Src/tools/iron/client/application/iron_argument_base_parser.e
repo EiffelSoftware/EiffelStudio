@@ -37,6 +37,11 @@ feature -- Change
 			is_using_builtin_switches := b
 		end
 
+	set_is_case_sensitive (b: BOOLEAN)
+		do
+			is_case_sensitive := b
+		end
+
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

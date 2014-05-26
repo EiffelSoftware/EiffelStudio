@@ -13,9 +13,14 @@ feature {NONE} -- Initialization
 		do
 			set_argument_source (a_task.argument_source)
 			set_is_using_builtin_switches (not is_verbose_switch_used)
+			set_is_case_sensitive (True)
 		end
 
 	set_is_using_builtin_switches (b: BOOLEAN)
+		deferred
+		end
+
+	set_is_case_sensitive (b: BOOLEAN)
 		deferred
 		end
 

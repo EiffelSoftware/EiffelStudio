@@ -53,11 +53,29 @@ feature -- Install task
 	tk_completed: STRING_32
 		do Result := {STRING_32} "completed" end
 
+	tk_skipped: STRING_32
+		do Result := {STRING_32} "skipped" end
+
+	tk_ignored: STRING_32
+		do Result := {STRING_32} "ignored" end
+
 	tk_simulated: STRING_32
 		do Result := {STRING_32} "simulated" end
 
 	m_installing (s: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Installing [$1] ", [s]) end
+
+	m_installing_dependencies_from_ecf (s: READABLE_STRING_GENERAL; tgt: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			if tgt /= Void then
+				Result := string_with_args ("Installing package dependencies from configuration file %"$1%" target %"$2%"", [s, tgt])
+			else
+				Result := string_with_args ("Installing package dependencies from configuration file %"$1%"", [s])
+			end
+		end
+
+	m_installing_dependencies_from_ecf_completed: STRING_32
+		do Result := {STRING_32} "completed."	end
 
 	m_setup_installation (s: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Setting up [$1] ", [s]) end

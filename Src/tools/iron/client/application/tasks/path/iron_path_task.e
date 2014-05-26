@@ -33,7 +33,7 @@ feature -- Execute
 			l_resources: LIST [READABLE_STRING_32]
 		do
 			l_resources := args.resources
-			if l_resources.count = 0 then
+			if l_resources.is_empty then
 				print (a_iron.layout.path.name)
 				io.put_new_line
 			else

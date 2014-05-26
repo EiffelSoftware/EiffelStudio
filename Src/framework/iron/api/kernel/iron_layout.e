@@ -125,6 +125,13 @@ feature -- Query
 			Result := packages_path.extended_path (safe_package_path (a_package, True)).appended_with_extension ("info")
 		end
 
+	package_installation_iron_file_path (a_package: IRON_PACKAGE): detachable PATH
+		do
+			if attached package_installation_path (a_package) as p then
+				Result := p.extended ("package").appended_with_extension ("iron")
+			end
+		end
+
 	package_installation_path (a_package: IRON_PACKAGE): detachable PATH
 		local
 			f: RAW_FILE

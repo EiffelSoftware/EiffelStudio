@@ -67,10 +67,9 @@ Notes:
 * In the scope of the .ecf file, the IRON_PATH variable is always set: to default path or to the value of environment variable IRON_PATH.
 * In addition to the IRON way to reference library, it is also possible to use the absolute URL in the repository, see advanced usage for more details.
 
-<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
-https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
-https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
-</code>
+ https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
+ https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
+ https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
 
 But this implies putting the version in the url (i.e 14.05), or you could set ISE_LIBRARY to <code>https://iron.eiffel.com/14.05/com.eiffel</code>
 

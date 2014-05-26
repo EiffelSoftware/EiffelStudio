@@ -27,11 +27,28 @@ feature -- Access
 		deferred
 		end
 
+	dependencies_included: BOOLEAN
+			-- Include the dependencies?
+		deferred
+		end
+
 	resources: LIST [IMMUTABLE_STRING_32]
 		deferred
 		end
 
 	files: LIST [IMMUTABLE_STRING_32]
+		deferred
+		end
+
+	for_ecf_file: detachable PATH
+			-- Install package for ecf `Result' if any.
+		deferred
+		end
+
+	target_name: detachable READABLE_STRING_32
+			-- Optional target name information in addition to `for_ecf_file'.
+		require
+			for_ecf_file_attached: for_ecf_file /= Void
 		deferred
 		end
 

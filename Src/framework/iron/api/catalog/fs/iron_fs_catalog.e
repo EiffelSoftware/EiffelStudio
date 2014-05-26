@@ -493,7 +493,7 @@ feature -- Package operations
 							if ic.item.name.is_case_insensitive_equal ("compile_library") then
 								create cl_code.put (0)
 								if is_silent then
-									execute_command_line (finish_freezing_command_name, ip.extended (ic.item.instruction), Void, cl_code)
+									execute_command_line (finish_freezing_command_name, ip.extended (ic.item.instruction), agent (s: STRING) do end, cl_code)
 								else
 									execute_command_line (finish_freezing_command_name, ip.extended (ic.item.instruction), agent (s: STRING) do print (s) end, cl_code)
 								end
@@ -504,11 +504,6 @@ feature -- Package operations
 									print (ic.item)
 									print ("%" ignored.##")
 								end
---								if ic.item.name.is_case_insensitive_equal ("install") then
---									print (" setup %""+ ic.item +"%" ignored!")
---									create cl_code.put (0)
---									execute_command_line (ic.item.instruction, ip, cl_string, cl_code)
---								end								
 							end
 						end
 						across

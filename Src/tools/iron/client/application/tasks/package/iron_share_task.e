@@ -332,7 +332,6 @@ feature -- Execute
 		local
 			u: FILE_UTILITIES
 			p: detachable PATH
-			pf_fac: IRON_PACKAGE_FILE_FACTORY
 			pf: detachable IRON_PACKAGE_FILE
 		do
 			p := args.data_file
@@ -343,8 +342,7 @@ feature -- Execute
 			end
 
 			if attached args.package_file as l_loc then
-				create pf_fac
-				pf := pf_fac.new_package_file (l_loc)
+				pf := (create {IRON_PACKAGE_FILE_FACTORY}).new_package_file (l_loc)
 				if attached pf.title as l_title then
 					Result.set_title (l_title)
 				end
@@ -412,10 +410,11 @@ feature -- Execute
 			-- Return package named `a_name' from `repo'
 			-- if there are more than one, return Void !
 		do
-			if attached repo.packages_associated_with_name (a_name) as lst then
-				if lst.count = 1 then
-					Result := lst.first
-				end
+			if
+				attached repo.packages_associated_with_name (a_name) as lst and then
+				lst.count = 1
+			then
+				Result := lst.first
 			end
 		end
 

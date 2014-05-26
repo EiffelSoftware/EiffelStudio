@@ -18,6 +18,16 @@ feature -- Access
 	name: STRING = "install"
 			-- Iron client task
 
+feature -- Status
+
+	is_simulation: BOOLEAN
+
+	is_verbose: BOOLEAN
+
+	is_setup_enabled: BOOLEAN
+
+	ignoring_cache: BOOLEAN
+
 feature -- Execute
 
 	process (a_iron: IRON)
@@ -32,10 +42,15 @@ feature -- Execute
 		local
 			l_package: detachable IRON_PACKAGE
 			lst: ARRAYED_LIST [IRON_PACKAGE]
-			l_conflicts: detachable ITERABLE [IRON_PACKAGE]
 			l_choices: ARRAYED_LIST [TUPLE [prompt: READABLE_STRING_GENERAL; value: IRON_PACKAGE]]
-			cl_succeed: CELL [BOOLEAN]
 		do
+				-- Status
+			is_simulation := args.is_simulation
+			is_setup_enabled := args.setup_execution_enabled
+			is_verbose := args.verbose
+			ignoring_cache := args.ignoring_cache
+
+				-- Processing
 			if args.installing_all then
 				lst := a_iron.catalog_api.available_packages
 			else
@@ -112,80 +127,357 @@ feature -- Execute
 				across
 					lst as c
 				loop
-					l_package := c.item
-					l_conflicts := a_iron.installation_api.packages_conflicting_with_package (l_package)
-								-- This can occurs if package are referenced by full URI
-					print (m_installing (l_package.human_identifier))
-					if a_iron.installation_api.is_package_installed (l_package) then
-						print (" -> ")
-						print (tk_already_installed)
-						print_new_line
-						if args.verbose and attached a_iron.layout.package_installation_path (l_package) as l_installation_path then
-							print ("  [")
-							print (l_installation_path.name)
-							print ("]%N")
-						end
-					else
-						if args.is_simulation then
-							print (" -> ")
-							print (tk_simulated)
-							print_new_line
-						else
-							a_iron.catalog_api.install_package (l_package.repository, l_package, args.ignoring_cache)
-							print (" -> ")
-							a_iron.installation_api.refresh_installed_packages
-							if a_iron.installation_api.is_package_installed (l_package) then
-								print (tk_successfully_installed)
-								print_new_line
-								if args.verbose and attached a_iron.installation_api.package_installation_path (l_package) as l_installation_path then
-									print ("  [")
-									print (l_installation_path.name)
-									print ("]%N")
-								end
-							else
-								print (tk_failed)
-								print_new_line
-							end
-						end
-					end
-					if
-						a_iron.installation_api.is_package_installed (l_package) and then
-						args.setup_execution_enabled
-					then
-						print (m_setup_installation (l_package.human_identifier))
-						print (" -> ")
-						if args.is_simulation then
-							print (tk_simulated)
-						else
-							create cl_succeed.put (False)
-							a_iron.catalog_api.setup_package_installation (l_package, cl_succeed, not args.verbose)
-							if cl_succeed.item then
-								print (tk_completed)
-							else
-								print (tk_failed)
-							end
-						end
-						print ("%N")
-					end
-
-					if l_conflicts /= Void then
-						print ("  -> ")
-						print (m_conflicting (l_package.human_identifier))
-						across
-							l_conflicts as ic
-						loop
-							print ("(")
-							print (ic.item.human_identifier)
-							print (") ")
-						end
-						print_new_line
-					end
+					install_package (c.item, a_iron)
+					process_package (c.item, a_iron)
 				end
+			end
+			if attached args.for_ecf_file as l_ecf then
+				install_ecf_dependencies (l_ecf, args.target_name, a_iron)
 			end
 			if not args.files.is_empty then
 				print ("[ERROR] Installing package from file is not yet implemented!")
 				print_new_line
 			end
+		end
+
+feature -- Operation: ecf dependency
+
+	install_package (a_package: IRON_PACKAGE; a_iron: IRON)
+			-- Install package `a_package'.
+		local
+			cl_succeed: CELL [BOOLEAN]
+		do
+			print (m_installing (a_package.human_identifier))
+			if a_iron.installation_api.is_package_installed (a_package) then
+				print (" -> ")
+				print (tk_already_installed)
+				print_new_line
+				if
+					is_verbose and
+					attached a_iron.layout.package_installation_path (a_package) as l_installation_path
+				then
+					print ("  [")
+					print (l_installation_path.name)
+					print ("]%N")
+				end
+			else
+				if is_simulation then
+					print (" -> ")
+					print (tk_simulated)
+					print_new_line
+				else
+					a_iron.catalog_api.install_package (a_package.repository, a_package, ignoring_cache)
+					print (" -> ")
+					if a_iron.catalog_api.is_package_installed (a_package) then
+						a_iron.installation_api.refresh_installed_packages
+						print (tk_successfully_installed)
+						io.put_new_line
+-- Maybe too verbose.						
+--						if is_verbose and attached a_iron.installation_api.package_installation_path (a_package) as l_installation_path then
+--							print ("  [")
+--							print (l_installation_path.name)
+--							print ("]")
+--							io.put_new_line
+--						end
+						if is_setup_enabled then
+							print (m_setup_installation (a_package.human_identifier))
+							print (" -> ")
+							if is_simulation then
+								print (tk_simulated)
+							else
+								create cl_succeed.put (False)
+								a_iron.catalog_api.setup_package_installation (a_package, cl_succeed, not is_verbose)
+								if cl_succeed.item then
+									print (tk_completed)
+								else
+									print (tk_failed)
+								end
+							end
+						else
+							print (tk_skipped)
+						end
+					else
+						print (tk_failed)
+					end
+					io.put_new_line
+				end
+			end
+
+			if attached a_iron.installation_api.packages_conflicting_with_package (a_package) as l_conflicts then
+						-- This can occurs if package are referenced by full URI
+				print ("  -> ")
+				print (m_conflicting (a_package.human_identifier))
+				across
+					l_conflicts as ic
+				loop
+					print ("(")
+					print (ic.item.human_identifier)
+					print (") ")
+				end
+				print_new_line
+			end
+		end
+
+	install_ecf_dependencies (a_ecf: PATH; a_target_name: detachable READABLE_STRING_GENERAL; a_iron: IRON)
+			-- Install IRON package needed by `a_ecf'.
+			-- This applies for current platform
+		require
+			a_ecf.name.ends_with_general (".ecf")
+		local
+			cfg: CONF_LOAD
+			cfg_factory: CONF_PARSE_FACTORY
+			tgt: detachable CONF_TARGET
+			lib: CONF_LIBRARY
+			l_ref: detachable READABLE_STRING_GENERAL
+			l_package_name: detachable STRING_32
+			ut: FILE_UTILITIES
+			l_targets: ARRAYED_LIST [CONF_TARGET]
+		do
+			if ut.file_path_exists (a_ecf) then
+				create cfg_factory
+				create cfg.make (cfg_factory)
+
+				cfg.retrieve_configuration (a_ecf.name)
+				if attached cfg.last_system as sys then
+					create l_targets.make (0)
+					if a_target_name = Void then
+						tgt := sys.library_target
+						if tgt /= Void then
+							l_targets.force (tgt)
+						else
+							across
+								sys.targets as ic
+							loop
+								l_targets.force (ic.item)
+							end
+						end
+					else
+						across
+							sys.targets as ic
+						until
+							tgt /= Void
+						loop
+							if a_target_name.is_case_insensitive_equal (ic.item.name) then
+								l_targets.force (ic.item)
+							end
+						end
+					end
+					from
+						l_targets.start
+					until
+						l_targets.after
+					loop
+						tgt := l_targets.item
+						if is_verbose then
+							print ("Analyze ")
+							if tgt = sys.library_target then
+								print (" library ")
+							else
+								print (" project ")
+							end
+							if not sys.name.same_string (tgt.name) then
+								print (sys.name)
+								print (".")
+							end
+							print (tgt.name)
+							print (" from ")
+							print (a_ecf.name)
+							print ("%N")
+						end
+						across
+							tgt.libraries as ic
+						loop
+							lib := ic.item
+							l_ref := lib.location.original_path
+							if l_ref.starts_with ("iron:") then
+								add_to_completed_pool (l_ref)
+								l_package_name := package_name_from_iron_uri (l_ref)
+								if not l_package_name.is_empty then
+									l_package_name.to_lower
+									process_package_by_name (l_package_name, a_iron)
+								end
+							else --| not a iron:package:path.ecf
+								l_ref := lib.location.evaluated_path.name
+								if not is_completed (l_ref) then
+									add_to_pending_ecf_pool (l_ref)
+								end
+							end
+						end
+
+						if attached pending_ecf_pool as ppool then
+							across
+								ppool as ic
+							loop
+								l_ref := ic.item
+								if not is_completed (l_ref) then
+									add_to_completed_pool (l_ref)
+									install_ecf_dependencies (create {PATH}.make_from_string (l_ref), Void, a_iron)
+								end
+							end
+						end
+						l_targets.forth
+					end
+				else
+					if is_verbose then
+						print ("Process ")
+						print (a_ecf.name)
+						print (" -> Error while loading!")
+						io.put_new_line
+					end
+				end
+			else
+				if is_verbose then
+					print ("Process ")
+					print (a_ecf.name)
+					print (" -> File Not Found!")
+					io.put_new_line
+				end
+			end
+		end
+
+	process_package_by_name (a_package_name: READABLE_STRING_GENERAL; a_iron: IRON)
+		local
+			l_package: IRON_PACKAGE
+		do
+			if not is_completed (a_package_name) then
+				if
+					attached a_iron.catalog_api.packages_associated_with_name (a_package_name) as l_packages and then
+					l_packages.count >= 1
+				then
+					l_package := l_packages.first
+					process_package (l_package, a_iron)
+				end
+			end
+		end
+
+	process_package (a_package: IRON_PACKAGE; a_iron: IRON)
+		do
+			if not is_completed (a_package.identifier) then
+				if a_iron.installation_api.is_package_installed (a_package) then
+						-- Installed
+					process_installed_package (a_package, a_iron)
+				else
+						-- Available
+					process_available_package (a_package, a_iron)
+				end
+			end
+		end
+
+	process_installed_package (a_package: IRON_PACKAGE; a_iron: IRON)
+		local
+			l_id: READABLE_STRING_GENERAL
+		do
+			l_id := a_package.identifier
+			if not is_completed (l_id) then
+				add_to_completed_pool (l_id)
+				across
+					projects_from_installed_package (a_package, a_iron) as ic
+				loop
+					l_id := ic.item.name
+					add_to_completed_pool (l_id)
+					install_ecf_dependencies (ic.item, Void, a_iron)
+				end
+			end
+		end
+
+	process_available_package (a_package: IRON_PACKAGE; a_iron: IRON)
+		do
+			if not is_completed (a_package.identifier) then
+				install_package (a_package, a_iron)
+				process_package (a_package, a_iron)
+			end
+		end
+
+feature {NONE} -- Helpers
+
+	completed_pool: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+
+	pending_ecf_pool: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+
+	add_to_pending_ecf_pool (a_ecf_file_name: READABLE_STRING_GENERAL)
+		local
+			l_pool: like pending_ecf_pool
+		do
+			l_pool := pending_ecf_pool
+			if l_pool = Void then
+				create l_pool.make (1)
+				pending_ecf_pool := l_pool
+			end
+			l_pool.force (a_ecf_file_name)
+		end
+
+	add_to_completed_pool (a_package_name_or_ecf: READABLE_STRING_GENERAL)
+		local
+			l_pool: like completed_pool
+		do
+			l_pool := completed_pool
+			if l_pool = Void then
+				create l_pool.make (1)
+				completed_pool := l_pool
+			end
+			l_pool.force (a_package_name_or_ecf)
+		end
+
+	is_completed (n: detachable READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := n /= Void and then
+						attached completed_pool as l_pool and then
+						across l_pool as ic some n.same_string (ic.item) end
+		end
+
+	is_pending_ecf (n: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := n /= Void and then
+						attached pending_ecf_pool as l_pool and then
+						across l_pool as ic some n.same_string (ic.item) end
+		end
+
+	package_name_from_iron_uri (a_uri: READABLE_STRING_GENERAL): STRING_32
+			-- Package name extracted from `a_uri' "iron:package-name:....ecf".
+		require
+			a_uri_valid: a_uri.starts_with ("iron:")
+		local
+			p: INTEGER
+		do
+			create Result.make_from_string_general (a_uri)
+			Result.remove_head (5)
+			p := Result.index_of (':', 1)
+			Result.keep_head (p - 1)
+		end
+
+	projects_from_installed_package (a_package: IRON_PACKAGE; a_iron: IRON): ARRAYED_LIST [PATH]
+			--
+		require
+			a_iron.installation_api.is_package_installed (a_package)
+		local
+--			fac: IRON_PACKAGE_FILE_FACTORY
+			ecfs_scanner: IRON_ECF_SCANNER
+			l_inst_path: detachable PATH
+		do
+			create Result.make (0)
+			l_inst_path := a_iron.layout.package_installation_path (a_package)
+			if l_inst_path /= Void then
+				create ecfs_scanner.make
+				ecfs_scanner.process_directory (l_inst_path)
+				across
+					ecfs_scanner.items as ic
+				loop
+					Result.force (ic.item)
+				end
+			end
+-- Maybe: we could restrict to projects declared in package.iron ...			
+--			if
+--				l_inst_path /= Void and then
+--				attached a_iron.layout.package_installation_iron_file_path (a_package) as p
+--			then
+--				create fac
+--				if attached fac.new_package_file (p) as ipf then
+--					across
+--						ipf.projects as ic
+--					loop
+--					end
+--				end
+--			end
 		end
 
 note

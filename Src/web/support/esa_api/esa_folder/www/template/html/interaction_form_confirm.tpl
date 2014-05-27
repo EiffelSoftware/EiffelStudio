@@ -13,14 +13,14 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports">Reports</a></li>
+            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
-                 <li class="active"><a href="{$host/}/report_form">Report a Problem</a></li>
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
+                 <li class="active"><a href="{$host/}/report_form" itemprop="create-report-form" rel="create-report-form">Report a Problem</a></li>
             {/if}
            </ul> 
          </div>
@@ -30,14 +30,14 @@
           <fieldset>
             <legend>Interaction Submission Confirmation</legend>
             <div class="control-group">
-              <label class="control-label" for="textarea">Description</label>
+              <label class="control-label" for="textarea" itemprop="description">Description</label>
               <div class="controls">
                 {$form.description/}
               </div>
             </div>
             {if isset="$new_status"}  
             <div class="control-group">
-              <label class="control-label" for="textarea">Change status from {$form.report.status.synopsis/} to 
+              <label class="control-label" for="textarea" itemprop="status">Change status from {$form.report.status.synopsis/} to 
               </label>
               <div class="controls">
                        {foreach from="$status" item="item"} 
@@ -50,7 +50,7 @@
             {/if}
             {if isset="$private"}  
             <div class="control-group">
-              <label class="control-label" for="textarea">Change Private from {$form.report.confidential/} to 
+              <label class="control-label" for="textarea" itemprop="private">Change Private from {$form.report.confidential/} to 
               </label>
               <div class="controls">
                       {$private/} 
@@ -58,7 +58,7 @@
             </div>
             {/if}
             <div class="control-group">
-              <label class="control-label" for="textarea">Attachments</label>
+              <label class="control-label" for="textarea" itemprop="attachments">Attachments</label>
               <div class="controls">
                 {foreach from="attachments" item="item"}
                     {$item.name/} </br>
@@ -67,11 +67,11 @@
             </div>
             <hr>
             <div class="form-actions">
-               <form  action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST">
+               <form  action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST" itemprop="create">
                     <button type="submit" class="btn btn-xs btn-primary">Confirm</button>
                     <input type="hidden" id="confirm" name="confirm" class="form-control" value="{$form.id/}">
                </form> 
-              <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}">Edit</a> 
+              <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}" itemprop="update" rel="update">Edit</a> 
             </div>
           </fieldset>
         </div>

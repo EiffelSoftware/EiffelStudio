@@ -1,0 +1,364 @@
+<alps>
+  <doc>
+    The profile here contains details representation media type for a specific application domain: Support Report Problems. 
+    It contains descriptions of valid data and transition values that   can appear within resource representations. 
+    This document is presented as a complete blueprint for implementing a compliant client or server that supports the basic features of the target application 
+    domain (Support Report Problems).
+  </doc>
+  <link rel="self" href="{$host}/profiles" />
+  
+  <!-- data elements -->
+  <descriptor id="about" type="semantic"  href="http://alps.io/iana/relations#about"/>
+
+  <descriptor id="attachment" type="semantic">
+    <doc format="html">
+        <p>A particular files that will be stored with the description of the problem</p>       
+    </doc> 
+  </descriptor>  
+
+  <descriptor id="report-number" type="semantic">
+    <doc format="html">
+        <p>Number of a particular report problem</p>       
+    </doc> 
+  </descriptor>  
+
+  <descriptor id="submitter" type="semantic">
+    <doc format="html">
+        <p>Person reporting a problem</p>       
+    </doc> 
+  </descriptor>  
+
+  <descriptor id="responsible" type="semantic">
+    <doc format="html">
+        <p>Person having an obligation to do analized a given report problem.</p>       
+    </doc> 
+  </descriptor>  
+
+  <descriptor id="attachments" type="semantic">
+    <doc format="html">
+        <p>List of files that will be stored together with the description of the problem</p>       
+    </doc> 
+  </descriptor>  
+
+  <descriptor id="synopsis" type="semantic">
+    <doc format="html">
+      <p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem report subjects.</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="submission-date" type="semantic"  href="http://alps.io/schema.org/CreativeWork#dateCreated">
+    <doc format="html">
+      <p>The date on which the Report was submitted.</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="date" type="semantic">
+    <doc format="html">
+      <p>The date on which the Report was submitted.</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="category" type="semantic">
+    <doc format="html">
+      <p>The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.</p>
+    </doc>
+  </descriptor>
+
+
+   <descriptor id="first-name" type="semantic"  href="http://alps.io/schema.org/Person.xml#givenName"/>
+   <descriptor id="last-name" type="semantic"  href="http://alps.io/schema.org/Person.xml#familyName"/>
+   <descriptor id="email" type="semantic"  href="http://alps.io/schema.org/Person.xml#email"/>
+   <descriptor id="user-name">
+		<doc format="html">
+			<p>Name of the user in the system.</p>
+		</doc>
+   </descriptor> 
+   <descriptor id="password">
+		<doc format="html">
+			<p>User's password</p>
+		</doc>
+   </descriptor>
+   <descriptor id="check-password">
+		<doc format="html">
+			<p>User's password confirmation </p>
+		</doc>
+   </descriptor>
+   <descriptor id="security-question">
+		<doc format="html">
+			<p>User's security question.</p>	
+		</doc>
+   </descriptor>
+
+   <descriptor id="answer">
+		<doc format="html">
+			<p>User's answer to the security question.</p>	
+		</doc>
+		<descriptor hred="#security-question"/>	
+   </descriptor>
+   
+
+  <descriptor id="class" type="semantic">
+    <doc format="html">
+      <p>The class of a problem can be one of the following:</p>
+        <UL>
+        <LI><B>Bug</B>: A general product problem.</LI>
+        <LI><B>Documentation</B>: A problem with documentation.</LI>
+        <LI><B>Change Request</B>: A request for a change in behavior, etc.</LI>
+        <LI><B>Support</B>: A support problem or question.</LI>
+        <LI><B>Installation</B>: A problem with installing the product.</LI>
+        </UL>
+    </doc>
+  </descriptor>
+
+  <descriptor id="status" type="semantic">
+    <doc format="html">
+      <p> The status of a problem can be one of the following:</p>
+      <ul>
+        <li><b>Open</b>  The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
+        <li><b>Analyzed</b>  The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
+        <li><b>Closed</b> A Problem Report is closed only when any changes have been integrated, documented, and tested, and the submitter has confirmed the solution </li>
+        <li><b>Suspended</b> Work on the problem has been postponed. This happens if a timely solution is not possible or is not cost-effective at the present time. The PR continues to exist, though a solution is not being actively sought. If the problem cannot be solved at all, it should be closed rather than suspended.</li>
+        <li><b>Won't fix</b> Won't fix problem report.</li>
+      </ul>  
+    </doc>  
+  </descriptor>
+
+  <descriptor id="confidential" type="semantic">
+       <doc format="html">
+           <p>Is the report considers confidential? If not, the material provided with the bug report can be published. For example, sample code can be used when helping other customers.</p>
+       </doc>
+  </descriptor>
+
+   <descriptor id="private" type="semantic">
+       <doc format="html">
+           <p>Is the report considers private? If not, the material provided with the bug report can be published. For example, sample code can be used when helping other customers.</p>
+       </doc>
+  </descriptor>
+  
+  
+  <descriptor id="description" type="semantic">
+    <doc format="html">       
+      <p>Precise description of the problem.</p>
+    </doc>
+  </descriptor>
+ 
+  <descriptor id="environment" type="semantic">
+    <doc format="html">       
+      <p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>
+    </doc>
+  </descriptor>
+
+   <descriptor id="priority" type="semantic">
+    <doc format="html"> 
+        <p>How soon the solution is required. Accepted values include:</p>
+            <UL>
+            <LI><B>High</B>: A solution is needed as soon as possible.</LI>
+            <LI><B>Medium</B>: The problem should be solved in the next release.</LI>
+            <LI><B>Low</B>: The problem should be solved in a future release.</LI>
+            </UL>      
+      </doc>
+  </descriptor>
+ 
+  <descriptor id="release" type="semantic">
+    <doc format="html">       
+      <p>Release or version number of the Eiffel product. Please be as specific as possible. For example, 5.6.0919 is better than 5.6.</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="severity" type="semantic">
+    <doc format="html">       
+      <p>The severity of the problem. Accepted values include:</p>
+      <UL>
+      <LI><B>Critical</B>: The product, component or concept is completely non operational. No workaround is known.</LI>
+      <LI><B>Serious</B>: The product, component or concept is not working properly. Problems that would otherwise be considered critical are rated serious when a workaround is known.</LI>
+      <LI><B>Non-critical</B>: The product, component or concept is working in general, but lacks features, has irritating behavior, does something wrong, or doesn't match its documentation.</LI>
+      </UL>
+    </doc>
+  </descriptor>
+
+  <descriptor id="to-reproduce" type="semantic">
+    <doc format="html">       
+      <p>Example code, input, or activities to reproduce the problem. Eiffel Software uses the example code both to reproduce the problem and to test whether the problem is fixed. Include all precondition, inputs, outputs, conditions after the problem, and symptoms. Any additional important information should be included. Include all the details that would be necessary for someone else to recreate the problem reported, however obvious. Sometimes seemingly arbitrary or obvious information can point the way toward a solution.</p>
+    </doc>
+  </descriptor>
+
+  <!-- containers -->
+  <descriptor id="all" type="semantic">
+    <doc format="html">
+      <p>A list representation of unfiltered results.</p> 
+    </doc>
+    <descriptor href="#report" />
+  </descriptor>
+
+
+  <descriptor id="all-user" type="semantic">
+    <doc format="html">
+      <p>A list representation of filtered results by the designated (logged-in) user.</p> 
+    </doc>
+    <descriptor href="#report" />
+  </descriptor>
+
+  <descriptor id="report" type="semantic">
+    <doc>
+      <p>A representation of a single report.</p>
+    </doc>
+    <descriptor href="#status"/>
+    <descriptor href="#synopsis"/>
+    <descriptor href="#submission-date"/>
+    <descriptor href="#category"/>
+    <descriptor href="#report-interaction"/>
+  </descriptor>
+
+  <!-- transitions -->
+
+  <descriptor id="first" type="semantic" href="http://alps.io/iana/relations#first"/>
+  <descriptor id="last"  type="semantic"  href="http://alps.io/iana/relations#last"/>
+  <descriptor id="prev"  type="semantic"  href="http://alps.io/iana/relations#prev"/>
+  <descriptor id="previous"  type="semantic"  href="http://alps.io/iana/relations#prev"/>
+  <descriptor id="last"  type="semantic"  href="http://alps.io/iana/relations#last"/>
+
+  <descriptor id="create" type="unsafe">
+    <doc format="html">
+      <p>Create a new resource</p>
+    </doc>
+  </descriptor>    
+
+  <descriptor id="update" type="unsafe">
+     <doc format="html">
+      <p>Update an existing resource</p>
+    </doc>
+  </descriptor>
+  
+  <descriptor id="home" type="safe">
+    <doc format="html">
+      <p>The target IRI points to a resource which represents the root.</p>
+    </doc>
+  </descriptor>
+  
+  <descriptor id="search" type="safe">
+    <doc format="html">
+      <p>
+         Defines a search query that can be performed by search clients.
+      </p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="register" type="safe">
+    <doc format="html">
+      <p>
+         Defines first phase of user registration: user email, password, first name and last name.
+      </p>
+     </doc> 
+      <descriptor href="#first-name"/>
+      <descriptor href="#last-name"/>
+      <descriptor href="#email"/>
+      <descriptor href="#user-name"/>
+      <descriptor href="#password"/>
+      <descriptor href="#check-password"/>
+      <descriptor href="#security-question"/>
+	  <descriptor href="#answer"/>
+      <descriptor href="#create"/>
+  </descriptor>
+
+  <descriptor id="reminder" type="safe">
+    <doc format="html">
+      <p>
+           Used to send new password to user.
+      </p>
+      <descriptor href="#email"/>
+      <descriptor href="#create"/> 
+    </doc>
+  </descriptor>
+
+  <descriptor id="login" type="safe">
+    <doc format="html">
+      <p>
+          Used to get authorized access, describes the connection established by a user with a Login, until either the user or the system or service to which he connected terminates the connection.
+          A user must only provide Credentials for Authentication at the start of a Login Session. He is then authorized to use some or all of the services offered by the Host System to which he connected.
+     </p>
+    </doc>
+	<descriptor href="#user-name"/>
+	<descriptor href="#password"/>
+  </descriptor>
+
+  <descriptor id="logoff" type="safe">
+    <doc format="html">
+      <p>
+         The act of terminating a login session.
+      </p>
+    </doc>
+  </descriptor>
+
+   <descriptor id="activation" type="safe">
+    <doc format="html">
+      <p>
+         Form to Activate a new user.
+      </p>
+	</doc>	
+      <descriptor href="#email"/>
+      <descriptor href="#token"/> 
+      <descriptor href="#create"/> 
+  </descriptor>
+
+
+  <descriptor id="report-interaction" type="safe">
+     <doc format="html">
+        <p>
+          Report problem summary
+        </p>
+      </doc>  
+      <descriptor href="#submitter"/>
+      <descriptor href="#category"/>      
+      <descriptor href="#priority"/>
+      <descriptor href="#date"/>
+      <descriptor href="#class"/>
+      <descriptor href="#severity"/>
+      <descriptor href="#number"/>
+      <descriptor href="#release"/>
+      <descriptor href="#confidential"/>
+      <descriptor href="#status"/>
+      <descriptor href="#responsible"/>
+      <descriptor href="#environment"/>
+      <descriptor href="#synopsis"/>
+      <descriptor href="#description"/>
+      <descriptor href="#to-reproduce"/>
+      <descriptor href="#interactions"/>
+      <descriptor href="#create-interaction-form"/>   
+  </descriptor>
+
+  <descriptor id="create-interaction-form" type="safe">
+    <doc>
+      <p>A link template to add a new report interaction problem to the system by the designated (logged-in) user.</p>
+    </doc>  
+       <descriptor href="#category" />
+       <descriptor href="#status" />
+       <descriptor href="#private" />
+       <descriptor href="#class" />
+       <descriptor href="#description" />
+       <descriptor href="#attachments" />
+       <descriptor href="#create"/>
+       <descriptor href="#update"/>
+  </descriptor>
+
+
+  <descriptor id="create-report-form" type="safe">
+    <doc>
+      <p>A link template to add a new report problem to the system by the designated (logged-in) user.</p>
+    </doc>  
+       <descriptor href="#category" />
+       <descriptor href="#severity" />
+       <descriptor href="#priority" />
+       <descriptor href="#class" />
+       <descriptor href="#release" />
+       <descriptor href="#confidential" />
+       <descriptor href="#synopsis" />
+       <descriptor href="#environment" />
+       <descriptor href="#description" />
+       <descriptor href="#to-reproduce" />
+       <descriptor href="#attachments" />
+       <descriptor hred="#create"/>
+       <descriptor hred="#update"/>
+  </descriptor>
+
+  
+</alps>

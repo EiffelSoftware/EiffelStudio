@@ -1,7 +1,7 @@
 {
     "database": {
         "datasource": {
-            "driver": "SQL Server Native Client 11.0",
+            "driver": "SQL Server",
             "username": "",
             "password": "",
             "environment": "development",
@@ -9,10 +9,10 @@
         },
         "environments": {
             "test": {
-                "connection_string":""
+                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=example;Uid=sa;Pwd=Eiffel1405;TrustedConnection=Yes"
             },
             "development": {
-                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=hola;User Id=sa;Password=Pa5mm0rd;Trusted_Connection=yes;"
+                "connection_string":"Server=sql.ise;Database=test;Uid=eiffel2;Pwd=eiffel2;"
                  },
             "production": {
                  "connection_string":""

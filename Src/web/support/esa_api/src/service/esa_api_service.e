@@ -454,6 +454,13 @@ feature -- Access
 			is_successful := login_provider.is_successful
 		end
 
+	user_account_information (a_username: STRING): ESA_USER_INFORMATION
+			-- User information for `a_username' if any.
+		do
+			Result := login_provider.user_information (a_username)
+			is_successful := login_provider.is_successful
+		end
+
 
 feature -- Basic Operations
 

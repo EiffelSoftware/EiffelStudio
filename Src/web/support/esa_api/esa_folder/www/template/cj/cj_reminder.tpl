@@ -13,7 +13,7 @@
                 "prompt": "Reports"
             >,
             <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
             >,
  

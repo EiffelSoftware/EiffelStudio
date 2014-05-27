@@ -13,24 +13,24 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports">Reports</a></li>
+            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
-                 <li class="active"><a href="{$host/}/report_form">Report a Problem</a></li>
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
+                 <li class="active"><a href="{$host/}/report_form" itemprop="create-report-form" rel="create-report-form">Report a Problem</a></li>
             {/if}
            </ul> 
          </div>
         <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
 
         {if isset="$id"}  
-          <form class="form-horizontal well" action="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$id/}" id="report" method="POST" enctype="multipart/form-data">
+          <form class="form-horizontal well" action="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$id/}" id="report" method="POST" enctype="multipart/form-data" itemprop="update">
         {/if}
         {unless isset="$id"}
-          <form class="form-horizontal well" action="{$host/}/report_detail/{$form.report.number/}/interaction_form" id="report" method="POST" enctype="multipart/form-data">
+          <form class="form-horizontal well" action="{$host/}/report_detail/{$form.report.number/}/interaction_form" id="report" method="POST" enctype="multipart/form-data" itemprop="create">
         {/unless}
           <fieldset>
             <legend>Problem Report Interaction Submission</legend>
@@ -43,7 +43,7 @@
             </div>
              <div class="row">
                 <div class="col-md-4">
-                  <label class="control-label" for="input01">Change Category from {$form.report.category.synopsis/} to </label>
+                  <label class="control-label" for="input01" itemprop="category">Change Category from {$form.report.category.synopsis/} to </label>
                   <select class="form-control"  data-style="btn-primary" name="category" form="report">
                   <option value="0">ALL</option>  
                   {foreach from="$categories" item="item"}
@@ -59,7 +59,7 @@
             </div>
             <div class="row">
               <div class="col-md-4">
-               <label class="control-label" for="input01">Change status from {$form.report.status.synopsis/} to </label>
+               <label class="control-label" for="input01" itemprop="status">Change status from {$form.report.status.synopsis/} to </label>
                <select class="form-control"  data-style="btn-primary" name="status" form="report">
                 <option value="0">ALL</option>
                 {foreach from="$status" item="item"}
@@ -73,7 +73,7 @@
               </select>
               </div>
              </div> 
-             <div class="checkbox">
+             <div class="checkbox" itemprop="private">
                {if condition="$form.private"}
                  <label>
                     <input type="checkbox" name="private" value="True" checked> Private
@@ -87,7 +87,7 @@
              </div> 
               {if isset="$temporary_files"}  
                 <div class="control-group">
-                <label class="control-label" for="fileInput">Temporary Attachments</label>
+                <label class="control-label" for="fileInput" itemprop="attachments">Temporary Attachments</label>
                 {foreach from="temporary_files" item="item"}
                   <div class="controls">
                        <input type="checkbox" name="temporary_files" value="{$item.name/}" checked />{$item.name/} <br />

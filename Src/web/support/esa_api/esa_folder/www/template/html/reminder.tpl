@@ -12,22 +12,22 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       <div class="row">
          <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports">Reports</a></li>
+            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
            </ul> 
          </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <form class="form-horizontal" id="reminder" method='POST' action='{$host/}/reminder'>
+          <form class="form-horizontal" id="reminder" method='POST' action='{$host/}/reminder' itemprop="create">
             <fieldset>
 
               <legend>Username/ Password Reminder</legend>
               <p>If you've forgotten your Username or Password, simply fill in your e-mail address below, then answer your security question. We will assign you a new random password and remind you of your Username via email. Once you log back in you may choose your own password by editing your member profile. </p>
 
               <div class="control-group">
-                <label class="control-label">Email</label>
+                <label class="control-label" itemprop="email">Email</label>
                 <div class="controls">
                   <input type="text" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" value="{$form.email/}">
                 </div>

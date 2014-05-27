@@ -14,7 +14,7 @@
             >,
              <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             {if isset="$user"}
@@ -47,7 +47,7 @@
                 >,
                 <
                     "href": "{$host/}/user_reports/{$user/}",
-                    "rel": "author",
+                    "rel": "all-user",
                     "prompt": "My Reports"
                 >,
                  <
@@ -101,7 +101,7 @@
                 >,
             {/unless}    
             <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
             >
           ],
@@ -136,6 +136,10 @@
                         "value": "{$item.category.synopsis/}"
                     >
                   ]
+                , 
+                "links" : [
+                    <"rel" : "report-interaction", "href" : "{$host/}/report_detail/{$item.number/}", "prompt" : "Report Details and Interactions">
+                    ]
                 >,{/foreach}]
         ,
        "queries" :

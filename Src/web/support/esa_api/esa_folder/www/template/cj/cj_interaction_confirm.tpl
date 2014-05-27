@@ -4,17 +4,17 @@
     "links": [
             <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
             >,
             {if isset="$user"}
             <
                 "href": "{$host/}/report_form",
-                "rel": "create-form",
+                "rel": "create-report-form",
                 "prompt": "Report a Problem"
             >,
             <
@@ -61,8 +61,8 @@
                     {/if}]
                     ,
             "links": [
-                        <"rel":"create-form", "href": "{$host/}/report_detail/{$form.report.number/}/interaction_confirm/{$form.id/}", "prompt": "Confirm">,
-                        <"rel":"edit-form", "href": "{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}", "prompt": "Edit">
+                        <"rel":"create", "href": "{$host/}/report_detail/{$form.report.number/}/interaction_confirm/{$form.id/}", "prompt": "Confirm">,
+                        <"rel":"update", "href": "{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}", "prompt": "Edit">
                     ]  
                 >
             ]

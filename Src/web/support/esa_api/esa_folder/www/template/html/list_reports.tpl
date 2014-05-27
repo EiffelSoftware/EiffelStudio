@@ -14,11 +14,11 @@
 
                {foreach from="$reports" item="item"}
                   <tr>
-                       <td>{$item.number/}</td>
-                       <td>{$item.status.id/}</td>
-                       <td>{$item.synopsis/}</td>
-                       <td>{$item.submission_date/}</td>
-                       <td>{$item.category.synopsis/}</td>
+                       <td itemprop="report_number">{$item.number/}</td>
+                       <td itemprop="status">{$item.status.id/}</td>
+                       <td itemprop="synopsis">{$item.synopsis/}</td>
+                       <td itemprop="submission date">{$item.submission_date/}</td>
+                       <td itemprop="catgeory">{$item.category.synopsis/}</td>
                 </tr>
               {/foreach}
               
@@ -27,8 +27,8 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                <li><a href="#">Previous</a></li>
-                <li><a href="#">Next</a></li>
+                <li><a href="#" rel="previous">Previous</a></li>
+                <li><a href="#" rel="next">Next</a></li>
               </ul>
           </div>
        </div>

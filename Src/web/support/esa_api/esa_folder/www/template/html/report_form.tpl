@@ -13,29 +13,29 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports">Reports</a></li>
+            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
-                 <li class="active"><a href="{$host/}/report_form">Report a Problem</a></li>
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
+                 <li class="active"><a href="{$host/}/report_form" itemprop="create-report-problem" rel="create-report-problem">Report a Problem</a></li>
             {/if}
            </ul> 
          </div>
         <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
 
         {if isset="$id"}  
-          <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data">
+          <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data" itemprop="update">
         {/if}
         {unless isset="$id"}
-          <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST" enctype="multipart/form-data">
+          <form class="form-horizontal well" action="{$host/}/report_form" id="report" method="POST" enctype="multipart/form-data" itemprop="create">
         {/unless}
           <fieldset>
             <legend>Problem Report Submission</legend>
             <div class="row">
-              <div class="col-md-2">
+              <div class="col-md-2" itemprop="category">
                 <label class="control-label" for="input01">Product/Category</label>
                 <select class="form-control"  data-style="btn-primary" name="category" form="report">
                 {foreach from="$categories" item="item"}
@@ -48,7 +48,7 @@
                 {/foreach}  
                </select>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2" itemprop="severity">
                <label class="control-label" for="input01">Severity</label>
                <select class="form-control"  data-style="btn-primary" name="severity" form="report">
                 {foreach from="$severities" item="item"}
@@ -61,7 +61,7 @@
                 {/foreach}  
               </select>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2" itemprop="priority">
                 <label class="control-label" for="input01">Priority</label>
                 <select class="form-control"  data-style="btn-primary" name="priority" form="report">
                 {foreach from="$priorities" item="item"}
@@ -74,7 +74,7 @@
                 {/foreach}  
                </select>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2" itemprop="class">
                 <label class="control-label" for="input01">Class</label>
                 <select class="form-control"  data-style="btn-primary" name="class" form="report">
                 {foreach from="$classes" item="item"}
@@ -87,7 +87,7 @@
                 {/foreach}  
                </select>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2" itemprop="confidential">
                <label class="control-label" for="input01">Confidential</label>
                <select class="form-control"  data-style="btn-primary" name="confidential" form="report">
                   {if condition="$confidential"} 
@@ -102,20 +102,20 @@
               </div>
             </div>    
             <div class="control-group" has-error>
-              <label class="control-label" for="input" has-success has-feedback>Release</label>
+              <label class="control-label" for="input" has-success has-feedback itemprop="release">Release</label>
               <div class="controls">
                <input type="text" id="release" name="release" class="form-control" value="{$release/}" placeholder="14.05" required form="report">
               </div>
             </div>
             <div class="control-group" has-error>
-              <label class="control-label" for="input"  has-success has-feedback>Synopsis</label>
+              <label class="control-label" for="input"  has-success has-feedback itemprop="synopsis">Synopsis</label>
               <div class="controls">
                <input type="text" id="synopsis" name="synopsis" class="form-control" value="{$synopsis/}" required>
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="textarea">Environment</label>
+              <label class="control-label" for="textarea" itemprop="environment">Environment</label>
               <div class="controls">
                 <textarea class="form-control input-xlarge" id="environment"  name="environment" rows="3"  placeholder="Windows XP SP2" required form="report">{$environment/}</textarea>
               </div>
@@ -123,7 +123,7 @@
 
            {if isset="$temporary_files"}  
               <div class="control-group">
-              <label class="control-label" for="fileInput">Temporary Attachments</label>
+              <label class="control-label" for="fileInput" itemprop="attachments">Temporary Attachments</label>
               {foreach from="temporary_files" item="item"}
                 <div class="controls">
                      <input type="checkbox" name="temporary_files" value="{$item.name/}" checked />{$item.name/} <br />
@@ -132,20 +132,20 @@
              </div> 
             {/if} 
             <div class="control-group">
-              <label class="control-label" for="fileInput">Attachments</label>
+              <label class="control-label" for="fileInput" itemprop="attachment">Attachments</label>
 
               <div class="controls">
                 <input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
               </div>
             </div>
             <div class="control-group" has-error>
-              <label class="control-label" for="textarea">Description</label>
+              <label class="control-label" for="textarea" itemprop="description">Description</label>
               <div class="controls">
                 <textarea class="form-control input-xlarge" id="description" name="description"  rows="4" placeholder="Give a description of the problem" required form="report">{$description/}</textarea>
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="textarea">To Reproduce</label>
+              <label class="control-label" for="textarea" itemprop="to-reproduce">To Reproduce</label>
               <div class="controls">
                 <textarea class="form-control input-xlarge" id="to_reproduce" name="to_reproduce" rows="4" form="report">{$to_reproduce/}</textarea>
               </div>

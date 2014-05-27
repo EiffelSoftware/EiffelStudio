@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			l_clear_filter_button: EV_BUTTON
 			l_update_index_button: EV_BUTTON
 			nb: EV_NOTEBOOK
+			lib_tab: detachable EV_NOTEBOOK_TAB
 			iron_box: IRON_PACKAGE_COLLECTION_BOX
 		do
 			Precursor
@@ -82,6 +83,7 @@ feature {NONE} -- Initialization
 			nb.extend (main)
 
 			if nb.has (main) then
+				lib_tab := nb.item_tab (main)
 				nb.item_tab (main).set_text ("Libraries")
 			end
 
@@ -255,7 +257,11 @@ feature {NONE} -- Initialization
 				create l_btn.make_with_text ("Back")
 				hb.extend (l_btn)
 				hb.disable_item_expand (l_btn)
-				l_btn.select_actions.extend (agent libraries_box.set_focus)
+				if lib_tab /= Void then
+					l_btn.select_actions.extend (agent lib_tab.enable_select)
+				else
+					l_btn.select_actions.extend (agent nb.select_item (nb.first))
+				end
 				layout_constants.set_default_width_for_button (l_btn)
 
 				nb.selection_actions.extend (agent (ia_nb: EV_NOTEBOOK_TAB; ia_iron_box: IRON_PACKAGE_COLLECTION_BOX)
@@ -726,7 +732,7 @@ feature {NONE} -- Basic operation
 	populate_libraries
 			-- Populates the list of libraries in the UI
 		local
-			l_libraries: like configuration_libraries 
+			l_libraries: like configuration_libraries
 			l_iron_libraries: like iron_configuration_libraries
 			l_style: EV_POINTER_STYLE
 			libs_box: like libraries_box

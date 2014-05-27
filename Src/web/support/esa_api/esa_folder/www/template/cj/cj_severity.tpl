@@ -9,18 +9,18 @@
             >,
              <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             {if isset="$user"}
                 <
                     "href": "{$host/}/user_reports/{$user/}",
-                    "rel": "author",
+                    "rel": "all-user",
                     "prompt": "My Reports"
                 >,
                  <
                     "href": "{$host/}/report_form",
-                    "rel": "create-form",
+                    "rel": "create-report-form",
                     "prompt": "Report a Problem"
                 >,
                 <

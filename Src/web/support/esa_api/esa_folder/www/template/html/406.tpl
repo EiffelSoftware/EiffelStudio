@@ -12,46 +12,16 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Eiffel Support API</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview</a></li>
-            <li><a href="{$host/}/reports">Reports</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Error</h1>
+         <div class="span12" itemscope itemtype="{$host/}/profile/esa_api.xml">
+           <h1 class="page-header">Error</h1>
             <p>An appropriate representation of the requested resource <span class="label label-success">{$resource/}</span> using the following <span class="label label-default">Accept</span> header <span class="label label-danger">{$accept/}</span> could not be found.
 
             Use one of the following media types.</br>  
             <span class="label label-info">text/html</span> 
             <span class="label label-info">application/vnd.collection+json</span> 
+            <a href="{$host/}" class="btn btn-large btn-info" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
         </div>
       </div>
     </div>

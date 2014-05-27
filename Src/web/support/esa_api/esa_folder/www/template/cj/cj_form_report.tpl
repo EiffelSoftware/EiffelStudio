@@ -10,23 +10,23 @@
     "links": [
             <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
             >,
             {if isset="$user"}
             <
                 "href": "{$host/}/user_reports/{$user/}",
-                "rel": "author",
+                "rel": "all-user",
                 "prompt": "My Reports"
             >,
             {if isset="$id"} 
                 <
                 "href": "{$host/}/report_confirm/{$id/}",
-                "rel": "alternate",
+                "rel": "create",
                 "prompt": "Confirm Report"
             >,
             {/if}

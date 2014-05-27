@@ -232,7 +232,7 @@ feature -- Access
 			disconnect
 		end
 
-	user_information (a_username: STRING): detachable ESA_USER
+	user_information (a_username: STRING): ESA_USER_INFORMATION
 			-- Full user information from username
 		require
 			attached_username: a_username /= Void
@@ -246,7 +246,9 @@ feature -- Access
 			db_handler.execute_reader
 			if not db_handler.after then
 				db_handler.start
-				Result := new_user_information
+				Result := new_user_account_information (a_username)
+			else
+				create Result.make (a_username)
 			end
 			disconnect
 		end
@@ -365,6 +367,76 @@ feature -- Factories
 			if attached db_handler.read_string (3) as l_item_name then
 				create Result.make (l_item_name)
 			end
+		end
+
+	new_user_account_information (a_user_name: STRING): ESA_USER_INFORMATION
+			-- Build a new user account information from.
+		do
+			create Result.make (a_user_name)
+			if attached db_handler.read_string (1) as l_first_name then
+				Result.set_first_name (l_first_name)
+			end
+			if attached db_handler.read_string (2) as l_last_name then
+				Result.set_last_name (l_last_name)
+			end
+			if attached db_handler.read_string (3) as l_email then
+				Result.set_email (l_email)
+			end
+			if attached db_handler.read_string (4) as l_address then
+				Result.set_address (l_address)
+			end
+			if attached db_handler.read_string (5) as l_city then
+				Result.set_city (l_city)
+			end
+			if attached db_handler.read_string (6) as l_region then
+				Result.set_region (l_region)
+			end
+			if attached db_handler.read_string (7) as l_postal_code then
+				Result.set_postal_code (l_postal_code)
+			end
+			if attached db_handler.read_string (8) as l_country then
+				Result.set_country (l_country)
+			end
+			if attached db_handler.read_string (9) as l_phone then
+				Result.set_telephone (l_phone)
+			end
+			if attached db_handler.read_string (10) as l_fax then
+				Result.set_fax (l_fax)
+			end
+			if attached db_handler.read_string (11) as l_position then
+				Result.set_position (l_position)
+			end
+			if attached db_handler.read_string (12) as l_organization_name then
+				Result.set_organization_name (l_organization_name)
+			end
+			if attached db_handler.read_string (13) as l_organization_email then
+				Result.set_organization_email (l_organization_email)
+			end
+			if attached db_handler.read_string (14) as l_organization_url then
+				Result.set_organization_url (l_organization_url)
+			end
+			if attached db_handler.read_string (15) as l_organization_address then
+				Result.set_organization_address (l_organization_address)
+			end
+			if attached db_handler.read_string (16) as l_organization_city then
+				Result.set_organization_city (l_organization_city)
+			end
+			if attached db_handler.read_string (17) as l_organization_region then
+				Result.set_organization_region (l_organization_region)
+			end
+			if attached db_handler.read_string (18) as l_organization_postal_code then
+				Result.set_organization_postal_code (l_organization_postal_code)
+			end
+			if attached db_handler.read_string (19) as l_organization_country then
+				Result.set_organization_country (l_organization_country)
+			end
+			if attached db_handler.read_string (20) as l_organization_phone then
+				Result.set_organization_telephone (l_organization_phone)
+			end
+			if attached db_handler.read_string (21) as l_organization_fax then
+				Result.set_organization_country (l_organization_fax)
+			end
+
 		end
 
 feature -- Status Report

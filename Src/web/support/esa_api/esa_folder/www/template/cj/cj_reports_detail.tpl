@@ -9,23 +9,23 @@
             >,
              <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
             >
             {if isset="$user"}
             ,
             <
                "href": "{$host/}/user_reports/{$user/}",
-               "rel": "author",
+               "rel": "all-user",
                "prompt": "My Reports"
             >,
             <
                "href": "{$host/}/report_form",
-               "rel": "create-form",
+               "rel": "create-report-form",
                "prompt": "Report a Problem"
             >,
             <
@@ -179,17 +179,17 @@
                             "value": "{$elem.bytes_count/}"
                         >,{/foreach}{/foreach}], 
                 "links":[
-                <"rel":"create-form", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">
-   
-                {foreach from="$report.interactions" item="item"}
+                 {if isset="$user"}
+                  <"rel":"create-report-interaction", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">,
+                 {/if}
+                 {foreach from="$report.interactions" item="item"}
                    
                     {foreach from="$item.attachments" item="elem"}
-                     ,
                      <
                        "href": "{$host/}/report_interaction/{$elem.id/}/{$elem.name/}",
-                       "rel": "download",
+                       "rel": "attachment",
                        "prompt": "Attatchment"
-                     >{/foreach}{/foreach}]      
+                     >,{/foreach}{/foreach}]      
 
                >  
             ]

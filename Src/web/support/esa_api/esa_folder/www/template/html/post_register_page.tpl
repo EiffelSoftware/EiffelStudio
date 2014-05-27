@@ -13,14 +13,14 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports">Reports</a></li>
+            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}">My Reports</a></li>
-                 <li><a href="{$host/}/report_form">Report a Problem</a></li>
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
+                 <li><a href="{$host/}/report_form" itemprop="create-report-form" rel="create-report-form">Report a Problem</a></li>
             {/if}
            </ul> 
          </div>
@@ -31,7 +31,7 @@
                   <h1>Eiffel Support Activation <small>
                   <br />
                   <p> An e-mail with an activation code was sent to your account.<br/>
-                   Please check your email and use the provided link to <a href="{$host/}/activation">activate</a> your account.</p>
+                   Please check your email and use the provided link to <a href="{$host/}/activation" itemprop="activation" rel="activation">activate</a> your account.</p>
                 </div>
                 <br />
           

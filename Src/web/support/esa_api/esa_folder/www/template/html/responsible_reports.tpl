@@ -1,6 +1,6 @@
 <div class="row">
    <div class="col-lg-8">
-     <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET">
+     <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
         <input type="search" class="form-control" name="search" placeholder="Search by Report #..." form="reports">
          <button type="submit" class="btn btn-default">View Problem Report</button>
      </form>
@@ -8,9 +8,9 @@
 </div>
 <div class="row">
    <div class="col-lg-8">
-     <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET">
+     <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
       <div class="col-md-4">
-         <label class="control-label" for="input01">Category</label>
+         <label class="control-label" for="input01" itemprop="category">Category</label>
          <select class="form-control"  data-style="btn-primary" name="category" form="search">
           <option value="0">ALL</option>
           {foreach from="$categories" item="item"}
@@ -24,7 +24,7 @@
         </select>
      </div> 
      <div class="col-md-4">
-       <label class="control-label" for="input01">Priority</label>
+       <label class="control-label" for="input01" itemprop="priority">Priority</label>
        <select class="form-control"  data-style="btn-primary" name="priority" form="search">
         <option value="0">ALL</option>
         {foreach from="$priorities" item="item"}
@@ -38,7 +38,7 @@
       </select>
      </div>
      <div class="col-md-4">
-       <label class="control-label" for="input01">Responsibles</label>
+       <label class="control-label" for="input01" itemprop="responsible">Responsibles</label>
        <select class="form-control"  data-style="btn-primary" name="responsible" form="search">
         <option value="0">ALL</option>
         {foreach from="$responsibles" item="item"}
@@ -52,7 +52,7 @@
       </select>
      </div>  
      <div class="col-md-4">
-       <label class="control-label" for="input01">Severity</label>
+       <label class="control-label" for="input01" itemprop="severity">Severity</label>
        <select class="form-control" data-style="btn-primary" name="severity" form="search">
         <option value="0">ALL</option>
         {foreach from="$severities" item="item"}
@@ -66,13 +66,13 @@
       </select>
      </div>
      <div class="col-md-4">
-       <label class="control-label" for="input01" title="To retrieve problem reports using the submitter's username: enter the username">Submitter</label>
+       <label class="control-label" for="input01" title="To retrieve problem reports using the submitter's username: enter the username" itemprop="submitter">Submitter</label>
             <input type="text"  name="submitter" class="form-control" placeholder="John.H">
       </div>  
   
     <div class="row">
        <div class="col-md-4">
-       <label class="control-label" for="input01">Status</label>
+       <label class="control-label" for="input01" itemprop="status">Status</label>
        <div>
         <input type="hidden" name="status" value="0">
         {foreach from="$status" item="item"}
@@ -152,7 +152,7 @@
               <tbody>
 
                {foreach from="$reports" item="item"}
-                 <form  class="form-inline well" action="{$host/}/reports/{$item.number/}" id="reports_{$item.number/}" method="POST">
+                 <form  class="form-inline well" action="{$host/}/reports/{$item.number/}" id="reports_{$item.number/}" method="POST" itemprop="update">
                    <input type="hidden" name="page" value="{$index/}"/>
                    <input type="hidden" name="category" value="{$view.selected_category/}"/>
                    <input type="hidden" name="severity" value="{$view.selected_severity/}"/>
@@ -163,14 +163,14 @@
                    <input type="hidden" name="dir" value="{$view.dir/}"/>
 
                   <tr>
-                       <td><a href="{$host/}/report_detail/{$item.number/}">{$item.number/}</a></td>
-                       <td>{$item.status.id/}</td>
-                       <td>{$item.priority.id/}</td>
-                       <td>{$item.severity.id/}</td>
-                       <td>{$item.synopsis/}</td>
-                       <td>{$item.contact.name/}</td>
-                       <td>{$item.submission_date/}</td>
-                       <td>
+                       <td itemprop="report-number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{$item.number/}</a></td>
+                       <td itemprop="status">{$item.status.id/}</td>
+                       <td itemprop="priority">{$item.priority.id/}</td>
+                       <td itemprop="severity">{$item.severity.id/}</td>
+                       <td itemprop="synopsis">{$item.synopsis/}</td>
+                       <td itemprop="submitter">{$item.contact.name/}</td>
+                       <td itemprop="submission date">{$item.submission_date/}</td>
+                       <td itemprop="responsible">
                            <select class="form-control" data-style="btn-primary"  for="input_{$item.number/}" name="user_responsible" form="reports_{$item.number/}">
                             <option value="0">not assigned</option>
                             {foreach from="$responsibles" item="val"}
@@ -183,8 +183,8 @@
                             {/foreach}  
                           </select>
                        </td>
-                       <td>{$item.category.synopsis/}</td>
-                       <td>{$item.release/}</td>
+                       <td itemprop="category">{$item.category.synopsis/}</td>
+                       <td itemprop="release">{$item.release/}</td>
                        <td><button type="submit" class="btn btn-default">Update</button></td>
 
                   </tr>
@@ -196,14 +196,14 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                  <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">First</a></li>
+                  <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="first" rel="first">First</a></li>
                   {if isset="$prev"}
-                    <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Previous</a></li>
+                    <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="previous" rel="previous">Previous</a></li>
                   {/if}
                   {if isset="$next"}
-                  <li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Next</a></li>
+                  <li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="next" rel="next">Next</a></li>
                   {/if}
-                  <li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}">Last</a></li>
+                  <li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="last" rel="last">Last</a></li>
                 </ul>
           </div>
        </div>

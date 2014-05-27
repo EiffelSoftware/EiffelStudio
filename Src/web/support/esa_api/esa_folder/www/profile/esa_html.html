@@ -1,0 +1,804 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Documentation</title>
+</head>
+<body>
+<h1>Documentation</h1>
+<doc>
+The profile here contains details representation media type for a specific application domain: Support Report Problems.
+It contains descriptions of valid data and transition values that can appear within resource representations.
+This document is presented as a complete blueprint for implementing a compliant client or server that supports the basic features of the target application
+domain (Support Report Problems).
+</doc><ul class="link"><li>rel:self = <a href="%7B%24host%7D/profiles" rel="self">{$host}/profiles</a>
+</li></ul>
+<div class="descriptor">
+<h4 class="id" id="about">about</h4>
+<ul class="attributes">
+<li>id : about</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#about">http://alps.io/iana/relations#about</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="attachment">attachment</h4>
+<doc format="html">
+<p>A particular files that will be stored with the description of the problem</p>
+</doc><ul class="attributes">
+<li>id : attachment</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="report-number">report-number</h4>
+<doc format="html">
+<p>Number of a particular report problem</p>
+</doc><ul class="attributes">
+<li>id : report-number</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="submitter">submitter</h4>
+<doc format="html">
+<p>Person reporting a problem</p>
+</doc><ul class="attributes">
+<li>id : submitter</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="responsible">responsible</h4>
+<doc format="html">
+<p>Person having an obligation to do analized a given report problem.</p>
+</doc><ul class="attributes">
+<li>id : responsible</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="attachments">attachments</h4>
+<doc format="html">
+<p>List of files that will be stored together with the description of the problem</p>
+</doc><ul class="attributes">
+<li>id : attachments</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="synopsis">synopsis</h4>
+<doc format="html">
+<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem report subjects.</p>
+</doc><ul class="attributes">
+<li>id : synopsis</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="submission-date">submission-date</h4>
+<doc format="html">
+<p>The date on which the Report was submitted.</p>
+</doc><ul class="attributes">
+<li>id : submission-date</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/schema.org/CreativeWork#dateCreated">http://alps.io/schema.org/CreativeWork#dateCreated</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="date">date</h4>
+<doc format="html">
+<p>The date on which the Report was submitted.</p>
+</doc><ul class="attributes">
+<li>id : date</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="category">category</h4>
+<doc format="html">
+<p>The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.</p>
+</doc><ul class="attributes">
+<li>id : category</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="first-name">first-name</h4>
+<ul class="attributes">
+<li>id : first-name</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/schema.org/Person.xml#givenName">http://alps.io/schema.org/Person.xml#givenName</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="last-name">last-name</h4>
+<ul class="attributes">
+<li>id : last-name</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/schema.org/Person.xml#familyName">http://alps.io/schema.org/Person.xml#familyName</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="email">email</h4>
+<ul class="attributes">
+<li>id : email</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/schema.org/Person.xml#email">http://alps.io/schema.org/Person.xml#email</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="user-name">user-name</h4>
+<doc format="html">
+<p>Name of the user in the system.</p>
+</doc><ul class="attributes"><li>id : user-name</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="password">password</h4>
+<doc format="html">
+<p>User's password</p>
+</doc><ul class="attributes"><li>id : password</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="re-type password">re-type password</h4>
+<doc format="html">
+<p>User's password confirmation </p>
+</doc><ul class="attributes"><li>id : re-type password</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="security-question">security-question</h4>
+<doc format="html">
+<p>User's security question.</p>
+</doc><ul class="attributes"><li>id : security-question</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="answer">answer</h4>
+<doc format="html">
+<p>User's answer to the security question.</p>
+</doc><ul class="attributes">
+<li>id : answer</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>hred : <a href="#security-question">#security-question</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="class">class</h4>
+<doc format="html">
+<p>The class of a problem can be one of the following:</p>
+<UL>
+<LI>
+<B>Bug</B>: A general product problem.</LI>
+<LI>
+<B>Documentation</B>: A problem with documentation.</LI>
+<LI>
+<B>Change Request</B>: A request for a change in behavior, etc.</LI>
+<LI>
+<B>Support</B>: A support problem or question.</LI>
+<LI>
+<B>Installation</B>: A problem with installing the product.</LI>
+</UL>
+</doc><ul class="attributes">
+<li>id : class</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="status">status</h4>
+<doc format="html">
+<p> The status of a problem can be one of the following:</p>
+<ul>
+<li>
+<b>Open</b> The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
+<li>
+<b>Analyzed</b> The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
+<li>
+<b>Closed</b> A Problem Report is closed only when any changes have been integrated, documented, and tested, and the submitter has confirmed the solution </li>
+<li>
+<b>Suspended</b> Work on the problem has been postponed. This happens if a timely solution is not possible or is not cost-effective at the present time. The PR continues to exist, though a solution is not being actively sought. If the problem cannot be solved at all, it should be closed rather than suspended.</li>
+<li>
+<b>Won't fix</b> Won't fix problem report.</li>
+</ul>
+</doc><ul class="attributes">
+<li>id : status</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="confidential">confidential</h4>
+<doc format="html">
+<p>Is the report considers confidential? If not, the material provided with the bug report can be published. For example, sample code can be used when helping other customers.</p>
+</doc><ul class="attributes">
+<li>id : confidential</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="private">private</h4>
+<doc format="html">
+<p>Is the report considers private? If not, the material provided with the bug report can be published. For example, sample code can be used when helping other customers.</p>
+</doc><ul class="attributes">
+<li>id : private</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="description">description</h4>
+<doc format="html">
+<p>Precise description of the problem.</p>
+</doc><ul class="attributes">
+<li>id : description</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="environment">environment</h4>
+<doc format="html">
+<p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>
+</doc><ul class="attributes">
+<li>id : environment</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="priority">priority</h4>
+<doc format="html">
+<p>How soon the solution is required. Accepted values include:</p>
+<UL>
+<LI>
+<B>High</B>: A solution is needed as soon as possible.</LI>
+<LI>
+<B>Medium</B>: The problem should be solved in the next release.</LI>
+<LI>
+<B>Low</B>: The problem should be solved in a future release.</LI>
+</UL>
+</doc><ul class="attributes">
+<li>id : priority</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="release">release</h4>
+<doc format="html">
+<p>Release or version number of the Eiffel product. Please be as specific as possible. For example, 5.6.0919 is better than 5.6.</p>
+</doc><ul class="attributes">
+<li>id : release</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="severity">severity</h4>
+<doc format="html">
+<p>The severity of the problem. Accepted values include:</p>
+<UL>
+<LI>
+<B>Critical</B>: The product, component or concept is completely non operational. No workaround is known.</LI>
+<LI>
+<B>Serious</B>: The product, component or concept is not working properly. Problems that would otherwise be considered critical are rated serious when a workaround is known.</LI>
+<LI>
+<B>Non-critical</B>: The product, component or concept is working in general, but lacks features, has irritating behavior, does something wrong, or doesn't match its documentation.</LI>
+</UL>
+</doc><ul class="attributes">
+<li>id : severity</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="to-reproduce">to-reproduce</h4>
+<doc format="html">
+<p>Example code, input, or activities to reproduce the problem. Eiffel Software uses the example code both to reproduce the problem and to test whether the problem is fixed. Include all precondition, inputs, outputs, conditions after the problem, and symptoms. Any additional important information should be included. Include all the details that would be necessary for someone else to recreate the problem reported, however obvious. Sometimes seemingly arbitrary or obvious information can point the way toward a solution.</p>
+</doc><ul class="attributes">
+<li>id : to-reproduce</li>
+<li>type : semantic</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="all">all</h4>
+<doc format="html">
+<p>A list representation of unfiltered results.</p>
+</doc><ul class="attributes">
+<li>id : all</li>
+<li>type : semantic</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#report">#report</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="all-user">all-user</h4>
+<doc format="html">
+<p>A list representation of filtered results by the designated (logged-in) user.</p>
+</doc><ul class="attributes">
+<li>id : all-user</li>
+<li>type : semantic</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#report">#report</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="report">report</h4>
+<doc>
+<p>A representation of a single report.</p>
+</doc><ul class="attributes">
+<li>id : report</li>
+<li>type : semantic</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#status">#status</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#synopsis">#synopsis</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#submission-date">#submission-date</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#category">#category</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#report-interaction">#report-interaction</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="first">first</h4>
+<ul class="attributes">
+<li>id : first</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#first">http://alps.io/iana/relations#first</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="last">last</h4>
+<ul class="attributes">
+<li>id : last</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#last">http://alps.io/iana/relations#last</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="prev">prev</h4>
+<ul class="attributes">
+<li>id : prev</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#prev">http://alps.io/iana/relations#prev</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="previous">previous</h4>
+<ul class="attributes">
+<li>id : previous</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#prev">http://alps.io/iana/relations#prev</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="last">last</h4>
+<ul class="attributes">
+<li>id : last</li>
+<li>type : semantic</li>
+<li>href : <a href="http://alps.io/iana/relations#last">http://alps.io/iana/relations#last</a>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="create">create</h4>
+<doc format="html">
+<p>Create a new resource</p>
+</doc><ul class="attributes">
+<li>id : create</li>
+<li>type : unsafe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="update">update</h4>
+<doc format="html">
+<p>Update an existing resource</p>
+</doc><ul class="attributes">
+<li>id : update</li>
+<li>type : unsafe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="home">home</h4>
+<doc format="html">
+<p>The target IRI points to a resource which represents the root.</p>
+</doc><ul class="attributes">
+<li>id : home</li>
+<li>type : safe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="search">search</h4>
+<doc format="html">
+<p>
+Defines a search query that can be performed by search clients.
+</p>
+</doc><ul class="attributes">
+<li>id : search</li>
+<li>type : safe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="register">register</h4>
+<doc format="html">
+<p>
+Defines first phase of user registration: user email, password, first name and last name.
+</p>
+</doc><ul class="attributes">
+<li>id : register</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#first-name">#first-name</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#last-name">#last-name</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#email">#email</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#user-name">#user-name</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#password">#password</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#re-type%20password">#re-type password</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#security-question">#security-question</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#answer">#answer</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#create">#create</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="reminder">reminder</h4>
+<doc format="html">
+<p>
+Used to send new password to user.
+</p>
+<descriptor href="#email"></descriptor>
+<descriptor href="#create"></descriptor>
+</doc><ul class="attributes">
+<li>id : reminder</li>
+<li>type : safe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="login">login</h4>
+<doc format="html">
+<p>
+Used to get authorized access, describes the connection established by a user with a Login, until either the user or the system or service to which he connected terminates the connection.
+A user must only provide Credentials for Authentication at the start of a Login Session. He is then authorized to use some or all of the services offered by the Host System to which he connected.
+</p>
+</doc><ul class="attributes">
+<li>id : login</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#user-name">#user-name</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#password">#password</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="logoff">logoff</h4>
+<doc format="html">
+<p>
+The act of terminating a login session.
+</p>
+</doc><ul class="attributes">
+<li>id : logoff</li>
+<li>type : safe</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="activation">activation</h4>
+<doc format="html">
+<p>
+Form to Activate a new user.
+</p>
+</doc><ul class="attributes">
+<li>id : activation</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#email">#email</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#token">#token</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#create">#create</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="report-interaction">report-interaction</h4>
+<doc format="html">
+<p>
+Report problem summary
+</p>
+</doc><ul class="attributes">
+<li>id : report-interaction</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#submitter">#submitter</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#category">#category</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#priority">#priority</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#date">#date</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#class">#class</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#severity">#severity</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#number">#number</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#release">#release</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#confidential">#confidential</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#status">#status</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#responsible">#responsible</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#environment">#environment</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#synopsis">#synopsis</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#description">#description</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#to-reproduce">#to-reproduce</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#interactions">#interactions</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#create-interaction-form">#create-interaction-form</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="create-interaction-form">create-interaction-form</h4>
+<doc>
+<p>A link template to add a new report interaction problem to the system by the designated (logged-in) user.</p>
+</doc><ul class="attributes">
+<li>id : create-interaction-form</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#category">#category</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#status">#status</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#private">#private</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#class">#class</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#description">#description</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#attachments">#attachments</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#create">#create</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#update">#update</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id="create-report-form">create-report-form</h4>
+<doc>
+<p>A link template to add a new report problem to the system by the designated (logged-in) user.</p>
+</doc><ul class="attributes">
+<li>id : create-report-form</li>
+<li>type : safe</li>
+<li>Contains: <div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#category">#category</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#severity">#severity</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#priority">#priority</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#class">#class</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#release">#release</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#confidential">#confidential</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#synopsis">#synopsis</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#environment">#environment</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#description">#description</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#to-reproduce">#to-reproduce</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>href : <a href="#attachments">#attachments</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>hred : <a href="#create">#create</a>
+</li></ul>
+</div>
+<div class="descriptor">
+<h4 class="id" id=""></h4>
+<ul class="attributes"><li>hred : <a href="#update">#update</a>
+</li></ul>
+</div>
+</li>
+</ul>
+</div>
+</body>
+</html>

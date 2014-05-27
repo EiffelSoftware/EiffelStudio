@@ -3,23 +3,23 @@
     "href": "{$host/}", 
     "links": [
             <
-                "href": "{$host/}/reports",
-                "rel": "collection",
-                "prompt": "Reports"
-            >,
-            <
-                "href": "http://alps.io/iana/relations.xml",
+                "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
+            >, 
+            <
+                "href": "{$host/}/reports",
+                "rel": "all",
+                "prompt": "Reports"
             >,
             {if isset="$user"}
             <
                 "href": "{$host/}/user_reports/{$user/}",
-                "rel": "author",
+                "rel": "all-user",
                 "prompt": "My Reports"
             >,
             <
                 "href": "{$host/}/report_form",
-                "rel": "create-form",
+                "rel": "create-report-form",
                 "prompt": "Report a Problem"
             >,
             <
@@ -44,9 +44,8 @@
                 "rel": "reminder",
                 "prompt": "Recover Username/Password"
             >
-
-            {/unless} 
-
+            {/unless}
+           
           ],
     "queries" :
         [

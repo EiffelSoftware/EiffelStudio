@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 					if attached process as p then
 						p.terminate_tree
 					end
+					close_in_gui_thread
 				end)
 			create l_hb
 			l_vb.extend (l_hb)
@@ -123,7 +124,19 @@ feature -- Update
 			-- Hide dialog in the gui thread.
 		do
 			mutex.lock
-			action_queue.extend (agent hide)
+			if not is_destroyed then
+				action_queue.extend (agent hide)
+			end
+			mutex.unlock
+		end
+
+	close_in_gui_thread
+			-- Close dialog in the gui thread.
+		do
+			mutex.lock
+			if not is_destroyed then
+				action_queue.extend (agent destroy)
+			end
 			mutex.unlock
 		end
 

@@ -669,7 +669,7 @@ feature -- Actions
 			l_done_handler := agent  (ia_dlg: IRON_OUTPUT_DIALOG; ia_prc_launcher: PROCESS)
 					do
 						if ia_prc_launcher.exit_code = 0 then
-							ia_dlg.hide_in_gui_thread
+							ia_dlg.close_in_gui_thread
 						else
 								-- error occured!
 						end
@@ -677,6 +677,7 @@ feature -- Actions
 
 			l_prc_launcher.set_on_exit_handler (l_done_handler)
 			l_prc_launcher.set_on_terminate_handler (l_done_handler)
+			l_prc_launcher.set_on_fail_launch_handler (l_done_handler)
 			l_prc_launcher.launch
 			if l_prc_launcher.launched then
 				if attached parent_window_of (widget) as win then

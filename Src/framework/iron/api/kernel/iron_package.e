@@ -140,7 +140,11 @@ feature -- Access
 		do
 			create Result.make_from_uri (repository.location)
 			if attached associated_paths as l_paths and then not l_paths.is_empty then
-				Result.add_unencoded_path_segment (l_paths.first)
+				across
+					l_paths.first.split ('/') as ic
+				loop
+					Result.add_unencoded_path_segment (ic.item)
+				end
 			else
 				Result.add_unencoded_path_segment (identifier)
 			end
@@ -222,6 +226,10 @@ feature -- Access: archive
 				Result := uri_to_path (l_uri)
 			end
 		end
+
+	archive_revision: NATURAL
+			-- Associated archive revision.
+			--| for now, only apply to remote web iron server.
 
 feature {NONE} -- Basic operation: archive
 
@@ -332,6 +340,12 @@ feature -- Change
 			else
 				description := Void
 			end
+		end
+
+	set_archive_revision (v: NATURAL)
+			-- Set `archive_revision' to `v'.
+		do
+			archive_revision := v
 		end
 
 	set_archive_uri (v: detachable READABLE_STRING_GENERAL)

@@ -144,7 +144,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (target_switch, "Optional target information to precise value passed with --ecf option", True, False, "target_name", "ECF target name", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_enabled_switch, "Enable execution of package installation setup? (Default:enabled)", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (setup_execution_ignored_switch, "Ignore execution of package installation setup?", True, False))
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end

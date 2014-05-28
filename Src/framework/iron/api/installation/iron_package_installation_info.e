@@ -180,6 +180,8 @@ feature -- Storage
 feature -- Conversion
 
 	json_object_to_package (j_package: JSON_OBJECT; repo: IRON_REPOSITORY): detachable IRON_PACKAGE
+		local
+			s: READABLE_STRING_GENERAL
 		do
 			if
 				attached {JSON_STRING} j_package.item ("id") as j_id and
@@ -193,6 +195,12 @@ feature -- Conversion
 				end
 				if attached {JSON_STRING} j_package.item ("description") as j_description then
 					Result.set_description (j_description.item)
+				end
+				if attached {JSON_NUMBER} j_package.item ("archive_revision") as j_rev then
+					s := j_rev.item
+					if s.is_natural then
+						Result.set_archive_revision (s.to_natural)
+					end
 				end
 				if attached {JSON_STRING} j_package.item ("archive") as j_archive then
 					Result.set_archive_uri (j_archive.item)

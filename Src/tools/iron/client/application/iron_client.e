@@ -32,7 +32,8 @@ inherit
 	LOCALIZED_PRINTER
 		rename
 			print as print_any,
-			localized_print as print
+			localized_print as print,
+			localized_print_error as print_error
 		end
 
 create
@@ -63,13 +64,20 @@ feature {NONE} -- Initialization
 			if task /= Void then
 				task.process (iron)
 			else
-				io.error.put_string ("Usage: command ...%N")
+				print_error (iron_executable_name)
+				print_error (" - Version: ")
+				print_error (iron_version)
+				print_error ("%N")
+				print_error ("Copyright ")
+				print_error (iron_copyright)
+				print_error ("%N%N")
+				print_error ("Usage: command ...%N")
 				across
 					tasks as c
 				loop
-					io.error.put_string ("%T " + c.key.to_string_8 + " : " + c.item.description.to_string_8 + "%N")
+					print_error ("%T " + c.key.to_string_8 + " : " + c.item.description.to_string_8 + "%N")
 				end
-				io.error.put_string ("note: command {action} --help: gives specific help usage on action {action}.%N")
+				print_error ("note: command {action} --help: gives specific help usage on action {action}.%N")
 			end
 		end
 
@@ -163,6 +171,25 @@ feature -- Access
 			create Result.make_default
 		end
 
+feature -- Constants access
+
+	iron_executable_name: IMMUTABLE_STRING_32
+			-- Associated executable name.
+		once
+			Result := (create {IRON_CONSTANTS}).copyright
+		end
+
+	iron_copyright: IMMUTABLE_STRING_32
+			-- Associated copyright.
+		once
+			Result := (create {IRON_CONSTANTS}).copyright
+		end
+
+	iron_version: IMMUTABLE_STRING_32
+			-- Associated version.
+		once
+			Result := (create {IRON_CONSTANTS}).version
+		end
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

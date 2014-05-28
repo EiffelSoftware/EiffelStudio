@@ -36,27 +36,19 @@ feature -- Archiving
 				if {PLATFORM}.is_windows then
 					p := p.appended_with_extension ("bat")
 				end
-				Result.append_character ('%"')
-				Result.append (p.name)
-				Result.append_character ('%"')
+					-- script filename
+				Result.append (safe_path_name_in_script (p))
 				Result.append_character (' ')
-				Result.append_character ('%"')
-				Result.append (a_source.name)
-				Result.append_character ('%"')
+				Result.append (safe_path_name_in_script (a_source))
 				if attached a_archive.entry as e then
 					Result.append_character (' ')
-					Result.append_character ('%"')
-					Result.append (a_archive.parent.name)
-					Result.append_character ('%"')
+					Result.append (safe_path_name_in_script (a_archive.parent))
 
 					Result.append_character (' ')
-					Result.append_character ('%"')
-					Result.append (e.name)
-					Result.append_character ('%"')
+					Result.append (safe_path_name_in_script (e))
 				else
 					Result.append_string_general (" . ")
-					Result.append_character ('%"')
-					Result.append (a_archive.name)
+					Result.append (safe_path_name_in_script (a_archive))
 					Result.append_character ('%"')
 				end
 			end
@@ -105,7 +97,13 @@ feature -- Archiving
 			cmd: STRING_32
 			p: PATH
 			f: detachable RAW_FILE
+			l_id: READABLE_STRING_8
 		do
+			if a_package /= Void then
+				l_id := a_package.id
+			else
+				l_id := ""
+			end
 			p := a_folder.absolute_path
 			create d.make_with_path (p)
 			if d.exists then
@@ -116,18 +114,18 @@ feature -- Archiving
 				f := Void
 
 				create proc_fact
-				cmd := build_package_archive_command (a_folder, a_target_file.absolute_path, a_layout)
+				cmd := build_package_archive_command (a_folder.absolute_path, a_target_file.absolute_path, a_layout)
 				debug
 					print (cmd + "%N")
 				end
 				proc := proc_fact.process_launcher_with_command_line (cmd, p.name)
-				proc.redirect_output_to_file (".tmp.output.proc")
+				proc.redirect_output_to_file (".tmp.output.proc." + l_id)
 				proc.redirect_error_to_same_as_output
 				proc.launch
 				if proc.launched then
 					proc.wait_for_exit
 				end
-				create f.make_with_name (".tmp.output.proc")
+				create f.make_with_name (".tmp.output.proc." + l_id)
 				delete_file (f)
 
 					-- target archive file.
@@ -221,6 +219,37 @@ feature -- URI
 					Result.prepend ("/")
 				end
 				Result := {STRING_32} "file://" + Result
+			end
+		end
+
+feature -- Helpers
+
+	safe_path_name_in_script (p: PATH): STRING_32
+		local
+			i,n: INTEGER
+			b: BOOLEAN
+		do
+			create Result.make_from_string (p.name)
+			if Result.is_empty then
+				Result := {STRING_32} ""
+			elseif Result[1] = '%"' then
+				if Result[Result.count] /= '%"' then
+					Result.append_character ('%"')
+				end
+			else
+				from
+					i := 1
+					n := Result.count
+				until
+					i > n or b
+				loop
+					b := Result[i].is_space
+					i := i + 1
+				end
+				if b then
+					Result.prepend_character ('%"')
+					Result.append_character ('%"')
+				end
 			end
 		end
 

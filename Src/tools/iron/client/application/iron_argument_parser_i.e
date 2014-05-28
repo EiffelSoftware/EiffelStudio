@@ -54,6 +54,16 @@ feature {NONE} -- Status report
 			create Result.make_from_string_general ("h|help")
 		end
 
+	version_switch: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string_general ("version")
+		end
+
+	logo_switch: IMMUTABLE_STRING_32
+		once
+			create Result.make_from_string_general ("logo")
+		end
+
 feature -- Access
 
 	task: IRON_TASK

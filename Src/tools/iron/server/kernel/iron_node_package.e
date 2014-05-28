@@ -113,7 +113,7 @@ feature -- Tags
 
 	links: detachable STRING_TABLE [IRON_NODE_LINK]
 
-feature -- Access: archive
+feature -- Query
 
 	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is Current package named `a_name' ?
@@ -131,6 +131,19 @@ feature -- Access: items
 			if attached items as tb then
 				Result := tb.item (n)
 			end
+		end
+
+feature -- Access: archive	
+
+	last_archive_revision: NATURAL
+			-- Internal last known archive revision.
+			-- This is a counter for each package.
+
+feature -- Change: archive			
+
+	increment_last_archive_revision
+		do
+			last_archive_revision := last_archive_revision + {NATURAL} 1
 		end
 
 feature {IRON_NODE_EXPORTER} -- Change
@@ -209,6 +222,14 @@ feature -- Change
 	set_last_modified_now
 		do
 			create last_modified.make_now_utc
+		end
+
+	set_last_archive_revision (rev: like last_archive_revision)
+			-- Set `last_archive_revision' to `rev'
+		require
+			rev_is_incremented: rev > last_archive_revision
+		do
+			last_archive_revision := rev
 		end
 
 	add_tag (t: READABLE_STRING_GENERAL)

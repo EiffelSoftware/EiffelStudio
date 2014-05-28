@@ -11,6 +11,14 @@ feature -- Arguments
 
 	is_verbose_switch_used: BOOLEAN = True
 
+	version_switch: IMMUTABLE_STRING_32
+		deferred
+		end
+
+	logo_switch: IMMUTABLE_STRING_32
+		deferred
+		end
+
 	verbose_switch: STRING = "v|verbose"
 
 	simulation_switch: STRING = "n|simulation"
@@ -22,6 +30,18 @@ feature -- Arguments
 	fill_argument_switches (a_switches: ARRAYED_LIST [ARGUMENT_SWITCH])
 		do
 			add_verbose_switch (a_switches)
+			add_version_switch (a_switches)
+			add_logo_switch (a_switches)
+		end
+
+	add_logo_switch (a_switches: ARRAYED_LIST [ARGUMENT_SWITCH])
+		do
+			a_switches.extend (create {ARGUMENT_SWITCH}.make (logo_switch, "Display logo information", True, False))
+		end
+
+	add_version_switch (a_switches: ARRAYED_LIST [ARGUMENT_SWITCH])
+		do
+			a_switches.extend (create {ARGUMENT_SWITCH}.make (version_switch, "Display version information", True, False))
 		end
 
 	add_verbose_switch (a_switches: ARRAYED_LIST [ARGUMENT_SWITCH])

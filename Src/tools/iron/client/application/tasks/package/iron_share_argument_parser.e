@@ -222,7 +222,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_archive_source_switch, "Package archive source", True, False, "folder", "Source folder used to build the archive, override existing value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (package_index_switch, "Associated package path (c.f full iron URI)", True, True, "path", "relative path from repository url", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Force operations (such as upload again the archive, ...)", True, True))
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end

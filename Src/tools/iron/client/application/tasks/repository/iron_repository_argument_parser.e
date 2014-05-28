@@ -90,7 +90,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "List repositories", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (info_switch, "Info on local repository settings", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean installation (remove unexpected packages..)", True, False))
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end

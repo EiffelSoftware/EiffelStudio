@@ -233,7 +233,6 @@ feature -- Operation: ecf dependency
 			ut: FILE_UTILITIES
 			l_targets: ARRAYED_LIST [CONF_TARGET]
 		do
---		across pending_ecf_pool as ic loop  end
 			if ut.file_path_exists (a_ecf) then
 				create cfg_factory
 				create cfg.make (cfg_factory)

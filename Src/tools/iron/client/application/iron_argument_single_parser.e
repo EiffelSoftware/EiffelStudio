@@ -14,7 +14,8 @@ inherit
 			sub_system_name,
 			is_using_unix_switch_style,
 			switch_prefixes,
-			help_switch
+			help_switch,
+			version_switch
 		end
 
 	IRON_ARGUMENT_PARSER_I

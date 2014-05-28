@@ -76,6 +76,7 @@ feature -- Execute
 					attached {IRON_WEB_REPOSITORY} a_iron.catalog_api.repository (uri) as repo
 				then
 					create remote_node.make_with_repository (a_iron.urls, a_iron.api_version, repo)
+
 					l_data := data_from (args)
 					if l_data /= Void then
 						l_name := l_data.name
@@ -254,32 +255,40 @@ feature -- Execute
 
 										(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
 										l_archive_path := tgt.absolute_path
+										if not (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
+											print ("[Error] Failure occured during package archive creation!%N")
+										end
 									elseif attached l_data.archive as l_archive then
 										l_archive_path := l_archive
 										l_package.set_archive_path (l_archive_path)
 									end
 
 									if l_archive_path /= Void then
-										check attached l_package.archive_path as l_arch and then l_archive_path.is_same_file_as (l_arch) end
-										print ({STRING_32} "Uploading package archive [size="+ file_size (l_archive_path).out +"]")
-										if attached l_package.archive_hash as l_hash then
-											print (" ["+ l_hash + "]")
-										else
-											print (" ["+ file_sha1 (l_archive_path) + "]")
-										end
-										print ("...%N")
-										remote_node.upload_package_archive (l_package, l_archive_path, u, p)
-										if remote_node.last_operation_succeed then
-											print ("Archive successfully uploaded!")
-											print_new_line
-										else
-											if attached remote_node.last_operation_error_message as errmsg then
-												print (errmsg)
+										check attached l_package.archive_path as l_arch implies l_archive_path.is_same_file_as (l_arch) end
+										if (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
+											print ({STRING_32} "Uploading package archive [size="+ file_size (l_archive_path).out +"]")
+											if attached l_package.archive_hash as l_hash then
+												print (" ["+ l_hash + "]")
 											else
-												print ("[Error] Archive uploading failed!")
+												print (" ["+ file_sha1 (l_archive_path) + "]")
 											end
+											print ("...%N")
+											remote_node.upload_package_archive (l_package, l_archive_path, u, p)
+											if remote_node.last_operation_succeed then
+												print ("Archive successfully uploaded!")
+												print_new_line
+											else
+												if attached remote_node.last_operation_error_message as errmsg then
+													print (errmsg)
+												else
+													print ("[Error] Archive uploading failed!")
+												end
+												print_new_line
+												err := True
+											end
+										else
+											print ({STRING_32} "Unable to find package archive %""+ l_archive_path.name +"%"!")
 											print_new_line
-											err := True
 										end
 									end
 								end
@@ -333,6 +342,7 @@ feature -- Execute
 			u: FILE_UTILITIES
 			p: detachable PATH
 			pf: detachable IRON_PACKAGE_FILE
+			l_dft_name: detachable READABLE_STRING_32
 		do
 			p := args.data_file
 			if p /= Void and then u.file_path_exists (p) then
@@ -350,6 +360,7 @@ feature -- Execute
 					Result.set_description (l_description)
 				end
 				Result.set_source (l_loc.parent)
+				l_dft_name := pf.package_name
 			end
 
 			if Result.has_name then
@@ -357,10 +368,22 @@ feature -- Execute
 			else
 				if attached args.package_name as l_name then
 					Result.set_name (l_name)
-				elseif not args.is_batch then
-					print ("Name? >")
+				elseif args.is_batch then
+					Result.set_name (l_dft_name)
+				else
+					print ("Name? ")
+					if l_dft_name /= Void then
+						print ("[")
+						print (l_dft_name)
+						print ("]")
+					end
+					print (" >")
 					io.read_line
-					Result.set_name (io.last_string.to_string_32)
+					if l_dft_name /= Void and then io.last_string.is_whitespace then
+						Result.set_name (l_dft_name)
+					else
+						Result.set_name (io.last_string.to_string_32)
+					end
 				end
 			end
 

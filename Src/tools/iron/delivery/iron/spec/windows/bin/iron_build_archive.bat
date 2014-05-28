@@ -18,10 +18,10 @@ echo Build archive from "%T_SOURCE_DIR%" into "%T_ARCHIVE_DIR%\%T_ARCHIVE_NAME%"
 if exist "%T_ARCHIVE_DIR%\%T_ARCHIVE_NAME%" goto archive_exists
 
 
-if not exist "%T_SOURCE_DIR%" goto failure
+if not exist "%T_SOURCE_DIR%" goto no_source
 
 if not exist "%T_ARCHIVE_DIR%" mkdir "%T_ARCHIVE_DIR%"
-if not exist "%T_ARCHIVE_DIR%" goto failure
+if not exist "%T_ARCHIVE_DIR%" goto no_archive_dir
 chdir "%T_ARCHIVE_DIR%"
 
 chdir "%T_SOURCE_DIR%"
@@ -43,6 +43,14 @@ goto end
 
 :archive_exists
 echo ERROR: Archive "%T_ARCHIVE_NAME%" already exists!
+goto failure
+
+:no_archive_dir
+echo ERROR: Archive directory "%T_ARCHIVE_DIR%" does not exists!
+goto failure
+
+:no_source
+echo ERROR: Source "%T_SOURCE_DIR%" does not exists!
 goto failure
 
 :failure

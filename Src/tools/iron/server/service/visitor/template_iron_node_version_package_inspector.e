@@ -53,6 +53,8 @@ feature -- Internal data
 					Result := cell_of (obj.archive_sha1)
 				elseif fn.is_case_insensitive_equal_general ("archive_hash") then
 					Result := cell_of (obj.archive_hash)
+				elseif fn.is_case_insensitive_equal_general ("archive_revision") then
+					Result := cell_of (obj.archive_revision)
 				elseif fn.is_case_insensitive_equal_general ("archive_last_modified") then
 					if attached obj.archive_last_modified as dt then
 						Result := cell_of ((create {HTTP_DATE}.make_from_date_time (dt)).string)

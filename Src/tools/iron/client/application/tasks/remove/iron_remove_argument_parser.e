@@ -62,7 +62,7 @@ feature {NONE} -- Switches
 		once
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_SWITCH}.make (all_switch, "Uninstall all installed packages", True, False))
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 			add_simulation_switch (Result)
 			add_batch_interactive_switch (Result)
 		end

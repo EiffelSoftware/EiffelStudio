@@ -65,7 +65,7 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (1)
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 		end
 
 ;note

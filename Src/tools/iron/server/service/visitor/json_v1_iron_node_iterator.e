@@ -217,6 +217,8 @@ feature -- Visit
 				js := p.archive_file_size.out + " octects"
 				j_object.put (js, "archive_size")
 
+				j_object.put_natural (p.archive_revision, "archive_revision")
+
 				if attached p.archive_hash as l_hash then
 					js := l_hash.out
 					j_object.put (js, "archive_hash")
@@ -226,6 +228,7 @@ feature -- Visit
 					js := date_as_string (dt)
 					j_object.put (js, "archive_date")
 				end
+
 				j_object.put (create {JSON_NUMBER}.make_integer (p.download_count), "download_count")
 			end
 			if attached p.title as l_title then

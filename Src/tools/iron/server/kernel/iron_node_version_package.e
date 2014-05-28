@@ -131,6 +131,9 @@ feature -- Tags
 
 feature -- Access: archive
 
+	archive_revision: NATURAL
+			-- Associated archive revision for this version.
+
 	has_archive: BOOLEAN
 		do
 			Result := archive_path /= Void
@@ -189,12 +192,6 @@ feature -- Access: archive
 			end
 		end
 
-	get_archive_hash
-			-- Compute `archive_hash'.
-		do
-			set_archive_hash (archive_sha1)
-		end
-
 feature -- Access: items	
 
 	items: detachable STRING_TABLE [detachable READABLE_STRING_32]
@@ -234,6 +231,19 @@ feature -- Change
 			end
 		end
 
+	reset_archive_path
+		do
+			archive_path := Void
+			get_archive_info
+		end
+
+	set_archive_revision (a_rev: like archive_revision)
+		require
+			valid_revision: package.last_archive_revision >= a_rev
+		do
+			archive_revision := a_rev
+		end
+
 	set_archive_path (v: detachable PATH)
 		do
 			archive_path := v
@@ -244,6 +254,25 @@ feature -- Change
 		do
 			download_count := a_count
 		end
+
+	reset_archive_hash
+		do
+			set_archive_hash (Void)
+		end
+
+	get_new_archive_revision
+		do
+			package.increment_last_archive_revision
+			archive_revision := package.last_archive_revision
+		end
+
+	get_archive_hash
+			-- Compute `archive_hash'.
+		do
+			set_archive_hash (archive_sha1)
+		end
+
+feature {NONE} -- Archive: change	
 
 	set_archive_hash (h: detachable READABLE_STRING_GENERAL)
 		do

@@ -60,7 +60,7 @@ feature {NONE} -- Switches
 			create Result.make (5)
 			Result.extend (create {ARGUMENT_SWITCH}.make (installed_switch, "Only installed packages", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (conflict_switch, "Only conflict packages ", True, False))
-			add_verbose_switch (Result)
+			fill_argument_switches (Result)
 		end
 
 	installed_switch: STRING = "i|installed"

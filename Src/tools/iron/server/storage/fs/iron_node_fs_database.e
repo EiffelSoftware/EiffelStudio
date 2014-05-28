@@ -323,6 +323,9 @@ feature -- Package
 				Result.set_name (inf.item ("name"))
 				Result.set_title (inf.item ("title"))
 				Result.set_description (inf.item ("description"))
+				if attached inf.item ("last-archive-revision") as s_rev and then s_rev.is_natural then
+					Result.set_last_archive_revision (s_rev.to_natural)
+				end
 				if attached inf.item ("owner") as s_owner then
 					if attached user (s_owner) as o then
 						Result.set_owner (o)
@@ -370,8 +373,13 @@ feature -- Package
 					if
 						c.key.same_string ("id")
 						or c.key.same_string ("name")
+						or c.key.same_string ("title")
 						or c.key.same_string ("description")
 						or c.key.same_string ("tags")
+						or c.key.same_string ("owner")
+						or c.key.same_string ("links")
+						or c.key.same_string ("last-modified")
+						or c.key.same_string ("last-archive-revision")
 					then
 							-- no way
 					else
@@ -533,6 +541,7 @@ feature -- Package: change
 			inf.put (a_package.name, "name")
 			inf.put (a_package.title, "title")
 			inf.put (a_package.description, "description")
+			inf.put (a_package.last_archive_revision.out, "last-archive-revision")
 			if attached a_package.last_modified as dt then
 				create hdate.make_from_date_time (dt)
 				inf.put (hdate.rfc1123_string, "last-modified")
@@ -601,19 +610,23 @@ feature -- Version package
 						-- Error !!
 				else
 					create Result.make (l_package, v)
+					if attached inf.item ("archive_revision") as s_rev and then s_rev.is_natural then
+						Result.set_archive_revision (s_rev.to_natural)
+					end
 
 					across
 						inf as c
 					loop
 						if
 							c.key.same_string ("id")
+							or c.key.same_string ("archive_revision")
 						then
 								-- no way
 						else
 							Result.put (c.item, c.key)
 						end
 					end
-					z := package_archive_path (v, a_id)
+					z := package_version_archive_path (Result)
 					if u.file_path_exists (z) then
 						Result.set_archive_path (z.absolute_path)
 					end
@@ -907,6 +920,7 @@ feature -- Version Package: change
 
 			inf.put (a_package.id, "id")
 			inf.put (a_package.name, "name")
+			inf.put (a_package.archive_revision.out, "archive_revision")
 
 			inf.save_to (vp.extended ("version.info"))
 			on_version_package_updated (a_package, flag_is_new)
@@ -946,14 +960,21 @@ feature -- Version package / archive: change
 
 	save_uploaded_package_archive (a_package: IRON_NODE_VERSION_PACKAGE; a_file: WSF_UPLOADED_FILE)
 		local
-			p: PATH
+			p, old_p: PATH
 			b: BOOLEAN
+			tgt: RAW_FILE
 		do
-			p := package_archive_path (a_package.version, a_package.id)
-			b := a_file.move_to (p.name.to_string_8)
+			p := package_version_archive_path (a_package)
+			create tgt.make_with_path (p)
+			if tgt.exists then
+				a_package.get_new_archive_revision
+				p := package_version_archive_path (a_package) -- New archive, keep previous for backup!
+				create tgt.make_with_path (p)
+			end
+			b := a_file.move_to (p.name)
 			if b then
 				a_package.set_archive_path (p)
-				a_package.set_archive_hash (a_package.archive_hash)
+				a_package.get_archive_hash
 				update_version_package (a_package)
 			end
 		end
@@ -964,12 +985,18 @@ feature -- Version package / archive: change
 			src,tgt: RAW_FILE
 			retried: BOOLEAN
 		do
-			p := package_archive_path (a_package.version, a_package.id)
 			if not retried then
 				create src.make_with_path (a_file)
 				if src.exists then
-					if a_keep_source_file then
+					p := package_version_archive_path (a_package)
+					create tgt.make_with_path (p)
+					if tgt.exists then
+						a_package.get_new_archive_revision -- New archive, keep previous for backup!
+						p := package_version_archive_path (a_package)
 						create tgt.make_with_path (p)
+					end
+
+					if a_keep_source_file then
 						tgt.open_write
 						src.open_read
 						src.copy_to (tgt)
@@ -979,12 +1006,13 @@ feature -- Version package / archive: change
 						src.rename_path (p)
 					end
 					a_package.set_archive_path (p)
-					a_package.set_archive_hash (a_package.archive_hash)
+					a_package.get_archive_hash
 					update_version_package (a_package)
 				end
 			else
+					-- FIXME: report issue !
 				a_package.set_archive_path (Void)
-				a_package.set_archive_hash (Void)
+				a_package.reset_archive_hash
 				update_version_package (a_package)
 			end
 		rescue
@@ -997,12 +1025,13 @@ feature -- Version package / archive: change
 			p: PATH
 			f: RAW_FILE
 		do
-			p := package_archive_path (a_package.version, a_package.id)
+			p := package_version_archive_path (a_package)
 			create f.make_with_path (p)
 			if f.exists then
 				f.delete
+				a_package.get_new_archive_revision -- new revision for new archive state...
 				a_package.set_archive_path (Void)
-				a_package.set_archive_hash (Void)
+				a_package.reset_archive_hash
 				update_version_package (a_package)
 			end
 		end
@@ -1287,11 +1316,21 @@ feature {NONE} -- Initialization
 			Result := packages_index_path (a_package.version).extended (a_package.id).extended ("downloads")
 		end
 
-	package_archive_path (v: IRON_NODE_VERSION; a_id: READABLE_STRING_GENERAL): PATH
+	package_version_archive_path (a_package: IRON_NODE_VERSION_PACKAGE): PATH
+		require
+			has_id: a_package.has_id
+		do
+			Result := package_archive_path (a_package.version, a_package.archive_revision, a_package.id)
+		end
+
+	package_archive_path (v: IRON_NODE_VERSION; a_rev: NATURAL; a_id: READABLE_STRING_GENERAL): PATH
 		require
 			valid_id: not a_id.is_empty
 		do
 			Result := packages_index_path (v).extended (a_id).extended ("archive")
+			if a_rev > 0 then
+				Result := Result.appended_with_extension (a_rev.out)
+			end
 		end
 
 	packages_index_path (v: IRON_NODE_VERSION): PATH

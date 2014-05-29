@@ -1,5 +1,7 @@
-note
-	description: "Error in loop iteration that is not of ITERABLE type."
+﻿note
+	description: "[
+			Error in loop iteration that the type of "new_cursor" is not attached.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -21,7 +23,7 @@ feature {NONE} -- Creation
 
 	make (c: AST_CONTEXT; t: TYPE_A; l: LOCATION_AS)
 			-- Create error object for loop iteration cursor of type `t'
-			-- that is not attached in the context `c'.
+			-- that is not attached in the context `c' at location 'l'.
 		require
 			c_attached: c /= Void
 			t_attached: t /= Void
@@ -61,7 +63,7 @@ invariant
 	cursor_type_attached: cursor_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

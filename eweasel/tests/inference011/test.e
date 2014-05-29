@@ -11,9 +11,9 @@ feature {NONE} -- Initialization
 			i; r1; r2; r3; r4; p1; p2; p3; p4; f1; f2; f3; f4
 		do
 				-- Inline agents.
-			r1 := agent (x, y: INTEGER) do report (y, True) end (i)
-			p1 := agent (x, y: INTEGER): BOOLEAN do Result := x = y end (i)
-			f1 := agent (x, y: INTEGER): INTEGER do Result := x + y end (i)
+			r1 := agent (x, y: INTEGER) do report (y, True) end (i, ?)
+			p1 := agent (x, y: INTEGER): BOOLEAN do Result := x = y end (i, ?)
+			f1 := agent (x, y: INTEGER): INTEGER do Result := x + y end (i, ?)
 			r1 (1)
 			report (2, p1 (5))
 			report (3, f1 (5) = 10)

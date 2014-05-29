@@ -1,0 +1,10 @@
+test_name 	 iteration-loop-target-attachment
+test_description Target of an iteration form of a loop should be attached.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST Loop_iteration_target_not_attached_error
+
+test_end

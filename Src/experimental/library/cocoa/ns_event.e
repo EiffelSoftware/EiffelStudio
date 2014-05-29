@@ -184,7 +184,7 @@ feature -- Getting Mouse Event Information
 	is_mouse_coalescing_enabled: BOOLEAN
 			-- Indicates whether mouse-movement event coalescing is enabled.
 		do
-			Result := {NS_EVENT_API}.is_mouse_coalescing_enabled ()
+			Result := {NS_EVENT_API}.is_mouse_coalescing_enabled
 		end
 
 feature -- Getting Mouse-Tracking Event Information
@@ -383,7 +383,7 @@ feature -- Requesting and Stopping Periodic Events
 	stop_periodic_events
 			-- Stops generating periodic events for the current thread and discards any periodic events remaining in the queue.
 		do
-			{NS_EVENT_API}.stop_periodic_events ()
+			{NS_EVENT_API}.stop_periodic_events
 		end
 
 feature -- Contract Support
@@ -545,4 +545,14 @@ feature -- Modifier flag constants
 			"NSDeviceIndependentModifierFlagsMask"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

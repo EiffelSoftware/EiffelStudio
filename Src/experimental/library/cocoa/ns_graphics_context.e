@@ -93,7 +93,7 @@ feature -- Testing the Drawing Destination
 	current_context_drawing_to_screen: BOOLEAN
 			-- Returns a Boolean value that indicates whether the current context is drawing to the screen.
 		do
-			Result := {NS_GRAPHICS_CONTEXT_API}.current_context_drawing_to_screen ()
+			Result := {NS_GRAPHICS_CONTEXT_API}.current_context_drawing_to_screen
 		end
 
 	is_drawing_to_screen: BOOLEAN
@@ -197,4 +197,14 @@ feature -- Managing the Color Rendering Intent
 			{NS_GRAPHICS_CONTEXT_API}.set_color_rendering_intent (item, a_rendering_intent)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

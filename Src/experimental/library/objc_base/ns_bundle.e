@@ -50,7 +50,7 @@ feature -- Getting an NSBundle
 	main_bundle
 			-- Returns the `NSBundle' object that corresponds to the directory where the current application executable is located.
 		do
-			make_from_pointer ({NS_BUNDLE_API}.main_bundle ())
+			make_from_pointer ({NS_BUNDLE_API}.main_bundle)
 		end
 
 	all_bundles: NS_ARRAY [NS_BUNDLE]
@@ -268,7 +268,7 @@ feature -- Managing Localizations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -192,19 +192,19 @@ feature -- Getting Metrics Information
 	label_font_size: REAL
 			-- Returns the size of the standard label font.
 		do
-			Result := {NS_FONT_API}.label_font_size ()
+			Result := {NS_FONT_API}.label_font_size
 		end
 
 	small_system_font_size: REAL
 			-- Returns the size of the standard small system font.
 		do
-			Result := {NS_FONT_API}.small_system_font_size ()
+			Result := {NS_FONT_API}.small_system_font_size
 		end
 
 	system_font_size: REAL
 			-- Returns the size of the standard system font.
 		do
-			Result := {NS_FONT_API}.system_font_size ()
+			Result := {NS_FONT_API}.system_font_size
 		end
 
 	system_font_size_for_control_size (a_control_size: NATURAL): REAL
@@ -385,4 +385,14 @@ feature -- Getting Corresponding Device Fonts
 			create Result.share_from_pointer ({NS_FONT_API}.screen_font_with_rendering_mode (item, a_rendering_mode))
 		end
 
+note
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

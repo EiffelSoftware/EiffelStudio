@@ -42,7 +42,7 @@ feature -- Class
 			end
 		end
 
-	text_did_change_actions: ACTION_SEQUENCE [TUPLE[]]
+	text_did_change_actions: ACTION_SEQUENCE [TUPLE]
 		do
 			if attached text_did_change_actions_internal as actions then
 				Result := actions
@@ -54,7 +54,7 @@ feature -- Class
 
 feature {NONE} -- Implementation
 
-	text_did_change_actions_internal: detachable ACTION_SEQUENCE [TUPLE[]]
+	text_did_change_actions_internal: detachable ACTION_SEQUENCE [TUPLE]
 
 feature -- Delegate Methods
 
@@ -120,4 +120,14 @@ feature -- Objective-C implementation
 			"[(NSTextField*)$a_text_field textDidChange: $a_notification];"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

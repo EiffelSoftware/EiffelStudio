@@ -22,7 +22,7 @@ feature -- Accessing Run Loops and Modes
 	current_run_loop
 			-- Returns the `NSRunLoop' object for the current thread.
 		do
-			make_from_pointer ({NS_RUN_LOOP_API}.current_run_loop ())
+			make_from_pointer ({NS_RUN_LOOP_API}.current_run_loop)
 		end
 
 	current_mode: NS_STRING_BASE
@@ -40,7 +40,7 @@ feature -- Accessing Run Loops and Modes
 	main_run_loop
 			-- Returns the run loop of the main thread.
 		do
-			make_from_pointer ({NS_RUN_LOOP_API}.main_run_loop ())
+			make_from_pointer ({NS_RUN_LOOP_API}.main_run_loop)
 		end
 
 feature -- Managing Timers
@@ -113,7 +113,7 @@ feature -- Scheduling and Canceling Messages
 
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

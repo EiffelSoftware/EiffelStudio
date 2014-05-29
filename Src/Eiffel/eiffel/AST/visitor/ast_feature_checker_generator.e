@@ -7137,7 +7137,8 @@ feature {NONE} -- Visitor
 				if
 					l_constraint_type = Void or else (
 					not l_constraint_type.is_integer and then not l_constraint_type.is_character and then
-					not l_constraint_type.is_natural and then not l_constraint_type.is_enum)
+					not l_constraint_type.is_natural and then not l_constraint_type.is_enum and then
+					l_constraint_type.is_known)
 				then
 						-- Error
 					create l_vomb1

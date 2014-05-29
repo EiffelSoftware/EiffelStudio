@@ -126,7 +126,7 @@ feature {NONE}
 
 	callback_void (a_object: POINTER; a_selector: POINTER): BOOLEAN
 		do
-			if attached {FUNCTION [ANY, TUPLE [], BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
 				Result := l_agent.item (Void)
 			end
 		end
@@ -137,7 +137,7 @@ feature {NONE}
 		do
 --			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 --			io.put_string ("B Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
-			if attached {FUNCTION [ANY, TUPLE [], BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
 				Result := l_agent.item (Void)
 			end
 		end
@@ -334,7 +334,7 @@ feature {OBJC_CLASS} -- Externals, to be able to call the superclass or previous
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

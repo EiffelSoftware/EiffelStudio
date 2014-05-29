@@ -948,7 +948,7 @@ feature {NONE} -- Roundtrip
 				l_vpir.set_location (l_as.body.start_location)
 				error_handler.insert_error (l_vpir)
 				reset_types
-			elseif is_byte_node_enabled then
+			elseif is_byte_node_enabled or else has_untyped_local then
 					-- This is the first place, where inline agents are looked at as features.
 					-- They are ignored by degree 2. So a new FEATURE_I has to be created
 				create l_feature_names.make (1)

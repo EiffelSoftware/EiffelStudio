@@ -1934,7 +1934,7 @@ feature {NONE} -- Implementation
 									-- If result type is declared frozen, then it keeps its status only if target is frozen.
 									-- Also if `last_type' is expanded or frozen or if the routine is frozen, we know for sure
 									-- there will not be any redeclaration so we can keep the `frozen' status of the query.
-								if 
+								if
 									not (a_type.is_frozen or a_type.is_expanded or (attached a_type.base_class as l_class and then l_class.is_frozen)) and then
 									(l_feature.type.is_frozen and not l_feature.is_frozen)
 								then
@@ -7706,8 +7706,13 @@ feature {NONE} -- Visitor
 						-- Lookup for a feature using general feature finder to deal with formal generics correctly.
 					feature_finder.find_by_routine_id (n.rout_id_set.first, iteration_type, context.current_class)
 					if not attached feature_finder.found_feature as f or else not attached feature_finder.found_site as iteration_base_type then
-							-- Iteration expression type does not conform to ITERABLE.
-						error_handler.insert_error (create {VOIT1}.make (context, iteration_type, i.actual_type, local_id))
+							-- Iteration expression type does not conform to ITERABLE because feature "new_cursor" is not found.
+						error_handler.insert_error (create {VOIT1}.make_conformance (context, iteration_type, i.actual_type, local_id))
+							-- Clear `last_type' to make sure it is not set when there is an error.
+						reset_types
+					elseif not iteration_type.is_attached and then is_void_safe_call (context.current_class)  then
+							-- Iteration expression type does not conform to ITERABLE because it is not attached.
+						error_handler.insert_error (create {VOIT1}.make_attachment (context, iteration_type, i.actual_type, local_id))
 							-- Clear `last_type' to make sure it is not set when there is an error.
 						reset_types
 					else

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error in loop iteration that is not of ITERABLE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,11 +15,12 @@ inherit
 		end
 
 create
-	make
+	make_conformance,
+	make_attachment
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; s: TYPE_A; t: CL_TYPE_A; l: LOCATION_AS)
+	make_conformance (c: AST_CONTEXT; s: TYPE_A; t: CL_TYPE_A; l: LOCATION_AS)
 			-- Create error object for loop iteration that is of type `s' which does not conform
 			-- to the target type `t' (ITERABLE [G]) in the context `c'.
 		require
@@ -32,6 +33,22 @@ feature {NONE} -- Creation
 			source_type := s
 			target_type := t
 			set_location (l)
+		ensure
+			source_type_set: source_type = s
+			target_type_set: target_type = t
+		end
+
+	make_attachment (c: AST_CONTEXT; s: TYPE_A; t: CL_TYPE_A; l: LOCATION_AS)
+			-- Create error object for loop iteration that is of type `s' which does not conform
+			-- to the target type `t' (ITERABLE [G]) in the context `c'.
+		require
+			c_attached: c /= Void
+			s_attached: s /= Void
+			t_attached: t /= Void
+			l_attached: l /= Void
+		do
+			make_conformance (c, s, t, l)
+			is_source_detachable := True
 		ensure
 			source_type_set: source_type = s
 			target_type_set: target_type = t
@@ -52,6 +69,9 @@ feature {NONE} -- Access
 
 	source_type: TYPE_A
 			-- Source type
+
+	is_source_detachable: BOOLEAN
+			-- Is conformance broken because source is detachable?
 
 feature -- Output
 
@@ -83,6 +103,10 @@ feature -- Output
 				a_text_formatter.add (")")
 			end
 			a_text_formatter.add_new_line
+			if is_source_detachable then
+				a_text_formatter.add ("Type of the iteration expression is not attached.")
+				a_text_formatter.add_new_line
+			end
 		end
 
 invariant
@@ -90,7 +114,7 @@ invariant
 	source_type_attached: source_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -949,6 +949,7 @@ feature {NONE} -- Roundtrip
 				error_handler.insert_error (l_vpir)
 				reset_types
 			elseif is_byte_node_enabled or else has_untyped_local then
+					-- TODO: Move creation of a new `{FEATURE_I}' object to an earlier stage to avoid the dependency on code generation.
 					-- This is the first place, where inline agents are looked at as features.
 					-- They are ignored by degree 2. So a new FEATURE_I has to be created
 				create l_feature_names.make (1)

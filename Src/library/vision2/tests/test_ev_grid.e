@@ -52,6 +52,7 @@ feature -- Test routines
 
 					create l_grid
 					l_grid.set_minimum_size (50, 50)
+					l_grid.hide_header
 
 					window.extend (l_grid)
 					window.show

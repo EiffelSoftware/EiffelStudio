@@ -136,6 +136,14 @@ feature -- Status report
 			result_valid: Result >= 0 and Result <= count
 		end
 
+	tab_index_at_screen_position (a_x, a_y: INTEGER): INTEGER
+			-- Index of tab currently at screen position (a_x, a_y), or 0 if none.
+		do
+			Result := implementation.tab_index_at_screen_position (a_x, a_y)
+		ensure
+			result_valid: Result >= 0 and Result <= count
+		end
+
 feature -- Status setting
 
 	position_tabs_top
@@ -269,7 +277,7 @@ invariant
 		is_usable and not is_empty implies attached selected_item as l_selected_item and then selected_item_index = index_of (l_selected_item, 1)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -13,7 +13,8 @@ inherit
 	EV_NOTEBOOK_I
 		redefine
 			interface,
-			is_usable
+			is_usable,
+			tab_index_at_screen_position
 		end
 
 	EV_WIDGET_LIST_IMP
@@ -196,12 +197,18 @@ feature {EV_ANY_I} -- Status report
 	pointed_tab_index: INTEGER
 			-- index of tab currently under mouse pointer, or 0 if none.
 		local
-			hit_test_info: WEL_TC_HITTESTINFO
 			point: WEL_POINT
 		do
 			create point.make_by_cursor_position
-			point.set_x (point.x - screen_x)
-			point.set_y (point.y - screen_y)
+			Result := tab_index_at_screen_position (point.x, point.y)
+		end
+
+	tab_index_at_screen_position (a_x, a_y: INTEGER_32): INTEGER
+		local
+			hit_test_info: WEL_TC_HITTESTINFO
+			point: WEL_POINT
+		do
+			create point.make (a_x - screen_x, a_y - screen_y)
 			create hit_test_info.make_with_point (point)
 			Result := {WEL_API}.send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
 		end

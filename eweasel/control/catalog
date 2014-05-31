@@ -2796,7 +2796,8 @@ test	inference-boolean-expression	inference009 tcf pass used_to_pass inference a
 test	inference-manifest-array	inference010 tcf pass used_to_pass inference
 test	inference-agent-expression	inference011 tcf fail inference agents
 test	inference-untyped-agent-target	inference012 tcf pass inference agents
-test	inference-inspect-instruction	inference013 tcf fail inference
+test	inference-inspect-instruction	inference013 tcf fail inference inspect
+test	inference-integer-plus-untyped	inference014 tcf pass used_to_pass inference
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop multithreaded execution

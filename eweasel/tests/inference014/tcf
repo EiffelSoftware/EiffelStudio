@@ -1,0 +1,10 @@
+test_name 	 inference-integer-plus-untyped
+test_description A type of addition that starts from an integer constant can be inferred.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   validity_error TEST Syntax
+
+test_end

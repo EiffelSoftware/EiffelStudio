@@ -61,7 +61,7 @@ feature {NONE} -- Creation
 		require
 			inspect_expression_type_not_void: inspect_expression_type /= Void
 			valid_inspect_expression_type:
-				inspect_expression_type.is_character or inspect_expression_type.is_integer or inspect_expression_type.is_natural or inspect_expression_type.is_enum
+				inspect_expression_type.is_character or inspect_expression_type.is_integer or inspect_expression_type.is_natural or inspect_expression_type.is_enum or not inspect_expression_type.is_known
 		do
 			create unique_names.make
 			create intervals.make
@@ -278,7 +278,7 @@ feature {CHAR_AS} -- Visitor
 		do
 			if type.is_character then
 				create {CHAR_VAL_B} last_inspect_value.make (l_as.value)
-			else
+			elseif type.is_known then
 				report_vomb2 (l_as)
 			end
 		end
@@ -289,7 +289,7 @@ feature {INTEGER_CONSTANT} -- Visitor
 		do
 			if l_as.valid_type (type) then
 				last_inspect_value := l_as.inspect_value (type)
-			else
+			elseif type.is_known then
 				report_vomb2 (l_as)
 			end
 		end
@@ -387,7 +387,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

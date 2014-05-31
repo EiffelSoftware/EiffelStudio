@@ -9515,7 +9515,7 @@ feature {NONE} -- Implementation
 		require
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
-			type_conforms: not a_for_conversion implies a_source_type.conform_to (context.current_class, a_target_type)
+			type_conforms: not a_for_conversion implies a_target_type.backward_conform_to (context.current_class, a_source_type)
 		do
 			if a_target_type.actual_type.has_frozen_mark then
 				if a_source_type.actual_type.is_none then

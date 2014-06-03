@@ -4,7 +4,7 @@
             "driver": "SQL Server",
             "username": "",
             "password": "",
-            "environment": "test",
+            "environment": "development",
             "trusted": "yes"
         },
         "environments": {

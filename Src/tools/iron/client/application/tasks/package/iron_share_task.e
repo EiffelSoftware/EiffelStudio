@@ -249,14 +249,10 @@ feature -- Execute
 								if l_upload_new_archive then
 									if attached l_data.source as src then
 										create tgt.make_from_string ("tmp_archive_" + (create {UUID_GENERATOR}).generate_uuid.out)
-										if l_package /= Void then
-											l_package.set_archive_uri (Void)
-										end
 										print ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N");
 
-										(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
-										create l_iron_archive.make (tgt.absolute_path)
-										if not l_iron_archive.file_exists then
+										l_iron_archive := (create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
+										if l_iron_archive = Void or else not l_iron_archive.file_exists then
 											print ("[Error] Failure occured during package archive creation!%N")
 										end
 --										if not (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
@@ -272,13 +268,16 @@ feature -- Execute
 												l_package.has_archive_uri and then
 												l_package.archive_size = l_iron_archive.file_size and then
 												(attached l_package.archive_hash as l_package_archive_hash and
-												 attached l_iron_archive.hash as l_iron_hash) implies l_package_archive_hash.is_case_insensitive_equal_general (l_iron_hash)
+												 attached l_iron_archive.hash as l_iron_hash) and then l_package_archive_hash.is_case_insensitive_equal_general (l_iron_hash)
 											then
 													-- Same archive .. no need to upload
-												print ({STRING_32} "Package archive is already uploaded.")
+												print ("Package archive is already uploaded (")
+												print (" size=" + l_iron_archive.file_size.out)
+												print (" hash=" + l_iron_hash)
+												print (" ).")
 												print_new_line
 											else
-												print ({STRING_32} "Uploading package archive [size="+ l_iron_archive.file_size.out +"]")
+												print ("Uploading package archive [size="+ l_iron_archive.file_size.out +"]")
 												if attached l_iron_archive.hash as l_hash then
 													print (" ["+ l_hash + "]")
 												end

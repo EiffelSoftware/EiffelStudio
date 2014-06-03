@@ -133,19 +133,6 @@ feature -- Access: items
 			end
 		end
 
-feature -- Access: archive	
-
-	last_archive_revision: NATURAL
-			-- Internal last known archive revision.
-			-- This is a counter for each package.
-
-feature -- Change: archive			
-
-	increment_last_archive_revision
-		do
-			last_archive_revision := last_archive_revision + {NATURAL} 1
-		end
-
 feature {IRON_NODE_EXPORTER} -- Change
 
 	update_id (a_id: READABLE_STRING_8)
@@ -224,13 +211,6 @@ feature -- Change
 			create last_modified.make_now_utc
 		end
 
-	set_last_archive_revision (rev: like last_archive_revision)
-			-- Set `last_archive_revision' to `rev'
-		require
-			rev_is_incremented: rev > last_archive_revision
-		do
-			last_archive_revision := rev
-		end
 
 	add_tag (t: READABLE_STRING_GENERAL)
 		local

@@ -86,7 +86,7 @@ feature -- Archiving
 			end
 		end
 
-	build_package_archive (a_package: detachable IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT)
+	build_package_archive (a_package: detachable IRON_PACKAGE; a_folder: PATH; a_target_file: PATH; a_layout: IRON_LAYOUT): detachable IRON_ARCHIVE
 			--| note: this also update `a_package.archive...' data.
 		require
 			folder_exists: (create {FILE_UTILITIES}).directory_path_exists (a_folder)
@@ -129,11 +129,9 @@ feature -- Archiving
 				delete_file (f)
 
 					-- target archive file.
-				create f.make_with_path (a_target_file)
-				if f.exists then
-					if a_package /= Void then
-						a_package.set_archive_path (a_target_file)
-					end
+				create Result.make (a_target_file)
+				if not Result.file_exists then
+					Result := Void
 				end
 			end
 		end

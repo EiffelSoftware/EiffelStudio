@@ -325,9 +325,6 @@ feature -- Package
 				Result.set_name (inf.item ("name"))
 				Result.set_title (inf.item ("title"))
 				Result.set_description (inf.item ("description"))
-				if attached inf.item ("last-archive-revision") as s_rev and then s_rev.is_natural then
-					Result.set_last_archive_revision (s_rev.to_natural)
-				end
 				if attached inf.item ("owner") as s_owner then
 					if attached user (s_owner) as o then
 						Result.set_owner (o)
@@ -543,7 +540,6 @@ feature -- Package: change
 			inf.put (a_package.name, "name")
 			inf.put (a_package.title, "title")
 			inf.put (a_package.description, "description")
-			inf.put (a_package.last_archive_revision.out, "last-archive-revision")
 			if attached a_package.last_modified as dt then
 				create hdate.make_from_date_time (dt)
 				inf.put (hdate.rfc1123_string, "last-modified")
@@ -970,7 +966,58 @@ feature -- Version Package: change
 			reset_path_association_map (a_package.version)
 		end
 
-feature -- Version package / archive: change		
+feature -- Version package / archive: change
+
+	last_archive_revision (a_package: IRON_NODE_PACKAGE): NATURAL
+		local
+			p: PATH
+			f: RAW_FILE
+			s: READABLE_STRING_8
+		do
+			p := package_archive_revision_counter_path (a_package)
+			create f.make_with_path (p)
+			if f.exists and then f.is_access_readable then
+				f.open_read
+				f.read_line_thread_aware
+				s := f.last_string
+				if s.is_integer then
+					Result := s.to_natural
+				end
+				f.close
+			end
+			Result := Result
+		end
+
+	incremented_last_archive_revision (a_package: IRON_NODE_PACKAGE; a_min_rev: NATURAL): NATURAL
+		local
+			p: PATH
+			f: RAW_FILE
+			s: READABLE_STRING_8
+		do
+			p := package_archive_revision_counter_path (a_package)
+			create f.make_with_path (p)
+			if f.exists and then f.is_access_readable then
+				f.open_read
+				f.read_line_thread_aware
+				s := f.last_string
+				if s.is_integer then
+					Result := s.to_natural
+				end
+				f.close
+			end
+			Result := a_min_rev.max (Result) + {NATURAL} 1
+			if not f.exists or else f.is_access_writable then
+				f.open_write
+				f.put_string (Result.out)
+				f.put_new_line
+				f.close
+			end
+		end
+
+	get_new_archive_revision (a_package: IRON_NODE_VERSION_PACKAGE)
+		do
+			a_package.set_archive_revision (incremented_last_archive_revision (a_package.package, a_package.archive_revision))
+		end
 
 	save_uploaded_package_archive (a_package: IRON_NODE_VERSION_PACKAGE; a_file: WSF_UPLOADED_FILE)
 		local
@@ -986,7 +1033,7 @@ feature -- Version package / archive: change
 			until
 				not tgt.exists
 			loop
-				a_package.get_new_archive_revision -- New archive, keep previous for backup!
+				get_new_archive_revision (a_package) -- New archive, keep previous for backup!
 				rev := a_package.archive_revision
 				create arch.make (package_version_archive_path (a_package, rev))
 				create tgt.make_with_path (arch.path)
@@ -1017,7 +1064,7 @@ feature -- Version package / archive: change
 					until
 						not tgt.exists
 					loop
-						a_package.get_new_archive_revision -- New archive, keep previous for backup!
+						get_new_archive_revision (a_package) -- New archive, keep previous for backup!
 						rev := a_package.archive_revision
 						create arch.make (package_version_archive_path (a_package, rev))
 						create tgt.make_with_path (arch.path)
@@ -1063,7 +1110,7 @@ feature -- Version package / archive: change
 			create f.make_with_path (p)
 			if f.exists then
 				f.delete
-				a_package.get_new_archive_revision
+				get_new_archive_revision (a_package)
 				a_package.set_archive (Void)
 				update_version_package (a_package)
 			end
@@ -1323,6 +1370,13 @@ feature {NONE} -- Initialization
 			valid_id: not a_id.is_empty
 		do
 			Result := packages_path.extended (a_id)
+		end
+
+	package_archive_revision_counter_path (a_package: IRON_NODE_PACKAGE): PATH
+		require
+			package_with_id: a_package.has_id
+		do
+			Result := package_path (a_package.id).extended ("archive_revision")
 		end
 
 	packages_trash_path: PATH

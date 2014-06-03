@@ -287,7 +287,26 @@ feature -- Version Package: change
 			version_package (a_package.version, old a_package.id) = Void
 		end
 
-feature -- Version Package/ archive: change				
+feature -- Version Package/ archive: change	
+
+	last_archive_revision (a_package: IRON_NODE_PACKAGE): NATURAL
+		deferred
+		end
+
+	incremented_last_archive_revision (a_package: IRON_NODE_PACKAGE; a_min_rev: NATURAL): NATURAL
+			-- Incremented value of last archive revision counter for package `a_package'
+			-- with a minimum value of `a_min_rev'.
+		deferred
+		ensure
+			Result > old last_archive_revision (a_package) and Result > a_min_rev
+		end
+
+	get_new_archive_revision (a_package: IRON_NODE_VERSION_PACKAGE)
+			-- Get a new archive revision number for `a_package'.
+		deferred
+		ensure
+			revision_incremented: a_package.archive_revision > old a_package.archive_revision
+		end
 
 	save_uploaded_package_archive (a_package: IRON_NODE_VERSION_PACKAGE; a_file: WSF_UPLOADED_FILE)
 		require

@@ -41,11 +41,12 @@ feature -- Execute
 			l_package: detachable IRON_PACKAGE
 			err, done: BOOLEAN
 			l_title, l_name, l_id: detachable READABLE_STRING_32
-			l_archive_path: detachable PATH
 			remote_node: IRON_REMOTE_NODE
 			u,p, repo_url: detachable READABLE_STRING_32
 			ini: INI_FILE
+			cl_body: CELL [detachable READABLE_STRING_8]
 			l_upload_new_archive: BOOLEAN
+			l_iron_archive: detachable IRON_ARCHIVE
 		do
 			err := False
 
@@ -254,40 +255,57 @@ feature -- Execute
 										print ({STRING_32} "Building the archive from folder %"" + src.name + {STRING_32} "%" %N");
 
 										(create {IRON_UTILITIES}).build_package_archive (l_package, src, tgt, a_iron.layout)
-										l_archive_path := tgt.absolute_path
-										if not (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
+										create l_iron_archive.make (tgt.absolute_path)
+										if not l_iron_archive.file_exists then
 											print ("[Error] Failure occured during package archive creation!%N")
 										end
+--										if not (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
+--											print ("[Error] Failure occured during package archive creation!%N")
+--										end
 									elseif attached l_data.archive as l_archive then
-										l_archive_path := l_archive
-										l_package.set_archive_path (l_archive_path)
+										create l_iron_archive.make (l_archive)
 									end
 
-									if l_archive_path /= Void then
-										check attached l_package.archive_path as l_arch implies l_archive_path.is_same_file_as (l_arch) end
-										if (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
-											print ({STRING_32} "Uploading package archive [size="+ file_size (l_archive_path).out +"]")
-											if attached l_package.archive_hash as l_hash then
-												print (" ["+ l_hash + "]")
-											else
-												print (" ["+ file_sha1 (l_archive_path) + "]")
-											end
-											print ("...%N")
-											remote_node.upload_package_archive (l_package, l_archive_path, u, p)
-											if remote_node.last_operation_succeed then
-												print ("Archive successfully uploaded!")
+									if l_iron_archive /= Void then
+										if l_iron_archive.file_exists then
+											if
+												l_package.has_archive_uri and then
+												l_package.archive_size = l_iron_archive.file_size and then
+												(attached l_package.archive_hash as l_package_archive_hash and
+												 attached l_iron_archive.hash as l_iron_hash) implies l_package_archive_hash.is_case_insensitive_equal_general (l_iron_hash)
+											then
+													-- Same archive .. no need to upload
+												print ({STRING_32} "Package archive is already uploaded.")
 												print_new_line
 											else
-												if attached remote_node.last_operation_error_message as errmsg then
-													print (errmsg)
-												else
-													print ("[Error] Archive uploading failed!")
+												print ({STRING_32} "Uploading package archive [size="+ l_iron_archive.file_size.out +"]")
+												if attached l_iron_archive.hash as l_hash then
+													print (" ["+ l_hash + "]")
 												end
-												print_new_line
-												err := True
+												print ("...%N")
+												create cl_body.put (Void)
+												remote_node.upload_package_archive (l_package, l_iron_archive, u, p, cl_body)
+												if remote_node.last_operation_succeed then
+													print ("Archive successfully uploaded!")
+													print_new_line
+												else
+													if attached remote_node.last_operation_error_message as errmsg then
+														print (errmsg)
+													else
+														print ("[Error] Archive uploading failed!")
+													end
+													print_new_line
+													err := True
+												end
+												if args.verbose then
+													if attached cl_body.item as l_resp_body then
+														print (l_resp_body)
+														print_new_line
+													end
+												end
 											end
 										else
-											print ({STRING_32} "Unable to find package archive %""+ l_archive_path.name +"%"!")
+											print ({STRING_32} "Unable to find package archive %""+ l_iron_archive.path.name +"%"!")
 											print_new_line
 										end
 									end

@@ -214,7 +214,7 @@ feature -- Visit
 					js := l_archive_path.name
 					j_object.put (js, "archive_path")
 				end
-				js := p.archive_file_size.out + " octects"
+				js := p.archive_file_size.out
 				j_object.put (js, "archive_size")
 
 				j_object.put_natural (p.archive_revision, "archive_revision")

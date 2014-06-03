@@ -213,9 +213,6 @@ feature -- Access
 
 feature -- Access: archive
 
-	archive_hash: detachable READABLE_STRING_8
-			-- Hash of the archive file.
-
 	archive_uri: detachable URI
 			-- URI of the associated archive file.
 
@@ -230,6 +227,12 @@ feature -- Access: archive
 	archive_revision: NATURAL
 			-- Associated archive revision.
 			--| for now, only apply to remote web iron server.
+
+	archive_hash: detachable READABLE_STRING_8
+			-- Hash of the archive file.
+
+	archive_size: INTEGER
+			-- Size of the archive file in octects.			
 
 feature {NONE} -- Basic operation: archive
 
@@ -346,6 +349,12 @@ feature -- Change
 			-- Set `archive_revision' to `v'.
 		do
 			archive_revision := v
+		end
+
+	set_archive_size (v: INTEGER)
+			-- Set `archive_size' to `v'.
+		do
+			archive_size := v
 		end
 
 	set_archive_uri (v: detachable READABLE_STRING_GENERAL)

@@ -208,6 +208,12 @@ feature -- Conversion
 				if attached {JSON_STRING} j_package.item ("archive_hash") as j_archive_hash then
 					Result.set_archive_hash (j_archive_hash.item)
 				end
+				if attached {JSON_NUMBER} j_package.item ("archive_size") as j_size then
+					s := j_size.item
+					if s.is_integer then
+						Result.set_archive_size (s.to_integer)
+					end
+				end
 				if attached {JSON_ARRAY} j_package.item ("paths") as j_paths then
 					across
 						j_paths.array_representation as c

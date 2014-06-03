@@ -57,6 +57,9 @@ feature -- Execute
 		end
 
 	display_information (a_package: IRON_PACKAGE; args: IRON_ARGUMENTS; a_iron: IRON)
+		local
+			l_rev: NATURAL
+			l_size: INTEGER
 		do
 			print (m_information_for (a_package.human_identifier, a_package.id, a_package.repository.location_string))
 			print_new_line
@@ -74,6 +77,29 @@ feature -- Execute
 				print_new_line
 				print ("  description: ")
 				print (l_description)
+				print_new_line
+			end
+			if a_package.has_archive_uri then
+				print_new_line
+				print ("  archive: ")
+				l_rev := a_package.archive_revision
+				if l_rev > 0 then
+					print (" revision=")
+					print (l_rev.out)
+				end
+				l_size := a_package.archive_size
+				if l_size > 0 then
+					print (" size=")
+					print (l_size.out)
+				end
+				if attached a_package.archive_hash as l_hash then
+					print (" hash=")
+					print (l_hash)
+				end
+				if attached a_package.item ("archive_date") as l_date then
+					print (" date=")
+					print (l_date)
+				end
 				print_new_line
 			end
 

@@ -13,37 +13,31 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-           </ul> 
-         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <form class="form-horizontal" id="registerHere" method='POST' action='{$host/}/activation' itemprop="create">
+    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+        <div class="main">
+          <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/activation' itemprop="create">
             <fieldset>
 
               <legend>Account Activation</legend>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="email">Email</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" value="{$form.email/}">
+              <div class="form-group">
+                <label class="control-label col-xs-2" itemprop="email">Email</label>
+                <div class="col-xs-9">
+                   <input type="email" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" placeholder="Email" value="{$form.email/}">
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="token">Token</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="token" name="token" rel="popover" data-content="Enter your roken" data-original-title="Token" value="{$form.token/}">
+              <div class="form-group">
+                <label class="control-label col-xs-2" itemprop="token">Token</label>
+                <div class="col-xs-9">
+                  <input type="text" class="input-xlarge" id="token" name="token" rel="popover" data-content="Enter your roken" data-original-title="Token" placeholder="Token" value="{$form.token/}">
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label"></label>
-                <div class="controls">
+              <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-9">
                   <button type="submit" class="btn btn-success" >Activate</button>
+                  <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>
 
@@ -58,7 +52,6 @@
           </form>
         </div>
       </div>
-    </div>
     <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/}     
   </body>

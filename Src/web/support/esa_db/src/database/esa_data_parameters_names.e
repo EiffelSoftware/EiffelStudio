@@ -106,6 +106,8 @@ feature -- Access
 
 	Url_param: STRING = "URL"
 
+	Token_param: STRING = "Token"
+
 feature -- Login
 
 	Passwordsalt_param: STRING = "PasswordSalt"

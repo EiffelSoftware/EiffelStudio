@@ -513,6 +513,20 @@ feature -- Access
 			create Result.make (db_handler, agent new_report_status )
 		end
 
+
+	countries: ESA_DATABASE_ITERATION_CURSOR[ESA_REPORT_SEVERITY]
+			-- Possible problem report severities
+			-- Columns: SeverityID, SeveritySynopsis, SeverityDescription
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			create l_parameters.make (0)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportSeverities", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_report_severity )
+		end
+
+
 	last_problem_report_number: INTEGER
 			-- Number of last submitted pr if `commit_problem_report' was called successfully
 			-- 0 otherwise

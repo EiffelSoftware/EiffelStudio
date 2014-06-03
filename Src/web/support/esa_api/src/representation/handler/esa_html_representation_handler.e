@@ -389,6 +389,98 @@ feature -- View
 			end
 		end
 
+	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
+		local
+			l_hp: ESA_ACCOUNT_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), a_account)
+				if attached l_hp.representation as l_post_reminder_page then
+					new_response_get (req, res, l_post_reminder_page)
+				end
+			end
+		end
+
+	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+			end
+		end
+
+
+	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_VIEW)
+			-- <Precursor>
+		local
+			l_hp: ESA_CHANGE_PASSWORD_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
+		end
+
+	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
+			-- <Precursor>
+		local
+			l_hp: ESA_CHANGE_EMAIL_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
+		end
+
+	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		local
+				l_hp: ESA_POST_CHANGE_EMAIL_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
+				if attached l_hp.representation as l_change_password_page then
+					    new_response_get (req, res, l_change_password_page)
+				end
+			end
+		end
+
+	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
+			-- <Precursor>
+		local
+			l_hp: ESA_CONFIRM_EMAIL_CHANGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
+		end
+
+	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+			end
+		end
 
 
 feature -- Response

@@ -12,7 +12,10 @@
             <p itemprop="user-name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
             <p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>
 	    <input type="hidden" name="host" value="{$host/}">
-            <p><button type="button" class="btn btn-success" onclick="login();">Sign in</button></p>
+             <div class="controls">
+                <button type="button" class="btn btn-success" onclick="login();">Sign in</button>
+                <input type="reset" class="btn btn-default" value="Reset"></p>
+             </div>   
           </form>
       </div>
     </div>
@@ -41,16 +44,29 @@
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
       </button>
          <a class="navbar-brand" href="{$host/}" itemprop="home" rel="home">Eiffel Support API</a>
      </div>
     <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+           <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
+            {if isset="$user"}
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
+                 <li><a href="{$host/}/report_form" itemprop="create-report-problem" rel="create-report-problem">Report a Problem</a></li>
+            {/if}
+      </ul>  
       <ul class="nav navbar-nav navbar-right">
-          {if isset="$user"}
-           <li><a href="#">{$user/}</a></li>
+         {if isset="$user"}
+             <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">{$user/} <b Class="caret"></b></a>
+              <ul class="dropdown-menu">
+              <li><a href="{$host/}/account">Account Information</a></li>
+              <li class="divider"></li>
+              <li><a href="{$host/}/email">Change Email</li>
+              <li><a href="{$host/}/password">Change Password</a></li>
+            </ul>
+         </li> 
+
          {/if}
          {unless isset="$user"}
               <li><a href="#">Guest</a></li>
@@ -64,7 +80,6 @@
             <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
             <!-- <li><a href="{$host/}/login">Login</a></li> -->   <!--Browser pop up -->
          {/unless} 
-         <li><a href="#">Help</a></li>
         </ul>
       <!--form class="navbar-form navbar-right">
         <input type="text" class="form-control" placeholder="Search...">

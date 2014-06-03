@@ -7,7 +7,7 @@
        <div class="panel panel-primary">
               <div class="panel-heading">Problem Report Summary</div>
               <div class="panel-body">
-  <div class="container">
+  <div class="form-horizontal well" >
       <!--form -->
       <div class="row">
        <div class="span8">
@@ -89,13 +89,13 @@
 </details>
 
 <details>
-  <summary id="labels"> Problem Report Interactions</summary>
+  <summary id="labels">Problem Report Interactions</summary>
   <div class="row">
   <div class="col-lg-16">
        <div class="panel panel-primary">
               <div class="panel-heading">Problem Report Summary</div>
               <div class="panel-body">
-  <div class="container">
+  <div class="form-horizontal well">
       <!--form -->
       <div class="row">
       <div class="span8">

@@ -452,6 +452,48 @@ feature -- View
 			end
 		end
 
+	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
+	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			to_implement ("Add CJ representation!!!")
+		end
+
 feature -- Response
 
 	compute_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; a_location: READABLE_STRING_32)

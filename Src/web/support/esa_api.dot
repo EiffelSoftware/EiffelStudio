@@ -1,0 +1,60 @@
+digraph G {
+        // General Settings
+        graph [
+            truecolor=true
+            bgcolor="#FFFFFF00"
+            fontname = "Ubuntu"
+        ];
+        node [
+            shape=box
+            style=filled
+            fillcolor="#FFFFFF"
+            color=blue
+            fontcolor="#0F192A"
+        ];
+        edge [
+            color="#0F192A"
+        ];
+        // Define our Nodes
+        home [label="Home" color="#0F192A" penwidth=3];
+        report_details [label="Report\nDetails"];
+        signin [label="Login\nForm"];
+        register [label="Register\nForm"];
+        report_form [label="Report\nForm"];
+        reports [label="Reports"];
+        my_reports [label="User\nReports"];
+        reminder [label="Reminder"];  
+        interactions [label="Interactions"]; 
+        interactions_form [label="Interaction\nForm"];
+        activation [label="Activation"];
+        search [label="Search"];
+        
+        // Define our Connections
+        home -> signin [label="<login, safe>"];
+        signin -> reminder [label="<reminder, safe>"];
+        signin -> home [label="<home, safe>"]; 
+        reminder -> home [label="<create, unsafe>"]; 
+        home -> register [label="<register, safe>"]; ;
+        register -> activation [label="<create, unsafe>"];
+        activation -> home [label="<create, unsafe>"];  
+        home -> reports [label="<all, safe>"];
+        home -> my_reports [label="<all-user,safe>"];
+        my_reports -> my_reports [label="<first, last, prev, next, safe>"]; 
+        reports -> reports [label="<first, last, prev, next, safe>"];
+        reports -> report_details [label="<report-interactions, safe>"];
+        report_details -> interactions [label="<report-interactions, safe>"];
+        interactions -> interactions_form [label="<create-interaction-form, safe>"];
+        interactions_form -> my_reports [label="<create,  unsafe>"];
+        interactions_form -> interactions_form [label="<update,  unsafe>"];
+ 
+        reports, my_reports -> search [label="<search,safe>"];
+        search -> reports [label="<search,safe>"];
+        search -> my_reports [label="<search,safe>"];
+        search -> report_details [label="<search,safe>"]; 
+
+        home -> report_form [label="create-report-form,safe"];
+        report_form -> report_form [label="update, unsafe"];
+        report_form -> my_reports [label="create, unsafe"];
+        my_reports -> report_form [label="create-report-form,safe"];
+        reports -> report_form [label="create-report-form,safe"];
+      }

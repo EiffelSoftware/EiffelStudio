@@ -82,7 +82,7 @@ feature --  Access
 	proc: DB_PROC
 			-- object to create and execute stored procedure.
 
-	parameters: HASH_TABLE [ANY, STRING_32]
+	parameters: HASH_TABLE [detachable ANY, STRING_32]
 			-- Parameters to be used by the stored procedure
 
 	stored_procedure: STRING

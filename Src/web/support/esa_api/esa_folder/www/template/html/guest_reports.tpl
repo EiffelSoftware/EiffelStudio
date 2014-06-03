@@ -1,3 +1,4 @@
+
 <div class="row">
    <div class="col-lg-8">
      <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
@@ -8,9 +9,8 @@
 </div>
 
 
-
 <div class="row">
-   <div class="col-lg-8">
+   <div class="col-lg-12">
     {if isset="$user"}
      <form  class="form-inline well" action="{$host/}/user_reports/{$user/}" id="search" method="GET" itemprop="search">
     {/if}
@@ -52,7 +52,7 @@
 
 <h2 class="sub-header">Problem Reports</h2>
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>#
@@ -148,4 +148,5 @@
           </div>
        </div>
 
-</divt
+  </div>
+</div>

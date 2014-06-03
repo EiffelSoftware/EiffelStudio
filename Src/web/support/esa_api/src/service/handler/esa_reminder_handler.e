@@ -67,7 +67,7 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Registe a new user
+			-- Send a new password.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_email: READABLE_STRING_32
@@ -91,11 +91,12 @@ feature -- HTTP Methods
 						l_token := l_security.token
 						api_service.update_password (l_email, l_token)
 						if attached api_service.user_from_email (l_email) as l_tuple then
-							--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
+								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
 							email_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
 							l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).post_reminder_page (req, res, l_email)
 					   	else
-
+							l_error := "User does not exist for the given email"
+							l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).reminder_page (req, res, l_error)
 					    end
 					else
 							-- Email address does not exist

@@ -6,26 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
      {include file="optional_styling_css.tpl"/}     
   </head>
 
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-            {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
-                 <li class="active"><a href="{$host/}/report_form" itemprop="create-report-problem" rel="create-report-problem">Report a Problem</a></li>
-            {/if}
-           </ul> 
-         </div>
-        <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-
+    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+      <div class="main">
         {if isset="$id"}  
           <form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data" itemprop="update">
         {/if}
@@ -153,6 +141,7 @@
            <hr>
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">Preview</button>
+              <input type="reset" class="btn btn-default" value="Reset"></p>
             </div>
           </fieldset>
         </form>

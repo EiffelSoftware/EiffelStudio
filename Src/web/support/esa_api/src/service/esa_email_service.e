@@ -84,7 +84,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_email_change_email (a_new_email, a_token: STRING)
+	send_email_change_email (a_new_email, a_token, a_host: STRING)
 			-- Send confirmation email for email address change.
 		require
 			attached_new_email: a_new_email /= Void
@@ -92,26 +92,26 @@ feature -- Basic Operations
 		local
 			l_message: STRING
 			l_url: URL_ENCODER
+			l_email: EMAIL
 		do
 			create l_url
 			create l_message.make (1024)
 			l_message.append ("Please confirm your new email address by clicking on the link below:%N%N")
---			l_message.append (login_root (True))
-			l_message.append ("secure/protected/email_confirmation.aspx?token=")
+			l_message.append (a_host)
+			l_message.append ("/confirm_email?token=")
 			l_message.append (l_url.encoded_string (a_token))
-			l_message.append ("&email=")
-			l_message.append (l_url.encoded_string(a_new_email))
-			l_message.append ("%N%NIf you are unable to click on the above link, please type the address below into your Web browser:%N%N")
---			l_message.append (application_root (True))
-			l_message.append ("/secure/protected/email_confirmation.aspx%N%N")
+			l_message.append ("%N%NIf you are unable to click on the above link, please type the address into your Web browser:%N%N")
 			l_message.append ("Once there, please enter the following information and then click the %"Confirm Email%" button.%N%N")
-			l_message.append ("Your new email address: ")
-			l_message.append (a_new_email)
 			l_message.append ("%NYour confirmation code: ")
 			l_message.append (a_token)
 			l_message.append ("%N%NThank you for using eiffel.com.%N%NEiffel Software.")
---			l_message.append (Disclaimer)
---			send_email (from_address (Void), a_new_email, Void, "Eiffel Software - Email Address Change Confirmation", l_message)
+			l_message.append (Disclaimer)
+
+				-- Create our message.
+			create l_email.make_with_entry (admin_email, a_new_email)
+			l_email.set_message (l_message)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Eiffel Support Site: Email Activation")
+			send_email (l_email)
 		end
 
 	send_new_email_confirmed_email (a_old_email, a_new_email: STRING)

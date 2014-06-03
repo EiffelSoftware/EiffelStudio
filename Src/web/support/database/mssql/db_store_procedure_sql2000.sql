@@ -4007,6 +4007,97 @@ SET FirstName = @FirstName,
 	
 WHERE ContactID = (SELECT ContactID FROM Memberships WHERE Username = @Username)
 GO
+
+/****** Object:  StoredProcedure [dbo].[UpdatePersonalInformation2]   ******/
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE dbo.UpdatePersonalInformation2
+@Username	VARCHAR(50),
+@FirstName	VARCHAR(50),
+@LastName	VARCHAR(50),
+@Position	VARCHAR(50),
+@Address	VARCHAR(500),
+@City		VARCHAR(100),
+@Country	VARCHAR(50),
+@Region	VARCHAR(100),
+@Code		VARCHAR(50),
+@Tel		VARCHAR(50),
+@Fax		VARCHAR(50)
+
+AS
+
+DECLARE @RegionID INT
+
+
+BEGIN TRANSACTION UpdateInformation
+if @Position = N'' 
+begin
+	SET @Position = NULL
+end
+IF @Address = N''
+begin
+	SET @Address = NULL
+end 
+if @City    = N''
+begin
+   SET @City = NULL
+end	
+if @Country	= N''
+begin
+	SET @Country = NULL
+end
+if @Region	= N''i
+begin
+	SET @Region = NULL
+end
+if @Code	= N''
+begin
+	SET @Code = NULL
+end
+if @Tel		= N''
+begin
+	SET @Tel = NULL
+end
+if @Fax		= N''
+begin
+	SET @Fax = NULL
+end
+SELECT @RegionID = RegionID
+FROM Regions
+WHERE Region = @Region
+
+IF @RegionID IS NULL
+BEGIN
+	INSERT INTO Regions
+	VALUES (
+		@Region
+	)
+	SELECT @RegionID = SCOPE_IDENTITY()
+END
+	
+UPDATE Contacts
+
+SET FirstName = @FirstName,
+        LastName = @LastName,
+        Position = @Position,
+        Address = @Address,
+        City = @City,
+        CountryID = @Country,
+        RegionID = @RegionID,
+        PostalCode = @Code,
+        Phone = @Tel,
+        Fax = @Fax
+WHERE ContactID = (SELECT ContactID FROM Memberships WHERE Username = @Username)
+Commit TRANSACTION UpdateInformation
+
 /****** Object:  StoredProcedure [dbo].[UpdateProblemReport]    Script Date: 21/05/2014 8:42:18 ******/
 SET ANSI_NULLS OFF
 GO
@@ -4339,3 +4430,71 @@ END
 SELECT @Res
 
 GO
+/****** Object:  StoredProcedure [dbo].[ChangeUserEmail]    ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[ChangeUserEmail]
+	-- Add the parameters for the stored procedure here
+	@Username			VARCHAR(50),
+	@Email	            VARCHAR(150), 
+	@Token              VARCHAR(50)
+	
+AS
+DECLARE @ContactID INT
+DECLARE @OldEmail	            VARCHAR(150) 
+
+SELECT @ContactID = ContactID FROM Memberships WHERE Username = @Username
+
+SELECT @OldEmail = EmaIL  FROM Contacts WHERE ContactID = @ContactID
+
+BEGIN TRANSACTION ChangeEmail
+
+INSERT INTO UpdateEmail(ContactID, Email, OldEmail, Token, CreatedDate) 
+	VALUES (@ContactID, @Email, @OldEmail, @Token, getdate())
+
+COMMIT TRANSACTION ChangeEmail
+
+GO
+/****** Object:  StoredProcedure [dbo].[UpdateEmailFromUserAndToken]    ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[UpdateEmailFromUserAndToken]
+
+  @Username VARCHAR(50),
+  @Token VARCHAR(50)
+
+AS
+
+ 
+  DECLARE @Email VARCHAR(150)
+  DECLARE @ContactID INT
+  DECLARE @Exist INT
+
+  BEGIN TRANSACTION UpdateEmail
+
+  SELECT @ContactID = ContactID FROM Memberships WHERE Username = @Username;
+
+  select @Email=Email from UpdateEmail where Token = @Token and ContactID = @ContactID
+
+
+  UPDATE Contacts
+  SET Email = @EMAIL
+  WHERE ContactID = @ContactID
+
+  COMMIT TRANSACTION UpdateEmail
+
+

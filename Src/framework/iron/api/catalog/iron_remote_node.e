@@ -235,7 +235,7 @@ feature -- Operation
 			end
 		end
 
-	upload_package_archive (a_package: IRON_PACKAGE; a_archive_path: PATH; a_user, a_password: READABLE_STRING_32)
+	upload_package_archive (a_package: IRON_PACKAGE; a_archive: IRON_ARCHIVE; a_user, a_password: READABLE_STRING_32; a_out_body: detachable CELL [detachable READABLE_STRING_8])
 		require
 			a_package_has_id: a_package.has_id
 			same_repository: repository.is_same_repository (a_package.repository)
@@ -248,10 +248,13 @@ feature -- Operation
 			last_operation_error_message := Void
 			sess := new_auth_session (repository.server_uri.string, a_user, a_password)
 			create ctx.make_with_credentials_required
-			ctx.set_upload_filename (a_archive_path.name)
+			ctx.set_upload_filename (a_archive.path.name)
 			ctx.add_header ("Content-Type", "application/zip")
 			sess.set_timeout (0) -- Never timeout ...
 			res := sess.post (urls.path_upload_package_archive (repository, a_package), ctx, Void)
+			if a_out_body /= Void then
+				a_out_body.replace (res.body)
+			end
 			if res.error_occurred then
 				last_operation_succeed := False
 				if attached res.error_message as errmsg then

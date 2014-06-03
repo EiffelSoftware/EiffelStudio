@@ -15,6 +15,8 @@ inherit
 			set_iron as make
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -77,9 +79,13 @@ feature -- Execution
 						end
 					elseif req.content_length_value > 0 then
 						if attached new_temporary_output_file ("tmp-uploaded-file") as f then
+							debug ("ssd_file_delay")
+								execution_environment.sleep (1_000_000_000)
+							end
 							req.read_input_data_into_file (f)
 							f.close
 							check all_data_fetched: f.count.to_natural_64 = req.content_length_value end
+
 							iron.database.save_package_archive (l_package, f.path, False)
 							m.add_normal_message ("archive uploaded")
 							if l_package.has_archive then

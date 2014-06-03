@@ -14,17 +14,7 @@
      {include file="navbar.tpl"/}  
 
     <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-            {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
-                 <li class="active"><a href="{$host/}/report_form" itemprop="create-report-form" rel="create-report-form">Report a Problem</a></li>
-            {/if}
-           </ul> 
-         </div>
-        <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+        <div class=" main">
 
         <div class="form-horizontal well">
           <fieldset>
@@ -112,8 +102,7 @@
    
         </div>
      </div> 
-    </div>   
-    <!-- Placed at the end of the document so the pages load faster -->
+   <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/}     
   </body>
 </html>

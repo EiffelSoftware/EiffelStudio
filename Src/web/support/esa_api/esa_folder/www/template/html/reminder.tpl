@@ -12,31 +12,26 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-         <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-           </ul> 
-         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <form class="form-horizontal" id="reminder" method='POST' action='{$host/}/reminder' itemprop="create">
+    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+        <div class="main">
+          <form class="form-horizontal well" id="reminder" method='POST' action='{$host/}/reminder' itemprop="create">
             <fieldset>
 
-              <legend>Username/ Password Reminder</legend>
+             <legend>Username/ Password Reminder</legend>
               <p>If you've forgotten your Username or Password, simply fill in your e-mail address below, then answer your security question. We will assign you a new random password and remind you of your Username via email. Once you log back in you may choose your own password by editing your member profile. </p>
 
               <div class="control-group">
                 <label class="control-label" itemprop="email">Email</label>
                 <div class="controls">
-                  <input type="text" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" value="{$form.email/}">
+                  <input type="email" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required>
                 </div>
               </div>  
             
               <div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls">
-                  <button type="submit" class="btn btn-success" >Check e-mail</button>
+                  <button type="submit" class="btn btn-info" >Check e-mail</button>
+                  <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>
 
@@ -51,7 +46,6 @@
           </form>
         </div>
       </div>
-    </div>
     <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/}     
   </body>

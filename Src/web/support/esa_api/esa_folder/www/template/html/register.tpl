@@ -13,62 +13,57 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-           </ul> 
-         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <form class="form-horizontal" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
+    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+          <div class="main">
+          <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
             <fieldset>
 
               <legend>Registration</legend>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="first-name">First Name</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name" value="{$form.first_name/}">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="first-name" >First Name</label>
+                 <div class="col-xs-9">
+                  <input type="text" class="input-xlarge" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name"  placeholder="Enter First Name" value="{$form.first_name/}" required>
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="last-name">Last Name</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name" value="{$form.last_name/}">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="last-name">Last Name</label>
+                 <div class="col-xs-9">
+                  <input type="text" class="input-xlarge" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name"  placeholder="Enter Last Name"value="{$form.last_name/}" required>
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="email">Email</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" value="{$form.email/}">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="email">Email</label>
+                 <div class="col-xs-9">
+                  <input type="email" class="input-xlarge" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required>
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="user-name">User Name</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" value="{$form.user_name/}">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="user-name">User Name</label>
+                 <div class="col-xs-9">
+                  <input type="text" class="input-xlarge" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" placeholder="Enter User Name"value="{$form.user_name/}" required>
                 </div>
               </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="password">Password</label>
-                <div class="controls">
-                  <input type="password" class="input-xlarge" id="password" name="password" rel="popover" data-content="Enter your password" data-original-title="Password">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="password">Password</label>
+                 <div class="col-xs-9">
+                  <input type="password" class="input-xlarge" id="password" name="password" rel="popover" data-content="Enter your password" placeholder="Enter Password" data-original-title="Password" required>
                 </div>
               </div>
 
 
-              <div class="control-group">
-                <label class="control-label" itemprop="check-password">Re-type Password</label>
-                <div class="controls">
-                  <input type="password" class="input-xlarge" id="check_password" name="check_password" rel="popover" data-content="Re-type your password" data-original-title="Re-type Password">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="check-password">Re-type Password</label>
+                 <div class="col-xs-9">
+                  <input type="password" class="input-xlarge" id="check_password" name="check_password" rel="popover" data-content="Re-type your password" placeholder="Confirm Password" data-original-title="Re-type Password" required>
                 </div>
               </div>
 
+              <!--  
                <div class="control-group">
                  <label class="control-label" for="input01" itemprop="security-question">Choose a security question</label>
                  <select class="form-control"  data-style="btn-primary" name="question" >
@@ -89,11 +84,12 @@
                   <input type="text" class="input-xlarge" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" data-original-title="Answer question" value="{$form.answer/}">
                 </div>
               </div>
+            -->
 
-              <div class="control-group">
-                <label class="control-label"></label>
-                <div class="controls">
-                  <button type="submit" class="btn btn-success" >Create My Account</button>
+              <div class="form-group">
+                <div class="col-xs-offset-3 col-xs-9">
+                  <button type="submit" class="btn btn-info" >Create My Account</button>
+                  <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>
 

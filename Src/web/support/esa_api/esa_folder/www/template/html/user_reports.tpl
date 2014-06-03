@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-    {include file="optional_styling_css.tpl"/}  
+     {include file="optional_styling_css.tpl"/}  
 
   </head>
 
@@ -15,16 +14,8 @@
 
     {include file="navbar.tpl"/}  
  
-    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li ><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
-            <li class="active"><a href="{$host/}/user_reports/{$user/}" itemprop="all-users" rel="all-user">My Reports</a></li>
-             <li><a href="{$host/}/report_form" itemprop="create-report-form" rel="create-report-form">Report a Problem</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+        <div class="main">
 
           {include file="dashboard.tpl"/}
 
@@ -32,7 +23,6 @@
           
         </div>
       </div>
-    </div>
 
     <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/} 

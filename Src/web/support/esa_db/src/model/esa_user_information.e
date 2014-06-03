@@ -152,6 +152,7 @@ feature -- Change Element
 	set_postal_code (a_postal_code: STRING)
 			-- Postal_code
 		do
+			postal_code := a_postal_code
 		ensure
 			post_code_set: postal_code = a_postal_code
 		end

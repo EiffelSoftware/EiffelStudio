@@ -7,7 +7,7 @@
   </div>  
 </div>
 <div class="row">
-   <div class="col-lg-8">
+   <div class="col-lg-12">
      <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
       <div class="col-md-4">
          <label class="control-label" for="input01" itemprop="category">Category</label>

@@ -1079,6 +1079,35 @@ CREATE TABLE [dbo].[TemporaryEmails](
 ) ON [PRIMARY]
 
 GO
+/****** Object:  Table [dbo].[UpdateEmail]    Script Date: 03/06/2014 14:16:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[UpdateEmail](
+	[ContactID] [int] NOT NULL,
+	[Email] [varchar](150) NOT NULL,
+	[OldEmail] [varchar](150) NOT NULL,
+	[Token] [varchar](50) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[ChangeEmailIdD] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_UpdateEmail] PRIMARY KEY CLUSTERED 
+(
+	[ChangeEmailIdD] ASC
+) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE [dbo].[UpdateEmail]  WITH CHECK ADD  CONSTRAINT [FK_EmailUpdate_Contacts] FOREIGN KEY([ContactID])
+REFERENCES [dbo].[Contacts] ([ContactID])
+GO
+ALTER TABLE [dbo].[UpdateEmail] CHECK CONSTRAINT [FK_EmailUpdate_Contacts]
+
+GO
 SET ANSI_PADDING OFF
 GO
 ALTER TABLE [dbo].[Memberships] ADD  CONSTRAINT [DF_Memberships_RoleID]  DEFAULT (1) FOR [RoleID]

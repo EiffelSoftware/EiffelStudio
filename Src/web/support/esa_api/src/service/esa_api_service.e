@@ -293,6 +293,17 @@ feature -- Access
 			is_successful := data_provider.is_successful
 		end
 
+	countries: LIST [ESA_COUNTRY]
+			-- List of countries.
+		do
+			log.write_information (generator +".countries")
+			create {ARRAYED_LIST[ESA_COUNTRY]}Result.make (0)
+			login_provider.connect
+			across login_provider.countries as c loop Result.force (c.item)  end
+			login_provider.disconnect
+			is_successful := data_provider.is_successful
+		end
+
 	temporary_problem_report (a_report_id: INTEGER): detachable TUPLE[synopsis : detachable STRING;
 															   release: detachable STRING;
 															   confidential: detachable STRING;
@@ -460,7 +471,6 @@ feature -- Access
 			Result := login_provider.user_information (a_username)
 			is_successful := login_provider.is_successful
 		end
-
 
 feature -- Basic Operations
 
@@ -662,6 +672,46 @@ feature -- Element Settings
 			is_successful := login_provider.is_successful
 		end
 
+	update_personal_information (a_username: STRING; a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax: detachable STRING): BOOLEAN
+			-- Update personal information of user with username `a_username'.
+		do
+			if login_provider.user_from_username (a_username) /= Void then
+				login_provider.update_personal_information (a_username, a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax)
+				is_successful := login_provider.is_successful
+				if is_successful then
+				   	Result := True
+				else
+					is_successful := login_provider.is_successful
+				end
+			else
+					-- 	"Could not update user: Username does not exist"
+				log.write_alert (generator + ".update_personal_information Could not update user info: Username not registered" )
+				Result := False
+			end
+		end
+
+
+	change_user_email (a_user: READABLE_STRING_32; a_new_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+			-- Change user email.
+		do
+			if login_provider.user_from_username (a_user) /= Void then
+				login_provider.change_user_email (a_user, a_new_email, a_token)
+				is_successful := login_provider.is_successful
+			else
+					-- 	"Could not update user: Username does not exist"
+				log.write_alert (generator + ".update_personal_information Could not update user info: Username not registered" )
+				set_last_error ("Username does not exist", generator + ".change_user_email")
+			end
+		end
+
+
+	update_email_from_user_and_token (a_user: STRING; a_token: STRING)
+		do
+			login_provider.update_email_from_user_and_token (a_token, a_user)
+			is_successful := login_provider.is_successful
+		end
+
+
 feature -- Status Report
 
 	is_active (a_username: STRING): BOOLEAN
@@ -716,6 +766,29 @@ feature -- Status Report
 				set_last_error_from_handler (login_provider.last_error)
 				log.write_error (generator + ".activation_valid " + last_error_message)
 			end
+		end
+
+
+	user_token_new_email (a_token: STRING; a_user: STRING): TUPLE[age:INTEGER; email:detachable STRING]
+			-- A token `a_token' is valid if it exist for the given user `a_user' and is not expired (24 hours since his request).
+		local
+			l_age: INTEGER
+		do
+				--login_provider.token_email (a_token: STRING; a_user: STRING)
+
+			Result := login_provider.email_token_age (a_token, a_user)
+			l_age := Result.age
+			if
+				l_age >= 0 and then
+				l_age <= 24
+			then
+				set_successful
+			elseif l_age = -1 then
+				set_last_error ("Token: " + a_token + " is invalid " , generator + ".is_token_email_valid")
+			else
+				set_last_error ("Token: " + a_token + " has expired " , generator + ".is_token_email_valid")
+			end
+
 		end
 
 

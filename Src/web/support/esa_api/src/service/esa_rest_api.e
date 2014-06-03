@@ -40,6 +40,10 @@ feature -- Initialization
 			configure_api_responsible
 			configure_api_reminder
 			configure_api_logger
+			configure_api_user_account
+			configure_api_user_password
+			configure_api_user_email
+			configure_api_user_confirm_email
 
 			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
@@ -298,6 +302,58 @@ feature -- Configure Resources Routes
 			l_methods.enable_post
 			router.handle_with_request_methods ("/logger", l_logger_handler, l_methods)
 		end
+
+
+	configure_api_user_account
+		local
+			l_account_handler: ESA_USER_ACCOUNT_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_account_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/account", l_account_handler, l_methods)
+		end
+
+	configure_api_user_password
+		local
+			l_password_handler: ESA_PASSWORD_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_password_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/password", l_password_handler, l_methods)
+		end
+
+	configure_api_user_email
+		local
+			l_email_handler: ESA_EMAIL_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_email_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/email", l_email_handler, l_methods)
+		end
+
+
+	configure_api_user_confirm_email
+		local
+			l_confirm_email_handler: ESA_EMAIL_CONFIRM_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_confirm_email_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle_with_request_methods ("/confirm_email", l_confirm_email_handler, l_methods)
+		end
+
+
 
 
 end

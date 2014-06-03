@@ -175,27 +175,63 @@ feature -- View
 		end
 
 	interaction_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: detachable ESA_INTERACTION_FORM_VIEW)
-			-- Interaction form error
+			-- Interaction form error.
 		deferred
 		end
 
 	interaction_form_confirm_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Interaction form redirect
+			-- Interaction form redirect.
 		deferred
 		end
 
 	interaction_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_id: INTEGER; a_id: INTEGER)
-			-- Interaction form confirm page
+			-- Interaction form confirm page.
 		deferred
 		end
 
 
 	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
-			-- Reminder page
+			-- Reminder page.
 		deferred
 		end
 
 	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
+			-- Post reminder page.
+		deferred
+		end
+
+	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: detachable ESA_ACCOUNT_VIEW)
+			-- Account information page.
+		deferred
+		end
+
+	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post account information page.
+		deferred
+		end
+
+	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_VIEW)
+			-- Change user password.
+		deferred
+		end
+
+	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
+			-- Change user email
+		deferred
+		end
+
+	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Email change
+		deferred
+		end
+
+	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
+			-- Confirm Email change
+		deferred
+		end
+
+	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Post Confirm Email change
 		deferred
 		end
 

@@ -230,6 +230,50 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+
+	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
+
 
 feature -- Response
 

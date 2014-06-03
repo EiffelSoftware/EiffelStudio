@@ -63,29 +63,28 @@
                 </div>
               </div>
 
-              <!--  
-               <div class="control-group">
-                 <label class="control-label" for="input01" itemprop="security-question">Choose a security question</label>
-                 <select class="form-control"  data-style="btn-primary" name="question" >
-                  {foreach from="$questions" item="item"}
-                    {if condition="$item.id = $view.selected_question"} 
-                      <option value="{$item.id/}" selected>{$item.question/}</option>
-                    {/if}
-                    {unless condition="$item.id = $view.selected_question"}
-                      <option value="{$item.id/}">{$item.question/}</option>
-                    {/unless}
-                  {/foreach}  
-                </select>
+               <div class="form-group">
+                 <label class="control-label col-xs-3" for="input01" itemprop="security-question">Choose a security question</label>
+                 <div class="col-xs-9">
+                   <select  data-style="btn-primary" name="question" >
+                    {foreach from="$questions" item="item"}
+                      {if condition="$item.id = $view.selected_question"} 
+                        <option value="{$item.id/}" selected>{$item.question/}</option>
+                      {/if}
+                      {unless condition="$item.id = $view.selected_question"}
+                        <option value="{$item.id/}">{$item.question/}</option>
+                      {/unless}
+                    {/foreach}  
+                     </select>
+                 </div>
                </div>
 
-              <div class="control-group">
-                <label class="control-label" itemprop="answer">Answer security question</label>
-                <div class="controls">
-                  <input type="text" class="input-xlarge" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" data-original-title="Answer question" value="{$form.answer/}">
+              <div class="form-group">
+                <label class="control-label col-xs-3" itemprop="answer">Answer security question</label>
+                <div class="col-xs-9">
+                  <input type="text" class="input-xlarge" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" placeholder="Answer security question" data-original-title="Answer question" value="{$form.answer/}" required>
                 </div>
               </div>
-            -->
-
               <div class="form-group">
                 <div class="col-xs-offset-3 col-xs-9">
                   <button type="submit" class="btn btn-info" >Create My Account</button>

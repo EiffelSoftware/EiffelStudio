@@ -191,6 +191,18 @@ feature {NONE} -- Implementation
 					vv1 := resolved_expression (l_sp_exp.at (1))
 					vv2 := resolved_expression (l_sp_exp.at (2))
 					vv := vv1 = vv2
+				elseif vn.has ('~') then
+					l_sp_exp := vn.split ('~')
+					vv1 := resolved_expression (l_sp_exp.at (1))
+					vv2 := resolved_expression (l_sp_exp.at (2))
+					if
+						attached {READABLE_STRING_GENERAL} vv1 as l_vv1 and then
+					    attached {READABLE_STRING_GENERAL} vv2 as l_vv2
+					then
+					   	vv := l_vv1.same_string (l_vv2)
+					else
+						vv := vv1 ~ vv2
+					end
 				else
 					vv := resolved_expression (vn)
 				end

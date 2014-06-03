@@ -229,7 +229,7 @@ feature -- Change
 		do
 			download_count := a_count
 		end
-		
+
 	set_archive (a_archive: detachable IRON_NODE_ARCHIVE)
 		do
 			archive := a_archive
@@ -238,12 +238,6 @@ feature -- Change
 	set_archive_revision (a_rev: NATURAL)
 		do
 			archive_revision := a_rev
-		end
-
-	get_new_archive_revision
-		do
-			package.increment_last_archive_revision
-			archive_revision := package.last_archive_revision
 		end
 
 feature -- Visitor

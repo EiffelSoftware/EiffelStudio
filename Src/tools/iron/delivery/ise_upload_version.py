@@ -50,6 +50,9 @@ def package_name_from_iron_package_file (pf):
 def get_ise_libraries(basedir, v):
 	branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
 	#branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
+
+	print "Getting source code from %s ..." % (branch_dir)
+
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
@@ -58,6 +61,8 @@ def get_ise_libraries(basedir, v):
 
 	shutil.rmtree (os.path.join (d, "obsolete"))
 	shutil.rmtree (os.path.join (d, "wizard"))
+	shutil.rmtree (os.path.join (d, "base", "test"))
+	shutil.rmtree (os.path.join (d, "base", "testing"))
 
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
@@ -128,8 +133,8 @@ def process_iron_package (ipfn, a_sources_dir, a_packages_dir, u,p,repo,v):
 	p_source = os.path.normpath(os.path.dirname(ipfn))
 
 
-	iron_create_cmd = "%s share create -u %s -p %s --repository %s --batch --package %s --package-name %s" % (iron_command_name(), u, p, repo, ipfn, p_name)
-	iron_update_cmd = "%s share update -u %s -p %s --repository %s --batch --package %s --package-name %s" % (iron_command_name(), u, p, repo, ipfn, p_name)
+	iron_create_cmd = "%s share create -u %s -p %s --repository %s --batch --package %s " % (iron_command_name(), u, p, repo, ipfn)
+	iron_update_cmd = "%s share update -u %s -p %s --repository %s --batch --package %s " % (iron_command_name(), u, p, repo, ipfn)
 
 	cmd = "%s" % (iron_create_cmd)
 	if p_description != None:
@@ -158,7 +163,7 @@ def process_iron_package (ipfn, a_sources_dir, a_packages_dir, u,p,repo,v):
 					cmd_call ("./iron/spec/unix/bin/iron_build_archive  %s %s %s" % (l_src, l_folder, "archive"))
 					print ""
 		else:
-			cmd = "%s --package-archive-source \"%s\" " % (iron_update_cmd, l_src)
+			cmd = "%s --force --package-archive-source \"%s\" " % (iron_update_cmd, l_src)
 			cmd_call (cmd)
 			print ""
 

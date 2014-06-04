@@ -115,7 +115,7 @@ feature -- Default Execution
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			if not esa_config.api_service.is_successful then
+			if not esa_config.api_service.successful then
 				log.write_critical (generator + ".execute_default " + esa_config.api_service.last_error_message)
 				create l_rhf
 				media_variants := media_type_variants (req)

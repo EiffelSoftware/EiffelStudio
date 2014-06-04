@@ -354,6 +354,4 @@ feature -- Configure Resources Routes
 		end
 
 
-
-
 end

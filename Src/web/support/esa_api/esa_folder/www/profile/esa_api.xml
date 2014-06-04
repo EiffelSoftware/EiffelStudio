@@ -16,7 +16,7 @@
     </doc> 
   </descriptor>  
 
-  <descriptor id="report-number" type="semantic">
+  <descriptor id="report_number" type="semantic">
     <doc format="html">
         <p>Number of a particular report problem</p>       
     </doc> 
@@ -46,7 +46,7 @@
     </doc>
   </descriptor>
 
-  <descriptor id="submission-date" type="semantic"  href="http://alps.io/schema.org/CreativeWork#dateCreated">
+  <descriptor id="submission_date" type="semantic"  href="http://alps.io/schema.org/CreativeWork#dateCreated">
     <doc format="html">
       <p>The date on which the Report was submitted.</p>
     </doc>
@@ -65,10 +65,10 @@
   </descriptor>
 
 
-   <descriptor id="first-name" type="semantic"  href="http://alps.io/schema.org/Person.xml#givenName"/>
-   <descriptor id="last-name" type="semantic"  href="http://alps.io/schema.org/Person.xml#familyName"/>
+   <descriptor id="first_name" type="semantic"  href="http://alps.io/schema.org/Person.xml#givenName"/>
+   <descriptor id="last_name" type="semantic"  href="http://alps.io/schema.org/Person.xml#familyName"/>
    <descriptor id="email" type="semantic"  href="http://alps.io/schema.org/Person.xml#email"/>
-   <descriptor id="user-name">
+   <descriptor id="user_name">
 		<doc format="html">
 			<p>Name of the user in the system.</p>
 		</doc>
@@ -78,12 +78,12 @@
 			<p>User's password</p>
 		</doc>
    </descriptor>
-   <descriptor id="check-password">
+   <descriptor id="check_password">
 		<doc format="html">
 			<p>User's password confirmation </p>
 		</doc>
    </descriptor>
-   <descriptor id="security-question">
+   <descriptor id="security_question">
 		<doc format="html">
 			<p>User's security question.</p>	
 		</doc>
@@ -93,7 +93,7 @@
 		<doc format="html">
 			<p>User's answer to the security question.</p>	
 		</doc>
-		<descriptor hred="#security-question"/>	
+		<descriptor hred="#security_question"/>	
    </descriptor>
    
 
@@ -176,7 +176,7 @@
     </doc>
   </descriptor>
 
-  <descriptor id="to-reproduce" type="semantic">
+  <descriptor id="to_reproduce" type="semantic">
     <doc format="html">       
       <p>Example code, input, or activities to reproduce the problem. Eiffel Software uses the example code both to reproduce the problem and to test whether the problem is fixed. Include all precondition, inputs, outputs, conditions after the problem, and symptoms. Any additional important information should be included. Include all the details that would be necessary for someone else to recreate the problem reported, however obvious. Sometimes seemingly arbitrary or obvious information can point the way toward a solution.</p>
     </doc>
@@ -191,7 +191,7 @@
   </descriptor>
 
 
-  <descriptor id="all-user" type="semantic">
+  <descriptor id="all_user" type="semantic">
     <doc format="html">
       <p>A list representation of filtered results by the designated (logged-in) user.</p> 
     </doc>
@@ -204,7 +204,7 @@
     </doc>
     <descriptor href="#status"/>
     <descriptor href="#synopsis"/>
-    <descriptor href="#submission-date"/>
+    <descriptor href="#submission_date"/>
     <descriptor href="#category"/>
     <descriptor href="#report-interaction"/>
   </descriptor>
@@ -249,13 +249,13 @@
          Defines first phase of user registration: user email, password, first name and last name.
       </p>
      </doc> 
-      <descriptor href="#first-name"/>
-      <descriptor href="#last-name"/>
+      <descriptor href="#first_name"/>
+      <descriptor href="#last_name"/>
       <descriptor href="#email"/>
-      <descriptor href="#user-name"/>
+      <descriptor href="#user_name"/>
       <descriptor href="#password"/>
       <descriptor href="#check-password"/>
-      <descriptor href="#security-question"/>
+      <descriptor href="#security_question"/>
 	  <descriptor href="#answer"/>
       <descriptor href="#create"/>
   </descriptor>
@@ -277,7 +277,7 @@
           A user must only provide Credentials for Authentication at the start of a Login Session. He is then authorized to use some or all of the services offered by the Host System to which he connected.
      </p>
     </doc>
-	<descriptor href="#user-name"/>
+	<descriptor href="#user_name"/>
 	<descriptor href="#password"/>
   </descriptor>
 
@@ -301,7 +301,7 @@
   </descriptor>
 
 
-  <descriptor id="report-interaction" type="safe">
+  <descriptor id="report_interaction" type="safe">
      <doc format="html">
         <p>
           Report problem summary
@@ -323,10 +323,10 @@
       <descriptor href="#description"/>
       <descriptor href="#to-reproduce"/>
       <descriptor href="#interactions"/>
-      <descriptor href="#create-interaction-form"/>   
+      <descriptor href="#create_interaction_form"/>   
   </descriptor>
 
-  <descriptor id="create-interaction-form" type="safe">
+  <descriptor id="create_interaction_form" type="safe">
     <doc>
       <p>A link template to add a new report interaction problem to the system by the designated (logged-in) user.</p>
     </doc>  
@@ -341,7 +341,7 @@
   </descriptor>
 
 
-  <descriptor id="create-report-form" type="safe">
+  <descriptor id="create_report_form" type="safe">
     <doc>
       <p>A link template to add a new report problem to the system by the designated (logged-in) user.</p>
     </doc>  
@@ -361,4 +361,4 @@
   </descriptor>
 
   
-</alps>
+</alps>s

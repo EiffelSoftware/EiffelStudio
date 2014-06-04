@@ -64,6 +64,16 @@ feature -- Element Settings
 			retry
 		end
 
+	set_last_error_from_handler (a_error: detachable ESA_ERROR_HANDLER)
+			-- Set `last_error' with `a_error',
+		do
+			last_error := a_error
+			successful := False
+		ensure
+			last_error_set: attached last_error
+			failed: not successful
+		end
+
 	set_last_error (a_message, a_location: STRING)
 			-- Set `last_error_message' with `a_message',
 			-- `last_error_location' with `a_location' and

@@ -47,6 +47,7 @@ feature -- Access
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_countries, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_country)
+			post_execution
 		end
 
 	token_from_email (a_email: READABLE_STRING_32): detachable STRING
@@ -66,6 +67,7 @@ feature -- Access
 				Result := db_handler.read_string (1)
 			end
 			disconnect
+			post_execution
 		end
 
 	token_from_username (a_username: READABLE_STRING_32): detachable STRING
@@ -85,6 +87,7 @@ feature -- Access
 				Result := db_handler.read_string (1)
 			end
 			disconnect
+			post_execution
 		end
 
 	membership_creation_date (a_username: STRING): detachable DATE_TIME
@@ -104,6 +107,7 @@ feature -- Access
 				Result := db_handler.read_date_time (1)
 			end
 			disconnect
+			post_execution
 		end
 
 	role (a_username: STRING): detachable STRING
@@ -124,6 +128,7 @@ feature -- Access
 				to_implement ("handle error: User not found - Retrieval of user role")
 			end
 			disconnect
+			post_execution
 		end
 
 	role_description (a_synopsis: STRING): detachable STRING
@@ -144,6 +149,7 @@ feature -- Access
 				to_implement ("handle error: Role not found -  Retrieval of role description")
 			end
 			disconnect
+			post_execution
 		end
 
 	security_questions: ESA_DATABASE_ITERATION_CURSOR [ESA_SECURITY_QUESTION]
@@ -156,6 +162,7 @@ feature -- Access
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetSecurityQuestions", l_parameters))
 			db_handler.execute_reader
 			create Result.make (db_handler, agent new_security_question)
+			post_execution
 		end
 
 	question_from_email (a_email: STRING): detachable STRING
@@ -175,6 +182,7 @@ feature -- Access
 				Result := db_handler.read_string (1)
 			end
 			disconnect
+			post_execution
 		end
 
 	user_creation_date (a_username: STRING): detachable DATE_TIME
@@ -192,6 +200,7 @@ feature -- Access
 				Result := db_handler.read_date_time (1)
 			end
 			disconnect
+			post_execution
 		end
 
 	user_from_email (a_email: STRING): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
@@ -211,6 +220,7 @@ feature -- Access
 				Result := new_user
 			end
 			disconnect
+			post_execution
 		end
 
 	user_from_username (a_username: STRING): detachable ESA_USER
@@ -230,6 +240,7 @@ feature -- Access
 				Result := new_user_username
 			end
 			disconnect
+			post_execution
 		end
 
 	user_information (a_username: STRING): ESA_USER_INFORMATION
@@ -251,6 +262,7 @@ feature -- Access
 				create Result.make (a_username)
 			end
 			disconnect
+			post_execution
 		end
 
 feature -- Element Settings
@@ -268,6 +280,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveUser", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 
@@ -284,6 +297,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveRegistrationToken", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 	update_password (a_email: STRING; a_password: STRING)
@@ -308,6 +322,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePasswordFromEmail", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 	update_email_from_user_and_token (a_token: STRING; a_user: STRING)
@@ -322,6 +337,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdateEmailFromUserAndToken", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 
@@ -367,6 +383,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePersonalInformation", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 	change_user_email (a_user: READABLE_STRING_32; a_new_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
@@ -382,6 +399,7 @@ feature -- Element Settings
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("ChangeUserEmail", l_parameters))
 			db_handler.execute_writer
 			disconnect
+			post_execution
 		end
 
 feature -- Factories
@@ -630,5 +648,19 @@ feature -- Queries
 		-- SQL Query to retrieve all countries
 
 	tuple_user: detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+
+
+feature {NONE} -- Implementation
+
+	post_execution
+		do
+			if db_handler.successful then
+				set_successful
+			else
+				if attached db_handler.last_error then
+					set_last_error_from_handler (db_handler.last_error)
+				end
+			end
+		end
 
 end

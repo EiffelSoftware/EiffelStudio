@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ESA API: Collection JSON</title>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function () {
+    $(".test").click(function () {
+        $("#thedialog").attr('src', $(this).attr("href"));
+        $("#somediv").dialog({
+            width: 800,
+            height: 800,
+            resizable: true,
+            modal: true,
+        });
+        return false;
+    });
+    $(function() {
+        $( ".test" ).draggable();
+        });
+    });
+   
+
+ </script> 
+   
+</head>
+<body>
+<div class="container">
+    <div class=""> 
+        <hr> 
+        <div class="page-header">
+          <h1>ESA API: Collection+JSON <small> Getting started using CJ</small></h1>
+        </div>
+    <div> 
+        
+        <h2> Introduction </h2>
+        <p>
+            ESA API uses Collection+JSON as a media type (also you can use HTML). This means that you can use any generic CJ client with ESA API. If you don't have one handy, it's easy!.
+            Examples in this tutorial make use of the command line tool cURL to construct HTTP requests.
+            We use this tool regularly in development and likely you will find it quite useful as well when working with the HTTP API.
+            ESA API uses two Collection+JSON extension (file upload [5] and lookup values[6]) and maybe more in the future.
+        </p>    
+        
+        <img src="./esa_api_state_machine.png" class="img-thumbnail">
+
+        <p>Safe:are HTTP methods that do not modify resources.</p>
+        <p>Idempotent: An idempotent HTTP method is a HTTP method that can be called many times without different outcomes.</p>
+        <p>Unsafe: not Safe, i.e may modify resources.</p>
+
+
+            If you're not familiar with Collection+JSON, here's how it works (please to learn more read [1,2,3,4]). As a simple introduction, below a template collection
+            json template document
+        </p>     
+        
+        <pre>
+        <code>
+        {
+          "collection": {
+              "version":"1.0",
+              "href":URI,
+              "links":[ARRAY],
+              "items":[ARRAY],
+              "queries":[ARRAY],
+              "template":{OBJECT},
+              "error":{OBJECT}      
+          }
+        }
+        </code>
+        </pre>
+
+        <p>Using the ESA API: make a request to the API:</p>
+
+
+        <pre><code>$ curl -i -H "Accept: application/vnd.collection+json" http://localhost:9999</code></pre>
+
+        <a href="http://www.hurl.it/" class="test btn btn-info" href="http://www.hurl.it/">Try it !</a>
+        <div id="somediv" style="display:none;">
+           <iframe id="thedialog" width="800" height="800"></iframe>
+        </div>
+
+
+
+
+        <p> You'll get one top-level item: a collection object. The collection has a queries array which represents queries you can make and links which represents the available next steps that you can follow.
+            Here's a full response, with the details filled in:
+        </p>
+           
+        <pre>    
+        <code>
+        {
+          "collection": {
+            "version": "1.0",
+            "href": "https://localhost",
+            "links": [
+                    {
+                        "href": "https://localhost/reports",
+                        "rel": "collection",
+                        "prompt": "Reports"
+                    },
+                    {
+                        "href": "http://alps.io/iana/relations.xml",
+                        "rel": "profile"
+                    },
+                    {
+                        "href": "https://localhost/login",
+                        "rel": "login",
+                        "prompt": "Login"
+                    },
+                     {
+                        "href": "https://localhost/register",
+                        "rel": "register",
+                        "prompt": "Register"
+                    }
+
+                  ],
+            "queries" :
+                [
+                 {
+                  "href" : "https://localhost/report_detail/",
+                  "rel" : "search",
+                  "prompt" : "Search by Report #...",
+                  "data" :
+                    [
+                        {"name" : "search", "value" : ""}
+                    ]
+                }
+            ]
+          }
+        }
+    </code>
+    </pre>
+
+
+    <p>
+    Our collection-home does not have items which will hold the data in the list. The links arrays hold a collection level URIs, will allow us browse the API. The queries array has one object inside. This object has four keys: rel, href, prompt and data. rel is the most important: it's the 'link relation' name of the query. In this case, we have a search relation. We'll use the rel in a moment.
+
+    href and data are used to construct the query itself. What you do is this: you take the URL located in href, and you append a query string made by joining the name elements of all of the objects in data as keys, and the values you want as values. For example you can try to search the report number 1, then make an HTTP GET request to the following URL 
+
+    https://localhost/report_detail/?search=1, and you'll get another response back.
+
+    Let's make that request:
+    </p>
+
+    <pre><code> $ curl -i --insecure -H "Accept: application/vnd.collection+json" "https://localhost/report_detail/?search=1"</code></pre>
+
+    <a href="http://www.hurl.it/" class="test btn btn-info" href="http://www.hurl.it/">Try it !</a>
+    <div id="somediv" style="display:none;">
+       <iframe id="thedialog" width="800" height="800"></iframe>
+   </div>
+
+    <pre>
+    <code>    
+        {"collection": {
+            "version": "1.0",
+            "href": "https://localhost/report_detail/2",
+            "links": [
+                    {
+                        "href": "https://localhost",
+                        "rel": "home",
+                        "prompt": "Home"
+                    },
+                     {
+                        "href": "https://localhost/reports",
+                        "rel": "collection",
+                        "prompt": "Reports"
+                    },
+                    {
+                        "href": "http://alps.io/iana/relations.xml",
+                        "rel": "profile"
+                    }
+
+
+                     ,
+                     {
+                      "href": "https://localhost/login",
+                      "rel": "login",
+                      "prompt": "Login"
+                     },
+                     {
+                       "href": "https://localhost/register",
+                       "rel": "register",
+                       "prompt": "Register"
+                     }
+
+                  ],
+             "items": [
+                       {
+                        "href": "https://localhost/report_detail/2",
+                        "data": [
+                            {
+                                "name": "Group",
+                                "prompt": "group",
+                                "value": "Description"
+                            },
+                            {
+                                "name": "Submitter",
+                                "prompt": "submitter",
+                                "value": "user0"
+                            },
+                            {
+                                "name": "Category",
+                                "prompt": "category",
+                                "value": ".NET"
+                            },
+                            {
+                                "name": "Priority",
+                                "prompt": "priority",
+                                "value": "High"
+                            },
+                            {
+                                "name": "Category",
+                                "prompt": "category",
+                                "value": ""
+                            },
+                            {
+                                "name": "Date",
+                                "prompt": "date",
+                                "value": "05/09/2014 4:59:08.000 PM"
+                            },
+                            {
+                                "name": "Class",
+                                "prompt": "class",
+                                "value": "Bug"
+                            },
+                            {
+                                "name": "Severity",
+                                "prompt": "severity",
+                                "value": "Critical"
+                            },
+                            {
+                                "name": "Number",
+                                "prompt": "number",
+                                "value": "2"
+                            },
+                            {
+                                "name": "Release",
+                                "prompt": "release",
+                                "value": "10"
+                            },
+                            {
+                                "name": "Confidential",
+                                "prompt": "confidential",
+                                "value": "False"
+                            },
+                            {
+                                "name": "Status",
+                                "prompt": "status",
+                                "value": "Open"
+                            },
+                            {
+                                "name": "Responsible",
+                                "prompt": "responsible",
+                                "value": ""
+                            },
+                            {
+                                "name": "Environment",
+                                "prompt": "environment",
+                                "value": "test"
+                            },
+                            {
+                                "name": "Synopsys",
+                                "prompt": "synopsis",
+                                "value": "test"
+                            },
+                            {
+                                "name": "Description",
+                                "prompt": "description",
+                                "value": "test"
+                            },
+                            {
+                                "name": "To reproduce",
+                                "prompt": "to reproduce",
+                                "value": "test"
+                            }
+                           ],
+                        "links":[
+                        {"rel":"create-form", "href": "https://localhost/report_detail/2/interaction_form", "prompt": "Interaction Form"}
+
+                        ]
+
+                       }
+                    ]
+
+           }
+        }
+    </code>    
+    </pre>
+
+    <p>
+    What's new is that we now have an items array. This items array contain an object, with a data array inside of it. This data array have objects with a name, a value and prompt. The name is a descriptive explanation, in this case, that we're showing different report properties, the prompt is the a value to show in a GUI, and the actual value.
+    </p>    
+
+
+1.http://amundsen.com/media-types/collection/format/
+2.http://amundsen.com/media-types/collection/examples/
+3.https://groups.google.com/forum/#!forum/collectionjson
+4.https://groups.google.com/forum/#!topic/collectionjson/7dkgjBWItrE
+5.https://github.com/jvelilla/collection-json/blob/jv_extensions/extensions/attachment.md
+6.https://github.cmo/jvelilla/collection-json/blob/jv_extensions/extensions/lookup.md
+
+</div>
+        <hr>
+        <hr>
+        <div class="row">
+            <div class="col-sm-12">
+                <footer>
+                    <p>© Copyright 2014 EiffelSoftware</p>
+                </footer>
+            </div>
+        </div>
+</body>
+</html>                                		

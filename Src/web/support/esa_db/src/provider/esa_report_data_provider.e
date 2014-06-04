@@ -28,13 +28,6 @@ feature -- Initialization
 	db_handler: ESA_DATABASE_HANDLER
 		-- Db handler
 
-feature -- Status Report
-
-	is_successful: BOOLEAN
-			-- Is the last execution sucessful?
-		do
-			Result := db_handler.successful
-		end
 
 feature -- Access
 

@@ -49,7 +49,7 @@
             <div class="col-sm-4 col-md-4 col-lg-3">
                 <h2>CJ API</h2>
                 <p>Collection JSON is an hypermedia type to describe APIs, here you will find examples about how to use the API using cURL or a CJ browser</p>
-                <p><a href="#" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
+                <p><a href="{$host/}/doc/cj_doc.html" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
             </div>
             <div class="clearfix visible-sm"></div>
             <div class="col-sm-4 col-md-4 col-lg-3">

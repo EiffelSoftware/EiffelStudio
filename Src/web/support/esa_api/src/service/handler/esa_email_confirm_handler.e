@@ -92,7 +92,7 @@ feature -- HTTP Methods
 				if attached current_user_name (req) as l_user then
 					if attached extract_data_from_request(req, l_type) as l_token then
 						api_service.update_email_from_user_and_token (l_user, l_token)
-					   	if api_service.is_successful then
+					   	if api_service.successful then
 						 	 l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_confirm_email_change_page (req, res)
 						else
                         	-- l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)

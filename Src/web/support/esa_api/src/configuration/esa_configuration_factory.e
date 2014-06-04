@@ -18,7 +18,6 @@ feature -- Factory
 
 	esa_config: ESA_CONFIG
 		local
-			l_mailer: NOTIFICATION_MAILER
 			l_layout: ESA_LAYOUT
 			l_email_service: ESA_EMAIL_SERVICE
 			l_database: ESA_DATABASE_CONNECTION

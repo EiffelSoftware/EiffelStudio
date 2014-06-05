@@ -9,25 +9,6 @@
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-   $(document).ready(function () {
-    $(".test").click(function () {
-        $("#thedialog").attr('src', $(this).attr("href"));
-        $("#somediv").dialog({
-            width: 800,
-            height: 800,
-            resizable: true,
-            modal: true,
-        });
-        return false;
-    });
-    $(function() {
-        $( ".test" ).draggable();
-        });
-    });
-   
-
- </script> 
    
 </head>
 <body>
@@ -79,11 +60,8 @@
 
         <pre><code>$ curl -i -H "Accept: application/vnd.collection+json" http://localhost:9999</code></pre>
 
-        <a href="http://www.hurl.it/" class="test btn btn-info" href="http://www.hurl.it/">Try it !</a>
-        <div id="somediv" style="display:none;">
-           <iframe id="thedialog" width="800" height="800"></iframe>
-        </div>
-
+        
+        <p><a href="http://www.hurl.it/" target="_blank" class="btn btn-info btn-medium">Try it »</a></p>
 
 
 
@@ -149,10 +127,8 @@
 
     <pre><code> $ curl -i --insecure -H "Accept: application/vnd.collection+json" "https://localhost/report_detail/?search=1"</code></pre>
 
-    <a href="http://www.hurl.it/" class="test btn btn-info" href="http://www.hurl.it/">Try it !</a>
-    <div id="somediv" style="display:none;">
-       <iframe id="thedialog" width="800" height="800"></iframe>
-   </div>
+   
+    <p><a href="http://www.hurl.it/" target="_blank" class="btn btn-info btn-medium">Try it »</a></p>
 
     <pre>
     <code>    

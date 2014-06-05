@@ -16,7 +16,7 @@
                 <div class="hero-unit center">
                   <h1>Eiffel Support Activation <small>
                   <br />
-                  <p> An e-mail with an activation code was sent to your account.<br/>
+                  <p > An e-mail with an activation code was sent to your account.<br/>
                    Please check your email and use the provided link to <a href="{$host/}/activation" itemprop="activation" rel="activation">activate</a> your account.</p>
                 </div>
     </div>

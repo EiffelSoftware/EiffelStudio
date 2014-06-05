@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
      {include file="optional_styling_css.tpl"/}     
   </head>
 
@@ -82,7 +81,7 @@
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="textarea" itemprop="to-reproduce">To Reproduce</label>
+              <label class="control-label" for="textarea" itemprop="to_reproduce">To Reproduce</label>
               <div class="controls">
                 {$to_reproduce/}
               </div>

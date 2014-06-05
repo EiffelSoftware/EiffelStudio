@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create a data provider
 		do
 			create {ESA_DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
+			post_execution
 		end
 
 	db_handler: ESA_DATABASE_HANDLER

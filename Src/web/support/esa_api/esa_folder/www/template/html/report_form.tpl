@@ -133,7 +133,7 @@
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="textarea" itemprop="to-reproduce">To Reproduce</label>
+              <label class="control-label" for="textarea" itemprop="to_reproduce">To Reproduce</label>
               <div class="controls">
                 <textarea class="form-control input-xlarge" id="to_reproduce" name="to_reproduce" rows="4" form="report">{$to_reproduce/}</textarea>
               </div>

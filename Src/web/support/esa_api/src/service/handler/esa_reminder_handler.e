@@ -93,8 +93,14 @@ feature -- HTTP Methods
 						if attached api_service.user_from_email (l_email) as l_tuple then
 								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
 							email_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
-							l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).post_reminder_page (req, res, l_email)
-					   	else
+
+							if email_service.successful then
+								l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).post_reminder_page (req, res, l_email)
+							else
+								l_error := email_service.last_error_message
+								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
+							end
+						else
 							l_error := "User does not exist for the given email"
 							l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).reminder_page (req, res, l_error)
 					    end

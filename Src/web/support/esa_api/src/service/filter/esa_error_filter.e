@@ -35,7 +35,6 @@ feature -- Basic operations
 
 			else
 				log.write_critical (generator + ".execute" + esa_config.api_service.last_error_message )
-				esa_config.api_service.set_successful
 				create l_rhf
 				media_variants := media_type_variants (req)
 				if media_variants.is_acceptable then

@@ -7,23 +7,27 @@ var login = function() {
     var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
-	var host = form.host.value;
+	  var host = form.host.value;
   	var _login = function(){
+
+    if  (document.getElementById('myModalFormId') !== null ) {
+        remove ('myModalFormId');
+    }
+
 
 	if (username === "" || password === "") {
              if (document.getElementById('myModalFormId') === null ) {		
                     var newdiv = document.createElement('div');
-	            newdiv.innerHTML = "<br>Invalid Credentials</br>";
+	                  newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
                     document.getElementById("myModalForm").appendChild(newdiv);
-               }
-	}else{        
-
+               } 
+	}else{  
+         
           //Instantiate HTTP Request
           var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-    	  var tok = "Basic " + btoa(username + ':' + password);
-    	  request.open("GET", host.concat(loginURL), true, username, password);
-	  request.send(null);
+    	    request.open("GET", host.concat(loginURL), true, username, password);
+	        request.send(null);
     
           //Process Response
           request.onreadystatechange = function(){
@@ -36,10 +40,11 @@ var login = function() {
                    
 		  if (document.getElementById('myModalFormId') === null ) {		
                     var newdiv = document.createElement('div');
-	            newdiv.innerHTML = "<br>Invalid Credentials</br>";
+	                   newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
                     document.getElementById("myModalForm").appendChild(newdiv);
-                   }
+                   } 
+
                   }
                }
             }
@@ -56,7 +61,7 @@ var login = function() {
     }
  
     if (firstLogIn) firstLogIn = false;
-}
+};
  
  
 var logoff = function(callback){
@@ -100,4 +105,20 @@ var logoff = function(callback){
                 } 
             }
     }
-}
+};
+
+var enter = function () {
+document.getElementById('password').keypress(function(e) {
+    if (e.which == '13') {
+        login();
+    }
+ });
+};
+
+function remove(id)
+{
+   var element = document.getElementById(id);
+   element.outerHTML = "";
+   delete element;
+   return;
+};

@@ -58,11 +58,47 @@
     </doc>
   </descriptor>
 
+  <descriptor id="position" type="semantic">
+    <doc format="html">
+      <p>Placed occupied by a User</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="city" type="semantic">
+    <doc format="html">
+      <p>User's city.</p>
+    </doc>
+  </descriptor>
+
+  <descriptor id="address" type="semantic" href="http://alps.io/schema.org/Place#address">
+    <doc format="html">Physical address of the user.</doc>
+  </descriptor>
+
+
+  <descriptor id="postal_code" type="semantic" href="http://alps.io/schema.org/PostalAddress#postalCode">
+    <doc format="html">The postal code. For example, 94043.</doc>
+  </descriptor>
+
+  <descriptor id="telephone" type="semantic" href="http://alps.io/schema.org/Place#telephone">
+      <doc format="html">The telephone number.</doc>
+  </descriptor>
+
+  <descriptor id="fax" type="semantic" href="http://alps.io/schema.org/Place#faxNumber">
+    <doc format="html">The fax number.</doc>
+   </descriptor>
+
   <descriptor id="category" type="semantic">
     <doc format="html">
       <p>The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.</p>
     </doc>
   </descriptor>
+
+  <descriptor id="token" type="semantic">
+    <doc format="html">
+      <p>Token used to activate a user account or email change.</p>
+    </doc>
+  </descriptor>
+
 
 
    <descriptor id="first_name" type="semantic"  href="http://alps.io/schema.org/Person.xml#givenName"/>
@@ -73,16 +109,19 @@
 			<p>Name of the user in the system.</p>
 		</doc>
    </descriptor> 
+
    <descriptor id="password">
 		<doc format="html">
 			<p>User's password</p>
 		</doc>
    </descriptor>
+
    <descriptor id="check_password">
 		<doc format="html">
 			<p>User's password confirmation </p>
 		</doc>
    </descriptor>
+
    <descriptor id="security_question">
 		<doc format="html">
 			<p>User's security question.</p>	

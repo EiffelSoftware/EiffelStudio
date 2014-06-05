@@ -51,8 +51,8 @@
       <ul class="nav navbar-nav navbar-left">
            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}
-                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all-user" rel="all-user">My Reports</a></li>
-                 <li><a href="{$host/}/report_form" itemprop="create-report-problem" rel="create-report-problem">Report a Problem</a></li>
+                 <li><a href="{$host/}/user_reports/{$user/}" itemprop="all_user" rel="all_user">My Reports</a></li>
+                 <li><a href="{$host/}/report_form" itemprop="create_report_problem" rel="create_report_problem">Report a Problem</a></li>
             {/if}
       </ul>  
       <ul class="nav navbar-nav navbar-right">

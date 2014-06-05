@@ -35,7 +35,7 @@
            </div>
           <div class="row">   
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="report-number">Number:</span> : <td>{$report.number/}</td> </br>
+                  <span class="label label-info" itemprop="report_number">Number:</span> : <td>{$report.number/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
                   <span class="label label-info" itemprop="release">Release:</span> : <td>{$report.release/}</td> </br>
@@ -72,7 +72,7 @@
           <div class="row">
           <div class="col-lg-12">
             <div class="panel panel-primary">
-              <div class="panel-heading" itemprop="to-reproduce">To Reproduce</div>
+              <div class="panel-heading" itemprop="to_reproduce">To Reproduce</div>
               <div class="panel-body">{$report.to_reproduce/}</div>
             </div>
           </div> 

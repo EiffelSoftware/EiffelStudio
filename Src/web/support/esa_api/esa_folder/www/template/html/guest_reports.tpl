@@ -111,10 +111,10 @@
 
                {foreach from="$reports" item="item"}
                   <tr>
-                       <td itemprop="report-number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{$item.number/}</a></td>
+                       <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report-interaction">{$item.number/}</a></td>
                        <td itemprop="status">{$item.status.id/}</td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
-                       <td itemprop="submission-date">{$item.submission_date/}</td>
+                       <td itemprop="submission_date">{$item.submission_date/}</td>
                        <td itemprop="category">{$item.category.synopsis/}</td>
                 </tr>
               {/foreach}

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
      {include file="optional_styling_css.tpl"/}   
   </head>
 
@@ -21,14 +20,14 @@
               <legend>Account Information</legend>
 
               <div class="form-group">
-                <label class="control-label col-xs-2" itemprop="first-name">First Name</label>
+                <label class="control-label col-xs-2" itemprop="first_name">First Name</label>
                 <div class="col-xs-9">
                   <input type="text" class="input-xlarge" id="input01" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name" value="{$account.first_name/}">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="control-label col-xs-2" itemprop="last-name">Last Name</label>
+                <label class="control-label col-xs-2" itemprop="last_name">Last Name</label>
                 <div class="col-xs-9">
                   <input type="text" class="input-xlarge" id="input01" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name" value="{$account.last_name/}">
                 </div>
@@ -87,7 +86,7 @@
 
 
               <div class="form-group">
-                <label class="control-label col-xs-2" itemprop="posta_code">Postal Code</label>
+                <label class="control-label col-xs-2" itemprop="postal_code">Postal Code</label>
                 <div class="col-xs-9">
                   <input type="text" class="input-xlarge" id="input01" name="user_postal_code" rel="popover" data-content="Enter your postal code" data-original-title="Postal Code" value="{$account.postal_code/}">
                 </div>

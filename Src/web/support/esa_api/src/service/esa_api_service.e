@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.make_common
 			create data_provider.make (l_connection)
 			create login_provider.make (l_connection)
+			post_data_provider_execution
+			post_login_provider_execution
 		end
 
 	make_with_database (a_connection: ESA_DATABASE_CONNECTION)
@@ -34,6 +36,8 @@ feature {NONE} -- Initialization
 			log.write_information (generator+".make_with_database is database connected?  "+ a_connection.is_connected.out )
 			create data_provider.make (a_connection)
 			create login_provider.make (a_connection)
+			post_data_provider_execution
+			post_login_provider_execution
 		end
 
 feature -- Access

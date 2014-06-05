@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			connection := a_connection
 			create last_query.make_now
+			set_successful
 		ensure
 			connection_not_void: connection /= Void
 			last_query_not_void: last_query /= Void

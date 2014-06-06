@@ -30,7 +30,7 @@
               <div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls">
-                  <button type="submit" class="btn btn-info" >Check e-mail</button>
+                  <button type="submit" class="btn btn-primary" >Check e-mail</button>
                   <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>

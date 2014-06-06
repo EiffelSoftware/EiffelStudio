@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="../css/dashboard.css" rel="stylesheet">
+
+<!-- Just for debugging purposes. Don't actually copy this line! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->     
+  </head>
+
+  <body>
+     <!-- Modal  Login-->
+<div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" itemscope itemtype="./profile/esa_api.xml">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h4 class="modal-title" id="myModalLabel">Login Form</h4>
+      </div>
+      <div class="modal-body" id="myModalForm">
+         <a href="../reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
+          <form itemprop="login">
+            <p itemprop="user-name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
+            <p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>
+	    <input type="hidden" name="host" value="../">
+             <div class="controls">
+                <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
+                <input type="reset" class="btn btn-default" value="Reset"></p>
+             </div>   
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal  Logoff-->
+<div class="modal fade" id="myModalLogoff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" itemscope itemtype="../profile/esa_api.xml">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h4 class="modal-title" id="myModalLabel">Are you sure to Logoff?</h4>
+      </div>
+      <div class="modal-body">
+          <form itemprop="logoff">
+	         <input type="hidden" name="host" value="../">
+            <p><button type="button" class="btn btn-primary" onclick="logoff();">Logoff</button></p>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+   
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope itemtype="../profile/esa_api.xml">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+         <a class="navbar-brand" href="../" itemprop="home" rel="home">Eiffel Support API</a>
+     </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+           <li><a href="../reports" itemprop="all" rel="all">Reports</a></li>
+            
+      </ul>  
+      <ul class="nav navbar-nav navbar-right">
+         
+         
+              <li><a href="#">Guest</a></li>
+              <li><a href="../register" itemprop="register" rel="register">Register</a></li> 
+          
+         
+         
+         
+            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
+            <!-- <li><a href="./login">Login</a></li> -->   <!--Browser pop up -->
+          
+        </ul>
+      <!--form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form -->
+    </div>
+  </div>
+</div>  
+
+  <div class="container">
+        <div class="jumbotron">
+            <h1>Eiffel Support Site</h1>
+            <p>It's an Hypermedia API using HTML5 and Collection+JSON (CJ).  
+            <p><a href="../register" target="_blank" class="btn btn-primary btn-large">Get started today</a></p>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-3">
+                <h2>HTML5 API</h2>
+                <p>HTML5 is a well known media type. The HTML5 tutorial section will help you understand the basics of API, using your browser.</p>
+                <p><a href="#" target="_blank" class="btn btn-primary btn-medium">Learn More »</a></p>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-3">
+                <h2>CJ API</h2>
+                <p>Collection JSON is an hypermedia type to describe APIs, here you will find examples about how to use the API using cURL or a CJ browser</p>
+                <p><a href="./cj_doc.html" target="_blank" class="btn btn-primary btn-medium">Learn More »</a></p>
+            </div>
+            <div class="clearfix visible-sm"></div>
+            <div class="col-sm-4 col-md-4 col-lg-3">
+                <h2>API Examples</h2>
+                <p>The examples section encloses an extensive collection of examples on various topic that you can try and test the API using a Collection JSON generic client or and HTML browser.</p>
+                <p><a href="#" target="_blank" class="btn btn-primary btn-medium">Learn More »</a></p>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-3">
+                <h2>FAQ</h2>
+                <p>The collection of Frequently Asked Questions (FAQ) provides brief answers to many common questions related to Eiffel Support API.</p>
+                <p><a href="#" target="_blank" class="btn btn-primary btn-medium">Learn More »</a></p>
+            </div>
+        </div>  
+        <hr>
+        <div class="row">
+            <div class="col-sm-12">
+                <footer>
+                    <p>© Copyright 2014 Eiffel Software</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+     <!-- Bootstrap core JavaScript ================================================== -->
+<script src="../js/auth.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="../js/holder.js"></script>
+<script src="../js/esa_tooltips.js"></script>
+     
+  </body>
+</html>

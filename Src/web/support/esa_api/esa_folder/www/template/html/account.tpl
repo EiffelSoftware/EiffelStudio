@@ -112,7 +112,7 @@
                
               <div class="form-group">
                  <div class="col-xs-offset-2 col-xs-9">
-                  <button type="submit" class="btn btn-info" id="input01">Update My Account</button>
+                  <button type="submit" class="btn btn-primary" id="input01">Update My Account</button>
                   <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>

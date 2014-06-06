@@ -20,7 +20,7 @@
             Use one of the following media types.</br>  
             <span class="label label-info">text/html</span> 
             <span class="label label-info">application/vnd.collection+json</span> 
-            <a href="{$host/}" class="btn btn-large btn-info" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
+            <a href="{$host/}" class="btn btn-large btn-primary" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
         </div>
       </div>
     </div>

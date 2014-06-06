@@ -19,7 +19,7 @@
             <br />
             <p>You may want to return</p>
             <p><b>press this neat little button:</b></p>
-            <a href="{$host/}" class="btn btn-large btn-info" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
+            <a href="{$host/}" class="btn btn-large btn-primary" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
           </div>
           <br />
     

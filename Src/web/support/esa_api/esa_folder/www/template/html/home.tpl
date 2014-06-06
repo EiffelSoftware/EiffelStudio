@@ -14,42 +14,37 @@
 
   <div class="container">
         <div class="jumbotron">
-            <h1>Eiffel Support Site</h1>
-            <p>It's an Hypermedia API using HTML5 and Collection+JSON (CJ).  
-            <p><a href="{$host/}/register" target="_blank" class="btn btn-success btn-large">Get started today</a></p>
+            <h1>Eiffel Software Support</h1>
+            <p><small>The Eiffel Software Support web site, your one stop destination for information and support on Eiffel products and technologies.</small> 
         </div>
         <div class="row">
-            <div class="col-sm-4 col-md-4 col-lg-3">
-                <h2>HTML5 API</h2>
-                <p>HTML5 is a well known media type. The HTML5 tutorial section will help you understand the basics of API, using your browser.</p>
-                <p><a href="#" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <h2 class="info">Assited Support</h2>
+                <p> <a href="#" target="_blank" class="info">View »</a> and <a href="#" target="_blank" class="info">submit »</a> problem and bug reports to the Eiffel Software Team through this web site. 
+                    Customers with a higher priority Support Plan receive faster response times and problem resolution. 
+                    Additional support options include email, phone, fax and training courses from an Eiffel Software professional.
+                </p>
+               
             </div>
-            <div class="col-sm-4 col-md-4 col-lg-3">
-                <h2>CJ API</h2>
-                <p>Collection JSON is an hypermedia type to describe APIs, here you will find examples about how to use the API using cURL or a CJ browser</p>
-                <p><a href="{$host/}/doc/cj_doc.html" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
-            </div>
-            <div class="clearfix visible-sm"></div>
-            <div class="col-sm-4 col-md-4 col-lg-3">
-                <h2>API Examples</h2>
-                <p>The examples section encloses an extensive collection of examples on various topic that you can try and test the API using a Collection JSON generic client or and HTML browser.</p>
-                <p><a href="#" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
-            </div>
-            <div class="col-sm-4 col-md-4 col-lg-3">
-                <h2>FAQ</h2>
-                <p>The collection of Frequently Asked Questions (FAQ) provides brief answers to many common questions related to Eiffel Support API.</p>
-                <p><a href="#" target="_blank" class="btn btn-success btn-medium">Learn More »</a></p>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <h2>Self Support</h2>
+                <p>Self-support
+                  Learn more about Eiffel Technologies from various online resources. Browse our full online documentation and technical archives, purchase educational and reference material, or join the Eiffel User Group to discuss issues and get help.</p>
+               
             </div>
         </div>  
         <hr>
         <div class="row">
-            <div class="col-sm-12">
-                <footer>
-                    <p>© Copyright 2014 Eiffel Software</p>
+            <div class="col-sm-12 ">
+                <footer >
+                    <p class="text-left"><a href="{$host/}/doc/esa_doc.html" target="_blank" class="info">API Documentation</a></p>
+                    <p class="text-right">© Copyright 2014 Eiffel Software</p>
                 </footer>
+
             </div>
         </div>
     </div>
+
 
     <!-- Placed at the end of the document so the pages load faster -->
     {include file="optional_enhancement_js.tpl"/}     

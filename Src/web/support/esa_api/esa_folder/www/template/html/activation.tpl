@@ -36,7 +36,7 @@
 
               <div class="form-group">
                 <div class="col-xs-offset-2 col-xs-9">
-                  <button type="submit" class="btn btn-success" >Activate</button>
+                  <button type="submit" class="btn btn-primary"Activate</button>
                   <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>

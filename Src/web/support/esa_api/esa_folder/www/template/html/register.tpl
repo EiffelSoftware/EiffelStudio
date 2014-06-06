@@ -86,7 +86,7 @@
               </div>
               <div class="form-group">
                 <div class="col-xs-offset-3 col-xs-9">
-                  <button type="submit" class="btn btn-info" >Create My Account</button>
+                  <button type="submit" class="btn btn-primary" >Create My Account</button>
                   <input type="reset" class="btn btn-default" value="Reset">
                 </div>
               </div>

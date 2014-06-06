@@ -4,7 +4,7 @@
   <summary id="labels">Problem Report Summary</summary>
   <div class="row">
   <div class="col-lg-16">
-       <div class="panel panel-primary">
+       <div class="panel panel-default">
               <div class="panel-heading">Problem Report Summary</div>
               <div class="panel-body">
   <div class="form-horizontal well" >
@@ -13,57 +13,57 @@
        <div class="span8">
           <div class="row">   
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="submitter">Submitter:</span> : <td>{$report.contact.name/}</td> </br>
+                  <span class="label label-primary" itemprop="submitter">Submitter:</span> : <td>{$report.contact.name/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="category">Category:</span> : <td>{$report.category.synopsis/}</td> </br>
+                  <span class="label label-primary" itemprop="category">Category:</span> : <td>{$report.category.synopsis/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="priority">Priority:</span> : <td>{$report.priority.synopsis/}</td> </br>
+                  <span class="label label-primary" itemprop="priority">Priority:</span> : <td>{$report.priority.synopsis/}</td> </br>
               </div>
          </div>
          <div class="row">  
                 <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="date">Date:</span> : <td>{$report.submission_date/}</td> </br>
+                  <span class="label label-primary" itemprop="date">Date:</span> : <td>{$report.submission_date/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="class">Class:</span> : <td>{$report.report_class.synopsis/}</td> </br>
+                  <span class="label label-primary" itemprop="class">Class:</span> : <td>{$report.report_class.synopsis/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                 <span class="label label-info" itemprop="severity">Severity:</span> : <td>{$report.severity.synopsis/}</td> </br>
+                 <span class="label label-primary" itemprop="severity">Severity:</span> : <td>{$report.severity.synopsis/}</td> </br>
              </div>
            </div>
           <div class="row">   
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="report_number">Number:</span> : <td>{$report.number/}</td> </br>
+                  <span class="label label-primary" itemprop="report_number">Number:</span> : <td>{$report.number/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="release">Release:</span> : <td>{$report.release/}</td> </br>
+                  <span class="label label-primary" itemprop="release">Release:</span> : <td>{$report.release/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="confidential">Confidential:</span> : <td>{$report.confidential/}</td> </br>
+                  <span class="label label-primary" itemprop="confidential">Confidential:</span> : <td>{$report.confidential/}</td> </br>
              </div>
            </div>  
           <div class="row">      
              <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="status">Status:</span> : <td>{$report.status.synopsis/}</td> </br>
+                  <span class="label label-primary" itemprop="status">Status:</span> : <td>{$report.status.synopsis/}</td> </br>
                </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="responsible">Responsible:</span> : <td></td> </br>
+                  <span class="label label-primary" itemprop="responsible">Responsible:</span> : <td></td> </br>
               </div>
               <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="environment">Environment:</span> : <td>{$report.environment/}</td> </br>
+                  <span class="label label-primary" itemprop="environment">Environment:</span> : <td>{$report.environment/}</td> </br>
               </div>
            </div>
             <div class="row">
                 <div class="col-lg-4 lightblue">
-                  <span class="label label-info" itemprop="synopsis">Synopsis:</span> : <td>{$report.synopsis/}</td> </br>
+                  <span class="label label-primary" itemprop="synopsis">Synopsis:</span> : <td>{$report.synopsis/}</td> </br>
                 </div>
             </div>    
 
           <div class="row">
           <div class="col-lg-12">
-            <div class="panel panel-primary">
+            <div class="panel panel-default">
               <div class="panel-heading" itemprop="description">Description</div>
               <div class="panel-body">{$report.description/}</div>
             </div>
@@ -71,7 +71,7 @@
          </div>
           <div class="row">
           <div class="col-lg-12">
-            <div class="panel panel-primary">
+            <div class="panel panel-default">
               <div class="panel-heading" itemprop="to_reproduce">To Reproduce</div>
               <div class="panel-body">{$report.to_reproduce/}</div>
             </div>
@@ -92,7 +92,7 @@
   <summary id="labels">Problem Report Interactions</summary>
   <div class="row">
   <div class="col-lg-16">
-       <div class="panel panel-primary">
+       <div class="panel panel-default">
               <div class="panel-heading">Problem Report Summary</div>
               <div class="panel-body">
   <div class="form-horizontal well">
@@ -103,15 +103,15 @@
       {foreach from="$report.interactions" item="item"}
                     <div class="row">
                       <div class="col-lg-12">
-                      <div class="panel panel-primary">
-                        <div class="panel-heading"> <span class="label label-info" itemprop="submitter">From:</span> {$item.contact.name/}   <span class="label label-info" itemprop="date">Date:</span>{$item.date/}    <span class="label label-info" itemprop="status">Status:</span> {$item.status/}</div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading"> <span class="label label-primary" itemprop="submitter">From:</span> {$item.contact.name/}   <span class="label label-primary" itemprop="date">Date:</span>{$item.date/}    <span class="label label-primary" itemprop="status">Status:</span> {$item.status/}</div>
                         <div class="panel-body">{$item.content/} <br>
                                     {foreach from="$item.attachments" item="elem"}
                                          <div class="row">
                                          <div class="col-lg-8">
                                           <div class="panel panel-default">
                                             <div class="panel-heading">
-                                                <span class="label label-info" itemprop="attachment">Attachment:</span> <a href="{$host/}/report_interaction/{$elem.id/}/{$elem.name/}"  download="{$elem.name/}">{$elem.name/}</a>   <span class="label label-info">Size:</span> {$elem.bytes_count/} </div>
+                                                <span class="label label-primary" itemprop="attachment">Attachment:</span> <a href="{$host/}/report_interaction/{$elem.id/}/{$elem.name/}"  download="{$elem.name/}">{$elem.name/}</a>   <span class="label label-primary">Size:</span> {$elem.bytes_count/} </div>
                                           </div> 
                                          </div>
                                         </div>  

@@ -131,46 +131,60 @@ feature -- Implementation
 			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
 			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
---					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
---					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
---					--  <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
---					--  <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
---					--  <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
---					--  <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
---					--  <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
---					--  <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
---				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("first_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_first_name (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("last_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_last_name (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_email (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("user_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_user_name (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_password (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("check_password") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_check_password (l_value.item)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("question") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  and then l_value.item.is_integer then
---					Result.set_question (l_value.item.to_integer)
---				end
---				if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
---					l_name.item.same_string ("answer") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
---					Result.set_answer (l_value.item)
---				end
+					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
+					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
+					--  <"name": "user_email", "prompt": "Email", "value": "{$form.email/}">,
+					--  <"name": "country", "prompt": "Country", "value": "{$form.country/}">,
+					--  <"name": "user_region", "prompt": "Region", "value": "{$form.region/}">,
+					--  <"name": "user_position", "prompt": "Position", "value": "{$form.position/}">,
+					--  <"name": "user_city", "prompt": "City", "value": "{$form.city/}">,
+					--  <"name": "user_address", "prompt": "Address", "value": "{$form.address/}">,
+					--  <"name": "user_post_code", "prompt": "Postal Code", "value": "{$form.postal_code/}">,
+					--  <"name": "user_phone", "prompt": "Thelehone", "value": "{$form.telephone/}">,
+					--  <"name": "user_fax", "prompt": "Fax", "value": "{$form.fax/}">,
+
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("first_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_first_name (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("last_name") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_last_name (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_email") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_email (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_region") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_region (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_position") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_region (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_city") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_city (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_address") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_address (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_postal_code") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_postal_code (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (9) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_phone") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_telephone (l_value.item)
+				end
+				if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_fax") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result.set_fax (l_value.item)
+				end
+
+
 			end
 		end
 

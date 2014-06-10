@@ -9,7 +9,7 @@
             >,
             <
                 "href": "{$host/}/reports",
-                "rel": "collection",
+                "rel": "all",
                 "prompt": "Reports"
             >,
             <

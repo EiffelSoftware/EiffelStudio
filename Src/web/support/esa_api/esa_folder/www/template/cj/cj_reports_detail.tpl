@@ -20,12 +20,12 @@
             ,
             <
                "href": "{$host/}/user_reports/{$user/}",
-               "rel": "all-user",
+               "rel": "all_user",
                "prompt": "My Reports"
             >,
             <
                "href": "{$host/}/report_form",
-               "rel": "create-report-form",
+               "rel": "create_report_form",
                "prompt": "Report a Problem"
             >,
             <
@@ -180,7 +180,7 @@
                         >,{/foreach}{/foreach}], 
                 "links":[
                  {if isset="$user"}
-                  <"rel":"create-report-interaction", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">,
+                  <"rel":"create_report_interaction", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">,
                  {/if}
                  {foreach from="$report.interactions" item="item"}
                    

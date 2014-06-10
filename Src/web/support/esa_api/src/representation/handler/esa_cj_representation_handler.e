@@ -454,8 +454,15 @@ feature -- View
 
 	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
 			-- <Precursor>
+		local
+			l_hp: ESA_CJ_ACCOUNT_PAGE
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), a_account)
+				if attached l_hp.representation as l_account_information_page then
+					new_response_get (req, res, l_account_information_page)
+				end
+			end
 		end
 
 	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)

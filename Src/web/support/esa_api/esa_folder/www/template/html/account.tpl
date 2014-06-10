@@ -18,6 +18,7 @@
             <fieldset>
 
               <legend>Account Information</legend>
+              <p>The information in this page is used by Eiffel Software should we need to contact you. We will never share this information with other companies. Please provide as much information as possible so we can better assist you.</p>
 
               <div class="form-group">
                 <label class="control-label col-xs-2" itemprop="first_name">First Name</label>

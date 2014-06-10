@@ -1,6 +1,6 @@
 <"collection": <
     "version": "1.0", 
-    "href": "{$host/}/register", 
+    "href": "{$host/}/account", 
     "links": [
              <
                 "href": "{$host/}",
@@ -28,39 +28,38 @@
                 "prompt": "Report a Problem"
             >,
             <
+                "href": "{$host/}/email",
+                "rel": "change_email",
+                "prompt": "Change email"
+            >,
+            <
+                "href": "{$host/}/password",
+                "rel": "change_password",
+                "prompt": "Change password"
+            >,
+            <
                 "href": "{$host/}/logoff",
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
             {/if}
 
-            {unless isset="$user"}
-            <
-                "href": "{$host/}/login",
-                "rel": "login",
-                "prompt": "Login"
-            >,
-             <
-                "href": "{$host/}/register",
-                "rel": "register",
-                "prompt": "Register"
-            >
-            {/unless} 
-
           ],
  
    "template": <
       "data": [
-        <"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
-        <"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
-        <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
-        <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
-        <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
-        <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
-        <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
-        <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
-      ]
-      >,
+             <"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
+             <"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
+             <"name": "user_email", "prompt": "Email", "value": "{$form.email/}">,
+             <"name": "country", "prompt": "Country", "value": "{$form.country/}">,
+             <"name": "user_region", "prompt": "Region", "value": "{$form.region/}">,
+             <"name": "user_position", "prompt": "Position", "value": "{$form.position/}">,
+             <"name": "user_city", "prompt": "City", "value": "{$form.city/}">,
+             <"name": "user_address", "prompt": "Address", "value": "{$form.address/}">,
+             <"name": "user_post_code", "prompt": "Postal Code", "value": "{$form.postal_code/}">,
+             <"name": "user_phone", "prompt": "Thelehone", "value": "{$form.telephone/}">,
+             <"name": "user_fax", "prompt": "Fax", "value": "{$form.fax/}">
+      ]     >,
     
     "queries" :
         [

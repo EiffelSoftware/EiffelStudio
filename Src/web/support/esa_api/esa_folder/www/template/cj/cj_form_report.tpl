@@ -20,7 +20,7 @@
             {if isset="$user"}
             <
                 "href": "{$host/}/user_reports/{$user/}",
-                "rel": "all-user",
+                "rel": "all_user",
                 "prompt": "My Reports"
             >,
             {if isset="$id"} 

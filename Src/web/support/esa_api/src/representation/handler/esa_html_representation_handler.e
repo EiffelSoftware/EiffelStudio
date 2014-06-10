@@ -143,7 +143,7 @@ feature -- View
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- Update report responsible
 		do
-			compute_response_redirect (req, res, a_redirect_uri )
+			compute_response_redirect (req, res, absolute_host (req, a_redirect_uri) )
 		end
 
 
@@ -390,13 +390,14 @@ feature -- View
 		end
 
 	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
+			-- <Precursor>
 		local
 			l_hp: ESA_ACCOUNT_PAGE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_account)
-				if attached l_hp.representation as l_post_reminder_page then
-					new_response_get (req, res, l_post_reminder_page)
+				if attached l_hp.representation as l_account_information_page then
+					new_response_get (req, res, l_account_information_page)
 				end
 			end
 		end

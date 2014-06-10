@@ -60,10 +60,10 @@
              <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">{$user/} <b Class="caret"></b></a>
               <ul class="dropdown-menu">
-              <li><a href="{$host/}/account">Account Information</a></li>
+              <li><a href="{$host/}/account" itemprop="account_information" rel="account_information">Account Information</a></li>
               <li class="divider"></li>
-              <li><a href="{$host/}/email">Change Email</li>
-              <li><a href="{$host/}/password">Change Password</a></li>
+              <li><a href="{$host/}/email" itemprop="change_email" rel="change_email">Change Email</li>
+              <li><a href="{$host/}/password" itemprop="change_password" rel="change_password">Change Password</a></li>
             </ul>
          </li> 
 

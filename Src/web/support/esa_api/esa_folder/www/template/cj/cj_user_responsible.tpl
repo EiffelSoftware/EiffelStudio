@@ -20,7 +20,7 @@
                 >,
                  <
                     "href": "{$host/}/report_form",
-                    "rel": "create-report-form",
+                    "rel": "create_report_form",
                     "prompt": "Report a Problem"
                 >,
                 <

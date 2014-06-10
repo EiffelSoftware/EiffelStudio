@@ -1365,17 +1365,18 @@ feature {NONE} -- Implementation
 	new_report_detail (a_tuple: DB_TUPLE): ESA_REPORT
 		do
 			create Result.make (0, "Null", False)
+
 				--SubmissionDate
-			if attached {DATE_TIME} a_tuple.item (1) as  l_item_1 then
+			if attached db_handler.read_date_time (1) as  l_item_1 then
 						Result.set_submission_date (l_item_1)
-					end
+			end
 				--Synopsis	
-			if attached {STRING} a_tuple.item (2) as  l_item_2 then
+			if attached db_handler.read_string (2) as  l_item_2 then
 				Result.set_synopsis (l_item_2)
 			end
 
 				--Release	
-			if attached {STRING} a_tuple.item (3) as  l_item_3 then
+			if attached db_handler.read_string (3) as  l_item_3 then
 				Result.set_release (l_item_3)
 			end
 
@@ -1385,48 +1386,59 @@ feature {NONE} -- Implementation
 			end
 
 				--Environment
-			if attached {STRING} a_tuple.item (5) as  l_item_5 then
+			if attached db_handler.read_string (5) as  l_item_5 then
 				Result.set_environment (l_item_5)
 			end
 
 				--Description
-			if attached {STRING} a_tuple.item (6) as  l_item_6 then
+			if attached db_handler.read_string (6) as  l_item_6 then
 				Result.set_description (l_item_6)
 			end
 
 				--To Reproduce
-			if attached {STRING} a_tuple.item (7) as  l_item_7 then
+			if attached db_handler.read_string (7) as  l_item_7 then
 				Result.set_to_reproduce (l_item_7)
 			end
 
 				--Status Synopsis
-			if attached {STRING} a_tuple.item (8) as  l_item_8 then
-				Result.set_status (create {ESA_REPORT_STATUS}.make (-1,l_item_8))
+			if attached db_handler.read_string (8) as  l_item_8 then
+				Result.set_status (create {ESA_REPORT_STATUS}.make (0,l_item_8))
 			end
 
 				--Priority Synopsis
-			if attached {STRING} a_tuple.item (9) as  l_item_9 then
-				Result.set_priority (create {ESA_REPORT_PRIORITY}.make (-1,l_item_9))
+			if attached db_handler.read_string (9) as  l_item_9 then
+				Result.set_priority (create {ESA_REPORT_PRIORITY}.make (0,l_item_9))
 			end
 
 				--Category Synopsis
-			if attached {STRING} a_tuple.item (10) as  l_item_10 then
-				Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (-1,l_item_10, True))
+			if attached db_handler.read_string (10) as  l_item_10 then
+				Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (0,l_item_10, True))
 			end
 
 			 	--Severity Synopsis
-			if attached {STRING} a_tuple.item (11) as  l_item_11 then
-				Result.set_severity (create {ESA_REPORT_SEVERITY}.make (-1,l_item_11))
+			if attached db_handler.read_string (11) as  l_item_11 then
+				Result.set_severity (create {ESA_REPORT_SEVERITY}.make (0,l_item_11))
 			end
 
 			 	--Class Synopsis
-			if attached {STRING} a_tuple.item (12) as  l_item_12 then
-				Result.set_report_class (create {ESA_REPORT_CLASS}.make (-1,l_item_12))
+			if attached db_handler.read_string (12) as  l_item_12 then
+				Result.set_report_class (create {ESA_REPORT_CLASS}.make (0,l_item_12))
 			end
 
 			 	--User Name
-			if attached {STRING} a_tuple.item (13) as  l_item_13 then
+			if attached db_handler.read_string (13) as  l_item_13 then
 				Result.set_contact (create {ESA_USER}.make (l_item_13))
+			end
+
+				-- Responsible
+			if attached db_handler.read_string (14) as  l_item_14 then
+				Result.set_assigned (create {ESA_USER}.make (l_item_14))
+				if
+					attached Result.assigned as l_assigned and then
+					attached db_handler.read_integer_32 (15) as l_item15
+				then
+					l_assigned.set_id (l_item15)
+				end
 			end
 
 		end

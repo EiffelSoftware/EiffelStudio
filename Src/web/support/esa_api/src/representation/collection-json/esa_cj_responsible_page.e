@@ -34,6 +34,10 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.size, "size")
 
+			if attached a_view.id as l_id then
+				template.add_value (l_id, "id")
+			end
+
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")
 			end

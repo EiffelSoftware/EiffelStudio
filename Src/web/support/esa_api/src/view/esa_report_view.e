@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	id: detachable STRING
+		-- Report id.
+
 	reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 		-- Possible list of reports with their statistics.
 
@@ -91,6 +94,15 @@ feature -- Access
 
 
 feature -- Change Element
+
+	set_id (a_id: STRING)
+			-- Set `id' to `a_id'
+		do
+			id := a_id
+		ensure
+			selected_id: id = a_id
+		end
+
 
 	set_selected_status (a_val: INTEGER)
 			-- Set `selected_status' with selected value `a_val'

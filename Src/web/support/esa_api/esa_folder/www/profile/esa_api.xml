@@ -295,7 +295,7 @@
       <descriptor href="#password"/>
       <descriptor href="#check-password"/>
       <descriptor href="#security_question"/>
-	  <descriptor href="#answer"/>
+	    <descriptor href="#answer"/>
       <descriptor href="#create"/>
   </descriptor>
 
@@ -316,8 +316,8 @@
           A user must only provide Credentials for Authentication at the start of a Login Session. He is then authorized to use some or all of the services offered by the Host System to which he connected.
      </p>
     </doc>
-	<descriptor href="#user_name"/>
-	<descriptor href="#password"/>
+  	<descriptor href="#user_name"/>
+	 <descriptor href="#password"/>
   </descriptor>
 
   <descriptor id="logoff" type="safe">
@@ -329,14 +329,55 @@
   </descriptor>
 
    <descriptor id="activation" type="safe">
-    <doc format="html">
-      <p>
-         Form to Activate a new user.
-      </p>
-	</doc>	
+       <doc format="html">
+        <p>
+          Form to Activate a new user.
+       </p>
+	    </doc>	
       <descriptor href="#email"/>
       <descriptor href="#token"/> 
       <descriptor href="#create"/> 
+  </descriptor>
+
+  <descriptor id="change_email" type="safe">
+       <doc format="html">
+        <p>
+          Form to change user's email
+       </p>
+      </doc>  
+      <descriptor href="#email"/>
+      <descriptor href="#check_email"/> 
+      <descriptor href="#create"/> 
+  </descriptor>
+
+  <descriptor id="change_password" type="safe">
+       <doc format="html">
+        <p>
+          Form to change user's password.
+       </p>
+      </doc>  
+      <descriptor href="#password"/>
+      <descriptor href="#check_password"/> 
+      <descriptor href="#update"/> 
+  </descriptor>
+
+  <descriptor id="account_information" type="safe">
+       <doc format="html">
+        <p>
+          Form to Update and View Account information.
+       </p>
+      </doc>  
+      <descriptor href="#first_name"/>
+      <descriptor href="#last_name"/> 
+      <descriptor href="#email"/>
+      <descriptor href="#country"/>
+      <descriptor href="#region"/>
+      <descriptor href="#position"/>
+      <descriptor href="#city"/>
+      <descriptor href="#postal_code"/>
+      <descriptor href="#telephone"/>
+      <descriptor href="#fax"/>
+      <descriptor href="#update"/>  
   </descriptor>
 
 

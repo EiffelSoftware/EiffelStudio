@@ -19,12 +19,12 @@
             {if isset="$user"}
             <
                 "href": "{$host/}/user_reports/{$user/}",
-                "rel": "all-user",
+                "rel": "all_user",
                 "prompt": "My Reports"
             >,
             <
                 "href": "{$host/}/report_form",
-                "rel": "create-form",
+                "rel": "create_report_form",
                 "prompt": "Report a Problem"
             >,
             <

@@ -1130,7 +1130,7 @@ SELECT ProblemReports.SubmissionDate, ProblemReports.Synopsis, ProblemReports.Re
 	 ProblemReports.Confidential, ProblemReports.Environment, ProblemReports.Description, ProblemReports.ToReproduce,
 	 ProblemReportStatus.StatusSynopsis, ProblemReportPriorities.PrioritySynopsis, ProblemReportCategories.CategorySynopsis,
 	 ProblemReportSeverities.SeveritySynopsis, ProblemReportClasses.ClassSynopsis, Username,
-	(SELECT Username AS Responsible FROM Memberships WHERE ContactID=ResponsibleID)
+	(SELECT Username AS Responsible FROM Memberships WHERE ContactID=ResponsibleID), ResponsibleID
 
 FROM ProblemReports
 INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID

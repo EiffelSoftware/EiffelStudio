@@ -14,8 +14,9 @@
 
     <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class="main">
-          <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/password' itemprop="update" >
+          <form class="form-horizontal well" id="changePassword" method='POST' action='{$host/}/password' itemprop="update" >
             <legend>Change Password</legend>
+            <p>Use this form to update your password:<p>
             <div class="form-group">
                 <label class="control-label col-xs-2" for="inputPassword" itemprop="password">Password:</label>
                 <div class="col-xs-9">

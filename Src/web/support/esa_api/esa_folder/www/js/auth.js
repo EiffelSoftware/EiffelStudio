@@ -65,10 +65,9 @@ var login = function() {
  
  
 var logoff = function(callback){
-	  var form = document.forms[0];
-      var host = form.host.value;
-	  alert (host);
- 
+	   var form = document.forms[0];
+     var host = form.host.value;
+	  
     if (userAgent.indexOf("msie") != -1) {
         document.execCommand("ClearAuthenticationCache");
     }

@@ -92,7 +92,14 @@ feature -- HTTP Methods
 					log.write_information (generator+".do_get Executed List of reports for registered users" )
 				elseif l_role.is_administrator or else l_role.is_responsible then
 						-- List of reports visible for reponsible and admin users
-					responsible_reports (req, res)
+					if
+						attached {WSF_STRING} req.path_parameter ("id") as l_id and then
+						l_id.is_integer
+					then
+						responsible_report_detail (req, res, l_id.integer_value)
+					else
+						responsible_reports (req, res)
+					end
 					log.write_information (generator+".do_get Executed List of reports for reponsible" )
 				else
 						-- Internal Users?
@@ -113,12 +120,12 @@ feature -- HTTP Methods
 			log.write_information (generator+".do_post Processing request"  )
 			if attached current_user_name (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then
-				   	l_id.is_integer and then attached {WSF_STRING} req.form_parameter ("user_responsible") as l_responsible and then
+				   	l_id.is_integer and then attached extract_data_from_request(req, current_media_type (req)) as l_responsible and then
 				   	l_responsible.is_integer then
 				   	l_role := api_service.role (l_user)
 					if l_role.is_administrator or else l_role.is_responsible then
 						-- List of reports visible for reponsible and admin users
-						api_service.set_problem_report_responsible (l_id.integer_value, l_responsible.integer_value)
+						api_service.set_problem_report_responsible (l_id.integer_value, l_responsible.to_integer)
 						to_implement ("send_responsible_change_email (l_pr_number, l_new_responsible, authenticated_username)")
 						update_report_responsible (req,res)
 					else
@@ -256,6 +263,31 @@ feature -- Implementation
 			end
 		end
 
+	responsible_report_detail (req: WSF_REQUEST; res: WSF_RESPONSE; a_id: INTEGER)
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_report_view: ESA_REPORT_VIEW
+			l_list: LIST[ESA_REPORT]
+		do
+			create l_rhf
+			if
+				attached current_media_type (req) as l_type and then
+				attached current_user_name (req) as l_user
+			then
+				if attached api_service.problem_report_details (l_user, a_id) as l_report then
+					create {ARRAYED_LIST[ESA_REPORT]} l_list.make (1)
+					l_list.force (l_report)
+					create l_report_view.make ([create {ESA_REPORT_STATISTICS},l_list],0,0, api_service.all_categories,api_service.status, l_user)
+					l_report_view.set_id (a_id.out)
+					l_report_view.set_responsibles (api_service.responsibles)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
+				else
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).not_found_page (req, res)
+				end
+			end
+		end
+
+
 	user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: READABLE_STRING_32)
 			-- List of reports for a user `a_user' with role Guest or User
 		local
@@ -342,13 +374,13 @@ feature -- Implementation
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				if attached {STRING_32} current_user_name (req) as l_user and then api_service.is_active (l_user) then
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req))
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, l_type))
 				else
 						-- The user is not active anymore, send response with an error.
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req))
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, l_type))
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req))
+				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, ""))
 			end
 		end
 
@@ -362,8 +394,48 @@ feature -- Implementation
 			end
 		end
 
+feature {NONE} --Implementation
 
-	build_redirect_uri (req: WSF_REQUEST): STRING
+	extract_data_from_request (req: WSF_REQUEST; a_type: detachable READABLE_STRING_32): detachable STRING
+			-- Is the form data populated?
+		do
+
+			if a_type /= Void and then a_type.same_string ("application/vnd.collection+json") then
+				Result := extract_data_from_cj (req)
+			else
+				Result :=  extract_data_from_form (req)
+			end
+		end
+
+	extract_data_from_cj (req: WSF_REQUEST): detachable STRING
+			-- Extract request form CJ data and build a object
+			-- password view.
+		local
+			l_parser: JSON_PARSER
+		do
+			create l_parser.make_parser (retrieve_data (req))
+			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
+			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+					--  <"name": "email", "prompt": "Password", "value": "{$form.email/}">,
+				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("user_responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					Result := l_value.item
+				end
+			end
+		end
+
+	extract_data_from_form (req: WSF_REQUEST): detachable STRING
+			-- Extract request form data and build a object email view.
+			-- email, check_email.
+		do
+			if attached {WSF_STRING}req.form_parameter ("user_responsible") as l_responsible then
+				Result := l_responsible.value
+			end
+		end
+
+
+	build_redirect_uri (req: WSF_REQUEST; a_type: STRING): STRING
 					--	<input type="hidden" name="page" value="{$index/}"/>
 					--  <input type="hidden" name="category" value="{$view.selected_category/}"/>
 					--  <input type="hidden" name="severity" value="{$view.selected_severity/}"/>
@@ -373,42 +445,47 @@ feature -- Implementation
 					--  <input type="hidden" name="orderBy" value="{$view.orderBy/}"/>
 					--  <input type="hidden" name="dir" value="{$view.dir/}"/>
 		do
-			create Result.make_from_string ("/reports/")
-			if attached {WSF_STRING} req.form_parameter ("page") as l_page then
-				Result.append_string (l_page.value)
-				Result.append_string ("?")
-			end
-			if attached {WSF_STRING} req.form_parameter ("category") as l_category then
-				Result.append_string ("category")
-				Result.append_string (l_category.value)
-				Result.append_string ("&")
-			end
-			if attached {WSF_STRING} req.form_parameter ("severity") as l_severity then
-				Result.append_string ("severity")
-				Result.append_string (l_severity.value)
-				Result.append_string ("&")
-			end
-			if attached {WSF_STRING} req.form_parameter ("priority") as l_priority then
-				Result.append_string ("priority")
-				Result.append_string (l_priority.value)
-				Result.append_string ("&")
-			end
-			if attached {WSF_STRING} req.form_parameter ("responsible") as l_responsible then
-				Result.append_string ("responsible")
-				Result.append_string (l_responsible.value)
-				Result.append_string ("&")
-			end
-			if attached {WSF_STRING} req.form_parameter ("status_query") as l_status then
-				Result.append_string (l_status.value)
-			end
-			if attached {WSF_STRING} req.form_parameter ("orderBy") as l_orderby then
-				Result.append_string ("orderBy")
-				Result.append_string (l_orderBy.value)
-				Result.append_string ("&")
-			end
-			if attached {WSF_STRING} req.form_parameter ("dir") as l_dir then
-				Result.append_string ("dir")
-				Result.append_string (l_dir.value)
+			if a_type.same_string ("application/vnd.collection+json") then
+				Result := req.path_info
+			else
+				create Result.make_from_string ("/reports/")
+				if attached {WSF_STRING} req.form_parameter ("page") as l_page then
+					Result.append_string (l_page.value)
+					Result.append_string ("?")
+				end
+				if attached {WSF_STRING} req.form_parameter ("category") as l_category then
+					Result.append_string ("category")
+					Result.append_string (l_category.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("severity") as l_severity then
+					Result.append_string ("severity")
+					Result.append_string (l_severity.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("priority") as l_priority then
+					Result.append_string ("priority")
+					Result.append_string (l_priority.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("responsible") as l_responsible then
+					Result.append_string ("responsible")
+					Result.append_string (l_responsible.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("status_query") as l_status then
+					Result.append_string (l_status.value)
+				end
+				if attached {WSF_STRING} req.form_parameter ("orderBy") as l_orderby then
+					Result.append_string ("orderBy")
+					Result.append_string (l_orderBy.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("dir") as l_dir then
+					Result.append_string ("dir")
+					Result.append_string (l_dir.value)
+				end
 			end
 		end
+
 end

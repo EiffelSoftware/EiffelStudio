@@ -56,9 +56,7 @@ feature {NONE} --Initialization
 			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
-				debug
-					print (representation)
-				end
+				log.write_debug (generator + ".make " + l_output)
 			end
 		end
 

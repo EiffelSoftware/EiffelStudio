@@ -14,19 +14,35 @@
             {if isset="$user"}
             <
                 "href": "{$host/}/user_reports/{$user/}",
-                "rel": "all-user",
+                "rel": "all_user",
                 "prompt": "My Reports"
             >,
             <
                 "href": "{$host/}/report_form",
-                "rel": "create-report-form",
+                "rel": "create_report_form",
                 "prompt": "Report a Problem"
+            >,
+            <
+                "href": "{$host/}/account",
+                "rel": "account_information",
+                "prompt": "Account"
+            >,
+            <
+                "href": "{$host/}/email",
+                "rel": "change_email",
+                "prompt": "Change email"
+            >,
+            <
+                "href": "{$host/}/password",
+                "rel": "change_password",
+                "prompt": "Change password"
             >,
             <
                 "href": "{$host/}/logoff",
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
+
             {/if}
             {unless isset="$user"}
             <

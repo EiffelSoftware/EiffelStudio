@@ -18,4 +18,7 @@ feature {NONE} -- Initialization
 	name: STRING_32 = "Hint"
 			-- <Precursor>
 
+	short_form: STRING_32 = "H"
+			-- <Precursor>
+
 end

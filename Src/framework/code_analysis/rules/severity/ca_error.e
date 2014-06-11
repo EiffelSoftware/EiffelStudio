@@ -18,4 +18,7 @@ feature -- Properties
 	name: STRING_32 = "Error"
 			-- <Precursor>
 
+	short_form: STRING_32 = "E"
+			-- <Precursor>
+
 end

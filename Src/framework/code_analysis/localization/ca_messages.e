@@ -346,6 +346,12 @@ feature -- Command Line
 		do Result := translation_in_context ("' was not found and will be skipped. Check the spelling %
 			%and make sure the class has been compiled.%N", once "code_analyzer.command") end
 
+	rule_not_found (a_rule_name: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Warning: Rule $1 could not be found, ignoring it.", once "code_analyzer"), [a_rule_name]) end
+
+	unknown_argument (a_argument_name: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Warning: argument $1 is not recognized, ignoring it.", once "code_analyzer"), [a_argument_name]) end
+
 feature {NONE} -- Translation
 
 	translation_in_context (s: READABLE_STRING_GENERAL; context: READABLE_STRING_GENERAL): STRING_32

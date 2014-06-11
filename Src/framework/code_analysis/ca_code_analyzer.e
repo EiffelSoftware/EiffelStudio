@@ -19,9 +19,12 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialization for `Current'.
+		local
+			l_rule_sorter: QUICK_SORTER [CA_RULE]
+			l_rule_comparator: CA_GENERIC_COMPARATOR [CA_RULE]
 		do
 			create settings.make
-			create rules.make
+			create rules.make (80)
 				-- Adding the rules.
 			rules.extend (create {CA_SELF_ASSIGNMENT_RULE}.make)
 			rules.extend (create {CA_UNUSED_ARGUMENT_RULE}.make)
@@ -59,6 +62,16 @@ feature {NONE} -- Initialization
 			rules.extend (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
 			rules.extend (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
 			rules.extend (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
+
+				-- Sort rules by ID.
+			create l_rule_comparator.make_with_agent (
+				agent (u, v: CA_RULE): BOOLEAN
+					do
+						Result := u.id < v.id
+					end
+			)
+			create l_rule_sorter.make (l_rule_comparator)
+			l_rule_sorter.sort (rules)
 
 			settings.initialize_rule_settings (rules)
 
@@ -217,13 +230,59 @@ feature -- Analysis interface
 			end
 		end
 
+	force_enable_rules (a_rule_list: LIST [STRING_32])
+		local
+			l_enabled_preference: BOOLEAN_PREFERENCE
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+			l_all_rules: LIST [CA_RULE]
+		do
+			create l_sorter.make (create {STRING_COMPARATOR}.make_caseless)
+			l_sorter.sort (a_rule_list)
+
+				-- Disable all rules.
+			across rules as ic loop
+				ic.item.is_enabled.set_value (False)
+			end
+
+				-- The `rules' list is always ordered by ID.
+
+			from
+				a_rule_list.start
+				rules.start
+			until
+				a_rule_list.after
+			loop
+				if rules.after then
+					-- We have passed the end of the rules list and we still have some rules in the force-enabled list
+					-- which we haven't found.
+					output_actions.call ([ca_messages.rule_not_found (a_rule_list.item)])
+					a_rule_list.forth
+				elseif a_rule_list.item > rules.item.id then
+						-- We haven't yet reached the current-rule-to-be-enabled
+					rules.item.is_enabled.set_value (False)
+					rules.forth
+				elseif a_rule_list.item ~ rules.item.id then
+						-- Here we are!
+					rules.item.is_enabled.set_value (True)
+					rules.forth
+					a_rule_list.forth
+				else
+					check a_rule_list.item < rules.item.id then end
+						-- We have passed the right location in the rule list without finding the specified rule.
+					output_actions.call ([ca_messages.rule_not_found (a_rule_list.item)])
+					a_rule_list.forth
+				end
+
+			end
+		end
+
 feature -- Properties
 
 	is_running: BOOLEAN
 			-- Is code analysis running?
 
-	rules: LINKED_LIST [CA_RULE]
-			-- List of rules that will be used for analysis.
+	rules: ARRAYED_LIST [CA_RULE]
+			-- List of rules that will be used for analysis. Rules are ordered by ID.
 
 	rule_violations: detachable HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
 			-- All found violations from the last analysis.

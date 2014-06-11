@@ -1,0 +1,14 @@
+test_name 	 qualified-anchor-expansion-3
+test_description If you have `like x.foo' and that `foo' is like `A [like {G}.item' where G is a formal generic parameter then the compiler crashes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	base_object_view.e $CLUSTER base_object_view.e
+copy_raw	proxy_proxiable_data_identified.e $CLUSTER proxy_proxiable_data_identified.e
+
+compile_melted
+compile_result	ok
+
+test_end

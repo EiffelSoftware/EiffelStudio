@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		local
 			l_rule_sorter: QUICK_SORTER [CA_RULE]
-			l_rule_comparator: CA_GENERIC_COMPARATOR [CA_RULE]
+			l_rule_comparator: AGENT_EQUALITY_TESTER [CA_RULE]
 		do
 			create settings.make
 			create rules.make (80)
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			rules.extend (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
 
 				-- Sort rules by ID.
-			create l_rule_comparator.make_with_agent (
+			create l_rule_comparator.make (
 				agent (u, v: CA_RULE): BOOLEAN
 					do
 						Result := u.id < v.id
@@ -232,9 +232,7 @@ feature -- Analysis interface
 
 	force_enable_rules (a_rule_list: LIST [STRING_32])
 		local
-			l_enabled_preference: BOOLEAN_PREFERENCE
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
-			l_all_rules: LIST [CA_RULE]
 		do
 			create l_sorter.make (create {STRING_COMPARATOR}.make_caseless)
 			l_sorter.sort (a_rule_list)

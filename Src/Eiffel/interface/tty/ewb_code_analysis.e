@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 					if l_args.item.is_empty then
 							-- Corner case: split would return one empty string, I want zero strings.
 							-- We still want to instantiate the list, as we want to analyze exactly zero classes.
-						create {ARRAYED_LIST [STRING]} class_name_list.make (0)
+						create {ARRAYED_LIST [STRING_32]} class_name_list.make (0)
 					else
 						class_name_list := l_args.item.split (' ')
 					end
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Options
 
-	class_name_list: detachable LIST [STRING]
+	class_name_list: detachable LIST [STRING_32]
 			-- List of class names for analysis, which have been provided by the user.
 
 	forced_rules_list: detachable LIST [STRING_32]

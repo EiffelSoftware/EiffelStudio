@@ -114,7 +114,7 @@ feature -- String properties
 		end;
 
 feature -- String list routines
-				
+
 	empty_strings_removed (list: LIST [STRING]): DYNAMIC_LIST [STRING]
 			-- `list' with all elements which are empty strings
 			-- or are Void removed
@@ -140,7 +140,7 @@ feature -- String list routines
 		ensure
 			result_not_void: Result /= Void;
 		end;
-				
+
 	trim_white_space (list: LIST [STRING])
 			-- Remove leading and trailing blanks
 			-- from each string in `list'
@@ -162,7 +162,7 @@ feature -- String list routines
 				list.forth;
 			end;
 		end;
-				
+
 	broken_into_words (line: STRING): DYNAMIC_LIST [STRING]
 			-- Result of breaking `line' into words, where each
 			-- word is terminated by white space
@@ -177,7 +177,7 @@ feature -- String list routines
 			from
 				create {ARRAYED_LIST [STRING]} Result.make (4)
 				pos := 1;
-			until 
+			until
 				pos > line.count
 			loop
 				char := line.item (pos);
@@ -206,6 +206,52 @@ feature -- String list routines
 			end
 		end;
 
+	broken_into_arguments (line: STRING): DYNAMIC_LIST [STRING]
+			-- Result of breaking `line' into arguments.
+			-- Arguments are separated by whitespace.
+			-- Multi-word arguments are specified
+			-- by wrapping them in double quotes.
+			-- If the line contains an odd number of
+			-- double quotes characters, the last
+			-- occurrence is ignored
+		require
+			line_exists: line /= Void;
+		local
+			l_line: STRING
+			l_quote1, l_quote2: INTEGER
+			l_word_list: DYNAMIC_LIST [STRING]
+			l_done: BOOLEAN
+		do
+			l_line := line.twin
+
+			from
+				create {ARRAYED_LIST [STRING]} Result.make (8)
+			until
+				l_done
+			loop
+				l_quote1 := l_line.index_of ('%"', 1)
+				if l_quote1 = 0 then
+					l_quote2 := 0
+				else
+					l_quote2 := l_line.index_of ('%"', l_quote1 + 1)
+				end
+
+				if l_quote1 = 0 or l_quote2 = 0 then
+						-- We have zero or one double quotes characters ahead, ignore them.
+					l_word_list := broken_into_words (l_line)
+					Result.merge_right (l_word_list)
+					l_done := true
+				else
+						-- We have at least one block wrapped by double quotes.
+					l_word_list := broken_into_words (l_line.head (l_quote1 - 1))
+					Result.merge_right (l_word_list)
+					Result.extend (l_line.substring (l_quote1 + 1, l_quote2 - 1))
+					Result.finish
+					l_line.remove_head (l_quote2)
+				end
+			end
+		end;
+
 	broken_at (line: STRING; sep_char: CHARACTER): DYNAMIC_LIST [STRING]
 			-- Result of breaking `line' into strings separated
 			-- by character `char'.  Empty strings resulting
@@ -223,7 +269,7 @@ feature -- String list routines
 				pos := 1;
 				first := 1;
 				count := line.count;
-			until 
+			until
 				pos > count
 			loop
 				char := line.item (pos);
@@ -243,7 +289,21 @@ feature -- String list routines
 				Result.extend (phrase);
 			end
 		end;
-	
+
+	merged_with_separator (a_strings: LIST [STRING]; a_separator: STRING): STRING
+			-- Result of concatenating all the strings in `a_strings',
+			-- separated by `a_separator'.
+		do
+			create Result.make_empty
+
+			if attached a_strings and then not a_strings.is_empty then
+				across a_strings as ic loop
+					Result.append (ic.item + a_separator)
+				end
+				Result.remove_tail (a_separator.count)
+			end
+		end
+
 	leading_args_removed (line: STRING n: INTEGER): STRING
 			-- `line' with the first `n' white-space delimited
 			-- arguments removed
@@ -272,6 +332,16 @@ feature -- String list routines
 			end
 		ensure
 			result_exists: Result /= Void
+		end
+
+	safe_string (a_string: STRING): STRING
+			-- `a_string' if `a_string' is attached. A new empty string otherwise.
+		do
+			if attached a_string then
+				Result := a_string
+			else
+				create Result.make_empty
+			end
 		end
 
 note

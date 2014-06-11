@@ -51,7 +51,7 @@ feature
 			end
 		end;
 
-	compilation_options: LIST [STRING]
+	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
 			-- if Eiffel compiler is run
 		deferred
@@ -76,6 +76,8 @@ feature {NONE} -- Implementation
 
 	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [STRING]
 			-- The arguments to the compiler for test `test'.
+		local
+			l_compilation_options: LIST [STRING]
 		do
 			create Result.make;
 				-- Add compilation dir to avoid changing
@@ -95,13 +97,14 @@ feature {NONE} -- Implementation
 
 				-- We must add the compilations options to the end of the command line, because
 				-- some commands (e.g. -code-analysis) require so.
+			l_compilation_options := compilation_options (test)
 			from
-				compilation_options.start
+				l_compilation_options.start
 			until
-				compilation_options.after
+				l_compilation_options.after
 			loop
-				Result.extend (compilation_options.item);
-				compilation_options.forth
+				Result.extend (l_compilation_options.item);
+				l_compilation_options.forth
 			end;
 		end;
 
@@ -131,11 +134,6 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
 
 
 end

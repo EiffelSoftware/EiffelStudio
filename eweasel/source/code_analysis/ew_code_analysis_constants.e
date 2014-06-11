@@ -12,7 +12,11 @@ feature -- Output messages
 	In_class_prefix: STRING = "In class "
 	Violation_prefix: STRING = " ["
 
-	Analysis_clean_message: STRING = "No_issues."
+	Class_not_found_prefix: STRING = "Warning: class "
+	Rule_not_found_prefix: STRING = "Warning: Rule "
+	Argument_not_recognized_prefix: STRING = "Warning: argument "
+
+	Analysis_clean_message: STRING = "No issues."
 
 feature -- Violation types
 
@@ -20,7 +24,7 @@ feature -- Violation types
 	Warning: STRING = "Warning"
 	Suggestion: STRING = "Suggestion"
 	Hint: STRING = "Hint"
-	Unknown_violation_type: STRING = "Unknown violation type"
+	Unknown_violation_type: STRING = "Violation"
 
 	is_valid_violation_type (a_type: STRING): BOOLEAN
 		do

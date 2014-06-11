@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'. `a_arguments' are the command-line
 			-- arguments that are relevant for the Code Analyzer.
 		do
-			create class_name_list.make
+			create {ARRAYED_LIST [STRING]} unknown_arguments.make (8)
 
 			across a_arguments as l_args loop
 				if l_args.item.is_equal ("-cadefaults") then
@@ -32,25 +32,46 @@ feature {NONE} -- Initialization
 				elseif l_args.item.is_equal ("-caloadprefs") then
 					l_args.forth
 					preference_file := l_args.item
-				elseif l_args.item.is_equal ("-caclass") or l_args.item.is_equal ("-caclasses") then
-					from l_args.forth
-					until l_args.after or l_args.item.starts_with ("-")
-					loop class_name_list.extend (l_args.item); l_args.forth
+				elseif l_args.item.is_equal ("-caforcerules") then
+					l_args.forth
+
+					if l_args.item.is_empty then
+							-- Corner case: split would return one empty string, I want zero strings.
+						create {ARRAYED_LIST [STRING_32]} forced_rules_list.make (0)
+					else
+						forced_rules_list := l_args.item.to_string_32.split (' ')
 					end
+				elseif l_args.item.is_equal ("-caclass") or l_args.item.is_equal ("-caclasses") then
+					l_args.forth
+
+					if l_args.item.is_empty then
+							-- Corner case: split would return one empty string, I want zero strings.
+						create {ARRAYED_LIST [STRING]} class_name_list.make (0)
+					else
+						class_name_list := l_args.item.split (' ')
+					end
+				else
+					unknown_arguments.extend (l_args.item)
 				end
 			end
 		end
 
 feature {NONE} -- Options
 
-	class_name_list: LINKED_LIST [STRING]
+	class_name_list: detachable LIST [STRING]
 			-- List of class names for analysis, which have been provided by the user.
+
+	forced_rules_list: detachable LIST [STRING_32]
+			-- List of the IDs of enabled rules which, if specified, overrides the preferences.
+			-- Void if unspecified.
 
 	restore_preferences: BOOLEAN
 			-- Does the user want to restore the Code Analysis preferences to their
 			-- default values?
 
 	preference_file: STRING
+
+	unknown_arguments: LIST [STRING]
 
 feature -- Execution (declared in EWB_CMD)
 
@@ -65,7 +86,7 @@ feature -- Execution (declared in EWB_CMD)
 				-- Delegate any output to the command line window.
 			l_code_analyzer.add_output_action (agent print_line)
 
-			if class_name_list.is_empty then
+			if not attached class_name_list then
 				l_code_analyzer.add_whole_system
 			else
 				across class_name_list as ic loop
@@ -76,10 +97,19 @@ feature -- Execution (declared in EWB_CMD)
 			output_window.add ("%NEiffel Inspector%N")
 			output_window.add ("----------------%N")
 
+			if attached unknown_arguments then
+				across unknown_arguments as ic loop
+					print_line (ca_messages.unknown_argument (ic.item))
+				end
+			end
+
 			if restore_preferences then
 				l_code_analyzer.preferences.restore_defaults
 			elseif preference_file /= Void then -- The user wants to load preferences.
 				import_preferences (l_code_analyzer.preferences, preference_file)
+			end
+			if forced_rules_list /= Void then
+				l_code_analyzer.force_enable_rules (forced_rules_list)
 			end
 			l_code_analyzer.analyze
 
@@ -98,8 +128,8 @@ feature -- Execution (declared in EWB_CMD)
 							l_line := ic.item.location.line.out
 							l_col := ic.item.location.column.out
 
-							output_window.add ("  (" + l_line + ":" + l_col + "): "
-								+ l_rule_name + " (" + l_rule_id + "): ")
+							output_window.add (" [" + l_line + ":" + l_col + "] " + ic.item.rule.severity.short_form + ": "
+								+ l_rule_id + " - " + l_rule_name + ": ")
 						else -- No location attached. Print without location.
 							output_window.add ("  "	+ l_rule_name + " (" + l_rule_id + "): ")
 						end
@@ -132,7 +162,7 @@ feature -- Execution (declared in EWB_CMD)
 			-- Adds class with name `a_class_name' if it is found amongst the compiled
 			-- classes to `a_analyzer'.
 		do
-			if attached universe.classes_with_name (a_class_name) as l_c then
+			if attached universe.classes_with_name (a_class_name) as l_c and then not l_c.is_empty then
 				across l_c as ic loop
 					a_analyzer.add_class (ic.item.config_class)
 				end

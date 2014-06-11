@@ -17,5 +17,8 @@ feature {NONE} -- Initialization
 
 	name: STRING_32 = "Suggestion"
 			-- <Precursor>
+			
+	short_form: STRING_32 = "S"
+			-- <Precursor>
 
 end

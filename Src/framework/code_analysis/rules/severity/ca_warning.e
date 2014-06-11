@@ -18,4 +18,7 @@ feature -- Properties
 	name: STRING_32 = "Warning"
 			-- <Precursor>
 
+	short_form: STRING_32 = "W"
+			-- <Precursor>
+
 end

@@ -21,4 +21,10 @@ feature -- Properties
 			valid_result: Result /= Void
 		end
 
+	short_form: STRING_32
+			-- Short form (ideally a single character) of the  severity.
+		deferred
+		ensure
+			valid_result: Result /= Void
+		end
 end

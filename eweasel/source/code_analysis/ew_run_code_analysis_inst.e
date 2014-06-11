@@ -9,12 +9,13 @@ class
 	EW_RUN_CODE_ANALYSIS_INST
 
 inherit
+
 	EW_START_COMPILE_INST
-	redefine
-		inst_initialize,
-		compilation_type,
-		execute
-	end
+		redefine
+			inst_initialize,
+			compilation_type,
+			execute
+		end
 
 feature -- Instruction
 
@@ -29,9 +30,7 @@ feature -- Instruction
 			load_defaults := False
 			preference_file_path := Void
 			class_list := Void
-
 			l_args := broken_into_arguments (line);
-
 			from
 				l_args.start
 			until
@@ -70,11 +69,8 @@ feature -- Instruction
 				end
 				l_args.forth
 			end
-
-
 			init_ok := not l_error
 		end
-
 
 	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
@@ -85,7 +81,6 @@ feature -- Instruction
 			create {ARRAYED_LIST [STRING]} Result.make (16)
 			Result.extend ("-melt")
 			Result.extend (Code_analysis_ec_option)
-
 			if load_defaults then
 				Result.extend (Load_defaults_ec_option)
 			end
@@ -114,7 +109,9 @@ feature {EW_RUN_CODE_ANALYSIS_INST} -- Redefinition
 	compilation_type: EW_CODE_ANALYSIS_PROCESS
 			-- <Precursor>
 		do
-			check callable: False then
+			check
+				callable: False
+			then
 			end
 		end
 
@@ -126,57 +123,65 @@ feature {EW_RUN_CODE_ANALYSIS_INST} -- Redefinition
 feature {NONE} -- Implementation
 
 	load_defaults: BOOLEAN
-		-- Was the argument for loading default settings specified?
+			-- Was the argument for loading default settings specified?
 
 	preference_file_path: STRING
-		-- The path to the preference file to be loaded. Void if preferences should not be loaded.
+			-- The path to the preference file to be loaded. Void if preferences should not be loaded.
 
 	class_list: LIST [STRING]
-		-- The list of names of classes to be analyzed. Void if the whole system is to be analyzed.
+			-- The list of names of classes to be analyzed. Void if the whole system is to be analyzed.
 
 	forced_rules_list: LIST [STRING]
-		-- The list of rules to enable, which overrides the preferences. Void if the whole system is to be analyzed.
+			-- The list of rules to enable, which overrides the preferences. Void if the whole system is to be analyzed.
 
 feature {NONE} -- Internal constants
 
 		-- Arguments for this EWeasel command
+
 	Load_defaults_ew_option: STRING = "loaddefaults"
+
 	Load_preferences_ew_option: STRING = "loadprefs"
+
 	Specify_classes_ew_option: STRING = "class"
+
 	Force_rules_ew_option: STRING = "rule"
 
 		-- Arguments to be passed to the compiler.
-	Code_analysis_ec_option: STRING = "-code-analysis"
-	Load_defaults_ec_option: STRING = "-cadefaults"
-	Load_preferences_ec_option: STRING = "-caloadprefs"
-	Specify_classes_ec_option: STRING = "-caclass"
-	Force_rules_ec_option: STRING = "-caforcerules"
 
+	Code_analysis_ec_option: STRING = "-code-analysis"
+
+	Load_defaults_ec_option: STRING = "-cadefaults"
+
+	Load_preferences_ec_option: STRING = "-caloadprefs"
+
+	Specify_classes_ec_option: STRING = "-caclass"
+
+	Force_rules_ec_option: STRING = "-caforcerules"
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
-			All rights reserved.
-			]"
-	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
+		Copyright (c) 1984-2007, University of Southern California and contributors.
+		All rights reserved.
+	]"
+	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
-			This file is part of the EiffelWeasel Eiffel Regression Tester.
-
-			The EiffelWeasel Eiffel Regression Tester is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License version 2 as published
-			by the Free Software Foundation.
-
-			The EiffelWeasel Eiffel Regression Tester is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License version 2 for more details.
-
-			You should have received a copy of the GNU General Public
-			License version 2 along with the EiffelWeasel Eiffel Regression Tester
-			if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA
-		]"
+					This file is part of the EiffelWeasel Eiffel Regression Tester.
+		
+					The EiffelWeasel Eiffel Regression Tester is free
+					software; you can redistribute it and/or modify it under
+					the terms of the GNU General Public License version 2 as published
+					by the Free Software Foundation.
+		
+					The EiffelWeasel Eiffel Regression Tester is
+					distributed in the hope that it will be useful, but
+					WITHOUT ANY WARRANTY; without even the implied warranty
+					of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+					See the GNU General Public License version 2 for more details.
+		
+					You should have received a copy of the GNU General Public
+					License version 2 along with the EiffelWeasel Eiffel Regression Tester
+					if not, write to the Free Software Foundation,
+					Inc., 51 Franklin St, Fifth Floor, Boston, MA
+	]"
 
 end

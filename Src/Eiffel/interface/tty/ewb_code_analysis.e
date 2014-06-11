@@ -24,28 +24,30 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'. `a_arguments' are the command-line
 			-- arguments that are relevant for the Code Analyzer.
 		do
-			create {ARRAYED_LIST [STRING]} unknown_arguments.make (8)
+			create unknown_arguments.make (8)
 
 			across a_arguments as l_args loop
-				if l_args.item.is_equal ("-cadefaults") then
+				if l_args.item.same_string ("-cadefaults") then
 					restore_preferences := True
-				elseif l_args.item.is_equal ("-caloadprefs") then
+				elseif l_args.item.same_string ("-caloadprefs") then
 					l_args.forth
 					preference_file := l_args.item
-				elseif l_args.item.is_equal ("-caforcerules") then
+				elseif l_args.item.same_string ("-caforcerules") then
 					l_args.forth
 
 					if l_args.item.is_empty then
 							-- Corner case: split would return one empty string, I want zero strings.
+							-- We still want to instantiate the list, as we want to enable exactly zero rules.
 						create {ARRAYED_LIST [STRING_32]} forced_rules_list.make (0)
 					else
 						forced_rules_list := l_args.item.to_string_32.split (' ')
 					end
-				elseif l_args.item.is_equal ("-caclass") or l_args.item.is_equal ("-caclasses") then
+				elseif l_args.item.same_string ("-caclass") or l_args.item.same_string ("-caclasses") then
 					l_args.forth
 
 					if l_args.item.is_empty then
 							-- Corner case: split would return one empty string, I want zero strings.
+							-- We still want to instantiate the list, as we want to analyze exactly zero classes.
 						create {ARRAYED_LIST [STRING]} class_name_list.make (0)
 					else
 						class_name_list := l_args.item.split (' ')
@@ -71,7 +73,7 @@ feature {NONE} -- Options
 
 	preference_file: STRING
 
-	unknown_arguments: LIST [STRING]
+	unknown_arguments: ARRAYED_LIST [STRING]
 
 feature -- Execution (declared in EWB_CMD)
 
@@ -108,8 +110,8 @@ feature -- Execution (declared in EWB_CMD)
 			elseif preference_file /= Void then -- The user wants to load preferences.
 				import_preferences (l_code_analyzer.preferences, preference_file)
 			end
-			if forced_rules_list /= Void then
-				l_code_analyzer.force_enable_rules (forced_rules_list)
+			if attached forced_rules_list as l_forced_rules_list then
+				l_code_analyzer.force_enable_rules (l_forced_rules_list)
 			end
 			l_code_analyzer.analyze
 

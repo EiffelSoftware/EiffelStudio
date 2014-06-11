@@ -36,20 +36,19 @@ feature -- Properties
 	has_violations: BOOLEAN
 			-- One or more violations were reported
 		do
-			Result := violations /= Void
-			check
-				not (Result and then violations.is_empty)
-			end
+			Result := (violations /= Void)
+		ensure
+			violation_list_not_empty: not (Result and then violations.is_empty)
 		end
 
 	analysis_argument_warning: BOOLEAN
-		-- The code analysis tool reported an unrecognized argument
+			-- The code analysis tool reported an unrecognized argument
 
 	analysis_class_warning: BOOLEAN
-		-- One of the specified classes was not found or not compiled
+			-- One of the specified classes was not found or not compiled
 
 	analysis_rule_warning: BOOLEAN
-		-- One of the specified forced rules was not found
+			-- One of the specified forced rules was not found
 
 	has_warnings: BOOLEAN
 			-- The code analysis threw a warning
@@ -60,25 +59,25 @@ feature -- Properties
 	eweasel_parse_error: BOOLEAN
 			-- There was some error or inconsistency in parsing the output and the state is unknown.
 
-
-
 	is_status_known: BOOLEAN
 			-- Is the status of compilation and analysis known?
 		local
 			l_count: INTEGER
 			l_exactly_one_analysis_status: BOOLEAN
 		do
-			if not_run then
-				l_count := l_count + 1
+			if Precursor and not eweasel_parse_error then
+					-- Check that we have exactly one analysis status.
+				if not_run then
+					l_count := l_count + 1
+				end
+				if analysis_clean then
+					l_count := l_count + 1
+				end
+				if has_violations then
+					l_count := l_count + 1
+				end
 			end
-			if analysis_clean then
-				l_count := l_count + 1
-			end
-			if has_violations then
-				l_count := l_count + 1
-			end
-			l_exactly_one_analysis_status := (l_count = 1)
-			Result := Precursor and not eweasel_parse_error and l_exactly_one_analysis_status
+			Result := (l_count = 1)
 		end
 
 	status: STRING
@@ -147,8 +146,10 @@ feature -- Update
 					analysis_rule_warning := True
 				elseif is_prefix (argument_not_recognized_prefix, line) then
 					analysis_argument_warning := True
-				elseif is_prefix (Exception_prefix, line) or is_prefix (Exception_occurred_prefix, line) then
-					analyze_exception (line)
+				elseif is_prefix (Exception_prefix, line) then
+					analyze_exception_line (line)
+				elseif is_prefix (Exception_occurred_prefix, line) then
+					analyze_exception_occurred_line (line)
 				end
 			end
 		end
@@ -156,23 +157,35 @@ feature -- Update
 feature -- Modification
 
 	set_analysis_clean
+			-- Set the `analysis_clean' status flag to True.
 		do
 			analysis_clean := True
+		ensure
+			analysis_clean = True
 		end
 
 	set_argument_warning
+			-- Set the `analysis_argument_warning' status flag to True.
 		do
 			analysis_argument_warning := True
+		ensure
+			analysis_argument_warning = True
 		end
 
 	set_class_warning
+			-- Set the `analysis_class_warning' status flag to True.
 		do
 			analysis_class_warning := True
+		ensure
+			analysis_class_warning = True
 		end
 
 	set_rule_warning
+			-- Sets the `analysis_rule_warning' status flag to True.
 		do
 			analysis_rule_warning := True
+		ensure
+			analysis_rule_warning = True
 		end
 
 	add_violation (a_violation: EW_CODE_ANALYSIS_VIOLATION)
@@ -315,6 +328,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+invariant
+	violation_list_not_empty: attached violations implies not violations.is_empty
 
 note
 	copyright: "[

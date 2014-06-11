@@ -176,9 +176,10 @@ feature -- Update
 				compilation_paused := True;
 			elseif is_prefix (Aborted_prefix, line) then
 				compilation_aborted := True;
-			elseif is_prefix (Exception_prefix, line) or
-				   is_prefix (Exception_occurred_prefix, line) then
-				analyze_exception (line)
+			elseif is_prefix (Exception_prefix, line) then
+				analyze_exception_line (line)
+			elseif is_prefix (Exception_occurred_prefix, line) then
+				analyze_exception_occurred_line (line)
 			elseif is_prefix (Failure_prefix, line) then
 				execution_failure := True;
 			elseif is_prefix (Illegal_inst_prefix, line) then
@@ -206,13 +207,19 @@ feature {NONE} -- State
 feature -- Modification
 
 	set_compilation_paused
+			-- Set the `compilation_paused' status flag to True.
 		do
 			compilation_paused := True;
+		ensure
+			compilation_paused = True
 		end;
 
 	set_compilation_finished
+			-- Set the `compilation_finished' status flag to True.
 		do
 			compilation_finished := True;
+		ensure
+			compilation_finished = True
 		end;
 
 	add_syntax_error (err: EW_EIFFEL_SYNTAX_ERROR)
@@ -281,17 +288,9 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	analyze_exception (line: STRING)
-		do
-			if is_prefix (Exception_prefix, line) then
-				analyze_exception_line (line)
-			else
-				check is_prefix (Exception_occurred_prefix, line) end
-				analyze_exception_occurred_line (line)
-			end
-		end
-
 	analyze_exception_line (line: STRING)
+		require
+			exception_prefix: is_prefix (Exception_prefix, line)
 		do
 			had_exception := True;
 			if exception_tag = Void then
@@ -305,6 +304,8 @@ feature {NONE} -- Implementation
 		end
 
 	analyze_exception_occurred_line (line: STRING)
+		require
+			exception_occurred_prefix: is_prefix (Exception_occurred_prefix, line)
 		do
 			had_exception := True;
 			if exception_tag = Void then

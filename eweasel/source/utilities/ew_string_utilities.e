@@ -44,7 +44,7 @@ feature -- String properties
 					pos := 1;
 				end
 			end;
-			
+
 			if pos > s.count then
 				failure := True;
 			end;
@@ -332,16 +332,6 @@ feature -- String list routines
 			end
 		ensure
 			result_exists: Result /= Void
-		end
-
-	safe_string (a_string: STRING): STRING
-			-- `a_string' if `a_string' is attached. A new empty string otherwise.
-		do
-			if attached a_string then
-				Result := a_string
-			else
-				create Result.make_empty
-			end
 		end
 
 note

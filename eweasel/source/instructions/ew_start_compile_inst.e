@@ -21,7 +21,6 @@ feature
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			name, compile_cmd, exec_error: STRING;
-			compilation: EW_EIFFEL_COMPILATION;
 			env_vars: HASH_TABLE [STRING, STRING]
 		do
 			env_vars := test.environment.environment_variables
@@ -60,20 +59,25 @@ feature
 			result_exists: Result /= Void
 		end;
 
+
+feature {EW_START_COMPILE_INST} -- For inherited classes
+
+	compilation: like compilation_type;
+
+	compilation_type: EW_EIFFEL_COMPILATION
+			-- For typing purposes of `compilation'
+		do
+			check callable: False then
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [STRING]
 			-- The arguments to the compiler for test `test'.
 		do
 			create Result.make;
-			from
-				compilation_options.start
-			until
-				compilation_options.after
-			loop
-				Result.extend (compilation_options.item);
-				compilation_options.forth
-			end;
 				-- Add compilation dir to avoid changing
 				-- working directory, which does not work
 				-- with multithreaded code
@@ -88,6 +92,17 @@ feature {NONE} -- Implementation
 				Result.extend ("-target")
 				Result.extend (test.target_name)
 			end
+
+				-- We must add the compilations options to the end of the command line, because
+				-- some commands (e.g. -code-analysis) require so.
+			from
+				compilation_options.start
+			until
+				compilation_options.after
+			loop
+				Result.extend (compilation_options.item);
+				compilation_options.forth
+			end;
 		end;
 
 

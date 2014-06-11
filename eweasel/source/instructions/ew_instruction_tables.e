@@ -51,6 +51,7 @@ feature
 			Result.put (create {EW_ABORT_COMPILE_INST}, Abort_compile_keyword)
 			Result.put (create {EW_EXIT_COMPILE_INST}, Exit_compile_keyword)
 			Result.put (create {EW_COMPILE_RESULT_INST}, Compile_result_keyword)
+			Result.put (create {EW_RUN_CODE_ANALYSIS_INST}, Code_analysis_keyword)
 			Result.put (create {EW_C_COMPILE_WORK_INST}, C_compile_work_keyword)
 			Result.put (create {EW_C_COMPILE_FINAL_INST}, C_compile_final_keyword)
 			Result.put (create {EW_C_COMPILE_RESULT_INST}, C_compile_result_keyword)

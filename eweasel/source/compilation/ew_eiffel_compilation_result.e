@@ -176,28 +176,9 @@ feature -- Update
 				compilation_paused := True;
 			elseif is_prefix (Aborted_prefix, line) then
 				compilation_aborted := True;
-			elseif is_prefix (Exception_prefix, line) then
-				had_exception := True;
-				if exception_tag = Void then
-					create exception_tag.make(0);
-				end;
-				line.keep_tail(line.count - Exception_prefix.count);
-				exception_tag.append (line);
-					-- Remove all newlines characters so that the exception tag appears on a single line.
-				exception_tag.replace_substring_all ("%N", "")
-				exception_tag.replace_substring_all ("%R", "")
-			elseif is_prefix (Exception_occurred_prefix, line) then
-				had_exception := True;
-				if exception_tag = Void then
-					create exception_tag.make(0);
-				end;
-				if exception_tag.count = 0 then
-					line.keep_tail (line.count - Exception_occurred_prefix.count);
-					exception_tag.append (line);
-						-- Remove all newlines characters so that the exception tag appears on a single line.
-					exception_tag.replace_substring_all ("%N", "")
-					exception_tag.replace_substring_all ("%R", "")
-				end
+			elseif is_prefix (Exception_prefix, line) or
+				   is_prefix (Exception_occurred_prefix, line) then
+				analyze_exception (line)
 			elseif is_prefix (Failure_prefix, line) then
 				execution_failure := True;
 			elseif is_prefix (Illegal_inst_prefix, line) then
@@ -299,6 +280,44 @@ feature -- Comparison
 
 
 feature {NONE} -- Implementation
+
+	analyze_exception (line: STRING)
+		do
+			if is_prefix (Exception_prefix, line) then
+				analyze_exception_line (line)
+			else
+				check is_prefix (Exception_occurred_prefix, line) end
+				analyze_exception_occurred_line (line)
+			end
+		end
+
+	analyze_exception_line (line: STRING)
+		do
+			had_exception := True;
+			if exception_tag = Void then
+				create exception_tag.make(0);
+			end;
+			line.keep_tail(line.count - Exception_prefix.count);
+			exception_tag.append (line);
+				-- Remove all newlines characters so that the exception tag appears on a single line.
+			exception_tag.replace_substring_all ("%N", "")
+			exception_tag.replace_substring_all ("%R", "")
+		end
+
+	analyze_exception_occurred_line (line: STRING)
+		do
+			had_exception := True;
+			if exception_tag = Void then
+				create exception_tag.make(0);
+			end;
+			if exception_tag.count = 0 then
+				line.keep_tail (line.count - Exception_occurred_prefix.count);
+				exception_tag.append (line);
+					-- Remove all newlines characters so that the exception tag appears on a single line.
+				exception_tag.replace_substring_all ("%N", "")
+				exception_tag.replace_substring_all ("%R", "")
+			end
+		end
 
 	analyze_syntax_error (line: STRING)
 		require

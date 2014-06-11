@@ -16,6 +16,8 @@ feature
 	C_compile_result_keyword: 	STRING = "c_compile_result"
 	C_compile_work_keyword: 	STRING = "c_compile_work"
 	Cleanup_compile_keyword: 	STRING = "cleanup_compile"
+	Code_analysis_keyword: 	STRING = "run_code_analysis"
+	Code_analysis_result_keyword: 	STRING = "code_analysis_result"
 	Compare_keyword: 		STRING = "compare"
 	Compile_final_keep_keyword: 	STRING = "compile_final_keep"
 	Compile_final_keyword: 	STRING = "compile_final"

@@ -46,7 +46,7 @@ feature -- Initialization
 			Result.extend (os.full_file_name (test.environment.value (Output_dir_name), file_name_after_format))
 		end
 
-	compilation_options: LIST [STRING]
+	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- <Precursor>
 		once
 			create {LINKED_LIST [STRING]} Result.make

@@ -16,73 +16,96 @@ inherit
 		execute
 	end
 
-feature
+feature -- Instruction
 
 	inst_initialize (line: STRING)
-			-- Initialize instruction from `line'.  Set
-			-- `init_ok' to indicate whether
+			-- Initialize instruction from `line'.
+			-- Set `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING];
-			i: INTEGER
+			l_args: LIST [STRING];
+			l_error: BOOLEAN
 		do
 			load_defaults := False
 			preference_file_path := Void
 			class_list := Void
 
-			args := broken_into_words (line);
+			l_args := broken_into_arguments (line);
 
-			args.start
-
-			if not args.after and then args.item ~ load_defaults_ew_option then
-				load_defaults := true
-				args.forth
-			end
-
-			if not args.after and then args.item ~ load_preferences_ew_option then
-				args.forth
-				if args.after then
-					init_ok := false
-					failure_explanation := "No preference file specified after " + load_preferences_ew_option + " option."
+			from
+				l_args.start
+			until
+				l_args.after or l_error
+			loop
+				if l_args.item ~ Load_defaults_ew_option then
+					load_defaults := true
+					l_args.forth
+				elseif l_args.item ~ Load_preferences_ew_option then
+					l_args.forth
+					if l_args.after then
+						l_error := True
+						failure_explanation := "No preference file specified after " + load_preferences_ew_option + " option."
+					else
+						preference_file_path := l_args.item
+					end
+				elseif l_args.item ~ Specify_classes_ew_option then
+					l_args.forth
+					if l_args.after then
+						l_error := True
+						failure_explanation := "No class or list of classes specified after " + Specify_classes_ew_option + " option."
+					else
+						class_list := broken_into_words (l_args.item)
+					end
+				elseif l_args.item ~ Force_rules_ew_option then
+					l_args.forth
+					if l_args.after then
+						l_error := True
+						failure_explanation := "No rule or list of rules specified after " + Force_rules_ew_option + " option."
+					else
+						forced_rules_list := broken_into_words (l_args.item)
+					end
 				else
-					preference_file_path := args.item
-					args.forth
+					l_error := True
+					failure_explanation := "Unrecognized argument: " + l_args.item
 				end
+				l_args.forth
 			end
 
-			if not args.after and then args.item ~ specify_classes_ew_option then
-				create {ARRAYED_LIST [STRING]} class_list.make (16)
-				from
-					args.forth -- Yes, this is correct!
-				until
-					args.after
-				loop
-					class_list.extend (args.item)
-				end
-			end
+
+			init_ok := not l_error
 		end
 
 
-	compilation_options: LIST [STRING]
+	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
 			-- if Eiffel compiler is run
+		local
+			l_temp_string: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (16)
 			Result.extend ("-melt")
-			Result.extend (code_analysis_ec_option)
+			Result.extend (Code_analysis_ec_option)
 
 			if load_defaults then
-				Result.extend (load_defaults_ec_option)
+				Result.extend (Load_defaults_ec_option)
 			end
-			if attached preference_file_path as l_preference_file_path then
-				Result.extend (load_preferences_ec_option)
-				Result.extend (l_preference_file_path)
+			if attached preference_file_path as l_preference_file_name then
+				Result.extend (Load_preferences_ec_option)
+				Result.extend (os.full_file_name (a_test.environment.value (Test_dir_name), l_preference_file_name))
 			end
 			if attached class_list as l_class_list then
-				Result.extend (specify_classes_ec_option)
-				across l_class_list as ic loop
-					Result.extend (ic.item)
-				end
+				Result.extend (Specify_classes_ec_option)
+				l_temp_string := merged_with_separator (l_class_list, " ")
+				l_temp_string.prepend_character ('%"')
+				l_temp_string.append_character ('%"')
+				Result.extend (l_temp_string)
+			end
+			if attached forced_rules_list as l_forced_rules_list then
+				Result.extend (Force_rules_ec_option)
+				l_temp_string := merged_with_separator (l_forced_rules_list, " ")
+				l_temp_string.prepend_character ('%"')
+				l_temp_string.append_character ('%"')
+				Result.extend (l_temp_string)
 			end
 		end
 
@@ -111,18 +134,23 @@ feature {NONE} -- Implementation
 	class_list: LIST [STRING]
 		-- The list of names of classes to be analyzed. Void if the whole system is to be analyzed.
 
+	forced_rules_list: LIST [STRING]
+		-- The list of rules to enable, which overrides the preferences. Void if the whole system is to be analyzed.
+
 feature {NONE} -- Internal constants
 
 		-- Arguments for this EWeasel command
-	load_defaults_ew_option: STRING = "loaddefaults"
-	load_preferences_ew_option: STRING = "loadprefs"
-	specify_classes_ew_option: STRING = "class"
+	Load_defaults_ew_option: STRING = "loaddefaults"
+	Load_preferences_ew_option: STRING = "loadprefs"
+	Specify_classes_ew_option: STRING = "class"
+	Force_rules_ew_option: STRING = "rule"
 
 		-- Arguments to be passed to the compiler.
-	code_analysis_ec_option: STRING = "-code-analysis"
-	load_defaults_ec_option: STRING = "-cadefaults"
-	load_preferences_ec_option: STRING = "-caloadprefs"
-	specify_classes_ec_option: STRING = "-caclass"
+	Code_analysis_ec_option: STRING = "-code-analysis"
+	Load_defaults_ec_option: STRING = "-cadefaults"
+	Load_preferences_ec_option: STRING = "-caloadprefs"
+	Specify_classes_ec_option: STRING = "-caclass"
+	Force_rules_ec_option: STRING = "-caforcerules"
 
 
 note

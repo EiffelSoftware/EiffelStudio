@@ -20,6 +20,11 @@ inherit
 			is_equal
 		end
 
+	EW_STRING_UTILITIES
+		undefine
+			is_equal
+		end
+
 create
 	make_empty, make_with_everything
 
@@ -27,6 +32,8 @@ feature {NONE} -- Initialization
 
 	make_empty
 		do
+				-- We do this because this field is (virtually) an enum.
+			type := unknown_violation_type
 		end
 
 	make_with_everything (a_class_name: STRING; a_line_number: INTEGER; a_rule_id, a_type, a_message: STRING)
@@ -63,19 +70,21 @@ feature -- Properties
 	summary: STRING
 		do
 			create Result.make (0);
-			Result.append (type);
+			Result.append (safe_string (type));
 			if not equal (class_name, "")  then
 				Result.append (" in class ");
-				Result.append (class_name);
-				Result.append (" at line " + line_number.out);
+				Result.append (safe_string (class_name));
+				if line_number /= 0 then
+					Result.append (" at line " + line_number.out);
+				end
 			end;
 			Result.append (". ");
-			Result.append (rule_id)
+			Result.append (safe_string (rule_id))
 			if rule_id /= Void and then not rule_id.is_empty and
 			   message /= Void and then not message.is_empty then
 				Result.append (": ")
 			end
-			Result.append (message)
+			Result.append (safe_string (message))
 		end;
 
 feature -- Modification
@@ -110,29 +119,41 @@ feature -- Modification
 
 feature -- Comparison
 
+	matches_pattern (other: like Current): BOOLEAN
+			-- Are the properties which are explicitly specified in `other'
+			-- equals to those in `Current'?
+		do
+			Result := (other.class_name = Void or else class_name.is_equal (other.class_name)) and
+					   (other.line_number = 0 or else line_number.is_equal (other.line_number)) and
+					   (other.rule_id = Void or else rule_id.is_equal (other.rule_id)) and
+					   (other.type = Unknown_violation_type or else type.is_equal (other.type)) and
+					   (other.message = Void or else message.is_equal (other.message))
+		end
+
 	is_equal (other: like Current): BOOLEAN
 		do
 			Result := class_name.is_equal (other.class_name) and line_number.is_equal (other.line_number) and
 					  type.is_equal (other.type) and message.is_equal (other.message)
 		end
 
+		-- TODO: Triggers an incorrect self-comparison violation (CA071). Create test!
 	is_less  alias "<" (other: like Current): BOOLEAN
 		do
 			if equal (class_name, other.class_name) then
 				if equal (line_number, other.line_number) then
-					Result := rule_id < other.rule_id
+					Result := safe_string (rule_id) < safe_string (other.rule_id)
 				else
 					Result := line_number < other.line_number
 				end
 			else
-				Result := class_name < other.class_name
+				Result := safe_string (class_name) < safe_string (other.class_name)
 			end
 		end
 
 invariant
 
 	valid_type:
-		type = Void or is_valid_violation_type (type)
+		type = is_valid_violation_type (type)
 
 
 note

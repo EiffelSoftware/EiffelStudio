@@ -11,7 +11,7 @@ inherit
 	EW_START_COMPILE_INST;
 
 feature
-	compilation_options: LIST [STRING]
+	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
 			-- if Eiffel compiler is run
 		once

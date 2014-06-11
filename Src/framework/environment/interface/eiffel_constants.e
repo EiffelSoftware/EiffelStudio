@@ -68,7 +68,7 @@ feature -- Version
 	major_version: NATURAL_16 = 14
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 05
+	minor_version: NATURAL_16 = 11
 			-- Minor release version.
 
 	two_digit_minimum_major_version: STRING
@@ -96,7 +96,7 @@ feature -- Version
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

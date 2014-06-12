@@ -9,6 +9,6 @@ copy_raw	base_object_view.e $CLUSTER base_object_view.e
 copy_raw	proxy_proxiable_data_identified.e $CLUSTER proxy_proxiable_data_identified.e
 
 compile_melted
-compile_result	ok
+compile_result	validity_warning TEST Unused_local_warning
 
 test_end

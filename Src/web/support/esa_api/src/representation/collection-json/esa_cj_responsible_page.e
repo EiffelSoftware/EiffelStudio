@@ -28,6 +28,7 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.categories, "categories")
 			template.add_value (a_view.priorities, "priorities")
+			template.add_value (a_view.responsibles, "responsibles")
 			template.add_value (a_view.status, "status")
 			template.add_value (a_view.severities, "severities")
 			template.add_value (a_view, "view")

@@ -85,7 +85,7 @@ feature -- View
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
 			-- <Precursor>
 		do
-			to_implement ("Add Implementation")
+			compute_response_redirect (req, res, absolute_host (req, a_redirect_uri) )
 		end
 
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
@@ -468,37 +468,82 @@ feature -- View
 	post_account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+			end
 		end
 
 	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_VIEW)
 			-- <Precursor>
+		local
+				l_hp: ESA_CJ_CHANGE_PASSWORD_PAGE
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
 		end
 
 	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
+		local
+			l_hp: ESA_CJ_CHANGE_EMAIL_PAGE
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
 		end
 
 	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
+		local
+			l_hp: ESA_CJ_POST_CHANGE_EMAIL_PAGE
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
+				if attached l_hp.representation as l_change_password_page then
+				    new_response_get (req, res, l_change_password_page)
+				end
+			end
 		end
+
 
 	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
+		local
+			l_hp: ESA_CJ_CONFIRM_EMAIL_CHANGE
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
 		end
 
 	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		do
-			to_implement ("Add CJ representation!!!")
+			if attached current_user_name (req) as l_user then
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+			end
 		end
 
 feature -- Response
@@ -528,6 +573,22 @@ feature -- Response
 			end
 			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.ok)
+			res.put_header_text (h.string)
+			res.put_string (output)
+		end
+
+	new_response_get_400 (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_type ("application/vnd.collection+json")
+			h.put_content_length (output.count)
+			if attached media_variants.vary_header_value as l_vary then
+				h.put_header_key_value ("Vary", l_vary)
+			end
+			h.put_current_date
+			res.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 			res.put_header_text (h.string)
 			res.put_string (output)
 		end

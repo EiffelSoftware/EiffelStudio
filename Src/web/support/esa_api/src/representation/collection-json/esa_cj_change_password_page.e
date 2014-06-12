@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ESA_CJ_REGISTER_PAGE}."
+	description: "Summary description for {ESA_CJ_CHANGE_PASSWORD_PAGE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_CJ_REGISTER_PAGE
+	ESA_CJ_CHANGE_PASSWORD_PAGE
 
 inherit
 
@@ -15,21 +15,22 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REGISTER_VIEW; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY; a_view: ESA_PASSWORD_VIEW)
 			-- Initialize `Current'.
 		local
 			l_error: STRING
 		do
 			set_template_folder (cj_path)
-			set_template_file_name ("cj_register.tpl")
+			set_template_file_name ("cj_change_password.tpl")
 			template.add_value (a_host, "host")
-			template.add_value (a_form.questions, "questions")
-			template.add_value (a_form, "form")
+			if attached a_user then
+				template.add_value (a_user, "user")
+			end
 
-			l_error := ""
-			if attached a_form.errors as l_errors then
+			if attached a_view.errors as l_errors then
+				l_error := ""
 				from
 					l_errors.start
 				until
@@ -41,13 +42,9 @@ feature {NONE} -- Initialization
 						l_error.append (" , ")
 					end
 				end
-				template.add_value (l_error, "error")
-				template.add_value ("Validation Error", "title")
+				template.add_value ("Validation Error:", "title")
 				template.add_value ("400", "code")
-			end
-
-			if attached a_user then
-				template.add_value (a_user,"user")
+				template.add_value (l_error, "error")
 			end
 
 			template_context.enable_verbose
@@ -57,7 +54,7 @@ feature {NONE} -- Initialization
 				l_output.replace_substring_all ("<", "{")
 				l_output.replace_substring_all (">", "}")
 				l_output.replace_substring_all ("},]", "}]")
-				l_output.replace_substring_all (",]", "]")
+
 				representation := l_output
 				debug
 					print ("%N===========%N" + l_output)

@@ -1,6 +1,6 @@
 <"collection": <
     "version": "1.0", 
-    "href": "{$host/}", 
+    "href": "{$host/}/email", 
     "links": [
              <
                 "href": "{$host/}",
@@ -28,6 +28,11 @@
                 "prompt": "Report a Problem"
             >,
             <
+                "href": "{$host/}/logoff",
+                "rel": "logoff",
+                "prompt": "Logoff"
+            >,
+            <
                 "href": "{$host/}/account",
                 "rel": "account",
                 "prompt": "Account information"
@@ -38,15 +43,11 @@
                 "prompt": "Change password"
             >,
             <
-                "href": "{$host/}/email",
-                "rel": "change_email",
-                "prompt": "Change Email"
-            >,
-            <
                 "href": "{$host/}/logoff",
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
+
 
 
             {/if}
@@ -66,12 +67,12 @@
           ],
     "items":[
                <
-                "href": "{$host/}/activation",
+                "href": "{$host/}/confirm_email",
                 "data": [
                     <
-                        "name": "activation",
-                        "prompt": "Account Activation",
-                        "value": "An e-mail with an activation code was sent to your account.   Please check your email and use the provided link to activate your account."
+                        "name": "email",
+                        "prompt": "Email Activation",
+                        "value": "An e-mail with an activation code was sent to your account.  Please check your email and use the provided link to activate your new email account."
                     >
                   ]
                 >

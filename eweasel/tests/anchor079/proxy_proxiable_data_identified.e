@@ -1,4 +1,4 @@
 class  PROXY_PROXIABLE_DATA_IDENTIFIED
 feature
-	item: STRING
+	item: detachable STRING
 end

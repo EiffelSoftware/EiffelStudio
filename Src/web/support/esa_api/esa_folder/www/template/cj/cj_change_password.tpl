@@ -1,13 +1,13 @@
 <"collection": <
     "version": "1.0", 
-    "href": "{$host/}", 
+    "href": "{$host/}/password", 
     "links": [
              <
                 "href": "{$host/}",
                 "rel": "home",
                 "prompt": "Home"
             >,
-            <
+             <
                 "href": "{$host/}/reports",
                 "rel": "all",
                 "prompt": "Reports"
@@ -38,44 +38,21 @@
                 "prompt": "Change password"
             >,
             <
-                "href": "{$host/}/email",
-                "rel": "change_email",
-                "prompt": "Change Email"
-            >,
-            <
                 "href": "{$host/}/logoff",
                 "rel": "logoff",
                 "prompt": "Logoff"
             >
-
-
             {/if}
-            {unless isset="$user"}
-            <
-                "href": "{$host/}/login",
-                "rel": "login",
-                "prompt": "Login"
-            >,
-             <
-                "href": "{$host/}/register",
-                "rel": "register",
-                "prompt": "Register"
-            >
-            {/unless} 
 
           ],
-    "items":[
-               <
-                "href": "{$host/}/activation",
-                "data": [
-                    <
-                        "name": "activation",
-                        "prompt": "Account Activation",
-                        "value": "An e-mail with an activation code was sent to your account.   Please check your email and use the provided link to activate your account."
-                    >
-                  ]
-                >
-             ],       
+ 
+   "template": <
+      "data": [
+                <"name": "password", "prompt": "Password", "value": "">,
+                <"name": "check_password", "prompt": "Re-Type Password", "value": "">
+
+             ]     >,
+    
     "queries" :
         [
          <
@@ -87,6 +64,11 @@
                 <"name" : "search", "value" : "">
             ]
         >
-    ]      
+       ]  
+    {if isset="$error"}
+    ,
+    "error":<"title":"{$title/}","code":"{$code/}", "message":"{$error/}">
+    {/if}  
+      
   >
 >

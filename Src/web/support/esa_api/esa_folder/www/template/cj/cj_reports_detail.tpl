@@ -29,6 +29,21 @@
                "prompt": "Report a Problem"
             >,
             <
+               "href": "{$host/}/account",
+               "rel": "account",
+               "prompt": "Account information"
+            >,
+            <
+               "href": "{$host/}/password",
+               "rel": "change_password",
+               "prompt": "Change password"
+            >,
+            <
+               "href": "{$host/}/email",
+               "rel": "change_email",
+               "prompt": "Change Email"
+            >,
+            <
              "href": "{$host/}/logoff",
              "rel": "logoff",
              "prompt": "Logoff"
@@ -179,9 +194,7 @@
                             "value": "{$elem.bytes_count/}"
                         >,{/foreach}{/foreach}], 
                 "links":[
-                 {if isset="$user"}
-                  <"rel":"create_report_interaction", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">,
-                 {/if}
+                 
                  {foreach from="$report.interactions" item="item"}
                    
                     {foreach from="$item.attachments" item="elem"}
@@ -189,8 +202,14 @@
                        "href": "{$host/}/report_interaction/{$elem.id/}/{$elem.name/}",
                        "rel": "attachment",
                        "prompt": "Attatchment"
-                     >,{/foreach}{/foreach}]      
-
+                     >,{/foreach}{/foreach}
+                  {if isset="$user"}
+                  <"rel":"create_report_interaction", "href": "{$host/}/report_detail/{$report.number/}/interaction_form", "prompt": "Interaction Form">,]
+                 {/if}
+                {unless isset="$user"}
+                  ]
+                {/unless}    
+                
                >  
             ]
      

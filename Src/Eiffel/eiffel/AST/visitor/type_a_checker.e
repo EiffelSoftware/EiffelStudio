@@ -860,11 +860,13 @@ feature {NONE} -- Implementation
 							associated_type_ast := saved_ast
 							if attached last_type as r then
 									-- Evaluate type of `f' in the current context.
-									-- Use formal generic constraint instead of the formal general itself.
+									-- Use formal generic constraint instead of the formal generic itself.
 									-- Avoid using `instantiated_in' to preserve `like Current' status.
 									-- Use `r.actual_type' instead of just `r' to avoid recomputing qualified anchored types (if any)
 									-- that are not ready yet for use (test#anchor033).
-								q := r.actual_type.formal_instantiation_in (q, p, c.class_id).actual_type
+									-- Use `{TYPE_A}.recomputed_in' to correctly recompute anchors relative to the context class,
+									-- e.g. when they depend on formal generics of the context class (test#anchor079).
+								q := r.actual_type.recomputed_in (q, current_class.class_id, p, c.class_id).actual_type
 									-- Record supplier for recompilation.
 								degree_4.add_qualified_supplier (f, c, current_class)
 									-- Register intermediate type with instantiator.

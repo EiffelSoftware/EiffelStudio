@@ -15,7 +15,7 @@ inherit
 			generics, valid_generic, parent_type, dump, ext_append_to, formal_instantiation_in,
 			has_like, has_like_argument, has_like_current, is_loose, duplicate, good_generics,
 			error_generics, check_constraints, has_formal_generic, formal_instantiated_in,
-			instantiated_in,
+			instantiated_in, recomputed_in,
 			has_expanded, internal_is_valid_for_class, expanded_deferred, valid_expanded_creation,
 			same_as, is_equivalent, description, description_with_detachable_type, instantiated_description, is_explicit,
 			deep_actual_type, context_free_type, instantiation_in, has_actual,
@@ -1081,6 +1081,37 @@ feature -- Primitives
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put_i_th (l_new_type, i)
+				end
+				i := i - 1
+			end
+		end
+
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): like Current
+			-- <Precursor>
+		local
+			i: INTEGER
+			old_generics: like generics
+			new_generics: like generics
+			old_type: TYPE_A
+			new_type: TYPE_A
+		do
+			Result := Current
+			from
+				old_generics := Result.generics
+				i := old_generics.count
+			until
+				i <= 0
+			loop
+				old_type := old_generics.i_th (i)
+				new_type := old_type.recomputed_in (target_type, context_id, constraint, written_id)
+				if new_type /= old_type then
+						-- Record a new type of a generic parameter.
+					if new_generics = Void then
+							-- Avoid modifying original type descriptor.
+						Result := Result.duplicate_for_instantiation
+						new_generics := Result.generics
+					end
+					new_generics.put_i_th (new_type, i)
 				end
 				i := i - 1
 			end

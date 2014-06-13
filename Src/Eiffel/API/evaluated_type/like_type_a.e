@@ -43,6 +43,7 @@ inherit
 			is_separate,
 			internal_is_valid_for_class,
 			meta_type,
+			recomputed_in,
 			set_attached_mark,
 			set_detachable_mark,
 			set_is_implicitly_attached,
@@ -305,6 +306,16 @@ feature -- Primitives
 			else
 				actual_type := a.to_other_immediate_attachment (Current)
 			end
+		end
+
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.recomputed_in (target_type, context_id, constraint, written_id))
+			Result := t
 		end
 
 	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A

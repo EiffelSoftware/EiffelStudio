@@ -14,7 +14,7 @@ inherit
 			actual_type, deep_actual_type, context_free_type,
 			base_class, associated_class_type, internal_conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
-			instantiated_in, duplicate, set_separate_mark,
+			instantiated_in, duplicate, set_separate_mark, recomputed_in,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
@@ -517,6 +517,13 @@ feature {COMPILER_EXPORTER} -- Duplication
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
+
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		do
+				-- Use original type.
+			Result := instantiation_in (target_type, written_id)
+		end
 
 	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
 			-- <Precursor>

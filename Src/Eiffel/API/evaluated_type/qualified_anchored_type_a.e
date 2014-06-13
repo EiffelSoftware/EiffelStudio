@@ -26,6 +26,7 @@ inherit
 			is_explicit,
 			is_loose,
 			is_syntactically_equal,
+			recomputed_in,
 			skeleton_adapted_in,
 			update_dependance
 		end
@@ -409,6 +410,12 @@ feature -- Primitives
 			t.set_actual_type (actual_type.instantiated_in (class_type).actual_type)
 			t.set_qualifier (qualifier.instantiated_in (class_type))
 			Result := t
+		end
+
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
+		do
+			Result := recompute (qualifier.recomputed_in (target_type, context_id, constraint, written_id), context_id)
 		end
 
 	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): QUALIFIED_ANCHORED_TYPE_A

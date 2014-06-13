@@ -1596,6 +1596,27 @@ feature -- Access
 			actual_argument_type_maintained: has_like_argument xor Result = Current
 		end
 
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- Current type written in the class of id `written_id' as seen in the class of id `context_id'
+			-- when used on the target type `target_type' with possible constraint `constraint'.
+			-- This applies to a call of a feature of type `Current' on a target of type `target_type'
+			-- in the class identified by `context_id' given that `Current' is written
+			-- in the class identified by `written_id' with the constraint `constraint':
+			--    class WRITTEN_CLASS feature f: CURRENT_TYPE ... end
+			--    class CONTEXT_CLASS [TARGET_TYPE -> CONSTRAINT] feature x: TARGET_TYPE ... x.f ... end
+			--       -- The result is the type of x.f in CONTEXT_CLASS.
+		require
+			target_type_attached: attached target_type
+			positive_context_id: context_id > 0
+			constraint_attached: constraint /= Void
+			constraint_not_formal: not constraint.is_formal
+			positive_id: written_id > 0
+		do
+			Result := formal_instantiation_in (target_type, constraint, written_id)
+		ensure
+			result_attached: attached Result
+		end
+
 	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current written in the class of id `written_id'
 			-- in the context of (possibly formal) `type' with actual (constraint type) `constraint'.

@@ -18,7 +18,7 @@ inherit
 			formal_instantiated_in, instantiated_in, good_generics, error_generics, check_constraints,
 			expanded_deferred, valid_expanded_creation, update_dependance,
 			has_expanded, dump, duplicate, reference_type, formal_instantiation_in,
-			is_equivalent, instantiation_of, same_as, instantiation_in,
+			is_equivalent, instantiation_of, same_as, instantiation_in, recomputed_in,
 			is_full_named_type, evaluated_type_in_descendant, is_explicit, is_known,
 			generate_cid, generate_cid_array, generate_cid_init, has_actual,
 			make_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,

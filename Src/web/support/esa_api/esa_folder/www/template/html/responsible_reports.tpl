@@ -164,9 +164,9 @@
 
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{$item.number/}</a></td>
-                       <td itemprop="status">{$item.status.id/}</td>
-                       <td itemprop="priority">{$item.priority.id/}</td>
-                       <td itemprop="severity">{$item.severity.id/}</td>
+                       <td itemprop="status">{$item.status.synopsis/}</td>
+                       <td itemprop="priority">{$item.priority.synopsis/}</td>
+                       <td itemprop="severity">{$item.severity.synopsis/}</td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
                        <td itemprop="submitter">{$item.contact.name/}</td>
                        <td itemprop="submission_date">{$item.submission_date/}</td>

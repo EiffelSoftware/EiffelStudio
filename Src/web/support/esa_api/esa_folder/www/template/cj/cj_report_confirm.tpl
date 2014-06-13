@@ -39,7 +39,7 @@
             >,
             <
                  "href": "{$host/}/email",
-                 "rel": "change_email,
+                 "rel": "change_email",
                  "prompt": "Change Email"
             >,
             <

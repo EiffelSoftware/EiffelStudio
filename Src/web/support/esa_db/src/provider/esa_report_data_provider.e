@@ -61,14 +61,13 @@ feature -- Access
 			l_query: STRING
 			l_encoder: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
-			create l_parameters.make (7)
+			create l_parameters.make (6)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page*a_page_number, "Offset")
 			l_parameters.put (l_encoder.encode (string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
-			l_parameters.put (l_encoder.encode (string_parameter (a_column, 30)), "Column")
 			create l_query.make_from_string (Select_problem_reports_by_user_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -77,6 +76,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD1", "DESC")
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
+			l_query.replace_substring_all ("$Column", l_encoder.encode (string_parameter (a_column, 30)))
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -112,12 +112,11 @@ feature -- Access
 			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
 			to_implement ("Improve the way to generate the prepare statement.")
-			create l_parameters.make (2)
+			create l_parameters.make (4)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number*a_rows_per_page, "Offset")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
-			l_parameters.put (l_encode.encode ( string_parameter (a_column, 30)), "Column")
 			create l_query.make_from_string (Select_problem_reports_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -126,6 +125,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD1", "DESC")
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
+			l_query.replace_substring_all ("$Column", l_encode.encode ( string_parameter (a_column, 30)) )
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -144,14 +144,13 @@ feature -- Access
 			l_query: STRING
 			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
-			create l_parameters.make (7)
+			create l_parameters.make (6)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page*a_page_number, "Offset")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 			l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
 			l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
-			l_parameters.put (l_encode.encode ( string_parameter (a_column, 30)), "Column")
 
 			create l_query.make_from_string (Select_problem_reports_responsibles_template)
 
@@ -161,6 +160,8 @@ feature -- Access
 			else
 				l_query.replace_substring_all ("$Submitter","")
 			end
+
+			l_query.replace_substring_all ("$Column", l_encode.encode ( string_parameter (a_column, 30)) )
 
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -1343,21 +1344,32 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0, "Null", False)
 			if attached a_tuple as l_tuple then
-				if attached {INTEGER_32_REF} l_tuple.item (1) as l_item_1 then
-						Result.set_number (l_item_1.item)
+					-- Report Number
+				if attached db_handler.read_integer_32 (1) as l_item_1 then
+					Result.set_number (l_item_1.item)
 				end
-				if attached {STRING} l_tuple.item (2) as  l_item_2 then
+					-- Synopsis
+				if attached db_handler.read_string (2) as  l_item_2 then
 					Result.set_synopsis (l_item_2)
 				end
-				if attached {STRING} l_tuple.item (3) as  l_item_3 then
-					Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (-1,l_item_3, True))
+					-- Category Synopsis
+				if attached db_handler.read_string (3) as  l_item_3 then
+					Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (0,l_item_3, True))
 				end
-				if attached {DATE_TIME} l_tuple.item (4) as  l_item_4 then
+					-- Submission Date
+				if attached db_handler.read_date_time (4) as l_item_4 then
 					Result.set_submission_date (l_item_4)
 				end
-
-				if attached {INTEGER_32_REF} l_tuple.item (5) as  l_item_5 then
+					-- StatusId
+				if attached db_handler.read_integer_32 (5) as  l_item_5 then
 					Result.set_status (create {ESA_REPORT_STATUS}.make (l_item_5.item,""))
+						-- Status Synopsis
+					if
+						attached db_handler.read_string (6) as l_item_6 and then
+						attached Result.status as l_status
+					then
+						l_status.set_synopsis (l_item_6)
+					end
 				end
 			end
 		end
@@ -1465,29 +1477,50 @@ feature {NONE} -- Implementation
 				--Priority ID
 			if attached db_handler.read_integer_32 (5) as  l_priority then
 				Result.set_priority (create {ESA_REPORT_PRIORITY}.make (l_priority,""))
+					-- PrioritySynopsis	
+				if
+					attached db_handler.read_string (6) as l_priority_synopsis and then
+					attached Result.priority as ll_priority
+				then
+					ll_priority.set_synopsis (l_priority_synopsis)
+				end
 			end
 				--Category Synopsis
-			if attached db_handler.read_string (6) as l_category_synopsis then
+			if attached db_handler.read_string (7) as l_category_synopsis then
 				Result.set_report_category (create {ESA_REPORT_CATEGORY}.make (0,l_category_synopsis, True))
 			end
 			 	--Severity ID
-			if attached db_handler.read_integer_32 (7) as  l_severity then
+			if attached db_handler.read_integer_32 (8) as  l_severity then
 				Result.set_severity (create {ESA_REPORT_SEVERITY}.make ( l_severity,""))
+					-- SeveritySynopsis	
+				if
+					attached db_handler.read_string (9) as l_serverity_synopsis and then
+					attached Result.severity as ll_severity
+				then
+					ll_severity.set_synopsis (l_serverity_synopsis)
+				end
 			end
 			 	--Status ID
-			if attached db_handler.read_integer_32 (8) as  l_status then
+			if attached db_handler.read_integer_32 (10) as  l_status then
 				Result.set_status (create {ESA_REPORT_STATUS}.make ( l_status,""))
+					-- StatusSynopsis	
+				if
+					attached db_handler.read_string (11) as l_status_synopsis and then
+					attached Result.status as ll_status
+				then
+					ll_status.set_synopsis (l_status_synopsis)
+				end
 			end
 				-- Description
-			if attached db_handler.read_string (9) as l_description then
+			if attached db_handler.read_string (12) as l_description then
 				Result.set_description (l_description)
 			end
 			 	--User Name
-			if attached db_handler.read_string (10) as  l_name then
+			if attached db_handler.read_string (13) as  l_name then
 				Result.set_contact (create {ESA_USER}.make (l_name))
 			end
 				-- Responsible ID
-			if attached db_handler.read_integer_32 (11) as l_responsible then
+			if attached db_handler.read_integer_32 (14) as l_responsible then
 				Result.set_assigned (create {ESA_USER}.make (""))
 				if attached Result.assigned as l_assigned then
 					l_assigned.set_id (l_responsible)
@@ -1685,39 +1718,42 @@ feature -- Queries
 
 
 	Select_problem_reports_template: STRING = "[
-				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
+				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, PAG2.StatusID, ProblemReportStatus.StatusSynopsis
 			 FROM (
 			    SELECT TOP :RowsPerPage
-				   Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, PAG.CategoryID
+				   Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, PAG.StatusID, ProblemReportStatus.StatusSynopsis, PAG.CategoryID
 			    FROM (
 				SELECT TOP :Offset
-				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID, ProblemReports.CategoryID
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, ProblemReports.StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID
 				FROM ProblemReports
-			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID 
+			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
+			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID   
 			    WHERE Confidential = 0 AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
 					AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
-				ORDER BY :Column $ORD1
+				ORDER BY $Column $ORD1
 				) AS PAG
 				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID 
-				ORDER BY :Column $ORD2
+				INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = PAG.StatusID  
+				ORDER BY $Column $ORD2
 			) AS PAG2
-			INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG2.CategoryID 
-			ORDER BY :Column $ORD1
+			INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG2.CategoryID
+			INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = PAG2.StatusID  
+			ORDER BY $Column $ORD1
 	]"
 
 
  Select_problem_reports_responsibles_template : STRING = "[
 			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,
-					 PAG2.Release, PAG2.PriorityID,
-					 PAG2.CategorySynopsis, PAG2.SeverityID,
-					 PAG2.StatusID, PAG2.Description,
+					 PAG2.Release, PAG2.PriorityID, PAG2.PrioritySynopsis, 
+					 PAG2.CategorySynopsis, PAG2.SeverityID, PAG2.SeveritySynopsis,
+					 PAG2.StatusID, PAG2.StatusSynopsis, PAG2.Description,
 					 PAG2.Username as 'DisplayName',
 					 PAG2.ResponsibleID, PAG2.Username
 				FROM (SELECT TOP :RowsPerPage  
 				     PAG.Number, PAG.Synopsis, SubmissionDate,
-					 PAG.Release, PAG.PriorityID,
-					 PAG.CategorySynopsis, PAG.SeverityID,
-					 PAG.StatusID, PAG.Description,
+					 PAG.Release, PAG.PriorityID, PAG.PrioritySynopsis, 
+					 PAG.CategorySynopsis, PAG.SeverityID, PAG.SeveritySynopsis,
+					 PAG.StatusID, PAG.StatusSynopsis, PAG.Description,
 					 PAG.Username as 'DisplayName',
 					 PAG.ResponsibleID, PAG.Username,
 					 PAG.CategoryID,
@@ -1725,9 +1761,9 @@ feature -- Queries
 					 PAG.ContactID	
 					FROM (SELECT TOP :Offset
 					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
-						 ProblemReports.Release, ProblemReports.PriorityID,
-						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID,
-						 ProblemReports.StatusID, ProblemReports.Description,
+						 ProblemReports.Release, ProblemReports.PriorityID, ProblemReportPriorities.PrioritySynopsis, 
+						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID, ProblemReportSeverities.SeveritySynopsis,
+						 ProblemReports.StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.Description,
 						 Memberships.Username as 'DisplayName',
 						 ProblemReportResponsibles.ResponsibleID, Memberships.Username,
 						 ProblemReports.CategoryID,
@@ -1735,6 +1771,9 @@ feature -- Queries
 						 Memberships.ContactID
 						FROM ProblemReports
 						INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
+						INNER JOIN ProblemReportPriorities ON ProblemReports.PriorityID = ProblemReportPriorities.PriorityID
+						INNER JOIN ProblemReportSeverities ON ProblemReports.SeverityID = ProblemReportSeverities.SeverityID
+						INNER JOIN ProblemReportStatus ON ProblemReports.StatusID = ProblemReportStatus.StatusID
 						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
 						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
 						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
@@ -1744,31 +1783,15 @@ feature -- Queries
 						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 						WHERE $Submitter
 						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
-						AND StatusID in $StatusSet
+						AND ProblemReports.StatusID in $StatusSet
 						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
 						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
 						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
-						ORDER BY :Column $ORD1
+						ORDER BY $Column $ORD1
 					) AS PAG
-				    INNER JOIN ProblemReportCategories ON PAG.CategoryID = ProblemReportCategories.CategoryID
-					LEFT JOIN Memberships ON PAG.ContactID = Memberships.ContactID
-					LEFT JOIN Contacts ON Contacts.ContactID = PAG.ContactID
-					LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
-																	(select max (ReportResponsibleID) as ReportResponsibleID
-											    from ProblemReportResponsibles prr, ProblemReports pr
-											    where prr.ReportID = pr.ReportID )  
-					LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = PAG.ReportID	
-					ORDER by :Column $ORD2
+					ORDER BY $Column $ORD2
 				 )  as PAG2 
-			   INNER JOIN ProblemReportCategories ON PAG2.CategoryID = ProblemReportCategories.CategoryID
-			   LEFT JOIN Memberships ON PAG2.ContactID = Memberships.ContactID
-			   LEFT JOIN Contacts ON Contacts.ContactID = PAG2.ContactID
-			   LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
-														(select max (ReportResponsibleID) as ReportResponsibleID
-								    from ProblemReportResponsibles prr, ProblemReports pr
-								    where prr.ReportID = pr.ReportID )  
-				LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = PAG2.ReportID	
-			   ORDER by :Column $ORD1
+			   ORDER by $Column $ORD1
  		]"
 
 
@@ -1815,13 +1838,13 @@ feature -- Queries
 							AND (((NOT ProblemReports.StatusID = 3) AND (NOT ProblemReports.StatusID = 5)) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE ((NOT StatusID = 3) AND (NOT StatusID = 5)))))
 						)
 					) 
-					ORDER BY :Column $ORD1
+					ORDER BY $Column $ORD1
 				) as PAG
 				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID
 				INNER JOIN Memberships ON PAG.ContactID = Memberships.ContactID and Username = :Username
-				ORDER BY :Column $ORD2	
+				ORDER BY $Column $ORD2	
 			) as PAG2
-		  ORDER BY :Column $ORD1
+		  ORDER BY $Column $ORD1
 		]"
 
 

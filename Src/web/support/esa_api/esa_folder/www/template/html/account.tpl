@@ -96,7 +96,7 @@
                <div class="form-group">
                 <label class="control-label col-xs-2" itemprop="telephone">Telephone</label>
                 <div class="col-xs-9">
-                  <input type="tel" class="input-xlarge" id="input01" name="user_phone" rel="popover" data-content="Enter your phone" data-original-title="phone" value="{$account.phone/}">
+                  <input type="tel" class="input-xlarge" id="input01" name="user_phone" rel="popover" data-content="Enter your phone" data-original-title="phone" value="{$account.telephone/}">
                 </div>
               </div>
 

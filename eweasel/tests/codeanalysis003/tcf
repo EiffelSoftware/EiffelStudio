@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name ca-forced-rules-preferences
+test_description Test forcing rules and preferences from the command line.
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+analyze_code rule "CA043 (Depth threshold=3); CA080"
+analyze_code_result violation "TEST CA043 CA080:20"
+
+analyze_code rule "CA043 (Depth threshold=6)"
+analyze_code_result ok
+
+-- Syntax error
+analyze_code rule "CA043 (Depth threshold=3; CA080"
+analyze_code_result violation "TEST CA043" argument_warning
+
+-- Non-existent preference
+analyze_code rule "CA043 (Depth threshold=3, Fake preference=9); CA080"
+analyze_code_result violation "TEST CA043 CA080" preference_warning
+
+analyze_code rule ""
+analyze_code_result ok
+
+test_end

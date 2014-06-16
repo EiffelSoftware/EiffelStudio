@@ -381,7 +381,7 @@ feature -- Element Settings
 				l_parameters.put (string_parameter (a_fax, 50), {ESA_DATA_PARAMETERS_NAMES}.Fax_param)
  			end
 
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePersonalInformation", l_parameters))
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePersonalInformation2", l_parameters))
 			db_handler.execute_writer
 			disconnect
 			post_execution

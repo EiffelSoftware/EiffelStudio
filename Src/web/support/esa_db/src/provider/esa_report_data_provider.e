@@ -1718,13 +1718,13 @@ feature -- Queries
 
 
 	Select_problem_reports_template: STRING = "[
-				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, PAG2.StatusID, ProblemReportStatus.StatusSynopsis
+				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG2.StatusID as statusID, ProblemReportStatus.StatusSynopsis
 			 FROM (
 			    SELECT TOP :RowsPerPage
-				   Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, PAG.StatusID, ProblemReportStatus.StatusSynopsis, PAG.CategoryID
+				   Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG.StatusID as statusID, ProblemReportStatus.StatusSynopsis, PAG.CategoryID
 			    FROM (
 				SELECT TOP :Offset
-				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, ProblemReports.StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, ProblemReports.StatusID statusID, ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID
 				FROM ProblemReports
 			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
 			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID   
@@ -1816,15 +1816,16 @@ feature -- Queries
 
 
 	Select_problem_reports_by_user_template: STRING = "[
-			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, StatusID
+			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, PAG2.StatusID, PAG2.StatusSynopsis
 			 FROM(SELECT TOP :RowsPerPage
-				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, StatusID
+				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, PAG.StatusID, PAG.StatusSynopsis
 			FROM (
 				SELECT TOP :Offset
-				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID,
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, ProblemReports.StatusID as statusID, ProblemReportStatus.StatusSynopsis,
 				ProblemReports.CategoryID, ProblemReports.ContactID
 				FROM ProblemReports
 				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
+				INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID   
 				INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID and Username = :Username
 				WHERE 
 					((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
@@ -1840,8 +1841,6 @@ feature -- Queries
 					) 
 					ORDER BY $Column $ORD1
 				) as PAG
-				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID
-				INNER JOIN Memberships ON PAG.ContactID = Memberships.ContactID and Username = :Username
 				ORDER BY $Column $ORD2	
 			) as PAG2
 		  ORDER BY $Column $ORD1

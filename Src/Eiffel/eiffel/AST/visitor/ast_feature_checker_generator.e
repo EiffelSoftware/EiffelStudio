@@ -1534,7 +1534,8 @@ feature {NONE} -- Implementation
 							if
 								l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment and then
 								l_formal_count > 0 and then
-								l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+								l_feature.arguments.i_th (l_formal_count).recomputed_in
+									(l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
 							then
 									-- The list of actual arguments may be adapted to the list of formal arguments.
 								if l_actual_count > l_formal_count and then l_formal_count > 0 then
@@ -1668,7 +1669,7 @@ feature {NONE} -- Implementation
 										l_formal_arg_type := l_feature.arguments.i_th (i)
 
 											-- Actual formal type of feature argument.
-										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
+										l_formal_arg_type := l_formal_arg_type.recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
 											-- check if `l_formal_arg_type' involves some generics whose actuals
 											-- are marked `variant'. Only do this when `is_inherited' is false, since
@@ -2109,7 +2110,7 @@ feature {NONE} -- Type checks
 			end
 
 				-- Adapted formal type of a feature argument.
-			formal_type := formal_type.formal_instantiation_in (actual_target_type.as_implicitly_detachable, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+			formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
 
 			warning_count := error_handler.warning_list.count
 			if not formal_type.backward_conform_to (current_class, actual_type) then
@@ -10954,8 +10955,7 @@ feature {NONE} -- Implementation: checking locals
 								-- Check an expanded local type
 
 							if attached l_missing_type then
-									-- TODO: Add a new standard type descriptor for "detachable separate ANY".
-								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i, system.any_type.as_detachable_type.as_separate, context.current_class))
+								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i, system.detachable_separate_any_type, context.current_class))
 									-- Record an error for this local.
 								l_untyped_local := untyped_local
 								if not attached l_untyped_local then

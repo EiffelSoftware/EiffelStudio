@@ -2791,6 +2791,7 @@ test	anchor-to-anchor-lose-named-tuple	anchor076 tcf pass anchored_type tuple
 test	qualified-anchor-expansion	anchor077 tcf pass anchored_type
 test	qualified-anchor-expansion-2	anchor078 tcf pass anchored_type
 test	qualified-anchor-expansion-3	anchor079 tcf pass anchored_type
+test	qualified-anchor-expansion-4	anchor080 tcf pass anchored_type
 
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass used_to_pass inference

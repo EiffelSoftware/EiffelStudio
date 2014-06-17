@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 					dlg.show_on_active_window
 					if dlg.attaching_confirmed then
 						p := dlg.port_field.value
-						if p >= 1000 then
+						if p >= 1024 then
 							dbg.controller.attach_application (p)
 						end
 					end
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

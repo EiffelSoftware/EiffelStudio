@@ -15,6 +15,8 @@ inherit
 			on_handle_key
 		end
 
+	ES_HELP_CONTEXT
+
 create
 	make
 
@@ -26,11 +28,13 @@ feature {NONE} -- Initialization
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
 			okb, cancelb: EV_BUTTON
+			f_desc: EV_LABEL
 		do
 				-- Create widgets.
-			create port_field.make_with_value_range (1000 |..| 65535)
+			create port_field.make_with_value_range (1024 |..| 65535)
 			port_field.set_text ("Port number")
-			port_field.set_value (1050)
+
+			port_field.set_value (50505)
 			create label.make_with_text (Interface_names.e_exec_attach_on_port)
 			create okb.make_with_text (Interface_names.b_exec_attach)
 			create cancelb.make_with_text (Interface_names.b_Cancel)
@@ -40,10 +44,15 @@ feature {NONE} -- Initialization
 				-- Set widget properties.
 			port_field.enable_sensitive
 
+			a_container.set_padding_width (3)
+
 			a_container.extend (label)
 			a_container.disable_item_expand (label)
 			a_container.extend (port_field)
 			a_container.disable_item_expand (port_field)
+
+			create f_desc.make_with_text (Interface_names.e_Exec_attach_on_port_description)
+			a_container.extend (f_desc)
 
 				-- Set up actions.
 			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
@@ -63,7 +72,15 @@ feature -- Access
 			-- "Attach" button
 
 	attaching_confirmed: BOOLEAN
-			-- Is attaching operation confirmed?		
+			-- Is attaching operation confirmed?
+
+feature -- Access: Help
+
+	help_context_id: STRING_32
+			-- <Precursor>
+		once
+			Result := {STRING_32} "E369DF0F-2E1F-5730-AE67-CD7B60B55C5F"
+		end
 
 feature -- Actions
 
@@ -169,7 +186,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

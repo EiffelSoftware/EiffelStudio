@@ -228,6 +228,15 @@ feature -- Messages
 				end
 			end
 
+	m_enter_debuggee_port_number (a_dft: INTEGER): STRING_32
+			do
+				if a_dft > 0 then
+					Result := locale.formatted_string (locale.translation (" -> Enter port number to attach debuggee [$1]:"), [a_dft])
+				else
+					Result := locale.translation (" -> Enter port number to attach debuggee:")
+				end
+			end
+
 feature -- Conditional entries
 
 	c_step_next: STRING_32
@@ -309,6 +318,8 @@ feature -- Entries
 			do Result := locale.translation ("Start and stop at breakpoints") end
 	e_start_without_stopping_at_breakpoints: STRING_32
 			do Result := locale.translation ("Start without stopping at breakpoints") end
+	e_attach_debuggee_execution: STRING_32
+			do Result := locale.translation ("Attach debuggee execution") end
 
 feature -- Object grid line values
 
@@ -637,7 +648,7 @@ feature -- Expression evaluation messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

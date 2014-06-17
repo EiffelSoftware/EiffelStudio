@@ -49,6 +49,7 @@ feature {NONE} -- Implementation
 			Result.add_entry ("R", debugger_names.e_start_and_stop_at_breakpoints, agent start_debugger ({EXEC_MODES}.run, False))
 			Result.add_entry ("L", debugger_names.e_start_without_stopping_at_breakpoints, agent start_debugger ({EXEC_MODES}.run, True))
 			Result.add_entry ("S", debugger_names.c_step_into, agent start_debugger ({EXEC_MODES}.step_into, False))
+			Result.add_entry ("C", debugger_names.e_attach_debuggee_execution, agent attach_debuggee)
 			Result.add_separator (" --- ")
 			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
 			Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not debugger_manager.application_is_executing end)
@@ -203,7 +204,7 @@ feature {NONE} -- Implementation
 					create wp.make_from_string (Eiffel_project.lace.directory_name)
 					if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (wp)) then
 						param_working_path := wp
-					elseif not wp.is_equal (Execution_environment.current_working_path) then
+					elseif not wp.same_as (Execution_environment.current_working_path) then
 						wp := Execution_environment.current_working_path
 						if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (wp)) then
 							param_working_path := wp
@@ -212,6 +213,24 @@ feature {NONE} -- Implementation
 				end
 			else
 				create param_working_path.make_from_string (io.last_string) -- FIXME: Unicode .. should we consider it as UTF-8 ?
+			end
+		end
+
+	attach_debuggee
+			-- Ask portnumber and try to attach debuggee.
+		require
+			debugger_manager /= Void
+		local
+			l_port: INTEGER
+		do
+			l_port := 50505
+			localized_print (debugger_names.m_enter_debuggee_port_number (l_port))
+			io.read_line
+			if not io.last_string.is_empty and io.last_string.is_integer then
+				l_port := io.last_string.to_integer
+			end
+			if l_port >= 1024 then
+				debugger_manager.controller.attach_application (l_port)
 			end
 		end
 
@@ -244,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -133,6 +133,21 @@ feature -- Access
 			any_type_not_void: Result /= Void
 		end
 
+	detachable_separate_any_type: CL_TYPE_A
+			-- Type representing "detachable separate ANY".
+		require
+			any_class_attached: attached any_class
+			compiled: any_class.is_compiled
+		do
+			create Result.make (any_id)
+			Result.set_detachable_mark
+			Result.set_separate_mark
+		ensure
+			detachable_separate_any_type_attached: Result /= Void
+			detachable_separate_any_type_detachable: not Result.is_attached
+			detachable_separate_any_type_separate: Result.is_separate
+		end
+
 	system_object_id: INTEGER
 			-- Id of class SYSTEM_OBJECT
 		require

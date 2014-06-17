@@ -2682,6 +2682,7 @@ feature -- Description texts
 	e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
 	e_Exec_attach: STRING_32			do Result := locale.translation("Attach debuggee ...")	end
 	e_Exec_attach_on_port: STRING_32	do Result := locale.translation("Attach debuggee on port")	end
+	e_Exec_attach_on_port_description: STRING_32	do Result := locale.translation("The port number shoud be greater than 1023.%NIt is recommended to use the range 49152-65535.")	end
 	e_Exec_detach: STRING_32			do Result := locale.translation("Detach execution")	end
 	e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
 	e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end

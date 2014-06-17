@@ -270,6 +270,9 @@ feature -- Execution
 			-- due to the time_out (see `eiffel_timeout_message').
 			-- Before attaching the application you must check
 			-- to see if the debugged information is up to date.
+			--
+			--| See http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+			--| for available port number if needed.
 		require
 			app_not_running: not is_running
 			application_exists: exists
@@ -279,7 +282,6 @@ feature -- Execution
 		do
 			parameters := Void
 			ctlr := debugger_manager.controller
-			-- FIXME: update if/when Eiffel_system.application_name becomes a PATH
 			attach_using_port (Eiffel_system.application_name (True), a_port)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
@@ -1394,7 +1396,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

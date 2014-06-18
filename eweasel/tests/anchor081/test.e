@@ -6,6 +6,6 @@ feature
 		local
 			t: TEST2 [PROXY_DESCENDANT]
 		do
-			create t.make
+			create t
 		end
 end

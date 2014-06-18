@@ -8,8 +8,8 @@
       </div>
       <div class="modal-body" id="myModalForm">
          <a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
-          <form itemprop="login">
-            <p itemprop="user-name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
+          <form  data-rel="login" itemprop="login">
+            <p itemprop="user_name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
             <p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>
 	    <input type="hidden" name="host" value="{$host/}">
              <div class="controls">
@@ -30,7 +30,7 @@
          <h4 class="modal-title" id="myModalLabel">Are you sure to Logoff?</h4>
       </div>
       <div class="modal-body">
-          <form itemprop="logoff">
+          <form data-rel="logoff" itemprop="logoff">
 	         <input type="hidden" name="host" value="{$host/}">
             <p><button type="button" class="btn btn-primary" onclick="logoff();">Logoff</button></p>
           </form>
@@ -39,7 +39,7 @@
   </div>
 </div>
    
-<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope itemtype="{$host/}/profile/esa_api.xml">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope="itemscope" itemtype="{$host/}/profile/esa_api.xml">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -47,7 +47,7 @@
       </button>
          <a class="navbar-brand" href="{$host/}" itemprop="home" rel="home">Eiffel Support Site</a>
      </div>
-    <div class="navbar-collapse collapse">
+    <div class="navbar-collapse collapse" itemscope="itemscope" itemtype="{$host/}/profile/esa_api.xml#report" >
       <ul class="nav navbar-nav navbar-left">
            <li><a href="{$host/}/reports" itemprop="all" rel="all">Reports</a></li>
             {if isset="$user"}

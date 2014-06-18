@@ -152,3 +152,30 @@ body {
   }
 }
 
+
+/* Tooltips */
+.blue-tooltip + .tooltip > .tooltip-inner {background-color: #FF;}
+.blue-tooltip + .tooltip > .tooltip-arrow { border-bottom-color:#FF; }
+.tooltip-inner { width:400px; max-width: 400px; }
+
+
+.tooltip.top .tooltip-arrow {
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-top-color: #000000;
+  border-width: 5px 5px 0;
+}
+.tooltip-inner {
+  color: #000;
+  background: #fff;
+  border: solid 1px #000000;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  top: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-bottom-color: #000000;
+  border-width: 0 5px 5px;
+}

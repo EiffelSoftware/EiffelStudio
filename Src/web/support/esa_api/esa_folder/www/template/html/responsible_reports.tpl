@@ -10,7 +10,7 @@
    <div class="col-lg-12">
      <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
       <div class="col-md-4">
-         <label class="control-label" for="input01" itemprop="category">Category</label>
+         <label class="control-label" for="input01" itemprop="category" data-original-title="<p>The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.</p>">Category</label>
          <select class="form-control"  data-style="btn-primary" name="category" form="search">
           <option value="0">ALL</option>
           {foreach from="$categories" item="item"}
@@ -24,7 +24,12 @@
         </select>
      </div> 
      <div class="col-md-4">
-       <label class="control-label" for="input01" itemprop="priority">Priority</label>
+       <label class="control-label" for="input01" itemprop="priority"  data-original-title="<p>How soon the solution is required. Accepted values include:</p>
+            <UL>
+            <LI><B>High</B>: A solution is needed as soon as possible.</LI>
+            <LI><B>Medium</B>: The problem should be solved in the next release.</LI>
+            <LI><B>Low</B>: The problem should be solved in a future release.</LI>
+            </UL>">Priority</label>
        <select class="form-control"  data-style="btn-primary" name="priority" form="search">
         <option value="0">ALL</option>
         {foreach from="$priorities" item="item"}
@@ -38,7 +43,7 @@
       </select>
      </div>
      <div class="col-md-4">
-       <label class="control-label" for="input01" itemprop="responsible">Responsibles</label>
+       <label class="control-label" for="input01" itemprop="responsible" data-original-title="<p>Person having an obligation to do analized a given report problem.</p>">Responsibles</label>
        <select class="form-control"  data-style="btn-primary" name="responsible" form="search">
         <option value="0">ALL</option>
         {foreach from="$responsibles" item="item"}
@@ -52,7 +57,13 @@
       </select>
      </div>  
      <div class="col-md-4">
-       <label class="control-label" for="input01" itemprop="severity">Severity</label>
+       <label class="control-label" for="input01" itemprop="severity" data-original-title="<p>The severity of the problem. Accepted values include:</p>
+                <UL>
+                  <LI><B>Critical</B>: The product, component or concept is completely non operational. No workaround is known.</LI>
+                  <LI><B>Serious</B>: The product, component or concept is not working properly. Problems that would otherwise be considered critical are rated serious when a workaround is known.</LI>
+                  <LI><B>Non-critical</B>: The product, component or concept is working in general, but lacks features, has irritating behavior, does something wrong, or doesn't match its documentation.</LI>
+                </UL>
+ ">Severity</label>
        <select class="form-control" data-style="btn-primary" name="severity" form="search">
         <option value="0">ALL</option>
         {foreach from="$severities" item="item"}
@@ -66,13 +77,20 @@
       </select>
      </div>
      <div class="col-md-4">
-       <label class="control-label" for="input01" title="To retrieve problem reports using the submitter's username: enter the username" itemprop="submitter">Submitter</label>
+       <label class="control-label" for="input01" title="To retrieve problem reports using the submitter's username: enter the username" itemprop="submitter" data-original-title="<p>Person reporting a problem</p>">Submitter</label>
             <input type="text"  name="submitter" class="form-control" placeholder="John.H">
       </div>  
   
     <div class="row">
        <div class="col-md-4">
-       <label class="control-label" for="input01" itemprop="status">Status</label>
+       <label class="control-label" for="input01" itemprop="status" data-original-title="<p>The status of a problem can be one of the following:</p>
+      <ul>
+        <li><b>Open</b>  The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
+        <li><b>Analyzed</b>  The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
+        <li><b>Closed</b> A Problem Report is closed only when any changes have been integrated, documented, and tested, and the submitter has confirmed the solution </li>
+        <li><b>Suspended</b> Work on the problem has been postponed. This happens if a timely solution is not possible or is not cost-effective at the present time. The PR continues to exist, though a solution is not being actively sought. If the problem cannot be solved at all, it should be closed rather than suspended.</li>
+        <li><b>Won't fix</b> Won't fix problem report.</li>
+      </ul>">Status</label>
        <div>
         <input type="hidden" name="status" value="0">
         {foreach from="$status" item="item"}
@@ -196,7 +214,7 @@
       
            <div class="col-lg-12">
                 <ul class="pager">
-                  <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="first" rel="first">First</a></li>
+                  <li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="first" rel="first">First</a></li>
                   {if isset="$prev"}
                     <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" itemprop="previous" rel="previous">Previous</a></li>
                   {/if}

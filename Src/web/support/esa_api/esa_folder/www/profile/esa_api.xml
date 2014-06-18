@@ -401,7 +401,7 @@
       <descriptor href="#environment"/>
       <descriptor href="#synopsis"/>
       <descriptor href="#description"/>
-      <descriptor href="#to-reproduce"/>
+      <descriptor href="#to_reproduce"/>
       <descriptor href="#interactions"/>
       <descriptor href="#create_interaction_form"/>   
   </descriptor>
@@ -434,7 +434,7 @@
        <descriptor href="#synopsis" />
        <descriptor href="#environment" />
        <descriptor href="#description" />
-       <descriptor href="#to-reproduce" />
+       <descriptor href="#to_reproduce" />
        <descriptor href="#attachments" />
        <descriptor hred="#create"/>
        <descriptor hred="#update"/>

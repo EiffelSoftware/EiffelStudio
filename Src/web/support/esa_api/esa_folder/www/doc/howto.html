@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="../css/dashboard.css" rel="stylesheet">
+
+<!-- Just for debugging purposes. Don't actually copy this line! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->     
+  </head>
+
+  <body>
+     <!-- Modal  Login-->
+<div class="modal fade" id="myModalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" itemscope itemtype="./profile/esa_api.xml">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h4 class="modal-title" id="myModalLabel">Login Form</h4>
+      </div>
+      <div class="modal-body" id="myModalForm">
+         <a href="../reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
+          <form itemprop="login">
+            <p itemprop="user-name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
+            <p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>
+	    <input type="hidden" name="host" value="../">
+             <div class="controls">
+                <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
+                <input type="reset" class="btn btn-default" value="Reset"></p>
+             </div>   
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal  Logoff-->
+<div class="modal fade" id="myModalLogoff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" itemscope itemtype="../profile/esa_api.xml">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h4 class="modal-title" id="myModalLabel">Are you sure to Logoff?</h4>
+      </div>
+      <div class="modal-body">
+          <form itemprop="logoff">
+	         <input type="hidden" name="host" value="../">
+            <p><button type="button" class="btn btn-primary" onclick="logoff();">Logoff</button></p>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+   
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope itemtype="../profile/esa_api.xml">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+         <a class="navbar-brand" href="../" itemprop="home" rel="home">Eiffel Support API</a>
+     </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+           <li><a href="../reports" itemprop="all" rel="all">Reports</a></li>
+            
+      </ul>  
+      <ul class="nav navbar-nav navbar-right">
+         
+         
+              <li><a href="#">Guest</a></li>
+              <li><a href="../register" itemprop="register" rel="register">Register</a></li> 
+          
+         
+         
+         
+            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
+            <!-- <li><a href="./login">Login</a></li> -->   <!--Browser pop up -->
+          
+        </ul>
+      <!--form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form -->
+    </div>
+  </div>
+</div>  
+<div class="container">
+  <h1>Submitting a Problem Report</h1>
+
+		
+	Following these recommendations will help us provide you with a speedier and more efficient response to your problem. There are specific recommendations when submitting a compiler, an EiffelStudio or a library (i.e. a problem with EiffelBase, EiffelVision2 or any other source library provided with our products) problem report. There are also instructions applicable to any problem report.
+	
+	<h2>Submitting a Compiler Problem Report</h2>
+	Before submitting a compiler related report, please modify the configuration of the product so that it generates additional information we will use to find the cause of the problem:
+	<ul>
+		<li>Edit the file `general.cfg' located in $ISE_EIFFEL/eifinit/studio and:</li>
+			<ol>
+				<li>Replace the line automatic_backup: False with automatic_backup: True.</li>
+				<li>Replace the line fail_on_rescue: False with fail_on_rescue: True.</li>
+			</ol>	
+		<li>Delete the EIFGEN folder generated by the compiler.</li>
+		<li>Relaunch the compilation until it fails: On Windows a trace should appear in a DOS prompt, a copy of its content will be saved in a file named exception_trace.log. On Unix, copy the output into a file called exception_trace.log.
+		</li>
+		<li>Attach a zip package containing the file exception_trace.log and the BACKUP directory located in the EIFGEN directory to the problem report.</li>
+	</ul>
+
+	<strong>Note:</strong> If a dialog box appears instead of a DOS console on Windows or an output trace on Unix when EiffelStudio fails then please send us the content of the dialog box instead of the exception_trace.log file.
+	<h2>Submitting an EiffelStudio Problem Report</h2>
+	If the problem occurs during compilation then the problem is probably a compiler problem. Please use the compiler category and follow the instructions above to submit the report.
+	If a crash occurs, then a dialog box appears with an exception trace in it. Copy the exception trace and include it in the problem report.
+	As always provide as much details as possible.
+	
+	<h2>Submitting a Library Problem Report</h2>
+	When you find a problem using a source library, please send us a complete package when submitting a problem report so we can rebuild your system. If you are using a precompiled library, make sure that the problem still occurs when not using it. The package should contain your Ace file (not using a precompiled library), your Eiffel source code files and any other file that may be required to rebuild the system.
+	If the problem only occurs when using a precompiled library the problem is probably not a library problem but rather a compiler problem. please use the compiler category and follow the instructions above.
+	
+	<h2>Submitting any Problem Report</h2>
+	If you have a problem with any Eiffel Software product, please send us all the required instructions necessary to reproduce the problem (in the To Reproduce field). If the problem cannot be reproduced we will probably not be able to provide you with a solution and you might consider waiting until you can reproduce the problem before submitting it.
+</div>
+    <!-- Placed at the end of the document so the pages load faster -->
+     <!-- Bootstrap core JavaScript ================================================== -->
+<script src="../js/auth.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="../js/holder.js"></script>
+<script src="../js/esa_tooltips.js"></script>
+     
+  </body>
+</html>

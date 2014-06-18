@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name ca-071-bug-001	
+test_description CA024 incorrectly triggered when comparing the result of two functions.
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+analyze_code rule CA080
+analyze_code_result violation "TEST CA080:21 CA080:22 CA080:23 CA080:24 CA080:25 CA080:26"
+
+test_end

@@ -814,7 +814,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 				instantiation := find_class_type (System.class_of_id (a_class_id))
 			end
 			Result := type.actual_type
-			if instantiation.generics /= Void and instantiation.generics.count > 0 then
+			if attached instantiation.generics as l_generics and then l_generics.count > 0 then
 					-- Does not make sense to instantiate if `instantation' is
 					-- a TUPLE with no arguments.
 				gen_type ?= instantiation

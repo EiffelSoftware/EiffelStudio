@@ -138,6 +138,13 @@ feature -- Hash Code
 			Result := id.hash_code
 		end
 
+feature {CA_CODE_ANALYZER} -- Preferences
+
+	full_preference_name (a_preference_name: STRING): STRING
+		do
+			Result := preference_namespace + a_preference_name
+		end
+
 feature {NONE} -- Preferences
 
 	frozen preference_namespace: STRING

@@ -1,0 +1,13 @@
+test_name	bogus-vdrd6-error
+test_description If you have an attribute that is redefined into a formal we generate a VDRD errors instead of accepting the code. Changing the attribute to a function is a current workaround for this error.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw parent.e $CLUSTER parent.e
+copy_raw child.e $CLUSTER child.e
+
+compile_melted
+compile_result	ok
+
+test_end

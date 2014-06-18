@@ -5,7 +5,7 @@ call %~dp0set_eweasel_env.bat
 if "%~3" == "nosvn" (
 	echo Not updating svn per request.
 ) else (
-	cd /d %ISE_EIFFEL%\library
+	cd /d "%ISE_EIFFEL%\library"
 	svn up base time thread store 
 )
 
@@ -14,14 +14,14 @@ rd /q /s %EWEASEL_OUTPUT%
 mkdir %EWEASEL_OUTPUT%
 
 rem Performing non-void safe threaded precompilations
-cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base.ecf -precompile -c_compile %2
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-mt.ecf -precompile -c_compile %2
+cd /d "%ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%"
+"%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe" -config base.ecf -precompile -c_compile %2
+"%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe" -config base-mt.ecf -precompile -c_compile %2
 
 rem Performing void-safe precompilation
-cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile %2
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-scoop-safe.ecf -precompile -c_compile %2
+cd /d "%ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%"
+"%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe" -config base-safe.ecf -precompile -c_compile %2
+"%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe" -config base-scoop-safe.ecf -precompile -c_compile %2
 
 rem Launch EiffelWeasel tests
 cd /d %TMP_PATH%
@@ -40,6 +40,8 @@ if "%~1" == "" (
 	if "%~1" == "no" (
 		echo "Eweasel not launched per user request"
 	) else (
-		%EWEASEL_COMMAND% -order -catalog %EWEASEL%\control\catalog > %output_file%
+		set hack=1
 	)
 )
+@echo on
+if %hack% == 1 %EWEASEL_COMMAND% -order -catalog %EWEASEL%\control\catalog > %output_file%

@@ -1,5 +1,9 @@
 -- Platform specific tools
-define_file		EWEASEL_COMPILE	$ISE_EIFFEL studio spec $ISE_PLATFORM bin ec.exe
+
+-- Work with EVE:
+-- define_file		EWEASEL_COMPILE	$ISE_EIFFEL studio spec $ISE_PLATFORM bin ec.exe
+define_file		EWEASEL_COMPILE	$ISE_LIBRARY Eiffel Ace EIFGENs bench W_code ec.exe
+
 define_file		EWEASEL_FREEZE	$ISE_EIFFEL studio spec $ISE_PLATFORM bin finish_freezing.exe
 define_file		EWEASEL_EXECUTE $EWEASEL bin eiffel_execute.bat
 

@@ -147,7 +147,12 @@ feature {NONE} -- Initialization
 			l_name, l_value: STRING
 			l_this_forced_preference: like forced_preference_type
 		do
-			l_preferences := a_block.split (',')
+			if a_block.is_empty then
+					-- Border case: split would return one string, I want zero.
+				create {ARRAYED_LIST [STRING]} l_preferences.make (0)
+			else
+				l_preferences := a_block.split (',')
+			end
 			create Result.make (l_preferences.count)
 
 			from

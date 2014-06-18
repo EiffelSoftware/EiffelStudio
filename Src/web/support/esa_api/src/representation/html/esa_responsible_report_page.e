@@ -47,8 +47,12 @@ feature {NONE} --Initialization
 			if a_view.index < a_view.pages then
 				template.add_value (a_view.index+1, "next")
 			end
-			template.add_value (a_view.pages, "last")
 
+			if a_view.pages > 0 then
+				template.add_value (a_view.pages, "last")
+			else
+				template.add_value (1, "last")
+			end
 		 	template.add_value (a_view.user,"user")
 
 			template_context.enable_verbose

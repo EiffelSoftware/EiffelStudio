@@ -125,7 +125,7 @@
            <div class="col-lg-12">
                 <ul class="pager">
                   {if isset="$user"}
-                    <li><a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
+                    <li><a href="{$host/}/user_reports/{$user/}?page=1&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
                     {if isset="$prev"}
                       <li><a href="{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="previous" rel="previous">Previous</a></li>
                     {/if}

@@ -14,11 +14,10 @@
 
     <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
           <div class="main">
-          <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
+          <form class="form-horizontal well" data-rel="register" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
             <fieldset>
 
               <legend>Registration</legend>
-
               <div class="form-group">
                 <label class="control-label col-xs-3" itemprop="first_name" >First Name</label>
                  <div class="col-xs-9">
@@ -63,9 +62,9 @@
               </div>
 
                <div class="form-group">
-                 <label class="control-label col-xs-3" for="input01" itemprop="security_question">Choose a security question</label>
+                 <label class="control-label col-xs-3" for="input01">Choose a security question</label>
                  <div class="col-xs-9">
-                   <select  data-style="btn-primary" name="question" >
+                   <select  data-style="btn-primary" itemprop="security_question" name="question" >
                     {foreach from="$questions" item="item"}
                       {if condition="$item.id = $view.selected_question"} 
                         <option value="{$item.id/}" selected>{$item.question/}</option>

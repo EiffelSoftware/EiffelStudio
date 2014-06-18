@@ -126,21 +126,19 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 		do
-			Result := class_name.same_string (other.class_name) and line_number.is_equal (other.line_number) and type.same_string (other.type) and message.same_string (other.message)
+			Result := is_string_equal_safe (class_name, other.class_name) and line_number.is_equal (other.line_number) and is_string_equal_safe (rule_id, other.rule_id) and is_string_equal_safe (type, other.type) and is_string_equal_safe (message, other.message)
 		end
-
-		-- TODO: Triggers an incorrect self-comparison violation (CA071). Create test!
 
 	is_less alias "<" (other: like Current): BOOLEAN
 		do
-			if equal (class_name, other.class_name) then
-				if equal (line_number, other.line_number) then
-					Result := is_string_less_safe (rule_id, other.rule_id)
+			if not equal (rule_id, other.rule_id) then
+				Result := is_string_less_safe (rule_id, other.rule_id)
+			else
+				if not equal (class_name, other.class_name) then
+					Result := is_string_less_safe (class_name, other.class_name)
 				else
 					Result := line_number < other.line_number
 				end
-			else
-				Result := is_string_less_safe (class_name, other.class_name)
 			end
 		end
 
@@ -152,12 +150,28 @@ feature {NONE} -- Implementation
 		do
 				-- Void is less than any other value, but if both strings are Void we want to
 				-- to return False (as the first string is not *strictly* less than the second).
-			if not attached a_greater_string then
-				Result := False
-			elseif not attached a_smaller_string then
+			if not attached a_smaller_string and attached a_greater_string then
+					-- The first is Void, the second is not.
 				Result := True
+			elseif not attached a_smaller_string or not attached a_greater_string then
+					-- Both are Void (equal), or only the second is Void.
+					-- In both cases, the result is false.
+				Result := False
 			else
+					-- Both are attached.
 				Result := a_smaller_string.is_less (a_greater_string)
+			end
+		end
+
+	is_string_equal_safe (a_first, a_second: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_first' the same string as `a_second' (or are they both detached)?
+		do
+			if a_first = Void and a_second = Void then
+				Result := True
+			elseif a_first = Void or a_second = Void then
+				Result := False
+			else
+				Result := a_first.same_string (a_second)
 			end
 		end
 

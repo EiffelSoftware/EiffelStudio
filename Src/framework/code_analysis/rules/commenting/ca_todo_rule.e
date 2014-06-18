@@ -116,7 +116,7 @@ feature {NONE} -- AST Visit
 				l_todo.left_adjust
 				l_todo.remove_head (l_toremove)
 				l_todo.left_adjust -- Remove leading whitespace again.
-				if l_todo [1].is_equal (':') then
+				if l_todo.starts_with (":") then
 						-- Remove the leading colon.
 					l_todo.remove (1)
 					l_todo.left_adjust

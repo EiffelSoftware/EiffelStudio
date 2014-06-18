@@ -38,7 +38,6 @@ feature -- Instruction
 			loop
 				if l_args.item ~ Load_defaults_ew_option then
 					load_defaults := true
-					l_args.forth
 				elseif l_args.item ~ Load_preferences_ew_option then
 					l_args.forth
 					if l_args.after then
@@ -61,7 +60,7 @@ feature -- Instruction
 						l_error := True
 						failure_explanation := "No rule or list of rules specified after " + Force_rules_ew_option + " option."
 					else
-						forced_rules_list := broken_into_words (l_args.item)
+						forced_rules_argument := l_args.item
 					end
 				else
 					l_error := True
@@ -95,12 +94,9 @@ feature -- Instruction
 				l_temp_string.append_character ('%"')
 				Result.extend (l_temp_string)
 			end
-			if attached forced_rules_list as l_forced_rules_list then
+			if attached forced_rules_argument as l_forced_rules_argument then
 				Result.extend (Force_rules_ec_option)
-				l_temp_string := merged_with_separator (l_forced_rules_list, " ")
-				l_temp_string.prepend_character ('%"')
-				l_temp_string.append_character ('%"')
-				Result.extend (l_temp_string)
+				Result.extend ("%"" + l_forced_rules_argument + "%"")
 			end
 		end
 
@@ -131,8 +127,9 @@ feature {NONE} -- Implementation
 	class_list: LIST [STRING]
 			-- The list of names of classes to be analyzed. Void if the whole system is to be analyzed.
 
-	forced_rules_list: LIST [STRING]
-			-- The list of rules to enable, which overrides the preferences. Void if the whole system is to be analyzed.
+	forced_rules_argument: STRING
+			-- The string argument with the forced rules and preferences, which will be passed to the ec as it is.
+			-- Void if we are not forcing rules and preferences
 
 feature {NONE} -- Internal constants
 

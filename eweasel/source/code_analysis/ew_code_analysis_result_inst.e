@@ -23,6 +23,7 @@ feature -- Instruction
 			l_args: LIST [STRING]
 			l_phrases: LIST [STRING];
 			l_analysis_result: EW_CODE_ANALYSIS_RESULT;
+			l_have_violations: BOOLEAN
 		do
 			init_ok := True
 			create l_analysis_result
@@ -40,9 +41,17 @@ feature -- Instruction
 			until
 				l_args.after or not init_ok
 			loop
-				if equal (l_args.item, Clean_result) then
-					l_analysis_result.set_analysis_clean
+				if equal (l_args.item, Ok_result) then
+						-- Do nothing, the analysis clean flag will be set at the end in any case.
+
+					if l_args.count /= 1 then -- if this is not the only argument
+						init_ok := False;
+						create failure_explanation.make (0);
+						failure_explanation.append ("The " + Ok_result + " argument is only allowed alone.");
+						failure_explanation.append (l_args.item);
+					end
 				elseif equal (l_args.item, Violation_result) or equal (l_args.item, Violations_result) then
+					l_have_violations := True
 					l_args.forth
 					if l_args.after then
 						init_ok := False;
@@ -64,6 +73,8 @@ feature -- Instruction
 					l_analysis_result.set_class_warning
 				elseif equal (l_args.item, Rule_warning_result) then
 					l_analysis_result.set_rule_warning
+				elseif equal (l_args.item, Preference_warning_result) then
+					l_analysis_result.set_preference_warning
 				else
 					init_ok := False;
 					create failure_explanation.make (0);
@@ -71,6 +82,9 @@ feature -- Instruction
 					failure_explanation.append (l_args.item);
 				end
 				l_args.forth
+			end
+			if not l_have_violations then
+				l_analysis_result.set_analysis_clean
 			end
 
 				-- No need to sort expected analysis result
@@ -148,7 +162,6 @@ feature {NONE} -- Implementation
 				failure_explanation.append (a_phrase);
 			else
 
-					-- TODO: Incorrectly triggers CA024. Write test!
 				from
 					l_words.start;
 					l_cname := real_class_name (l_words.item);
@@ -195,9 +208,11 @@ feature {NONE} -- Implementation
 
 	Phrase_separator: CHARACTER = ';';
 
-	Clean_result: STRING = "clean"
+	Ok_result: STRING = "ok"
 
 	Rule_warning_result: STRING = "rule_warning"
+
+	Preference_warning_result: STRING = "preference_warning"
 
 	Class_warning_result: STRING = "class_warning"
 

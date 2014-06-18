@@ -15,7 +15,9 @@ feature -- Output messages
 
 	Class_not_found_prefix: STRING = "Warning: class "
 
-	Rule_not_found_prefix: STRING = "Warning: Rule "
+	Rule_not_found_prefix: STRING = "Warning: rule "
+
+	Preference_not_found_prefix: STRING = "Warning: preference "
 
 	Argument_not_recognized_prefix: STRING = "Warning: argument "
 
@@ -70,6 +72,7 @@ feature -- Violation types
 			end
 		ensure
 			valid: is_valid_violation_type (Result)
+			correct: short_violation_type (Result).same_string (a_type)
 		end
 
 	short_violation_type (a_type: STRING): STRING
@@ -89,6 +92,7 @@ feature -- Violation types
 			end
 		ensure
 			valid_short: is_valid_short_violation_type (Result)
+			correct: long_violation_type (Result).same_string (a_type)
 		end
 
 end

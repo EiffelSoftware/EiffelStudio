@@ -50,6 +50,9 @@ feature -- Properties
 	analysis_rule_warning: BOOLEAN
 			-- One of the specified forced rules was not found
 
+	analysis_preference_warning: BOOLEAN
+			-- One of the specified forced preferences was not found
+
 	has_warnings: BOOLEAN
 			-- The code analysis threw a warning
 		do
@@ -100,6 +103,9 @@ feature -- Properties
 			if analysis_rule_warning then
 				Result.append ("; forced rule not found warning")
 			end
+			if analysis_preference_warning then
+				Result.append ("; forced preference not found warning")
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -140,11 +146,13 @@ feature -- Update
 					parse_in_class_line (line)
 				elseif is_prefix (Violation_prefix, line) then
 					parse_violation_line (line)
-				elseif is_prefix (class_not_found_prefix, line) then
+				elseif is_prefix (Class_not_found_prefix, line) then
 					analysis_class_warning := True
-				elseif is_prefix (rule_not_found_prefix, line) then
+				elseif is_prefix (Rule_not_found_prefix, line) then
 					analysis_rule_warning := True
-				elseif is_prefix (argument_not_recognized_prefix, line) then
+				elseif is_prefix (Preference_not_found_prefix, line) then
+					analysis_preference_warning := True
+				elseif is_prefix (Argument_not_recognized_prefix, line) then
 					analysis_argument_warning := True
 				elseif is_prefix (Exception_prefix, line) then
 					analyze_exception_line (line)
@@ -188,7 +196,16 @@ feature -- Modification
 			analysis_rule_warning = True
 		end
 
+	set_preference_warning
+			-- Sets the `analysis_preference_warning' status flag to True.
+		do
+			analysis_preference_warning := True
+		ensure
+			analysis_preference_warning = True
+		end
+
 	add_violation (a_violation: EW_CODE_ANALYSIS_VIOLATION)
+		local
 		do
 			if violations = Void then
 				create violations.make

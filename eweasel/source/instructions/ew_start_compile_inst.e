@@ -22,10 +22,11 @@ feature
 		local
 			name, compile_cmd, exec_error: STRING;
 			env_vars: HASH_TABLE [STRING, STRING]
+			l_compilation: like compilation_type
 		do
 			env_vars := test.environment.environment_variables
-			compilation := test.e_compilation;
-			if compilation = Void or else not compilation.suspended then
+			l_compilation := test.e_compilation;
+			if l_compilation = Void or else not l_compilation.suspended then
 				compile_cmd := test.environment.value (Compile_command_name)
 				exec_error := executable_file_error (compile_cmd)
 				if exec_error = Void then
@@ -37,9 +38,9 @@ feature
 						name := test.e_compile_output_name;
 					end;
 					name := os.full_file_name (test.environment.value (Output_dir_name), name);
-					create compilation.make (compile_cmd, compiler_arguments (test, test.environment), env_vars, name);
-					test.set_e_compilation (compilation);
-					test.set_e_compilation_result (compilation.next_compile_result);
+					create l_compilation.make (compile_cmd, compiler_arguments (test, test.environment), env_vars, name);
+					test.set_e_compilation (l_compilation);
+					test.set_e_compilation_result (l_compilation.next_compile_result);
 					execute_ok := True;
 				else
 					failure_explanation := exec_error
@@ -61,8 +62,6 @@ feature
 
 
 feature {EW_START_COMPILE_INST} -- For inherited classes
-
-	compilation: like compilation_type;
 
 	compilation_type: EW_EIFFEL_COMPILATION
 			-- For typing purposes of `compilation'

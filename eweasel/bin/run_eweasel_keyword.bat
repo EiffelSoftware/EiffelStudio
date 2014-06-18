@@ -1,6 +1,6 @@
-@echo off
+rem @echo off
 call %~dp0set_eweasel_env.bat
-
+@echo on
 if "%~1" == "" (
 	echo Error: Missing argument: keyword.
 	echo Usage:

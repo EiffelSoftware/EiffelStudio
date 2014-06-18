@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization
 		do
-			-- TODO
+			-- TODO: this is a TODO
 			if True then
 				if True then
 					if True then

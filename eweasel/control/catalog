@@ -15,6 +15,7 @@ test	ca-forced-rules-preferences		codeanalysis003 tcf fail code_analysis
 test	ca-various-warnings				codeanalysis004 tcf fail code_analysis
 test	ca-054-bug-001					codeanalysis005 tcf fail code_analysis
 test	ca-071-bug-001					codeanalysis006 tcf fail code_analysis
+test	ca-080-bug-001					codeanalysis007 tcf fail code_analysis
 
 -- EiffelTime tests
 

@@ -347,10 +347,13 @@ feature -- Command Line
 			%and make sure the class has been compiled.%N", once "code_analyzer.command") end
 
 	rule_not_found (a_rule_name: attached READABLE_STRING_GENERAL): STRING_32
-		do Result := locale.formatted_string (translation_in_context ("Warning: Rule $1 could not be found, ignoring it.", once "code_analyzer"), [a_rule_name]) end
+		do Result := locale.formatted_string (translation_in_context ("Warning: rule $1 could not be found, ignoring it.", once "code_analyzer"), [a_rule_name]) end
+
+	preference_not_found (a_full_preference_name: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Warning: preference $1 could not be found, ignoring it.", once "code_analyzer"), [a_full_preference_name]) end
 
 	unknown_argument (a_argument_name: attached READABLE_STRING_GENERAL): STRING_32
-		do Result := locale.formatted_string (translation_in_context ("Warning: argument $1 is not recognized, ignoring it.", once "code_analyzer"), [a_argument_name]) end
+		do Result := locale.formatted_string (translation_in_context ("Warning: argument $1 is not recognized or could not be parsed, ignoring it.", once "code_analyzer"), [a_argument_name]) end
 
 feature {NONE} -- Translation
 

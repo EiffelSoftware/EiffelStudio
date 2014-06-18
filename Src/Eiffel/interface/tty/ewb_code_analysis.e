@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 	make_with_arguments (a_arguments: ITERABLE [STRING_32])
 			-- Initialization for `Current'. `a_arguments' are the command-line
 			-- arguments that are relevant for the Code Analyzer.
+		local
+			l_string: STRING_32
+			l_list_strings: LIST [STRING_32]
 		do
 			create unknown_arguments.make (8)
 
@@ -35,14 +38,13 @@ feature {NONE} -- Initialization
 				elseif l_args.item.same_string ("-caforcerules") then
 					l_args.forth
 
-					if l_args.item.is_empty then
-							-- Corner case: split would return one empty string, I want zero strings.
-							-- We still want to instantiate the list, as we want to enable exactly zero rules.
-						create {ARRAYED_LIST [STRING_32]} forced_rules_list.make (0)
-					else
-						forced_rules_list := l_args.item.to_string_32.split (' ')
+					parse_forced_rules (l_args.item)
+					if forced_rules_parse_error then
+						unknown_arguments.extend (l_args.item)
 					end
 				elseif l_args.item.same_string ("-caclass") or l_args.item.same_string ("-caclasses") then
+						-- Syntax: -caclass "MY_CLASS; MY_CLASS_2; MY_CLASS_3"
+						-- where semicolons are optional.
 					l_args.forth
 
 					if l_args.item.is_empty then
@@ -50,7 +52,20 @@ feature {NONE} -- Initialization
 							-- We still want to instantiate the list, as we want to analyze exactly zero classes.
 						create {ARRAYED_LIST [STRING_32]} class_name_list.make (0)
 					else
-						class_name_list := l_args.item.split (' ')
+						l_string := l_args.item.to_string_32
+
+							-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR"
+						l_string.replace_substring_all (";", " ")
+						l_list_strings := l_string.to_string_32.split (' ')
+
+							-- Remove empty entries
+						create {ARRAYED_LIST [STRING_32]} class_name_list.make (l_list_strings.count)
+						across l_list_strings as ic loop
+							if not ic.item.is_empty then
+								class_name_list.extend (ic.item)
+							end
+						end
+
 					end
 				else
 					unknown_arguments.extend (l_args.item)
@@ -58,13 +73,123 @@ feature {NONE} -- Initialization
 			end
 		end
 
+
+		forced_rules_parse_error: BOOLEAN
+				-- Did the last call to `parse_forced_rules' result in an error?
+
+		parse_forced_rules (a_line: STRING)
+				-- Parse an argument representing the forced rules list (possibly with forced preferences).
+			local
+				l_line: STRING
+				l_preferences_to_add: like parse_preference_block
+				l_parse_error: BOOLEAN
+				l_rule_name: STRING
+				l_block_end_pos: INTEGER
+			do
+				l_line := a_line.twin
+				create forced_preferences.make (16)
+
+					-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR"
+				l_line.replace_substring_all (";", " ")
+
+				from
+					-- l_line
+				until
+					l_line.is_empty or l_parse_error
+				loop
+						-- Read the rule name
+					l_rule_name := first_word (l_line, 1)
+
+						-- Get angry if it's not recognized
+					if l_rule_name.is_empty then
+						l_parse_error := true
+					else
+							-- Enable the rule.
+						forced_preferences.extend ([l_rule_name, ca_names.enable_rule.to_string_8, "True"])
+
+							-- Trim the head
+						l_line.remove_head (l_rule_name.count)
+						l_line.left_adjust
+
+							-- Do we have a preference block?
+						if l_line.starts_with ("(") then
+							l_block_end_pos := l_line.index_of (')', 1)
+							if l_block_end_pos = 0 then
+								l_parse_error := true
+							else
+								l_preferences_to_add := parse_preference_block (l_line.substring (2, l_block_end_pos - 1), l_rule_name)
+
+								if attached l_preferences_to_add then
+									forced_preferences.finish
+									forced_preferences.merge_right (l_preferences_to_add)
+								else
+									l_parse_error := True
+								end
+
+									-- Trim again
+								l_line.remove_head (l_block_end_pos)
+								l_line.left_adjust
+							end
+						end
+					end
+				end
+
+				forced_rules_parse_error := l_parse_error
+			end
+
+	parse_preference_block (a_block, a_rule_id: STRING): like forced_preferences
+			-- Parse a preference block for a single forced rule. Return the list of preferences to force.
+			-- Return Void in case of error.
+		local
+			l_preferences: LIST [STRING]
+			l_preference: STRING
+			l_equal_pos: INTEGER
+			l_name, l_value: STRING
+			l_this_forced_preference: like forced_preference_type
+		do
+			l_preferences := a_block.split (',')
+			create Result.make (l_preferences.count)
+
+			from
+				l_preferences.start
+			until
+				l_preferences.after or Result = Void
+			loop
+				l_preference := l_preferences.item
+				l_preference.adjust
+				l_equal_pos := l_preference.index_of ('=', 1)
+				if l_equal_pos = 0 then
+						-- Error
+					Result := Void
+				else
+					l_name := l_preference.head (l_equal_pos - 1)
+					l_value := l_preference.substring (l_equal_pos + 1, l_preference.count)
+
+					create l_this_forced_preference
+					l_this_forced_preference.rule_id := a_rule_id
+					l_this_forced_preference.preference_name := l_name
+					l_this_forced_preference.preference_value := l_value
+					Result.extend (l_this_forced_preference)
+				end
+				l_preferences.forth
+			end
+		end
+
+
 feature {NONE} -- Options
 
 	class_name_list: detachable LIST [STRING_32]
 			-- List of class names for analysis, which have been provided by the user.
 
-	forced_rules_list: detachable LIST [STRING_32]
-			-- List of the IDs of enabled rules which, if specified, overrides the preferences.
+	forced_preference_type: TUPLE [rule_id: READABLE_STRING_GENERAL; preference_name: STRING; preference_value: READABLE_STRING_GENERAL]
+			-- Shortcut for the type.
+		do
+			check callable: False end
+		end
+
+	forced_preferences: detachable ARRAYED_LIST [like forced_preference_type]
+			-- List of preferences specified through the command line.
+			-- If specified, all rules will be disabled by default.
 			-- Void if unspecified.
 
 	restore_preferences: BOOLEAN
@@ -110,8 +235,8 @@ feature -- Execution (declared in EWB_CMD)
 			elseif preference_file /= Void then -- The user wants to load preferences.
 				import_preferences (l_code_analyzer.preferences, preference_file)
 			end
-			if attached forced_rules_list as l_forced_rules_list then
-				l_code_analyzer.force_enable_rules (l_forced_rules_list)
+			if attached forced_preferences as l_forced_preferences then
+				l_code_analyzer.force_preferences (l_forced_preferences)
 			end
 			l_code_analyzer.analyze
 
@@ -186,6 +311,68 @@ feature -- Info (declared in EWB_CMD)
 
 	abbreviation: CHARACTER = 'a'
 			-- One-character abbreviation for this command-line tool.
+
+feature {NONE} -- Implementation
+
+	is_identifier_character (a_char: CHARACTER): BOOLEAN
+			-- Is `a_char' a valid Eiffel identifier character?
+		do
+			Result := (a_char = '_' or (a_char >= 'a' and a_char <= 'z') or (a_char >= 'A' and a_char <= 'Z') or (a_char >= '0' and a_char <= '9'))
+		end
+
+	first_word (a_string: STRING; a_start_index: INTEGER): STRING
+			-- The first word (formed with valid Eiffel identifier characters) in `a_string',
+			-- starting from `a_start_index'.
+			-- An empty string if `a_string' does not start with a valid identifier.
+		require
+			argument_exists: a_string /= Void
+		local
+			i: INTEGER
+			l_stop: BOOLEAN
+		do
+			from
+				i := 1
+			until
+				l_stop or i > a_string.count
+			loop
+				if not is_identifier_character (a_string.at (i)) then
+					l_stop := True
+				else
+					i := i + 1
+				end
+			end
+			Result := a_string.substring (a_start_index, i - 1)
+		ensure
+			is_prefix: a_string.starts_with (Result)
+		end
+
+		next_word_index (a_string: STRING; a_start_index: INTEGER): INTEGER
+			-- At which position does the next word (formed with valid Eiffel identifier characters)
+			-- start in `a_string', after `a_start_index'?
+			-- Return `a_string'.count + 1 if not found.
+		require
+			argument_exists: a_string /= Void
+		local
+			i: INTEGER
+			l_stop: BOOLEAN
+		do
+			from
+				i := a_start_index
+			until
+				l_stop or i > a_string.count
+			loop
+				if is_identifier_character (a_string.at (i)) then
+					l_stop := True
+				else
+					i := i + 1
+				end
+			end
+			Result := i
+		ensure
+			positive_result: Result >= 1
+			result_small_enough: Result <= a_string.count + 1
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

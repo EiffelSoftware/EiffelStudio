@@ -19,59 +19,47 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialization for `Current'.
-		local
-			l_rule_sorter: QUICK_SORTER [CA_RULE]
-			l_rule_comparator: AGENT_EQUALITY_TESTER [CA_RULE]
 		do
 			create settings.make
-			create rules.make (80)
-				-- Adding the rules.
-			rules.extend (create {CA_SELF_ASSIGNMENT_RULE}.make)
-			rules.extend (create {CA_UNUSED_ARGUMENT_RULE}.make)
-			rules.extend (create {CA_NPATH_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_EMPTY_IF_RULE}.make)
-			rules.extend (create {CA_FEATURE_NEVER_CALLED_RULE}.make)
-			rules.extend (create {CA_CQ_SEPARATION_RULE}.make)
-			rules.extend (create {CA_UNNEEDED_OT_LOCAL_RULE}.make)
-			rules.extend (create {CA_UNNEEDED_OBJECT_TEST_RULE}.make) -- Needs type info.
-			rules.extend (create {CA_NESTED_COMPLEXITY_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_CREATION_PROC_EXPORTED_RULE}.make)
-			rules.extend (create {CA_VARIABLE_NOT_READ_RULE}.make)
-			rules.extend (create {CA_SEMICOLON_ARGUMENTS_RULE}.make)
-			rules.extend (create {CA_VERY_LONG_ROUTINE_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_VERY_BIG_CLASS_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_FEATURE_SECTION_COMMENT_RULE}.make)
-			rules.extend (create {CA_FEATURE_NOT_COMMENTED_RULE}.make)
-			rules.extend (create {CA_BOOLEAN_RESULT_RULE}.make)
-			rules.extend (create {CA_BOOLEAN_COMPARISON_RULE}.make)
-			rules.extend (create {CA_VERY_SHORT_IDENTIFIER_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_VERY_LONG_IDENTIFIER_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_MISSING_IS_EQUAL_RULE}.make)
-			rules.extend (create {CA_SIMPLIFIABLE_BOOLEAN_RULE}.make)
-			rules.extend (create {CA_SELF_COMPARISON_RULE}.make)
-			rules.extend (create {CA_TODO_RULE}.make)
-			rules.extend (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
-			rules.extend (create {CA_INSPECT_INSTRUCTIONS_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_ATTRIBUTE_TO_LOCAL_RULE}.make)
-			rules.extend (create {CA_EMPTY_EFFECTIVE_ROUTINE_RULE}.make)
-			rules.extend (create {CA_IF_ELSE_NOT_EQUAL_RULE}.make)
-			rules.extend (create {CA_SHORT_CIRCUIT_IF_RULE}.make)
-			rules.extend (create {CA_ITERABLE_LOOP_RULE}.make) -- Needs type info.
-			rules.extend (create {CA_COUNT_EQUALS_ZERO_RULE}.make) -- Needs type info.
-			rules.extend (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
-			rules.extend (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
+			create rules.make_caseless (100) -- Rule IDs should be case insensitive.
 
-				-- Sort rules by ID.
-			create l_rule_comparator.make (
-				agent (u, v: CA_RULE): BOOLEAN
-					do
-						Result := u.id < v.id
-					end
-			)
-			create l_rule_sorter.make (l_rule_comparator)
-			l_rule_sorter.sort (rules)
+				-- Adding the rules.
+			add_rule (create {CA_SELF_ASSIGNMENT_RULE}.make)
+			add_rule (create {CA_UNUSED_ARGUMENT_RULE}.make)
+			add_rule (create {CA_NPATH_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_EMPTY_IF_RULE}.make)
+			add_rule (create {CA_FEATURE_NEVER_CALLED_RULE}.make)
+			add_rule (create {CA_CQ_SEPARATION_RULE}.make)
+			add_rule (create {CA_UNNEEDED_OT_LOCAL_RULE}.make)
+			add_rule (create {CA_UNNEEDED_OBJECT_TEST_RULE}.make) -- Needs type info.
+			add_rule (create {CA_NESTED_COMPLEXITY_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_CREATION_PROC_EXPORTED_RULE}.make)
+			add_rule (create {CA_VARIABLE_NOT_READ_RULE}.make)
+			add_rule (create {CA_SEMICOLON_ARGUMENTS_RULE}.make)
+			add_rule (create {CA_VERY_LONG_ROUTINE_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VERY_BIG_CLASS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_FEATURE_SECTION_COMMENT_RULE}.make)
+			add_rule (create {CA_FEATURE_NOT_COMMENTED_RULE}.make)
+			add_rule (create {CA_BOOLEAN_RESULT_RULE}.make)
+			add_rule (create {CA_BOOLEAN_COMPARISON_RULE}.make)
+			add_rule (create {CA_VERY_SHORT_IDENTIFIER_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VERY_LONG_IDENTIFIER_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_MISSING_IS_EQUAL_RULE}.make)
+			add_rule (create {CA_SIMPLIFIABLE_BOOLEAN_RULE}.make)
+			add_rule (create {CA_SELF_COMPARISON_RULE}.make)
+			add_rule (create {CA_TODO_RULE}.make)
+			add_rule (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
+			add_rule (create {CA_INSPECT_INSTRUCTIONS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_ATTRIBUTE_TO_LOCAL_RULE}.make)
+			add_rule (create {CA_EMPTY_EFFECTIVE_ROUTINE_RULE}.make)
+			add_rule (create {CA_IF_ELSE_NOT_EQUAL_RULE}.make)
+			add_rule (create {CA_SHORT_CIRCUIT_IF_RULE}.make)
+			add_rule (create {CA_ITERABLE_LOOP_RULE}.make) -- Needs type info.
+			add_rule (create {CA_COUNT_EQUALS_ZERO_RULE}.make) -- Needs type info.
+			add_rule (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
 
 			settings.initialize_rule_settings (rules)
 
@@ -230,57 +218,54 @@ feature -- Analysis interface
 			end
 		end
 
-	force_enable_rules (a_rule_list: LIST [STRING_32])
-		local
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
-		do
-			create l_sorter.make (create {STRING_COMPARATOR}.make_caseless)
-			l_sorter.sort (a_rule_list)
 
+	force_preferences (a_preferences: LIST [TUPLE [rule_id: READABLE_STRING_GENERAL; preference_name: STRING; preference_value: READABLE_STRING_GENERAL]])
+			-- Forcefully set the preferences in `a_preferences' to the specified values,
+			-- overwriting the current ones.
+		local
+			l_full_preference_name: STRING
+			l_preference: PREFERENCE
+		do
 				-- Disable all rules.
 			across rules as ic loop
 				ic.item.is_enabled.set_value (False)
 			end
 
-				-- The `rules' list is always ordered by ID.
+			across a_preferences as ic loop
+				if rules.has_key (ic.item.rule_id) then
+					l_full_preference_name := rules.found_item.full_preference_name (ic.item.preference_name)
+					l_preference := preferences.get_preference (l_full_preference_name)
 
-			from
-				a_rule_list.start
-				rules.start
-			until
-				a_rule_list.after
-			loop
-				if rules.after then
-					-- We have passed the end of the rules list and we still have some rules in the force-enabled list
-					-- which we haven't found.
-					output_actions.call ([ca_messages.rule_not_found (a_rule_list.item)])
-					a_rule_list.forth
-				elseif a_rule_list.item > rules.item.id then
-						-- We haven't yet reached the current-rule-to-be-enabled
-					rules.item.is_enabled.set_value (False)
-					rules.forth
-				elseif a_rule_list.item ~ rules.item.id then
-						-- Here we are!
-					rules.item.is_enabled.set_value (True)
-					rules.forth
-					a_rule_list.forth
+					if attached l_preference then
+						l_preference.set_value_from_string (ic.item.preference_value)
+					else
+						output_actions.call ([ca_messages.preference_not_found (l_full_preference_name)])
+					end
+
 				else
-					check a_rule_list.item < rules.item.id then end
-						-- We have passed the right location in the rule list without finding the specified rule.
-					output_actions.call ([ca_messages.rule_not_found (a_rule_list.item)])
-					a_rule_list.forth
+					output_actions.call ([ca_messages.rule_not_found (ic.item.rule_id)])
 				end
-
 			end
 		end
+
 
 feature -- Properties
 
 	is_running: BOOLEAN
 			-- Is code analysis running?
 
-	rules: ARRAYED_LIST [CA_RULE]
-			-- List of rules that will be used for analysis. Rules are ordered by ID.
+	rules: STRING_TABLE [CA_RULE]
+		-- Table containing the rules that will be used for analysis. Rules are indexed by ID.
+
+	add_rule (a_rule: CA_RULE)
+			-- Adds `a_rule' to the rules list.
+		require
+			not_added_yet: not rules.has (a_rule.id)
+		do
+			rules.extend (a_rule, a_rule.id)
+		ensure
+			added: rules.has (a_rule.id)
+		end
 
 	rule_violations: detachable HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
 			-- All found violations from the last analysis.

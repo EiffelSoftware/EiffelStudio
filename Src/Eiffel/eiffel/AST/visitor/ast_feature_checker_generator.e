@@ -4540,8 +4540,9 @@ feature {NONE} -- Visitor
 									-- We inherited this feature.
 								if last_alias_error = Void then
 									l_feature_type := l_prefix_feature.type
-									l_feature_type := l_prefix_feature.type.formal_instantiation_in
+									l_feature_type := l_prefix_feature.type.recomputed_in
 										(last_type.as_implicitly_detachable,
+										l_context_current_class.class_id,
 										l_last_constrained.as_implicitly_detachable,
 										l_last_class.class_id).actual_type
 									if 	l_last_feature_type = Void then
@@ -4653,13 +4654,19 @@ feature {NONE} -- Visitor
 									l_prefix_feature_type := l_last_constrained
 								else
 										-- Usual case
-									l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
-													(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
+									l_prefix_feature_type := l_prefix_feature_type.recomputed_in
+										(last_type.as_implicitly_detachable,
+										l_context_current_class.class_id,
+										l_last_constrained.as_implicitly_detachable,
+										l_last_class.class_id).actual_type
 								end
 							else
 									-- Usual case
-								l_prefix_feature_type := l_prefix_feature_type.formal_instantiation_in
-												(last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_class.class_id).actual_type
+								l_prefix_feature_type := l_prefix_feature_type.recomputed_in
+									(last_type.as_implicitly_detachable,
+									l_context_current_class.class_id,
+									l_last_constrained.as_implicitly_detachable,
+									l_last_class.class_id).actual_type
 							end
 							if l_is_assigner_call then
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)

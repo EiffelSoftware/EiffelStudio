@@ -1,0 +1,4 @@
+class D [G]
+
+end
+

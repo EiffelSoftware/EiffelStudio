@@ -540,7 +540,8 @@ test	invalid-static-inspect-constant	 	valid278 tcf pass validity
 test	wrong-tuple-type-in-descendants	valid279 tcf fail validity
 test	bogus-vjar-error			valid280 tcf pass validity anchored_type
 test	bogus-vdrd6-error			valid281 tcf fail validity
-test	missing-vuar2-error			valid282 tcf fail validity anchored_type
+test	missing-vuar2-error			valid282 tcf pass validity anchored_type system-validity
+test	missing-vuar2-error-2		valid283 tcf pass validity anchored_type system-validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

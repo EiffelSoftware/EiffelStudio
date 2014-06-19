@@ -1,0 +1,15 @@
+test_name	missing-vuar2-error-2
+test_description With qualified anchored types, the compiler can miss some system validity errors in descendant class when types are redefined.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+copy_raw test3.e $CLUSTER test3.e
+copy_raw parent.e $CLUSTER parent.e
+copy_raw child.e $CLUSTER child.e
+
+compile_melted
+compile_result	validity_error TEST2 VUAR(2)
+
+test_end

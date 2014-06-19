@@ -1629,7 +1629,7 @@ feature {NONE} -- Implementation
 										-- Check if an actual type of the last actual argument is compatible with a formal type of that argument.
 									if
 										attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) and then
-										l_feature.arguments.i_th (l_formal_count).formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+										l_feature.arguments.i_th (l_formal_count).recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
 									then
 											-- Actual and formal types of the last argument are not compatible.
 											-- Try to wrap last argument in a tuple.

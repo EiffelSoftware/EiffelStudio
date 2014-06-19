@@ -1,4 +1,4 @@
-test_name 	 qualified-anchor-expansion-7
+test_name 	 qualified-anchor-expansion-8
 test_description If `x' is of a formal generic type and there is a call on it using an assigner command of type like `A [like {G}.item]' where G is another formal generic parameter then the compiler crashes at degree 4 or 3.
 
 copy_sub	Ace $TEST Ace

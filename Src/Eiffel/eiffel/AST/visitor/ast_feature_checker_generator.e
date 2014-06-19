@@ -9586,8 +9586,10 @@ feature {NONE} -- Implementation
 					if not is_inherited then
 						context.supplier_ids.extend_depend_unit_with_level (l_target_class_id, l_assigner_command, depend_unit_level)
 					end
-					l_type := l_assigner_command.arguments.i_th (1).formal_instantiation_in (
-						a_target_type.as_implicitly_detachable, a_target_constrained_type.as_implicitly_detachable,
+					l_type := l_assigner_command.arguments.i_th (1).recomputed_in (
+						a_target_type.as_implicitly_detachable,
+						context.current_class.class_id,
+						a_target_constrained_type.as_implicitly_detachable,
 						l_target_class_id).actual_type
 				end
 				last_assigner_command := l_assigner_command

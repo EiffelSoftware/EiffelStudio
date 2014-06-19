@@ -2799,6 +2799,7 @@ test	qualified-anchor-expansion-6	anchor082 tcf pass anchored_type
 test	qualified-anchor-expansion-7	anchor083 tcf pass anchored_type
 test	qualified-anchor-expansion-8	anchor084 tcf pass anchored_type
 test	qualified-anchor-expansion-9	anchor085 tcf pass anchored_type
+test	qualified-anchor-expansion-10	anchor086 tcf pass anchored_type
 
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass used_to_pass inference

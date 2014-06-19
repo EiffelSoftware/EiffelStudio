@@ -4923,7 +4923,11 @@ feature {NONE} -- Visitor
 										-- We inherited this feature.
 									if l_error = Void then
 										l_feature_type := last_alias_feature.type
-										l_feature_type := l_feature_type.formal_instantiation_in (l_left_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_class.class_id)
+										l_feature_type := l_feature_type.recomputed_in
+											(l_left_type.as_implicitly_detachable,
+											l_context_current_class.class_id,
+											l_left_constrained.as_implicitly_detachable,
+											l_class.class_id)
 										if l_feature_type.has_like_argument then
 											create l_arg_types.make (1)
 											l_arg_types.extend (l_right_type)
@@ -5056,7 +5060,11 @@ feature {NONE} -- Visitor
 
 								-- Update the type stack: instantiate result type of the
 								-- infixed feature
-							l_infix_type := last_alias_feature.type.formal_instantiation_in (l_target_type.as_implicitly_detachable, l_left_constrained.as_implicitly_detachable, l_left_id)
+							l_infix_type := last_alias_feature.type.recomputed_in
+								(l_target_type.as_implicitly_detachable,
+								l_context_current_class.class_id,
+								l_left_constrained.as_implicitly_detachable,
+								l_left_id)
 							if l_infix_type.has_like_argument then
 								create l_arg_types.make (1)
 								l_arg_types.extend (l_right_type)

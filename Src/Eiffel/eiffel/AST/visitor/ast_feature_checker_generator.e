@@ -1773,7 +1773,11 @@ feature {NONE} -- Implementation
 
 								-- Get the type of Current feature.
 							l_result_type := l_feature.type
-							l_result_type := l_result_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
+							l_result_type := l_result_type.recomputed_in
+								(l_last_type.as_implicitly_detachable,
+								l_context_current_class.class_id,
+								l_last_constrained.as_implicitly_detachable,
+								l_last_id)
 								-- Adapted type in case it is a formal generic parameter or a like.
 							if l_arg_types /= Void then
 								l_pure_result_type := l_result_type

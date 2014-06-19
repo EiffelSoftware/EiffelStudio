@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 								-- Evaluate type of `f' in the current context.
 								-- Use formal generic constraint instead of the formal general itself.
 								-- Avoid using `instantiated_in' to preserve `like Current' status.
-							q := r.formal_instantiation_in (q, p, c.class_id)
+							q := r.recomputed_in (q, current_class.class_id, p, c.class_id)
 								-- Record supplier for recompilation.
 							degree_4.add_qualified_supplier (f, c, current_class)
 								-- Register intermediate type with instantiator.

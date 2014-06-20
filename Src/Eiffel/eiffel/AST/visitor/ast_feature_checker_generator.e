@@ -9369,7 +9369,7 @@ feature {NONE} -- Implementation
 						-- Conformance initialization
 						-- Argument conformance: infix feature must have one argument
 					l_arg_type := a_feature.arguments.i_th (1)
-					l_arg_type := l_arg_type.formal_instantiation_in (a_left_type.as_implicitly_detachable,
+					l_arg_type := l_arg_type.recomputed_in (a_left_type.as_implicitly_detachable, context.current_class.class_id,
 						a_left_constrained.as_implicitly_detachable, a_context_class.class_id).actual_type
 
 					if not l_arg_type.backward_conform_to (context.current_class, a_right_type) then

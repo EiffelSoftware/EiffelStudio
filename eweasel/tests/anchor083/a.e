@@ -9,7 +9,7 @@ feature
 		do
 			check
 				attached_view: attached view as l_v
-				attached_plus: attached (l_v + l_v) as l_plus
+				attached_plus: attached (l_v + l_v.example) as l_plus
 			then
 				Result := l_plus
 			end

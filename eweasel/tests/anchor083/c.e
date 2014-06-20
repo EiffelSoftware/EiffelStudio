@@ -4,7 +4,9 @@ inherit B
 
 feature
 
-	plus alias "+" (other: like Current): detachable D [like {H}.item]
+	example: detachable D [like {H}.item]
+
+	plus alias "+" (other: detachable D [like {H}.item]): detachable D [like {H}.item]
 		do
 		end
 

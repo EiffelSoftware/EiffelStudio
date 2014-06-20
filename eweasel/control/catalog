@@ -13,9 +13,20 @@ test	ca-simple-violation				codeanalysis001 tcf fail code_analysis
 test	ca-load-preferences				codeanalysis002 tcf fail code_analysis
 test	ca-forced-rules-preferences		codeanalysis003 tcf fail code_analysis
 test	ca-various-warnings				codeanalysis004 tcf fail code_analysis
-test	ca-054-bug-001					codeanalysis005 tcf fail code_analysis
+test	ca-024-bug-001					codeanalysis005 tcf fail code_analysis
 test	ca-071-bug-001					codeanalysis006 tcf fail code_analysis
 test	ca-080-bug-001					codeanalysis007 tcf fail code_analysis
+test	ca-030-001						codeanalysis008 tcf fail code_analysis
+test	ca-051-001						codeanalysis009 tcf fail code_analysis
+test	ca-059-001						codeanalysis010 tcf fail code_analysis
+test	ca-060-001						codeanalysis011 tcf fail code_analysis
+test	ca-063-001						codeanalysis012 tcf fail code_analysis
+test	ca-064-001						codeanalysis013 tcf fail code_analysis
+test	ca-065-001						codeanalysis014 tcf fail code_analysis
+test	ca-066-001						codeanalysis015 tcf fail code_analysis
+test	ca-079-001						codeanalysis016 tcf fail code_analysis
+test	ca-088-001						codeanalysis017 tcf fail code_analysis
+test	ca-089-001						codeanalysis018 tcf fail code_analysis
 
 -- EiffelTime tests
 

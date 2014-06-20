@@ -6,12 +6,12 @@
 
 -- This is a test control file
 
-test_name ca-071-bug-001
-test_description CA071 incorrectly triggered when comparing the result of two functions.
+test_name ca-079-001
+test_description Test rule CA079 - Argument naming convention violated
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 
-analyze_code rule CA071
-analyze_code_result ok
+analyze_code rule "CA079"
+analyze_code_result violation "TEST CA079:28"
 
 test_end

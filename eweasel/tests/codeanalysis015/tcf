@@ -1,0 +1,20 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name ca-066-001
+test_description Test rule CA066 - Argument naming convention violated
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+analyze_code rule "CA066 (Enforce argument prefix 'a_'=True)"
+analyze_code_result violation "TEST CA066:28 CA066:29 CA066:30 CA066:31"
+
+analyze_code rule "CA066 (Enforce argument prefix 'a_'=False)"
+analyze_code_result violation "TEST CA066:28 CA066:29 CA066:30"
+
+test_end

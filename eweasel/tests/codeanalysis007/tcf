@@ -6,8 +6,8 @@
 
 -- This is a test control file
 
-test_name ca-071-bug-001	
-test_description CA024 incorrectly triggered when comparing the result of two functions.
+test_name ca-080-bug-001
+test_description CA080 (TODO) analysis crashes (contract violation) on empty TODO clauses. Fixed in revision 95281.
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 

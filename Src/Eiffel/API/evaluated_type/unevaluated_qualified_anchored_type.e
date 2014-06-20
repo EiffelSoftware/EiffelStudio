@@ -16,11 +16,11 @@ inherit
 			evaluated_type_in_descendant,
 			has_associated_class,
 			formal_instantiated_in,
-			formal_instantiation_in,
 			instantiated_in,
 			instantiation_in,
 			internal_is_valid_for_class,
-			is_syntactically_equal
+			is_syntactically_equal,
+			recomputed_in
 		end
 
 	SHARED_NAMES_HEAP
@@ -184,9 +184,9 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	formal_instantiation_in (type, constraint: TYPE_A; written_id: INTEGER_32): like Current
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
+			-- <Precursor>
 		do
-
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current
@@ -198,7 +198,7 @@ invariant
 	chain_attached: chain /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

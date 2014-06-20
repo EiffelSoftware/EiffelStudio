@@ -1995,11 +1995,16 @@ feature {NONE} -- Implementation
 									-- Feature is not found.
 								if not is_target_known then
 										-- Unknown target.
+										-- Lookup for a feature in a set of possible types.
 									if attached {LOCAL_TYPE_A} a_type.actual_type as t and then
 										attached t.feature_call (a_name.name_id, context.current_class) as f
 									then
-											-- Lookup for a feature in a set of possible types.
-										l_result_type := f.descriptor.type.formal_instantiation_in (f.target.as_implicitly_detachable, f.site.as_implicitly_detachable, context.current_class.class_id)
+											-- For the use of `f.site.class_id' see test#anchor086.
+										l_result_type := f.descriptor.type.recomputed_in
+											(f.target.as_implicitly_detachable,
+											l_context_current_class.class_id,
+											f.site.as_implicitly_detachable,
+											f.site.class_id)
 										if attached l_arg_types then
 											l_result_type := l_result_type.actual_argument_type (l_arg_types)
 										end

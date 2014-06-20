@@ -6,7 +6,7 @@
 
 -- This is a test control file
 
-test_name ca-054-bug-001	
+test_name ca-024-bug-001
 test_description CA024 incorrectly triggered even if loop initialization calls 'forth'.
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

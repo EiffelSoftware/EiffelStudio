@@ -1,0 +1,1 @@
+Test for Inspector Eiffel. Used to fail with an exception due to a bug in the tested rule, but should now pass.

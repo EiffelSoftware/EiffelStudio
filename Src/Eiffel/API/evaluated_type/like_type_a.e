@@ -22,7 +22,6 @@ inherit
 			associated_class_type,
 			has_associated_class_type,
 			has_like,
-			formal_instantiation_in,
 			good_generics,
 			error_generics,
 			formal_instantiated_in,
@@ -315,16 +314,6 @@ feature -- Primitives
 		do
 			t := twin
 			t.set_actual_type (actual_type.recomputed_in (target_type, context_id, constraint, written_id))
-			Result := t
-		end
-
-	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
-			-- <Precursor>
-		local
-			t: like Current
-		do
-			t := twin
-			t.set_actual_type (actual_type.formal_instantiation_in (type, constraint, written_id))
 			Result := t
 		end
 

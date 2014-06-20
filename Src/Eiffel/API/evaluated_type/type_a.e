@@ -1612,23 +1612,9 @@ feature -- Access
 			constraint_not_formal: not constraint.is_formal
 			positive_id: written_id > 0
 		do
-			Result := formal_instantiation_in (target_type, constraint, written_id)
-		ensure
-			result_attached: attached Result
-		end
-
-	formal_instantiation_in (type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
-			-- Instantiation of Current written in the class of id `written_id'
-			-- in the context of (possibly formal) `type' with actual (constraint type) `constraint'.
-		require
-			type_attached: type /= Void
-			constraint_attached: constraint /= Void
-			constraint_not_formal: not constraint.is_formal
-			positive_id: written_id > 0
-		do
 			Result := Current
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A

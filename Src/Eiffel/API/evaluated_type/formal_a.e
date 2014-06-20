@@ -20,7 +20,6 @@ inherit
 			description,
 			description_with_detachable_type,
 			evaluated_type_in_descendant,
-			formal_instantiation_in,
 			generated_id,
 			generate_cid,
 			generate_cid_array,
@@ -41,6 +40,7 @@ inherit
 			is_reference,
 			is_separate,
 			make_type_byte_code,
+			recomputed_in,
 			same_as,
 			set_separate_mark,
 			skeleton_adapted_in
@@ -589,7 +589,7 @@ feature -- Access
 			end
 		end
 
-	formal_instantiation_in (type: TYPE_A; constraint_type: TYPE_A; written_id: INTEGER): TYPE_A
+	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint_type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- <Precursor>
 		do
 				-- Use constraint type.

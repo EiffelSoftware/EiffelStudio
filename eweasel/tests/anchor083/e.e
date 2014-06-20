@@ -8,11 +8,11 @@ feature
 	store: like view.plus
 		require
 			attached_view: attached view as v
-			attached_plus: attached (v + v)
+			attached_plus: attached (v + v.example)
 		do
 			check
 				attached_view: attached view as l_v
-				attached_plus: attached (l_v + l_v) as l_plus
+				attached_plus: attached (l_v + l_v.example) as l_plus
 			then
 				Result := l_plus
 			end

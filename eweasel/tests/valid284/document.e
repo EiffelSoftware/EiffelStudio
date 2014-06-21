@@ -5,6 +5,11 @@ inherit
 			new_proxy
 		end
 
+	PROXIABLE
+		undefine
+			proxy
+		end
+
 feature
 
 	new_proxy: PROXY_DOCUMENT

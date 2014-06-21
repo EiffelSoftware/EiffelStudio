@@ -1,6 +1,5 @@
 deferred class PARENT
 inherit
-
 	PROXIABLE
 		redefine
 			proxy,
@@ -8,12 +7,15 @@ inherit
 		end
 
 feature
-	creation_objects_proxy_anchor: TUPLE
+	creation_objects_proxy_anchor: TEST2 [ANY]
 		do
 			check False then end
 		end
 
 	proxy: like new_proxy
+		do
+			check False then end
+		end
 
 	new_proxy: PROXY_PARENT
 		deferred

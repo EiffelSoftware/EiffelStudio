@@ -5,6 +5,7 @@ copy_sub Ace $TEST Ace
 copy_raw child.e $CLUSTER child.e
 copy_raw document.e $CLUSTER document.e
 copy_raw parent.e $CLUSTER parent.e
+copy_raw proxy.e $CLUSTER proxy.e
 copy_raw proxiable.e $CLUSTER proxiable.e
 copy_raw proxy_document.e $CLUSTER proxy_document.e
 copy_raw proxy_parent.e $CLUSTER proxy_parent.e

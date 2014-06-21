@@ -6,7 +6,7 @@ inherit
 		end
 
 feature
-	creation_objects_proxy_anchor: TEST3 [order: like document.proxy]
+	creation_objects_proxy_anchor: TEST3 [like document.proxy]
 			-- <Precursor>
 		do
 			check False then end

@@ -1,6 +1,6 @@
 deferred class DOCUMENT
 inherit
-	PARENT
+	CHILD
 		redefine
 			new_proxy
 		end

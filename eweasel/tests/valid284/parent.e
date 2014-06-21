@@ -7,7 +7,7 @@ inherit
 		end
 
 feature
-	creation_objects_proxy_anchor: TEST2 [ANY]
+	creation_objects_proxy_anchor: TEST3 [ANY]
 		do
 			check False then end
 		end

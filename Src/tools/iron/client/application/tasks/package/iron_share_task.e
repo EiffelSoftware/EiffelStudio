@@ -282,6 +282,14 @@ feature -- Execute
 													print (" ["+ l_hash + "]")
 												end
 												print ("...%N")
+												if l_package.has_archive_uri then
+													print (" -> replacing previous archive [size=" + l_package.archive_size.out)
+													if attached l_package.archive_hash as l_hash then
+														print (" hash=" + l_hash)
+													end
+													print (" ].")
+													print_new_line
+												end
 												create cl_body.put (Void)
 												remote_node.upload_package_archive (l_package, l_iron_archive, u, p, cl_body)
 												if remote_node.last_operation_succeed then

@@ -67,10 +67,9 @@ Notes:
 * In the scope of the .ecf file, the IRON_PATH variable is always set: to default path or to the value of environment variable IRON_PATH.
 * In addition to the IRON way to reference library, it is also possible to use the absolute URL in the repository, see advanced usage for more details.
 
-<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
-https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
-https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
-</code>
+ https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
+ https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
+ https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
 
 But this implies putting the version in the url (i.e 14.05), or you could set ISE_LIBRARY to <code>https://iron.eiffel.com/14.05/com.eiffel</code>
 
@@ -316,15 +315,21 @@ See for instance, the package.iron for Eiffel Base package:
 
 '''end'''</code>
 
-Note: online version at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron] .
+Note: The package iron file for the Eiffel Base package is available online at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron] .
 
-Only the name of the package is required for now, but the section "project" list the various available .ecf projects, and the section "note" contains the title, description, tags, ... informations.
-The tag under the '''note''' section is free, and for now, only '''title, description, tags, link<nowiki>[...]</nowiki>, and maps''' have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.
+Current status:
+* only the '''name of the package is required'''
+* the section "project" list the various available .ecf projects
+* the section "note" contains title, description, tags, ... informations. The formation is similar to Eiffel indexing note, and in addition it supports bracket in the name of note, such as in ''<nowiki>link[doc]</nowiki>''.
+** The "link" declaration: <code>link<nowiki>[category</nowiki>]: "Optional Title" associated-url</code>
+* The following notes have semantic that are processed by Iron: '''title, description, tags, link<nowiki>[..]</nowiki>, and maps''', for now mostly on the Iron server.
+* It is possible to use any note name.  Currently they are simply stored and never displayed. In the future, Iron may support additional semantic for those notes.
 
-A few packages may require post installation operations, such as compiling C code, or others. 
+A few packages may require '''post installation operations''', such as compiling C code, or others. 
 For that, use the section '''setup''', and in particular the '''compile_library''' information.
 During installation, '''iron''' will launch the <code>compile_library</code> tool delivered with EiffelStudio on the provided directory.
 Example at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL/package.iron] :
+
 <code>package cURL
 
 setup

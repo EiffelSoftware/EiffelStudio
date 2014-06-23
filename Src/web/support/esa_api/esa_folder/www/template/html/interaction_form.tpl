@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-     {include file="optional_styling_css.tpl"/}     
-  </head>
+   
+   {include file="head.tpl"/}     
 
   <body>
      {include file="navbar.tpl"/}  
@@ -23,7 +17,7 @@
           <form class="form-horizontal well" action="{$host/}/report_detail/{$form.report.number/}/interaction_form" id="report" method="POST" enctype="multipart/form-data" itemprop="create">
         {/unless}
           <fieldset>
-            <legend>Problem Report Interaction Submission</legend>
+            <legend><h1>Problem Report Interaction Submission</h1></legend>
             <p> Fill in the description for the new interaction for the <strong>{$form.report.status.synopsis/}</strong> problem report {$form.report.number/}.</p>
             <div class="control-group" has-error>
               <label class="control-label" for="textarea">Description</label>

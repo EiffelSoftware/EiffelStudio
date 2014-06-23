@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ESA_REPORT_PROBLEM_HANDLER}."
+	description: "[
+					Handle user report a new problem as a temporary report problem.
+				    Also handle update a temporary report problem after completing the first step.
+				   ]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,6 +67,7 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		do
 			if attached req.path_parameter ("id") then
 					-- Edit a Report Problem
@@ -78,6 +82,7 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		do
 			if attached req.path_parameter ("id") then
 					-- Update a Report Problem
@@ -90,9 +95,10 @@ feature -- HTTP Methods
 			end
 		end
 
-feature -- Edit Report Problem
+feature {NONE} -- Edit Report Problem
 
 	edit_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Edit an existing temporary report problem.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -123,6 +129,7 @@ feature -- Edit Report Problem
 		end
 
 	edit_form (a_report_id: INTEGER): ESA_REPORT_FORM_VIEW
+			-- edit form realted to `a_report_id'.
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			Result.set_id (a_report_id)
@@ -161,9 +168,10 @@ feature -- Edit Report Problem
 			Result.set_temporary_files (api_service.temporary_problem_report_attachments (a_report_id))
 		end
 
-feature -- New Report Problem
+feature {NONE} -- New Report Problem
 
 	new_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Create a new report problem
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
@@ -190,14 +198,14 @@ feature -- New Report Problem
 		end
 
 
-feature -- Update Report Problem
+feature {NONE} -- Update Report Problem
 
 	update_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Update a temporary report problem.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_form: ESA_REPORT_FORM_VIEW
 		do
-			to_implement ("Clean code and make it simpler")
 			create l_rhf
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
 				if attached {STRING_32} current_user_name (req) as l_user then
@@ -235,7 +243,7 @@ feature -- Update Report Problem
 
 
 	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW; a_type: READABLE_STRING_32)
-			-- Update problem report
+			-- Update problem report.
 		local
 			l_reproduce: STRING_32
 		do
@@ -262,6 +270,7 @@ feature -- Update Report Problem
 feature -- Initialize Report Problem
 
 	initialize_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Initialize a new temporay report problem.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_report_id: INTEGER
@@ -296,7 +305,7 @@ feature -- Initialize Report Problem
 		end
 
 	initialize_report_problem_internal (req: WSF_REQUEST; a_form: ESA_REPORT_FORM_VIEW)
-			-- Initialize problem report
+			-- Initialize problem report.
 		require
 			is_valid: a_form.is_valid_form
 		local
@@ -348,7 +357,7 @@ feature {NONE} -- Implementation
 
 
 	extract_form_data_cj (req: WSF_REQUEST): ESA_REPORT_FORM_VIEW
-			-- Extract data from collection+json template
+			-- Extract data from collection+json template.
 		local
 			l_parser: JSON_PARSER
 			l_content: STRING

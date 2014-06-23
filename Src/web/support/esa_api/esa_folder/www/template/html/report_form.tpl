@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <title>
+        Support Site for Eiffel  Users
+    </title>
+
      {include file="optional_styling_css.tpl"/}     
   </head>
 

@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-     {include file="optional_styling_css.tpl"/}     
-  </head>
+ 
+  {include file="head.tpl"/}     
 
   <body>
      {include file="navbar.tpl"/}  
@@ -46,10 +40,10 @@
         </div> -->
         <div id="footer">
             <div class="container">
-                   <p class="text-muted"><a href="{$host/}/doc/esa_doc.html" target="_blank" class="info">API Documentation </a></p>
-                    <p class="text-muted"><a href="http://www.eiffel.com/company/contact/" target="_blank" class="info">Questions? Comments? Let us know! </a></p>
-                    <p class="text-muted">© Copyright 2014 Eiffel Software -- <a href="http://www.eiffel.com/privacy-policy" target="_blank" class="info">Privacy Policy</a> </p>
-              </div>
+                <p class="text-muted"><a href="{$host/}/doc/esa_doc.html" target="_blank" class="info">API Documentation </a></p>
+                <p class="text-muted"><a href="http://www.eiffel.com/company/contact/" target="_blank" class="info">Questions? Comments? Let us know! </a></p>
+                <p class="text-muted">© Copyright 2014 Eiffel Software -- <a href="http://www.eiffel.com/privacy-policy" target="_blank" class="info">Privacy Policy</a> </p>
+            </div>
         </div>
     </div>
 

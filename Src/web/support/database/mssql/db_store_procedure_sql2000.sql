@@ -4498,3 +4498,126 @@ AS
   COMMIT TRANSACTION UpdateEmail
 
 
+GO
+/****** Object:  StoredProcedure [dbo].[GetProblemReportTemporaryInteraction2]    Script Date: 23/06/2014 9:57:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetProblemReportTemporaryInteraction2]
+
+@InteractionID INT
+
+AS
+SELECT Content, (SELECT Username FROM Memberships WHERE Memberships.ContactID = ProblemReportTemporaryInteractions.ContactID), (SELECT StatusSynopsis FROM ProblemReportStatus WHERE ProblemReportStatus.StatusID = ProblemReportTemporaryInteractions.NewStatusID), Private, (SELECT CategorySynopsis FROM ProblemReportCategories WHERE ProblemReportCategories.CategoryID = ProblemReportTemporaryInteractions.NewCategoryID) 
+
+FROM ProblemReportTemporaryInteractions
+
+WHERE InteractionID = @InteractionID
+
+GO
+/****** Object:  StoredProcedure [dbo].[GetProblemReportTemporaryInteraction3]    Script Date: 23/06/2014 9:57:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetProblemReportTemporaryInteraction3]
+
+@InteractionID INT
+
+AS
+SELECT NewStatusID, NewCategoryID
+
+FROM ProblemReportTemporaryInteractions
+
+WHERE InteractionID = @InteractionID
+
+GO
+/****** Object:  StoredProcedure [dbo].[InitializeInteraction3]    Script Date: 23/06/2014 9:57:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[InitializeInteraction3]
+@InteractionID	INT,
+@Content	TEXT,
+@StatusID	INT,
+@Private	BIT,
+@CategoryID	INT
+
+AS
+DECLARE @NewStatusID INT
+DECLARE @NewCategoryID INT
+
+IF @StatusID > 0
+BEGIN
+	SET @NewStatusID = @StatusID
+END
+ELSE
+BEGIN
+	SET @NewStatusID = NULL
+END
+
+IF @CategoryID > 0
+BEGIN
+	SET @NewCategoryID = @CategoryID
+END
+ELSE
+BEGIN
+	SET @NewCategoryID = NULL
+END
+
+UPDATE ProblemReportTemporaryInteractions
+SET Content = @Content, NewStatusID = @NewStatusID, Private = @Private, NewCategoryID = @CategoryID
+WHERE InteractionID = @InteractionID
+
+GO
+
+GO
+/****** Object:  StoredProcedure [dbo].[GetEmailTokenAge]    Script Date: 23/06/2014 10:01:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[GetEmailTokenAge]
+	-- Add the parameters for the stored procedure here
+    @Username			VARCHAR(50),
+	@Token              VARCHAR(50)
+AS
+  DECLARE @ContactID INT
+  DECLARE @Exist INT
+
+
+  SELECT @ContactID = ContactID FROM Memberships WHERE Username = @Username;
+
+  select @Exist=COUNT(*)  from UpdateEmail where Token = @Token and ContactID = @ContactID
+
+  if @Exist = 1
+  BEGIN
+       select DATEDIFF(HOUR,CreatedDate,getdate()), Email from UpdateEmail where Token = @Token and ContactID = @ContactID
+  END
+  IF @Exist = 0
+  begin
+	   Select -1  
+  end 
+GO

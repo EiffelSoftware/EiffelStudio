@@ -42,32 +42,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
-			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
-			-- Only not confidential reports
-		local
-			l_report: ESA_REPORT
-			l_list: LIST[ESA_REPORT]
-			l_statistics: ESA_REPORT_STATISTICS
-		do
-			log.write_debug (generator + ".problem_reports_guest All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out)
-			data_provider.connect
-			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
-			create l_statistics
-			data_provider.connect
-			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status) as c loop
-				l_report := c.item
-				if attached l_report.status as ll_status then
-					update_statistics (l_statistics, ll_status)
-					l_report.set_status (ll_status)
-				end
-				l_list.force (l_report)
-			end
-			data_provider.disconnect
-			Result := [l_statistics, l_list]
-			post_data_provider_execution
-		end
-
 	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
@@ -380,6 +354,41 @@ feature -- Access
 			post_data_provider_execution
 		end
 
+	temporary_interaction_2 (a_interaction_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
+															   username: detachable READABLE_STRING_32;
+															   status: detachable READABLE_STRING_32;
+															   private: detachable READABLE_STRING_32;
+															   category: detachable READABLE_STRING_32
+															   ]
+			-- Temporary problem report interaction
+			--			Content,
+			--			Username,
+			--			Status,
+			--			Private,
+			-- 			Category	
+
+		do
+			log.write_debug (generator+".temporary_interaction interaction_id:" + a_interaction_id.out)
+			Result := data_provider.temporary_interaction_2 (a_interaction_id)
+			post_data_provider_execution
+		end
+
+
+
+	temporary_interaction_3 (a_interaction_id: INTEGER): detachable TUPLE[
+															   status: INTEGER;
+															   category: INTEGER
+															   ]
+			-- Temporary problem report interaction
+			--			Status,
+			-- 			Category	
+
+		do
+			log.write_debug (generator+".temporary_interaction interaction_id:" + a_interaction_id.out)
+			Result := data_provider.temporary_interaction_3 (a_interaction_id)
+			post_data_provider_execution
+		end
+
 	temporary_problem_report_attachments (a_report_id: INTEGER): LIST[ESA_FILE_VIEW]
 		local
 			l_file: ESA_FILE_VIEW
@@ -393,7 +402,6 @@ feature -- Access
 			end
 			post_data_provider_execution
 		end
-
 
 	temporary_interation_attachments (a_interaction_id: INTEGER): LIST[ESA_FILE_VIEW]
 			-- Attachments for temporary interaction `a_interaction_id'
@@ -578,7 +586,6 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-
 	set_problem_report_responsible (a_number, a_contact_id: INTEGER_32)
 			-- Assign responsible with id `a_contact_id' to problem report number `a_report_number'.
 		do
@@ -586,7 +593,6 @@ feature -- Basic Operations
 			data_provider.set_problem_report_responsible (a_number, a_contact_id)
 			post_data_provider_execution
 		end
-
 
 	new_interaction_id (a_username: STRING; a_pr_number: INTEGER): INTEGER
 			-- Id of added interaction by user `a_username' to interactions of pr with number `a_pr_number'.
@@ -604,6 +610,15 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
+
+	initialize_interaction_2 (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
+			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
+		do
+			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
+			data_provider.initialize_interaction_2 (a_interaction_id, a_category_id, a_content, a_new_status, a_private)
+			post_data_provider_execution
+		end
+
 	commit_interaction (a_interaction_id: INTEGER)
 			-- Commit temporary interaction report `a_report_id'.
 		do
@@ -611,8 +626,6 @@ feature -- Basic Operations
 			data_provider.commit_interaction (a_interaction_id)
 			post_data_provider_execution
 		end
-
-
 
 	upload_temporary_report_attachment (a_report_id: INTEGER; a_file: ESA_FILE_VIEW)
 			-- Upload attachment in temporary table for temporary report `a_report_id'
@@ -627,6 +640,21 @@ feature -- Basic Operations
 		do
 			log.write_debug (generator + ".upload_temporary_interaction_attachment InteractionId:" + a_interaction_id.out + " filename:" + a_file.name)
 			data_provider.upload_temporary_interaction_attachment (a_interaction_id, a_file.size, a_file.name, a_file.content)
+			post_data_provider_execution
+		end
+
+	set_problem_report_category (a_number, a_category_id: INTEGER)
+			-- Set category of problem report with number `a_number' to category with category ID `a_category_id'.	
+		do
+			data_provider.set_problem_report_category (a_number, a_category_id)
+			post_data_provider_execution
+		end
+
+
+	set_problem_report_status (a_number, a_status_id: INTEGER)
+			-- Set status of problem report with number `a_number' to status with status ID `a_status_id'.
+		do
+			data_provider.set_problem_report_status (a_number, a_status_id)
 			post_data_provider_execution
 		end
 

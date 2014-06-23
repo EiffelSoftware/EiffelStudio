@@ -64,6 +64,7 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -90,15 +91,22 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_interaction: INTEGER
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if
+				attached {STRING_32} current_user_name (req) as l_user and then
+				attached {WSF_STRING} req.path_parameter("report_id") as l_report_id and then l_report_id.is_integer
+			then
 				if attached current_media_type (req) as l_type then
 					log.write_information (generator + ".do_post Processing request")
 					to_implement ("send_new_report_email (l_number)")
-					api_service.commit_interaction (extract_form_data(req, l_type))
+					l_interaction := extract_form_data(req, l_type)
+					api_service.commit_interaction (l_interaction)
+					update_report_problem (l_report_id.integer_value, l_interaction)
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				else
 					log.write_alert (generator + ".do_post Processing request, not acceptable")
@@ -115,7 +123,10 @@ feature -- HTTP Methods
 			end
 		end
 
+feature {NONE} -- Implementation
+
 	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): INTEGER
+			-- Extract data from a post request (form in text/html or template in CJ).
 		local
 			l_parser: JSON_PARSER
 		do
@@ -135,4 +146,23 @@ feature -- HTTP Methods
 				end
 			end
 		end
+
+	update_report_problem (a_report_id, a_interaction_id: INTEGER)
+			-- Update report problem
+		local
+			l_tuple: detachable TUPLE[ status: INTEGER;
+									   category: INTEGER]
+		do
+			l_tuple := api_service.temporary_interaction_3 (a_interaction_id)
+			if l_tuple /= Void then
+				if l_tuple.status > 0 then
+					api_service.set_problem_report_status (a_report_id, l_tuple.status)
+				end
+				if l_tuple.category > 0 then
+					api_service.set_problem_report_category (a_report_id, l_tuple.category)
+				end
+			end
+		end
+
+
 end

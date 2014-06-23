@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-     {include file="optional_styling_css.tpl"/}   
-  </head>
+
+   {include file="head.tpl"/}     
+
 
   <body>
      {include file="navbar.tpl"/}  
@@ -17,7 +12,7 @@
           <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/account' itemprop="update">
             <fieldset>
 
-              <legend>Account Information</legend>
+              <legend><h1>Account Information</h1></legend>
               <p>The information in this page is used by Eiffel Software should we need to contact you. We will never share this information with other companies. Please provide as much information as possible so we can better assist you.</p>
 
               <div class="form-group">

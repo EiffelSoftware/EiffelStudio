@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-     {include file="optional_styling_css.tpl"/}     
-  </head>
+
+  {include file="head.tpl"/}     
 
   <body>
      {include file="navbar.tpl"/}  
@@ -17,7 +10,7 @@
         <div class="main">
         <div class="form-horizontal well">
           <fieldset>
-            <legend>Interaction Submission Confirmation</legend>
+            <legend><h1>Interaction Submission Confirmation</h1></legend>
             <div class="control-group">
               <label class="control-label" for="textarea" itemprop="description">Description</label>
               <div class="controls">
@@ -36,6 +29,19 @@
                     {/foreach} 
               </div>
             </div>
+            {/if}
+            {if isset="$new_category"}  
+              <div class="control-group">
+              <label class="control-label" for="textarea" itemprop="category">Change category from {$form.report.category.synopsis/} to 
+              </label>
+              <div class="controls">
+                       {foreach from="$categories" item="item"} 
+                        {if condition="$item.id = $form.category"} 
+                          {$item.synopsis/} 
+                        {/if} 
+                    {/foreach} 
+               </div>
+              </div>
             {/if}
             {if isset="$private"}  
             <div class="control-group">

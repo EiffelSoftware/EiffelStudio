@@ -74,10 +74,10 @@ Notes:<ul><li> It is possible to override the default location of IRON installat
 <li> In addition to the IRON way to reference library, it is also possible to use the absolute URL in the repository, see advanced usage for more details.</li>
 </ul>
 <br/>
-<code>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
+<pre>https://iron.eiffel.com/14.05/com.eiffel/library/base/base.ecf
 https://iron.eiffel.com/14.05/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
 https://iron.eiffel.com/14.05/others/dummy/src/foo/bar.ecf
-</code><br/>
+</pre><br/>
 But this implies putting the version in the url (i.e 14.05), or you could set ISE_LIBRARY to <code class="inline">https://iron.eiffel.com/14.05/com.eiffel</code>
 <h1>
 IRON client tool</h1>
@@ -321,15 +321,22 @@ See for instance, the package.iron for Eiffel Base package:<br/>
 	maps: /com.eiffel/library/data_structure/adt/base
 
 <strong>end</strong></code><br/>
-Note: online version at <a href="https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron" class="wiki_ext_link">https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron</a> .<br/>
+Note: The package iron file for the Eiffel Base package is available online at <a href="https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron" class="wiki_ext_link">https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron</a> .<br/>
 <br/>
-Only the name of the package is required for now, but the section "project" list the various available .ecf projects, and the section "note" contains the title, description, tags, ... informations.<br/>
-The tag under the <strong>note</strong> section is free, and for now, only <strong>title, description, tags, link[...], and maps</strong> have semantic. For now the others are simply stored and never displayed, but the server will be improved later to support for more meta data.<br/>
+Current status:<ul><li> only the <strong>name of the package is required</strong></li>
+<li> the section "project" list the various available .ecf projects</li>
+<li> the section "note" contains title, description, tags, ... informations. The formation is similar to Eiffel indexing note, and in addition it supports bracket in the name of note, such as in <em>link[doc]</em>.<br/>
+<li> The "link" declaration: <code class="inline">link[category]: "Optional Title" associated-url</code></li>
+</li>
+<li> The following notes have semantic that are processed by Iron: <strong>title, description, tags, link[..], and maps</strong>, for now mostly on the Iron server.</li>
+<li> It is possible to use any note name.  Currently they are simply stored and never displayed. In the future, Iron may support additional semantic for those notes.</li>
+</ul>
 <br/>
-A few packages may require post installation operations, such as compiling C code, or others. <br/>
+A few packages may require <strong>post installation operations</strong>, such as compiling C code, or others. <br/>
 For that, use the section <strong>setup</strong>, and in particular the <strong>compile_library</strong> information.<br/>
 During installation, <strong>iron</strong> will launch the <code class="inline">compile_library</code> tool delivered with EiffelStudio on the provided directory.<br/>
 Example at <a href="https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL/package.iron" class="wiki_ext_link">https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL/package.iron</a> :<br/>
+<br/>
 <code>package cURL
 
 setup

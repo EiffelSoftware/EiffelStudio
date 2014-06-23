@@ -53,6 +53,7 @@ feature -- Execute
 			create envs.make (0)
 
 			is_stdout := True
+			keep_backup := False
 
 			across
 				argument_source.arguments as ic
@@ -82,6 +83,14 @@ feature -- Execute
 					then
 						is_stdout := False
 					elseif
+						ic.item.is_case_insensitive_equal_general ("--backup")
+					then
+						keep_backup := True
+					elseif
+						ic.item.is_case_insensitive_equal_general ("--no_backup")
+					then
+						keep_backup := False
+					elseif
 						ic.item.is_case_insensitive_equal_general ("-D")
 						or ic.item.is_case_insensitive_equal_general ("--define")
 					then
@@ -102,6 +111,8 @@ feature -- Execute
 				print ("   -i|--simulation: simulation mode, no change on files%N")
 				print ("   --stdout: updated file content is display in stdout%N")
 				print ("   --save: update file directly%N")
+				print ("   --backup: backup updated files as .bak file%N")
+				print ("   --no_backup: do no backup updated file (this is the default)%N")
 				print ("   -h|--help: display help%N")
 			else
 				apply_variable_definitions (envs)
@@ -136,6 +147,9 @@ feature -- Execute
 
 	is_stdout: BOOLEAN
 			-- Output updated ecf file to stdout
+
+	keep_backup: BOOLEAN
+			-- Keep system backuped as ".bak" file?
 
 	add_variable_definition_to (s: READABLE_STRING_32; envs: STRING_TABLE [READABLE_STRING_32])
 		local
@@ -280,7 +294,9 @@ feature -- Execute
 							print ("ERROR: issue while trying to generate ecf content%N")
 						end
 					else
-						backup_system (sys)
+						if keep_backup then
+							backup_system (sys)
+						end
 						sys.store
 					end
 				end

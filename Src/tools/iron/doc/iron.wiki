@@ -1,4 +1,4 @@
-=Purpose=
+﻿=Purpose=
 IRON provides an easy-to-use facility for using and sharing packages of quality Eiffel components, automating many of the tasks involved.
 Most often a package is a library or a set of libraries, but it could also other resources such as tools.
 

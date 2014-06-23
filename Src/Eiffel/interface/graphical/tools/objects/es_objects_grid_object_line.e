@@ -836,7 +836,7 @@ feature {NONE} -- Filling
 			attributes_not_filled_yet: not row_attributes_filled
 		local
 			val: ABSTRACT_DEBUG_VALUE
-			l_is_hidden: BOOLEAN
+			l_is_hidden, l_is_tuple: BOOLEAN
 			i: INTEGER
 			grid: EV_GRID
 			es_glab: EV_GRID_LABEL_ITEM
@@ -851,9 +851,6 @@ feature {NONE} -- Filling
 			vlist := sorted_attributes_values
 			if vlist /= Void and then not vlist.is_empty then
 					--| better being sure it won't happen |--
-				check
-					vlist /= Void
-				end
 				from
 					vlist.start
 				until
@@ -874,13 +871,27 @@ feature {NONE} -- Filling
 				end
 
 				if not vlist.is_empty then
+					dcl := object_dynamic_class
+					if dcl /= Void then
+						l_is_tuple := dcl.conform_to (debugger_manager.compiler_data.tuple_class_c)
+					end
 					grid := a_row.parent
-
 					from
 						l_row_index := a_row.index
-						a_row.insert_subrows (vlist.count, 1)
 						list_cursor := vlist.new_cursor
 						list_cursor.start
+						if l_is_tuple then
+								-- We do not display the first elements at position `0' in the TUPLE because
+								-- it corresponds to `object_comparison' encoded as the value at position 0. This
+								-- is added in `fill_extra_attributes_for_tuple' below.
+							if vlist.count > 1 then
+									-- Only insert more rows if TUPLE has some actual generics.
+								a_row.insert_subrows (vlist.count - 1, 1)
+							end
+							list_cursor.forth
+						else
+							a_row.insert_subrows (vlist.count, 1)
+						end
 					until
 						list_cursor.after
 					loop
@@ -916,7 +927,6 @@ feature {NONE} -- Filling
 							grid.set_item (Col_name_index, i, es_glab)
 						end
 					end
-					dcl := object_dynamic_class
 					if dcl /= Void then
 						if
 							--| FIXME jfiat [2009-06-03]: check the implementation for dotnet, related to count and capacity
@@ -924,7 +934,7 @@ feature {NONE} -- Filling
 							dcl.conform_to (debugger_manager.compiler_data.special_class_c)
 						then
 							fill_extra_attributes_for_special (a_row, list_cursor)
-						elseif dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
+						elseif l_is_tuple then
 							fill_extra_attributes_for_tuple (a_row, list_cursor)
 						elseif
 							Eb_debugger_manager.display_agent_details
@@ -1149,10 +1159,15 @@ feature {NONE} -- Agent filling
 
 					f := debugger_manager.compiler_data.tuple_class_c.feature_with_name_32 ("object_comparison")
 					create gf
-					gf.set_pixmap (pixmap_from_e_feature (f))
+					if f /= Void then
+						gf.set_pixmap (pixmap_from_e_feature (f))
+						Grid_feature_style.set_e_feature (f)
+						gf.set_text_with_tokens (Grid_feature_style.text)
+					else
+						gf.set_pixmap (pixmaps.icon_pixmaps.feature_routine_icon)
+						gf.set_text ("object_comparison")
+					end
 					gf.set_overriden_fonts (label_font_table, label_font_height)
-					Grid_feature_style.set_e_feature (f)
-					gf.set_text_with_tokens (Grid_feature_style.text)
 					lrow.set_item (Col_name_index, gf)
 
 					create glab.make_with_text (vitem.output_value)

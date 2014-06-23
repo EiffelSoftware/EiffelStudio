@@ -793,6 +793,7 @@ CREATE TABLE [dbo].[ProblemReportTemporaryInteractions](
 	[Content] [text] NULL,
 	[CreationDate] [datetime] NOT NULL,
 	[Private] [bit] NOT NULL,
+	[NewCategoryID] [int] NULL,
  CONSTRAINT [PK_ProblemReportInteractionsTemp] PRIMARY KEY CLUSTERED 
 (
 	[InteractionID] ASC
@@ -1357,6 +1358,11 @@ ALTER TABLE [dbo].[ProblemReportTemporaryInteractions]  WITH NOCHECK ADD  CONSTR
 REFERENCES [dbo].[ProblemReportStatus] ([StatusID])
 GO
 ALTER TABLE [dbo].[ProblemReportTemporaryInteractions] CHECK CONSTRAINT [FK_ProblemReportTemporaryInteractions_ProblemReportStatus]
+GO
+ALTER TABLE [dbo].[ProblemReportTemporaryInteractions]  WITH CHECK ADD  CONSTRAINT [FK_ProblemReportTemporaryInteractions_ProblemReportCategory] FOREIGN KEY([NewCategoryID])
+REFERENCES [dbo].[ProblemReportCategories] ([CategoryID])
+GO
+ALTER TABLE [dbo].[ProblemReportTemporaryInteractions] CHECK CONSTRAINT [FK_ProblemReportTemporaryInteractions_ProblemReportCategory]
 GO
 ALTER TABLE [dbo].[ProblemReportTemporaryReportAttachments]  WITH CHECK ADD  CONSTRAINT [FK_ProblemReportTemporaryReportAttachments_ProblemReportsTemporary] FOREIGN KEY([ReportID])
 REFERENCES [dbo].[ProblemReportsTemporary] ([ReportID])

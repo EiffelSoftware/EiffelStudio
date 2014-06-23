@@ -27,19 +27,27 @@ feature {NONE} -- Initialization
 			create l_my_file_log_writer.make_at_location ((create {PATH}.make_current).extended("test.log"))
 			l_my_file_log_writer.set_max_file_size ({NATURAL_64}256*256)
 			l_my_file_log_writer.set_max_backup_count (2)
-			l_my_file_log_writer.enable_debug_log_level
+				-- Enable this line to log at DEBUG level, log by default at ERROR level.			
+				-- l_my_file_log_writer.enable_debug_log_level
 			log.register_log_writer (l_my_file_log_writer)
 			from
 				i := 10000
 			until
 				i = 0
 			loop
+				log.write_emergency ("[
+									Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it  
+									]" + " Index: " + i.out)
+				log.write_error ("[
+									Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it  
+									]" + " Index: " + i.out)
+				
 				log.write_information ("[
 						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it
-						]" + "Index: " + i.out)
+						]" + " Index: " + i.out)
 				log.write_debug ("[
-						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it
-						]" + "Index: " + i.out)
+						Example application that illustrates the basic behavior of LOG_ROLLING_WRITER_FILE  and how to use it 
+						]" + " Index: " + i.out)
 
 				i := i - 1
 			end

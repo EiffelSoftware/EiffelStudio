@@ -126,7 +126,8 @@ feature -- Edit Report Problem
 			l_tuple: detachable TUPLE[content : detachable READABLE_STRING_32;
 									   username: detachable READABLE_STRING_32;
 									   status: detachable READABLE_STRING_32;
-									   private: detachable READABLE_STRING_32]
+									   private: detachable READABLE_STRING_32;
+									   category: detachable READABLE_STRING_32]
 		do
 			create Result.make (api_service.status, api_service.all_categories)
 			Result.set_report (api_service.problem_report_details_guest (a_report_id))
@@ -135,7 +136,7 @@ feature -- Edit Report Problem
 			   	Result.set_category_by_synopsis (l_category.synopsis)
 			end
 			Result.set_id (a_interaction_id)
-			l_tuple := api_service.temporary_interaction (a_interaction_id)
+			l_tuple := api_service.temporary_interaction_2 (a_interaction_id)
 			if l_tuple /= Void then
 				if l_tuple.content /= Void then
 					Result.set_description (l_tuple.content)
@@ -145,6 +146,9 @@ feature -- Edit Report Problem
 				end
 				if attached l_tuple.private as l_private and then l_private.is_boolean then
 					Result.set_private (l_private.to_boolean)
+				end
+				if attached l_tuple.category as l_category then
+					Result.set_category_by_synopsis (l_category)
 				end
 			end
 			Result.set_temporary_files (api_service.temporary_interation_attachments (a_interaction_id))
@@ -236,8 +240,8 @@ feature -- Update Report Problem
 	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW; a_type: STRING)
 			-- Update problem report.
 		do
-			if attached a_form.description as l_category then
-				api_service.initialize_interaction (a_form.id, l_category, a_form.selected_status, a_form.private)
+			if attached a_form.description as l_description then
+				api_service.initialize_interaction_2 (a_form.id, a_form.category, l_description, a_form.selected_status, a_form.private)
 			end
 				-- Update temporary files
 			if a_type.same_string ("application/vnd.collection+json") then
@@ -291,8 +295,8 @@ feature -- Initialize Report Problem
 		require
 			is_valid: a_form.is_valid_form
 		do
-			if attached a_form.description as l_category then
-				api_service.initialize_interaction (a_form.id, l_category, a_form.selected_status, a_form.private)
+			if attached a_form.description as l_description then
+				api_service.initialize_interaction_2 (a_form.id, a_form.category, l_description, a_form.selected_status, a_form.private)
 			end
 			if attached a_form.uploaded_files as l_files then
 				across l_files as c loop

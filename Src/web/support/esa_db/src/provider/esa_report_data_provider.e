@@ -83,23 +83,6 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
-			-- All Problem reports for guest users
-			-- Only not confidential reports
-		local
-			l_parameters: HASH_TABLE[ANY,STRING_32]
-		do
-			create l_parameters.make (2)
-			l_parameters.put (a_rows_per_page, "RowsPerPage")
-			l_parameters.put (a_page_number, "PageNumber")
-			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportsGuest3", l_parameters))
-			db_handler.execute_reader
-			create Result.make (db_handler, agent new_report)
-			post_execution
-		end
-
 	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
@@ -635,7 +618,6 @@ feature -- Access
 			post_execution
 		end
 
-
 	temporary_interaction (a_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
 															   username: detachable READABLE_STRING_32;
 															   status: detachable READABLE_STRING_32;
@@ -660,6 +642,71 @@ feature -- Access
 				across 1 |..| 4 as i loop
 					if attached db_handler.read_string (i.item) as l_item then
 						Result[i.item] := l_item.as_string_32
+					end
+				end
+			end
+			disconnect
+			post_execution
+		end
+
+
+	temporary_interaction_2 (a_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
+															   username: detachable READABLE_STRING_32;
+															   status: detachable READABLE_STRING_32;
+															   private: detachable READABLE_STRING_32;
+															   category: detachable READABLE_STRING_32
+															   ]
+			-- Temporary problem report interaction
+			--			Content,
+			--			Username,
+			--			Status,
+			--			Private,
+			--          Category
+		local
+				l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction2", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				create Result.default_create
+				across 1 |..| 5 as i loop
+					if attached db_handler.read_string (i.item) as l_item then
+						Result[i.item] := l_item.as_string_32
+					end
+				end
+			end
+			disconnect
+			post_execution
+		end
+
+
+	temporary_interaction_3 (a_id: INTEGER): detachable TUPLE[ status:  INTEGER;
+															   category: INTEGER
+															   ]
+			-- Temporary problem report interaction
+			--			Content,
+			--			Username,
+			--			Status,
+			--			Private,
+			--          Category
+		local
+				l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (1)
+			l_parameters.put (a_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction3", l_parameters))
+			db_handler.execute_reader
+			if not db_handler.after then
+				db_handler.start
+				create Result.default_create
+				across 1 |..| 2 as i loop
+					if attached db_handler.read_integer_32 (i.item) as l_item then
+						Result[i.item] := l_item
 					end
 				end
 			end
@@ -1048,6 +1095,26 @@ feature -- Basic Operations
 			post_execution
 		end
 
+	initialize_interaction_2 (a_interaction_id: INTEGER; a_category_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
+			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
+		require
+			attached_content: a_content /= Void
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (5)
+			l_parameters.put (a_interaction_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
+			l_parameters.put (a_content, {ESA_DATA_PARAMETERS_NAMES}.Content_param)
+			l_parameters.put (a_new_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			l_parameters.put (a_private, {ESA_DATA_PARAMETERS_NAMES}.Private_param)
+			l_parameters.put (a_category_id, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("InitializeInteraction3", l_parameters))
+			db_handler.execute_writer
+			disconnect
+			post_execution
+		end
+
 	commit_interaction (a_interaction_id: INTEGER)
 			-- Commit temporary interaction report `a_report_id'.
 		local
@@ -1173,6 +1240,41 @@ feature -- Basic Operations
 			post_execution
 		end
 
+	set_problem_report_status (a_number, a_status_id: INTEGER)
+			-- Set status of problem report with number `a_number' to status with status ID `a_status_id'.
+		require
+			valid_number: a_number > 0
+			valid_status_id: a_status_id > 0
+		local
+				l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (a_number, {ESA_DATA_PARAMETERS_NAMES}.Number_param)
+			l_parameters.put (a_status_id, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer("UpdateProblemReportStatus", l_parameters))
+			db_handler.execute_writer
+			disconnect
+			post_execution
+		end
+
+	set_problem_report_category (a_number, a_category_id: INTEGER)
+			-- Set category of problem report with number `a_number' to category with category ID `a_category_id'.
+		require
+			valid_number: a_number > 0
+			valid_category_id: a_category_id > 0
+		local
+			l_parameters: HASH_TABLE[ANY,STRING_32]
+		do
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (a_number, {ESA_DATA_PARAMETERS_NAMES}.Number_param)
+			l_parameters.put (a_category_id, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer("UpdateProblemReportCategory", l_parameters))
+			db_handler.execute_writer
+			disconnect
+			post_execution
+		end
 
 feature -- Status Report
 

@@ -799,7 +799,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	
+
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username:READABLE_STRING_32): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users and
 			-- users with role user.
@@ -1451,6 +1451,11 @@ feature {NONE} -- Implementation
 						l_status.set_synopsis (l_item_6)
 					end
 				end
+					-- Contact
+				if attached db_handler.read_string (7) as l_item then
+					Result.set_contact (create {ESA_USER}.make (l_item))
+				end
+
 			end
 		end
 
@@ -1798,26 +1803,24 @@ feature -- Queries
 
 
 	Select_problem_reports_template: STRING = "[
-				SELECT Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG2.StatusID as statusID, ProblemReportStatus.StatusSynopsis
+				SELECT Number, Synopsis, PAG2.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG2.StatusID as statusID, PAG2.StatusSynopsis, PAG2.Username
 			 FROM (
 			    SELECT TOP :RowsPerPage
-				   Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG.StatusID as statusID, ProblemReportStatus.StatusSynopsis, PAG.CategoryID
+				   Number, Synopsis, PAG.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG.StatusID as statusID, PAG.StatusSynopsis, PAG.CategoryID, PAG.Username
 			    FROM (
 				SELECT TOP :Offset
-				Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, ProblemReports.StatusID statusID, ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, ProblemReports.StatusID statusID, 
+				ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID, Memberships.Username
 				FROM ProblemReports
 			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
-			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID   
+			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID  
+			    LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID  
 			    WHERE Confidential = 0 AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
 					AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
 				ORDER BY $Column $ORD1
 				) AS PAG
-				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG.CategoryID 
-				INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = PAG.StatusID  
 				ORDER BY $Column $ORD2
 			) AS PAG2
-			INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = PAG2.CategoryID
-			INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = PAG2.StatusID  
 			ORDER BY $Column $ORD1
 	]"
 

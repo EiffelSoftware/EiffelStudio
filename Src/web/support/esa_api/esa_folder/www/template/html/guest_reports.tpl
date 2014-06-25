@@ -105,6 +105,8 @@
                         <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
                       {/unless}  
                   </th>
+                  <th>Submitter
+                   </th>
                 </tr>
               </thead>
               <tbody>
@@ -114,8 +116,10 @@
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
                        <td itemprop="status">{$item.status.synopsis/}</td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
-                       <td itemprop="submission_date">{$item.submission_date/}</td>
+                       <td itemprop="submission_date">{$item.submission_date_output/}</td>
                        <td itemprop="category">{$item.category.synopsis/}</td>
+                       <td itemprop="category">{$item.contact.name/}</td>
+                </tr>
                 </tr>
               {/foreach}
               
@@ -135,7 +139,7 @@
                     <li><a href="{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}"  itemprop="last" rel="last">Last</a></li>
                   {/if}
                   {unless isset="$user"}
-                    <li><a href="{$host/}/reports?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
+                    <li><a href="{$host/}/reports?page=1&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
                     {if isset="$prev"}
                       <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="previous" rel="previous">Previous</a></li>
                     {/if}

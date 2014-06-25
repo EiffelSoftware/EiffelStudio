@@ -1,7 +1,5 @@
 <h1 class="sub-header">PR# {$report.number/} {$report.synopsis/} </h1>
  
-<details>
-  <summary id="labels">Problem Report Summary</summary>
   <div class="row">
   <div class="col-lg-16">
        <div class="panel panel-default">
@@ -65,7 +63,7 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading" itemprop="description">Description</div>
-              <div class="panel-body">{$report.description/}</div>
+              <div class="panel-body">{nl2br}{$report.description/}{/nl2br}</div>
             </div>
           </div>
          </div>
@@ -73,7 +71,7 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading" itemprop="to_reproduce">To Reproduce</div>
-              <div class="panel-body">{$report.to_reproduce/}</div>
+              <div class="panel-body">{nl2br}{$report.to_reproduce/}{/nl2br}</div>
             </div>
           </div> 
          </div>  
@@ -86,10 +84,7 @@
     </div>
     </div>
     </div>        
-</details>
 
-<details>
-  <summary id="labels">Problem Report Interactions</summary>
   <div class="row">
   <div class="col-lg-16">
        <div class="panel panel-default">
@@ -132,7 +127,7 @@
     </div>
     </div>
     </div>        
-</details>  
+
         {if isset="$user"}
             <div class="btn-group">
                 <a href="{$host/}/report_detail/{$report.number/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">

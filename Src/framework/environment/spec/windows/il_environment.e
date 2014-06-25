@@ -287,29 +287,37 @@ feature {NONE} -- Implementation
 		end
 
 	sdk_key_paths: ARRAYED_LIST [STRING_32]
-			-- List of keys associated to each known version of the .NET runtime from version 4.0
+			-- List of keys associated to each known version of the .NET runtime from version 4.0 or greater.
 		require
 			version_valid: version.count >= 4
 		local
 			l_path: STRING_32
+			l_major, l_minor: CHARACTER_32
+			l_list: ARRAYED_LIST [STRING_32]
 		do
 			create Result.make (2)
+			l_major := version.item (2)
+			l_minor := version.item (4)
+				-- Create list of known SDKs
+			create l_list.make (5)
+			l_list.extend ({STRING_32} "v8.1A")
+			l_list.extend ({STRING_32} "v8.1")
+			l_list.extend ({STRING_32} "v8.0A")
+			l_list.extend ({STRING_32} "v8.0")
+			l_list.extend ({STRING_32} "v7.1")
+			l_list.extend ({STRING_32} "v7.0A")
 
-			create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\WinSDK-NetFx")
-				-- Major version
-			l_path.append_character (version.item (2))
-				-- Minor version
-			l_path.append_character (version.item (4))
-			l_path.append_string_general ("Tools")
-			Result.extend (l_path)
-
-			create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx")
-				-- Major version
-			l_path.append_character (version.item (2))
-				-- Minor version
-			l_path.append_character (version.item (4))
-			l_path.append_string_general ("Tools")
-			Result.extend (l_path)
+			across l_list as l_sdk loop
+				create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\")
+				l_path.append_string (l_sdk.item)
+				l_path.append_string ("\WinSDK-NetFx")
+				l_path.append_character (l_major)
+				l_path.append_character (l_minor)
+				l_path.append_string_general ("Tools")
+					-- In recent versions we see also the "-x64" or "-x86" appearing but
+					-- just using the one without the suffix picks up the right binaries for our purpose.
+				Result.extend (l_path)
+			end
 		end
 
 	dotnet_runtime_path: detachable PATH
@@ -355,7 +363,7 @@ invariant
 	version_not_void: version /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

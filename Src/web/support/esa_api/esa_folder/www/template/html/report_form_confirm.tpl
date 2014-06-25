@@ -11,23 +11,39 @@
 
         <div class="form-horizontal well">
           <fieldset>
-            <legend>Problem Report Submission Confirmation</legend>
+            <legend><h1>Problem Report Submission Confirmation</h1></legend>
             <div class="row">
               <div class="col-md-2">
                 <label class="control-label" for="input01" itemprop="category">Product/Category:</label>
-                    {$categories/} 
+                {foreach from="$form.categories" item="item"}
+                  {if condition="$item.id = $category"} 
+                        {$item.synopsis/}
+                  {/if}
+                {/foreach}  
               </div>
               <div class="col-md-2">
                <label class="control-label" for="input01" itemprop="severity">Severity:</label>
-                {$severities/}
+                {foreach from="$form.severities" item="item"}
+                  {if condition="$item.id = $severity"} 
+                        {$item.synopsis/}
+                  {/if}
+                {/foreach}
               </div>
               <div class="col-md-2">
                 <label class="control-label" for="input01" itemprop="priority">Priority:</label>
-                {$priorities/}
+                 {foreach from="$form.priorities" item="item"}
+                  {if condition="$item.id = $priority"} 
+                        {$item.synopsis/}
+                  {/if}
+                {/foreach}
               </div>
               <div class="col-md-2">
                 <label class="control-label" for="input01" itemprop="class">Class</label>
-                {$classes/}
+                {foreach from="$form.classes" item="item"}
+                  {if condition="$item.id = $class"} 
+                        {$item.synopsis/}
+                  {/if}
+                {/foreach}
               </div>
               <div class="col-md-2">
                <label class="control-label" for="input01" itemprop="confidential">Confidential</label>

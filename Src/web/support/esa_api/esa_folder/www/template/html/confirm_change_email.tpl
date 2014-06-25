@@ -9,7 +9,7 @@
     <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class="main">
           <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/confirm_email' itemprop="update">
-            <legend>Confirm Email</legend>
+            <legend><>Confirm Email</legend>
             {unless isset="$has_error"}
             <div class="form-group">
                 <label class="control-label col-xs-2" for="inputToken" itemprop="token">Token:</label>

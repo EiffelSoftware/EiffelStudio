@@ -11,7 +11,10 @@
           <form class="form-horizontal well" data-rel="register" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
             <fieldset>
 
-              <legend>Registration</legend>
+              <legend><h1>Registration</h1></legend>
+              <p>Register yourself with Eiffel's web site, it's quick and free. 
+              Once registered you will be able to access download and report problems via our support web page.
+              An activation code will be sent to the email address below for verification.</p> 
               <div class="form-group">
                 <label class="control-label col-xs-3" itemprop="first_name" >First Name</label>
                  <div class="col-xs-9">

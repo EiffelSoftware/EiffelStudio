@@ -72,23 +72,11 @@ feature {NONE} -- Initialization
 			print ("%NGuest Reports")
 			create l_prov.make (connection)
 			l_prov.connect
-			across l_prov.problem_reports_guest (1, 2, 0, 0) as c loop
-			 	print (c.item.string_8)
-			end
+--			across l_prov.problem_reports_guest_2 (1, 2, 0, 0) as c loop
+--			 	print (c.item.string_8)
+--			end
 			l_prov.disconnect
 		end
-
-	execute_row_count
-		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
-		do
-			create l_prov.make (connection)
-			print ("RowCount { ProblemReports } :" + l_prov.row_count ("ProblemReports").out)
-			print ("RowCount { Contacts } :" + l_prov.row_count ("Contacts").out)
- 			print ("RowCount { NotExist } :" + l_prov.row_count ("NotExist").out)
-			print ("RowCount { Memberships } :" + l_prov.row_count ("Memberships").out)
-		end
-
 
 	execute_write_example
 		local

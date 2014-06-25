@@ -799,29 +799,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count (a_table: STRING): INTEGER
-		-- Return number of rows for `a_table'.
-		require
-			attached_table: a_table /= Void
-		local
-				l_parameters: HASH_TABLE[ANY,STRING_32]
-		do
-			connect
-			create l_parameters.make (1)
-			l_parameters.put (a_table, "TableName")
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("TableRowCount", l_parameters))
-			db_handler.execute_reader
-
-			if not db_handler.after then
-				db_handler.start
-				if attached {DB_TUPLE} db_handler.item as l_item and then attached {INTEGER_32_REF} l_item.item (1) as l_item_1 then
-					Result := l_item_1.item
-				end
-			end
-			disconnect
-			post_execution
-		end
-
+	
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username:READABLE_STRING_32): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users and
 			-- users with role user.

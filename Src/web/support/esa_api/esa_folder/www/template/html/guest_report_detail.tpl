@@ -1,4 +1,4 @@
-<h2 class="sub-header">PR# {$report.number/} {$report.synopsis/} </h2>
+<h1 class="sub-header">PR# {$report.number/} {$report.synopsis/} </h1>
  
 <details>
   <summary id="labels">Problem Report Summary</summary>

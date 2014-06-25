@@ -64,6 +64,9 @@ feature -- Optional
 	assigned: detachable ESA_USER
 
 
+	submission_date_output: detachable STRING
+			-- formatted date as dd mmm yyyy
+
 feature -- Element change
 
 	set_number (v: like number)
@@ -142,6 +145,9 @@ feature -- Element change
 	set_submission_date (a_date: like submission_date)
 		do
 			submission_date := a_date
+			if a_date /= void then
+				submission_date_output := a_date.formatted_out ("[0]dd/mm/yyyy")
+			end
 		end
 
 	set_report_category (a_category: ESA_REPORT_CATEGORY)

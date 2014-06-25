@@ -450,26 +450,27 @@ feature {NONE} --Implementation
 			else
 				create Result.make_from_string ("/reports/")
 				if attached {WSF_STRING} req.form_parameter ("page") as l_page then
+					Result.append ("page=")
 					Result.append_string (l_page.value)
 					Result.append_string ("?")
 				end
 				if attached {WSF_STRING} req.form_parameter ("category") as l_category then
-					Result.append_string ("category")
+					Result.append_string ("category=")
 					Result.append_string (l_category.value)
 					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("severity") as l_severity then
-					Result.append_string ("severity")
+					Result.append_string ("severity=")
 					Result.append_string (l_severity.value)
 					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("priority") as l_priority then
-					Result.append_string ("priority")
+					Result.append_string ("priority=")
 					Result.append_string (l_priority.value)
 					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("responsible") as l_responsible then
-					Result.append_string ("responsible")
+					Result.append_string ("responsible=")
 					Result.append_string (l_responsible.value)
 					Result.append_string ("&")
 				end
@@ -477,12 +478,12 @@ feature {NONE} --Implementation
 					Result.append_string (l_status.value)
 				end
 				if attached {WSF_STRING} req.form_parameter ("orderBy") as l_orderby then
-					Result.append_string ("orderBy")
+					Result.append_string ("orderBy=")
 					Result.append_string (l_orderBy.value)
 					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("dir") as l_dir then
-					Result.append_string ("dir")
+					Result.append_string ("dir=")
 					Result.append_string (l_dir.value)
 				end
 			end

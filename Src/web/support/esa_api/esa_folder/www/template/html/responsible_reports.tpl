@@ -187,7 +187,7 @@
                        <td itemprop="severity">{$item.severity.synopsis/}</td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
                        <td itemprop="submitter">{$item.contact.name/}</td>
-                       <td itemprop="submission_date">{$item.submission_date/}</td>
+                       <td itemprop="submission_date">{$item.submission_date_output/}</td>
                        <td itemprop="responsible">
                            <select class="form-control" data-style="btn-primary"  for="input_{$item.number/}" name="user_responsible" form="reports_{$item.number/}">
                             <option value="0">not assigned</option>

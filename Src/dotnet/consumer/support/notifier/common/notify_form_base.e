@@ -28,16 +28,8 @@ feature {NONE} -- Initialization
 	initialize_component
 			-- Initialize form controls
 		local
-			l_rm: RESOURCE_MANAGER
-			l_icon: detachable DRAWING_ICON
 			l_location: DRAWING_POINT
-			l_type: SYSTEM_TYPE
 		do
-			l_type := {NOTIFY_FORM}
-			create l_rm.make (resource_name, (l_type.assembly))
-			l_icon ?= l_rm.get_object (tray_icon_resource_name)
-			check l_icon_attached: l_icon /= Void end
-
 			create notify_icon.make
 
 			create l_location.make_from_x_and_y (-1000, -1000)
@@ -49,7 +41,7 @@ feature {NONE} -- Initialization
 			set_opacity (0)
 
 			notify_icon.text := "Eiffel Metadata Consumer Tool"
-			notify_icon.icon := l_icon
+			notify_icon.icon := resource_icon
 			notify_icon.visible := True
 		end
 
@@ -75,7 +67,7 @@ feature -- Status Setting
 				notify_info (create {STRING_32}.make_from_cil (l_msg))
 			end
 		ensure
-			last_notification_set: last_notification ~ old notify_string.to_cil
+			last_notification_set: attached last_notification as l_notification and then l_notification.same_string (old notify_string)
 		end
 
 	notify_info (a_message: READABLE_STRING_GENERAL)
@@ -84,11 +76,11 @@ feature -- Status Setting
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty
 		do
-			last_notification := notify_string
+			last_notification := notify_string.twin
 			notify_string.wipe_out
 			notify_string.append_string_general (a_message)
 		ensure
-			last_notification_set: last_notification ~ old notify_string.to_cil
+			last_notification_set: attached last_notification as l_notification and then l_notification.same_string (old notify_string)
 		end
 
 	restore_last_notification
@@ -137,8 +129,27 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	last_notification: detachable READABLE_STRING_GENERAL;
+	last_notification: detachable READABLE_STRING_GENERAL
 			-- Last set notification
+
+	resource_icon: detachable DRAWING_ICON
+			-- Load `notify_icon' from resources if available.
+		local
+			l_type: SYSTEM_TYPE
+			l_rm: RESOURCE_MANAGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				l_type := {NOTIFY_FORM}
+				create l_rm.make (resource_name, (l_type.assembly))
+				if attached {DRAWING_ICON} l_rm.get_object (tray_icon_resource_name) as l_icon then
+					Result := l_icon
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

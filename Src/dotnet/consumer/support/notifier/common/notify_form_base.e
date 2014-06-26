@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			-- Last set notification
 
 	resource_icon: detachable DRAWING_ICON
-			-- Load `notify_icon' from resources if available.
+			-- Load `notify_icon' from resources can be loaded and if present.
 		local
 			l_type: SYSTEM_TYPE
 			l_rm: RESOURCE_MANAGER

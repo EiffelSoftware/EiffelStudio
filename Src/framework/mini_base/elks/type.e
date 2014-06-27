@@ -128,7 +128,7 @@ feature -- Comparison
 	is_conforming_to alias "<=" (other: like Current): BOOLEAN
 			-- Does type represented by `Current' conform to type represented by `other'?
 		do
-			Result := {ISE_RUNTIME}.type_conforms_to (type_id, other.type_id)
+			Result := conforms_to (other)
 		end
 
 feature -- Conversion

@@ -6,6 +6,6 @@ copy_raw test.e $CLUSTER test.e
 copy_bin a.dll $CLUSTER a.dll
 
 compile_melted
-compile_result	validity_error A VTCT
+compile_result	ok
 
 test_end

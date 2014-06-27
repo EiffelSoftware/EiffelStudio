@@ -9,7 +9,6 @@
  
     <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class ="main">  
-          {include file="dashboard.tpl"/}
 
           {include file="responsible_reports.tpl"/}     
           

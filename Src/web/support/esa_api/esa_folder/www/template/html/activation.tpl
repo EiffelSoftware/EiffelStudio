@@ -11,7 +11,7 @@
           <form class="form-horizontal well" id="registerHere" method='POST' action='{$host/}/activation' itemprop="create">
             <fieldset>
 
-              <legend>Account Activation</legend>
+              <legend><h1>Account Activation</h1></legend>
 
               <div class="form-group">
                 <label class="control-label col-xs-2" itemprop="email">Email</label>

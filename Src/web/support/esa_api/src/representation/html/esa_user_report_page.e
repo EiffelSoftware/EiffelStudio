@@ -32,6 +32,7 @@ feature {NONE} --Initialization
 			set_template_folder (html_path)
 			set_template_file_name ("user_reports.tpl")
 			template.add_value (a_host, "host")
+			template.add_value (a_view, "view")
 			template.add_value (a_view.reports.at (1), "statistics")
 			template.add_value (a_view.reports.at (2), "reports")
 			template.add_value (a_view.categories, "categories")

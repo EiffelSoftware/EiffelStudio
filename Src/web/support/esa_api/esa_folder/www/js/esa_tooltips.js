@@ -15,4 +15,9 @@ $(document).ready(function(){
         placement : 'bottom', html: true
     });
 
+    $(".table *").tooltip({
+        placement : 'bottom', html: true
+    });
+
+
 });

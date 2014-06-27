@@ -40,6 +40,13 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.size, "size")
 
+			if
+				attached a_view.submitter as l_submitter and then
+				not l_submitter.is_empty
+			then
+				template.add_value (a_view.submitter, "submitter")
+
+			end
 
 			if a_view.index > 1 then
 				template.add_value (a_view.index-1 , "prev")

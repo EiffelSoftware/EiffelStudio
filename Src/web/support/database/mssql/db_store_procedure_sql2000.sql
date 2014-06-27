@@ -4098,6 +4098,7 @@ SET FirstName = @FirstName,
 WHERE ContactID = (SELECT ContactID FROM Memberships WHERE Username = @Username)
 Commit TRANSACTION UpdateInformation
 
+GO
 /****** Object:  StoredProcedure [dbo].[UpdateProblemReport]    Script Date: 21/05/2014 8:42:18 ******/
 SET ANSI_NULLS OFF
 GO

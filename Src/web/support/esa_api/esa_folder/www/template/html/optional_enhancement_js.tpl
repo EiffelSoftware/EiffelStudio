@@ -4,4 +4,5 @@
 <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="{$host/}/js/holder.js"></script>
 <script src="{$host/}/js/esa_tooltips.js"></script>
+<script src="{$host/}/js/bootstrap-select.min.js"></script>
 

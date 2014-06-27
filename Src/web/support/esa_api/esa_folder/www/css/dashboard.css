@@ -179,3 +179,10 @@ body {
   border-bottom-color: #000000;
   border-width: 0 5px 5px;
 }
+
+/* pre */
+pre {
+  word-wrap: code;
+  white-space: pre-wrap;
+  background-color:white;
+}

@@ -1899,13 +1899,13 @@ feature -- Queries
 
 
 	Select_problem_reports_by_user_template: STRING = "[
-			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, PAG2.StatusID, PAG2.StatusSynopsis
+			SELECT Number, Synopsis, PAG2.CategorySynopsis, SubmissionDate, PAG2.StatusID, PAG2.StatusSynopsis, PAG2.Username
 			 FROM(SELECT TOP :RowsPerPage
-				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, PAG.StatusID, PAG.StatusSynopsis
+				Number, Synopsis, PAG.CategorySynopsis, SubmissionDate, PAG.StatusID, PAG.StatusSynopsis, PAG.Username
 			FROM (
 				SELECT TOP :Offset
 				Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, ProblemReports.StatusID as statusID, ProblemReportStatus.StatusSynopsis,
-				ProblemReports.CategoryID, ProblemReports.ContactID
+				ProblemReports.CategoryID, ProblemReports.ContactID, Memberships.Username
 				FROM ProblemReports
 				INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
 				INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID   

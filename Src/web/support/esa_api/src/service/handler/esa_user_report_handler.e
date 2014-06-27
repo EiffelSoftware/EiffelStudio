@@ -85,7 +85,7 @@ feature -- HTTP Methods
 				log.write_information (generator+".do_get Processing request with user:" + l_user  )
 				if attached current_media_type (req) as l_type then
 
-					l_order_by := "number"
+					l_order_by := "submissionDate"
 					l_direction := "ASC"
 					l_dir := 0
 
@@ -136,6 +136,14 @@ feature -- HTTP Methods
 					l_view.set_selected_category (l_category)
 					l_view.set_selected_status (l_status)
 					l_view.set_size (l_size)
+					l_view.set_order_by (l_order_by)
+
+					if l_dir = 1 then
+						l_view.set_direction ("ASC")
+					else
+						l_view.set_direction ("DESC")
+					end
+
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_user_reports (req, res, l_view)
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).problem_user_reports (req, res, Void)

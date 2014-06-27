@@ -88,10 +88,11 @@ feature -- Access
 	order_by: detachable STRING_32
 		-- Field used to sort the reports
 
-	direction : detachable STRING_32
+	direction: detachable STRING_32
 		-- Direction ASC|DESC
 
-
+	submitter: detachable STRING_32
+		-- User submit a problem.
 
 feature -- Change Element
 
@@ -181,6 +182,14 @@ feature -- Change Element
 			size := a_size
 		ensure
 			size_set: size = a_size
+		end
+
+	set_submitter ( a_submitter: like submitter)
+			-- Set `submitter' to `a_submitter'.
+		do
+			submitter := a_submitter
+		ensure
+			submitter_set: submitter = a_submitter
 		end
 
 end

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="api.appcache">
   
    {include file="head.tpl"/}     
 
@@ -10,8 +10,6 @@
  
     <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class="main">
-
-          {include file="dashboard.tpl"/}
 
           {include file="guest_reports.tpl"/}     
           

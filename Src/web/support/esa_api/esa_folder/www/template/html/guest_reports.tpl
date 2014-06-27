@@ -55,54 +55,183 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th>#
+                  <th>
+                     {assign name="column" value="number"/}
+                     {assign name="dir" value="ASC"/}
+                   
                      {if isset="$user"}
-                       <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                       <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                       {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC"># <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"># <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"># </a>
+                       {/unless}
                      {/if}
                      {unless isset="$user"}
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=number&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                       {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC"># <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"># <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"># </a>
+                       {/unless}
                      {/unless}
                   </th>
-                  <th>Status
+                  <th>
+                     {assign name="column" value="statusID"/}
+                     {assign name="dir" value="ASC"/}
+                      
                      {if isset="$user"}
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
+                       {/unless}       
                      {/if}
                      {unless isset="$user"}
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=statusID&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
-                     {/unless}   
+                       {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC"><img src="{$host/}/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
+                       {/unless}       
+
+                      {/unless}   
                   </th>
-                  <th>Synopsis
+                  <th>
+                     {assign name="column" value="synopsis"/}
+                     {assign name="dir" value="ASC"/}
+ 
                       {if isset="$user"}
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Synopsis <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Synopsis <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Synopsis </a>
+                       {/unless}
                       {/if}
                       {unless isset="$user"}
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Synopsis <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Synopsis <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Synopsis </a>
+                       {/unless}
+     
                       {/unless}  
                   </th>
-                  <th>Date
+                  <th> 
+                      {assign name="column" value="submissionDate"/}
+                      {assign name="dir" value="ASC"/}
+
                       {if isset="$user"}
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=synopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                          {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Date <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Date <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Date </a>
+                       {/unless}
                       {/if}
                       {unless isset="$user"}
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=submissionDate&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Date <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Date <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Date </a>
+                       {/unless}
+
                       {/unless}
                   </th>
-                  <th>Category
+                  <th>
+                      {assign name="column" value="categorySynopsis"/}
+                      {assign name="dir" value="ASC"/}
+
                       {if isset="$user"}
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                          {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Category <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Category <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Category </a>
+                       {/unless}
                       {/if}
                       {unless isset="$user"}
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=ASC"><span class="glyphicon glyphicon-arrow-up"/></a>
-                        <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy=categorySynopsis&dir=DESC"><span class="glyphicon glyphicon-arrow-down"/></a>
+                        {if condition="$view.order_by ~ $column"}
+                            {if condition="$view.direction ~ $dir"}
+
+                                 <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=DESC">Category <img src="{$host/}/images/up.gif" class="img-rounded"></a>
+                            {/if}
+                            {unless condition="$view.direction ~ $dir"}
+                                <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Category <img src="{$host/}/images/down.gif" class="img-rounded"></a>
+                            {/unless}
+
+                       {/if} 
+                       {unless condition="$view.order_by ~ $column"}
+                            <a href="{$host/}/reports?page={$index/}&size={$size/}&orderBy={$column/}&dir=ASC">Category </a>
+                       {/unless}
+
                       {/unless}  
                   </th>
                   <th>Submitter
@@ -114,7 +243,7 @@
                {foreach from="$reports" item="item"}
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
-                       <td itemprop="status">{$item.status.synopsis/}</td>
+                       <td itemprop="status"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
                        <td itemprop="submission_date">{$item.submission_date_output/}</td>
                        <td itemprop="category">{$item.category.synopsis/}</td>

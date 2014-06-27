@@ -179,7 +179,7 @@ feature -- Implementation
 				l_submitter := ""
 					-- Hardcoded selected values
 				l_status_selected := ""
-				l_order_by := "number"
+				l_order_by := "submissionDate"
 				l_direction := "ASC"
 				l_dir := 0
 
@@ -257,6 +257,15 @@ feature -- Implementation
 				l_report_view.set_priorities (l_priorities)
 				l_report_view.set_severities (l_severities)
 				l_report_view.set_size (l_size)
+				l_report_view.set_submitter (l_submitter)
+				l_report_view.set_order_by (l_order_by)
+
+				if l_dir = 1 then
+					l_report_view.set_direction ("ASC")
+				else
+					l_report_view.set_direction ("DESC")
+				end
+
 				l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
 			else
 				l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).problem_reports_responsible (req, res, Void)
@@ -347,7 +356,7 @@ feature -- Implementation
 						l_dir := 1
 					end
 				else
-					l_order_by := "number"
+					l_order_by := "submissionDate"
 					l_direction := "ASC"
 					l_dir := 1
 				end
@@ -359,6 +368,13 @@ feature -- Implementation
 				l_report_view.set_selected_status (l_status)
 				l_report_view.set_order_by (l_order_by)
 				l_report_view.set_direction (l_direction)
+				l_report_view.set_order_by (l_order_by)
+
+				if l_dir = 1 then
+					l_report_view.set_direction ("ASC")
+				else
+					l_report_view.set_direction ("DESC")
+				end
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_guest (req, res, l_report_view)
 				log.write_information (generator+".user_reports Executed reports guest" )
 			else

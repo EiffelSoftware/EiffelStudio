@@ -22,7 +22,7 @@
          </div>
          <div class="row">  
                 <div class="col-lg-4 lightblue">
-                  <span class="label label-primary" itemprop="date">Date:</span> : <td>{$report.submission_date/}</td> </br>
+                  <span class="label label-primary" itemprop="date">Date:</span> : <td>{$report.submission_date_output/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
                   <span class="label label-primary" itemprop="class">Class:</span> : <td>{$report.report_class.synopsis/}</td> </br>
@@ -63,7 +63,7 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading" itemprop="description">Description</div>
-              <div class="panel-body">{nl2br}{$report.description/}{/nl2br}</div>
+              <div class="panel-body"><pre>{$report.description/}</pre></div>
             </div>
           </div>
          </div>
@@ -71,7 +71,7 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading" itemprop="to_reproduce">To Reproduce</div>
-              <div class="panel-body">{nl2br}{$report.to_reproduce/}{/nl2br}</div>
+              <div class="panel-body"><pre>{$report.to_reproduce/}<pre></div>
             </div>
           </div> 
          </div>  

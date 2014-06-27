@@ -1,5 +1,5 @@
 test_name missing-dotnet-type
-test_description Ensure the compiler reports a VTCT errors for types it cannot find in assembly.
+test_description Ensure the compiler does not report a VTCT errors when a routine is using a type that is not visible. It is the job of the .NET consumer to ignore those routines so that one can still use part of the classes where everything is fine.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

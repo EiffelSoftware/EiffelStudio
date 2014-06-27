@@ -16,6 +16,15 @@ inherit
 			is_equal, out
 		end
 
+	PART_COMPARABLE
+		rename
+			default as any_default,
+			is_less as is_strictly_conforming_to alias "<",
+			is_less_equal as is_conforming_to alias "<="
+		redefine
+			is_conforming_to, is_equal, out
+		end
+
 	DEBUG_OUTPUT
 		rename
 			default as any_default
@@ -127,6 +136,33 @@ feature -- Status report
 			end
 		end
 
+	is_attached: BOOLEAN
+			-- Is current type attached?
+		do
+			Result := internal.is_attached_type (type_id)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := type_id = other.type_id
+		end
+
+	is_strictly_conforming_to alias "<" (other: like Current): BOOLEAN
+			-- Does type represented by `Current' conform to type represented by `other' and differ from it?
+		do
+			Result := type_id /= other.type_id and then is_conforming_to (other)
+		end
+
+	is_conforming_to alias "<=" (other: like Current): BOOLEAN
+			-- Does type represented by `Current' conform to type represented by `other'?
+		do
+			Result := internal.type_conforms_to (type_id, other.type_id)
+		end
+
 feature -- Conversion
 
 	to_cil: SYSTEM_TYPE
@@ -152,8 +188,8 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable ANY): detachable G
-			-- Result of assignment attempt of `obj' to an entity of type G
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
+			-- Result of assignment attempt of `obj' to entity of type G
 		do
 			if attached {G} obj as l_g then
 				Result := l_g
@@ -171,15 +207,6 @@ feature -- Conversion
 			has_default: has_default
 		external
 			"built_in"
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := type_id = other.type_id
 		end
 
 feature -- Output
@@ -319,7 +346,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

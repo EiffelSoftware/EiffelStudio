@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 					l_decl_type_attached: l_decl_type /= Void
 				end
 				create l_dotnet_name.make_from_cil (l_info_name)
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, info.return_type, info.declaring_type)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, info.return_type, l_decl_type)
 				if l_unique_eiffel_name = Void then
 					create l_unique_eiffel_name.make_from_cil (l_info_name)
 				end

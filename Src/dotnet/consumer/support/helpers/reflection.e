@@ -22,19 +22,8 @@ feature -- Status Report
 			-- Is `t' a public CLS compliant type?
 		require
 			t_attached: t /= Void
-		local
-			l_type: detachable SYSTEM_TYPE
 		do
-			if is_eiffel_compliant_type (t) then
-				Result := is_visible_type (t)
-				if not Result then
-					if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
-						l_type := t.declaring_type
-						check l_type_attached: l_type /= Void end
-						Result := is_consumed_type (l_type)
-					end
-				end
-			end
+			Result := checked_type (t).is_eiffel_compliant
 		end
 
 	is_consumed_method (m: METHOD_BASE): BOOLEAN
@@ -84,29 +73,13 @@ feature -- Status Report
 			Result := l_name = Void or else l_name.index_of ('`') >= 0
 		end
 
-	is_eiffel_compliant_type (a_type: SYSTEM_TYPE): BOOLEAN
-			-- is `a_type' Eiffel-compliant
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_type: EC_CHECKED_TYPE
-		do
-			l_type := checked_type (a_type)
-			Result := l_type.is_eiffel_compliant
-		end
-
 	is_eiffel_compliant_member (member: MEMBER_INFO): BOOLEAN
 			-- 	Is `member' Eiffel-compliant?
-		local
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_type ?= member
-			if l_type = Void then
-				if attached checked_member (member) as l_member then
-					Result := l_member.is_eiffel_compliant
-				end
-			else
-				Result := is_eiffel_compliant_type (l_type)
+			if attached {SYSTEM_TYPE} member as l_type then
+				Result := is_consumed_type (l_type)
+			elseif attached checked_member (member) as l_member then
+				Result := l_member.is_eiffel_compliant
 			end
 		end
 
@@ -122,34 +95,8 @@ feature -- Status Report
 			Result := a_field.is_init_only
 		end
 
-feature {NONE} -- Implementation
-
-	is_visible_type (a_type: SYSTEM_TYPE): BOOLEAN
-			-- Determines if type `a_type' is really visible, which is require on 2.0 to test if types are really public!
-		require
-			a_type_attached: a_type /= Void
-		do
-			Result := a_type.is_public
-			if Result and then attached is_visible_function as l_call then
-				if attached {BOOLEAN} l_call.invoke_object_object_array (a_type, create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (0)) as l_bool then
-					Result := l_bool
-				end
-			end
-		end
-
-	is_visible_function: detachable METHOD_INFO
-			-- get_IsVisible function from System.Type
-		local
-			l_type: SYSTEM_TYPE
-		once
-			if attached {ENVIRONMENT}.version as l_version and then l_version.major >= 2 then
-				l_type := {SYSTEM_TYPE}
-				Result := l_type.get_method ("get_IsVisible")
-			end
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,22 +109,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

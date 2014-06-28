@@ -20,6 +20,7 @@ feature -- Access
 			-- Consumed type from `t'
 		require
 			non_void_type: t /= Void
+			is_visible: t.is_visible
 		local
 			l_name: detachable SYSTEM_STRING
 			am: like assembly_mapping

@@ -139,16 +139,14 @@ feature {NONE} -- Basic Operations
 			-- Decendents wanting to provide more checking should redefine this feature.
 		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
-		do
-			--| Do nothing...
+		deferred
 		end
 
 	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
 		note
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
-		do
-			internal_is_eiffel_compliant := True
+		deferred
 		end
 
 feature {NONE} -- Query
@@ -261,7 +259,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

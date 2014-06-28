@@ -94,25 +94,27 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 					non_compliant_reason := l_element.non_compliant_reason
 				end
 			else
-				Precursor {EC_CACHABLE_CHECKED_ENTITY}
 				if not internal_is_marked then
-						-- type was not marked with CLS-compliant attribute, but it might be marked on an
-						-- assembly level.
-					l_asm := type.assembly
-					check l_asm_attached: l_asm /= Void end
-					l_checked_asm := checked_assembly (l_asm)
-					internal_is_marked := l_checked_asm.is_marked
-					l_compliant := l_checked_asm.is_compliant
-					if l_compliant then
-						internal_is_compliant := True
+					-- type was not marked with CLS-compliant attribute, but it might be marked on an
+					-- assembly level.
+					if type.is_visible then
+						l_asm := type.assembly
+						check l_asm_attached: l_asm /= Void end
+						l_checked_asm := checked_assembly (l_asm)
+						internal_is_marked := l_checked_asm.is_marked
+						l_compliant := l_checked_asm.is_compliant
+						if l_compliant then
+							internal_is_compliant := True
+						else
+							non_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_cls_compliant
+						end
 					else
-						non_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_cls_compliant
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_not_visible
 					end
 				elseif not internal_is_compliant then
 					non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 				end
 			end
-
 		end
 
 	check_eiffel_compliance
@@ -128,8 +130,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			retried: BOOLEAN
 		do
 			if not retried then
-				Precursor {EC_CACHABLE_CHECKED_ENTITY}
-				if internal_is_eiffel_compliant then
+				if type.is_visible then
 					l_asm := type.assembly
 					check l_asm_attached: l_asm /= Void end
 					l_checked_asm := checked_assembly (l_asm)
@@ -161,7 +162,8 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 					end
 					internal_is_eiffel_compliant := l_compliant
 				else
-					non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_eiffel_consumable
+					internal_is_eiffel_compliant := False
+					non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_not_visible
 				end
 			else
 				internal_is_eiffel_compliant := False
@@ -182,7 +184,7 @@ invariant
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

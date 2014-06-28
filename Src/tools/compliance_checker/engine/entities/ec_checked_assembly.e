@@ -41,11 +41,22 @@ feature {NONE} -- Query {EC_CHECKED_ENTITY}
 			Result := assembly
 		end
 
+feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
+
+	check_extended_compliance
+		do
+		end
+
+	check_eiffel_compliance
+		do
+			internal_is_eiffel_compliant := True
+		end
+
 invariant
 	assembly_not_void: assembly /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

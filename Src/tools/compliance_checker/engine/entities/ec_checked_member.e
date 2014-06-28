@@ -52,7 +52,6 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			l_checked_type: EC_CHECKED_TYPE
 			l_type: detachable SYSTEM_TYPE
 		do
-			Precursor {EC_CHECKED_ENTITY}
 			if internal_is_compliant and then not internal_is_marked then
 					-- No CLS-compliant attribute was set on member so we need to check parent
 					-- container type.
@@ -75,29 +74,24 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			l_type: detachable SYSTEM_TYPE
 			l_compliant: BOOLEAN
 		do
-			Precursor {EC_CHECKED_ENTITY}
-			if internal_is_eiffel_compliant then
-				l_member_name := member.name
-				l_compliant := l_member_name /= Void and then (l_member_name.index_of_character ('`') < 0)
-				if l_compliant then
-					l_type := member.declaring_type
-					check l_type_attached: l_type /= Void end
-					l_checked_type := checked_type (l_type)
-					l_compliant := l_checked_type.is_eiffel_compliant
-					if not l_compliant then
-						if l_checked_type.non_eiffel_compliant_reason ~  non_compliant_reasons.reason_type_is_generic then
-							non_eiffel_compliant_reason := non_compliant_reasons.reason_member_is_generic
-						else
-							non_eiffel_compliant_reason := l_checked_type.non_eiffel_compliant_reason
-						end
+			l_member_name := member.name
+			l_compliant := l_member_name /= Void and then (l_member_name.index_of_character ('`') < 0)
+			if l_compliant then
+				l_type := member.declaring_type
+				check l_type_attached: l_type /= Void end
+				l_checked_type := checked_type (l_type)
+				l_compliant := l_checked_type.is_eiffel_compliant
+				if not l_compliant then
+					if l_checked_type.non_eiffel_compliant_reason ~  non_compliant_reasons.reason_type_is_generic then
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_member_is_generic
+					else
+						non_eiffel_compliant_reason := l_checked_type.non_eiffel_compliant_reason
 					end
-					internal_is_eiffel_compliant := l_compliant
-				else
-					internal_is_eiffel_compliant := False
-					non_eiffel_compliant_reason := non_compliant_reasons.reason_member_is_generic
 				end
+				internal_is_eiffel_compliant := l_compliant
 			else
-				non_eiffel_compliant_reason := non_compliant_reasons.reason_member_marked_non_eiffel_consumable
+				internal_is_eiffel_compliant := False
+				non_eiffel_compliant_reason := non_compliant_reasons.reason_member_is_generic
 			end
 		end
 
@@ -113,7 +107,7 @@ invariant
 	member_not_void: member /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

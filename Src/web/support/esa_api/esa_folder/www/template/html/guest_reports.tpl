@@ -51,8 +51,11 @@
 </div>
 
 <h2 class="sub-header">Problem Reports</h2>
+          <ul class="pagination">
+              <li class="info">Current page {$index/} of {$pages/}</li>
+           </ul>
           <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="table">
               <thead>
                 <tr>
                   <th>

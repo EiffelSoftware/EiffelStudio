@@ -11,7 +11,7 @@
        <div class="span8">
           <div class="row">   
               <div class="col-lg-4 lightblue">
-                  <span class="label label-primary" itemprop="submitter">Submitter:</span> : <td>{$report.contact.name/}</td> </br>
+                  <span class="label label-primary" itemprop="submitter">Submitter:</span> : <td class="label">{$report.contact.name/}</td> </br>
               </div>
               <div class="col-lg-4 lightblue">
                   <span class="label label-primary" itemprop="category">Category:</span> : <td>{$report.category.synopsis/}</td> </br>
@@ -71,7 +71,7 @@
           <div class="col-lg-12">
             <div class="panel panel-default">
               <div class="panel-heading" itemprop="to_reproduce">To Reproduce</div>
-              <div class="panel-body"><pre>{$report.to_reproduce/}<pre></div>
+              <div class="panel-body"><pre>{$report.to_reproduce/}</pre></div>
             </div>
           </div> 
          </div>  

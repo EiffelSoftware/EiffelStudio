@@ -156,7 +156,6 @@ body {
 /* Tooltips */
 .blue-tooltip + .tooltip > .tooltip-inner {background-color: #FF;}
 .blue-tooltip + .tooltip > .tooltip-arrow { border-bottom-color:#FF; }
-.tooltip-inner { width:400px; max-width: 400px; }
 
 
 .tooltip.top .tooltip-arrow {
@@ -170,6 +169,7 @@ body {
   color: #000;
   background: #fff;
   border: solid 1px #000000;
+  max-width: 450px
 }
 
 .tooltip.bottom .tooltip-arrow {
@@ -185,4 +185,21 @@ pre {
   word-wrap: code;
   white-space: pre-wrap;
   background-color:white;
+}
+
+
+
+/* Container -Fluid */
+.container-fluid {
+    padding: 0 15px;
+}
+
+
+.container-fluid  .row {
+    margin: 0;
+}
+
+.row-padding {
+    margin-top: 25px;
+    margin-bottom: 25px;
 }

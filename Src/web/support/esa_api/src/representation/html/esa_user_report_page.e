@@ -44,14 +44,16 @@ feature {NONE} --Initialization
 			template.add_value (a_view.direction,"dir")
 			template.add_value (a_view.size, "size")
 			if a_view.index > 1 then
-				template.add_value (a_view.index-1 , "prev")
+				template.add_value (a_view.index - 1 , "prev")
 			end
 			if a_view.index < a_view.pages then
-				template.add_value (a_view.index+1, "next")
+				template.add_value (a_view.index + 1, "next")
 			end
 			template.add_value (a_view.pages + 1, "last")
 
-		 	template.add_value (a_view.user,"user")
+		 	template.add_value (a_view.user, "user")
+			template.add_value (a_view.pages + 1, "pages")
+
 
 			template_context.enable_verbose
 			template.analyze

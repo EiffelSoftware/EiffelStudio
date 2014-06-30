@@ -6,7 +6,7 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
       
         <div class="main">
 

@@ -56,13 +56,13 @@ extern "C" {
 #define TERMINATOR				0xFFFF
 #define LIKE_ARG_TYPE			0xFFFD
 #define LIKE_CURRENT_TYPE		0xFFFC
-#define LIKE_PFEATURE_TYPE		0xFFFB
+/* #define NOT_USED_TYPE		0xFFFB */
 #define LIKE_FEATURE_TYPE		0xFFFA
 #define TUPLE_TYPE				0xFFF9
 #define FORMAL_TYPE				0xFFF8
 #define PARENT_TYPE_SEPARATOR	0xFFF7
-#define QUALIFIED_PFEATURE_TYPE		0xFFF6
-#define QUALIFIED_FEATURE_TYPE		0xFFF5
+/* #define NOT_USED_TYPE		0xFFF6 */
+#define QUALIFIED_FEATURE_TYPE	0xFFF5
 
 /* Currently we only support up to 4 annotations which can be read at once. */
 #define ATTACHED_TYPE			0xFF11

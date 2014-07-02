@@ -51,6 +51,8 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #error "SCOOP is currenly supported only in multithreaded mode."
 #endif
 
+#ifndef SCOOPQS
+
 rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 {
 	EIF_TYPED_VALUE ou; 
@@ -59,6 +61,28 @@ rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 	RTS_TCB(scoop_task_check_uncontrolled,c,s,&ou);
 	return EIF_TEST (ou.item.b);
 }
+
+rt_public EIF_BOOLEAN eif_is_passive (EIF_SCP_PID s)
+{
+	EIF_TYPED_VALUE ou; 
+	ou.item.b = EIF_FALSE;
+	ou.type = SK_BOOL;
+	RTS_TCB(scoop_task_is_passive,0,s,&ou);
+	return EIF_TEST (ou.item.b);
+}
+
+
+rt_public EIF_BOOLEAN eif_is_synced_on (EIF_SCP_PID c, EIF_SCP_PID s)
+{
+	EIF_BOOLEAN res;
+	EIF_TYPED_VALUE ou;
+	ou.item.b = EIF_FALSE;
+	ou.type = SK_BOOL;
+	RTS_TCB(scoop_task_is_synced_on,c,s,&ou);
+	res = EIF_TEST (ou.item.b);
+	return res;
+}
+
 
 #ifdef WORKBENCH
 
@@ -143,6 +167,15 @@ void eif_call_const (call_data * a)
 }
 
 #endif /* WORKBENCH */
+#else
+void eif_call_const (call_data * a)
+{
+	/* Constant value is hard-coded in the generated code: nothing to do here. */
+	/* Avoid C compiler error about unreferenced parameter. */
+	(void) a;
+}
+#endif
+
 
 rt_public void eif_free_call (call_data * a)
 {

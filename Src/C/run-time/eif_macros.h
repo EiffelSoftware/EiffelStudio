@@ -58,6 +58,10 @@
 #include "eif_option.h"
 #include "eif_scoop.h"
 
+#ifdef SCOOPQS
+#include "eveqs.h"
+#endif
+
 #ifdef WORKBENCH
 #include "eif_wbench.h"
 #endif
@@ -1337,6 +1341,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_wait_for_processor_redundancy 10
 #define scoop_task_check_uncontrolled 11
 #define scoop_task_update_statistics 12
+#define scoop_task_set_active 13
+#define scoop_task_set_passive 14
+#define scoop_task_is_passive 15
+#define scoop_task_is_synced_on 16
+#define scoop_task_set_synced_on 17
+#define scoop_task_set_not_synced_on 18
+
 
 #ifdef WORKBENCH
 #define RTS_TCB(t,c,s,a) \
@@ -1352,10 +1363,32 @@ RT_LNK void eif_exit_eiffel_code(void);
 		xa.type = SK_POINTER;                                     \
 		(egc_scoop_manager_task_callback)(scp_mnger,xt,xc,xs,xa); \
 	}
+#elif defined SCOOPQS
+#define RTS_TCB(t,c,s,a) "SCOOP/Qs: no callbacks to the ISE SCOOP manager" t c s a;
 #else
 #define RTS_TCB(t,c,s,a) (egc_scoop_manager_task_callback)(scp_mnger,t,c,s,a);
 #endif
+
 #define RTS_PID(o) HEADER(o)->ov_pid
+
+#ifdef SCOOPQS
+#define eif_scoop_access(x) (x)
+#else
+#define eif_scoop_access(x) eif_access(x)
+#endif
+
+/* 
+ * SCOOP processor ID swapping.
+ *
+ * `eif_globals' should be reloaded after the restoration.
+ */
+#define RTS_IMPERSONATE(pid)						\
+  {                                                                     \
+    EIF_ENTER_C;							\
+    eif_globals = (eif_global_context_t*) eif_thr_impersonate(pid);	\
+    EIF_EXIT_C;								\
+    RTGC;								\
+  }
 
 /*
  * Object status:
@@ -1364,15 +1397,49 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
 
-#define RTS_EIF_ACCESS(r) (r ? eif_access (r) : NULL) 
+#ifdef SCOOPQS
+#define EIF_IS_SYNCED_ON(c,s) eveqs_is_synced_on (RTS_PID(c), RTS_PID(s))
+#define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)))
+#define EIF_IS_DIFFERENT_PROCESSOR_FOR_QUERY(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)) && !(EIF_IS_SYNCED_ON(o1,o2)))
+#else
+EIF_BOOLEAN eif_is_synced_on (EIF_SCP_PID c, EIF_SCP_PID );
+#define EIF_IS_SYNCED_ON(c,s) \
+	(eif_is_synced_on (RTS_PID (c), RTS_PID(s)) == EIF_TRUE)
+#define EIF_SET_SYNCED_ON(c,s) \
+	RTS_TCB(scoop_task_set_synced_on, RTS_PID(c), RTS_PID(s), 0)
+#define EIF_SET_NOT_SYNCED_ON(c,s) \
+	RTS_TCB(scoop_task_set_not_synced_on, RTS_PID(c), RTS_PID(s), 0)
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) (RTS_PID (o1) != RTS_PID (o2))
+#define EIF_IS_DIFFERENT_PROCESSOR_FOR_QUERY(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)))
+#endif
+
+#define RTS_EIF_ACCESS(r) (r ? eif_scoop_access (r) : NULL) 
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
+
+
+#ifdef SCOOPQS
+#define RTS_OU(c,o) ((o) && eveqs_is_uncontrolled (RTS_PID (c), RTS_PID (o)))
+#else /* SCOOPQS */
 #define RTS_OU(c,o) ((o) && (scp_mnger) && EIF_TEST (eif_is_uncontrolled (RTS_PID (c), RTS_PID (o))))
+#endif
+
+#ifdef SCOOPQS
+#define EIF_SET_ACTIVE(o) ; //  "SCOOP/Qs: set_active not implemented" o;
+#define EIF_SET_PASSIVE(o) ; //  "SCOOP/Qs: set_passive not implemented" o;
+#define EIF_IS_PASSIVE(o) 0 // "SCOOP/Qs: is_passive not implemented" o;
+#else
+#define EIF_SET_ACTIVE(o) RTS_TCB(scoop_task_set_active,0,RTS_PID (o),0)
+#define EIF_SET_PASSIVE(o) RTS_TCB(scoop_task_set_passive,0,RTS_PID (o),0)
+#define EIF_IS_PASSIVE(o) (eif_is_passive (RTS_PID (o)) == EIF_TRUE)
+#endif
 
 /*
  * Processor:
  * RTS_PA(o) - associate a fresh processor with an object o
  */
+#ifdef SCOOPQS
+#define RTS_PA(o) eveqs_processor_fresh (o);
+#else
 #define RTS_PA(o) \
 	{                                                               \
 		EIF_TYPED_VALUE pid;                                    \
@@ -1381,7 +1448,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),0,&pid); \
 		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                   \
 	}
-
+#endif
 /*
  * Request chain:
  * RTS_RC(p)   - create a request chain for the processor identified by object p
@@ -1392,12 +1459,19 @@ RT_LNK void eif_exit_eiffel_code(void);
  * The only valid sequence of calls is
  *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
  */
+#ifdef SCOOPQS
+#define RTS_RC(p) eveqs_req_grp_new(RTS_PID(p));
+#define RTS_RD(p) eveqs_req_grp_delete(RTS_PID(p));
+#define RTS_RF(p)   eveqs_req_grp_wait (RTS_PID(p));
+#define RTS_RS(p,s) eveqs_req_grp_add_supplier(RTS_PID(p), RTS_PID(s));
+#define RTS_RW(p) eveqs_req_grp_lock(RTS_PID(p));
+#else
 #define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),0,NULL)
 #define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),RTS_PID(p),NULL)
 #define RTS_RF(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),-1,NULL)
 #define RTS_RS(p,s) if (s) {RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),NULL)}
 #define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),0,NULL)
-
+#endif
 
 /*
  * Request chain stack:
@@ -1501,10 +1575,57 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_AA(v,f,t,n,a) - register argument v corresponding to field f of type t at position n in a
  * RTS_AS(v,f,t,n,a) - same as RTS_AA except that that argument is checked if it is controlled or not that is recorded to make synchronous call if required
  */
+#ifdef SCOOPQS
+#define RTS_AC(n,t,a) \
+	{                                                                                                              \
+		a = malloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
+		((call_data*)(a)) -> target = (t);								\
+		((call_data*)(a)) -> count = (n);                                                                      \
+		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                                                   \
+		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1;                                                      \
+		((call_data*)(a)) -> is_lock_passing = EIF_FALSE;                                                      \
+	}
+#	define RTS_AA(v,f,t,n,a) \
+		{                                                         \
+			((call_data*)(a)) -> argument [(n) - 1].f = (v);  \
+			((call_data*)(a)) -> argument [(n) - 1].type = (t);	\
+		}
+#	define RTS_AS(v,f,t,n,a) \
+		{	                                                                                 \
+			((call_data*)(a)) -> argument [(n) - 1].type = SK_REF;                           \
+			if (v) \
+			{	\
+			  ((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) (v); \
+				if (!RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r ) )	\
+				{	\
+					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, ((call_data*)(a))->argument [(n)-1].it_r)) \
+					{	\
+						((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
+						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+					}	\
+				}	\
+			}	\
+			else	\
+			{	\
+			  ((call_data*)(a)) -> argument [(n) - 1].it_r = (v);  	\
+			}	\
+		}
+#ifdef WORKBENCH
+#undef RTS_AC
+#undef RTS_AA
+#undef RTS_AS
+#define RTS_AC(n,t,a)
+#define RTS_AA(v,f,t,n,a)
+#define RTS_AS(v,f,t,n,a)
+#endif
+
+#endif
+
+#ifndef SCOOPQS
 #define RTS_AC(n,t,a) \
 	{                                                                                                              \
 		a = cmalloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
-		((call_data*)(a)) -> target = eif_protect (t);                                                         \
+		((call_data*)(a)) -> target = eif_protect (t);                   \
 		((call_data*)(a)) -> count = (n);                                                                      \
 		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                                                   \
 		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1;                                                      \
@@ -1559,8 +1680,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 			}	\
 		}
 #endif /* WORKBENCH */
+#endif /* SCOOPQS */
 
+#ifdef SCOOPQS
+#define RTS_WPR eveqs_wait_for_all();
+#else
 #define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,0,0,NULL)
+#endif
 
 #define RTS_SEMAPHORE_CLIENT_WAIT(semaddr) EIF_ENTER_C; eif_pthread_sem_wait(semaddr); EIF_EXIT_C; RTGC;
 #define RTS_SEMAPHORE_SUPPLIER_SIGNAL(semaddr) eif_pthread_sem_post(semaddr);
@@ -1781,6 +1907,4 @@ RT_LNK void eif_exit_eiffel_code(void);
 #endif
 
 #endif
-
-
 

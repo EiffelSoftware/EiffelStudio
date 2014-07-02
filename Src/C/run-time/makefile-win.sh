@@ -10,6 +10,7 @@ OUTPUT_CMD = $output_cmd
 INPUT_CMD = $input_cmd
 JCFLAGS = $(CFLAGS) $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
+JMTCPPFLAGS = $(CPPFLAGS) $mtcppflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
 MAKE = $make
 LINK32 = $link32
@@ -17,6 +18,7 @@ DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 
 CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
+CPPFLAGS = -I.
 NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)network.$lib
 MT_NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)mtnetwork.$lib
 LIBNAME = ipc.$lib
@@ -178,6 +180,14 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTrout_obj.$obj \
 	$(INDIR)MTscoop.$obj \
 	$(INDIR)MTscoop_gc.$obj \
+	$(INDIR)MTeif_utils.$obj \
+	$(INDIR)MTeveqs.$obj \
+	$(INDIR)MTprocessor_registry.$obj \
+	$(INDIR)MTnotify_token.$obj \
+	$(INDIR)MTprivate_queue.$obj \
+	$(INDIR)MTprocessor.$obj \
+	$(INDIR)MTqueue_cache.$obj \
+	$(INDIR)MTreq_grp.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
 
@@ -236,6 +246,14 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwrout_obj.$obj \
 	$(INDIR)MTwscoop.$obj \
 	$(INDIR)MTwscoop_gc.$obj \
+	$(INDIR)MTweif_utils.$obj \
+	$(INDIR)MTweveqs.$obj \
+	$(INDIR)MTwprocessor_registry.$obj \
+	$(INDIR)MTwnotify_token.$obj \
+	$(INDIR)MTwprivate_queue.$obj \
+	$(INDIR)MTwprocessor.$obj \
+	$(INDIR)MTwqueue_cache.$obj \
+	$(INDIR)MTwreq_grp.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
 
 MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
@@ -674,6 +692,30 @@ $(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
 $(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)scoop_gc.c
 
+$(INDIR)MTeif_utils.$obj: $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eif_utils.cpp
+
+$(INDIR)MTeveqs.$obj: $(RTSRC)eveqs.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eveqs.cpp
+
+$(INDIR)MTprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor_registry.cpp
+
+$(INDIR)MTnotify_token.$obj: $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)notify_token.cpp
+
+$(INDIR)MTprivate_queue.$obj: $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)private_queue.cpp
+
+$(INDIR)MTprocessor.$obj: $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor.cpp
+
+$(INDIR)MTqueue_cache.$obj: $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)queue_cache.cpp
+
+$(INDIR)MTreq_grp.$obj: $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)req_grp.cpp
+
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c
 
@@ -814,6 +856,30 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop_gc.c
+
+$(INDIR)MTweif_utils.$obj: $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eif_utils.cpp
+
+$(INDIR)MTweveqs.$obj: $(RTSRC)eveqs.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eveqs.cpp
+
+$(INDIR)MTwprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor_registry.cpp
+
+$(INDIR)MTwnotify_token.$obj: $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)notify_token.cpp
+
+$(INDIR)MTwprivate_queue.$obj: $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)private_queue.cpp
+
+$(INDIR)MTwprocessor.$obj: $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor.cpp
+
+$(INDIR)MTwqueue_cache.$obj: $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)queue_cache.cpp
+
+$(INDIR)MTwreq_grp.$obj: $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)req_grp.cpp
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

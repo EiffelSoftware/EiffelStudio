@@ -101,10 +101,8 @@
                <form  action="{$host/}/report_confirm" method="POST" itemprop="create">
                     <button type="submit" class="btn btn-xs btn-primary">Confirm</button>
                     <input type="hidden" id="confirm" name="confirm" class="form-control" value="{$id/}">
+                    <a class="btn btn-xs btn-primary" href="{$host/}/report_form/{$id/}" itemprop="update" rel="update">Edit</a> 
                </form> 
-
-               <!--form class="form-horizontal well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data"-->
-              <a class="btn btn-xs btn-primary" href="{$host/}/report_form/{$id/}" itemprop="update" rel="update">Edit</a> 
             </div>
           </fieldset>
         </div>

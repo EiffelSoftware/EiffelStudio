@@ -50,11 +50,24 @@
   </div>  
 </div>
 
-<h2 class="sub-header">Problem Reports</h2>
-          <ul class="pagination">
-              <li class="info">Current page {$index/} of {$pages/}</li>
+<h2 class="sub-header">Problem Reports: 
+          <small><ul class="pagination">
+              <li class="info">Current page {$index/} of {$pages/} - </li>
+              <li><label class="control-label" for="input01" itemprop="size"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
+                <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="imgProgress" />
+              {if isset="$user"}
+                  <input type="hidden"  name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">
+              {/if}
+              {unless isset="$user"}
+                 <input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">
+              {/unless}
            </ul>
-          <div class="table-responsive">
+         </small>  
+  </h2>
+      <div class="row">
+           {include file="paging.tpl"/}    
+      </div> 
+          <div class="table table-responsive">
             <table class="table table-bordered" id="table">
               <thead>
                 <tr>
@@ -246,7 +259,7 @@
                {foreach from="$reports" item="item"}
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
-                       <td itemprop="status"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></td>
+                       <td class="text-center" itemprop="status"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>
                        <td itemprop="submission_date">{$item.submission_date_output/}</td>
                        <td itemprop="category">{$item.category.synopsis/}</td>
@@ -257,31 +270,8 @@
               
               </tbody>
             </table>
-      
-           <div class="col-lg-12">
-                <ul class="pager">
-                  {if isset="$user"}
-                    <li><a href="{$host/}/user_reports/{$user/}?page=1&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
-                    {if isset="$prev"}
-                      <li><a href="{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="previous" rel="previous">Previous</a></li>
-                    {/if}
-                    {if isset="$next"}
-                    <li><a href="{$host/}/user_reports/{$user/}?page={$next/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}"  itemprop="next" rel="next">Next</a></li>
-                    {/if}
-                    <li><a href="{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}"  itemprop="last" rel="last">Last</a></li>
-                  {/if}
-                  {unless isset="$user"}
-                    <li><a href="{$host/}/reports?page=1&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="first" rel="first">First</a></li>
-                    {if isset="$prev"}
-                      <li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="previous" rel="previous">Previous</a></li>
-                    {/if}
-                    {if isset="$next"}
-                    <li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="next" rel="next">Next</a></li>
-                    {/if}
-                    <li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" itemprop="last" rel="last">Last</a></li>
-                  {/unless}
-                </ul>
-          </div>
+        
+           {include file="paging.tpl"/}  
        </div>
 
   </div>

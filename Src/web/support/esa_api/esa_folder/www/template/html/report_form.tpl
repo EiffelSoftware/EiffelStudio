@@ -130,7 +130,7 @@
               <label class="control-label" for="textarea" itemprop="environment" data-original-title="<p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>
    ">Environment</label>
               <div class="controls">
-                <textarea class="form-control input-xlarge" id="environment"  name="environment" rows="3"  placeholder="Windows XP SP2" required form="report">{$environment/}</textarea>
+                <textarea class="form-control input-xlarge" id="environment"  name="environment" rows="3"  placeholder="Windows 8.1" required form="report">{$environment/}</textarea>
               </div>
             </div>
 

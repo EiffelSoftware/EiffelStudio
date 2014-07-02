@@ -17,7 +17,21 @@ $.event.special.inputchange = {
     }
 };
 
-$("#changesize").on('inputchange', function() {
+$.fn.pressEnter = function(fn) {  
+  
+    return this.each(function() {  
+        $(this).bind('enterPress', fn);
+        $(this).keyup(function(e){
+            if(e.keyCode == 13)
+            {
+              $(this).trigger("enterPress");
+            }
+        })
+    });  
+ }; 
+
+
+$("#changesize").pressEnter( function() {
 
      $("#imgProgress").show();
     var str = document.getElementById("currentPage").value;

@@ -53,8 +53,7 @@ doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP
 		PID_MAP_ITEM (x) &= ~ PID_MAP_BIT (x); \
 	}
 
-#define RT_IS_LIVE_PID(pid) \
-		PID_MAP_ITEM (pid) & PID_MAP_BIT (pid)
+#define RT_IS_LIVE_PID(pid) (PID_MAP_ITEM (pid) & PID_MAP_BIT (pid))
 
 /*
 doc:	<attribute name="live_pid_map" return_type="PID_MAP_ITEM_TYPE" export="shared">
@@ -116,7 +115,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_shared void prepare_live_index (void)
+rt_shared void prepare_live_index ()
 {
 	size_t i;
 	size_t count = rt_globals_list.count;
@@ -153,6 +152,12 @@ rt_shared void prepare_live_index (void)
 		}
 	}
 
+#ifdef SCOOPQS
+	eveqs_enumerate_live ();
+	if (!live_index_count) {
+		update_live_index ();
+	}
+#else
 		/* Check if system is running with SCOOP manager. */
 	if (scp_mnger) {
 			/* Record live SCOOP processors. */
@@ -164,6 +169,7 @@ rt_shared void prepare_live_index (void)
 			update_live_index ();
 		}
 	}
+#endif
 }
 
 /*
@@ -247,6 +253,17 @@ rt_shared void complement_live_index (void)
 	}
 }
 
+
+#ifdef SCOOPQS
+#define RTS_UNMARKED(pid) eveqs_unmarked(pid);
+#else
+#define RTS_UNMARKED(pid)															\
+	if (scp_mnger)																			\
+		{																									\
+			RTS_TCB(scoop_task_free_processor, pid, 0, 0);	\
+		}
+#endif
+
 /*
 doc:	<routine name="report_live_index" export="shared">
 doc:		<summary>Notify SCOOP manager about live indexes.</summary>
@@ -256,20 +273,22 @@ doc:	</function>
 */
 rt_shared void report_live_index (void)
 {
-	if (scp_mnger) {
-		size_t i;
-		rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
-		size_t count = rt_globals_list.count; /* Total number of indexes. */
-			/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
-		for (i = live_index_count; i < count; i++) {
-			rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
-				/* Notify SCOOP manager that the processor is not used anymore. */
-			RTS_TCB(scoop_task_free_processor, c -> logical_id, 0, 0);
-		}
-			/* Notify SCOOP manager that the GC cycle is over. */
-		RTS_TCB(scoop_task_update_statistics, 0, 0, 0);
+	size_t i;
+	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
+	size_t count = rt_globals_list.count; /* Total number of indexes. */
+
+	/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
+	for (i = live_index_count; i < count; i++) {
+		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
+		/* Notify SCOOP manager that the processor is not used anymore. */
+		RTS_UNMARKED(c->logical_id);
 	}
+	/* Notify SCOOP manager that the GC cycle is over. */
+	/* Unused currently, don't want to come up with another replacement
+		 macro for this as well. */
+	/* RTS_TCB(scoop_task_update_statistics, 0, 0, 0); */
 }
+
 
 /*
 doc:</file>

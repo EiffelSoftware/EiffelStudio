@@ -1,10 +1,11 @@
 /*
- *	 Jmakefile for Eiffel 3.0 run-time
+ *	makefile for Eiffel 3.0 run-time
  */
 
 #include "../U/runtime.H"
 
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
+CPPFLAGS = -std=c++11 -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
 LIB_SHARED= $(TOP)/ipc/shared
@@ -15,6 +16,9 @@ LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 EWB_PROTO_OBJ = $(TOP)/ipc/ewb/wewb_proto.o
 MTEWB_PROTO_OBJ = $(TOP)/ipc/ewb/MTwewb_proto.o
+
+SHAREDLINK=g++
+LDSHAREDFLAGS=-shared -o
 
 IDRS_OBJ = $(TOP)/idrs/idrs.o
 MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
@@ -32,6 +36,16 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c offset.c main.c except.c
+
+EVEQSSRC = \
+	eif_utils.cpp \
+	eveqs.cpp \
+	processor_registry.cpp \
+	notify_token.cpp \
+	private_queue.cpp \
+	processor.cpp \
+	queue_cache.cpp \
+	req_grp.cpp
 
 /*
  * Files addedd only for workbench-type archive
@@ -98,6 +112,22 @@ MT_LOBJ = \
 -expand \\
 
 
+/*
+ * Object files for finalized run-time archive
+ */
+MT_QS_LOBJ = \
+	$(MTIDRS_OBJ) \
+|expand f!$(EVEQSSRC)!
+	MTqs!f:\.cpp=.o \
+-expand
+|expand f!$(MTADD)!
+	MTqs!f:\.c=.o \
+-expand
+|expand f!$(LSRC)!
+	MTqs!f:\.c=.o \
+-expand \\
+
+
 /* How to build a 'w' and `MT' and `MTw' file from a normal file. 
  */
 
@@ -118,6 +148,13 @@ MTw!f:\.c=.o: !f
         $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 -expand
+
+|expand f!$(LSRC)!
+MTqs!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
+
+-expand
+
 
 |expand f!$(WADD)!
 !f:\.c=.o: !f
@@ -143,16 +180,32 @@ MT!f:\.c=.o: !f
 
 -expand
 
+
+|expand f!$(MTADD)!
+MTqs!f:\.c=.o: !f
+	$(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
+
+-expand
+
+|expand f!$(EVEQSSRC)!
+MTqs!f:\.cpp=.o: !f
+	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+
+-expand
+
+
 NormalObjectRule()
 ShellScriptLongTarget(eif_size_h,eif_size.h)
 AddSource($(LSRC) $(WADD) $(MTADD))
 
 CustomLibraryTarget(mtfinalized,$(MT_LOBJ))
+CustomLibraryTarget(mtqsfinalized,$(MT_QS_LOBJ))
 CustomLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomLibraryTarget(finalized,$(LOBJ))
 CustomLibraryTarget(wkbench,$(WOBJ))
 
 CustomMTSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
+CustomMTSharedLibraryTarget(mtqsfinalized,$(MT_QS_WOBJ))
 CustomMTSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomSharedLibraryTarget(finalized,$(LOBJ))
 CustomSharedLibraryTarget(wkbench,$(WOBJ))

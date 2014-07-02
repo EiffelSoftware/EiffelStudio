@@ -10,6 +10,8 @@ var login = function() {
 	  var host = form.host.value;
   	var _login = function(){
 
+     $("#imgProgress").show();  
+
     if  (document.getElementById('myModalFormId') !== null ) {
         remove ('myModalFormId');
     }
@@ -21,6 +23,7 @@ var login = function() {
 	                  newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
                     document.getElementById("myModalForm").appendChild(newdiv);
+                     $("#imgProgress").hide();
                } 
 	}else{  
          
@@ -43,6 +46,7 @@ var login = function() {
 	                   newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
                     document.getElementById("myModalForm").appendChild(newdiv);
+                     $("#imgProgress").hide();    
                    } 
 
                   }
@@ -106,6 +110,7 @@ var logoff = function(callback){
     }
 };
 
+/*
 var enter = function () {
 document.getElementById('password').keypress(function(e) {
     if (e.which == '13') {
@@ -113,6 +118,7 @@ document.getElementById('password').keypress(function(e) {
     }
  });
 };
+*/
 
 function remove(id)
 {
@@ -121,3 +127,21 @@ function remove(id)
    delete element;
    return;
 };
+
+$.fn.pressEnter = function(fn) {  
+  
+    return this.each(function() {  
+        $(this).bind('enterPress', fn);
+        $(this).keyup(function(e){
+            if(e.keyCode == 13)
+            {
+              $(this).trigger("enterPress");
+            }
+        })
+    });  
+ }; 
+
+$("#password").pressEnter( function() {
+
+     login();
+}); 

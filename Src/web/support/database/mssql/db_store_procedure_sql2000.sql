@@ -4622,3 +4622,63 @@ AS
 	   Select -1  
   end 
 GO
+
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[CommitInteraction2]
+
+@InteractionID INT
+
+AS
+
+/* Start transaction to guarentee no two updates in parallel */
+
+DECLARE @ReportID INT
+DECLARE @NewInteractionID INT
+DECLARE @InteractionDate DATETIME
+
+SET NOCOUNT ON
+
+SELECT @ReportID = ReportID FROM ProblemReportTemporaryInteractions WHERE InteractionID = @InteractionID
+SET @InteractionDate=getdate()
+
+UPDATE ProblemReports SET LastActivityDate = @InteractionDate WHERE ReportID = @ReportID
+
+BEGIN TRANSACTION CommitInteraction
+
+INSERT INTO ProblemReportInteractions (ReportID, ContactID, InteractionDate, Content, NewStatusID, Private)
+SELECT ReportID = @ReportID, ContactID, InteractionDate = @InteractionDate, Content, NewStatusID, Private
+FROM ProblemReportTemporaryInteractions
+WHERE InteractionID = @InteractionID
+
+COMMIT TRANSACTION CommitInteraction
+
+SET @NewInteractionID = SCOPE_IDENTITY()
+
+IF EXISTS(SELECT* FROM ProblemReportTemporaryInteractionAttachments WHERE InteractionID = @InteractionID)
+BEGIN
+	INSERT  INTO ProblemReportInteractionAttachments (InteractionID, Blob, [FileName], BytesCount)
+	SELECT InteractionID = @NewInteractionID, Blob = Content, [FileName], BytesCount = Length
+	FROM ProblemReportTemporaryInteractionAttachments
+	WHERE InteractionID = @InteractionID
+END
+
+SELECT @NewInteractionID

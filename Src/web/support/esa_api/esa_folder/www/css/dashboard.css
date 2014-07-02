@@ -203,3 +203,15 @@ pre {
     margin-top: 25px;
     margin-bottom: 25px;
 }
+
+.form-inline .control-label-api {
+margin-bottom: 0;
+vertical-align: middle;
+width: 95px;
+}
+
+.label-primary-api {
+  display: inline-block;
+  width: 95px;
+  background-color: #428bca;
+}

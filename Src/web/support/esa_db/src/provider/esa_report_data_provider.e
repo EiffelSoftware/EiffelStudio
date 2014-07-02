@@ -1103,7 +1103,7 @@ feature -- Basic Operations
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {ESA_DATA_PARAMETERS_NAMES}.Interactionid_param)
-			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("CommitInteraction", l_parameters))
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("CommitInteraction2", l_parameters))
 			db_handler.execute_reader
 
 				-- At the moment the following code is not needed
@@ -1118,6 +1118,7 @@ feature -- Basic Operations
 				set_last_interaction_id (l_int)
 			end
 			post_execution
+--			delete_problem_report_temporary_interactions (a_interaction_id)
 		end
 
 	upload_temporary_report_attachment (a_report_id: INTEGER; a_length: INTEGER; a_name: READABLE_STRING_32; a_content: STRING )
@@ -1797,6 +1798,23 @@ feature -- Connection
 			end
 		end
 
+feature -- {NONE} Implementation
+
+	delete_problem_report_temporary_interactions (a_interaction: INTEGER)
+				-- Delete a report temporary interaction by id `a_interaction_id'.
+			local
+				l_parameters: STRING_TABLE[ANY]
+				l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
+			do
+				connect
+				create l_parameters.make (1)
+				l_parameters.put (a_interaction, {ESA_DATA_PARAMETERS_NAMES}.interactionid_param)
+				db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (delete_ProblemReportTemporaryInteractions, l_parameters))
+				db_handler.execute_query
+				disconnect
+				post_execution
+			end
+
 feature -- Queries
 
 	Select_categories: STRING = "select CategoryID, CategorySynopsis from ProblemReportCategories;"
@@ -1949,6 +1967,10 @@ feature -- Queries
 				)
 		]"
 
+
+	delete_ProblemReportTemporaryInteractions: STRING ="[
+						DELETE FROM ProblemReportTemporaryInteractions WHERE InteractionID = :InteractionID
+						]"
 
 
 feature {NONE} -- Implementation

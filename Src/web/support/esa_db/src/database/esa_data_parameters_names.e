@@ -14,7 +14,7 @@ feature -- Access
 
 	Submitter_username_param: STRING = "SubmitterUsername"
 
-	Responsibleid_param: STRING =  "Responsible"
+	Responsibleid_param: STRING =  "ResponsibleID"
 
 	Email_param: STRING = "Email"
 

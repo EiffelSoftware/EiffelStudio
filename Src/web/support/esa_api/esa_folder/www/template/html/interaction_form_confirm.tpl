@@ -11,6 +11,24 @@
         <div class="form-horizontal well">
           <fieldset>
             <legend><h1>Interaction Submission Confirmation</h1></legend>
+
+              <div class="control-group">
+              <label class="control-label" for="textarea" itemprop="description">Confidential</label>
+   
+               
+               {if condition="$form.private"}
+                    <div class="controls">
+                        Yes
+                    </div> 
+               {/if}
+               {unless condition="$form.private"}
+                     <div class="controls">
+                        No
+                    </div> 
+              
+               {/unless} 
+             </div>
+
             <div class="control-group">
               <label class="control-label" for="textarea" itemprop="description">Description</label>
               <div class="controls">
@@ -61,14 +79,14 @@
               </div>
             </div>
             <hr>
-            <div class="form-actions">
-               <form  action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST" itemprop="create">
-                    <button type="submit" class="btn btn-xs btn-primary">Confirm</button>
-                    <input type="hidden" id="confirm" name="confirm" class="form-control" value="{$form.id/}">
-               </form> 
-              <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}" itemprop="update" rel="update">Edit</a> 
-            </div>
-          </fieldset>
+              <div class="form-actions">
+                 <form  action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST" itemprop="create">
+                      <button type="submit" class="btn btn-xs btn-primary">Confirm</button>
+                      <input type="hidden" id="confirm" name="confirm" class="form-control" value="{$form.id/}">
+                      <a class="btn btn-xs btn-primary" href="{$host/}/report_detail/{$form.report.number/}/interaction_form/{$form.id/}" itemprop="update" rel="update">Edit</a> 
+                 </form> 
+              </div>
+            </fieldset>
         </div>
    
         </div>

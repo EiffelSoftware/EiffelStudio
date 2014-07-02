@@ -30,14 +30,14 @@ feature {NONE} --Initialization
 			if attached a_form.report as l_report then
 				if
 					attached l_report.status as l_status and then
-				   	l_status.id /= a_form.selected_status
+				   	selected_item_by_synopsis (a_form.status, l_status.synopsis) /= a_form.selected_status
 				then
 					template.add_value (a_form.selected_status, "new_status")
 				end
 
 				if
 				    attached l_report.category as l_category and then
-				   	l_category.id /= a_form.category
+				    selected_item_by_synopsis (a_form.categories, l_category.synopsis) /= a_form.category
 				then
 					template.add_value (a_form.category, "new_category")
 				end
@@ -59,6 +59,27 @@ feature {NONE} --Initialization
 				debug
 					print (representation)
 				end
+			end
+		end
+
+
+	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
+			-- Retrieve the current selected item
+		local
+			l_found: BOOLEAN
+			l_item: ESA_REPORT_SELECTABLE
+		do
+			from
+				a_items.start
+			until
+				a_items.after or l_found
+			loop
+				l_item := a_items.item_for_iteration
+				if a_synopsis.is_case_insensitive_equal (l_item.synopsis) then
+					Result := l_item.id
+					l_found := True
+				end
+				a_items.forth
 			end
 		end
 

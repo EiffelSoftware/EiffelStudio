@@ -824,18 +824,30 @@ UPDATE ProblemReportsTemporary SET
 
 COMMIT TRANSACTION UpdateTemporaryProblemReport
 
-GO
-
-/********* Update Store Procedures */
 
 GO
-/****** Object:  StoredProcedure [dbo].[CommitInteraction]    Script Date: 25/06/2014 11:10:52 ******/
+
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-ALTER PROCEDURE [dbo].[CommitInteraction]
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[CommitInteraction2]
 
 @InteractionID INT
 
@@ -854,14 +866,14 @@ SET @InteractionDate=getdate()
 
 UPDATE ProblemReports SET LastActivityDate = @InteractionDate WHERE ReportID = @ReportID
 
---BEGIN TRANSACTION CommitInteraction
+BEGIN TRANSACTION CommitInteraction
 
 INSERT INTO ProblemReportInteractions (ReportID, ContactID, InteractionDate, Content, NewStatusID, Private)
 SELECT ReportID = @ReportID, ContactID, InteractionDate = @InteractionDate, Content, NewStatusID, Private
 FROM ProblemReportTemporaryInteractions
 WHERE InteractionID = @InteractionID
 
---COMMIT TRANSACTION CommitInteraction
+COMMIT TRANSACTION CommitInteraction
 
 SET @NewInteractionID = SCOPE_IDENTITY()
 
@@ -873,12 +885,11 @@ BEGIN
 	WHERE InteractionID = @InteractionID
 END
 
-
-DELETE FROM ProblemReportTemporaryInteractions WHERE InteractionID = @InteractionID
-
 SELECT @NewInteractionID
 
-GO
+
+/********* Update Store Procedures */
+
 
 GO
 /****** Object:  StoredProcedure [dbo].[CommitProblemReport]    Script Date: 25/06/2014 11:12:18 ******/

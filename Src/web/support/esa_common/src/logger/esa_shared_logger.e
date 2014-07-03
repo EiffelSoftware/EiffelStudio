@@ -8,9 +8,6 @@ class
 
 inherit
 	LOG_PRIORITY_CONSTANTS
-		export {NONE}
-	end
-
 
 feature -- Logger
 

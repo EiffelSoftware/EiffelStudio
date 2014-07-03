@@ -505,31 +505,34 @@ feature {NONE} -- Implementation
 			l_temporary_files := api_service.temporary_problem_report_attachments (a_form.id)
 				-- Remove not selected files
 			across l_temporary_files as c loop
-				across a_form.uploaded_files as lf loop
-					if c.item.name.same_string (lf.item.name) then
-						l_found := True
+				if attached a_form.uploaded_files as l_uploaded_files then
+					across l_uploaded_files as lf loop
+						if c.item.name.same_string (lf.item.name) then
+							l_found := True
+						end
 					end
-				end
-				if not l_found then
-					api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
-				else
-					l_found := False
+					if not l_found then
+						api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
+					else
+						l_found := False
+					end
 				end
 			end
 
 				-- Upload new files.
-			across a_form.uploaded_files as lf loop
-				across l_temporary_files as c loop
-					if c.item.name.same_string (lf.item.name) then
-						l_found := True
+			if attached a_form.uploaded_files as l_uploaded_files then
+				across l_uploaded_files as lf loop
+					across l_temporary_files as c loop
+						if c.item.name.same_string (lf.item.name) then
+							l_found := True
+						end
+					end
+					if not l_found then
+						api_service.upload_temporary_report_attachment (a_form.id, lf.item)
+					else
+						l_found := False
 					end
 				end
-				if not l_found then
-					api_service.upload_temporary_report_attachment (a_form.id, lf.item)
-				else
-					l_found := False
-				end
-
 			end
 		end
 

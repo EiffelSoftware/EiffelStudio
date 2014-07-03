@@ -508,7 +508,7 @@ static  void    print_byte_code (void)
 		fprintf (ofp,"arg%d: ", (int) n);
 		switch (get_uint8 (&ip)) {
 		case EIF_EXPANDED_CODE_EXTENSION:
-			print_dtype (1, SK_EXP | get_int16(&ip));
+			print_cid ();
 			break;
 		case EIF_REFERENCE_CODE:
 			fprintf (ofp,"REFERENCE");

@@ -252,8 +252,6 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 				(dtype != LIKE_CURRENT_TYPE) &&
 				(dtype != LIKE_ARG_TYPE) &&
 				(dtype != LIKE_FEATURE_TYPE) &&
-				(dtype != LIKE_PFEATURE_TYPE) &&
-				(dtype != QUALIFIED_PFEATURE_TYPE) &&
 				(dtype != QUALIFIED_FEATURE_TYPE) &&
 				(dtype != FORMAL_TYPE));
 

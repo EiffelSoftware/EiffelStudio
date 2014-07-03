@@ -66,9 +66,12 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if
+				attached {STRING_32} current_user_name (req) as l_user and then
+		  	    api_service.role (l_user).is_administrator
+			then
 				compute_response_get_txt (req, res, read_log_file)
-			else -- Not a logged in user
+			else -- Not an admin user
 				create l_rhf
 				l_rhf.new_representation_handler (esa_config,"text/html",media_type_variants (req)).new_response_unauthorized (req, res)
 			end

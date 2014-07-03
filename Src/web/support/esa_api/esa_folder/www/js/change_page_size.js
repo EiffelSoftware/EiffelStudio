@@ -17,23 +17,10 @@ $.event.special.inputchange = {
     }
 };
 
-$.fn.pressEnter = function(fn) {  
-  
-    return this.each(function() {  
-        $(this).bind('enterPress', fn);
-        $(this).keyup(function(e){
-            if(e.keyCode == 13)
-            {
-              $(this).trigger("enterPress");
-            }
-        })
-    });  
- }; 
-
 
 $("#changesize").pressEnter( function() {
 
-     $("#imgProgress").show();
+     $("#pageLoad").show();
     var str = document.getElementById("currentPage").value;
 
     // Return all pattern matches with captured groups
@@ -66,7 +53,7 @@ $("#changesize").pressEnter( function() {
       if (request.readyState == 4) {
          if (request.status==200) { 
                 window.location=str;
-                $("#imgProgress").hide();
+                $("#pageLoad").hide();
             }
      }
    }

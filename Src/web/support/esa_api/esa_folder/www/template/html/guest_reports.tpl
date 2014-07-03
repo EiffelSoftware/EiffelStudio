@@ -2,7 +2,7 @@
 <div class="row">
    <div class="col-lg-8">
      <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
-        <input type="search" class="form-control" name="search" placeholder="Search by Report #..." form="reports">
+        <input type="number" class="form-control" min="1" name="search" placeholder="Search by Report #..." form="reports">
          <button type="submit" class="btn btn-default">View Problem Report</button>
      </form>
   </div>  
@@ -54,7 +54,7 @@
           <small><ul class="pagination">
               <li class="info">Current page {$index/} of {$pages/} - </li>
               <li><label class="control-label" for="input01" itemprop="size"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
-                <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="imgProgress" />
+                <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
               {if isset="$user"}
                   <input type="hidden"  name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">
               {/if}
@@ -259,11 +259,18 @@
                {foreach from="$reports" item="item"}
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
-                       <td class="text-center" itemprop="status"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></td>
+                       <td class="text-center" itemprop="status"> {if isset="$user"}
+                                                                       <a href="{$host/}/user_reports/{$user/}?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td> 
+                                                                  {/if}
+                                                                  {unless isset="$user"}
+                                                                      <a href="{$host/}/reports?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td>
+                                                                  {/unless}
+ 
                        <td itemprop="synopsis">{$item.synopsis/}</td>
                        <td itemprop="submission_date">{$item.submission_date_output/}</td>
-                       <td itemprop="category">{$item.category.synopsis/}</td>
-                       <td itemprop="category">{$item.contact.name/}</td>
+
+                       <td itemprop="category"> {$item.category.synopsis/}</td> 
+                       <td itemprop="contact">{$item.contact.name/}</td>
                 </tr>
                 </tr>
               {/foreach}

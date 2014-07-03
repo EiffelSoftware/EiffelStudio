@@ -1,3 +1,4 @@
+<<<<<<< .mine
 var loginURL = "/login";
 var logoutURL = "/logoff";
 var userAgent = navigator.userAgent.toLowerCase();
@@ -128,18 +129,6 @@ function remove(id)
    return;
 };
 
-$.fn.pressEnter = function(fn) {  
-  
-    return this.each(function() {  
-        $(this).bind('enterPress', fn);
-        $(this).keyup(function(e){
-            if(e.keyCode == 13)
-            {
-              $(this).trigger("enterPress");
-            }
-        })
-    });  
- }; 
 
 $("#password").pressEnter( function() {
 

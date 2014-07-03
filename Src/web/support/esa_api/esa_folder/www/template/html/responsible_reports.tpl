@@ -1,7 +1,7 @@
 <div class="row">
    <div class="col-lg-8">
      <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
-        <input type="search" class="form-control" name="search" placeholder="Search by Report #..." form="reports">
+        <input type="number" class="form-control" min="1" name="search" placeholder="Search by Report #..." form="reports">
          <button type="submit" class="btn btn-default">View Problem Report</button>
      </form>
   </div>  
@@ -156,7 +156,7 @@
               <ul class="pagination">
                <li class="info">Current page {$index/} of {$pages/} - </li>
                <li><label class="control-label" for="input01" itemprop="size"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
-                <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="imgProgress" />
+                <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
                 <input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}" id="currentPage">
                </ul>
            </small>  

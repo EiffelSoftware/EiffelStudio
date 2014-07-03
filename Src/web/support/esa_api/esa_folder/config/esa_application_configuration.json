@@ -23,5 +23,8 @@
     "smtp": {
         "server": "localhost"
     },
-    "logger": {}
+    "logger": { 
+            "level":"debug",
+            "backup_count":"4"
+        }
 }

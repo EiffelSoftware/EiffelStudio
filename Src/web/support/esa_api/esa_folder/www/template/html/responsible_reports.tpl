@@ -134,6 +134,38 @@
                 {/foreach}  
               </select>
           </div>
+            <div class="col-md-4">
+             <label class="control-label-api" for="input01" title="To retrieve problem reports filtered by synopsis or description" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
+                  {if isset="$filter"}
+                    <input type="text"  name="filter" class="form-control" placeholder="Filter" value="{$filter/}">
+                  {/if}
+                  {unless isset="$filter"}
+                    <input type="text"  name="filter" class="form-control" placeholder="Filter">
+                  {/unless}
+
+                  {if isset="$filter_synopsis"}
+                      <label class="checkbox inline" for="checkboxes-synopsis">
+                         <input type="checkbox" name="filter_synopsis" value="1" checked /> Synopsis 
+                      </label>    
+                  {/if}
+                  {unless isset="$filter_synopsis"}
+                      <label class="checkbox inline" for="checkboxes-synopsis">
+                         <input type="checkbox" name="filter_synopsis" value="0"/> Synopsis 
+                      </label>    
+                  {/unless}
+                  {if isset="$filter_description"}
+                      <label class="checkbox inline" for="checkboxes-description">
+                         <input type="checkbox" name="filter_description" value="1" checked /> Description 
+                      </label>    
+                  {/if}
+                  {unless isset="$filter_description"}
+                      <label class="checkbox inline" for="checkboxes-description">
+                         <input type="checkbox" name="filter_description" value="0"/> Description 
+                      </label>    
+                  {/unless}
+            </div>
+ 
+
         </div>
        </div>
       </div>  

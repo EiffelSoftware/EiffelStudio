@@ -142,6 +142,7 @@ feature -- Access
 				l_query.replace_substring_all ("$Submitter","Username = :Username AND")
 			else
 				l_query.replace_substring_all ("$Submitter","")
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
 			end
 
 			l_query.replace_substring_all ("$Column", l_encode.encode ( string_parameter (a_column, 30)) )
@@ -845,6 +846,7 @@ feature -- Basic Operations
 					l_query.replace_substring_all ("$Submitter","Username = :Username AND")
 				else
 					l_query.replace_substring_all ("$Submitter","")
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
 				end
 					--| Need to be updated to build the set based on user selection.
 				l_query.replace_substring_all ("$StatusSet","("+l_encode.encode (a_status) +")")
@@ -1804,7 +1806,6 @@ feature -- {NONE} Implementation
 				-- Delete a report temporary interaction by id `a_interaction_id'.
 			local
 				l_parameters: STRING_TABLE[ANY]
-				l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 			do
 				connect
 				create l_parameters.make (1)
@@ -1888,6 +1889,7 @@ feature -- Queries
 						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
 						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
 						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+						$SearchBySynopsisAndOrDescription
 						ORDER BY $Column $ORD1
 					) AS PAG
 					ORDER BY $Column $ORD2
@@ -1912,6 +1914,7 @@ feature -- Queries
 						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
 						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
 						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+						$SearchBySynopsisAndOrDescription
 		]"
 
 

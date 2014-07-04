@@ -167,6 +167,9 @@ feature -- Implementation
 			l_status_selected: STRING
 			l_page: INTEGER
 			l_size: INTEGER
+			l_filter: detachable STRING_32
+			l_synopsis: INTEGER
+			l_description: INTEGER
 		do
 			to_implement ("Clean, refactor too complex code!!!")
 			create l_rhf
@@ -197,6 +200,22 @@ feature -- Implementation
 				else
 					-- default page size is 10
 					l_size := 10
+				end
+
+					-- Filter text
+				if attached {WSF_STRING} req.query_parameter ("filter") as ll_filter then
+					l_filter := ll_filter.value
+				end
+
+					-- Filter by description
+				if attached {WSF_STRING} req.query_parameter ("filter_description") as l_filter_description and then l_filter_description.is_integer then
+					l_description := l_filter_description.integer_value
+				end
+
+
+					-- Filter by synopsis
+				if attached {WSF_STRING} req.query_parameter ("filter_synopsis") as l_filter_synopsis and then l_filter_synopsis.is_integer then
+					l_synopsis := l_filter_synopsis.integer_value
 				end
 
 					-- Page query parameters
@@ -246,8 +265,8 @@ feature -- Implementation
 						end
 					end
 				end
-				l_pages := api_service.row_count_problem_report_responsible (l_category, l_severity, l_priority, l_responsible, l_status_selected, l_submitter)
-				l_row :=  api_service.problem_reports_responsibles (l_page, l_size, l_category, l_severity,l_priority, l_responsible, l_order_by, l_dir, l_status_selected, l_submitter)
+				l_pages := api_service.row_count_problem_report_responsible (l_category, l_severity, l_priority, l_responsible, l_status_selected, l_submitter, l_filter, l_description, l_synopsis)
+				l_row :=  api_service.problem_reports_responsibles (l_page, l_size, l_category, l_severity,l_priority, l_responsible, l_order_by, l_dir, l_status_selected, l_submitter, l_filter, l_description, l_synopsis)
 				create l_report_view.make (l_row, l_page, l_pages // l_size, l_categories, list_status, current_user_name (req))
 				l_report_view.set_selected_category (l_category)
 				l_report_view.set_selected_priority (l_priority)
@@ -259,6 +278,9 @@ feature -- Implementation
 				l_report_view.set_size (l_size)
 				l_report_view.set_submitter (l_submitter)
 				l_report_view.set_order_by (l_order_by)
+				l_report_view.set_filter (l_filter)
+				l_report_view.set_filter_description (l_description)
+				l_report_view.set_filter_synopsis (l_synopsis)
 
 				if l_dir = 1 then
 					l_report_view.set_direction ("ASC")

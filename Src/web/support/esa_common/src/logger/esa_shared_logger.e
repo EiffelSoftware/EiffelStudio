@@ -30,7 +30,11 @@ feature -- Logger
 				create l_log_writer.make_at_location (l_path.extended("esa_api.log"))
 			end
 			l_log_writer.set_max_file_size ({NATURAL_64}1024*1204)
-			l_logger_config := new_logger_level_configuration (l_path.extended ("esa_folder").extended("config").extended ("esa_application_configuration.json"))
+			if attached l_environment.item ("ESA_DIR") as s then
+				l_logger_config := new_logger_level_configuration (l_path.extended("config").extended ("esa_application_configuration.json"))
+			else
+				l_logger_config := new_logger_level_configuration (l_path.extended ("esa_folder").extended("config").extended ("esa_application_configuration.json"))
+			end
 			l_log_writer.set_max_backup_count (l_logger_config.backup_count)
 			set_logger_level (l_log_writer, l_logger_config.level)
 			log.register_log_writer (l_log_writer)

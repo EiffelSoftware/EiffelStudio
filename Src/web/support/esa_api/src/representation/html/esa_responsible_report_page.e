@@ -40,6 +40,18 @@ feature {NONE} --Initialization
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.size, "size")
 
+			if attached a_view.filter as l_filter then
+				template.add_value (l_filter, "filter")
+			end
+
+			if a_view.filter_description = 1 then
+				template.add_value (a_view.filter_description, "filter_description")
+			end
+
+			if a_view.filter_synopsis = 1 then
+				template.add_value (a_view.filter_synopsis, "filter_synopsis")
+			end
+
 			if
 				attached a_view.submitter as l_submitter and then
 				not l_submitter.is_empty

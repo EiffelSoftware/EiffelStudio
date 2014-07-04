@@ -69,7 +69,7 @@ feature -- Access
 		end
 
 
-	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32):TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32):TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
 		local
@@ -85,7 +85,7 @@ feature -- Access
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			create l_statistics
 			data_provider.connect
-			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username) as c loop
+			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_description, a_synopsis) as c loop
 				l_report := c.item
 				if attached l_report.status as ll_status then
 						update_statistics (l_statistics, ll_status)
@@ -492,13 +492,13 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_status, a_username: READABLE_STRING_32): INTEGER
+	row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): INTEGER
 			-- Number of problems reports for responsible users.
 			-- With filters by category `a_category', severity 'a_severity', priority `a_priority', responsible `a_responsible',
 			-- status `a_status' and submitter `a_submitter'
 		do
 			log.write_debug (generator+".row_count_problem_report_responsible filter by category:" + a_category.out + " severity:" + a_severity.out + " priority:" + a_priority.out + " status:" + a_status.out + " username:" + a_username)
-			Result := data_provider.row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible, a_status, a_username)
+			Result := data_provider.row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible, a_status, a_username, a_filter, a_description, a_synopsis)
 			post_data_provider_execution
 		end
 

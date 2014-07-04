@@ -1,4 +1,3 @@
-<<<<<<< .mine
 var loginURL = "/login";
 var logoutURL = "/logoff";
 var userAgent = navigator.userAgent.toLowerCase();

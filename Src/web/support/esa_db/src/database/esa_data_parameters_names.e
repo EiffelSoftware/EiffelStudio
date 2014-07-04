@@ -108,6 +108,8 @@ feature -- Access
 
 	Token_param: STRING = "Token"
 
+	Filter_param: STRING = "Filter"
+
 feature -- Login
 
 	Passwordsalt_param: STRING = "PasswordSalt"

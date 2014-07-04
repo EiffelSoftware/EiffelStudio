@@ -116,7 +116,7 @@ feature -- Access
 		end
 
 	problem_reports_responsibles (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER;
-								a_column: READABLE_STRING_32; a_order: INTEGER; a_status:  READABLE_STRING_32; a_username: READABLE_STRING_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+								a_column: READABLE_STRING_32; a_order: INTEGER; a_status:  READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for responsible users
 			-- All reports are visible for responsible users
 			-- Filtered category `a_category' and status `a_status'
@@ -127,13 +127,17 @@ feature -- Access
 			l_query: STRING
 			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 		do
-			create l_parameters.make (6)
+			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page*a_page_number, "Offset")
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 			l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
 			l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
+
+			if attached a_filter then
+				l_parameters.put (l_encode.encode ( string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+			end
 
 			create l_query.make_from_string (Select_problem_reports_responsibles_template)
 
@@ -142,7 +146,20 @@ feature -- Access
 				l_query.replace_substring_all ("$Submitter","Username = :Username AND")
 			else
 				l_query.replace_substring_all ("$Submitter","")
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
+			end
+
+				-- Filter search.
+			if a_synopsis = 1 and then
+			   a_description = 1 then
+			   l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%') OR (ProblemReports.Description like '%%' + :Filter + '%%'))")
+			else
+				if a_synopsis = 1 then
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND ( ProblemReports.Synopsis like '%%' + :Filter + '%%')")
+				elseif a_description = 1 then
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND (ProblemReports.Description like '%%' + :Filter + '%%')")
+				else
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
+				end
 			end
 
 			l_query.replace_substring_all ("$Column", l_encode.encode ( string_parameter (a_column, 30)) )
@@ -826,7 +843,7 @@ feature -- Basic Operations
 		end
 
 
-	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32;a_username: READABLE_STRING_32): INTEGER
+	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): INTEGER
 				-- Number of problems reports for responsible users.
 				-- Could be filtered by category, serverity, priority, responsible, and username.
 			local
@@ -835,18 +852,33 @@ feature -- Basic Operations
 				l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
 			do
 				connect
-				create l_parameters.make (5)
+				create l_parameters.make (6)
 				l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 				l_parameters.put (a_severity, {ESA_DATA_PARAMETERS_NAMES}.Severityid_param)
 				l_parameters.put (a_priority, {ESA_DATA_PARAMETERS_NAMES}.Priorityid_param)
 				l_parameters.put (a_responsible, {ESA_DATA_PARAMETERS_NAMES}.Responsibleid_param)
 				l_parameters.put (l_encode.encode ( string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				if attached a_filter then
+					l_parameters.put (l_encode.encode ( string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+				end
 				create l_query.make_from_string (select_row_count_problem_reports_responsibles)
 				if  not a_username.is_empty then
 					l_query.replace_substring_all ("$Submitter","Username = :Username AND")
 				else
 					l_query.replace_substring_all ("$Submitter","")
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
+				end
+					-- Filter search.
+				if a_synopsis = 1 and then
+				   a_description = 1 then
+				   l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%') OR (ProblemReports.Description like '%%'+ :Filter + '%%'))")
+				else
+					if a_synopsis = 1 then
+						l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND ( ProblemReports.Synopsis like '%%' + :Filter + '%%')")
+					elseif a_description = 1 then
+						l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription"," AND (ProblemReports.Description like '%%' + :Filter + '%%')")
+					else
+						l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription","")
+					end
 				end
 					--| Need to be updated to build the set based on user selection.
 				l_query.replace_substring_all ("$StatusSet","("+l_encode.encode (a_status) +")")
@@ -1846,16 +1878,16 @@ feature -- Queries
 
  Select_problem_reports_responsibles_template : STRING = "[
 			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,
-					 PAG2.Release, PAG2.PriorityID, PAG2.PrioritySynopsis, 
-					 PAG2.CategorySynopsis, PAG2.SeverityID, PAG2.SeveritySynopsis,
-					 PAG2.StatusID, PAG2.StatusSynopsis, PAG2.Description,
+					 PAG2.Release, PAG2.PriorityID PriorityID, PAG2.PrioritySynopsis, 
+					 PAG2.CategorySynopsis, PAG2.SeverityID SeverityID, PAG2.SeveritySynopsis,
+					 PAG2.StatusID StatusID, PAG2.StatusSynopsis, PAG2.Description,
 					 PAG2.Username as 'DisplayName',
 					 PAG2.ResponsibleID, PAG2.Username
 				FROM (SELECT TOP :RowsPerPage  
 				     PAG.Number, PAG.Synopsis, SubmissionDate,
-					 PAG.Release, PAG.PriorityID, PAG.PrioritySynopsis, 
-					 PAG.CategorySynopsis, PAG.SeverityID, PAG.SeveritySynopsis,
-					 PAG.StatusID, PAG.StatusSynopsis, PAG.Description,
+					 PAG.Release, PAG.PriorityID PriorityID, PAG.PrioritySynopsis, 
+					 PAG.CategorySynopsis, PAG.SeverityID SeverityID, PAG.SeveritySynopsis,
+					 PAG.StatusID StatusID, PAG.StatusSynopsis, PAG.Description,
 					 PAG.Username as 'DisplayName',
 					 PAG.ResponsibleID, PAG.Username,
 					 PAG.CategoryID,
@@ -1863,9 +1895,9 @@ feature -- Queries
 					 PAG.ContactID	
 					FROM (SELECT TOP :Offset
 					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
-						 ProblemReports.Release, ProblemReports.PriorityID, ProblemReportPriorities.PrioritySynopsis, 
-						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID, ProblemReportSeverities.SeveritySynopsis,
-						 ProblemReports.StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.Description,
+						 ProblemReports.Release, ProblemReports.PriorityID PriorityID, ProblemReportPriorities.PrioritySynopsis, 
+						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID SeverityID, ProblemReportSeverities.SeveritySynopsis,
+						 ProblemReports.StatusID StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.Description,
 						 Memberships.Username as 'DisplayName',
 						 ProblemReportResponsibles.ResponsibleID, Memberships.Username,
 						 ProblemReports.CategoryID,

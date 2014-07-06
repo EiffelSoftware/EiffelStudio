@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			if not l_retried then
 				create l_file.make (storage_file_name)
 				l_file.open_read
-				if attached {A [TUPLE [STRING, INTEGER]]} l_file.retrieved as l_a then
+				if attached l_file.retrieved as l_a then
 					print (l_a.generating_type)
 					print ("%N")
 				end
@@ -56,9 +56,8 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				create l_a
-				l_a.many_types (800).do_nothing
 				create l_file.make_create_read_write (storage_file_name)
-				l_file.independent_store (create {A [TUPLE [STRING, INTEGER]]}) 
+				l_file.independent_store (l_a.many_types (argument (2).to_integer))
 				l_file.close
 			end
 		rescue

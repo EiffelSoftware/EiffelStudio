@@ -110,8 +110,8 @@ feature -- Settings
 	s_use_cluster_name_as_namespace: STRING = "use_cluster_name_as_namespace"
 	s_use_all_cluster_name_as_namespace: STRING = "use_all_cluster_name_as_namespace"
 
-		-- Enable EVE/Qs runtime
 	s_eveqs: STRING = "eveqs"
+			-- Enable EVE/Qs runtime.
 
 feature -- Debug
 

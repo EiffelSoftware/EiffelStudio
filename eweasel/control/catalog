@@ -553,7 +553,7 @@ test	bogus-vjar-error			valid280 tcf pass validity anchored_type
 test	bogus-vdrd6-error			valid281 tcf fail validity
 test	missing-vuar2-error			valid282 tcf pass validity anchored_type system-validity
 test	missing-vuar2-error-2		valid283 tcf pass validity anchored_type system-validity
-test	missing-vjar-error			valid284 tcf fail validity anchored_type system-validity
+test	missing-vjar-error			valid284 tcf pass validity anchored_type system-validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors
@@ -1060,7 +1060,7 @@ test 	system-change-crash			incr415 tcf fail incrementality
 test 	recompilation-forces-freeze	incr416 tcf pass incrementality
 test 	qat-spurious-veen		incr417 tcf fail incrementality validity
 test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_type
-test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_type
+test	static-type-id-crash-3			incr419 tcf pass incrementality anchored_type
 test	internal-search-crash			incr420 tcf pass incrementality skip
 test	change-application-options		incr421 tcf pass incrementality
 test	fix-vlec-infinite-recursion		incr422	tcf fail used_to_pass incrementality scoop expanded
@@ -1158,7 +1158,7 @@ test	melted-anchored-precursor-in-tuple	melt086  tcf pass execution melting
 test	redefined-once-with-alt-precondition	melt087  tcf fail execution melting
 test	character_32-constant		melt088  tcf pass execution melting
 test	alt-precondition-call-on-void-target	melt089  tcf pass execution melting
-test	melted-object-test-with-anchored-none	melt090  tcf fail execution melting
+test	melted-object-test-with-anchored-none	melt090  tcf pass execution melting
 test	melted-creation-crash			melt091  tcf pass execution melting
 test	melted-agent-exception-crash	melt092  tcf pass execution melting agents
 test	raise-exception-inspect-branch	melt093  tcf pass execution melting
@@ -2753,7 +2753,7 @@ test	qat-with-renamed-features		anchor021 tcf pass anchored_type renaming
 test	qat-with-redefined-features		anchor022 tcf pass anchored_type system-validity
 test	qat-with-non-formal-generic		anchor023 tcf pass anchored_type
 test	qat-in-generic-constraint		anchor024 tcf pass anchored_type
-test	qat-renamed-constraint			anchor025 tcf fail used_to_pass anchored_type formal generic
+test	qat-renamed-constraint			anchor025 tcf pass anchored_type formal generic
 test	qat-with-missing-actual-generic		anchor026 tcf pass anchored_type
 test	qat-with-expanded-type			anchor027 tcf pass anchored_type expanded creation
 test	qat-actual-generic-anchored-to-generic	anchor028 tcf pass anchored_type

@@ -6,29 +6,46 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
-        <div class="main">
-          <form class="form-horizontal well" id="changePassword" method='POST' action='{$host/}/password' itemprop="update" >
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
+       <div class="col-lg-12">    
+            <form class="form-inline well" id="changePassword" method='POST' action='{$host/}/password' itemprop="update" >
             <legend><h1>Change Password</h1></legend>
             <p>Use this form to update your password:<p>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="inputPassword" itemprop="password">Password:</label>
-                <div class="col-xs-9">
-                    <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+            
+            <div class="row">
+               <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">  
+                  <label class="control-label-api" for="inputPassword" itemprop="password">Password</label>
+                  <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
                 </div>
+              </div>
+             </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="confirmPassword" itemprop="check_password">Confirm Password:</label>
-                <div class="col-xs-9">
-                    <input type="password" class="form-control" id="confirmPassword" name="check_password" placeholder="Confirm Password">
+
+            <div class="row">
+               <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">  
+                    <label class="control-label-api" for="confirmPassword" itemprop="check_password">Confirm Password</label>
+                   <input type="password" class="form-control" id="confirmPassword" name="check_password" placeholder="Confirm Password">
+                  </div>
                 </div>
+               </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-offset-2 col-xs-9">
+
+            </br>  
+            <div class="row">
+               <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">  
                     <input type="submit" class="btn btn-primary" value="Submit">
                     <input type="reset" class="btn btn-default" value="Reset">
                 </div>
             </div>
+           </div>
+          </div>
+
            {if isset="$has_error"} 
              <div class="control-group">
                <label class="col-sm-offset-1  label label-danger">Errors</label>

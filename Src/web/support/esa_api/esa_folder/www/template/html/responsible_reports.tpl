@@ -1,3 +1,4 @@
+
 <div class="row">
    <div class="col-lg-8">
      <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
@@ -217,7 +218,6 @@
                        {assign name="dir" value="ASC"/}
                        {if condition="$view.order_by ~ $column"}
                             {if condition="$view.direction ~ $dir"}
-
                                   <a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_synopsis={$view.filter_synopsis/}&filter_description={$view.filter_description/}"># <img src="{$host/}/images/up.gif" class="img-rounded"></a>
                             {/if}
                             {unless condition="$view.direction ~ $dir"}

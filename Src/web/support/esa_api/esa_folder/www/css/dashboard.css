@@ -215,3 +215,10 @@ width: 95px;
   width: 95px;
   background-color: #428bca;
 }
+
+
+.form-inline .control-label-api2 {
+margin-bottom: 0;
+vertical-align: middle;
+width: 110px;
+}

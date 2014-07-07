@@ -132,11 +132,10 @@ WOBJECTS = $(WORKBENCH_OBJECTS) \
 	$(INDIR)wmain.$obj \
 	$(NETWORK)
 
-MT_FINAL_OBJECTS = \
+MT_COMMON_F_OBJECTS = \
 	$(INDIR)MTlmalloc.$obj \
 	$(INDIR)MTmalloc.$obj \
 	$(INDIR)offset.$obj \
-	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTlocal.$obj \
 	$(INDIR)MTexcept.$obj \
 	$(INDIR)MTstore.$obj \
@@ -178,8 +177,18 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTgen_conf.$obj \
 	$(INDIR)MTeif_type_id.$obj \
 	$(INDIR)MTrout_obj.$obj \
+	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
+	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
+
+MT_FINAL_OBJECTS = $(MT_COMMON_F_OBJECTS) \
+	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTscoop.$obj \
 	$(INDIR)MTscoop_gc.$obj \
+
+MTQS_F_OBJECTS = $(MT_COMMON_F_OBJECTS) \
+	$(INDIR)MTqsgarcol.$obj \
+	$(INDIR)MTqsscoop.$obj \
+	$(INDIR)MTqsscoop_gc.$obj \
 	$(INDIR)MTeif_utils.$obj \
 	$(INDIR)MTeveqs.$obj \
 	$(INDIR)MTprocessor_registry.$obj \
@@ -188,17 +197,15 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTprocessor.$obj \
 	$(INDIR)MTqueue_cache.$obj \
 	$(INDIR)MTreq_grp.$obj \
-	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
-	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
+	$(INDIR)MTmain.$obj
 
 MT_OBJECTS = $(MT_FINAL_OBJECTS) \
 	$(INDIR)MTmain.$obj
 
-MT_WORKBENCH_OBJECTS = \
+MT_COMMON_W_OBJECTS = \
 	$(INDIR)MTwlmalloc.$obj \
 	$(INDIR)MTwmalloc.$obj \
 	$(INDIR)offset.$obj \
-	$(INDIR)MTwgarcol.$obj \
 	$(INDIR)MTwlocal.$obj \
 	$(INDIR)MTwexcept.$obj \
 	$(INDIR)MTwstore.$obj \
@@ -228,7 +235,6 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwboolstr.$obj \
 	$(INDIR)MTwsearch.$obj \
 	$(INDIR)MTdebug.$obj \
-	$(INDIR)MTinterp.$obj \
 	$(INDIR)MTwoption.$obj \
 	$(INDIR)MTupdate.$obj \
 	$(INDIR)MTwbench.$obj \
@@ -244,8 +250,19 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwgen_conf.$obj \
 	$(INDIR)MTweif_type_id.$obj \
 	$(INDIR)MTwrout_obj.$obj \
+	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
+
+MT_WORKBENCH_OBJECTS = $(MT_COMMON_W_OBJECTS) \
+	$(INDIR)MTwgarcol.$obj \
+	$(INDIR)MTinterp.$obj \
 	$(INDIR)MTwscoop.$obj \
-	$(INDIR)MTwscoop_gc.$obj \
+	$(INDIR)MTwscoop_gc.$obj
+
+MTQS_W_OBJECTS = $(MT_COMMON_W_OBJECTS) \
+	$(INDIR)MTqswgarcol.$obj \
+	$(INDIR)MTqsinterp.$obj \
+	$(INDIR)MTqswscoop.$obj \
+	$(INDIR)MTqswscoop_gc.$obj \
 	$(INDIR)MTweif_utils.$obj \
 	$(INDIR)MTweveqs.$obj \
 	$(INDIR)MTwprocessor_registry.$obj \
@@ -254,7 +271,8 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwprocessor.$obj \
 	$(INDIR)MTwqueue_cache.$obj \
 	$(INDIR)MTwreq_grp.$obj \
-	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
+	$(INDIR)MTwmain.$obj \
+	$(MT_NETWORK)
 
 MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
 	$(INDIR)MTwmain.$obj \
@@ -265,6 +283,7 @@ all:: $output_libraries
 
 standard:: $(OUTDIR)finalized.$lib $(OUTDIR)wkbench.$lib
 mtstandard:: $(OUTDIR)mtfinalized.$lib $(OUTDIR)mtwkbench.$lib
+mtqsstandard:: $(OUTDIR)mtqsfinalized.$lib $(OUTDIR)mtqswkbench.$lib
 
 $(OUTDIR)finalized.$lib: $(OBJECTS)
 	$alib_line
@@ -278,6 +297,12 @@ $(OUTDIR)mtfinalized.$lib: $(MT_OBJECTS)
 $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
 	$alib_line
 
+$(OUTDIR)mtqsfinalized.$lib: $(MTQS_F_OBJECTS)
+	$alib_line
+
+$(OUTDIR)mtqswkbench.$lib: $(MTQS_W_OBJECTS)
+	$alib_line
+
 dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll
 
@@ -286,6 +311,12 @@ $(OUTDIR)mtwkbench.dll : $(MT_WOBJECTS)
 
 $(OUTDIR)mtfinalized.dll : $(MT_OBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS) $(DLL_LIBS)
+
+$(OUTDIR)mtqswkbench.dll : $(MTQS_W_OBJECTS)
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtqswkbench.lib $(MTQS_W_OBJECTS) $(DLL_LIBS)
+
+$(OUTDIR)mtqsfinalized.dll : $(MTQS_F_OBJECTS)
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtqsfinalized.lib $(MTQS_F_OBJECTS) $(DLL_LIBS)
 
 $(OUTDIR)wkbench.dll : $(WOBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS)  $(DLL_LIBS)
@@ -692,29 +723,38 @@ $(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
 $(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)scoop_gc.c
 
+$(INDIR)MTqsgarcol.$obj: $(RTSRC)garcol.c
+	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)garcol.c
+
+$(INDIR)MTqsscoop.$obj: $(RTSRC)scoop.c
+	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop.c
+
+$(INDIR)MTqsscoop_gc.$obj: $(RTSRC)scoop_gc.c
+	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop_gc.c
+
 $(INDIR)MTeif_utils.$obj: $(RTSRC)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)eif_utils.cpp
 
 $(INDIR)MTeveqs.$obj: $(RTSRC)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eveqs.cpp
-
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)eveqs.cpp
+	
 $(INDIR)MTprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)processor_registry.cpp
 
 $(INDIR)MTnotify_token.$obj: $(RTSRC)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)notify_token.cpp
 
 $(INDIR)MTprivate_queue.$obj: $(RTSRC)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)private_queue.cpp
 
 $(INDIR)MTprocessor.$obj: $(RTSRC)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)processor.cpp
 
 $(INDIR)MTqueue_cache.$obj: $(RTSRC)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)queue_cache.cpp
 
 $(INDIR)MTreq_grp.$obj: $(RTSRC)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)req_grp.cpp
 
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c
@@ -857,29 +897,41 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop_gc.c
 
+$(INDIR)MTqswgarcol.$obj: $(RTSRC)garcol.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)garcol.c
+
+$(INDIR)MTqsinterp.$obj: $(RTSRC)interp.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)interp.c
+
+$(INDIR)MTqswscoop.$obj: $(RTSRC)scoop.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop.c
+
+$(INDIR)MTqswscoop_gc.$obj: $(RTSRC)scoop_gc.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop_gc.c
+
 $(INDIR)MTweif_utils.$obj: $(RTSRC)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)eif_utils.cpp
 
 $(INDIR)MTweveqs.$obj: $(RTSRC)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eveqs.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)eveqs.cpp
 
 $(INDIR)MTwprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)processor_registry.cpp
 
 $(INDIR)MTwnotify_token.$obj: $(RTSRC)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)notify_token.cpp
 
 $(INDIR)MTwprivate_queue.$obj: $(RTSRC)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)private_queue.cpp
 
 $(INDIR)MTwprocessor.$obj: $(RTSRC)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)processor.cpp
 
 $(INDIR)MTwqueue_cache.$obj: $(RTSRC)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)queue_cache.cpp
 
 $(INDIR)MTwreq_grp.$obj: $(RTSRC)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)req_grp.cpp
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

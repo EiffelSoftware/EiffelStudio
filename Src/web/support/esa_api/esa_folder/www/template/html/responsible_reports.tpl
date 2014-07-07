@@ -13,7 +13,6 @@
 <div class="row">
    <div class="col-lg-12">
      <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
-        
         <div class="row">
           <div class="col-md-12">
             <div class="row">

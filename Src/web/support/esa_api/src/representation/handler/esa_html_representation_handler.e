@@ -81,7 +81,7 @@ feature -- View
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_report_view)
 				if attached l_hp.representation as l_home_page then
-					new_response_get (req, res, l_home_page)
+					new_response_get_cache (req, res, l_home_page)
 				end
 			end
 		end
@@ -496,7 +496,7 @@ feature -- Response
 			if attached media_variants.vary_header_value as l_vary then
 				h.put_header_key_value ("Vary", l_vary)
 			end
-			h.add_header_key_value ("Cache-Control", "plublic, max-age=0")
+			h.add_header_key_value ("Cache-Control", "public, max-age=3600")
 			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.ok)
 			res.put_header_text (h.string)
@@ -518,6 +518,24 @@ feature -- Response
 			res.put_header_text (h.string)
 			res.put_string (output)
 		end
+
+	new_response_get_cache (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_type_text_html
+			h.add_header_key_value ("Cache-Control", "public; max-age=180")
+			h.put_content_length (output.count)
+			if attached media_variants.vary_header_value as l_vary then
+				h.put_header_key_value ("Vary", l_vary)
+			end
+			h.put_current_date
+			res.set_status_code ({HTTP_STATUS_CODE}.ok)
+			res.put_header_text (h.string)
+			res.put_string (output)
+		end
+
 
 	new_response_get_400 (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
 		local

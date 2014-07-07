@@ -252,6 +252,12 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
+				-- EVE/Qs property
+			l_bool_prop := new_boolean_property (conf_interface_names.target_eveqs_name, current_target.setting_eveqs)
+			l_bool_prop.set_description (conf_interface_names.target_eveqs_description)
+			add_boolean_setting_actions (l_bool_prop, s_eveqs)
+			properties.add_property (l_bool_prop)
+
 			l_bool_prop := new_boolean_property (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
 			add_boolean_setting_actions (l_bool_prop, s_inlining)
@@ -632,7 +638,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

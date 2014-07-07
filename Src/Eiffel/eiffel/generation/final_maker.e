@@ -17,26 +17,49 @@ feature
 	generate_compilation_rule
 			-- Generates the .c -> .o compilation rule
 		do
-			Make_file.put_string ("%
-				%.SUFFIXES: .x .xpp .cpp .o%N%N%
-				%.c.o:%N%
-				%%T$(CC) $(CFLAGS) -c $<%N%N%
-				%.cpp.o:%N%
-				%%T$(CPP) $(CPPFLAGS) -c $<%N%N")
-			Make_file.put_string ("%
-				%.x.o:%N%
-				%%T$(X2C) $< $*.c%N%
-				%%T$(CC) $(CFLAGS) -c $*.c%N%
-				%%T$(RM) $*.c%N%N%
-				%.xpp.o:%N%
-				%%T$(X2C) $< $*.cpp%N%
-				%%T$(CPP) $(CPPFLAGS) -c $*.cpp%N%
-				%%T$(RM) $*.cpp%N%N")
-			Make_file.put_string ("%
-				%.x.c:%N%
-				%%T$(X2C) $< $*.c%N%N%
-				%.xpp.cpp:%N%
-				%%T$(X2C) $< $*.cpp%N%N")
+			if System.has_multithreaded and System.use_eveqs then
+				Make_file.put_string ("%
+					%.SUFFIXES: .x .xpp .cpp .o%N%N%
+					%.c.o:%N%
+					%%T$(CC) $(CFLAGS) -DSCOOPQS -c $<%N%N%
+					%.cpp.o:%N%
+					%%T$(CPP) $(CPPFLAGS) -DSCOOPQS -c $<%N%N")
+				Make_file.put_string ("%
+					%.x.o:%N%
+					%%T$(X2C) $< $*.c%N%
+					%%T$(CC) $(CFLAGS) -DSCOOPQS -c $*.c%N%
+					%%T$(RM) $*.c%N%N%
+					%.xpp.o:%N%
+					%%T$(X2C) $< $*.cpp%N%
+					%%T$(CPP) $(CPPFLAGS) -DSCOOPQS -c $*.cpp%N%
+					%%T$(RM) $*.cpp%N%N")
+				Make_file.put_string ("%
+					%.x.c:%N%
+					%%T$(X2C) $< $*.c%N%N%
+					%.xpp.cpp:%N%
+					%%T$(X2C) $< $*.cpp%N%N")
+			else
+				Make_file.put_string ("%
+					%.SUFFIXES: .x .xpp .cpp .o%N%N%
+					%.c.o:%N%
+					%%T$(CC) $(CFLAGS) -c $<%N%N%
+					%.cpp.o:%N%
+					%%T$(CPP) $(CPPFLAGS) -c $<%N%N")
+				Make_file.put_string ("%
+					%.x.o:%N%
+					%%T$(X2C) $< $*.c%N%
+					%%T$(CC) $(CFLAGS) -c $*.c%N%
+					%%T$(RM) $*.c%N%N%
+					%.xpp.o:%N%
+					%%T$(X2C) $< $*.cpp%N%
+					%%T$(CPP) $(CPPFLAGS) -c $*.cpp%N%
+					%%T$(RM) $*.cpp%N%N")
+				Make_file.put_string ("%
+					%.x.c:%N%
+					%%T$(X2C) $< $*.c%N%N%
+					%.xpp.cpp:%N%
+					%%T$(X2C) $< $*.cpp%N%N")
+			end
 		end;
 
 	add_specific_objects
@@ -242,7 +265,12 @@ feature
 			end
 
 			if System.has_multithreaded then
-				Result.append ("$mt_prefix")
+				if System.use_eveqs then
+					Result.append ("$qs_prefix")
+				else
+					Result.append ("$mt_prefix")
+				end
+
 			end
 
 			Result.append ("$eiflib")

@@ -777,6 +777,7 @@ feature -- Access: concurrency setting
 		end
 
 	setting_eveqs: BOOLEAN
+			-- A flag that indicates whether the new SCOOP run-time has to be used.
 		do
 			Result := setting_boolean (s_eveqs)
 		end

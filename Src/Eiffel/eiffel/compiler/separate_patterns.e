@@ -113,7 +113,7 @@ feature -- Generation
 				end
 				buffer.put_character ('(')
 				p.result_type.generate_function_cast (buffer, p.argument_type_array, False)
-				buffer.put_string ("(a -> feature.address)) (eif_access (a -> target)")
+				buffer.put_string ("(a -> feature.address)) (eif_scoop_access (a -> target)")
 				if attached p.argument_types as a then
 						-- This pattern cannot be used for attribute call stub.
 					is_attribute := False
@@ -150,7 +150,7 @@ feature -- Generation
 					p.result_type.generate_access_cast (buffer)
 					buffer.put_string ("(a -> result) = *")
 					p.result_type.generate_access_cast (buffer)
-					buffer.put_string (" (eif_access (a -> target) + a -> feature.offset);")
+					buffer.put_string (" (eif_scoop_access (a -> target) + a -> feature.offset);")
 					buffer.generate_block_close
 				end
 				t.forth

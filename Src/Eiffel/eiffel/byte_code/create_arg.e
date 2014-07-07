@@ -127,16 +127,6 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY)
-			-- Generate byte code for an argument anchored type.
-		do
-			ba.append (Bc_carg)
-			associated_create_info.make_byte_code (ba)
-			ba.append_short_integer (position)
-		end
-
 feature -- Generic conformance
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
@@ -153,7 +143,7 @@ feature -- Generic conformance
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_arg_type)
 			ba.append_short_integer (position)
-			associated_create_info.make_byte_code (ba)
+			argument_type.make_type_byte_code (ba, True, context.context_class_type.type)
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER;
@@ -219,7 +209,7 @@ feature -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

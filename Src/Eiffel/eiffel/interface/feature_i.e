@@ -2312,6 +2312,24 @@ feature {NONE} -- Signature checking
 
 feature -- Signature checking
 
+	nested_check_types (c: CLASS_C)
+			--
+		local
+			old_current_class: CLASS_C
+		do
+			if is_type_evaluation_delayed and then not type_a_checker.is_delayed then
+					-- Evaluate types now to get correct actual type (see test#valid284).
+				old_current_class := context.current_class
+				system.set_current_class (c)
+				context.initialize (c, c.actual_type)
+					-- Update feature type.
+				check_types (c.feature_table)
+					-- Restore context state.
+				context.initialize (old_current_class, old_current_class.actual_type)
+				system.set_current_class (old_current_class)
+			end
+		end
+
 	check_types (feat_table: FEATURE_TABLE)
 			-- Check type and arguments types. The objective is
 			-- to deal with anchored types and genericity. All anchored

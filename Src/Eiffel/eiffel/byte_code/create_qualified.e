@@ -315,16 +315,6 @@ feature -- IL code generation
 			context.restore_class_type_context
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY)
-			-- Generate byte code for an anchored creation type.
-		do
-			ba.append (Bc_qlike)
-			qualifier_creation.make_byte_code (ba)
-			ba.append_integer (routine_id)
-		end
-
 feature -- Genericity
 
 	is_explicit: BOOLEAN
@@ -503,8 +493,12 @@ feature -- Genericity
 			-- <Precursor>
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.qualified_feature_type)
-			qualifier.make_full_type_byte_code (ba, context.context_class_type.type)
-			ba.append_integer (routine_id)
+				-- Only one element in the chain.
+			ba.append_natural_16 ({NATURAL_16} 1)
+			qualifier.make_type_byte_code (ba, True, context.context_class_type.type)
+				-- Note that we do not encode the INEGER_32 value into NATURAL_16 encoding
+				-- that type arrays are usually made of.
+			ba.append_integer_for_type_array (routine_id)
 		end
 
 	type_to_create: CL_TYPE_A

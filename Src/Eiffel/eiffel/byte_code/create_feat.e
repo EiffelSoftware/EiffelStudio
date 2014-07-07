@@ -235,15 +235,6 @@ feature -- IL code generation
 			il_generator.generate_type_feature_call (context.context_class_type.associated_class.anchored_features.item (routine_id))
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY)
-			-- Generate byte code for an anchored creation type.
-		do
-			ba.append (Bc_clike)
-			ba.append_integer (routine_id)
-		end
-
 feature -- Genericity
 
 	is_explicit: BOOLEAN
@@ -437,7 +428,7 @@ feature -- Genericity
 			-- <Precursor>
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
-			ba.append_integer (routine_id)
+			ba.append_integer_for_type_array (routine_id)
 		end
 
 	type_to_create: CL_TYPE_A

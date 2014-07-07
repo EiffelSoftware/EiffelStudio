@@ -257,7 +257,25 @@ feature -- Element change
 			append_integer_32 (i)
 		end
 
-	append_integer_32 (i: INTEGER)
+	append_integer_for_type_array (i: INTEGER)
+			-- Write `i' a non-negative integer as a sequence of 16-bit value.
+			-- For values between 0 and 0x7FFF, write the value itself.
+			-- For values between 0x8000 and 0x7FFFFFE, write 1xxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx.
+			-- We do not enabled 0x7FFFFFFF because this would generate 0x8FFF 0xFFFF and the 0xFFFF
+			-- would be considered a terminator which is not what is intended.
+		require
+			i_non_negative: i >= 0
+			i_not_maximum_integer: i < {INTEGER}.max_value
+		do
+			if i <= 0x7FFF then
+				append_natural_16 (i.to_natural_16)
+			else
+				append_natural_16 (((i.to_natural_32 |>> 16) | 0x8000).to_natural_16)
+				append_natural_16 (i.as_natural_16)
+			end
+		end
+
+ 	append_integer_32 (i: INTEGER)
 			-- Append long integer `i' in the array
 		local
 			new_position: INTEGER
@@ -606,7 +624,7 @@ invariant
 	integer_32_valid: integer_32_bytes = natural_32_bytes
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

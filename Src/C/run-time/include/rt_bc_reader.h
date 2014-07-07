@@ -314,6 +314,31 @@ rt_private rt_inline EIF_NATURAL_64 get_uint64(unsigned char **bc)
 }
 
 /*
+doc:	<routine name="get_encoded_int32" return_type="EIF_INTEGER_32" export="private">
+doc:		<summary>Read an EIF_INTEGER_32 from a sequence of 16-bit code encode in such a way that values between 0 and 0x7FFF only use one 16-bit, and the other 2 16-bit.</summary>
+doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>
+doc:		<return>The read EIF_INTEGER_32 value.</return>
+doc:		<thread_safety>Safe if `bc' is not used by more than one thread</thread_safety>
+doc:		<synchronization>None required.</synchronization>
+doc:	</routine>
+*/
+
+rt_private rt_inline EIF_INTEGER_32 get_encoded_int32(unsigned char **bc)
+{
+	EIF_INTEGER_32 result;
+
+	REQUIRE("bc_not_null", bc);
+	REQUIRE("bc_data_not_null", *bc);
+	result = (EIF_INTEGER_32) get_uint16(bc);
+	if (result & 0x8000) {
+			/* This is a value greater than 0x7FFF */
+		result = ((result & 0x7FFF) << 16) | (EIF_INTEGER_32) get_uint16(bc);
+	}
+
+	return result;
+}
+
+/*
 doc:	<routine name="get_real32" return_type="EIF_REAL_32" export="private">
 doc:		<summary>Read an EIF_REAL_32 from a byte code stream.</summary>
 doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>

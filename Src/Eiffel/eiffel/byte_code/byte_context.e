@@ -2272,6 +2272,7 @@ feature -- Access
 				else
 					a_type.create_info.make_byte_code (ba)
 				end
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
 					-- We sometime need to convert a type to either it associated attached/non-attached
 					-- version. First boolean is to figure out if there is an action to be taken, the

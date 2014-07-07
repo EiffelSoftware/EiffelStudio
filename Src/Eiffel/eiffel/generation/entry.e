@@ -181,9 +181,21 @@ feature -- from ENTRY
 			-- Make byte code for type of current entry.
 		require
 			is_generic : needs_extended_info
+		local
+			t: CLASS_TYPE
 		do
-			type.make_type_byte_code (ba, False, system.class_type_of_id (type_id).type)
-		end;
+			t := system.class_type_of_id (type_id)
+			if not attached context.context_class_type as ct then
+				context.init (t)
+				type.make_type_byte_code (ba, False, t.type)
+			elseif ct.type_id /= t.type_id then
+				context.change_class_type_context (t, t.type, t, t.type)
+				type.make_type_byte_code (ba, False, t.type)
+				context.restore_class_type_context
+			else
+				type.make_type_byte_code (ba, False, t.type)
+			end
+		end
 
 feature -- Status report
 
@@ -193,7 +205,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -234,6 +234,7 @@ feature {NONE} -- Visitors
 			end
 			l_special_info := a_node.special_info.updated_info
 			l_special_info.make_byte_code (ba)
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			l_special_type := l_special_info.type
 			check
 				is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
@@ -684,6 +685,7 @@ feature {NONE} -- Visitors
 					ba.append_boolean (l_is_make_filled)
 					ba.append_boolean (a_node.is_special_make_empty)
 					a_node.info.updated_info.make_byte_code (ba)
+					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					l_class_type.make_creation_byte_code (ba)
 					if l_is_make_filled then
 						create l_nested
@@ -702,6 +704,7 @@ feature {NONE} -- Visitors
 
 						-- Create associated object.
 					a_node.info.updated_info.make_byte_code (ba)
+					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
 						-- Call creation procedure if any.
 					if l_call /= Void then
@@ -1731,6 +1734,7 @@ feature {NONE} -- Visitors
 				ba.append_short_integer (context.object_test_local_position (a_node.target))
 					-- Generate type of target
 				a_node.info.updated_info.make_byte_code (ba)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			end
 		end
 
@@ -1867,6 +1871,7 @@ feature {NONE} -- Visitors
 				melted_assignment_generator.generate_assignment (ba, a_node.target)
 					-- Generate type of target
 				a_node.info.updated_info.make_byte_code (ba)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			end
 		end
 
@@ -2042,6 +2047,7 @@ feature {NONE} -- Visitors
 			l_type_type := context.descendant_type (a_node.type_type)
 			l_type_creator := l_type_type.create_info
 			l_type_creator.make_byte_code (ba)
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
 				-- Because `l_type_creator' discards the attachment mark if any, we need
 				-- to take it into account to create the proper type.
@@ -2538,7 +2544,9 @@ feature -- Type information
 			b_attached: attached b
 		do
 			b.append_short_integer (l.count)
-			l.do_all (agent generate_local_type (?, b))
+			across l as loc loop
+				generate_local_type (loc.item, b)
+			end
 		end
 
 	generate_local_type (t: TYPE_A; b: BYTE_ARRAY)

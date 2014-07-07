@@ -366,8 +366,30 @@ feature
 			buffer.put_new_line
 			buffer.put_string ("void ")
 			buffer.put_string (l_table_name)
-			buffer.put_string ("_init (void) {")
-			buffer.indent
+			buffer.put_string ("_init (void)")
+			buffer.generate_block_open
+
+				-- Initialize `egc_routines_types', `egc_routines_gen_types' and `egc_routines_offset'.
+			buffer.put_new_line
+			buffer.put_string ("egc_routines_types [")
+			buffer.put_integer (rout_id)
+			buffer.put_string ("] = ")
+			buffer.put_string (l_table_name)
+			buffer.put_character (';')
+
+			buffer.put_new_line
+			buffer.put_string ("egc_routines_gen_types [")
+			buffer.put_integer (rout_id)
+			buffer.put_string ("] = ")
+			buffer.put_string (l_table_name)
+			buffer.put_string ("_gen_type;")
+
+			buffer.put_new_line
+			buffer.put_string ("egc_routines_offset [")
+			buffer.put_integer (rout_id)
+			buffer.put_string ("] = ")
+			buffer.put_type_id (min_type_id)
+			buffer.put_string (";")
 
 				-- Compact generation for `XXX_gen_type' table. No need to try to be
 				-- smart here, since occurrences of the type array occurs only once in
@@ -449,8 +471,8 @@ feature
 					l_start, l_end)
 			end
 
-			buffer.exdent
-			buffer.put_three_character ('%N', '}', '%N')
+			buffer.generate_block_close
+			buffer.put_new_line_only
 		end
 
 	is_routine_table: BOOLEAN
@@ -831,7 +853,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

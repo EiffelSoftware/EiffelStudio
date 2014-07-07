@@ -94,10 +94,10 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_LASSIGN			24
 #define BC_ASSIGN			25
 #define BC_CREATE			26
-#define BC_CTYPE			27
-#define	BC_CARG				28
-#define BC_CLIKE			29
-#define BC_CCUR				30
+#define BC_NOTUSED_27		27
+#define	BC_NOTUSED_28		28
+#define BC_NOTUSED_29		29
+#define BC_NOTUSED_30		30
 #define BC_CREATE_TYPE		31
 #define BC_RANGE			32
 #define BC_INSPECT_EXCEP	33
@@ -327,6 +327,7 @@ extern void dynamic_eval(int routine_id, int static_dtype, int is_basic_type, rt
 extern void dynamic_eval_dbg(int routine_id, int static_dtype, int is_basic_type, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);
 
 extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE);
+extern EIF_REFERENCE rt_melted_arg (int a_pos);
 
 #ifdef __cplusplus
 }

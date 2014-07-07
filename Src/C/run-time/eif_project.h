@@ -190,6 +190,9 @@ extern "C" {
 	RT_LNK struct ctable *egc_ce_rname;
 	RT_LNK long *egc_fnbref ;
 	RT_LNK long *egc_fsize;
+	RT_LNK EIF_TYPE_INDEX **egc_routines_types;
+	RT_LNK EIF_TYPE_INDEX ***egc_routines_gen_types;
+	RT_LNK int *egc_routines_offset;
 #endif
 
 #ifdef WORKBENCH

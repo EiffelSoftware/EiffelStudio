@@ -10,7 +10,7 @@ class CREATE_TYPE
 inherit
 	CREATE_INFO
 		redefine
-			generate, generate_cid, is_explicit
+			generate, generate_cid, is_explicit, make_byte_code
 		end
 
 create
@@ -151,8 +151,7 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a hardcoded creation type
 		do
-			ba.append (Bc_ctype)
-			type.make_full_type_byte_code (ba, context.context_class_type.type)
+			type.make_type_byte_code (ba, True, context.context_class_type.type)
 		end
 
 feature -- Generic conformance
@@ -182,7 +181,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

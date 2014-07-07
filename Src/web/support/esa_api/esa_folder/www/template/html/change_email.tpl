@@ -6,29 +6,47 @@
   <body>
      {include file="navbar.tpl"/}  
 
-    <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
-        <div class="main">
-          <form class="form-horizontal well" id="changeEmail" method='POST' action='{$host/}/email' itemprop="create" >
+    <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
+       <div class="col-lg-12">    
+          <form class="form-inline well" id="changeEmail" method='POST' action='{$host/}/email' itemprop="create" >
             <legend><h1>Change Email</h1></legend>
             <p>Use this form to update your email:</p>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="inputEmail" itemprop="email">Email:</label>
-                <div class="col-xs-9">
-                    <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email">
+           
+            <div class="row">
+               <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">  
+                    <label class="control-label-api" for="inputEmail" itemprop="email">Email</label>
+                     <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email">
+                   </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="confirmEmail" itemprop="check_password">Confirm Email:</label>
-                <div class="col-xs-9">
+              </div>
+            </div>   
+
+            <div class="row">
+              <div class="col-md-12">
+               <div class="row">
+                  <div class="col-md-4">  
+                    <label class="control-label-api" for="confirmEmail" itemprop="check_password">Confirm Email</label>
                     <input type="email" class="form-control" id="confirmEmail" name="check_email" placeholder="Confirm Email">
+                 </div>
                 </div>
+              </div>
+            </div>  
+
+          </br>    
+          <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-4">
+                         <input type="submit" class="btn btn-primary" value="Submit">
+                        <input type="reset" class="btn btn-default" value="Reset">
+                   </div>
+              </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-offset-2 col-xs-9">
-                    <input type="submit" class="btn btn-primary" value="Submit">
-                    <input type="reset" class="btn btn-default" value="Reset">
-                </div>
-            </div>
+          </div>
+   
+
            {if isset="$has_error"} 
              <div class="control-group">
                <label class="col-sm-offset-1  label label-danger">Errors</label>

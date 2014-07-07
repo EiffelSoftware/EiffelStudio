@@ -219,6 +219,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 
 /* Getting constants */
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
+rt_shared EIF_REFERENCE rt_melted_arg (int a_pos);
 rt_private EIF_TYPE_INDEX get_creation_type(int for_creation);		/* Get a creation type id */
 
 /* Interpreter interface */
@@ -5538,64 +5539,26 @@ rt_private void address(int32 aid)
 	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
-rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
-	/* Compute next element of currently traversed compound_id. */
-{
+rt_shared EIF_REFERENCE rt_melted_arg (int a_pos) {
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	EIF_TYPE_INDEX result = 0;
-	int pos;
-
-	result = (EIF_TYPE_INDEX) get_int16(&IC);
-	switch (result)
-	{
-		case LIKE_ARG_TYPE: /* like argument */
-			pos = (int) get_int16(&IC);
-			result = get_creation_type (0);
-			result = RTCA(arg(pos)->it_ref, result);
-			break;
-		case LIKE_CURRENT_TYPE: /* like Current */
-			result = Dftype(Current);
-			break;
-		case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
-			{
-				int routine_id;
-
-				routine_id = get_int32(&IC);		/* Get the routine ID */
-				result = RTWCT(routine_id, Dtype(Current), Dftype(Current));
-			}
-			break;
-		case QUALIFIED_FEATURE_TYPE: /* like feature - see BC_QLIKE */
-			{
-				int routine_id;
-				EIF_TYPE_INDEX dftype;
-
-				dftype = get_compound_id(Current);
-				routine_id = get_int32(&IC);	/* Get the routine ID */
-				result = RTWCTT(routine_id, dftype);
-			}
-			break;
-		default:
-			break;
-	}
-	return result;
+	return arg(a_pos)->it_ref;
 }
 
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
-{
 	/* Get array of short ints and convert it to a compound id. */
-	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1];
+{
+	EIF_GET_CONTEXT
+
+	EIF_TYPE_INDEX l_type, gen_types [MAX_CID_SIZE+1];
 	int cnt = 0;
 
-	gen_types [cnt] = get_next_compound_id (Current);
-	while (gen_types [cnt] != TERMINATOR) {
-		if (cnt >= MAX_CID_SIZE) {
+	do {
+		gen_types [cnt] = l_type = get_int16(&IC);
+		cnt++;
+		if (cnt > MAX_CID_SIZE) {
 			eif_panic(MTC "Too many generic parameters in compound type");
-		} else {
-			cnt++;
-			gen_types [cnt] = get_next_compound_id (Current);
 		}
-	}
+	} while (l_type != TERMINATOR);
 
 		/* If not generic then return dtype */
 	if (cnt <= 1) {
@@ -5608,44 +5571,9 @@ rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
 
 rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 {
-	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
-	EIF_TYPE_INDEX type;/* Often used to hold type values */
-	EIF_TYPE_INDEX code;	/* Current intepreted byte code */
-	int routine_id;
-
-	switch (*IC++) {
-	case BC_CTYPE:				/* Hardcoded creation type */
-/* GENERIC CONFORMANCE */
-		type = get_compound_id(MTC icurrent->it_ref);
-		break;
-	case BC_CARG:				/* Like argument creation type */
-		type = get_creation_type (1);
-		code = get_int16(&IC);		/* Argument position */
-		type = RTCA(arg(code)->it_ref, type);
-		break;
-	case BC_CLIKE:				/* Like feature creation type */
-		routine_id = get_int32(&IC);		/* Get the routine ID */
-/* GENERIC CONFORMANCE */
-		type = RTWCT(routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref));
-		break;
-	case BC_QLIKE:				/* Qualified anchored creation type */
-		{
-		EIF_TYPE_INDEX dftype; /* Current dftype */
-		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
-		routine_id = get_int32(&IC);                    /* Get the routine ID */
-		type = RTWCTT(routine_id, dftype);      /* GENERIC CONFORMANCE */
-		}
-		break;
-	case BC_CCUR:				/* Like Current creation type */
-		type = icur_dftype;
-		break;
-	default:
-		type = 0;	/* To avoid C compiler warning */
-		eif_panic(MTC "creation type lost");
-		/* NOTREACHED */
-	}
-
+	EIF_TYPE_INDEX type;
+	type = get_compound_id (icurrent->it_ref);
 	if (for_creation) {
 		return eif_non_attached_type(type);
 	} else {

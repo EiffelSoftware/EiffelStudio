@@ -4143,6 +4143,8 @@ feature -- Generation
 			l_rout_ids: ARRAYED_LIST [INTEGER]
 			l_tmp_poly_server: like tmp_poly_server
 			l_encoder: like encoder
+			l_processed: HASH_TABLE [BOOLEAN, INTEGER]
+			l_done: BOOLEAN
 		do
 			l_buf := generation_buffer
 			l_header_buf := header_generation_buffer
@@ -4153,25 +4155,38 @@ feature -- Generation
 			Attr_generator.init (l_buf)
 			Rout_generator.init (l_header_buf)
 
+			used := Eiffel_table.used
+			used_for_types := Eiffel_table.used_for_types
+			used_for_routines := Eiffel_table.used_for_routines
+
+				-- Iterate until no more tables are marked used.
+				-- This solves test#anchor040 where during `table.write_for_type'
+				-- new routine IDs are marked alive.
 			from
-				used := Eiffel_table.used
-				used_for_types := Eiffel_table.used_for_types
-				used_for_routines := Eiffel_table.used_for_routines
-				i := used.lower
-				nb := used.upper
+				create l_processed.make (used.count)
 			until
-				i > nb
+				l_done
 			loop
-				if used.item (i) then
-					table := l_tmp_poly_server.item (i)
-					if used_for_routines.valid_index (i) and then used_for_routines.item (i) then
-						table.write
+				from
+					l_done := True
+					i := used.lower
+					nb := used.upper
+				until
+					i > nb
+				loop
+					if used.item (i) and not l_processed.item (i) then
+						table := l_tmp_poly_server.item (i)
+						if used_for_routines.valid_index (i) and then used_for_routines.item (i) then
+							table.write
+						end
+						if used_for_types.valid_index (i) and then used_for_types.item (i) then
+							table.write_for_type
+						end
+						l_processed.put (True, i)
+						l_done := False
 					end
-					if used_for_types.valid_index (i) and then used_for_types.item (i) then
-						table.write_for_type
-					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 
 			generate_initialization_table
@@ -4195,6 +4210,22 @@ feature -- Generation
 			l_buf.put_new_line
 			l_buf.put_string ("void egc_routine_tables_init (void)")
 			l_buf.generate_block_open
+
+				-- Allocate `egc_routines_types', `egc_routines_gen_types' and `egc_routiness_offset'.
+			l_buf.put_new_line
+			l_buf.put_string ("egc_routines_types = (EIF_TYPE_INDEX **) eif_malloc (sizeof(EIF_TYPE_INDEX *) * ")
+			l_buf.put_integer (routine_id_counter.count + 1)
+			l_buf.put_string (");")
+			l_buf.put_new_line
+			l_buf.put_string ("egc_routines_gen_types = (EIF_TYPE_INDEX ***) eif_malloc (sizeof(EIF_TYPE_INDEX **) * ")
+			l_buf.put_integer (routine_id_counter.count + 1)
+			l_buf.put_string (");")
+			l_buf.put_new_line
+			l_buf.put_string ("egc_routines_offset = (int *) eif_malloc (sizeof(int) * ")
+			l_buf.put_integer (routine_id_counter.count + 1)
+			l_buf.put_string (");")
+			l_buf.put_new_line
+
 			from
 				i := used.lower
 				nb := used.upper

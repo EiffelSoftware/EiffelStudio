@@ -70,14 +70,6 @@ feature -- Il code generation
 			il_generator.load_type
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY)
-			-- Generate byte code for a like Current creation type.
-		do
-			ba.append (Bc_ccur)
-		end
-
 feature -- Generic conformance
 
 	generate_gen_type_conversion (a_level: NATURAL)
@@ -133,7 +125,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

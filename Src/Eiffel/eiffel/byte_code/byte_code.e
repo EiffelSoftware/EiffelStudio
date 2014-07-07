@@ -705,6 +705,7 @@ feature -- Byte code generation
 					ba.append (bc_is_attached)
 					create create_info.make (feat.feature_id, r_id)
 					create_info.make_byte_code (ba)
+					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					ba.append (bc_jmp_f)
 					ba.mark_forward3
 				end

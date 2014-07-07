@@ -448,7 +448,7 @@ rt_public struct eif_par_types **egc_partab;
 rt_public EIF_TYPE_INDEX egc_partab_size;
 rt_public void (*egc_system_mod_init) (void);	
 rt_public int egc_type_of_gc;
-rt_public struct eif_opt *egc_foption;	
+rt_public struct eif_opt *egc_foption;
 
 
 #ifdef WORKBENCH
@@ -470,6 +470,9 @@ rt_public void (**egc_exp_create)(EIF_REFERENCE);
 rt_public struct ctable *egc_ce_rname;
 rt_public long *egc_fnbref ;
 rt_public long *egc_fsize;
+rt_public EIF_TYPE_INDEX **egc_routines_types;
+rt_public EIF_TYPE_INDEX ***egc_routines_gen_types;
+rt_public int *egc_routines_offset;
 #endif
 
 #ifdef WORKBENCH

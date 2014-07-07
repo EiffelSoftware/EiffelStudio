@@ -73,10 +73,10 @@ static  char    *names [] = {
 "BC_LASSIGN" ,
 "BC_ASSIGN" ,
 "BC_CREATE" ,
-"BC_CTYPE" ,
-"BC_CARG" ,
-"BC_CLIKE" ,
-"BC_CCUR" ,
+"BC_NOTUSED_27" ,
+"BC_NOTUSED_28" ,
+"BC_NOTUSED_29" ,
+"BC_NOTUSED_30" ,
 "BC_CREATE_TYPE" ,
 "BC_RANGE" ,
 "BC_INSPECT_EXCEP" ,
@@ -207,7 +207,7 @@ static  char    *names [] = {
 "BC_END_CATCALL" ,
 "BC_IS_ATTACHED" ,
 "BC_SPECIAL_EXTEND" ,
-"BC_QLIKE" ,
+"BC_NOTUSED_161" ,
 "BC_NOTUSED_162" ,
 "BC_GUARD" ,
 "BC_CREATION" ,
@@ -318,7 +318,6 @@ static  void    print_instructions (void);
 static  void    print_dtype (int, uint32);
 static  void    print_ctype (short);
 static  void    print_cid (void);
-static	void	get_creation_type (void);
 static  void    advance (int);
 static  void    panic (void);
 
@@ -692,7 +691,7 @@ static  void    print_instructions (void)
 			case BC_END_CATCALL:
 				break;
 			case BC_CATCALL :
-				get_creation_type();
+				print_cid();
 					/* Get rid of modifiers */
 				if (get_bool(&ip)) {
 					(void) get_bool(&ip);
@@ -744,14 +743,14 @@ static  void    print_instructions (void)
 			case  BC_RREVERSE :
 				/* Reverse assignment to 'Result' */
 				/* Static type of target */
-				get_creation_type();
+				print_cid();
 				break;
 			case  BC_LREVERSE :
 				/* Reverse assignment to a local */
 				/* local index */
 				fprintf (ofp,"%d ", (int) get_int16(&ip));
 				/* Static type of target */
-				get_creation_type();
+				print_cid();
 				break;
 			case  BC_REVERSE :
 				/* Attribute */
@@ -760,19 +759,19 @@ static  void    print_instructions (void)
 				/* Meta-type */
 				print_dtype (0, get_uint32(&ip));
 				/* Static type of target */
-				get_creation_type ();
+				print_cid ();
 				break;
 			case  BC_OBJECT_TEST :
 				/* Object test */
 				/* local index */
 				fprintf (ofp,"%d ", (int) get_int16(&ip));
 				/* Static type of target */
-				get_creation_type();
+				print_cid();
 				break;
 			case  BC_IS_ATTACHED :
 				/* Test if a type is attached */
 				/* Static type of target */
-				get_creation_type();
+				print_cid();
 				break;
 /* Creation */
 			case  BC_RCREATE:
@@ -802,7 +801,7 @@ static  void    print_instructions (void)
 						fprintf (ofp," dup_top_object ");
 					}
 
-					get_creation_type ();
+					print_cid ();
 
 					if (is_type_creation) {
 						if (get_bool(&ip)) {
@@ -821,7 +820,7 @@ static  void    print_instructions (void)
 			case BC_SPCREATE:
 				if (get_char8(&ip)) { fprintf (ofp, "make_filled"); }
 				if (get_char8(&ip)) { fprintf (ofp, "make_empty"); }
-				get_creation_type ();
+				print_cid ();
 				fprintf (ofp, " ");
 					/* Read various flags about special we want to create. */
 				if (get_char8(&ip)) {
@@ -1307,53 +1306,6 @@ static  void    print_dtype (int cid, uint32 type)
 	}
 }
 
-/*------------------------------------------------------------------*/
-static void get_creation_type (void)
-	/* Type of creation */
-{
-	unsigned char   cval;
-
-	cval = get_char8(&ip);
-
-	switch (cval)
-	{
-		case  BC_CTYPE :
-			/* creation type */
-			fprintf (ofp, " (BC_CTYPE) ");
-/*GENERIC CONFORMANCE*/
-			print_cid ();
-			break;
-
-		case  BC_CCUR :
-			/* like current */
-			fprintf (ofp, " (BC_CCUR) ");
-			break;
-		case  BC_CARG :
-			/* like argument */
-			/* static creation type */
-			fprintf (ofp, " (BC_CARG) ");
-			get_creation_type ();
-			/* argument index */
-			fprintf (ofp,"%d", (int) get_int16(&ip));
-			break;
-		case  BC_CLIKE :
-			/* like feature */
-			/* creation type */
-			fprintf (ofp, " (BC_CLIKE) ");
-			/* Routine id */
-			fprintf (ofp,"rid=%d", get_int32(&ip));
-			break;
-		case  BC_QLIKE :
-			/* Qualified anchor */
-			/* creation type */
-			fprintf (ofp, " (BC_QLIKE) {");
-			get_creation_type ();
-			fprintf (ofp, "}.");
-			/* Routine id */
-			fprintf (ofp,"rid=%d", get_int32(&ip));
-			break;
-	}
-}
 /*------------------------------------------------------------------*/
 
 static  void    print_ctype (short type)

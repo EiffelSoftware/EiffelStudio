@@ -14,8 +14,9 @@ inherit
 			{FORMAL_A} make
 		redefine
 			generate, generate_type_id, generate_gen_type_conversion,
-			generate_cid, generate_cid_init, generate_cid_array, type_to_create, make_byte_code,
-			analyze, generate_il, type, is_explicit, make_type_byte_code
+			generate_cid, generate_cid_init, generate_cid_array, type_to_create,
+			analyze, generate_il, type, is_explicit, make_type_byte_code,
+			make_byte_code
 		end
 
 create
@@ -72,9 +73,9 @@ feature -- IL code generation
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY)
-			-- Generate byte code for a formal creation type.
+			-- <Precursor>
 		do
-			associated_create_feat.make_byte_code (ba)
+			make_type_byte_code (ba)
 		end
 
 	make_type_byte_code (ba: BYTE_ARRAY)
@@ -138,7 +139,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

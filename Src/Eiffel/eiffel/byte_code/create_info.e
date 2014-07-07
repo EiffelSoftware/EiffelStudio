@@ -88,7 +88,8 @@ feature -- Byte code generation
 		require
 			ba_not_void: ba /= Void
 			context_valid: context.context_class_type.type /= Void
-		deferred
+		do
+			make_type_byte_code (ba)
 		end
 
 feature -- Generic conformance

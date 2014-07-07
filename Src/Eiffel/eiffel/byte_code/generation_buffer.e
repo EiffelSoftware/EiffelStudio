@@ -330,6 +330,25 @@ feature -- Automatically indented output
 			put_hex_natural_64 (v)
 		end
 
+	put_integer_for_type_array (i: INTEGER)
+			-- Write `i' a non-negative integer as a sequence of 16-bit value.
+			-- For values between 0 and 0x7FFF, write the value itself.
+			-- For values between 0x8000 and 0x7FFFFFE, write 1xxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx.
+			-- We do not enabled 0x7FFFFFFF because this would generate 0x8FFF 0xFFFF and the 0xFFFF
+			-- would be considered a terminator which is not what is intended.
+		require
+			i_non_negative: i >= 0
+			i_not_maximum_integer: i < {INTEGER}.max_value
+		do
+			if i <= 0x7FFF then
+				current_buffer.append_integer (i)
+			else
+				put_hex_natural_64 ((i.to_natural_64 |>> 16) | 0x8000)
+				current_buffer.append_character (',')
+				put_hex_natural_64 (i.as_natural_16)
+			end
+		end
+
 	put_hex_natural_32 (v: NATURAL_32)
 			-- Write natural `v' as a 32-bit hexadecimal value.
 		do
@@ -922,7 +941,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

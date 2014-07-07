@@ -39,10 +39,10 @@ feature -- Access
 	Bc_lassign:			CHARACTER = '%/024/';
 	Bc_assign:			CHARACTER = '%/025/';
 	Bc_create:			CHARACTER = '%/026/';
-	Bc_ctype:			CHARACTER = '%/027/';
-	Bc_carg:			CHARACTER = '%/028/';
-	Bc_clike:			CHARACTER = '%/029/';
-	Bc_ccur:			CHARACTER = '%/030/';
+	Bc_not_used_27:		CHARACTER = '%/027/';
+	Bc_not_used_28:		CHARACTER = '%/028/';
+	Bc_not_used_29:		CHARACTER = '%/029/';
+	Bc_not_used_30:		CHARACTER = '%/030/';
 	Bc_create_type:		CHARACTER = '%/031/';
 	Bc_range:			CHARACTER = '%/032/';
 	Bc_inspect_excep:	CHARACTER = '%/033/';

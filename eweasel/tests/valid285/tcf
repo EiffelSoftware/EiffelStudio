@@ -1,0 +1,28 @@
+test_name	missing-vjar-error-2
+test_description With qualified anchored types that relies on another one that hasn't been evaluated yet, the compiler wrongly evaluate types. This involves both missing errors not being reported or improper runtime execution.
+
+copy_sub Ace $TEST Ace
+copy_raw data.e $CLUSTER data.e
+copy_raw document.e $CLUSTER document.e
+copy_raw entity.e $CLUSTER entity.e
+copy_raw entry.e $CLUSTER entry.e
+copy_raw item_list.e $CLUSTER item_list.e
+copy_raw line_item.e $CLUSTER line_item.e
+copy_raw object_proxy.e $CLUSTER object_proxy.e
+copy_raw parent_list.e $CLUSTER parent_list.e
+copy_raw proxiable.e $CLUSTER proxiable.e
+copy_raw proxiable_data.e $CLUSTER proxiable_data.e
+copy_raw proxy.e $CLUSTER proxy.e
+copy_raw proxy_document.e $CLUSTER proxy_document.e
+copy_raw proxy_entity.e $CLUSTER proxy_entity.e
+copy_raw proxy_proxiable_data.e $CLUSTER proxy_proxiable_data.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

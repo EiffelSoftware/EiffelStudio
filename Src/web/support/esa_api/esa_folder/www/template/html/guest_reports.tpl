@@ -260,10 +260,10 @@
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
                        <td class="text-center" itemprop="status"> {if isset="$user"}
-                                                                       <a href="{$host/}/user_reports/{$user/}?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td> 
+                                                                       <a href="{$host/}/user_reports/{$user/}?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td> 
                                                                   {/if}
                                                                   {unless isset="$user"}
-                                                                      <a href="{$host/}/reports?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td>
+                                                                      <a href="{$host/}/reports?category=0&status={$item.status.id/}" rel="filter"><img src="{$host/}/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></a></td>
                                                                   {/unless}
  
                        <td itemprop="synopsis">{$item.synopsis/}</td>

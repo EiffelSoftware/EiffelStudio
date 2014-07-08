@@ -525,6 +525,7 @@ feature -- Response
 		do
 			create h.make
 			h.put_content_type_text_html
+
 			h.add_header_key_value ("Cache-Control", "public; max-age=180")
 			h.put_content_length (output.count)
 			if attached media_variants.vary_header_value as l_vary then

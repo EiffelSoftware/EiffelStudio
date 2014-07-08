@@ -56,12 +56,12 @@
               {foreach from="$status" item="item"}
                     {if condition="$item.is_selected"}
                       <label class="checkbox inline" for="checkboxes-{$item.id/}">
-                         <input type="checkbox" name="status" value="{$item.id/}" checked /><img src="{$host/}/images/status_{$item.synopsis/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}" > 
+                         <input type="checkbox" name="status" value="{$item.id/}" checked /><img src="{$host/}/images/status_{$item.id/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}" > 
                       </label>    
                     {/if}
                     {unless condition="$item.is_selected"}
                               <label class="checkbox inline" for="checkboxes-{$item.id/}">
-                                 <input type="checkbox" name="status" value="{$item.id/}"/><img src="{$host/}/images/status_{$item.synopsis/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}"  >
+                                 <input type="checkbox" name="status" value="{$item.id/}"/><img src="{$host/}/images/status_{$item.id/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}"  >
                               </label>
                     {/unless}
                 {/foreach}
@@ -401,7 +401,7 @@
 
                   <tr>
                        <td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{$item.number/}</a></td>
-                       <td  class="text-center" itemprop="status"><img src="{$host/}/images/status_{$item.status.synopsis/}.gif" class="img-rounded"  data-original-title="{$item.status.synopsis/}"></td>
+                       <td  class="text-center" itemprop="status"><img src="{$host/}/images/status_{$item.status.id/}.gif" class="img-rounded"  data-original-title="{$item.status.synopsis/}"></td>
                        <td  class="text-center" itemprop="priority"><img src="{$host/}/images/priority_{$item.priority.synopsis/}.gif" class="img-rounded" data-original-title="{$item.priority.synopsis/}"></td>
                        <td  class="text-center" itemprop="severity"><img src="{$host/}/images/severity_{$item.severity.synopsis/}.gif" class="img-rounded" data-original-title="{$item.severity.synopsis/}"></td>
                        <td itemprop="synopsis">{$item.synopsis/}</td>

@@ -12,7 +12,7 @@ inherit
 feature -- Logger
 
 
-	log: LOG_LOGGING_FACILITY
+	log: ESA_LOGGING_FACILITY
 		local
 			l_log_writer: LOG_ROLLING_WRITER_FILE
 			l_environment: EXECUTION_ENVIRONMENT

@@ -600,7 +600,7 @@ feature {NONE} -- Recomputation in a different context
 							c [i] := f.feature_name_id
 						end
 						f.nested_check_types (feature_finder.found_site.base_class)
-						q := f.type.instantiated_in (q)
+						q := f.type.recomputed_in (q, new_class_id, feature_finder.found_site, f.written_in)
 					end
 					i := i + 1
 				end

@@ -4,9 +4,9 @@
   {include file="head.tpl"/}     
 
   <body>
-
-    {include file="navbar.tpl"/}  
- 
+  
+     {include file="navbar.tpl"/}  
+    
     <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class ="main">  
 

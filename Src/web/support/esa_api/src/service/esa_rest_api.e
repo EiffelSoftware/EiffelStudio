@@ -64,7 +64,6 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/", l_root_handler, l_methods)
-			router.handle_with_request_methods ("", l_root_handler, l_methods) -- Workaround!!!.
 		end
 
 	configure_api_report

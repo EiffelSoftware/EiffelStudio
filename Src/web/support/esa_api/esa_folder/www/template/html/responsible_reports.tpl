@@ -12,7 +12,9 @@
 
 <div class="row">
    <div class="col-lg-12">
-     <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
+     {if isset="$user"}
+        <form  class="form-inline well" action="{$host/}/reports/" id="search" method="GET" itemprop="search">
+      {/if}    
         <div class="row">
           <div class="col-md-12">
             <div class="row">
@@ -129,7 +131,7 @@
                     <option value="{$item.id/}" selected>  {$item.synopsis/}</option>
                   {/if}
                   {unless condition="$item.id = $view.selected_severity"}
-                    <option style="background-image:url();" value="{$item.id/}"> {$item.synopsis/} </option>
+                    <option value="{$item.id/}"> {$item.synopsis/} </option>
                   {/unless}
                 {/foreach}  
               </select>

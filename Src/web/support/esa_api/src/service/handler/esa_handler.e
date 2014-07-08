@@ -37,12 +37,14 @@ feature -- User
 feature -- Media Type
 
 	current_media_type (req: WSF_REQUEST): detachable READABLE_STRING_32
-			-- Current media type of Void if it's not acceptable.
+			-- Current media type or Void if it's not acceptable.
 		do
 			if attached {STRING} req.execution_variable ("media_type") as l_type then
 				Result := l_type
 			end
 		end
+
+feature -- Absolute Host
 
 	absolute_host (req: WSF_REQUEST; a_path:STRING): STRING
 		do
@@ -51,6 +53,16 @@ feature -- Media Type
 				Result.remove_tail (1)
 			end
 			log.write_debug (generator + ".absolute_host " + Result )
+		end
+
+feature -- Compression
+
+	current_compression (req: WSF_REQUEST): detachable READABLE_STRING_32
+			-- Current compression encoding or Void if it's not acceptable.
+		do
+			if attached {STRING} req.execution_variable ("compression") as l_encoding then
+				Result := l_encoding
+			end
 		end
 
 feature {NONE} -- Implementations

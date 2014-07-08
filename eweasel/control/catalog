@@ -554,6 +554,7 @@ test	bogus-vdrd6-error			valid281 tcf fail validity
 test	missing-vuar2-error			valid282 tcf pass validity anchored_type system-validity
 test	missing-vuar2-error-2		valid283 tcf pass validity anchored_type system-validity
 test	missing-vjar-error			valid284 tcf pass validity anchored_type system-validity
+test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

@@ -1874,13 +1874,13 @@ feature -- Queries
 						INNER JOIN ProblemReportPriorities ON ProblemReports.PriorityID = ProblemReportPriorities.PriorityID
 						INNER JOIN ProblemReportSeverities ON ProblemReports.SeverityID = ProblemReportSeverities.SeverityID
 						INNER JOIN ProblemReportStatus ON ProblemReports.StatusID = ProblemReportStatus.StatusID
-						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
-						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
-						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+						INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+						INNER JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+						INNER JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
 																(select max (ReportResponsibleID) as ReportResponsibleID
 										    from ProblemReportResponsibles prr, ProblemReports pr
 										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  
-						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+						INNER JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 						WHERE $Submitter
 						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
 						AND ProblemReports.StatusID in $StatusSet
@@ -1899,10 +1899,10 @@ feature -- Queries
 			SELECT COUNT(DISTINCT(number))
 			FROM ProblemReports
 			INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
-			LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
-			LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
-			LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
-			LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+			INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+			INNER JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+			INNER JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
+			INNER JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 			WHERE  
 			$Submitter
 			((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))

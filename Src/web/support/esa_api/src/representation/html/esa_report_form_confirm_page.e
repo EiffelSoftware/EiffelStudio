@@ -20,6 +20,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: report_form_confirm.tpl")
 			set_template_folder (html_path)
 			set_template_file_name ("report_form_confirm.tpl")
 			template.add_value (a_host, "host")
@@ -47,7 +48,7 @@ feature {NONE} --Initialization
 			if attached template.output as l_output then
 				representation := l_output
 				debug
-					print (representation)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

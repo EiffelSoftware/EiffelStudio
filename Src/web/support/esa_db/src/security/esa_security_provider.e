@@ -6,10 +6,14 @@ note
 class
 	ESA_SECURITY_PROVIDER
 
+inherit
+
+	REFACTORING_HELPER
+
 feature -- Access
 
 	token: STRING
-			-- Cryptographic random base 64 string
+			-- Cryptographic random base 64 string.
 		do
 			Result := salt_with_size (5)
 				--	Remove trailing equal sign
@@ -17,13 +21,13 @@ feature -- Access
 		end
 
 	salt: STRING
-			-- Cryptographic random number of 16 bytes
+			-- Cryptographic random number of 16 bytes.
 		do
 			Result := salt_with_size (16)
 		end
 
 	password: STRING
-			-- Cryptographic random password of 10 bytes
+			-- Cryptographic random password of 10 bytes.
 		do
 			Result := salt_with_size (10)
 				--	Remove trailing equal signs
@@ -31,7 +35,7 @@ feature -- Access
 		end
 
 	password_hash (a_password, a_salt: STRING): STRING
-			-- Password hash based on password `a_password' and salt value `a_salt'
+			-- Password hash based on password `a_password' and salt value `a_salt'.
 		do
 			Result := sha1_string (a_password + a_salt )
 		end
@@ -39,7 +43,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	salt_with_size (a_val: INTEGER): STRING
-			-- Return a salt with size `a_val'
+			-- Return a salt with size `a_val'.
 		local
 			l_salt: SALT_XOR_SHIFT_64_GENERATOR
 			l_array: ARRAY [INTEGER_8]
@@ -58,7 +62,7 @@ feature {NONE} -- Implementation
 		end
 
 	sha1_string (a_str: STRING): STRING
-			-- SHA1 diggest of `a_str'
+			-- SHA1 diggest of `a_str'.
 		do
 			sha1.update_from_string (a_str)
 			Result := sha1.digest_as_string
@@ -72,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Encoding
-		--! Check existing code to do that!!!.
+
 
 	encode_base_64 (bytes: SPECIAL [INTEGER_8]): STRING_8
 			-- Encodes a byte array into a STRING doing base64 encoding.
@@ -82,6 +86,7 @@ feature -- Encoding
 			i, ptr: INTEGER
 			char: CHARACTER
 		do
+			to_implement ("Check existing code to do that!!!.")
 			create l_output.make_filled (0, ((bytes.count + 2) // 3) * 4)
 			l_remaining := bytes.count
 			from
@@ -134,12 +139,13 @@ feature -- Encoding
 		end
 
 	base64_map: SPECIAL [CHARACTER_8]
-			-- Table for Base64 encoding
+			-- Table for Base64 encoding.
 		once
 			Result := ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/").area
 		end
 
 	encode_value (i: INTEGER_8): INTEGER_8
+			-- Encode `i'.
 		do
 			Result := base64_map [i & 0x3F].code.as_integer_8
 		end

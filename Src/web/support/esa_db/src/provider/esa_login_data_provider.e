@@ -20,14 +20,14 @@ create
 feature -- Initialization
 
 	make (a_connection: ESA_DATABASE_CONNECTION)
-			-- Create a data provider
+			-- Create a data provider.
 		do
 			create {ESA_DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
 			post_execution
 		end
 
 	db_handler: ESA_DATABASE_HANDLER
-			-- Db handler
+			-- Db handler.
 
 feature -- Status Report
 
@@ -40,10 +40,11 @@ feature -- Status Report
 feature -- Access
 
 	countries: ESA_DATABASE_ITERATION_CURSOR [ESA_COUNTRY]
-			-- Countries
+			-- Countries.
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
+			log.write_information (generator + ".countries")
 			create l_parameters.make (0)
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_countries, l_parameters))
 			db_handler.execute_query
@@ -52,12 +53,13 @@ feature -- Access
 		end
 
 	token_from_email (a_email: READABLE_STRING_32): detachable STRING
-			-- Activation token for user with email `a_email' if any
+			-- Activation token for user with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".token_from_email")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {ESA_DATA_PARAMETERS_NAMES}.email_param)
@@ -78,6 +80,7 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".token_from_username")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.email_param)
@@ -92,12 +95,13 @@ feature -- Access
 		end
 
 	membership_creation_date (a_username: STRING): detachable DATE_TIME
-			-- Creation date of membership of user with username `a_username'
+			-- Creation date of membership of user with username `a_username'.
 		require
 			attached_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".membership_creation_date")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -112,12 +116,13 @@ feature -- Access
 		end
 
 	role (a_username: STRING): detachable STRING
-			-- Role associated with user with username `a_username'
+			-- Role associated with user with username `a_username'.
 		require
 			attached_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".role")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -133,12 +138,13 @@ feature -- Access
 		end
 
 	role_description (a_synopsis: STRING): detachable STRING
-			-- Role description for role with synopsis `a_synopsis'
+			-- Role description for role with synopsis `a_synopsis'.
 		require
 			attached_synopsis: a_synopsis /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".role_description")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_synopsis, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -154,11 +160,11 @@ feature -- Access
 		end
 
 	security_questions: ESA_DATABASE_ITERATION_CURSOR [ESA_SECURITY_QUESTION]
-			--	Security questions
+			--	Security questions.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator+".security_questions Execute store procedure GetSecurityQuestions.")
+			log.write_information (generator+".security_questions")
 			create l_parameters.make (0)
 			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetSecurityQuestions", l_parameters))
 			db_handler.execute_reader
@@ -167,12 +173,13 @@ feature -- Access
 		end
 
 	question_from_email (a_email: STRING): detachable STRING
-			-- Security question associated with account with email `a_email' if any
+			-- Security question associated with account with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".question_from_email")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -187,10 +194,11 @@ feature -- Access
 		end
 
 	user_creation_date (a_username: STRING): detachable DATE_TIME
-			-- Last accounts admin page view date for user `a_username'
+			-- Last accounts admin page view date for user `a_username'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".user_creation_date")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -205,12 +213,13 @@ feature -- Access
 		end
 
 	user_from_email (a_email: STRING): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
-			-- User with email `a_email' if any
+			-- User with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".user_from_email")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -225,12 +234,13 @@ feature -- Access
 		end
 
 	user_from_username (a_username: STRING): detachable ESA_USER
-			-- User with username `a_username' if any
+			-- User with username `a_username' if any.
 		require
 			attached_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".user_from_username")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -245,12 +255,13 @@ feature -- Access
 		end
 
 	user_information (a_username: STRING): ESA_USER_INFORMATION
-			-- Full user information from username
+			-- Full user information from username.
 		require
 			attached_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".user_information")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -275,6 +286,7 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".remove_user")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -292,6 +304,7 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".remove_token")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_token, 7), {ESA_DATA_PARAMETERS_NAMES}.registrationtoken_param)
@@ -311,6 +324,7 @@ feature -- Element Settings
 			l_password_salt, l_password_hash: STRING
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".update_password")
 			create l_security
 			l_password_salt := l_security.salt
 			l_password_hash := l_security.password_hash (a_password, l_password_salt)
@@ -331,6 +345,7 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".update_email_from_user_and_token")
 			connect
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_user, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
@@ -347,6 +362,7 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".update_personal_information")
 			connect
 			create l_parameters.make (11)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
@@ -392,6 +408,7 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".change_user_email")
 			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_user, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
@@ -407,7 +424,7 @@ feature -- Factories
 
 	new_country (a_tuple: DB_TUPLE): ESA_COUNTRY
 			-- Build a new country from a db_tuple,
-			-- by default an empty county
+			-- by default an empty county.
 		do
 			create Result.make ("", "")
 			if attached db_handler.read_string (1) as l_item_id and then attached db_handler.read_string (2) as l_item_name then
@@ -417,7 +434,7 @@ feature -- Factories
 
 	new_security_question (a_tuple: DB_TUPLE): ESA_SECURITY_QUESTION
 			-- Build a new country from a db_tuple,
-			-- by default an empty security question
+			-- by default an empty security question.
 		do
 			create Result.make (0, "")
 			if attached db_handler.read_integer_32 (1) as l_item_id and then attached db_handler.read_string (2) as l_item_name then
@@ -427,7 +444,7 @@ feature -- Factories
 
 	new_user: TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 			-- Build a new user from a db_tuple,
-			-- by default an empty user
+			-- by default an empty user.
 		do
 			create Result.default_create
 			if attached db_handler.read_string (1) as l_item_fname then
@@ -443,7 +460,7 @@ feature -- Factories
 
 	new_user_username: ESA_USER
 			-- Build a new user from a db_tuple,
-			-- by default an empty user
+			-- by default an empty user.
 		do
 			create Result.make ("")
 			if attached db_handler.read_string (3) as l_item_name then
@@ -453,7 +470,7 @@ feature -- Factories
 
 	new_user_information: ESA_USER
 			-- Build a new user from a db_tuple,
-			-- by default an empty user
+			-- by default an empty user.
 		do
 			create Result.make ("")
 			if attached db_handler.read_string (3) as l_item_name then
@@ -540,6 +557,7 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
+			log.write_information (generator + ".is_active")
 			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -557,6 +575,7 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
+			log.write_information (generator + ".validate_login")
 			connect
 			create l_parameters.make (2)
 			l_parameters.put (a_username, {ESA_DATA_PARAMETERS_NAMES}.username_param)
@@ -583,13 +602,16 @@ feature -- Status Report
 		local
 			l_token: detachable STRING
 		do
+			log.write_information (generator + ".activation_valid")
 			l_token := token_from_email (a_email)
 			if l_token = Void then
 				if user_from_email(a_email) = Void then
 					set_last_error ("Account not registered with that email address", "Activation validation")
+					log.write_error (generator + ".activation_valid Account not registered with that email address :" + a_email )
 				else
 					-- Account already activated
 				   	set_last_error ("Account with that email address has already been successfully activated", "Activation validation")
+				   	log.write_error (generator + ".activation_valid Account with that email address has already been successfully activated :" + a_email )
 				   	Result := False
 				end
 			elseif a_token.same_string (l_token) then
@@ -598,6 +620,7 @@ feature -- Status Report
 				Result := True
 			else
 				set_last_error ("Specified token does not match one sent.", "Activation validation")
+				log.write_error (generator + ".activation_valid Specified token does not match one sent to email :" + a_email )
 				Result := False
 			end
 		end
@@ -606,6 +629,7 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
+			log.write_information (generator + ".email_token_age")
 			create Result.default_create
 			connect
 			create l_parameters.make (2)
@@ -628,7 +652,7 @@ feature -- Status Report
 feature -- Connection
 
 	connect
-			-- Connect to the database
+			-- Connect to the database.
 		do
 			if not db_handler.is_connected then
 				db_handler.connect
@@ -636,7 +660,7 @@ feature -- Connection
 		end
 
 	disconnect
-			-- Disconnect to the database
+			-- Disconnect to the database.
 		do
 			if db_handler.is_connected then
 				db_handler.disconnect
@@ -646,14 +670,15 @@ feature -- Connection
 feature -- Queries
 
 	Select_countries: STRING = "select CountryId, Country from Countries;"
-		-- SQL Query to retrieve all countries
+		-- SQL Query to retrieve all countries.
 
 	tuple_user: detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
-
+		-- User row with first name, last name and user name.
 
 feature {NONE} -- Implementation
 
 	post_execution
+			-- Post database execution.
 		do
 			if db_handler.successful then
 				set_successful

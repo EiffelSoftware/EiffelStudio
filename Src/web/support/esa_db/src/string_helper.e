@@ -27,6 +27,7 @@ feature -- Access
 		end
 
 	indented_text (pre: READABLE_STRING_8; t: READABLE_STRING_8): READABLE_STRING_8
+			-- Indendted text.
 		local
 			s8: STRING_8
 		do
@@ -38,6 +39,7 @@ feature -- Access
 
 
 	json_encode (a_string: STRING): STRING
+			-- json encode `a_string'.
 		local
 			encode: SHARED_JSON_ENCODER
 		do

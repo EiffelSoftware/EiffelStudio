@@ -86,6 +86,7 @@ feature -- ESA Configuraion
 		-- Configuration
 
  	setup_config
+ 			-- Configure API.
  		local
  			l_configuration_factory: ESA_CONFIGURATION_FACTORY
  		do

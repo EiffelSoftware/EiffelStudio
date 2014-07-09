@@ -13,10 +13,13 @@ feature -- Initialization
 
 	make (a_id:INTEGER; a_question:READABLE_STRING_32)
 			-- Create an object security question with `a_id'
-			-- an `a_question'
+			-- an `a_question'.
 		do
 			id := a_id
 			question := a_question
+		ensure
+			id_set: id = a_id
+			question_set: question = a_question
 		end
 
 feature -- Access
@@ -30,6 +33,7 @@ feature -- Access
 feature -- Output
 
 	output: STRING_8
+			-- String representation.
 		do
 			create Result.make_empty
 			Result.append(" Id: ")

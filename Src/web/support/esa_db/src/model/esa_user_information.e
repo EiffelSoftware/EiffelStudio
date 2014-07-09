@@ -23,72 +23,72 @@ feature {NONE} -- Initialization
 feature -- Access : Personal Information
 
 	username: STRING
-			-- Username
+			-- Username.
 
 	first_name: detachable STRING
-			-- First_name
+			-- First_name.
 
 	last_name: detachable STRING
-			-- Last_name	
+			-- Last_name.	
 
 	email: detachable STRING
-			-- Email
+			-- Email.
 
 	address: detachable STRING
-			-- Street address
+			-- Street address.
 
 	city: detachable STRING
-			-- City
+			-- City.
 
 	country: detachable STRING
-			-- Country
+			-- Country.
 
 	region: detachable STRING
-			-- Region
+			-- Region.
 
 	postal_code: detachable STRING
-			-- Postal_code
+			-- Postal_code.
 
 	telephone: detachable STRING
-			-- Telephone
+			-- Telephone.
 
 	fax: detachable STRING
-			-- Fax
+			-- Fax.
 
 	position: detachable STRING
-			-- Position
+			-- Position.
 
 feature -- Access : Organization Information
 
 	organization_name: detachable STRING
-			-- Organization name
+			-- Organization name.
 
 	organization_email: detachable STRING
-			-- Organization email
+			-- Organization email.
 
 	organization_url: detachable STRING
-			-- Organization_url
+			-- Organization_url.
 
 	organization_address: detachable STRING
-			-- Organization street address
+			-- Organization street address.
 
 	organization_city: detachable STRING
-			-- Organization city
+			-- Organization city.
 
 	organization_country: detachable STRING
-			-- Organization country
+			-- Organization country.
 
 	organization_region: detachable STRING
-			-- Organization region
+			-- Organization region.
 
 	organization_postal_code: detachable STRING
-			-- Organization postal code
+			-- Organization postal code.
 
 	organization_telephone: detachable STRING
-			-- Organization telephone
+			-- Organization telephone.
 
 	organization_fax: detachable STRING
-			-- Organization fax
+			-- Organization fax.
 
 feature -- Change Element
 
@@ -174,7 +174,7 @@ feature -- Change Element
 		end
 
 	set_position ( a_position : STRING)
-			-- Set `position' to `a_position'
+			-- Set `position' to `a_position'.
 		do
 			position := a_position
 		ensure
@@ -182,7 +182,7 @@ feature -- Change Element
 		end
 
 	set_organization_name ( a_organization_name : STRING)
-			-- Set `organization_name' to `a_organization_name'
+			-- Set `organization_name' to `a_organization_name'.
 		do
 			organization_name := a_organization_name
 		ensure
@@ -198,7 +198,7 @@ feature -- Change Element
 		end
 
 	set_organization_url ( a_organization_url : STRING)
-			-- Set `organization_url' to `a_organization_url'
+			-- Set `organization_url' to `a_organization_url'.
 		do
 			organization_url := a_organization_url
 		ensure
@@ -206,7 +206,7 @@ feature -- Change Element
 		end
 
 	set_organization_address ( a_organization_address : STRING)
-			-- Set `organization_address' to `a_organization_address'
+			-- Set `organization_address' to `a_organization_address'.
 		do
 			organization_address := a_organization_address
 		ensure

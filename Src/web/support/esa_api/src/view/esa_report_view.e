@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[ESA_REPORT_CATEGORY]; a_status: LIST[ESA_REPORT_STATUS]; a_user: detachable ANY)
+	make (a_reports: LIST[ESA_REPORT]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[ESA_REPORT_CATEGORY]; a_status: LIST[ESA_REPORT_STATUS]; a_user: detachable ANY)
 			-- Create a new object with reports `a_reports'
 			-- current page `a_index'
 			-- number of pages `a_pages'
@@ -40,8 +40,8 @@ feature -- Access
 	id: detachable STRING
 		-- Report id.
 
-	reports: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
-		-- Possible list of reports with their statistics.
+	reports: LIST[ESA_REPORT]
+		-- Possible list of reports.
 
 	index: INTEGER;
 		--  Current index.

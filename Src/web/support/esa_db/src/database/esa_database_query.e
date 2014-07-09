@@ -7,6 +7,9 @@ class
 	ESA_DATABASE_QUERY
 inherit
 	ESA_SHARED_LOGGER
+
+	REFACTORING_HELPER
+
 create
 	data_reader
 
@@ -15,16 +18,20 @@ feature -- Intialization
 	data_reader (a_query: STRING; a_parameters: STRING_TABLE [ANY])
 			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
+			log.write_information (generator + ".data_reader" + " execute query: " + a_query)
+			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
 			query := a_query
 			parameters := a_parameters
+		ensure
+			query_set: query = a_query
+			parameters_set: parameters = a_parameters
 		end
 
 	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
 			-- Execute the Current sql query.
 		do
-				-- Check test dynamic sequel. to redesign.
-			log.write_information ( generator+".execute_reader for query:" + query)
-					create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
+			to_implement ("Check test dynamic sequel. to redesign.")
+			create {ARRAYED_LIST [DB_RESULT]} Result.make (100)
 			a_base_selection.set_container (Result)
 			set_map_name (a_base_selection)
 			a_base_selection.set_query (query)
@@ -35,22 +42,21 @@ feature -- Intialization
 			a_base_selection.terminate
 		end
 
-	execute_change (a_base_CAHNGE: DB_CHANGE)
+	execute_change (a_base_change: DB_CHANGE)
 			-- Execute the Current sql query .
 		do
-				-- Check test dynamic sequel. to redesign.
-			log.write_information ( generator+".execute_change for query:" + query)
-			a_base_cahnge.set_query (query)
-			a_base_cahnge.execute_query
+			to_implement ("Check test dynamic sequel. to redesign.")
+			a_base_change.set_query (query)
+			a_base_change.execute_query
 		end
 
 feature --  Access
 
 	query: STRING
-			-- SQL query to execute
+			-- SQL query to execute.
 
 	parameters: STRING_TABLE [ANY]
-			-- query parameters
+			-- query parameters.
 
 feature -- Status Report
 
@@ -61,7 +67,7 @@ feature -- Status Report
 		-- Error message if any.
 
 	error_code: INTEGER
-		-- Error code
+		-- Error code.
 
 feature {NONE} -- Implementation
 
@@ -90,5 +96,34 @@ feature {NONE} -- Implementation
 				parameters.forth
 			end
 		end
+
+	log_parameters (a_parameters: like parameters): STRING
+			-- Parameters to log with name and value
+			-- exclude sensitive information.
+		do
+			create Result.make_empty
+			from
+				a_parameters.start
+			until
+				a_parameters.after
+			loop
+				Result.append ("name:")
+				Result.append (a_parameters.key_for_iteration.as_string_32)
+				Result.append (", value:")
+				if
+					a_parameters.key_for_iteration.has_substring ("Password") or else
+					a_parameters.key_for_iteration.has_substring ("password")
+				then
+					-- Data to exclude
+				else
+					if attached a_parameters.item_for_iteration as l_item  then
+						Result.append (l_item.out)
+					end
+				end
+				Result.append ("%N")
+				a_parameters.forth
+			end
+		end
+
 
 end -- ESA_DATABASE_QUERY

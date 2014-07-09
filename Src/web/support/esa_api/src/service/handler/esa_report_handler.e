@@ -8,7 +8,6 @@ note
 				Other features
 				Allow filter reports, by severity, category, status, responsible, submitter.
 				Sorting by report number, severirty, category, submissionDate, release, etc.
-
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,11 +73,7 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Using GET to retrieve resource information.
-			-- If the GET request is SUCCESS, we response with
-			-- 200 OK, and a representation of the root collection JSON
-			-- If the GET request is not SUCCESS, we response with
-			-- 404 Resource not found and their corresponding error in collection json
+			-- <Precursor>
 		local
 			l_role: ESA_USER_ROLE
 		do
@@ -114,6 +109,7 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_role: ESA_USER_ROLE
 		do
@@ -149,7 +145,7 @@ feature -- Implementation
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_pages: INTEGER
-			l_row: TUPLE [ESA_REPORT_STATISTICS, LIST [ESA_REPORT]]
+			l_row: LIST [ESA_REPORT]
 			l_report_view: ESA_REPORT_VIEW
 			list_status: LIST [ESA_REPORT_STATUS]
 			l_categories: LIST [ESA_REPORT_CATEGORY]
@@ -308,7 +304,7 @@ feature -- Implementation
 				if attached api_service.problem_report_details (l_user, a_id) as l_report then
 					create {ARRAYED_LIST[ESA_REPORT]} l_list.make (1)
 					l_list.force (l_report)
-					create l_report_view.make ([create {ESA_REPORT_STATISTICS},l_list],0,0, api_service.all_categories,api_service.status, l_user)
+					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user)
 					l_report_view.set_id (a_id.out)
 					l_report_view.set_responsibles (api_service.responsibles)
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
@@ -320,10 +316,10 @@ feature -- Implementation
 
 
 	user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: READABLE_STRING_32)
-			-- List of reports for a user `a_user' with role Guest or User
+			-- List of reports for a user `a_user' with role Guest or User.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: TUPLE [ESA_REPORT_STATISTICS, LIST [ESA_REPORT]]
+			l_row: LIST [ESA_REPORT]
 			l_pages: INTEGER
 			l_category: INTEGER
 			l_status: INTEGER

@@ -18,10 +18,14 @@ create
 feature -- Initialization
 
 	make (a_handler: ESA_DATABASE_HANDLER; a_action: like action)
-			--  Create an iterator with a `a_handler'
+			--  Create an iterator and set  `db_handlet' to `a_handler'
+			--  `action' to `a_action'
 		do
 			db_handler := a_handler
 			action := a_action
+		ensure
+			db_handler_set: db_handler = a_handler
+			action_set: action = a_action
 		end
 
 feature -- Access
@@ -33,7 +37,7 @@ feature -- Access
 		end
 
 	db_item: DB_TUPLE
-			-- Current element
+			-- Current element.
 		do
 			if attached {DB_TUPLE} db_handler.item as l_item then
 				Result := l_item
@@ -54,7 +58,7 @@ feature -- Status report
 feature -- Cursor movement
 
 	start
-			-- Set the cursor on first element
+			-- Set the cursor on first element.
 		do
 			db_handler.start
 		end
@@ -82,6 +86,6 @@ feature -- Action
 feature {NONE} -- Implementation
 
 	db_handler: ESA_DATABASE_HANDLER
-			-- Associated handler used for iteration
+			-- Associated handler used for iteration.
 
 end

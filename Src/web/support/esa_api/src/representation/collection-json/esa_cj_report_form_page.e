@@ -22,6 +22,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_form_report.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
@@ -49,7 +50,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 
@@ -59,6 +60,7 @@ feature {NONE} --Initialization
 	make_with_data (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make_with_data render template: cj_form_report.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
@@ -96,7 +98,7 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all ("},]", "}]")
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make_with_data " + l_output)
 				end
 			end
 
@@ -109,6 +111,7 @@ feature {NONE} --Initialization
 		local
 			l_message: STRING
 		do
+			log.write_information (generator + ".make_with_error render template: cj_form_report.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
@@ -153,7 +156,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make_with_error " + l_output)
 				end
 			end
 		end

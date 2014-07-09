@@ -1,5 +1,14 @@
 note
-	description: "Summary description for {USER_ROLE}."
+	description: "[
+				Objects that represent a user role
+				
+				The role of a user can be one of the following:
+					Guest   Anonymous visitor.
+					User	Eiffel Software web site user.
+					Admin	Eiffel Software web site administrator.
+					InternalUser	Internal user, has access to special pr categories but cannot edit web site.
+					Responsible	Eiffel Software developer, responsible for fixing reported problems.				
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,6 +21,9 @@ create
 feature -- Initialization
 
 	make (a_synopsis: STRING; a_description: STRING)
+			-- Create an object instance
+			-- Set `synopsis' to `a_synopsis'
+			-- Set `description' to `a_description'.
 		do
 			synopsis := a_synopsis
 			description := a_description
@@ -23,10 +35,10 @@ feature -- Initialization
 feature -- Access
 
 	synopsis: STRING
-			-- Role synopsis
+			-- Role synopsis.
 
 	description: STRING
-			-- Role description
+			-- Role description.
 
 feature -- Status Report
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_DATABASE_SQL_SERVER_ENCODER}."
+	description: "Help to encode sql queries, to prevent sql injections."
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "SQL server injection", "src=http://blogs.msdn.com/b/raulga/archive/2007/01/04/dynamic-sql-sql-injection.aspx", "protocol=url"
@@ -29,6 +29,5 @@ feature -- Escape SQL input
 				end
 			end
 			Result := l_string
-			log.write_debug (generator + ".encode for : " + a_string + " result: " + Result )
 		end
 end

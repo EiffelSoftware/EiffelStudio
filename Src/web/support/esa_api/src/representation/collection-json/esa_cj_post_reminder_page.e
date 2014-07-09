@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CJ_POST_REMINDER_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,6 +20,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_email: detachable STRING)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_post_reminder.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_post_reminder.tpl")
 			template.add_value (a_host, "host")
@@ -36,7 +36,7 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all (">", "}")
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_information (generator + ".make " + l_output)
 				end
 			end
 		end

@@ -19,7 +19,7 @@ create
 feature -- Initialization
 
 	make_common
-			-- Create a database handler for ODBC with common settings
+			-- Create a database handler for ODBC with common settings.
 		local
 			l_retried: BOOLEAN
 		do
@@ -41,6 +41,7 @@ feature -- Initialization
 		rescue
 			create db_control.make
 			set_last_error_from_exception ("Connection execution")
+			log.write_critical (generator + ".make_common:" + last_error_message)
 			if is_connected then
 				disconnect
 			end
@@ -49,6 +50,8 @@ feature -- Initialization
 		end
 
 	make_basic (a_database_name: STRING)
+			-- Create a database handler and
+			-- set database_name to `a_database_name'.
 		local
 			l_retried: BOOLEAN
 		do
@@ -70,6 +73,7 @@ feature -- Initialization
 		rescue
 			create db_control.make
 			set_last_error_from_exception ("Connection execution")
+			log.write_critical (generator + ".make_common:" + last_error_message)
 			if is_connected then
 				disconnect
 			end
@@ -79,7 +83,10 @@ feature -- Initialization
 
 	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
-			-- Create a database handler for ODBC
+			-- Create a database handler for ODBC and set `username' to `a_username',
+			-- `password' to `a_password'
+			-- `database_name' to `a_database_name'
+			-- `connection' to `a_connection'
 		do
 			create db_application.login (a_username, a_password)
 			db_application.set_hostname (a_hostname)
@@ -95,7 +102,7 @@ feature -- Initialization
 	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'and immediately connect to database.
 		do
-			log.write_information (generator +".login_with_connection_string " + a_string )
+			log.write_debug (generator +".login_with_connection_string")
 			create db_application.login_with_connection_string (a_string)
 			db_application.set_base
 			create db_control.make
@@ -114,6 +121,6 @@ feature -- Initialization
 feature -- Databse Connection
 
 	db_application: DATABASE_APPL [ODBC]
-			-- Database application
+			-- Database application.
 
 end

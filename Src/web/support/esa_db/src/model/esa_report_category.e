@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {REPORT_CATEGORY}."
+	description: "[
+				Objects that represent a report category. 
+				The name of the product, component or concept where the problem lies. 
+				In order to get the best possible support, please select the category carefully.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,43 +21,57 @@ create
 feature {NONE} -- Initialization
 
 	make (a_id: INTEGER; a_synop: READABLE_STRING_32; a_active: BOOLEAN)
+			--  Create an object instance with
+			-- Set `id' to `a_id'
+			-- Set `synopsis' to `a_synop'
+			-- Set `is_active' to `a_active'
 		do
 			id := a_id
 			synopsis := a_synop
 			is_active := a_active
+		ensure
+			id_set: id = a_id
+			synopsis_set: synopsis = a_synop
+			is_active_set: is_active = a_active
 		end
 
 feature -- Access
 
 	id: INTEGER
+		-- Unique Id.
 
 	synopsis: READABLE_STRING_32
+		-- Short description.
 
 	is_active: BOOLEAN
+		-- Is current active?
 
 feature -- Change Element
 
 	set_id (a_id: INTEGER)
-			-- Set `id' with `a_id'
+			-- <Precursor>
 		do
 			id := a_id
 		end
 
 	set_synopsis (a_synopsis: like synopsis)
-			-- Set `synopsis' with `a_synopsis'
+			-- <Precursor>
 		do
 			synopsis := a_synopsis
 		end
 
 	set_is_active (a_val: BOOLEAN)
-			-- Set `is_active' with `a_val'
+			-- Set `is_active' with `a_val'.
 		do
 			is_active := a_val
+		ensure
+			is_active_set: is_active = a_val
 		end
 
 feature -- Output
 
 	string: STRING_8
+			-- String representation.
 		do
 			Result := synopsis.string
 			if is_active then

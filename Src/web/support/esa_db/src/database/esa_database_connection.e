@@ -15,7 +15,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_common
-			-- Create a database handler with common settings
+			-- Create a database handler with common settings.
 		deferred
 		ensure
 			db_application_not_void: db_application /= Void
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make_basic ( a_database_name: STRING)
 			-- Create a database handler with common settings and
- 			-- database_name `a_database_name'.
+ 			-- set database_name with `a_database_name'.
 		require
 			database_name_not_void: a_database_name /= Void
 			database_name_not_empty: not a_database_name.is_empty
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
 			-- Create a database handler with user `a_username', password `a_password',
-			-- host `a_hostname', database_name `a_database_name', and keep_connection `connection'
+			-- host `a_hostname', database_name `a_database_name', and keep_connection `connection'.
 		require
 			username_not_void: a_username /= Void
 			username_not_empty: not a_username.is_empty
@@ -64,10 +64,10 @@ feature {NONE} -- Initialization
 feature -- Database Setup
 
 	db_application: DATABASE_APPL [DATABASE]
-			-- Database application
+			-- Database application.
 
 	db_control: DB_CONTROL
-			-- Database control
+			-- Database control.
 
 	keep_connection: BOOLEAN
 			-- Keep connection alive?
@@ -75,7 +75,7 @@ feature -- Database Setup
 feature -- Conection
 
 	connect
-			-- Connect to the database
+			-- Connect to the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do
@@ -85,7 +85,7 @@ feature -- Conection
 		end
 
 	disconnect
-			-- Disconnect from the database
+			-- Disconnect from the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do
@@ -93,7 +93,7 @@ feature -- Conection
 		end
 
 	is_connected: BOOLEAN
-			-- True if connected to the database
+			-- True if connected to the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do

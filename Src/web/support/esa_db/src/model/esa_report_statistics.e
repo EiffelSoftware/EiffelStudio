@@ -9,19 +9,19 @@ class
 feature -- Access
 
 	open: NATURAL
- 		--  Number of open issues
+ 		--  Number of open issues.
 
 	analyzed: NATURAL
- 		-- Number of  analyzed issues
+ 		-- Number of  analyzed issues.
 
 	closed: NATURAL
-		-- Number of closed issues
+		-- Number of closed issues.
 
 	suspended: NATURAL
-		-- Number of suspended issues
+		-- Number of suspended issues.
 
 	wont_fix: NATURAL
-		-- Number of won't fix issues
+		-- Number of won't fix issues.
 
 feature -- Change element
 

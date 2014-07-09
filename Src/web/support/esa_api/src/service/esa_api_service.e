@@ -42,114 +42,86 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): LIST[ESA_REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
-			l_statistics: ESA_REPORT_STATISTICS
 		do
-			log.write_debug (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
+			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
 			data_provider.connect
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
-			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order) as c loop
 				l_report := c.item
-				if attached l_report.status as ll_status then
-						update_statistics (l_statistics, ll_status)
-						l_report.set_status (ll_status)
-				end
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
-			Result := [l_statistics, l_list]
+			Result := l_list
 			post_data_provider_execution
 		end
 
 
-	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32):TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): LIST[ESA_REPORT]
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
 		local
-			l_status: LIST[ESA_REPORT_STATUS]
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
-			l_statistics: ESA_REPORT_STATISTICS
 		do
 			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
-			l_status := status
 
 			data_provider.connect
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
-			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_description, a_synopsis) as c loop
 				l_report := c.item
-				if attached l_report.status as ll_status then
-						update_statistics (l_statistics, ll_status)
-						l_report.set_status (ll_status)
-				end
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
-			Result := [l_statistics, l_list]
+			Result := l_list
 			post_data_provider_execution
 		end
 
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST[ESA_REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
-			l_statistics: ESA_REPORT_STATISTICS
 		do
 			log.write_debug (generator + ".problem_reports Problem reports for username:" + a_username + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out )
 
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
-			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
 				l_report := c.item
-				if attached l_report.status as ll_status then
-					update_statistics (l_statistics, ll_status)
-					l_report.set_status (ll_status)
-				end
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
-			Result := [l_statistics, l_list]
+			Result := l_list
 			post_data_provider_execution
 		end
 
-	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32): TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32): LIST[ESA_REPORT]
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_status: LIST[ESA_REPORT_STATUS]
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
-			l_statistics: ESA_REPORT_STATISTICS
 		do
 			log.write_debug (generator + ".problem_reports2 Problem reports for username:" + a_username + " page_number:" + a_page_number.out + "rows_per_page:" + a_rows_per_page.out + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out + " column:" + a_column + " order:" + a_order.out)
 
-			l_status := status
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
-			create l_statistics
 			data_provider.connect
 			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_open_only, a_category, a_status, a_column, a_order) as c loop
 				l_report := c.item
-				if attached l_report.status as ll_status then
-					update_statistics (l_statistics, ll_status)
-					l_report.set_status (ll_status)
-				end
 				l_list.force (l_report)
 			end
 			data_provider.disconnect
-			Result := [l_statistics, l_list]
+			Result := l_list
 			post_data_provider_execution
 		end
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_DATABASE_CONNECTION_NULL}."
+	description: "Null object to meet Void Safe."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ create
 feature -- Initialization
 
 	make_common
-			-- Create a database handler for ODBC with common settings
+			-- Create a database handler for ODBC with common settings.
 		do
 			create db_application.login (username, password)
 			db_application.set_hostname (hostname)
@@ -31,14 +31,14 @@ feature -- Initialization
 
 	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
-			-- Create a database handler for ODBC
+			-- Create a database handler for ODBC.
 		do
 			make_common
 		end
 
 	make_basic (a_database_name: STRING)
 
-			-- Create a database handler for ODBC
+			-- Create a database handler for ODBC.
 		do
 			make_common
 		end
@@ -55,11 +55,11 @@ feature -- Initialization
 feature -- Databse Connection
 
 	db_application: DATABASE_APPL[ESA_NULL_DATABASE]
-			-- Database application
+			-- Database application.
 
 
 	is_connected: BOOLEAN
-			-- True if connected to the database
+			-- True if connected to the database.
 		do
 			Result := True
 		end

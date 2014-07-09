@@ -30,7 +30,7 @@ feature -- Status Report
 feature -- Element Change
 
 	set_selected_id (a_val: INTEGER)
-			-- Set `selected_id' with `a_val'
+			-- Set `selected_id' with `a_val'.
 		require
 			id_positive: a_val >= 0
 		do
@@ -40,7 +40,7 @@ feature -- Element Change
 		end
 
 	set_synopsis (a_synopsis: like synopsis)
-			-- Set `synopsis' with `a_synopsis'		
+			-- Set `synopsis' with `a_synopsis'.		
 		deferred
 		ensure
 			synopsis_set: synopsis.same_string (a_synopsis)

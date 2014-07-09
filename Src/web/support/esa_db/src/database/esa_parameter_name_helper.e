@@ -9,7 +9,7 @@ deferred class
 feature -- String
 
 	string_parameter (a_value: STRING; a_length: INTEGER): STRING
-			-- Adjust a parameter `a_value' to the lenght `a_length'
+			-- Adjust a parameter `a_value' to the lenght `a_length'.
 		require
 			valid_length: a_length > 0
 		do

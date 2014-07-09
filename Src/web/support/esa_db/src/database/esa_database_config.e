@@ -9,16 +9,16 @@ deferred class
 feature -- Database access
 
 	hostname: STRING = ""
-			-- Database hostname
+			-- Database hostname.
 
 	username: STRING = ""
-			-- Database username
+			-- Database username.
 
 	password: STRING = ""
-			-- Database password
+			-- Database password.
 
 	database_name: STRING = "EiffelDB"
-			-- Database name
+			-- Database name.
 
 	is_keep_connection: BOOLEAN
 			-- Keep Connection to database?

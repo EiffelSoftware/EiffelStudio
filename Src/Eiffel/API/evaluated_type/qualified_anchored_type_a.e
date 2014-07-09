@@ -587,8 +587,10 @@ feature {NONE} -- Recomputation in a different context
 				loop
 						-- Find a corresponding feature in the written type.
 					feature_finder.find_by_routine_id (routine_id [i], q, w)
-					check
-						is_feature_found: attached feature_finder.found_feature as f
+					if
+						attached feature_finder.found_feature as f and then
+						attached feature_finder.found_site as l_site and then
+						attached l_site.base_class as l_site_class
 					then
 						if f.feature_name_id /= c [i] then
 								-- New feature name is used.
@@ -599,8 +601,11 @@ feature {NONE} -- Recomputation in a different context
 							end
 							c [i] := f.feature_name_id
 						end
-						f.nested_check_types (feature_finder.found_site.base_class)
-						q := f.type.recomputed_in (q, new_class_id, feature_finder.found_site, f.written_in)
+						f.nested_check_types (l_site.base_class)
+						q := f.type.recomputed_in (q, new_class_id, l_site, l_site_class.class_id)
+					else
+							-- An internal compiler error occurred here.
+						check feature_found: False end
 					end
 					i := i + 1
 				end

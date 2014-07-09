@@ -1899,10 +1899,10 @@ feature -- Queries
 			SELECT COUNT(DISTINCT(number))
 			FROM ProblemReports
 			INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
-			INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
-			INNER JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
-			INNER JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
-			INNER JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+			LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+			LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+			LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
+			LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 			WHERE  
 			$Submitter
 			((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))

@@ -1874,9 +1874,9 @@ feature -- Queries
 						INNER JOIN ProblemReportPriorities ON ProblemReports.PriorityID = ProblemReportPriorities.PriorityID
 						INNER JOIN ProblemReportSeverities ON ProblemReports.SeverityID = ProblemReportSeverities.SeverityID
 						INNER JOIN ProblemReportStatus ON ProblemReports.StatusID = ProblemReportStatus.StatusID
-						INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
-						INNER JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
-						INNER JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
 																(select max (ReportResponsibleID) as ReportResponsibleID
 										    from ProblemReportResponsibles prr, ProblemReports pr
 										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  

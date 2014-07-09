@@ -21,6 +21,7 @@ feature {NONE} --Initialization
 		local
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
+			log.write_information (generator + ".make render template: reports.tpl")
 			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
 			set_selected_category (a_view.categories,a_view.selected_category)
 
@@ -32,8 +33,7 @@ feature {NONE} --Initialization
 			set_template_file_name ("reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view, "view")
-			template.add_value (a_view.reports.at (1), "statistics")
-			template.add_value (a_view.reports.at (2), "reports")
+			template.add_value (a_view.reports, "reports")
 			template.add_value (a_view.categories, "categories")
 			template.add_value (a_view.status, "status")
 			template.add_value (a_view.selected_status, "selected_status")
@@ -64,7 +64,7 @@ feature {NONE} --Initialization
 			if attached template.output as l_output then
 				representation := l_output
 				debug
-					print (representation)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

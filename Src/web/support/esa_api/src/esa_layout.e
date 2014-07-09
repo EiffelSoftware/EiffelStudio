@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_LAYOUT}."
+	description: "[API Layout, to provide paths(config, application, log, documentation, www, html cj)]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +13,7 @@ create
 feature {NONE} -- Initialization
 
 	make_default
+			-- Create a default layout based on current working directory.
 		local
 			p: PATH
 		do
@@ -22,6 +23,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_path (p: PATH)
+			-- Create a layour based on a path `p'.
 		do
 			path := p.absolute_path.canonical_path
 		end
@@ -44,29 +46,32 @@ feature -- Access: internal
 			Result := config_path.extended ("esa_application_configuration.json")
 		end
 
-
 	logs_path: PATH
+			-- Directory for logs.
 		once
 			Result := path.extended ("logs")
 		end
 
 	documentation_path: PATH
-			-- directory for iron documentation	
+			-- Directory for API documentation.
 		once
 			Result := path.extended ("doc")
 		end
 
 	www_path: PATH
+			-- Directory for www.
 		once
 			Result := path.extended ("www")
 		end
 
 	html_template_path: PATH
+			-- Directory for html.
 		once
 			Result := www_path.extended ("template").extended ("html")
 		end
 
 	cj_template_path: PATH
+			-- Directory for cj.
 		once
 			Result := www_path.extended ("template").extended ("cj")
 		end

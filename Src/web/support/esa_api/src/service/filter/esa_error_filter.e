@@ -32,7 +32,6 @@ feature -- Basic operations
 			if esa_config.is_successful and then esa_config.api_service.successful then
 				log.write_information (generator + ".execute")
 				execute_next (req, res)
-
 			else
 				log.write_critical (generator + ".execute" + esa_config.api_service.last_error_message )
 				create l_rhf

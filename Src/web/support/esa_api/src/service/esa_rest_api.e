@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_REST_API}."
+	description: "REST API configuration"
 	date: "$Date$"
 	revision: "$Revision$"
 

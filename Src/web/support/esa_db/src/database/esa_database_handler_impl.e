@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_connection: ESA_DATABASE_CONNECTION)
-			-- Create a database handler with connnection `connection'
+			-- Create a database handler with connnection `connection'.
 		do
 			connection := a_connection
 			create last_query.make_now
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Functionality
 
 	execute_reader
-			-- Execute stored procedure that returns data
+			-- Execute stored procedure that returns data.
 		local
 			l_db_selection: DB_SELECTION
 			l_retried: BOOLEAN
@@ -63,7 +63,7 @@ feature -- Functionality
 		end
 
 	execute_writer
-			-- Execute stored procedure that update/add data
+			-- Execute stored procedure that update/add data.
 		local
 			l_db_change: DB_CHANGE
 			l_retried : BOOLEAN
@@ -100,7 +100,7 @@ feature -- Functionality
 feature -- SQL Queries
 
 	execute_query
-			-- Execute query
+			-- Execute query.
 		local
 			l_db_selection: DB_SELECTION
 			l_retried: BOOLEAN
@@ -119,10 +119,9 @@ feature -- SQL Queries
 					disconnect
 				end
 				set_successful
-				log.write_debug ( generator+".execute_query Successful")
 			end
 		rescue
-			set_last_error_from_exception ("Query execution")
+			set_last_error_from_exception ("execute_query")
 			log.write_critical (generator+ ".execute_query " + last_error_message)
 			if is_connected then
 				disconnect
@@ -133,7 +132,7 @@ feature -- SQL Queries
 
 
 	execute_change
-			-- Execute sqlquery that update/add data
+			-- Execute sqlquery that update/add data.
 		local
 			l_db_change: DB_CHANGE
 			l_retried : BOOLEAN
@@ -153,7 +152,6 @@ feature -- SQL Queries
 					disconnect
 				end
 				set_successful
-				log.write_debug ( generator+".execute_change Successful")
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")
@@ -169,7 +167,7 @@ feature -- SQL Queries
 feature -- Iteration
 
 	start
-			-- Set the cursor on first element
+			-- Set the cursor on first element.
 		do
 			if attached db_selection as l_db_selection and then l_db_selection.container /= Void then
 				l_db_selection.start
@@ -177,7 +175,7 @@ feature -- Iteration
 		end
 
 	forth
-			-- Move cursor to next element
+			-- Move cursor to next element.
 		do
 			if attached db_selection as l_db_selection then
 				l_db_selection.forth
@@ -187,7 +185,7 @@ feature -- Iteration
 		end
 
 	after: BOOLEAN
-			-- True for the last element
+			-- True for the last element.
 		do
 			if attached db_selection as l_db_selection and then l_db_selection.container /= Void then
 				Result := l_db_selection.after or else l_db_selection.cursor = Void
@@ -197,7 +195,7 @@ feature -- Iteration
 		end
 
 	item: DB_TUPLE
-			-- Current element
+			-- Current element.
 		do
 			if attached db_selection as l_db_selection and then attached l_db_selection.cursor as l_cursor then
 				create {DB_TUPLE} Result.copy (l_cursor)
@@ -210,25 +208,25 @@ feature -- Iteration
 feature {NONE} -- Implementation
 
 	connection: ESA_DATABASE_CONNECTION
-		-- Database connection
+		-- Database connection.
 
 	db_control: DB_CONTROL
-		-- Database control
+		-- Database control.
 		do
 			Result := connection.db_control
 		end
 
 	db_result: detachable DB_RESULT
-		-- Database query result
+		-- Database query result.
 
 	db_selection: detachable DB_SELECTION
-		-- Database selection
+		-- Database selection.
 
 	db_update: detachable DB_CHANGE
-		-- Database modification	
+		-- Database modification.	
 
 	last_query: DATE_TIME
-		-- Last time when a query was executed
+		-- Last time when a query was executed.
 
 	keep_connection: BOOLEAN
 		-- Keep connection alive?
@@ -237,7 +235,7 @@ feature {NONE} -- Implementation
 		end
 
 	connect
-			-- Connect to the database
+			-- Connect to the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do
@@ -247,7 +245,7 @@ feature {NONE} -- Implementation
 		end
 
 	disconnect
-			-- Disconnect from the database
+			-- Disconnect from the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do
@@ -255,7 +253,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_connected: BOOLEAN
-			-- True if connected to the database
+			-- True if connected to the database.
 		require else
 			db_control_not_void: db_control /= Void
 		do
@@ -263,7 +261,7 @@ feature {NONE} -- Implementation
 		end
 
 	affected_row_count: INTEGER
-			--  The number of rows changed, deleted, or inserted by the last statement
+			--  The number of rows changed, deleted, or inserted by the last statement.
 		do
 			if attached db_update as l_update then
 				Result := l_update.affected_row_count
@@ -273,7 +271,7 @@ feature {NONE} -- Implementation
 feature -- Result
 
 	items : detachable LIST[DB_RESULT]
-		-- Query result
+		-- Query result.
 
 	count: INTEGER
 			-- <Precursor>

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_DATABASE_ERROR}."
+	description: "Error from Database"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +13,10 @@ inherit
 feature -- Access
 
 	last_error: detachable ESA_ERROR_HANDLER
+			-- Last error, if any.
 
 	last_error_message: READABLE_STRING_32
+			-- Last error message, if any, or empty string.
 		do
 			if attached last_error as ll_error then
 				Result := ll_error.error_message

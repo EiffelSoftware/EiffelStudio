@@ -22,6 +22,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_interaction_confirm.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_interaction_confirm.tpl")
 			template.add_value (a_host, "host")
@@ -51,7 +52,7 @@ feature {NONE} --Initialization
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
-			
+
 				-- Workaround
 			if attached template.output as l_output then
 				l_output.replace_substring_all ("<", "{")
@@ -61,7 +62,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

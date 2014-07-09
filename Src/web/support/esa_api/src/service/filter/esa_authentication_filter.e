@@ -40,11 +40,11 @@ feature -- Basic operations
 					req.set_execution_variable ("user", create {ESA_USER}.make (l_auth_login))
 					execute_next (req, res)
 				else
-					log.write_debug (generator + ".execute login_valid failed for: " + l_auth_login )
+					log.write_error (generator + ".execute login_valid failed for: " + l_auth_login )
 					execute_next (req, res)
 				end
 			else
-				log.write_debug (generator + ".execute Not valid")
+				log.write_error (generator + ".execute Not valid")
 				execute_next (req, res)
 			end
 		end

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CJ_CHANGE_EMAIL_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +19,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY; a_view: ESA_EMAIL_VIEW)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_change_email.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_change_email.tpl")
 			template.add_value (a_host, "host")
@@ -43,7 +43,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

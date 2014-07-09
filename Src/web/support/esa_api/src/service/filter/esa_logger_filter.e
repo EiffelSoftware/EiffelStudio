@@ -22,7 +22,7 @@ create
 feature -- Basic operations
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the filter
+			-- Execute the filter.
 		local
 			s: STRING_8
 		do

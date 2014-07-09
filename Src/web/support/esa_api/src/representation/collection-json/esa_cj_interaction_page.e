@@ -21,6 +21,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_interaction_form.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_interaction_form.tpl")
 			template.add_value (a_host, "host")
@@ -52,7 +53,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_information (generator + ".make " + l_output)
 				end
 			end
 

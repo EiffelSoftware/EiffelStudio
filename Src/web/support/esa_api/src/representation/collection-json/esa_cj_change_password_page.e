@@ -22,6 +22,7 @@ feature {NONE} --Initialization
 		local
 			l_error: STRING
 		do
+			log.write_information (generator + ".make render template: cj_change_password.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_change_password.tpl")
 			template.add_value (a_host, "host")
@@ -57,7 +58,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_information (generator + ".make " + l_output)
 				end
 			end
 		end

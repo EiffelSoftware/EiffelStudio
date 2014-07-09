@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {NULL_DATABASE}."
+	description: "Null object to meet void safe"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +13,7 @@ inherit
 feature -- Acccess
 
 	database_handle_name: STRING = "NULL"
+			-- Handle name
 
 feature -- For DATABASE_STATUS
 
@@ -533,7 +534,5 @@ feature -- External features
 			-- Begin a data base transaction
 		do
 		end
-
-
 
 end

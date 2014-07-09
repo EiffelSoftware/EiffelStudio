@@ -20,6 +20,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: cj_confirmation.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_confirmation.tpl")
 			template.add_value (a_host, "host")
@@ -34,7 +35,7 @@ feature {NONE} --Initialization
 				l_output.replace_substring_all (">", "}")
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

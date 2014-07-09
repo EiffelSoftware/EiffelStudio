@@ -13,7 +13,7 @@ feature {NONE} -- Initialization
 
 	make (a_id: READABLE_STRING_32; a_name: READABLE_STRING_32)
 			-- Create a new object Country with id set to `a_id'
-			-- and name set to `a_name'
+			-- and name set to `a_name'.
 		do
 			id := a_id
 			name := a_name
@@ -31,14 +31,13 @@ feature -- Access
 		-- Country name.	
 
 	ouput: STRING_8
-			-- Country output
+			-- Country output.
 		do
 			create Result.make_empty
 			Result.append (" Id: ")
 			Result.append (id)
 			Result.append (" Name: ")
 			Result.append("%N")
-
 			Result.append (name)
 		end
 

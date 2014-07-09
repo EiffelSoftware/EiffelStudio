@@ -21,6 +21,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL;a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: ch_responsible_reports.tpl")
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_responsible_reports.tpl")
 			template.add_value (a_host, "host")
@@ -62,7 +63,7 @@ feature {NONE} --Initialization
 
 				representation := l_output
 				debug
-					print ("%N===========%N" + l_output)
+					log.write_debug (generator + ".make " + l_output)
 				end
 			end
 		end

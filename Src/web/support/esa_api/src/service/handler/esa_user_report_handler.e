@@ -66,7 +66,7 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: TUPLE[ESA_REPORT_STATISTICS,LIST[ESA_REPORT]]
+			l_row: LIST[ESA_REPORT]
 			l_view: ESA_REPORT_VIEW
 			l_status: INTEGER
 			l_category: INTEGER

@@ -20,6 +20,7 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
+			log.write_information (generator + ".make render template: home.tpl")
 			set_template_folder (html_path)
 			set_template_file_name ("home.tpl")
 			template.add_value (a_host, "host")
@@ -31,7 +32,9 @@ feature {NONE} --Initialization
 			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
-				log.write_debug (generator + ".make%N " + l_output)
+				debug
+					log.write_debug (generator + ".make%N " + l_output)
+				end
 			end
 		end
 

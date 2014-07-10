@@ -27,19 +27,10 @@
             </div>
         </div>  
         <hr>
-        <!--div class="row">
-            <div class="container">
-                <footer>
-                    <p class="text-muted"><a href="{$host/}/doc/esa_doc.html" target="_blank" class="info">API Documentation </a></p>
-                    <p class="text-muted"><a href="http://www.eiffel.com/company/contact/" target="_blank" class="info">Questions? Comments? Let us know! </a></p>
-                    <p class="text-muted">© Copyright 2014 Eiffel Software -- <a href="http://www.eiffel.com/privacy-policy" target="_blank" class="info">Privacy Policy</a> </p>
-                </footer>
-
-            </div>
-        </div> -->
+     
         <div id="footer">
             <div class="container">
-                <p class="text-muted"><a href="{$host/}/doc/esa_doc.html" target="_blank" class="info">API Documentation </a></p>
+                <p class="text-muted"><a href="{$host/}/static/doc/esa_doc.html" target="_blank" class="info">API Documentation </a></p>
                 <p class="text-muted"><a href="http://www.eiffel.com/company/contact/" target="_blank" class="info">Questions? Comments? Let us know! </a></p>
                 <p class="text-muted">© Copyright 2014 Eiffel Software -- <a href="http://www.eiffel.com/privacy-policy" target="_blank" class="info">Privacy Policy</a> </p>
             </div>

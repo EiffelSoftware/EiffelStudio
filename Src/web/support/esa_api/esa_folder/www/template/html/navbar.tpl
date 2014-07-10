@@ -14,7 +14,7 @@
 	    <input type="hidden" name="host" value="{$host/}">
              <div class="controls">
                 <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
-                <input type="reset" class="btn btn-default" value="Reset"></p> <img src="{$host/}/images/ajax-loader.gif" style="display: none;" id="imgProgress" />
+                <input type="reset" class="btn btn-default" value="Reset"></p> <img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="imgProgress" />
              </div>   
           </form>
       </div>

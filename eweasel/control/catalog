@@ -2875,6 +2875,7 @@ test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreade
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock
 test	deadlock-synchronous-2-cycle			deadlock003 tcf manual scoop multithreaded deadlock lock_passing
 test	deadlock-synchronous-3-cycle			deadlock004 tcf manual scoop multithreaded deadlock lock_passing
+test	deadlock-synchronous-n-cycle			deadlock005 tcf manual scoop multithreaded deadlock
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

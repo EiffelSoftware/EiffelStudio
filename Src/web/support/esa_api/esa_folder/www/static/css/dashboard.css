@@ -152,6 +152,21 @@ body {
   }
 }
 
+.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
+.navbar {min-height:32px !important}
+
+.navbar-brand {
+      float: left;
+      padding: 15px;
+      padding-top: 5px;
+      padding-right: 15px;
+      padding-bottom: 5px;
+      padding-left: 15px;
+      font-size: 18px;
+      line-height: 20px;
+      height: 20px;
+}
+
 
 /* Tooltips */
 .blue-tooltip + .tooltip > .tooltip-inner {background-color: #FF;}

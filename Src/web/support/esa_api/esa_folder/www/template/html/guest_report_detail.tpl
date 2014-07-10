@@ -49,10 +49,12 @@
               <div class="col-sm-4 lightblue">
                   <span class="label label-primary-api-default" itemprop="responsible">Responsible:</span> <td></td> </br>
               </div>
-              <div class="col-sm-4 lightblue">
+           </div>
+           <div class="row">
+               <div class="col-sm-4 lightblue">
                   <span class="label label-primary-api-default" itemprop="environment">Environment:</span> <td>{$report.environment/}</td> </br>
               </div>
-           </div>
+            </div>  
             <div class="row">
                 <div class="col-sm-4 lightblue">
                   <span class="label label-primary-api-default" itemprop="synopsis">Synopsis:</span> <td>{$report.synopsis/}</td> </br>

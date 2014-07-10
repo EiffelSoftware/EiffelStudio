@@ -19,7 +19,8 @@
           <fieldset>
             <legend><h1>Problem Report Interaction Submission</h1></legend>
             <p> Fill in the description for the new interaction for the <strong>{$form.report.status.synopsis/}</strong> problem report {$form.report.number/}.</p>
-            <div class="control-group" has-error>
+            <div class="row">
+             <div class="col-md-12">
               <label class="control-label" for="textarea">Description</label>
               <div class="controls">
                 <textarea class="form-control input-xlarge" id="description" name="description"  rows="4" placeholder="Give a description of the problem" required form="report">{$form.description/}</textarea>

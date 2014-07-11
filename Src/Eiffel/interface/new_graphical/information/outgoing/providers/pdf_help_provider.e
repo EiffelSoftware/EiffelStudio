@@ -76,11 +76,8 @@ feature -- Basic operations
 		require
 			a_string_not_void: a_string /= Void
 			a_entry_not_void: a_entry /= Void
-		local
-			l_args: detachable STRING
 		do
-			l_args := pdf_arguments_from_entry (a_entry)
-			if l_args /= Void then
+			if attached pdf_arguments_from_entry (a_entry) as l_args then
 				a_string.append (acrobat_url_sep)
 				a_string.append (l_args)
 			end
@@ -91,15 +88,12 @@ feature -- Basic operations
 		require
 			a_string_not_void: a_string /= Void
 			a_entry_not_void: a_entry /= Void
-		local
-			l_args: detachable STRING
 		do
-			l_args := pdf_arguments_from_entry (a_entry)
 			a_string.append (acrobat_command_string)
-			if l_args /= Void then
+			if attached pdf_arguments_from_entry (a_entry) as l_args then
 				a_string.append (acrobat_action_string)
 				a_string.append (quoted_string (l_args))
-				a_string.append (" ")
+				a_string.append_character (' ')
 			end
 		end
 
@@ -142,8 +136,8 @@ feature -- Basic operations
 			a_string_not_void: a_string /= Void
 		do
 			create Result.make_from_string (a_string)
-			Result.prepend ("%"")
-			Result.append ("%"")
+			Result.prepend_character ('"')
+			Result.append_character ('"')
 		ensure
 			Result_not_void: Result /= Void
 		end

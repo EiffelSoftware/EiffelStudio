@@ -71,21 +71,16 @@ feature {NONE} -- Initialization
 			grid_events.disable_vertical_scrolling_per_item
 
 				-- Register action to display context menus.
-			register_action (grid_events.pointer_button_release_actions, agent (ia_widget: ES_GRID; ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
-				local
-					l_item: EV_GRID_ITEM
+			register_action (grid_events.pointer_button_release_item_actions, agent (ia_x, ia_y, ia_button: INTEGER; a_item: detachable EV_GRID_ITEM)
 				do
-					if ia_button = {EV_POINTER_CONSTANTS}.right then
-						if ia_widget.is_header_displayed then
-							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y - ia_widget.header.height)
+					if ia_button = {EV_POINTER_CONSTANTS}.right and a_item /= Void then
+						if a_item.parent.is_header_displayed then
+							show_context_menu (a_item, ia_x - a_item.parent.virtual_x_position, (ia_y + a_item.parent.header.height) - a_item.parent.virtual_y_position)
 						else
-							l_item := ia_widget.item_at_virtual_position (ia_x, ia_y)
-						end
-						if l_item /= Void then
-							show_context_menu (l_item, ia_x, ia_y)
+							show_context_menu (a_item, ia_x - a_item.parent.virtual_x_position, ia_y - a_item.parent.virtual_y_position)
 						end
 					end
-				end (grid_events, ?, ?, ?, ?, ?, ?, ?, ?))
+				end)
 
 			Precursor
 
@@ -1328,7 +1323,7 @@ invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

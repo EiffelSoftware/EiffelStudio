@@ -80,19 +80,16 @@ feature {NONE} -- Implementation
 							id: STRING;
 							parameters: STRING_TABLE [STRING_32];
 							override: BOOLEAN]
-			l_key, l_value: STRING_32
+			l_key, l_value, l_default: STRING_32
 			l_source_pos, l_source_len: INTEGER
 			l_count, l_removed_chars: INTEGER
 		do
 			last_source_ast := Void
 			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
-				l_entry_tuple := [Void, Void, Void, Void, Void, Void, False]
 				create l_parameters.make (3)
 				create l_tags.make (2)
-				l_entry_tuple.parameters := l_parameters
-				l_entry_tuple.tags := l_tags
-				l_entry_tuple.id := a_eis_id
+				l_entry_tuple := [l_default, l_default, l_default, l_tags, a_eis_id, l_parameters, False]
 				from
 					l_index_list.start
 				until
@@ -363,7 +360,7 @@ feature {NONE} -- Implemetation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -181,6 +181,7 @@ body {
   border-width: 5px 5px 0;
 }
 .tooltip-inner {
+  text-align: left;
   color: #000;
   background: #fff;
   border: solid 1px #000000;

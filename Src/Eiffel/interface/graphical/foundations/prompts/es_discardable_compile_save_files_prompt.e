@@ -58,6 +58,8 @@ feature {NONE} -- User interface initialization
 				create l_list
 				l_list.disable_border
 				l_list.hide_header
+				l_list.hide_vertical_scroll_bar
+				l_list.hide_horizontal_scroll_bar
 
 					-- Current hack because EV_GRID does not implement EV_TAB_CONTROLABLE				
 				l_tabbable ?= l_list
@@ -119,7 +121,7 @@ invariant
 	class_list_contains_attached_items: not class_list.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

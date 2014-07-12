@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 				-- Template description
 			l_template_description := l_definition.metadata.description
 			if not l_template_description.is_empty then
-				create l_description.make
+				create l_description
 				l_description.align_text_left
 				l_description.set_is_text_wrapped (True)
 				l_description.set_text (l_template_description)

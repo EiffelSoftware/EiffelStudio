@@ -95,7 +95,6 @@ feature -- Element change
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			now_is_shown: not is_shown
 		do
 			context_class := a_class
 			context_feature := a_feature
@@ -239,7 +238,7 @@ feature {NONE} -- Basic operation
 				-- Clear the contract grid
 			l_grid := contract_grid
 			l_grid.lock_update
-			l_grid.clear
+			l_grid.wipe_out
 
 			has_content := False
 
@@ -512,7 +511,7 @@ invariant
 	edit_contract_label_set: edit_contract_label /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

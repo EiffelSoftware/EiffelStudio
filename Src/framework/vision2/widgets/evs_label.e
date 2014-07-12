@@ -1,6 +1,9 @@
 note
 	description: "[
 		An EiffelVision2 label extension that supports text wrapping and text ellipsing.
+		Make sure to call `calculate_size' before it is shown to ensure a more realistic display,
+		that is to say, if you create the label and then show it, no text will be visible unless
+		you call `calculate_size' or that a resizing occurred.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,12 +17,16 @@ inherit
 	EV_LABEL
 		rename
 			text as label_text,
-			set_text as set_label_text
+			set_text as set_label_text,
+			make_with_text as make_with_label_text
 		export
 			{NONE} label_text, set_label_text, set_minimum_height, set_minimum_width, set_minimum_size
 		redefine
 			set_font,
-			remove_text
+			remove_text,
+			create_interface_objects,
+			initialize,
+			is_in_default_state
 		end
 
 	EV_SHARED_APPLICATION
@@ -39,18 +46,20 @@ inherit
 		end
 
 create
-	make
+	default_create, make, make_with_text
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initialize new wrappable label.
-			-- Note: Be sure to call `calculate_size' before the label has been shown!
+	create_interface_objects
+			-- <Precursor>
 		do
 			create text.make_empty
-			default_create
+		end
+
+	initialize
+			-- <Precursor>
+		do
 			align_text_left
-			create text.make_empty
 			resize_actions.extend (agent (a,b,c,d: INTEGER_32)
 				do
 					resize_actions.block
@@ -59,6 +68,27 @@ feature {NONE} -- Initialization
 				end)
 			maximum_height := -1
 			maximum_width := -1
+		end
+
+	make
+			-- Initialize new wrappable label.
+		obsolete
+			"Use `default_create' or `make_with_text' instead."
+		do
+			default_create
+		end
+
+	make_with_text (a_text: READABLE_STRING_GENERAL)
+			-- <Precursor>
+		do
+			default_create
+			set_text (a_text)
+		end
+
+	is_in_default_state: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_left_aligned
 		end
 
 feature -- Access
@@ -77,7 +107,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_text (a_text: like text)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -91,9 +121,9 @@ feature -- Element change
 			l_sizes: like measure_words
 			l_cache: HASH_TABLE [INTEGER, STRING_32]
 		do
-			text := a_text
+			text := a_text.as_string_32
 
-			l_lines := a_text.split ('%N')
+			l_lines := text.split ('%N')
 			create l_cache.make (13)
 			create l_text_lines.make (1)
 			create l_text_sizes.make (1)
@@ -342,6 +372,12 @@ feature {NONE} -- Line rendering
 	text_sizes: detachable LIST [ARRAY [INTEGER]]
 			-- Sizes of text fragments
 
+	version: NATURAL_32
+			-- Current version of label.
+			-- Because some label updates are done during idle actions, we do not want them to update
+			-- the label with the old content in the case a new text was set after the idle action was
+			-- added but before the idle action has been executed.
+
 	resize_text (a_resizing: BOOLEAN)
 			-- Sizes the text set by the user to fit on screen label dimensions specified.
 		local
@@ -363,10 +399,10 @@ feature {NONE} -- Line rendering
 			l_stop: BOOLEAN
 			l_len: INTEGER
 			l_size: TUPLE [width, height, left, right: INTEGER]
---			l_dummy: EV_LABEL
 		do
+				-- Reset `minimum_height' since it might have been set previously
+				-- and with resizing it will have to be recomputed.
 			reset_minimum_height
-			reset_minimum_width
 
 			l_wrapped := is_text_wrapped
 			l_ellipsed := is_text_ellipsed
@@ -476,24 +512,16 @@ feature {NONE} -- Line rendering
 							end
 						end
 
-							-- Set height
+							-- Set height of label accordingly to 
 						l_size := l_font.string_size (l_text)
 						if is_maximum_height_set_by_user then
+								-- Because user requested a maximum height, we
+								-- need to ensure it.
 							set_minimum_height (l_size.height.min (l_max_height))
-						else
-							set_minimum_height (l_size.height)
 						end
-					else
-						set_minimum_height (l_size.height)
 					end
 
-	-- For experimental purposes, this code is commented out.
---						-- Create a dummy label so we can retrieve the label padding.
---					create l_dummy.make_with_text ("O")
---					l_dummy.set_font (l_font)
-
---					set_minimum_width (l_size.width + l_size.right + l_size.left + (l_dummy.width - l_font.string_width (l_dummy.text)))
-
+					version := version + 1
 					if a_resizing then
 							-- Cannot do `set_label_text' during resizing events.
 							-- If we do so, somehow in an EV_VERTICAL_BOX_IMP,
@@ -507,11 +535,19 @@ feature {NONE} -- Line rendering
 							-- {EV_HORIZONTAL_BOX_IMP}.set_children_width uses the updated minimum value.
 							-- The consequence is the text wrapping is incorrectly computed
 							-- according to a wrong `width'.
-						ev_application.do_once_on_idle (agent set_label_text (l_text))
+						ev_application.do_once_on_idle (agent update_label_text (l_text, version))
 					else
-						set_label_text (l_text)
+						update_label_text (l_text, version)
 					end
 				end
+			end
+		end
+
+	update_label_text (a_text: STRING_32; a_version: NATURAL_32)
+			-- If `a_version' matches `version' update current with `a_text'.
+		do
+			if version = a_version then
+				set_label_text (a_text)
 			end
 		end
 
@@ -523,7 +559,7 @@ invariant
 			attached text_lines as inv_text_lines) implies inv_text_lines.count = inv_text_sizes.count
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

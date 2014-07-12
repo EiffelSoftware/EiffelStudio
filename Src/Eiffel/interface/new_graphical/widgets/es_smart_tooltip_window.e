@@ -160,13 +160,22 @@ feature {NONE} -- Action handlers
 			if l_widget.has_parent then
 				l_widget.show
 			else
-				popup_window.lock_update
-				widget_container.wipe_out
-				widget_container.extend (l_widget)
+					-- If `widget_container' has no widget, we extend it with
+					-- `l_widget' (the `popup_widget'). If it already has one
+					-- and it is already the same, we do nothing to avoid flickering,
+					-- otherwise we remove and add the widget (which might cause some
+					-- flickering).
+				if not widget_container.is_empty then
+					if widget_container.first /= l_widget then
+						widget_container.wipe_out
+						widget_container.extend (l_widget)
+					end
+				else
+					widget_container.extend (l_widget)
+				end
 				if not widget_container.is_displayed then
 					widget_container.show
 				end
-				popup_window.unlock_update
 			end
 		end
 
@@ -254,8 +263,10 @@ feature {NONE} -- Implementation
 	ensure_popup_window_visible_on_screen
 			-- Ensures the popup window is visible on screen, given the bounding edges
 		do
-				-- Let the window be smallest and grow to fit new widget's size.
-			popup_window.set_size (1, 1)
+				-- Let the window be smallest possible and grow to fit new widget's size.
+			popup_window.resize_actions.block
+			popup_window.set_size (popup_window.minimum_width, popup_window.minimum_height)
+			popup_window.resize_actions.resume
 			Precursor
 		end
 
@@ -266,7 +277,7 @@ feature {NONE} -- Implementation
 			-- Cached version of `popup_widget'
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

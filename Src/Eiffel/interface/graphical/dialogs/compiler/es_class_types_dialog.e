@@ -65,7 +65,7 @@ feature {NONE} -- Initialization: User interface
 			l_border: ES_BORDERED_WIDGET [ES_GRID]
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
-			create l_label.make
+			create l_label
 			l_label.is_text_wrapped := True
 			l_label.set_text (locale_formatter.formatted_translation (lb_info, [associated_class.name_in_upper]))
 			a_container.extend (l_label)
@@ -300,13 +300,13 @@ feature {NONE} -- Constants
 feature {NONE} -- Initialization
 
 	t_dialog_title: STRING = "Select Class Type"
-	lb_info: STRING = "The selected class $1 has multiple internal representations associated with it. Please select the appropriate represntation to open:"
+	lb_info: STRING = "The selected class $1 has multiple internal representations associated with it. Please select the appropriate representation to open:"
 
 invariant
 	associated_class_attached: attached associated_class
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

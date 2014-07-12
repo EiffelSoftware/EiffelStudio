@@ -558,7 +558,6 @@ feature {NONE} -- Option behaviour
 			l_list: like choice_list
 		do
 			l_list := choice_list
-			lock_update
 				-- Save selected item
 			if l_list.has_selected_row then
 				local_name ?= l_list.selected_rows.first.data
@@ -580,7 +579,6 @@ feature {NONE} -- Option behaviour
 				l_list.row (local_index).ensure_visible
 			end
 			resize_column_to_window_width
-			unlock_update
 		end
 
 	apply_show_return_type (a_b: BOOLEAN)
@@ -591,7 +589,6 @@ feature {NONE} -- Option behaviour
 			l_list: like choice_list
 		do
 			l_list := choice_list
-			lock_update
 			if l_list.has_selected_row then
 				local_index := l_list.selected_rows.first.index
 			end
@@ -616,7 +613,6 @@ feature {NONE} -- Option behaviour
 				ensure_item_selection
 			end
 			resize_column_to_window_width
-			unlock_update
 		end
 
 	apply_show_completion_signature (a_b: BOOLEAN)
@@ -654,7 +650,6 @@ feature {NONE} -- Option behaviour
 	apply_remember_window_size (a_b: BOOLEAN)
 			-- Apply remembering window size.
 		do
-			lock_update
 			if a_b then
 				save_window_position
 			else
@@ -662,7 +657,6 @@ feature {NONE} -- Option behaviour
 				resize_window_to_column_width
 				resize_column_to_window_width
 			end
-			unlock_update
 		end
 
 feature {NONE} -- Recyclable
@@ -718,7 +712,7 @@ feature {NONE} -- Action handlers
 						if tooltip_window = Void then
 							create tooltip_window.make
 						end
-						tooltip_window.set_popup_widget (l_widget)
+						tooltip_window.set_popup_widget (l_widget.widget)
 						if is_displayed then
 							show_tooltip (a_r)
 						end
@@ -769,22 +763,19 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Implementation
 
-	contract_widget_from_row (a_row: EV_GRID_ROW): detachable EV_WIDGET
-			-- Contract widget from a grid row
-		require
-			a_row_set: a_row /= Void
+	contract_widget: TUPLE [widget: EV_WIDGET; comment: EVS_LABEL; viewer: ES_CONTRACT_VIEWER_WIDGET]
+			-- Reference to the tooltip widget.
+
+	new_contract_widget: like contract_widget
+			-- Create all the necessary widgets to display the tooltip.
 		local
 			l_viewer: ES_CONTRACT_VIEWER_WIDGET
-			l_c: CLASS_C
-			l_f: E_FEATURE
-			l_comment_preview: EVS_LABEL
 			l_v: EV_VERTICAL_BOX
 			l_h: EV_HORIZONTAL_BOX
-			l_tt_text: STRING_32
 			l_padding: EV_CELL
 			l_sep: EV_HORIZONTAL_SEPARATOR
 			l_widget: EV_WIDGET
-			l_screen: EV_RECTANGLE
+			l_comment_preview: EVS_LABEL
 		do
 			create l_v
 
@@ -804,7 +795,7 @@ feature {NONE} -- Implementation
 			l_h.extend (l_padding)
 			l_h.disable_item_expand (l_padding)
 
-			create l_comment_preview.make
+			create l_comment_preview
 			l_h.extend (l_comment_preview)
 
 			create l_padding
@@ -824,6 +815,47 @@ feature {NONE} -- Implementation
 			l_comment_preview.is_text_wrapped := True
 			l_comment_preview.set_background_color (colors.tooltip_color)
 
+			create l_viewer.make
+			l_viewer.is_showing_full_contracts := True
+			l_viewer.set_auto_check_visible (False)
+			l_viewer.set_is_showing_comments (False)
+			l_viewer.set_is_showing_edit_contract_button (False)
+			l_widget := l_viewer.widget
+			l_v.extend (l_widget)
+			color_propogator.propagate_colors (l_widget, Void, contract_background_color, Void)
+
+			Result := [l_v, l_comment_preview, l_viewer]
+		end
+
+	contract_widget_from_row (a_row: EV_GRID_ROW): like contract_widget
+			-- Contract widget from a grid row
+		require
+			a_row_set: a_row /= Void
+		local
+			l_viewer: ES_CONTRACT_VIEWER_WIDGET
+			l_c: CLASS_C
+			l_f: E_FEATURE
+			l_tt_text: STRING_32
+			l_screen: EV_RECTANGLE
+			l_comment_preview: EVS_LABEL
+		do
+			if attached contract_widget as l_widget then
+				Result := l_widget
+			else
+				Result := new_contract_widget
+				contract_widget := Result
+			end
+			l_comment_preview := Result.comment
+			l_viewer := Result.viewer
+
+			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
+				l_f := l_completion_feature.associated_feature
+				l_c := l_f.associated_class
+				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
+				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
+				l_viewer.set_context (l_c, l_f)
+			end
+
 			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
 				l_tt_text := l_completion_feature.tooltip_text
 			elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
@@ -836,43 +868,10 @@ feature {NONE} -- Implementation
 					l_tt_text.append ("...")
 				end
 				l_comment_preview.set_text (l_tt_text)
-				last_comment := l_tt_text
 			else
 				l_comment_preview.set_text (interface_names.l_no_comment)
-				last_comment := interface_names.l_no_comment
 			end
-			last_comment_label := l_comment_preview
-
-			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
-				l_f := l_completion_feature.associated_feature
-				l_c := l_f.associated_class
-				if attached last_contract_widget as l_cw then
-					l_cw.recycle
-				end
-				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
-				create l_viewer.make
-				last_contract_widget := l_viewer
-				l_viewer.is_showing_full_contracts := True
-				l_viewer.set_auto_check_visible (False)
-				l_viewer.set_is_showing_comments (False)
-				l_viewer.set_is_showing_edit_contract_button (False)
-				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
-				l_viewer.set_context (l_c, l_f)
-				l_widget := l_viewer.widget
-				l_v.extend (l_widget)
-				color_propogator.propagate_colors (l_widget, Void, contract_background_color, Void)
-			end
-			Result := l_v
 		end
-
-	last_comment: STRING_32
-			-- Last generated comment.
-
-	last_comment_label: EVS_LABEL
-			-- Last generated label for comment.
-
-	last_contract_widget: ES_CONTRACT_VIEWER_WIDGET
-			-- Last contract widget
 
 	color_propogator: ES_COLOR_PROPAGATOR
 			-- Color propogator
@@ -898,7 +897,6 @@ feature {NONE} -- Implementation
 			-- Process displayable character key press event.
 		local
 			c: CHARACTER
-			l_closed: BOOLEAN
 		do
 			if character_string.count = 1 then
 				if code_completable.is_completing then
@@ -926,7 +924,6 @@ feature {NONE} -- Implementation
 				elseif not code_completable.unwanted_characters.item (c.code) then
 					if not code_completable.is_char_activator_character (c) then
 						close_and_complete
-						l_closed := True
 					elseif code_completable.has_selection then
 						code_completable.go_to_end_of_line
 					end
@@ -1022,9 +1019,7 @@ feature {NONE} -- Implementation
 			-- Cancel autocomplete
 		do
 			Precursor
-			if
-				attached tooltip_window as l_w and then not l_w.is_recycled
-			then
+			if attached tooltip_window as l_w and then not l_w.is_recycled then
 				l_w.hide
 			end
 			if code_completable.is_focus_back_needed then
@@ -1137,7 +1132,7 @@ feature {NONE} -- Implementation
 			-- Timer to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

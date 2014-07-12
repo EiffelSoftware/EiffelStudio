@@ -397,7 +397,6 @@ feature {NONE} -- Cursor movement
 		do
 			if choice_list.row_count > 0 then
 				if choice_list.has_selected_row then
-					lock_update
 					l_selected_row := choice_list.selected_rows.first.index
 					if not choice_list.visible_row_indexes.has (l_selected_row) then
 						l_selected_row := choice_list.visible_row_indexes.first
@@ -421,7 +420,6 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
-					unlock_update
 				end
 			end
 		end
@@ -440,7 +438,7 @@ feature {NONE} -- Cursor movement
 			if choice_list.row_count > 0 then
 				if choice_list.has_selected_row then
 					l_rows := choice_list.selected_rows
-					lock_update
+
 					l_selected_row := l_rows.first.index
 					if not choice_list.visible_row_indexes.has (l_selected_row) then
 						l_selected_row := choice_list.visible_row_indexes.last
@@ -464,7 +462,7 @@ feature {NONE} -- Cursor movement
 					choice_list.remove_selection
 					choice_list.row (l_last_selectable).enable_select
 					choice_list.row (l_last_selectable).ensure_visible
-					unlock_update
+
 				end
 			end
 		end
@@ -1255,10 +1253,8 @@ feature {NONE} -- String matching
 						-- To prevent flickering due to the potential
 						-- hidding/showing of scrollbars we lock ourselve
 						-- while rebuilding the list.
-					lock_update
 					build_displayed_list (buffered_input)
 					resize_column_to_window_width
-					unlock_update
 				end
 			end
 			ensure_item_selection

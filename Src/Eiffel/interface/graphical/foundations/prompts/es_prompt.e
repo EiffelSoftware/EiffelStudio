@@ -99,7 +99,6 @@ feature {NONE} -- User interface initialization
 			l_cell: EV_CELL
 			l_icon: EV_PIXMAP
 			l_large_icon: EV_PIXEL_BUFFER
-			l_can_lock: BOOLEAN
 		do
 			create l_vbox
 			create l_hbox
@@ -142,15 +141,7 @@ feature {NONE} -- User interface initialization
 				l_vbox.disable_item_expand (l_vbox.last)
 			end
 
-			l_can_lock := (ev_application.locked_window = Void)
-
-			if internal_dialog /= Void and l_can_lock then
-				internal_dialog.lock_update
-			end
 			propagate_prompt_background_color (a_container, colors.prompt_banner_color)
-			if internal_dialog /= Void and l_can_lock then
-				internal_dialog.unlock_update
-			end
 		end
 
 	build_prompt_interface (a_container: EV_VERTICAL_BOX)
@@ -164,7 +155,7 @@ feature {NONE} -- User interface initialization
 			is_initializing: is_initializing
 		do
 				-- Prompt sub title
-			create prompt_sub_title_label.make
+			create prompt_sub_title_label
 			prompt_sub_title_label.align_text_left
 			prompt_sub_title_label.set_font (fonts.prompt_sub_title_font)
 			prompt_sub_title_label.set_foreground_color (colors.prompt_sub_title_foreground_color)
@@ -172,7 +163,7 @@ feature {NONE} -- User interface initialization
 			prompt_sub_title_label.hide
 
 				-- Prompt text
-			create prompt_text.make
+			create prompt_text
 			prompt_text.align_text_left
 			prompt_text.set_font (fonts.prompt_text_font)
 			prompt_text.set_foreground_color (colors.prompt_text_foreground_color)
@@ -750,7 +741,7 @@ invariant
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

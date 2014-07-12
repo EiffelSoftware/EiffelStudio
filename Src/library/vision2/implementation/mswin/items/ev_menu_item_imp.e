@@ -552,7 +552,6 @@ feature {NONE} -- WEL Implementation
 			selected_state, disabled_state: BOOLEAN
 			rect: WEL_RECT
 			right_plain_text_pos: INTEGER
-			border_width: INTEGER
 			space_width: INTEGER
 		do
 			draw_dc := draw_item_struct.dc
@@ -603,12 +602,14 @@ feature {NONE} -- WEL Implementation
 					draw_flags := draw_flags | Wel_drawing_constants.Dt_hideprefix
 				end
 
+					-- Default spacing between text and accelerator, and the right border.
+					-- We use the letter `o' so that the spacing is proportional to the chosen font.
+					-- See `{EV_MENU_IMP}.on_measure_menu_item'.
+				space_width := menu_font.string_width ("o")
 					-- Compute the right offset of the end of the plain text
 				if accelerator_text_position = 0 then
-					border_width := menu_font.string_width ("WC")
-					right_plain_text_pos := right_pos - border_width
+					right_plain_text_pos := right_pos - space_width
 				else
-					space_width := menu_font.string_width ("W")
 					right_plain_text_pos := left_pos + accelerator_text_position - space_width
 				end
 
@@ -630,8 +631,10 @@ feature {NONE} -- WEL Implementation
 					rect.set_rect (left_pos + plain_text_position, text_top_pos, right_plain_text_pos, bottom_pos)
 					draw_dc.draw_text (plain_text, rect, draw_flags)
 
-					rect.set_rect (left_pos + accelerator_text_position, text_top_pos, right_pos, bottom_pos)
-					draw_dc.draw_text (accelerator_text, rect, Wel_drawing_constants.Dt_left | Wel_drawing_constants.Dt_expandtabs)
+					if not accelerator_text.is_empty then
+						rect.set_rect (left_pos + accelerator_text_position, text_top_pos, right_pos, bottom_pos)
+						draw_dc.draw_text (accelerator_text, rect, Wel_drawing_constants.Dt_left | Wel_drawing_constants.Dt_expandtabs)
+					end
 				else
 					draw_dc.set_background_color (background_color)
 					draw_dc.set_text_color (foreground_color)
@@ -639,8 +642,10 @@ feature {NONE} -- WEL Implementation
 					rect.set_rect (left_pos + plain_text_position, text_top_pos, right_plain_text_pos, bottom_pos)
 					draw_dc.draw_text (plain_text, rect, draw_flags)
 
-					rect.set_rect (left_pos + accelerator_text_position, text_top_pos, right_pos, bottom_pos)
-					draw_dc.draw_text (accelerator_text, rect, Wel_drawing_constants.Dt_left | Wel_drawing_constants.Dt_expandtabs)
+					if not accelerator_text.is_empty then
+						rect.set_rect (left_pos + accelerator_text_position, text_top_pos, right_pos, bottom_pos)
+						draw_dc.draw_text (accelerator_text, rect, Wel_drawing_constants.Dt_left | Wel_drawing_constants.Dt_expandtabs)
+					end
 				end
 				draw_dc.unselect_font
 			end

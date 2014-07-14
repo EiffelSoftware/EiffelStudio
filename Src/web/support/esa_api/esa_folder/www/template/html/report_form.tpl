@@ -16,7 +16,7 @@
         {/unless}
           <fieldset>
             <legend>Problem Report Submission</legend>
-             <p>Use this page to submit a problem report. If you haven't already we strongly suggest that you read the <a href="{$host/}/doc/howto.html" target="_blank" class="info" >instructions for submitting problem reports.</a></p> 
+             <p>Use this page to submit a problem report. If you haven't already we strongly suggest that you read the <a href="{$host/}/static/doc/howto.html" target="_blank" class="info" >instructions for submitting problem reports.</a></p> 
             <div class="row">
               <div class="col-md-2" itemprop="category">
                 <label class="control-label" for="input01" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Product/Category</label>

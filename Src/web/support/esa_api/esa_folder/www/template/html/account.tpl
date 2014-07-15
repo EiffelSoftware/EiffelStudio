@@ -46,7 +46,7 @@
                   <div class="row">
                      <div class="col-sm-4">
                       <label class=" control-label-api" itemprop="email">Email</label>
-                       <input type="email" class="form-control" id="input01" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" value="{$account.email/}" disabled>
+                       <input type="email" class="form-control" id="input01" name="user_email" rel="popover" data-content="What is your email address?" data-original-title="Email" value="{$account.email/}" disabled>
                      </div>
                   </div>
                 </div>

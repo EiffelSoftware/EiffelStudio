@@ -13,7 +13,7 @@
 
 	<target name="init" >
 		<precursor/>
-		<set name="misc_dir" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}misc" />
+		<set name="misc_dir" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}misc" />
 	</target>
 	
 	<target name="help">

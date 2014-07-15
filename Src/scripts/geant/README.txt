@@ -5,12 +5,12 @@
 :Categories: ec,compilation,build,scripts
 ----------------------------------------------------------
 
-The geant's script  $EIFFEL_SRC/scripts/build.eant can be used to compile "ec"
+The geant's script  $EIFFEL_SRC/scripts/geant/build.eant can be used to compile "ec"
 and other product from EiffelSoftware open source project.
 
 1) First you need to checkout the source.
 for instance
-svn checkout https://eiffelsoftware.origo.ethz.ch/svn/es/branches/Eiffel_57 57dev
+svn checkout https://svn.eiffel.com/eiffelstudio/trunk Eiffel_dev
 
 Note: the whole trunk or branches is checkouted into a single folder
 
@@ -21,24 +21,24 @@ cd $HOME/compile
 3) You must be sure to have valid environment variables: $ISE_EIFFEL, EIFFEL_SRC, and ISE_C_COMPILER (on windows only) 
 
 4) using geant 
-	geant -b $EIFFEL_SRC/scripts/build.eant
+	geant -b $EIFFEL_SRC/scripts/geant/build.eant
 Will display the usage of this script
 If you want to compile a finalized "ec"
 You must do
 		--| Compile the ISE runtime
-	geant -b $EIFFEL_SRC/scripts/build.eant compile_runtime
+	geant -b $EIFFEL_SRC/scripts/geant/build.eant compile_runtime
 		--| Compile the various clib (c code) of various ISE libraries
 		--| And also third party c libraries (zip, png ...)
 		--| Install ISE´s patched gobo library
-	geant -b $EIFFEL_SRC/scripts/build.eant compile_library
+	geant -b $EIFFEL_SRC/scripts/geant/build.eant compile_library
 
 And then
-	geant -b $EIFFEL_SRC/scripts/build.eant finalize_ec
-	geant -b $EIFFEL_SRC/scripts/build.eant finalize_estudio
+	geant -b $EIFFEL_SRC/scripts/geant/build.eant finalize_ec
+	geant -b $EIFFEL_SRC/scripts/geant/build.eant finalize_estudio
 
 Those scripts are in progress for now.
-Please report any issue to es-develop@origo.ethz.ch (or jfiat@eiffel.com)
+Please report any issue to jfiat@eiffel.com
 
 -------------------------------------------
- Web: http://eiffelstudio.origo.ethz.ch/
+ Web: http://svn.eiffel.com/eiffelstudio
 -------------------------------------------

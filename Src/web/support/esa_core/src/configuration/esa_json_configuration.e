@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_JSON_CONFIGURATION}."
+	description: "Provide access to json configuration"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,6 +41,24 @@ feature -- Application Configuration
 				 attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
 				 attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string then
 				create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
+			 end
+			end
+		end
+
+
+	new_logger_level_configuration (a_path: PATH): READABLE_STRING_32
+			-- Retrieve a new logger level configuration.
+			-- By default, level is set to `DEBUG'.
+		local
+			l_parser: JSON_PARSER
+		do
+			Result := "DEBUG"
+			if attached json_file_from (a_path) as json_file then
+			 l_parser := new_json_parser (json_file)
+			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
+			     attached {JSON_STRING} l_logger.item ("level") as l_level then
+			     Result := l_level.item
 			 end
 			end
 		end

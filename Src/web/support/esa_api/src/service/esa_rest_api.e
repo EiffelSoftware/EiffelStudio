@@ -16,7 +16,7 @@ create
 feature -- Initialization
 
 	setup_router
-			-- Setup `router'
+			-- Setup `router'.
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
 		do

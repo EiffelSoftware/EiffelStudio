@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_ERROR_HANDLER}."
+	description: "Object handling error information"
 	date: "$Date$"
 	revision: "$Revision$"
 

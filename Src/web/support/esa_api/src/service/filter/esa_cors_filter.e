@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_CORS_FILTER}."
+	description: "CORS filter"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {SHARED_CONNEG_HELPER}."
+	description: "Conneg Helper"
 	date: "$Date$"
 	revision: "$Revision$"
 

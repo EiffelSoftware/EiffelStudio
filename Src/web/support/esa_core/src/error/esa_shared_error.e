@@ -1,10 +1,10 @@
 note
-	description: "Error from Database"
+	description: "Provides error information"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_DATABASE_ERROR
+	ESA_SHARED_ERROR
 
 inherit
 
@@ -13,10 +13,10 @@ inherit
 feature -- Access
 
 	last_error: detachable ESA_ERROR_HANDLER
-			-- Last error, if any.
+			-- Object represent last error.
 
 	last_error_message: READABLE_STRING_32
-			-- Last error message, if any, or empty string.
+			-- Last error string representation.
 		do
 			if attached last_error as ll_error then
 				Result := ll_error.error_message
@@ -66,16 +66,6 @@ feature -- Element Settings
 			retry
 		end
 
-	set_last_error_from_handler (a_error: detachable ESA_ERROR_HANDLER)
-			-- Set `last_error' with `a_error',
-		do
-			last_error := a_error
-			successful := False
-		ensure
-			last_error_set: attached last_error
-			failed: not successful
-		end
-
 	set_last_error (a_message, a_location: STRING)
 			-- Set `last_error_message' with `a_message',
 			-- `last_error_location' with `a_location' and
@@ -92,6 +82,16 @@ feature -- Element Settings
 			failed: not successful
 		end
 
+	set_last_error_from_handler (a_error: detachable ESA_ERROR_HANDLER)
+			-- Set `last_error' with `a_error'.
+		do
+			last_error := a_error
+			successful := False
+		ensure
+			last_error_set: attached last_error
+			failed: not successful
+		end
+
 	set_successful
 			-- Reset `last_error_message' and `last_error_location' and
 			-- set `successful' to `True'.
@@ -102,5 +102,4 @@ feature -- Element Settings
 			last_error__reset: last_error = Void
 			successful: successful
 		end
-
 end

@@ -65,6 +65,7 @@ feature {NONE} -- Launch operation
 feature {ESA_ABSTRACT_API} -- Services		
 
 	api_service: ESA_REST_API
+			-- rest api.
 		local
 			s: like internal_api_service
 		do
@@ -83,7 +84,7 @@ feature {NONE} -- Internal
 feature -- ESA Configuraion
 
 	esa_config: ESA_CONFIG
-		-- Configuration
+		-- Configuration.
 
  	setup_config
  			-- Configure API.
@@ -114,7 +115,7 @@ feature -- Execute Filter
 feature -- Filters
 
 	create_filter
-			-- Create `filter'
+			-- Create `filter'.
 		local
 			f, l_filter: detachable WSF_FILTER
 			fh: WSF_CUSTOM_HEADER_FILTER
@@ -173,7 +174,7 @@ feature -- Filters
 		end
 
 	setup_filter
-			-- Setup `filter'
+			-- Setup `filter'.
 		local
 			f: WSF_FILTER
 		do

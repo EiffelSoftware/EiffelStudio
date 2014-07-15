@@ -8,9 +8,7 @@ class
 
 inherit
 
-	ESA_SHARED_LOGGER
-
-	ESA_DATABASE_ERROR
+	ESA_SHARED_ERROR
 
 create
 	data_reader, data_writer

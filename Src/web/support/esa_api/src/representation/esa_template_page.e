@@ -15,18 +15,22 @@ inherit
 feature -- Status
 
 	representation: detachable STRING
+			-- String representation, if any.
 
 	set_template_folder (v: PATH)
+			-- Set template folder to `v'.
 		do
 			template_context.set_template_folder (v)
 		end
 
 	set_template_file_name (v: STRING)
+			-- Set  `template' to `v'.
 		do
 			create template.make_from_file (v)
 		end
 
 	set_template (v: like template)
+			-- Set `template' to `v'.
 		do
 			template := v
 		end
@@ -46,13 +50,13 @@ feature -- Status
 		end
 
 	html_path: PATH
-			-- Html template paths
+			-- Html template paths.
 		do
 			Result := layout.html_template_path
 		end
 
 	cj_path:  PATH
-			-- Collection json template paths
+			-- Collection json template paths.
 		do
 			Result := layout.cj_template_path
 		end

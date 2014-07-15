@@ -8,9 +8,7 @@ class
 
 inherit
 
-	ESA_API_ERROR
-
-	ESA_SHARED_LOGGER
+	ESA_SHARED_ERROR
 
 create
 	make

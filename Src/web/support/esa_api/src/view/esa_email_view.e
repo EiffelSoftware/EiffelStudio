@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_EMAIL_VIEW}."
+	description: "Object view that represent Email data"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,6 +77,7 @@ feature -- Change Element
 		end
 
 	add_error (a_key: READABLE_STRING_32; a_description: READABLE_STRING_32)
+			-- Add an error with key `a_key' and description `a_description'.
 		local
 			l_errors: like errors
 		do

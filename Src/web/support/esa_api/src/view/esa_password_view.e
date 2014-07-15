@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_PASSWORD_VIEW}."
+	description: "Object view that represent password data"
 	date: "$Date$"
 	revision: "$Revision$"
 

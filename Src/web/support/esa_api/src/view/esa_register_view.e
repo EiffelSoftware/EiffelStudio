@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_REGISTER_VIEW}."
+	description: "Object view that represent register data"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,10 +9,10 @@ class
 feature -- Access
 
 	questions: detachable LIST [ESA_SECURITY_QUESTION]
-			-- Possible list of security questions
+			-- Possible list of security questions.
 
 	question: INTEGER
-			-- Current selected question
+			-- Current selected question.
 
 	first_name: detachable READABLE_STRING_32
 			-- Current first name, if any.
@@ -95,60 +95,79 @@ feature -- Errors
 feature -- Change Element
 
 	set_questions (a_questions: like questions)
-			-- Set `questions' with `a_questions'
+			-- Set `questions' with `a_questions'.
 		do
 			questions := a_questions
+		ensure
+			questions_set: questions = a_questions
 		end
 
 	set_question (a_question: like question)
-			-- Set `question' with `a_question'
+			-- Set `question' with `a_question'.
 		do
 			question := a_question
+		ensure
+			question_set: question = a_question
 		end
 
 	set_first_name (a_first_name: like first_name)
-			-- Set `first_name' with `a_first_name'
+			-- Set `first_name' with `a_first_name'.
 		do
 			first_name := a_first_name
+		ensure
+			first_name_set: first_name = a_first_name
 		end
 
 	set_last_name (a_last_name: like last_name)
-			-- Set `last_name' with `a_last_name'
+			-- Set `last_name' with `a_last_name'.
 		do
 			last_name := a_last_name
+		ensure
+			last_name_set: last_name = a_last_name
 		end
 
 	set_user_name (a_user_name: like user_name)
-			-- Set `user_name' with `a_user_name'
+			-- Set `user_name' with `a_user_name'.
 		do
 			user_name := a_user_name
+		ensure
+			user_name_set: user_name = a_user_name
 		end
 
 	set_email (a_email: like email)
-			-- Set `email' with `a_email'
+			-- Set `email' with `a_email'.
 		do
 			email := a_email
+		ensure
+			email_set: email = a_email
 		end
 
 	set_password (a_password: like password)
-			-- Set `password' with `a_password'
+			-- Set `password' with `a_password'.
 		do
 			password := a_password
+		ensure
+			password_set: password = a_password
 		end
 
 	set_check_password (a_check_password: like check_password)
-			-- Set `check_password' with `a_check_password'
+			-- Set `check_password' with `a_check_password'.
 		do
 			check_password := a_check_password
+		ensure
+			check_password_set: check_password = a_check_password
 		end
 
 	set_answer (a_answer: like answer)
-			-- Set `answer' with `a_answer'
+			-- Set `answer' with `a_answer'.
 		do
 			answer := a_answer
+		ensure
+			answer_set: answer = a_answer
 		end
 
 	add_error (a_key: READABLE_STRING_32; a_description: READABLE_STRING_32)
+			-- Add an error with key `a_key' and description `a_description'
 		local
 			l_errors: like errors
 		do

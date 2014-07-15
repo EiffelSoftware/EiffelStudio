@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_FILE_VIEW}."
+	description: "Object view that represent attachment data"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,6 +12,10 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: READABLE_STRING_32; a_size: INTEGER; a_content: STRING)
+			-- Create an object instance of ESA_FILE_VIEW
+			-- Set `name' to `a_name'
+			-- Set `size' to `a_size'
+			-- Set `content' to `a_content'.
 		do
 			name := a_name
 			size := a_size
@@ -39,7 +43,7 @@ feature -- Access
 feature -- Element Change
 
 	set_id (a_id: like id)
-			-- Set `id' with `a_id'
+			-- Set `id' with `a_id'.
 		do
 			id := a_id
 		ensure

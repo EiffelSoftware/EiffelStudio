@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_ERROR_FILTER}."
+	description: "Error filter"
 	date: "$Date$"
 	revision: "$Revision$"
 

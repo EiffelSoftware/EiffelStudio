@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {ESA_CONNEG_FILTER}."
-	author: ""
+	description: "Conneg filter"
 	date: "$Date$"
 	revision: "$Revision$"
 

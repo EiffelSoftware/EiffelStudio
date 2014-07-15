@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_LOGGER_FILTER}."
+	description: "Logger filter"
 	date: "$Date$"
 	revision: "$Revision$"
 

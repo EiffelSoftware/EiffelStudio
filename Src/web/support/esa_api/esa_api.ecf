@@ -26,6 +26,7 @@
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
+		<library name="esa_core" location="..\esa_core\esa_core.ecf"/>
 	</target>
 	<target name="esa_api_any" extends="common">
 		<root class="ESA_SERVER" feature="make_and_launch"/>

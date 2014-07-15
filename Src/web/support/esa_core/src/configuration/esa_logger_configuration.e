@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_LOGGER_CONFIGURATION}."
+	description: "Object that represent Logger configuration settings"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +25,7 @@ feature -- Initialization
 
 	default_create
 			-- Initialize a Logger Instance configuration with default values
-			-- backups = `4' and level = `DEBUG'
+			-- backups = `4' and level = `DEBUG'.
 		do
 			backup_count := 4
 			level := Log_debug

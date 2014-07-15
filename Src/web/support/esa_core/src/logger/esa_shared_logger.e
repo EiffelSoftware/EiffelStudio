@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_SHARED_LOGGER}."
+	description: "Provides logger information"
 	date: "$Date$"
 	revision: "$Revision$"
 

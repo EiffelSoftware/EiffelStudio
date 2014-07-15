@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_REPORT_CONFIRM_HANDLER}."
+	description: "Authentication Filter"
 	date: "$Date$"
 	revision: "$Revision$"
 

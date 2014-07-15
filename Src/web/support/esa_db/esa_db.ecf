@@ -15,7 +15,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<cluster name="common" location="..\esa_common\src\" recursive="true"/>
+		<library name="esa_core" location="..\esa_core\esa_core.ecf"/>
 
 		<cluster name="esa_db" location=".\src\" recursive="true">
 			<file_rule>

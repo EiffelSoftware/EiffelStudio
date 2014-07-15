@@ -8,7 +8,7 @@ deferred class
 
 inherit
 
-	ESA_DATABASE_ERROR
+	ESA_SHARED_ERROR
 
 feature -- Access
 

@@ -126,6 +126,7 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 			l_query: STRING
 			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_query_filter: STRING
 		do
 			log.write_information (generator + ".problem_reports_responsibles")
 			create l_parameters.make (7)
@@ -147,6 +148,23 @@ feature -- Access
 			end
 
 				-- Filter search.
+			create  l_query_filter.make_empty
+			if a_category > 0 then
+				l_query_filter.append (" AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))")
+			end
+			if a_severity > 0 then
+				l_query_filter.append (" AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))")
+			end
+			if a_priority > 0 then
+				l_query_filter.append (" AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))")
+			end
+
+			if a_responsible > 0 then
+				l_query_filter.append (" AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))")
+			end
+
+			l_query.replace_substring_all ("$queryFilter", l_query_filter)
+
 			if a_synopsis = 1 and then a_description = 1 then
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%') OR (ProblemReports.Description like '%%' + :Filter + '%%'))")
 			else
@@ -1881,12 +1899,8 @@ feature -- Queries
 										    from ProblemReportResponsibles prr, ProblemReports pr
 										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  
 						INNER JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
-						WHERE $Submitter
-						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
-						AND ProblemReports.StatusID in $StatusSet
-						AND ((ProblemReports.PriorityID = :PriorityID) OR (NOT EXISTS (SELECT PriorityID FROM ProblemReportPriorities WHERE PriorityID = :PriorityID)))
-						AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
-						AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
+						WHERE ProblemReports.StatusID in $StatusSet
+						$queryFilter
 						$SearchBySynopsisAndOrDescription
 						ORDER BY $Column $ORD1
 					) AS PAG

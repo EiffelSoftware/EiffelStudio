@@ -33,14 +33,14 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end

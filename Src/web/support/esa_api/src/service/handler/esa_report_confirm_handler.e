@@ -43,20 +43,20 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
 
 	uri_template_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
@@ -64,6 +64,7 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -89,6 +90,7 @@ feature -- HTTP Methods
 		end
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -112,6 +114,7 @@ feature -- HTTP Methods
 		end
 
 	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): INTEGER
+			-- Extract confirmation numnber.
 		local
 			l_parser: JSON_PARSER
 		do

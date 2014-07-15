@@ -171,7 +171,7 @@ feature {NONE} -- Edit Report Problem
 feature {NONE} -- New Report Problem
 
 	new_report_problem (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Create a new report problem
+			-- Create a new report problem.
 		local
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			--"synopsis=test"
 			--"environment=download"
 			--"description=test"
-			--"to_reproduce=test"
+			--"to_reproduce=test".
 		do
 
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)

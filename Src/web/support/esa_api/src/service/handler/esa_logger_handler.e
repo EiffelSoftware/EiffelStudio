@@ -49,13 +49,13 @@ feature -- execute
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
 
 	uri_template_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
@@ -63,6 +63,7 @@ feature -- execute
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -80,7 +81,7 @@ feature -- HTTP Methods
 feature -- Response	
 
 	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-			--Simple response to download content
+			--Simple response to download content.
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
@@ -97,6 +98,7 @@ feature -- Response
 		end
 
 	read_log_file: STRING
+			-- Read the log file.
 		local
 			f: RAW_FILE
 			l_path : PATH

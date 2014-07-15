@@ -13,12 +13,15 @@ feature -- Logger
 
 
 	log: ESA_LOGGING_FACILITY
+			-- New `log' (once per process)
+            -- that could be shared between threads
+            -- without reinitializing it.
 		local
 			l_log_writer: LOG_ROLLING_WRITER_FILE
 			l_environment: EXECUTION_ENVIRONMENT
 			l_path: PATH
 			l_logger_config: ESA_LOGGER_CONFIGURATION
-		once
+		once ("PROCESS")
 					--| Initialize the logging facility
 			create Result.make
 			create l_environment

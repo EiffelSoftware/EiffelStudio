@@ -1,7 +1,7 @@
-<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" />
+<!-- Bootstrap version 3.1.0 -->
+<link href="{$host/}/static/css/bootstrap.min.css" rel="stylesheet" />
 
 <!-- Custom styles for this template -->
-<link href="{$host/}/static/css/bootstrap-select.min.css" rel="stylesheet">
 <link href="{$host/}/static/css/dashboard.css" rel="stylesheet">
 
 

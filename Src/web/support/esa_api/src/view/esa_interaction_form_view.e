@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {ESA_INTERACTION_FORM_VIEW}."
-	author: ""
+	description: "Object view that represent a report interaction data"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +12,9 @@ create
 feature {NONE} -- Intialization
 
 	make (a_status: like status; a_categories: like categories)
+			-- Create an object instance
+			-- Set `status' to `a_status'
+			-- Set `categories' to `a_categories'.
 		do
 			status := a_status
 			categories := a_categories
@@ -25,34 +27,34 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	status: LIST[ESA_REPORT_STATUS]
-			-- Possible list of status
+			-- Possible list of status.
 
 	categories:  LIST[ESA_REPORT_CATEGORY]
-			-- Possible list of categories
+			-- Possible list of categories.
 
 	description: detachable READABLE_STRING_32
-			-- Interaction description
+			-- Interaction description.
 
 	private: BOOLEAN
 			-- is the interaction public or private?
 
 	selected_status: INTEGER;
-			-- Current selected status
+			-- Current selected status.
 
 	category: INTEGER
-			-- Current selected category
+			-- Current selected category.
 
 	report: detachable ESA_REPORT
-			-- Current report to add an interaction
+			-- Current report to add an interaction.
 
 	id: INTEGER
 		-- Current interaction id.		
 
 	uploaded_files: detachable LIST[ESA_FILE_VIEW]
-		-- Uploaded files
+		-- Uploaded files.
 
 	temporary_files: detachable LIST[ESA_FILE_VIEW]
-		-- Temporary files	
+		-- Temporary files.	
 
 feature -- Status Report
 
@@ -72,7 +74,7 @@ feature -- Status Report
 feature -- Element Change
 
 	set_selected_status (a_status: like selected_status)
-			-- Set `selected_status' with `a_status'
+			-- Set `selected_status' with `a_status'.
 		do
 			selected_status := a_status
 		ensure
@@ -80,7 +82,7 @@ feature -- Element Change
 		end
 
 	set_category (a_category: like category)
-			-- Set `category' with `a_category'
+			-- Set `category' with `a_category'.
 		do
 			category := a_category
 		ensure
@@ -96,7 +98,7 @@ feature -- Element Change
 		end
 
 	set_report (a_report: like report)
-			-- Set `report' with `a_report'
+			-- Set `report' with `a_report'.
 		do
 			report := a_report
 		ensure
@@ -104,7 +106,7 @@ feature -- Element Change
 		end
 
 	set_description (a_description: like description)
-			-- Set `description' with `a_description'
+			-- Set `description' with `a_description'.
 		do
 			description := a_description
 		ensure
@@ -112,7 +114,7 @@ feature -- Element Change
 		end
 
 	set_id (a_id: INTEGER)
-			-- Set `id' with `a_id'
+			-- Set `id' with `a_id'.
 		do
 			id := a_id
 		ensure
@@ -140,7 +142,7 @@ feature -- Element Change
 		end
 
 	set_files (a_files: like uploaded_files)
-			-- Set `uploaded_files' with `a_files'
+			-- Set `uploaded_files' with `a_files'.
 		do
 			uploaded_files := a_files
 		ensure
@@ -148,7 +150,7 @@ feature -- Element Change
 		end
 
 	set_temporary_files (a_files: like temporary_files )
-			-- Set `temporary_files' with `a_files'
+			-- Set `temporary_files' with `a_files'.
 		do
 			temporary_files := a_files
 		ensure

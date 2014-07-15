@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_ACCOUNT_VIEW}."
+	description: "Generic Representation of an Account."
 	date: "$Date$"
 	revision: "$Revision$"
 

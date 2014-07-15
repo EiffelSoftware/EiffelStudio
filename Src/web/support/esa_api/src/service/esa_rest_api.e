@@ -1,5 +1,9 @@
 note
-	description: "REST API configuration"
+	description: "[
+				REST API configuration
+				We manage URI and Uri templates using Routers. They are used to delegate calls (to the corresponing handlers) based on a URI template. 
+				We define a Rooter and attach handlers to it.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_CATEGORY_HANDLER}."
+	description: "{ESA_CATEGORY_HANDLER} it's in charge to retrieve report categories. "
 	date: "$Date$"
 	revision: "$Revision$"
 

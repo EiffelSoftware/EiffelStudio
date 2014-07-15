@@ -43,7 +43,7 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_report_problem (a_report_id, a_interaction_id: INTEGER)
-			-- Update report problem
+			-- Update report problem.
 		local
 			l_tuple: detachable TUPLE[ status: INTEGER;
 									   category: INTEGER]

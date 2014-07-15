@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ESA_EMAIL_HANDLER}."
+	description: "[
+				{ESA_EMAIL_HANDLER}. Handle email change, show a form and also handle the post.
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,14 +36,14 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end

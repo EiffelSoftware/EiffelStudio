@@ -34,14 +34,14 @@ create
 feature -- execute
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute request handler.
 		do
 			execute_methods (req, res)
 		end
@@ -64,8 +64,6 @@ feature -- HTTP Methods
 				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).change_password (req, res, Void)
 			end
 		end
-
-
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
@@ -93,9 +91,6 @@ feature -- HTTP Methods
 			end
 		end
 
-
-
-
 feature -- Implementation
 
 	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_PASSWORD_VIEW
@@ -108,7 +103,6 @@ feature -- Implementation
 				Result :=  extract_data_from_form (req)
 			end
 		end
-
 
 	extract_data_from_cj (req: WSF_REQUEST): ESA_PASSWORD_VIEW
 			-- Extract request form CJ data and build a object

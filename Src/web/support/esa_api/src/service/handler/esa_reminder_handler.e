@@ -157,7 +157,7 @@ feature -- HTTP Methods
 
 
 	message_content (a_password: STRING; a_user: TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]): STRING
-			-- Username and Password e-mail content
+			-- Username and Password e-mail content.
 		do
 				create Result.make (1024)
 				Result.append ("Dear ")

@@ -64,40 +64,40 @@ feature {NONE}-- Initialization
 feature -- Access : Personal Information
 
 	username: STRING
-			-- Username
+			-- Username.
 
 	first_name: detachable STRING
-			-- First_name
+			-- First_name.
 
 	last_name: detachable STRING
-			-- Last_name	
+			-- Last_name.	
 
 	email: detachable STRING
-			-- Email
+			-- Email.
 
 	address: detachable STRING
-			-- Street address
+			-- Street address.
 
 	city: detachable STRING
-			-- City
+			-- City.
 
 	country: detachable STRING
-			-- Country
+			-- Country.
 
 	region: detachable STRING
-			-- Region
+			-- Region.
 
 	postal_code: detachable STRING
-			-- Postal_code
+			-- Postal_code.
 
 	telephone: detachable STRING
-			-- Telephone
+			-- Telephone.
 
 	fax: detachable STRING
-			-- Fax
+			-- Fax.
 
 	position: detachable STRING
-			-- Position
+			-- Position.
 
 	countries: detachable LIST[ESA_COUNTRY]
 			-- Countries.
@@ -188,7 +188,7 @@ feature -- Change Element
 		end
 
 	set_position ( a_position : STRING)
-			-- Set `position' to `a_position'
+			-- Set `position' to `a_position'.
 		do
 			position := a_position
 		ensure
@@ -196,7 +196,7 @@ feature -- Change Element
 		end
 
 	set_countries (a_countries: like countries)
-			-- Set `countries' to `a_countries'
+			-- Set `countries' to `a_countries'.
 		do
 			countries := a_countries
 			if attached country as l_country and then
@@ -214,8 +214,6 @@ feature -- Change Element
 			   		end
 			   	end
 			end
-
-
 		ensure
 			countries_set: countries = a_countries
 		end

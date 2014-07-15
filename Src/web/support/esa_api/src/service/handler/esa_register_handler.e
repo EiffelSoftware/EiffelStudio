@@ -73,7 +73,7 @@ feature -- HTTP Methods
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Registe a new user
+			-- Registe a new user.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_register: ESA_REGISTER_VIEW
@@ -144,7 +144,7 @@ feature -- HTTP Methods
 
 
 	remove_user (a_register: ESA_REGISTER_VIEW)
-			-- Remove user
+			-- Remove user,
 		do
 			if attached a_register.user_name as l_user_name then
 			   api_service.remove_user (l_user_name)
@@ -154,7 +154,7 @@ feature -- HTTP Methods
 
 	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_REGISTER_VIEW
 			-- Is the form data populated?
-			-- first_name, last_name, user_email, user_name, password, check_password, question, answer_question
+			-- first_name, last_name, user_email, user_name, password, check_password, question, answer_question.
 		do
 
 			if a_type.same_string ("application/vnd.collection+json") then

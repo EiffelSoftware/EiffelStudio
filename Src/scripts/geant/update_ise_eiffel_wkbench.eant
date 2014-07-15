@@ -30,7 +30,7 @@
 	</target>
 
 	<target name="init">
-		<set name="config_local_path" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}config-local.eant" />
+		<set name="config_local_path" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}config-local.eant" />
 		<available resource="${config_local_path}" variable="config_local_available"/>
 		<geant target="create_config_local_script"  unless="${config_local_available}=true"/>
 		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false" />
@@ -115,6 +115,43 @@
 		<unset name="ISE_EIFFEL_WB_LIBRARY" />
 		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />
 
+		<!-- tools -->
+		<echo message="Update tools ..." />
+		<set name="ISE_EIFFEL_TOOLS" value="${ISE_EIFFEL}${path_separator}tools" />
+		<set name="ISE_EIFFEL_WB_TOOLS" value="${ISE_EIFFEL}_workbench${path_separator}tools" />
+		<copy 	dir="${ISE_EIFFEL_TOOLS}"
+			to_directory="${ISE_EIFFEL_WB_TOOLS}"
+				force="true" unless="${return_code}=0" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<unset name="ISE_EIFFEL_TOOLS" />
+		<unset name="ISE_EIFFEL_WB_TOOLS" />
+
+		<!-- contrib -->
+		<echo message="Update contrib ..." />
+		<set name="EIFFEL_SRC_CONTRIB" value="${EIFFEL_SRC}${path_separator}contrib" />
+		<set name="ISE_EIFFEL_WB_CONTRIB" value="${ISE_EIFFEL}_workbench${path_separator}contrib" />
+		<copy 	dir="${EIFFEL_SRC_CONTRIB}"
+			to_directory="${ISE_EIFFEL_WB_CONTRIB}"
+				force="true" unless="${return_code}=0" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<unset name="EIFFEL_SRC_CONTRIB" />
+		<unset name="ISE_EIFFEL_WB_CONTRIB" />
+
+		<!-- unstable -->
+		<echo message="Update unstable ..." />
+		<set name="EIFFEL_SRC_UNSTABLE" value="${EIFFEL_SRC}${path_separator}unstable" />
+		<set name="ISE_EIFFEL_WB_UNSTABLE" value="${ISE_EIFFEL}_workbench${path_separator}unstable" />
+		<copy 	dir="${EIFFEL_SRC_UNSTABLE}"
+			to_directory="${ISE_EIFFEL_WB_UNSTABLE}"
+				force="true" unless="${return_code}=0" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<unset name="EIFFEL_SRC_UNSTABLE" />
+		<unset name="ISE_EIFFEL_WB_UNSTABLE" />
+
+		<!-- ... -->
 		<geant target="update_executable_properties" />
 	</target>
 

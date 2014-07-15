@@ -72,6 +72,8 @@
 		<!-- Output folder containing compiled materials -->
 		<global name="_BINARY_DIR" value="${cwd}${path_separator}BIN" unless="$_BINARY_DIR"/>
 
+		<!-- Output folder containing compiled materials -->
+		<global name="_EWEASEL_DIR" value="${cwd}${path_separator}EWEASEL" unless="$_EWEASEL_DIR"/>
 		<!-- source related -->
 		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${_DELIVERY_DIR}"/>
 
@@ -242,12 +244,27 @@
 		<mkdir directory="${_BINARY_DIR}/gobo" />
 	</target>
 
+	<target name="post_copy_ise_eiffel_to_delivery" depend="init_deliv" >
+		<available dir="$_TARGET_DELIV_DIR" resource="eweasel" variable="eweasel_available" />
+		<geant target="copy_full_tree" arguments="${ISE_EIFFEL}/eweasel,${_TARGET_DELIV_DIR}/eweasel" if="$eweasel_available=false" />
+
+		<available dir="$_TARGET_DELIV_DIR" resource="tools" variable="tools_available" />
+		<mkdir directory="${_TARGET_DELIV_DIR}/tools" if="$tools_available=false" />
+
+		<available dir="$_TARGET_DELIV_DIR/tools" resource="iron" variable="iron_tools_available" />
+		<geant target="copy_full_tree" arguments="${ISE_EIFFEL}/tools/iron,${_TARGET_DELIV_DIR}/tools/iron" if="$iron_tools_available=false" />
+
+		<available dir="$_TARGET_DELIV_DIR/tools" resource="spec" variable="spec_tools_available" />
+		<geant target="copy_full_tree" arguments="${ISE_EIFFEL}/tools/spec,${_TARGET_DELIV_DIR}/tools/spec" if="$spec_tools_available=false" />
+	</target>
+
 	<target name="quick_delivery" depend="init_deliv" >
 		<!-- copy executable from ISE_EIFFEL, remove ec and ecb, and make delivery -->
 		<geant target="copy_ise_eiffel_to_delivery" />
 		<geant target="safe_delete" arguments="${_BINARY_DIR},ecb${exe}" />
 		<geant target="safe_delete" arguments="${_BINARY_DIR},ec${exe}" />
 		<geant target="build_delivery" />
+		<geant target="post_copy_ise_eiffel_to_delivery" />
 	</target>
 
 	<target name="quick_compiler_delivery" depend="init_deliv" >
@@ -260,6 +277,7 @@
 		<geant target="safe_delete" arguments="${_BINARY_DIR},finish_freezing${exe}" />
 		<geant target="safe_delete" arguments="${_BINARY_DIR},quick_finalize${exe}" />
 		<geant target="build_delivery" />
+		<geant target="post_copy_ise_eiffel_to_delivery" />
 	</target>
 
 	<target name="quick_eweasel_delivery" depend="init_deliv" >
@@ -270,6 +288,7 @@
 		<echo to_file="${_BINARY_DIR}${path_separator}ec${exe}" message="ignore for eweasel" unless="$tmp_rt_available=true" />
 		<geant target="build_binaries" />
 		<geant target="install_eweasel" />
+		<geant target="post_copy_ise_eiffel_to_delivery" />
 	</target>
 
 	<target name="build_delivery" depend="init_deliv" >
@@ -410,6 +429,26 @@
 		<geant target="clean_folder" arguments="windows" dir="${a_dir}/studio/spec" unless="${ISE_PLATFORM}=windows" />
 		<geant target="clean_folder" arguments="win64" dir="${a_dir}/studio/spec" unless="${ISE_PLATFORM}=win64" />
 		<geant target="clean_folder" arguments="unix" dir="${a_dir}/studio/spec" if="${is_windows}" />
+
+		<!-- eweasel -->
+		<geant target="_log" arguments="Process $_EWEASEL_DIR into $a_dir ..." />
+		<available resource="$_EWEASEL_DIR" variable="eweasel_available" />
+		<group if="$eweasel_available=false" >
+			<mkdir directory="$_EWEASEL_DIR" />
+			<exec executable="svn export -N https://svn.eiffel.com/eiffelstudio/trunk/eweasel eweasel" 
+				dir="${_EWEASEL_DIR}" exit_code_variable="tmp_return_code" accept_errors="true" />
+			<exec executable="svn export https://svn.eiffel.com/eiffelstudio/trunk/eweasel/bin" 
+				dir="${_EWEASEL_DIR}/eweasel" exit_code_variable="tmp_return_code" accept_errors="true" />
+			<exec executable="svn export https://svn.eiffel.com/eiffelstudio/trunk/eweasel/control" 
+				dir="${_EWEASEL_DIR}/eweasel" exit_code_variable="tmp_return_code" accept_errors="true" />
+			<exec executable="svn export https://svn.eiffel.com/eiffelstudio/trunk/eweasel/source" 
+				dir="${_EWEASEL_DIR}/eweasel" exit_code_variable="tmp_return_code" accept_errors="true" />
+			<exec executable="svn export https://svn.eiffel.com/eiffelstudio/trunk/eweasel/compilation" 
+				dir="${_EWEASEL_DIR}/eweasel" exit_code_variable="tmp_return_code" accept_errors="true" />
+		</group>
+		<available resource="${a_dir}/eweasel" variable="eweasel_available" />
+		<mkdir directory="$a_dir/eweasel" if="$eweasel_available=false"/>
+		<geant target="copy_full_tree" arguments="${_EWEASEL_DIR}/eweasel,${a_dir}/eweasel" if="$eweasel_available=false" />
 
 	</target>
 

@@ -30,7 +30,7 @@
 
 <!-- Targets -->
 	<target name="check_setup" >
-		<set name="L_check_setup_script" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}check_setup.eant" />
+		<set name="L_check_setup_script" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}check_setup.eant" />
 		<available resource="$L_check_setup_script" variable="tmp_available"/>
 		<geant target="check_setup" file="$L_check_setup_script"
 			reuse_variables="true" fork="false"
@@ -49,28 +49,28 @@
 	<target name="compile" depend="init_compilation" >
 		<echo message="finalize `ec' in [$L_comp_dir]" />
 
-		<geant target="finalize" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+		<geant target="finalize" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>
 	<target name="compile_workbench" depend="init_compilation" >
 		<echo message="workbench `ec' in [$L_comp_dir]" />
 
-		<geant target="freeze" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+		<geant target="freeze" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>
 	<target name="estudio_workbench" depend="init_compilation" >
 		<echo message="workbench `ec' in [$L_comp_dir]" />
 
-		<geant target="estudio" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+		<geant target="estudio" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>
 	<target name="clean_compilation" depend="init_compilation" >
 		<echo message="Clean `ec' compilation from [$L_comp_dir]" />
 
-		<geant target="clean" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+		<geant target="clean" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>
@@ -90,11 +90,11 @@
 	</target>
 
 	<target name="make_delivery" >
-		<geant target="build_delivery" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}deliv.eant"
+		<geant target="build_delivery" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}deliv.eant"
 			reuse_variables="true" fork="false" />
 	</target>
 	<target name="make_delivery_menu" >
-		<geant target="menu" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}menu.eant"
+		<geant target="menu" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}geant${path_separator}menu.eant"
 			reuse_variables="true" fork="false" />
 	</target>
 

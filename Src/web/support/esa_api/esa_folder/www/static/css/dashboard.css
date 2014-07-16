@@ -259,6 +259,19 @@ pre {
 	min-width: 100px;
 }
 
+/* Default width for the entries in a table like layout. */
+.form-horizontal .form-input {
+	min-width: 100px;
+	width: 200px;
+}
+
+/* Default width for the labels in a normal form like layout. */
+.form-horizontal .form-label {
+	min-width: 150px;
+	float: left;
+}
+
+
 .label-primary-api-default {
 	display: inline-block;
 	width: 105px;

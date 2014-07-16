@@ -14,35 +14,22 @@
             
             <div class="row">
                <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-4">  
-                  <label class="control-label-api" for="inputPassword" itemprop="password">Password</label>
-                  <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
-                </div>
+                  <label class="form-label" for="inputPassword" itemprop="password">Password</label>
+                  <input type="password" class="form-control form-entry" id="inputPassword" name="password" placeholder="Password">
               </div>
-             </div>
             </div>
 
             <div class="row">
                <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-4">  
-                    <label class="control-label-api" for="confirmPassword" itemprop="check_password">Confirm Password</label>
-                   <input type="password" class="form-control" id="confirmPassword" name="check_password" placeholder="Confirm Password">
-                  </div>
-                </div>
+                    <label class="form-label" for="confirmPassword" itemprop="check_password">Confirm Password</label>
+                   <input type="password" class="form-control form-entry" id="confirmPassword" name="check_password" placeholder="Confirm Password">
                </div>
             </div>
 
-            </br>  
             <div class="row">
-               <div class="col-md-12">
-                <div class="row">
                   <div class="col-md-4">  
                     <input type="submit" class="btn btn-primary" value="Submit">
                     <input type="reset" class="btn btn-default" value="Reset">
-                </div>
-            </div>
            </div>
           </div>
 

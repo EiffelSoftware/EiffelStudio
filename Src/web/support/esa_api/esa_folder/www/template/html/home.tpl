@@ -7,6 +7,7 @@
      {include file="navbar.tpl"/}  
 
   <div class="container">
+	<div class="main">
         <div class="jumbotron">
             <h1>Eiffel Software Support</h1>
             <p><small>The Eiffel Software Support web site, your one stop destination for information and support on Eiffel products and technologies.</small> 
@@ -35,6 +36,7 @@
                 <p class="text-muted">© Copyright 2014 Eiffel Software -- <a href="http://www.eiffel.com/privacy-policy" target="_blank" class="info">Privacy Policy</a> </p>
             </div>
         </div>
+		</div>
     </div>
 
 

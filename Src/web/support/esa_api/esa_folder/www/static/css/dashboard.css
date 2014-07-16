@@ -221,27 +221,37 @@ pre {
 	margin-bottom: 25px;
 }
 
-.form-inline .form-control {
-	width: inherit;
+/* Width for the text field to enter a bug report in the reports page. */
+.form-inline .form-bug {
+	width: 100px;
 }
 
+/* Width for the text field to enter data that will be searched in the reports page. */
+.form-inline .form-filter {
+	min-width: 400px;
+}
+
+/* Default width for the majority of entries in the site. */
+.form-inline .form-input {
+	min-width: 100px;
+	width: 250px;
+}
+
+.form-inline .checkbox {
+	padding-left: 10px;
+}
+
+/* Labels used in association with a form_input. */
 .form-inline .control-label-api {
 	margin-bottom: 0;
 	vertical-align: middle;
-	width: 95px;
+	min-width: 110px;
 }
-
-.label-primary-api {
-	display: inline-block;
-	width: 95px;
-	background-color: #428bca;
-}
-
 
 .form-inline .control-label-api2 {
-margin-bottom: 0;
-vertical-align: middle;
-width: 110px;
+	margin-bottom: 0;
+	vertical-align: middle;
+	min-width: 110px;
 }
 
 
@@ -292,10 +302,12 @@ pre {
 .form-control{
 	height:inherit;
 	padding: 1px 2px;
+	margin: 1px;
 }
 
 .btn {
 	padding: 1px 12px;
+	margin: 1px;
 }
 
 .pager {
@@ -310,4 +322,5 @@ pre {
 .well {
 	padding: 9px;
 	margin-bottom: 10px;
+	min-height: 44px;
 }

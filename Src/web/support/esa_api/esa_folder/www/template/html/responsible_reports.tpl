@@ -1,9 +1,13 @@
 
 <div class="row">
    <div class="col-sm-12">
-     <form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
-        <input type="number" class="form-control" min="1" name="search" placeholder="Search by Report #..." form="reports">
-         <button type="submit" class="btn btn-default">View Problem Report</button>
+     	<form  class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
+			<div class="row">
+				<div class="col-sm-12">
+					<input type="number" class="form-control form-bug" min="1" name="search" placeholder="Report #..." form="reports">
+					<button type="submit" class="btn btn-default">View Problem Report</button>
+				</div>
+			</div>
      </form>
   </div>  
 </div>
@@ -19,9 +23,9 @@
           <div class="col-sm-12">
             <div class="row">
        
-             <div class="col-sm-4">
+             <div class="col-sm-6">
                  <label class="control-label-api" for="input01" itemprop="category" data-original-title="<p>The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.</p>">Category</label>
-                 <select class="form-control"  data-style="btn-primary" name="category" form="search">
+                 <select class="form-control form-input"  data-style="btn-primary" name="category" form="search">
                   <option value="0">ALL</option>
                   {foreach from="$categories" item="item"}
                     {if condition="$item.id = $view.selected_category"} 
@@ -34,13 +38,13 @@
                 </select>
              </div> 
 
-             <div class="col-sm-4">
+             <div class="col-sm-6">
              <label class="control-label-api" for="input01" title="To retrieve problem reports using the submitter's username: enter the username" itemprop="submitter" data-original-title="<p>Person reporting a problem</p>">Submitter</label>
                   {if isset="$submitter"}
-                    <input type="text"  name="submitter" class="form-control" placeholder="John.H" value="{$submitter/}">
+                    <input type="text"  name="submitter" class="form-control form-input" placeholder="John.H" value="{$submitter/}">
                   {/if}
                   {unless isset="$submitter"}
-                    <input type="text"  name="submitter" class="form-control" placeholder="John.H">
+                    <input type="text"  name="submitter" class="form-control form-input" placeholder="John.H">
                   {/unless}
             </div>
           </div>
@@ -50,14 +54,14 @@
           <div class="col-sm-12">
             <div class="row">
              
-             <div class="col-sm-4">
+             <div class="col-sm-6">
               <label class="control-label-api" for="input01" itemprop="priority"  data-original-title="<small><p>How soon the solution is required. Accepted values include:</p>
                   <UL>
                   <LI><B>High</B>: A solution is needed as soon as possible.</LI>
                   <LI><B>Medium</B>: The problem should be solved in the next release.</LI>
                   <LI><B>Low</B>: The problem should be solved in a future release.</LI>
                   </UL></small>">Priority</label>
-             <select class="form-control"  data-style="btn-primary" name="priority" form="search">
+             <select class="form-control form-input"  data-style="btn-primary" name="priority" form="search">
               <option value="0">ALL</option>
               {foreach from="$priorities" item="item"}
                 {if condition="$item.id = $view.selected_priority"} 
@@ -70,9 +74,9 @@
             </select>
            </div>
 
-           <div class="col-sm-4">
+           <div class="col-sm-6">
              <label class="control-label-api" for="input01" itemprop="responsible" data-original-title="<p>Person having an obligation to do analized a given report problem.</p>">Responsibles</label>
-             <select class="form-control"  data-style="btn-primary" name="responsible" form="search">
+             <select class="form-control form-input"  data-style="btn-primary" name="responsible" form="search">
               <option value="0">ALL</option>
               {foreach from="$responsibles" item="item"}
                 {if condition="$item.id = $view.selected_responsible"} 
@@ -93,7 +97,7 @@
       <div class="row">
           <div class="col-sm-12">
             <div class="row"> 
-             <div class="col-sm-4">
+             <div class="col-sm-6">
                <label class="control-label-api" for="input01" itemprop="severity" data-original-title="<small><p>The severity of the problem. Accepted values include:</p>
                         <UL>
                           <LI><B>Critical</B>: The product, component or concept is completely non operational. No workaround is known.</LI>
@@ -101,7 +105,7 @@
                           <LI><B>Non-critical</B>: The product, component or concept is working in general, but lacks features, has irritating behavior, does something wrong, or doesn't match its documentation.</LI>
                         </UL></small>
          ">Severity</label>
-               <select class="form-control" data-style="btn-primary" name="severity" form="search">
+               <select class="form-control form-input" data-style="btn-primary" name="severity" form="search">
                 <option value="0">ALL</option>
                 {foreach from="$severities" item="item"}
                   {if condition="$item.id = $view.selected_severity"}
@@ -113,7 +117,7 @@
                 {/foreach}  
               </select>
           </div>
-          <div class="col-sm-8">
+          <div class="col-sm-6">
              <label class="control-label-api" for="input01" itemprop="status" data-original-title="<small><p>The status of a problem can be one of the following:</p>
             <ul>
               <li><b>Open</b>  The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
@@ -148,10 +152,10 @@
              <div class="col-sm-12">
              <label class="control-label-api" for="input01" title="To retrieve problem reports filtered by synopsis or description" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
                   {if isset="$filter"}
-                    <input type="text"  name="filter" class="form-control" placeholder="Filter" value="{$filter/}">
+                    <input type="text"  name="filter" class="form-control form-filter" placeholder="Filter" value="{$filter/}">
                   {/if}
                   {unless isset="$filter"}
-                    <input type="text"  name="filter" class="form-control" placeholder="Filter">
+                    <input type="text"  name="filter" class="form-control form-filter" placeholder="Filter">
                   {/unless}
 
                   {if isset="$filter_synopsis"}
@@ -183,7 +187,7 @@
        <div class="row">
           <div class="col-sm-12">
             <div class="row"> 
-             <div class="col-sm-4">
+             <div class="col-sm-6">
               <button type="submit" class="btn btn-default">Search</button>
              </div>
             </div>

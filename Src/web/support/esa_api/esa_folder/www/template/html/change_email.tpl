@@ -14,36 +14,23 @@
            
             <div class="row">
                <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-4">  
-                    <label class="control-label-api" for="inputEmail" itemprop="email">Email</label>
-                     <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email">
-                   </div>
-                </div>
+                    <label class="form-label" for="inputEmail" itemprop="email">Email</label>
+                     <input type="email" class="form-control form-entry" id="inputEmail" name="email" placeholder="Email">
               </div>
             </div>   
 
             <div class="row">
               <div class="col-md-12">
-               <div class="row">
-                  <div class="col-md-4">  
-                    <label class="control-label-api" for="confirmEmail" itemprop="check_password">Confirm Email</label>
-                    <input type="email" class="form-control" id="confirmEmail" name="check_email" placeholder="Confirm Email">
-                 </div>
-                </div>
+                    <label class="form-label" for="confirmEmail" itemprop="check_password">Confirm Email</label>
+                    <input type="email" class="form-control form-entry" id="confirmEmail" name="check_email" placeholder="Confirm Email">
               </div>
             </div>  
 
-          </br>    
           <div class="row">
-                <div class="col-md-12">
-                  <div class="row">
-                    <div class="col-md-4">
-                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <input type="reset" class="btn btn-default" value="Reset">
-                   </div>
-              </div>
-            </div>
+               <div class="col-md-4">
+                   <input type="submit" class="btn btn-primary" value="Submit">
+                   <input type="reset" class="btn btn-default" value="Reset">
+               </div>
           </div>
    
 

@@ -231,10 +231,21 @@ pre {
 	min-width: 400px;
 }
 
-/* Default width for the majority of entries in the site. */
+/* Default width for the entries in a table like layout. */
 .form-inline .form-input {
 	min-width: 100px;
-	width: 250px;
+	width: 200px;
+}
+
+/* Default width for the labels in a normal form like layout. */
+.form-inline .form-label {
+	min-width: 150px;
+}
+
+/* Default width for the entries in a normal form like layout. */
+.form-inline .form-entry {
+	min-width: 150px;
+	width: 400px;
 }
 
 .form-inline .checkbox {
@@ -245,7 +256,7 @@ pre {
 .form-inline .control-label-api {
 	margin-bottom: 0;
 	vertical-align: middle;
-	min-width: 120px;
+	min-width: 100px;
 }
 
 .label-primary-api-default {
@@ -301,6 +312,7 @@ pre {
 .btn {
 	padding: 1px 12px;
 	margin: 1px;
+	min-width: 100px;
 }
 
 .pager {

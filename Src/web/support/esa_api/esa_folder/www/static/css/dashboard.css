@@ -315,6 +315,10 @@ pre {
 	min-width: 100px;
 }
 
+.login {
+	cursor: pointer;
+}
+
 .pager {
 	margin:10px 0;
 }

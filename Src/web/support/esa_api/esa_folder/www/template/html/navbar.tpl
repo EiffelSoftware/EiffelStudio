@@ -74,10 +74,10 @@
          {/unless} 
          
          {if isset="$user"}
-            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>
+            <li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>
          {/if}
          {unless isset="$user"}
-            <li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
+            <li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
             <!-- <li><a href="{$host/}/login">Login</a></li> -->   <!--Browser pop up -->
          {/unless} 
         </ul>

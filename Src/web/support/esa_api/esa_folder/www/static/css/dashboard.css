@@ -245,15 +245,8 @@ pre {
 .form-inline .control-label-api {
 	margin-bottom: 0;
 	vertical-align: middle;
-	min-width: 110px;
+	min-width: 120px;
 }
-
-.form-inline .control-label-api2 {
-	margin-bottom: 0;
-	vertical-align: middle;
-	min-width: 110px;
-}
-
 
 .label-primary-api-default {
 	display: inline-block;

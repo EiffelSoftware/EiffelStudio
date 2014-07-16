@@ -18,7 +18,7 @@
      <form  class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
     {/unless} 
       <div class="col-sm-4">
-       <label class="control-label" for="input01" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
+       <label class="control-label-api" for="input01" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
        <select class="form-control form-input"  data-style="btn-primary" name="category" form="search" itemprop="search">
         <option value="0">ALL</option>
         {foreach from="$categories" item="item"}
@@ -32,7 +32,7 @@
       </select>
     </div>   
      <div class="col-sm-4">
-       <label class="control-label" for="input01" itemprop="status"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Status</label>
+       <label class="control-label-api" for="input01" itemprop="status"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Status</label>
        <select class="form-control form-input" data-style="btn-primary" name="status" form="search">
         <option value="0">ALL</option>
         {foreach from="$status" item="item"}
@@ -55,7 +55,7 @@
 <h2 class="sub-header">Problem Reports: 
           <small><ul class="pagination">
               <li class="info">Current page {$index/} of {$pages/} - </li>
-              <li><label class="control-label" for="input01" itemprop="size"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
+              <li><label class="control-label-api" for="input01" itemprop="size"  data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
                 <input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
               {if isset="$user"}
                   <input type="hidden"  name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">

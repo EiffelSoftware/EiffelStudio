@@ -11,11 +11,12 @@
 <div class="row">
 	<div class="col-sm-12">
 		{if isset="$user"}
-			<form class="form-inline well" action="{$host/}/user_reports/{$user/}" id="search" method="GET" itemprop="search">
+		<form class="form-inline well" action="{$host/}/user_reports/{$user/}" id="search" method="GET" itemprop="search">
 		{/if}
 		{unless isset="$user"}
-			<form class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
+		<form class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
 		{/unless} 
+			<div class="row">
 				<div class="col-sm-4">
 					<label class="control-label-api" for="input01" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 					<select class="form-control form-input" data-style="btn-primary" name="category" form="search" itemprop="search">
@@ -47,23 +48,28 @@
 				<div class="col-sm-4">
 					<button type="submit" class="btn btn-default">Search</button>
 				</div>
-			</form>
+			</div>
+		</form>
 	</div>
 </div>
 
 <h2 class="sub-header">Problem Reports: 
-					<small><ul class="pagination">
-							<li class="info">Current page {$index/} of {$pages/} - </li>
-							<li><label class="control-label-api" for="input01" itemprop="size" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
-								<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
-							{if isset="$user"}
-									<input type="hidden" name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">
-							{/if}
-							{unless isset="$user"}
-								<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage">
-							{/unless}
-					</ul>
-				</small>
+	<small>
+		<ul class="pagination">
+			<li class="info">Current page {$index/} of {$pages/} - </li>
+			<li><label class="control-label-api" for="input01" itemprop="size" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
+				<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"/>
+			</li>
+			<li><img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
+				{if isset="$user"}
+					<input type="hidden" name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage"/>
+				{/if}
+				{unless isset="$user"}
+					<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$selected_category/}&status={$selected_status/}&orderBy={$orderBy/}&dir={$dir/}" id="currentPage"/>
+				{/unless}
+			</li>
+		</ul>
+	</small>
 </h2>
 	<div class="row">
 		{include file="paging.tpl"/}

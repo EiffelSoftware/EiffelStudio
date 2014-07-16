@@ -194,8 +194,8 @@ feature -- Implementation
 				if attached {WSF_STRING} req.query_parameter ("size") as ll_size and then ll_size.is_integer then
 					l_size := ll_size.integer_value
 				else
-					-- default page size is 10
-					l_size := 10
+					-- default page size is 30
+					l_size := 30
 				end
 
 					-- Filter text
@@ -354,8 +354,8 @@ feature -- Implementation
 				if attached {WSF_STRING} req.query_parameter ("size") as ll_size and then ll_size.is_integer then
 					l_size := ll_size.integer_value
 				else
-						-- default page size is 10
-					l_size := 10
+						-- default page size is 30
+					l_size := 30
 				end
 
 					-- Page query parameters

@@ -110,15 +110,6 @@ var logoff = function(callback){
     }
 };
 
-/*
-var enter = function () {
-document.getElementById('password').keypress(function(e) {
-    if (e.which == '13') {
-        login();
-    }
- });
-};
-*/
 
 function remove(id)
 {
@@ -133,3 +124,32 @@ $("#password").pressEnter( function() {
 
      login();
 }); 
+
+
+$(document).ready(function() {
+
+     var host = $('#host_pe').val();
+     var user = $('#user_pe').val();
+     console.log(host);
+     console.log(user);
+
+     var elem = '<li  class="dropdown">  <a class="dropdown-toggle" data-toggle="dropdown">';
+     elem = elem.concat(user);
+     elem = elem.concat('<b Class="caret"></b></a><ul class="dropdown-menu"><li><a href="');
+     elem = elem.concat(host);
+     elem = elem.concat('/account" itemprop="account_information" rel="account_information">Account Information</a></li><li class="divider"></li><li><a href="');
+     elem = elem.concat(host);
+     elem = elem.concat('/email" itemprop="change_email" rel="change_email">Change Email</li><li><a href="');
+     elem = elem.concat(host);
+     elem = elem.concat('/password" itemprop="change_password" rel="change_password">Change Password</a></li></ul></li>' );
+     console.log (elem);
+
+
+    $('#login_pe').after('<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>').remove();
+    $('#logoff_pe').after('<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>').remove();
+    $('#dropdown_pe_2').remove();
+    $('#dropdown_pe_3').remove();
+    $('#dropdown_pe_4').remove();
+    $('#dropdown_pe_1').after(elem).remove(); 
+
+});

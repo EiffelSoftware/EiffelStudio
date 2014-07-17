@@ -40,6 +40,7 @@
 </div>
    
 <div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope="itemscope" itemtype="{$host/}/profile/esa_api.xml">
+  <input id="host_pe" type="hidden" name="host" value="{$host/}">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -57,16 +58,12 @@
       </ul>  
       <ul class="nav navbar-nav navbar-right">
          {if isset="$user"}
-             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown">{$user/} <b Class="caret"></b></a>
-              <ul class="dropdown-menu">
-              <li><a href="{$host/}/account" itemprop="account_information" rel="account_information">Account Information</a></li>
-              <li class="divider"></li>
-              <li><a href="{$host/}/email" itemprop="change_email" rel="change_email">Change Email</li>
-              <li><a href="{$host/}/password" itemprop="change_password" rel="change_password">Change Password</a></li>
-            </ul>
-         </li> 
-
+              <li id="dropdown_pe_1">
+              <input id="user_pe" type="hidden" name="user" value="{$user/}">
+              <a>{$user/} </a></li>
+              <li id="dropdown_pe_2"><a href="{$host/}/account" itemprop="account_information" rel="account_information">Account Information</a></li>
+              <li id="dropdown_pe_3"><a href="{$host/}/password" itemprop="change_password" rel="change_password">Change Password</a></li>
+              <li id="dropdown_pe_4"><a href="{$host/}/email" itemprop="change_email" rel="change_email">Change Email</a></li>
          {/if}
          {unless isset="$user"}
               <li><a href="#">Guest</a></li>
@@ -74,11 +71,11 @@
          {/unless} 
          
          {if isset="$user"}
-            <li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>
+            <li id="logoff_pe" ><a href="{$host/}/logoff"  itemprop="logoff" rel="logoff">Logoff</a></li>
          {/if}
          {unless isset="$user"}
-            <li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <!--  Custome Modal -->
-            <!-- <li><a href="{$host/}/login">Login</a></li> -->   <!--Browser pop up -->
+            <!--<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <! Custome Modal --> 
+            <li id="login_pe" ><a href="{$host/}/login"  itemprop="login" rel="login">Login</a></li>  <!--  Custome Modal -->
          {/unless} 
         </ul>
       <!--form class="navbar-form navbar-right">

@@ -19,7 +19,12 @@
 
 #ifndef _EVEQS_H
 #define _EVEQS_H
-#include <stdint.h>
+
+#include "eif_portable.h"
+
+#ifndef EIF_WINDOWS
+#	include <stdint.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

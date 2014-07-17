@@ -42,6 +42,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	problem_report (a_number: INTEGER): detachable ESA_REPORT
+			-- Problem report with number `a_number'.
+		do
+			Result := data_provider.problem_report (a_number)
+			post_data_provider_execution
+		end
+
+
 	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): LIST[ESA_REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
@@ -122,6 +130,20 @@ feature -- Access
 			end
 			data_provider.disconnect
 			Result := l_list
+			post_data_provider_execution
+		end
+
+
+	problem_report_category_subscribers (a_category: STRING): LIST[STRING]
+			-- Possible list of subscriber to category `a_category'	
+		do
+			log.write_debug (generator+".status" )
+			create {ARRAYED_LIST[STRING]} Result.make (0)
+			data_provider.connect
+			across data_provider.problem_report_category_subscribers (a_category) as c loop
+				Result.force (c.item)
+			end
+			data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -519,8 +541,11 @@ feature -- Basic Operations
 	commit_problem_report (a_report_id: INTEGER)
 			-- Commit a temporary problem report.
 		do
+				-- Should we return the last report number?
+				-- CQS
 			log.write_debug (generator+".commit_problem_report report_id" + a_report_id.out )
 			data_provider.commit_problem_report (a_report_id)
+			set_last_problem_report_number (data_provider.last_problem_report_number)
 			post_data_provider_execution
 		end
 
@@ -596,6 +621,7 @@ feature -- Basic Operations
 		do
 			log.write_debug (generator + ".commit_interaction Interaction_Id:" + a_interaction_id.out)
 			data_provider.commit_interaction (a_interaction_id)
+			set_last_interaction_id (data_provider.last_interaction_id)
 			post_data_provider_execution
 		end
 
@@ -792,6 +818,11 @@ feature -- Status Report
 
 		end
 
+	last_problem_report_number: INTEGER
+			-- last_problem_report_number created.
+
+	last_interaction_id: INTEGER
+			-- last_interaction_id created.		
 
 feature -- Statistics
 
@@ -809,6 +840,23 @@ feature -- Statistics
 
 
 feature {NONE} -- Implementation
+
+	set_last_problem_report_number (a_number: INTEGER)
+			-- Set `last_problem_report_number' to `a_number'.
+		do
+			last_problem_report_number := a_number
+		ensure
+			set: last_problem_report_number = a_number
+		end
+
+	set_last_interaction_id (a_id: INTEGER)
+			-- Set `last_interaction_id' to `a_id'.
+		do
+			last_interaction_id := a_id
+		ensure
+			set: last_interaction_id = a_id
+		end
+
 
 	post_data_provider_execution
 		do

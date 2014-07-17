@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Using "noreplies@eiffel.com" as admin email.
 		do
 
-			admin_email := "noreplies@eiffel.com"
+			admin_email := "noreply@eiffel.com"
 			smtp_server := a_smtp_server
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
 			create host.make_local
@@ -147,7 +147,108 @@ feature -- Basic Operations
 			end
 		end
 
+	send_new_report_email (a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING])
+			-- Send report creation confirmation email to interested parties.
+		local
+			l_email: EMAIL
+		do
+			if successful then
+				create l_email.make_with_entry (admin_email, a_email)
+				l_email.set_message (a_report.string_8)
+				l_email.set_signature (disclaimer)
+				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject(a_report))
+				if not a_subscribers.is_empty then
+					l_email.add_header_entry ({EMAIL_CONSTANTS}.h_cc, recipients_to_string (a_subscribers))
+				end
+				send_email (l_email)
+			else
+				log.write_error (generator + ".send_new_report_email " + a_report.number.out + " " + last_error_message)
+			end
+		end
+
+	send_new_interaction_email (a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT)
+			-- Send report creation confirmation email to interested parties.
+		local
+			l_email: EMAIL
+			l_message: STRING
+
+		do
+			if
+				attached a_report.interactions as l_interactions and then
+				attached l_interactions.first as l_report_interaction
+			then
+				if successful then
+					create l_email.make_with_entry (admin_email, a_email)
+					l_message := l_report_interaction.string_8
+
+					if
+						attached a_old_report.category as l_old_category and then
+						attached a_old_report.status as l_old_status and then
+						attached a_report.category as l_category and then
+						attached a_report.status as l_status
+					then
+						if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
+							l_message.append ("%N")
+							l_message.append ("Category changed to:" + l_category.synopsis)
+						end
+						if not l_old_status.synopsis.is_case_insensitive_equal_general (l_status.synopsis) then
+							l_message.append ("%N")
+							l_message.append ("Status changed to:" + l_status.synopsis)
+						end
+					end
+
+					l_email.set_message (l_message)
+					l_email.set_signature (disclaimer)
+					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject(a_report))
+					if not a_subscribers.is_empty then
+						l_email.add_header_entry ({EMAIL_CONSTANTS}.h_cc, recipients_to_string (a_subscribers))
+					end
+					send_email (l_email)
+				else
+					log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
+				end
+			else
+			end
+		end
+
+
+
 feature {NONE} -- Implementation
+
+	report_email_subject (a_report: ESA_REPORT): STRING
+			-- Subject of email related to report `a_report'
+		do
+			create Result.make (1024)
+			Result.append_character ('[')
+			if attached a_report.category as l_category then
+				Result.append (l_category.synopsis)
+			end
+			Result.append (" #")
+			Result.append_integer (a_report.number)
+			Result.append ("] ")
+			Result.append (a_report.synopsis)
+		end
+
+	recipients_to_string (a_recipients: LIST [STRING]): STRING
+			-- Convert list of recipients to 'To' field string
+		require
+			valid_recipients: not a_recipients.is_empty
+		do
+			from
+				create Result.make (a_recipients.count * 25)
+				a_recipients.start
+				Result.append (a_recipients.item)
+				a_recipients.forth
+			until
+				a_recipients.after
+			loop
+				Result.append_character (',')
+				Result.append (a_recipients.item)
+				a_recipients.forth
+			end
+		ensure
+			attached_string: Result /= Void
+		end
 
 
 	send_email (a_email: EMAIL)
@@ -161,6 +262,7 @@ feature {NONE} -- Implementation
 				smtp_protocol.transfer (a_email)
 				smtp_protocol.close_protocol
 				log.write_information (generator + ".send_email Email sent.")
+				set_successful
 			else
 				log.write_error (generator + ".send_email Email not send" + last_error_message )
 			end
@@ -171,6 +273,6 @@ feature {NONE} -- Implementation
 		end
 
 	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
-		-- Email not monitored disclaimer
+		-- Email not monitored disclaimer.
 
 end

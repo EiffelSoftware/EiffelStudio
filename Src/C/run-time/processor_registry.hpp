@@ -112,6 +112,10 @@ private:
   std::atomic<bool> is_marking;
   void clear_from_caches (processor *proc);
 
+private:
+  std::mutex need_pid_mutex;
+  std::condition_variable need_pid_cv;
+
   // end of life notification
 private:
   bool all_done;

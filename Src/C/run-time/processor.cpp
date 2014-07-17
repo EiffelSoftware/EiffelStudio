@@ -62,7 +62,7 @@ processor::~processor()
 bool
 processor::try_call (call_data *call)
 {
-  if (false) // Switch this on to catch exceptions
+  if (true) // Switch this on to catch exceptions
     {
       // This section slows down some benchmarks by 2x. I believe
       // this is due to either some locking in the allocation routines (again)
@@ -284,7 +284,7 @@ processor::mark(marker_t mark)
 priv_queue*
 processor::new_priv_queue()
 {
-  std::unique_lock <std::mutex> lk (cache_mutex);
+  std::unique_lock <mutex_type> lk (cache_mutex);
   private_queue_cache.push_back(new priv_queue(this));
   return private_queue_cache.back();
 }

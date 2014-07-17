@@ -109,6 +109,7 @@ struct notifier : spsc <notify_message> {
  */
 class processor
 {
+
 public:
   /* Construct a new processor.
    * @_pid the processor ID that will be used to identify this processor
@@ -246,7 +247,7 @@ public:
 
 private:
   std::vector<priv_queue*> private_queue_cache;
-  std::mutex cache_mutex;
+  mutex_type cache_mutex;
 
 private:
   /* Clients that we have to notify that we didn't do what they wanted.

@@ -29,7 +29,6 @@
 #include <eif_macros.h>
 #include <eif_scoop.h>
 #include <iostream>
-#include <mutex>
 #include <stdlib.h>
 
 processor_registry registry;
@@ -67,11 +66,19 @@ processor_registry::create_fresh (void* obj)
   spid_t pid = 0;
   processor *proc;
 
-#ifndef NDEBUG
-  bool success = 
-#endif
-  free_pids.dequeue (pid);
-  assert (success & "There were no available PIDs");
+  if (!free_pids.dequeue (pid))
+    {
+      plsc();
+      {
+        eif_lock lock (need_pid_mutex);
+        {
+          while (!free_pids.dequeue (pid))
+            {
+              need_pid_cv.wait (lock);
+            }
+        }
+      }
+    }
 
   proc = new processor(pid, false);
   procs[pid] = proc;
@@ -105,7 +112,7 @@ processor_registry::return_processor (processor *proc)
 
       if (used_pids.size() == 0)
 	{
-	  std::unique_lock<std::mutex> lock(all_done_mutex);
+	  std::unique_lock <std::mutex> lock(all_done_mutex);
 	  all_done = true;
 	  all_done_cv.notify_one();
 	}
@@ -113,7 +120,9 @@ processor_registry::return_processor (processor *proc)
       // pid 0 is special so we don't recycle that one.
       if (pid)
 	{
+	  eif_lock lock (need_pid_mutex);
 	  free_pids.enqueue (pid);
+	  need_pid_cv.notify_all();
 	}
     }
   else
@@ -185,7 +194,7 @@ processor_registry::clear_from_caches (processor *proc)
     {
       if (used_pids.has (i))
 	{
-	  proc->cache.clear (proc);
+	  procs[i]->cache.clear (proc);
 	}
     }
 }

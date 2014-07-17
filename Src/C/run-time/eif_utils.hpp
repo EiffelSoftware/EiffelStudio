@@ -23,6 +23,14 @@
 #include <mutex>
 #include "eif_macros.h"
 
+#define EIF_USE_STD_MUTEX
+#ifdef EIF_USE_STD_MUTEX
+	typedef std::mutex mutex_type;
+#else
+#	include "concurrency/rt_mutex.hpp"
+	typedef eiffel_run_time::mutex mutex_type;
+#endif
+
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);
 
 void

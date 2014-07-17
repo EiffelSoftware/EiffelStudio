@@ -111,6 +111,7 @@ typedef unsigned int uint32;
 
 /* Portable integer pointers */
 #ifdef EIF_WINDOWS
+#include <stdint.h>
 
 #ifndef _INTPTR_T_DEFINED
 #define _INTPTR_T_DEFINED

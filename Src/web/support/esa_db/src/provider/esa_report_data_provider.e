@@ -214,6 +214,21 @@ feature -- Access
 			post_execution
 		end
 
+
+	problem_report_category_subscribers (a_category: STRING): ESA_DATABASE_ITERATION_CURSOR [STRING]
+			-- Problem report subscribers emails for category `a_category'
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			log.write_information (generator + ".problem_report_category_subscribers")
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_category, 50), {ESA_DATA_PARAMETERS_NAMES}.Category_synopsis_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportCategorySubscribers", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_category_email_subscribers)
+			post_execution
+		end
+
 	interaction (a_username: STRING; a_interaction_id: INTEGER; a_report: ESA_REPORT): detachable ESA_REPORT_INTERACTION
 			-- Problem report interaction given `a_username', `a_interaction_id' and report, if any.
 		local
@@ -1795,6 +1810,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	new_category_email_subscribers (a_data_value: DB_TUPLE): STRING
+			-- New subscriber email.
+		do
+			create Result.make_empty
+			if attached db_handler.read_string (3) as l_email then
+				Result.append (l_email)
+			end
+		end
+
 feature -- Status Report
 
 	last_row_count: INTEGER
@@ -1803,6 +1827,7 @@ feature -- Status Report
 feature -- Connection
 
 	connect
+			-- Connect to the database.
 		do
 			if not db_handler.is_connected then
 				db_handler.connect
@@ -1810,6 +1835,7 @@ feature -- Connection
 		end
 
 	disconnect
+			-- Disconnect from the database.
 		do
 			if db_handler.is_connected then
 				db_handler.disconnect
@@ -1898,7 +1924,7 @@ feature -- Queries
 																(select max (ReportResponsibleID) as ReportResponsibleID
 										    from ProblemReportResponsibles prr, ProblemReports pr
 										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  
-						INNER JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 						WHERE ProblemReports.StatusID in $StatusSet
 						$queryFilter
 						$SearchBySynopsisAndOrDescription

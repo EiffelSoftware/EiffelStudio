@@ -16,6 +16,7 @@
 		{unless isset="$user"}
 		<form class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
 		{/unless} 
+			<input type="hidden" name="size" value="{$size/}">    
 			<div class="row">
 				<div class="col-sm-4">
 					<label class="control-label-api" for="input01" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>

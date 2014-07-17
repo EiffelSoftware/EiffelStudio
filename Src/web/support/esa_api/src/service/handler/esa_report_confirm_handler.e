@@ -97,9 +97,9 @@ feature -- HTTP Methods
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
 				if attached current_media_type (req) as l_type then
-					to_implement ("l_number := Data_provider.last_problem_report_number")
-					to_implement ("send_new_report_email (l_number)")
 					api_service.commit_problem_report (extract_form_data(req, l_type))
+					log.write_information (generator +"do_post Send email to report number:" + api_service.last_problem_report_number.out)
+					send_new_report_email (l_user)
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).report_form_confirm_redirect (req, res)
 				else
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).report_form_confirm_redirect (req, res)
@@ -112,6 +112,8 @@ feature -- HTTP Methods
 				end
 			end
 		end
+
+feature -- Implementation
 
 	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): INTEGER
 			-- Extract confirmation numnber.
@@ -132,6 +134,25 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.form_parameter ("confirm") as l_confirm and then l_confirm.is_integer then
 					Result := l_confirm.integer_value
 				end
+			end
+		end
+
+	send_new_report_email (a_user: STRING)
+			-- Send report creation confirmation email to interested parties.	
+		local
+			l_subscribers: LIST [STRING]
+		do
+			if
+				attached api_service.user_account_information (a_user).email as l_email and then
+				attached api_service.problem_report (api_service.last_problem_report_number) as l_report and then
+				attached l_report.category as l_category and then
+				attached l_category.synopsis as l_synopsis
+			then
+				l_subscribers := api_service.problem_report_category_subscribers (l_synopsis)
+				email_service.send_new_report_email (l_report, l_email, l_subscribers)
+			else
+					-- Not expected.
+				log.write_critical (generator + ".send_new_report_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")
 			end
 		end
 end

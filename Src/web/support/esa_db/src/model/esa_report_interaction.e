@@ -56,6 +56,9 @@ feature -- Access
 	date: detachable DATE_TIME
 			-- interaction date.
 
+	date_output: detachable STRING
+			-- formatted date as dd mmm yyyy.		
+
 	status: detachable STRING
 			-- assigned status.
 
@@ -92,6 +95,9 @@ feature -- Element change
 			-- Set `date' to `a_date'.
 		do
 			date := a_date
+			if a_date /= void then
+				date_output := a_date.formatted_out ("[0]dd/mm/yyyy")
+			end
 		ensure
 			date_set: date = a_date
 		end
@@ -144,7 +150,7 @@ feature -- Output
 				if ats.count > 1 then
 					Result.append (ats.count.out + " attachment(s):%N")
 				else
-					Result.append ("One attachment:%N")
+					-- Result.append ("One attachment:%N")
 				end
 				across
 					ats as c

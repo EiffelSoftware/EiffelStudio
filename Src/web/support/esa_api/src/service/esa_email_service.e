@@ -147,15 +147,14 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING])
+	send_new_report_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
 		do
 			if successful then
 				create l_email.make_with_entry (user_mail (a_name), a_email)
-				l_email.set_message (a_report.string_8)
-				l_email.set_signature (disclaimer)
+				l_email.set_message (new_report_email_message (a_report, a_url))
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
 					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
@@ -166,7 +165,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT)
+	send_new_interaction_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -197,8 +196,8 @@ feature -- Basic Operations
 						end
 					end
 
+					l_message.append (new_interaction_email_message(a_report,a_url))
 					l_email.set_message (l_message)
-					l_email.set_signature (disclaimer)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
 						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
@@ -244,7 +243,7 @@ feature {NONE} -- Implementation
 		end
 
 	recipients_to_array (a_recipients: LIST [STRING]): ARRAY [STRING]
-			-- Convert list of recipients to 'To' field string
+			-- Convert list of recipients to 'To' array of strings.
 		require
 			valid_recipients: not a_recipients.is_empty
 		local
@@ -265,6 +264,98 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			attached_string: Result /= Void
+		end
+
+
+	report_email_links (a_url:STRING; a_report_number: INTEGER): STRING
+			-- Links to report with number `a_report_number'
+		do
+			create Result.make (1024)
+			Result.append ("%N%NAdditional information available at:%N")
+			Result.append (a_url)
+			Result.append ("/")
+			Result.append_integer (a_report_number)
+			Result.append ("%N%NAdd a new interaction to problem report at:%N")
+			Result.append (a_url)
+			Result.append ("/")
+			Result.append_integer (a_report_number)
+			Result.append ("/interaction_form")
+		end
+
+
+	new_report_email_message (a_report: ESA_REPORT; a_url: STRING): STRING
+			-- New report message
+		do
+			create Result.make (4096)
+			Result.append (report_email_subject (a_report, 0))
+			Result.append (":%N%NSubmitter: ")
+			if
+				attached a_report.contact as l_contact and then
+				attached l_contact.name as l_name
+			then
+				Result.append (l_name)
+			end
+			Result.append ("%NClass: ")
+			if attached a_report.report_class as l_class then
+				Result.append (l_class.synopsis)
+			end
+			Result.append ("%NSeverity: ")
+			if attached a_report.severity as l_severity then
+				Result.append (l_severity.synopsis)
+			end
+			Result.append ("%NCategory: ")
+			if
+				attached a_report.category as l_category and then
+				attached l_category.synopsis as l_synopsis
+			then
+				Result.append (l_synopsis)
+			end
+			Result.append ("%NRelease: ")
+			if attached a_report.release as l_release then
+				Result.append (l_release)
+			end
+			Result.append ("%NEnvironment: ")
+			if attached a_report.environment as l_env then
+				Result.append (l_env)
+			end
+			Result.append ("%N%NDescription:%N")
+			if attached a_report.description as l_description  then
+				Result.append (l_description)
+				if attached a_report.to_reproduce as l_reproduce and then l_reproduce.count > 0 then
+					Result.append ("%N%NTo reproduce:%N")
+					Result.append (l_reproduce)
+				end
+			end
+			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
+			Result.append ("%N%N")
+			Result.append (signature (Void))
+		end
+
+
+	new_interaction_email_message (a_report: ESA_REPORT; a_url: STRING): STRING
+			-- New interaction message.
+		do
+			create Result.make (4096)
+			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
+			Result.append ("%N%N")
+			Result.append (signature (Void))
+		end
+
+
+	signature (a_user: detachable ESA_USER): STRING
+			-- Email signature for user `a_user'
+		do
+			create Result.make (256)
+			Result.append ("--%NWith best regards,%NThe Customer Support Team.%N")
+			if a_user /= Void then
+				Result.append ("%N------------------------------------------------------------%N")
+				Result.append ("Message prepared by: ")
+--				Result.append (a_user.first_name)
+				Result.append (" ")
+--				Result.append (a_user.last_name)
+				Result.append ("%N%N")
+				Result.append (Disclaimer)
+			end
 		end
 
 

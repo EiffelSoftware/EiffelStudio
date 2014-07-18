@@ -108,7 +108,7 @@ feature -- HTTP Methods
 					l_old_report := api_service.problem_report (l_report_id.integer_value)
 					api_service.commit_interaction (l_interaction)
 					update_report_problem (l_report_id.integer_value, l_interaction)
-					send_new_interaction_email (l_user, l_report_id.integer_value, l_old_report )
+					send_new_interaction_email (l_user, l_report_id.integer_value, l_old_report, absolute_host (req, "") )
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				else
 					log.write_alert (generator + ".do_post Processing request, not acceptable")
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_new_interaction_email (a_user: STRING; a_report_id: INTEGER; a_old_report: detachable ESA_REPORT)
+	send_new_interaction_email (a_user: STRING; a_report_id: INTEGER; a_old_report: detachable ESA_REPORT; a_url: STRING)
 			-- Send interaction creation confirmation email to interested parties.
 		local
 			l_subscribers: LIST [STRING]
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 				attached l_category.synopsis as l_synopsis
 			then
 				l_subscribers := api_service.problem_report_category_subscribers (l_synopsis)
-				email_service.send_new_interaction_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers, a_old_report)
+				email_service.send_new_interaction_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers, a_old_report, a_url)
 			else
 					-- Not expected.
 				log.write_critical (generator + ".send_new_interaction_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")

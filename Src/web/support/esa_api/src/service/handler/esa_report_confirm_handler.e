@@ -99,7 +99,7 @@ feature -- HTTP Methods
 				if attached current_media_type (req) as l_type then
 					api_service.commit_problem_report (extract_form_data(req, l_type))
 					log.write_information (generator +"do_post Send email to report number:" + api_service.last_problem_report_number.out)
-					send_new_report_email (l_user)
+					send_new_report_email (l_user, absolute_host (req,""))
 					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).report_form_confirm_redirect (req, res)
 				else
 					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).report_form_confirm_redirect (req, res)
@@ -137,19 +137,19 @@ feature -- Implementation
 			end
 		end
 
-	send_new_report_email (a_user: STRING)
+	send_new_report_email (a_user: STRING; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.	
 		local
 			l_subscribers: LIST [STRING]
 		do
 			if
 				attached api_service.user_account_information (a_user).email as l_email and then
-				attached api_service.problem_report (api_service.last_problem_report_number) as l_report and then
+				attached api_service.problem_report_details (a_user,api_service.last_problem_report_number) as l_report and then
 				attached l_report.category as l_category and then
 				attached l_category.synopsis as l_synopsis
 			then
 				l_subscribers := api_service.problem_report_category_subscribers (l_synopsis)
-				email_service.send_new_report_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers)
+				email_service.send_new_report_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers, a_url)
 			else
 					-- Not expected.
 				log.write_critical (generator + ".send_new_report_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")

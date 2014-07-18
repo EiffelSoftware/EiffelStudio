@@ -328,7 +328,7 @@ pre {
 	min-width: 100px;
 }
 
-.login {
+.dropdown-toggle, .login {
 	cursor: pointer;
 }
 

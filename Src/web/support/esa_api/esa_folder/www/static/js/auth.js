@@ -145,8 +145,8 @@ $(document).ready(function() {
      console.log (elem);
 
 
-    $('#login_pe').after('<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>').remove();
-    $('#logoff_pe').after('<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>').remove();
+    $('#login_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>').remove();
+    $('#logoff_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogoff" rel="logoff" itemprop="logoff">Logoff</a></li>').remove();
     $('#dropdown_pe_2').remove();
     $('#dropdown_pe_3').remove();
     $('#dropdown_pe_4').remove();

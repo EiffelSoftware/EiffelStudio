@@ -112,16 +112,14 @@ priv_queue::unlock()
 void
 priv_queue::mark(marker_t mark)
 {
-  auto mark_call =
-    [&](pq_message msg)
-      {
-	call_data* call = msg.call;
-        if (call)
-          {
-            mark_call_data (mark, call);
-          }
-      };
-  unsafe_map_ (mark_call);
+  for (auto n = q.tail_->next_ ; n ; n = n->next_)
+    {
+      call_data* call = n->value_.call;
+      if (call)
+        {
+          mark_call_data (mark, call);
+        }
+    }
 
   if (call_stack_msg.call)
     {

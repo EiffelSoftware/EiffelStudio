@@ -32,7 +32,7 @@
       <div class="modal-body">
           <form data-rel="logoff" itemprop="logoff">
 	         <input type="hidden" name="host" value="{$host/}">
-            <p><button type="button" class="btn btn-primary" onclick="logoff();">Logoff</button></p>
+            <p><button type="button" class="login btn-primary" onclick="logoff();">Logoff</button></p>
           </form>
       </div>
     </div>
@@ -74,7 +74,7 @@
             <li id="logoff_pe" ><a href="{$host/}/logoff"  itemprop="logoff" rel="logoff">Logoff</a></li>
          {/if}
          {unless isset="$user"}
-            <!--<li><a class="btn pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <! Custome Modal --> 
+            <!--<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalLogin">Login</a></li>  <! Custome Modal --> 
             <li id="login_pe" ><a href="{$host/}/login"  itemprop="login" rel="login">Login</a></li>  <!--  Custome Modal -->
          {/unless} 
         </ul>

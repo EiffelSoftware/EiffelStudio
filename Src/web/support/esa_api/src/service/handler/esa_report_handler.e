@@ -164,8 +164,7 @@ feature -- Implementation
 			l_page: INTEGER
 			l_size: INTEGER
 			l_filter: detachable STRING_32
-			l_synopsis: INTEGER
-			l_description: INTEGER
+			l_content: INTEGER
 		do
 			to_implement ("Clean, refactor too complex code!!!")
 			create l_rhf
@@ -204,15 +203,10 @@ feature -- Implementation
 				end
 
 					-- Filter by description
-				if attached {WSF_STRING} req.query_parameter ("filter_description") as l_filter_description and then l_filter_description.is_integer then
-					l_description := l_filter_description.integer_value
+				if attached {WSF_STRING} req.query_parameter ("filter_content") as l_filter_content and then l_filter_content.is_integer then
+					l_content := l_filter_content.integer_value
 				end
 
-
-					-- Filter by synopsis
-				if attached {WSF_STRING} req.query_parameter ("filter_synopsis") as l_filter_synopsis and then l_filter_synopsis.is_integer then
-					l_synopsis := l_filter_synopsis.integer_value
-				end
 
 					-- Page query parameters
 				if attached {WSF_STRING} req.query_parameter ("category") as ll_category and then
@@ -261,8 +255,8 @@ feature -- Implementation
 						end
 					end
 				end
-				l_pages := api_service.row_count_problem_report_responsible (l_category, l_severity, l_priority, l_responsible, l_status_selected, l_submitter, l_filter, l_description, l_synopsis)
-				l_row :=  api_service.problem_reports_responsibles (l_page, l_size, l_category, l_severity,l_priority, l_responsible, l_order_by, l_dir, l_status_selected, l_submitter, l_filter, l_description, l_synopsis)
+				l_pages := api_service.row_count_problem_report_responsible (l_category, l_severity, l_priority, l_responsible, l_status_selected, l_submitter, l_filter, l_content)
+				l_row :=  api_service.problem_reports_responsibles (l_page, l_size, l_category, l_severity,l_priority, l_responsible, l_order_by, l_dir, l_status_selected, l_submitter, l_filter, l_content)
 				create l_report_view.make (l_row, l_page, l_pages // l_size, l_categories, list_status, current_user_name (req))
 				l_report_view.set_selected_category (l_category)
 				l_report_view.set_selected_priority (l_priority)
@@ -275,8 +269,7 @@ feature -- Implementation
 				l_report_view.set_submitter (l_submitter)
 				l_report_view.set_order_by (l_order_by)
 				l_report_view.set_filter (l_filter)
-				l_report_view.set_filter_description (l_description)
-				l_report_view.set_filter_synopsis (l_synopsis)
+				l_report_view.set_filter_content (l_content)
 
 				if l_dir = 1 then
 					l_report_view.set_direction ("ASC")
@@ -376,7 +369,7 @@ feature -- Implementation
 				else
 					l_order_by := "submissionDate"
 					l_direction := "ASC"
-					l_dir := 1
+					l_dir := 0
 				end
 				l_pages := api_service.row_count_problem_report_guest (l_category, l_status, a_user)
 				l_row := api_service.problem_reports_guest_2 (l_page, l_size, l_category, l_status, l_order_by, l_dir)

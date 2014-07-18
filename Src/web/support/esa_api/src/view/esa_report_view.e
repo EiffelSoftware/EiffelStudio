@@ -95,14 +95,12 @@ feature -- Access
 		-- User submit a problem.
 
 	filter: detachable STRING_32
-		-- Filter text to search by synopsis or descriptions.
+		-- Filter text to search
+		-- By default search by synopsis.
+		-- If content is checked, also search by ToReproduce, Descriptions and Interactions Contents.
 
-	filter_description: INTEGER
-		-- Is filter by description checked?
-		-- 1: yes, 0: no.
-
-	filter_synopsis: INTEGER
-		-- Is filter by synopsis checked?
+	filter_content: INTEGER
+		-- Is filter by content checked?
 		-- 1: yes, 0: no.
 
 feature -- Change Element
@@ -211,21 +209,12 @@ feature -- Change Element
 			filter_set: filter = a_filter
 		end
 
-	set_filter_description (a_filter_description: like filter_description)
-			-- Set `filter_description' to `a_filter_description'.
+	set_filter_content (a_filter_content: like filter_content)
+			-- Set `filter_content' to `a_filter_content'.
 		do
-			filter_description := a_filter_description
+			filter_content := a_filter_content
 		ensure
-			filter_description_set: filter_description = a_filter_description
-		end
-
-
-	set_filter_synopsis (a_filter_synopsis: like filter_synopsis)
-			-- Set `filter_synopsis' to `a_filter_synopsis'.
-		do
-			filter_synopsis := a_filter_synopsis
-		ensure
-			filter_synopsis_set: filter_synopsis = a_filter_synopsis
+			filter_content_set: filter_content = a_filter_content
 		end
 
 end

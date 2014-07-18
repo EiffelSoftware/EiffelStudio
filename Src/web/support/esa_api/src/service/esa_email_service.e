@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Using "noreplies@eiffel.com" as admin email.
 		do
 
-			admin_email := "noreply@eiffel.com"
+			admin_email := "noreplies@eiffel.com"
 			smtp_server := a_smtp_server
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
 			create host.make_local
@@ -147,18 +147,18 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING])
+	send_new_report_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING])
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
 		do
 			if successful then
-				create l_email.make_with_entry (admin_email, a_email)
+				create l_email.make_with_entry (user_mail (a_name), a_email)
 				l_email.set_message (a_report.string_8)
 				l_email.set_signature (disclaimer)
-				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject(a_report))
+				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
-					l_email.add_header_entry ({EMAIL_CONSTANTS}.h_cc, recipients_to_string (a_subscribers))
+					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
 				end
 				send_email (l_email)
 			else
@@ -166,7 +166,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT)
+	send_new_interaction_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -178,7 +178,7 @@ feature -- Basic Operations
 				attached l_interactions.first as l_report_interaction
 			then
 				if successful then
-					create l_email.make_with_entry (admin_email, a_email)
+					create l_email.make_with_entry (user_mail (a_name), a_email)
 					l_message := l_report_interaction.string_8
 
 					if
@@ -199,9 +199,9 @@ feature -- Basic Operations
 
 					l_email.set_message (l_message)
 					l_email.set_signature (disclaimer)
-					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject(a_report))
+					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
-						l_email.add_header_entry ({EMAIL_CONSTANTS}.h_cc, recipients_to_string (a_subscribers))
+						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
 					end
 					send_email (l_email)
 				else
@@ -215,7 +215,17 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	report_email_subject (a_report: ESA_REPORT): STRING
+	user_mail (a_name: STRING): STRING
+			-- Construct the from email of a user `a_name' as "a_name <admin_mail>".
+		do
+			create Result.make (a_name.count + 3 + admin_email.count)
+			Result.append (a_name)
+			Result.append_character ('<')
+			Result.append (admin_email)
+			Result.append_character ('>')
+		end
+
+	report_email_subject (a_report: ESA_REPORT; a_interactions_count: INTEGER): STRING
 			-- Subject of email related to report `a_report'
 		do
 			create Result.make (1024)
@@ -225,25 +235,32 @@ feature {NONE} -- Implementation
 			end
 			Result.append (" #")
 			Result.append_integer (a_report.number)
+			if a_interactions_count > 0 then
+				Result.append (" - ")
+				Result.append_integer (a_interactions_count)
+			end
 			Result.append ("] ")
 			Result.append (a_report.synopsis)
 		end
 
-	recipients_to_string (a_recipients: LIST [STRING]): STRING
+	recipients_to_array (a_recipients: LIST [STRING]): ARRAY [STRING]
 			-- Convert list of recipients to 'To' field string
 		require
 			valid_recipients: not a_recipients.is_empty
+		local
+			i: INTEGER
 		do
 			from
-				create Result.make (a_recipients.count * 25)
+				create Result.make_filled ("", 1, a_recipients.count)
 				a_recipients.start
-				Result.append (a_recipients.item)
+				Result.put (a_recipients.item, 1)
+				i := 2
 				a_recipients.forth
 			until
 				a_recipients.after
 			loop
-				Result.append_character (',')
-				Result.append (a_recipients.item)
+				Result.put (a_recipients.item, i)
+				i := i + 1
 				a_recipients.forth
 			end
 		ensure

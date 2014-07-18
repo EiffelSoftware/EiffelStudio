@@ -149,7 +149,7 @@ feature -- Implementation
 				attached l_category.synopsis as l_synopsis
 			then
 				l_subscribers := api_service.problem_report_category_subscribers (l_synopsis)
-				email_service.send_new_report_email (l_report, l_email, l_subscribers)
+				email_service.send_new_report_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers)
 			else
 					-- Not expected.
 				log.write_critical (generator + ".send_new_report_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")

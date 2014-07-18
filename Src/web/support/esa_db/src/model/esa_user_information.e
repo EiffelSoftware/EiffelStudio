@@ -6,7 +6,6 @@ note
 class
 	ESA_USER_INFORMATION
 
-
 create
 	make
 
@@ -270,6 +269,29 @@ feature -- Query
 				is_null_or_empty (first_name) or else
 				is_null_or_empty (last_name) or else
 				is_null_or_empty (email))
+		end
+
+	displayed_name: STRING
+			-- Display representation of the name for Current user.
+		do
+			if attached first_name as l_first and then not l_first.is_empty then
+				if attached last_name as l_last and then not l_last.is_empty then
+						-- We have both the first and last name.
+					create Result.make (l_first.count + 1 + l_last.count)
+					Result.append (l_first)
+					Result.append_character (' ')
+					Result.append (l_last)
+				else
+						-- Only the last name.
+					Result := l_first
+				end
+			elseif attached last_name as l_last and then not l_last.is_empty then
+					-- Only the first name.
+				Result := l_last
+			else
+					-- None of the first or lastname, we will use the username
+				Result := username
+			end
 		end
 
 	has_extended_information: BOOLEAN

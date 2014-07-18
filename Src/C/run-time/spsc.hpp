@@ -113,8 +113,8 @@ public:
       }
   }
 
-private:
-  // internal node structure
+  // Internal node structure.
+  // It should be private, but it is made public to allow explicit iteration in 'priv_queue::mark'.
   struct node
   {
     node* next_;
@@ -125,6 +125,7 @@ private:
   // accessed mainly by consumer, infrequently be producer
   node* tail_; // tail of the queue
 
+private:
   // delimiter between consumer part and producer part,
   // so that they situated on different cache lines
   char cache_line_pad_ [cache_line_size];
@@ -225,8 +226,10 @@ public:
         f (n->value_);
       }
   }
-private:
+
   spsc_queue_impl<T> q;
+
+private:
   std::mutex mutex;
   std::condition_variable cv;
 };

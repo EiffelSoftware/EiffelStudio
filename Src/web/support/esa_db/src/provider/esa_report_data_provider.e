@@ -116,7 +116,7 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_responsibles (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+	problem_reports_responsibles (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for responsible users
 			-- All reports are visible for responsible users
 			-- Filtered category `a_category' and status `a_status'
@@ -165,17 +165,21 @@ feature -- Access
 
 			l_query.replace_substring_all ("$queryFilter", l_query_filter)
 
-			if a_synopsis = 1 and then a_description = 1 then
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%') OR (ProblemReports.Description like '%%' + :Filter + '%%'))")
-			else
-				if a_synopsis = 1 then
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND ( ProblemReports.Synopsis like '%%' + :Filter + '%%')")
-				elseif a_description = 1 then
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (ProblemReports.Description like '%%' + :Filter + '%%')")
+
+				-- Filter search.
+			if attached a_filter then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
+
 			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)))
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -855,7 +859,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_description, a_synopsis: INTEGER_32): INTEGER
+	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problems reports for responsible users.
 			-- Could be filtered by category, serverity, priority, responsible, and username.
 		local
@@ -881,16 +885,17 @@ feature -- Basic Operations
 				l_query.replace_substring_all ("$Submitter", "")
 			end
 				-- Filter search.
-			if a_synopsis = 1 and then a_description = 1 then
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%') OR (ProblemReports.Description like '%%'+ :Filter + '%%'))")
-			else
-				if a_synopsis = 1 then
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND ( ProblemReports.Synopsis like '%%' + :Filter + '%%')")
-				elseif a_description = 1 then
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (ProblemReports.Description like '%%' + :Filter + '%%')")
+			if attached a_filter then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 				--| Need to be updated to build the set based on user selection.
 			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
@@ -2006,6 +2011,21 @@ feature -- Queries
 	delete_ProblemReportTemporaryInteractions: STRING = "[
 			DELETE FROM ProblemReportTemporaryInteractions WHERE InteractionID = :InteractionID
 		]"
+
+
+	filter_by_content: STRING =	"[
+							AND (( ProblemReports.Synopsis like '%%' + :Filter + '%' ) or ( ProblemReports.Description like '%%' + :Filter + '%%' )
+							or ( ProblemReports.Description like '%%' + :Filter + '%%' )
+							or ( ProblemReports.ReportID IN
+								  ( Select  ProblemReportInteractions.ReportID
+									from ProblemReportInteractions
+									 	INNER JOIN ProblemReports ON ProblemReportInteractions.ReportID = ProblemReports.ReportID
+									where ProblemReportInteractions.Content like '%%' + :Filter + '%%'
+								   )
+								)
+							)
+						]"
+
 
 feature {NONE} -- Implementation
 

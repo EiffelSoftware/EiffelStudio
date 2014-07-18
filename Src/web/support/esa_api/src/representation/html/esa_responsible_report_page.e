@@ -44,12 +44,8 @@ feature {NONE} --Initialization
 				template.add_value (l_filter, "filter")
 			end
 
-			if a_view.filter_description = 1 then
-				template.add_value (a_view.filter_description, "filter_description")
-			end
-
-			if a_view.filter_synopsis = 1 then
-				template.add_value (a_view.filter_synopsis, "filter_synopsis")
+			if a_view.filter_content= 1 then
+				template.add_value (a_view.filter_content, "filter_content")
 			end
 
 			if

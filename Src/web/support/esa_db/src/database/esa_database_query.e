@@ -36,8 +36,12 @@ feature -- Intialization
 			set_map_name (a_base_selection)
 			a_base_selection.set_query (query)
 			a_base_selection.execute_query
-			a_base_selection.load_result
-			Result := a_base_selection.container
+			if a_base_selection.is_ok then
+				a_base_selection.load_result
+				Result := a_base_selection.container
+			else
+				log.write_error (generator + "." + a_base_selection.error_message_32)
+			end
 			unset_map_name (a_base_selection)
 			a_base_selection.terminate
 		end

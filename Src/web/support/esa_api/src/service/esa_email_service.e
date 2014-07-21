@@ -216,6 +216,7 @@ feature -- Basic Operations
 				l_content.append (" has made you the responsible for problem report '")
 				l_content.append (a_report.synopsis)
 				l_content.append ("'.%N%N")
+				l_email.set_message (l_content)
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				send_email (l_email)
 			else

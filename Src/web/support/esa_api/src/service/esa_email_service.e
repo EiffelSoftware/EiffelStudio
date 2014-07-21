@@ -66,7 +66,10 @@ feature -- Basic Operations
 				create l_content.make (1024)
 				l_content.append ("Thank you for registering at eiffel.com.%N%NTo complete your registration, please click on this link to activate your account:%N%N")
 				l_content.append (a_host)
-				l_content.append ("/activation")
+				l_content.append ("/activation?code=")
+				l_content.append (l_url.encoded_string (a_token))
+				l_content.append ("&email=")
+				l_content.append (l_url.encoded_string (a_to))
 				l_content.append ("%N%NOnce there, please enter the following information and then click the Activate Account, button.%N%N")
 				l_content.append ("Your e-mail: ")
 				l_content.append (l_html.encoded_string (a_to))
@@ -373,7 +376,10 @@ feature {NONE} -- Implementation
 				Result.append ("%N%N")
 			end
 
-			if attached a_report_interaction.attachments as l_attachments then
+			if
+				attached a_report_interaction.attachments as l_attachments 	and then
+				not l_attachments.is_empty
+			then
 				Result.append ( attachments_text (l_attachments, a_url))
 			end
 
@@ -384,6 +390,8 @@ feature {NONE} -- Implementation
 
 	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_32): STRING
 			-- Text for downloading attachments `a_attachments'.
+		require
+			not_empty: not a_attachments.is_empty
 		do
 			create Result.make (512)
 			Result.append ("Attachments:%N%N")

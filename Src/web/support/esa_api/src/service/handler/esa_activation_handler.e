@@ -48,6 +48,7 @@ feature -- execute
 		end
 
 feature -- HTTP Methods
+
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
@@ -56,9 +57,18 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
+				create l_activation_view
+				if
+					attached {WSF_STRING} req.query_parameter ("code") as l_code and then
+					attached {WSF_STRING} req.query_parameter ("email") as l_email
+				then
+					l_activation_view.set_email (l_email.value)
+					l_activation_view.set_token (l_code.value)
+				end
+				
 				log.write_information (generator + ".do_get Procesing Request using media_type: " + l_type)
 		    		-- Activation Form
-		    	create l_activation_view
+
 				l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).activation_page (req, res, l_activation_view)
 			else
 					-- Get request to /activation

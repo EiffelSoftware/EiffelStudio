@@ -167,7 +167,10 @@ feature -- Access
 
 
 				-- Filter search.
-			if attached a_filter then
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
 					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
@@ -885,7 +888,10 @@ feature -- Basic Operations
 				l_query.replace_substring_all ("$Submitter", "")
 			end
 				-- Filter search.
-			if attached a_filter then
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
 					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)

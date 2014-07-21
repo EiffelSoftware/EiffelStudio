@@ -124,6 +124,7 @@ feature -- HTTP Methods
 						api_service.set_problem_report_responsible (l_id.integer_value, l_responsible.to_integer)
 						to_implement ("send_responsible_change_email (l_pr_number, l_new_responsible, authenticated_username)")
 						update_report_responsible (req,res)
+						send_responsible_change_email (l_user, l_id.integer_value)
 					else
 					    ---	
 					end
@@ -516,4 +517,18 @@ feature {NONE} --Implementation
 			end
 		end
 
+	send_responsible_change_email (a_user: STRING; a_report_id: INTEGER)
+			-- Send email to new problem report responsible.
+		do
+			if
+				api_service.successful and then
+				attached api_service.problem_report (a_report_id) as l_report and then
+				attached l_report.assigned as l_assigned and then
+				attached l_assigned.name as l_name
+			then
+				email_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name))
+			else
+				log.write_error (generator + ".send_responsible_change_email")
+			end
+		end
 end

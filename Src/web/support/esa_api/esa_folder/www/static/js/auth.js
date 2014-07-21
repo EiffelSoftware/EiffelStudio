@@ -7,10 +7,13 @@ var login = function() {
     var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
-	  var host = form.host.value;
+	var host = form.host.value;
   	var _login = function(){
 
-     $("#imgProgress").show();  
+    var redirectURL = form.redirect && form.redirect.value || "";   
+
+
+    $("#imgProgress").show();  
 
     if  (document.getElementById('myModalFormId') !== null ) {
         remove ('myModalFormId');
@@ -35,7 +38,13 @@ var login = function() {
           //Process Response
           request.onreadystatechange = function(){
              if (request.readyState == 4) {
-                 if (request.status==200) { window.location=host.concat("/");
+                 if (request.status==200) {
+                     if (redirectURL === "") {   
+                        window.location=host.concat("/");
+                    } else {
+                        window.location=host.concat(redirectURL);
+                    }
+
  		}
                 else{
                   if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       

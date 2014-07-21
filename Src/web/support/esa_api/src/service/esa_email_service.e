@@ -165,7 +165,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT; a_url: STRING)
+	send_new_interaction_email (a_user: ESA_USER_INFORMATION; a_report: ESA_REPORT; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT; a_url: STRING; a_user_role: ESA_USER_ROLE)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -176,27 +176,16 @@ feature -- Basic Operations
 				attached a_report.interactions as l_interactions and then
 				attached l_interactions.first as l_report_interaction
 			then
-				if successful then
-					create l_email.make_with_entry (user_mail (a_name), a_email)
-					l_message := l_report_interaction.string_8
-
-					if
-						attached a_old_report.category as l_old_category and then
-						attached a_old_report.status as l_old_status and then
-						attached a_report.category as l_category and then
-						attached a_report.status as l_status
-					then
-						if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
-							l_message.append ("%N")
-							l_message.append ("Category changed to:" + l_category.synopsis)
-						end
-						if not l_old_status.synopsis.is_case_insensitive_equal_general (l_status.synopsis) then
-							l_message.append ("%N")
-							l_message.append ("Status changed to:" + l_status.synopsis)
-						end
+				if successful and then
+				   attached a_user.email as ll_email
+				then
+					if a_user_role.is_administrator or else a_user_role.is_responsible then
+						create l_email.make_with_entry (user_mail ("Eiffel Software Customer Support"), ll_email)
+					else
+						create l_email.make_with_entry (user_mail (a_user.displayed_name), ll_email)
 					end
-
-					l_message.append (new_interaction_email_message(a_report,a_url))
+					create l_message.make_empty
+					l_message.append (new_interaction_email_message(l_report_interaction, a_report, a_old_report,a_url))
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
@@ -207,8 +196,33 @@ feature -- Basic Operations
 					log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
 				end
 			else
+				log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
 			end
 		end
+
+
+	send_responsible_change_email (a_user_name: READABLE_STRING_32; a_report: ESA_REPORT; a_user: ESA_USER_INFORMATION)
+			-- Send email to new problem report responsible.
+		local
+			l_email: EMAIL
+			l_content: STRING
+		do
+			if successful and then
+				attached a_user.email as ll_email
+			then
+				create l_email.make_with_entry (user_mail (a_user.displayed_name), ll_email)
+				create l_content.make (2048)
+				l_content.append (a_user_name)
+				l_content.append (" has made you the responsible for problem report '")
+				l_content.append (a_report.synopsis)
+				l_content.append ("'.%N%N")
+				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
+				send_email (l_email)
+			else
+				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + last_error_message)
+			end
+		end
+
 
 
 
@@ -332,13 +346,74 @@ feature {NONE} -- Implementation
 		end
 
 
-	new_interaction_email_message (a_report: ESA_REPORT; a_url: STRING): STRING
+	new_interaction_email_message (a_report_interaction: ESA_REPORT_INTERACTION; a_report: ESA_REPORT; a_old_report: ESA_REPORT; a_url: STRING): STRING
 			-- New interaction message.
 		do
 			create Result.make (4096)
+
+			if
+				attached a_old_report.category as l_old_category and then
+				attached a_old_report.status as l_old_status and then
+				attached a_report.category as l_category and then
+				attached a_report.status as l_status
+			then
+				if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
+					Result.append ("%N")
+					Result.append ("Category changed to:" + l_category.synopsis)
+				end
+				if not l_old_status.synopsis.is_case_insensitive_equal_general (l_status.synopsis) then
+					Result.append ("%N")
+					Result.append ("Status changed to:" + l_status.synopsis)
+				end
+			end
+
+			if attached a_report_interaction.content as l_content then
+				Result.append (l_content)
+				Result.append ("%N%N")
+			end
+
+			if attached a_report_interaction.attachments as l_attachments then
+				Result.append ( attachments_text (l_attachments, a_url))
+			end
+
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
 			Result.append ("%N%N")
 			Result.append (signature (Void))
+		end
+
+	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_32): STRING
+			-- Text for downloading attachments `a_attachments'.
+		do
+			create Result.make (512)
+			Result.append ("Attachments:%N%N")
+			from
+				a_attachments.start
+				Result.append (attachment_text (a_attachments.item, a_url))
+				a_attachments.forth
+			until
+				a_attachments.after
+			loop
+				Result.append ("%N%N")
+				Result.append (attachment_text (a_attachments.item, a_url))
+				a_attachments.forth
+			end
+		ensure
+			attached_text: Result /= Void
+		end
+
+	attachment_text (a_attachment: ESA_REPORT_ATTACHMENT; a_url: READABLE_STRING_32): STRING
+			-- Text for downloading `a_attachment'.
+		do
+			create Result.make (512)
+			Result.append (a_attachment.name)
+			Result.append (" (")
+			Result.append_integer (a_attachment.bytes_count)
+			Result.append (" bytes):%N")
+			Result.append (a_url)
+			Result.append ("/report_interaction/")
+			Result.append_integer (a_attachment.id)
+			Result.append ("/")
+			Result.append (a_attachment.name)
 		end
 
 

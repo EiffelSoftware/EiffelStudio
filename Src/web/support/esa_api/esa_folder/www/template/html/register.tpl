@@ -7,7 +7,7 @@
      {include file="navbar.tpl"/}  
 
     <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-         <div class="col-lg-12">
+         <div class="col-xs-12">
           <form class="form-inline well" data-rel="register" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
             <fieldset>
             <legend><h1>Registration</h1></legend>
@@ -17,81 +17,69 @@
               </div>
 
             <div class="row">
-               <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-4">  
+                  <div class="col-xs-2">  
                     <label class="control-label-api itemprop="first_name" >First Name</label>
-                    <input type="text" class="form-control form-input" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name"  placeholder="Enter First Name" value="{$form.first_name/}" required>
+				</div>
+				<div class="col-xs-6">
+                    <input type="text" class="form-control" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name"  placeholder="Enter First Name" value="{$form.first_name/}" required>
                  </div>
-                </div>
-               </div>
             </div>   
                 
 
             <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                    <label class="control-label-api" itemprop="last_name">Last Name</label>
-                   <input type="text" class="form-control form-input" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name"  placeholder="Enter Last Name"value="{$form.last_name/}" required>
+				</div>
+				<div class="col-xs-6">
+                   <input type="text" class="form-control" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name"  placeholder="Enter Last Name"value="{$form.last_name/}" required>
                 </div>
-              </div>
-             </div>
             </div>  
 
             <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                 <label class="control-label-api" itemprop="email">Email</label>
-                  <input type="email" class="form-control form-input" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required>
+				</div>
+				<div class="col-xs-6">
+                  <input type="email" class="form-control" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required>
               </div>
-             </div>
-            </div>
            </div>   
 
 
             <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                  <label class="control-label-api" itemprop="user_name">User Name</label>
-                 <input type="text" class="form-control form-input" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" placeholder="Enter User Name"value="{$form.user_name/}" required>
+				</div>
+				<div class="col-xs-6">
+                 <input type="text" class="form-control" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" placeholder="Enter User Name"value="{$form.user_name/}" required>
                 </div>
-               </div>
-              </div>
              </div>   
 
             <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                   <label class="control-label-api" itemprop="password">Password</label>
-                  <input type="password" class="form-control form-input" id="password" name="password" rel="popover" data-content="Enter your password" placeholder="Enter Password" data-original-title="Password" required>
+				</div>
+				<div class="col-xs-6">
+                  <input type="password" class="form-control" id="password" name="password" rel="popover" data-content="Enter your password" placeholder="Enter Password" data-original-title="Password" required>
               </div>
-             </div>
-            </div>
            </div>   
 
 
             <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                   <label class="control-label-api" itemprop="check_password">Re-type Password</label>
-                  <input type="password" class="form-control form-input" id="check_password" name="check_password" rel="popover" data-content="Re-type your password" placeholder="Confirm Password" data-original-title="Re-type Password" required>
+				</div>
+				<div class="col-xs-6">
+                  <input type="password" class="form-control" id="check_password" name="check_password" rel="popover" data-content="Re-type your password" placeholder="Confirm Password" data-original-title="Re-type Password" required>
                </div>
-              </div>
-             </div>
             </div>  
 
 
            <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                 <label class="control-label-api" for="input01">Security question</label>
-                 <select  class="form-control form-input" data-style="btn-primary" itemprop="security_question" name="question"  rel="popover" data-original-title="Choose a security question">
+				</div>
+				<div class="col-xs-6">
+                 <select  class="form-control" data-style="btn-primary" itemprop="security_question" name="question"  rel="popover" data-original-title="Choose a security question">
                     {foreach from="$questions" item="item"}
                       {if condition="$item.id = $view.selected_question"} 
                         <option value="{$item.id/}" selected>{$item.question/}</option>
@@ -102,30 +90,22 @@
                     {/foreach}  
                  </select>
                </div>
-              </div>
-             </div>
             </div>   
 
            <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
+                <div class="col-xs-2">  
                 <label class="control-label-api" itemprop="answer">Answer</label>
-                  <input type="text" class="form-control form-input" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" placeholder="Answer security question" data-original-title="Answer security question" value="{$form.answer/}" required>
+				</div>
+				<div class="col-xs-6">
+                  <input type="text" class="form-control" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" placeholder="Answer security question" data-original-title="Answer security question" value="{$form.answer/}" required>
                 </div>
-              </div>
-            </div>
            </div> 
            </br>  
 
            <div class="row">
-             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">  
-                  <button type="submit" class="btn btn-primary" >Create My Account</button>
+             <div class="col-xs-12">
+                  <button type="submit" class="btn btn-primary" >Create</button>
                   <input type="reset" class="btn btn-default" value="Reset">
-                </div>
-              </div>
              </div>
            </div>   
 

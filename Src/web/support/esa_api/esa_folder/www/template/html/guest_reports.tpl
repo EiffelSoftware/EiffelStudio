@@ -1,15 +1,22 @@
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-xs-12">
 		<form class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
-			<input type="number" class="form-control form-bug" min="1" name="search" placeholder="Report #..." form="reports">
-			<button type="submit" class="btn btn-default">View Problem Report</button>
+			<div class="row">
+				<div class="col-xs-2">
+					<label class="control-label-api" for="input01" itemprop="report_number" data-original-title="Problem report number you need to see.">View Problem Report #:</label>
+				</div>
+				<div class="col-xs-1">
+					<input type="number" class="form-control form-bug-number-entry" min="1" name="search" placeholder="Report #..." form="reports">
+				</div>
+				<button type="submit" class="btn btn-default">Go</button>
+			</div>
 		</form>
 	</div>
 </div>
 
 
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-xs-12">
 		{if isset="$user"}
 		<form class="form-inline well" action="{$host/}/user_reports/{$user/}" id="search" method="GET" itemprop="search">
 		{/if}
@@ -18,9 +25,11 @@
 		{/unless} 
 			<input type="hidden" name="size" value="{$size/}">    
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-xs-1">
 					<label class="control-label-api" for="input01" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
-					<select class="form-control form-input" data-style="btn-primary" name="category" form="search" itemprop="search">
+				</div>
+				<div class="col-xs-4">
+					<select class="form-control" data-style="btn-primary" name="category" form="search" itemprop="search">
 						<option value="0">ALL</option>
 						{foreach from="$categories" item="item"}
 							{if condition="$item.is_selected"} 
@@ -32,9 +41,11 @@
 						{/foreach}
 					</select>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-xs-1">
 					<label class="control-label-api" for="input01" itemprop="status" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Status</label>
-					<select class="form-control form-input" data-style="btn-primary" name="status" form="search">
+				</div>
+				<div class="col-xs-4">
+					<select class="form-control" data-style="btn-primary" name="status" form="search">
 						<option value="0">ALL</option>
 						{foreach from="$status" item="item"}
 							{if condition="$item.is_selected"}
@@ -46,7 +57,7 @@
 						{/foreach}
 					</select>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-xs-2">
 					<button type="submit" class="btn btn-default">Search</button>
 				</div>
 			</div>

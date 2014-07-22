@@ -2,7 +2,7 @@
 <link href="{$host/}/static/css/bootstrap.css" rel="stylesheet" />
 
 <!-- Custom styles for this template -->
-<link href="{$host/}/static/css/dashboard.css" rel="stylesheet">
+<link href="{$host/}/static/css/dashboard.css" rel="stylesheet" />
 
 
 <!-- Just for debugging purposes. Don't actually copy this line! -->

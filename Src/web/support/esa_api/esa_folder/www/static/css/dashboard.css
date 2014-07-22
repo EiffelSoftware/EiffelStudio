@@ -237,7 +237,7 @@ pre {
 }
 
 label {
-	min-width: 100px;
+	padding-right: 10px;
 }
 
 .label-primary-api-default {

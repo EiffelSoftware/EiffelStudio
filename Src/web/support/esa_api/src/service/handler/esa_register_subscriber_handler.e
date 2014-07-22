@@ -82,7 +82,6 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_categories: LIST[INTEGER]
-			l_token: STRING
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then

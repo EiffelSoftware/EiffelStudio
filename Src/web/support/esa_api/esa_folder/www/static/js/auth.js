@@ -137,7 +137,14 @@ $("#password").pressEnter( function() {
 
 $(document).ready(function() {
 
-     var host = $('#host_pe').val();
+    progressive_loging();
+ 
+});
+
+
+var progressive_loging = function () {
+
+    var host = $('#host_pe').val();
      var user = $('#user_pe').val();
      console.log(host);
      console.log(user);
@@ -161,4 +168,7 @@ $(document).ready(function() {
     $('#dropdown_pe_4').remove();
     $('#dropdown_pe_1').after(elem).remove(); 
 
-});
+};
+
+
+

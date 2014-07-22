@@ -235,6 +235,12 @@ feature -- View
 		deferred
 		end
 
+	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable ANY )
+			-- Subscribe to category register page.
+		deferred
+		end
+
+
 feature -- Response
 
 	new_response_get (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)

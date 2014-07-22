@@ -546,6 +546,13 @@ feature -- View
 			end
 		end
 
+	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable ANY )
+			-- <Precursor>
+		do
+			to_implement ("Implement subscribe to category in CJ")
+		end
+
+
 feature -- Response
 
 	compute_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; a_location: READABLE_STRING_32)

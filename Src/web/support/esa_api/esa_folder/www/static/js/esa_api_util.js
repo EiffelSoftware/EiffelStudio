@@ -10,3 +10,15 @@ $.fn.pressEnter = function(fn) {
         })
     });  
  }; 
+
+
+$(document).ready(function() {
+
+	$('#check_uncheck').toggle(function(){
+	      $('input:checkbox').attr('checked','checked');
+	          $(this).val('uncheck all')
+	      },function(){
+	          $('input:checkbox').removeAttr('checked');
+	          $(this).val('check all');        
+	 });
+});

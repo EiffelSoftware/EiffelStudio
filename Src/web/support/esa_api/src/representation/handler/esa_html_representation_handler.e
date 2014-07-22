@@ -483,6 +483,19 @@ feature -- View
 			end
 		end
 
+	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ] )
+			-- <Precursor>
+		local
+			l_hp: ESA_SUBSCRIBE_TO_CATEGORY
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_list)
+				if attached l_hp.representation as l_change_password_page then
+					    new_response_get (req, res, l_change_password_page)
+				end
+			end
+		end
+
 
 feature -- Response
 

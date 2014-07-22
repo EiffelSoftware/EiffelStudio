@@ -213,7 +213,7 @@ pre {
 
 
 .container-fluid .row {
-	margin: 2px;
+	margin: 0px;
 }
 
 .row-padding {
@@ -221,56 +221,24 @@ pre {
 	margin-bottom: 25px;
 }
 
-/* Width for the text field to enter a bug report in the reports page. */
-.form-inline .form-bug {
-	width: 100px;
-}
-
-/* Width for the text field to enter data that will be searched in the reports page. */
-.form-inline .form-filter {
-	min-width: 400px;
+/* Width for the text field to enter a bug report number in the reports page.
+ * We put a maximum width to override the width value coming from `form-control'. */
+.form-bug-number-entry {
+	max-width: 100px;
 }
 
 /* Default width for the entries in a table like layout. */
-.form-inline .form-input {
-	min-width: 100px;
-	width: 200px;
-}
-
-/* Default width for the labels in a normal form like layout. */
-.form-inline .form-label {
-	min-width: 150px;
-}
-
-/* Default width for the entries in a normal form like layout. */
-.form-inline .form-entry {
-	min-width: 150px;
-	width: 400px;
+.form-inline .form-control {
+	width: 95%;
 }
 
 .form-inline .checkbox {
-	padding-left: 10px;
+	margin-left: 10px;
 }
 
-/* Labels used in association with a form_input. */
-.form-inline .control-label-api {
-	margin-bottom: 0;
-	vertical-align: middle;
+label {
 	min-width: 100px;
 }
-
-/* Default width for the entries in a table like layout. */
-.form-horizontal .form-input {
-	min-width: 100px;
-	width: 200px;
-}
-
-/* Default width for the labels in a normal form like layout. */
-.form-horizontal .form-label {
-	min-width: 150px;
-	float: left;
-}
-
 
 .label-primary-api-default {
 	display: inline-block;
@@ -306,9 +274,10 @@ pre {
 }
 
 
+/* No padding, so that nested columns are always properly aligned. */
 .col-xs-1,.col-sm-1,.col-md-1,.col-lg-1,.col-xs-2,.col-sm-2,.col-md-2,.col-lg-2,.col-xs-3,.col-sm-3,.col-md-3,.col-lg-3,.col-xs-4,.col-sm-4,.col-md-4,.col-lg-4,.col-xs-5,.col-sm-5,.col-md-5,.col-lg-5,.col-xs-6,.col-sm-6,.col-md-6,.col-lg-6,.col-xs-7,.col-sm-7,.col-md-7,.col-lg-7,.col-xs-8,.col-sm-8,.col-md-8,.col-lg-8,.col-xs-9,.col-sm-9,.col-md-9,.col-lg-9,.col-xs-10,.col-sm-10,.col-md-10,.col-lg-10,.col-xs-11,.col-sm-11,.col-md-11,.col-lg-11,.col-xs-12,.col-sm-12,.col-md-12,.col-lg-12 {
-	padding-left: 1px;
-	padding-right: 1px;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 .table>thead>tr>th,.table>tbody>tr>th,.table>tfoot>tr>th,.table>thead>tr>td,.table>tbody>tr>td,.table>tfoot>tr>td {

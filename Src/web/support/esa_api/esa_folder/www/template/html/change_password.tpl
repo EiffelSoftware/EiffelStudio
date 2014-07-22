@@ -13,21 +13,25 @@
             <p>Use this form to update your password:<p>
             
             <div class="row">
-               <div class="col-md-12">
-                  <label class="form-label" for="inputPassword" itemprop="password">Password</label>
-                  <input type="password" class="form-control form-entry" id="inputPassword" name="password" placeholder="Password">
+               <div class="col-xs-3">
+                  <label class="control-label-api" for="inputPassword" itemprop="password">Password</label>
+						</div>
+						<div class="col-xs-6">
+                  <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
               </div>
             </div>
 
             <div class="row">
-               <div class="col-md-12">
-                    <label class="form-label" for="confirmPassword" itemprop="check_password">Confirm Password</label>
-                   <input type="password" class="form-control form-entry" id="confirmPassword" name="check_password" placeholder="Confirm Password">
+               <div class="col-xs-3">
+                    <label class="control-label-api" for="confirmPassword" itemprop="check_password">Confirm Password</label>
+						</div>
+						<div class="col-xs-6">
+                   <input type="password" class="form-control" id="confirmPassword" name="check_password" placeholder="Confirm Password">
                </div>
             </div>
 
             <div class="row">
-                  <div class="col-md-4">  
+                  <div class="col-xs-4">  
                     <input type="submit" class="btn btn-primary" value="Submit">
                     <input type="reset" class="btn btn-default" value="Reset">
            </div>
@@ -35,9 +39,9 @@
 
            {if isset="$has_error"} 
              <div class="control-group">
-               <label class="col-sm-offset-1  label label-danger">Errors</label>
+               <label class="col-xs-offset-1  label label-danger">Errors</label>
                  {foreach from="$form.errors" item="item"}
-                   <br>  <span class="col-sm-offset-1 label label-warning">{$item/} </span> 
+                   <br>  <span class="col-xs-offset-1 label label-warning">{$item/} </span> 
                  {/foreach}
                </div>    
           {/if}

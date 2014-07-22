@@ -813,12 +813,26 @@ feature -- Access
 			post_execution
 		end
 
+	subscribed_categories (a_username: STRING): ESA_DATABASE_ITERATION_CURSOR [ TUPLE[categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER] ]
+			-- Table associating each category with boolean value specifying whether responsible `a_username'
+			-- is subscribed for receiving email notifications when reports or interactions are created in
+			-- category
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			log.write_information (generator + ".responsibles")
+			create l_parameters.make (1)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportSubscribedCategories2", l_parameters))
+			db_handler.execute_reader
+			create Result.make (db_handler, agent new_problem_report_subsribed_categeory)
+			post_execution
+		end
+
 feature -- Basic Operations
 
 	new_problem_report_id (a_username: STRING): INTEGER
 			-- Initialize new problem report row and returns ReportID.
-		require
-			attached_username: a_username /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
@@ -1465,6 +1479,36 @@ feature -- Status Report
 			post_execution
 		end
 
+	register_subscriber (a_username: STRING; a_catID: INTEGER; a_subscribe: BOOLEAN)
+			-- Subscribe responsible `a_username' to category with category ID `a_catID' if `a_subscribe'
+			-- Unsubscribe otherwise.
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_res: INTEGER
+		do
+			log.write_information (generator + ".register_subscriber")
+			if a_subscribe then
+				connect
+				create l_parameters.make (2)
+				l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				l_parameters.put (a_catid, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+				db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("AddProblemReportCategorySubscriber", l_parameters))
+				db_handler.execute_writer
+				disconnect
+				post_execution
+			else
+				connect
+				create l_parameters.make (2)
+				l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+				l_parameters.put (a_catid, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+				db_handler.set_store (create {ESA_DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportCategorySubscriber", l_parameters))
+				db_handler.execute_writer
+				disconnect
+				post_execution
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	set_last_problem_report_number (a_number: INTEGER)
@@ -1829,6 +1873,23 @@ feature {NONE} -- Implementation
 				Result.append (l_email)
 			end
 		end
+
+	new_problem_report_subsribed_categeory	(a_data_value: DB_TUPLE): TUPLE[categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER]
+			-- New tuple row (CategoryID, CategorySynopsis, Subscribed).
+		do
+			create Result
+			if attached db_handler.read_integer_32 (1) as l_categoryid then
+				Result[1] := l_categoryid
+			end
+			if attached db_handler.read_string (2) as l_synopsis then
+				Result[2] := l_synopsis
+			end
+			if attached db_handler.read_integer_32 (3) as l_subcribed then
+				Result[3] := l_subcribed
+			end
+		end
+
+
 
 feature -- Status Report
 

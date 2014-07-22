@@ -18,27 +18,21 @@ feature {NONE} -- Initialization
 	make (a_smtp_server: READABLE_STRING_32)
 			-- Create an instance of {ESA_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using "noreplies@eiffel.com" as admin email.
+		local
+			l_address_factory: INET_ADDRESS_FACTORY
 		do
-
-			admin_email := "noreplies@eiffel.com"
-			smtp_server := a_smtp_server
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create host.make_local
-			create smtp_protocol.make (a_smtp_server, host.local_host_name)
+			create l_address_factory
+			create smtp_protocol.make (a_smtp_server, l_address_factory.create_localhost.host_name)
 			set_successful
-		ensure
-			smtp_server_set: smtp_server = a_smtp_server
 		end
 
 
-	admin_email: READABLE_STRING_8
+	admin_email: IMMUTABLE_STRING_8
 			-- Administrator email.
-
-	host: HOST_ADDRESS
-			--  host name of SMTP_PROTOCOL.
-
-	smtp_server: READABLE_STRING_32
-			-- SMTP server address.
+		once
+			Result := "noreplies@eiffel.com"
+		end
 
 	smtp_protocol: SMTP_PROTOCOL
 			-- SMTP protocol.

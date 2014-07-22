@@ -274,6 +274,11 @@ feature -- View
 		end
 
 
+	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable ANY )
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
 
 feature -- Response
 

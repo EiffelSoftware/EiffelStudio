@@ -112,6 +112,7 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_role: ESA_USER_ROLE
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			log.write_information (generator+".do_post Processing request"  )
 			if attached current_user_name (req) as l_user then
@@ -124,13 +125,14 @@ feature -- HTTP Methods
 						api_service.set_problem_report_responsible (l_id.integer_value, l_responsible.to_integer)
 						to_implement ("send_responsible_change_email (l_pr_number, l_new_responsible, authenticated_username)")
 						update_report_responsible (req,res)
-						send_responsible_change_email (l_user, l_id.integer_value)
+						send_responsible_change_email (l_user, l_id.integer_value, absolute_host (req, ""))
 					else
 					    ---	
 					end
 				else
-					to_implement ("Unauthorized")
-					-- Unauthorized
+					create l_rhf
+					log.write_alert (generator + ".do_get Processing Repor request via the user "+ l_user + " does not have permissions!")
+					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_authenticate (req, res)
 				end
 			else
 				to_implement ("Unauthorized")
@@ -517,7 +519,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	send_responsible_change_email (a_user: STRING; a_report_id: INTEGER)
+	send_responsible_change_email (a_user: STRING; a_report_id: INTEGER; a_url: STRING)
 			-- Send email to new problem report responsible.
 		do
 			if
@@ -526,7 +528,7 @@ feature {NONE} --Implementation
 				attached l_report.assigned as l_assigned and then
 				attached l_assigned.name as l_name
 			then
-				email_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name))
+				email_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name), a_url )
 			else
 				log.write_error (generator + ".send_responsible_change_email")
 			end

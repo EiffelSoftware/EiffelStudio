@@ -476,6 +476,26 @@ feature -- Access
 			post_login_provider_execution
 		end
 
+	subscribed_categories (a_username: STRING): LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ]
+			-- Table associating each category with boolean value specifying whether responsible `a_username'
+			-- is subscribed for receiving email notifications when reports or interactions are created in
+			-- category
+		local
+			l_item: ESA_CATEGORY_SUBSCRIBER_VIEW
+		do
+			create  {ARRAYED_LIST[ESA_CATEGORY_SUBSCRIBER_VIEW]} Result.make (0)
+			data_provider.connect
+			across data_provider.subscribed_categories (a_username) as c loop
+					create l_item
+					l_item.set_id (c.item.categoryId)
+					l_item.set_synopsis (c.item.synopsis)
+					l_item.set_subscribed (c.item.subscribed)
+					Result.force (l_item)
+			end
+			data_provider.disconnect
+			post_data_provider_execution
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
@@ -823,6 +843,38 @@ feature -- Status Report
 
 	last_interaction_id: INTEGER
 			-- last_interaction_id created.		
+
+
+	register_subscriber (a_user: STRING; a_categories: LIST[INTEGER])
+			-- Subscribe responsible `a_user' to category with category ID in the list of categories'
+		local
+			l_categories: LIST [ESA_CATEGORY_SUBSCRIBER_VIEW]
+			l_exist: BOOLEAN
+		do
+			l_categories := subscribed_categories (a_user)
+			across a_categories as c  loop
+				data_provider.connect
+				data_provider.register_subscriber (a_user, c.item, True)
+				data_provider.disconnect
+			end
+
+			across l_categories as nc loop
+				if nc.item.subscribed then
+					across a_categories as ec loop
+						if ec.item = nc.item.id then
+							l_exist := True
+						end
+					end
+					if not l_exist then
+						data_provider.connect
+						data_provider.register_subscriber (a_user, nc.item.id, False)
+						data_provider.disconnect
+					end
+					l_exist := False
+				end
+			end
+			post_data_provider_execution
+		end
 
 feature -- Statistics
 

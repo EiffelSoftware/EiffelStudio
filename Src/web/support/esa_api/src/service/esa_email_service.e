@@ -188,7 +188,7 @@ feature -- Basic Operations
 						create l_email.make_with_entry (user_mail (a_user.displayed_name), ll_email)
 					end
 					create l_message.make_empty
-					l_message.append (new_interaction_email_message(l_report_interaction, a_report, a_old_report,a_url))
+					l_message.append (new_interaction_email_message(a_user,l_report_interaction, a_report, a_old_report,a_url))
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
@@ -204,7 +204,7 @@ feature -- Basic Operations
 		end
 
 
-	send_responsible_change_email (a_user_name: READABLE_STRING_32; a_report: ESA_REPORT; a_user: ESA_USER_INFORMATION)
+	send_responsible_change_email (a_user_name: READABLE_STRING_32; a_report: ESA_REPORT; a_user: ESA_USER_INFORMATION; a_url: STRING)
 			-- Send email to new problem report responsible.
 		local
 			l_email: EMAIL
@@ -219,6 +219,7 @@ feature -- Basic Operations
 				l_content.append (" has made you the responsible for problem report '")
 				l_content.append (a_report.synopsis)
 				l_content.append ("'.%N%N")
+				l_content.append ( report_email_links (a_url + "/report_detail", a_report.number))
 				l_email.set_message (l_content)
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				send_email (l_email)
@@ -226,9 +227,6 @@ feature -- Basic Operations
 				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + last_error_message)
 			end
 		end
-
-
-
 
 feature {NONE} -- Implementation
 
@@ -349,8 +347,7 @@ feature {NONE} -- Implementation
 			Result.append (signature (Void))
 		end
 
-
-	new_interaction_email_message (a_report_interaction: ESA_REPORT_INTERACTION; a_report: ESA_REPORT; a_old_report: ESA_REPORT; a_url: STRING): STRING
+	new_interaction_email_message (a_user: ESA_USER_INFORMATION; a_report_interaction: ESA_REPORT_INTERACTION; a_report: ESA_REPORT; a_old_report: ESA_REPORT; a_url: STRING): STRING
 			-- New interaction message.
 		do
 			create Result.make (4096)
@@ -361,14 +358,21 @@ feature {NONE} -- Implementation
 				attached a_report.category as l_category and then
 				attached a_report.status as l_status
 			then
-				if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
-					Result.append ("%N")
-					Result.append ("Category changed to:" + l_category.synopsis)
-				end
+				Result.append ("%N")
 				if not l_old_status.synopsis.is_case_insensitive_equal_general (l_status.synopsis) then
-					Result.append ("%N")
-					Result.append ("Status changed to:" + l_status.synopsis)
+					Result.append ("Status changed to '" + l_status.synopsis)
+
+					if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
+						Result.append ("', category changed to '" + l_category.synopsis + "'")
+					else
+						Result.append ("'")
+					end
+				else
+					if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
+						Result.append ("Category changed to '" + l_category.synopsis + "'")
+					end
 				end
+				Result.append ("%N%N")
 			end
 
 			if attached a_report_interaction.content as l_content then
@@ -385,7 +389,7 @@ feature {NONE} -- Implementation
 
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
 			Result.append ("%N%N")
-			Result.append (signature (Void))
+			Result.append (signature (a_user))
 		end
 
 	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_32): STRING
@@ -426,17 +430,15 @@ feature {NONE} -- Implementation
 		end
 
 
-	signature (a_user: detachable ESA_USER): STRING
-			-- Email signature for user `a_user'
+	signature (a_user: detachable ESA_USER_INFORMATION): STRING
+			-- Email signature for user `a_user'.
 		do
 			create Result.make (256)
 			Result.append ("--%NWith best regards,%NThe Customer Support Team.%N")
 			if a_user /= Void then
 				Result.append ("%N------------------------------------------------------------%N")
 				Result.append ("Message prepared by: ")
---				Result.append (a_user.first_name)
-				Result.append (" ")
---				Result.append (a_user.last_name)
+				Result.append (a_user.displayed_name)
 				Result.append ("%N%N")
 				Result.append (Disclaimer)
 			end

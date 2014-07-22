@@ -348,7 +348,7 @@ feature {NONE} -- Initialization
 			l_db: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
-			print (l_db.row_count_problem_report_responsible (0,0,0,0,"1,2,3,4,5","", Void, 0, 0))
+			print (l_db.row_count_problem_report_responsible (0,0,0,0,"1,2,3,4,5","", Void, 0))
 		end
 
 
@@ -366,7 +366,8 @@ feature {NONE} -- Initialization
 			l_db: ESA_REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
-			across l_db.problem_reports_responsibles (1, 10, 0, 0, 0, 0, "number", 1, "1,2,3,4", "", Void,0,0) as c loop
+--			l_db.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32, a_column: READABLE_STRING_32, a_order: INTEGER_32, a_status, a_username: READABLE_STRING_32, a_filter: detachable READABLE_STRING_32, a_content: INTEGER_32)
+			across l_db.problem_reports_responsibles (1, 10, 0, 0, 0, 0, "number", 1, "1,2,3,4", "", Void,0) as c loop
 				print (c.item.string_8)
 			end
 		end

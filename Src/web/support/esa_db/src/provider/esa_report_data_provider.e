@@ -1484,7 +1484,6 @@ feature -- Status Report
 			-- Unsubscribe otherwise.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
-			l_res: INTEGER
 		do
 			log.write_information (generator + ".register_subscriber")
 			if a_subscribe then

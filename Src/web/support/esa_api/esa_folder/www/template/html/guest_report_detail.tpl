@@ -101,7 +101,11 @@
                     <div class="row">
                       <div class="col-sm-12">
                       <div class="panel panel-default">
-                        <div class="panel-heading"> <span class="label label-primary-api-interactions" itemprop="submitter">From:</span> {$item.contact.name/}   <span class="label label-primary-api-interactions" itemprop="date">Date:</span>{$item.date_output/}    <span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}</div>
+                        <div class="panel-heading"> <span class="label label-primary-api-interactions" itemprop="submitter">From:</span> {$item.contact.name/}   <span class="label label-primary-api-interactions" itemprop="date">Date:</span>{$item.date_output/}
+					{if isset="$item.status"}
+						<span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}
+					{/if}
+					</div>
                         <div class="panel-body"><pre>{$item.content/}</pre> <br>
                                     {foreach from="$item.attachments" item="elem"}
                                          <div class="row">

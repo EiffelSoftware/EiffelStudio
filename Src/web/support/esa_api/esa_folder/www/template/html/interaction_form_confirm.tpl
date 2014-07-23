@@ -32,7 +32,7 @@
             <div class="control-group">
               <label class="control-label" for="textarea" itemprop="description">Description</label>
               <div class="controls">
-                <pre>{$form.description/}</pre>
+				<pre>{htmlentities}{$form.description/}{/htmlentities}</pre>
               </div>
             </div>
             {if isset="$new_status"}  

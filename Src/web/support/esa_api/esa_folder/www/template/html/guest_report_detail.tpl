@@ -68,7 +68,9 @@
 								<div class="col-xs-12">
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="description"><strong>Description</strong></div>
-										<div class="panel-body"><pre>{$report.description/}</pre></div>
+										<div class="panel-body">
+											<pre>{htmlentities}{$report.description/}{/htmlentities}</pre>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -76,7 +78,9 @@
 								<div class="col-xs-12">
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="to_reproduce"><strong>To Reproduce</strong></div>
-										<div class="panel-body"><pre>{$report.to_reproduce/}</pre></div>
+										<div class="panel-body">
+											<pre>{htmlentities}{$report.to_reproduce/}{/htmlentities}</pre>
+										</div>
 									</div>
 								</div>
 							</div>

@@ -25,37 +25,45 @@
 		{/unless} 
 			<input type="hidden" name="size" value="{$size/}"/>
 			<div class="row">
-				<div class="col-xs-1">
-					<label class="control-label-api" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
+				<div class="col-xs-3">
+					<div class="row">
+						<div class="col-xs-2">
+							<label class="control-label-api" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
+						</div>
+						<div class="col-xs-6">
+							<select class="form-control" data-style="btn-primary" name="category" form="search" itemprop="search">
+								<option value="0">ALL</option>
+								{foreach from="$categories" item="item"}
+									{if condition="$item.is_selected"} 
+										<option value="{$item.id/}" selected>{$item.synopsis/}</option>
+									{/if}
+									{unless condition="$item.is_selected"}
+										<option value="{$item.id/}">{$item.synopsis/}</option>
+									{/unless}
+								{/foreach}
+							</select>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-4">
-					<select class="form-control" data-style="btn-primary" name="category" form="search" itemprop="search">
-						<option value="0">ALL</option>
-						{foreach from="$categories" item="item"}
-							{if condition="$item.is_selected"} 
-								<option value="{$item.id/}" selected>{$item.synopsis/}</option>
-							{/if}
-							{unless condition="$item.is_selected"}
-								<option value="{$item.id/}">{$item.synopsis/}</option>
-							{/unless}
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-xs-1">
-					<label class="control-label-api" itemprop="status" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Status</label>
-				</div>
-				<div class="col-xs-4">
-					<select class="form-control" data-style="btn-primary" name="status" form="search">
-						<option value="0">ALL</option>
-						{foreach from="$status" item="item"}
-							{if condition="$item.is_selected"}
-								<option value="{$item.id/}" selected>{$item.synopsis/}</option>
-							{/if}
-							{unless condition="$item.is_selected"}
-								<option value="{$item.id/}">{$item.synopsis/}</option>
-							{/unless}
-						{/foreach}
-					</select>
+				<div class="col-xs-3">
+					<div class="row">
+						<div class="col-xs-2">
+							<label class="control-label-api" itemprop="status" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Status</label>
+						</div>
+						<div class="col-xs-6">
+							<select class="form-control" data-style="btn-primary" name="status" form="search">
+								<option value="0">ALL</option>
+								{foreach from="$status" item="item"}
+									{if condition="$item.is_selected"}
+										<option value="{$item.id/}" selected>{$item.synopsis/}</option>
+									{/if}
+									{unless condition="$item.is_selected"}
+										<option value="{$item.id/}">{$item.synopsis/}</option>
+									{/unless}
+								{/foreach}
+							</select>
+						</div>
+					</div>
 				</div>
 				<div class="col-xs-2">
 					<button type="submit" class="btn btn-default">Search</button>

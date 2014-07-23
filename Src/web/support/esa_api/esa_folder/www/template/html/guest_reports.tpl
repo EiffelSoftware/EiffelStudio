@@ -1,19 +1,4 @@
-<div class="row">
-	<div class="col-xs-12">
-		<form class="form-inline well" action="{$host/}/report_detail/" id="reports" method="GET" itemprop="search">
-			<div class="row">
-				<div class="col-xs-2">
-					<label class="control-label-api" itemprop="report_number" data-original-title="Problem report number you need to see.">View Problem Report #:</label>
-				</div>
-				<div class="col-xs-1">
-					<input type="number" class="form-control form-bug-number-entry" min="1" name="search" placeholder="Report #..." form="reports"/>
-				</div>
-				<button type="submit" class="btn btn-default">Go</button>
-			</div>
-		</form>
-	</div>
-</div>
-
+{include file="modules/search_by_report_id.tpl"/}
 
 <div class="row">
 	<div class="col-xs-12">

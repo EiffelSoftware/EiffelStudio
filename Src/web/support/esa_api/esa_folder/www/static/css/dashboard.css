@@ -2,9 +2,9 @@
  * Base structure
  */
 
-/* Move down content because we have a fixed navbar that is 20px tall */
+/* Move down content because we have a fixed navbar that is 30px tall */
 body {
-	padding-top: 22px;
+	padding-top: 35px;
 }
 
 
@@ -62,12 +62,12 @@ h2.sub-header{
  */
 
 .main {
-	padding: 20px;
+	padding: 3px;
 }
 @media (min-width: 768px) {
 	.main {
-		padding-left: 40px;
-		padding-right: 40px;
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 .main .page-header {
@@ -154,7 +154,7 @@ h2.sub-header{
 }
 
 .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
-.navbar {min-height:20px !important}
+.navbar {min-height:30px !important}
 
 .navbar-brand {
 	float: left;
@@ -165,7 +165,7 @@ h2.sub-header{
 	padding-left: 15px;
 	font-size: 18px;
 	line-height: 18px;
-	height: 20px;
+	height: 30px;
 }
 
 
@@ -205,12 +205,15 @@ pre {
 }
 
 
-
 /* Container -Fluid */
 .container-fluid {
-	padding: 0 15px;
+	padding: 0 2px;
 }
-
+@media (min-width: 768px) {
+	.container-fluid {
+		padding: 0 5px;
+	}
+}
 
 .container-fluid .row {
 	margin: 0px;

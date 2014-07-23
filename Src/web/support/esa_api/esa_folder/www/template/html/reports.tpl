@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-	{include file="head.tpl"/}
+	{include file="master/head.tpl"/}
 	<body>
 		{include file="navbar.tpl"/}
 		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">

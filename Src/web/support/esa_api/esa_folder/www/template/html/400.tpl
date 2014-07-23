@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   
-  {include file="head.tpl"/}     
+  {include file="master/head.tpl"/}     
 
   <body>
 

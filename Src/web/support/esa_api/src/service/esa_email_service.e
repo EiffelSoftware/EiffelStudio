@@ -343,6 +343,8 @@ feature {NONE} -- Implementation
 
 	new_interaction_email_message (a_user: ESA_USER_INFORMATION; a_report_interaction: ESA_REPORT_INTERACTION; a_report: ESA_REPORT; a_old_report: ESA_REPORT; a_url: STRING): STRING
 			-- New interaction message.
+		local
+			u: UTF_CONVERTER
 		do
 			create Result.make (4096)
 
@@ -370,7 +372,7 @@ feature {NONE} -- Implementation
 			end
 
 			if attached a_report_interaction.content as l_content then
-				Result.append (l_content)
+				u.utf_32_string_into_utf_8_string_8 (l_content, Result)
 				Result.append ("%N%N")
 			end
 
@@ -378,7 +380,7 @@ feature {NONE} -- Implementation
 				attached a_report_interaction.attachments as l_attachments 	and then
 				not l_attachments.is_empty
 			then
-				Result.append ( attachments_text (l_attachments, a_url))
+				Result.append (attachments_text (l_attachments, a_url))
 			end
 
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
@@ -386,7 +388,7 @@ feature {NONE} -- Implementation
 			Result.append (signature (a_user))
 		end
 
-	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_32): STRING
+	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_8): STRING
 			-- Text for downloading attachments `a_attachments'.
 		require
 			not_empty: not a_attachments.is_empty
@@ -408,11 +410,13 @@ feature {NONE} -- Implementation
 			attached_text: Result /= Void
 		end
 
-	attachment_text (a_attachment: ESA_REPORT_ATTACHMENT; a_url: READABLE_STRING_32): STRING
+	attachment_text (a_attachment: ESA_REPORT_ATTACHMENT; a_url: READABLE_STRING_8): STRING
 			-- Text for downloading `a_attachment'.
+		local
+			u: UTF_CONVERTER
 		do
 			create Result.make (512)
-			Result.append (a_attachment.name)
+			u.utf_32_string_into_utf_8_string_8 (a_attachment.name, Result)
 			Result.append (" (")
 			Result.append_integer (a_attachment.bytes_count)
 			Result.append (" bytes):%N")
@@ -420,7 +424,7 @@ feature {NONE} -- Implementation
 			Result.append ("/report_interaction/")
 			Result.append_integer (a_attachment.id)
 			Result.append ("/")
-			Result.append (a_attachment.name)
+			u.utf_32_string_into_utf_8_string_8 (a_attachment.name, Result)
 		end
 
 

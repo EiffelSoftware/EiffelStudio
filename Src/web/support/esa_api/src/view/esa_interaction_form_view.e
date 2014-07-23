@@ -56,6 +56,9 @@ feature -- Access
 	temporary_files: detachable LIST[ESA_FILE_VIEW]
 		-- Temporary files.	
 
+	is_responsible_or_admin: BOOLEAN
+		-- Is the current user responsible or admin?
+
 feature -- Status Report
 
 	is_valid_form: BOOLEAN
@@ -155,5 +158,13 @@ feature -- Element Change
 			temporary_files := a_files
 		ensure
 			temporary_files_set: temporary_files = a_files
+		end
+
+	set_responsible_or_admin (a_boolean: BOOLEAN)
+			-- Set `is_responsible_or_admin' to `a_boolean'.
+		do
+			is_responsible_or_admin := a_boolean
+		ensure
+			set_responsible_or_admin: is_responsible_or_admin = a_boolean
 		end
 end

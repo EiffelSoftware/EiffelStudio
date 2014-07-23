@@ -58,6 +58,7 @@
               </select>
               </div>
              </div> 
+             {if condition="$form.is_responsible_or_admin"}
              <div class="checkbox" itemprop="private">
                {if condition="$form.private"}
                  <label>
@@ -69,7 +70,8 @@
                     <input type="checkbox" name="private" value="True"> Private
                  </label>
                {/unless} 
-             </div> 
+             </div>
+             {/if} 
               {if isset="$temporary_files"}  
                 <div class="control-group">
                 <label class="control-label" for="fileInput" itemprop="attachments">Temporary Attachments</label>

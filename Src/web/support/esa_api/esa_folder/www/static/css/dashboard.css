@@ -2,9 +2,9 @@
  * Base structure
  */
 
-/* Move down content because we have a fixed navbar that is 30px tall */
+/* Move down content because we have a fixed navbar that is 20px tall */
 body {
-	padding-top: 30px;
+	padding-top: 22px;
 }
 
 
@@ -154,7 +154,7 @@ h2.sub-header{
 }
 
 .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
-.navbar {min-height:30px !important}
+.navbar {min-height:20px !important}
 
 .navbar-brand {
 	float: left;
@@ -236,8 +236,14 @@ pre {
 	margin-left: 10px;
 }
 
+/* Note that there is also a class called label. */
 label {
-	padding-right: 10px;
+	padding-right: 5px;
+}
+
+.label {
+	padding: 0px;
+	padding-right: 5px;
 }
 
 .label-primary-api-default {
@@ -252,7 +258,7 @@ label {
 
 .label-primary-api-interactions {
 	display: inline-block;
-	width: 75px;
+	padding-right: 5px;
 	text-align: left;
 	color: #000;
 	font-size: 100%;
@@ -314,4 +320,16 @@ pre {
 	padding: 9px;
 	margin-bottom: 10px;
 	min-height: 44px;
+}
+
+.panel-heading {
+	background-color: #ddeaf2 !important;
+}
+
+.private-panel-border {
+	border: solid 1px #DBA458 !important;
+}
+
+.private-panel {
+	background-color: #f2eadd !important;
 }

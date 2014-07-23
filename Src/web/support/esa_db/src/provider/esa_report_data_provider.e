@@ -83,7 +83,7 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
 			-- Filtered category `a_category' and status `a_status'
@@ -99,6 +99,7 @@ feature -- Access
 			create l_parameters.make (4)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_page_number * a_rows_per_page, "Offset")
+			l_parameters.put (string_parameter (a_username, 100),{ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
 			create l_query.make_from_string (Select_problem_reports_template)
@@ -1948,7 +1949,7 @@ feature -- Queries
 			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
 			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID  
 			    LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID  
-			    WHERE Confidential = 0 AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+			    WHERE (Confidential = 0 or (Confidential = 1 and ProblemReports.ContactID = (SELECT ContactID FROM Memberships WHERE Username = :Username ) ) ) AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
 					AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
 				ORDER BY $Column $ORD1
 				) AS PAG

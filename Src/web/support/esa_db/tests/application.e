@@ -328,7 +328,7 @@ feature {NONE} -- Initialization
 		do
 				-- Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
 			create l_db.make (connection)
-			across l_db.problem_reports_guest_2 (1, 2, 0, 0, "CategorySynopsis", 1) as c loop
+			across l_db.problem_reports_guest_2 (1, 2, 0, 0, "CategorySynopsis", 1, "") as c loop
 				print (c.item.string_8)
 			end
 		end

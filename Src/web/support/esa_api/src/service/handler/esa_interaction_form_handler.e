@@ -162,16 +162,22 @@ feature -- New Report Problem
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_form: ESA_INTERACTION_FORM_VIEW
+			l_role: ESA_USER_ROLE
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
+
 				if attached current_media_type (req) as l_type then
 					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						create l_form.make (api_service.status, api_service.all_categories)
 						l_form.set_report (l_report)
-						l_form.set_private (l_report.confidential)
+
+						l_role := api_service.user_role (l_user)
+						if l_role.is_administrator or else l_role.is_responsible then
+							l_form.set_responsible_or_admin (True)
+						end
 						if attached l_report.status as l_status then
 							l_form.set_status_by_synopsis (l_status.synopsis)
 						end

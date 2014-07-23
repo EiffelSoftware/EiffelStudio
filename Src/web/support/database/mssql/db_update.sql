@@ -517,7 +517,7 @@ FROM ProblemReportInteractions
 INNER JOIN Contacts ON Contacts.ContactID = ProblemReportInteractions.ContactID
 LEFT JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReportInteractions.NewStatusID
 LEFT JOIN Memberships ON Memberships.ContactID = ProblemReportInteractions.ContactID
-WHERE ReportID = (SELECT ReportID FROM ProblemReports WHERE Number = @Number and Confidential = 0)
+WHERE ReportID = (SELECT ReportID FROM ProblemReports WHERE Number = @Number and Private = 0)
 END
 
 

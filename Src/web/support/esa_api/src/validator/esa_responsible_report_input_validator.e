@@ -32,7 +32,7 @@ feature -- Initialization
 				set_responsible (0)
 				default_status
 				set_orderby ("submissionDate")
-				set_direction ("ASC")
+				set_direction ("DESC")
 				set_filter ("")
 				set_filter_content (0)
 				create errors.make (0)

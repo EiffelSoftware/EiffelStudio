@@ -94,7 +94,7 @@
 												<option value="1" selected>Yes</option>
 												<option value="0">No</option>
 											{/if}
-											{unless condition="confidential"}
+											{unless condition="$confidential"}
 												<option value="0" selected>No</option>
 												<option value="1">Yes</option>
 											{/unless}

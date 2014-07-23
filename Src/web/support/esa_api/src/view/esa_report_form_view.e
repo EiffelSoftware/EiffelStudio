@@ -18,11 +18,13 @@ feature {NONE} -- Initialization
 			severities := a_severities
 			classes := a_classes
 			priorities := a_priorities
+			set_confidential (True)
 		ensure
 			categories_set: categories = a_categories
 			severities_set: severities = a_severities
 			classes_set: classes = a_classes
 			priorities_set: priorities = a_priorities
+			confidential_set_true: confidential
 		end
 
 feature -- Access

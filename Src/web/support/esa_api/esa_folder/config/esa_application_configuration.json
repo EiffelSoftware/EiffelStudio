@@ -1,27 +1,26 @@
 {
-    "database": {
-        "datasource": {
-            "driver": "SQL Server",
-            "environment": "test"
-        },
-        "environments": {
-            "test": {
-                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=example;Uid=sa;Pwd=Eiffel1405;TrustedConnection=Yes"
-            },
-            "development": {
-                "connection_string":"Server=sql.ise;Database=ESA_DB_TEST;Uid=eiffel2;Pwd=eiffel2;"
-                 },
-            "production": {
-                 "connection_string":""
-    
-            }
-        }
-    },
-    "smtp": {
-        "server": "localhost"
-    },
-    "logger": { 
-            "level":"debug",
-            "backup_count":"4"
-        }
+	"database": {
+		"datasource": {
+			"driver": "SQL Server Native Client 10.0",
+			"environment": "test"
+		},
+		"environments": {
+			"test": {
+                "connection_string":"Server=Machine\\SQLEXPRESS;Database=test;Uid=XXX;Pwd=YYY;TrustedConnection=Yes"
+			},
+			"development": {
+				"connection_string":"Server=SQLSERVER;Database=DEV_DATABASE;Uid=XXX;Pwd=YYY;"
+				 },
+			"production": {
+				"connection_string":"Server=SQLSERVER;Database=LIVE_DATABASE;Uid=XXX;Pwd=YYY;"
+			}
+		}
+	},
+	"smtp": {
+		"server": "localhost"
+		},
+	"logger": { 
+			"level":"debug",
+			"backup_count":"4"
+		}
 }

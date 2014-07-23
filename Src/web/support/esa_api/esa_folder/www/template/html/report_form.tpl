@@ -21,7 +21,7 @@
 										<label class="control-label-api" for="input01" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control"	data-style="btn-primary" name="category" form="report">
+										<select class="form-control" data-style="btn-primary" name="category" form="report">
 											{foreach from="$categories" item="item"}
 												{if condition="$item.id = $category"}
 													<option value="{$item.id/}" selected>{$item.synopsis/}</option>
@@ -45,7 +45,7 @@
 											</UL>">Severity</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control"	data-style="btn-primary" name="severity" form="report">
+										<select class="form-control" data-style="btn-primary" name="severity" form="report">
 											{foreach from="$severities" item="item"}
 												{if condition="$item.id = $severity"}
 													<option value="{$item.id/}" selected>{$item.synopsis/}</option>
@@ -70,7 +70,7 @@
 											</UL>">Priority</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control"	data-style="btn-primary" name="priority" form="report">
+										<select class="form-control" data-style="btn-primary" name="priority" form="report">
 											{foreach from="$priorities" item="item"}
 												{if condition="$item.id = $priority"}
 													<option value="{$item.id/}" selected>{$item.synopsis/}</option>
@@ -89,7 +89,7 @@
 										<label class="control-label-api" for="input01" data-original-title="<p>Is the report considers confidential? If not, the material provided with the bug report can be published. For example, sample code can be used when helping other customers.</p>">Confidential</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control"	data-style="btn-primary" name="confidential" form="report">
+										<select class="form-control" data-style="btn-primary" name="confidential" form="report">
 											{if condition="$confidential"}
 												<option value="1" selected>Yes</option>
 												<option value="0">No</option>
@@ -117,7 +117,7 @@
 											</UL>">Class</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control"	data-style="btn-primary" name="class" form="report">
+										<select class="form-control" data-style="btn-primary" name="class" form="report">
 											{foreach from="$classes" item="item"}
 												{if condition="$item.id = $class"}
 													<option value="{$item.id/}" selected>{$item.synopsis/}</option>
@@ -142,7 +142,7 @@
 							</div>
 						</div>
 						<div class="row" has-error>
-							<label class="control-label" for="input"	has-success has-feedback itemprop="synopsis" data-original-title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem report subjects.</p>">Synopsis</label>
+							<label class="control-label" for="input" has-success has-feedback itemprop="synopsis" data-original-title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem report subjects.</p>">Synopsis</label>
 							<div class="controls">
 								<input type="text" id="synopsis" name="synopsis" class="form-control" value="{$synopsis/}" required>
 							</div>
@@ -151,7 +151,7 @@
 						<div class="row">
 							<label class="control-label" for="textarea" itemprop="environment" data-original-title="<p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>">Environment</label>
 							<div class="controls">
-								<input type="text" class="form-control" id="environment"	name="environment" rows="3"	placeholder="Windows 8.1" required form="report">{$environment/}</textarea>
+								<input type="text" class="form-control" id="environment" name="environment" rows="3" placeholder="Windows 8.1" required form="report">{$environment/}</textarea>
 							</div>
 						</div>
 
@@ -174,7 +174,7 @@
 						<div class="row" has-error>
 							<label class="control-label" for="textarea" itemprop="description" data-original-title="<p>Precise description of the problem.</p>">Description</label>
 							<div class="controls">
-								<textarea class="form-control input-xlarge" id="description" name="description"	rows="17" placeholder="Give a description of the problem" required form="report">{$description/}</textarea>
+								<textarea class="form-control input-xlarge" id="description" name="description" rows="17" placeholder="Give a description of the problem" required form="report">{$description/}</textarea>
 							</div>
 						</div>
 						<div class="row">

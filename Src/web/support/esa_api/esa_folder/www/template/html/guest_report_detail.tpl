@@ -9,54 +9,54 @@
 					<div class="row">
 						<div class="span8">
 							<div class="row">
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="submitter">Submitter:</span>	<td class="label">{$report.contact.name/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="submitter">Submitter:</span>	<span>{$report.contact.name/}</span> <br/>
 								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="category">Category:</span>	<td>{$report.category.synopsis/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="category">Category:</span>	<span>{$report.category.synopsis/}</span> <br/>
 								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="priority">Priority:</span>	<td>{$report.priority.synopsis/}</td> </br>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="date">Date:</span>	<td>{$report.submission_date_output/}</td> </br>
-								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="class">Class:</span>	<td>{$report.report_class.synopsis/}</td> </br>
-								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="severity">Severity:</span> <td>{$report.severity.synopsis/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="priority">Priority:</span>	<span>{$report.priority.synopsis/}</span> <br/>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="report_number">Number:</span>	<td>{$report.number/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="date">Date:</span>	<span>{$report.submission_date_output/}</span> <br/>
 								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="release">Release:</span>	<td>{$report.release/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="class">Class:</span>	<span>{$report.report_class.synopsis/}</span> <br/>
 								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="confidential">Confidential:</span> <td>{$report.confidential/}</td> </br>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="status">Status:</span> <td>{$report.status.synopsis/}</td> </br>
-								</div>
-								<div class="col-xs-4 lightblue">
-									<span class="label label-primary-api-default" itemprop="responsible">Responsible:</span> <td></td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="severity">Severity:</span> <span>{$report.severity.synopsis/}</span> <br/>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-12 lightblue">
-									<span class="label label-primary-api-default" itemprop="environment">Environment:</span> <td>{$report.environment/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="report_number">Number:</span>	<span>{$report.number/}</span> <br/>
+								</div>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="release">Release:</span>	<span>{$report.release/}</span> <br/>
+								</div>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="confidential">Confidential:</span> <span>{$report.confidential/}</span> <br/>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-12 lightblue">
-									<span class="label label-primary-api-default" itemprop="synopsis">Synopsis:</span> <td>{$report.synopsis/}</td> </br>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="status">Status:</span> <span>{$report.status.synopsis/}</span> <br/>
+								</div>
+								<div class="col-xs-4">
+									<span class="label label-primary-api-default" itemprop="responsible">Responsible:</span> <span></span> <br/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<span class="label label-primary-api-default" itemprop="environment">Environment:</span> <span>{$report.environment/}</span> <br/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<span class="label label-primary-api-default" itemprop="synopsis">Synopsis:</span> <span>{$report.synopsis/}</span> <br/>
 								</div>
 							</div>
 							<div class="row">

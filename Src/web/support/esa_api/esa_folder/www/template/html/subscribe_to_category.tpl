@@ -12,9 +12,7 @@
 			<form class="form-inline well" id="registerHere" method='POST' action='{$host/}/subscribe_to_category' itemprop="update">
 				<fieldset>
 					<legend>Problem Report Categories Selection</legend>
-					<div class="span3"><p>The information in this page is used by Eiffel Software should we need to contact you.
-						We will never share this information with other companies.
-						Please provide as much information as possible so we can better assist you.</p>
+					<div class="span3"><p>Select the categories you would like to subscribe to below. Once subscribed to a category, you will receive a notification each time a problem report is submitted to that category or a new interaction is added to an existing problem report from that category.</p>
 					</div>
 					<input type="hidden" name="subscriber_to_category" value="-1"/>
 

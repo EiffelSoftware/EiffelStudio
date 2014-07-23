@@ -241,7 +241,6 @@
 						{/unless}
 					{/unless}
 				</th>
-				<th>Submitter</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -260,7 +259,6 @@
 					<td itemprop="synopsis">{$item.synopsis/}</td>
 					<td itemprop="submission_date">{$item.submission_date_output/}</td>
 					<td itemprop="category"> {$item.category.synopsis/}</td> 
-					<td itemprop="contact">{$item.contact.name/}</td>
 				</tr>
 			{/foreach}
 						

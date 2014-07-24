@@ -4,7 +4,7 @@
   {include file="master/head.tpl"/}     
  
   <body>
-     {include file="navbar.tpl"/}  
+     {include file="master/navbar.tpl"/}  
 
       <div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
           <div class="hero-unit center">

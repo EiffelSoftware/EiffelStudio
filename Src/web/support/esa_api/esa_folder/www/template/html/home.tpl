@@ -2,7 +2,7 @@
 <html lang="en">
 	{include file="master/head.tpl"/}
 	<body>
-		 {include file="navbar.tpl"/}
+		 {include file="master/navbar.tpl"/}
 		<div class="main">
 			<div class="container">
 				<div class="jumbotron">

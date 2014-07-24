@@ -9,7 +9,7 @@
     <div class="row">
       <div class="span12">
         <div class="hero-unit center" itemscope itemtype="{$host/}/profile/esa_api.xml">
-            <h1>You have successfully Logged out</h1>
+            <h1>You have successfully signed out</h1>
             <br />
             <p>You may want to return</p>
             <p><b>press this neat little button:</b></p>

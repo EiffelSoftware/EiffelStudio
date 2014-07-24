@@ -47,7 +47,7 @@
           {/if}
           {if isset="$password_changed"} 
              <div class="control-group">
-                  Your password was successfully changed, please Loggin again.
+                  Your password was successfully changed, please sign in again.
              </div>    
           {/if}
           </form>         

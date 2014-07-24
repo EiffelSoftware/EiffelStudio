@@ -12,7 +12,7 @@
          <div class="hero-unit center" itemscope itemtype="https://www2.eiffel.com/beta/profile/esa_api.xml">
             <h1>Unauthorized Request <small><font face="Tahoma" color="red">Error 401</font></small></h1>
             <br />
-            <p>The page you requested could not be served because you {$user/} don't have access to. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
+            <p>The page you requested could not be served because you {$user/} don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
             <p><b>Or you could just press this neat little button:</b></p>
             <a href="https://www2.eiffel.com/beta" class="btn btn-large btn-primary" iemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
           </div>
@@ -31,7 +31,7 @@
                  <form class="form-inline well"  data-rel="login" itemprop="login">
                   <legend><h1>Login</h1></legend>
                   <p>
-                    The page you requested could not be served because you don't have access to. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.
+                    The page you requested could not be served because you don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.
                   </p>
                   <p itemprop="user_name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
                   <p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required></p>

@@ -66,7 +66,6 @@
 					<li id="dropdown_pe_4"><a href="{$host/}/email" itemprop="change_email" rel="change_email">Change Email</a></li>
 				{/if}
 				{unless isset="$user"}
-					<li><a href="#">Guest</a></li>
 					<li><a href="{$host/}/register" itemprop="register" rel="register">Register</a></li>
 				{/unless}
 

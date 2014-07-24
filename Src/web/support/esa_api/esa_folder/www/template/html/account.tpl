@@ -6,7 +6,7 @@
 
 	<body>
 
-		{include file="navbar.tpl"/}	
+		{include file="master/navbar.tpl"/}	
 
 		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
 			<form class="form-inline well" id="registerHere" method='POST' action='{$host/}/account' itemprop="update">

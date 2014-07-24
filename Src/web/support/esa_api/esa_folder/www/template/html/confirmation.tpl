@@ -10,7 +10,7 @@
           <div class="hero-unit center">
               <h1>Eiffel Support Confirmation <small>
               <br/>
-              <p class="text-success"> Thank you, your account was activated successfully.  You may now Login to your account using the username and password you chose during registration.</p>
+              <p class="text-success"> Thank you, your account was activated successfully.  You may now sign in to your account using the username and password you chose during registration.</p>
           </div>
       </div>
     <!-- Placed at the end of the document so the pages load faster -->

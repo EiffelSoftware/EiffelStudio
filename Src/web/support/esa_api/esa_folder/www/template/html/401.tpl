@@ -12,7 +12,7 @@
          <div class="hero-unit center" itemscope itemtype="https://www2.eiffel.com/beta/profile/esa_api.xml">
             <h1>Unauthorized Request <small><font face="Tahoma" color="red">Error 401</font></small></h1>
             <br />
-            <p>The page you requested could not be served because you {$user/} don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
+            <p>The page you requested could not be served because user <b>{$user/}</b> doesn't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
             <p><b>Or you could just press this neat little button:</b></p>
             <a href="https://www2.eiffel.com/beta" class="btn btn-large btn-primary" iemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
           </div>
@@ -29,7 +29,7 @@
         <div class="modal-body" id="myModalForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
                  <a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
                  <form class="form-inline well"  data-rel="login" itemprop="login">
-                  <legend><h1>Login</h1></legend>
+                  <legend><h1>Sign in</h1></legend>
                   <p>
                     The page you requested could not be served because you don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.
                   </p>

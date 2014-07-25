@@ -11,7 +11,7 @@
     <div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
         <div class="main">
 
-          {include file="guest_reports.tpl"/}     
+          {include file="loggedin_reports.tpl"/}     
           
         </div>
       </div>

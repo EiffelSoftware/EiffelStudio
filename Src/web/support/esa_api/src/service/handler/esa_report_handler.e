@@ -101,9 +101,7 @@ feature -- HTTP Methods
 				end
 			else
 					-- List of reports visisble for Guest Users
-				log.write_information (generator+".do_get ExecutList of reports visisble for Guest Users" )
 				user_reports (req, res, "")
-				log.write_information (generator+".do_get Executed List of reports visisble for Guest Users" )
 			end
 		end
 
@@ -161,32 +159,39 @@ feature -- Implementation
 			if attached current_media_type (req) as l_type then
 				create l_input_validator
 				l_input_validator.input_from (req.query_parameters)
-				l_categories := api_service.all_categories
-				list_status := api_service.status
-				l_responsibles := api_service.responsibles
-				l_priorities := api_service.priorities
-				l_severities := api_service.severities
 
-				l_pages := api_service.row_count_problem_report_responsible (l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
-				l_row :=  api_service.problem_reports_responsibles (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
+				if not l_input_validator.has_error then
+					l_categories := api_service.all_categories
+					list_status := api_service.status
+					l_responsibles := api_service.responsibles
+					l_priorities := api_service.priorities
+					l_severities := api_service.severities
 
-				create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
-				l_report_view.set_selected_category (l_input_validator.category)
-				l_report_view.set_selected_priority (l_input_validator.priority)
-				l_report_view.set_selected_severity (l_input_validator.severity)
-				l_report_view.set_selected_responsible (l_input_validator.responsible)
-				l_report_view.set_responsibles (l_responsibles)
-				l_report_view.set_priorities (l_priorities)
-				l_report_view.set_severities (l_severities)
-				l_report_view.set_size (l_input_validator.size)
-				l_report_view.set_submitter (l_input_validator.submitter)
-				l_report_view.set_order_by (l_input_validator.orderBy)
-				l_report_view.set_filter (l_input_validator.filter)
-				l_report_view.set_filter_content (l_input_validator.filter_content)
-				l_report_view.set_direction (l_input_validator.direction)
-				mark_selected_status (list_status, l_input_validator.status)
+					l_pages := api_service.row_count_problem_report_responsible (l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
+					l_row :=  api_service.problem_reports_responsibles (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
 
-				l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
+					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
+					l_report_view.set_selected_category (l_input_validator.category)
+					l_report_view.set_selected_priority (l_input_validator.priority)
+					l_report_view.set_selected_severity (l_input_validator.severity)
+					l_report_view.set_selected_responsible (l_input_validator.responsible)
+					l_report_view.set_responsibles (l_responsibles)
+					l_report_view.set_priorities (l_priorities)
+					l_report_view.set_severities (l_severities)
+					l_report_view.set_size (l_input_validator.size)
+					l_report_view.set_submitter (l_input_validator.submitter)
+					l_report_view.set_order_by (l_input_validator.orderBy)
+					l_report_view.set_filter (l_input_validator.filter)
+					l_report_view.set_filter_content (l_input_validator.filter_content)
+					l_report_view.set_direction (l_input_validator.direction)
+					mark_selected_status (list_status, l_input_validator.status)
+
+					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
+				else
+						-- Bad request
+					log.write_error (generator + ".responsible_reports " + l_input_validator.error_message)
+					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
+				end
 			else
 				l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).problem_reports_responsible (req, res, Void)
 			end

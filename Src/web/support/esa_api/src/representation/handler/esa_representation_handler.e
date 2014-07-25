@@ -114,6 +114,12 @@ feature -- View
 		deferred
 		end
 
+
+	bad_request_with_errors_page (req: WSF_REQUEST; res: WSF_RESPONSE; errors: STRING_TABLE[READABLE_STRING_32])
+			-- Bad request with error page
+		deferred
+		end
+
 	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- internal_server_error
 		deferred

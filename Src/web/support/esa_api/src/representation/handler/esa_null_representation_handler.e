@@ -113,6 +113,12 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	bad_request_with_errors_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: STRING_TABLE[READABLE_STRING_32])
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
 	new_response_unauthorized(req: WSF_REQUEST; res: WSF_RESPONSE)
 				-- Generate a Reponse based on the Media Type
 		do

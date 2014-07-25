@@ -161,8 +161,8 @@ var progressive_loging = function () {
      console.log (elem);
 
 
-    $('#login_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalSignIn">Sign in</a></li>').remove();
-    $('#logoff_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalSignOut" rel="logoff" itemprop="logoff">Sign out</a></li>').remove();
+    $('#login_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalSignIn">Sign In</a></li>').remove();
+    $('#logoff_pe').after('<li><a class="login pull-right" data-toggle="modal"  data-target="#myModalSignOut" rel="logoff" itemprop="logoff">Sign Out</a></li>').remove();
     $('#dropdown_pe_2').remove();
     $('#dropdown_pe_3').remove();
     $('#dropdown_pe_4').remove();

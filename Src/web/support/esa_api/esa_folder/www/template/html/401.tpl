@@ -29,7 +29,7 @@
         <div class="modal-body" id="myModalForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
                  <a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
                  <form class="form-inline well"  data-rel="login" itemprop="login">
-                  <legend><h1>Sign in</h1></legend>
+                  <legend><h1>Sign In</h1></legend>
                   <p>
                     The page you requested could not be served because you don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.
                   </p>
@@ -38,7 +38,7 @@
                   <input type="hidden" name="redirect" value="{$redirect/}">
                   <input type="hidden" name="host" value="{$host/}">
                    <div class="controls">
-                    <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
+                    <button type="button" class="btn btn-primary" onclick="login();">Sign In</button>
                     <input type="reset" class="btn btn-default" value="Reset"></p> 
                  </div>   
               </form>

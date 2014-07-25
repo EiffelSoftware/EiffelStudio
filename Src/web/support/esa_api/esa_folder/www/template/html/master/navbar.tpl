@@ -4,7 +4,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Sign in Form</h4>
+				<h4 class="modal-title" id="myModalLabel">Sign In Form</h4>
 			</div>
 			<div class="modal-body" id="myModalForm">
 				<a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
@@ -13,7 +13,7 @@
 					<p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required/></p>
 					<input type="hidden" name="host" value="{$host/}"/>
 					<div class="controls">
-						<button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
+						<button type="button" class="btn btn-primary" onclick="login();">Sign In</button>
 						<input type="reset" class="btn btn-default" value="Reset"/><img src="{$host/}/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="imgProgress" />
 					</div>
 				</form>
@@ -32,7 +32,7 @@
 			<div class="modal-body">
 				<form data-rel="logoff" itemprop="logoff">
 					<input type="hidden" name="host" value="{$host/}"/>
-					<p><button type="button" class="login btn-primary" onclick="logoff();">Sign out</button></p>
+					<p><button type="button" class="login btn-primary" onclick="logoff();">Sign Out</button></p>
 				</form>
 			</div>
 		</div>
@@ -70,11 +70,11 @@
 				{/unless}
 
 				{if isset="$user"}
-					<li id="logoff_pe" ><a href="{$host/}/logoff" itemprop="logoff" rel="logoff">Sign out</a></li>
+					<li id="logoff_pe" ><a href="{$host/}/logoff" itemprop="logoff" rel="logoff">Sign Out</a></li>
 				{/if}
 				{unless isset="$user"}
-					<!--<li><a class="login pull-right" data-toggle="modal" data-target="#myModalSignIn">Sign in</a></li>	<! Custome Modal -->
-					<li id="login_pe" ><a href="{$host/}/login" itemprop="login" rel="login">Sign in</a></li>	<!--	Custome Modal -->
+					<!--<li><a class="login pull-right" data-toggle="modal" data-target="#myModalSignIn">Sign In</a></li>	<! Custome Modal -->
+					<li id="login_pe" ><a href="{$host/}/login" itemprop="login" rel="login">Sign In</a></li>	<!--	Custome Modal -->
 				{/unless}
 			</ul>
 			<!--form class="navbar-form navbar-right">

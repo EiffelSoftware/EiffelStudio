@@ -26,7 +26,7 @@
 					<div class="span12">
 						<div class="modal-body" id="myModalForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
 							<a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
-							<p/>
+							<p></p>
 							<form class="form-inline well"	data-rel="login" itemprop="login">
 								<legend><h1>Sign In</h1></legend>
 								<p>The page you requested could not be served because you don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>

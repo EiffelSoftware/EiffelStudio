@@ -87,7 +87,7 @@
 								<input type="text" class="form-control" id="answer_question" name="answer_question" rel="popover" data-content="Answer security question" placeholder="Answer security question" data-original-title="Answer security question" value="{$form.answer/}" required />
 							</div>
 						</div>
-						<p/>
+						<p></p>
 						<div class="row">
 							<div class="col-xs-12">
 								<button type="submit" class="btn btn-primary" >Create</button>

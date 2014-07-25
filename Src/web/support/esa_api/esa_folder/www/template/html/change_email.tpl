@@ -25,7 +25,7 @@
 							<input type="email" class="form-control" id="confirmEmail" name="check_email" placeholder="Confirm Email"/>
 						</div>
 					</div>
-					<p/>
+					<p></p>
 					<div class="row">
 						<div class="col-xs-4">
 							<input type="submit" class="btn btn-primary" value="Submit"/>

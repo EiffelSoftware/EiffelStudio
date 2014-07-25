@@ -25,7 +25,7 @@
 							<input type="password" class="form-control" id="confirmPassword" name="check_password" placeholder="Confirm Password"/>
 						</div>
 					</div>
-					<p/>
+					<p></p>
 
 					<div class="row">
 						<div class="col-xs-4">

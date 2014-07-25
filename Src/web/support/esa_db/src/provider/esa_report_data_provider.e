@@ -83,7 +83,7 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
 			-- Filtered category `a_category' and status `a_status'
@@ -101,7 +101,9 @@ feature -- Access
 			l_parameters.put (a_page_number * a_rows_per_page, "Offset")
 			l_parameters.put (string_parameter (a_username, 100),{ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
+			if attached a_filter then
+				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+			end
 			create l_query.make_from_string (Select_problem_reports_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -111,6 +113,26 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
 			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)))
+
+				-- Filter search.
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+				else
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+			end
+
+			--| Need to be updated to build the set based on user selection.
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -871,6 +893,55 @@ feature -- Basic Operations
 				db_handler.start
 				if attached {DB_TUPLE} db_handler.item as l_item and then attached {INTEGER_32_REF} l_item.item (1) as l_item_1 then
 					Result := l_item_1.item
+				end
+			end
+			disconnect
+			post_execution
+		end
+
+	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: STRING; a_content:INTEGER ): INTEGER
+			-- Row count table `PROBLEM_REPORT table' for guest users and
+			-- users with role user.
+		local
+			l_parameters: STRING_TABLE [ANY]
+			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_query: STRING
+		do
+			log.write_information (generator + ".row_count_problem_report_guest")
+			connect
+			create l_parameters.make (2)
+			l_parameters.put (string_parameter (a_username, 50), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
+			if attached a_filter then
+				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+			end
+			create l_query.make_from_string (Select_row_count_problem_reports)
+
+				-- Filter search.
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+				else
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+			end
+
+			--| Need to be updated to build the set based on user selection.
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				if attached db_handler.read_integer_32 (1) as l_count then
+					Result := l_count
 				end
 			end
 			disconnect
@@ -1950,13 +2021,27 @@ feature -- Queries
 			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID  
 			    LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID  
 			    WHERE (Confidential = 0 or (Confidential = 1 and ProblemReports.ContactID = (SELECT ContactID FROM Memberships WHERE Username = :Username ) ) ) AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
-					AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
+					AND ((ProblemReports.StatusID in $StatusSet ))
+					$SearchBySynopsisAndOrDescription
 				ORDER BY $Column $ORD1
 				) AS PAG
 				ORDER BY $Column $ORD2
 			) AS PAG2
 			ORDER BY $Column $ORD1
 		]"
+
+	Select_row_count_problem_reports: STRING = "[
+					SELECT COUNT(*)
+					FROM dbo.ProblemReports
+					where (Confidential = 0 or (Confidential = 1 and ContactID = (SELECT ContactID FROM Memberships WHERE Username = :Username ) ))
+					and ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+					AND ((ProblemReports.StatusID in $StatusSet))
+					$SearchBySynopsisAndOrDescription
+				]"
+
+
+
+
 
 	Select_problem_reports_responsibles_template: STRING = "[
 			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,

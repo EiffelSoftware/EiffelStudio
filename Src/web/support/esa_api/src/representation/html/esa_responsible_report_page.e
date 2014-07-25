@@ -53,7 +53,6 @@ feature {NONE} --Initialization
 				not l_submitter.is_empty
 			then
 				template.add_value (a_view.submitter, "submitter")
-
 			end
 
 			if a_view.index > 1 then
@@ -90,6 +89,7 @@ feature {NONE} --Initialization
 					Result.append_character ('&')
 				end
 			end
+			Result.remove_tail (1)
 		end
 end
 

@@ -166,9 +166,11 @@ feature -- New Report Problem
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
-			if attached {STRING_32} current_user_name (req) as l_user then
-					-- Logged in user
-
+			if
+				attached {STRING_32} current_user_name (req) as l_user and then
+			 	api_service.is_report_visible (l_user, a_report_id)
+			then
+					-- Logged in user with access to the given report id.
 				if attached current_media_type (req) as l_type then
 					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						create l_form.make (api_service.status, api_service.all_categories)
@@ -192,7 +194,7 @@ feature -- New Report Problem
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_variants).add_interaction_form (req, res, Void)
 				end
-			else -- Not a logged in user
+			else -- Not a logged in user or the user does not have permissions to add an interaction.
 				if attached current_media_type (req) as l_type then
 					l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
 				else

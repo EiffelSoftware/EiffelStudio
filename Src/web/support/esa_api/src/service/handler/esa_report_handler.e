@@ -238,6 +238,9 @@ feature -- Implementation
 			l_dir: INTEGER
 			l_page: INTEGER
 			l_size: INTEGER
+			l_status_selected: STRING
+			l_filter: STRING
+			l_content: INTEGER
 		do
 			to_implement ("Validate request parameters!!!")
 			--| At the moment the page size is hardcoded as 10 items per page.
@@ -248,6 +251,7 @@ feature -- Implementation
 			if attached current_media_type (req) as l_type then
 				l_categories := api_service.all_categories
 				list_status := api_service.status
+				create l_filter.make_empty
 
 					-- Page setup
 				if attached {WSF_STRING} req.query_parameter ("page") as ll_page and then ll_page.is_integer then
@@ -257,7 +261,7 @@ feature -- Implementation
 					l_page := 1
 				end
 
-						-- Page Size
+					-- Page Size
 				if attached {WSF_STRING} req.query_parameter ("size") as ll_size and then ll_size.is_integer then
 					l_size := ll_size.integer_value
 				else
@@ -266,13 +270,46 @@ feature -- Implementation
 				end
 
 					-- Page query parameters
-				if attached {WSF_STRING} req.query_parameter ("category") as ll_category and then attached {WSF_STRING} req.query_parameter ("status") as ll_status and then ll_category.is_integer and then ll_status.is_integer then
+				if attached {WSF_STRING} req.query_parameter ("category") as ll_category  and then ll_category.is_integer then
 					l_category := ll_category.integer_value
-					l_status := ll_status.integer_value
 				else
 					l_category := 0
-					l_status := 0
 				end
+
+				    -- Filter text
+                if attached {WSF_STRING} req.query_parameter ("filter") as ll_filter then
+	                 l_filter := ll_filter.value
+                end
+
+		             -- Filter by description
+	            if attached {WSF_STRING} req.query_parameter ("filter_content") as l_filter_content and then l_filter_content.is_integer then
+	                 l_content := l_filter_content.integer_value
+	            end
+
+				create l_status_selected.make_empty
+				if  attached {WSF_MULTIPLE_STRING} req.query_parameter ("status") as ll_status then
+                    across ll_status.values as c loop
+                    	if c.item.integer_value > 0 then
+                        	set_selected_status (list_status, c.item.integer_value)
+							l_status_selected.append_string (c.item.value)
+							l_status_selected.append_character (',')
+                        end
+                     end
+
+                     if l_status_selected.is_empty then
+                     	l_status_selected := "0"
+					 else
+                     	l_status_selected.remove_tail (1) -- remove the last ','
+                     end
+	            else
+	            	-- Default Setup
+	                to_implement ("Improve this code!!!")
+	                l_status_selected := "1,2,3,4"
+	                set_selected_status (list_status, 1)
+	                set_selected_status (list_status, 2)
+	                set_selected_status (list_status, 3)
+	                set_selected_status (list_status, 4)
+	            end
 					-- Order by and Direction
 				if attached {WSF_STRING} req.query_parameter ("orderBy") as l_orderby and then attached {WSF_STRING} req.query_parameter ("dir") as ll_dir then
 					l_order_by := l_orderby.value
@@ -285,8 +322,8 @@ feature -- Implementation
 					l_direction := "ASC"
 					l_dir := 0
 				end
-				l_pages := api_service.row_count_problem_report_guest (l_category, l_status, a_user)
-				l_row := api_service.problem_reports_guest_2 (l_page, l_size, l_category, l_status, l_order_by, l_dir, a_user)
+				l_pages := api_service.row_count_problem_reports (l_category, l_status_selected, a_user,l_filter, l_content)
+				l_row := api_service.problem_reports_guest_2 (l_page, l_size, l_category, l_status_selected, l_order_by, l_dir, a_user, l_filter, l_content )
 				create l_report_view.make (l_row, l_page, l_pages // l_size, l_categories, list_status, current_user_name (req))
 				l_report_view.set_size (l_size)
 				l_report_view.set_selected_category (l_category)
@@ -294,6 +331,8 @@ feature -- Implementation
 				l_report_view.set_order_by (l_order_by)
 				l_report_view.set_direction (l_direction)
 				l_report_view.set_order_by (l_order_by)
+				l_report_view.set_filter (l_filter)
+				l_report_view.set_filter_content (l_content)
 
 				if l_dir = 1 then
 					l_report_view.set_direction ("ASC")

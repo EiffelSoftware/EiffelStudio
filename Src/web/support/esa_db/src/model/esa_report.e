@@ -189,8 +189,8 @@ feature -- Element change
 			-- Set `submission_date' to `a_date'.
 		do
 			submission_date := a_date
-			if a_date /= void then
-				submission_date_output := a_date.formatted_out ("[0]dd/mm/yyyy")
+			if a_date /= Void then
+				submission_date_output := a_date.formatted_out ("yyyy/[0]mm/[0]dd")
 			end
 		ensure
 			submission_date_set: submission_date = a_date

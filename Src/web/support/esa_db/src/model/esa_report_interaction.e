@@ -95,8 +95,8 @@ feature -- Element change
 			-- Set `date' to `a_date'.
 		do
 			date := a_date
-			if a_date /= void then
-				date_output := a_date.formatted_out ("[0]dd/mm/yyyy")
+			if a_date /= Void then
+				date_output := a_date.formatted_out ("yyyy/[0]mm/[0]dd")
 			end
 		ensure
 			date_set: date = a_date

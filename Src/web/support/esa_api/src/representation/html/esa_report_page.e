@@ -21,7 +21,7 @@ feature {NONE} --Initialization
 		local
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
-			log.write_information (generator + ".make render template: reports.tpl")
+			log.write_information (generator + ".make render template: template_guest_reports.tpl")
 			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_CATEGORY}).out)
 			set_selected_category (a_view.categories,a_view.selected_category)
 
@@ -30,7 +30,7 @@ feature {NONE} --Initialization
 
 
 			set_template_folder (html_path)
-			set_template_file_name ("reports.tpl")
+			set_template_file_name ("template_guest_reports.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (a_view, "view")
 			template.add_value (a_view.reports, "reports")

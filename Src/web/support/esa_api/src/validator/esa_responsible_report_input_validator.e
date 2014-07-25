@@ -100,7 +100,23 @@ feature -- Access
 feature -- Errors
 
 	errors: STRING_TABLE[READABLE_STRING_32]
-		-- Hash table with errors and descriptions.		
+			-- Hash table with errors and descriptions.	
+
+	has_error: BOOLEAN
+			-- Has errors the last request?
+		do
+			Result := not errors.is_empty
+		end
+
+	error_message: STRING
+			-- String representation.
+		do
+			create Result.make_empty
+			across errors as c loop
+				Result.append (c.item)
+				Result.append ("%N")
+			end
+		end
 
 feature -- Request Input Parameters
 
@@ -124,13 +140,16 @@ feature -- Request Input Parameters
 
 				-- validate query parameters values.
 
-					-- Validate page, should be a number
+					-- Validate page, should be a number > 0
 				if l_current_keys.has ({STRING_32}"page") then
 					if
 						attached {WSF_STRING} l_table_request.at ("page") as l_page
 					then
-						if not l_page.is_integer then
-							errors.force ("The parameter value for page=[" + l_page.value + "] is not valid", "page")
+						if
+							not l_page.is_integer or else
+							(l_page.is_integer and then l_page.integer_value <= 0)
+						then
+							errors.force ("The parameter value for page should be > 0, the value [" + l_page.value + "] is not valid", "page")
 						else
 							set_page (l_page.integer_value)
 						end
@@ -142,8 +161,11 @@ feature -- Request Input Parameters
 					if
 						attached {WSF_STRING} l_table_request.at ("size") as l_size
 					then
-						if not l_size.is_integer then
-							errors.force ("The parameter value for size=[" + l_size.value + "] is not valid", "size")
+						if
+							not l_size.is_integer or else
+							(l_size.is_integer and then l_size.integer_value <= 0)
+						then
+							errors.force ("The parameter value for size should be > 0, the value [" + l_size.value + "] is not valid", "size")
 						else
 							set_size (l_size.integer_value)
 						end
@@ -164,8 +186,11 @@ feature -- Request Input Parameters
 					if
 						attached {WSF_STRING} l_table_request.at ("category") as l_category
 					then
-						if not l_category.is_integer then
-							errors.force ("The parameter value for category=[" + l_category.value + "] is not valid", "category")
+						if
+							not l_category.is_integer or else
+							(l_category.is_integer and then l_category.integer_value < 0)
+						then
+							errors.force ("The parameter value for category should be >= 0, the value [" + l_category.value + "] is not valid", "category")
 						else
 							set_category (l_category.integer_value)
 						end
@@ -227,7 +252,7 @@ feature -- Request Input Parameters
 					then
 						status.wipe_out
 						across l_status.values as c loop
-					   		if c.item.integer_value > 0 and then c.item.integer_value < 6 then
+					   		if c.item.integer_value >= 0 and then c.item.integer_value < 6 then
 					   			status.force (c.item.integer_value)
 					   		else
 					   			errors.force ("The parameter value for status=[" + c.item.value + "] is not valid", "status_" + c.item.value )
@@ -241,9 +266,11 @@ feature -- Request Input Parameters
 					if
 						attached {WSF_STRING} l_table_request.at ("orderBy") as l_orderBy
 					then
-						if l_orderBy.is_string then
+						if
+							l_orderBy.is_string and then
+							not l_orderBy.is_empty
+						then
 							if
-								not l_orderBy.value.is_empty and then
 								accetpable_order_by.has (l_orderBy.value)
 							then
 								set_orderby (l_orderBy.value)
@@ -285,7 +312,10 @@ feature -- Request Input Parameters
 					if
 						attached {WSF_STRING} l_table_request.at ("dir") as l_dir
 					then
-						if l_dir.is_string then
+						if
+							l_dir.is_string and then
+						   	not l_dir.is_empty
+						then
 							if
 								l_dir.value.same_string ("ASC") or	l_dir.value.same_string ("DESC")
 							then

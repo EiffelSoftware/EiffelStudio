@@ -2,7 +2,7 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<form class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
+		<form class="form-inline well" action="{$host/}/user_reports/{$user/}" id="search" method="GET" itemprop="search">
 			<input type="hidden" name="size" value="{$size/}"/>
 			<div class="row">
 				<div class="col-xs-3">
@@ -61,13 +61,13 @@
 				<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"/>
 			</li>
 			<li><img src="{$host/}/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" />
-				<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;category={$selected_category/}&amp;status={$selected_status/}&amp;orderBy={$orderBy/}&amp;dir={$dir/}" id="currentPage"/>
+					<input type="hidden" name="current" value="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;category={$selected_category/}&amp;status={$selected_status/}&amp;orderBy={$orderBy/}&amp;dir={$dir/}" id="currentPage"/>
 			</li>
 		</ul>
 	</small>
 </h2>
 <div class="row">
-	{include file="paging_reports.tpl"/}
+	{include file="paging_user_reports.tpl"/}
 </div> 
 <div class="table table-responsive">
 	<table class="table table-bordered" id="table">
@@ -79,77 +79,80 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC"># <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC"># <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"># <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"># <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"># </a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"># </a>
 					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="statusID"/}
 					{assign name="ldir" value="ASC"/}
-					
+	
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> 
+								<img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> 
+								<img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
-					{/if}	
-						{unless condition="$view.order_by ~ $column"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
-						{/unless}
+					{/if} 
+					{unless condition="$view.order_by ~ $column"}
+						<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="synopsis"/}
 					{assign name="ldir" value="ASC"/}
-				
+					
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Synopsis <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Synopsis <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Synopsis <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Synopsis <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Synopsis </a>
+						<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Synopsis </a>
 					{/unless}
 				</th>
 				<th> 
 					{assign name="column" value="submissionDate"/}
 					{assign name="ldir" value="ASC"/}
-				
+					
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Date <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Date <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Date <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Date <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Date </a>
+						<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Date </a>
 					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="categorySynopsis"/}
 					{assign name="ldir" value="ASC"/}
+				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Category <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC">Category <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Category <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Category <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Category </a>
+						<a href="{$host/}/user_reports/{$user/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC">Category </a>
 					{/unless}
 				</th>
 			</tr>
@@ -159,7 +162,7 @@
 				<tr>
 					<td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report_interaction" rel="report_interaction">{$item.number/}</a></td>
 					<td class="text-center" itemprop="status">
-							<a href="{$host/}/reports?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$host/}/static/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"/></a>
+							<a href="{$host/}/user_reports/{$user/}?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$host/}/static/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"/></a>
 					</td>
 
 					<td itemprop="synopsis">{$item.synopsis/}</td>
@@ -170,5 +173,5 @@
 						
 		</tbody>
 	</table>
-	{include file="paging_reports.tpl"/}
+	{include file="paging_user_reports.tpl"/}
 </div>

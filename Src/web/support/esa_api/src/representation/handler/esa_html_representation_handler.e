@@ -197,6 +197,18 @@ feature -- View
 			end
 		end
 
+	bad_request_with_errors_page (req: WSF_REQUEST; res: WSF_RESPONSE; errors: STRING_TABLE[READABLE_STRING_32])
+			-- Bad request with error page
+		local
+			l_hp: ESA_HTML_400_PAGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make_with_errors (absolute_host (req, ""), errors)
+				if attached l_hp.representation as l_bad_page then
+					new_response_get_400 (req, res, l_bad_page)
+				end
+			end
+		end
 	new_response_unauthorized (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Generate a Reponse based on the Media Type
 		local

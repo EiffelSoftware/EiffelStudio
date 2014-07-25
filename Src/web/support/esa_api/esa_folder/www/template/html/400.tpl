@@ -16,6 +16,15 @@
             <a href="{$host/}" class="btn btn-large btn-primary" itemprop="home" rel="home"><i class="glyphicon glyphicon-home"></i> Take Me Home</a>
           </div>
           <br/>
+
+          {if isset="$errors"} 
+             <div class="control-group">
+               <label class="col-xs-offset-1  label label-danger">Errors</label>
+                 {foreach from="$errors" item="item"}
+                   <br>  <span class="col-xs-offset-1 label label-warning">{$item/} </span> 
+                 {/foreach}
+               </div>    
+          {/if}
     
     </div>
   </div>

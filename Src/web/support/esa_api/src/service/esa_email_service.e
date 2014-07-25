@@ -27,11 +27,16 @@ feature {NONE} -- Initialization
 			set_successful
 		end
 
-
 	admin_email: IMMUTABLE_STRING_8
 			-- Administrator email.
 		once
 			Result := "noreplies@eiffel.com"
+		end
+
+	webmaster_email: IMMUTABLE_STRING_8
+			-- Webmaster email.
+		once
+			Result := "webmaster@eiffel.com"
 		end
 
 	smtp_protocol: SMTP_PROTOCOL
@@ -220,6 +225,20 @@ feature -- Basic Operations
 			else
 				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + last_error_message)
 			end
+		end
+
+	send_shutdown_email (a_message: READABLE_STRING_GENERAL)
+			-- Send email shutdown cause by an unexpected condition.
+		local
+			l_email: EMAIL
+			l_content: STRING
+		do
+			create l_email.make_with_entry (admin_email, webmaster_email)
+			create l_content.make (2048)
+			l_content.append (a_message.as_string_32)
+			l_email.set_message (l_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "ESA API exception")
+			send_email (l_email)
 		end
 
 feature {NONE} -- Implementation

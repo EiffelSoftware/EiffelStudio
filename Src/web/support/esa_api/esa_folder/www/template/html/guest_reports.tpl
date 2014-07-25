@@ -28,7 +28,7 @@
 				<div class="col-xs-6">
 					<div class="row">
 						<div class="col-xs-2">
-							<label class="control-label-api" for="input01" itemprop="status" data-original-title="<small><p>The status of a problem can be one of the following:</p>
+							<label class="control-label-api" itemprop="status" data-original-title="<small><p>The status of a problem can be one of the following:</p>
 								<ul>
 									<li><b>Open</b>	The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
 									<li><b>Analyzed</b>	The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
@@ -54,7 +54,7 @@
 
 			<div class="row">
 				<div class="col-xs-1">
-					<label class="control-label-api" for="input01" title="To retrieve problem reports filtered by default synopsis or Content, Descriptions, To Reproduce and Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
+					<label class="control-label-api" title="To retrieve problem reports filtered by default synopsis or Content, Descriptions, To Reproduce and Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
 				</div>
 				<div class="col-xs-8">
 					{if isset="$filter"}

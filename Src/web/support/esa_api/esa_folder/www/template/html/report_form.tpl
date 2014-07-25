@@ -151,7 +151,7 @@
 						<div class="row">
 							<label class="control-label" for="textarea" itemprop="environment" data-original-title="<p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>">Environment</label>
 							<div class="controls">
-								<input type="text" class="form-control" id="environment" name="environment" rows="3" placeholder="Windows 8.1" required form="report">{$environment/}</textarea>
+								<input type="text" class="form-control" id="environment" name="environment" rows="3" placeholder="Windows 8.1" required form="report">{$environment/}</input>
 							</div>
 						</div>
 

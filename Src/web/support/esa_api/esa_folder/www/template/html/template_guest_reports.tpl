@@ -5,13 +5,9 @@
 		{include file="master/navbar.tpl"/}
 		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
 			<div class="main">
-
-				{include file="guest_reports.tpl"/}	
-				
+				{include file="guest_reports.tpl"/}
 			</div>
 		</div>
-
-			<!-- Placed at the end of the document so the pages load faster -->
-		{include file="optional_enhancement_js.tpl"/} 
+		{include file="master/footer.tpl"/}
 	</body>
 </html>

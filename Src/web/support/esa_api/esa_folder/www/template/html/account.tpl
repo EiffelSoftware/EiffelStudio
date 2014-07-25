@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 	{include file="master/head.tpl"/}
-
-
 	<body>
-
 		{include file="master/navbar.tpl"/}	
-
 		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
 			<form class="form-inline well" id="registerHere" method='POST' action='{$host/}/account' itemprop="update">
 				<fieldset>
@@ -146,8 +141,6 @@
 				</fieldset>
 			</form>
 		</div>
-		<!-- Placed at the end of the document so the pages load faster -->
-
-		{include file="optional_enhancement_js.tpl"/}
+		{include file="master/footer.tpl"/}
 	</body>
 </html>

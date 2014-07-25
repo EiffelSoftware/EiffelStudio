@@ -1,4 +1,4 @@
- <div class="col-xs-12">
+<div class="col-xs-12">
 	<ul class="pager">
 		<li><a href="{$host/}/reports?page=1&amp;size={$size/}&amp;category={$selected_category/}&amp;{$status_query/}&amp;orderBy={$orderBy/}&amp;dir={$dir/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
 		{if isset="$prev"}

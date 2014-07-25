@@ -5,12 +5,12 @@
 		<form class="form-inline well" action="{$host/}/reports" id="search" method="GET" itemprop="search">
 			<input type="hidden" name="size" value="{$size/}"/>
 			<div class="row">
-				<div class="col-xs-3">
+				<div class="col-xs-6">
 					<div class="row">
 						<div class="col-xs-2">
 							<label class="control-label-api" itemprop="category" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-8">
 							<select class="form-control" data-style="btn-primary" name="category" form="search" itemprop="search">
 								<option value="0">ALL</option>
 								{foreach from="$categories" item="item"}
@@ -25,7 +25,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-3">
+				<div class="col-xs-6">
 					<div class="row">
 						<div class="col-xs-2">
 							<label class="control-label-api" for="input01" itemprop="status" data-original-title="<small><p>The status of a problem can be one of the following:</p>
@@ -37,7 +37,7 @@
 									<li><b>Won't fix</b> Won't fix problem report.</li>
 								</ul></small>">Status</label>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-8">
 							<input type="hidden" name="status" value="0" />
 							{foreach from="$status" item="item"}
 								{if condition="$item.is_selected"}
@@ -53,32 +53,29 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-3">
-					<div class="row">
-						<div class="col-xs-2">
-							<label class="control-label-api" for="input01" title="To retrieve problem reports filtered by default synopsis or Content, Descriptions, To Reproduce and Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
-						</div>
-						<div class="col-xs-6">
-							{if isset="$filter"}
-								<input type="text" name="filter" class="form-control" placeholder="Filter" value="{$filter/}">
-							{/if}
-							{unless isset="$filter"}
-								<input type="text" name="filter" class="form-control" placeholder="Filter">
-							{/unless}
-						</div>
-						<div class="col-xs-2">
-							<label class="checkbox inline" for="checkboxes-description">
-								{if isset="$filter_content"}
-									<input type="checkbox" name="filter_content" value="1" checked /> Content
-								{/if}
-								{unless isset="$filter_content"}
-									<input type="checkbox" name="filter_content" value="1"/> Content
-								{/unless}
-							</label>
-						</div>
-					</div>
+				<div class="col-xs-1">
+					<label class="control-label-api" for="input01" title="To retrieve problem reports filtered by default synopsis or Content, Descriptions, To Reproduce and Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
+				</div>
+				<div class="col-xs-8">
+					{if isset="$filter"}
+						<input type="text" name="filter" class="form-control" placeholder="Filter" value="{$filter/}">
+					{/if}
+					{unless isset="$filter"}
+						<input type="text" name="filter" class="form-control" placeholder="Filter">
+					{/unless}
+				</div>
+				<div class="col-xs-2">
+					<label class="checkbox inline" for="checkboxes-description">
+						{if isset="$filter_content"}
+							<input type="checkbox" name="filter_content" value="1" checked /> Content
+						{/if}
+						{unless isset="$filter_content"}
+							<input type="checkbox" name="filter_content" value="1"/> Content
+						{/unless}
+					</label>
 				</div>
 			</div>
+			<p/>
 			<div class="row">
 				<div class="col-xs-6">
 					<button type="submit" class="btn btn-default">Search</button>

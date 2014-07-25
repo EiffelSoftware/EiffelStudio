@@ -22,7 +22,7 @@
 									{unless condition="$item.id = $view.selected_category"}
 										<option value="{$item.id/}">{$item.synopsis/}</option>
 									{/unless}
-								{/foreach}	
+								{/foreach}
 							</select>
 						</div>
 					</div>
@@ -65,7 +65,7 @@
 									{unless condition="$item.id = $view.selected_priority"}
 										<option value="{$item.id/}">{$item.synopsis/}</option>
 									{/unless}
-								{/foreach}	
+								{/foreach}
 							</select>
 						</div>
 					</div>
@@ -85,13 +85,13 @@
 									{unless condition="$item.id = $view.selected_responsible"}
 										<option value="{$item.id/}">{$item.synopsis/}</option>
 									{/unless}
-								{/foreach}	
+								{/foreach}
 							</select>
 						</div>
-					</div>		
+					</div>
 				</div>
-			</div>		
-	
+			</div>
+
 			<div class="row">
 				<div class="col-xs-6">
 					<div class="row">
@@ -113,7 +113,7 @@
 									{unless condition="$item.id = $view.selected_severity"}
 										<option value="{$item.id/}"> {$item.synopsis/} </option>
 									{/unless}
-								{/foreach}	
+								{/foreach}
 							</select>
 						</div>
 					</div>
@@ -173,9 +173,9 @@
 				<div class="col-xs-6">
 					<button type="submit" class="btn btn-default">Search</button>
 				</div>
-			</div>				
+			</div>
 		</form>
-	</div>	
+	</div>
 </div>
 
 <h2 class="sub-header">Problem Reports
@@ -186,7 +186,7 @@
 			<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
 			<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" id="currentPage">
 		</ul>
-	</small>	
+	</small>
 </h2>
 
 <div class="row">
@@ -221,7 +221,7 @@
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
 						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"># </a>
-					{/unless}		
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="statusID"/}
@@ -239,14 +239,14 @@
 					{unless condition="$view.order_by ~ $column"}
 						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
-					{/unless}		
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="priorityID"/}
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">	
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
@@ -256,7 +256,7 @@
 					{unless condition="$view.order_by ~ $column"}
 						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
-					{/unless}		
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="severityID"/}
@@ -292,14 +292,14 @@
 					{unless condition="$view.order_by ~ $column"}
 						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							Synopsis </a>
-					{/unless}		
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="username"/}
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">			
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Submitter <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
@@ -310,7 +310,7 @@
 					{unless condition="$view.order_by ~ $column"}
 						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							Submitter </a>
-					{/unless}										
+					{/unless}
 				</th>
 				<th>
 					{assign name="column" value="submissionDate"/}
@@ -393,19 +393,19 @@
 									{unless condition="$val.id = $item.assigned.id"}
 										<option value="{$val.id/}">{$val.synopsis/}</option>
 									{/unless}
-								{/foreach}	
+								{/foreach}
 							</select>
 						</td>
 						<td itemprop="category">{$item.category.synopsis/}</td>
 						<td itemprop="release">{$item.release/}</td>
 						<td><button type="submit" class="btn btn-default">Update</button></td>
 					</tr>
-				</form>		
+				</form>
 			{/foreach}
 		</tbody>
 	</table>
 </div>
-			
+
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="pager">

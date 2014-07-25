@@ -192,7 +192,6 @@
 				</form>
 			</div>
 		</div>
-		<!-- Placed at the end of the document so the pages load faster -->
-		{include file="optional_enhancement_js.tpl"/}
+		{include file="master/footer.tpl"/}
 	</body>
 </html>

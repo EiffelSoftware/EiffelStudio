@@ -12,10 +12,21 @@ body {
  * Global add-ons
  */
 
+h1 {
+	margin-top: initial;
+	margin-bottom: 5px;
+}
+
 h2.sub-header{
 	margin-top: 1px;
 	margin-bottom: 1px;
 	border-bottom: 1px solid #eee;
+}
+
+
+.container .jumbotron {
+	padding: 10px;
+	text-align: center;
 }
 
 

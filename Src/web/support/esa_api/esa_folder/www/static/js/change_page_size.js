@@ -38,6 +38,8 @@ $("#changesize").pressEnter( function() {
                                     document.open();
                                     document.write(request.responseText);
                                     window.history.pushState(request.responseText, "Support Site for Eiffel users", str);
+                                    document.close();
+                                    document.contentWindow.stop();
 
                                 }
                          }

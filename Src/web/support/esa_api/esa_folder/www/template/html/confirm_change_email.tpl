@@ -25,7 +25,7 @@
 								<input type="text" class="form-control" id="inputToken" name="token" value="{$token/}" placeholder="Token"/>
 							</div>
 						</div>
-						<p/>
+						<p></p>
 						<div class="row">
 							<div class="col-xs-4">
 								<input type="submit" class="btn btn-primary" value="Submit"/>

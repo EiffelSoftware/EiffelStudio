@@ -168,7 +168,7 @@
 					</label>
 				</div>
 			</div>
-
+			<p></p>
 			<div class="row">
 				<div class="col-xs-6">
 					<button type="submit" class="btn btn-default">Search</button>

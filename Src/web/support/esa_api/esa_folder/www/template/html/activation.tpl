@@ -24,7 +24,7 @@
 							<input type="text" class="form-control" id="token" name="token" rel="popover" data-content="Enter your roken" data-original-title="Token" placeholder="Token" value="{$form.token/}"/>
 						</div>
 					</div>
-					<p/>
+					<p></p>
 
 					<div class="row">
 						<div class="col-xs-4">

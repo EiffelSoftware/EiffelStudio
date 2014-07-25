@@ -50,7 +50,7 @@ feature -- Access
 		end
 
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32): LIST[ESA_REPORT]
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): LIST[ESA_REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
@@ -61,7 +61,7 @@ feature -- Access
 			data_provider.connect
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			data_provider.connect
-			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username) as c loop
+			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
@@ -503,6 +503,15 @@ feature -- Basic Operations
 		do
 			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username)
 			Result := data_provider.row_count_problem_report_guest (a_category, a_status, a_username)
+			post_data_provider_execution
+		end
+
+	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: STRING; a_content:INTEGER ): INTEGER
+			-- Row count table `PROBLEM_REPORT table' for guest users
+		do
+
+			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username)
+			Result := data_provider.row_count_problem_reports (a_category, a_status, a_username, a_filter, a_content)
 			post_data_provider_execution
 		end
 

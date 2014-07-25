@@ -157,14 +157,14 @@ feature {NONE} -- Internationalization
 
 	e_missing_non_switched_argument: IMMUTABLE_STRING_32
 		once
-			create Result.make_from_string_general ("{1} is require and was not specified.")
+			create Result.make_from_string_general ("The required argument %"{1}%" is missing.")
 		end
 
 invariant
 	is_allowing_non_switched_arguments: is_allowing_non_switched_arguments
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -195,4 +195,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_MULTI_PARSER}
+end

@@ -2,9 +2,15 @@
  * Base structure
  */
 
-/* Move down content because we have a fixed navbar that is 30px tall */
+/* Move down content because we have a fixed navbar that is 36px tall on small screen */
 body {
-	padding-top: 35px;
+	padding-top: 40px;
+}
+/* On large screen, we give it more space and the navbar is 30px tall. */
+@media (min-width: 768px) {
+	body {
+		padding-top: 45px;
+	}
 }
 
 
@@ -287,7 +293,7 @@ pre {
 	font-size: 12px;
 	font-family: monospace;
 	line-height: 1.428571429;
-	word-break: break-all;
+	word-break: break-word;
 	word-wrap: break-word;
 	color: #333;
 	border: 0px; 

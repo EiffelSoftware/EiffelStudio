@@ -48,8 +48,16 @@ feature {NONE} --Initialization
 				end
 			end
 
-			if attached a_user then
+			if
+				attached a_form.temporary_files_names as l_files and then
+				not l_files.is_empty
+			then
+				template.add_value (l_files, "attachments")
+			end
+
+			if attached {STRING_32} a_user as l_user then
 				template.add_value (a_user, "user")
+				template.add_value (has_access(l_user, a_form), "has_access")
 			end
 
 			template_context.enable_verbose
@@ -63,9 +71,8 @@ feature {NONE} --Initialization
 			end
 		end
 
-
 	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
-			-- Retrieve the current selected item
+			-- Retrieve the current selected item.
 		local
 			l_found: BOOLEAN
 			l_item: ESA_REPORT_SELECTABLE
@@ -83,5 +90,17 @@ feature {NONE} --Initialization
 				a_items.forth
 			end
 		end
+
+	has_access (a_user:STRING; a_form: ESA_INTERACTION_FORM_VIEW): BOOLEAN
+				-- Has the current user access to change category and status?
+			do
+				Result := a_form.is_responsible_or_admin
+				if
+					attached a_form.report as l_report and then
+					attached l_report.contact as l_contact then
+					Result := Result or else (a_user.same_string (l_contact.name))
+				end
+
+			end
 
 end

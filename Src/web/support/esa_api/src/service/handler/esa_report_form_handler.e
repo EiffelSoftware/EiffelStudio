@@ -552,6 +552,7 @@ feature {NONE} -- Implementation
 						api_service.remove_temporary_report_attachment (a_form.id, l_file.value)
 					end
 				end
+				a_form.add_temporary_file_name (l_file.value)
 			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
 				across api_service.temporary_problem_report_attachments (a_form.id) as c loop
 					across l_files as lf loop
@@ -565,11 +566,16 @@ feature {NONE} -- Implementation
 						l_found := False
 					end
 				end
+				across l_files as lf loop
+					a_form.add_temporary_file_name (lf.item.name)
+				end
+
 			end
 				-- Add new uploaded files
 			if attached a_form.uploaded_files as l_files then
 				across l_files as c loop
 					api_service.upload_temporary_report_attachment (a_form.id, c.item)
+					a_form.add_temporary_file_name (c.item.name)
 				end
 			end
   		end

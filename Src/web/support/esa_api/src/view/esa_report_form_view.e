@@ -80,6 +80,9 @@ feature -- Access
 	temporary_files: detachable LIST[ESA_FILE_VIEW]
 		-- Temporary files.
 
+	temporary_files_names: detachable LIST[STRING]
+		-- Temporary files names.		
+
 
 feature -- Status Report
 
@@ -237,6 +240,18 @@ feature -- Element Change
 			temporary_files := a_files
 		ensure
 			temporary_files_set: temporary_files = a_files
+		end
+
+	add_temporary_file_name (a_name: STRING)
+		local
+			l_files: like temporary_files_names
+		do
+			l_files := temporary_files_names
+			if l_files = Void then
+				create {ARRAYED_LIST[STRING]}l_files.make (1)
+				temporary_files_names := l_files
+			end
+			l_files.force (a_name)
 		end
 
 end

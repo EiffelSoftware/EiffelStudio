@@ -52,7 +52,7 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
+	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER; a_filter: READABLE_STRING_32; a_content: INTEGER): ESA_DATABASE_ITERATION_CURSOR [ESA_REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
@@ -65,9 +65,10 @@ feature -- Access
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page * a_page_number, "Offset")
 			l_parameters.put (l_encoder.encode (string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
-			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.statusid_param)
+			if not a_filter.is_empty then
+				l_parameters.put (l_encoder.encode (string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+			end
 			create l_query.make_from_string (Select_problem_reports_by_user_template)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
@@ -77,6 +78,27 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
 			l_query.replace_substring_all ("$Column", l_encoder.encode (string_parameter (a_column, 30)))
+
+			-- Filter search.
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+				else
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+			end
+
+				--| Need to be updated to build the set based on user selection.
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encoder.encode (a_status) + ")")
+
 			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -1003,21 +1025,44 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count_problem_report_user (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): INTEGER
+	row_count_problem_report_user (a_username: STRING; a_category:INTEGER; a_status:READABLE_STRING_32; a_filter: READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status.
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_encode: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_query: STRING
 		do
 			log.write_information (generator + ".row_count_problem_report_user")
 			connect
 			create l_parameters.make (4)
 			l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {ESA_DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {ESA_DATA_PARAMETERS_NAMES}.Categoryid_param)
-			l_parameters.put (a_status, {ESA_DATA_PARAMETERS_NAMES}.Statusid_param)
-			l_parameters.put (a_open_only, {ESA_DATA_PARAMETERS_NAMES}.Openonly_param)
-			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (Select_row_count_problem_report_by_user, l_parameters))
+			if not a_filter.is_empty then
+				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {ESA_DATA_PARAMETERS_NAMES}.Filter_param)
+			end
+
+			create l_query.make_from_string (Select_row_count_problem_report_by_user)
+
+					-- Filter search.
+			if
+				attached a_filter and then
+				not a_filter.is_empty
+			then
+				if a_content = 1 then
+						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+				else
+						-- Search only by Synopsis
+					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+				end
+			else
+					-- No filter
+				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+			end
+				--| Need to be updated to build the set based on user selection.
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
 				db_handler.start
@@ -2124,16 +2169,8 @@ feature -- Queries
 					INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID and Username = :Username
 					WHERE 
 						((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
-						AND
-						(
-							(
-								:OpenOnly = 0
-								AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
-							) OR (
-								:OpenOnly = 1
-								AND (((NOT ProblemReports.StatusID = 3) AND (NOT ProblemReports.StatusID = 5)) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE ((NOT StatusID = 3) AND (NOT StatusID = 5)))))
-							)
-						) 
+						AND ((ProblemReports.StatusID in $StatusSet))
+						$SearchBySynopsisAndOrDescription
 						ORDER BY $Column $ORD1
 					) as PAG
 					ORDER BY $Column $ORD2	
@@ -2148,16 +2185,9 @@ feature -- Queries
 			INNER JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID and Username = :Username
 			WHERE 
 				((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
-				AND
-				(
-					(
-						:OpenOnly = 0
-						AND ((ProblemReports.StatusID = :StatusID) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE (StatusID = :StatusID))))
-					) OR (
-						:OpenOnly = 1
-						AND (((NOT ProblemReports.StatusID = 3) AND (NOT ProblemReports.StatusID = 5)) OR (NOT EXISTS (SELECT StatusID FROM ProblemReportStatus WHERE ((NOT StatusID = 3) AND (NOT StatusID = 5)))))
-					)
-				)
+				AND ((ProblemReports.StatusID in $StatusSet))
+				$SearchBySynopsisAndOrDescription
+
 		]"
 
 	delete_ProblemReportTemporaryInteractions: STRING = "[

@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				across l_files as lf loop
-					a_form.add_temporary_file_name (lf.item.name)
+					a_form.add_temporary_file_name (lf.item.value)
 				end
 
 			end

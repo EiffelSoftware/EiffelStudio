@@ -24,7 +24,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<div class="modal-body" id="myModalForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
+						<div class="modal-body" id="redirecLoginForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
 							<a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
 							<p></p>
 							<form class="form-inline well"	data-rel="login" itemprop="login">
@@ -35,8 +35,8 @@
 								<input type="hidden" name="redirect" value="{$redirect/}"/>
 								<input type="hidden" name="host" value="{$host/}"/>
 								<div class="controls">
-									<button type="button" class="btn btn-primary" onclick="login();">Sign In</button>
-									<input type="reset" class="btn btn-default" value="Reset"/>
+									<button type="button" class="btn btn-primary" onclick="login_with_redirect();">Sign In</button>
+									<input type="reset" class="btn btn-default" value="Reset"/><img src="{$host/}/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="imgProgressRedirect" />
 								</div>
 							</form>
 						</div>

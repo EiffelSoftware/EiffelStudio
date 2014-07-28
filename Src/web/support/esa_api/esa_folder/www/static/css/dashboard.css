@@ -253,7 +253,8 @@ pre {
 }
 
 .form-inline .checkbox {
-	margin-left: 10px;
+	font-weight: initial;
+	vertical-align: top;
 }
 
 /* Note that there is also a class called label. */

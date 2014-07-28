@@ -13,16 +13,14 @@
 					<input type="hidden" name="subscriber_to_category" value="-1"/>
 
  					{foreach from="$categories" item="item"}
-						<p>
-							<label class="checkbox inline" for="checkboxes-{$item.id/}">
-							{if condition="$item.subscribed"}
-								<input type="checkbox" name="subscriber_to_category" value="{$item.id/}" checked /> {$item.synopsis/}
-							{/if}
-							{unless condition="$item.subscribed"}
-								<input type="checkbox" name="subscriber_to_category" value="{$item.id/}"/> {$item.synopsis/}
-							{/unless}
-							</label>
-						</p>
+						{if condition="$item.subscribed"}
+							<input type="checkbox" id="checkbox-{$item.id/}" name="subscriber_to_category" value="{$item.id/}" checked />
+						{/if}
+						{unless condition="$item.subscribed"}
+							<input type="checkbox" id="checkbox-{$item.id/}" name="subscriber_to_category" value="{$item.id/}"/>
+						{/unless}
+						<label class="checkbox inline" for="checkbox-{$item.id/}">{$item.synopsis/}</label>
+						<br/>
 					{/foreach}
 					<div class="row">
 						<div class="col-xs-12">

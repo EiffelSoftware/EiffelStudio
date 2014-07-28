@@ -79,12 +79,20 @@ feature -- HTTP Methods
 			l_direction: STRING
 			l_order_by : STRING
 			l_dir: INTEGER
+			l_filter: STRING
+			l_content: INTEGER
+			l_status_selected: STRING
 		do
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				log.write_information (generator+".do_get Processing request with user:" + l_user  )
 				if attached current_media_type (req) as l_type then
+
+					l_categories := api_service.all_categories
+					list_status:= api_service.status
+
+					create l_filter.make_empty
 
 					l_order_by := "submissionDate"
 					l_direction := "ASC"
@@ -107,37 +115,62 @@ feature -- HTTP Methods
 						l_size := 30
 					end
 
-					l_categories := api_service.all_categories
-					list_status:= api_service.status
-					if attached {WSF_STRING} req.query_parameter ("category") as ll_category and then
-					   attached {WSF_STRING} req.query_parameter ("status") as ll_status and then
-						  ll_category.is_integer and then ll_status.is_integer then
-					  	l_category := ll_category.integer_value
-					    l_status := ll_status.integer_value
-					 else
-						l_category := 0
-						l_status := 0
-					end
+				    -- Filter text
+	                if attached {WSF_STRING} req.query_parameter ("filter") as ll_filter then
+		                 l_filter := ll_filter.value
+	                end
 
-						-- Order By and Direction
+			             -- Filter by description
+		            if attached {WSF_STRING} req.query_parameter ("filter_content") as l_filter_content and then l_filter_content.is_integer then
+		                 l_content := l_filter_content.integer_value
+		            end
+
+					create l_status_selected.make_empty
+					if  attached {WSF_MULTIPLE_STRING} req.query_parameter ("status") as ll_status then
+	                    across ll_status.values as c loop
+	                    	if c.item.integer_value > 0 then
+	                        	set_selected_status (list_status, c.item.integer_value)
+								l_status_selected.append_string (c.item.value)
+								l_status_selected.append_character (',')
+	                        end
+	                     end
+
+	                     if l_status_selected.is_empty then
+	                     	l_status_selected := "0"
+						 else
+	                     	l_status_selected.remove_tail (1) -- remove the last ','
+	                     end
+		            else
+		            	-- Default Setup
+		                to_implement ("Improve this code!!!")
+		                l_status_selected := "1,2,3,4"
+		                set_selected_status (list_status, 1)
+		                set_selected_status (list_status, 2)
+		                set_selected_status (list_status, 3)
+		                set_selected_status (list_status, 4)
+		            end
+						-- Order by and Direction
 					if attached {WSF_STRING} req.query_parameter ("orderBy") as l_orderby and then attached {WSF_STRING} req.query_parameter ("dir") as ll_dir then
-						if not l_orderby.value.is_empty then
-							l_order_by := l_orderby.value
+						l_order_by := l_orderby.value
+						l_direction := ll_dir.value
+						if ll_dir.value.same_string ("ASC") then
+							l_dir := 1
 						end
-						if not ll_dir.value.is_empty then
-							l_direction := ll_dir.value
-							if ll_dir.value.same_string ("ASC") then
-								l_dir := 1
-							end
-						end
+					else
+						l_order_by := "submissionDate"
+						l_direction := "ASC"
+						l_dir := 0
 					end
-					l_pages := api_service.row_count_problem_report_user (l_user, False, l_category, l_status)
-					l_row := api_service.problem_reports_2 (l_page, l_size, l_user, False, l_category, l_status, l_order_by, l_dir)
+					l_pages := api_service.row_count_problem_report_user (l_user, l_category, l_status_selected, l_filter, l_content)
+					l_row := api_service.problem_reports_2 (l_page, l_size, l_user,l_category, l_status_selected, l_order_by, l_dir, l_filter, l_content)
 					create l_view.make (l_row, l_page, l_pages // l_size, l_categories, list_status, l_user)
 					l_view.set_selected_category (l_category)
 					l_view.set_selected_status (l_status)
 					l_view.set_size (l_size)
 					l_view.set_order_by (l_order_by)
+					l_view.set_filter (l_filter)
+					l_view.set_filter_content (l_content)
+
 
 					if l_dir = 1 then
 						l_view.set_direction ("ASC")
@@ -156,6 +189,17 @@ feature -- HTTP Methods
 				else
 					log.write_alert (generator+".do_get Processing request not acceptable")
 					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
+				end
+			end
+		end
+
+
+	set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
+			-- Set the current selected status
+		do
+			across a_status as c  loop
+				if c.item.id = a_selected_status then
+					c.item.set_selected_id (a_selected_status)
 				end
 			end
 		end

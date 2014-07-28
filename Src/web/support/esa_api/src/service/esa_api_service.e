@@ -113,18 +113,16 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32): LIST[ESA_REPORT]
+	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[ESA_REPORT]
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
 		local
 			l_report: ESA_REPORT
 			l_list: LIST[ESA_REPORT]
 		do
-			log.write_debug (generator + ".problem_reports2 Problem reports for username:" + a_username + " page_number:" + a_page_number.out + "rows_per_page:" + a_rows_per_page.out + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out + " column:" + a_column + " order:" + a_order.out)
-
 			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
 			data_provider.connect
-			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_open_only, a_category, a_status, a_column, a_order) as c loop
+			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
@@ -525,12 +523,11 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	row_count_problem_report_user (a_username: STRING_8; a_open_only: BOOLEAN; a_category, a_status: INTEGER_32): INTEGER
+	row_count_problem_report_user (a_username: STRING_8;  a_category: INTEGER_32; a_status, a_filter: READABLE_STRING_32; a_content: INTEGER): INTEGER
 			-- Number of problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status
 		do
-			log.write_debug (generator+".row_count_problem_report_user filter by username:" + a_username + " open_only:" + a_open_only.out + " category:" + a_category.out + " status:" + a_status.out)
-			Result := data_provider.row_count_problem_report_user (a_username, a_open_only, a_category, a_status)
+			Result := data_provider.row_count_problem_report_user (a_username,a_category, a_status, a_filter, a_content)
 			post_data_provider_execution
 		end
 

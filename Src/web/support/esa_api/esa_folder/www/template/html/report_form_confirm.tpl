@@ -4,94 +4,120 @@
 	<body>
 		{include file="master/navbar.tpl"/}
 		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
-			<div class=" main">
-				<div class="form-horizontal well">
-					<fieldset>
-						<legend><h1>Problem Report Submission Confirmation</h1></legend>
-						<div class="row">
-							<div class="col-xs-2">
-								<label class="control-label" for="input01" itemprop="category">Product/Category:</label>
-								{foreach from="$form.categories" item="item"}
-									{if condition="$item.id = $category"}
-												{$item.synopsis/}
-									{/if}
-								{/foreach}
-							</div>
-							<div class="col-xs-2">
-								<label class="control-label" for="input01" itemprop="severity">Severity:</label>
-									{foreach from="$form.severities" item="item"}
-										{if condition="$item.id = $severity"}
+			<div class="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Problem Report Submission Confirmation</strong>
+					</div>
+					<div class="panel-body">
+						<div class="form-inline">
+							<div class="row">
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="category">Category:</label>
+									<span>
+									{foreach from="$form.categories" item="item"}
+										{if condition="$item.id = $category"}
 													{$item.synopsis/}
 										{/if}
 									{/foreach}
+									</span>
+								</div>
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="severity">Severity:</label>
+										{foreach from="$form.severities" item="item"}
+											{if condition="$item.id = $severity"}
+														{$item.synopsis/}
+											{/if}
+										{/foreach}
+								</div>
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="priority">Priority:</label>
+									{foreach from="$form.priorities" item="item"}
+										{if condition="$item.id = $priority"}
+													{$item.synopsis/}
+										{/if}
+									{/foreach}
+								</div>
 							</div>
-							<div class="col-xs-2">
-								<label class="control-label" for="input01" itemprop="priority">Priority:</label>
-								{foreach from="$form.priorities" item="item"}
-									{if condition="$item.id = $priority"}
-												{$item.synopsis/}
+							<div class="row">
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="class">Class:</label>
+									{foreach from="$form.classes" item="item"}
+										{if condition="$item.id = $class"}
+													{$item.synopsis/}
+										{/if}
+									{/foreach}
+								</div>
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="confidential">Confidential:</label>
+									{if condition="$confidential"}
+										Yes
 									{/if}
-								{/foreach}
+									{unless condition="confidential"}
+										No
+									{/unless}
+								</div>
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" has-success has-feedback itemprop="release">Release:</label>
+									<span>{$release/}</span>
+								</div>
 							</div>
-							<div class="col-xs-2">
-								<label class="control-label" for="input01" itemprop="class">Class</label>
-								{foreach from="$form.classes" item="item"}
-									{if condition="$item.id = $class"}
-												{$item.synopsis/}
-									{/if}
-								{/foreach}
+							<div class="row">
+								<div class="col-xs-12">
+									<label class="label label-primary-api-default" itemprop="environment">Environment:</label>
+									<span>{$environment/}</span>
+								</div>
 							</div>
-							<div class="col-xs-2">
-								<label class="control-label" for="input01" itemprop="confidential">Confidential</label>
-								{if condition="$confidential"}
-									Yes
-								{/if}
-								{unless condition="confidential"}
-									No
-								{/unless}
+							<div class="row">
+								<div class="col-xs-12">
+									<label class="label label-primary-api-default" has-success has-feedback itemprop="synopsis">Synopsis:</label>
+									<span>{$synopsis/}</span>
+								</div>
+							</div>
+							{if isset="$attachments"}
+							<div class="row">
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="attachments">Attachments:</label>
+									<span>
+										{foreach from="attachments" item="item"}
+											{$item/} 
+										{/foreach}
+									</span>
+								</div>
+							</div>
+							{/if}
+							<div class="row">
+								<div class="col-xs-4">
+									<label class="label label-primary-api-default" itemprop="description">Description:</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<pre>{htmlentities}{$description/}{/htmlentities}</pre>
+								</div>
+							</div>
+							{if isset="$to_reproduce"}
+							<div class="row">
+								<div class="col-xs-4">
+									<label class="control-label" itemprop="to_reproduce">To Reproduce:</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<pre>{htmlentities}{$to_reproduce/}{/htmlentities}</pre>
+								</div>
+							</div>
+							{/if}
+							<hr/>
+							<div class="form-actions">
+								<form action="{$host/}/report_confirm" method="POST" itemprop="create">
+									<button type="submit" class="btn btn-xs btn-primary">Confirm</button>
+									<input type="hidden" id="confirm" name="confirm" class="form-control" value="{$id/}" />
+									<a class="btn btn-xs btn-primary" href="{$host/}/report_form/{$id/}" itemprop="update" rel="update">Edit</a>
+								</form>
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label" for="input" has-success has-feedback itemprop="release">Release</label>
-							<div class="controls">{$release/}</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="input"	has-success has-feedback itemprop="synopsis">Synopsis</label>
-							<div class="controls">{$synopsis/}</div>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="textarea" itemprop="environment">Environment</label>
-							<div class="controls">{$environment/}</div>
-						</div>
-						{if isset="$attachments"}
-						<div class="control-group">
-							<label class="control-label" for="textarea" itemprop="attachments">Attachments</label>
-							<div class="controls">
-								{foreach from="$attachments" item="item"}
-									{$item/} </br>
-								{/foreach}
-							</div>
-						</div>
-						{/if}
-						<div class="control-group">
-							<label class="control-label" for="textarea" itemprop="description">Description</label>
-							<div class="controls">{$description/}</div>
-						</div>
-						{if isset="$to_reproduce"}
-						<div class="control-group">
-							<label class="control-label" for="textarea" itemprop="to_reproduce">To Reproduce</label>
-							<div class="controls">{$to_reproduce/}</div>
-						</div>
-						{/if}
-						<hr/>
-						<div class="form-actions">
-							<form action="{$host/}/report_confirm" method="POST" itemprop="create">
-								<button type="submit" class="btn btn-xs btn-primary">Confirm</button>
-								<input type="hidden" id="confirm" name="confirm" class="form-control" value="{$id/}" />
-								<a class="btn btn-xs btn-primary" href="{$host/}/report_form/{$id/}" itemprop="update" rel="update">Edit</a>
-							</form>
-						</div>
-					</fieldset>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -134,11 +134,14 @@
 							<input type="hidden" name="status" value="0" />
 							{foreach from="$status" item="item"}
 								{if condition="$item.is_selected"}
-									<input type="checkbox" name="status" value="{$item.id/}" checked /><img src="{$host/}/static/images/status_{$item.id/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}" >
+									<input type="checkbox" id="checkbox-status-{$item.id/}" name="status" value="{$item.id/}" checked/>
 								{/if}
 								{unless condition="$item.is_selected"}
-									<input type="checkbox" name="status" value="{$item.id/}"/><img src="{$host/}/static/images/status_{$item.id/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}"	>
+									<input type="checkbox" id="checkbox-status-{$item.id/}" name="status" value="{$item.id/}"/>
 								{/unless}
+								<label class="checkbox" for="checkbox-status-{$item.id/}">
+									<img src="{$host/}/static/images/status_{$item.id/}.gif" class="img-rounded" data-original-title="{$item.synopsis/}"/>
+								</label>
 							{/foreach}
 						</div>
 					</div>
@@ -158,14 +161,13 @@
 					{/unless}
 				</div>
 				<div class="col-xs-2">
-					<label class="checkbox inline" for="checkboxes-description">
-						{if isset="$filter_content"}
-							<input type="checkbox" name="filter_content" value="1" checked /> Content
-						{/if}
-						{unless isset="$filter_content"}
-							<input type="checkbox" name="filter_content" value="1"/> Content
-						{/unless}
-					</label>
+					{if isset="$filter_content"}
+						<input type="checkbox" id="checkbox-filter-content" name="filter_content" value="1" checked />
+					{/if}
+					{unless isset="$filter_content"}
+						<input type="checkbox" id="checkbox-filter-content" name="filter_content" value="1"/>
+					{/unless}
+					<label class="checkbox" for="checkbox-filter-content">Content</label>
 				</div>
 			</div>
 			<p></p>

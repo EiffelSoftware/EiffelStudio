@@ -79,7 +79,7 @@
 								<div class="col-xs-4">
 									<label class="label label-primary-api-default" itemprop="attachments">Attachments:</label>
 									<span>
-										{foreach from="attachments" item="item"}
+										{foreach from="$attachments" item="item"}
 											{$item/} 
 										{/foreach}
 									</span>

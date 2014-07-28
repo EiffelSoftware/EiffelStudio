@@ -277,6 +277,7 @@ feature -- Initialize Report Problem
 						l_form := extract_form_data (req, l_type)
 						l_form.set_id (l_temp_interaction_id)
 						l_form.set_report (l_report)
+						l_form.confirm_changes
 						if l_form.is_valid_form then
 							initialize_interaction_report_problem_internal (req, l_form)
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm (req, res, l_form)
@@ -458,9 +459,9 @@ feature {NONE} -- Implementation
 		local
 			l_found: BOOLEAN
 		do
-				-- Update temporary files
+					-- Update temporary files
 			if req.form_parameter ("temporary_files") = Void then
-				-- remove all the attached files.
+					-- remove all the attached files.
 				api_service.remove_all_temporary_interaction_attachments (a_form.id)
 			elseif attached {WSF_STRING} req.form_parameter ("temporary_files") as l_file and then
 				l_file.is_string then
@@ -469,6 +470,7 @@ feature {NONE} -- Implementation
 						api_service.remove_temporary_interaction_attachment (a_form.id, l_file.value)
 					end
 				end
+				a_form.add_temporary_file_name (l_file.value)
 			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("temporary_files") as l_files then
 				across api_service.temporary_interation_attachments (a_form.id) as c loop
 					across l_files as lf loop
@@ -482,11 +484,15 @@ feature {NONE} -- Implementation
 						l_found := False
 					end
 				end
+				across l_files as lf loop
+					a_form.add_temporary_file_name (lf.item.name)
+				end
 			end
 				-- Add new uploaded files
 			if attached a_form.uploaded_files as l_files then
 				across l_files as c loop
 					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
+					a_form.add_temporary_file_name (c.item.name)
 				end
 			end
   		end

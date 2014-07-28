@@ -56,6 +56,9 @@ feature -- Access
 	temporary_files: detachable LIST[ESA_FILE_VIEW]
 		-- Temporary files.	
 
+	temporary_files_names: detachable LIST[STRING]
+		-- Temporary files names.	
+
 	is_responsible_or_admin: BOOLEAN
 		-- Is the current user responsible or admin?
 
@@ -64,13 +67,27 @@ feature -- Status Report
 	is_valid_form: BOOLEAN
 			-- An interaction form is valid iff
 			-- A description is defined and it's not empty
-			-- A selected status it's not 0
-			-- A category it's not 0.
+			-- A selected status by default is 0
+			-- A category by default is 0.
 		do
 			if attached description as l_description and then
 			   not l_description.is_empty  and then
-			   selected_status > 0 and then category > 0 then
+			   selected_status >= 0 and then category >= 0 then
 			   	Result := True
+			end
+		end
+
+	confirm_changes
+		do
+			if
+				selected_status = 0 and then
+			    category = 0 and then
+			    attached report as l_report and then
+			    attached l_report.status as l_status and then
+			    attached l_report.category as l_category
+			then
+			    set_status_by_synopsis(l_status.synopsis)
+			   	set_category_by_synopsis (l_category.synopsis)
 			end
 		end
 
@@ -166,5 +183,17 @@ feature -- Element Change
 			is_responsible_or_admin := a_boolean
 		ensure
 			set_responsible_or_admin: is_responsible_or_admin = a_boolean
+		end
+
+	add_temporary_file_name (a_name: STRING)
+		local
+			l_files: like temporary_files_names
+		do
+			l_files := temporary_files_names
+			if l_files = Void then
+				create {ARRAYED_LIST[STRING]}l_files.make (1)
+				temporary_files_names := l_files
+			end
+			l_files.force (a_name)
 		end
 end

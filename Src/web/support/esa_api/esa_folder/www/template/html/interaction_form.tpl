@@ -21,6 +21,7 @@
 									<textarea class="form-control input-xlarge" id="description" name="description"	rows="4" placeholder="Give a description of the problem" required form="report">{$form.description/}</textarea>
 								</div>
 							</div>
+							{if condition="$has_access"}
 							<div class="row">
 								<div class="col-xs-4">
 									<label class="control-label" for="input01" itemprop="category">Change Category from {$form.report.category.synopsis/} to </label>
@@ -40,7 +41,7 @@
 							<div class="row">
 								<div class="col-xs-4">
 									<label class="control-label" for="input01" itemprop="status">Change status from {$form.report.status.synopsis/} to </label>
-									<select class="form-control"	data-style="btn-primary" name="status" form="report">
+									<select class="form-control" data-style="btn-primary" name="status" form="report">
 										<option value="0">ALL</option>
 										{foreach from="$status" item="item"}
 											{if condition="$item.id = $form.selected_status"}
@@ -53,6 +54,7 @@
 									</select>
 								</div>
 							</div>
+							{/if}
 							{if condition="$form.is_responsible_or_admin"}
 								<div class="checkbox" itemprop="private">
 									{if condition="$form.private"}

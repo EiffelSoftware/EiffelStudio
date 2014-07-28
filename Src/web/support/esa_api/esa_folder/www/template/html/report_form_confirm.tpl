@@ -63,22 +63,26 @@
 							<label class="control-label" for="textarea" itemprop="environment">Environment</label>
 							<div class="controls">{$environment/}</div>
 						</div>
+						{if isset="$attachments"}
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="attachments">Attachments</label>
 							<div class="controls">
 								{foreach from="attachments" item="item"}
-									{$item.name/} </br>
+									{$item/} </br>
 								{/foreach}
 							</div>
 						</div>
+						{/if}
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="description">Description</label>
 							<div class="controls">{$description/}</div>
 						</div>
+						{if isset="$to_reproduce"}
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="to_reproduce">To Reproduce</label>
 							<div class="controls">{$to_reproduce/}</div>
 						</div>
+						{/if}
 						<hr/>
 						<div class="form-actions">
 							<form action="{$host/}/report_confirm" method="POST" itemprop="create">

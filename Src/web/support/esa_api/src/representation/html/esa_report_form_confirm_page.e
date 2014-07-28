@@ -32,10 +32,20 @@ feature {NONE} --Initialization
 			template.add_value (a_form.confidential, "confidential")
 			template.add_value (a_form.description, "description")
 			template.add_value (a_form.environment, "environment")
-			template.add_value (a_form.to_reproduce,"to_reproduce")
+			if
+				attached a_form.to_reproduce as l_reproduce and then
+				not l_reproduce.is_empty
+			then
+				template.add_value (a_form.to_reproduce,"to_reproduce")
+			end
 			template.add_value (a_form.release, "release")
 			template.add_value (a_form.synopsis, "synopsis")
-			template.add_value (a_form.uploaded_files, "attachments")
+			if
+				attached a_form.temporary_files_names as l_files and then
+				not l_files.is_empty
+			then
+				template.add_value (l_files, "attachments")
+			end
 			template.add_value (a_form.id, "id")
 
 

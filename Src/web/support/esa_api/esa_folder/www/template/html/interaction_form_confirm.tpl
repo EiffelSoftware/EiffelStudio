@@ -24,44 +24,48 @@
 								<pre>{htmlentities}{$form.description/}{/htmlentities}</pre>
 							</div>
 						</div>
-						{if isset="$new_status"}
-							<div class="control-group">
-								<label class="control-label" for="textarea" itemprop="status">Change status from {$form.report.status.synopsis/} to</label>
-								<div class="controls">
-									{foreach from="$status" item="item"}
-										{if condition="$item.id = $form.selected_status"}
-											{$item.synopsis/}
-										{/if}
-									{/foreach}
+						{if condition="$has_access"}
+							{if isset="$new_status"}
+								<div class="control-group">
+									<label class="control-label" for="textarea" itemprop="status">Change status from {$form.report.status.synopsis/} to</label>
+									<div class="controls">
+										{foreach from="$status" item="item"}
+											{if condition="$item.id = $form.selected_status"}
+												{$item.synopsis/}
+											{/if}
+										{/foreach}
+									</div>
 								</div>
-							</div>
-						{/if}
-						{if isset="$new_category"}
-							<div class="control-group">
-								<label class="control-label" for="textarea" itemprop="category">Change category from {$form.report.category.synopsis/} to</label>
-								<div class="controls">
-									{foreach from="$categories" item="item"}
-										{if condition="$item.id = $form.category"}
-											{$item.synopsis/}
-										{/if}
-									{/foreach}
+							{/if}
+							{if isset="$new_category"}
+								<div class="control-group">
+									<label class="control-label" for="textarea" itemprop="category">Change category from {$form.report.category.synopsis/} to</label>
+									<div class="controls">
+										{foreach from="$categories" item="item"}
+											{if condition="$item.id = $form.category"}
+												{$item.synopsis/}
+											{/if}
+										{/foreach}
+									</div>
 								</div>
-							</div>
-						{/if}
+							{/if}
+						{/if}	
 						{if isset="$private"}
 							<div class="control-group">
 								<label class="control-label" for="textarea" itemprop="private">Change Private from {$form.report.confidential/} to</label>
 								<div class="controls">{$private/}</div>
 							</div>
 						{/if}
+						{if isset="$attachments"}
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="attachments">Attachments</label>
 							<div class="controls">
-								{foreach from="attachments" item="item"}
-									{$item.name/} </br>
+								{foreach from="$attachments" item="item"}
+									{$item/} </br>
 								{/foreach}
 							</div>
 						</div>
+						{/if}
 						<hr/>
 						<div class="form-actions">
 							<form action="{$host/}/report_detail/{$form.report.number/}/interaction_confirm" method="POST" itemprop="create">

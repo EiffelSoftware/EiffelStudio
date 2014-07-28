@@ -10,9 +10,7 @@ var login = function() {
 	var host = form.host.value;
   	var _login = function(){
 
-    var redirectURL = form.redirect && form.redirect.value || "";   
-
-
+ 
     $("#imgProgress").show();  
 
     if  (document.getElementById('myModalFormId') !== null ) {
@@ -39,13 +37,8 @@ var login = function() {
           request.onreadystatechange = function(){
              if (request.readyState == 4) {
                  if (request.status==200) {
-                     if (redirectURL === "") {   
-                        window.location=host.concat("/");
-                    } else {
-                        window.location=host.concat(redirectURL);
-                    }
-
- 		}
+                           window.location=host.concat("/");
+                }
                 else{
                   if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
                      }
@@ -75,6 +68,81 @@ var login = function() {
  
     if (firstLogIn) firstLogIn = false;
 };
+
+
+var login_with_redirect = function() {
+    var form = document.forms[2];
+    var username = form.username.value;
+    var password = form.password.value;
+    var host = form.host.value;
+    var _login = function(){
+
+    var redirectURL = form.redirect && form.redirect.value || "";   
+
+
+    $("#imgProgressRedirect").show();  
+
+    if  (document.getElementById('myModalFormId') !== null ) {
+        remove ('myModalFormId');
+    }
+
+
+    if (username === "" || password === "") {
+             if (document.getElementById('myModalFormId') === null ) {      
+                    var newdiv = document.createElement('div');
+                      newdiv.innerHTML = "<br>Invalid Credentials</br>";
+                    newdiv.id = 'myModalFormId';
+                    document.getElementById("redirecLoginForm").appendChild(newdiv);
+                     $("#imgProgressRedirect").hide();
+               } 
+    }else{  
+         
+          //Instantiate HTTP Request
+          var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
+            request.open("GET", host.concat(loginURL), true, username, password);
+            request.send(null);
+    
+          //Process Response
+          request.onreadystatechange = function(){
+             if (request.readyState == 4) {
+                 if (request.status==200) {
+                     if (redirectURL === "") {   
+                        window.location=host.concat("/");
+                    } else {
+                        window.location=host.concat(redirectURL);
+                    }
+
+        }
+                else{
+                  if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
+                     }
+                   
+          if (document.getElementById('myModalFormId') === null ) {     
+                    var newdiv = document.createElement('div');
+                       newdiv.innerHTML = "<br>Invalid Credentials</br>";
+                    newdiv.id = 'myModalFormId';
+                    document.getElementById("redirecLoginForm").appendChild(newdiv);
+                     $("#imgProgressRedirect").hide();    
+                   } 
+
+                  }
+               }
+            }
+        }
+    }
+ 
+    var userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.indexOf("firefox") != -1){ //TODO: check version number
+        if (firstLogIn) _login();
+        else logoff(_login);
+    }
+    else{
+        _login();
+    }
+ 
+    if (firstLogIn) firstLogIn = false;
+};
+
  
  
 var logoff = function(callback){

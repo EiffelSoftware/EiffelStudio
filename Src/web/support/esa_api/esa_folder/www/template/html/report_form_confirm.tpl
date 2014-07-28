@@ -67,7 +67,7 @@
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="attachments">Attachments</label>
 							<div class="controls">
-								{foreach from="attachments" item="item"}
+								{foreach from="$attachments" item="item"}
 									{$item/} </br>
 								{/foreach}
 							</div>

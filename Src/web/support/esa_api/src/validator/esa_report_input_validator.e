@@ -350,10 +350,9 @@ feature -- Set element
 	default_status
 				-- Set default status available.
 			do
-				create {ARRAYED_LIST[INTEGER]} status.make (4)
+				create {ARRAYED_LIST[INTEGER]} status.make (3)
 				put_status (1)
 				put_status (2)
-				put_status (3)
 				put_status (4)
 			end
 

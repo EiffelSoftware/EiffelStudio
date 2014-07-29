@@ -25,6 +25,9 @@ $("#changesize").pressEnter( function() {
                             str =  str.replace (results[i], "size=".concat(this.value));
                         }
 
+                        if (navigator.userAgent.indexOf('MSIE') !== -1){
+                            $(location).attr('href',str);    
+                       } else {
 
                         var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
                         request.open("GET", str, true);
@@ -35,14 +38,14 @@ $("#changesize").pressEnter( function() {
                              if (request.status==200) { 
                                     //window.location=str;
                                     $("#pageLoad").hide();
-                                    document.open();
-                                    document.write(request.responseText);
-                                    window.history.pushState(request.responseText, "Support Site for Eiffel users", str);
-                                    document.close();
-                                    document.contentWindow.stop();
-
+                                        document.open();
+                                        document.write(request.responseText);
+                                        window.history.pushState(request.responseText, "Support Site for Eiffel users", str);
+                                        document.close();
+                                        document.contentWindow.stop();
                                 }
-                         }
+                             }
                        }
+                    }
       
 });

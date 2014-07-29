@@ -310,6 +310,7 @@ feature -- Initialize Report Problem
 			if attached a_form.uploaded_files as l_files then
 				across l_files as c loop
 					api_service.upload_temporary_interaction_attachment (a_form.id, c.item)
+					a_form.add_temporary_file_name (c.item.name)
 				end
 			end
 		end

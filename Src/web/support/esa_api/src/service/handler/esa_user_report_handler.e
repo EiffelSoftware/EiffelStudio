@@ -69,116 +69,37 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_row: LIST[ESA_REPORT]
 			l_view: ESA_REPORT_VIEW
-			l_status: INTEGER
-			l_category: INTEGER
 			list_status: LIST[ESA_REPORT_STATUS]
 			l_categories: LIST[ESA_REPORT_CATEGORY]
 			l_pages : INTEGER
-			l_page: INTEGER
-			l_size: INTEGER
-			l_direction: STRING
-			l_order_by : STRING
-			l_dir: INTEGER
-			l_filter: STRING
-			l_content: INTEGER
-			l_status_selected: STRING
+			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
 		do
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				log.write_information (generator+".do_get Processing request with user:" + l_user  )
 				if attached current_media_type (req) as l_type then
+					create l_input_validator
+					l_input_validator.input_from (req.query_parameters)
+					if not l_input_validator.has_error then
+						l_categories := api_service.all_categories
+						list_status := api_service.status
 
-					l_categories := api_service.all_categories
-					list_status:= api_service.status
-
-					create l_filter.make_empty
-
-					l_order_by := "submissionDate"
-					l_direction := "ASC"
-					l_dir := 0
-
-
-						-- Page setup
-					if attached {WSF_STRING} req.query_parameter ("page") as ll_page and then ll_page.is_integer then
-						l_page := ll_page.integer_value
+						l_pages := api_service.row_count_problem_report_user (l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.filter, l_input_validator.filter_content)
+						l_row := api_service.problem_reports_2 (l_input_validator.page, l_input_validator.size, l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.filter, l_input_validator.filter_content)
+						create l_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, l_user)
+						l_view.set_selected_category (l_input_validator.category)
+						l_view.set_size (l_input_validator.size)
+						l_view.set_order_by (l_input_validator.orderby)
+						l_view.set_filter (l_input_validator.filter)
+						l_view.set_filter_content (l_input_validator.filter_content)
+						mark_selected_status (list_status, l_input_validator.status)
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_user_reports (req, res, l_view)
 					else
-						-- default page number 1
-						l_page := 1
+							-- Bad request
+						log.write_error (generator + ".user_reports " + l_input_validator.error_message)
+						l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
 					end
-
-						-- Page Size
-					if attached {WSF_STRING} req.query_parameter ("size") as ll_size and then ll_size.is_integer then
-						l_size := ll_size.integer_value
-					else
-						-- default page size is 30
-						l_size := 30
-					end
-
-				    -- Filter text
-	                if attached {WSF_STRING} req.query_parameter ("filter") as ll_filter then
-		                 l_filter := ll_filter.value
-	                end
-
-			             -- Filter by description
-		            if attached {WSF_STRING} req.query_parameter ("filter_content") as l_filter_content and then l_filter_content.is_integer then
-		                 l_content := l_filter_content.integer_value
-		            end
-
-					create l_status_selected.make_empty
-					if  attached {WSF_MULTIPLE_STRING} req.query_parameter ("status") as ll_status then
-	                    across ll_status.values as c loop
-	                    	if c.item.integer_value > 0 then
-	                        	set_selected_status (list_status, c.item.integer_value)
-								l_status_selected.append_string (c.item.value)
-								l_status_selected.append_character (',')
-	                        end
-	                     end
-
-	                     if l_status_selected.is_empty then
-	                     	l_status_selected := "0"
-						 else
-	                     	l_status_selected.remove_tail (1) -- remove the last ','
-	                     end
-		            else
-		            	-- Default Setup
-		                to_implement ("Improve this code!!!")
-		                l_status_selected := "1,2,3,4"
-		                set_selected_status (list_status, 1)
-		                set_selected_status (list_status, 2)
-		                set_selected_status (list_status, 3)
-		                set_selected_status (list_status, 4)
-		            end
-						-- Order by and Direction
-					if attached {WSF_STRING} req.query_parameter ("orderBy") as l_orderby and then attached {WSF_STRING} req.query_parameter ("dir") as ll_dir then
-						l_order_by := l_orderby.value
-						l_direction := ll_dir.value
-						if ll_dir.value.same_string ("ASC") then
-							l_dir := 1
-						end
-					else
-						l_order_by := "submissionDate"
-						l_direction := "ASC"
-						l_dir := 0
-					end
-					l_pages := api_service.row_count_problem_report_user (l_user, l_category, l_status_selected, l_filter, l_content)
-					l_row := api_service.problem_reports_2 (l_page, l_size, l_user,l_category, l_status_selected, l_order_by, l_dir, l_filter, l_content)
-					create l_view.make (l_row, l_page, l_pages // l_size, l_categories, list_status, l_user)
-					l_view.set_selected_category (l_category)
-					l_view.set_selected_status (l_status)
-					l_view.set_size (l_size)
-					l_view.set_order_by (l_order_by)
-					l_view.set_filter (l_filter)
-					l_view.set_filter_content (l_content)
-
-
-					if l_dir = 1 then
-						l_view.set_direction ("ASC")
-					else
-						l_view.set_direction ("DESC")
-					end
-
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_user_reports (req, res, l_view)
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).problem_user_reports (req, res, Void)
 				end
@@ -194,13 +115,23 @@ feature -- HTTP Methods
 		end
 
 
+feature {NONE} --Implementation
+
 	set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
-			-- Set the current selected status
+			-- Set the current selected status.
 		do
 			across a_status as c  loop
 				if c.item.id = a_selected_status then
 					c.item.set_selected_id (a_selected_status)
 				end
+			end
+		end
+
+	mark_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
+			-- Set the current selected status.
+		do
+			across a_status_selected as c  loop
+				set_selected_status (a_status, c.item)
 			end
 		end
 

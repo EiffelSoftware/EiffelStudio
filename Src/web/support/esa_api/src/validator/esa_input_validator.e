@@ -6,39 +6,37 @@ note
 deferred class
 	ESA_INPUT_VALIDATOR
 
-
 feature -- Basic Operations
 
-	validate_input (a_source: READABLE_STRING_32; a_arg: READABLE_STRING_32)
-			-- Validate input for control `a_source'.
-		local
-			l_valid: BOOLEAN
-			l_count: INTEGER
+	input_from (a_request: ITERABLE [WSF_VALUE])
+			-- Update current object using parameters extracted from QUERY_STRING.
+			-- If there are errors they are set to the errors parameter.
 		do
-			l_count := a_arg.count
-			min_text_lengths.search (a_source)
-			if min_text_lengths.found and then l_count >= min_text_lengths.found_item then
-				max_text_lengths.search (a_source)
-				if max_text_lengths.found then
-					l_valid := l_count <= max_text_lengths.found_item
-				end
+			if attached {STRING_TABLE[WSF_VALUE]} a_request as l_table_request then
+				validate (l_table_request)
 			end
 		end
 
+feature -- Validation
 
-
-feature {NONE} -- Private Access
-
-	max_text_lengths: HASH_TABLE [INTEGER, STRING] is
-			-- Maximum text lengths of text edit controls, keyed by control ID
-			-- Must correspond to size of data type in database!
+	validate (a_request: STRING_TABLE [WSF_VALUE])
+			-- Validate input for control `a_request'.
 		deferred
 		end
 
-	min_text_lengths: HASH_TABLE [INTEGER, STRING] is
-			-- Maximum text lengths of text edit controls, keyed by control ID
-			-- Must correspond to size of data type in database!
+
+feature -- Access
+
+	acceptable_query_parameters: ARRAY[STRING]
+			-- The parameters are optionals, more parameters is a bad request, the order is not important.
 		deferred
 		end
+
+	accetpable_order_by: ARRAY[STRING]
+			-- acceptable values to sort the reports.	
+		deferred
+		end
+
+
 
 end -- class EFA_INPUT_VALIDATOR

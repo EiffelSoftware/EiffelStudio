@@ -323,6 +323,7 @@ feature -- Initialize Report Problem
 				if attached a_form.uploaded_files as l_files then
 					across l_files as c loop
 						api_service.upload_temporary_report_attachment (a_form.id, c.item)
+						a_form.add_temporary_file_name (c.item.name)
 					end
 				end
 			end
@@ -549,7 +550,7 @@ feature {NONE} -- Implementation
 					l_file.is_string then
 				across api_service.temporary_problem_report_attachments (a_form.id) as c loop
 					if not c.item.name.same_string (l_file.value) then
-						api_service.remove_temporary_report_attachment (a_form.id, l_file.value)
+						api_service.remove_temporary_report_attachment (a_form.id, c.item.name)
 					end
 				end
 				a_form.add_temporary_file_name (l_file.value)

@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 				l_file.is_string then
 				across api_service.temporary_interation_attachments (a_form.id) as c loop
 					if not c.item.name.same_string (l_file.value) then
-						api_service.remove_temporary_interaction_attachment (a_form.id, l_file.value)
+						api_service.remove_temporary_interaction_attachment (a_form.id, c.item.name)
 					end
 				end
 				a_form.add_temporary_file_name (l_file.value)

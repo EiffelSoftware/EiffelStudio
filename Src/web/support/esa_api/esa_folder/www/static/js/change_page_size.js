@@ -25,9 +25,11 @@ $("#changesize").pressEnter( function() {
                             str =  str.replace (results[i], "size=".concat(this.value));
                         }
 
-                        if ((navigator.userAgent.indexOf('MSIE') !== -1) || ((navigator.userAgent.indexOf('Trident') !== -1)){
+
+                        /** http://msdn.microsoft.com/en-us/library/ie/bg182625(v=vs.85).aspx  Compatibility changes in IE11*/ 
+                        if ((navigator.userAgent.indexOf('MSIE') !== -1) ||  (navigator.userAgent.indexOf('Trident') !== -1)) {
                             $(location).attr('href',str);    
-                       } else {
+                        } else {
 
                         var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
                         request.open("GET", str, true);

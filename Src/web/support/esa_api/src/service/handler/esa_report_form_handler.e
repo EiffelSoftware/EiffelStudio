@@ -322,8 +322,16 @@ feature -- Initialize Report Problem
 
 				if attached a_form.uploaded_files as l_files then
 					across l_files as c loop
-						api_service.upload_temporary_report_attachment (a_form.id, c.item)
-						a_form.add_temporary_file_name (c.item.name)
+						-- Max Size File 10MB.
+						to_implement ("Refactor code, extract hardcoded variable to a constant.")
+						if c.item.size.to_natural_64 <= ({NATURAL_64}10*1024*1024) then
+							api_service.upload_temporary_report_attachment (a_form.id, c.item)
+							a_form.add_temporary_file_name (c.item.name)
+						else
+							-- Not accepted file too big.
+							to_implement("Add the name of the file as a list of rejected files.")
+							log.write_alert (generator + ".initialize_report_problem_internal File " + c.item.name + " rejected, too big." )
+						end
 					end
 				end
 			end
@@ -575,8 +583,16 @@ feature {NONE} -- Implementation
 				-- Add new uploaded files
 			if attached a_form.uploaded_files as l_files then
 				across l_files as c loop
-					api_service.upload_temporary_report_attachment (a_form.id, c.item)
-					a_form.add_temporary_file_name (c.item.name)
+						-- Max Size File 10MB.
+					to_implement ("Refactor code, extract hardcoded variable to a constant.")
+					if c.item.size.to_natural_64 <= ({NATURAL_64}10*1024*1024) then
+						api_service.upload_temporary_report_attachment (a_form.id, c.item)
+						a_form.add_temporary_file_name (c.item.name)
+					else
+						-- Not accepted file too big.
+						to_implement("Add the name of the file as a list of rejected files.")
+						log.write_alert (generator + ".upload_temporary_files_html File " + c.item.name + " rejected, too big." )
+					end
 				end
 			end
   		end

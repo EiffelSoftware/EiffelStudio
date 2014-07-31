@@ -21,7 +21,7 @@
 										<label class="control-label-api" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 									</div>
 									<div class="col-xs-4">
-										<select class="form-control" data-style="btn-primary" name="category" form="report">
+										<select class="form-control" data-style="btn-primary" name="category" form="report" required>
 											<option value=""></option>
 											{foreach from="$categories" item="item"}
 												{if condition="$item.id = $category"}
@@ -173,6 +173,8 @@
 							<div class="controls">
 								<input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
 							</div>
+							<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
+
 						</div>
 						<div class="row" has-error>
 							<label class="control-label" for="description" itemprop="description" data-original-title="<p>Precise description of the problem.</p>">Description</label>

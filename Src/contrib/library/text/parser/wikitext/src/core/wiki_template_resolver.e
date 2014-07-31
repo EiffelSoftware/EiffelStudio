@@ -1,20 +1,16 @@
 note
-	description: "Summary description for {WIKI_STRING_ITEM}."
+	description: "Summary description for {WIKI_TEMPLATE_RESOLVER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred
-class
-	WIKI_STRING_ITEM
+deferred class
+	WIKI_TEMPLATE_RESOLVER
 
-inherit
-	WIKI_ITEM
+feature -- Access
 
-feature -- Status report
-
-	is_empty: BOOLEAN
-			-- Is empty text?
+	content (a_template: WIKI_TEMPLATE; a_page: detachable WIKI_PAGE): detachable STRING
+			-- Template content for `a_template' in the context of `a_page' if any.
 		deferred
 		end
 

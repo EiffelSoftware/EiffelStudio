@@ -25,21 +25,23 @@ feature {NONE} -- Initialization
 	make (s: STRING)
 			-- [schema:resource title]
 		require
+			starts_with_bracket: s.starts_with ("[")
+			ends_with_bracket: s.ends_with ("]")
 			valid_wiki_link: s.count > 0
 		local
 			p, n: INTEGER
 		do
 			from
 				n := s.count
-				p := 1
+				p := 1 + 1 -- skip first "["
 			until
 				p > n or s.item (p).is_space
 			loop
 				p := p + 1
 			end
-			url := s.substring (1, p - 1)
+			url := s.substring (2, p - 1)
 			if p < n then
-				text := wiki_string (s.substring (p + 1, n))
+				text := wiki_string (s.substring (p + 1, n - 1)) --| n -1: to ignore last "]"
 			else
 				text := wiki_raw_string (url)
 			end
@@ -51,6 +53,14 @@ feature -- Access
 
 	text: WIKI_STRING_ITEM
 
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is empty text?
+		do
+			Result := text.is_empty and url.is_empty
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -59,7 +69,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

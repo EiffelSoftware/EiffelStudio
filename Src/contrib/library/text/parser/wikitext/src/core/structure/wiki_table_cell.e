@@ -22,7 +22,24 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: WIKI_STRING --\ WIKI_ITEM ... since a table cell can contain another table ...
+	text: WIKI_STRING
+			-- A table cell can contain another table, ...
+
+	modifiers: detachable ARRAYED_LIST [READABLE_STRING_8]
+
+feature -- Element change
+
+	add_modifier (s: READABLE_STRING_8)
+		local
+			lst: like modifiers
+		do
+			lst := modifiers
+			if lst = Void then
+				create lst.make (1)
+				modifiers := lst
+			end
+			lst.force (s)
+		end
 
 feature -- Visitor
 
@@ -32,7 +49,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

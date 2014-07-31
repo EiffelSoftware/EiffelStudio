@@ -17,21 +17,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag_name: STRING; s: STRING)
+	make (a_tag: STRING; s: STRING)
 		local
 			i,j: INTEGER
 		do
-			i := a_tag_name.index_of (' ', 1)
-			j := a_tag_name.index_of ('%T', 1)
+			tag := a_tag
+			tag_name := tag_name_from (a_tag)
+
+			i := tag_name.index_of (' ', 1)
+			j := tag_name.index_of ('%T', 1)
 			if i = 0 then
 				i := j
 			elseif j /= 0 then
 				i := i.min (j)
 			end
 			if i > 0 then
-				tag_name := a_tag_name.substring (1, i - 1)
+				tag_name := tag_name.substring (1, i - 1)
 			else
-				tag_name := a_tag_name
+--				tag_name := a_tag_name
 			end
 
 			text := s
@@ -39,15 +42,49 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	tag: STRING
+
 	tag_name: STRING
 
 	text: WIKI_STRING
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is empty text?
+		do
+			Result := tag.is_empty and text.is_empty
+		end
 
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
 		do
 			a_visitor.visit_tag (Current)
+		end
+
+feature -- Help
+
+	tag_name_from (s: READABLE_STRING_8): STRING_8
+			-- Tag name from  inside of <...>
+			--| for instance ' abc def="geh"' will return abc
+		local
+			i,n: INTEGER
+		do
+			i := s.index_of (' ', 2)
+			n := s.index_of ('%T', 2)
+			if i = 0 then
+				i := n
+			elseif n /= 0 then
+				i := i.min (n)
+			end
+			if i > 0 then
+				create Result.make_from_string (s.substring (2, i - 1))
+			else
+				create Result.make_from_string (s.substring (2, s.count - 1))
+			end
+			Result.left_adjust
+			Result.right_adjust
 		end
 
 feature -- Status report

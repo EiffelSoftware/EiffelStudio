@@ -178,6 +178,9 @@ feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)
 		do
+			if attached a_table.caption as c then
+				visit_string (c)
+			end
 			visit_composite (a_table)
 		end
 

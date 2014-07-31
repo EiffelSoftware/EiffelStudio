@@ -17,11 +17,11 @@ create
 
 feature {NONE} -- Make
 
-	make (a_title: STRING; a_key: STRING)
+	make (a_title: STRING; a_parent_key: STRING)
 		do
 			title := a_title
-			key := a_key
-			src := a_key
+			parent_key := a_parent_key
+			src := a_parent_key + "/" + a_title
 		end
 
 feature -- Visitor
@@ -35,13 +35,39 @@ feature -- Access
 
 	title: STRING
 
-	key: STRING
+	parent_key: STRING
 
 	src: STRING
 
 	pages: detachable ARRAYED_LIST [WIKI_PAGE]
 
 	structure: detachable WIKI_STRUCTURE
+
+	path: detachable PATH
+
+feature -- Query
+
+	key: READABLE_STRING_8
+		local
+			l_src: like src
+			p,q: INTEGER
+		do
+			l_src := src
+			p := l_src.count + 1
+			q := l_src.last_index_of ('/', p - 1)
+			if q > 0 then
+				Result := l_src.substring (q + 1, p - 1)
+				if Result.is_case_insensitive_equal ("index") then
+					p := q - 1
+					q := l_src.last_index_of ('/', p)
+					if q > 0 then
+						Result := l_src.substring (q + 1, p - 1)
+					end
+				end
+			else
+				Result := l_src
+			end
+		end
 
 feature -- Element change
 
@@ -55,6 +81,8 @@ feature -- Element change
 			in_header: BOOLEAN
 			h: detachable STRING_TABLE [STRING]
 		do
+			path := a_filename
+
 			fn := a_filename
 			create f.make_with_path (fn)
 			if f.exists and f.is_readable then
@@ -97,6 +125,11 @@ feature -- Element change
 		end
 
 	add_page (a_page: WIKI_PAGE)
+		do
+			add_page_with_weight (a_page, 0)
+		end
+
+	add_page_with_weight (a_page: WIKI_PAGE; a_weight: INTEGER)
 		local
 			l_pages: like pages
 		do
@@ -118,7 +151,7 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			create Result.make_from_string (key)
+			create Result.make_from_string (parent_key)
 			Result.append_character (':')
 			Result.append_string (title)
 			if attached pages as pgs then

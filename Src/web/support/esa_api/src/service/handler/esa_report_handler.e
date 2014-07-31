@@ -365,6 +365,11 @@ feature {NONE} --Implementation
 					Result.append_string (l_page.value)
 					Result.append_string ("?")
 				end
+				if attached {WSF_STRING} req.form_parameter ("size") as l_size then
+					Result.append ("size=")
+					Result.append_string (l_size.value)
+					Result.append_string ("?")
+				end
 				if attached {WSF_STRING} req.form_parameter ("category") as l_category then
 					Result.append_string ("category=")
 					Result.append_string (l_category.value)
@@ -385,8 +390,9 @@ feature {NONE} --Implementation
 					Result.append_string (l_responsible.value)
 					Result.append_string ("&")
 				end
-				if attached {WSF_STRING} req.form_parameter ("status_query") as l_status then
+				if attached {WSF_STRING} req.form_parameter ("status") as l_status then
 					Result.append_string (l_status.value)
+					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("orderBy") as l_orderby then
 					Result.append_string ("orderBy=")
@@ -396,6 +402,21 @@ feature {NONE} --Implementation
 				if attached {WSF_STRING} req.form_parameter ("dir") as l_dir then
 					Result.append_string ("dir=")
 					Result.append_string (l_dir.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("submitter") as l_submitter then
+					Result.append_string ("submitter=")
+					Result.append_string (l_submitter.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("filter") as l_filter then
+					Result.append_string ("filter=")
+					Result.append_string (l_filter.value)
+					Result.append_string ("&")
+				end
+				if attached {WSF_STRING} req.form_parameter ("filter_content") as l_filter_content then
+					Result.append_string ("filter_content=")
+					Result.append_string (l_filter_content.value)
 				end
 			end
 		end

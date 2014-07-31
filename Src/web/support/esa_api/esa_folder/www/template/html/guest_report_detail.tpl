@@ -69,7 +69,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="description"><strong>Description</strong></div>
 										<div class="panel-body">
-											<pre>{htmlentities}{$report.description/}{/htmlentities}</pre>
+											<textarea class="form-control input-xlarge" style="border: none ;background-color:white;"  disabled="True" rows="17">{$report.description/}</textarea>
 										</div>
 									</div>
 								</div>
@@ -79,7 +79,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="to_reproduce"><strong>To Reproduce</strong></div>
 										<div class="panel-body">
-											<pre>{htmlentities}{$report.to_reproduce/}{/htmlentities}</pre>
+											<textarea class="form-control input-xlarge" style="border: none ;background-color:white;"  disabled="True" rows="7">{$report.to_reproduce/}</textarea>
 										</div>
 									</div>
 								</div>

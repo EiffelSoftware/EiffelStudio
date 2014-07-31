@@ -90,17 +90,38 @@
 
 <h2 class="sub-header">Problem Reports: 
 	<small>
-		<ul class="pagination">
-			<li class="info">Current page {$index/} of {$pages/} - </li>
-			<li><label class="control-label-api" itemprop="size" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label> 
-				<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"/>
-			</li>
-			<li><img src="{$host/}/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" />
-				<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;category={$selected_category/}&amp;orderBy={$orderBy/}&amp;dir={$dir/}&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}" id="currentPage"/>
-			</li>
-		</ul>
-	</small>
+		<div class="row" id="guest_reports_page_size">
+			<div class="col-xs-12">
+				<input type="hidden" name="pages" id="pages_pe" value="{$pages/}"/>
+				<input type="hidden" name="size" id="size_pe" value="{$size/}"/>
+
+				<form class="form-inline" action="{$host/}/reports" id="reports" method="GET" itemprop="size">
+					<input type="hidden" name="page" id="page_pe" value="{$index/}"/>
+					<input type="hidden" name="category" id="category_pe" value="{$selected_category/}"/>
+					<input type="hidden" name="orderBy" id="orderBy_pe" value="{$orderBy/}"/>
+					<input type="hidden" name="dir"  id="dir_pe" value="{$dir/}"/>
+					<input type="hidden" name="status" id="status_pe" value="{htmlentities}{$status_query/}{/htmlentities}"/>
+					<input type="hidden" name="filter" id="filter_pe" value="{$view.filter/}"/>
+					<input type="hidden" name="filter_content" id="filter_content_pe" value="{$view.filter_content/}"/>
+						<div class="col-xs-1">
+							<label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Current page {$index/} of {$pages/}
+							</label>	
+						</div>
+						<div class="col-xs-2">
+							<label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Size</label>
+						</div>
+						<div class="col-xs-1">
+							<input type="number" class="form-control form-bug-number-entry" min="1" name="size" value="{$size/}"/>
+						</div>
+						<div class="col-xs-1">
+							<button type="submit" class="btn btn-default">Resize</button>
+						</div>
+				</form>
+			</div>			
+		</div>
+  </small>		
 </h2>
+
 <div class="row">
 	{include file="paging_reports.tpl"/}
 </div> 
@@ -114,14 +135,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># </a>
+						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># </a>
 					{/unless}
 				</th>
 				<th>
@@ -130,14 +151,14 @@
 					
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if}	
 						{unless condition="$view.order_by ~ $column"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
 						{/unless}
 				</th>
 				<th>
@@ -146,14 +167,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis </a>
+						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis </a>
 					{/unless}
 				</th>
 				<th> 
@@ -162,14 +183,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date </a>
+						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date </a>
 					{/unless}
 				</th>
 				<th>
@@ -177,14 +198,14 @@
 					{assign name="ldir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$host/}/static/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
+							<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$host/}/static/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;{$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category </a>
+						<a href="{$host/}/reports?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category </a>
 					{/unless}
 				</th>
 			</tr>

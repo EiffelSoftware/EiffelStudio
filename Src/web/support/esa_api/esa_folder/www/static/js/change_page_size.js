@@ -1,6 +1,8 @@
 var firstExecution = true;
 
-$("#changesize").pressEnter( function() {
+$(document).ready(function() {
+
+  $("#changesize").pressEnter( function() {
        $("#pageLoad").show();
                         var str = document.getElementById("currentPage").value;
 
@@ -45,9 +47,18 @@ $("#changesize").pressEnter( function() {
                                       window.history.pushState(request.responseText, "Support Site for Eiffel users", str);
                                       document.close();
                                       document.contentWindow.stop();
+                                } else {
+                                  $("#pageLoad").hide();
+                                    //document.open();
+                                    document.write(request.responseText);
+                                    window.history.pushState(request.responseText, "Support Site for Eiffel users", str);
+                                    document.close();
+                                    document.contentWindow.stop();
                                 }
-                             }
-                       }
-                    }
-      
+
+                           } 
+                     }
+                  }
+      });
+
 });

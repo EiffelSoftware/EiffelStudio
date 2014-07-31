@@ -71,6 +71,9 @@ feature -- Access
 	description: detachable STRING_32
 		-- Description of the problem.
 
+	description_utf8: detachable STRING_32
+		-- UTF-8 description encoded.
+
 	to_reproduce: detachable STRING_32
 		-- How to reproduce the problem.
 
@@ -173,6 +176,7 @@ feature -- Element Change
 			-- Set `description' with `a_description'
 		do
 			description := a_description
+			description_utf8 := (create {UTF8_ENCODER}).encoded_string (a_description)
 		ensure
 			description_set:  attached description as l_description and then l_description.same_string (a_description)
 		end

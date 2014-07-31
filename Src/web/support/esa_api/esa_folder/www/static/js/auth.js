@@ -206,13 +206,22 @@ $("#password").pressEnter( function() {
 $(document).ready(function() {
 
     progressive_loging();
+    if (document.getElementById('guest_reports_page_size') !== null) {
+        progressive_guest_page_resize();
+    }
+    if (document.getElementById('user_reports_page_size') !== null) {
+        progressive_user_page_resize();
+    }
+    if (document.getElementById('responsible_reports_page_size') !== null) {
+        progressive_responsible_page_resize();
+    }
  
 });
 
 
 var progressive_loging = function () {
 
-    var host = $('#host_pe').val();
+     var host = $('#host_pe').val();
      var user = $('#user_pe').val();
      console.log(host);
      console.log(user);
@@ -239,4 +248,205 @@ var progressive_loging = function () {
 };
 
 
+
+var progressive_guest_page_resize = function () {
+
+          var host = $('#host_pe').val();
+          var index = $('#page_pe').val();
+          var category = $('#category_pe').val();
+          var orderBy = $('#orderBy_pe').val();
+          var dir = $('#dir_pe').val();
+          var status =  $('#status_pe').val();
+          var filter =  $('#filter_pe').val();
+          var filter_content =  $('#filter_content_pe').val();
+          var pages = $('#pages_pe').val();
+          var size  = $('#size_pe').val();
+
+          console.log (host);
+          console.log (index);
+          console.log (category);
+          console.log (orderBy);
+          console.log (dir);
+          console.log (status);
+          console.log (filter);
+          console.log (filter_content);
+          console.log (pages);
+          
+          var elem = '<div class="col-xs-12"><div class="col-xs-2"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Current page ';
+          elem = elem.concat(index);
+          elem = elem.concat(' of ');
+          elem = elem.concat(pages);
+          elem = elem.concat ('</label></div>');   
+          elem = elem.concat('<div class="col-xs-1"> <label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Size</label> </div>') ; 
+          elem = elem.concat('<div class="col-xs-1"> <input type="number" name="quantity" min="1" max="9999" value="');
+          elem = elem.concat(size);
+          elem = elem.concat ('" id="changesize"/>');
+          elem = elem.concat('<input type="hidden" name="current" value="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/reports?page=');
+          elem = elem.concat (index);
+          elem = elem.concat ('&amp;size=');
+          elem = elem.concat (size);
+          elem = elem.concat ('&amp;category=');
+          elem = elem.concat (category);
+          elem = elem.concat ('&amp;orderBy=');
+          elem = elem.concat (orderBy);
+          elem = elem.concat ('&amp;dir=');  
+          elem = elem.concat (dir);  
+          elem = elem.concat ('&amp;status='); 
+          elem = elem.concat (status);
+          elem = elem.concat ('&amp;filter='); 
+          elem = elem.concat (filter);
+          elem = elem.concat ('&amp;filter_content='); 
+          elem = elem.concat (filter_content);
+          elem = elem.concat ('" id="currentPage"/>');
+          elem = elem.concat ('<img src="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
+          elem = elem.concat ('</div> </div>' ); 
+          console.log (elem);
+
+          $('#guest_reports_page_size').after(elem).remove();
+       
+};
+
+
+var progressive_user_page_resize = function () {
+
+          var host = $('#host_pe').val();
+          var user = $('#user_pe').val();
+          var index = $('#page_pe').val();
+          var category = $('#category_pe').val();
+          var orderBy = $('#orderBy_pe').val();
+          var dir = $('#dir_pe').val();
+          var status =  $('#status_pe').val();
+          var filter =  $('#filter_pe').val();
+          var filter_content =  $('#filter_content_pe').val();
+          var pages = $('#pages_pe').val();
+          var size  = $('#size_pe').val();
+
+          console.log (host);
+          console.log (index);
+          console.log (category);
+          console.log (orderBy);
+          console.log (dir);
+          console.log (status);
+          console.log (filter);
+          console.log (filter_content);
+          console.log (pages);
+          
+          var elem = '<div class="col-xs-12"><div class="col-xs-2"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Current page ';
+          elem = elem.concat(index);
+          elem = elem.concat(' of ');
+          elem = elem.concat(pages);
+          elem = elem.concat ('</label></div>');   
+          elem = elem.concat('<div class="col-xs-1"> <label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Size</label> </div>') ; 
+          elem = elem.concat('<div class="col-xs-1"> <input type="number" name="quantity" min="1" max="9999" value="');
+          elem = elem.concat(size);
+          elem = elem.concat ('" id="changesize"/>');
+          elem = elem.concat('<input type="hidden" name="current" value="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/user_reports/');
+          elem = elem.concat (user);
+          elem = elem.concat ('?page=');
+          elem = elem.concat (index);
+          elem = elem.concat ('&amp;size=');
+          elem = elem.concat (size);
+          elem = elem.concat ('&amp;category=');
+          elem = elem.concat (category);
+          elem = elem.concat ('&amp;orderBy=');
+          elem = elem.concat (orderBy);
+          elem = elem.concat ('&amp;dir=');  
+          elem = elem.concat (dir);  
+          elem = elem.concat ('&amp;status='); 
+          elem = elem.concat (status);
+          elem = elem.concat ('&amp;filter='); 
+          elem = elem.concat (filter);
+          elem = elem.concat ('&amp;filter_content='); 
+          elem = elem.concat (filter_content);
+          elem = elem.concat ('" id="currentPage"/>');
+          elem = elem.concat ('<img src="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
+          elem = elem.concat ('</div> </div>' ); 
+          console.log (elem);
+
+          $('#user_reports_page_size').after(elem).remove();
+       
+};
+
+
+var progressive_responsible_page_resize = function () {
+
+          var host = $('#host_pe').val();
+          var user = $('#user_pe').val();
+          var index = $('#page_pe').val();
+          var category = $('#category_pe').val();
+          var orderBy = $('#orderBy_pe').val();
+          var dir = $('#dir_pe').val();
+          var status =  $('#status_pe').val();
+          var filter =  $('#filter_pe').val();
+          var filter_content =  $('#filter_content_pe').val();
+          var pages = $('#pages_pe').val();
+          var size  = $('#size_pe').val();
+          var submitter = $('#submitter_pe').val();
+          var severity  = $('#severity_pe').val();
+          var priority  = $('#priority_pe').val();
+          var responsible  = $('#responsible_pe').val();
+
+          console.log (host);
+          console.log (index);
+          console.log (category);
+          console.log (orderBy);
+          console.log (dir);
+          console.log (status);
+          console.log (filter);
+          console.log (filter_content);
+          console.log (pages);
+
+          var elem = '<div class="col-xs-12"><div class="col-xs-2"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Current page ';
+          elem = elem.concat(index);
+          elem = elem.concat(' of ');
+          elem = elem.concat(pages);
+          elem = elem.concat ('</label></div>');   
+          elem = elem.concat('<div class="col-xs-1"> <label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Size</label> </div>') ; 
+          elem = elem.concat('<div class="col-xs-1"> <input type="number" name="quantity" min="1" max="9999" value="');
+          elem = elem.concat(size);
+          elem = elem.concat ('" id="changesize"/>');
+          elem = elem.concat('<input type="hidden" name="current" value="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/reports?page=');
+          elem = elem.concat (index);
+          elem = elem.concat ('&amp;size=');
+          elem = elem.concat (size);
+          elem = elem.concat ('&amp;category=');
+          elem = elem.concat (category);
+          elem = elem.concat ('&amp;submitter=');
+          elem = elem.concat (submitter);
+          elem = elem.concat ('&amp;severity=');
+          elem = elem.concat (severity);
+          elem = elem.concat ('&amp;priority=');
+          elem = elem.concat (priority);
+          elem = elem.concat ('&amp;responsible=');
+          elem = elem.concat (responsible);
+          elem = elem.concat ('&amp;orderBy=');
+          elem = elem.concat (orderBy);
+          elem = elem.concat ('&amp;dir=');  
+          elem = elem.concat (dir);  
+          elem = elem.concat ('&amp;status='); 
+          elem = elem.concat (status);
+          elem = elem.concat ('&amp;filter='); 
+          elem = elem.concat (filter);
+          elem = elem.concat ('&amp;filter_content='); 
+          elem = elem.concat (filter_content);
+          elem = elem.concat ('" id="currentPage"/>');
+          elem = elem.concat ('<img src="');
+          elem = elem.concat (host);
+          elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
+          elem = elem.concat ('</div> </div>' ); 
+          console.log (elem);
+
+          $('#responsible_reports_page_size').after(elem).remove();
+       
+}
 

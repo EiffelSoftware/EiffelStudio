@@ -17,13 +17,16 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: 404.tpl")
 			set_template_folder (html_path)
 			set_template_file_name ("404.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user then
+				template.add_value (a_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output

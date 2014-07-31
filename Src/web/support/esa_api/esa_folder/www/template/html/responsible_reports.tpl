@@ -182,26 +182,53 @@
 
 <h2 class="sub-header">Problem Reports
 	<small>
-		<ul class="pagination">
-			<li class="info">Current page {$index/} of {$pages/} - </li>
-			<li><label class="control-label" for="input01" itemprop="size" data-original-title="The status of a problem can be one of the following: Open - Analyzed - Closed - Suspended - Won't Fix">Size</label>
-			<input type="number" name="quantity" min="1" max="9999" value="{$size/}" id="changesize"> </li> <img src="{$host/}/static/images/ajax-loader.gif" style="display: none;" id="pageLoad" />
-			<input type="hidden" name="current" value="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" id="currentPage">
-		</ul>
-	</small>
+		<div class="row" id="responsible_reports_page_size">
+			<div class="col-xs-12">
+				<input type="hidden" name="pages" id="pages_pe" value="{$pages/}"/>
+				<input type="hidden" name="size" id="size_pe" value="{$size/}"/>
+
+				<form class="form-inline" action="{$host/}/reports" id="reports" method="GET" itemprop="size">
+					<input type="hidden" name="page" id="page_pe" value="{$index/}"/>
+					<input type="hidden" name="category" id="category_pe" value="{$view.selected_category/}"/>
+					<input type="hidden" name="submitter" id="submitter_pe" value="{$view.submitter/}"/>
+					<input type="hidden" name="severity" id="severity_pe" value="{$view.selected_severity/}"/>
+					<input type="hidden" name="priority" id="priority_pe" value="{$view.selected_priority/}"/>
+					<input type="hidden" name="responsible" id="responsible_pe" value="{$view.selected_responsible/}"/>
+					<input type="hidden" name="orderBy" id="orderBy_pe" value="{$view.orderBy/}"/>
+					<input type="hidden" name="dir"  id="dir_pe" value="{$view.dir/}"/>
+					<input type="hidden" name="status" id="status_pe" value="{$status_query/}"/>
+					<input type="hidden" name="filter" id="filter_pe" value="{$view.filter/}"/>
+					<input type="hidden" name="filter_content" id="filter_content_pe" value="{$view.filter_content/}"/>
+						<div class="col-xs-2">
+							<label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Current page {$index/} of {$pages/}
+							</label>	
+						</div>
+						<div class="col-xs-1">
+							<label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see.">Size</label>
+						</div>
+						<div class="col-xs-1">
+							<input type="number" class="form-control form-bug-number-entry" min="1" name="size" value="{$size/}"/>
+						</div>
+						<div class="col-xs-1">
+							<button type="submit" class="btn btn-default">Resize</button>
+						</div>
+				</form>
+			</div>			
+		</div>
+  </small>		
 </h2>
 
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="pager">
-			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
+			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
 			{if isset="$prev"}
-				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
+				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
 			{/if}
 			{if isset="$next"}
-				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
+				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
 			{/if}
-				<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
+				<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
 		</ul>
 	</div>
 </div>
@@ -215,14 +242,14 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"># <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"># </a>
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"># </a>
 					{/unless}
 				</th>
 				<th>
@@ -230,16 +257,16 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
 					{/unless}
 				</th>
@@ -248,15 +275,15 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"><img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
 					{/unless}
 				</th>
@@ -265,16 +292,16 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							<img src="{$host/}/static/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"> </a>
 					{/unless}
 				</th>
@@ -283,16 +310,16 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Synopsis <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Synopsis <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							Synopsis </a>
 					{/unless}
 				</th>
@@ -301,16 +328,16 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Submitter <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Submitter <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 							Submitter </a>
 					{/unless}
 				</th>
@@ -319,16 +346,16 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Date <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Date <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Date </a>
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Date </a>
 					{/unless}
 				</th>
 				<th>Responsible</th>
@@ -337,15 +364,15 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">
 								Category <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">																Category <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">																Category <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Category </a>
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Category </a>
 					{/unless}
 				</th>
 				<th>
@@ -353,14 +380,14 @@
 					{assign name="dir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">Release <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=DESC&filter={$view.filter/}&filter_content={$view.filter_content/}">Release <img src="{$host/}/static/images/up.gif" class="img-rounded"></a>
 						{/if}
 						{unless condition="$view.direction ~ $dir"}
-							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"> Release <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
+							<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}"> Release <img src="{$host/}/static/images/down.gif" class="img-rounded"></a>
 						{/unless}
 					{/if}
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Release </a>
+						<a href="{$host/}/reports?page={$index/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$column/}&dir=ASC&filter={$view.filter/}&filter_content={$view.filter_content/}">Release </a>
 					{/unless}
 				</th>
 			</tr>
@@ -411,14 +438,14 @@
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="pager">
-			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
+			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
 			{if isset="$prev"}
-				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
+				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
 			{/if}
 			{if isset="$next"}
-				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
+				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
 			{/if}
-			<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&{$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
+			<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
 		</ul>
 	</div>
 </div>

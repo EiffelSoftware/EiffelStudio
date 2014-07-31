@@ -882,6 +882,14 @@ feature -- Status Report
 			post_data_provider_execution
 		end
 
+
+	exist_report (a_report_number: INTEGER): BOOLEAN
+			-- Exist a report with  number `a_report_number'?
+		do
+			Result := attached problem_report (a_report_number)
+		end
+
+
 feature -- Statistics
 
 	update_statistics (a_statistics: ESA_REPORT_STATISTICS; a_status: ESA_REPORT_STATUS)

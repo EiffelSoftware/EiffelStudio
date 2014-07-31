@@ -18,7 +18,7 @@ feature -- Query
 		do
 			p := s.index_of ('%N', i)
 			if p > 0 then
-				check p > i end
+				check p >= i end
 				Result := p -1
 			else
 				Result := s.count
@@ -33,7 +33,7 @@ feature -- Query
 			Result := s.substring (i, index_of_end_of_line (s, i))
 		end
 
-	is_blank (s: STRING_GENERAL): BOOLEAN
+	is_blank_string (s: STRING_GENERAL): BOOLEAN
 			-- Is blank string?
 		require
 			s_attached: s /= Void
@@ -82,7 +82,7 @@ feature -- Query
 			when '_', ' ' then
 			when '[', ']', '|' then
 				Result := False
---			when ':' then
+			when ':' then -- [[Image:foo|bar]]
 			when '#' then
 				Result := True --|Used to indicate section
 			else
@@ -156,7 +156,7 @@ feature -- String manipulation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -1,20 +1,16 @@
 note
-	description: "Summary description for {WIKI_STRING_ITEM}."
+	description: "Summary description for {WIKI_LINK_RESOLVER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred
-class
-	WIKI_STRING_ITEM
+deferred class
+	WIKI_LINK_RESOLVER
 
-inherit
-	WIKI_ITEM
+feature -- Access
 
-feature -- Status report
-
-	is_empty: BOOLEAN
-			-- Is empty text?
+	wiki_url (a_link: WIKI_LINK; a_page: detachable WIKI_PAGE): detachable STRING
+			-- URL accessing the wiki link `a_link' in the context of `a_page'.
 		deferred
 		end
 

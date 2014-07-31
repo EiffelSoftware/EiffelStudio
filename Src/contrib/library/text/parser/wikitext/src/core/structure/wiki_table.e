@@ -38,6 +38,9 @@ create
 feature {NONE} -- Initialization
 
 	make (s: STRING)
+		require
+			starts_with_curly_bracket_and_pipe: s.starts_with ("{|")
+			ends_with_pipe_and_curly_bracket: s.ends_with ("|}")
 		do
 			initialize
 			set_text (s)
@@ -47,47 +50,88 @@ feature -- Access
 
 	text: WIKI_STRING
 
+	caption: detachable WIKI_STRING
+			-- |+
+
 	style: detachable STRING
 			-- Table style  {| style |-
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is empty text?
+		do
+			Result := text.is_empty
+		end
 
 feature -- Change
 
 	set_text (t: STRING)
 		local
-			i,n: INTEGER
+			i,n,p: INTEGER
 			tbls_level: INTEGER
 			r: detachable WIKI_TABLE_ROW
-			cl: WIKI_TABLE_CELL
+			cl: detachable WIKI_TABLE_CELL
 			s: STRING
 			l_is_header_cell: BOOLEAN
 			l_was_sep: BOOLEAN
-			l_style: detachable STRING
+			l_style,l_caption: detachable STRING
+			l_modifier: detachable STRING
+			l_is_sep: BOOLEAN
 		do
 			create text.make (t)
 			from
-				i := 1
-				n := t.count
+				i := 1 + 2  -- 2="{|"
+				n := t.count - 2 --| skip last "|}"
 				create s.make_empty
 			until
 				i > n
 			loop
 				if tbls_level > 0 then
 					if safe_character (t, i) = '|' and then safe_character (t, i+1) = '}' then
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
 						tbls_level := tbls_level - 1
+					elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '|' then
+						tbls_level := tbls_level + 1
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
 					else
 						s.extend (t[i])
 					end
 				elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '|' then
 					tbls_level := tbls_level + 1
+					s.extend (t[i])
+					i := i + 1
+					s.extend (t[i])
+				elseif safe_character (t, i) = '|' and safe_character (t, i + 1) = '+' then
+					p := t.index_of ('|', i + 1)
+					if p > 0 then
+						if l_caption = Void then
+							l_caption := t.substring (i + 2, p - 1)
+							l_caption.left_adjust
+						else
+							l_caption.append (t.substring (i + 2, p - 1))
+						end
+						l_caption.right_adjust
+						create caption.make (l_caption)
+						i := p - 1
+					else
+						s.extend (t[i])
+					end
 				elseif safe_character (t, i) = '|' or safe_character (t, i) = '!' then
 					if l_style = Void then
 						l_style := s
 						create style.make_from_string (s)
 						create s.make_empty
 					end
+					cl := Void
 					if safe_character (t, i + 1) = '-' then
 						check safe_character (t, i) = '|' end
 						if r /= Void then
+								-- Previous row handling
 							if l_is_header_cell then
 								create {WIKI_TABLE_HEADER_CELL} cl.make (s)
 							else
@@ -97,6 +141,7 @@ feature -- Change
 						else
 							check s.is_whitespace end
 						end
+							-- New row
 						create s.make_empty
 						create r.make
 						add_element (r)
@@ -105,22 +150,50 @@ feature -- Change
 						i := i + 1
 					else
 						l_is_header_cell := safe_character (t, i) = '!'
-						if r = Void then
-							check has_row: False end
-							create r.make
-							add_element (r)
-						elseif not s.is_empty then
-							if not l_was_sep then
-								if l_is_header_cell then
-									create {WIKI_TABLE_HEADER_CELL} cl.make (s)
-								else
-									create cl.make (s)
+						if
+							safe_character (t, i - 1) = '%N'
+							or safe_character (t, i - 1) = '|'
+						then
+							l_is_sep := True
+						elseif
+							safe_character (t, i + 1) = '|'
+						then
+							l_is_sep := True
+							i := i + 1
+						else
+							l_is_sep := False
+						end
+						if l_is_sep then
+								-- Real column separator
+							if r = Void then
+								check has_row: False end
+								create r.make
+								add_element (r)
+							elseif not s.is_empty then
+								if not l_was_sep then
+									if l_is_header_cell then
+										create {WIKI_TABLE_HEADER_CELL} cl.make (s)
+									else
+										create cl.make (s)
+									end
+									r.add_element (cl)
 								end
-								r.add_element (cl)
+							end
+							create s.make_empty
+							l_was_sep := False
+						else
+							if l_modifier = Void then
+								create l_modifier.make_from_string (s)
+								create s.make_empty
+							else
+								s.extend ('|')
 							end
 						end
-						create s.make_empty
-						l_was_sep := False
+					end
+
+					if cl /= Void and l_modifier /= Void then
+						cl.add_modifier (l_modifier)
+						l_modifier := Void
 					end
 				else
 					s.extend (t[i])

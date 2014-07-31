@@ -32,6 +32,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_empty: BOOLEAN
+			-- Is empty text?
+		do
+			Result := text.is_empty
+		end
+
 	is_italic: BOOLEAN
 		do
 			Result := kind = italic_kind
@@ -71,7 +77,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

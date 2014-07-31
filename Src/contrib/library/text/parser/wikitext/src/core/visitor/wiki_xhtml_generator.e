@@ -32,6 +32,32 @@ feature -- Basic operation
 			pre_block_level := 0
 			next_output_require_newline := False
 			next_newline_ignored := False
+			current_page := Void
+		end
+
+feature -- Callback
+
+	link_resolver: detachable WIKI_LINK_RESOLVER assign set_link_resolver
+
+	image_resolver: detachable WIKI_IMAGE_RESOLVER assign set_image_resolver
+
+	template_resolver: detachable WIKI_TEMPLATE_RESOLVER assign set_template_resolver
+
+feature -- Callback change
+
+	set_link_resolver (r: like link_resolver)
+		do
+			link_resolver := r
+		end
+
+	set_image_resolver (r: like image_resolver)
+		do
+			image_resolver := r
+		end
+
+	set_template_resolver (r: like template_resolver)
+		do
+			template_resolver := r
 		end
 
 feature -- Output
@@ -121,6 +147,9 @@ feature -- status: pre block
 			pre_block_level := pre_block_level - 1
 		end
 
+	current_page: detachable WIKI_PAGE
+			-- Current page being processed.
+
 feature -- Book processing
 
 	visit_book (a_book: WIKI_BOOK)
@@ -142,11 +171,28 @@ feature -- Book processing
 
 	visit_page (a_page: WIKI_PAGE)
 		do
+			current_page := a_page
 			if attached a_page.structure as st then
+-- TODO: support for __TOC__ and related
+-- TOC				
+--				across
+--					st.elements as ic
+--				loop
+--					if attached {WIKI_SECTION} ic.item as w_section then
+--						output ("<li>")
+--						if attached w_section.text as l_text then
+--							output (l_text.text)
+--						else
+--							output ("...")
+--						end
+--						output ("</li>")
+--					end
+--				end
 				output ("<div>")
 				st.process (Current)
 				output ("</div>%N")
 			end
+			current_page := Void
 		end
 
 feature -- Processing
@@ -354,13 +400,23 @@ feature -- Strings
 feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
+		local
+			wstr: WIKI_STRING
 		do
-			output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
-			output ("<strong>" + a_template.name + "</strong>: ")
-			if attached a_template.parameters_string as st then
-				st.process (Current)
+			if
+				attached template_resolver as r and then
+				attached r.content (a_template, current_page) as tpl
+			then
+				wstr := a_template.text (tpl)
+				wstr.process (Current)
+			else
+				output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
+				output ("<strong>" + a_template.name + "</strong>: ")
+				if attached a_template.parameters_string as st then
+					st.process (Current)
+				end
+				output ("</div>")
 			end
-			output ("</div>")
 			debug
 				output ("{{TEMPLATE %"" + a_template.name + "%"")
 				if attached a_template.parameters_string as str then
@@ -377,12 +433,15 @@ feature -- Tag
 	visit_code (a_code: WIKI_CODE)
 		local
 			l_is_inline: BOOLEAN
+			l_tag: STRING
 		do
+			l_tag := a_code.tag
 			l_is_inline := a_code.is_inline
 			if l_is_inline then
-				output ("<" + a_code.tag_name + " class=%"inline%">")
+				output (l_tag.substring (1, l_tag.count - 1))
+				output (" class=%"inline%">")
 			else
-				output ("<" + a_code.tag_name + ">")
+				output (l_tag)
 			end
 			a_code.text.process (Current)
 			output ("</" + a_code.tag_name + ">")
@@ -390,13 +449,10 @@ feature -- Tag
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
-		local
-			n: READABLE_STRING_8
 		do
-			n := a_tag.tag_name
-			output ("<" + n + ">")
+			output (a_tag.tag)
 			a_tag.text.process (Current)
-			output ("</" + n + ">")
+			output ("</" + a_tag.tag_name + ">")
 		end
 
 feature -- Entity
@@ -416,27 +472,67 @@ feature -- Links
 		end
 
 	visit_link (a_link: WIKI_LINK)
+		local
+			l_url: detachable READABLE_STRING_8
 		do
-			output ("<a href=%"" + a_link.name + ".html%" class=%"wiki_link%">")
+			if
+				attached link_resolver as r and then
+				attached r.wiki_url (a_link, current_page) as u
+			then
+				l_url := u
+			else
+				l_url := a_link.name
+			end
+			debug
+--				output ("#" + l_url + "#")
+			end
+			output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
 			a_link.text.process (Current)
 			output ("</a>")
 		end
 
 	visit_image_link (a_link: WIKI_IMAGE_LINK)
+		local
+			l_wiki_url, l_url: detachable READABLE_STRING_8
 		do
-			-- FIXME!!!
-			if a_link.inlined then
-				output ("<img src=%"" + a_link.name + "%">")
-				if not attached {WIKI_RAW_STRING} a_link.text then
-					a_link.text.process (Current)
-				end
-				output ("</img>")
-			else
-				output ("<img src=%"" + a_link.name + "%">")
-				if not attached {WIKI_RAW_STRING} a_link.text then
-					a_link.text.process (Current)
-				end
-				output ("</img>")
+			if attached image_resolver as r then
+				l_url := r.url (a_link, current_page)
+				l_wiki_url := r.wiki_url (a_link, current_page)
+			end
+			if l_wiki_url = Void then
+				l_wiki_url := a_link.name
+			end
+			if l_url = Void then
+				l_url := l_wiki_url
+			end
+			if attached a_link.location_parameter as l_location then
+				output ("<div style=%"text-align: "+ l_location +"%">")
+			end
+			output ("<a href=%"" + l_wiki_url + "%">")
+			output ("<img src=%"" + l_url + "%" border=%"0%"")
+			if attached a_link.width_parameter as w then
+				output (" width=%"")
+				output (w)
+				output ("%"")
+			end
+			if attached a_link.height_parameter as h then
+				output (" height=%"")
+				output (h)
+				output ("%"")
+			end
+			output ("/>")
+			output ("</a>")
+			if not a_link.inlined then
+				output ("<br/>")
+			end
+
+			if not attached {WIKI_RAW_STRING} a_link.text then
+				a_link.text.process (Current)
+			end
+			if a_link.location_parameter /= Void then
+				output ("</div>")
+			end
+			if not a_link.inlined then
 				set_next_output_require_newline
 			end
 		end
@@ -448,12 +544,13 @@ feature -- Links
 				a_link.text.process (Current)
 				output ("%")")
 			else
-				-- FIXME
+				-- FIXME: not implemented
 			end
 		end
 
 	visit_media_link (a_link: WIKI_MEDIA_LINK)
 		do
+				-- FIXME: not implemented
 			output ("MEDIA("+ a_link.name + ", %"")
 			a_link.text.process (Current)
 			output ("%")")
@@ -467,6 +564,11 @@ feature -- Table
 				output ("<table " + st + ">")
 			else
 				output ("<table>")
+			end
+			if attached a_table.caption as l_caption then
+				output ("<caption>")
+				l_caption.process (Current)
+				output ("</caption>")
 			end
 
 			visit_composite (a_table)
@@ -483,14 +585,36 @@ feature -- Table
 
 	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
 		do
-			output ("<th>")
+			if attached a_cell.modifiers as lst and then not lst.is_empty then
+				output ("<th")
+				across
+					lst as ic
+				loop
+					output (" ")
+					output (ic.item)
+				end
+				output (">")
+			else
+				output ("<th>")
+			end
 			a_cell.text.process (Current)
 			output ("</th>")
 		end
 
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
 		do
-			output ("<td>")
+			if attached a_cell.modifiers as lst and then not lst.is_empty then
+				output ("<td")
+				across
+					lst as ic
+				loop
+					output (" ")
+					output (ic.item)
+				end
+				output (">")
+			else
+				output ("<td>")
+			end
 			a_cell.text.process (Current)
 			output ("</td>")
 		end

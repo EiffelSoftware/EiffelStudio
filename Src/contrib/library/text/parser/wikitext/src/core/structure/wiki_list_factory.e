@@ -16,7 +16,7 @@ feature -- Access
 		local
 			t: STRING
 			c: CHARACTER
-			n,p: INTEGER
+			n: INTEGER
 			v: NATURAL_8
 		do
 			if s = Void or else s.is_empty then
@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

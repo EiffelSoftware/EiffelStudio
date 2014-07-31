@@ -31,7 +31,7 @@ feature -- Access
 
 	parts: detachable WIKI_STRING_LIST
 
-feature -- Element change
+feature {WIKI_STRING_ANALYZER} -- Element change
 
 	set_parts (p: attached like parts)
 		do
@@ -68,8 +68,8 @@ feature -- Status report
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			create Result.make_from_string (text)
-			if Result.count > 30 then
-				Result.keep_head (27)
+			if Result.count > 50 then
+				Result.keep_head (50 - 3)
 				Result.append_string ("...")
 			end
 		end

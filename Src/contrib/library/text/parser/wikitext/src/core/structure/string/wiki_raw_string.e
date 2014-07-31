@@ -26,6 +26,14 @@ feature -- Access
 
 	text: STRING
 
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is empty text?
+		do
+			Result := text.is_empty
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)

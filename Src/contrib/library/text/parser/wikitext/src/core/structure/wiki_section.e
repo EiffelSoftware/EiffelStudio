@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			end
 			p := s.substring_index (t, v)
 			level := v - 1
-			if p > 0 and is_blank (s.substring (p + v, n)) then
+			if p > 0 and is_blank_string (s.substring (p + v, n)) then
 				is_valid := True
 				t := s.substring (v, p - 1)
 				t.left_adjust

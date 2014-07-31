@@ -97,28 +97,6 @@ feature -- Access
 			Result.compare_objects
 		end
 
-feature -- Errors
-
-	errors: STRING_TABLE[READABLE_STRING_32]
-			-- Hash table with errors and descriptions.	
-
-	has_error: BOOLEAN
-			-- Has errors the last request?
-		do
-			Result := not errors.is_empty
-		end
-
-	error_message: STRING
-			-- String representation.
-		do
-			create Result.make_empty
-			across errors as c loop
-				Result.append (c.item)
-				Result.append ("%N")
-			end
-		end
-
-
 feature -- Validation
 
 	validate (a_request: STRING_TABLE [WSF_VALUE])
@@ -219,6 +197,9 @@ feature {NONE} -- Validations
 	validate_status (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
 			-- Validate `status' query parameter, if it's present should be a value between 0..5, update the value to `status'
 			-- feature, if there is an error, add it to errors.
+		local
+			ll_status: LIST[READABLE_STRING_32]
+			ll_string_status: STRING_32
 		do
 			if a_current_keys.has ({STRING_32}"status") then
 				if
@@ -226,12 +207,30 @@ feature {NONE} -- Validations
 				then
 					status.wipe_out
 					across l_status.values as c loop
-				   		if c.item.integer_value >= 0 and then c.item.integer_value < 6 then
+				   		if
+				   			(c.item.is_integer) and then
+				   			(c.item.integer_value >= 0 and then c.item.integer_value < 6)
+				   		then
 				   			status.force (c.item.integer_value)
 				   		else
 				   			errors.force ("The parameter value for status=[" + c.item.value + "] is not valid", "status_" + c.item.value )
 				   		end
 				   end
+				elseif attached {WSF_STRING} a_table_request.at ("status") as l_status  then
+					ll_string_status := l_status.value
+					ll_string_status.replace_substring_all ("status=", "")
+					ll_status := ll_string_status.split ('&')
+					status.wipe_out
+					across ll_status as c loop
+						if
+							 c.item.is_integer and then
+							(c.item.to_integer >= 0 and then c.item.to_integer < 6)
+						then
+							status.force (c.item.to_integer)
+						else
+							errors.force ("The parameter value for status=[" + c.item + "] is not valid", "status_" + c.item )
+						end
+					end
 				end
 			end
 		end
@@ -357,7 +356,6 @@ feature -- Set element
 			end
 
 feature -- Change Element
-
 
 	set_page (a_page: INTEGER)
 			-- Set `page' to `a_page'.

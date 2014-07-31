@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $(".form-inline *").tooltip({
-        placement : 'top', html: true
+        placement : 'bottom', html: true
     });
 
     $(".col-md-2 *").tooltip({

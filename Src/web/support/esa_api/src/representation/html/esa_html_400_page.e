@@ -18,13 +18,16 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL)
+	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: 400.tpl")
 			set_template_folder (html_path)
 			set_template_file_name ("400.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user then
+				template.add_value (a_user, "user")
+			end
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
@@ -37,13 +40,16 @@ feature {NONE} --Initialization
 		end
 
 
-	make_with_errors (a_host: READABLE_STRING_GENERAL; a_errors: STRING_TABLE[READABLE_STRING_32])
+	make_with_errors (a_host: READABLE_STRING_GENERAL; a_errors: STRING_TABLE[READABLE_STRING_32]; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make_with_errors render template: 400.tpl")
 			set_template_folder (html_path)
 			set_template_file_name ("400.tpl")
 			template.add_value (a_host, "host")
+			if attached a_user then
+				template.add_value (a_user, "user")
+			end
 			template.add_value (a_errors, "errors")
 			template_context.enable_verbose
 			template.analyze

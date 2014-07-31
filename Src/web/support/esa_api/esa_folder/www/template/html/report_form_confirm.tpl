@@ -93,7 +93,7 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
-									<pre>{htmlentities}{$description/}{/htmlentities}</pre>
+									<textarea class="form-control input-xlarge" style="border: none ;background-color:white;"  disabled="True" rows="17">{$description/}</textarea>
 								</div>
 							</div>
 							{if isset="$to_reproduce"}
@@ -104,7 +104,7 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
-									<pre>{htmlentities}{$to_reproduce/}{/htmlentities}</pre>
+									<textarea class="form-control input-xlarge" style="border: none ;background-color:white;"  disabled="True" rows="7">{$to_reproduce/}</textarea>
 								</div>
 							</div>
 							{/if}

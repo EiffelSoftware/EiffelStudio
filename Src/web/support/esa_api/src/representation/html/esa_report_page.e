@@ -96,14 +96,14 @@ feature {NONE} --Initialization
 
 	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
 		do
-			Result := "status=0&amp;"
+			Result := "0&"
 			across a_status as c loop
 				if c.item.is_selected then
 					Result.append_string ("status=")
 					Result.append_string (c.item.id.out)
-					Result.append_string ("&amp;")
+					Result.append_string ("&")
 				end
 			end
-			Result.remove_tail (5)
+			Result.remove_tail (1)
 		end
 end

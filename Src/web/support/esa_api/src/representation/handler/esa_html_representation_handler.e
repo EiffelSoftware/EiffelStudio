@@ -153,7 +153,7 @@ feature -- View
 			l_hp: ESA_HTML_404_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (absolute_host (req, ""))
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_home_page then
 					new_response_get_404 (req, res, l_home_page)
 				end
@@ -190,7 +190,7 @@ feature -- View
 			l_hp: ESA_HTML_400_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (absolute_host (req, ""))
+				create l_hp.make (absolute_host (req, ""), current_user_name (req))
 				if attached l_hp.representation as l_bad_page then
 					new_response_get_400 (req, res, l_bad_page)
 				end
@@ -203,7 +203,7 @@ feature -- View
 			l_hp: ESA_HTML_400_PAGE
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make_with_errors (absolute_host (req, ""), errors)
+				create l_hp.make_with_errors (absolute_host (req, ""), errors, current_user_name (req))
 				if attached l_hp.representation as l_bad_page then
 					new_response_get_400 (req, res, l_bad_page)
 				end

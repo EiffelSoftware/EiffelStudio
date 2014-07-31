@@ -78,10 +78,9 @@ feature {NONE} --Initialization
 			end
 		end
 
-
 	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
 		do
-			Result := "status=0&amp;"
+			Result := "0&amp;"
 			across a_status as c loop
 				if c.item.is_selected then
 					Result.append_string ("status=")
@@ -89,7 +88,9 @@ feature {NONE} --Initialization
 					Result.append_string ("&amp;")
 				end
 			end
-			Result.remove_tail (5)
+			if Result.count > 5 then
+				Result.remove_tail (5)
+			end
 		end
 end
 

@@ -78,30 +78,73 @@ feature -- HTTP Methods
 			end
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	user_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: STRING)
 			-- Retrieve report details for a logged in user `a_user'
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer and then api_service.is_report_visible (a_user, l_id.integer_value) then
-					retrieve_report_details (req, res, l_type, a_user, l_id.integer_value)
+				if	attached {WSF_STRING} req.path_parameter ("id") as l_id then
+					retrieve_report_by (req, res, l_type, a_user, l_id.value)
 				elseif attached {WSF_STRING} req.query_parameter ("search") as l_id then
-					if l_id.is_integer and then api_service.is_report_visible (a_user, l_id.integer_value) then
-						retrieve_report_details (req, res, l_type, a_user, l_id.integer_value)
-					elseif not l_id.is_integer then
-						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
-					else
-						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
-					end
+					search_report (req, res, l_type, a_user)
 				else
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				end
 			else
 				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)). problem_report(req, res, Void)
+			end
+		end
+
+	retrieve_report_by (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: READABLE_STRING_32; a_id: READABLE_STRING_32 )
+			-- Retrieve a report by a given ID in a path parameter /{$id}
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+		do
+			create l_rhf
+			if	a_id.is_integer	then
+				if api_service.exist_report (a_id.to_integer) then
+					if  api_service.is_report_visible (a_user, a_id.to_integer) then
+						retrieve_report_details (req, res, a_type, a_user, a_id.to_integer)
+					else
+						l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					end
+				else
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).not_found_page (req, res)
+				end
+			else
+				l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).bad_request_page (req, res)
+			end
+
+		end
+
+	search_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: STRING)
+			-- Search a report by a given if from a query, search=?.
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
+		do
+			create l_rhf
+			create l_validator
+			l_validator.input_from (req.query_parameters)
+			if not l_validator.has_error then
+				if api_service.exist_report (l_validator.search) then
+					if  api_service.is_report_visible (a_user, l_validator.search ) then
+						retrieve_report_details (req, res, a_type, a_user, l_validator.search)
+					else
+						l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					end
+				else
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).not_found_page (req, res)
+				end
+			else
+				-- Bad request
+				log.write_error (generator + ".responsible_reports " + l_validator.error_message)
+				l_rhf.new_representation_handler (esa_config, a_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_validator.errors)
 			end
 		end
 
@@ -121,19 +164,68 @@ feature -- Implementation
 			-- Retrieve report details for `Guest' users.
 			-- Include visible interactions and attachments.
 		local
-			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+				l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+				l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer and then api_service.is_report_visible_guest (l_id.integer_value) then
-					retrieve_guest_report_details (req, res, l_type, l_id.integer_value)
-				elseif attached {WSF_STRING} req.query_parameter ("search") as l_id and then l_id.is_integer and then api_service.is_report_visible_guest (l_id.integer_value) then
-					retrieve_guest_report_details (req, res, l_type, l_id.integer_value)
+				if	attached {WSF_STRING} req.path_parameter ("id") as l_id then
+					retrieve_guest_report_by (req, res, l_type, l_id.value)
+				elseif attached {WSF_STRING} req.query_parameter ("search") as l_id then
+					search_guest_report (req, res, l_type)
 				else
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				end
 			else
 				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)). problem_report(req, res, Void)
+			end
+		end
+
+	retrieve_guest_report_by (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_id: READABLE_STRING_32 )
+			-- Retrieve a report by a given ID in a path parameter /{$id}.
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+		do
+			create l_rhf
+			if	a_id.is_integer	then
+				if api_service.exist_report (a_id.to_integer) then
+					if  api_service.is_report_visible_guest (a_id.to_integer) then
+						retrieve_guest_report_details (req, res, a_type, a_id.to_integer)
+					else
+						l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					end
+				else
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).not_found_page (req, res)
+				end
+			else
+				l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).bad_request_page (req, res)
+			end
+
+		end
+
+	search_guest_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32)
+			-- Search a report by a given if from a query, search=?.
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+			l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
+		do
+			create l_rhf
+			create l_validator
+			l_validator.input_from (req.query_parameters)
+			if not l_validator.has_error then
+				if api_service.exist_report (l_validator.search) then
+					if  api_service.is_report_visible_guest ( l_validator.search ) then
+						retrieve_guest_report_details (req, res, a_type, l_validator.search)
+					else
+						l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+					end
+				else
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).not_found_page (req, res)
+				end
+			else
+				-- Bad request
+				log.write_error (generator + ".responsible_reports " + l_validator.error_message)
+				l_rhf.new_representation_handler (esa_config, a_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_validator.errors)
 			end
 		end
 
@@ -148,5 +240,4 @@ feature -- Implementation
 				l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).not_found_page (req, res)
 			end
 		end
-
 end

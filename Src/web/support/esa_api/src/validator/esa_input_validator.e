@@ -32,9 +32,25 @@ feature -- Access
 		deferred
 		end
 
-	accetpable_order_by: ARRAY[STRING]
-			-- acceptable values to sort the reports.	
-		deferred
+feature -- Errors
+
+	errors: STRING_TABLE[READABLE_STRING_32]
+			-- Hash table with errors and descriptions.	
+
+	has_error: BOOLEAN
+			-- Has errors the last request?
+		do
+			Result := not errors.is_empty
+		end
+
+	error_message: STRING
+			-- String representation.
+		do
+			create Result.make_empty
+			across errors as c loop
+				Result.append (c.item)
+				Result.append ("%N")
+			end
 		end
 
 

@@ -95,6 +95,7 @@
 								<div class="controls">
 									<input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
 								</div>
+								<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
 							</div>
 						</div>
 						<hr>

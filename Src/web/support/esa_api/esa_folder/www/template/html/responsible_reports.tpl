@@ -396,13 +396,17 @@
 			{foreach from="$reports" item="item"}
 				<form class="form-inline well" action="{$host/}/reports/{$item.number/}" id="reports_{$item.number/}" method="POST" itemprop="update">
 					<input type="hidden" name="page" value="{$index/}"/>
+					<input type="hidden" name="size" value="{$size/}"/>
 					<input type="hidden" name="category" value="{$view.selected_category/}"/>
 					<input type="hidden" name="severity" value="{$view.selected_severity/}"/>
 					<input type="hidden" name="priority" value="{$view.selected_priority/}"/>
 					<input type="hidden" name="responsible" value="{$view.selected_responsible/}"/>
-					<input type="hidden" name="status_query" value="{$status_query/}"/>
+					<input type="hidden" name="status" value="status={$status_query/}"/>
 					<input type="hidden" name="orderBy" value="{$view.orderBy/}"/>
 					<input type="hidden" name="dir" value="{$view.dir/}"/>
+					<input type="hidden" name="submitter" value="{$view.submitter/}"/>
+					<input type="hidden" name="filter" value="{$view.filter/}"/>
+					<input type="hidden" name="filter_content" value="{$view.filter_content/}"/>
 
 					<tr>
 						<td itemprop="report_number"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{$item.number/}</a></td>

@@ -149,7 +149,7 @@ system_dynlib: "\%N%
 il_system_compilation_line: "%
 	%$(IL_SYSTEM): $(OBJECTS) $(IL_RESOURCE).res%N%
 	%%T$(RM) $(IL_SYSTEM) %N%
-	%%T$(CC) -shared -Wl,--kill-at -o $(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res%N%
+	%%T$(CC) -shared -Wl,--kill-at -o $(IL_SYSTEM) $(IL_RESOURCE).res  $(OBJECTS) $(EXTERNALS) $(SHAREDLIBS)%N%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
 	%../../../$(IL_RESOURCE).rc:%N%

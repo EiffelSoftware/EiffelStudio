@@ -1,0 +1,6 @@
+Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count
+chameneos,6,23861,24751,24300,304,..\scoop_chameneos\EIFGENs\main-qs\F_code\main.exe 1000000,..\scoop_chameneos,1,0
+product,7,5296,5578,5348,101,..\scoop_product\EIFGENs\main-qs\F_code\main.exe -i ..\scoop_product\mainbig.in -bench,..\scoop_product,1,0
+randmat,8,5578,5626,5609,14,..\scoop_randmat\EIFGENs\main-qs\F_code\main.exe -i ..\scoop_randmat\mainbig2.in -bench,..\scoop_randmat,1,0
+thresh,117,515,532,530,1,..\scoop_thresh\EIFGENs\main-qs\F_code\main.exe -i ..\scoop_thresh\mainbig.in -bench,..\scoop_thresh,1,0
+winnow,87,780,1063,853,110,..\scoop_winnow\EIFGENs\main-qs\F_code\main.exe -i ..\scoop_winnow\mainbig.in -bench,..\scoop_winnow,1,0

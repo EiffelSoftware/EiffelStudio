@@ -1,0 +1,8 @@
+Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count
+chain,72,3688,4781,4174,310,..\scoop_chain\EIFGENs\main\F_code\main.exe -i ..\scoop_chain\main.in -bench,..\scoop_chain,1,0
+chameneos,6,48049,50189,48746,787,..\scoop_chameneos\EIFGENs\main\F_code\main.exe 1000000,..\scoop_chameneos,1,0
+outer,18,2132,57682,34152,19389,..\scoop_outer\EIFGENs\main\F_code\main.exe -i ..\scoop_outer\mainbig.in -bench,..\scoop_outer,1,0
+product,7,31588,49057,41143,6500,..\scoop_product\EIFGENs\main\F_code\main.exe -i ..\scoop_product\mainbig.in -bench,..\scoop_product,1,0
+randmat,8,2527,47589,20029,16446,..\scoop_randmat\EIFGENs\main\F_code\main.exe -i ..\scoop_randmat\mainbig2.in -bench,..\scoop_randmat,1,0
+thresh,117,2375,2657,2632,70,..\scoop_thresh\EIFGENs\main\F_code\main.exe -i ..\scoop_thresh\mainbig.in -bench,..\scoop_thresh,1,0
+winnow,87,3422,3719,3510,113,..\scoop_winnow\EIFGENs\main\F_code\main.exe -i ..\scoop_winnow\mainbig.in -bench,..\scoop_winnow,1,0

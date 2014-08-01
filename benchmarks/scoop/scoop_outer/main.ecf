@@ -2,7 +2,8 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="main" uuid="240C83BA-E177-4303-9D9A-FF816172DCC3">
 	<target name="main">
 		<root class="MAIN" feature="make"/>
-        <setting name="concurrency" value="scoop"/>
+		<setting name="concurrency" value="scoop"/>
+		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="main" location=".\"/>
 	</target>

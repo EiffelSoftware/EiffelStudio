@@ -160,6 +160,7 @@ public:
    * to apply.
    */
   mpscq <qoq_item> qoq;
+  std::recursive_mutex qoq_mutex;
 
 public:
   /* A stack of <req_grp>s.

@@ -65,9 +65,19 @@ req_grp::lock()
 
   sorted = true;
 
+  for (auto pq : *this)
+    {
+      pq->supplier->qoq_mutex.lock();
+    }
+
   for (auto &pq : *this)
     {
       pq->lock(client);
+    }
+
+  for (auto it = rbegin(); it != rend(); ++it)
+    {
+      (*it)->supplier->qoq_mutex.unlock();
     }
 }
 

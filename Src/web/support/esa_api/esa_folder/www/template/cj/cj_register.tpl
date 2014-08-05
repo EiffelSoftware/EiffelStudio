@@ -15,38 +15,7 @@
             <
                 "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
-            >,
-            {if isset="$user"}
-            <
-                "href": "{$host/}/user_reports/{$user/}",
-                "rel": "all_user",
-                "prompt": "My Reports"
-            >,
-            <
-                "href": "{$host/}/report_form",
-                "rel": "create_report_form",
-                "prompt": "Report a Problem"
-            >,
-            <
-                "href": "{$host/}/logoff",
-                "rel": "logoff",
-                "prompt": "Logoff"
             >
-            {/if}
-
-            {unless isset="$user"}
-            <
-                "href": "{$host/}/login",
-                "rel": "login",
-                "prompt": "Login"
-            >,
-             <
-                "href": "{$host/}/register",
-                "rel": "register",
-                "prompt": "Register"
-            >
-            {/unless} 
-
           ],
  
    "template": <
@@ -57,7 +26,7 @@
         <"name": "user_name", "prompt": "User Name", "value": "{$form.user_name/}">,
         <"name": "password", "prompt": "Password", "value": "{$form.password/}">,
         <"name": "check_password", "prompt": "Re-Type Password", "value": "{$form.check_password/}">,
-        <"name": "question", "prompt": "Question", "value": "{$form.selected_question/}">,
+        <"name": "question", "prompt": "Question", "acceptableValues":[{foreach from="$form.questions" item="item"}<"name": "{$item.id/}", "value": "{$item.question/}">,{/foreach}], "value": "{$form.selected_question/}">,
         <"name": "answer", "prompt": "Answer", "value": "{$form.answer/}">
       ]
       >,

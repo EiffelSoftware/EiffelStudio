@@ -174,13 +174,13 @@
             "href" : "{$host/}/user_reports/{$user/}",
            {/if}
            {unless isset="$user"}
-           "href" : "{$host/}/reports/", 
+           "href" : "{$host/}/reports", 
            {/unless}
           "rel" : "search",
           "prompt" : "Filter by Category / Status...",
           "data" :
             [
-                <"name" : "category", "value" : "">,
+                <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value":"{$view.selected_category/}">,
                 <"name" : "status", "value" : "">
             ]
         >,
@@ -197,7 +197,7 @@
             [
                 <"name" : "orderBy", "value" : "">,
                 <"name" : "dir", "value" : "">,
-                <"name" : "category", "value" : "">,
+                <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" :"{$view.selected_category/}">,
                 <"name" : "status", "value" : "">
             ]
         >

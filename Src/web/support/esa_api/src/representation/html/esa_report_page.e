@@ -9,6 +9,11 @@ inherit
 
 	ESA_TEMPLATE_PAGE
 
+	ESA_TEMPLATE_REPORT_PAGE
+		rename
+			make as make_template
+		end
+
 	SHARED_TEMPLATE_CONTEXT
 
 create
@@ -27,57 +32,15 @@ feature {NONE} --Initialization
 
 			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
 
+			    -- Build common template
+			make_template (a_host, a_view, "template_guest_reports.tpl")
 
+				-- Set path to HTML.
 			set_template_folder (html_path)
-			set_template_file_name ("template_guest_reports.tpl")
-			template.add_value (a_host, "host")
-			template.add_value (a_view, "view")
-			template.add_value (a_view.reports, "reports")
-			template.add_value (a_view.categories, "categories")
-			template.add_value (a_view.status, "status")
-			template.add_value (a_view.selected_category, "selected_category")
-			template.add_value (a_view.index, "index")
-			template.add_value (a_view.order_by,"orderBy")
-			template.add_value (a_view.direction,"dir")
-			template.add_value (a_view.size, "size")
-			template.add_value (retrieve_status_query (a_view.status),"status_query")
 
+				-- Process the current tempate.
+			process
 
-			if a_view.index > 1 then
-				template.add_value (a_view.index - 1 , "prev")
-			end
-			if a_view.index < a_view.pages then
-				template.add_value (a_view.index + 1, "next")
-			end
-			template.add_value (a_view.pages + 1 , "last")
-
-			template.add_value (a_view.pages + 1, "pages")
-
-
-			if attached a_view.filter as l_filter then
-				template.add_value (l_filter, "filter")
-			end
-
-			if a_view.filter_content= 1 then
-				template.add_value (a_view.filter_content, "filter_content")
-			end
-
-			if
-				attached a_view.submitter as l_submitter and then
-				not l_submitter.is_empty
-			then
-				template.add_value (a_view.submitter, "submitter")
-			end
-
-
-
-		 	if attached a_view.user as l_user then
-		 		template.add_value (l_user,"user")
-			end
-
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
 				debug
@@ -86,24 +49,4 @@ feature {NONE} --Initialization
 			end
 		end
 
-	set_selected_category (a_categories: LIST[ESA_REPORT_CATEGORY]; a_selected_category:  INTEGER)
-			-- Set the current selected category
-		do
-			across a_categories as c  loop
-				c.item.set_selected_id (a_selected_category)
-			end
-		end
-
-	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
-		do
-			Result := "0&"
-			across a_status as c loop
-				if c.item.is_selected then
-					Result.append_string ("status=")
-					Result.append_string (c.item.id.out)
-					Result.append_string ("&")
-				end
-			end
-			Result.remove_tail (1)
-		end
 end

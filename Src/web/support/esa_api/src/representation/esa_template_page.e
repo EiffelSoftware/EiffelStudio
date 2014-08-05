@@ -61,4 +61,14 @@ feature -- Status
 			Result := layout.cj_template_path
 		end
 
+
+feature -- Process
+
+	process
+			-- Process the current template.
+		do
+			template_context.enable_verbose
+			template.analyze
+			template.get_output
+		end
 end

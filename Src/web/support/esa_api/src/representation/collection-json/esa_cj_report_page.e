@@ -10,6 +10,11 @@ inherit
 
 	ESA_TEMPLATE_PAGE
 
+	ESA_TEMPLATE_REPORT_PAGE
+		rename
+			make as make_template
+		end
+
 	SHARED_TEMPLATE_CONTEXT
 
 create
@@ -17,40 +22,28 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL;a_view: ESA_REPORT_VIEW)
+	make (a_host: READABLE_STRING_GENERAL; a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_reports.tpl")
+			log.write_information (generator + ".make render template: cj_guest_reports.tpl")
+
+               -- Build common template.
+			make_template (a_host, a_view, "cj_guest_reports.tpl")
+
+			   -- Set path to CJ.
 			set_template_folder (cj_path)
-			set_template_file_name ("cj_reports.tpl")
-			template.add_value (a_host, "host")
-			template.add_value (a_view.reports.at (2), "reports")
-			template.add_value (a_view.index, "index")
-			template.add_value (a_view.categories, "categories")
-			template.add_value (a_view.status, "status")
-			template.add_value (a_view.order_by,"orderBy")
-			template.add_value (a_view.direction,"dir")
-			template.add_value (a_view.size, "size")
 
-			if a_view.index > 1 then
-				template.add_value (a_view.index-1 , "prev")
-			end
-			if a_view.index < a_view.pages then
-				template.add_value (a_view.index+1, "next")
-			end
-			template.add_value (a_view.pages + 1, "last")
+			template.add_value ((create {ESA_REPORT_INPUT_VALIDATOR}).accetpable_order_by, "columns" )
+			template.add_value (checked_status_query(a_view.status), "checked_status" )
 
-			if attached a_view.user as l_user then
-				template.add_value (a_view.user, "user")
-			end
+				-- Process the template
+			process
 
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
 				-- Workaround
 			if attached template.output as l_output then
 				l_output.replace_substring_all ("<", "{")
 				l_output.replace_substring_all (">", "}")
+				l_output.replace_substring_all (",]", "]")
 				l_output.replace_substring_all ("},]", "}]")
 
 				representation := l_output
@@ -59,4 +52,15 @@ feature {NONE} --Initialization
 				end
 			end
 		end
+
+		checked_status_query (a_status: LIST[ESA_REPORT_STATUS]): LIST[ESA_REPORT_STATUS]
+			do
+				create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
+				across a_status as c loop
+					if c.item.is_selected then
+						Result.force (c.item)
+					end
+				end
+			end
+
 end

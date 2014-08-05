@@ -359,16 +359,16 @@ feature {NONE} --Implementation
 			if a_type.same_string ("application/vnd.collection+json") then
 				Result := req.path_info
 			else
-				create Result.make_from_string ("/reports/")
+				create Result.make_from_string ("/reports?")
 				if attached {WSF_STRING} req.form_parameter ("page") as l_page then
 					Result.append ("page=")
 					Result.append_string (l_page.value)
-					Result.append_string ("?")
+					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("size") as l_size then
 					Result.append ("size=")
 					Result.append_string (l_size.value)
-					Result.append_string ("?")
+					Result.append_string ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("category") as l_category then
 					Result.append_string ("category=")

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wdocs_app" uuid="CEFE96C7-25BA-4DF4-B0C4-A42BF9077265">
+	<target name="wdocs_app">
+		<root class="WDOCS_APP" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="connector_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino-safe.ecf"/>
+		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY/library/thread/thread-safe.ecf"/>
+		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false" use_application_options="true">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<library name="wsf_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<library name="web_browser" location="$ISE_LIBRARY/library/web_browser/web_browser-safe.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2-safe.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/launcher$</exclude>
+				<exclude>/web$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

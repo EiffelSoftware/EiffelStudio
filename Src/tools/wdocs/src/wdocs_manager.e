@@ -235,15 +235,21 @@ feature {NONE} -- Initialization
 	stored_data: detachable WDOCS_DATA
 		local
 			f: RAW_FILE
+			retried: BOOLEAN
 		do
-			create f.make_with_path (database_path.appended_with_extension ("data"))
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				if attached {WDOCS_DATA} f.retrieved as d then
-					Result := d
+			if not retried then
+				create f.make_with_path (database_path.appended_with_extension ("data"))
+				if f.exists and then f.is_access_readable then
+					f.open_read
+					if attached {WDOCS_DATA} f.retrieved as d then
+						Result := d
+					end
+					f.close
 				end
-				f.close
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	store_data (d: WDOCS_DATA)

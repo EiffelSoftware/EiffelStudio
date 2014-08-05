@@ -1,102 +1,69 @@
 note
-	description: "Summary description for {WDOCS_APP_EMBEDDED_WEB_SERVICE}."
+	description: "Summary description for {WDOCS_SERVICE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	WDOCS_APP_EMBEDDED_WEB_SERVICE
+deferred class
+	WDOCS_SERVICE
 
 inherit
-	EMBEDDED_WEB_SERVICE
-		rename
-			make as make_service
+	WSF_ROUTED_SERVICE
 		redefine
-			initialize_options
+			execute_default
 		end
 
 	SHARED_WSF_PERCENT_ENCODER
 
-create
-	make
+feature	-- Initialization
 
-feature {NONE} -- Initialization
-
-	make (a_root_dir: PATH)
-		do
-			root_dir := a_root_dir
-			make_service
-			create request_exit_operation_actions
-			local_connection_restriction_enabled := True
-
-
-			if not {PLATFORM}.is_thread_capable then
-				print ("Impossible to launch the embedded web service%N")
-				(create {EXCEPTIONS}).die (-1)
-			end
-		end
-
-	initialize_options (opts: WSF_SERVICE_LAUNCHER_OPTIONS)
-		do
-			Precursor (opts)
-			opts.set_option ("force_single_threaded", True)
-		end
-
-feature -- Access
-
-	root_dir: PATH
-
-feature -- Factory
-
-	manager: WDOCS_MANAGER
-		do
-			create Result.make (root_dir)
-		end
-
-feature -- Execution
-
-	request_exit_operation_actions: ACTION_SEQUENCE [TUPLE]
-
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the request
-			-- See `req.input' for input stream
-    		--     `req.meta_variables' for the CGI meta variable
-			-- and `res' for output buffer
+	setup_router
 		local
-			router: WSF_ROUTER
 			sess: detachable WSF_ROUTER_SESSION
 			m: WSF_HTML_PAGE_RESPONSE
 			b: STRING
 			fs: WSF_FILE_SYSTEM_HANDLER
 		do
-			create router.make (3)
 			router.handle ("/book/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
 			router.handle ("/book/{bookid}/_images/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wiki_image))
 			router.handle ("/book/{bookid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
 			router.handle ("/book/{bookid}/{wikipageid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wikipage))
-			router.handle ("/exit", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_exit))
 			create fs.make_with_path ((create {EXECUTION_ENVIRONMENT}).current_working_path.extended ("files"))
 			router.handle ("/files", fs)
-			create sess
-			router.dispatch (req, res, sess)
-			if not sess.dispatched then
-				create m.make
-				create b.make_from_string ("<h1>Wiki Docs App</h1>")
-				b.append ("<li><a href=%"" + req.script_url ("/book/") + "%">Books</a></li>")
-				b.append ("<li><a href=%"" + req.script_url ("/book/a_test/index") + "%">Test</a></li>")
-				b.append ("<li><a href=%"" + req.script_url ("/book/eiffelstudio/index") + "%">EiffelStudio</a></li>")
-				b.append ("<li><a href=%"" + req.script_url ("/exit") + "%">exit</a></li>")
-
-
-				if attached req.http_referer as l_ref then
-					b.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
-				end
-				b.append ("<li>Location: " + req.request_uri + "</li>")
-
-				m.set_body (b)
-				res.send (m)
-			end
 		end
+
+feature -- Access
+
+	manager: WDOCS_MANAGER
+		deferred
+		end
+
+feature	-- Execution		
+
+	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Dispatch requests without a matching handler.
+		local
+			m: WSF_HTML_PAGE_RESPONSE
+			b: STRING
+		do
+			create m.make
+			create b.make_from_string ("<h1>Wiki Docs App</h1>")
+			b.append ("<li><a href=%"" + req.script_url ("/book/") + "%">Books</a></li>")
+			b.append ("<li><a href=%"" + req.script_url ("/book/a_test/index") + "%">Test</a></li>")
+			b.append ("<li><a href=%"" + req.script_url ("/book/eiffelstudio/index") + "%">EiffelStudio</a></li>")
+			b.append ("<li><a href=%"" + req.script_url ("/exit") + "%">exit</a></li>")
+
+
+			if attached req.http_referer as l_ref then
+				b.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
+			end
+			b.append ("<li>Location: " + req.request_uri + "</li>")
+
+			m.set_body (b)
+			res.send (m)
+		end
+
+feature -- Helper		
 
 	append_navigation_to (req: WSF_REQUEST; s: STRING)
 		do
@@ -336,22 +303,6 @@ feature -- Execution
 				end
 				f.close
 			end
-		end
-
-	handle_exit (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			m: WSF_HTML_PAGE_RESPONSE
-			b: STRING
-		do
-			create m.make
-			create b.make_from_string ("<h1>Wiki Docs is about to shutdown</h1>")
-			append_navigation_to (req, b)
-			m.set_body (b)
-			res.send (m)
-			if attached {WGI_NINO_CONNECTOR} req.wgi_connector as nino then
-				nino.server.shutdown_server
-			end
-			request_exit_operation_actions.call (Void)
 		end
 
 end

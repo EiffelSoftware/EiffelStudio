@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wdocs" uuid="CEFE96C7-25BA-4DF4-B0C4-A42BF9077265">
-	<target name="wdocs">
-		<root class="WDOCS_APP" feature="make_and_launch"/>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wdocs" uuid="B1F852EA-D493-497D-BF35-82EBD3EC967C">
+	<target name="wdocs_common">
+		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -13,18 +13,58 @@
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-		<library name="connector_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino-safe.ecf"/>
-		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY/library/thread/thread-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2-safe.ecf"/>
-		<library name="web_browser" location="$ISE_LIBRARY/library/web_browser/web_browser-safe.ecf"/>
 		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false" use_application_options="true">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
-		<library name="wsf_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
-		<cluster name="src" location=".\src\" recursive="true"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 	</target>
+
+	<target name="wdocs_any" extends="wdocs_common">
+		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
+		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
+		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<cluster name="launcher" location=".\src\web\launcher\any\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/web/launcher$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="wdocs_nino" extends="wdocs_common">
+		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
+		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/web/launcher$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="wdocs_cgi" extends="wdocs_common">
+		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/web/launcher$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="wdocs_libfcgi" extends="wdocs_common">
+		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/web/launcher$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+
+	<target name="wdocs" extends="wdocs_nino"/>	
 </system>

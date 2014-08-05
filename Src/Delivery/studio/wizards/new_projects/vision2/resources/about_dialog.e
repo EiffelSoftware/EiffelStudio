@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor
+			create message_label
 			create ok_button.make_with_text (Button_ok_item)
 		end
 
@@ -42,6 +43,7 @@ feature {NONE} -- Initialization
 			horizontal_separator: EV_HORIZONTAL_SEPARATOR
 			buttons_box: EV_HORIZONTAL_BOX
 			ev_cell: EV_CELL
+			pixmap: EV_PIXMAP
 		do
 			Precursor
 
@@ -55,7 +57,6 @@ feature {NONE} -- Initialization
 			pixmap.copy ((create {EV_STOCK_PIXMAPS}).Information_pixmap)
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
 	
-			create message_label
 			message_label.align_text_left
 
 			create horizontal_separator
@@ -126,9 +127,6 @@ feature {NONE} -- Implementation
 	message_label: EV_LABEL
 			-- Label situated on the top of the dialog,
 			-- contains the message.
-
-	pixmap: EV_PIXMAP
-			-- Pixmap display on the left of the dialog.
 
 	ok_button: EV_BUTTON
 			-- "OK" button.

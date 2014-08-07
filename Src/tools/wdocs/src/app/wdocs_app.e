@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			main_window := l_win
 			l_win.show
 
-			create l_embeded_services.make (create {PATH}.make_current)
+			create l_embeded_services.make
 			l_embeded_services.set_port_number (0) -- Use first available port number
 
 			l_embeded_services.on_launched_actions.force (agent on_web_service_launched (l_win))

@@ -882,6 +882,8 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 
 	ieee_init();
 	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
+		/* Initialize directory to an empty string by default. */
+	starting_working_directory [0] = '\0';
 
 	ufill();							/* Get urgent memory chunks */
 

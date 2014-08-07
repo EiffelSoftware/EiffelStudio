@@ -270,28 +270,6 @@ feature -- Access
 		do
 			Result := data.book_names
 		end
---		local
---			lst: ARRAYED_LIST [READABLE_STRING_32]
---			p: PATH
---			d,l_dir: DIRECTORY
---		do
---			create lst.make (0)
---			p := wiki_database_path
---			create d.make_with_path (p)
---			if d.exists then
---				across
---					d.entries as ic
---				loop
---					if not ic.item.is_parent_symbol and not ic.item.is_current_symbol then
---						create l_dir.make_with_path (p.extended_path (ic.item))
---						if l_dir.exists then
---							lst.force (ic.item.name)
---						end
---					end
---				end
---			end
---			Result := lst
---		end
 
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 		local

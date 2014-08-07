@@ -4,13 +4,14 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_CJ_REGISTER_PAGE
+	CJ_REGISTER
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	TEMPLATE_REGISTER
+		rename
+			make as make_template
+		end
 
 create
 	make
@@ -23,11 +24,12 @@ feature {NONE} -- Initialization
 			l_error: STRING
 		do
 			log.write_information (generator + ".make render template: cj_register.tpl")
+
+				-- Build common template
+			make_template (a_host, a_form, a_user, "cj_register.tpl" )
+
+				-- Set template folder to CJ.
 			set_template_folder (cj_path)
-			set_template_file_name ("cj_register.tpl")
-			template.add_value (a_host, "host")
-			template.add_value (a_form.questions, "questions")
-			template.add_value (a_form, "form")
 
 			l_error := ""
 			if attached a_form.errors as l_errors then
@@ -47,13 +49,9 @@ feature {NONE} -- Initialization
 				template.add_value ("400", "code")
 			end
 
-			if attached a_user then
-				template.add_value (a_user,"user")
-			end
-
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
+				-- Process the current template
+			process
+				-- Post process
 			if attached template.output as l_output then
 				l_output.replace_substring_all ("<", "{")
 				l_output.replace_substring_all (">", "}")

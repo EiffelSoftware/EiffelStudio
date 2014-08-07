@@ -4,13 +4,11 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_TEMPLATE_REPORT_PAGE
+	ESA_TEMPLATE_REPORT
 
 inherit
 
 	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
 
 create
 	make

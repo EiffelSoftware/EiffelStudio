@@ -145,7 +145,7 @@ feature {NONE} -- Validations
 						not l_page.is_integer or else
 						(l_page.is_integer and then l_page.integer_value <= 0)
 					then
-						errors.force ("The parameter value for page should be > 0, the value [" + l_page.value + "] is not valid", "page")
+						errors.force ("The parameter value for page should be greater then 0, the value " + l_page.value + " is not valid", "page")
 					else
 						set_page (l_page.integer_value)
 					end
@@ -166,7 +166,7 @@ feature {NONE} -- Validations
 						not l_size.is_integer or else
 						(l_size.is_integer and then l_size.integer_value <= 0)
 					then
-						errors.force ("The parameter value for size should be > 0, the value [" + l_size.value + "] is not valid", "size")
+						errors.force ("The parameter value for size should be greater than 0, the value " + l_size.value + " is not valid", "size")
 					else
 						set_size (l_size.integer_value)
 					end
@@ -186,7 +186,7 @@ feature {NONE} -- Validations
 						not l_category.is_integer or else
 						(l_category.is_integer and then l_category.integer_value < 0)
 					then
-						errors.force ("The parameter value for category should be >= 0, the value [" + l_category.value + "] is not valid", "category")
+						errors.force ("The parameter value for category should be greater than or equal 0, the value " + l_category.value + " is not valid", "category")
 					else
 						set_category (l_category.integer_value)
 					end
@@ -213,7 +213,7 @@ feature {NONE} -- Validations
 				   		then
 				   			status.force (c.item.integer_value)
 				   		else
-				   			errors.force ("The parameter value for status=[" + c.item.value + "] is not valid", "status_" + c.item.value )
+				   			errors.force ("The parameter value for status " + c.item.value + " is not valid", "status_" + c.item.value )
 				   		end
 				   end
 				elseif attached {WSF_STRING} a_table_request.at ("status") as l_status  then
@@ -228,7 +228,7 @@ feature {NONE} -- Validations
 						then
 							status.force (c.item.to_integer)
 						else
-							errors.force ("The parameter value for status=[" + c.item + "] is not valid", "status_" + c.item )
+							errors.force ("The parameter value for status " + c.item + " is not valid", "status_" + c.item )
 						end
 					end
 				end
@@ -252,7 +252,7 @@ feature {NONE} -- Validations
 						then
 							set_orderby (l_orderBy.value)
 						else
-							errors.force ("The parameter value for orderBy=[" + l_orderBy.value + "] is not valid", "orderBy")
+							errors.force ("The parameter value for orderBy " + l_orderBy.value + " is not valid", "orderBy")
 						end
 					end
 				end
@@ -285,7 +285,7 @@ feature {NONE} -- Validations
 					elseif l_content.is_integer and then
 						   ( l_content.integer_value > 1 or else l_content.integer_value < 0 )
 					then
-						   	errors.force ("The parameter value for filter_content should be between 0 .. 1 the current value [" + l_content.value + "] is not valid", "content")
+						   	errors.force ("The parameter value for filter_content should be between 0 and 1 the current value " + l_content.value + " is not valid", "content")
 					else
 						set_filter_content (l_content.integer_value)
 					end
@@ -310,7 +310,7 @@ feature {NONE} -- Validations
 						then
 							set_direction (l_dir.value)
 						else
-							errors.force ("The parameter value for dir=[" + l_dir.value + "] is not valid", "dir")
+							errors.force ("The parameter value for dir " + l_dir.value + " is not valid", "dir")
 						end
 					end
 				end

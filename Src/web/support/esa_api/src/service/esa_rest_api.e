@@ -51,6 +51,7 @@ feature -- Initialization
 			configure_api_subscribe_to_category
 
 			create fhdl.make_hidden_with_path (layout.www_path)
+			fhdl.disable_index
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)

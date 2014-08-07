@@ -20,7 +20,7 @@ feature -- View
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_cj: ESA_CJ_ROOT_PAGE
+			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), current_user_name (req))
@@ -46,7 +46,7 @@ feature -- View
 	problem_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a guest user
 		local
-			l_hp: ESA_CJ_REPORT_PAGE
+			l_hp: CJ_REPORT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""), a_report_view)
@@ -59,7 +59,7 @@ feature -- View
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		local
-			l_hp: ESA_CJ_REPORT_PAGE
+			l_hp: CJ_REPORT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""), a_report_view)
@@ -156,7 +156,7 @@ feature -- View
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_cj: ESA_CJ_ROOT_PAGE
+			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make_with_error (absolute_host(req, ""), "The resource " + req.percent_encoded_path_info + "was not found", 404, current_user_name (req))
@@ -169,7 +169,7 @@ feature -- View
 	login_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Login page
 		local
-			l_cj: ESA_CJ_ROOT_PAGE
+			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), current_user_name (req))
@@ -182,7 +182,7 @@ feature -- View
 	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_cj: ESA_CJ_ROOT_PAGE
+			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), Void)
@@ -195,22 +195,33 @@ feature -- View
 	bad_request_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_cj: ESA_CJ_ROOT_PAGE
+			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make_with_error (absolute_host(req,""), "Bad Request " + req.path_info.as_string_8, 400, current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					new_response_400 (req, res, l_representation)
-				else
-					to_implement ("Internal server error")
 				end
 			end
 		end
 
 	bad_request_with_errors_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: STRING_TABLE[READABLE_STRING_32])
 			-- <Precursor>
+		local
+				l_cj: CJ_ROOT
+				l_error: STRING
 		do
-			to_implement ("Add implementation for CJ media type")
+			create l_error.make_from_string ("Bad Request -")
+			across a_error as c loop
+				l_error.append (c.item)
+				l_error.append (",")
+			end
+			if attached req.http_host as l_host then
+				create l_cj.make_with_error (absolute_host(req,""), l_error, 400, current_user_name (req))
+				if attached l_cj.representation as l_representation then
+					new_response_400 (req, res, l_representation)
+				end
+			end
 		end
 
 
@@ -241,7 +252,7 @@ feature -- View
 	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
 			-- Register form
 		local
-				l_cj: ESA_CJ_REGISTER_PAGE
+				l_cj: CJ_REGISTER
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), a_view , current_user_name (req))

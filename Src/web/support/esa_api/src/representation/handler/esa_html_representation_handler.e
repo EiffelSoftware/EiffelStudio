@@ -47,7 +47,7 @@ feature -- View
 	problem_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a guest user
 		local
-			l_hp: ESA_REPORT_PAGE
+			l_hp: HTML_REPORT
 		do
 			log.write_information (generator+".problem_reports_guest" )
 			if attached req.http_host as l_host then
@@ -187,7 +187,7 @@ feature -- View
 	bad_request_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_hp: ESA_HTML_400_PAGE
+			l_hp: HTML_400
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -200,7 +200,7 @@ feature -- View
 	bad_request_with_errors_page (req: WSF_REQUEST; res: WSF_RESPONSE; errors: STRING_TABLE[READABLE_STRING_32])
 			-- Bad request with error page
 		local
-			l_hp: ESA_HTML_400_PAGE
+			l_hp: HTML_400
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make_with_errors (absolute_host (req, ""), errors, current_user_name (req))
@@ -238,7 +238,7 @@ feature -- View
 	register_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REGISTER_VIEW)
 			-- Register form
 		local
-			l_hp: ESA_HTML_REGISTER_PAGE
+			l_hp: HTML_REGISTER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_view, current_user_name (req))

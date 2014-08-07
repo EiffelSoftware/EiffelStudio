@@ -4,17 +4,13 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_REPORT_PAGE
+	HTML_REPORT
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	ESA_TEMPLATE_REPORT_PAGE
+	ESA_TEMPLATE_REPORT
 		rename
 			make as make_template
 		end
-
-	SHARED_TEMPLATE_CONTEXT
 
 create
 	make

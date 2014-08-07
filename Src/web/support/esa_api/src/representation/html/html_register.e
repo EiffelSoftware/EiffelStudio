@@ -4,13 +4,14 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_HTML_REGISTER_PAGE
+	HTML_REGISTER
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	TEMPLATE_REGISTER
+		rename
+			make as make_template
+		end
 
 create
 	make
@@ -21,23 +22,21 @@ feature {NONE} --Initialization
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: register.tpl")
+
+				-- Build template
+			make_template (a_host, a_form, a_user, "register.tpl")
+
+				-- Set tempalte folder to HTML.
 			set_template_folder (html_path)
-			set_template_file_name ("register.tpl")
-			template.add_value (a_host, "host")
-			template.add_value (a_form.questions, "questions")
 
 			if attached a_form.errors then
 				template.add_value (True, "has_error")
-				template.add_value (a_form, "form")
+
 			end
 
-			if attached a_user then
-				template.add_value (a_user, "user")
-			end
+				-- Process the current template
+			process
 
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
 			if attached template.output as l_output then
 				representation := l_output
 				debug

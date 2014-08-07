@@ -4,17 +4,17 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_HTML_400_PAGE
+	HTML_400
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	ESA_TEMPLATE_BAD_REQUEST
+		rename
+			make as make_template
+		end
 
 create
-	make,
-	make_with_errors
+	make, make_with_errors
 
 feature {NONE} --Initialization
 
@@ -23,14 +23,15 @@ feature {NONE} --Initialization
 		do
 			log.write_information (generator + ".make render template: 400.tpl")
 			set_template_folder (html_path)
-			set_template_file_name ("400.tpl")
-			template.add_value (a_host, "host")
-			if attached a_user then
-				template.add_value (a_user, "user")
-			end
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
+
+				-- Build Common Template
+			make_template (a_host, a_user, "400.tpl")
+
+				-- Set path to HTML.
+			set_template_folder (html_path)
+
+				-- Process the current tempate.
+			process
 			if attached template.output as l_output then
 				representation := l_output
 				debug
@@ -39,21 +40,24 @@ feature {NONE} --Initialization
 			end
 		end
 
-
-	make_with_errors (a_host: READABLE_STRING_GENERAL; a_errors: STRING_TABLE[READABLE_STRING_32]; a_user: detachable ANY)
+	make_with_errors (a_host: READABLE_STRING_GENERAL; a_errors: STRING_TABLE [READABLE_STRING_32]; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make_with_errors render template: 400.tpl")
 			set_template_folder (html_path)
-			set_template_file_name ("400.tpl")
-			template.add_value (a_host, "host")
-			if attached a_user then
-				template.add_value (a_user, "user")
-			end
+
+			set_template_folder (html_path)
+
+				-- Build Common Template
+			make_template (a_host, a_user, "400.tpl")
+
+				-- Set path to HTML.
+			set_template_folder (html_path)
 			template.add_value (a_errors, "errors")
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
+
+				-- Process the current tempate.
+			process
+
 			if attached template.output as l_output then
 				representation := l_output
 				debug
@@ -61,6 +65,5 @@ feature {NONE} --Initialization
 				end
 			end
 		end
-
 
 end

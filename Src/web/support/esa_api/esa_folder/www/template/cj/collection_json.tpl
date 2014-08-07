@@ -74,6 +74,11 @@
                 <"name" : "search", "value" : "">
             ]
         >
-    ]      
+    ]
+
+    {if isset="$error"} 
+        ,
+        "error":<"title":"{$error/}","code":{$code/}>
+    {/if}             
   >
 >

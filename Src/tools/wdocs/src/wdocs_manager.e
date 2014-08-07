@@ -474,100 +474,44 @@ feature -- Access: Image
 							p := f.path
 							bak := 0
 						end
-						create Result.make (p.name.count)
-						from
-						until
-							bak <= 1
-						loop
-							if not Result.is_empty then
-								Result.append_character ('/')
+						if a_page /= Void then
+							Result := "/book/" + l_book_name
+							across
+								p.components as ic
+							loop
+								if not Result.is_empty then
+									Result.append_character ('/')
+								end
+								Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 							end
-							Result.append ("..")
-							bak := bak - 1
+						else
+							Result := "/images/" + a_link.name
+	--						create Result.make (p.name.count)
+	--						from
+	--						until
+	--							bak <= 1
+	--						loop
+	--							if not Result.is_empty then
+	--								Result.append_character ('/')
+	--							end
+	--							Result.append ("..")
+	--							bak := bak - 1
+	--						end
+	--						across
+	--							p.components as ic
+	--						loop
+	--							if not Result.is_empty then
+	--								Result.append_character ('/')
+	--							end
+	--							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
+	--						end							
 						end
-						across
-							p.components as ic
-						loop
-							if not Result.is_empty then
-								Result.append_character ('/')
-							end
-							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
-						end
+
+
 					end
 				end
 			end
 		end
-
---	images (a_path: PATH): STRING_TABLE [PATH]
---		local
---			d: DIRECTORY
---			p: PATH
---			f,img: RAW_FILE
---			l_line: READABLE_STRING_8
---			l_title: detachable STRING_8
---			l_filename: detachable STRING_32
---		do
---			if attached images_table.item (a_path) as res then
---				Result := res
---			else
---				create Result.make (10)
---				images_table.force (Result, a_path)
-
---				create d.make_with_path (a_path)
---				across
---					d.entries as ic
---				loop
---					p := ic.item
---					if p.is_current_symbol or p.is_parent_symbol then
---							-- Ignore
---					elseif attached p.extension as ext and then ext.is_case_insensitive_equal_general ("md") then
---						create f.make_with_path (a_path.extended_path (p))
---						if f.exists and then f.is_access_readable then
---							f.open_read
---							from
---								l_title := Void
---								l_filename := Void
---							until
---								f.exhausted or f.end_of_file
---							loop
---								f.read_line_thread_aware
---								l_line := f.last_string
---								if l_line.starts_with_general ("title=") then
---									l_title := l_line.substring (1 + ("title=").count, l_line.count)
---									l_title.left_adjust
---									l_title.right_adjust
---								elseif l_line.starts_with_general ("filename=") then
---									l_filename := l_line.substring (1 + ("filename=").count, l_line.count)
---									l_filename.left_adjust
---									l_filename.right_adjust
---								end
---							end
---							f.close
---							if l_title /= Void then
---								if l_filename = Void then
---									if attached p.entry as e then
---										l_filename := e.name
---										l_filename.remove_tail (3) -- extension ".md"
---										create img.make_with_path (d.path.extended (l_filename))
---										if not img.exists then
---											l_filename := Void
---										end
---									end
---								end
---								if l_filename /= Void then
---									Result.force (d.path.extended (l_filename), l_title)
---								end
---							end
---						end
---					end
---				end
---			end
---		end
-
---	images_table: HASH_TABLE [STRING_TABLE [PATH], PATH]
---		once
---			create Result.make (0)
---		end
 
 feature -- Access: Template
 
@@ -612,14 +556,12 @@ feature -- Access: Template
 					l_book_name := "_"
 				end
 				l_template_path := data.template_path (a_template.name, l_book_name)
---				l_template_path := templates (d.path).item (a_template.name)
 				if l_template_path = Void then
 					p := d.path.extended (a_template.name).appended_with_extension ("tpl")
 					create f.make_with_path (p)
 					if f.exists then
 						data.record_template_path (p, a_template.name, l_book_name)
 						store_data (data)
---						templates (d.path).force (p, a_template.name)
 						l_template_path := p
 					end
 				end
@@ -640,80 +582,5 @@ feature -- Access: Template
 				end
 			end
 		end
-
---	templates (a_path: PATH): STRING_TABLE [PATH]
---		local
---			d: DIRECTORY
---			p: PATH
---			f: RAW_FILE
---			l_line: READABLE_STRING_8
---			l_title: detachable STRING_8
---			l_filename: detachable STRING_32
---		do
---			if attached templates_table.item (a_path) as res then
---				Result := res
---			else
---				create Result.make (10)
---				templates_table.force (Result, a_path)
-
---				create d.make_with_path (a_path)
---				across
---					d.entries as ic
---				loop
---					p := ic.item
---					if p.is_current_symbol or p.is_parent_symbol then
---							-- Ignore
---					elseif attached p.extension as ext and then ext.is_case_insensitive_equal_general ("md") then
---						create f.make_with_path (a_path.extended_path (p))
---						if f.exists and then f.is_access_readable then
---							f.open_read
---							from
---								l_title := Void
---								l_filename := Void
---							until
---								f.exhausted or f.end_of_file
---							loop
---								f.read_line_thread_aware
---								l_line := f.last_string
---								if l_line.starts_with_general ("title=") then
---									l_title := l_line.substring (1 + ("title=").count, l_line.count)
---									l_title.left_adjust
---									l_title.right_adjust
---								elseif l_line.starts_with_general ("filename=") then
---									l_filename := l_line.substring (1 + ("filename=").count, l_line.count)
---									l_filename.left_adjust
---									l_filename.right_adjust
---								end
---							end
---							f.close
---							if l_title /= Void then
---								if l_filename = Void then
---									if attached p.entry as e then
---										l_filename := e.name
---										l_filename.remove_tail (3) -- extension ".md"
---										create f.make_with_path (d.path.extended (l_filename))
---										if not f.exists then
---											l_filename.append (".tpl") -- use PATH.appended_with_extension !
---											create f.make_with_path (d.path.extended (l_filename))
---											if not f.exists then
---												l_filename := Void
---											end
---										end
---									end
---								end
---								if l_filename /= Void then
---									Result.force (d.path.extended (l_filename), l_title)
---								end
---							end
---						end
---					end
---				end
---			end
---		end
-
---	templates_table: HASH_TABLE [STRING_TABLE [PATH], PATH]
---		once
---			create Result.make (0)
---		end
 
 end

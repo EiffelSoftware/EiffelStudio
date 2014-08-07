@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		do
 			initialize
 			create root_dir.make_current
+			wiki_dir := root_dir.extended ("_db").extended ("wiki")
 			create theme_name.make_from_string_general ("default")
 		end
 

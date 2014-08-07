@@ -32,20 +32,30 @@ feature {NONE} -- Initialization
 			-- Initialize current service.
 		do
 			Precursor
-			create root_dir.make_current
 			set_service_option ("port", 9090)
+			initialize_wdocs
 			initialize_router
 		end
 
-feature -- Access
-
-	root_dir: PATH
-
-feature -- Factory
-
-	manager: WDOCS_MANAGER
+	configuration: WDOCS_CONFIG
+		local
+			cfg: detachable WDOCS_CONFIG
+			p: PATH
+			ut: FILE_UTILITIES
 		do
-			create Result.make (root_dir)
+			create p.make_from_string ("wdocs.ini")
+			if ut.file_path_exists (p) then
+				create {WDOCS_INI_CONFIG} cfg.make (p)
+			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then
+				create p.make_from_string (s)
+				if ut.file_path_exists (p) then
+					create {WDOCS_INI_CONFIG} cfg.make (p)
+				end
+			end
+			if cfg = Void then
+				create {WDOCS_DEFAULT_CONFIG} cfg.make
+			end
+			Result := cfg
 		end
 
 end

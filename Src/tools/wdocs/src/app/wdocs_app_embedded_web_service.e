@@ -30,10 +30,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_root_dir: PATH)
+	make
 		do
-			root_dir := a_root_dir
 			make_service
+			initialize_wdocs
 			initialize_router
 			create request_exit_operation_actions
 			local_connection_restriction_enabled := True
@@ -48,17 +48,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor (opts)
 			opts.set_option ("force_single_threaded", True)
-		end
-
-feature -- Access
-
-	root_dir: PATH
-
-feature -- Factory
-
-	manager: WDOCS_MANAGER
-		do
-			create Result.make (root_dir)
 		end
 
 feature -- Access

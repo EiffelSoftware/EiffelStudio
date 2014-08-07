@@ -13,10 +13,24 @@ inherit
 			execute_default
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
 	SHARED_WSF_PERCENT_ENCODER
 	SHARED_HTML_ENCODER
 
 feature	-- Initialization
+
+	initialize_wdocs
+		local
+			cfg: detachable WDOCS_CONFIG
+		do
+			cfg := configuration
+			root_dir := cfg.root_dir
+			theme_name := cfg.theme_name
+		end
+
+	configuration: WDOCS_CONFIG
+		deferred
+		end
 
 	setup_router
 		local
@@ -51,13 +65,19 @@ feature	-- Initialization
 
 feature -- Access
 
+	root_dir: PATH
+
 	manager: WDOCS_MANAGER
-		deferred
+		do
+			create Result.make (root_dir)
 		end
+
+	theme_name: IMMUTABLE_STRING_32
+			-- Associated theme name.
 
 	theme_path: PATH
 		once
-			Result := manager.root_dir.extended ("themes").extended ("demo")
+			Result := manager.root_dir.extended ("themes").extended (theme_name)
 		end
 
 	wdocs_theme: WDOCS_THEME
@@ -111,9 +131,6 @@ feature	-- Execution
 						if ic.item.key.is_case_insensitive_equal_general ("index") or ic.item.parent_key.is_case_insensitive_equal_general ("index") then
 							b.append ("<li>")
 							append_wiki_page_link (req, l_bookid, ic.item, True, b)
-	--						b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (l_bookid)) + "/" + percent_encoder.percent_encoded_string (last_segment (ic.item.src)) + "%">")
-	--						b.append (m.html_encoded_string (ic.item.title))
-	--						b.append ("</a>")
 							b.append ("</li>")
 						end
 					end
@@ -374,11 +391,6 @@ feature -- Helper
 				end
 				f.close
 			end
-		end
-
-	wiki_text_cached_expired (pg: WIKI_PAGE): BOOLEAN
-		do
-
 		end
 
 end

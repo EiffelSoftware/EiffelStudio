@@ -184,11 +184,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	environment_arguments_valid: not environment_arguments.is_empty implies (
-			argument_count > base_arguments.argument_count and
-			environment_arguments.lower = base_arguments.argument_count + 1 and
-			environment_arguments.upper = argument_count
-		)
+	environment_arguments_valid: not environment_arguments.is_empty implies
+				argument_count > base_arguments.argument_count
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 						if k.is_case_insensitive_equal_general ("root") then
 							create root_dir.make_from_string (v)
 						elseif k.is_case_insensitive_equal_general ("theme") then
-							create theme_name.make_from_string_general (v)
+							create theme_name.make_from_string_general (utf.utf_8_string_8_to_escaped_string_32 (v))
 						end
 					end
 				end

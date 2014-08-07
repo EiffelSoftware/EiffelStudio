@@ -31,19 +31,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_root_dir: PATH)
+	make (a_root_dir: PATH; a_wiki_dir: PATH)
 		do
 			root_dir := a_root_dir
-			database_path := a_root_dir.extended ("_db")
-			wiki_database_path := database_path.extended ("wiki")
+			wiki_database_path := a_wiki_dir
 			get_data
 		end
 
 feature -- Access
 
 	root_dir: PATH
-
-	database_path: PATH
 
 	wiki_database_path: PATH
 
@@ -238,7 +235,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create f.make_with_path (database_path.appended_with_extension ("data"))
+				create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
 				if f.exists and then f.is_access_readable then
 					f.open_read
 					if attached {WDOCS_DATA} f.retrieved as d then
@@ -256,7 +253,7 @@ feature {NONE} -- Initialization
 		local
 			f: RAW_FILE
 		do
-			create f.make_with_path (database_path.appended_with_extension ("data"))
+			create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
 			if not f.exists or else f.is_access_writable then
 				f.open_write
 				f.basic_store (d)

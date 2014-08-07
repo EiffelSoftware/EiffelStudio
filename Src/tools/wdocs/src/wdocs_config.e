@@ -13,6 +13,8 @@ feature -- Access
 
 	root_dir: PATH
 
+	wiki_dir: PATH
+
 feature -- Initialization
 
 	initialize

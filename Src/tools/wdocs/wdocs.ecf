@@ -11,20 +11,20 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="exception_trace" value="true"/>
 		<setting name="concurrency" value="thread"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY/library/thread/thread-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
+		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false" use_application_options="true">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 	</target>
-
 	<target name="wdocs_any" extends="wdocs_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
@@ -67,6 +67,6 @@
 			</file_rule>
 		</cluster>
 	</target>
-
-	<target name="wdocs" extends="wdocs_nino"/>	
+	<target name="wdocs" extends="wdocs_nino">
+	</target>
 </system>

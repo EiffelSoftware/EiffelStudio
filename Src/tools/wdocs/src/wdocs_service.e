@@ -25,6 +25,7 @@ feature	-- Initialization
 		do
 			cfg := configuration
 			root_dir := cfg.root_dir
+			wiki_dir := cfg.wiki_dir
 			theme_name := cfg.theme_name
 		end
 
@@ -57,7 +58,6 @@ feature	-- Initialization
 			fs.disable_index
 			router.handle ("/images", fs)
 
-
 			create fs.make_with_path (theme_path)
 			fs.disable_index
 			router.handle ("/theme", fs)
@@ -67,22 +67,32 @@ feature -- Access
 
 	root_dir: PATH
 
+	wiki_dir: PATH
+
 	manager: WDOCS_MANAGER
 		do
-			create Result.make (root_dir)
+			create Result.make (root_dir, wiki_dir)
 		end
 
 	theme_name: IMMUTABLE_STRING_32
 			-- Associated theme name.
 
 	theme_path: PATH
-		once
-			Result := manager.root_dir.extended ("themes").extended (theme_name)
+		do
+			Result := root_dir.extended ("themes").extended (theme_name)
 		end
 
 	wdocs_theme: WDOCS_THEME
-		once
+		do
 			create Result.make (theme_path)
+		end
+
+feature -- Factory
+
+	new_wdocs_page_response (req: WSF_REQUEST; a_content_type: STRING): WDOCS_PAGE_RESPONSE
+		do
+			create Result.make (req, a_content_type, wdocs_theme)
+			Result.set_value (req.absolute_script_url (""), "site_url")
 		end
 
 feature	-- Execution		
@@ -93,7 +103,7 @@ feature	-- Execution
 			m: WDOCS_PAGE_RESPONSE
 			b: STRING
 		do
-			create m.make (req, "doc", wdocs_theme)
+			m := new_wdocs_page_response (req, "doc")
 			create b.make_from_string ("<h1>Documentation</h1>")
 			b.append ("<li><a href=%"" + req.script_url ("/book/") + "%">All the books</a></li>")
 			debug ("wdocs")
@@ -114,12 +124,12 @@ feature	-- Execution
 			l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 		do
-			create m.make (req, "doc", wdocs_theme)
+			m := new_wdocs_page_response (req, "doc")
 
 			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
 				l_bookid := p_bookid.value
 			end
-			create m.make (req, "doc", wdocs_theme)
+
 			if l_bookid /= Void then
 				m.set_value (l_bookid, "book_name")
 				create b.make_from_string ("<h1>Book # "+ m.html_encoded_string (l_bookid) +"</h1>")
@@ -225,9 +235,8 @@ feature	-- Execution
 			end
 			mnger := manager
 
+			m := new_wdocs_page_response (req, "doc")
 
-
-			create m.make (req, "doc", wdocs_theme)
 			if l_bookid /= Void then
 				m.set_value (l_bookid, "wiki_book_name")
 				pg := mnger.page (l_bookid, l_wiki_id)
@@ -329,7 +338,7 @@ feature -- Helper
 			l_wiki_page_date_timestamp,
 			l_cache_date_timestamp: INTEGER
 		do
-			p := a_manager.database_path.appended_with_extension ("cache")
+			p := wiki_dir.appended_with_extension ("cache")
 			if a_book_name /= Void then
 				p := p.extended (a_book_name)
 			end

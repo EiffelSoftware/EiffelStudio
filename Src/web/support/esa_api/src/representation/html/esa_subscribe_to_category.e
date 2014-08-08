@@ -8,9 +8,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	TEMPLATE_SHARED
 
 create
 	make
@@ -28,15 +26,8 @@ feature {NONE} --Initialization
 			template.add_value ("responsible", "responsible")
 			template.add_value (a_list, "categories")
 
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
-			if attached template.output as l_output then
-				representation := l_output
-				debug
-					log.write_debug (generator  +"executor " + l_output)
-				end
-			end
+				-- Process current template
+			process
 		end
 
 end

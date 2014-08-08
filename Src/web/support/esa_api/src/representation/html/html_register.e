@@ -36,13 +36,6 @@ feature {NONE} --Initialization
 
 				-- Process the current template
 			process
-
-			if attached template.output as l_output then
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
 		end
 
 end

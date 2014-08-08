@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_BAD_REQUEST
+	TEMPLATE_BAD_REQUEST
 		rename
 			make as make_template
 		end
@@ -32,12 +32,6 @@ feature {NONE} --Initialization
 
 				-- Process the current tempate.
 			process
-			if attached template.output as l_output then
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
 		end
 
 	make_with_errors (a_host: READABLE_STRING_GENERAL; a_errors: STRING_TABLE [READABLE_STRING_32]; a_user: detachable ANY)
@@ -57,13 +51,6 @@ feature {NONE} --Initialization
 
 				-- Process the current tempate.
 			process
-
-			if attached template.output as l_output then
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
 		end
 
 end

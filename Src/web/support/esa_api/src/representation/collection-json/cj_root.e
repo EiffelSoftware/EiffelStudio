@@ -9,7 +9,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_BAD_REQUEST
+	TEMPLATE_BAD_REQUEST
 		rename
 			make as make_template
 		end
@@ -32,8 +32,6 @@ feature {NONE} --Initialization
 				-- Process the current tempate.
 			process
 
-				-- Post Process the generated output
-			post_process
 		end
 
 	make_with_error (a_host: READABLE_STRING_GENERAL; a_error: READABLE_STRING_GENERAL; a_code: INTEGER; a_user: detachable ANY)
@@ -52,24 +50,6 @@ feature {NONE} --Initialization
 
 				-- Process the current template
 			process
-
-				-- Post process the generated output
-			post_process
-		end
-
-feature {NONE} -- Smarty Post Process
-
-	post_process
-			-- Post process the generated template output.
-		do
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make" + l_output)
-				end
-			end
 		end
 
 end

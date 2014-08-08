@@ -304,7 +304,7 @@ feature -- Response
 
 	generic_response (req: WSF_REQUEST; res: WSF_RESPONSE)
 			local
-				l_np: ESA_HTML_406_PAGE
+				l_np: HTML_406
 			do
 				if attached req.http_host as l_host then
 					create l_np.make (req.absolute_script_url (""),req.percent_encoded_path_info,req.http_accept)

@@ -7,6 +7,9 @@ note
 deferred class
 	WIKI_IMAGE_RESOLVER
 
+inherit
+	WIKI_ITEM_RESOLVER
+
 feature -- Access
 
 	wiki_url (a_image: WIKI_LINK; a_page: detachable WIKI_PAGE): detachable STRING

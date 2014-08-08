@@ -19,46 +19,22 @@ create
 feature {NONE} -- Initialization
 
 	make (p: PATH)
+		local
+			ini: INI_CONFIG
 		do
 			make_default
-			import_ini_file (p)
-		end
 
-	import_ini_file (p: PATH)
-		local
-			utf: UTF_CONVERTER
-			f: PLAIN_TEXT_FILE
-			s,k,v: STRING_8
-			i: INTEGER
-		do
-			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				from
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_line_thread_aware
-					s := f.last_string
-					s.left_adjust
-					i := s.index_of ('=', 1)
-					if i > 1 then
-						k := s.head (i - 1)
-						k.right_adjust
-						v := s.substring (i + 1, s.count)
-						v.left_adjust
-						v.right_adjust
-						if k.is_case_insensitive_equal_general ("root") then
-							create root_dir.make_from_string (v)
-						elseif k.is_case_insensitive_equal_general ("wiki") then
-							create wiki_dir.make_from_string (v)
-						elseif k.is_case_insensitive_equal_general ("theme") then
-							create theme_name.make_from_string_general (utf.utf_8_string_8_to_escaped_string_32 (v))
-						end
-					end
-				end
-				f.close
+			create ini.make_from_file (p)
+
+			if attached ini.unicode_string_item ("root") as l_root then
+				create root_dir.make_from_string (l_root)
+			end
+			if attached ini.unicode_string_item ("wiki") as l_wiki then
+				create wiki_dir.make_from_string (l_wiki)
+			end
+			if attached ini.unicode_string_item ("theme") as l_theme then
+				create theme_name.make_from_string (l_theme)
 			end
 		end
-
+		
 end

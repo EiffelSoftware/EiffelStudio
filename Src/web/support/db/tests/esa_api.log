@@ -1,0 +1,6 @@
+07/07/2014 12:50:45.278 PM - INFO  - The application is starting up...
+07/07/2014 12:50:45.315 PM - INFO  - ESA_DATABASE_CONNECTION_ODBC.login_with_connection_string Driver={SQL Server};Server=JVELILLA;Database=test;Uid=sa;Pwd=Eiffel1405;
+07/07/2014 12:50:45.362 PM - DEBUG - ESA_DATABASE_CONNECTION_ODBC.login_with_connection_string, is_keep_connection? True
+07/07/2014 12:51:06.636 PM - INFO  - The application is starting up...
+07/07/2014 12:51:06.680 PM - INFO  - ESA_DATABASE_CONNECTION_ODBC.login_with_connection_string Driver={SQL Server};Server=JVELILLA;Database=test;Uid=sa;Pwd=Eiffel1405;
+07/07/2014 12:51:06.804 PM - DEBUG - ESA_DATABASE_CONNECTION_ODBC.login_with_connection_string, is_keep_connection? True

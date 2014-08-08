@@ -215,11 +215,6 @@ feature -- Code generation
 			buffer.put_character ('_')
 			buffer.put_integer (idx)
 			buffer.put_string (once " [] = {")
-				-- In order to generate proper type description for current entry we need to
-				-- evaluate `type_i' in the context of `current_type' from BYTE_CONTEXT, otherwise
-				-- it is possible that we would not find the associated class type of `l_type'
-				-- and therefore generate an incorrect type specification (Cf eweasel bug about
-				-- storable).
 			type_i.generate_cid (buffer, is_final_mode, False, a_class_type.type)
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			buffer.put_three_character ('}', ';', '%N')

@@ -49,18 +49,8 @@ feature {NONE} -- Initialization
 				template.add_value ("400", "code")
 			end
 
-				-- Process the current template
+				-- Process the current template.
 			process
-				-- Post process
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				l_output.replace_substring_all ("},]", "}]")
-				l_output.replace_substring_all (",]", "]")
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
+
 		end
 end

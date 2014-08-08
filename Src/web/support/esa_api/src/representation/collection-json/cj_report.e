@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_REPORT
+	TEMPLATE_REPORT
 		rename
 			make as make_template
 		end
@@ -33,19 +33,6 @@ feature {NONE} --Initialization
 
 				-- Process the template
 			process
-
-				-- Workaround
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				l_output.replace_substring_all (",]", "]")
-				l_output.replace_substring_all ("},]", "}]")
-
-				representation := l_output
-				debug
-					log.write_information (generator + ".make " + l_output)
-				end
-			end
 		end
 
 		checked_status_query (a_status: LIST[ESA_REPORT_STATUS]): LIST[ESA_REPORT_STATUS]

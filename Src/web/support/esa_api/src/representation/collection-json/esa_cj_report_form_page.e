@@ -8,9 +8,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	TEMPLATE_SHARED
 
 create
 	make,
@@ -38,21 +36,8 @@ feature {NONE} --Initialization
 				template.add_value (a_user, "user")
 			end
 
-
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
-				-- Workaround
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				l_output.replace_substring_all ("},]", "}]")
-
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
+				-- Process current template
+			process
 
 		end
 
@@ -88,20 +73,8 @@ feature {NONE} --Initialization
 				template.add_value (a_user, "user")
 			end
 
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
-				-- Workaround
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				l_output.replace_substring_all ("},]", "}]")
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make_with_data " + l_output)
-				end
-			end
-
+				-- Process current template
+			process
 		end
 
 
@@ -144,20 +117,7 @@ feature {NONE} --Initialization
 				template.add_value (a_user, "user")
 			end
 
-
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
-				-- Workaround
-			if attached template.output as l_output then
-				l_output.replace_substring_all ("<", "{")
-				l_output.replace_substring_all (">", "}")
-				l_output.replace_substring_all ("},]", "}]")
-
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make_with_error " + l_output)
-				end
-			end
+				-- Process current template
+			process
 		end
 end

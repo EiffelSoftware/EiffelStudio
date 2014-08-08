@@ -33,7 +33,7 @@ feature -- View
 	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: ESA_REPORT)
 			-- <Precursor>
 		local
-			l_cj: ESA_CJ_REPORT_DETAIL_PAGE
+			l_cj: CJ_REPORT_DETAIL
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), a_report, current_user_name (req))
@@ -271,7 +271,7 @@ feature -- View
 	post_register_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Post Register page
 		local
-				l_cj: ESA_CJ_POST_REGISTER_PAGE
+				l_cj: CJ_POST_REGISTER
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""),  current_user_name (req))
@@ -287,7 +287,7 @@ feature -- View
 	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_ACTIVATION_VIEW)
 			-- Activation Page
 		local
-				l_cj: ESA_CJ_ACTIVATION_PAGE
+				l_cj: CJ_ACTIVATION
 		do
 			if attached req.http_host as l_host then
 				create l_cj.make (absolute_host(req,""), a_view, current_user_name (req))
@@ -307,7 +307,7 @@ feature -- View
 	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Confirmation page
 		local
-			l_hp: ESA_CJ_CONFIRMATION_PAGE
+			l_hp: CJ_CONFIRMATION
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""), current_user_name (req))
@@ -321,7 +321,7 @@ feature -- View
 	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_STATUS])
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_STATUS_PAGE
+			l_hp: CJ_STATUS
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
@@ -335,7 +335,7 @@ feature -- View
 	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_SEVERITY])
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_SEVERITY_PAGE
+			l_hp: CJ_SEVERITY
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
@@ -349,7 +349,7 @@ feature -- View
 	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_CATEGORY])
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_CATEGORY_PAGE
+			l_hp: CJ_CATEGORY
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
@@ -363,7 +363,7 @@ feature -- View
 	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_PRIORITY])
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_PRIORITY_PAGE
+			l_hp: CJ_PRIORITY
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
@@ -376,7 +376,7 @@ feature -- View
 	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_USER])
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_USER_RESPONSIBLE_PAGE
+			l_hp: CJ_USER_RESPONSIBLE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""),a_list,current_user_name (req))
@@ -443,7 +443,7 @@ feature -- View
 	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
 			-- Reminder page
 		local
-			l_hp: ESA_CJ_REMINDER_PAGE
+			l_hp: CJ_REMINDER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_error)
@@ -460,7 +460,7 @@ feature -- View
 	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_POST_REMINDER_PAGE
+			l_hp: CJ_POST_REMINDER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_email)
@@ -473,7 +473,7 @@ feature -- View
 	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_ACCOUNT_PAGE
+			l_hp: CJ_ACCOUNT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_account)
@@ -494,7 +494,7 @@ feature -- View
 	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_VIEW)
 			-- <Precursor>
 		local
-				l_hp: ESA_CJ_CHANGE_PASSWORD_PAGE
+				l_hp: CJ_CHANGE_PASSWORD
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
@@ -511,7 +511,7 @@ feature -- View
 	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_CHANGE_EMAIL_PAGE
+			l_hp: CJ_CHANGE_EMAIL
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
@@ -528,7 +528,7 @@ feature -- View
 	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_POST_CHANGE_EMAIL_PAGE
+			l_hp: CJ_POST_CHANGE_EMAIL
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -542,7 +542,7 @@ feature -- View
 	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_CONFIRM_EMAIL_CHANGE
+			l_hp: CJ_CONFIRM_EMAIL_CHANGE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)

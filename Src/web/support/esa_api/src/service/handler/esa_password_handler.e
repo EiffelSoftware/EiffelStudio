@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ESA_PASSWORD_HANDLER}."
+	description: "[
+					This handle it's in charge to show a form to change password.
+					Completed this step also handle the form submission.				
+					]"
 	date: "$Date$"
 	revision: "$Revision$"
 

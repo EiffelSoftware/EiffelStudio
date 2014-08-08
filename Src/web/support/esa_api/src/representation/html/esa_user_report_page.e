@@ -8,9 +8,7 @@ class
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
-	SHARED_TEMPLATE_CONTEXT
+	TEMPLATE_SHARED
 
 create
 	make
@@ -54,15 +52,9 @@ feature {NONE} --Initialization
 			if a_view.filter_content = 1 then
 				template.add_value (a_view.filter_content, "filter_content")
 			end
-			template_context.enable_verbose
-			template.analyze
-			template.get_output
-			if attached template.output as l_output then
-				representation := l_output
-				debug
-					log.write_debug (generator + ".make " + l_output)
-				end
-			end
+
+				-- Process current template
+			process
 		end
 
 	set_selected_category (a_categories: LIST [ESA_REPORT_CATEGORY]; a_selected_category: INTEGER)

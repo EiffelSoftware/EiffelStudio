@@ -70,5 +70,23 @@ feature -- Process
 			template_context.enable_verbose
 			template.analyze
 			template.get_output
+
+			if attached template.output as l_output then
+				if
+					attached template_context.template_folder as l_folder and then
+					l_folder.is_case_insensitive_equal (cj_path)
+				then
+						-- CJ workaround
+					l_output.replace_substring_all ("<", "{")
+					l_output.replace_substring_all (">", "}")
+					l_output.replace_substring_all (",]", "]")
+					l_output.replace_substring_all ("},]", "}]")
+				end
+
+				representation := l_output
+				debug
+					log.write_debug (generator + ".make " +  l_output)
+				end
+			end
 		end
 end

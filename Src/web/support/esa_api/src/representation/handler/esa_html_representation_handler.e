@@ -20,7 +20,7 @@ feature -- View
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_hp: ESA_HOME_PAGE
+			l_hp: HTML_HOME
 		do
 
 			if attached req.http_host as l_host then
@@ -34,7 +34,7 @@ feature -- View
 	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: ESA_REPORT)
 			-- <Precursor>
 		local
-			l_hp: ESA_REPORT_DETAIL_PAGE
+			l_hp: HTML_REPORT_DETAIL
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_report, current_user_name (req))
@@ -150,7 +150,7 @@ feature -- View
 	not_found_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
-			l_hp: ESA_HTML_404_PAGE
+			l_hp: HTML_404
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -170,7 +170,7 @@ feature -- View
 	logout_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Logout page
 		local
-			l_hp: ESA_LOGOUT_PAGE
+			l_hp: HTML_LOGOUT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""))
@@ -212,7 +212,7 @@ feature -- View
 	new_response_unauthorized (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Generate a Reponse based on the Media Type
 		local
-			l_hp: ESA_HTML_401_PAGE
+			l_hp: HTML_401
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make_with_redirect (absolute_host (req, ""),req.path_info, current_user_name (req) )
@@ -225,7 +225,7 @@ feature -- View
 	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- internal_server_error
 		local
-				l_hp: ESA_HTML_500_PAGE
+				l_hp: HTML_500
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""))
@@ -255,7 +255,7 @@ feature -- View
 	post_register_page 	(req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Post Register page
 		local
-			l_hp: ESA_HTML_POST_REGISTER_PAGE
+			l_hp: HTML_POST_REGISTER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -268,7 +268,7 @@ feature -- View
 	activation_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_ACTIVATION_VIEW)
 			-- Activation page
 		local
-			l_hp: ESA_ACTIVATION_PAGE
+			l_hp: HTML_ACTIVATION
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_view, current_user_name (req))
@@ -285,7 +285,7 @@ feature -- View
 	activation_confirmation_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Confirmation page
 		local
-			l_hp: ESA_CONFIRMATION_PAGE
+			l_hp: HTML_CONFIRMATION
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -378,7 +378,7 @@ feature -- View
 	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
 			-- Reminder page
 		local
-			l_hp: ESA_REMINDER_PAGE
+			l_hp: HTML_REMINDER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_error)
@@ -391,7 +391,7 @@ feature -- View
 	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
 			-- <Precursor>
 		local
-			l_hp: ESA_POST_REMINDER_PAGE
+			l_hp: HTML_POST_REMINDER
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_email)
@@ -404,7 +404,7 @@ feature -- View
 	account_information_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_account: ESA_ACCOUNT_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_ACCOUNT_PAGE
+			l_hp: HTML_ACCOUNT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_account)
@@ -426,7 +426,7 @@ feature -- View
 	change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CHANGE_PASSWORD_PAGE
+			l_hp: HTML_CHANGE_PASSWORD
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
@@ -443,7 +443,7 @@ feature -- View
 	change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CHANGE_EMAIL_PAGE
+			l_hp: HTML_CHANGE_EMAIL
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
@@ -460,7 +460,7 @@ feature -- View
 	post_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-				l_hp: ESA_POST_CHANGE_EMAIL_PAGE
+				l_hp: HTML_POST_CHANGE_EMAIL
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req))
@@ -473,7 +473,7 @@ feature -- View
 	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_EMAIL_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CONFIRM_EMAIL_CHANGE
+			l_hp: HTML_CONFIRM_EMAIL_CHANGE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)

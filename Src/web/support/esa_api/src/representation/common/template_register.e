@@ -8,8 +8,10 @@ class
 
 inherit
 
-	ESA_TEMPLATE_PAGE
-
+	TEMPLATE_USER_HOST
+		rename
+			make as make_user_host
+		end
 create
 	make
 
@@ -18,14 +20,9 @@ feature {NONE} -- Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REGISTER_VIEW; a_user: detachable ANY; a_template: READABLE_STRING_32)
 			-- Initialize `Current'.
 		do
-			set_template_file_name (a_template)
-			template.add_value (a_host, "host")
+			make_user_host (a_host, a_user, a_template)
 			template.add_value (a_form.questions, "questions")
 			template.add_value (a_form, "form")
-
-			if attached a_user then
-				template.add_value (a_user,"user")
-			end
 		end
 
 end

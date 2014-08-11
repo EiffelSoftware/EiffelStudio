@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_PAGE_RESPONSE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

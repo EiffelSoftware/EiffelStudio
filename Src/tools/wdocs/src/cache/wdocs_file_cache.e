@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_FILE_CACHE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

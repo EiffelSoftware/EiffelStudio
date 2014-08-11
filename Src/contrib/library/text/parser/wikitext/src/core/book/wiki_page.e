@@ -42,38 +42,8 @@ feature -- Access
 	pages: detachable ARRAYED_LIST [WIKI_PAGE]
 
 	structure: detachable WIKI_STRUCTURE
-
-	path: detachable PATH
-
-feature -- Query
-
-	key: READABLE_STRING_8
 		local
-			l_src: like src
-			p,q: INTEGER
-		do
-			l_src := src
-			p := l_src.count + 1
-			q := l_src.last_index_of ('/', p - 1)
-			if q > 0 then
-				Result := l_src.substring (q + 1, p - 1)
-				if Result.is_case_insensitive_equal ("index") then
-					p := q - 1
-					q := l_src.last_index_of ('/', p)
-					if q > 0 then
-						Result := l_src.substring (q + 1, p - 1)
-					end
-				end
-			else
-				Result := l_src
-			end
-		end
-
-feature -- Element change
-
-	get_structure (a_filename: PATH)
-		local
-			fn: PATH
+			l_internal_structure: detachable WIKI_STRUCTURE
 			f: RAW_FILE
 			t: STRING
 			ln, p: INTEGER
@@ -81,9 +51,63 @@ feature -- Element change
 			in_header: BOOLEAN
 			h: detachable STRING_TABLE [STRING]
 		do
-			path := a_filename
+			l_internal_structure := internal_structure
+			if
+				l_internal_structure = Void and then
+				attached path as fn
+			then
+				create f.make_with_path (fn)
+				if f.exists and f.is_readable then
+					f.open_read
+					from
+						ln := 0
+						in_header := True
+						create h.make (3)
+						create t.make (f.count)
+					until
+						f.exhausted or f.end_of_file
+					loop
+						ln := ln + 1
+						f.read_line
+						s := f.last_string
+						if in_header then
+							if s.is_empty then
+								in_header := False
+							elseif s.item (1) = '#' then
+								p := s.index_of ('=', 1)
+								if p > 0 then
+									h.force (s.substring (p+1, s.count), s.substring (1, p -1))
+								else
+									in_header := False
+								end
+							else
+								in_header := False
+							end
+						end
+						if not in_header then
+							t.append (s)
+							t.append_character ('%N')
+						end
+					end
+					f.close
+					create l_internal_structure.make (h, t)
+				else
+					create l_internal_structure.make (Void, "!!ERROR!!")
+				end
+				internal_structure := l_internal_structure
+			end
+			Result := l_internal_structure
+		end
 
-			fn := a_filename
+	structure_from_path (fn: PATH): like structure
+		local
+			f: RAW_FILE
+			t: STRING
+			ln, p: INTEGER
+			s: STRING
+			in_header: BOOLEAN
+			h: detachable STRING_TABLE [STRING]
+		do
 			create f.make_with_path (fn)
 			if f.exists and f.is_readable then
 				f.open_read
@@ -118,10 +142,49 @@ feature -- Element change
 					end
 				end
 				f.close
-				create structure.make (h, t)
+				create Result.make (h, t)
 			else
-				create structure.make (Void, "!!ERROR!!")
+				create Result.make (Void, "!!ERROR!!")
 			end
+		end
+
+	path: detachable PATH
+
+feature -- Query
+
+	key: READABLE_STRING_8
+		local
+			l_src: like src
+			p,q: INTEGER
+		do
+			l_src := src
+			p := l_src.count + 1
+			q := l_src.last_index_of ('/', p - 1)
+			if q > 0 then
+				Result := l_src.substring (q + 1, p - 1)
+				if Result.is_case_insensitive_equal ("index") then
+					p := q - 1
+					q := l_src.last_index_of ('/', p)
+					if q > 0 then
+						Result := l_src.substring (q + 1, p - 1)
+					end
+				end
+			else
+				Result := l_src
+			end
+		end
+
+feature {NONE} -- Internal
+
+	internal_structure: detachable like structure
+			-- Internal structure value.
+
+feature -- Element change
+
+	get_structure (a_filename: PATH)
+		do
+			path := a_filename
+			internal_structure := Void
 		end
 
 	add_page (a_page: WIKI_PAGE)

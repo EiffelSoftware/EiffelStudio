@@ -54,12 +54,12 @@
           ],
     "template": <
       "data": [
-        <"name": "category", "prompt": "Category", {if isset="$category"}"value": "{$category/}"{/if}{unless isset="$category"}"value" : ""{/unless}>, 
-        <"name": "severity", "prompt": "Severity", {if isset="$severity"}"value": "{$severity/}"{/if}{unless isset="$severity"}"value" : ""{/unless}>,
-        <"name": "priority", "prompt": "Priority", {if isset="$priority"}"value": "{$priority/}"{/if}{unless isset="$priority"}"value" : ""{/unless}>,
-        <"name": "class", "prompt": "Class", {if isset="$class"}"value": "{$class/}"{/if}{unless isset="$class"}"value" : ""{/unless}>,
+        <"name": "category", "prompt": "Category","acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], {if isset="$category"}"value": "{$category/}"{/if}{unless isset="$category"}"value" : ""{/unless}>, 
+        <"name": "severity", "prompt": "Severity", "acceptableValues":[{foreach from="$severities" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], {if isset="$severity"}"value": "{$severity/}"{/if}{unless isset="$severity"}"value" : ""{/unless}>,
+        <"name": "priority", "prompt": "Priority", "acceptableValues":[{foreach from="$priorities" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], {if isset="$priority"}"value": "{$priority/}"{/if}{unless isset="$priority"}"value" : ""{/unless}>,
+        <"name": "class", "prompt": "Class", "acceptableValues":[{foreach from="$classes" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], {if isset="$class"}"value": "{$class/}"{/if}{unless isset="$class"}"value" : ""{/unless}>,
         <"name": "release", "prompt": "Release", {if isset="$release"}"value": "{$release/}"{/if}{unless isset="$release"}"value" : ""{/unless}>,
-        <"name": "confidential", "prompt": "Confidential", {if isset="$confidential"}"value": "{$confidential/}"{/if}{unless isset="$confidential"}"value" : ""{/unless}>,
+        <"name": "confidential", "prompt": "Confidential", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], {if isset="$confidential"}"value": "{$confidential/}"{/if}{unless isset="$confidential"}"value" : ""{/unless}>,
         <"name": "synopsis", "prompt": "Synopsis", {if isset="$synopsis"}"value": "{$synopsis/}"{/if}{unless isset="$synopsis"}"value" : ""{/unless}>,
         <"name": "environment", "prompt": "Environment",{if isset="$environment"}"value": "{$environment/}"{/if}{unless isset="$environment"}"value" : ""{/unless}>,
         <"name": "description", "prompt": "Description",{if isset="$description"}"value": "{$description/}"{/if}{unless isset="$description"}"value" : ""{/unless}>,

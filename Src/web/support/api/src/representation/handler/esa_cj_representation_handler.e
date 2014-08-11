@@ -59,12 +59,12 @@ feature -- View
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		local
-			l_hp: CJ_REPORT
+			l_hp: CJ_USER_REPORT
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (absolute_host(req,""), a_report_view)
-				if attached l_hp.representation as l_home_page then
-					new_response_get (req, res, l_home_page)
+				create l_hp.make (absolute_host(req,""), a_report_view, current_user_name (req))
+				if attached l_hp.representation as l_user_report_page then
+					new_response_get (req, res, l_user_report_page)
 				end
 			end
 		end

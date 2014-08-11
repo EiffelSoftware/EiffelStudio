@@ -409,8 +409,8 @@ feature {NONE} -- Implementation
 					Result.set_release (l_value.item)
 				end
 				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-				   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
-					Result.set_confidential (l_value.item.to_boolean)
+				   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+					Result.set_confidential (l_value.item.to_integer.to_boolean)
 				end
 				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("synopsis") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then

@@ -63,7 +63,7 @@ feature -- View
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REPORT_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_USER_REPORT_PAGE
+			l_hp: HTML_USER_REPORT
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_view)

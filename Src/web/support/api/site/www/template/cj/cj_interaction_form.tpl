@@ -138,7 +138,7 @@
                    
                   ],
             "links": [
-                        <"rel":"all", "href": "{$host/}/report_detail/{$report.number/}/interactions", "prompt": "List of Report Interactions">,
+                        <"rel":"all", "href": "{$host/}/report_detail/{$report.number/}", "prompt": "Report Detail">,
                         <"rel":"all", "href": "{$host/}/categories", "prompt": "List of Report Categories">,
                         <"rel":"all", "href": "{$host/}/status", "prompt": "List of Report Status">
                     ]  
@@ -148,8 +148,8 @@
    {if isset="$id"}        
     "template": <
       "data": [
-        <"name": "category", "prompt": "Category", "value" : "{$form.category/}">, 
-        <"name": "status", "prompt": "Status", "value" : "{$form.selected_status/}">,
+        <"name": "category", "prompt": "Category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "{$form.category/}">, 
+        <"name": "status", "prompt": "Status","acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "{$form.selected_status/}">,
         <"name": "private", "prompt": "Private", "value" : "{$form.private/}">,
         <"name": "description", "prompt": "Description","value" : "{$form.description/}">,
          <"name" : "attachments", "files" : [{foreach from="$uploaded_files", item="file"} <"name":"{$file.name/}", "value":"">,{/foreach}] , "prompt" : "Attachments">
@@ -160,8 +160,8 @@
     {unless isset="$id"}        
     "template": <
       "data": [
-        <"name": "category", "prompt": "Category", "value" : "">, 
-        <"name": "status", "prompt": "Status", "value" : "">,
+        <"name": "category", "prompt": "Category","acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "">, 
+        <"name": "status", "prompt": "Status", "acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "">,
         <"name": "private", "prompt": "Private", "value" : "">,
         <"name": "description", "prompt": "Description", "value" : "">,
         <"name" : "attachments", "files" : [<>] , "prompt" : "Attachments">

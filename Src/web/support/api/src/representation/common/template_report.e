@@ -84,4 +84,16 @@ feature {NONE} --Initialization
 			Result.remove_tail (1)
 		end
 
+
+	checked_status_query (a_status: LIST[ESA_REPORT_STATUS]): LIST[ESA_REPORT_STATUS]
+		do
+			create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
+			across a_status as c loop
+				if c.item.is_selected then
+					Result.force (c.item)
+				end
+			end
+		end
+
+
 end

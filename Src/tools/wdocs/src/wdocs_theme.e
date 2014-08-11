@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_THEME}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

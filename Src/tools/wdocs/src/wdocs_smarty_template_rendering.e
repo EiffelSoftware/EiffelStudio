@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_SMARTY_TEMPLATE_RENDERING}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

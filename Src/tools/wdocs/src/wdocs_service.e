@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_SERVICE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,6 +15,7 @@ inherit
 	SHARED_EXECUTION_ENVIRONMENT
 	SHARED_WSF_PERCENT_ENCODER
 	SHARED_HTML_ENCODER
+	REFACTORING_HELPER
 
 feature	-- Initialization
 
@@ -139,6 +139,7 @@ feature	-- Execution
 			l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 		do
+			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			m := new_wdocs_page_response (req, "doc")
 
 			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
@@ -182,6 +183,7 @@ feature	-- Execution
 
 	append_wiki_page_link (req: WSF_REQUEST; a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_PAGE; is_recursive: BOOLEAN; a_output: STRING)
 		do
+			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			if a_book_id /= Void then
 				a_output.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
 			else
@@ -266,6 +268,7 @@ feature	-- Execution
 			pg: detachable WIKI_PAGE
 			s: STRING
 		do
+			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
 				l_bookid := p_bookid.value
 			end
@@ -333,6 +336,7 @@ feature -- Helper
 
 	append_navigation_to (req: WSF_REQUEST; s: STRING)
 		do
+			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			s.append ("<li><a href=%"" + req.script_url ("/") + "%">back to home</a></li>")
 			if attached req.http_referer as l_ref then
 				s.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")

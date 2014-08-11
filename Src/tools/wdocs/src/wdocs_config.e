@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_CONFIG}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

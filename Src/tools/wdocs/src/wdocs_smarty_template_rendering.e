@@ -29,7 +29,7 @@ feature -- Rendering
 
 	xhtml (req: WSF_REQUEST; a_values: STRING_TABLE [detachable ANY]): STRING
 		local
-			p: PATH
+--			p: PATH
 			tpl: TEMPLATE_FILE
 		do
 			template_context.set_template_folder (path.parent)

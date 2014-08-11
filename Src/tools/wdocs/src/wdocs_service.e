@@ -38,7 +38,7 @@ feature	-- Initialization
 		local
 			fs: WSF_FILE_SYSTEM_HANDLER
 		do
-			router.handle ("/learn/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
+			router.handle ("/learn", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
 			router.handle ("/book/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
 			router.handle ("/book/{bookid}/_images/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wiki_image))
 			router.handle ("/book/{bookid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
@@ -115,7 +115,7 @@ feature	-- Execution
 			m: WDOCS_PAGE_RESPONSE
 			b: STRING
 		do
-			m := new_wdocs_page_response (req, "doc")
+			m := new_wdocs_page_response (req, "front")
 			create b.make_from_string ("<h1>Documentation</h1>")
 			b.append ("<li><a href=%"" + req.script_url ("/book/") + "%">All the books</a></li>")
 			debug ("wdocs")

@@ -38,7 +38,12 @@ feature	-- Initialization
 		local
 			fs: WSF_FILE_SYSTEM_HANDLER
 		do
+			router.handle ("/about", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("about", ?, ?)))
 			router.handle ("/learn", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
+			router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("download", ?, ?)))
+			router.handle ("/contribute", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("contribute", ?, ?)))
+
+
 			router.handle ("/book/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
 			router.handle ("/book/{bookid}/_images/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wiki_image))
 			router.handle ("/book/{bookid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
@@ -111,21 +116,19 @@ feature	-- Execution
 
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Dispatch requests without a matching handler.
+		do
+			handle_custom ("front", req, res)
+		end
+
+	handle_custom (a_type: detachable READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			m: WDOCS_PAGE_RESPONSE
-			b: STRING
 		do
-			m := new_wdocs_page_response (req, "front")
-			create b.make_from_string ("<h1>Documentation</h1>")
-			b.append ("<li><a href=%"" + req.script_url ("/book/") + "%">All the books</a></li>")
-			debug ("wdocs")
-				if attached req.http_referer as l_ref then
-					b.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
-				end
-				b.append ("<li>Location: " + req.request_uri + "</li>")
+			if a_type /= Void then
+				m := new_wdocs_page_response (req, a_type)
+			else
+				m := new_wdocs_page_response (req, "font")
 			end
-
-			m.set_value (b, "content")
 			res.send (m)
 		end
 

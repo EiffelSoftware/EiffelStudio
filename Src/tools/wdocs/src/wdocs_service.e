@@ -27,6 +27,7 @@ feature	-- Initialization
 			root_dir := cfg.root_dir
 			wiki_dir := cfg.wiki_dir
 			theme_name := cfg.theme_name
+			cache_duration := cfg.cache_duration
 		end
 
 	configuration: WDOCS_CONFIG
@@ -68,6 +69,17 @@ feature -- Access
 	root_dir: PATH
 
 	wiki_dir: PATH
+
+	cache_duration: INTEGER
+			-- Caching duration
+			--|  0: disable
+			--| -1: cache always valie
+			--| nb: cache expires after nb seconds.
+
+	cache_disabled: BOOLEAN
+		do
+			Result := cache_duration = 0
+		end
 
 	manager: WDOCS_MANAGER
 		do
@@ -199,6 +211,8 @@ feature	-- Execution
 			l_file_response: WSF_FILE_RESPONSE
 			mnger: WDOCS_MANAGER
 			p: PATH
+			h: HTTP_HEADER
+			dt: DATE_TIME
 		do
 			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
 				l_bookid := p_bookid.value
@@ -209,9 +223,31 @@ feature	-- Execution
 			if l_bookid /= Void and l_filename /= Void then
 				mnger := manager
 				p := mnger.wiki_database_path.extended (l_bookid).extended ("_images").extended (l_filename)
-				create l_file_response.make (p.name)
---				l_file_response.set_expires_in_seconds (24*60*60)
-				res.send (l_file_response)
+
+				if
+					attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
+					attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
+					attached file_date (p) as f_date and then
+					f_date <= l_if_modified_since_date
+				then
+					create dt.make_now_utc
+					create h.make
+					h.put_cache_control ("private, max-age=" + (cache_duration).out) -- 24 hours
+					h.put_utc_date (dt)
+					if cache_duration > 0 then
+						dt := dt.twin
+						dt.second_add (cache_duration)
+					end
+					h.put_expires_date (dt)
+					h.put_last_modified (f_date)
+					res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
+					res.put_header_lines (h)
+					res.flush
+				else
+					create l_file_response.make (p.name)
+	--				l_file_response.set_expires_in_seconds (24*60*60)
+					res.send (l_file_response)
+				end
 			else
 				create l_not_found.make (req)
 				res.send (l_not_found)
@@ -260,17 +296,7 @@ feature	-- Execution
 					end
 				end
 
-				append_wiki_page_xhtml_to (pg, l_bookid, mnger, s)
-
-				if attached pg.pages as l_sub_pages then
-					across
-						l_sub_pages as ic
-					loop
-						s.append ("<li>")
-						append_wiki_page_link (req, l_bookid, ic.item, False, s)
-						s.append ("</li>")
-					end
-				end
+				append_wiki_page_xhtml_to (pg, l_bookid, mnger, s, req)
 
 				if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
 					s.append ("<hr/>")
@@ -328,15 +354,16 @@ feature -- Helper
 			end
 		end
 
-	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING)
+	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST)
 		local
+			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
 			l_xhtml: detachable STRING_8
 			wvis: WIKI_XHTML_GENERATOR
 			p: PATH
 			d: DIRECTORY
 			f: PLAIN_TEXT_FILE
-			l_wiki_page_date_timestamp,
-			l_cache_date_timestamp: INTEGER
+			l_wiki_page_date_time: detachable DATE_TIME
+			client_request_no_server_cache: BOOLEAN
 		do
 			p := wiki_dir.appended_with_extension ("cache")
 			if a_book_name /= Void then
@@ -347,37 +374,56 @@ feature -- Helper
 				d.recursive_create_dir
 			end
 			p := p.extended (a_wiki_page.title).appended_with_extension ("xhtml")
-			if attached a_wiki_page.path as l_pg_path then
-				create f.make_with_path (l_pg_path)
-				if f.exists and then f.is_access_readable then
-					l_wiki_page_date_timestamp := f.change_date
+
+			if
+				cache_disabled
+			then
+					-- No cache!
+			else
+				create l_cache.make (p)
+				if attached a_wiki_page.path as l_pg_path then
+					create f.make_with_path (l_pg_path)
+					if f.exists and then f.is_access_readable then
+						create l_wiki_page_date_time.make_from_epoch (f.date)
+					end
 				end
 			end
-			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
-				l_cache_date_timestamp := f.change_date
-				create l_xhtml.make (f.count)
-				from
-					f.open_read
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_stream_thread_aware (1_024)
-					l_xhtml.append (f.last_string)
-				end
-				f.close
-			end
-			if l_xhtml = Void then
+
+			client_request_no_server_cache := attached req.meta_string_variable ("HTTP_CACHE_CONTROL") as s_cache_control and then
+						s_cache_control.is_case_insensitive_equal_general ("no-cache")
+
+
+			if
+				not client_request_no_server_cache and then
+				l_cache /= Void and then -- i.e: cache enabled
+				l_cache.exists and then
+				not l_cache.expired (l_wiki_page_date_time, cache_duration)
+			then
+				create l_xhtml.make (l_cache.file_size)
+				l_cache.append_to (l_xhtml)
+
+				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
+			else
 				create l_xhtml.make_empty
+
 				create wvis.make (l_xhtml)
 				wvis.set_link_resolver (a_manager)
 				wvis.set_image_resolver (a_manager)
 				wvis.set_template_resolver (a_manager)
 				wvis.visit_page (a_wiki_page)
-				if not f.exists or else f.is_writable then
-					f.open_write
-					f.put_string (l_xhtml)
-					f.close
+
+				if attached a_wiki_page.pages as l_sub_pages then
+					across
+						l_sub_pages as ic
+					loop
+						l_xhtml.append ("<li>")
+						append_wiki_page_link (req, a_book_name, ic.item, False, l_xhtml)
+						l_xhtml.append ("</li>")
+					end
+				end
+
+				if l_cache /= Void then
+					l_cache.put (l_xhtml)
 				end
 			end
 			a_output.append (l_xhtml)
@@ -400,6 +446,36 @@ feature -- Helper
 				end
 				f.close
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
+		local
+			d: HTTP_DATE
+		do
+			create d.make_from_string (s)
+			if not d.has_error then
+				Result := d.date_time
+			end
+		end
+
+	file_date (p: PATH): DATE_TIME
+		require
+			path_exists: (create {FILE_UTILITIES}).file_path_exists (p)
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (p)
+			Result := timestamp_to_date (f.date)
+		end
+
+	timestamp_to_date (n: INTEGER): DATE_TIME
+		local
+			d: HTTP_DATE
+		do
+			create d.make_from_timestamp (n)
+			Result := d.date_time
 		end
 
 end

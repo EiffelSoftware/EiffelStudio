@@ -48,17 +48,17 @@
  
    "template": <
       "data": [
-             <"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
-             <"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
-             <"name": "user_email", "prompt": "Email", "value": "{$form.email/}">,
-             <"name": "country", "prompt": "Country", "value": "{$form.country/}">,
-             <"name": "user_region", "prompt": "Region", "value": "{$form.region/}">,
-             <"name": "user_position", "prompt": "Position", "value": "{$form.position/}">,
-             <"name": "user_city", "prompt": "City", "value": "{$form.city/}">,
-             <"name": "user_address", "prompt": "Address", "value": "{$form.address/}">,
-             <"name": "user_post_code", "prompt": "Postal Code", "value": "{$form.postal_code/}">,
-             <"name": "user_phone", "prompt": "Thelehone", "value": "{$form.telephone/}">,
-             <"name": "user_fax", "prompt": "Fax", "value": "{$form.fax/}">
+             <"name": "first_name", "prompt": "Frist Name", "value": "{$account.first_name/}">,
+             <"name": "last_name", "prompt": "Last Name", "value": "{$account.last_name/}">,
+             <"name": "user_email", "prompt": "Email", "value": "{$account.email/}">,
+             <"name": "country", "prompt": "Country",  "acceptableValues":[{foreach from="$account.countries" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value": "{$account.selected_country/}">,
+             <"name": "user_region", "prompt": "Region", "value": "{$account.region/}">,
+             <"name": "user_position", "prompt": "Position", "value": "{$account.position/}">,
+             <"name": "user_city", "prompt": "City", "value": "{$account.city/}">,
+             <"name": "user_address", "prompt": "Address", "value": "{$account.address/}">,
+             <"name": "user_post_code", "prompt": "Postal Code", "value": "{$account.postal_code/}">,
+             <"name": "user_phone", "prompt": "Thelehone", "value": "{$account.telephone/}">,
+             <"name": "user_fax", "prompt": "Fax", "value": "{$account.fax/}">
       ]     >,
     
     "queries" :

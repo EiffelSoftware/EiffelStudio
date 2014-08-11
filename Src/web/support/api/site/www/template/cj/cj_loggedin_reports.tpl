@@ -1,121 +1,70 @@
 <"collection": <
     "version": "1.0",
-    {if isset="$user"} 
-        "href": "{$host/}/user_reports/{$user/}", 
-    {/if}
-    {unless isset="$user"} 
-        "href": "{$host/}/reports", 
-    {/unless}
+    "href": "{$host/}/user_reports/{$user/}?page=1&size={$size/}&category={$view.selected_category/}&status={$status_query/}&orderBy={$orderBy/}&dir={$dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
+    {include file="cj_metadata.tpl"/}                
     "links": [
             <
-                "href": "{$host/}",
+                "href": "{$host/}/",
                 "rel": "home",
                 "prompt": "Home"
             >,
-             <
-                "href": "{$host/}/reports",
-                "rel": "all",
-                "prompt": "Reports"
+            <
+               "href": "{$host/}/user_reports/{$user/}?page=1&size={$size/}&category={$view.selected_category/}&status={$status_query/}&orderBy={$orderBy/}&dir={$dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
+                "rel": "first",
+                "prompt": "First"
+            >
+                {if isset="$prev"}
+                ,
+                <
+                    "href": "{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}&category={$view.selected_category/}&status={$status_query/}&orderBy={$orderBy/}&dir={$dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
+                    "rel": "previous",
+                    "prompt": "Previous"
+                >
+                {/if}
+                {if isset="$next"}
+                  ,
+                <
+                    "href": "{$host/}/user_reports/{$user/}?page={$next/}&size={$size/}&category={$view.selected_category/}&status={$status_query/}&orderBy={$orderBy/}&dir={$dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
+                    "rel": "next",
+                    "prompt": "Next"
+                >     
+                {/if}
+                ,
+            <
+              "href": "{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}&category={$view.selected_category/}&status={$status_query/}&orderBy={$orderBy/}&dir={$dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
+              "rel": "last",
+              "prompt": "Last"
             >,
-            {if isset="$user"}
-               <
-                "href": "{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}",
-                "rel": "first",
-                "prompt": "First"
-                >
-                {if isset="$prev"}
-                ,
-                <
-                    "href": "{$host/}/user_reports/{$user/}?page={$prev/}&size={$size/}",
-                    "rel": "previous",
-                    "prompt": "Previous"
-                >
-                {/if}
-                {if isset="$next"}
-                  ,
-                <
-                    "href": "{$host/}/user_reports/{$user/}?page={$next/}&size={$size/}",
-                    "rel": "next",
-                    "prompt": "Next"
-                >     
-                {/if}
-                ,
-                <
-                    "href": "{$host/}/user_reports/{$user/}?page={$last/}&size={$size/}",
-                    "rel": "last",
-                    "prompt": "Last"
-                >,
-                <
-                    "href": "{$host/}/user_reports/{$user/}",
-                    "rel": "all_user",
-                    "prompt": "My Reports"
-                >,
-                 <
-                    "href": "{$host/}/report_form",
-                    "rel": "create_report_form",
-                    "prompt": "Report a Problem"
-                >,
-                <
-                 "href": "{$host/}/account",
-                 "rel": "account",
-                 "prompt": "Account information"
-                >,
-                <
-                 "href": "{$host/}/password",
-                 "rel": "change_password",
-                 "prompt": "Change password"
-                >,
-                 <
-                 "href": "{$host/}/email",
-                 "rel": "change_email",
-                 "prompt": "Change Email"
-                >,
-      
-                <
-                    "href": "{$host/}/logoff",
-                    "rel": "logoff",
-                    "prompt": "Logoff"
-                >,
-            {/if}
-            {unless isset="$user"}
-                <
-                "href": "{$host/}/reports?page={$index/}&size={$size/}",
-                "rel": "first",
-                "prompt": "First"
-                >
-                {if isset="$prev"}
-                ,
-                <
-                    "href": "{$host/}/reports?page={$prev/}&size={$size/}",
-                    "rel": "previous",
-                    "prompt": "Previous"
-                >
-                {/if}
-                {if isset="$next"}
-                  ,
-                <
-                    "href": "{$host/}/reports?page={$next/}&size={$size/}",
-                    "rel": "next",
-                    "prompt": "Next"
-                >     
-                {/if}
-                ,
-                <
-                    "href": "{$host/}/reports?page={$last/}&size={$size/}",
-                    "rel": "last",
-                    "prompt": "Last"
-                >,
-                <
-                    "href": "{$host/}/login",
-                    "rel": "login",
-                    "prompt": "Login"
-                >,
-                <
-                    "href": "{$host/}/register",
-                    "rel": "register",
-                    "prompt": "Register"
-                >,
-            {/unless}    
+            <
+              "href": "{$host/}/user_reports/{$user/}",
+              "rel": "all_user",
+              "prompt": "My Reports"
+            >,
+            <
+              "href": "{$host/}/report_form",
+              "rel": "create_report_form",
+              "prompt": "Report a Problem"
+            >,
+            <
+              "href": "{$host/}/account",
+              "rel": "account",
+              "prompt": "Account information"
+            >,
+            <
+             "href": "{$host/}/password",
+             "rel": "change_password",
+             "prompt": "Change password"
+            >,
+            <
+             "href": "{$host/}/email",
+             "rel": "change_email",
+             "prompt": "Change Email"
+            >,
+            <
+             "href": "{$host/}/logoff",
+             "rel": "logoff",
+             "prompt": "Logoff"
+            >,
             <
                 "href": "{$host/}/profile/esa_api.xml",
                 "rel": "profile"
@@ -170,35 +119,20 @@
             ]
         >,
         <
-           {if isset="$user"}   
-            "href" : "{$host/}/user_reports/{$user/}",
-           {/if}
-           {unless isset="$user"}
-           "href" : "{$host/}/reports", 
-           {/unless}
+          "href" : "{$host/}/user_reports/{$user/}?page={$index/}",
           "rel" : "search",
-          "prompt" : "Filter by Category / Status...",
+          "prompt" : "Sorting/Filter",
           "data" :
             [
-                <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value":"{$view.selected_category/}">,
-                <"name" : "status", "value" : "">
-            ]
-        >,
-        <
-          {if isset="$user"}
-          "href" : "{$host/}/user_reports/{$user/}?page={$index/}&size={$size/}",
-          {/if}
-          {unless isset="$user"}
-          "href" : "{$host/}/reports?page={$index/}&size={$size/}",
-          {/unless}
-          "rel" : "search",
-          "prompt" : "Sorting",
-          "data" :
-            [
-                <"name" : "orderBy", "value" : "">,
-                <"name" : "dir", "value" : "">,
-                <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" :"{$view.selected_category/}">,
-                <"name" : "status", "value" : "">
+                <"name" : "orderBy", "acceptableValues":[{foreach from="$columns" item="item"} "{$item/}",{/foreach}], "value" :"{$orderBy/}">,
+                {assign name="ldir" value="1"/}
+                <"name" : "dir", "acceptableValues":["ASC","DESC"], "value" : "{$view.direction/}" >,
+                <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_category/}">,
+                <"name" : "status", "acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], 
+                "array": [{foreach from="$checked_status" item="item"} "{$item.synopsis/}",{/foreach}]>,
+                <"name" : "filter", "value" : "{$view.filter/}">,
+                <"name" : "filter_content", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], "value" : "{$view.filter_content/}">,
+                <"name" : "size", "value":"{$size/}">
             ]
         >
     ]                      

@@ -65,7 +65,7 @@ feature -- Query
 			end
 		end
 
-	page (a_title: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page (a_title: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): detachable WIKI_PAGE
 		do
 
 		end

@@ -7,6 +7,12 @@ note
 deferred class
 	WDOCS_CONFIG
 
+feature {NONE} -- Initialization
+
+	make
+		do
+		end
+
 feature -- Access
 
 	theme_name: IMMUTABLE_STRING_32
@@ -15,10 +21,6 @@ feature -- Access
 
 	wiki_dir: PATH
 
-feature -- Initialization
-
-	initialize
-		do
-		end
+	cache_duration: INTEGER
 
 end

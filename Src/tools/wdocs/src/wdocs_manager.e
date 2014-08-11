@@ -231,35 +231,51 @@ feature {NONE} -- Initialization
 
 	stored_data: detachable WDOCS_DATA
 		local
-			f: RAW_FILE
-			retried: BOOLEAN
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
 		do
-			if not retried then
-				create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
-				if f.exists and then f.is_access_readable then
-					f.open_read
-					if attached {WDOCS_DATA} f.retrieved as d then
-						Result := d
-					end
-					f.close
-				end
-			end
-		rescue
-			retried := True
-			retry
+			create c.make (wiki_database_path.appended_with_extension ("data"))
+			Result := c.item
 		end
 
 	store_data (d: WDOCS_DATA)
 		local
-			f: RAW_FILE
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
 		do
-			create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
-			if not f.exists or else f.is_access_writable then
-				f.open_write
-				f.basic_store (d)
-				f.close
-			end
+			create c.make (wiki_database_path.appended_with_extension ("data"))
+			c.put (d)
 		end
+
+--	stored_data: detachable WDOCS_DATA
+--		local
+--			f: RAW_FILE
+--			retried: BOOLEAN
+--		do
+--			if not retried then
+--				create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
+--				if f.exists and then f.is_access_readable then
+--					f.open_read
+--					if attached {WDOCS_DATA} f.retrieved as d then
+--						Result := d
+--					end
+--					f.close
+--				end
+--			end
+--		rescue
+--			retried := True
+--			retry
+--		end
+
+--	store_data (d: WDOCS_DATA)
+--		local
+--			f: RAW_FILE
+--		do
+--			create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
+--			if not f.exists or else f.is_access_writable then
+--				f.open_write
+--				f.basic_store (d)
+--				f.close
+--			end
+--		end
 
 feature -- Access
 
@@ -486,6 +502,7 @@ feature -- Access: Image
 							end
 						else
 							Result := "/images/" + a_link.name
+	--	This commented code was used to try to compute relative path, give another try later.
 	--						create Result.make (p.name.count)
 	--						from
 	--						until
@@ -506,8 +523,6 @@ feature -- Access: Image
 	--							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 	--						end							
 						end
-
-
 					end
 				end
 			end

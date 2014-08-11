@@ -26,15 +26,21 @@ feature {NONE} -- Initialization
 
 			create ini.make_from_file (p)
 
-			if attached ini.unicode_string_item ("root") as l_root then
+			if attached ini.text_item ("root") as l_root then
 				create root_dir.make_from_string (l_root)
 			end
-			if attached ini.unicode_string_item ("wiki") as l_wiki then
+			if attached ini.text_item ("wiki") as l_wiki then
 				create wiki_dir.make_from_string (l_wiki)
 			end
-			if attached ini.unicode_string_item ("theme") as l_theme then
+			if attached ini.text_item ("theme") as l_theme then
 				create theme_name.make_from_string (l_theme)
 			end
+			if
+				attached ini.text_item ("cache_duration") as l_duration and then
+				l_duration.is_integer
+			then
+				cache_duration := l_duration.to_integer
+			end
 		end
-		
+
 end

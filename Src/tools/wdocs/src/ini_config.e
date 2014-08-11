@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unicode_string_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 		local
 			utf: UTF_CONVERTER
 			obj: like item

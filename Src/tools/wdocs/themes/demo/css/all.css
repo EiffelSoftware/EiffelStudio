@@ -34,10 +34,25 @@ img {
 
 a {
   text-decoration: none;
-  color: #abc4d4;
+  color: #66f;
 }
 a:hover {
-  color: blue;
+  color: #00f;
+  text-decoration: underline;
+}
+#nav a {
+	color: white;
+}
+#nav a:hover {
+	color: yellow;
+	text-decoration: underline;
+}
+#nav ul {
+	padding-top: 40px;
+}
+#nav ul li {
+	padding: 10px;
+	display: inline-block;
 }
 
 #wrapper {

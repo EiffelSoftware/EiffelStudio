@@ -3028,3 +3028,4 @@ if DOTNET test  dotnet-object-test-basic-type	dotnet113 tcf pass dotnet attached
 if DOTNET test  dotnet-array-data-copy	dotnet114 tcf pass dotnet
 test  dotnet-static-access-on-deferred	dotnet115 tcf pass dotnet
 if DOTNET test  missing-dotnet-type			dotnet116 tcf pass dotnet
+if DOTNET test  missing-dotnet-type-2		dotnet117 tcf pass dotnet

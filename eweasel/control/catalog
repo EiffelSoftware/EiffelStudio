@@ -2135,6 +2135,7 @@ test	correct-mismatch-memory-corruption store036 tcf pass storable
 test	store-retrieve-non-void-safe	store037 tcf pass storable attached_types
 test	storable-performance-testing	store038 tcf pass storable performance
 test	storable-with-long-generics	store039 tcf pass storable
+test	storable-with-qualified-anchors	store040 tcf fail storable
 
 -- Library class tests
 

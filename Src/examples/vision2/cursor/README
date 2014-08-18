@@ -1,0 +1,8 @@
+This example shows how to change the cursor in an application and how to pick
+and drop (PND) a list item using a dedicated cursor which changes according to
+the area the pointer is over. 
+
+The text field is the only widget which accepts to receive something (a string)
+by the PND mechanim. When the pointer comes over that text field the cursor
+appears with a shape corresponding to the selected list item. A right click will
+write the cursor name in the field.

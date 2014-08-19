@@ -57,7 +57,7 @@ extern "C" {
 #define LIKE_ARG_TYPE			0xFFFD
 #define LIKE_CURRENT_TYPE		0xFFFC
 /* #define NOT_USED_TYPE		0xFFFB */
-#define LIKE_FEATURE_TYPE		0xFFFA
+#define LIKE_FEATURE_TYPE		0xFFFA	/* Only for melted code generation */
 #define TUPLE_TYPE				0xFFF9
 #define FORMAL_TYPE				0xFFF8
 #define PARENT_TYPE_SEPARATOR	0xFFF7

@@ -59,7 +59,7 @@ feature {NONE} -- Implementation features
 			p: PATH
 			ut: FILE_UTILITIES
 		do
-			create p.make_from_string ("wdocs.ini")
+			create p.make_from_string ("eiffel-lang.ini")
 			if ut.file_path_exists (p) then
 				create {WDOCS_INI_CONFIG} Result.make (p)
 			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation features
 			p: PATH
 			ut: FILE_UTILITIES
 		do
-			create p.make_from_string ("wdocs.json")
+			create p.make_from_string ("eiffel-lang.json")
 			if ut.file_path_exists (p) then
 				create {WDOCS_JSON_CONFIG} Result.make (p)
 			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then

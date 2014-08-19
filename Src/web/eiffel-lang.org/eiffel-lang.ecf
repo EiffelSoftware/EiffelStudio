@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wdocs" uuid="B1F852EA-D493-497D-BF35-82EBD3EC967C">
-	<target name="wdocs_common">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel-lang" >
+	<target name="eiffel-lang_common">
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -26,7 +26,7 @@
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 	</target>
-	<target name="wdocs_any" extends="wdocs_common">
+	<target name="eiffel-lang_any" extends="eiffel-lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
@@ -38,7 +38,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="wdocs_nino" extends="wdocs_common">
+	<target name="eiffel-lang_nino" extends="eiffel-lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -48,7 +48,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="wdocs_cgi" extends="wdocs_common">
+	<target name="eiffel-lang_cgi" extends="eiffel-lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -58,7 +58,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="wdocs_libfcgi" extends="wdocs_common">
+	<target name="eiffel-lang_libfcgi" extends="eiffel-lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -68,6 +68,6 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="wdocs" extends="wdocs_nino">
+	<target name="eiffel-lang" extends="eiffel-lang_nino">
 	</target>
 </system>

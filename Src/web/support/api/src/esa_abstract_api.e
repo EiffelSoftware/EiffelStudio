@@ -22,7 +22,7 @@ inherit
 
 	SHARED_CONNEG_HELPER
 
-	ESA_SHARED_LOGGER
+	SHARED_LOGGER
 
 feature {NONE} -- Initialization
 
@@ -48,7 +48,7 @@ feature -- Router setup
 		deferred
 		end
 
-	layout: ESA_LAYOUT
+	layout: APPLICATION_LAYOUT
 		do
 			Result := esa_config.layout
 		end

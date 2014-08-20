@@ -16,7 +16,7 @@ class
 
 feature
 
-	clean_db (a_connection: ESA_DATABASE_CONNECTION)
+	clean_db (a_connection: DATABASE_CONNECTION)
 				-- Number of rows for the given query `a_query' using parameters `a_parameters'
 		local
 			l_parameters: STRING_TABLE[STRING]
@@ -24,15 +24,15 @@ feature
 			create l_parameters.make (0)
 			a_connection.connect
 				-- Clean registrations
-			db_handler(a_connection).set_query (create {ESA_DATABASE_QUERY}.data_reader (Sql_delete_registrations, l_parameters))
+			db_handler(a_connection).set_query (create {DATABASE_QUERY}.data_reader (Sql_delete_registrations, l_parameters))
 			db_handler(a_connection).execute_query
 
 				-- Clean Membershios
-			db_handler(a_connection).set_query (create {ESA_DATABASE_QUERY}.data_reader (Sql_delete_memberships, l_parameters))
+			db_handler(a_connection).set_query (create {DATABASE_QUERY}.data_reader (Sql_delete_memberships, l_parameters))
 			db_handler(a_connection).execute_query
 
 				-- Clean Contacts
-			db_handler(a_connection).set_query (create {ESA_DATABASE_QUERY}.data_reader (Sql_delete_contacts, l_parameters))
+			db_handler(a_connection).set_query (create {DATABASE_QUERY}.data_reader (Sql_delete_contacts, l_parameters))
 			db_handler(a_connection).execute_query
 
 			a_connection.disconnect
@@ -42,10 +42,10 @@ feature
 
 feature -- Database Hanlder
 
-	db_handler (a_connection: ESA_DATABASE_CONNECTION): ESA_DATABASE_HANDLER
+	db_handler (a_connection: DATABASE_CONNECTION): DATABASE_HANDLER
 			-- Db handler
 		once
-			create {ESA_DATABASE_HANDLER_IMPL} Result.make (a_connection)
+			create {DATABASE_HANDLER_IMPL} Result.make (a_connection)
 		end
 
 

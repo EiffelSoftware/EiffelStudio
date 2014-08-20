@@ -10,8 +10,9 @@ inherit
 
 	SHARED_TEMPLATE_CONTEXT
 
-	ESA_SHARED_LOGGER
+	SHARED_LOGGER
 
+	ARGUMENTS
 feature -- Status
 
 	representation: detachable STRING
@@ -37,13 +38,13 @@ feature -- Status
 
 	template: TEMPLATE_FILE
 
-	layout: ESA_LAYOUT
+	layout: APPLICATION_LAYOUT
 		local
 			l_env: EXECUTION_ENVIRONMENT
 		once
 			create l_env
-			if attached l_env.item ({ESA_CONSTANTS}.Esa_directory_variable_name) as s then
-				create Result.make_with_path (create {PATH}.make_from_string (s))
+			if attached separate_character_option_value ('d') as l_dir  then
+				create Result.make_with_path (create {PATH}.make_from_string (l_dir))
 			else
 				create Result.make_default
 			end

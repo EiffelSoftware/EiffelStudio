@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_report: detachable ESA_REPORT; a_user: detachable ANY; a_template: READABLE_STRING_32)
+	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT; a_user: detachable ANY; a_template: READABLE_STRING_32)
 		do
 			make_user_host (a_host, a_user, a_template)
 			template.add_value (a_report, "report")

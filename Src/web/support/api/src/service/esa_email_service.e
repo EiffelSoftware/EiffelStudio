@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_SHARED_ERROR
+	SHARED_ERROR
 
 create
 	make
@@ -149,7 +149,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: STRING; a_report: ESA_REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_url: STRING)
+	send_new_report_email (a_name: STRING; a_report: REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -167,7 +167,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_user: ESA_USER_INFORMATION; a_report: ESA_REPORT; a_subscribers: LIST[STRING]; a_old_report: ESA_REPORT; a_url: STRING; a_user_role: ESA_USER_ROLE)
+	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST[STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -203,7 +203,7 @@ feature -- Basic Operations
 		end
 
 
-	send_responsible_change_email (a_user_name: READABLE_STRING_32; a_report: ESA_REPORT; a_user: ESA_USER_INFORMATION; a_url: STRING)
+	send_responsible_change_email (a_user_name: READABLE_STRING_32; a_report: REPORT; a_user: USER_INFORMATION; a_url: STRING)
 			-- Send email to new problem report responsible.
 		local
 			l_email: EMAIL
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('>')
 		end
 
-	report_email_subject (a_report: ESA_REPORT; a_interactions_count: INTEGER): STRING
+	report_email_subject (a_report: REPORT; a_interactions_count: INTEGER): STRING
 			-- Subject of email related to report `a_report'
 		do
 			create Result.make (1024)
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	new_report_email_message (a_report: ESA_REPORT; a_url: STRING): STRING
+	new_report_email_message (a_report: REPORT; a_url: STRING): STRING
 			-- New report message
 		do
 			create Result.make (4096)
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			Result.append (signature (Void))
 		end
 
-	new_interaction_email_message (a_user: ESA_USER_INFORMATION; a_report_interaction: ESA_REPORT_INTERACTION; a_report: ESA_REPORT; a_old_report: ESA_REPORT; a_url: STRING): STRING
+	new_interaction_email_message (a_user: USER_INFORMATION; a_report_interaction: REPORT_INTERACTION; a_report: REPORT; a_old_report: REPORT; a_url: STRING): STRING
 			-- New interaction message.
 		local
 			u: UTF_CONVERTER
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			Result.append (signature (a_user))
 		end
 
-	attachments_text (a_attachments: LIST [ESA_REPORT_ATTACHMENT]; a_url: READABLE_STRING_8): STRING
+	attachments_text (a_attachments: LIST [REPORT_ATTACHMENT]; a_url: READABLE_STRING_8): STRING
 			-- Text for downloading attachments `a_attachments'.
 		require
 			not_empty: not a_attachments.is_empty
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			attached_text: Result /= Void
 		end
 
-	attachment_text (a_attachment: ESA_REPORT_ATTACHMENT; a_url: READABLE_STRING_8): STRING
+	attachment_text (a_attachment: REPORT_ATTACHMENT; a_url: READABLE_STRING_8): STRING
 			-- Text for downloading `a_attachment'.
 		local
 			u: UTF_CONVERTER
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	signature (a_user: detachable ESA_USER_INFORMATION): STRING
+	signature (a_user: detachable USER_INFORMATION): STRING
 			-- Email signature for user `a_user'.
 		do
 			create Result.make (256)

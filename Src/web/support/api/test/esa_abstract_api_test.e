@@ -43,7 +43,7 @@ feature -- API Service
 
 feature -- Security
 
-	security: ESA_SECURITY_PROVIDER
+	security: SECURITY_PROVIDER
 		do
 			create Result
 		end
@@ -94,7 +94,7 @@ feature -- Context Executor
 	 	-- Database schema.
 
 
-	db_connection: ESA_DATABASE_CONNECTION
+	db_connection: DATABASE_CONNECTION
 		do
 			if attached esa_config as l_config then
 				Result := l_config.database
@@ -106,7 +106,7 @@ feature -- Context Executor
 
 	esa_config: ESA_CONFIG
 		do
-			Result := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test
+			Result := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test (Void)
 		end
 
 end

@@ -22,7 +22,7 @@ feature {NONE} --Initialization
 		do
 
 			log.write_information (generator + ".make render template: user_responsible_reports.tpl")
-			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable ESA_REPORT_STATUS}).out)
+			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_STATUS}).out)
 
 			set_template_folder (html_path)
 			set_template_file_name ("user_responsible_reports.tpl")
@@ -69,7 +69,7 @@ feature {NONE} --Initialization
 			process
 		end
 
-	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
+	retrieve_status_query (a_status: LIST[REPORT_STATUS]): STRING
 		do
 			Result := "0&amp;"
 			across a_status as c loop

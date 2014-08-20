@@ -162,7 +162,7 @@ feature -- New Report Problem
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_form: ESA_INTERACTION_FORM_VIEW
-			l_role: ESA_USER_ROLE
+			l_role: USER_ROLE
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
@@ -512,11 +512,11 @@ feature {NONE} -- Implementation
 			end
   		end
 
-	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
+	selected_item_by_synopsis (a_items: LIST [REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item.
 		local
 			l_found: BOOLEAN
-			l_item: ESA_REPORT_SELECTABLE
+			l_item: REPORT_SELECTABLE
 		do
 			from
 				a_items.start

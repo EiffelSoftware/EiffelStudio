@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	questions: detachable LIST [ESA_SECURITY_QUESTION]
+	questions: detachable LIST [SECURITY_QUESTION]
 			-- Possible list of security questions.
 
 	question: INTEGER

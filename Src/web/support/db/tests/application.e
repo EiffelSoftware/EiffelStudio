@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 	execute_read_example
 		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
+			l_prov: REPORT_DATA_PROVIDER
 		do
 			create l_prov.make (connection)
 			across l_prov.problem_reports ("jvelilla", False, 15, 3) as c loop
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 	execute_guest_reports
 		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
+			l_prov: REPORT_DATA_PROVIDER
 		do
 			print ("%NGuest Reports")
 			create l_prov.make (connection)
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 	execute_write_example
 		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
+			l_prov: REPORT_DATA_PROVIDER
 		do
 			create l_prov.make (connection)
 			print (l_prov.new_problem_report_id ("jvelilla"))
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 	execute_report_guest
 		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
+			l_prov: REPORT_DATA_PROVIDER
 		do
 			create l_prov.make (connection)
 			print (l_prov.problem_report (18628))
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 	execute_iterator
 		local
-			l_prov: ESA_REPORT_DATA_PROVIDER
+			l_prov: REPORT_DATA_PROVIDER
 		do
 			create l_prov.make (connection)
 
@@ -110,8 +110,8 @@ feature {NONE} -- Initialization
 
 	test_add_user
 		local
-			ld: ESA_REPORT_DATA_PROVIDER
-			ll: ESA_LOGIN_DATA_PROVIDER
+			ld: REPORT_DATA_PROVIDER
+			ll: LOGIN_DATA_PROVIDER
 		do
 			create ld.make (connection)
 			create ll.make (connection)
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 
 	test_token_from_username
 		local
-			ll: ESA_LOGIN_DATA_PROVIDER
+			ll: LOGIN_DATA_PROVIDER
 		do
 			create ll.make (connection)
 			if attached ll.token_from_username ("jvelilla") as l_token then
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 
 	test_countries
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 
 	test_registration_token
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.token_from_email ("test001"))
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 	test_membership_creation_date
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.membership_creation_date ("jvelilla"))
@@ -167,7 +167,7 @@ feature {NONE} -- Initialization
 
 	test_user_role
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.role ("jvelilla"))
@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 
 	test_role_description
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.role_description ("Responsible"))
@@ -186,7 +186,7 @@ feature {NONE} -- Initialization
 
 	test_security_questions
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -196,7 +196,7 @@ feature {NONE} -- Initialization
 
 	test_question_from_email
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -206,7 +206,7 @@ feature {NONE} -- Initialization
 
 	test_user_creation_date
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -215,7 +215,7 @@ feature {NONE} -- Initialization
 
 	test_user_from_email
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 			l_tuple: detachable TUPLE[STRING,STRING,STRING]
 		do
 			create l_db.make (connection)
@@ -228,7 +228,7 @@ feature {NONE} -- Initialization
 
 	test_user_form_username
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -237,7 +237,7 @@ feature {NONE} -- Initialization
 
 	test_categories
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -251,7 +251,7 @@ feature {NONE} -- Initialization
 
 	test_classes
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -264,7 +264,7 @@ feature {NONE} -- Initialization
 
 	test_severities
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -277,7 +277,7 @@ feature {NONE} -- Initialization
 
 	test_priorities
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -290,7 +290,7 @@ feature {NONE} -- Initialization
 
 	test_initialize_problem_report
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 
@@ -300,7 +300,7 @@ feature {NONE} -- Initialization
 
 	 test_temporary_problem_report
 	 	local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 			l_tuple: detachable TUPLE[synopsis : detachable STRING;
 															   release: detachable STRING;
 															   confidential: detachable STRING;
@@ -324,7 +324,7 @@ feature {NONE} -- Initialization
 
 	test_problem_reports_guest_2
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 				-- Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
 			create l_db.make (connection)
@@ -336,7 +336,7 @@ feature {NONE} -- Initialization
 
 	test_responsibles
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			across l_db.responsibles as c loop print (c.item.string_8) end
@@ -345,7 +345,7 @@ feature {NONE} -- Initialization
 
 	test_row_count_responsible_default
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.row_count_problem_report_responsible (0,0,0,0,"1,2,3,4,5","", Void, 0))
@@ -354,7 +354,7 @@ feature {NONE} -- Initialization
 
 	test_row_count_responsible_by_user
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 --			l_db.row_count_problem_report_user (a_username: STRING_8, a_category: INTEGER_32, a_status, a_filter: READABLE_STRING_32, a_content: INTEGER_32)
@@ -364,7 +364,7 @@ feature {NONE} -- Initialization
 
 	test_problem_report_responsibles
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 --			l_db.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32, a_column: READABLE_STRING_32, a_order: INTEGER_32, a_status, a_username: READABLE_STRING_32, a_filter: detachable READABLE_STRING_32, a_content: INTEGER_32)
@@ -376,7 +376,7 @@ feature {NONE} -- Initialization
 
 	test_problem_report_by_uer
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 --			l_db.problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32, a_username: STRING_8, a_category: INTEGER_32, a_status, a_column: READABLE_STRING_32, a_order: INTEGER_32, a_filter: READABLE_STRING_32, a_content: INTEGER_32)
@@ -387,7 +387,7 @@ feature {NONE} -- Initialization
 
 	test_temporary_interaction
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			if attached l_db.temporary_interaction (17745) as l_tuple then
@@ -408,7 +408,7 @@ feature {NONE} -- Initialization
 
 	test_row_count_problem_by_user
 		local
-			l_db: ESA_REPORT_DATA_PROVIDER
+			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			print (l_db.row_count_problem_report_user ("jvelilla",0,"1,2,3,4","",0))
@@ -416,9 +416,9 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	connection: ESA_DATABASE_CONNECTION
+	connection: DATABASE_CONNECTION
 		once
-			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
+			create {DATABASE_CONNECTION_ODBC}Result.make_common
 		end
 
 
@@ -442,8 +442,8 @@ feature -- Implementation
 
 	db_setup (a_database_name: STRING)
 		local
-			l_connection: ESA_DATABASE_CONNECTION
-			l_handler: ESA_DATABASE_HANDLER
+			l_connection: DATABASE_CONNECTION
+			l_handler: DATABASE_HANDLER
 			l_parameters: STRING_TABLE[ANY]
 			l_sql: STRING
 		do
@@ -451,14 +451,14 @@ feature -- Implementation
 			create l_parameters.make (0)
 
 				 -- Connection
-			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.login_with_connection_string ("Driver={SQL Server};Server=JVELILLA;Database=test;Uid=sa;Pwd=Eiffel1405;")
+			create {DATABASE_CONNECTION_ODBC} l_connection.login_with_connection_string ("Driver={SQL Server};Server=JVELILLA;Database=test;Uid=sa;Pwd=Eiffel1405;")
 
 			l_sql := read_file ("create_db_sql2000.sql")
 			l_sql.replace_substring_all ("$(database_name)", a_database_name)
 				 -- Create Database
-			create {ESA_DATABASE_HANDLER_IMPL} l_handler.make (l_connection)
+			create {DATABASE_HANDLER_IMPL} l_handler.make (l_connection)
 
-			l_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (l_sql, l_parameters))
+			l_handler.set_query (create {DATABASE_QUERY}.data_reader (l_sql, l_parameters))
 
 			l_handler.execute_change
 

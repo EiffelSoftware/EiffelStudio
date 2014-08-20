@@ -26,10 +26,10 @@ feature {NONE} -- Intialization
 
 feature -- Access
 
-	status: LIST[ESA_REPORT_STATUS]
+	status: LIST[REPORT_STATUS]
 			-- Possible list of status.
 
-	categories:  LIST[ESA_REPORT_CATEGORY]
+	categories:  LIST[REPORT_CATEGORY]
 			-- Possible list of categories.
 
 	description: detachable READABLE_STRING_32
@@ -44,7 +44,7 @@ feature -- Access
 	category: INTEGER
 			-- Current selected category.
 
-	report: detachable ESA_REPORT
+	report: detachable REPORT
 			-- Current report to add an interaction.
 
 	id: INTEGER

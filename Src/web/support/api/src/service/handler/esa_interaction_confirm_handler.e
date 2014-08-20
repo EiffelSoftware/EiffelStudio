@@ -95,7 +95,7 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_interaction: INTEGER
-			l_old_report: detachable ESA_REPORT
+			l_old_report: detachable REPORT
 		do
 			create l_rhf
 			if
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_new_interaction_email (a_user: STRING; a_report_id: INTEGER; a_old_report: detachable ESA_REPORT; a_url: STRING)
+	send_new_interaction_email (a_user: STRING; a_report_id: INTEGER; a_old_report: detachable REPORT; a_url: STRING)
 			-- Send interaction creation confirmation email to interested parties.
 		local
 			l_subscribers: LIST [STRING]

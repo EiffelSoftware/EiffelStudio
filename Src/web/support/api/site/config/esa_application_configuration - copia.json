@@ -1,0 +1,26 @@
+{
+	"database": {
+		"datasource": {
+			"driver": "SQL Server Native Client 10.0",
+			"environment": "test"
+		},
+		"environments": {
+			"test": {
+                "connection_string":"Server=Machine\\SQLEXPRESS;Database=test;Uid=XXX;Pwd=YYY;TrustedConnection=Yes"
+			},
+			"development": {
+				"connection_string":"Server=SQLSERVER;Database=DEV_DATABASE;Uid=XXX;Pwd=YYY;"
+				 },
+			"production": {
+				"connection_string":"Server=SQLSERVER;Database=LIVE_DATABASE;Uid=XXX;Pwd=YYY;"
+			}
+		}
+	},
+	"smtp": {
+		"server": "localhost"
+		},
+	"logger": { 
+			"level":"debug",
+			"backup_count":"4"
+		}
+}

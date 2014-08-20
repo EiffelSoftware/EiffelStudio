@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_SHARED_ERROR
+	SHARED_ERROR
 
 create
 	make,
@@ -19,16 +19,16 @@ feature {NONE} -- Initialization
 	make
 			-- Create the API service
 		local
-			l_connection: ESA_DATABASE_CONNECTION
+			l_connection: DATABASE_CONNECTION
 		do
-			create {ESA_DATABASE_CONNECTION_ODBC} l_connection.make_common
+			create {DATABASE_CONNECTION_ODBC} l_connection.make_common
 			create data_provider.make (l_connection)
 			create login_provider.make (l_connection)
 			post_data_provider_execution
 			post_login_provider_execution
 		end
 
-	make_with_database (a_connection: ESA_DATABASE_CONNECTION)
+	make_with_database (a_connection: DATABASE_CONNECTION)
 			-- Create the API service
 		require
 			is_connected: a_connection.is_connected
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_report (a_number: INTEGER): detachable ESA_REPORT
+	problem_report (a_number: INTEGER): detachable REPORT
 			-- Problem report with number `a_number'.
 		do
 			Result := data_provider.problem_report (a_number)
@@ -50,16 +50,16 @@ feature -- Access
 		end
 
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): LIST[ESA_REPORT]
+	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): LIST[REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_report: ESA_REPORT
-			l_list: LIST[ESA_REPORT]
+			l_report: REPORT
+			l_list: LIST[REPORT]
 		do
 			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
 			data_provider.connect
-			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			data_provider.connect
 			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
 				l_report := c.item
@@ -71,17 +71,17 @@ feature -- Access
 		end
 
 
-	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): LIST[ESA_REPORT]
+	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): LIST[REPORT]
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
 		local
-			l_report: ESA_REPORT
-			l_list: LIST[ESA_REPORT]
+			l_report: REPORT
+			l_list: LIST[REPORT]
 		do
 			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
 
 			data_provider.connect
-			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
 				l_report := c.item
@@ -93,16 +93,16 @@ feature -- Access
 		end
 
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST[ESA_REPORT]
+	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST[REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_report: ESA_REPORT
-			l_list: LIST[ESA_REPORT]
+			l_report: REPORT
+			l_list: LIST[REPORT]
 		do
 			log.write_debug (generator + ".problem_reports Problem reports for username:" + a_username + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out )
 
-			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
 				l_report := c.item
@@ -113,14 +113,14 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[ESA_REPORT]
+	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[REPORT]
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_report: ESA_REPORT
-			l_list: LIST[ESA_REPORT]
+			l_report: REPORT
+			l_list: LIST[REPORT]
 		do
-			create {ARRAYED_LIST[ESA_REPORT]} l_list.make (0)
+			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			data_provider.connect
 			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
 				l_report := c.item
@@ -145,11 +145,11 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	status: LIST[ESA_REPORT_STATUS]
+	status: LIST[REPORT_STATUS]
 			-- Possible problem report status
 		do
 			log.write_debug (generator+".status" )
-			create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
+			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
 			data_provider.connect
 			across data_provider.status as c  loop
 				Result.force (c.item)
@@ -158,21 +158,21 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	all_categories: LIST[ESA_REPORT_CATEGORY]
+	all_categories: LIST[REPORT_CATEGORY]
 			-- Report Categories
 		do
 			log.write_debug (generator+".all_categories" )
-			create {ARRAYED_LIST[ESA_REPORT_CATEGORY]} Result.make (0)
+			create {ARRAYED_LIST[REPORT_CATEGORY]} Result.make (0)
 			data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
 			data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	problem_report_details (a_username: STRING; a_number: INTEGER): detachable ESA_REPORT
+	problem_report_details (a_username: STRING; a_number: INTEGER): detachable REPORT
 			-- Problem report details for user `a_user_name' (Interactions and Attachments)with number `a_number'.
 		local
-			l_interactions: LIST[ESA_REPORT_INTERACTION]
+			l_interactions: LIST[REPORT_INTERACTION]
 		do
 			log.write_debug (generator+".problem_report_details for user:"+ a_username + " interaction and attachments:" + a_number.out )
 			if attached data_provider.problem_report (a_number) as l_report then
@@ -186,10 +186,10 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	problem_report_details_guest (a_number: INTEGER): detachable ESA_REPORT
+	problem_report_details_guest (a_number: INTEGER): detachable REPORT
 			-- Problem report details for Guest user (Interactions and Attachments)with number `a_number'.
 		local
-			l_interactions: LIST[ESA_REPORT_INTERACTION]
+			l_interactions: LIST[REPORT_INTERACTION]
 		do
 			log.write_debug (generator+".problem_report_details_guest for guest:  interaction and attachments:" + a_number.out )
 			if attached data_provider.problem_report (a_number) as l_report then
@@ -211,7 +211,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	user_role (a_username: STRING): ESA_USER_ROLE
+	user_role (a_username: STRING): USER_ROLE
 			-- Role associated with user with username `a_username'.
 		do
 			log.write_debug (generator + ".user_role:" + a_username)
@@ -227,11 +227,11 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	severities: LIST[ESA_REPORT_SEVERITY]
+	severities: LIST[REPORT_SEVERITY]
 			-- Possible problem report severity
 		do
 			log.write_debug (generator + ".severities")
-			create {ARRAYED_LIST[ESA_REPORT_SEVERITY]}Result.make (0)
+			create {ARRAYED_LIST[REPORT_SEVERITY]}Result.make (0)
 			data_provider.connect
 			across data_provider.severities as c  loop Result.force (c.item)  end
 			data_provider.disconnect
@@ -239,33 +239,33 @@ feature -- Access
 		end
 
 
-	classes: LIST[ESA_REPORT_CLASS]
+	classes: LIST[REPORT_CLASS]
 			-- Possible problem report classes
 		do
 			log.write_debug (generator + ".classes")
-			create {ARRAYED_LIST[ESA_REPORT_CLASS]}Result.make (0)
+			create {ARRAYED_LIST[REPORT_CLASS]}Result.make (0)
 			data_provider.connect
 			across data_provider.classes as c  loop Result.force (c.item)  end
 			data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	priorities: LIST[ESA_REPORT_PRIORITY]
+	priorities: LIST[REPORT_PRIORITY]
 			-- Possible problem report priorities.
 		do
 			log.write_information (generator +".priorities")
-			create {ARRAYED_LIST[ESA_REPORT_PRIORITY]}Result.make (0)
+			create {ARRAYED_LIST[REPORT_PRIORITY]}Result.make (0)
 			data_provider.connect
 			across data_provider.priorities as c  loop Result.force (c.item)  end
 			data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	countries: LIST [ESA_COUNTRY]
+	countries: LIST [COUNTRY]
 			-- List of countries.
 		do
 			log.write_information (generator +".countries")
-			create {ARRAYED_LIST[ESA_COUNTRY]}Result.make (0)
+			create {ARRAYED_LIST[COUNTRY]}Result.make (0)
 			login_provider.connect
 			across login_provider.countries as c loop Result.force (c.item)  end
 			login_provider.disconnect
@@ -293,7 +293,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	role (a_username: READABLE_STRING_32): ESA_USER_ROLE
+	role (a_username: READABLE_STRING_32): USER_ROLE
 			-- Role associated with username `a_username'
 		do
 			log.write_debug (generator + ".role username:" + a_username)
@@ -306,23 +306,23 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	responsibles: LIST [ESA_USER]
+	responsibles: LIST [USER]
 			-- Problem report responsibles
 			-- Columns ContactID, Username, Name
 		do
 			log.write_debug (generator + ".responsibles")
-			create {ARRAYED_LIST[ESA_USER]}Result.make (0)
+			create {ARRAYED_LIST[USER]}Result.make (0)
 			data_provider.connect
 			across data_provider.responsibles as c loop Result.force (c.item)   end
 			data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	security_questions: LIST[ESA_SECURITY_QUESTION]
+	security_questions: LIST[SECURITY_QUESTION]
 			-- Security questions
 		do
 			log.write_debug (generator+".security_questions")
-			create {ARRAYED_LIST[ESA_SECURITY_QUESTION]}Result.make (0)
+			create {ARRAYED_LIST[SECURITY_QUESTION]}Result.make (0)
 			login_provider.connect
 			across login_provider.security_questions as c loop Result.force (c.item)  end
 			login_provider.disconnect
@@ -467,7 +467,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	user_account_information (a_username: STRING): ESA_USER_INFORMATION
+	user_account_information (a_username: STRING): USER_INFORMATION
 			-- User information for `a_username' if any.
 		do
 			Result := login_provider.user_information (a_username)
@@ -784,7 +784,7 @@ feature -- Status Report
 			log.write_debug (generator + ".login_valid for username:" + a_username )
 			if attached data_provider.user_password_salt (a_username) as l_hash and then
 			   attached a_password then
-				l_sha_password := (create {ESA_SECURITY_PROVIDER}).password_hash (a_password, l_hash)
+				l_sha_password := (create {SECURITY_PROVIDER}).password_hash (a_password, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 			post_login_provider_execution
@@ -892,7 +892,7 @@ feature -- Status Report
 
 feature -- Statistics
 
-	update_statistics (a_statistics: ESA_REPORT_STATISTICS; a_status: ESA_REPORT_STATUS)
+	update_statistics (a_statistics: REPORT_STATISTICS; a_status: REPORT_STATUS)
 		do
 			inspect a_status.id
 			when 1 then a_statistics.increment_open
@@ -946,9 +946,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	data_provider: ESA_REPORT_DATA_PROVIDER
+	data_provider: REPORT_DATA_PROVIDER
 			-- Report Data provider
 
-	login_provider: ESA_LOGIN_DATA_PROVIDER
+	login_provider: LOGIN_DATA_PROVIDER
 			-- Login data provider
 end

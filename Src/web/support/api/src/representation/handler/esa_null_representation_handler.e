@@ -26,7 +26,7 @@ feature -- View
 			generic_response (req, res)
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: ESA_REPORT)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: REPORT)
 			-- <Precursor>
 		do
 			generic_response (req, res)
@@ -162,33 +162,33 @@ feature -- View
 			generic_response (req, res)
 		end
 
-	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_STATUS])
+	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_STATUS])
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
 
 
-	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_SEVERITY])
+	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_SEVERITY])
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
 
 
-	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_CATEGORY])
+	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_CATEGORY])
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
 
-	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_PRIORITY])
+	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[REPORT_PRIORITY])
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
 
-	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_USER])
+	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[USER])
 			-- <Precursor>
 		do
 			generic_response (req, res)

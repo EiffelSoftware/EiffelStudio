@@ -75,7 +75,7 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_role: ESA_USER_ROLE
+			l_role: USER_ROLE
 		do
 			if attached current_user_name (req) as l_user then
 				log.write_information ( generator+".do_get Processing request: user:" + l_user  )
@@ -109,7 +109,7 @@ feature -- HTTP Methods
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_role: ESA_USER_ROLE
+			l_role: USER_ROLE
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			log.write_information (generator+".do_post Processing request"  )
@@ -146,13 +146,13 @@ feature -- Implementation
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_pages: INTEGER
-			l_row: LIST [ESA_REPORT]
+			l_row: LIST [REPORT]
 			l_report_view: ESA_REPORT_VIEW
-			list_status: LIST [ESA_REPORT_STATUS]
-			l_categories: LIST [ESA_REPORT_CATEGORY]
-			l_priorities: LIST [ESA_REPORT_PRIORITY]
-			l_severities: LIST [ESA_REPORT_SEVERITY]
-			l_responsibles: LIST[ESA_USER]
+			list_status: LIST [REPORT_STATUS]
+			l_categories: LIST [REPORT_CATEGORY]
+			l_priorities: LIST [REPORT_PRIORITY]
+			l_severities: LIST [REPORT_SEVERITY]
+			l_responsibles: LIST[USER]
 			l_input_validator: ESA_RESPONSIBLE_REPORT_INPUT_VALIDATOR
 		do
 			create l_rhf
@@ -201,7 +201,7 @@ feature -- Implementation
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_report_view: ESA_REPORT_VIEW
-			l_list: LIST[ESA_REPORT]
+			l_list: LIST[REPORT]
 		do
 			create l_rhf
 			if
@@ -209,7 +209,7 @@ feature -- Implementation
 				attached current_user_name (req) as l_user
 			then
 				if attached api_service.problem_report_details (l_user, a_id) as l_report then
-					create {ARRAYED_LIST[ESA_REPORT]} l_list.make (1)
+					create {ARRAYED_LIST[REPORT]} l_list.make (1)
 					l_list.force (l_report)
 					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user)
 					l_report_view.set_id (a_id.out)
@@ -226,10 +226,10 @@ feature -- Implementation
 			-- List of reports for a user `a_user' with role Guest or User.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: LIST [ESA_REPORT]
+			l_row: LIST [REPORT]
 			l_pages: INTEGER
-			list_status: LIST [ESA_REPORT_STATUS]
-			l_categories: LIST [ESA_REPORT_CATEGORY]
+			list_status: LIST [REPORT_STATUS]
+			l_categories: LIST [REPORT_CATEGORY]
 			l_report_view: ESA_REPORT_VIEW
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
 		do
@@ -287,7 +287,7 @@ feature -- Implementation
 			end
 		end
 
-	set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
+	set_selected_status (a_status: LIST[REPORT_STATUS]; a_selected_status:  INTEGER)
 			-- Set the current selected status
 		do
 			across a_status as c  loop
@@ -297,7 +297,7 @@ feature -- Implementation
 			end
 		end
 
-	mark_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
+	mark_selected_status (a_status: LIST[REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
 			-- Set the current selected status
 		do
 			across a_status_selected as c  loop

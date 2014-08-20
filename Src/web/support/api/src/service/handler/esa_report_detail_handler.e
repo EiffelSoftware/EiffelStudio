@@ -84,7 +84,6 @@ feature {NONE} -- Implementation
 			-- Retrieve report details for a logged in user `a_user'
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
@@ -165,7 +164,6 @@ feature {NONE} -- Implementation
 			-- Include visible interactions and attachments.
 		local
 				l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-				l_validator: ESA_REPORT_DETAIL_INPUT_VALIDATOR
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then

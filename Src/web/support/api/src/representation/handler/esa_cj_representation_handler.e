@@ -30,7 +30,7 @@ feature -- View
 			end
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: ESA_REPORT)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: REPORT)
 			-- <Precursor>
 		local
 			l_cj: CJ_REPORT_DETAIL
@@ -318,7 +318,7 @@ feature -- View
 		end
 
 
-	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_STATUS])
+	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_STATUS])
 			-- <Precursor>
 		local
 			l_hp: CJ_STATUS
@@ -332,7 +332,7 @@ feature -- View
 		end
 
 
-	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_SEVERITY])
+	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_SEVERITY])
 			-- <Precursor>
 		local
 			l_hp: CJ_SEVERITY
@@ -346,7 +346,7 @@ feature -- View
 		end
 
 
-	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_CATEGORY])
+	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_CATEGORY])
 			-- <Precursor>
 		local
 			l_hp: CJ_CATEGORY
@@ -360,7 +360,7 @@ feature -- View
 		end
 
 
-	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_REPORT_PRIORITY])
+	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[REPORT_PRIORITY])
 			-- <Precursor>
 		local
 			l_hp: CJ_PRIORITY
@@ -373,7 +373,7 @@ feature -- View
 			end
 		end
 
-	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[ESA_USER])
+	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST[USER])
 			-- <Precursor>
 		local
 			l_hp: CJ_USER_RESPONSIBLE

@@ -56,7 +56,7 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_role: ESA_USER_ROLE
+			l_role: USER_ROLE
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then

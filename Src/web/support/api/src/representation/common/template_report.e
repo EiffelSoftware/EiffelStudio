@@ -63,7 +63,7 @@ feature {NONE} --Initialization
 			end
 		end
 
-	set_selected_category (a_categories: LIST[ESA_REPORT_CATEGORY]; a_selected_category:  INTEGER)
+	set_selected_category (a_categories: LIST[REPORT_CATEGORY]; a_selected_category:  INTEGER)
 			-- Set the current selected category
 		do
 			across a_categories as c  loop
@@ -71,7 +71,7 @@ feature {NONE} --Initialization
 			end
 		end
 
-	retrieve_status_query (a_status: LIST[ESA_REPORT_STATUS]): STRING
+	retrieve_status_query (a_status: LIST[REPORT_STATUS]): STRING
 		do
 			Result := "0&"
 			across a_status as c loop
@@ -85,9 +85,9 @@ feature {NONE} --Initialization
 		end
 
 
-	checked_status_query (a_status: LIST[ESA_REPORT_STATUS]): LIST[ESA_REPORT_STATUS]
+	checked_status_query (a_status: LIST[REPORT_STATUS]): LIST[REPORT_STATUS]
 		do
-			create {ARRAYED_LIST[ESA_REPORT_STATUS]} Result.make (0)
+			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
 			across a_status as c loop
 				if c.item.is_selected then
 					Result.force (c.item)

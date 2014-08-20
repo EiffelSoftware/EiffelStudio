@@ -16,6 +16,9 @@ iff not exist iron.exe then
 	CANCEL
 endiff
 move iron.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libcurl.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libeay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\ssleay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
 
 remtrace Recompile syntax_updater
 cdd %EIFFEL_SRC\tools\syntax_updater

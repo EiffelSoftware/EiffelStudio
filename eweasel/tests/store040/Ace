@@ -7,7 +7,8 @@
 		</option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="base_testing" location="$ISE_LIBRARY\library\base\test\test.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>
 </system>

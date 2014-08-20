@@ -6,6 +6,9 @@ note
 class
 	TEST
 
+inherit
+	SERIALIZATION_HELPER
+
 create
 	make
 
@@ -14,15 +17,18 @@ feature {NONE} -- Initialization
 	make
 		local
 			l_file: RAW_FILE
+			l_objects: like retrieved_objects
 		do
 			create t1.make
-			create l_file.make_open_write ("test.bin")
-			l_file.independent_store (t1)
-			l_file.close
-
-			create l_file.make_open_read ("test.bin")
-			if not attached l_file.retrieved as l_obj then
-				io.put_string ("Failure%N")
+			store_object (t1, "stored")
+			l_objects := retrieved_objects ("stored")
+			if l_objects.count /= storable_types.count then
+				io.put_string ("Error occurred. List of successful retrieval:%N")
+				across l_objects as l_item loop
+					io.put_string ("Retrieved " + l_item.key + "%N")
+				end
+			elseif not across l_objects as l_item all deep_equal (l_item.item, t1) end then
+				io.put_string ("Some objects are not equal!%N")
 			end
 		end
 

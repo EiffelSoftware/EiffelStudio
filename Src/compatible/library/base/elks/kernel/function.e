@@ -22,22 +22,18 @@ inherit
 			is_equal, copy
 		end
 
+create {NONE}
+	set_rout_disp
+
 feature -- Access
 
 	last_result: detachable RESULT_TYPE
 			-- Result of last call, if any
 
 	call (args: detachable OPEN_ARGS)
-		local
-			l_closed_count: INTEGER
-			c: like closed_operands
+			-- <Precursor>
 		do
-			c := closed_operands
-			if c/= Void then
-				l_closed_count :=  c.count
-			end
-			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			last_result := item (args)
 		end
 
 	item (args: detachable OPEN_ARGS): RESULT_TYPE
@@ -52,22 +48,14 @@ feature -- Access
 			if c/= Void then
 				l_closed_count :=  c.count
 			end
-			Result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			Result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, routine_id,
+				is_basic, written_type_id_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
 	apply
 			-- Call function with `operands' as last set.
-		local
-			l_closed_count: INTEGER
-			c: like closed_operands
 		do
-			c := closed_operands
-			if c/= Void then
-				l_closed_count :=  c.count
-			end
-			last_result := fast_item (encaps_rout_disp, calc_rout_addr, $closed_operands, $operands, class_id, feature_id,
-				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
+			last_result := item (operands)
 		end
 
 feature -- Comparison
@@ -84,8 +72,10 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Use same function as `other'.
 		do
-			Precursor (other)
-			last_result := other.last_result
+			if other /= Current then
+				Precursor (other)
+				last_result := other.last_result
+			end
 		end
 
 feature -- Obsolete
@@ -114,7 +104,7 @@ feature {NONE} -- Implementation
 
 	fast_item (a_rout_disp, a_calc_rout_addr: POINTER
 		       a_closed_operands: POINTER; a_operands: POINTER
-			   a_class_id, a_feature_id: INTEGER; a_is_precompiled, a_is_basic, a_is_inline_agent: BOOLEAN
+			   a_routine_id: INTEGER; a_is_basic: BOOLEAN; a_class_id_inline_agent: INTEGER;
 			   a_closed_count, a_open_count: INTEGER; a_open_map: POINTER): RESULT_TYPE
 		external
 			"C inline use %"eif_rout_obj.h%""
@@ -127,11 +117,9 @@ feature {NONE} -- Implementation
 						$a_calc_rout_addr, $a_closed_operands, $a_operands).$$_result_value;
 				} else {
 					rout_obj_call_function_dynamic (
-						$a_class_id,
-						$a_feature_id,
-						$a_is_precompiled,
+						$a_routine_id,
 						$a_is_basic,
-						$a_is_inline_agent,
+						$a_class_id_inline_agent,
 						$a_closed_operands,
 						$a_closed_count,
 						$a_operands,

@@ -15,7 +15,7 @@ feature -- Test
 			--	set @data = 'data'
 			--  [data]	
 		local
-			l_enc: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
 			assert ("Expected [data]", (l_enc.encode ("'data'")).same_string("[data]"))
 		end
@@ -24,7 +24,7 @@ feature -- Test
 				-- set @data = 'this data needs to be escaped: ] '
 				-- [this data needs to be escaped: ]] ]		
 		local
-			l_enc: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
 			assert ("Expected [data]", (l_enc.encode ("'this data needs to be escaped: ] '")).same_string("[this data needs to be escaped: ]] ]"))
 		end
@@ -35,7 +35,7 @@ feature -- Test
 			--	set @data = data
 			--  [data]	
 		local
-			l_enc: ESA_DATABASE_SQL_SERVER_ENCODER
+			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
 			assert ("Expected [data]", (l_enc.encode ("data")).same_string("[data]"))
 		end

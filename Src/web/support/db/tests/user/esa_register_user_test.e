@@ -140,18 +140,18 @@ feature -- Factories
 		do
 				--Not exist the user name
 			create l_parameters_memberships.make (1)
-			l_parameters_memberships.put (a_username,{ESA_DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters_memberships.put (a_username,{DATA_PARAMETERS_NAMES}.Username_param)
 			assert ("Expect: Username not a membership", not exist (sql_exist_memberships, l_parameters_memberships))
 
 				--Not is trying to register
 			create l_parameters_register.make (2)
-			l_parameters_register.put (a_username,{ESA_DATA_PARAMETERS_NAMES}.Username_param)
-			l_parameters_register.put (a_email,{ESA_DATA_PARAMETERS_NAMES}.Email_param)
+			l_parameters_register.put (a_username,{DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters_register.put (a_email,{DATA_PARAMETERS_NAMES}.Email_param)
 			assert ("Expect: Username/Email not registered", not exist (sql_exist_registration, l_parameters_register))
 
 				-- Email is not registered
 			create l_parameters_contact.make (1)
-			l_parameters_contact.put (a_email,{ESA_DATA_PARAMETERS_NAMES}.Email_param)
+			l_parameters_contact.put (a_email,{DATA_PARAMETERS_NAMES}.Email_param)
 			assert ("Expect: Email is not a contact", not exist (sql_exist_contact, l_parameters_contact))
 
 				-- Add user

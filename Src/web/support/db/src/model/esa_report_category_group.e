@@ -7,7 +7,7 @@ class
 	ESA_REPORT_CATEGORY_GROUP
 
 inherit
-	ESA_REPORT_FIELD
+	REPORT_FIELD
 
 create
 	make

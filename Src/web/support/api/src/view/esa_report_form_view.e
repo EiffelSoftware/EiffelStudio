@@ -32,16 +32,16 @@ feature -- Access
 	id: INTEGER
 		-- Unique id.
 
- 	categories: LIST[ESA_REPORT_CATEGORY]
+ 	categories: LIST[REPORT_CATEGORY]
  		-- Possible list of categories.
 
- 	severities: LIST[ESA_REPORT_SEVERITY]
+ 	severities: LIST[REPORT_SEVERITY]
  		-- Possible list of severities.
 
-  	classes: LIST[ESA_REPORT_CLASS]
+  	classes: LIST[REPORT_CLASS]
   		-- Possible list of classes.
 
-  	priorities: LIST[ESA_REPORT_PRIORITY]
+  	priorities: LIST[REPORT_PRIORITY]
   		-- Possible list of priorities.
 
   	category: INTEGER

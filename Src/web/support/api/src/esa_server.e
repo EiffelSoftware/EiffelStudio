@@ -29,9 +29,11 @@ inherit
 			{NONE} all
 		end
 
-	ESA_CONSTANTS
+	ESA_APPLICATION_CONSTANTS
 
 	REFACTORING_HELPER
+
+	ARGUMENTS
 
 create
 	make_and_launch
@@ -120,7 +122,7 @@ feature -- ESA Configuraion
  			l_configuration_factory: ESA_CONFIGURATION_FACTORY
  		do
  			create l_configuration_factory
- 			esa_config := l_configuration_factory.esa_config
+ 			esa_config := l_configuration_factory.esa_config (separate_character_option_value ('d'))
 			if attached l_configuration_factory.last_error as l_error then
 				esa_config.set_last_error_from_handler (l_error)
 			else

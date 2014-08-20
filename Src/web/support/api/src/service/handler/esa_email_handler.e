@@ -82,7 +82,7 @@ feature -- HTTP Methods
 					   attached l_email.email as l_new_email and then
 					   attached api_service.user_account_information (l_user).email as ll_email and then
 					   api_service.user_from_email (l_new_email) = Void then
-					   	l_token := (create {ESA_SECURITY_PROVIDER}).token
+					   	l_token := (create {SECURITY_PROVIDER}).token
 					   	api_service.change_user_email (l_user, l_new_email, l_token)
 					   	if api_service.successful then
 						  	email_service.send_email_change_email (ll_email, l_token, req.absolute_script_url (""))

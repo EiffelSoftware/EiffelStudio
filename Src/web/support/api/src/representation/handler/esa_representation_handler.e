@@ -44,7 +44,7 @@ feature -- View
 		deferred
 		end
 
-	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: detachable ESA_REPORT)
+	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: detachable REPORT)
 			-- Problem report representation
 		deferred
 		end
@@ -145,27 +145,27 @@ feature -- View
 		deferred
 		end
 
-	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_status: detachable LIST[ESA_REPORT_STATUS])
+	status_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_status: detachable LIST[REPORT_STATUS])
 			-- Status page
 		deferred
 		end
 
-	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_SEVERITY])
+	severity_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[REPORT_SEVERITY])
 			-- Severity page
 		deferred
 		end
 
-	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_CATEGORY])
+	category_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[REPORT_CATEGORY])
 			-- Category page
 		deferred
 		end
 
-	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_REPORT_PRIORITY])
+	priority_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[REPORT_PRIORITY])
 			-- Priority page
 		deferred
 		end
 
-	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[ESA_USER])
+	responsible_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable LIST[USER])
 			-- Priority page
 		deferred
 		end

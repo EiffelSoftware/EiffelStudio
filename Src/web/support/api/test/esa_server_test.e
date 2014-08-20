@@ -84,7 +84,7 @@ feature -- ESA configuration
 
  	setup_config
  		do
- 			esa_config := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test
+ 			esa_config := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test (separate_character_option_value ('d'))
 		end
 
 	server_name: STRING = "JVELILLA\SQLEXPRESS"
@@ -97,7 +97,7 @@ feature -- ESA configuration
 	 	-- Database schema.
 
 
-	db_connection: ESA_DATABASE_CONNECTION
+	db_connection: DATABASE_CONNECTION
 		do
 			if attached esa_config as l_config then
 				Result := l_config.database

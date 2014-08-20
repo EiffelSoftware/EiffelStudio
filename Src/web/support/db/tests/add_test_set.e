@@ -14,15 +14,15 @@ feature -- Test
 
 	test_add_user
 		local
-			ld: ESA_REPORT_DATA_PROVIDER
+			ld: REPORT_DATA_PROVIDER
 		do
 			create ld.make (connection)
 --			assert ("Expected False", not ld.add_user ("test001", "test001","test001", "test001", "test001", "answer", "token", 1))
 		end
 
-	connection: ESA_DATABASE_CONNECTION
+	connection: DATABASE_CONNECTION
 		once
-			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
+			create {DATABASE_CONNECTION_ODBC}Result.make_common
 		end
 
 end

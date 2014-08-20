@@ -20,7 +20,7 @@ feature {NONE}-- Initialization
 			username_set: username = a_username
 		end
 
-	make_from_user_info (a_user_info: ESA_USER_INFORMATION)
+	make_from_user_info (a_user_info: USER_INFORMATION)
 			-- Create a new instance from user information `a_user_info'.
 		do
 			username := a_user_info.username
@@ -99,7 +99,7 @@ feature -- Access : Personal Information
 	position: detachable STRING
 			-- Position.
 
-	countries: detachable LIST[ESA_COUNTRY]
+	countries: detachable LIST[COUNTRY]
 			-- Countries.
 
 	selected_country: detachable STRING

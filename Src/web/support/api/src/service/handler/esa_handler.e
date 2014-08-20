@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_SHARED_LOGGER
+	SHARED_LOGGER
 
 feature -- User
 
@@ -18,18 +18,18 @@ feature -- User
 			EIS: "name=Authentication Filter", "src=https://svn.eiffel.com/eiffelstudio/trunk/Src/web/support/esa_api/src/service/filter/esa_authentication_filter.e", "protocol=URI"
 			EIS: "src=eiffel:?class=ESA_AUTHENTICATION_FILTER&feature=execute"
 		do
-			if attached {ESA_USER} current_user (req) as l_user then
+			if attached {USER} current_user (req) as l_user then
 				Result := l_user.name
 			end
 		end
 
-	current_user (req: WSF_REQUEST): detachable ESA_USER
+	current_user (req: WSF_REQUEST): detachable USER
 			-- Current user or Void in case of Guest user.
 		note
 			EIS: "name=Authentication Filter", "src=https://svn.eiffel.com/eiffelstudio/trunk/Src/web/support/esa_api/src/service/filter/esa_authentication_filter.e", "protocol=URI"
 			EIS: "eiffel:?class=ESA_AUTHENTICATION_FILTER&feature=execute"
 		do
-			if attached {ESA_USER} req.execution_variable ("user") as l_user then
+			if attached {USER} req.execution_variable ("user") as l_user then
 				Result := l_user
 			end
 		end

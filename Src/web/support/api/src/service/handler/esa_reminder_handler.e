@@ -72,7 +72,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_email: READABLE_STRING_32
 			l_error: detachable STRING;
-			l_security: ESA_SECURITY_PROVIDER
+			l_security: SECURITY_PROVIDER
 			l_token: STRING
 
 		do

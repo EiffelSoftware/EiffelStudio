@@ -17,7 +17,7 @@ create
 
 feature -- Internal data
 
-	internal_data (fn: STRING; obj: ESA_REPORT_CATEGORY): detachable CELL [detachable ANY]
+	internal_data (fn: STRING; obj: REPORT_CATEGORY): detachable CELL [detachable ANY]
 		local
 			l_fn: STRING
 		do

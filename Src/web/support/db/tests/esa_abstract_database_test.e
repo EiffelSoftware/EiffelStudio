@@ -33,7 +33,7 @@ feature {NONE} -- Events
 			l_env.change_working_directory (l_old_dir)
 
 				--
-			create {ESA_DATABASE_CONNECTION_ODBC} connection.login_with_connection_string ("Driver={SQL Server Native Client 11.0};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;")
+			create {DATABASE_CONNECTION_ODBC} connection.login_with_connection_string ("Driver={SQL Server Native Client 11.0};Server=" + {ESA_DATABASE_TEST_CONFIG}.server_name + ";Database=" + {ESA_DATABASE_TEST_CONFIG}.database_name + ";Trusted_Connection=Yes;")
 		end
 
 
@@ -44,7 +44,7 @@ feature -- Helper queries
 				-- Number of rows for the given query `a_query' using parameters `a_parameters'
 		do
 			connection.connect
-			db_handler.set_query (create {ESA_DATABASE_QUERY}.data_reader (a_query, a_parameters))
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_query, a_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
 				db_handler.start
@@ -63,34 +63,34 @@ feature -- Helper queries
 
 feature -- Database Providers
 
-	database_provider: ESA_REPORT_DATA_PROVIDER
+	database_provider: REPORT_DATA_PROVIDER
 		do
 			create Result.make (connection)
 		end
 
-	login_provider: ESA_LOGIN_DATA_PROVIDER
+	login_provider: LOGIN_DATA_PROVIDER
 		do
 			create Result.make (connection)
 		end
 
 feature -- Database Hanlder
 
-	db_handler: ESA_DATABASE_HANDLER
+	db_handler: DATABASE_HANDLER
 			-- Db handler
 		once
-			create {ESA_DATABASE_HANDLER_IMPL} Result.make (connection)
+			create {DATABASE_HANDLER_IMPL} Result.make (connection)
 		end
 
 feature -- Security Provider
 
-	security: ESA_SECURITY_PROVIDER
+	security: SECURITY_PROVIDER
 		do
 			create Result
 		end
 
 feature -- Configuration
 
-	connection: ESA_DATABASE_CONNECTION
+	connection: DATABASE_CONNECTION
 			-- Database connection
 
 feature -- Script directory

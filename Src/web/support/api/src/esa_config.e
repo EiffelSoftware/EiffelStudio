@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ESA_SHARED_ERROR
+	SHARED_ERROR
 
 
 create
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_database: ESA_DATABASE_CONNECTION; a_api_service: ESA_API_SERVICE; a_email_service: ESA_EMAIL_SERVICE; a_layout: ESA_LAYOUT )
+	make (a_database: DATABASE_CONNECTION; a_api_service: ESA_API_SERVICE; a_email_service: ESA_EMAIL_SERVICE; a_layout: APPLICATION_LAYOUT )
 			-- Create an object with defaults.
 		do
 			database := a_database
@@ -39,7 +39,7 @@ feature -- Access
 		end
 
 
-	database: ESA_DATABASE_CONNECTION
+	database: DATABASE_CONNECTION
 			-- Database connection.
 
 	api_service: ESA_API_SERVICE
@@ -48,7 +48,7 @@ feature -- Access
 	email_service: ESA_EMAIL_SERVICE
 			-- Email service.
 
-	layout: ESA_LAYOUT
+	layout: APPLICATION_LAYOUT
 			-- Api layout.		
 
 end

@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reports: LIST[ESA_REPORT]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[ESA_REPORT_CATEGORY]; a_status: LIST[ESA_REPORT_STATUS]; a_user: detachable ANY)
+	make (a_reports: LIST[REPORT]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST[REPORT_CATEGORY]; a_status: LIST[REPORT_STATUS]; a_user: detachable ANY)
 			-- Create a new object with reports `a_reports'
 			-- current page `a_index'
 			-- number of pages `a_pages'
@@ -40,7 +40,7 @@ feature -- Access
 	id: detachable STRING
 		-- Report id.
 
-	reports: LIST[ESA_REPORT]
+	reports: LIST[REPORT]
 		-- Possible list of reports.
 
 	index: INTEGER
@@ -52,19 +52,19 @@ feature -- Access
 	pages: INTEGER
 		-- Number of pages.
 
-	categories: LIST[ESA_REPORT_CATEGORY]
+	categories: LIST[REPORT_CATEGORY]
 		-- Possible list of report problem categories.
 
-	status: LIST[ESA_REPORT_STATUS]
+	status: LIST[REPORT_STATUS]
 		-- Possible list of report problem status.
 
-	responsibles: detachable LIST[ESA_USER]
+	responsibles: detachable LIST[USER]
 		-- Possible list of report problem responsibles.
 
-	priorities: detachable LIST[ESA_REPORT_PRIORITY]
+	priorities: detachable LIST[REPORT_PRIORITY]
 		-- Possible list of report problem  priorities.
 
-	severities: detachable LIST[ESA_REPORT_SEVERITY]
+	severities: detachable LIST[REPORT_SEVERITY]
 		-- Possible list of report problem severities
 
 	user: detachable ANY

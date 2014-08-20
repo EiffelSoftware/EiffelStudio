@@ -61,11 +61,11 @@ feature {NONE} --Initialization
 			process
 	end
 
-	selected_item_by_synopsis (a_items: LIST [ESA_REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
+	selected_item_by_synopsis (a_items: LIST [REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item.
 		local
 			l_found: BOOLEAN
-			l_item: ESA_REPORT_SELECTABLE
+			l_item: REPORT_SELECTABLE
 		do
 			from
 				a_items.start

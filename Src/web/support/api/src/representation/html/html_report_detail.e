@@ -17,7 +17,7 @@ create
 	make
 
 feature {NONE} -- {Initialization}
-	make (a_host: READABLE_STRING_GENERAL; a_report: detachable ESA_REPORT; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: reports_detail.tpl")

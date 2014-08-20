@@ -24,7 +24,7 @@ feature -- Test routines
 	test_password_salt_success
 			-- The user exist
 		local
-			db: ESA_REPORT_DATA_PROVIDER
+			db: REPORT_DATA_PROVIDER
 		do
 			create db.make (connection)
  			assert("Expected not Void",attached db.user_password_salt ("jvelilla"))
@@ -33,8 +33,8 @@ feature -- Test routines
 	test_password_hash_success
 			-- The user exist
 		local
-			db: ESA_REPORT_DATA_PROVIDER
-			ld: ESA_LOGIN_DATA_PROVIDER
+			db: REPORT_DATA_PROVIDER
+			ld: LOGIN_DATA_PROVIDER
 			l_sha_password: STRING
 			l_value: BOOLEAN
 		do
@@ -52,7 +52,7 @@ feature -- Test routines
 
 	test_is_active_true
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			assert("Expected True:", l_db.is_active ("jvelilla"))
@@ -60,7 +60,7 @@ feature -- Test routines
 
 	test_is_active_false
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			assert("Expected False:", not l_db.is_active ("raphaels"))
@@ -68,7 +68,7 @@ feature -- Test routines
 
 	test_is_active_user_not_exist
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			assert("Expected False:", not l_db.is_active ("notexist_001"))
@@ -77,7 +77,7 @@ feature -- Test routines
 
 	test_countries
 		local
-			l_db: ESA_LOGIN_DATA_PROVIDER
+			l_db: LOGIN_DATA_PROVIDER
 		do
 			create l_db.make (connection)
 			l_db.connect
@@ -102,9 +102,9 @@ feature -- Helpers
 			create Result.make
 		end
 
-	connection: ESA_DATABASE_CONNECTION
+	connection: DATABASE_CONNECTION
 		once
-			create {ESA_DATABASE_CONNECTION_ODBC}Result.make_common
+			create {DATABASE_CONNECTION_ODBC}Result.make_common
 		end
 
 end

@@ -67,10 +67,10 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: LIST[ESA_REPORT]
+			l_row: LIST[REPORT]
 			l_view: ESA_REPORT_VIEW
-			list_status: LIST[ESA_REPORT_STATUS]
-			l_categories: LIST[ESA_REPORT_CATEGORY]
+			list_status: LIST[REPORT_STATUS]
+			l_categories: LIST[REPORT_CATEGORY]
 			l_pages : INTEGER
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
 		do
@@ -117,7 +117,7 @@ feature -- HTTP Methods
 
 feature {NONE} --Implementation
 
-	set_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_selected_status:  INTEGER)
+	set_selected_status (a_status: LIST[REPORT_STATUS]; a_selected_status:  INTEGER)
 			-- Set the current selected status.
 		do
 			across a_status as c  loop
@@ -127,7 +127,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	mark_selected_status (a_status: LIST[ESA_REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
+	mark_selected_status (a_status: LIST[REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
 			-- Set the current selected status.
 		do
 			across a_status_selected as c  loop

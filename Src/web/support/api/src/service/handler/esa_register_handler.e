@@ -113,7 +113,7 @@ feature -- HTTP Methods
 			-- Add a new user with `a_register' data, if it's ok.
 		local
 			l_token: STRING
-			l_security: ESA_SECURITY_PROVIDER
+			l_security: SECURITY_PROVIDER
 			l_encode: URL_ENCODER
 		do
 			create l_security

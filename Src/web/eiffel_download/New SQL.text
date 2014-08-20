@@ -1,0 +1,12 @@
+New SQL
+
+Table
+DownloadExpiration
+ContactsTemporary
+
+SP
+GetDownloadExpirationTokenAge
+InitializeDownload             -- Add row to the DownloadExpirationTable.
+RemoveDownloadExpiration
+AddDownloadInteractionContact
+GetContactFromEmail

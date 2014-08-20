@@ -84,7 +84,9 @@ feature {NONE} -- Settings
 		do
 			if {PLATFORM}.is_thread_capable then
 				create l_prc_factory
-				l_prc_launcher := l_prc_factory.process_launcher (a_iron_cmd.name, a_arguments, Void)
+					-- Launch the iron command in `eiffel_layout.bin_path' (i.e $ISE_EIFFEL/studio/soec/$ISE_PLATFORM/bin)
+					-- to have access to the required DLLs on Windows (libcurl,...).
+				l_prc_launcher := l_prc_factory.process_launcher (a_iron_cmd.name, a_arguments, eiffel_layout.bin_path.name)
 				l_prc_launcher.set_separate_console (False)
 				l_prc_launcher.launch
 				if l_prc_launcher.launched then

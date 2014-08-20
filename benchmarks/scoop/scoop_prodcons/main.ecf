@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="main" uuid="21D059D6-B9E7-4830-9AF5-E47945D749CF">
+	<target name="main">
+		<root class="APPLICATION" feature="make"/>
+		<setting name="concurrency" value="scoop"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="prodcons" location=".\"/>
+	</target>
+	<target name="main-qs" extends="main">
+		<setting name="eveqs" value="true"/>
+	</target>
+</system>

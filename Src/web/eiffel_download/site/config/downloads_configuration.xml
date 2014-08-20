@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<downloads >
+  <platforms>
+    <platform id="freebsd-x86-64" icon="icon_freebsd.png">FreeBSD (64-bit)</platform>
+    <platform id="freebsd-x86" icon="icon_freebsd.png">FreeBSD (32-bit)</platform>
+    <platform id="irix-mips-64" icon="icon_sgi.png">Irix (64-bit)</platform>
+    <platform id="irix-mips" icon="icon_sgi.png">Irix (32-bit)</platform>
+    <platform id="linux-ppc" icon="icon_linux.png">Linux on PPC</platform>
+    <platform id="linux-sparc" icon="icon_linux.png">Linux on Sparc</platform>
+    <platform id="linux-x86-64" icon="icon_linux.png">Linux (64-bit)</platform>
+    <platform id="linux-x86" icon="icon_linux.png">Linux (32-bit)</platform>
+    <platform id="macosx-x86-64" icon="icon_mac_osx.png">Mac OSX (64-bit)</platform>
+    <platform id="openbsd-x86-64" icon="icon_openbsd.png">OpenBSD (64-bit)</platform>
+    <platform id="openbsd-x86" icon="icon_openbsd.png">OpenBSD (32-bit)</platform>
+    <platform id="solaris-sparc-64" icon="icon_solaris.png">Solaris 10 on Sparc (64-bit)</platform>
+    <platform id="solaris-sparc" icon="icon_solaris.png">Solaris 10 on Sparc (32-bit)</platform>
+    <platform id="solaris-x86-64" icon="icon_solaris.png">Solaris 10 on x64 (64-bit)</platform>
+    <platform id="solaris-x86" icon="icon_solaris.png">Solaris 10 on x86 (32-bit)</platform>
+	<platform id="win64" icon="icon_windows.png">Windows XP or greater (64-bit)</platform>
+	<platform id="windows" icon="icon_windows.png">Windows XP or greater (32-bit)</platform>
+    <platform id="windows-x86-64" icon="icon_windows.png">Windows XP or greater (64-bit)</platform>
+    <platform id="windows-x86" icon="icon_windows.png">Windows XP or greater (32-bit)</platform>
+  </platforms>
+
+  <mirrors id="eiffelstudio">
+    <mirror priority="95" type="http"  url="http://downloads.sourceforge.net/eiffelstudio/">SourceForge.net (HTTP)</mirror>
+    <mirror priority="92" type="http" url="http://ftp.eiffel.com/pub/download/13.11/">EiffelSoftware (USA, HTTP)</mirror>
+    <mirror priority="91" type="ftp"  url="ftp://ftp.eiffel.com/pub/download/13.11/">EiffelSoftware (USA, FTP)</mirror>
+	<!--    <mirror priority="85" type="http"  url="http://download.origo.ethz.ch/eiffelstudio/">Origo (Switzerland, HTTP)</mirror>-->
+	<!--    <mirror priority="80" type="ftp"  url="ftp://ftp.cs.rit.edu/pub/mirrors/ise/download/71/">Rochester Institute of Technology (USA, FTP)</mirror> -->
+	<!--	<mirror priority="70" type="ftp"  url="ftp://ftp.inf.ethz.ch/pub/mirror/eiffel/71/">ETH Zurich (Switzerland, FTP)</mirror> -->
+	<!--    <irror priority="60" type="ftp"  url="ftp://ftp.deakin.edu.au/pub/eiffel/download/71/">Deakin Univeristy (Australia, FTP)</mirror>-->
+    <!--    <mirror priority="50" type="ftp" url="ftp://apollon.cs.abo.fi/eiffel/71/">Åbo Akademi (Finland, FTP)</mirror>-->
+	<!--    <mirror priority="45" type="ftp"  url="ftp://ftp.gmu.edu/eiffel/ftp.eiffel.com/pub/download/71/">George Mason University (USA, FTP)</mirror>-->
+	<!--    <mirror priority="40" type="ftp"  url="ftp://ftp.pucpr.br/eiffel/71/">Pontifícia Universidade Católica do Paraná (Brazil, FTP)</mirror>-->
+    <!--    <mirror priority="35" type="ftp" url="ftp://ftp.um.es/mirror/eiffel/71/">Universidad De Murcia (Spain, FTP)</mirror> -->
+	<!--    <mirror priority="30" type="ftp"  url="ftp://gd.tuwien.ac.at/languages/eiffel/download/71/">ITS Vienna University of Technology (Austria, FTP)</mirror> -->
+	<!--    <irror priority="20" type="http" url="http://gd.tuwien.ac.at/languages/eiffel/download/71/">ITS Vienna University of Technology (Austria, HTTP)</mirror> -->
+	<!--    <mirror priority="10" type="ftp"  url="ftp://ftp.informatik.uni-stuttgart.de/pub/eiffel/mirrors/ise/download/71/">Universitäte Stuttgart (Germany, FTP)</mirror> -->
+  </mirrors>
+
+  <mirrors id="public">
+    <mirror priority="92" type="ftp"  url="ftp://ftp.eiffel.com/pub/download/">EiffelSoftware (USA, FTP)</mirror>
+    <mirror priority="91" type="http" url="http://ftp.eiffel.com/pub/download/">EiffelSoftware (USA, HTTP)</mirror>
+    <mirror priority="80" type="ftp"  url="ftp://ftp.cs.rit.edu/pub/mirrors/ise/download/">Rochester Institute of Technology (USA, FTP)</mirror>
+    <mirror priority="70" type="ftp"  url="ftp://ftp.inf.ethz.ch/pub/mirror/eiffel/">ETH Zurich (Switzerland, FTP)</mirror>
+    <mirror priority="60" type="ftp"  url="ftp://ftp.deakin.edu.au/pub/eiffel/download/">Deakin Univeristy (Australia, FTP)</mirror>
+<!--    <mirror priority="50" type="ftp" url="ftp://apollon.cs.abo.fi/eiffel/">Åbo Akademi (Finland, FTP)</mirror>-->
+    <mirror priority="45" type="ftp"  url="ftp://ftp.gmu.edu/eiffel/ftp.eiffel.com/pub/download/">George Mason University (USA, FTP)</mirror>
+    <mirror priority="40" type="ftp"  url="ftp://ftp.pucpr.br/eiffel/">Pontifícia Universidade Católica do Paraná (Brazil, FTP)</mirror>
+<!--    <mirror priority="35" type="ftp" url="ftp://ftp.um.es/mirror/eiffel/">Universidad De Murcia (Spain, FTP)</mirror> -->
+    <mirror priority="30" type="ftp"  url="ftp://gd.tuwien.ac.at/languages/eiffel/download/">ITS Vienna University of Technology (Austria, FTP)</mirror>
+    <mirror priority="20" type="http" url="http://gd.tuwien.ac.at/languages/eiffel/download/">ITS Vienna University of Technology (Austria, HTTP)</mirror>
+    <mirror priority="10" type="ftp"  url="ftp://ftp.informatik.uni-stuttgart.de/pub/eiffel/mirrors/ise/download/">Universitäte Stuttgart (Germany, FTP)</mirror>
+  </mirrors>
+  
+  <mirrors id="private">
+    <mirror priority="02" type="ftp" url="ftp://enterprise:enterprise57@ftp.eiffel.com/">EiffelSoftware (USA, FTP)</mirror>
+  </mirrors>
+  
+  <products> 
+    <product id="eiffelstudio_ent" name="EiffelStudio" version="13.11 Enterprise Evaluation Edition" release="Official Release" date="Winter 2013" sub_directory="13.11" icon="eiffelstudio_ent.png" public="true" for_evaluation="true" mirrors="private">
+      <license name="Enterprise" url="enterprise.html"/>
+      <blerb><![CDATA[
+<h2>EiffelStudio: A Contract for Success</h2>
+<p>
+Take full advantage of the power of Object Technology ... and more
+<p>
+EiffelStudio is more than just an IDE. With EiffelStudio you can model your
+system as you think - capturing your requirements and your thought processes in
+Eiffel. Then, when you are ready to design, you build upon the model you just
+created, still with EiffelStudio. And then you implement, in EiffelStudio. You
+never need to throw anything out and start over. You don't need extra tools to
+be able to go back and make changes in architecture safely. Roundtrip
+engineering? It's built in by design. Testing, metrics and productivity tools?
+They're built in. What about debugging? EiffelStudio native Design by Contract™
+mechanism prevents 90% of the bugs from ever occurring - and what bugs remain
+are easily traced and fixed. If you are using other languages and tools chances
+are that EiffelStudio will interface with the code you already have.
+<p>
+We thank you for downloading EiffelStudio. If you have questions please post
+them to our <a href="http://groups.eiffel.com">user mailing-list</a>.
+<p>
+Enjoy EiffelStudio and if you do let your friends know!
+<p>
+]]></blerb>
+		<download platform="freebsd-x86-64" filename="Eiffel_13.11_ent_93542-freebsd-x86-64.tar.bz2" size="76750761" md5="fd607c32553225f3608d286704690389" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="freebsd-x86" filename="Eiffel_13.11_ent_93542-freebsd-x86.tar.bz2" size="68653653" md5="e33e8ebf0ddac5e0a873ff75dcd85c18" cdkey="46782-67611-21125-82441-92581-71882"/> 
+		<download platform="linux-x86-64" filename="Eiffel_13.11_ent_93542-linux-x86-64.tar.bz2" size="83356218" md5="df489be7c7b598c7d85e350cd474e638" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="linux-x86" filename="Eiffel_13.11_ent_93542-linux-x86.tar.bz2" size="71732826" md5="f3bbb6348369ac6dc866e0cf4afb98cf" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="macosx-x86-64" filename="Eiffel_13.11_ent_93542-macosx-x86-64.tar.bz2" size="68421986" md5="c6c794bbf7615ad9296ec32481000a27" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="openbsd-x86-64" filename="Eiffel_13.11_ent_93542-openbsd-x86-64.tar.bz2" size="80664195" md5="0df9ed3e3f30dff5b0b5e8ea1709d786" cdkey="46782-67611-21125-82441-92581-71882"/>
+<!--		<download platform="openbsd-x86" filename="Eiffel_13.11_ent_93542-openbsd-x86.tar.bz2" size=" " md5=" " cdkey=" "/> -->
+		<download platform="solaris-sparc-64" filename="Eiffel_13.11_ent_93542-solaris-sparc-64.tar.bz2" size="90095988" md5="4bec368b06877ebd0a88bf89f65252d2" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="solaris-sparc" filename="Eiffel_13.11_ent_93542-solaris-sparc.tar.bz2" size="90069905" md5="9b948692defdb5ae974f89c6e9851e4b" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="solaris-x86-64" filename="Eiffel_13.11_ent_93542-solaris-x86-64.tar.bz2" size="77139132" md5="e3c0427bcd5a1fc63379cdfa14c112f9" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="solaris-x86" filename="Eiffel_13.11_ent_93542-solaris-x86.tar.bz2" size="68007866" md5="33b62bfdaf425b2b5ce359107f827a2c" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="win64" filename="Eiffel_13.11_ent_93542-win64.msi" size="135389212" md5="58b7e24162eb4abc22a85b3712a36e21" cdkey="46782-67611-21125-82441-92581-71882"/>
+		<download platform="windows" filename="Eiffel_13.11_ent_93542-windows.msi" size="123618308" md5="9aeb6f639fea369b0eee811b2045a63b" cdkey="46782-67611-21125-82441-92581-71882"/>
+    </product>
+    
+    <product id="eiffelstudio" name="EiffelStudio" version="13.11 GPL" release="Official Release" date="Winter 2013" icon="eiffelstudio.png" public="true" mirrors="eiffelstudio">
+      <license name="GPL" url="gpl.html"/>
+      <blerb><![CDATA[
+<p>
+<hr width="90%" color="#DDDDDD">
+<p>Welcome to the GPL Edition of EiffelStudio!</p>
+<p>If you are a professional programmer we are pleased to see you download EiffelStudio to develop open-source applications and domain specific libraries for the benefit of the programming community.</p>
+<p>The procedure for contributing is simple:</p>
+<ul>
+	<li>Create a project repository at <a href="http://sourceforge.net/">SourceForge</a>.</li>
+	<li>Announce the project on the <a href="http://dev.eiffel.com/Category:Projects#Adding_your_own_project">EiffelStudio development wiki page</a> with a short description and a link to the Sourceforge project. Include relevant tags to make sure others can find your code easily.</li>
+	<li>Make sure to keep the SourceForge project page up to date with the evolution of your code.</li>
+	<li><a href="http://www.eiffel.com/general/general_feedback.html">Contact us</a>, if you have any questions. We are ready to help.</li>
+</ul>
+
+<p>If you are a student learning programming thank you for choosing EiffelStudio for your study. You might want to select <a href="http://docs.eiffel.com/isedoc/uuid/3b4afd2f-6433-c619-f9a4-602c430c6902">"Touch of Class: learning to program well with Objects and contract"</a> as a supporting textbook for this task.</p>
+
+<p>If you only want to evaluate EiffelStudio for future projects please download our <a href="https://www2.eiffel.com/download/">Evaluation Edition.</a></p>
+
+<p>We wish you all much success.</p>
+<hr width="90%" color="#DDDDDD">
+<h2>EiffelStudio: A Contract for Success</h2>
+<p>
+Take full advantage of the power of Object Technology ... and more
+</p>
+<p>
+EiffelStudio is more than just an IDE. With EiffelStudio you can model your
+system as you think - capturing your requirements and your thought processes in
+Eiffel. Then, when you are ready to design, you build upon the model you just
+created, still with EiffelStudio. And then you implement, in EiffelStudio. You
+never need to throw anything out and start over. You don't need extra tools to
+be able to go back and make changes in architecture safely. Roundtrip
+engineering? It's built in by design. Testing, metrics and productivity tools?
+They're built in. What about debugging? EiffelStudio native Design by Contract™
+mechanism prevents 90% of the bugs from ever occurring - and what bugs remain
+are easily traced and fixed. If you are using other languages and tools chances
+are that EiffelStudio will interface with the code you already have.
+</p><p>
+We thank you for downloading EiffelStudio. If you have questions please post
+them to our <a href="http://groups.eiffel.com">user mailing-list</a>.
+</p><p>
+Enjoy EiffelStudio and if you do let your friends know!
+</p>
+]]></blerb>
+		<download platform="freebsd-x86-64" filename="Eiffel_13.11_gpl_93542-freebsd-x86-64.tar.bz2" size="75453089" md5="f86d73594e7c3c83e05c0de454e08196"/>
+		<download platform="freebsd-x86" filename="Eiffel_13.11_gpl_93542-freebsd-x86.tar.bz2" size="67383398" md5="73730a28bf9b925709219524c113add3"/>
+		<download platform="linux-x86-64" filename="Eiffel_13.11_gpl_93542-linux-x86-64.tar.bz2" size="82061433" md5="5aa3df41c151d445f9033ec5827bc0d0"/>
+		<download platform="linux-x86" filename="Eiffel_13.11_gpl_93542-linux-x86.tar.bz2" size="70506682" md5="e88a7a706bc0c7b0a97c5a2f8533a164"/>
+		<download platform="macosx-x86-64" filename="Eiffel_13.11_gpl_93542-macosx-x86-64.tar.bz2" size="67432962" md5="3df1daeba6b91a44567392c8287d4121"/>
+		<download platform="openbsd-x86-64" filename="Eiffel_13.11_gpl_93542-openbsd-x86-64.tar.bz2" size="79269275" md5="0e2a04ceeefc29736c41a72fb106c110"/>
+<!--		<download platform="openbsd-x86" filename="Eiffel_13.11_gpl_93542-openbsd-x86.tar.bz2" size=" " md5=" "/> -->
+		<download platform="solaris-sparc-64" filename="Eiffel_13.11_gpl_93542-solaris-sparc-64.tar.bz2" size="88615557" md5="42dad679eb806003a54c67bec0cb3b4e"/>
+		<download platform="solaris-sparc" filename="Eiffel_13.11_gpl_93542-solaris-sparc.tar.bz2" size="88496462" md5="66f8ca0deabf449d8f51b7fb2f9e9397"/>
+		<download platform="solaris-x86-64" filename="Eiffel_13.11_gpl_93542-solaris-x86-64.tar.bz2" size="75814649" md5="87b26b706b1eddf8fdfb439d43b5ce19"/>
+		<download platform="solaris-x86" filename="Eiffel_13.11_gpl_93542-solaris-x86.tar.bz2" size="66950645" md5="30d1f55148691a14f39471d1478f3936"/>
+		<download platform="win64" filename="Eiffel_13.11_gpl_93542-win64.msi" size="135350437" md5="caef4e370cf216430b5471ec3c436344"/>
+		<download platform="windows" filename="Eiffel_13.11_gpl_93542-windows.msi" size="123575656" md5="c08af33d55cd30d84cbc9e01edd48594"/>
+    </product>
+  </products>
+</downloads>

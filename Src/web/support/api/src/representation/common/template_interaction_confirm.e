@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ESA_INTERACTION_CONFIRM_PAGE}."
+	description: "Interaction confirm template page, setting common properties to CJ and HTML media types"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_INTERACTION_CONFIRM_PAGE
+	TEMPLATE_INTERACTION_CONFIRM
 
 inherit
 
@@ -13,15 +13,13 @@ inherit
 create
 	make
 
-feature {NONE} --Initialization
+feature {NONE} -- Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY;)
+	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY; a_template: READABLE_STRING_32)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: interaction_form_confirm.tpl")
-			set_template_folder (html_path)
-			set_template_file_name ("interaction_form_confirm.tpl")
-			template.add_value (a_host, "host")
+			set_template_file_name (a_template)
+			add_host (a_host)
 			template.add_value (a_form.categories, "categories")
 			template.add_value (a_form.status, "status")
 			template.add_value (a_form, "form")
@@ -57,9 +55,10 @@ feature {NONE} --Initialization
 				template.add_value (a_user, "user")
 				template.add_value (has_access(l_user, a_form), "has_access")
 			end
-				-- Process current template
-			process
-	end
+
+		end
+
+feature -- Implementation
 
 	selected_item_by_synopsis (a_items: LIST [REPORT_SELECTABLE]; a_synopsis: READABLE_STRING_32): INTEGER
 			-- Retrieve the current selected item.

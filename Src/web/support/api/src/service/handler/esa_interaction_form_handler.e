@@ -382,32 +382,45 @@ feature {NONE} -- Implementation
 			l_parser: JSON_PARSER
 			l_list: LIST[ESA_FILE_VIEW]
 			l_content: STRING
+			i: INTEGER
 		do
 			create Result.make (api_service.status, api_service.all_categories)
 			create l_parser.make_parser (retrieve_data (req))
 			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then attached {JSON_ARRAY} l_template.item ("data") as l_data then
-					--		 <"name":  "category", "prompt": "Category", "value": "">,
-					--        <"name": "status", "prompt": "Status", "value": "">,
-					--        <"name": "private", "prompt": "Private", "value": "">,
-					--        <"name": "description", "prompt": "Description", "value": "">,
+					--		description
+					--    	category *
+					--      status *
+					--      private *
+					--	    attachments
 				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("category") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-					Result.set_category (l_value.item.to_integer)
-				end
-				if attached {JSON_OBJECT} l_data.i_th (2) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("status") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-					Result.set_selected_status (l_value.item.to_integer)
-				end
-				if attached {JSON_OBJECT} l_data.i_th (3) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("private") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
-					Result.set_private (l_value.item.to_boolean)
-				end
-				if attached {JSON_OBJECT} l_data.i_th (4) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 					l_name.item.same_string ("description") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
 					Result.set_description (l_value.item)
+					i := 2
 				end
-				if attached {JSON_OBJECT} l_data.i_th (5) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
+				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("category") then
+					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+						Result.set_category (l_value.item.to_integer)
+					end
+					i := i + 1
+				end
+				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("status") then
+					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+						Result.set_selected_status (l_value.item.to_integer)
+					end
+					i := i + 1
+				end
+				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("private") then
+					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
+						Result.set_private (l_value.item.to_boolean)
+					end
+					i := i + 1
+				end
+
+				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
 					create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
 					across l_files as c  loop
 						if attached {JSON_OBJECT} c.item as jo and then attached {JSON_STRING} jo.item("name") as l_key and then

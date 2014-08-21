@@ -148,11 +148,15 @@
    {if isset="$id"}        
     "template": <
       "data": [
+        <"name": "description", "prompt": "Description","value" : "{$form.description/}">,
+        {if condition="$has_access"}
         <"name": "category", "prompt": "Category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "{$form.category/}">, 
         <"name": "status", "prompt": "Status","acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "{$form.selected_status/}">,
-        <"name": "private", "prompt": "Private", "value" : "{$form.private/}">,
-        <"name": "description", "prompt": "Description","value" : "{$form.description/}">,
-         <"name" : "attachments", "files" : [{foreach from="$uploaded_files", item="file"} <"name":"{$file.name/}", "value":"">,{/foreach}] , "prompt" : "Attachments">
+        {/if}
+        {if condition="$form.is_responsible_or_admin"}
+         <"name": "private", "prompt": "Private", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], "value" : "{$form.private/}">,
+        {/if}
+        <"name" : "attachments", "files" : [{foreach from="$temporary_files", item="file"} <"name":"{$file.name/}", "value":"">,{/foreach}] , "prompt" : "Attachments">
       ]
       >
     {/if}
@@ -160,10 +164,14 @@
     {unless isset="$id"}        
     "template": <
       "data": [
+        <"name": "description", "prompt": "Description", "value" : "">,
+        {if condition="$has_access"}
         <"name": "category", "prompt": "Category","acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "">, 
         <"name": "status", "prompt": "Status", "acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], "value" : "">,
-        <"name": "private", "prompt": "Private", "value" : "">,
-        <"name": "description", "prompt": "Description", "value" : "">,
+        {/if}
+        {if condition="$form.is_responsible_or_admin"}
+        <"name": "private", "prompt": "Private", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], "value" : "{$form.private/}">,
+        {/if}
         <"name" : "attachments", "files" : [<>] , "prompt" : "Attachments">
       ]
       >

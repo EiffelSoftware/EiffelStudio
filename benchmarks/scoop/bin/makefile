@@ -35,9 +35,13 @@ benchmark::
 benchmark build clean::
 	$(MAKE) ACTION=$* chain
 	$(MAKE) ACTION=$* chameneos
+	$(MAKE) ACTION=$* condition
+	$(MAKE) ACTION=$* mutex
 	$(MAKE) ACTION=$* outer
+	$(MAKE) ACTION=$* prodcons
 	$(MAKE) ACTION=$* product
 	$(MAKE) ACTION=$* randmat
+	$(MAKE) ACTION=$* threadring
 	$(MAKE) ACTION=$* thresh
 	$(MAKE) ACTION=$* winnow
 	
@@ -47,14 +51,26 @@ chain:
 chameneos:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000" "REPEAT=-c 6"
 
+condition:
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="100000 32" "REPEAT=-c 13"
+
+mutex:
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000 64" "REPEAT=-c 9"
+
 outer:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 18"
+
+prodcons:
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="40000 32" "REPEAT=-c 16"
 
 product:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 7"
 
 randmat:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig2.in -bench" "REPEAT=-c 8"
+
+threadring:
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="3000000 64" "REPEAT=-c 14"
 
 thresh:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 117"

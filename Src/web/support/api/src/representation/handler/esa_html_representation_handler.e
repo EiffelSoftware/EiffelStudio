@@ -330,7 +330,7 @@ feature -- View
 	add_interaction_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Interaction Form
 		local
-			l_hp: ESA_INTERACTION_PAGE
+			l_hp: HTML_INTERACTION
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
@@ -343,7 +343,7 @@ feature -- View
 	interaction_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Interaction Form Confirm.
 		local
-				l_hp: ESA_INTERACTION_CONFIRM_PAGE
+				l_hp: HTML_INTERACTION_CONFIRM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))

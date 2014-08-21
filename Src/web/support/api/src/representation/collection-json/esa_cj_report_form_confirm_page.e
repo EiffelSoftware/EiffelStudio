@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ESA_CJ_REPORT_FORM_CONFIRM_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

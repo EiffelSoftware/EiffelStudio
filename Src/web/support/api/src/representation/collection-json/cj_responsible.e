@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_CJ_RESPONSIBLE_PAGE
+	CJ_RESPONSIBLE
 
 inherit
 
@@ -29,9 +29,28 @@ feature {NONE} --Initialization
 			template.add_value (a_view.responsibles, "responsibles")
 			template.add_value (a_view.status, "status")
 			template.add_value (a_view.severities, "severities")
+			template.add_value (retrieve_status_query (a_view.status),"status_query")
 			template.add_value (a_view, "view")
 			template.add_value (a_view.index, "index")
 			template.add_value (a_view.size, "size")
+			template.add_value ((create {ESA_REPORT_INPUT_VALIDATOR}).accetpable_order_by, "columns" )
+			template.add_value (checked_status_query(a_view.status), "checked_status" )
+
+
+			if attached a_view.filter as l_filter then
+				template.add_value (l_filter, "filter")
+			end
+
+			if a_view.filter_content= 1 then
+				template.add_value (a_view.filter_content, "filter_content")
+			end
+
+			if
+				attached a_view.submitter as l_submitter and then
+				not l_submitter.is_empty
+			then
+				template.add_value (a_view.submitter, "submitter")
+			end
 
 			if attached a_view.id as l_id then
 				template.add_value (l_id, "id")
@@ -52,4 +71,29 @@ feature {NONE} --Initialization
 				-- Process current template
 			process
 		end
+
+	retrieve_status_query (a_status: LIST[REPORT_STATUS]): STRING
+		do
+			Result := "0&"
+			across a_status as c loop
+				if c.item.is_selected then
+					Result.append_string ("status=")
+					Result.append_string (c.item.id.out)
+					Result.append_string ("&")
+				end
+			end
+			Result.remove_tail (1)
+		end
+
+
+	checked_status_query (a_status: LIST[REPORT_STATUS]): LIST[REPORT_STATUS]
+		do
+			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
+			across a_status as c loop
+				if c.item.is_selected then
+					Result.force (c.item)
+				end
+			end
+		end
+
 end

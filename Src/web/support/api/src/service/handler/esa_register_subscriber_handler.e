@@ -125,7 +125,15 @@ feature -- Implementation
 			create l_parser.make_parser (retrieve_data (req))
 			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			   attached {JSON_ARRAY} l_template.item ("data") as l_data and then
+			   l_data.count > 0 and then attached {JSON_OBJECT} l_data.i_th (1) as l_elem and then
+			   attached {JSON_ARRAY} l_elem.item ("array") as l_array
+			then
+				across l_array as c  loop
+					if attached {JSON_STRING} c.item as jo  then
+							Result.force (jo.item.to_integer)
+					end
+				end
 			end
 		end
 

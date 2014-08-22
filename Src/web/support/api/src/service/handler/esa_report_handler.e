@@ -330,7 +330,7 @@ feature {NONE} --Implementation
 			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
 					--  <"name": "email", "prompt": "Password", "value": "{$form.email/}">,
 				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("user_responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
+					l_name.item.same_string ("responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
 					Result := l_value.item
 				end
 			end

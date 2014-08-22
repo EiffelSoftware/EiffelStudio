@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_CJ_REPORT_FORM_CONFIRM_PAGE
+	CJ_REPORT_FORM_CONFIRM
 
 inherit
 

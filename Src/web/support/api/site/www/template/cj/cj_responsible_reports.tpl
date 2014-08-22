@@ -18,14 +18,14 @@
                 "prompt": "Reports"
             >,
             <
-                "href": "{$host/}/reports?page={$index/}&size={$size/}",
+                "href": "{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
                 "rel": "first",
                 "prompt": "First"
             >
             {if isset="$prev"}
                 ,
             <
-                "href": "{$host/}/reports?page={$prev/}&size={$size/}",
+                "href": "{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
                 "rel": "previous",
                 "prompt": "Previous"
             >
@@ -33,14 +33,14 @@
             {if isset="$next"}
               ,
             <
-                "href": "{$host/}/reports?page={$next/}&size={$size/}",
+                "href": "{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
                 "rel": "next",
                 "prompt": "Next"
             >     
             {/if}
             ,
             <
-                "href": "{$host/}/reports/?page={$last/}&size={$size/}",
+                "href": "{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}",
                 "rel": "last",
                 "prompt": "Last"
             >,
@@ -180,7 +180,8 @@
        {if isset="$id"}
        "template": <
        "data": [
-             <"name": "user_responsible", "prompt": "Responsible", "value": "">
+               <"name" : "responsible",  "prompt": "Responsible", "acceptableValues":[{foreach from="$responsibles" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_responsible/}">   
+
             ] 
         >,
        {/if}
@@ -196,34 +197,27 @@
             ]
         >,
         <
-          "href" : "{$host/}/reports",
-          "rel" : "search",
-          "prompt" : "Filter by Category / Status / Priority / Responsible / Severity / Submitter",
-          "data" :
-            [
-                <"name" : "category", "value" : "">,
-                <"name" : "status", "value" : "">,
-                <"name" : "priority", "value" : "">,
-                <"name" : "responsible", "value" : "">,
-                <"name" : "severity", "value" : "">,
-                <"name" : "submitter", "value" : "">
-            ]
-        >,
-        <
           "href" : "{$host/}/reports?page={$last/}&size={$size/}",
           "rel" : "search",
           "prompt" : "Sorting",
           "data" :
             [
-                <"name" : "orderBy", "value" : "">,
-                <"name" : "dir", "value" : "">,
-                <"name" : "category", "value" : "">,
-                <"name" : "status", "value" : "">,
-                <"name" : "priority", "value" : "">,
-                <"name" : "responsible", "value" : "">,
-                <"name" : "severity", "value" : "">,
-                <"name" : "submitter", "value" : "">
-        
+               <"name" : "orderBy", "acceptableValues":[{foreach from="$columns" item="item"} "{$item/}",{/foreach}], "value" :"{$orderBy/}">,
+               <"name" : "dir", "acceptableValues":["ASC","DESC"], "value" : "{$view.direction/}" >,
+               <"name" : "category", "acceptableValues":[{foreach from="$categories" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_category/}">,
+               <"name" : "status", "acceptableValues":[{foreach from="$status" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach}], 
+                "array": [{foreach from="$checked_status" item="item"} "{$item.synopsis/}",{/foreach}]>,
+
+               <"name" : "priority", "acceptableValues":[{foreach from="$priorities" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_priority/}">,
+
+                <"name" : "severity", "acceptableValues":[{foreach from="$severities" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_severity/}">,
+
+                <"name" : "responsible", "acceptableValues":[{foreach from="$responsibles" item="item"}<"name": "{$item.id/}", "value": "{$item.synopsis/}">,{/foreach} <"name": "0", "value": "ALL">], "value" :"{$view.selected_responsible/}">,
+                <"name" : "submitter", "value" : "{$view.submitter/}">,
+                <"name" : "filter", "value" : "{$view.filter/}">,
+                <"name" : "filter_content", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], "value" : "{$view.filter_content/}">,
+                <"name" : "size", "value":"{$size/}">
+
             ]
         >
     ]                      

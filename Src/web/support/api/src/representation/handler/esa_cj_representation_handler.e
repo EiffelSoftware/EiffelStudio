@@ -72,7 +72,7 @@ feature -- View
 	problem_reports_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_RESPONSIBLE_PAGE
+			l_hp: CJ_RESPONSIBLE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req,""), a_report_view)
@@ -91,7 +91,7 @@ feature -- View
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		local
-			l_hp: ESA_CJ_REPORT_FORM_PAGE
+			l_hp: CJ_REPORT_FORM
 		do
 			if attached req.http_host as l_host then
 				if a_form.id > 0 then
@@ -108,7 +108,7 @@ feature -- View
 	report_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form confirm
 		local
-			l_hp: ESA_CJ_REPORT_FORM_PAGE
+			l_hp: CJ_REPORT_FORM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make_with_data (absolute_host(req,""), a_form, current_user_name (req))
@@ -129,7 +129,7 @@ feature -- View
 	report_form_confirm_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_id: INTEGER)
 			-- Report form confirm page
 		local
-			l_hp: ESA_CJ_REPORT_FORM_CONFIRM_PAGE
+			l_hp: CJ_REPORT_FORM_CONFIRM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host(req , ""), a_id, current_user_name (req))
@@ -143,7 +143,7 @@ feature -- View
 	report_form_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- Report form error
 		local
-			l_hp: ESA_CJ_REPORT_FORM_PAGE
+			l_hp: CJ_REPORT_FORM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make_with_error (absolute_host(req, ""), a_form, current_user_name (req))
@@ -564,12 +564,18 @@ feature -- View
 			end
 		end
 
-	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: detachable ANY )
+	subscribe_to_category (req: WSF_REQUEST; res: WSF_RESPONSE; a_list: LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ] )
 			-- <Precursor>
+		local
+			l_hp: CJ_SUBSCRIBE_TO_CATEGORY
 		do
-			to_implement ("Implement subscribe to category in CJ")
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_list)
+				if attached l_hp.representation as l_change_password_page then
+					    new_response_get (req, res, l_change_password_page)
+				end
+			end
 		end
-
 
 feature -- Response
 

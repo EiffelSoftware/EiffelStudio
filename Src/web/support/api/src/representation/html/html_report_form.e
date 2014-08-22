@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_REPORT_FORM_PAGE
+	HTML_REPORT_FORM
 
 inherit
 

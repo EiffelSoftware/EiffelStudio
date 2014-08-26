@@ -102,20 +102,15 @@
             "mirror": [
                 {
                     "priority": "95",
-                    "url": "http://downloads.sourceforge.net/eiffelstudio/",
+                    "url": "http://sourceforge.net/projects/eiffelstudio/files/",
                     "text": "SourceForge.net (HTTP)"
                 },
                 {
                     "priority": "92",
                     "url": "http://ftp.eiffel.com/pub/download/13.11/",
                     "text": "EiffelSoftware (USA, HTTP)"
-                },
-                {
-                    "priority": "91",
-                    "url": "ftp://ftp.eiffel.com/pub/download/13.11/",
-                    "text": "EiffelSoftware (USA, FTP)"
                 }
-            ]
+             ]
         },
         {
             "id": "public",
@@ -189,6 +184,8 @@
             "release": "Official Release",
             "date": "Winter 2013",
             "sub_directory": "13.11",
+            "number": "13.11",
+            "build" : "Build_93542",
             "icon": "eiffelstudio_ent.png",
             "public": "true",
             "for_evaluation": "true",
@@ -289,6 +286,8 @@
             "id": "eiffelstudio",
             "name": "EiffelStudio",
             "version": "13.11 GPL",
+            "number": "13.11",
+            "build" : "Build_93542",
             "release": "Official Release",
             "date": "Winter 2013",
             "icon": "eiffelstudio.png",

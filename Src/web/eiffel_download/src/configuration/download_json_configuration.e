@@ -141,6 +141,12 @@ feature {NONE} -- Implemenation: Products
 					if attached {JSON_STRING} ji.item ("sub_directory") as l_subdirectory then
 						l_item.set_sub_directory (l_subdirectory.item)
 					end
+					if attached {JSON_STRING} ji.item ("number") as l_number then
+						l_item.set_number (l_number.item)
+					end
+					if attached {JSON_STRING} ji.item ("build") as l_build then
+						l_item.set_build (l_build.item)
+					end
 					if attached {JSON_STRING} ji.item ("icon") as l_icon then
 						l_item.set_icon (l_icon.item)
 					end

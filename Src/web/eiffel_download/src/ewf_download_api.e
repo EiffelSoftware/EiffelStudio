@@ -124,7 +124,7 @@ feature -- Workflow
 						l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
 						l_service.initialize_download (l_form.email, l_token, l_form.platform )
 				end
-				send_email (l_form, l_token, l_form.platform, req.absolute_script_url (""))
+				send_email (req, l_form, l_token, req.absolute_script_url (""))
 				compute_response_redirect (req, res, "/post_download")
 			else
 				if attached read_file ("500.html") as l_output then
@@ -146,19 +146,20 @@ feature -- Workflow
 				if
 					attached {WSF_STRING} req.query_parameter ("email") as l_email and then
 					attached {WSF_STRING} req.query_parameter ("token") as l_token and then
-					attached {WSF_STRING} req.query_parameter ("platform") as l_platform
+					attached {WSF_STRING} req.query_parameter ("platform") as l_platform and then
+					attached {WSF_STRING} req.query_parameter ("link") as l_link
 				then
 					if l_service.is_membership (l_email.value) then
-						if 	l_service.is_download_active (l_email.value, l_token.value, l_platform.value) then
+						if 	l_service.is_download_active (l_email.value, l_token.value) then
 							l_service.add_download_interaction_membership (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_platform.value)
+							enterprise_download_options (req, res, l_link.value)
 						else
 							bad_request (req, res, "")
 						end
 					elseif l_service.is_contact (l_email.value) then
-						if 	l_service.is_download_active (l_email.value, l_token.value, l_platform.value) then
+						if 	l_service.is_download_active (l_email.value, l_token.value) then
 							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_platform.value)
+							enterprise_download_options (req, res, l_link.value)
 						else
 							bad_request (req, res, "")
 						end
@@ -167,10 +168,10 @@ feature -- Workflow
 							l_service.is_new_contact (l_email.value)
 						end
 
-						if 	l_service.is_download_active (l_email.value, l_token.value, l_platform.value) then
+						if 	l_service.is_download_active (l_email.value, l_token.value ) then
 							l_service.validate_contact (l_email.value) --(add a new contact, remove temporary contact)
 							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_platform.value)
+							enterprise_download_options (req, res, l_link.value)
 						else
 							bad_request (req, res, "")
 						end
@@ -185,17 +186,11 @@ feature -- Workflow
 
 feature -- Response
 
-	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_platform: STRING)
+	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
 		local
 			l_hp: HTML_DOWNLOAD_OPTIONS
 		do
-			if attached req.http_host as l_host and then
-			   attached download_service as l_service then
-				create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_platform, l_service.enterprise)
-				if attached l_hp.representation as l_html_download_options then
-					compute_response_get (req, res, l_html_download_options)
-				end
-			end
+			compute_download (req, res, a_link)
 		end
 
 	post_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
@@ -297,6 +292,20 @@ feature -- Response
 		end
 
 
+	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+			--Simple response to download content
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_content_disposition ("attachment; filename", output)
+			h.put_current_date
+			h.put_header_key_value ("Content-type", "application/octet-stream")
+			h.put_location (output)
+			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
+			res.put_header_text (h.string)
+		end
+
 feature {NONE} -- Implementation
 
 	extract_data_form (req: WSF_REQUEST): DOWNLOAD_FORM
@@ -360,14 +369,24 @@ feature -- Configuration
 
 feature -- Send Email		
 
-	send_email (a_form: DOWNLOAD_FORM; a_token: READABLE_STRING_32; a_platform, a_host: READABLE_STRING_32)
+	send_email (req: WSF_REQUEST; a_form: DOWNLOAD_FORM; a_token: READABLE_STRING_32; a_host: READABLE_STRING_32)
  			-- Send mail to start download with additional information.
+		local
+			l_hp: EMAIL_DOWNLOAD_OPTIONS
 		do
-			to_implement ("Add additional information, for example links to videos, tutorials, etc!!!")
-			if attached email_service as l_email_service then
-				l_email_service.send_download_email (a_form.email,a_token, a_platform, a_host)
+
+			if attached email_service as l_email_service and then
+				attached download_service as l_service then
+					create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service.enterprise)
+					if attached l_hp.representation as l_html_download_options then
+						l_email_service.send_download_email (a_form.email,l_html_download_options, a_host)
+					else
+						l_email_service.send_download_email (a_form.email,"Internal Server Error", a_host)
+					end
+
 			end
 		end
+
 
 feature -- Read file
 

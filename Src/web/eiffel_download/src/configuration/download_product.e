@@ -45,8 +45,17 @@ feature -- Access
 	id: detachable READABLE_STRING_32
 			-- Product id.
 
+	number: detachable READABLE_STRING_32
+			-- Number of the version example: 13.11
+
+	build: detachable READABLE_STRING_32
+			-- Build description 		
+
+
 	downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]
 			-- Possible list of download options.
+
+
 
 feature -- Element change
 
@@ -144,6 +153,22 @@ feature -- Element change
 			id := an_id
 		ensure
 			id_assigned: id = an_id
+		end
+
+	set_number (a_number: like number)
+			-- Assign `number' with `a_number'.
+		do
+			number := a_number
+		ensure
+			number_assigned: number = a_number
+		end
+
+	set_build (a_build: like build)
+			-- Assign `build' with `a_build'.
+		do
+			build := a_build
+		ensure
+			build_assigned: build = a_build
 		end
 
 	set_downloads (a_downloads: like downloads)

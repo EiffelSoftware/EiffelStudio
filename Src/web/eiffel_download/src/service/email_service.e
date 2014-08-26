@@ -38,32 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	send_download_email (a_to, a_token, a_platform, a_host: STRING)
+	send_download_email (a_to, a_content, a_host: STRING)
 			-- Send successful download message containing token code (use to validate the download and give it an expiration of 10 days) `a_token' to `a_to'.
 		require
 			attached_to: a_to /= Void
-			attached_token: a_token /= Void
 			attached_host: a_host /= Void
 		local
 			l_content: STRING
 			l_url: URL_ENCODER
  			l_path: PATH
-			l_html: HTML_ENCODER
 			l_email: EMAIL
 		do
 			create l_path.make_current
-			create l_url
-			create l_html
-			create l_content.make (1024)
-			l_content.append ("Thank you for downloading EiffelStudio.%N%NTo complete your download, please click on this link %N%N")
-			l_content.append (a_host)
-			l_content.append ("/confirm_download?token=")
-			l_content.append (l_url.encoded_string (a_token))
-			l_content.append ("&email=")
-			l_content.append (l_url.encoded_string (a_to))
-			l_content.append ("&platform=")
-			l_content.append (l_url.encoded_string (a_platform))
-			l_content.append ("%N%N")
+			create l_content.make_from_string (a_content)
 			l_content.append (Disclaimer)
 				-- Create our message.
 			create l_email.make_with_entry (admin_email, a_to)

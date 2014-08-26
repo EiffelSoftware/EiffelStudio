@@ -29,7 +29,6 @@ feature -- Basic Operations
 		end
 
 
-
 feature -- Implementation
 
 	retrieve_mirror_enterprise: detachable LIST[DOWNLOAD_MIRROR_MIRRORS]
@@ -45,7 +44,7 @@ feature -- Implementation
 	retrieve_product_enterprise: detachable DOWNLOAD_PRODUCT
 		do
 			if attached configuration.products as l_products then
-				Result := l_products.at (1)
+				Result := l_products.at (2)
 			end
 		end
 

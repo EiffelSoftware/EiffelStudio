@@ -1514,17 +1514,16 @@ feature -- Basic Operations
 		end
 
 
-	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_32)
-			-- Initialize download for a given user with email `a_email' and token `a_token' and platform `a_platform'.
+	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32;)
+			-- Initialize download for a given user with email `a_email' and token `a_token'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".initialize_download")
 			connect
-			create l_parameters.make (3)
+			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
-			l_parameters.put (string_parameter (a_platform, 50), {DATA_PARAMETERS_NAMES}.Platform_param)
 
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeDownload", l_parameters))
 			db_handler.execute_writer
@@ -1759,7 +1758,7 @@ feature -- Status Report
 			end
 		end
 
-	download_expiration_token_age (a_token: STRING; a_email: STRING; a_platform: READABLE_STRING_32): INTEGER
+	download_expiration_token_age (a_token: STRING; a_email: STRING ): INTEGER
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
@@ -1768,7 +1767,6 @@ feature -- Status Report
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
-			l_parameters.put (string_parameter (a_platform, 50) , {DATA_PARAMETERS_NAMES}.Platform_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetDownloadExpirationTokenAge", l_parameters))
 			db_handler.execute_reader
 			if not db_handler.after then
@@ -2279,7 +2277,7 @@ feature -- Queries
 						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
 																(select max (ReportResponsibleID) as ReportResponsibleID
 										    from ProblemReportResponsibles prr, ProblemReports pr
-										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)  
+										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)
 						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
 						WHERE ProblemReports.StatusID in $StatusSet
 						$queryFilter
@@ -2287,7 +2285,7 @@ feature -- Queries
 						ORDER BY $Column $ORD1
 					) AS PAG
 					ORDER BY $Column $ORD2
-				 )  as PAG2 
+				 )  as PAG2
 			   ORDER by $Column $ORD1
 		]"
 

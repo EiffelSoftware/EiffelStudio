@@ -29,7 +29,7 @@
 							<div class="col-xs-2"></div>
 							<div class="col-xs-8">
 								<h2>Self-Support</h2>
-								<p style="width:360px">Learn more about Eiffel Technologies from various online resources. Browse our full <a href="http://docs.eiffel.com/" target="_blank" class="info">online documentation</a> and <a href="http://www.eiffel.com/search/search.html"target="_blank" class="info">technical archives</a>, purchase educational and reference material, or join the <a href="http://groups.yahoo.com/group/eiffel_software/" target="_blank" class="info">Eiffel User Group</a> to discuss issues and get help.</p>
+								<p style="width:360px">Learn more about Eiffel Technologies from various online resources. Browse our full <a href="http://docs.eiffel.com/" target="_blank" class="info">online documentation</a> and <a href="http://www.eiffel.com/search/search.html" target="_blank" class="info">technical archives</a>, purchase educational and reference material, or join the <a href="http://groups.yahoo.com/group/eiffel_software/" target="_blank" class="info">Eiffel User Group</a> to discuss issues and get help.</p>
 							</div>
 							<div class="col-xs-2"></div>
 						</div>

@@ -36,7 +36,11 @@ feature -- Output
 					elseif template_context.values.has (vn) then
 						output := string_value (template_context.values.item (vn))
 					else
-						output := "{!! Error = No value for " + vn + " variable !!}"
+						if template_context.verbose then
+							output := "{!! Error = No value for " + vn + " variable !!}"
+						else
+							output := ""
+						end
 					end
 				elseif attached variable_expression as ve then
 					output := string_value (resolved_expression (ve))
@@ -72,7 +76,7 @@ feature -- Change
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

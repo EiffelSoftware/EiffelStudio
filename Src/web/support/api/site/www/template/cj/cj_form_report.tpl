@@ -62,8 +62,8 @@
         <"name": "confidential", "prompt": "Confidential", "acceptableValues":[<"name":"1","value":"True">,<"name":"0","value":"False">], {if isset="$confidential"}"value": "{$confidential/}"{/if}{unless isset="$confidential"}"value" : ""{/unless}>,
         <"name": "synopsis", "prompt": "Synopsis", {if isset="$synopsis"}"value": "{$synopsis/}"{/if}{unless isset="$synopsis"}"value" : ""{/unless}>,
         <"name": "environment", "prompt": "Environment",{if isset="$environment"}"value": "{$environment/}"{/if}{unless isset="$environment"}"value" : ""{/unless}>,
-        <"name": "description", "prompt": "Description",{if isset="$description"}"value": "{$description/}"{/if}{unless isset="$description"}"value" : ""{/unless}>,
-        <"name": "to_reproduce", "prompt": "To Reproduce", {if isset="$to_reproduce"}"value": "{$to_reproduce/}"{/if}{unless isset="$to_reproduce"}"value" : ""{/unless}>,
+        <"name": "description", "prompt": "Description",{if isset="$description"}"value": "{$form.description_json/}"{/if}{unless isset="$description"}"value" : ""{/unless}>,
+        <"name": "to_reproduce", "prompt": "To Reproduce", {if isset="$to_reproduce"}"value": "{$form.to_reproduce_json/}"{/if}{unless isset="$to_reproduce"}"value" : ""{/unless}>,
         <"name" : "attachments", "files" : [{foreach from="$uploaded_files", item="file"} <"name":"{$file.name/}", "value":"">,{/foreach}] , "prompt" : "Attachments">
       ]
       >

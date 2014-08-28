@@ -71,11 +71,15 @@ feature -- Access
 	description: detachable STRING_32
 		-- Description of the problem.
 
-	description_utf8: detachable STRING_32
-		-- UTF-8 description encoded.
+	description_json: detachable STRING_32
+		--JSON description encoded.
 
 	to_reproduce: detachable STRING_32
 		-- How to reproduce the problem.
+
+	to_reproduce_json: detachable STRING_32
+		-- How to reproduce the problem.
+
 
 	uploaded_files: detachable LIST[ESA_FILE_VIEW]
 		-- Uploaded files
@@ -176,7 +180,7 @@ feature -- Element Change
 			-- Set `description' with `a_description'
 		do
 			description := a_description
-			description_utf8 := (create {UTF8_ENCODER}).encoded_string (a_description)
+			description_json := (create {JSON_ENCODER}).encoded_string (a_description)
 		ensure
 			description_set:  attached description as l_description and then l_description.same_string (a_description)
 		end
@@ -194,6 +198,7 @@ feature -- Element Change
 			-- Set `to_reproduce' with `a_to_reproduce'.
 		do
 			to_reproduce := a_to_reproduce
+			to_reproduce_json := (create {JSON_ENCODER}).encoded_string (a_to_reproduce)
 		ensure
 			to_reproduce_set:  attached to_reproduce as l_to_reproduce and then l_to_reproduce.same_string (a_to_reproduce)
 		end

@@ -53,7 +53,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.severities, "severities")
 			template.add_value (a_form.classes, "classes")
 			template.add_value (a_form.priorities, "priorities")
-
+			template.add_value (a_form, "form")
 			template.add_value (a_form.category, "category")
 			template.add_value (a_form.severity, "severity")
 			template.add_value (a_form.selected_class, "class")

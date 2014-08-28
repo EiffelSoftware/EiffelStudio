@@ -371,6 +371,7 @@ feature {NONE} -- Implementation
 			l_parser: JSON_PARSER
 			l_content: STRING
 			l_list: LIST[ESA_FILE_VIEW]
+			l_test: STRING_8
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			create l_parser.make_parser (retrieve_data (req))
@@ -409,12 +410,14 @@ feature {NONE} -- Implementation
 					Result.set_release (l_value.item)
 				end
 				if attached {JSON_OBJECT} l_data.i_th (6) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-				   l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+				    l_name.item.same_string ("confidential") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
 					Result.set_confidential (l_value.item.to_integer.to_boolean)
 				end
 				if attached {JSON_OBJECT} l_data.i_th (7) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("synopsis") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-					Result.set_synopsis (l_value.item)
+					create l_test.make_empty
+					l_value.unescape_to_string_8 (l_test)
+					Result.set_synopsis ((create {UTF8_ENCODER}).encoded_string (l_test))
 				end
 				if attached {JSON_OBJECT} l_data.i_th (8) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("environment") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
@@ -422,11 +425,15 @@ feature {NONE} -- Implementation
 				end
 				if attached {JSON_OBJECT} l_data.i_th (9) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("description") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-					Result.set_description (l_value.item)
+					create l_test.make_empty
+					l_value.unescape_to_string_8 (l_test)
+					Result.set_description ((create {UTF8_ENCODER}).encoded_string (l_test))
 				end
 				if attached {JSON_OBJECT} l_data.i_th (10) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 				   l_name.item.same_string ("to_reproduce") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
-					Result.set_to_reproduce (l_value.item)
+					create l_test.make_empty
+					l_value.unescape_to_string_8 (l_test)
+					Result.set_to_reproduce ((create {UTF8_ENCODER}).encoded_string (l_test))
 				end
 				if attached {JSON_OBJECT} l_data.i_th (11) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
 					create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
@@ -485,11 +492,11 @@ feature {NONE} -- Implementation
 			end
 				--Description
 			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				Result.set_description (l_description.value)
+				Result.set_description (l_description.url_encoded_value)
 			end
 				--To Reproduce (Optional)
 			if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-				Result.set_to_reproduce (l_to_reproduce.value)
+				Result.set_to_reproduce (l_to_reproduce.url_encoded_value)
 			end
 			if req.has_uploaded_file then
 				create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)

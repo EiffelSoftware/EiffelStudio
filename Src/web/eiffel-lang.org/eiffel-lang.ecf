@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_lang" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
 	<target name="eiffel_lang_common">
 		<file_rule>
@@ -28,7 +28,7 @@
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 	</target>
 	<target name="eiffel_lang_any" extends="eiffel_lang_common">
-		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>

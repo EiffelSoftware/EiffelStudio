@@ -14,11 +14,6 @@ inherit
 			initialize
 		end
 
-	WSF_ROUTED_SERVICE
-		undefine
-			execute_default
-		end
-
 	WDOCS_SERVICE
 
 	APPLICATION_LAUNCHER
@@ -35,8 +30,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_service_option ("port", 9090)
+
+			service_options := create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("ewf.ini")
+
 			initialize_wdocs
-			initialize_router
 		end
 
 	configuration: WDOCS_CONFIG
@@ -70,7 +67,6 @@ feature {NONE} -- Implementation features
 			end
 		end
 
-
 	configuration_json: detachable WDOCS_CONFIG
 		local
 			p: PATH
@@ -86,5 +82,6 @@ feature {NONE} -- Implementation features
 				end
 			end
 		end
+
 end
 

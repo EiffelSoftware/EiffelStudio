@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel-lang" >
-	<target name="eiffel-lang_common">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_lang" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+	<target name="eiffel_lang_common">
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -13,9 +13,10 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location=".\library\cms\cms-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
-		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
+		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false" use_application_options="true">
@@ -26,7 +27,7 @@
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 	</target>
-	<target name="eiffel-lang_any" extends="eiffel-lang_common">
+	<target name="eiffel_lang_any" extends="eiffel_lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
@@ -38,7 +39,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel-lang_nino" extends="eiffel-lang_common">
+	<target name="eiffel_lang_nino" extends="eiffel_lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -48,7 +49,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel-lang_cgi" extends="eiffel-lang_common">
+	<target name="eiffel_lang_cgi" extends="eiffel_lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -58,7 +59,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel-lang_libfcgi" extends="eiffel-lang_common">
+	<target name="eiffel_lang_libfcgi" extends="eiffel_lang_common">
 		<root class="WDOCS_WEB" feature="make_and_launch"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -68,6 +69,6 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel-lang" extends="eiffel-lang_nino">
+	<target name="eiffel_lang" extends="eiffel_lang_nino">
 	</target>
 </system>

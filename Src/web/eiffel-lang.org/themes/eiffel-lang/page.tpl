@@ -5,9 +5,9 @@
 	<div id="wrapper">
 		<div class="w1">
 			<div class="w2">
-			  {include file="master/root/main.tpl"/}
+			  {include file="master/main.tpl"/}
 
-			  {include file="footer.tpl"/}	
+			  {include file="footer.tpl"/}
 			</div>
 		</div>
 	</div>

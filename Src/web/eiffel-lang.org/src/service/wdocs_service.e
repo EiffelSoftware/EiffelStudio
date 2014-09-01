@@ -7,10 +7,7 @@ deferred class
 	WDOCS_SERVICE
 
 inherit
-	WSF_ROUTED_SERVICE
-		redefine
-			execute_default
-		end
+	WSF_SERVICE
 
 	SHARED_EXECUTION_ENVIRONMENT
 	SHARED_WSF_PERCENT_ENCODER
@@ -28,45 +25,121 @@ feature	-- Initialization
 			wiki_dir := cfg.wiki_dir
 			theme_name := cfg.theme_name
 			cache_duration := cfg.cache_duration
+
+			initialize_cms (root_dir)
 		end
 
 	configuration: WDOCS_CONFIG
 		deferred
 		end
 
-	setup_router
+	initialize_cms (a_root_dir: PATH)
 		local
-			fs: WSF_FILE_SYSTEM_HANDLER
+			args: ARGUMENTS_32
+			cfg: detachable READABLE_STRING_32
+			i,n: INTEGER
+			ut: FILE_UTILITIES
 		do
-			router.handle ("/about", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("about", ?, ?)))
-			router.handle ("/learn", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
-			router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("download", ?, ?)))
-			router.handle ("/contribute", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("contribute", ?, ?)))
+--			initialize_router
+
+				--| Arguments
+			create args
+			from
+				i := 1
+				n := args.argument_count
+			until
+				i > n or cfg /= Void
+			loop
+				if attached args.argument (i) as s then
+					if s.same_string_general ("--config") or s.same_string_general ("-c") then
+						if i < n then
+							cfg := args.argument (i + 1)
+						end
+					end
+				end
+				i := i + 1
+			end
+			if cfg = Void then
+				if ut.file_path_exists (a_root_dir.extended ("cms.ini")) then
+					cfg := a_root_dir.extended ("cms.ini").name
+				end
+			end
+
+			create cms_service.make (cms_setup (cfg))
+		end
+
+--	setup_router
+--		local
+--			fs: WSF_FILE_SYSTEM_HANDLER
+--		do
+--			router.handle ("/about", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("about", ?, ?)))
+--			router.handle ("/learn", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
+--			router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("download", ?, ?)))
+--			router.handle ("/contribute", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_custom ("contribute", ?, ?)))
 
 
-			router.handle ("/book/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
-			router.handle ("/book/{bookid}/_images/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wiki_image))
-			router.handle ("/book/{bookid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
-			router.handle ("/book/{bookid}/{wikipageid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wikipage))
+--			router.handle ("/book/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
+--			router.handle ("/book/{bookid}/_images/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wiki_image))
+--			router.handle ("/book/{bookid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_book))
+--			router.handle ("/book/{bookid}/{wikipageid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_wikipage))
 
-			create fs.make_with_path ((create {EXECUTION_ENVIRONMENT}).current_working_path.extended ("files"))
-			router.handle ("/files", fs)
+--			create fs.make_with_path ((create {EXECUTION_ENVIRONMENT}).current_working_path.extended ("files"))
+--			router.handle ("/files", fs)
 
-			create fs.make_with_path (theme_path.extended ("css"))
-			fs.disable_index
-			router.handle ("/css", fs)
+--			create fs.make_with_path (theme_path.extended ("css"))
+--			fs.disable_index
+--			router.handle ("/css", fs)
 
-			create fs.make_with_path (theme_path.extended ("js"))
-			fs.disable_index
-			router.handle ("/js", fs)
+--			create fs.make_with_path (theme_path.extended ("js"))
+--			fs.disable_index
+--			router.handle ("/js", fs)
 
-			create fs.make_with_path (theme_path.extended ("images"))
-			fs.disable_index
-			router.handle ("/images", fs)
+--			create fs.make_with_path (theme_path.extended ("images"))
+--			fs.disable_index
+--			router.handle ("/images", fs)
 
-			create fs.make_with_path (theme_path)
-			fs.disable_index
-			router.handle ("/theme", fs)
+--			create fs.make_with_path (theme_path)
+--			fs.disable_index
+--			router.handle ("/theme", fs)
+--		end
+
+feature -- Access: CMS
+
+	cms_service: CMS_SERVICE
+
+feature -- Implementation: CMS
+
+	cms_setup (a_cfg_fn: detachable READABLE_STRING_GENERAL): CMS_CUSTOM_SETUP
+		do
+			if a_cfg_fn /= Void then
+				create Result.make_from_file (a_cfg_fn)
+			else
+				create Result -- Default
+			end
+			setup_modules (Result)
+			setup_storage (Result)
+		end
+
+	setup_modules (a_setup: CMS_SETUP)
+		local
+			m: CMS_MODULE
+		do
+			create {WIKI_DOCS_MODULE} m.make
+			m.enable
+			a_setup.add_module (m)
+
+			create {DEBUG_MODULE} m.make
+			m.enable
+			a_setup.add_module (m)
+
+--			create {OPENID_MODULE} m.make
+--			m.enable
+--			a_setup.add_module (m)
+		end
+
+	setup_storage (a_setup: CMS_SETUP)
+		do
+
 		end
 
 feature -- Access
@@ -112,7 +185,20 @@ feature -- Factory
 			Result.set_value (req.absolute_script_url (""), "site_url")
 		end
 
-feature	-- Execution		
+feature	-- Execution
+
+	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute the request
+			-- See `req.input' for input stream
+    		--     `req.meta_variables' for the CGI meta variable
+			-- and `res' for output buffer
+		do
+			if req.request_uri.same_string (req.script_url ("")) then
+				handle_custom ("front", req, res)
+			else
+				cms_service.execute (req, res)
+			end
+		end
 
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Dispatch requests without a matching handler.

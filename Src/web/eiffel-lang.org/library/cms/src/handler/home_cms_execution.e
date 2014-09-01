@@ -42,11 +42,21 @@ feature -- Execution
 
 			debug ("cms")
 				if attached controller.session as sess then
-					b.append ("<div>Session#" + sess.uuid + "</div>%N")
+					b.append ("<div>Session#" + sess.id + "</div>%N")
 				end
 			end
 
 			set_main_content (b)
 		end
 
+note
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

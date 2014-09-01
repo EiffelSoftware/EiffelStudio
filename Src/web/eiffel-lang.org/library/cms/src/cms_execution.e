@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			request := req
 			response := res
 			create header.make
+			create values.make (3)
 			initialize
 		end
 
@@ -65,6 +66,9 @@ feature -- Access: CMS
 		do
 			Result := url ("/", Void)
 		end
+
+	values: STRING_TABLE [detachable ANY]
+			-- Associated values indexed by string name.
 
 feature -- Permission
 
@@ -173,6 +177,18 @@ feature -- Element change: user
 			end
 			set_user (Void)
 			controller.start_session (req)
+		end
+
+	set_value (v: detachable ANY; k: READABLE_STRING_GENERAL)
+			-- Set value `v' associated with name `k'.
+		do
+			values.force (v, k)
+		end
+
+	unset_value (k: READABLE_STRING_GENERAL)
+			-- Unset value associated with name `k'.
+		do
+			values.remove (k)
 		end
 
 feature -- Logging
@@ -388,6 +404,9 @@ feature -- Access
 
 	main_content: detachable STRING_8
 
+	optional_content_type: detachable IMMUTABLE_STRING_8
+			-- Optional content type name.
+
 	redirection: detachable READABLE_STRING_8
 
 feature -- Generation
@@ -434,9 +453,18 @@ feature -- Generation
 		local
 			s: STRING_8
 		do
+				-- Values Associated with current Esecution object.
+			across
+				values as ic
+			loop
+				page.register_variable (ic.item, ic.key)
+			end
+
+				-- Specific values
 			page.register_variable (is_front, "is_front")
 			page.register_variable (request.absolute_script_url (""), "site_url")
 
+				-- Additional lines in <head ../>
 			if attached additional_page_head_lines as l_head_lines then
 				across
 					l_head_lines as hl
@@ -445,8 +473,10 @@ feature -- Generation
 				end
 			end
 
+				-- Main menu
 			add_to_main_menu (create {CMS_LOCAL_LINK}.make ("Home", "/"))
 
+				-- ...
 			service.call_menu_alter_hooks (menu_system, Current)
 			prepare_menu_system (menu_system)
 
@@ -591,6 +621,16 @@ feature -- Element change
 			end
 		end
 
+	set_optional_content_type (ct: like optional_content_type)
+			-- Set `optional_content_type' to `ct'
+		do
+			if ct = Void then
+				optional_content_type := Void
+			else
+				create optional_content_type.make_from_string (ct.as_lower)
+			end
+		end
+
 feature -- Execution
 
 	execute
@@ -615,7 +655,9 @@ feature {NONE} -- Execution
 			cms_page: CMS_HTML_PAGE
 			page: CMS_HTML_PAGE_RESPONSE
 		do
-			if is_front then
+			if attached optional_content_type as l_type then
+				create cms_page.make_typed (l_type)
+			elseif is_front then
 				create cms_page.make_typed ("front")
 			else
 				create cms_page.make

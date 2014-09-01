@@ -144,11 +144,6 @@ feature -- Access: docs
 			Result := root_dir.extended ("themes").extended (theme_name)
 		end
 
-	wdocs_theme: WDOCS_THEME
-		do
-			create Result.make (theme_path)
-		end
-
 feature -- Hooks
 
 --	block_list: ITERABLE [like {CMS_BLOCK}.name]
@@ -223,9 +218,10 @@ feature -- Handler
 				end
 				b.append ("</ul>")
 			end
---			debug ("wdocs")
---				append_navigation_to (req, b)
---			end
+			debug ("wdocs")
+				append_navigation_to (req, b)
+			end
+
 			e.set_main_content (b)
 			e.execute
 		end
@@ -306,10 +302,10 @@ feature -- Handler
 				create s.make_from_string ("Page not found")
 			end
 
---			debug ("wdocs")
---				append_navigation_to (req, s)
---			end
------
+			debug ("wdocs")
+				append_navigation_to (req, s)
+			end
+
 			e.set_main_content (s)
 			e.execute
 		end
@@ -366,7 +362,17 @@ feature -- Handler
 			end
 		end
 
-feature {NONE} -- Implementation: wiki render		
+feature {NONE} -- Implementation: wiki render	
+
+	append_navigation_to (req: WSF_REQUEST; s: STRING)
+		do
+			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			s.append ("<li><a href=%"" + req.script_url ("/") + "%">back to home</a></li>")
+			if attached req.http_referer as l_ref then
+				s.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
+			end
+			s.append ("<li>Location: " + req.request_uri + "</li>")
+		end
 
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST)
 		local

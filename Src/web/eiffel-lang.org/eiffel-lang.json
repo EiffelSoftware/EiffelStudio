@@ -1,11 +1,11 @@
 {
 	"layout": {
 		"root":".",
-		"wiki":"_db/wiki"
+		"wiki":"data/wiki"
 	},
 
 	"ui": {
-		"theme":"demo"
+		"theme":"eiffel-lang"
 	},
 
 	"settings": {

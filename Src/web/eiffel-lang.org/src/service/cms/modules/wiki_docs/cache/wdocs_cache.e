@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WDOCS_CACHING_UTILITIES}."
+	description: "Summary description for {WDOCS_CACHE}."
 	date: "$Date$"
 	revision: "$Revision$"
 

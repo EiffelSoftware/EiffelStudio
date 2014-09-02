@@ -79,7 +79,7 @@ feature -- Implementation: CMS
 		local
 			m: CMS_MODULE
 		do
-			create {WIKI_DOCS_MODULE} m.make
+			create {WDOCS_MODULE} m.make
 			m.enable
 			a_setup.add_module (m)
 

@@ -13,304 +13,304 @@ compile_result 	ok
 c_compile_final
 c_compile_result ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
-execute_final	NONE exec_output_f
+execute_final	NONE exec_output_f -i $SOURCE/main.in -bench
 execute_result	ok
 
 test_end

@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {WIKI_DOCS_MODULE}."
+	description: "Summary description for {WDOCS_MODULE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WIKI_DOCS_MODULE
+	WDOCS_MODULE
 
 inherit
 	CMS_MODULE

@@ -37,7 +37,8 @@ a {
   color: #abc4d4;
 }
 a:hover {
-  color: white;
+  color: #5082D9;
+  color: #abc4d4;
 }
 
 input,
@@ -750,6 +751,7 @@ table {
 .column .libraries ul li a,
 .column .updates ul li a {
   color: white;
+  color: #7FB514;
 }
 .column .libraries ul li a:hover,
 .column .updates ul li a:hover {

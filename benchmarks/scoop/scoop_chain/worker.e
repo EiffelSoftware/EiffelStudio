@@ -133,7 +133,6 @@ feature -- Thresholding computations
     local
       i: INTEGER
       h: INTEGER
-      newmax: INTEGER
     do
       print ("Updating histogram%N")
       max_.new_max (local_max)
@@ -181,9 +180,7 @@ feature -- Winnowing procedure
 
   live_winnow
     local
-      vector: ARRAYED_LIST [TUPLE[INTEGER, INTEGER, INTEGER]]
       i, j: INTEGER
-      count: INTEGER
     do
       print ("Worker: live_winnow%N")
       create winnow_vector_v.make (100)
@@ -371,7 +368,6 @@ feature -- Product procedure
     local
       i, j: INTEGER
       sum: DOUBLE
-      res: ARRAY [DOUBLE]
     do
       create product_vector.make_filled (0, 0, win_final - win_start - 1)
 		print ("live product (post import)%N")

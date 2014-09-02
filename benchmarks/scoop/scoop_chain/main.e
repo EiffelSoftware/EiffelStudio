@@ -254,10 +254,6 @@ feature {NONE}
 		end
 
 	import_winnow: ARRAYED_LIST [TUPLE [INTEGER, INTEGER, INTEGER]]
-		local
-			i: INTEGER
-			n: INTEGER
-			v, x, y: INTEGER
 		do
 			print ("Master: importing winnow%N")
 			create Result.make (10000)
@@ -272,7 +268,6 @@ feature {NONE}
 	import_winnow_worker (vector: ARRAYED_LIST [TUPLE [v, x, y: INTEGER]]; w: separate WORKER)
 		local
 			i: INTEGER
-			t: TUPLE [v, x, y: INTEGER]
 			v,x,y: INTEGER
 		do
 			print ("import winnow from worker: " + w.winnow_vector_v.count.out + "%N")
@@ -292,7 +287,6 @@ feature {NONE}
 
 	sort_winnow (points: ARRAYED_LIST [TUPLE [x, y, z: INTEGER]] winnow_xs_, winnow_ys_: separate ARRAY [INTEGER])
 		local
-			trim_points: ARRAY [TUPLE [v, x, y: INTEGER]]
 			sorter: SORTER [TUPLE [INTEGER, INTEGER, INTEGER]] -- TUPLE_SORTER
 
 			i, n, chunk, index: INTEGER

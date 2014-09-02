@@ -23,7 +23,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create root_dir.make_current
 			wiki_dir := root_dir.extended ("_db").extended ("wiki")
-			create theme_name.make_from_string_general ("default")
 			cache_duration := 6 * 60 * 60 -- 6 hours
 		end
 

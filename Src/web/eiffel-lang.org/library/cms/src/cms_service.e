@@ -19,13 +19,9 @@ feature {NONE} -- Initialization
 
 	make (a_setup: CMS_SETUP)
 		local
-			cfg: detachable CMS_CONFIGURATION
+			cfg: CMS_CONFIGURATION
 		do
 			cfg := a_setup.configuration
-			if cfg = Void then
-				create cfg.make
-			end
-
 			configuration := cfg
 			base_url := a_setup.base_url
 

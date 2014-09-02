@@ -30,19 +30,18 @@ create
 feature {NONE} -- Initialization
 
 	make
-		local
-			cfg: detachable WDOCS_CONFIG
+			-- Create current module
 		do
 			name := "wdocs"
 			version := "1.0"
 			description := "Wiki Documentation"
 			package := "doc"
 
-			cfg := configuration
-			root_dir := cfg.root_dir
-			wiki_dir := cfg.wiki_dir
-			theme_name := cfg.theme_name
-			cache_duration := cfg.cache_duration
+				-- FIXME: maybe have a WDOCS_MODULE_EXECUTION to get those info when needed...
+				-- Note those values are really set in `register'
+			create root_dir.make_current
+			wiki_dir := root_dir.extended ("wiki")
+			cache_duration := 0
 		end
 
 feature {CMS_SERVICE} -- Registration
@@ -52,65 +51,74 @@ feature {CMS_SERVICE} -- Registration
 	register (a_service: CMS_SERVICE)
 		local
 			fs: WSF_FILE_SYSTEM_HANDLER
+			cfg: detachable WDOCS_CONFIG
 		do
 			service := a_service
+
+				-- FIXME: this code could/should be retarded to when it is really needed
+				-- then if the module is disabled, it won't take CPU+memory for nothing.
+			cfg := configuration (a_service.site_var_dir)
+			root_dir := cfg.root_dir
+			wiki_dir := cfg.wiki_dir
+			cache_duration := cfg.cache_duration
+
 			a_service.map_uri_template ("/learn", agent handle_learn (a_service, ?, ?))
 			a_service.map_uri_template ("/book/", agent handle_book (a_service, ?, ?))
 			a_service.map_uri_template ("/book/{bookid}/_images/{filename}", agent handle_wiki_image (a_service, ?, ?))
 			a_service.map_uri_template ("/book/{bookid}", agent handle_book (a_service, ?, ?))
 			a_service.map_uri_template ("/book/{bookid}/{wikipageid}", agent handle_wikipage (a_service, ?, ?))
 
-			create fs.make_with_path (theme_path.extended ("images"))
+			create fs.make_with_path (a_service.theme_location.extended ("res").extended ("images"))
 			fs.disable_index
 			a_service.router.handle ("/images", fs)
 		end
 
 feature -- Access: config
 
-	configuration: WDOCS_CONFIG
+	configuration (a_dir: PATH): WDOCS_CONFIG
 			-- Configuration setup.
+		local
+			cfg: detachable WDOCS_CONFIG
+			p: detachable PATH
+			ut: FILE_UTILITIES
 		do
-			if attached configuration_ini as l_config_ini then
-				Result := l_config_ini
-			elseif attached configuration_json as l_config_json then
-				Result := l_config_json
+			if attached execution_environment.item ("WDOCS_CONFIG") as s then
+				create p.make_from_string (s)
+				if not ut.file_path_exists (p) then
+					p := a_dir.extended (s)
+					if not ut.file_path_exists (p) then
+						p := Void
+					end
+				end
+			end
+			if p /= Void then
+				if attached p.extension as ext then
+					if ext.is_case_insensitive_equal_general ("ini") then
+						create {WDOCS_INI_CONFIG} cfg.make (p)
+					elseif ext.is_case_insensitive_equal_general ("json") then
+						create {WDOCS_JSON_CONFIG} cfg.make (p)
+					end
+				end
+				if cfg = Void then
+					create {WDOCS_INI_CONFIG} Result.make (p)
+				end
+			else
+				p := a_dir.extended ("eiffel-lang.ini")
+				if ut.file_path_exists (p) then
+					create {WDOCS_INI_CONFIG} cfg.make (p)
+				else
+					p := a_dir.extended ("eiffel-lang.json")
+					if ut.file_path_exists (p) then
+						create {WDOCS_JSON_CONFIG} cfg.make (p)
+					end
+				end
+			end
+
+			if cfg /= Void then
+				Result := cfg
 			else
 					-- Default
 				create {WDOCS_DEFAULT_CONFIG} Result.make
-			end
-		end
-
-feature {NONE} -- Implementation: config
-
-	configuration_ini: detachable WDOCS_CONFIG
-		local
-			p: PATH
-			ut: FILE_UTILITIES
-		do
-			create p.make_from_string ("eiffel-lang.ini")
-			if ut.file_path_exists (p) then
-				create {WDOCS_INI_CONFIG} Result.make (p)
-			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then
-				create p.make_from_string (s)
-				if ut.file_path_exists (p) then
-					create {WDOCS_INI_CONFIG} Result.make (p)
-				end
-			end
-		end
-
-	configuration_json: detachable WDOCS_CONFIG
-		local
-			p: PATH
-			ut: FILE_UTILITIES
-		do
-			create p.make_from_string ("eiffel-lang.json")
-			if ut.file_path_exists (p) then
-				create {WDOCS_JSON_CONFIG} Result.make (p)
-			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then
-				create p.make_from_string (s)
-				if ut.file_path_exists (p) then
-					create {WDOCS_JSON_CONFIG} Result.make (p)
-				end
 			end
 		end
 
@@ -134,14 +142,6 @@ feature -- Access: docs
 	manager: WDOCS_MANAGER
 		do
 			create Result.make (root_dir, wiki_dir)
-		end
-
-	theme_name: IMMUTABLE_STRING_32
-			-- Associated theme name.
-
-	theme_path: PATH
-		do
-			Result := root_dir.extended ("themes").extended (theme_name)
 		end
 
 feature -- Hooks

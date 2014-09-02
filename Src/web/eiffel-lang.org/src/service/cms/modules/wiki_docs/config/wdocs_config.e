@@ -14,8 +14,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	theme_name: IMMUTABLE_STRING_32
-
 	root_dir: PATH
 
 	wiki_dir: PATH

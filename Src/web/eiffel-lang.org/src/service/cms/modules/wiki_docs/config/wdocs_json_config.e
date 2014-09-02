@@ -31,9 +31,6 @@ feature {NONE} -- Initialization
 			if attached json.layout_wiki as l_wiki then
 				create wiki_dir.make_from_string (l_wiki)
 			end
-			if attached json.ui_theme as l_theme then
-				create theme_name.make_from_string (l_theme)
-			end
 			if
 				attached json.settings_cache_duration as l_duration and then
 				l_duration.is_integer

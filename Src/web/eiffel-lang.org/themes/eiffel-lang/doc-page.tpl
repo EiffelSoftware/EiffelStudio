@@ -6,6 +6,8 @@
 		<div class="w1">
 			<div class="w2">
 			  {include file="master/document/main.tpl"/}
+
+			  {include file="footer.tpl"/}
 			</div>
 		</div>
 	</div>

@@ -23,7 +23,11 @@ feature {NONE} -- Initialization
 	make (a_cfg: CMS_CONFIGURATION)
 		do
 			configuration := a_cfg
-			default_create
+			build_modules
+			build_storage
+			build_session_manager
+			build_auth_engine
+			build_mailer
 		end
 
 	make_from_file (fn: READABLE_STRING_GENERAL)
@@ -37,11 +41,7 @@ feature {NONE} -- Initialization
 	default_create
 		do
 			Precursor
-			build_modules
-			build_storage
-			build_session_manager
-			build_auth_engine
-			build_mailer
+			make (create {CMS_CONFIGURATION}.make)
 		end
 
 feature -- Access
@@ -129,4 +129,14 @@ feature -- Change
 			modules.force (m)
 		end
 
+note
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

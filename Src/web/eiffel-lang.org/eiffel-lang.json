@@ -3,11 +3,6 @@
 		"root":".",
 		"wiki":"data/wiki"
 	},
-
-	"ui": {
-		"theme":"eiffel-lang"
-	},
-
 	"settings": {
 		"cache_duration" : "21600"
 	}

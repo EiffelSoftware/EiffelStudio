@@ -1,0 +1,316 @@
+test_name	scoop-run-time-crash
+test_description SCOOP application should not crash spontaneously at run-time.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	histogram_max.e	$CLUSTER histogram_max.e
+copy_raw	main.e	$CLUSTER main.e
+copy_raw	tuple_comparator.e	$CLUSTER tuple_comparator.e
+copy_raw	tuple_sorter.e	$CLUSTER tuple_sorter.e
+copy_raw	worker.e	$CLUSTER worker.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+
+test_end

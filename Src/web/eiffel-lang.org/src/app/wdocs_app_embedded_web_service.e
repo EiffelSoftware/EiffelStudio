@@ -15,15 +15,14 @@ inherit
 			initialize_options
 		end
 
-	WSF_ROUTED_SERVICE
-		undefine
-			execute_default
+	EIFFEL_LANG_SERVICE
+		redefine
+			initialize_cms
+		select
+			execute
 		end
 
-	WDOCS_SERVICE
-		redefine
-			setup_router
-		end
+	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -34,7 +33,6 @@ feature {NONE} -- Initialization
 		do
 			make_service
 			initialize_wdocs
-			initialize_router
 			create request_exit_operation_actions
 			local_connection_restriction_enabled := True
 
@@ -49,7 +47,7 @@ feature {NONE} -- Initialization
 			Precursor (opts)
 			opts.set_option ("force_single_threaded", True)
 		end
-		
+
 	configuration: WDOCS_CONFIG
 		local
 			cfg: detachable WDOCS_CONFIG
@@ -77,10 +75,10 @@ feature -- Access
 
 feature	-- Initialization
 
-	setup_router
+	initialize_cms (a_root_dir: PATH)
 		do
-			Precursor
-			router.handle ("/exit", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_exit))
+			Precursor (a_root_dir)
+			cms_service.map_uri_template ("/exit", agent handle_exit)
 		end
 
 feature -- Execution
@@ -92,7 +90,6 @@ feature -- Execution
 		do
 			create m.make
 			create b.make_from_string ("<h1>Wiki Docs is about to shutdown</h1>")
-			append_navigation_to (req, b)
 			m.set_body (b)
 			res.send (m)
 			if attached {WGI_NINO_CONNECTOR} req.wgi_connector as nino then

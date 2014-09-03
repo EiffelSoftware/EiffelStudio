@@ -40,7 +40,7 @@
 		</cluster>
 	</target>
 	<target name="eiffel_lang_nino" extends="eiffel_lang_common">
-		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
@@ -50,7 +50,7 @@
 		</cluster>
 	</target>
 	<target name="eiffel_lang_cgi" extends="eiffel_lang_common">
-		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
@@ -60,7 +60,7 @@
 		</cluster>
 	</target>
 	<target name="eiffel_lang_libfcgi" extends="eiffel_lang_common">
-		<root class="WDOCS_WEB" feature="make_and_launch"/>
+		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">

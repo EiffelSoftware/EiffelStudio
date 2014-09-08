@@ -453,7 +453,10 @@ feature -- Generation
 		local
 			s: STRING_8
 		do
-				-- Values Associated with current Esecution object.
+			if attached user as l_user then
+				page.register_variable (l_user, "user")
+			end
+				-- Values Associated with current Execution object.
 			across
 				values as ic
 			loop

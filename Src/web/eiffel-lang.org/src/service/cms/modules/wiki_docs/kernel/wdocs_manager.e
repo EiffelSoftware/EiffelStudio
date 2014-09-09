@@ -30,10 +30,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_root_dir: PATH; a_wiki_dir: PATH)
+	make (a_root_dir: PATH; a_wiki_dir: PATH; a_version_id: like version_id)
 		do
 			root_dir := a_root_dir
 			wiki_database_path := a_wiki_dir
+			version_id := a_version_id
 			get_data
 		end
 
@@ -42,6 +43,8 @@ feature -- Access
 	root_dir: PATH
 
 	wiki_database_path: PATH
+
+	version_id: detachable READABLE_STRING_GENERAL
 
 	data: WDOCS_DATA
 
@@ -257,17 +260,28 @@ feature -- Access
 
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 		local
-			p: PATH
+			p, ip: PATH
 			w: WIKI_INDEX
+			ut: FILE_UTILITIES
+			vis: WDOCS_WIKI_BOOK_SCANNER
 		do
 			if attached data.book (a_bookid) as b then
 				Result := b
 			else
 				p := wiki_database_path.extended (a_bookid)
-				p := p.extended ("book.index")
-				create w.make (a_bookid.as_string_8, p)
-				Result := w.book
-				if Result /= Void then
+				ip := p.extended ("book.index")
+				if ut.file_path_exists (ip) then
+						-- Based on book.index
+					create w.make (a_bookid.as_string_8, ip)
+					Result := w.book
+					if Result /= Void then
+						data.books.force (Result)
+						store_data (data)
+					end
+				else
+						-- Scan each folder, and sub folder(s)
+					create Result.make (a_bookid.as_string_8, p) -- FIXME: truncated
+					create vis.make (Result)
 					data.books.force (Result)
 					store_data (data)
 				end
@@ -394,7 +408,12 @@ feature -- Access: Image
 
 	image_to_wiki_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		do
-			Result := "/images/" + a_link.name
+			if attached version_id as vid then
+				Result := "/version/" + percent_encoder.percent_encoded_string (vid)
+			else
+				create Result.make_empty
+			end
+			Result.append ("/images/" + a_link.name)
 		end
 
 	image_to_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
@@ -461,8 +480,13 @@ feature -- Access: Image
 							p := f.path
 							bak := 0
 						end
+						if attached version_id as vid then
+							Result := "/version/" + percent_encoder.percent_encoded_string (vid)
+						else
+							create Result.make_empty
+						end
 						if a_page /= Void then
-							Result := "/book/" + l_book_name
+							Result.append ("/book/" + l_book_name)
 							across
 								p.components as ic
 							loop
@@ -472,7 +496,7 @@ feature -- Access: Image
 								Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 							end
 						else
-							Result := "/images/" + a_link.name
+							Result.append ("/images/" + a_link.name)
 	--	This commented code was used to try to compute relative path, give another try later.
 	--						create Result.make (p.name.count)
 	--						from

@@ -161,9 +161,9 @@ feature -- Access: docs
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 		do
 			if a_version_id = Void then
-				create Result.make (root_dir, documentation_wiki_dir (default_version_id))
+				create Result.make (root_dir, documentation_wiki_dir (default_version_id), a_version_id)
 			else
-				create Result.make (root_dir, documentation_wiki_dir (a_version_id))
+				create Result.make (root_dir, documentation_wiki_dir (a_version_id), a_version_id)
 			end
 		end
 
@@ -195,6 +195,7 @@ feature -- Handler
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
+			wp: WIKI_PAGE
 		do
 			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 
@@ -217,9 +218,13 @@ feature -- Handler
 					across
 						l_book.pages as ic
 					loop
-						if ic.item.key.is_case_insensitive_equal_general ("index") or ic.item.parent_key.is_case_insensitive_equal_general ("index") then
+						wp := ic.item
+						if
+							wp.key.is_case_insensitive_equal_general ("index")
+							or wp.parent_key.is_case_insensitive_equal_general ("index")
+						then
 							b.append ("<li>")
-							append_wiki_page_link (req, l_version_id, l_bookid, ic.item, True, b)
+							append_wiki_page_link (req, l_version_id, l_bookid, wp, True, b)
 							b.append ("</li>")
 						end
 					end

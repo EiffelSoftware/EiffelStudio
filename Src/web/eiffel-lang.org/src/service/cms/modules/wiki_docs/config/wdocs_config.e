@@ -16,7 +16,9 @@ feature -- Access
 
 	root_dir: PATH
 
-	wiki_dir: PATH
+	documentation_dir: PATH
+
+	documentation_default_version: STRING
 
 	cache_duration: INTEGER
 

@@ -40,7 +40,8 @@ feature {NONE} -- Initialization
 				-- FIXME: maybe have a WDOCS_MODULE_EXECUTION to get those info when needed...
 				-- Note those values are really set in `register'
 			create root_dir.make_current
-			wiki_dir := root_dir.extended ("wiki")
+			documentation_dir := root_dir.extended ("data").extended ("documentation")
+			default_version_id := "current"
 			cache_duration := 0
 		end
 
@@ -59,8 +60,9 @@ feature {CMS_SERVICE} -- Registration
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
 			cfg := configuration (a_service.site_var_dir)
 			root_dir := cfg.root_dir
-			wiki_dir := cfg.wiki_dir
+			documentation_dir := cfg.documentation_dir
 			cache_duration := cfg.cache_duration
+			default_version_id := cfg.documentation_default_version
 
 			a_service.map_uri_template ("/learn", agent handle_learn (a_service, ?, ?))
 			a_service.map_uri_template ("/book/", agent handle_book (a_service, ?, ?))
@@ -68,9 +70,17 @@ feature {CMS_SERVICE} -- Registration
 			a_service.map_uri_template ("/book/{bookid}", agent handle_book (a_service, ?, ?))
 			a_service.map_uri_template ("/book/{bookid}/{wikipageid}", agent handle_wikipage (a_service, ?, ?))
 
+			a_service.map_uri_template ("/version/{version_id}/book/", agent handle_book (a_service, ?, ?))
+			a_service.map_uri_template ("/version/{version_id}/book/{bookid}/_images/{filename}", agent handle_wiki_image (a_service, ?, ?))
+			a_service.map_uri_template ("/version/{version_id}/book/{bookid}", agent handle_book (a_service, ?, ?))
+			a_service.map_uri_template ("/version/{version_id}/book/{bookid}/{wikipageid}", agent handle_wikipage (a_service, ?, ?))
+
+			a_service.map_uri_template ("/images/{image_id}", agent handle_wiki_image (a_service, ?, ?))
+			a_service.map_uri_template ("/version/{version_id}/images/{image_id}", agent handle_wiki_image (a_service, ?, ?))
+
 			create fs.make_with_path (a_service.theme_location.extended ("res").extended ("images"))
 			fs.disable_index
-			a_service.router.handle ("/images", fs)
+			a_service.router.handle ("/theme/images", fs)
 		end
 
 feature -- Access: config
@@ -126,7 +136,16 @@ feature -- Access: docs
 
 	root_dir: PATH
 
-	wiki_dir: PATH
+	documentation_dir: PATH
+
+	default_version_id: READABLE_STRING_GENERAL
+
+	documentation_wiki_dir (a_version_id: READABLE_STRING_GENERAL): PATH
+		require
+			a_version_id_not_blank: not a_version_id.is_whitespace
+		do
+			Result := documentation_dir.extended (a_version_id)
+		end
 
 	cache_duration: INTEGER
 			-- Caching duration
@@ -139,9 +158,13 @@ feature -- Access: docs
 			Result := cache_duration = 0
 		end
 
-	manager: WDOCS_MANAGER
+	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 		do
-			create Result.make (root_dir, wiki_dir)
+			if a_version_id = Void then
+				create Result.make (root_dir, documentation_wiki_dir (default_version_id))
+			else
+				create Result.make (root_dir, documentation_wiki_dir (a_version_id))
+			end
 		end
 
 feature -- Hooks
@@ -170,7 +193,7 @@ feature -- Handler
 		local
 			e: CMS_EXECUTION
 			b: STRING
-			l_bookid: detachable READABLE_STRING_32
+			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 		do
 			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
@@ -181,23 +204,22 @@ feature -- Handler
 				create {NOT_FOUND_CMS_EXECUTION} e.make (req, res, cms)
 			end
 
-			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
-				l_bookid := p_bookid.value
-			end
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
 
 			if l_bookid /= Void then
 				e.set_optional_content_type ("doc")
 				e.set_title (l_bookid)
 				e.set_value (l_bookid, "book_name")
 				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
-				mnger := manager
+				mnger := manager (l_version_id)
 				if attached mnger.book (l_bookid) as l_book then
 					across
 						l_book.pages as ic
 					loop
 						if ic.item.key.is_case_insensitive_equal_general ("index") or ic.item.parent_key.is_case_insensitive_equal_general ("index") then
 							b.append ("<li>")
-							append_wiki_page_link (req, l_bookid, ic.item, True, b)
+							append_wiki_page_link (req, l_version_id, l_bookid, ic.item, True, b)
 							b.append ("</li>")
 						end
 					end
@@ -206,7 +228,7 @@ feature -- Handler
 				e.set_optional_content_type ("doc")
 				e.set_title ("Book list ...")
 				create b.make_from_string ("<ul class=%"books%">")
-				mnger := manager
+				mnger := manager (l_version_id)
 				across
 					mnger.book_names as ic
 				loop
@@ -228,8 +250,7 @@ feature -- Handler
 
 	handle_wikipage (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			l_wiki_id: detachable READABLE_STRING_32
-			l_bookid: detachable READABLE_STRING_32
+			l_version_id, l_bookid, l_wiki_id: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 			pg: detachable WIKI_PAGE
 			e: CMS_EXECUTION
@@ -245,13 +266,10 @@ feature -- Handler
 
 			e.set_optional_content_type ("doc")
 
-			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
-				l_bookid := p_bookid.value
-			end
-			if attached {WSF_STRING} req.path_parameter ("wikipageid") as p_id then
-				l_wiki_id := p_id.value
-			end
-			mnger := manager
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+			l_wiki_id := wikipage_id (req, Void)
+			mnger := manager (l_version_id)
 
 			if l_bookid /= Void then
 				e.set_value (l_bookid, "wiki_book_name")
@@ -313,7 +331,8 @@ feature -- Handler
 	handle_wiki_image (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
 			--|	map: "/book/_images/{filename}"
 		local
-			l_bookid: detachable READABLE_STRING_32
+			l_version_id,
+			l_bookid,
 			l_filename: detachable READABLE_STRING_32
 			l_not_found: WSF_NOT_FOUND_RESPONSE
 			l_file_response: WSF_FILE_RESPONSE
@@ -322,14 +341,11 @@ feature -- Handler
 			h: HTTP_HEADER
 			dt: DATE_TIME
 		do
-			if attached {WSF_STRING} req.path_parameter ("bookid") as p_bookid then
-				l_bookid := p_bookid.value
-			end
-			if attached {WSF_STRING} req.path_parameter ("filename") as p_filename then
-				l_filename := p_filename.value
-			end
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+			l_filename := text_path_parameter (req, "filename", Void)
 			if l_bookid /= Void and l_filename /= Void then
-				mnger := manager
+				mnger := manager (l_version_id)
 				p := mnger.wiki_database_path.extended (l_bookid).extended ("_images").extended (l_filename)
 
 				if
@@ -356,6 +372,20 @@ feature -- Handler
 	--				l_file_response.set_expires_in_seconds (24*60*60)
 					res.send (l_file_response)
 				end
+			elseif attached text_path_parameter (req, "image_id", Void) as l_img_id then
+				mnger := manager (l_version_id)
+				if attached mnger.data.image_path (l_img_id, Void) as l_img_path then
+					create l_file_response.make (l_img_path.name)
+	--				l_file_response.set_expires_in_seconds (24*60*60)
+					res.send (l_file_response)
+				else
+					create l_not_found.make (req)
+					l_not_found.add_suggested_text ("Not Yet Implemented .. ", Void)
+					if attached req.http_referer as ref then
+						l_not_found.add_suggested_location (ref, "Back to previous page [" + ref + "]", Void)
+					end
+					res.send (l_not_found)
+				end
 			else
 				create l_not_found.make (req)
 				res.send (l_not_found)
@@ -363,6 +393,33 @@ feature -- Handler
 		end
 
 feature {NONE} -- Implementation: wiki render	
+
+
+	text_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+			-- STRING path parameter associated with `a_name' if it exists.
+			-- If Result is Void, return `a_default' value.
+		do
+			if attached {WSF_STRING} req.path_parameter (a_name) as l_param then
+				Result := l_param.value
+			else
+				Result := a_default
+			end
+		end
+
+	version_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+		do
+			Result := text_path_parameter (req, "version_id", a_default)
+		end
+
+	book_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+		do
+			Result := text_path_parameter (req, "bookid", a_default)
+		end
+
+	wikipage_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+		do
+			Result := text_path_parameter (req, "wikipageid", a_default)
+		end
 
 	append_navigation_to (req: WSF_REQUEST; s: STRING)
 		do
@@ -384,8 +441,10 @@ feature {NONE} -- Implementation: wiki render
 			f: PLAIN_TEXT_FILE
 			l_wiki_page_date_time: detachable DATE_TIME
 			client_request_no_server_cache: BOOLEAN
+			l_version_id: like version_id
 		do
-			p := wiki_dir.appended_with_extension ("cache")
+			l_version_id := version_id (req, Void)
+			p := a_manager.wiki_database_path.appended_with_extension ("cache")
 			if a_book_name /= Void then
 				p := p.extended (a_book_name)
 			end
@@ -437,7 +496,7 @@ feature {NONE} -- Implementation: wiki render
 						l_sub_pages as ic
 					loop
 						l_xhtml.append ("<li>")
-						append_wiki_page_link (req, a_book_name, ic.item, False, l_xhtml)
+						append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, l_xhtml)
 						l_xhtml.append ("</li>")
 					end
 				end
@@ -487,11 +546,15 @@ feature {NONE} -- implementation: wiki docs
 			end
 		end
 
-	append_wiki_page_link (req: WSF_REQUEST; a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_PAGE; is_recursive: BOOLEAN; a_output: STRING)
+	append_wiki_page_link (req: WSF_REQUEST; a_version_id, a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_PAGE; is_recursive: BOOLEAN; a_output: STRING)
 		do
 			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			if a_book_id /= Void then
-				a_output.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
+				if a_version_id /= Void then
+					a_output.append ("<a href=%""+ req.script_url ("/version/"+ percent_encoder.percent_encoded_string (a_version_id) +"/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
+				else
+					a_output.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
+				end
 			else
 				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
 			end
@@ -505,7 +568,7 @@ feature {NONE} -- implementation: wiki docs
 						l_pages as ic
 					loop
 						a_output.append ("<li>")
-						append_wiki_page_link (req, a_book_id, ic.item, is_recursive, a_output)
+						append_wiki_page_link (req, a_version_id, a_book_id, ic.item, is_recursive, a_output)
 						a_output.append ("</li>")
 					end
 					a_output.append ("</ul>")

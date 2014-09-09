@@ -50,10 +50,22 @@ feature -- Query
 			end
 		end
 
-	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): detachable PATH
+	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
 		do
-			if attached images_path_by_title_and_book.item (a_book_name) as ht then
-				Result := ht.item (a_title)
+			if a_book_name /= Void then
+				if attached images_path_by_title_and_book.item (a_book_name) as ht then
+					Result := ht.item (a_title)
+				end
+			else
+				across
+					book_names as ic
+				until
+					Result /= Void
+				loop
+					if attached image_path (a_title, ic.item) as l_path then
+						Result := l_path
+					end
+				end
 			end
 		end
 

@@ -1,7 +1,8 @@
 {
 	"layout": {
 		"root":".",
-		"wiki":"data/wiki"
+		"documentation":"data/documentation",
+		"documentation_default_version":"demo"
 	},
 	"settings": {
 		"cache_duration" : "21600"

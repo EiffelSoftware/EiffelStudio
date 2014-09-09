@@ -22,7 +22,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create root_dir.make_current
-			wiki_dir := root_dir.extended ("_db").extended ("wiki")
+			documentation_dir := root_dir.extended ("data").extended ("documentation")
+			documentation_default_version := "current"
 			cache_duration := 6 * 60 * 60 -- 6 hours
 		end
 

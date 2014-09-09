@@ -233,7 +233,11 @@ feature -- Handler
 					mnger.book_names as ic
 				loop
 					b.append ("<li>")
-					b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
+					if l_version_id /= Void then
+						b.append ("<a href=%""+ req.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
+					else
+						b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
+					end
 					b.append (html_encoded (ic.item))
 					b.append ("</a>")
 					b.append ("</li>")

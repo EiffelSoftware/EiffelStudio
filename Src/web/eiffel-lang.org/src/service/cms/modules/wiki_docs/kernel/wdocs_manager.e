@@ -248,38 +248,6 @@ feature {NONE} -- Initialization
 			c.put (d)
 		end
 
---	stored_data: detachable WDOCS_DATA
---		local
---			f: RAW_FILE
---			retried: BOOLEAN
---		do
---			if not retried then
---				create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
---				if f.exists and then f.is_access_readable then
---					f.open_read
---					if attached {WDOCS_DATA} f.retrieved as d then
---						Result := d
---					end
---					f.close
---				end
---			end
---		rescue
---			retried := True
---			retry
---		end
-
---	store_data (d: WDOCS_DATA)
---		local
---			f: RAW_FILE
---		do
---			create f.make_with_path (wiki_database_path.appended_with_extension ("data"))
---			if not f.exists or else f.is_access_writable then
---				f.open_write
---				f.basic_store (d)
---				f.close
---			end
---		end
-
 feature -- Access
 
 	book_names: ITERABLE [READABLE_STRING_32]

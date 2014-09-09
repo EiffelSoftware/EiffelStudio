@@ -19,20 +19,23 @@ feature {NONE} -- Initialization
 
 	make (p: PATH)
 		local
-			json: JSON_CONFIG
+			cfg: JSON_CONFIG
 		do
 			make_default
 
-			create JSON.make_from_file (p)
+			create cfg.make_from_file (p)
 
-			if attached json.layout_root as l_root then
+			if attached cfg.text_item ("layout.root") as l_root then
 				create root_dir.make_from_string (l_root)
 			end
-			if attached json.layout_wiki as l_wiki then
-				create wiki_dir.make_from_string (l_wiki)
+			if attached cfg.text_item ("layout.documentation") as l_documentation_dir then
+				create documentation_dir.make_from_string (l_documentation_dir)
+			end
+			if attached cfg.text_item ("layout.documentation_default_version") as l_version then
+				create documentation_default_version.make_from_string (l_version)
 			end
 			if
-				attached json.settings_cache_duration as l_duration and then
+				attached cfg.text_item ("settings.cache_duration") as l_duration and then
 				l_duration.is_integer
 			then
 				cache_duration := l_duration.to_integer

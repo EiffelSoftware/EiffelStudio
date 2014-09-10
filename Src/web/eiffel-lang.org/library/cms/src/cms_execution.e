@@ -484,6 +484,13 @@ feature -- Generation
 			prepare_menu_system (menu_system)
 
 			get_blocks
+			across
+				blocks as ic
+			loop
+				if attached {CMS_MENU_BLOCK} ic.item.block as l_menu_block then
+					recursive_get_active (l_menu_block.menu, request)
+				end
+			end
 
 			if attached title as l_title then
 				page.set_title (l_title)
@@ -519,6 +526,23 @@ feature -- Generation
 					s.append ("</div>")
 					s.append ("</div>")
 					page.add_to_region (s, b_info.region)
+				end
+			end
+		end
+
+	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)
+			-- Update the active status recursively on `a_comp'.
+		do
+			if attached a_comp.items as l_items then
+				across
+					l_items as ic
+				loop
+					if attached {CMS_LOCAL_LINK} ic.item as l_local then
+						l_local.get_is_active (request)
+					end
+					if ic.item.is_expanded and then attached {CMS_LINK_COMPOSITE} ic.item as l_comp then
+						recursive_get_active (l_comp, req)
+					end
 				end
 			end
 		end

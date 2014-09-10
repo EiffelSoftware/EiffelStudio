@@ -2,9 +2,11 @@
 						<div id="content" class="documentation">
 							<div class="holder">
 {if isset="$content"}
-			  <h1>
+			  <div id="breadcumb">
+			  		<span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>
 			  		{if isset="$wiki_book_name"}<a href="{$site_url/}/book/{$wiki_book_name/}">{$wiki_book_name/}</a>{/if}
-			  		{if isset="$wiki_page_name"}:: {$wiki_page_name/}{/if}</h1>
+			  		{if isset="$wiki_page_name"}:: {$wiki_page_name/}{/if}
+			  </div>
 			  <div class="wikipage">{$content/}</div>
 {/if}
 {unless isset="$content"}
@@ -16,6 +18,13 @@
 {/unless}
 							</div>
 						</div>
+						{if isset="$doc_sidebar"}
+						<aside id="sidebar">
+							<div class="holder">
+								{$doc_sidebar/}
+							</div>
+						</aside>
+						{/if}
 <!-- Commented for now, no right side bar
 						<aside id="sidebar">
 							<div class="holder">

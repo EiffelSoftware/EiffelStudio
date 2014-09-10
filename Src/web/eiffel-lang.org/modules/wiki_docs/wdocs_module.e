@@ -9,7 +9,7 @@ class
 inherit
 	CMS_MODULE
 
---	CMS_HOOK_BLOCK
+	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -169,18 +169,148 @@ feature -- Access: docs
 
 feature -- Hooks
 
---	block_list: ITERABLE [like {CMS_BLOCK}.name]
---		do
---			Result := <<"debug-info">>
---		end
+	block_list: ITERABLE [like {CMS_BLOCK}.name]
+		do
+			Result := <<"wdocs-tree">>
+		end
 
---	get_block_view (a_block_id: detachable READABLE_STRING_8; a_execution: CMS_EXECUTION)
---		local
---			b: CMS_CONTENT_BLOCK
---		do
---			create b.make ("debug-info", "Debug", "... ", a_execution.formats.plain_text)
---			a_execution.add_block (b, Void)
---		end
+	get_block_view (a_block_id: detachable READABLE_STRING_8; a_execution: CMS_EXECUTION)
+		local
+			b: CMS_MENU_BLOCK
+			m: CMS_MENU
+			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
+		do
+			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_version_id") as t then
+				l_version_id := t
+			end
+			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_book_name") as t then
+				l_book_name := t
+			end
+			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
+				l_page_name := t
+			end
+			m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name)
+			create b.make (m)
+			a_execution.add_block (b, "doc_sidebar")
+
+		end
+
+	wdocs_cms_menu (a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL): CMS_MENU
+		local
+			ln: CMS_LOCAL_LINK
+			loc: STRING
+			mng: like manager
+			wb: detachable WIKI_BOOK
+			l_parent: detachable WIKI_PAGE
+		do
+			create Result.make_with_title ("wdocs-tree", "Documentation", 3)
+			mng := manager (a_version_id)
+
+			if a_book_name /= Void then
+				if a_page_name = Void then
+					create ln.make (a_book_name.to_string_32, wdocs_book_link_location (a_version_id, a_book_name))
+					ln.set_expandable (True)
+					Result.extend (ln)
+					wb := mng.book (a_book_name)
+					if wb /= Void then
+						if attached wb.root_page as wp then
+							if attached wp.pages as l_wp_pages then
+								ln.set_expanded (not l_wp_pages.is_empty)
+								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
+							end
+						else
+							wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, wb.top_pages, ln)
+						end
+					end
+				else
+					if a_book_name /= Void then
+						wb := mng.book (a_book_name)
+						loc := wdocs_page_link_location (a_version_id, a_book_name, a_page_name)
+					else
+						loc := wdocs_page_link_location (a_version_id, "???", a_page_name)
+					end
+
+					if wb /= Void and then attached wb.page (a_page_name) as wp then
+						l_parent := wb.page_by_key (wp.parent_key)
+						if l_parent /= Void then
+							create ln.make ({STRING_32} "Parent <" + l_parent.title + ">", wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
+							ln.set_expandable (True)
+							Result.extend (ln)
+
+							if attached l_parent.pages as l_wp_pages and then not l_wp_pages.is_empty then
+								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
+							else
+								check has_wp: False end
+							end
+						else
+							create ln.make ({STRING_32} "Book %"" +wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
+							ln.set_expandable (True)
+							Result.extend (ln)
+
+							if attached wb.top_pages as l_pages and then not l_pages.is_empty then
+								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_pages, ln)
+							end
+
+--								-- Is top  ..?
+--							create ln.make (a_page_name.to_string_32, loc)
+--							Result.extend (ln)
+--							if attached wp.pages as l_wp_pages and then not l_wp_pages.is_empty then
+--								ln.set_expandable (True)
+--								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
+--							end
+						end
+
+					else
+						create ln.make (a_page_name.to_string_32, loc)
+						Result.extend (ln)
+					end
+				end
+			end
+			across
+				mng.book_names as ic
+			loop
+				if
+					a_book_name = Void
+					or else not a_book_name.is_case_insensitive_equal (ic.item)
+				then
+					create ln.make (ic.item, wdocs_book_link_location (a_version_id, ic.item))
+					Result.extend (ln)
+				end
+			end
+		end
+
+	wdocs_append_pages_to_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_active_page_name: detachable READABLE_STRING_GENERAL; a_pages: LIST [WIKI_PAGE]; a_link: CMS_LOCAL_LINK)
+		require
+			is_expandable: a_link.is_expandable
+		local
+			sub_ln: CMS_LOCAL_LINK
+			wp: WIKI_PAGE
+		do
+			a_link.set_expandable (True)
+			a_link.set_expanded (True)
+			across
+				a_pages as ic
+			loop
+				wp := ic.item
+				create sub_ln.make (wp.title, wdocs_page_link_location (a_version_id, a_book_name, wp.title))
+				if wp.has_page then
+					sub_ln.set_expandable (wp.has_page)
+					if
+						a_active_page_name /= Void and then
+						a_active_page_name.is_case_insensitive_equal (wp.title)
+					then
+							-- FIXME: find a way to mark it as current doc!
+						if
+							attached wp.pages as l_wp_pages and then
+							not l_wp_pages.is_empty
+						then
+							wdocs_append_pages_to_link (a_version_id, a_book_name, Void, l_wp_pages, sub_ln)
+						end
+					end
+				end
+				a_link.add_link (sub_ln)
+			end
+		end
 
 feature -- Handler		
 
@@ -195,9 +325,10 @@ feature -- Handler
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
-			wp: WIKI_PAGE
 		do
-			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			debug ("refactor_fixme")
+				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			end
 
 			if req.is_get_request_method then
 				create {ANY_CMS_EXECUTION} e.make (req, res, cms)
@@ -208,23 +339,25 @@ feature -- Handler
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)
 
+			e.set_value (l_version_id, "wiki_version_id")
+
 			if l_bookid /= Void then
 				e.set_optional_content_type ("doc")
 				e.set_title (l_bookid)
-				e.set_value (l_bookid, "book_name")
+				e.set_value (l_bookid, "wiki_book_name")
 				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
 				mnger := manager (l_version_id)
 				if attached mnger.book (l_bookid) as l_book then
-					across
-						l_book.pages as ic
-					loop
-						wp := ic.item
-						if
-							wp.key.is_case_insensitive_equal_general ("index")
-							or wp.parent_key.is_case_insensitive_equal_general ("index")
-						then
+					if attached l_book.root_page as wp then
+						b.append ("<li>")
+						append_wiki_page_link (req, l_version_id, l_bookid, wp, True, b)
+						b.append ("</li>")
+					else
+						across
+							l_book.top_pages as ic
+						loop
 							b.append ("<li>")
-							append_wiki_page_link (req, l_version_id, l_bookid, wp, True, b)
+							append_wiki_page_link (req, l_version_id, l_bookid, ic.item, True, b)
 							b.append ("</li>")
 						end
 					end
@@ -265,7 +398,9 @@ feature -- Handler
 			e: CMS_EXECUTION
 			s: STRING
 		do
-			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			debug ("refactor_fixme")
+				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			end
 
 			if req.is_get_request_method then
 				create {ANY_CMS_EXECUTION} e.make (req, res, cms)
@@ -279,6 +414,8 @@ feature -- Handler
 			l_bookid := book_id (req, Void)
 			l_wiki_id := wikipage_id (req, Void)
 			mnger := manager (l_version_id)
+
+			e.set_value (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
 				e.set_value (l_bookid, "wiki_book_name")
@@ -298,13 +435,13 @@ feature -- Handler
 				e.set_value (pg.title, "wiki_page_name")
 				create s.make_empty
 
-				debug ("wdocs")
-					if l_wiki_id /= Void then
-						s.append ("<h1><a href="+ req.request_uri +">Wiki page # "+ html_encoded (l_wiki_id) +"</a></h1>")
-					else
-						s.append ("<h1>Wiki page #???</h1>")
-					end
-				end
+--				debug ("wdocs")
+--					if l_wiki_id /= Void then
+--						s.append ("<h1><a href="+ req.request_uri +">Wiki page # "+ html_encoded (l_wiki_id) +"</a></h1>")
+--					else
+--						s.append ("<h1>Wiki page #???</h1>")
+--					end
+--				end
 
 				append_wiki_page_xhtml_to (pg, l_bookid, mnger, s, req)
 
@@ -325,7 +462,7 @@ feature -- Handler
 					s.append ("</pre>")
 				end
 			else
-				e.set_title ("Wiki page #???")
+				e.set_title ("Wiki page not found!")
 				create s.make_from_string ("Page not found")
 			end
 
@@ -432,7 +569,9 @@ feature {NONE} -- Implementation: wiki render
 
 	append_navigation_to (req: WSF_REQUEST; s: STRING)
 		do
-			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			debug ("refactor_fixme")
+				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			end
 			s.append ("<li><a href=%"" + req.script_url ("/") + "%">back to home</a></li>")
 			if attached req.http_referer as l_ref then
 				s.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
@@ -500,6 +639,17 @@ feature {NONE} -- Implementation: wiki render
 				wvis.set_template_resolver (a_manager)
 				wvis.visit_page (a_wiki_page)
 
+				l_xhtml.append ("<ul class=%"wdocs-index%">")
+				if
+					a_book_name /= Void and then
+					attached a_manager.page (a_book_name, a_wiki_page.parent_key) as l_parent_page and then
+					l_parent_page /= a_wiki_page
+				then
+					l_xhtml.append ("<li><em>Parent</em> &lt;")
+					append_wiki_page_link (req, l_version_id, a_book_name, l_parent_page, False, l_xhtml)
+					l_xhtml.append ("&gt;</li>")
+				end
+
 				if attached a_wiki_page.pages as l_sub_pages then
 					across
 						l_sub_pages as ic
@@ -509,7 +659,7 @@ feature {NONE} -- Implementation: wiki render
 						l_xhtml.append ("</li>")
 					end
 				end
-
+				l_xhtml.append ("</ul>")
 				if l_cache /= Void then
 					l_cache.put (l_xhtml)
 				end
@@ -556,21 +706,35 @@ feature {NONE} -- implementation: wiki docs
 		end
 
 	append_wiki_page_link (req: WSF_REQUEST; a_version_id, a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_PAGE; is_recursive: BOOLEAN; a_output: STRING)
+		local
+			l_pages: detachable LIST [WIKI_PAGE]
+			loc: STRING
 		do
-			to_implement ("Find a way to extract presentation [html code] outside Eiffel")
-			if a_book_id /= Void then
-				if a_version_id /= Void then
-					a_output.append ("<a href=%""+ req.script_url ("/version/"+ percent_encoder.percent_encoded_string (a_version_id) +"/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
-				else
-					a_output.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (a_book_id)) + "/" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
-				end
-			else
-				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%">")
+			debug ("refactor_fixme")
+				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			end
+			l_pages := a_page.pages
+			if l_pages /= Void and then l_pages.is_empty then
+				l_pages := Void
+			end
+
+			if a_book_id /= Void then
+				loc := wdocs_page_link_location (a_version_id, a_book_id, last_segment (a_page.src))
+				a_output.append ("<a href=%""+ req.script_url (loc) + "%"")
+			else
+				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%"")
+			end
+			if l_pages /= Void then
+				a_output.append (" class=%"wdocslink folder%"")
+			else
+				a_output.append (" class=%"wdocslink%"")
+			end
+			a_output.append (">")
 			a_output.append (html_encoder.general_encoded_string (a_page.title))
 			a_output.append ("</a>")
 
-			if attached a_page.pages as l_pages and then not l_pages.is_empty then
+			if l_pages /= Void then
+				check pages_not_empty: not l_pages.is_empty end
 				if is_recursive then
 					a_output.append ("<ul>")
 					across
@@ -583,6 +747,24 @@ feature {NONE} -- implementation: wiki docs
 					a_output.append ("</ul>")
 				end
 			end
+		end
+
+	wdocs_book_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): STRING
+		do
+			if a_version_id /= Void then
+				create Result.make_from_string ("/version/" + percent_encoder.percent_encoded_string (a_version_id))
+			else
+				create Result.make_empty
+			end
+			Result.append ("/book/")
+			Result.append (percent_encoder.percent_encoded_string (a_book_name))
+		end
+
+	wdocs_page_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_page_name: READABLE_STRING_GENERAL): STRING
+		do
+			Result := wdocs_book_link_location (a_version_id, a_book_name)
+			Result.append ("/")
+			Result.append (percent_encoder.percent_encoded_string (a_page_name))
 		end
 
 feature {NONE} -- Implementation: date and time

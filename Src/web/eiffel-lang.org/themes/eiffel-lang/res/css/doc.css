@@ -2,10 +2,10 @@
 
 #content.documentation {
   overflow:visible;
-  width: 90%;
+  width: 615px;
 }
 #content.documentation .holder {
-  width: 100%;
+  width: 615px;
 }
 #content .head {
   color: #13a69a;
@@ -16,4 +16,8 @@
 div.cache-info {
   float: right;
   font-style: italic;
+}
+#wdocs-tree.menu li.active {
+	font-weight: bold;
+	border-right: solid 2px #ccc;
 }

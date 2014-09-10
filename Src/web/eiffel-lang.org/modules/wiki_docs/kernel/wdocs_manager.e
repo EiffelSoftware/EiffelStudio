@@ -295,6 +295,7 @@ feature -- Access
 			f: PLAIN_TEXT_FILE
 			wi: WIKI_INDEX
 			pg: detachable WIKI_PAGE
+			ut: FILE_UTILITIES
 		do
 			if a_bookpage = Void then
 				n := "index"
@@ -302,16 +303,32 @@ feature -- Access
 				n := a_bookpage
 			end
 
-			create wi.make (a_bookid.as_string_8, wiki_database_path.extended (a_bookid).extended ("book.index"))
-			pg := wi.page_by_id (n)
+			p := wiki_database_path.extended (a_bookid).extended ("book.index")
+			if ut.file_path_exists (p) then
+				create wi.make (a_bookid.as_string_8, wiki_database_path.extended (a_bookid).extended ("book.index"))
+				pg := wi.page_by_id (n)
+			elseif attached book (a_bookid) as wb then
+				pg := wb.page (n)
+				if pg = Void then
+					pg := wb.page_by_key (n)
+				end
+			end
 			if pg /= Void then
 				p := wiki_database_path.extended (pg.src)
 			else
 				p := wiki_database_path.extended (a_bookid).extended (n)
 			end
-
 			p := p.appended_with_extension ("wiki")
 			create f.make_with_path (p)
+			if not f.exists then
+				if pg /= Void then
+					p := wiki_database_path.extended (pg.src)
+				else
+					p := wiki_database_path.extended (a_bookid).extended (n)
+				end
+				p := p.extended ("index.wiki")
+				create f.make_with_path (p)
+			end
 			if f.exists then
 				if pg /= Void then
 					Result := pg

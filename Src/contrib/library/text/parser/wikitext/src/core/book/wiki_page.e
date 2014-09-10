@@ -34,12 +34,23 @@ feature -- Visitor
 feature -- Access
 
 	title: STRING
+			-- Page's title.
 
 	parent_key: STRING
+			-- Key identifying a parent page.
+			-- note: this is related to book structure.
 
 	src: STRING
+			-- Relative URI from book root directory.
+
+	has_page: BOOLEAN
+			-- Has any sub pages?
+		do
+			Result := attached pages as lst and then not lst.is_empty
+		end
 
 	pages: detachable ARRAYED_LIST [WIKI_PAGE]
+			-- Sub pages.
 
 	structure: detachable WIKI_STRUCTURE
 		local
@@ -166,11 +177,43 @@ feature -- Query
 					p := q - 1
 					q := l_src.last_index_of ('/', p)
 					if q > 0 then
-						Result := l_src.substring (q + 1, p - 1)
+						Result := l_src.substring (q + 1, p)
 					end
 				end
 			else
 				Result := l_src
+			end
+		end
+
+	page (a_title: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+		do
+			if attached pages as l_pages then
+				across
+					l_pages as ic
+				until
+					Result /= Void
+				loop
+					Result := ic.item
+					if not Result.title.is_case_insensitive_equal_general (a_title) then
+						Result := Void
+					end
+				end
+			end
+		end
+
+	page_by_key (k: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+		do
+			if attached pages as l_pages then
+				across
+					l_pages as ic
+				until
+					Result /= Void
+				loop
+					Result := ic.item
+					if not Result.key.is_case_insensitive_equal_general (k) then
+						Result := Void
+					end
+				end
 			end
 		end
 
@@ -181,10 +224,19 @@ feature {NONE} -- Internal
 
 feature -- Element change
 
-	get_structure (a_filename: PATH)
+	set_path (p: PATH)
 		do
-			path := a_filename
-			internal_structure := Void
+			path := p
+		end
+
+	set_src (a_src: like src)
+		do
+			src := a_src
+		end
+
+	set_parent (a_page: WIKI_PAGE)
+		do
+			parent_key := a_page.key
 		end
 
 	add_page (a_page: WIKI_PAGE)
@@ -193,6 +245,9 @@ feature -- Element change
 		end
 
 	add_page_with_weight (a_page: WIKI_PAGE; a_weight: INTEGER)
+		require
+			not_current: a_page /= Current
+			not_same_title_as_current: not title.is_case_insensitive_equal (a_page.title)
 		local
 			l_pages: like pages
 		do
@@ -204,9 +259,10 @@ feature -- Element change
 			l_pages.extend (a_page)
 		end
 
-	set_src (a_src: like src)
+	get_structure (a_filename: PATH)
 		do
-			src := a_src
+			path := a_filename
+			internal_structure := Void
 		end
 
 feature -- Status report

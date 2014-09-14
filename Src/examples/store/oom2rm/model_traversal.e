@@ -181,6 +181,7 @@ feature {NONE}
 				tables.after or Result = true
 			loop
 				Result := tables.item.name ~ name
+				tables.forth
 			end
 		end;
 

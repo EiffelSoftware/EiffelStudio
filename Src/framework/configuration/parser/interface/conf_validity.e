@@ -104,12 +104,16 @@ feature -- Basic validity queries
 	valid_config_extension (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file' have a correct eiffel config file extension?
 		local
-			sep, cnt: INTEGER
+			cnt: INTEGER
 		do
 			cnt := a_file.count
-			sep := a_file.last_index_of_code (('.').natural_32_code, cnt)
-			if sep /= 0 then
-				Result := a_file.substring (sep + 1, cnt).is_case_insensitive_equal ("ecf")
+				-- It should have at leat 5 characters, one for the file name and four
+				-- for the extension part including the dot (".ecf").
+			if cnt >= 5 then
+				Result := a_file.item (cnt - 3) = {CHARACTER_32} '.' and
+					a_file.item (cnt - 2).as_lower = {CHARACTER_32} 'e' and
+					a_file.item (cnt - 1).as_lower = {CHARACTER_32} 'c' and
+					a_file.item (cnt).as_lower = {CHARACTER_32} 'f'
 			end
 		end
 

@@ -94,6 +94,65 @@ feature -- Access
 			end
 		end
 
+
+	quick_installed_package (a_package_name: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
+			-- Installed package `a_package_name' if any.
+			-- Minor optimization.
+		local
+			p: PATH
+			vis: IRON_FS_PACKAGE_INFO_DIRECTORY_ITERATOR
+			lst: ARRAYED_LIST [PATH]
+			l_inst_info: IRON_PACKAGE_INSTALLATION_INFO
+			l_unordered_result: ARRAYED_LIST [IRON_PACKAGE]
+		do
+			create l_unordered_result.make (0)
+			l_unordered_result.compare_objects
+			p := layout.packages_path
+			create lst.make (10)
+			create vis.make (lst)
+			vis.scan_folder (p.absolute_path.canonical_path)
+			across
+				lst as c
+			loop
+				if
+					attached repo_package_identifier_from_json_string (file_content (c.item)) as l_package_id and then
+					l_package_id.is_case_insensitive_equal (a_package_name)
+				then
+					create l_inst_info.make_with_file (c.item)
+					if attached l_inst_info.package as l_package then
+						l_unordered_result.force (l_package)
+					else
+							-- Backward compatibility
+						if
+							attached file_content (c.item) as s and then
+							attached repo_package_from_json_string (s) as l_package
+						then
+							l_unordered_result.force (l_package)
+						end
+					end
+				end
+			end
+
+			across
+				repositories as ic
+			until
+				l_unordered_result.is_empty or Result /= Void
+			loop
+				from
+					l_unordered_result.start
+				until
+					l_unordered_result.after or Result /= Void
+				loop
+					if ic.item.is_same_repository (l_unordered_result.item.repository) then
+						Result := l_unordered_result.item
+						l_unordered_result.remove
+					else
+						l_unordered_result.forth
+					end
+				end
+			end
+		end
+
 	available_packages: ARRAYED_LIST [IRON_PACKAGE]
 			-- URI indexed by package name.
 		local
@@ -255,6 +314,16 @@ feature {NONE} -- Implementation
 		do
 			create f
 			Result := f.json_to_package (s)
+		end
+
+	repo_package_identifier_from_json_string (s: detachable READABLE_STRING_8): detachable READABLE_STRING_GENERAL
+		local
+			f: JSON_TO_IRON_FACTORY
+		do
+			if s /= Void then
+				create f
+				Result := f.json_to_package_identifier (s)
+			end
 		end
 
 note

@@ -42,6 +42,25 @@ feature -- Access
 			Result := installed_packages.count
 		end
 
+	installed_package (a_package_name: READABLE_STRING_GENERAL; a_skip_cache: BOOLEAN): detachable IRON_PACKAGE
+			-- Installed package `a_package_name' if any.
+			-- note: this is an optimized query.
+		do
+			if a_skip_cache then
+				Result := db.quick_installed_package (a_package_name)
+			elseif attached installed_packages as lst then
+				across
+					lst as p
+				until
+					Result /= Void
+				loop
+					if p.item.is_identified_by (a_package_name) then
+						Result := p.item
+					end
+				end
+			end
+		end
+
 	installed_packages: LIST [IRON_PACKAGE]
 			-- List of installed package represented as a list of package object.
 		local
@@ -89,6 +108,12 @@ feature -- Access
 				internal_available_packages := res
 			end
 			Result := res
+		end
+
+	repositories: LIST [IRON_REPOSITORY]
+			-- List of registered repositories.
+		do
+			Result := db.repositories
 		end
 
 feature -- Change
@@ -462,17 +487,7 @@ feature -- Local path
 		local
 			l_package: detachable IRON_PACKAGE
 		do
-			if attached installed_packages as lst then
-				across
-					lst as p
-				until
-					l_package /= Void
-				loop
-					if p.item.is_identified_by (a_package_name) then
-						l_package := p.item
-					end
-				end
-			end
+			l_package := installed_package (a_package_name, False)
 			if l_package /= Void then
 				Result := package_installation_path (l_package)
 				if Result /= Void and then (create {DIRECTORY}.make_with_path (Result)).exists then

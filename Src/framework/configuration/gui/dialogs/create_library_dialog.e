@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			l_clear_filter_button: EV_BUTTON
 			l_update_index_button: EV_BUTTON
 			nb: EV_NOTEBOOK
-			lib_tab: detachable EV_NOTEBOOK_TAB
+			libs_tab: detachable EV_NOTEBOOK_TAB
 			iron_box: IRON_PACKAGE_COLLECTION_BOX
 		do
 			Precursor
@@ -83,8 +83,8 @@ feature {NONE} -- Initialization
 			nb.extend (main)
 
 			if nb.has (main) then
-				lib_tab := nb.item_tab (main)
-				nb.item_tab (main).set_text ("Libraries")
+				libs_tab := nb.item_tab (main)
+				nb.item_tab (main).set_text (conf_interface_names.dialog_create_libraries)
 			end
 
 			create vb
@@ -150,8 +150,8 @@ feature {NONE} -- Initialization
 
 			create l_update_index_button
 			l_update_index_button.select_actions.extend (agent update_index)
-			l_update_index_button.set_text ("Update index")
-			l_update_index_button.set_tooltip (names.b_reset)
+			l_update_index_button.set_text (conf_interface_names.dialog_create_refresh)
+			l_update_index_button.set_tooltip (conf_interface_names.dialog_create_refresh_tooltip)
 			l_update_index_button.enable_sensitive
 			hb1.extend (l_update_index_button)
 			hb1.disable_item_expand (l_update_index_button)
@@ -159,7 +159,8 @@ feature {NONE} -- Initialization
 
 			create l_btn
 			l_btn.set_pixmap (conf_pixmaps.project_settings_advanced_icon)
-			l_btn.select_actions.extend (agent edit_libraries_cfg)
+			l_btn.select_actions.extend (agent popup_configuration_information)
+			l_btn.set_tooltip (conf_interface_names.dialog_display_configuration_tooltip)
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 
@@ -242,8 +243,11 @@ feature {NONE} -- Initialization
 				nb.has (main) and then
 				attached nb.item_tab (main) as iron_tab
 			then
-				iron_tab.set_text ("Iron")
+				iron_tab.set_text (conf_interface_names.dialog_create_iron_packages)
 				create iron_box.make (target)
+					--| Whenever an operation is made on iron packages via the current EiffelStudio's dialog
+					--| `on_iron_packages_changed' will be executed.
+				iron_box.on_iron_packages_changed_actions.extend (agent on_iron_packages_changed)
 				vb2.extend (iron_box.widget)
 
 				-----------------
@@ -254,22 +258,32 @@ feature {NONE} -- Initialization
 				hb.extend (create {EV_CELL})
 				hb.set_padding (layout_constants.default_padding_size)
 
-				create l_btn.make_with_text ("Back")
+				create l_btn.make_with_text (conf_interface_names.dialog_create_back_to_previous_tab)
 				hb.extend (l_btn)
 				hb.disable_item_expand (l_btn)
-				if lib_tab /= Void then
-					l_btn.select_actions.extend (agent lib_tab.enable_select)
+				if libs_tab /= Void then
+					l_btn.select_actions.extend (agent libs_tab.enable_select)
 				else
 					l_btn.select_actions.extend (agent nb.select_item (nb.first))
 				end
 				layout_constants.set_default_width_for_button (l_btn)
 
-				nb.selection_actions.extend (agent (ia_nb: EV_NOTEBOOK_TAB; ia_iron_box: IRON_PACKAGE_COLLECTION_BOX)
+				nb.selection_actions.extend (agent (ia_libs, ia_nb: detachable EV_NOTEBOOK_TAB; ia_iron_box: IRON_PACKAGE_COLLECTION_BOX)
 						do
-							if ia_nb.is_selected then
-								ia_iron_box.populate
+							if ia_nb /= Void and then ia_nb.is_selected then
+									--| the "IRON Packages" tab is selected
+									--| then populate the associated grid to display iron packages
+								ev_application.add_idle_action_kamikaze (agent ia_iron_box.populate)
+							elseif ia_libs /= Void and then ia_libs.is_selected then
+									--| the "Libraries" tab is selected
+								if repopulate_requested then
+										--| a command requested the re-population of the libraries grid
+										--| most likely due to recent IRON changes from the related dialog
+										--| that resetted the cache of iron libraries data.
+									ev_application.add_idle_action_kamikaze (agent populate_libraries)
+								end
 							end
-						end (iron_tab, iron_box)
+						end (libs_tab, iron_tab, iron_box)
 					)
 			end
 
@@ -370,82 +384,50 @@ feature -- Access
 	last_group: CONF_LIBRARY
 			-- Last created group.
 
-feature {NONE} -- Libraries cache.
+feature {NONE} -- Callback
 
-	edit_libraries_cfg
-		local
-			dlg: EV_DIALOG
-			txt: EV_TEXT
-			v: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			but: EV_BUTTON
-			p: PATH
-			f: RAW_FILE
-			s: STRING_32
-			utf: UTF_CONVERTER
+	on_iron_packages_changed (a_package: detachable IRON_PACKAGE)
+			-- Called when the iron packages are changed from the IRON_PACKAGE_COLLECTION_BOX.
 		do
-
-			p := eiffel_layout.eifinit_path.extended ("libraries.cfg")
-			create f.make_with_path (p)
-			if f.exists and then f.is_readable then
-				create dlg
-				create v
-				dlg.extend (v)
-
-				create txt
-				txt.set_minimum_size (200, 200)
-				v.extend (txt)
-				create hb
-				v.extend (hb)
-				v.disable_item_expand (hb)
-
-				f.open_read
-				from
-					create s.make_empty
-				until
-					f.exhausted
-				loop
-					f.read_line_thread_aware
-					s.append (utf.utf_8_string_8_to_string_32 (f.last_string))
-					s.append_character ('%N')
-				end
-				f.close
-				txt.set_text (s)
-
-				if f.is_writable then
-					txt.enable_edit
-					create but.make_with_text_and_action (names.b_save, agent (ia_dlg: EV_DIALOG; ia_text: EV_TEXTABLE; ia_file: FILE)
-							require
-								ia_file.is_writable
-							do
-								ia_file.open_write
-								ia_file.put_string (ia_text.text)
-								ia_file.put_new_line
-								ia_file.close
-
-								ia_dlg.destroy
-							end (dlg, txt, f))
-				else
-					txt.disable_edit
-					create but.make_with_text (names.b_save)
-					but.disable_sensitive
-				end
-				hb.extend (but)
-				hb.disable_item_expand (but)
-				create but.make_with_text_and_action (names.b_cancel, agent (ia_dlg: EV_DIALOG) do ia_dlg.destroy end(dlg))
-				hb.extend (but)
-				hb.disable_item_expand (but)
-			else
-				create {EV_ERROR_DIALOG} dlg.make_with_text ("Can not edit libraries settings !")
+			reset_iron_configuration_libraries_cache
+			if not repopulate_requested then
+				repopulate_requested := True
 			end
-			dlg.show_modal_to_window (Current)
 		end
+
+	repopulate_requested: BOOLEAN
+			-- Any pending request to call `populate_libraries'?
+
+feature {NONE} -- Libraries cache.
 
 	update_index
 		do
-			cache_data (Void, "iron_configuration_libraries.cache")
-			cache_data (Void, "configuration_libraries.cache")
+			cache_data (Void, iron_configuration_libraries_cache_name (target.setting_msil_generation))
+			cache_data (Void, configuration_libraries_cache_name (target.setting_msil_generation))
 			populate_libraries
+		end
+
+	reset_iron_configuration_libraries_cache
+		do
+			cache_data (Void, iron_configuration_libraries_cache_name (target.setting_msil_generation))
+		end
+
+	iron_configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
+		do
+			if a_is_dotnet then
+				Result := "iron_configuration_libraries_dotnet.cache"
+			else
+				Result := "iron_configuration_libraries.cache"
+			end
+		end
+
+	configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
+		do
+			if a_is_dotnet then
+				Result := "configuration_libraries_dotnet.cache"
+			else
+				Result := "configuration_libraries.cache"
+			end
 		end
 
 	cached_data (a_name: READABLE_STRING_GENERAL): detachable ANY
@@ -505,6 +487,56 @@ feature {NONE} -- Libraries cache.
 			retry
 		end
 
+feature {NONE} -- Configuration settings for libraries
+
+	popup_configuration_information
+			-- Popup information related to library dialog configuration.
+		local
+			dlg: EV_DIALOG
+			p1, p2: PATH
+			us1, us2: detachable READABLE_STRING_GENERAL
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			t: EV_TEXT
+			l_close_button: EV_BUTTON
+		do
+			p1 := eiffel_layout.libraries_config_name
+			if eiffel_layout.is_user_files_supported then
+				us1 := eiffel_layout.user_priority_file_name (p1, False).name
+			end
+			p2 := eiffel_layout.precompiles_config_name
+			if eiffel_layout.is_user_files_supported then
+				us2 := eiffel_layout.user_priority_file_name (p2, False).name
+			end
+
+			create dlg
+			dlg.set_title (conf_interface_names.dialog_display_configuration_title)
+			create vb
+			vb.set_border_width (Layout_constants.Default_border_size)
+			vb.set_padding (Layout_constants.Default_padding_size)
+
+			create t.make_with_text (conf_interface_names.dialog_display_configuration_text (p1.name, us1, p2.name, us2 , eiffel_layout.is_user_files_supported))
+			t.disable_edit
+			t.set_background_color ((create {EV_STOCK_COLORS}).white)
+			t.set_minimum_size (500, 200)
+			vb.extend (t)
+			create hb
+			create l_close_button.make_with_text (conf_interface_names.general_close)
+			l_close_button.select_actions.extend (agent dlg.destroy)
+			hb.set_padding (Layout_constants.Default_padding_size)
+			dlg.set_icon_pixmap (Default_pixmaps.Information_pixmap)
+
+			hb.extend (create {EV_CELL})
+			hb.extend (l_close_button)
+			hb.disable_item_expand (l_close_button)
+			hb.extend (create {EV_CELL})
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			dlg.extend (vb)
+
+			dlg.show_modal_to_window (Current)
+		end
+
 feature {NONE} -- Access		
 
 	libraries: SEARCH_TABLE [STRING_32]
@@ -513,27 +545,30 @@ feature {NONE} -- Access
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
 			l_dirs: like lookup_directories
-			l_libraries: SEARCH_TABLE [STRING_32]
+			l_libraries: STRING_TABLE [BOOLEAN]
 			l_dir: DIRECTORY
 			l_path: IMMUTABLE_STRING_32
+			l_lib_path: STRING_32
 			l_location: CONF_DIRECTORY_LOCATION
 		do
 			l_dirs := lookup_directories
 			create Result.make (l_dirs.count)
-			from l_dirs.start until l_dirs.after loop
-				create l_location.make (l_dirs.item_for_iteration.path, target)
+			across l_dirs as ic loop
+				create l_location.make (ic.item.path, target)
 				l_path := l_location.evaluated_path.name
 				create l_dir.make (l_path)
 				if l_dir.is_readable then
 					create l_libraries.make (10)
-					add_configs_in_directory (l_dir, l_dirs.item_for_iteration.depth, l_libraries)
-					from l_libraries.start until l_libraries.after loop
-						l_libraries.item_for_iteration.replace_substring (l_dirs.item_for_iteration.path, 1, l_path.count)
-						l_libraries.forth
+					add_configs_in_directory (l_dir, ic.item.depth, l_libraries)
+					across l_libraries as ic_libs loop
+							-- If the config file was using some environment variable, we just
+							-- replace the computed path with what was specified in the config file
+							-- for the current entry of `ic'.
+						l_lib_path := ic_libs.key.as_string_32.twin
+						l_lib_path.replace_substring (ic.item.path, 1, l_path.count)
+						Result.put (l_lib_path)
 					end
-					Result.merge (l_libraries)
 				end
-				l_dirs.forth
 			end
 		ensure
 			result_attached: Result /= Void
@@ -568,12 +603,12 @@ feature {NONE} -- Access
 		local
 			l_libs: like libraries
 		do
-			if attached {like configuration_libraries} cached_data ("configuration_libraries.cache") as cfg_libs then
+			if attached {like configuration_libraries} cached_data (configuration_libraries_cache_name (target.setting_msil_generation)) as cfg_libs then
 				Result := cfg_libs
 			else
 				l_libs := libraries
 				Result := conf_system_list_from (l_libs, l_libs.count)
-				cache_data (Result, "configuration_libraries.cache")
+				cache_data (Result, configuration_libraries_cache_name (target.setting_msil_generation))
 			end
 		ensure
 			result_attached: attached Result
@@ -581,25 +616,25 @@ feature {NONE} -- Access
 
 	iron_configuration_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
 		local
-			installation_api: IRON_INSTALLATION_API
-			l_iron_layout: IRON_LAYOUT
-			l_iron_url_builder: IRON_URL_BUILDER
+			l_installation_api: IRON_INSTALLATION_API
 			lst: ARRAYED_LIST [READABLE_STRING_32]
 			p: PATH
+			l_iron_installation_api_factory: CONF_IRON_INSTALLATION_API_FACTORY
 		do
-			if attached {like configuration_libraries} cached_data ("iron_configuration_libraries.cache") as cfg_libs then
+			if attached {like configuration_libraries} cached_data (iron_configuration_libraries_cache_name (target.setting_msil_generation)) as cfg_libs then
 				Result := cfg_libs
 			else
-				create l_iron_layout.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path)
-				create l_iron_url_builder
-				create installation_api.make_with_layout (l_iron_layout, l_iron_url_builder)
-				if attached installation_api.installed_packages as l_packages then
+				create l_iron_installation_api_factory
+					--| TODO: improve performance, by caching iron_installation_api in the whole system.
+					--| idea: l_iron_installation_api_factory.enable_caching
+				l_installation_api := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
+				if attached l_installation_api.installed_packages as l_packages then
 					create lst.make (l_packages.count)
 					across
 						l_packages as ic
 					loop
-						p := installation_api.package_installation_path (ic.item)
-						if attached installation_api.projects_from_installed_package (ic.item) as l_projects then
+						p := l_installation_api.package_installation_path (ic.item)
+						if attached l_installation_api.projects_from_installed_package (ic.item) as l_projects then
 							across
 								l_projects as proj_ic
 							loop
@@ -608,10 +643,13 @@ feature {NONE} -- Access
 						end
 					end
 					Result := conf_system_list_from (lst, lst.count)
+						--| TODO: improve performance, by caching iron_installation_api in the whole system.
+						--| this point would be good location to disable the caching.
+						--| idea: l_iron_installation_api_factory.disable_caching
 				else
 					create Result.make (0)
 				end
-				cache_data (Result, "iron_configuration_libraries.cache")
+				cache_data (Result, iron_configuration_libraries_cache_name (target.setting_msil_generation))
 			end
 		end
 
@@ -642,7 +680,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path.name.as_string_32, 2])
+				Result.extend ([eiffel_layout.library_path.name.as_string_32, 4])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -729,84 +767,100 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
-	populate_libraries
-			-- Populates the list of libraries in the UI
+	all_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
 		local
 			l_libraries: like configuration_libraries
 			l_iron_libraries: like iron_configuration_libraries
-			l_style: EV_POINTER_STYLE
-			libs_box: like libraries_box
-			libs: like configuration_libraries
 		do
-			l_style := pointer_style
-			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
-
 			l_libraries := configuration_libraries
 			l_iron_libraries := iron_configuration_libraries
-
-			libs_box := libraries_box
-			create libs.make (l_libraries.count + l_iron_libraries.count)
-			libs.merge (l_libraries)
-			libs.merge (l_iron_libraries)
-
-			libs_box.set_configuration_libraries (libs)
-
-			libs_box.set_filter_text (filter_text)
-			libs_box.update_grid
-
-			set_pointer_style (l_style)
+			create Result.make (l_libraries.count + l_iron_libraries.count)
+			Result.merge (l_libraries)
+			Result.merge (l_iron_libraries)
 		end
 
-	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: SEARCH_TABLE [STRING_32])
+	populate_libraries
+			-- Populates the list of libraries in the UI
+		local
+			l_style: detachable EV_POINTER_STYLE
+			libs_box: like libraries_box
+			retried: BOOLEAN
+			popup: detachable EV_POPUP_WINDOW
+			bb,vb: EV_VERTICAL_BOX
+		do
+			repopulate_requested := False
+			if not retried then
+				l_style := pointer_style
+				set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+				create popup.make_with_shadow
+				create bb
+				bb.set_border_width (1)
+				create vb
+				bb.extend (vb)
+				vb.set_border_width (3 * layout_constants.default_border_size)
+				vb.extend (create {EV_LABEL}.make_with_text (conf_interface_names.dialog_create_searching_please_wait_message))
+
+				popup.extend (bb)
+				popup.set_background_color ((create {EV_STOCK_COLORS}).white)
+				popup.propagate_background_color
+				bb.set_background_color ((create {EV_STOCK_COLORS}).blue)
+				popup.set_position (x_position + (width - popup.width) // 2, y_position + (height - popup.height) // 2)
+				popup.show_relative_to_window (Current)
+				popup.refresh_now
+
+				libs_box := libraries_box
+				libs_box.set_configuration_libraries (all_libraries)
+				libs_box.set_filter_text (filter_text)
+				libs_box.update_grid
+			end
+			if popup /= Void then
+				popup.destroy
+			end
+
+			if l_style /= Void then
+				set_pointer_style (l_style)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: STRING_TABLE [BOOLEAN])
 			-- Add config files in `a_path' to `a_libraries'.
+			-- if `a_depth' is -1, scan all subdirectories without any depth limits.
 		require
 			a_dir_attached: attached a_dir
 			a_dir_is_readable: a_dir.is_readable
 			a_depth_big_enough: a_depth >= -1
 			a_libraries_attached: attached a_libraries
 		local
-			l_dir_name: PATH
-			l_lib_file: STRING_32
 			l_file_name: PATH
-			l_file_string: STRING_32
 			l_file: RAW_FILE
-			s32: STRING_32
+			l_entry: PATH
 		do
-			if attached a_dir.linear_representation_32 as l_items then
-				across l_items as l_files loop
-					l_lib_file := l_files.item
-					if valid_config_extension (l_lib_file) then
-						l_file_name := a_dir.path.extended (l_lib_file)
-						create l_file.make_with_path (l_file_name)
-						if l_file.exists and then l_file.is_plain then
-							l_file_string := l_file_name.name.as_string_32
-							if {PLATFORM_CONSTANTS}.is_windows then
-								l_file_string := l_file_string.as_lower
+			across a_dir.entries as l_entries loop
+				l_entry := l_entries.item
+				if l_entry.is_current_symbol or l_entry.is_parent_symbol then
+					 -- Nothing to do
+				else
+					l_file_name := a_dir.path.extended_path (l_entry)
+					create l_file.make_with_path (l_file_name)
+					if l_file.exists then
+						if l_file.is_directory then
+							if a_depth = -1 or a_depth > 0 then
+									-- Recurse
+								add_configs_in_directory (create {DIRECTORY}.make_with_path (l_file_name), (a_depth - 1).max (-1), a_libraries)
 							end
-							if not a_libraries.has (l_file_string) then
-								a_libraries.force (l_file_string)
-							end
-						end
-					end
-				end
-
-				if (a_depth = -1 or a_depth > 0) and then attached a_dir.entries as l_subdirs then
-						-- Perform recursion
-					across l_subdirs as l_dirs loop
-						s32 := l_dirs.item.name
-						if not s32.same_string (".") and not s32.same_string ("..") then -- FIXME: use upcoming PATH.is_dot, and related
-							l_dir_name := a_dir.path.extended_path (l_dirs.item)
-							create l_file.make_with_path (l_dir_name)
-							if l_file.exists and then l_file.is_directory then
-								add_configs_in_directory (create {DIRECTORY}.make_with_path (l_dir_name), (a_depth - 1).max (-1), a_libraries)
-							end
+						elseif l_file.is_plain and then valid_config_extension (l_entry.name) then
+								-- File is an ECF, we add it to `a_libraries'.
+							a_libraries.put (True, l_file_name.name)
 						end
 					end
 				end
 			end
 		end
 
-	add_lookup_directories (a_path: STRING_32; a_list: ARRAYED_LIST [TUPLE [path: READABLE_STRING_32; depth: INTEGER]])
+	add_lookup_directories (a_path: STRING_32; a_list: ARRAYED_LIST [TUPLE [path: READABLE_STRING_GENERAL; depth: INTEGER]])
 			-- Adds look up directories from a file located at `a_path' into `a_list'
 		require
 			a_path_attached: attached a_path
@@ -826,7 +880,11 @@ feature {NONE} -- Basic operation
 				from l_file.open_read until l_file.end_of_file loop
 					l_file.read_line
 					l_line := l_file.last_string
-					if not l_line.is_empty then
+					if l_line.is_empty then
+							-- Ignore
+					elseif l_line.starts_with ("--") then
+							-- Ignore comment
+					else
 						l_line.left_adjust
 						l_line.right_adjust
 						l_pos := l_line.last_index_of ('%T', l_line.count)
@@ -836,14 +894,18 @@ feature {NONE} -- Basic operation
 							if l_pos < l_line.count then
 								l_depth_string := l_line.substring (l_pos + 1, l_line.count)
 								l_depth_string.left_adjust
+								l_depth_string.right_adjust
 							end
 						else
 							l_location := l_line
 						end
-						if l_depth_string /= Void and then l_depth_string.is_integer then
-							l_depth := l_depth_string.to_integer
-						else
-							l_depth := 1
+						l_depth := 1 -- Default
+						if l_depth_string /= Void then
+							if l_depth_string.is_integer then
+								l_depth := l_depth_string.to_integer
+							elseif l_depth_string.is_case_insensitive_equal_general ("*") then
+								l_depth := -1
+							end
 						end
 						--| FIXME: Unicode content of the file, does not provide Unicode file name
 						--| unless it is UTF-8 encoded ...

@@ -434,6 +434,7 @@ feature -- Option names and descriptions
 feature -- Misc
 
 	general_add: STRING_32 do Result := locale.translation ("Add")	end
+	general_close: STRING_32 do Result := locale.translation ("Close")	end
 	general_remove: STRING_32 do Result := locale.translation ("Remove")	end
 	variables_name: STRING_32 do Result := locale.translation ("Name")	end
 	variables_value: STRING_32 do Result := locale.translation ("Value")	end
@@ -532,6 +533,149 @@ feature -- Create library dialog
 	dialog_create_library_name: STRING_32 do Result := locale.translation ("Name")	end
 	dialog_create_library_void_safety: STRING_32 do Result := locale.translation ("Void safety")	end
 	dialog_create_library_location: STRING_32 do Result := locale.translation ("Location")	end
+
+	dialog_create_libraries: STRING_32 do Result := locale.translation ("Libraries")	end
+	dialog_create_iron_packages: STRING_32 do Result := locale.translation ("IRON packages")	end
+	dialog_create_back_to_previous_tab: STRING_32 do Result := locale.translation ("Back to libraries")	end
+	dialog_create_refresh: STRING_32 do Result := locale.translation ("Refresh")	end
+	dialog_create_refresh_tooltip: STRING_32 do Result := locale.translation ("Refresh list of libraries.")	end
+	dialog_display_configuration_tooltip: STRING_32 do Result := locale.translation ("Display locations of configuration files used for libraries lookup.")	end
+
+	dialog_create_searching_please_wait_message: STRING_32 do Result := locale.translation ("Building list of available libraries...")	end
+
+	dialog_display_configuration_title: STRING_32 do Result := locale.translation ("Locations of configuration files") end
+
+	dialog_display_configuration_text (a_lib_cfg: READABLE_STRING_GENERAL; a_user_lib_cfg: detachable READABLE_STRING_GENERAL; a_pre_cfg: READABLE_STRING_GENERAL; a_user_pre_cfg: detachable READABLE_STRING_GENERAL; is_user_files_supported: BOOLEAN): STRING_32
+		do
+			if is_user_files_supported and a_user_lib_cfg /= Void and a_user_pre_cfg /= Void then
+				Result := locale.formatted_string (locale.translation ("[
+Search paths for libraries are specified in the configuration file:
+   $1
+
+and could be overwridden by user configuration file:
+   $2
+
+Search paths for precompiled libraries are specified in the configuration file:
+   $3
+
+and could be overwridden by user configuration file:
+   $4
+						]"),
+						[a_lib_cfg, a_user_lib_cfg, a_pre_cfg, a_user_pre_cfg]
+					)
+			else
+				Result := locale.formatted_string (locale.translation ("[
+Search paths for library ECFs are specified in the configuration file:
+	$1
+
+Search paths for precompile ECFs are specified in the configuration file:
+	$2
+
+						]"),
+						[a_lib_cfg, a_pre_cfg]
+					)
+			end
+		end
+
+feature -- Iron packages box		
+
+	iron_box_package_status_label: STRING_32 do Result := locale.translation ("Package Status") end
+
+	iron_box_package_waiting_for_data_message: STRING_32 do Result := locale.translation ("Waiting for data ...") end
+
+	iron_box_packages_label: STRING_32 do Result := locale.translation ("Packages") end
+
+	iron_box_repositories_label: STRING_32 do Result := locale.translation ("Repositories") end
+
+	iron_box_package_label: STRING_32 do Result := locale.translation ("Package") end
+
+	iron_box_installation_label: STRING_32 do Result := locale.translation ("Installation") end
+
+	iron_box_location_label: STRING_32 do Result := locale.translation ("Location") end
+
+	iron_box_information_label: STRING_32 do Result := locale.translation ("Information") end
+
+	iron_box_install_label: STRING_32 do Result := locale.translation ("Install") end
+
+	iron_box_remove_label: STRING_32 do Result := locale.translation ("Remove") end
+
+	iron_box_update_label: STRING_32 do Result := locale.translation ("Update") end
+
+	iron_box_tags_label: STRING_32 do Result := locale.translation ("Tags") end
+
+	iron_box_missing_package_error_message: STRING_32 do Result := locale.translation ("Error: missing package.") end
+
+	iron_box_package_installed_message (a_folder: PATH; a_projects: LIST [PATH]): STRING_32
+		local
+			s: STRING_32
+		do
+			create s.make_empty
+			across
+				a_projects as ic
+			loop
+				s.append_character (' ')
+				s.append_character ('-')
+				s.append_character (' ')
+				s.append (a_folder.extended_path (ic.item).name)
+				s.append_character ('%N')
+			end
+			Result := locale.formatted_string (locale.translation ("[
+					Installed in folder "$1" .
+					$2 associated ecf files:
+					$3
+				]"), [a_folder, a_projects.count, s])
+		end
+
+	iron_box_install_package_help (a_package_id: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+					To install:
+					- use the graphical tool
+					- or command: "iron install $1"
+				]"), [a_package_id])
+		end
+
+	iron_box_install_conflicting_package_help (a_package_id: READABLE_STRING_GENERAL; a_package_location: READABLE_STRING_GENERAL; a_conflict_id: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+					WARNING: package "$2" is conflicting with package "$3".
+					
+					Both have the same identifier "$1", but package "$3" has priority over "$2".
+					
+					If only one is installed, iron reference "iron:$1:....ecf" in .ecf files will use the installed package.
+					If both are installed, .ecf file should reference the package using the absolute location="$1" .
+				]"), [a_package_id, a_package_location, a_conflict_id])
+		end
+
+	iron_box_conflicting_with_package_message (a_location: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("conflicting with $1"), [a_location])
+		end
+
+	iron_box_double_click_to_install_package_message (a_location: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("double-click to install $1"), [a_location])
+		end
+
+	iron_box_how_to_install_selected_package_message: STRING_32
+		do
+			Result := locale.translation ("To install: select and click button [Install].")
+		end
+
+	iron_box_package_installation_title (a_package_id: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Installation of package: $1"), [a_package_id])
+		end
+
+	iron_box_package_uninstallation_title (a_package_id: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Removal of package: $1"), [a_package_id])
+		end
+
+	iron_box_updating_title: STRING_32
+		do
+			Result := locale.translation ("Updating IRON")
+		end
 
 feature -- Create precompile dialog
 

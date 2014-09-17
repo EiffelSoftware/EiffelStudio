@@ -75,6 +75,26 @@ feature -- Access
 			end
 		end
 
+	json_to_package_identifier (a_json_string: READABLE_STRING_8): detachable READABLE_STRING_GENERAL
+		local
+			j: JSON_PARSER
+		do
+			create j.make_parser (a_json_string)
+			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
+				if attached {JSON_STRING} jo.item ("package-name") as j_package_name then
+					Result := j_package_name.item
+				elseif
+					attached {JSON_OBJECT} jo.item ("package") as j_package
+				then
+					if attached {JSON_STRING} j_package.item ("name") as j_name then
+						Result := j_name.item
+					elseif attached {JSON_STRING} j_package.item ("id") as j_id then
+						Result := j_id.item
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Implementation		
 
 	json_object_to_package (j_package: JSON_OBJECT; repo: IRON_REPOSITORY; a_version: detachable READABLE_STRING_8): detachable IRON_PACKAGE

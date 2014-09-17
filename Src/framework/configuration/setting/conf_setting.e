@@ -53,6 +53,22 @@ feature -- Access: Configuration location mapper
 	conf_location_mapper_initialized: BOOLEAN
 			-- Configuration location mapper intialized?
 
+	iron_mapping: detachable CONF_LOCATION_IRON_MAPPING
+			-- Iron mapping if any.
+		require
+			is_initialized: is_initialized
+		do
+			across
+				conf_location_mapper.mappings as ic
+			until
+				Result /= Void
+			loop
+				if attached {like iron_mapping} ic.item as res then
+					Result := res
+				end
+			end
+		end
+
 feature -- Initialization: Configuration location mapper
 
 	initialize_conf_location_mapper

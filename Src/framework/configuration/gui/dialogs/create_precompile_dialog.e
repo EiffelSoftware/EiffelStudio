@@ -15,7 +15,10 @@ inherit
 			last_group,
 			on_library_selected,
 			on_ok,
-			lookup_directories
+			lookup_directories,
+			all_libraries,
+			configuration_libraries_cache_name,
+			iron_configuration_libraries_cache_name
 		end
 
 create
@@ -63,7 +66,58 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name.as_string_32, 0])
+				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name.as_string_32, 1])
+			end
+		end
+
+feature {NONE} -- Basic operation
+
+	all_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
+		local
+			libs: like all_libraries
+			l_precompilation: detachable STRING_32
+		do
+				-- We store the ISE_PRECOMP environment variable because when editing an ECF, it can
+				-- be either .NET or classic so we need to compute the right path.
+			l_precompilation := eiffel_layout.get_environment_32 ({EIFFEL_CONSTANTS}.ise_precomp_env)
+			eiffel_layout.set_precompile (target.setting_msil_generation)
+
+				-- Lookup all the ECFs that matches.
+			libs := Precursor
+			create Result.make_caseless (libs.count)
+			across
+				libs as ic
+			loop
+				if ic.item.system_name.starts_with ("precomp_") then
+					Result.force (ic.item, ic.key)
+				end
+			end
+
+				-- Restore ISE_PRECOMP to its previous value.
+			if l_precompilation /= Void then
+				eiffel_layout.set_environment (l_precompilation, {EIFFEL_CONSTANTS}.ise_precomp_env)
+			else
+				eiffel_layout.set_environment ("", {EIFFEL_CONSTANTS}.ise_precomp_env)
+			end
+		end
+
+feature {NONE} -- Libraries cache.
+
+	iron_configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
+		do
+			if a_is_dotnet then
+				Result := "iron_configuration_precomp_libraries_dotnet.cache"
+			else
+				Result := "iron_configuration_precomp_libraries.cache"
+			end
+		end
+
+	configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
+		do
+			if a_is_dotnet then
+				Result := "configuration_precomp_libraries_dotnet.cache"
+			else
+				Result := "configuration_precomp_libraries.cache"
 			end
 		end
 

@@ -89,11 +89,13 @@ feature -- Access
 
 	iron_api: IRON_INSTALLATION_API
 		local
-			l_iron_api: like internal_iron_api
+			l_iron_api: detachable like iron_api
+			fac: CONF_IRON_INSTALLATION_API_FACTORY
 		do
 			l_iron_api := internal_iron_api
 			if l_iron_api = Void then
-				create l_iron_api.make_with_layout (iron_layout, iron_urls)
+				create fac
+				l_iron_api := fac.iron_installation_api (iron_layout, iron_urls)
 				internal_iron_api := l_iron_api
 			end
 			Result := l_iron_api

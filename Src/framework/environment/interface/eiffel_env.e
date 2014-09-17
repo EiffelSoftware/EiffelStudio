@@ -250,6 +250,13 @@ feature -- Status update
 					is_hidden_files_path_available := False
 				end
 			end
+
+				-- Initialize User specific precompiled libraries
+			init_precompile_directory (False)
+			if {PLATFORM}.is_windows then
+					-- We only initialize .NET precompiled libraries on Windows.
+				init_precompile_directory (True)
+			end
 		ensure
 			is_valid_environment: is_valid_environment
 		end
@@ -351,9 +358,6 @@ feature -- Status report
 	is_valid_environment: BOOLEAN
 			-- Have the needed environment variables been set?
 
-	is_valid_precompile_environment: BOOLEAN
-			-- Has the precompile environment been set correctly?
-
 	is_hidden_files_path_available: BOOLEAN
 			-- Is there a valid home directory?
 
@@ -378,8 +382,9 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_precompile (a_is_dotnet: BOOLEAN)
-			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
+	init_precompile_directory (a_is_dotnet: BOOLEAN)
+			-- If ISE_PRECOMP is not set, initialize user specific precompilation directory
+			-- taking into account `a_is_dotnet' to compute the path.
 		require
 			is_valid_environment: is_valid_environment
 		local
@@ -392,11 +397,6 @@ feature -- Status setting
 			if not retried then
 					-- Get the path for the precompiled libraries
 				l_precompilation_path := precompilation_path (a_is_dotnet)
-
-					-- Now we set the ISE_PRECOMP environment variable with that path.
-					-- Note that if it was already set, the value stays the same.
-				set_environment (l_precompilation_path.name, {EIFFEL_CONSTANTS}.ise_precomp_env)
-				is_valid_precompile_environment := True
 
 					-- Now if `l_precompilation_path' does not exist, we copy the content from
 					-- the installation directory.
@@ -435,8 +435,6 @@ feature -- Status setting
 					end
 				end
 			end
-		ensure
-			is_valid_precompile_environment: is_valid_precompile_environment
 		rescue
 				-- For some reasons, there was a failure, which most likely happened
 				-- while trying to copy the precompilation ECFs over. We simply ignore
@@ -450,6 +448,16 @@ feature -- Status setting
 				l_target_file.close
 			end
 			retry
+		end
+
+	set_precompile (a_is_dotnet: BOOLEAN)
+			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
+		require
+			is_valid_environment: is_valid_environment
+		do
+				-- Now we set the ISE_PRECOMP environment variable with the precompiled library path.
+				-- Note that if it was already set, the value stays the same.
+			set_environment (precompilation_path (a_is_dotnet).name, {EIFFEL_CONSTANTS}.ise_precomp_env)
 		end
 
 feature {NONE} -- Helpers

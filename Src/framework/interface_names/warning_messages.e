@@ -947,7 +947,7 @@ feature -- Warning messages
 				"[
 					Applying selected fixes causes changes to the source code that cannot be undone automatically.
 					
-					Click Yes to apply fixes.
+					Click OK to apply fixes.
 					Click Cancel to abort.
 				]", "fix")
 		end

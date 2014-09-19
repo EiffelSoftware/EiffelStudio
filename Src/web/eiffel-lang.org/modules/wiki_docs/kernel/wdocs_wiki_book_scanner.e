@@ -21,11 +21,16 @@ create
 feature {NONE} -- Initialization
 
 	make (wb: WIKI_BOOK)
+		local
+			ut: FILE_UTILITIES
 		do
 			wiki_book := wb
 			create parent_pages.make (0)
 			create local_pages.make (0)
-			process_directory (wb.path)
+
+			if ut.directory_path_exists (wb.path) then
+				process_directory (wb.path)
+			end
 		end
 
 feature -- Access

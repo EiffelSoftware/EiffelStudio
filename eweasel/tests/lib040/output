@@ -1,0 +1,7 @@
+Argument parser test - Version: 1.0
+Copyright (c) 2014, Eiffel Software. All Rights Reserved.
+
+1 error(s) occurred.
+   > The required argument "command line" is missing.
+
+Execution completed

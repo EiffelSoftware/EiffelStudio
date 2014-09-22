@@ -534,7 +534,7 @@ feature {NONE} -- Level Process Management
 	increase_level
 			-- Increases expression processing level so instructions may be processes as if they were new instructions
 		do
-			level_stack.put (create {like current_level_item})
+			level_stack.put ([False, False])
 		ensure
 			current_level_increased: current_level = old current_level + 1
 		end

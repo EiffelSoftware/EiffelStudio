@@ -96,7 +96,7 @@ feature -- Query
 			l_item_count: INTEGER
 		do
 			from
-				create Result
+				Result := [0, 0]
 				l_snapshot := internal_group_info.twin
 				l_new_group_snapshot := internal_is_new_group.twin
 				check same_size: l_new_group_snapshot.count = l_snapshot.count end
@@ -141,7 +141,7 @@ feature -- Query
 			l_temp_result: TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
 		do
 			from
-				create Result
+				Result := [0, 0]
 				l_group_count := 1
 				l_total_group := group_count
 			until
@@ -217,7 +217,7 @@ feature -- Query
 			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			from
-				create Result.default_create
+				Result := [0, 0]
 				l_group_count := 1
 				l_index_count := 1
 				l_index_max := count
@@ -595,14 +595,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

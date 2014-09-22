@@ -616,7 +616,7 @@ feature {EV_TREE_IMP} -- Implementation
 				loop_parent ?= loop_parent.parent_imp
 				counter := counter + 1
 			end
-			create Result
+			Result := [0, 0]
 			l_top_parent := top_parent_imp
 			if l_top_parent /= Void then
 					-- Added protection against the case where `top_parent_imp' is Void.

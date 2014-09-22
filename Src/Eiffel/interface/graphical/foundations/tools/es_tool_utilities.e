@@ -88,8 +88,7 @@ feature -- Query
 						-- Set type
 					l_tool_type ?= l_internal.type_of_type (l_id)
 					if l_tool_type /= Void then
-						create Result
-						Result.type := l_tool_type
+						Result := [l_tool_type, {NATURAL_8} 0]
 
 							-- Set edition
 						if l_edition = Void then

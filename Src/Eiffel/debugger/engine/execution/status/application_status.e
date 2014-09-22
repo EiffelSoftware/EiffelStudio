@@ -382,10 +382,12 @@ feature -- Call Stack element related
 			end
 		end
 
-	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT
+	current_eiffel_call_stack_element: detachable EIFFEL_CALL_STACK_ELEMENT
 			-- Current call stack element being displayed
 		do
-			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
+			if attached {EIFFEL_CALL_STACK_ELEMENT} current_call_stack.i_th (Application.current_execution_stack_number) as e then
+				Result := e
+			end
 		end
 
 feature -- Process related access
@@ -610,19 +612,13 @@ feature -- Access
 					attached rep.e_feature as r_fe and then
 					r_fe.body_id_for_ast = fe.body_index
 				then
-					create Result
-					Result.bp := rep.replayed_break_index
-					Result.bp_nested := 0
-					Result.fid := r_fe.feature_id
+					Result := [rep.replayed_break_index, 0, r_fe.feature_id]
 				elseif
 					attached {EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element as stel and then
 					attached stel.routine as ot_fe and then
 					ot_fe.body_id_for_ast = fe.body_index
 				then
-					create Result
-					Result.bp := stel.break_index
-					Result.bp_nested := stel.break_nested_index
-					Result.fid := ot_fe.feature_id
+					Result := [stel.break_index, stel.break_nested_index, ot_fe.feature_id]
 				end
 			end
 		end
@@ -833,7 +829,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

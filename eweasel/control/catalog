@@ -2181,7 +2181,7 @@ test	format-double-crash				lib036	 tcf pass library ieee
 test	ptf-file-read-to-string		lib037	 tcf pass library file
 test	managed-pointer-invariant	lib038	 tcf pass library invariant
 test	file-info-not-duplicated	lib039	 tcf pass library file
-test	argument_parser-missing-non-switched-argument	lib040	tcf pass library argument_parser
+test	argument_parser-missing-non-switched-argument	lib040	tcf fail library argument_parser
 
 test	utf-16-basics			utf001	tcf pass library unicode
 test	utf-8-basics			utf002	tcf pass library unicode

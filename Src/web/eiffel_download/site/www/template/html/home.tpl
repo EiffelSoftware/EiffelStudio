@@ -91,7 +91,7 @@
 				<!-- class="execphpwidget"-->
 						<div class="box2 ">
 							<h3><strong>Download</strong> EiffelStudio Today</h3>
-									<form action="http://localhost:9090/download" method="POST" class="bootstrap-frm">
+									<form action="{$host/}/download" method="POST" class="bootstrap-frm">
 									   <h3><strong>Tell us a bit about yourself</strong></h3>
 								
 									    <label>

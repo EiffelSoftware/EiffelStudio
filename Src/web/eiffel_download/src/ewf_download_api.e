@@ -128,7 +128,7 @@ feature -- Workflow
 						l_service.initialize_download (l_form.email, l_token, l_form.platform )
 				end
 				send_email (req, l_form, l_token, req.absolute_script_url (""))
-				compute_response_redirect (req, res, "/post_download")
+				compute_response_redirect (req, res, req.absolute_script_url ("/post_download"))
 			else
 				if attached read_file ("500.html") as l_output then
 					compute_response_500 (req, res, l_output)

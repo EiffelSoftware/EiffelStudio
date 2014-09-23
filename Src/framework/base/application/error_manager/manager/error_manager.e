@@ -71,29 +71,23 @@ feature -- Query
 			l_error: like last_error
 		do
 			l_error := last_error
-			check l_error_attached: l_error /= Void end
-			Result := l_error
+			check not_is_successful: l_error_attached: l_error /= Void then
+				Result := l_error
+			end
 			last_error := Void
 		ensure
 			result_attached: Result /= Void
-			last_error_detached: last_error = Void
-			is_successful: is_successful
 		end
 
 	pop_error_description: STRING
 			-- Pops last error description.
 		require
 			not_is_successful: not is_successful
-		local
-			l_error: like pop_last_error
 		do
-			l_error := pop_last_error
-			check l_error_attached: l_error /= Void end
-			Result := l_error.description
+			Result := pop_last_error.description
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			last_error_detached: is_successful implies last_error = Void
 		end
 
 	pop_warning: ERROR_WARNING_INFO
@@ -102,11 +96,12 @@ feature -- Query
 			has_warnings: has_warnings
 		local
 			l_warning: detachable ERROR_WARNING_INFO
+			l_warnings: like internal_warnings
 		do
-			l_warning := internal_warnings.first
-			check l_warning_attached: l_warning /= Void end
-
-			internal_warnings.prune (l_warning)
+			check has_warnings: not warnings.is_empty end
+			l_warnings := internal_warnings
+			l_warning := l_warnings.first
+			l_warnings.prune (l_warning)
 			Result := l_warning
 		ensure
 			result_attached: Result /= Void
@@ -213,7 +208,7 @@ invariant
 	internal_warnings_attached: internal_warnings /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

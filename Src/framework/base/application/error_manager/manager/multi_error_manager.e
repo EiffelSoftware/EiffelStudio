@@ -68,9 +68,7 @@ feature -- Query
 			l_errors: like internal_errors
 			l_error: like last_error
 		do
-			l_error := last_error
-			check l_error_attached: l_error /= Void end
-			Result := l_error
+			Result := Precursor
 
 			l_errors := internal_errors
 			l_errors.finish
@@ -141,7 +139,7 @@ invariant
 	internal_errors_attached: internal_errors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

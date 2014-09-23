@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 
 				-- HTML uri/uri templates.
 			map_uri_agent_with_request_methods ("/", agent handle_home, router.methods_get)
+			map_uri_agent_with_request_methods ("", agent handle_home, router.methods_get)
 			map_uri_agent_with_request_methods ("/download", agent handle_download, router.methods_post)
 			map_uri_agent_with_request_methods ("/post_download", agent handle_post_download, router.methods_get)
 			map_uri_agent_with_request_methods ("/confirm_download", agent handle_confirm_download, router.methods_get)

@@ -93,8 +93,7 @@
 						<div class="box2 ">
 							<h3>Thank you for <strong>downloading</strong> EiffelStudio Today</h3>
 							<p>You should receive shortly an email with the download link for the EiffelStudio Evaluation Version.</p> 
-				   			<iframe src="https://www.youtube.com/embed/watch?v=GtLj7OQxkvs&list=UUfkDvng7VL3iLOD_X495gqQ" width="100%" height="500" frameborder="0"></iframe>
-			        	</div>
+				    	</div>
 				<!--/div-->
 			</div>
 				<div class="widget-area widget-sidebar"><div class="execphpwidget"><section class="news_sec">

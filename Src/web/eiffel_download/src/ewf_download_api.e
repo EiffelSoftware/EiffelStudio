@@ -27,6 +27,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	ARGUMENTS
+
 create
 	make_and_launch
 
@@ -352,9 +354,8 @@ feature -- Configuration
 			l_path: PATH
 			l_database: DATABASE_CONNECTION
 		do
-			if attached Execution_environment.item ({CONSTANTS}.Directory_variable_name) as s then
-				create l_path.make_from_string (s)
-				create layout.make_with_path (l_path)
+			if attached separate_character_option_value ('d') as l_dir then
+				create layout.make_with_path (create {PATH}.make_from_string (l_dir))
 			else
 				create layout.make_default
 			end

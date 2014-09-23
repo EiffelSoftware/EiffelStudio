@@ -68,12 +68,12 @@ feature {NONE} -- Output
 		require
 			a_error_attached: a_error /= Void
 		local
-			l_file_name: detachable STRING
+			l_file_name: detachable READABLE_STRING_GENERAL
 			l_ln: INTEGER
-			l_sep: CHARACTER
-			l_cwd: STRING
-			l_path: STRING
-			l_name: detachable STRING
+			l_cwd: STRING_32
+			l_name: detachable STRING_32
+			p: PATH
+			utf: UTF_CONVERTER
 		do
 			l_ln := -1
 			if attached {ERROR_FILE_ERROR_INFO} a_error as l_file_error then
@@ -88,23 +88,23 @@ feature {NONE} -- Output
 
 			if l_file_name /= Void and then not l_file_name.is_empty then
 				check l_ln_positive: l_ln >= 0 end
-				l_sep := operating_environment.directory_separator
 
 					-- Create relative path	for file names	
-				l_cwd := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_lower
-				if l_cwd.item (l_cwd.count) /= l_sep then
-					l_cwd.append_character (l_sep)
-				end
+				p := (create {EXECUTION_ENVIRONMENT}).current_working_path
+				l_cwd := p.name
 
-				if l_cwd.count < l_file_name.count then
-					l_path := l_file_name.substring (1, l_cwd.count).as_lower
-					if l_path.is_equal (l_cwd) and then l_file_name.index_of (l_sep, l_path.count + 1) = 0 then
-						l_file_name.keep_tail (l_file_name.count - l_path.count)
+				if {PLATFORM}.is_windows then
+					if l_file_name.as_lower.starts_with (l_cwd.as_lower) then
+						l_file_name := l_file_name.tail (l_file_name.count - l_cwd.count - 1)
+					end
+				else
+					if l_file_name.starts_with (l_cwd) then
+						l_file_name := l_file_name.tail (l_file_name.count - l_cwd.count - 1)
 					end
 				end
 
 				create l_name.make (l_file_name.count + 7)
-				l_name.append (l_file_name)
+				l_name.append_string_general (l_file_name)
 				if l_ln > 0 then
 					l_name.append_character ('(')
 					l_name.append (l_ln.out)
@@ -112,11 +112,14 @@ feature {NONE} -- Output
 				end
 			end
 
-			check
-				l_name_attached: l_name /= Void
-				not_l_name_is_empty: not l_name.is_empty
+			if l_name /= Void and then not l_name.is_empty then
+				io.error.put_string (utf.string_32_to_utf_8_string_8 (l_name)) -- FIXME: use localized_printer.
+			else
+				check
+					l_name_attached: l_name /= Void
+					not_l_name_is_empty: not l_name.is_empty
+				end
 			end
-			io.error.put_string (l_name)
 		end
 
 	print_level_code (a_err: ERROR_ERROR_INFO)
@@ -162,7 +165,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

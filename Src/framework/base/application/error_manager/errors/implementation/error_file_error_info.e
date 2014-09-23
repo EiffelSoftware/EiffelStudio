@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING
+	file_name: READABLE_STRING_GENERAL
 			-- Error absolute file name
 
 	line_number: INTEGER
@@ -51,7 +51,7 @@ invariant
 	line_number_positive: line_number >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

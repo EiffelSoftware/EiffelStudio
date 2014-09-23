@@ -29,6 +29,8 @@ inherit
 
 	ARGUMENTS
 
+	SHARED_LOGGER
+
 create
 	make_and_launch
 
@@ -153,29 +155,37 @@ feature -- Workflow
 					attached {WSF_STRING} req.query_parameter ("link") as l_link
 				then
 					if l_service.is_membership (l_email.value) then
+						log.write_debug (generator + "process_workflow:" + l_email.value +  " Membership")
 						if 	l_service.is_download_active (l_email.value, l_token.value) then
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
 							l_service.add_download_interaction_membership (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
 							enterprise_download_options (req, res, l_link.value)
 						else
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
 					elseif l_service.is_contact (l_email.value) then
+						log.write_debug (generator + "process_workflow:" + l_email.value +  " Contact")
 						if 	l_service.is_download_active (l_email.value, l_token.value) then
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
 							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
 							enterprise_download_options (req, res, l_link.value)
 						else
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
 					else
 						check
 							l_service.is_new_contact (l_email.value)
 						end
-
+						log.write_debug (generator + "process_workflow:" + l_email.value +  " New Contact")
 						if 	l_service.is_download_active (l_email.value, l_token.value ) then
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
 							l_service.validate_contact (l_email.value) --(add a new contact, remove temporary contact)
 							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
 							enterprise_download_options (req, res, l_link.value)
 						else
+							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
 					end

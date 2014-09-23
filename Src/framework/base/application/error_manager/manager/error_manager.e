@@ -71,7 +71,7 @@ feature -- Query
 			l_error: like last_error
 		do
 			l_error := last_error
-			check not_is_successful: l_error_attached: l_error /= Void then
+			check not_is_successful: l_error /= Void then
 				Result := l_error
 			end
 			last_error := Void

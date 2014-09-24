@@ -45,7 +45,6 @@ feature -- Basic Operations
 			attached_host: a_host /= Void
 		local
 			l_content: STRING
-			l_url: URL_ENCODER
  			l_path: PATH
 			l_email: EMAIL
 		do

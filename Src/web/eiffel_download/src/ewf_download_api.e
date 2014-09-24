@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Initialize current service.
 		do
 			Precursor
-			service_options := create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("download.ini")
+			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} service_options.make_from_file ("download.ini")
 			setup_config
 			initialize_router
 		end
@@ -200,8 +200,6 @@ feature -- Workflow
 feature -- Response
 
 	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
-		local
-			l_hp: HTML_DOWNLOAD_OPTIONS
 		do
 			compute_download (req, res, a_link)
 		end
@@ -246,7 +244,6 @@ feature -- Response
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			create h.make
 			create l_msg.make_from_string (output)
@@ -262,7 +259,6 @@ feature -- Response
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			create h.make
 			create l_msg.make_from_string (output)
@@ -279,7 +275,6 @@ feature -- Response
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
-			hdate: HTTP_DATE
 		do
 			create h.make
 			create l_msg.make_from_string (output)

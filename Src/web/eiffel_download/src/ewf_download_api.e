@@ -56,7 +56,6 @@ feature {NONE} -- Initialization
 			map_uri_agent_with_request_methods ("/", agent handle_home, router.methods_get)
 			map_uri_agent_with_request_methods ("", agent handle_home, router.methods_get)
 			map_uri_agent_with_request_methods ("/download", agent handle_download, router.methods_post)
-			map_uri_agent_with_request_methods ("/post_download", agent handle_post_download, router.methods_get)
 			map_uri_agent_with_request_methods ("/confirm_download", agent handle_confirm_download, router.methods_get)
 			create doc.make (router)
 
@@ -78,12 +77,6 @@ feature -- Handle HTML pages
 		do
 			process_workflow (req, res)
 		end
-
-	handle_post_download (req: WSF_REQUEST; res: WSF_RESPONSE)
-		do
-			post_download (req, res, "")
-		end
-
 
 	handle_home (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -204,17 +197,6 @@ feature -- Response
 			compute_download (req, res, a_link)
 		end
 
-	post_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
-		local
-			l_hp: HTML_POST_DOWNLOAD
-		do
-			if attached req.http_host as l_host then
-				create l_hp.make (layout.html_template_path, req.absolute_script_url (""))
-				if attached l_hp.representation as l_html_post_download then
-					compute_response_get (req, res, l_html_post_download)
-				end
-			end
-		end
 
 	bad_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
 		local

@@ -92,13 +92,13 @@ feature -- Access
 		do
 			l_name := a_name.to_string_32
 			l_table := table
-			if l_table.has (l_name) then
-				Result := l_table.item (l_name)
+			if attached l_table.item (l_name) as l_result then
+				Result := l_result
 			else
 				Result := execution_environment.item (a_name)
-			end
-			if (not attached Result) and then is_eiffel_layout_defined then
-				Result := eiffel_layout.get_environment_32 (l_name)
+				if Result = Void and is_eiffel_layout_defined then
+					Result := eiffel_layout.get_environment_32 (l_name)
+				end
 			end
 		end
 

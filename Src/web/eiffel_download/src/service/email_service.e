@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	admin_email: IMMUTABLE_STRING_8
 			-- Administrator email.
 		once
-			Result := "noreplies@eiffel.com"
+			Result := "Eiffel Software Evaluation <noreplies@eiffel.com>"
 		end
 
 	smtp_protocol: SMTP_PROTOCOL

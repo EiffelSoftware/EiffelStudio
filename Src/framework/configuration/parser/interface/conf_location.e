@@ -38,6 +38,11 @@ inherit
 			is_equal
 		end
 
+	EIFFEL_LAYOUT
+		undefine
+			is_equal
+		end
+
 feature -- Access, stored in configuration file
 
 	original_path: STRING_32
@@ -127,6 +132,9 @@ feature -- Access queries
 					l_value := target.variables.item (l_key.as_lower)
 					if l_value = Void then
 						l_value := execution_environment.item (l_key)
+						if l_value = Void and is_eiffel_layout_defined then
+							l_value := eiffel_layout.get_environment_32 (l_key)
+						end
 						if l_value = Void then
 							l_value := once {STRING_32} ""
 						end

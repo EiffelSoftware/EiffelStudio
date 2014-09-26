@@ -2819,7 +2819,7 @@ test	qualified-anchor-expansion-7	anchor083 tcf pass anchored_type
 test	qualified-anchor-expansion-8	anchor084 tcf pass anchored_type
 test	qualified-anchor-expansion-9	anchor085 tcf pass anchored_type
 test	qat-inference-crash		anchor086 tcf pass anchored_type inference
-test	qat-cycle-in-generic		anchor087 tcf pass anchored_type formal generic validity
+test	qat-cycle-in-generic		anchor087 tcf manual anchored_type formal generic validity
 
 -- Type inference
 test	inference-single-lower-bound	inference001 tcf pass used_to_pass inference

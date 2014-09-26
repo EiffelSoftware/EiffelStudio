@@ -1,0 +1,13 @@
+test_name 	 qat-cycle-in-generic
+test_description Cyclic qualified anchored type should be reported as an error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+
+compile_melted
+compile_result	validity_error C VTAT(1)
+
+test_end

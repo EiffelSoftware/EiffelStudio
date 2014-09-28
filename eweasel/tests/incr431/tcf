@@ -1,0 +1,18 @@
+test_name	unique-recompile-crash
+test_description After initial compilation, a class is changed in a way to force recompilation at degree 4 of another class that contains `unique' constants. The compiler crashes when the class is processed.
+
+define ANCHOR_TYPE "DOUBLE"
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+define ANCHOR_TYPE "BOOLEAN"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

@@ -21,9 +21,16 @@ feature
 		do
 			print (uniq1); io.new_line;
 			print (uniq3); io.new_line;
+			print (uniq4); io.new_line;
+			print (uniq5); io.new_line;
 		end;
 
 	uniq1, 
 	uniq3: INTEGER is unique;
 	
+feature -- Access
+
+	uniq4: INTEGER is unique
+	uniq5: INTEGER is unique
+
 end

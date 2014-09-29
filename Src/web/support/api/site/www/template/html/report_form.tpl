@@ -179,14 +179,17 @@
 						<div class="row" has-error>
 							<label class="control-label" for="description" itemprop="description" data-original-title="<p>Precise description of the problem.</p>">Description</label>
 							<div class="controls">
-								<textarea class="form-control input-xlarge" id="description" name="description" rows="17" placeholder="Give a description of the problem" required form="report">{$description/}</textarea>
+								<textarea class="form-control input-xlarge" id="description" name="description" rows="17" placeholder="Give a description of the problem" maxlength="32768" required form="report">{$description/}</textarea>
 							</div>
+							<small><p>Note: Description cannot exceed 32768 bytes (32 KB).</p></small>
+
 						</div>
 						<div class="row">
 							<label class="control-label" for="to_reproduce" itemprop="to_reproduce" data-original-title="	<p>Example code, input, or activities to reproduce the problem. Eiffel Software uses the example code both to reproduce the problem and to test whether the problem is fixed. Include all precondition, inputs, outputs, conditions after the problem, and symptoms. Any additional important information should be included. Include all the details that would be necessary for someone else to recreate the problem reported, however obvious. Sometimes seemingly arbitrary or obvious information can point the way toward a solution.</p>">To Reproduce</label>
 							<div class="controls">
-								<textarea class="form-control input-xlarge" id="to_reproduce" name="to_reproduce" rows="7" form="report">{$to_reproduce/}</textarea>
+								<textarea class="form-control input-xlarge" id="to_reproduce" name="to_reproduce" rows="7" maxlength="32768" form="report">{$to_reproduce/}</textarea>
 							</div>
+							<small><p>Note: To Reproduce cannot exceed 32768 bytes (32 KB).</p></small>
 						</div>
 						<hr>
 						<div class="form-actions">

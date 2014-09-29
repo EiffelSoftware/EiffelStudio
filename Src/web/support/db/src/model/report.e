@@ -18,8 +18,12 @@ feature {NONE} -- Initialization
 	make (a_number: INTEGER; a_synopsis: READABLE_STRING_32; a_confidential: BOOLEAN)
 		do
 			number := a_number
-			synopsis := a_synopsis
+			set_synopsis (a_synopsis)
 			confidential := a_confidential
+		ensure
+			number_set: number = a_number
+			synopsis_set: synopsis = a_synopsis
+			confidential_set: confidential = a_confidential
 		end
 
 feature -- Access
@@ -32,6 +36,9 @@ feature -- Access
 
 	synopsis: READABLE_STRING_32
 			-- Report synopsis.
+
+	synopsis_encode: READABLE_STRING_32
+			-- Workaround to support json_encoding.
 
 	confidential: BOOLEAN
 			-- Is the report confidential?
@@ -97,6 +104,7 @@ feature -- Element change
 			-- Set `synopsis' to `v'.
 		do
 			synopsis := v
+			synopsis_encode := json_encode (v)
 		ensure
 			synopsis_set: synopsis = v
 		end

@@ -97,7 +97,7 @@
                      <
                         "name": "Synopsis",
                         "prompt": "synopsis",
-                        "value": "{$item.synopsis/}"
+                        "value": "{$item.synopsis_encode/}"
                     >,
                     <
                         "name": "submitter",

@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 			end
 				--Synopsis
 			if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
-				Result.set_synopsis (l_synopsis.value)
+				Result.set_synopsis (l_synopsis.url_encoded_value)
 			end
 				--Environment
 			if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then

@@ -140,7 +140,7 @@
                     <
                         "name": "Synopsys",
                         "prompt": "synopsis",
-                        "value": "{$report.synopsis/}"
+                        "value": "{$report.synopsis_encode/}"
                     >,
                     <
                         "name": "Description",

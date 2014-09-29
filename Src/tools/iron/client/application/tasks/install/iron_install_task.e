@@ -128,7 +128,9 @@ feature -- Execute
 					lst as c
 				loop
 					install_package (c.item, a_iron)
-					process_package (c.item, a_iron)
+					if a_iron.installation_api.is_package_installed (c.item) then
+						process_package (c.item, a_iron)
+					end
 				end
 			end
 			if attached args.for_ecf_file as l_ecf then
@@ -384,7 +386,9 @@ feature -- Operation: ecf dependency
 		do
 			if not is_completed (a_package.identifier) then
 				install_package (a_package, a_iron)
-				process_package (a_package, a_iron)
+				if a_iron.installation_api.is_package_installed (a_package) then
+					process_package (a_package, a_iron)
+				end
 			end
 		end
 

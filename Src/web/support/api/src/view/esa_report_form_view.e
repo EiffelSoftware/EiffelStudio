@@ -129,6 +129,14 @@ feature -- Status Report
 			if not attached description then
 				l_errors.put ("Description is required", "Description")
 			end
+			if attached description as l_description and then
+				l_description.count > 32768 then
+				l_errors.put ("Description is too long, max value 32 KB", "Description")
+			end
+			if attached to_reproduce as l_reproduce and then
+				l_reproduce.count > 32768 then
+				l_errors.put ("To Reproduce is too long, max value 32 KB", "Description")
+			end
 			if l_errors.is_empty then
 				Result := True
 			else

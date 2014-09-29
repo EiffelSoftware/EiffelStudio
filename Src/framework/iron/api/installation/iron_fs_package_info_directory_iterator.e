@@ -43,9 +43,14 @@ feature -- Access: result
 feature -- Access
 
 	scan_folder (dn: PATH)
+			-- Scan directory `dn' for iron package files.
+		local
+			ut: FILE_UTILITIES
 		do
 			depth := 0
-			process_directory (dn)
+			if ut.directory_path_exists (dn) then
+				process_directory (dn)
+			end
 		end
 
 	process_directory (dn: PATH)

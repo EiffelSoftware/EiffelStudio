@@ -902,25 +902,6 @@ feature -- Comparison
 				is_expanded = other.is_expanded
 		end
 
-feature {ABSTRACT_CLASS_C} -- Update
-
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
-			-- Assign values to Unique features defined in the current class
-		require
-			valid_args: counter /= Void and values /= Void
-		do
-			if attached features as l_fclauses then
-				from
-					l_fclauses.start
-				until
-					l_fclauses.after
-				loop
-					l_fclauses.item.assign_unique_values (counter, values)
-					l_fclauses.forth
-				end
-			end
-		end
-
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_top_indexes (i: like top_indexes)

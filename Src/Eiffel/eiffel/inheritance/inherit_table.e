@@ -1026,11 +1026,15 @@ end;
 			l_export_status: EXPORT_I;
 			property_name: STRING
 			property_names: HASH_TABLE [FEATURE_I, STRING]
+			unique_counter: detachable COUNTER
 		do
 			clauses := class_info.features;
 			if clauses /= Void then
 				if system.il_generation then
 					create property_names.make (0)
+				end
+				if a_class.has_unique then
+					create unique_counter
 				end
 				from
 					clauses.start
@@ -1059,7 +1063,7 @@ end;
 							feat_name := name_list.item;
 								-- Computes an internal name for the feature
 								-- taking care of prefix/infix notations
-							feature_i := feature_i_from_feature_as (single_feature, feat_name);
+							feature_i := feature_i_from_feature_as (single_feature, feat_name, unique_counter);
 								-- Attributes `body_index', `feature_name' and
 								-- `written_in' are ok now. If it is an old
 								-- instance of FEATURE_I from a previous
@@ -1314,7 +1318,7 @@ end;
 			origins.extend (feature_i.feature_name_id);
 		end;
 
-	feature_i_from_feature_as (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I
+	feature_i_from_feature_as (yacc_feature: FEATURE_AS; feat: FEATURE_NAME; a_unique_counter: detachable COUNTER): FEATURE_I
 			-- Feature correponding to declaration `yacc_feature'.
 			-- If we found a feature named `feature_name' in a previous
 			-- feature table, don't change of feature id. If this previous
@@ -1361,8 +1365,7 @@ end;
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
-				create integer_value.make_with_value (
-					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name.string_representation))
+				create integer_value.make_with_value (a_unique_counter.next)
 				if integer_value.valid_type (unique_feature.type) then
 					integer_value.set_real_type (unique_feature.type)
 				else
@@ -2033,7 +2036,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

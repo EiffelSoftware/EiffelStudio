@@ -410,23 +410,6 @@ feature -- Access
 			end
 		end
 
-feature -- Update
-
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
-			-- Assign values to Unique features defined in the current class
-		do
-			if body.is_unique then
-				from
-					feature_names.start
-				until
-					feature_names.after
-				loop
-					values.put (counter.next, feature_names.item.internal_name.name)
-					feature_names.forth
-				end
-			end
-		end
-
 feature -- empty body
 
 	is_empty : BOOLEAN

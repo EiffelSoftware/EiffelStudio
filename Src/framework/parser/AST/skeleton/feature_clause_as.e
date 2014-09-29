@@ -244,21 +244,6 @@ feature -- Access
 				equivalent (features, other.features)
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Update
-
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
-			-- Assign values to Unique features defined in the current class
-		do
-			from
-				features.start
-			until
-				features.after
-			loop
-				features.item.assign_unique_values (counter, values)
-				features.forth
-			end
-		end
-
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_features (f: like features)

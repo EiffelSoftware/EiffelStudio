@@ -372,10 +372,6 @@ feature -- Action
 			supplier_list, light_supplier_list: SEARCH_TABLE [ID_AS]
 			parent_list: EIFFEL_LIST [PARENT_AS]
 			old_syntactical_suppliers: like syntactical_suppliers
-			unique_values: HASH_TABLE [INTEGER, STRING]
-				-- Stores the values of the unique attributes
-			unique_counter: COUNTER
-				-- Counter for unique features
 		do
 				-- Check suppliers of parsed class represented by `ast_b'.
 				-- Supplier classes not present already in the system
@@ -417,15 +413,6 @@ feature -- Action
 					-- `class_id' of CLASS_C and file ".TMP_AST".
 				ast_b.set_class_id (class_id)
 				Tmp_ast_server.put (ast_b)
-
-				if has_unique then
-					create unique_counter
-					create unique_values.make (7)
-
-						-- Compute the values of the unique constants
-					ast_b.assign_unique_values (unique_counter, unique_values)
-					Tmp_ast_server.unique_values_put (unique_values, class_id)
-				end
 
 					-- Clean the filters, i.e. remove all the obsolete types
 				filters.clean (Current)

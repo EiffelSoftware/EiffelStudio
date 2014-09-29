@@ -44,7 +44,6 @@ feature {NONE} --  Initialization
 			Precursor {COMPILER_SERVER}
 			create storage.make (Chunk)
 			create invariant_info.make (Chunk)
-			create unique_values.make (Chunk)
 			create invariants_to_remove.make
 			create discardable_classes.make (chunk)
 		end
@@ -214,20 +213,6 @@ feature -- Invariant element change
 			end
 		end
 
-feature -- Unique values element change
-
-	unique_values_put (a_unique_values: HASH_TABLE [INTEGER, STRING]; a_class_id: INTEGER)
-			-- Put the `a_unique_values' of `a_class_id'.
-		require
-			a_unique_values_not_void: a_unique_values /= Void
-			a_class_id_positive: a_class_id >= 0
-		do
-				-- We use `force' since we could replace the unique values of a class
-				-- each time the class is recompiled and that we haven't reached a successful
-				-- compilation yet.
-			unique_values.force (a_unique_values, a_class_id)
-		end
-
 feature -- Element access
 
 	has (a_class_id: INTEGER): BOOLEAN
@@ -311,14 +296,6 @@ feature -- Element access
 			end
 		end
 
-	unique_values_item (a_class_id: INTEGER): HASH_TABLE [INTEGER, STRING]
-			-- Get the unique values of `a_class_id'.
-		require
-			a_class_id_positive: a_class_id >= 0
-		do
-			Result := unique_values.item (a_class_id)
-		end
-
 feature -- Finalization
 
 	finalize
@@ -358,9 +335,6 @@ feature -- Finalization
 				-- Clear cache and merge with server
 			Inv_ast_server.cache.wipe_out
 			Inv_ast_server.merge (invariant_info);
-
-				-- Remove unique values.
-			unique_values.wipe_out
 		end
 
 feature {NONE} -- Implementation (in memory)
@@ -460,7 +434,6 @@ feature {NONE} -- Implementation disk read
 
 invariant
 	cache_not_void: cache /= Void
-	unique_values_not_void: unique_values /= Void
 	storage_not_void: storage /= Void
 	invariant_info_not_void: invariant_info /= Void
 	invariants_to_remove_not_void: invariants_to_remove /= Void

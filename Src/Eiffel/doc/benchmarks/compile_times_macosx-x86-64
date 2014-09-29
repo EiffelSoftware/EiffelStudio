@@ -1,0 +1,12 @@
+MacMini with OSX 10.9 (Intel Core i7-3720QM  2.6GHz (Turbo 3.6 GHz))
+
+14.05
+=====
+Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
+
+14.05.9.4713 RTEA, MT, inlining_size = 8, full class checking:
+542.926u 18.233s 9:21.64 99.9%	0+0k 23+10173io 2pf+0w
+545.788u 18.356s 9:24.17 99.9%	0+0k 0+9901io 0pf+0w
+
+14.05.9.4713 non-RTEA, non-MT, inlining_size = 8, full class checking:
+222.784u 18.100s 4:03.28 99.0%	0+0k 2+9328io 5pf+0w

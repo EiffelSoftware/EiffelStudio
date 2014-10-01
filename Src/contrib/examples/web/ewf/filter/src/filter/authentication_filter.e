@@ -28,7 +28,7 @@ feature -- Basic operations
 			end
 			if
 				l_auth /= Void and then
-				(attached l_auth.type as l_auth_type and then l_auth_type.same_string ("basic")) and then
+				l_auth.is_basic and then
 				attached l_auth.login as l_auth_login and then
 				attached Db_access.user (0, l_auth_login) as l_user and then
 				l_auth_login.same_string (l_user.name) and then
@@ -60,6 +60,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2014, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

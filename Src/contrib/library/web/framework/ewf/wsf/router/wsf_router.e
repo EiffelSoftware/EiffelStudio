@@ -77,18 +77,41 @@ feature -- Mapping
 		require
 			a_mapping_attached: a_mapping /= Void
 		do
+			extend (create {WSF_ROUTER_ITEM}.make_with_request_methods (a_mapping, rqst_methods))
+		end
+
+	import (a_mapping_items: ITERABLE [WSF_ROUTER_ITEM])
+			-- Import mapping items from `a_mapping_items'.
+			-- note: this `a_mapping_items' could be an instance of WSF_ROUTER.
+		do
+			across
+				a_mapping_items as ic
+			loop
+				extend (ic.item)
+			end
+		end
+
+feature {WSF_ROUTER} -- Mapping
+
+	extend (a_item: WSF_ROUTER_ITEM)
+			-- Extend `mappings' with `a_item'.
+		local
+			l_mapping: WSF_ROUTER_MAPPING
+		do
+			l_mapping := a_item.mapping
 			debug ("router")
 				-- Display conflict in mapping
-				if has_item_associated_with_resource (a_mapping.associated_resource, rqst_methods) then
-					io.error.put_string ("Mapping: " + a_mapping.debug_output + ": conflict with existing mapping")
-					if attached item_associated_with_resource (a_mapping.associated_resource, rqst_methods) as l_conflicted then
+				if has_item_associated_with_resource (l_mapping.associated_resource, a_item.request_methods) then
+					io.error.put_string ("Mapping: " + l_mapping.debug_output + ": conflict with existing mapping")
+					if attached item_associated_with_resource (l_mapping.associated_resource, a_item.request_methods) as l_conflicted then
 						io.error.put_string (": " + l_conflicted.debug_output)
 					end
 					io.error.put_string ("%N")
 				end
 			end
-			mappings.extend (create {WSF_ROUTER_ITEM}.make_with_request_methods (a_mapping, rqst_methods))
-			a_mapping.handler.on_mapped (a_mapping, rqst_methods)
+
+			mappings.extend (a_item)
+			l_mapping.handler.on_mapped (l_mapping, a_item.request_methods)
 		end
 
 feature -- Mapping handler
@@ -553,7 +576,7 @@ invariant
 	pre_execution_actions_attached: pre_execution_actions /= Void
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

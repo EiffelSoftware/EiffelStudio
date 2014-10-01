@@ -10,21 +10,14 @@ class
 inherit
 	ANY
 
-	WSF_HANDLER_HELPER
-
 	WSF_DEFAULT_SERVICE
 
 	WSF_ROUTED_SERVICE
-		rename
-			execute as execute_router
+		undefine
+			execute
 		end
 
 	WSF_FILTERED_SERVICE
-
-	WSF_FILTER
-		rename
-			execute as execute_router
-		end
 
 	SHARED_EJSON
 
@@ -62,11 +55,15 @@ feature {NONE} -- Initialization
 	setup_filter
 			-- Setup `filter'
 		local
+			l_routing_filter: WSF_ROUTING_FILTER
 			l_logging_filter: WSF_LOGGING_FILTER
 		do
+			create l_routing_filter.make (router)
+			l_routing_filter.set_execute_default_action (agent execute_default)
+			filter.set_next (l_routing_filter)
+
 			create l_logging_filter
-			filter.set_next (l_logging_filter)
-			l_logging_filter.set_next (Current)
+			l_routing_filter.set_next (l_logging_filter)
 		end
 
 	setup_router
@@ -102,7 +99,7 @@ feature {NONE} -- Implementation
 			-- Port number
 
 note
-	copyright: "2011-2013, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2014, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

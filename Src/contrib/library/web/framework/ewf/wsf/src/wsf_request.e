@@ -18,7 +18,7 @@ note
 					--| to keep value attached to the request
 
 			About https support: `is_https' indicates if the request is made through an https connection or not.
-			
+
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 					--| so, let's be flexible, and accepts other variants of "on"
 			else
 				check is_not_https: is_https = False end
-			end			
+			end
 		end
 
 	wgi_request: WGI_REQUEST
@@ -1889,16 +1889,14 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 		end
 
 	save_uploaded_file (a_up_file: WSF_UPLOADED_FILE; a_content: STRING)
-			-- Save uploaded file content to `a_filename'
+			-- Save uploaded file content `a_content' into `a_filename'.
 		local
-			bn: STRING
-			l_safe_name: STRING
-			f: RAW_FILE
 			dn: PATH
-			fn: PATH
 			d: DIRECTORY
-			n: INTEGER
 			rescued: BOOLEAN
+			temp_fac: WSF_FILE_UTILITIES [RAW_FILE]
+			l_prefix: STRING
+			dt: DATE_TIME
 		do
 			if not rescued then
 				if attached uploaded_file_path as p then
@@ -1909,26 +1907,24 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 				end
 				create d.make_with_path (dn)
 				if d.exists and then d.is_writable then
-					l_safe_name := a_up_file.safe_filename
-					from
-						bn := "tmp-" + l_safe_name
-						fn := dn.extended (bn)
-						create f.make_with_path (fn)
-						n := 0
-					until
-						not f.exists
-						or else n > 1_000
-					loop
-						n := n + 1
-						bn := "tmp-" + n.out + "-" + l_safe_name
-						fn := dn.extended (bn)
-						f.make_with_path (fn)
-					end
+					create temp_fac
 
-					if not f.exists or else f.is_writable then
+					create l_prefix.make_from_string ("tmp_uploaded_")
+					create dt.make_now_utc
+					l_prefix.append_integer (dt.date.ordered_compact_date)
+					l_prefix.append_character ('_')
+					l_prefix.append_integer (dt.time.compact_time)
+					l_prefix.append_character ('.')
+					l_prefix.append_integer ((dt.time.fractional_second * 1_000_000_000).truncated_to_integer)
+
+					if attached temp_fac.new_temporary_file (d, l_prefix, a_up_file.filename) as f then
 						a_up_file.set_tmp_path (f.path)
-						a_up_file.set_tmp_basename (bn)
-						f.open_write
+						if attached f.path.entry as e then
+							a_up_file.set_tmp_basename (e.name)
+						else
+							a_up_file.set_tmp_basename (f.path.name) -- Should not occurs.
+						end
+						check f.is_open_write end
 						f.put_string (a_content)
 						f.close
 					else

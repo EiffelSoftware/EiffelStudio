@@ -229,9 +229,8 @@ rt_private void (*eif_tracing_routine)(EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, 
 #define NB_NANO_IN_ONE_MICRO	RTU64C(1000)
 
 /*
-doc:	<routine name="process_time" return_type="void" export="private">
-doc:		<summary>Set `a_time' with the current process time usage. This is the core of the profiling.</summary>
-doc:		<param name="a_time" type="rt_uint64 *">Time argument</param>
+doc:	<routine name="process_time" return_type="rt_uint64" export="private">
+doc:		<summary>Get the current process time usage in nanoseconds.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
@@ -239,10 +238,14 @@ doc:	</attribute>
 rt_private rt_uint64 process_time (void)
 {
 #ifdef EIF_WINDOWS
-	FILETIME l_creation, l_exit, l_user, l_kernel;
-	GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel, &l_user);
+	FILETIME l_creation, l_exit;
+	union {
+		FILETIME time;
+		rt_uint64 nat64;
+	} l_user, l_kernel;
+	GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel.time, &l_user.time);
 		/* Times are given in 100-nanoseconds unit. */
-	return (*(rt_uint64 *) &l_user + *(rt_uint64 *) &l_kernel) * 100;
+	return (l_user.nat64 + l_kernel.nat64) * 100;
 
 #elif defined(HAS_GETRUSAGE)
 	struct rusage usage;

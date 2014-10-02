@@ -152,13 +152,17 @@ rt_public void getcputime(double *usertime, double *systime)
 {
 #ifdef EIF_WINDOWS
 	BOOL l_success;
-	FILETIME l_creation, l_exit, l_user, l_kernel;
+	FILETIME l_creation, l_exit;
+	union {
+		FILETIME time;
+		EIF_NATURAL_64 nat64;
+	} l_user, l_kernel;
 
-	l_success = GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel, &l_user);
+	l_success = GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel.time, &l_user.time);
 	if (l_success) {
 			/* The times are given in 100-nanoseconds, thus the division by 10000000 to get the seconds. */
-		*usertime = (eif_uint64_to_real64 (*(EIF_NATURAL_64*) &l_user) / 10000000.);
-		*systime = (eif_uint64_to_real64 (*(EIF_NATURAL_64*) &l_kernel) / 10000000.);
+		*usertime = (eif_uint64_to_real64 (l_user.nat64) / 10000000.);
+		*systime = (eif_uint64_to_real64 (l_kernel.nat64) / 10000000.);
 	} else {
 		*usertime = 0;
 		*systime = 0;

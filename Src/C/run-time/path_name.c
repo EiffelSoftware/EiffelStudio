@@ -73,14 +73,12 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include <lib$routines>
 #endif /* EIF_VMS */
 
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
-rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *);
-rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER_8 *);
-rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *);
-#endif
-
-
-
+/* The following routines are used to call Eiffel routines that expects a `CHARACTER_8 *'
+ * by passing a `char *' and avoiding a cast all the time. */
+#define rt_is_volume_name_valid(p) eif_is_volume_name_valid((EIF_CHARACTER_8 *) p)
+#define rt_is_directory_name_valid(p) eif_is_directory_name_valid((EIF_CHARACTER_8 *) p)
+#define rt_is_file_name_valid(p) eif_is_file_name_valid((EIF_CHARACTER_8 *) p)
+#define rt_is_directory_valid(p) eif_is_directory_valid((EIF_CHARACTER_8 *) p)
 
 /* FIXME: Manu: 09/17/97 There is a need to review all the *_valid function both for UNIX and
  * Windows since there are not working at all
@@ -94,23 +92,26 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *);
 /* Validity */
 
 rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
+	/* Test to see if `p' is a well constructed directory path */
 {
-		/* Test to see if `p' is a well constructed directory path */
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
 	size_t i, len, last_bslash;
 	EIF_BOOLEAN result;
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
-	len = strlen (p);
+	len = strlen (l_p);
 	s = (char *) eif_malloc (len + 1);
-	strcpy (s, p);
+	strcpy (s, l_p);
 	c = s + len - 1;
 	last_bslash = 0;
 		/* FIXME: Manu: 07/16/2007: this loop will never terminate because i >= 0 is always true. */
 	for (i = len;i >= 0; i--, c--)
 		if (*c == '\\')
-			if (strlen(c+1) && !eif_is_directory_name_valid (c+1)) {
+			if (strlen(c+1) && !rt_is_directory_name_valid (c+1)) {
 				eif_free(s);
 				return EIF_FALSE;
 			} else
@@ -124,14 +125,14 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 		else 
 			if (*c == ':')
 				/* Form a:xyz\def or a:\xyz\def */
-				if ((strlen (c+1)) && (!eif_is_directory_name_valid (c+1))) {
+				if ((strlen (c+1)) && (!rt_is_directory_name_valid (c+1))) {
 					/* Form a:xyz where xyz is invalid */
 					eif_free(s);
 					return EIF_FALSE;
 				} else {
 					/* Form a:\xyz or a: - currently as a:*/
 					* (c+1) = '\0';
-					result = eif_is_volume_name_valid (s);
+					result = rt_is_volume_name_valid (s);
 					eif_free(s);
 					return result;
 				}
@@ -140,7 +141,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 					
 	/* 	Did we start with an \ ? If so s is empty other wise it is a relative path */
 	if (strlen(s))
-		result = eif_is_directory_name_valid (s);
+		result = rt_is_directory_name_valid (s);
 	else
 		result = EIF_TRUE;
 
@@ -153,15 +154,15 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 	/* for now, just skip all of this and return TRUE */
 	EIF_BOOLEAN result = EIF_FALSE;
 
-	if (p && *p) {
-		EIF_CHARACTER_8 last = p[strlen((char*)p)-1];
-		/* first check to see if p includes a ] */
+	if (l_p && *l_p) {
+		EIF_CHARACTER_8 last = l_p[strlen(l_p)-1];
+		/* first check to see if l_p includes a ] */
 		/* in fact, the last character should be ] */
 		if (last != ']')		/* end with ]; what about > ? */
 			return EIF_FALSE;
-		if ( strchr( (char *)p,'[') == NULL)	/* has a opening bracket */
+		if ( strchr(l_p,'[') == NULL)	/* has a opening bracket */
 			return EIF_FALSE;
-		if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+		if ( strchr(l_p,'/') != NULL)	/* no slash allowed */
 			return EIF_FALSE;
 		return EIF_TRUE;
 	}
@@ -170,19 +171,22 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 
 #else /* must be Unix */
 		/* FIXME */
-	return EIF_TRUE;
+	return (l_p ? EIF_TRUE: EIF_FALSE);
 #endif
 }
 
 rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *p)
 {
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
 #ifdef EIF_WINDOWS
 	char rootpath[4];
-		/* Test to see if `p' is a valid volume name */
-	if (p)
-		if ((strlen (p) == 2) && (*(p+1) == ':'))
+		/* Test to see if `l_p' is a valid volume name */
+	if (l_p)
+		if ((strlen (l_p) == 2) && (*(l_p+1) == ':'))
 			{
-			strcpy (rootpath, p);
+			strcpy (rootpath, l_p);
 			rootpath[2] = '\\';
 			rootpath [3] = '\0';
 			return (EIF_BOOLEAN) (GetDriveType (rootpath) != 1);
@@ -193,8 +197,8 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *p)
 
 #elif defined EIF_VMS
 	/* string must end in ":" */
-	if (p && *p && p[strlen((char*)p)-1] == ':' ) {
-		DX_BLD (dev_dx, (char*)p, strlen((char*)p));
+	if (l_p && *l_p && l_p[strlen(l_p)-1] == ':' ) {
+		DX_BLD (dev_dx, l_p, strlen(l_p));
 		int devsts;
 		VMS_STS sts = lib$getdvi (&DVI$_DEVSTS, 0, &dev_dx, &devsts, 0, 0);
 		if (VMS_SUCCESS(sts) || sts == SS$_NOSUCHDEV)
@@ -204,12 +208,15 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *p)
 
 #else
 		/* Unix */
-	return (*p == '\0');
+	return (*l_p == '\0');
 #endif
 }
 
 rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p)
 {
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
 #if defined EIF_WINDOWS || defined EIF_OS2
 #define MAX_FILE_LEN 256
 
@@ -219,10 +226,10 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p)
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 
-	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > MAX_FILE_LEN) )
+	if ((l_p == NULL) || ((len = strlen (l_p)) == 0) || (len > MAX_FILE_LEN) )
 		return EIF_FALSE;
 
-	for (s = p; *s; s++)
+	for (s = l_p; *s; s++)
 		if ((*s == '\\') || (*s == '*') || (*s == '?') || (*s == ':')) 
 				return EIF_FALSE;
 	return EIF_TRUE;
@@ -232,12 +239,12 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p)
 	/* where <name> and <ext> start with an alphabetic and may be followed */
 	/* by up to 38 alphanumeric chars. Alphabetic are [A-Za-z$_-]   */
 	/* but since those restrictions may be relaxed (ODS-5), lets ask the system. */
-	if (p && *p) {
+	if (l_p && *l_p) {
 		/* perform a parse on the name supplied */
 		struct FAB fab = cc$rms_fab;
 		struct NAM nam = cc$rms_nam;
 		VMS_STS sts;
-		fab.fab$l_fna = (char*)p; fab.fab$b_fns = strlen((char*)p);
+		fab.fab$l_fna = l_p; fab.fab$b_fns = strlen(l_p);
 		fab.fab$l_nam = &nam;
 		nam.nam$b_nop |= NAM$M_SYNCHK;	/* request syntax check only, no lookup */
 		sts = sys$parse (&fab);
@@ -248,28 +255,32 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p)
 
 #else
 		/* Unix implement */
-	return EIF_TRUE;
+	return (l_p ? EIF_TRUE : EIF_FALSE);
 #endif /* platform */
 }
 
 rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER_8 *p)
 {
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
+
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 		/* Test to see if `p' is a valid extension */
 #if defined EIF_WINDOWS || defined EIF_OS2
-	if ((p == NULL) || (strlen (p) > 254))
+	if ((l_p == NULL) || (strlen (l_p) > 254))
 		return EIF_FALSE;
 
-	return eif_is_file_name_valid (p);
+	return rt_is_file_name_valid (l_p);
 
 #elif defined EIF_VMS
 	
 	/* ***VMS_FIXME*** */
-	return EIF_TRUE;
+	return (l_p ? EIF_TRUE : EIF_FALSE);
 
 #else
 		/* Unix implement */
-	return EIF_TRUE;
+	return (l_p ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
@@ -278,14 +289,17 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *p)
 		/* Test to see if `p' is a well constructed file name (with directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
 	size_t i, len;
 
-	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
+	return (l_p ? EIF_TRUE : EIF_FALSE);	/* FIXME: Manu: 09/17/97 Look at the beginning */
 
-	len = strlen (p);
+	len = strlen (l_p);
 	s = (char *) eif_malloc (len + 1);
 		/* FIXME: memory leak */
-	strcpy (s, p);
+	strcpy (s, l_p);
 	c = s + len -1;
 		/* FIXME: Manu: 07/16/2007: this loop will never terminate because i >= 0 is always true. */
 	for (i = len; i >= 0; i --, c--)
@@ -294,9 +308,9 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *p)
 			*c = '\0';
 			break;
 			}
-	if (!eif_is_file_name_valid (c+1))
+	if (!rt_is_file_name_valid (c+1))
 		return EIF_FALSE;
-	return eif_is_directory_valid (s);
+	return rt_is_directory_valid (s);
 
 #elif defined EIF_VMS
 	/* To implement */
@@ -315,11 +329,14 @@ rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER_8 *p)
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return eif_is_file_name_valid (p);
 #elif defined EIF_VMS_V6_ONLY
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = p;
 	/* For VMS, allow "subdir" or "[.subdir]" or "dev:[dir.subdir]" */
-	if ( strchr( (char*)p,'[') != NULL)	    /* if it has a [ ... */
-		if ( p[strlen((char*)p)-1] != ']')  /* ... end with ] */
+	if ( strchr(l_p,'[') != NULL)	    /* if it has a [ ... */
+		if ( l_p[strlen(l_p)-1] != ']')  /* ... end with ] */
 			return EIF_FALSE;
-	if ( strchr( (char*)p,'/') != NULL)	    /* no slash allowed */
+	if ( strchr(l_p,'/') != NULL)	    /* no slash allowed */
 		return EIF_FALSE;
 	return EIF_TRUE;
 #elif defined EIF_VMS
@@ -335,10 +352,10 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER_8 *s, EIF_CHARACTER_8 
 {
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return EIF_TEST(!strnicmp(s, t, length));
+	return EIF_TEST(!strnicmp((char *) s, (char *) t, length));
 #elif defined EIF_VMS
 	/** **VMS_FIXME** **VMS** implement this routine for VMS */
-	return EIF_TEST (!strncasecmp((char*)s, (char*)t, length) );
+	return EIF_TEST (!strncasecmp((char *) s, (char *) t, length) );
 #else	/* Unix */
 	return EIF_TEST(!strncmp((char *) s, (char *) t, length));
 #endif
@@ -352,36 +369,41 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EI
 	EIF_GET_CONTEXT
 #endif
 
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
+	char *l_v = (char *) v;
+
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
 
 #ifdef EIF_VMS
 	/*** DEBUG ***/
-	char *pu = decc$translate_vms ((char*)p);   /* note: returns in static buffer */
-	char *vu = decc$translate_vms ((char*)v);
+	char *pu = decc$translate_vms (l_p);   /* note: returns in static buffer */
+	char *vu = decc$translate_vms (l_v);
 	/*** END DEBUG ***/
 	/* if no vms path delimiters in either string, use unix syntax, else use vms syntax (i.e. default to unix) */
-	if ( !eifrt_is_vms_filespec((char*)p) && !eifrt_is_vms_filespec((char*)v) ) {
-	    strcat (strcat ((char*)p, "/"), (char*)v);
+	if ( !eifrt_is_vms_filespec(l_p) && !eifrt_is_vms_filespec(l_v) ) {
+	    strcat (strcat (l_p, "/"), l_v);
 #ifdef EIF_VMS_V6_ONLY	/* this is nugatory with default to unix */
-	} else if (!*p && !strcspn ((char*)v, eifrt_vms_valid_filename_chars)) { 
-	    /* HACK: if p is empty and v is a simple filename (no .type), force unix syntax */
+	} else if (!*l_p && !strcspn (l_v, eifrt_vms_valid_filename_chars)) { 
+	    /* HACK: if `l_p' is empty and `l_v' is a simple filename (no .type), force unix syntax */
 	    /* This works around the problem of es4 using append_directory ("kernel", "any.e")   */
 	    /* when it should be using append_filename() by forcing the relative path to    */
 	    /* be unix syntax ("./kernel", "any.e") so that the distinction is nugatory.    */
-	    strcat (strcpy ((char*)p, "./"), (char*)v);
+	    strcat (strcpy (l_p, "./"), l_v);
 #endif /* EIF_VMS_V6_ONLY */
 	} else {
 		/* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
-		/* allowable forms for p are device:[dir]file	*/
-		/* allowable forms for v are [.subdir] or subdir */
-		/* make p "[x]" look like "[x." if p is not "[x.]" */
-		if (*p == '\0') strcpy ((char*)p, "[.]");
-		if (*p != '\0') {
-		    /* require: strlen(p) >= 1 */
-		    char *q = (char*)p + strlen((char*)p) - 1; 
-						/* q -> last char of p	*/
-		    char *w = (char*)v;		/* w -> first char of v */
+		/* allowable forms for `l_p' are device:[dir]file	*/
+		/* allowable forms for `l_v' are [.subdir] or subdir */
+		/* make `l_p' "[x]" look like "[x." if `l_p' is not "[x.]" */
+		if (*l_p == '\0') strcpy (l_p, "[.]");
+		if (*l_p != '\0') {
+		    /* require: strlen(l_p) >= 1 */
+		    char *q = l_p + strlen(l_p) - 1; 
+						/* q -> last char of `l_p'	*/
+		    char *w = l_v;		/* w -> first char of `l_v' */
 		    /* skip leading delimiters [ or [. in second string */
 		    if (*w == '[') {		/* if w starts with [	*/
 			if (*++w == '.')	/* skip it, check for .	*/
@@ -396,32 +418,32 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EI
 		} else {			/* none (name only)	*/
 		    *++q = ':'; *++q = '[';	/* append :[		*/
 		}
-		/* q still --> last char of p (p + strlen(p) -1) */
-		strcpy (++q, w);		/* append 2nd string (v) */
+		/* q still --> last char of l_p (l_p + strlen(l_p) -1) */
+		strcpy (++q, w);		/* append 2nd string (`l_v') */
 		/* ensure it has a closing ] */
-		if ( *(w = (char*)p + strlen((char*)p) - 1) != ']')
-		    strcat ((char*)p, "]");
-		} else { /* p is empty string */
-		    /* what to do with v??? */
-		    strcpy ((char*)p, (char*)v);
+		if ( *(w = l_p + strlen(l_p) - 1) != ']')
+		    strcat (l_p, "]");
+		} else { /* l_p is empty string */
+		    /* what to do with `l_v'??? */
+		    strcpy (l_p, l_v);
 		}
 	    }
 
 #else	/* (not) EIF_VMS */
-	if (*((char *)p) != '\0')
+	if (*(l_p) != '\0')
 #if defined EIF_WINDOWS || defined EIF_OS2
-		strcat ((char *)p, "\\");
+		strcat (l_p, "\\");
 #else	/* Unix */
-		strcat ((char *)p, "/");
+		strcat (l_p, "/");
 #endif /* Windows/Unix */
-	strcat ((char *)p, (char *)v);
+	strcat (l_p, l_v);
 
 #endif	/* EIF_VMS */
 
 #ifdef WORKBENCH
 	nstcall = 0;
 #endif
-	RT_STRING_SET_COUNT(string, strlen((char *) p));
+	RT_STRING_SET_COUNT(string, strlen(l_p));
 }
 
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v)
@@ -429,29 +451,35 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_C
 #ifdef WORKBENCH
 	EIF_GET_CONTEXT
 #endif
-		/* Set the absolute part of the path name p to directory name v */
+	
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
+	char *l_v = (char *) v;
+
+		/* Set the absolute part of the path name `l_p' to directory name `l_v' */
 #if defined EIF_VMS_V6_ONLY
 	/* VMS FIXME: this is not correct - what if path is relative? */
-	/* assume *p == '\0' ? */
-	*p = '\0';
-	strcat (strcat (strcat ((char*)p, "["), (char*)v), "]");
-	strcpy (p, v);
+	/* assume *l_p == '\0' ? */
+	*l_p = '\0';
+	strcat (strcat (strcat (l_p, "["), l_v), "]");
+	strcpy (l_p, l_v);
 #elif defined EIF_VMS
-	/* assume *p == '\0' ? */
-	if (!eifrt_is_vms_filespec((char*)v) && *p != '\0' && *v != '/')
-	    strcat ((char*)p, "/");
-	strcat ((char*)p, (char*)v);
+	/* assume *l_p == '\0' ? */
+	if (!eifrt_is_vms_filespec(l_v) && *l_p != '\0' && *l_v != '/')
+	    strcat (l_p, "/");
+	strcat (l_p, l_v);
 #elif defined EIF_WINDOWS || defined EIF_OS2
-	strcat ((char *)p, (char *)v);
+	strcat (l_p, l_v);
 #else	/* Unix */
-	if (*((char*)v) != '/' )
-		strcat ((char *)p, "/");
-	strcat ((char *)p, (char *)v);
+	if (*(l_v) != '/' )
+		strcat (l_p, "/");
+	strcat (l_p, l_v);
 #endif
 #ifdef WORKBENCH
 	nstcall = 0;
 #endif
-	RT_STRING_SET_COUNT(string, strlen((char *) p));
+	RT_STRING_SET_COUNT(string, strlen(l_p));
 }
 
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v)
@@ -459,36 +487,40 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EI
 #ifdef WORKBENCH
 	EIF_GET_CONTEXT
 #endif
+		/* We do a cast once, so that we can manipulate the Eiffel string
+		 * using the C routines. */
+	char *l_p = (char *) p;
+	char *l_v = (char *) v;
 
 		/* Append the file name part in the path name */
-	if (*((char *)p) == '\0'){
-		strcat ((char *)p, (char *)v);
+	if (*(l_p) == '\0'){
+		strcat (l_p, l_v);
 	} else {
 
 #if defined EIF_WINDOWS || defined EIF_OS2
-		if (p[strlen(p) - 1] != '\\')
-			strcat ((char *)p, "\\");
+		if (l_p[strlen(l_p) - 1] != '\\')
+			strcat (l_p, "\\");
 
 #elif defined EIF_VMS_V6_ONLY	/* vms_v6: append unix separator iff no delimiter present */
-		if (strchr (vms_valid_filename_chars, p[strlen(p) -1]))
-			strcat ((char *)p, "/");
+		if (strchr (vms_valid_filename_chars, l_p[strlen(l_p) -1]))
+			strcat (l_p, "/");
 
 #elif defined EIF_VMS	/* vms: append unix separator iff no vms-specific delimiter at end of path */
-		char lastc = p [strlen((char*)p) -1];
+		char lastc = l_p [strlen(l_p) -1];
 		if (lastc != '/' && !strchr (eifrt_vms_path_terminators, lastc))
-			strcat ((char *)p, "/");
+			strcat (l_p, "/");
 
 #else /* Not Windows or VMS: append unix delimiter */
-		if (p[strlen((char *) p) - 1] != '/')
-			strcat ((char *)p, "/");
+		if (l_p[strlen(l_p) - 1] != '/')
+			strcat (l_p, "/");
 
 #endif
-		strcat ((char *)p, (char *)v);
+		strcat (l_p, l_v);
 	}
 #ifdef WORKBENCH
 	nstcall = 0;
 #endif
-	RT_STRING_SET_COUNT(string, strlen((char *) p));
+	RT_STRING_SET_COUNT(string, strlen(l_p));
 }
 
 rt_public EIF_BOOLEAN eif_case_sensitive_path_names(void)

@@ -2,13 +2,13 @@
 expanded class TEST1 [G]
 
 feature
-        weasel
-                do
+	weasel
+		do
 			if attached {TEST1 [DOUBLE]} x as a then
-			   print ("Error: DOUBLE should not conform to TEST1 [DOUBLE]%N");
+				print ("Error: DOUBLE should not conform to TEST1 [DOUBLE]%N");
 			end
-                end
+		end
 
-        x: G
+	x: G
 
 end

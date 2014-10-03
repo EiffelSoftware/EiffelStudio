@@ -1957,16 +1957,12 @@ feature {NONE} -- Implementation
 					ll_status.set_synopsis (l_status_synopsis)
 				end
 			end
-				-- Description
-			if attached db_handler.read_string (12) as l_description then
-				Result.set_description (l_description)
-			end
 				--User Name
-			if attached db_handler.read_string (13) as l_name then
+			if attached db_handler.read_string (12) as l_name then
 				Result.set_contact (create {USER}.make (l_name))
 			end
 				-- Responsible ID
-			if attached db_handler.read_integer_32 (14) as l_responsible then
+			if attached db_handler.read_integer_32 (13) as l_responsible then
 				Result.set_assigned (create {USER}.make (""))
 				if attached Result.assigned as l_assigned then
 					l_assigned.set_id (l_responsible)
@@ -2237,21 +2233,18 @@ feature -- Queries
 				]"
 
 
-
-
-
 	Select_problem_reports_responsibles_template: STRING = "[
 			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,
 					 PAG2.Release, PAG2.PriorityID PriorityID, PAG2.PrioritySynopsis, 
 					 PAG2.CategorySynopsis, PAG2.SeverityID SeverityID, PAG2.SeveritySynopsis,
-					 PAG2.StatusID StatusID, PAG2.StatusSynopsis, PAG2.Description,
+					 PAG2.StatusID StatusID, PAG2.StatusSynopsis, 
 					 PAG2.Username as 'DisplayName',
 					 PAG2.ResponsibleID, PAG2.Username
 				FROM (SELECT TOP :RowsPerPage  
 				     PAG.Number, PAG.Synopsis, SubmissionDate,
 					 PAG.Release, PAG.PriorityID PriorityID, PAG.PrioritySynopsis, 
 					 PAG.CategorySynopsis, PAG.SeverityID SeverityID, PAG.SeveritySynopsis,
-					 PAG.StatusID StatusID, PAG.StatusSynopsis, PAG.Description,
+					 PAG.StatusID StatusID, PAG.StatusSynopsis, 
 					 PAG.Username as 'DisplayName',
 					 PAG.ResponsibleID, PAG.Username,
 					 PAG.CategoryID,
@@ -2261,7 +2254,7 @@ feature -- Queries
 					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
 						 ProblemReports.Release, ProblemReports.PriorityID PriorityID, ProblemReportPriorities.PrioritySynopsis, 
 						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID SeverityID, ProblemReportSeverities.SeveritySynopsis,
-						 ProblemReports.StatusID StatusID, ProblemReportStatus.StatusSynopsis, ProblemReports.Description,
+						 ProblemReports.StatusID StatusID, ProblemReportStatus.StatusSynopsis, 
 						 Memberships.Username as 'DisplayName',
 						 ProblemReportResponsibles.ResponsibleID, Memberships.Username,
 						 ProblemReports.CategoryID,

@@ -3905,7 +3905,9 @@ rt_private int generational_collect(void)
 
 		if (sc_from.sc_top >= watermark) {
 			overused = sc_from.sc_top - sc_from.sc_mark + GS_FLOATMARK;
-			for (age = eif_tenure_max - 1; age >= 0; age--) {
+			age = eif_tenure_max;
+			while (age > 0) {
+				age--;
 				if (overused >= size_table[age]) {
 						/* Amount tenured at 'age' */
 					overused -= size_table [age];
@@ -3934,7 +3936,9 @@ rt_private int generational_collect(void)
 
 	if (overused > OBJ_MAX) {
 		overused -= OBJ_MAX;				/* Amount of spurious objects */
-		for (age = eif_tenure_max - 1; age >= 0; age--) {
+		age = eif_tenure_max;
+		while (age > 0) {
+			age--;
 			if (overused >= age_table [age]) {
 					/* Amount tenured at 'age' */
 				overused -= age_table[age];

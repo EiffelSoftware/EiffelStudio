@@ -203,28 +203,6 @@ feature -- Action
 					cl_type.remove_c_generated_files
 					l_types.forth
 				end
-
-				if not is_precompiled then
-					create object_name.make (5)
-					object_name.append_string (packet_name (C_prefix, packet_number))
-					c_file_name := project_location.workbench_path.extended (object_name)
-					create object_name.make (12)
-					object_name.append (base_file_name)
-					object_name.append_integer (feature_table_file_id)
-					object_name.append_character (Feature_table_file_suffix)
-					object_name.append (Dot_c)
-					create file.make_with_path (c_file_name.extended (object_name))
-					file_exists := file.exists
-					if file_exists and then file.is_writable then
-						file.delete
-					end
-					if file_exists then
-						create finished_file.make_with_path (c_file_name.extended (Finished_file_for_make))
-						if finished_file.exists and then finished_file.is_writable then
-							finished_file.delete
-						end
-					end
-				end
 			end
 		rescue
 			retried := True
@@ -1267,49 +1245,6 @@ feature -- Workbench feature and descriptor table generation
  		end
 
 feature
-
-	feature_table_file_name: PATH
-			-- Generated file name prefix
-			-- Side effect: Create the corresponding subdirectory if it
-			-- doesnot exist yet.
-		require
-			has_types: has_types
-		local
-			subdirectory, base_name: STRING_32
-			dir: DIRECTORY
-			dir_name: PATH
-			finished_file: PLAIN_TEXT_FILE
-		do
-			if System.in_final_mode then
-				dir_name := project_location.final_path
-			else
-				dir_name := project_location.workbench_path
-			end
-
-			create subdirectory.make (5)
-			subdirectory.append_string_general (packet_name (C_prefix, packet_number))
-
-			dir_name := dir_name.extended (subdirectory)
-			create dir.make_with_path (dir_name)
-			if not dir.exists then
-				dir.create_dir
-			end
-
-			create base_name.make (12)
-			base_name.append_string_general (base_file_name)
-			base_name.append_integer (feature_table_file_id)
-			base_name.append_character (feature_table_file_suffix)
-			base_name.append_string_general (Dot_c)
-			Result := dir_name.extended (base_name)
-
-			create finished_file.make_with_path (dir_name.extended (Finished_file_for_make))
-			if finished_file.exists and then finished_file.is_writable then
-				finished_file.delete
-			end
-		ensure
-			feature_table_file_name_not_void: Result /= Void
-			feature_table_file_name_not_empty: not Result.is_empty
-		end
 
 	base_file_name: STRING
 			-- Generated base file name prefix. Keep first two letters

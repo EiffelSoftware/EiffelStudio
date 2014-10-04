@@ -100,8 +100,6 @@ feature {NONE}
 
 	F_code: STRING = "F_code"
 
-	Feature_table_file_suffix: CHARACTER = 'f'
-
 	Makefile_sh: STRING = "Makefile.SH"
 
 	Partials: STRING = "Partials"

@@ -21,11 +21,8 @@ feature -- Access
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
 				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed then
-					if attached {JSON_ARRAY} jv.item ("platforms") as l_platforms then
-						Result.set_platforms (new_platforms (l_platforms))
-					end
-					if attached {JSON_ARRAY} jv.item ("mirrors") as l_mirrors then
-						Result.set_mirrors (new_mirrors (l_mirrors))
+					if attached {JSON_STRING} jv.item ("mirror") as l_mirror then
+						Result.set_mirror (l_mirror.unescaped_string_32)
 					end
 					if attached {JSON_ARRAY} jv.item ("products") as l_products then
 						Result.set_products (new_products (l_products))

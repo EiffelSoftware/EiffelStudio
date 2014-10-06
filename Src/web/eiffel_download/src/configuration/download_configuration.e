@@ -9,27 +9,20 @@ class
 
 feature -- Access
 
-	platforms: detachable  LIST[DOWNLOAD_PLATFORM]
-		-- Possible list of available platforms.
-
-	mirrors: detachable STRING_TABLE[DOWNLOAD_MIRROR]
-		-- Mirror table <id, mirror>.
+	mirror: detachable READABLE_STRING_32
+		-- url mirror.
 
 	products: detachable LIST[DOWNLOAD_PRODUCT]
 		-- Possible list of product downloads.
 
 feature -- Element Change
 
-	set_platforms (a_platforms: like platforms)
-			-- Possible list of available platforms.
+	set_mirror (a_mirror: like mirror)
+			-- Set `mirror' with `a_mirror'.
 		do
-			platforms := a_platforms
-		end
-
-	set_mirrors (a_mirrors: like mirrors)
-			-- Mirror table <id, mirror>.
-		do
-			mirrors := a_mirrors
+			mirror := a_mirror
+		ensure
+			mirror_set: mirror = a_mirror
 		end
 
 	set_products (a_products: like products)

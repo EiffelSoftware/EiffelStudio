@@ -71,7 +71,7 @@ feature -- Conversion
 
 	prepare (page: CMS_HTML_PAGE)
 		do
-			page.add_style (url ("/theme/style.css", Void), Void)
+
 		end
 
 	page_html (page: CMS_HTML_PAGE): STRING_8

@@ -41,9 +41,15 @@ feature -- Status report
 			Result := is_expandable and then internal_is_expanded
 		end
 
+	is_collapsed: BOOLEAN
+			-- Is expanded, but visually collapsed?
+		do
+			Result := is_expandable and then internal_is_collapsed
+		end
+
 	is_expandable: BOOLEAN
 		do
-			Result := internal_is_expandable or internal_is_expanded or has_children
+			Result := internal_is_expandable or internal_is_expanded or internal_is_collapsed or has_children
 		end
 
 	has_children: BOOLEAN
@@ -58,6 +64,7 @@ feature -- Status report
 	internal_is_expandable: BOOLEAN
 
 	internal_is_expanded: BOOLEAN
+	internal_is_collapsed: BOOLEAN
 
 feature -- Element change
 
@@ -93,7 +100,19 @@ feature -- Element change
 
 	set_expanded (b: like is_expanded)
 		do
+			if b then
+				set_expandable (True)
+				set_collapsed (False)
+			end
 			internal_is_expanded := b
+		end
+
+	set_collapsed (b: like is_collapsed)
+		do
+			if b then
+				set_expanded (False)
+			end
+			internal_is_collapsed := b
 		end
 
 	set_expandable (b: like is_expandable)
@@ -105,7 +124,7 @@ feature -- Element change
 		local
 			qs: STRING
 		do
-			create qs.make_from_string (req.path_info)
+			create qs.make_from_string (req.percent_encoded_path_info)
 			is_active := qs.same_string (location)
 			if not is_active then
 				if attached req.query_string as l_query_string and then not l_query_string.is_empty then

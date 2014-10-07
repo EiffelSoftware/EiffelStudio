@@ -532,15 +532,18 @@ feature -- Generation
 
 	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)
 			-- Update the active status recursively on `a_comp'.
+		local
+			ln: CMS_LINK
 		do
 			if attached a_comp.items as l_items then
 				across
 					l_items as ic
 				loop
-					if attached {CMS_LOCAL_LINK} ic.item as l_local then
+					ln := ic.item
+					if attached {CMS_LOCAL_LINK} ln as l_local then
 						l_local.get_is_active (request)
 					end
-					if ic.item.is_expanded and then attached {CMS_LINK_COMPOSITE} ic.item as l_comp then
+					if (ln.is_expanded or ln.is_collapsed) and then attached {CMS_LINK_COMPOSITE} ln as l_comp then
 						recursive_get_active (l_comp, req)
 					end
 				end

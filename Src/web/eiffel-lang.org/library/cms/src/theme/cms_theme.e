@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			end
 			s.append ("<a href=%"" + url (lnk.location, lnk.options) + "%">" + html_encoded (lnk.title) + "</a>")
 			if
-				lnk.is_expanded and then
+				(lnk.is_expanded or lnk.is_collapsed) and then
 				attached lnk.children as l_children
 			then
 				s.append ("<ul>%N")

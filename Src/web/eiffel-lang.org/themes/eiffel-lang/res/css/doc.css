@@ -17,7 +17,40 @@ div.cache-info {
   float: right;
   font-style: italic;
 }
+
+#wdocs-tree.menu ul {
+	list-style-type: none;
+	padding-left: 1em;
+}
+#wdocs-tree.menu ul li {
+	padding: 0;
+}
+
 #wdocs-tree.menu li.active {
 	font-weight: bold;
 	border-right: solid 2px #ccc;
 }
+#wdocs-tree.menu li.active li {
+	font-weight: normal;
+	border-right: dotted 2px #eee;
+}
+
+#wdocs-tree.menu li.expandable:not(.expanded) li {
+	border-left: dotted 4px red;
+	display: none;
+}
+#wdocs-tree.menu li.expandable.expanded>a {
+	font-weight: bold;
+}
+
+//#wdocs-tree.menu li:not(.expandable)>a:before {
+	//content: "- ";
+//}
+
+//#wdocs-tree.menu li.expandable:not(.expanded)>a:before {
+	//content: "[>] "
+//}
+//#wdocs-tree.menu li.expandable.expanded>a:before {
+	//content: "[V] "
+//}
+

@@ -49,6 +49,7 @@
 #include "request.h"
 #include "com.h"
 #include "stream.h"
+#include "eif_network.h"
 #include "eif_logfile.h"
 #include <string.h>
 #include "rt_assert.h"

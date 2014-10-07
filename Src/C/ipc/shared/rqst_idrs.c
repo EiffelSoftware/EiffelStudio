@@ -169,12 +169,16 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 	Where *whe = (Where *) ext;
 	bool_t result;
 	static char buf[MAX_FEATURE_LEN + 1];
+	const char *l_str;
 
 	if (idrs->i_op == IDR_DECODE) {
 		buf[0]='\0';
 		whe->wh_name = buf;
+		result = idr_string_decode(idrs, &whe->wh_name, 0, -MAX_FEATURE_LEN);
+	} else {
+		l_str = whe->wh_name;
+		result = idr_string_encode(idrs, &l_str, 0, -MAX_FEATURE_LEN);
 	}
-	result = idr_string(idrs, &whe->wh_name, 0, -MAX_FEATURE_LEN);
 	result = result && idr_rt_uint_ptr(idrs, &whe->wh_obj);
 	result = result && idr_int(idrs, &whe->wh_origin);
 	result = result && idr_int(idrs, &whe->wh_type);
@@ -213,6 +217,8 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 	static EIF_TYPED_VALUE *last_exi;
 	struct ex_vect *exv;
 	EIF_TYPED_VALUE *exi;
+	bool_t result;
+	const char *l_str;
 
 	if (!idr_int (idrs, &dum->dmp_type))
 		return FALSE;
@@ -241,17 +247,25 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		case EX_RESC:
 		case EX_RETY:
 		case EX_CALL:
-			return idr_eif_reference (idrs, &exv->exu.exur.exur_id)
-				&& idr_string (idrs, &exv->exu.exur.exur_rout, 0, -MAX_FEATURE_LEN)
-				&& idr_type_index (idrs, &exv -> exu.exur.exur_orig)
-				&& idr_type_index (idrs, &exv -> exu.exur.exur_dtype)
-				&& idr_int (idrs, &exv->ex_linenum)
-				&& idr_int (idrs, &exv->ex_bpnested);
+			result = idr_eif_reference (idrs, &exv->exu.exur.exur_id);
+			if (idrs->i_op == IDR_ENCODE) {
+				l_str = exv->exu.exur.exur_rout;
+				result = result && idr_string_encode (idrs, &l_str, 0, -MAX_FEATURE_LEN);
+			} else {
+				result = result && idr_string_decode (idrs, &exv->exu.exur.exur_rout, 0, -MAX_FEATURE_LEN);
+			}
+			result = result && idr_type_index (idrs, &exv -> exu.exur.exur_orig);
+			result = result && idr_type_index (idrs, &exv -> exu.exur.exur_dtype);
+			result = result && idr_int (idrs, &exv->ex_linenum);
+			result = result && idr_int (idrs, &exv->ex_bpnested);
+			return result;
 		default:
-			return idr_string (idrs, &exv->exu.exua.exua_name, 0, -MAX_STRLEN)
-				&& idr_string (idrs, &exv->exu.exua.exua_where, 0, -MAX_STRLEN)
-				&& idr_type_index (idrs, &exv->exu.exua.exua_from)
-				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
+				/* Before there was some code here but it was removed because
+				 * we could not find a case where it would not be one of the above 
+				 * type.
+				 * In addition, the previous code could have written into a string
+				 * whose type was `const char *' which is not correct.*/
+			CHECK("Not a valid execution vector type", 0);
 		}
 	case DMP_EXCEPTION_ITEM:
 	case DMP_ITEM:
@@ -282,6 +296,8 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 {
 	if (idrs->i_op == IDR_ENCODE) {
+		const char *l_str = ext->it_ref;
+
 		memcpy (idrs->i_ptr, &ext->type, sizeof(EIF_INTEGER_32));
 		idrs->i_ptr += sizeof(EIF_INTEGER_32);
 
@@ -343,9 +359,9 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
 		case SK_STRING:
-			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_encode (idrs, &l_str, dum->dmp_info, 0); /* 0 = no limit */
 		case SK_STRING32:
-			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_encode (idrs, &l_str, dum->dmp_info, 0); /* 0 = no limit */
 		default:
 			return idr_eif_reference (idrs, &ext->it_ref);
 		}
@@ -411,9 +427,9 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
 		case SK_STRING:
-			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_decode (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		case SK_STRING32:
-			return idr_string (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_decode (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
 		default:
 			return idr_eif_reference (idrs, &ext->it_ref);
 		}

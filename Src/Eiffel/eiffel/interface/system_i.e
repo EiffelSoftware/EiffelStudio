@@ -4514,16 +4514,8 @@ feature -- Generation
 					a_class := class_array.item (i)
 					if a_class /= Void then
 						j := a_class.class_id
-						if
-							not Compilation_modes.is_precompiling and
-							not a_class.is_precompiled
-						then
-							buffer.put_string ("extern int32 ra")
-							buffer.put_integer (j)
-							buffer.put_string ("[];%N")
-						end
 						if a_class.has_visible then
-							buffer.put_string ("extern char *cl")
+							buffer.put_string ("extern const char *cl")
 							buffer.put_integer (j)
 							buffer.put_string ("[];%N")
 							from
@@ -4532,20 +4524,7 @@ feature -- Generation
 							until
 								types.after
 							loop
-								buffer.put_string ("extern uint32 cr")
-								buffer.put_integer (types.item.type_id)
-								buffer.put_string ("[];%N")
-								types.forth
-							end
-						end
-						if not a_class.skeleton.is_empty then
-							from
-								types := a_class.types
-								types.start
-							until
-								types.after
-							loop
-								buffer.put_string ("extern uint32 types")
+								buffer.put_string ("extern const uint32 cr")
 								buffer.put_integer (types.item.type_id)
 								buffer.put_string ("[];%N")
 								types.forth
@@ -4581,7 +4560,8 @@ feature -- Generation
 			end
 
 				-- Generate skeleton.
-			buffer.put_string ("struct cnode egc_fsystem_init[] = {")
+			end
+			buffer.put_string ("const struct cnode egc_fsystem_init[] = {")
 			from
 				i := 1
 			until

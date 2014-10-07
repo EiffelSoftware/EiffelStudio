@@ -548,14 +548,14 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target)
 {
 	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
 											   since they are supposed to be the same type.*/
-	struct cnode *skeleton = &System(dtype);
+	const struct cnode *skeleton = &System(dtype);
 	long index;		/* Target attribute index */
 	long offset;
 	EIF_REFERENCE t_ref, s_ref;
 #ifndef WORKBENCH
-	long *offsets = skeleton->cn_offsets;	/* Target attribute offsets. */
+	const long *offsets = skeleton->cn_offsets;	/* Target attribute offsets. */
 #else
-	int32 *cn_attr = skeleton->cn_attr;		/* Array of attribute keys for target object */
+	const int32 *cn_attr = skeleton->cn_attr;		/* Array of attribute keys for target object */
 	int32 attr_key;	/* Attribute key */
 #endif
 

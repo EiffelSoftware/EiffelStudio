@@ -86,7 +86,7 @@ struct ex_vect {
 		int exu_sig;			/* Signal number */
 		int exu_errno;			/* Error number reported by kernel */
 		struct {
-			char *exua_name;	/* The assertion tag */
+			const char *exua_name;	/* The assertion tag */
 			char *exua_where;	/* The routine name where assertion was found */
 			EIF_TYPE_INDEX exua_from;		/* And its origin (where it was written) */
 			EIF_REFERENCE exua_oid;		/* Value of Current */
@@ -140,7 +140,7 @@ struct eif_exception {
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
 	int ex_nsig;			/* Number of last signal received */
 	unsigned int ex_level;	/* Exception level (rescue branches) */
- 	char *ex_tag;			/* Assertion tag */
+ 	const char *ex_tag;		/* Assertion tag */
 	char *ex_rt;			/* Routine associated with current exception */
 	EIF_TYPE_INDEX ex_class;/* Class associated with current exception */
 	int ex_entry;			/* Is entry or exit of a routine when evaluating invariant. */

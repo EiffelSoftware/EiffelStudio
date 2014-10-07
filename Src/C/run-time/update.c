@@ -76,6 +76,7 @@ rt_private void cecil_updt(void);			/* Cecil update */
 rt_private void parents_updt(void);			/* Partent table update */
 rt_private char **names_updt(short int count);		/* String array */
 rt_private void root_class_updt(void);		/* Update the root class info */
+rt_private void cnode_updt(struct cnode *);	/* Update a cnode structure */
 
 /* Read information from byte code file `melted_file'. */
 rt_private void wread(char *buffer, size_t nbytes);
@@ -130,6 +131,8 @@ rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 	EIF_NATIVE_CHAR *filename;							/* .UPDT complet path */
 	long pattern_id;
 	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
+	struct cnode *l_esystem;
+
 /* %%ss bloc moved below*/
 
 	if (ignore_updt != (char) 0) {
@@ -309,9 +312,9 @@ rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 			/* Get the Eiffel profiler status */
 		egc_prof_enabled = wint32();
 
-			/* Allocation of variable `esystem' */
-		SAFE_ALLOC(esystem, struct cnode, count);
-		memcpy (esystem, egc_fsystem, scount * sizeof(struct cnode));
+			/* Initialization of `l_esystem' */
+		SAFE_ALLOC(l_esystem, struct cnode, count);
+		memcpy (l_esystem, egc_fsystem, scount * sizeof(struct cnode));
 
 		scount = count;
 			/* Feature table update */
@@ -320,8 +323,11 @@ rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 		dprintf(1)("Number of feature tables to update: %d\n", count);
 #endif
 
-		while (count-- > 0)
-			cnode_updt();
+		while (count-- > 0) {
+			cnode_updt(l_esystem);
+		}
+			/* Setting up `esystem'. */
+		esystem = l_esystem;
 
 			/* Updating of the melting table */
 		melt_count = (rt_uint_ptr) wint32();		/* Read the size of the byte code array */
@@ -462,7 +468,7 @@ rt_private void root_class_updt (void)
 	}
 }
 
-rt_public void cnode_updt(void)
+rt_private void cnode_updt(struct cnode *a_esystem)
 {
 	/* Update a cnode structure */
 
@@ -471,16 +477,16 @@ rt_public void cnode_updt(void)
 	char *str;				/* String to allocate */
 	long nbattr;			/* Attributes number */
 	struct cnode *node;		/* Structure to update */
-	char **names;			/* Name array */
+	const char **names;		/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
 	uint16 *attr_flags;		/* Attribute flags array */
-	EIF_TYPE_INDEX **gtypes;/* Attribute full-type array */
+	const EIF_TYPE_INDEX **gtypes;/* Attribute full-type array */
 	int32 *rout_ids;		/* Routine id array */
 	int i;
 
 		/* 1. Dynamic type */
 	dtype = wshort();
-	node = &System(dtype);
+	node = &a_esystem[dtype];
 #ifdef DEBUG
 	dprintf(4)("Updating cnode of dyn type %d\n", dtype);
 #endif
@@ -507,13 +513,13 @@ rt_public void cnode_updt(void)
 
 		/* 4. Attribute names array */
 	if (nbattr > 0) {
-		SAFE_ALLOC(names, char *, nbattr);
+		SAFE_ALLOC(names, const char *, nbattr);
 		node->cn_names = names;
 		SAFE_ALLOC(types, uint32, nbattr);
 		node->cn_types = types;
 		SAFE_ALLOC(attr_flags, uint16, nbattr);
 		node->cn_attr_flags = attr_flags;
-		SAFE_ALLOC(gtypes, EIF_TYPE_INDEX *, nbattr);
+		SAFE_ALLOC(gtypes, const EIF_TYPE_INDEX *, nbattr);
 		node->cn_gtypes = gtypes;
 		for (i=0; i<nbattr; i++) {
 			str_count = wshort();

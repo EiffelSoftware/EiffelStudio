@@ -191,7 +191,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized here in `main.c' and updated once in `update' from `update.c'.</synchronization>
 doc:	</attribute>
 */
-rt_public struct cnode *esystem;			/* Eiffel system */
+rt_public const struct cnode *esystem;			/* Eiffel system */
 
 /*
 doc:	<attribute name="eif_environ" return_type="EIF_NATIVE_CHAR **" export="public">

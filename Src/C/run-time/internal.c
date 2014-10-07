@@ -186,7 +186,7 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	 * Take care of normal and expanded types.
 	 */
 
-	struct cnode *obj_desc;
+	const struct cnode *obj_desc;
 	EIF_TYPE_INDEX dtype = Dtype(object);
 	uint32 field_type;
 	long offset;

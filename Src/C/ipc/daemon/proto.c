@@ -57,6 +57,7 @@
 #include "select.h"
 #include "com.h"
 #include "stream.h"
+#include "eif_network.h"
 #include "transfer.h"		/* for swallow() */
 #include "eif_logfile.h"
 #include "rqst_idrs.h"

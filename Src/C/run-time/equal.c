@@ -506,12 +506,12 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	 * Return a boolean.
 	 */
 
-	struct cnode *skeleton;	/* Target skeleton */
-	uint32 *types;            /* Target attribute types */
+	const struct cnode *skeleton;	/* Target skeleton */
+	const uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	long *offsets;	/* Target attribute tables */
+	const long *offsets;	/* Target attribute tables */
 #else
-	int32 *cn_attr;     		/* Array of attribute keys for target object */
+	const int32 *cn_attr;     		/* Array of attribute keys for target object */
 	int32 attr_key;				/* Attribute key */
 #endif
 	long offset;
@@ -634,12 +634,12 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 	 * Return a boolean.
 	 */
 
-	struct cnode *skeleton;	/* Target skeleton */
-	uint32 *types;            /* Target attribute types */
+	const struct cnode *skeleton;	/* Target skeleton */
+	const uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	long *offsets;	/* Target attribute tables */
+	const long *offsets;	/* Target attribute tables */
 #else
-	int32 *cn_attr;                /* Array of attribute keys for source object */
+	const int32 *cn_attr;                /* Array of attribute keys for source object */
 	int32 attr_key;				/* Attribute key */
 #endif
 	long offset;

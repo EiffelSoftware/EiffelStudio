@@ -210,7 +210,7 @@ feature -- Code generation
 			buffer_not_void: buffer /= Void
 			has_type: type_i /= Void
 		do
-			buffer.put_string (once "static EIF_TYPE_INDEX g_atype")
+			buffer.put_string (once "static const EIF_TYPE_INDEX g_atype")
 			buffer.put_integer (a_class_type.type_id)
 			buffer.put_character ('_')
 			buffer.put_integer (idx)

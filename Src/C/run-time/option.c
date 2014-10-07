@@ -215,12 +215,12 @@ rt_private EIF_OBJECT eif_tracing_handler = NULL;
 
 /*
 doc:	<attribute name="eif_tracing_routine" return_type="fnptr" export="private">
-doc:		<summary>Current handler for processing any trace. If not set, we use the default runtime handler</summary>
+doc:		<summary>Current handler for processing any trace. If not set, we use the default runtime handler. Note that the third argument is `const char *' to show that this cannot be modified by the routine. However we set the pointer with an Eiffel routine that does not know about this. This is something to keep in mind if the Eiffel routine tries to modify the third argument and it crashes at runtime.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Write access synchronized in `eif_set_tracer'.</synchronization>
 doc:	</attribute>
 */
-rt_private void (*eif_tracing_routine)(EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN) = NULL;
+rt_private void (*eif_tracing_routine)(EIF_REFERENCE, EIF_INTEGER, const char *, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN) = NULL;
 
 
 /* Convenient macros to convert units to nanoseconds. */
@@ -717,7 +717,7 @@ rt_public void eif_set_tracer (EIF_REFERENCE obj, EIF_POINTER fnptr)
 		/* Add new handler and its routine if not NULL. */
 	if (obj && fnptr) {
 		eif_tracing_handler = eif_protect (obj);
-		eif_tracing_routine = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN)) fnptr;
+		eif_tracing_routine = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, const char *, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN)) fnptr;
 	} else {
 		eif_tracing_handler = NULL;
 		eif_tracing_routine = NULL;

@@ -105,7 +105,7 @@ doc:	</attribute>
 rt_private size_t tagged_len = 0;
 #endif /* EIF_THREADS */
 
-rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
+rt_private void write_string(const char *str);	/* Write a string in `tagged_out' */
 rt_private void write_char(EIF_CHARACTER_8 c);		/* Write a character */
 rt_private void write_attribute_character(EIF_CHARACTER_8 c);		/* Write a character as an Eiffel attribute */
 rt_private void write_tab(register int tab);		/* Print tabulations */
@@ -126,7 +126,7 @@ rt_public EIF_REFERENCE c_generator_of_type (EIF_INTEGER dftype)
 	 * Return a reference on an Eiffel instance of STRING.
 	 */
 {
-	char *generator;
+	const char *generator;
 	generator = System (To_dtype(dftype)).cn_generator;
 	return makestr (generator, strlen (generator));
 }
@@ -199,18 +199,18 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
 	RT_GET_CONTEXT
-	struct cnode *obj_desc;	   /* Object type description */
+	const struct cnode *obj_desc;	   /* Object type description */
 	long nb_attr;				 /* Attribute number */
-	uint32 *types;                /* Attribute types */
+	const uint32 *types;                /* Attribute types */
 #ifndef WORKBENCH
-	long *offsets;			   /* Attribute offsets table */
+	const long *offsets;			   /* Attribute offsets table */
 #else
-	int32 *cn_attr;			   /* Attribute keys */
+	const int32 *cn_attr;			   /* Attribute keys */
 	long offset;
 #endif
 	EIF_TYPE_INDEX dyn_type;			   /* Object dynamic type */
 	EIF_REFERENCE o_ref;
-	char **names;				 /* Attribute names */
+	const char **names;				 /* Attribute names */
 	EIF_REFERENCE reference;						/* Reference attribute */
 	long i;
 	uint32 type, ref_flags;
@@ -644,7 +644,7 @@ rt_private void write_attribute_character (EIF_CHARACTER_8 c)
 	write_char ('\n');
 }
 
-rt_private void write_string(char *str)
+rt_private void write_string(const char *str)
 {
 	/* Print `str' in `tagged_out'. */
 	RT_GET_CONTEXT

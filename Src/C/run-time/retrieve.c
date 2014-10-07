@@ -781,7 +781,7 @@ rt_private void set_mismatch_information (
 	EIF_TYPE_INDEX new_dtype = Dtype (object);
 	EIF_TYPE_INDEX new_dftype = Dftype (object);
 	type_descriptor *conv = type_description_for_new (conversions, new_dtype);
-	char *l_new_version = NULL, *l_old_version = NULL;
+	const char *l_new_version = NULL, *l_old_version = NULL;
 	uint32 i;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
@@ -1439,7 +1439,7 @@ rt_private uint32 special_generic_type (EIF_TYPE_INDEX dtype)
 	EIF_TYPE_INDEX *dynamic_types;
 	uint32 *patterns;
 	int nb_gen;
-	char *vis_name = System (dtype).cn_generator;
+	const char *vis_name = System (dtype).cn_generator;
 	struct cecil_info *info;
 
 		/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
@@ -2448,7 +2448,8 @@ rt_private void read_header(void)
 	uint32 nb_gen, l_length;
 	size_t bsize = 1024;
 	char vis_name[512];
-	char *l_storable_version, *l_new_storable_version;
+	char *l_storable_version;
+   	const char *l_new_storable_version;
 	char * temp_buf;
 	jmp_buf exenv;
 	RTYD;
@@ -2854,13 +2855,13 @@ rt_shared void print_object_summary (
 /*
 doc:	<routine name="old_attribute_type_matched" export="private">
 doc:		<summary>Find out if `gtype' and `atype' corresponds to the same type. This is similar to `attribute_type_matched' except this one takes care of storable versions that are strictly less than INDEPENDENT_STORE_5_5.</summary>
-doc:		<param name="gtype" type="EIF_TYPE_INDEX **">Type array for attribute defined in retrieving system.</param>
-doc:		<param name="atype" type="EIF_TYPE_INDEX **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.</param>
+doc:		<param name="gtype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in retrieving system.</param>
+doc:		<param name="atype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>GC mutex</synchronization>
 doc:	</routine>
 */
-rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype)
+rt_private int old_attribute_type_matched (const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype)
 {
 #ifdef EIF_ASSERTIONS
 	RT_GET_CONTEXT
@@ -2933,7 +2934,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 	return result;
 }
 
-rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_ptr att_index, EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype, int level)
+rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_ptr att_index, const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype, int level)
 {
 	RT_GET_CONTEXT
 	int result = 1;
@@ -3057,7 +3058,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 	return result;
 }
 
-rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_ptr att_index, EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *atypes)
+rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_ptr att_index, const EIF_TYPE_INDEX *gtypes, const EIF_TYPE_INDEX *atypes)
 {
 	RT_GET_CONTEXT
 	int result;
@@ -3488,7 +3489,8 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 {
 	RT_GET_CONTEXT
 	int result = 0;
-	char *l_storable_version, *l_new_storable_version;
+	char *l_storable_version;
+	const char *l_new_storable_version;
 	char *name = class_translation_lookup (conv->name);
 	struct cecil_info *ginfo = cecil_info (conv, name);
 	if (ginfo != NULL && ginfo->nb_param == conv->generic_count) {

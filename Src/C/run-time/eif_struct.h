@@ -61,14 +61,14 @@ extern "C" {
 struct cnode {
 	long cn_nbattr;				/* Number of attributes */
 	long cn_persistent_nbattr;	/* Number of persistent attributes */
-	char *cn_generator;			/* Class name */
-	char **cn_names;			/* Attribute names */
-	uint32 *cn_types;			/* Attribute types */
-	uint16 *cn_attr_flags;		/* Attribute flags */
-	EIF_TYPE_INDEX **cn_gtypes;	/* Attribute generic types (expanded attributes only) */
+	const char *cn_generator;			/* Class name */
+	const char **cn_names;			/* Attribute names */
+	const uint32 *cn_types;			/* Attribute types */
+	const uint16 *cn_attr_flags;		/* Attribute flags */
+	const EIF_TYPE_INDEX **cn_gtypes;	/* Attribute generic types (expanded attributes only) */
 	uint16 cn_flags;			/* Flags of Current type */
 #ifdef WORKBENCH
-	int32 *cn_attr;				/* Array of attribute routine ids */
+	const int32 *cn_attr;				/* Array of attribute routine ids */
 	long cn_size;				/* Object size */
 	long cn_nbref;				/* Number of references in the object */
 
@@ -76,12 +76,12 @@ struct cnode {
 		 * identify the the creation procedure for expanded types.
 		 */
 	int32 cn_creation_id;
-	struct ctable cn_cecil;		/* Cecil hash table */
+	const struct ctable cn_cecil;		/* Cecil hash table */
 #else
 	void (*cn_inv)();			/* Pointer on invariant routine if any */
-	long *cn_offsets;			/* Attribute offsets */
+	const long *cn_offsets;		/* Attribute offsets */
 #endif
-	char *cn_version;			/* Version of the class, used for storable. */
+	const char *cn_version;			/* Version of the class, used for storable. */
 };
 
 /* Values used to encode the type of each attribute. Dynamic type is encoded on

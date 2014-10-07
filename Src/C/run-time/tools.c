@@ -41,7 +41,7 @@ doc:<file name="tools.c" header="eif_tools.h" version="$Id$" summary="General pu
 #include "rt_tools.h"
 #include <stddef.h>					/* For size_t typedef. */
 
-rt_public EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count)
+rt_public EIF_INTEGER hashcode(const char *s, register EIF_INTEGER count)
 {
 	/* Compute the hash code associated with given string s. The magic number
 	 * below is the greatest prime lower than 2^23 so that this magic number

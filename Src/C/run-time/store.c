@@ -186,7 +186,7 @@ rt_private void st_write_cid (EIF_TYPE_INDEX);
 rt_private void ist_write_cid (EIF_TYPE_INDEX);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
-rt_shared void buffer_write(char *data, size_t size);
+rt_shared void buffer_write(const char *data, size_t size);
 
 rt_public void rt_reset_store (void);
 
@@ -1532,9 +1532,9 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_TYPE_INDEX i;
-	char *vis_name;			/* Visible name of a class */
+	const char *vis_name;			/* Visible name of a class */
 	int l_is_version_required = rt_kind_version >= GENERAL_STORE_6_6;
-	char *l_storable_version;
+	const char *l_storable_version;
 	char *s_buffer = NULL;
 	uint32 l_length;
 	struct cecil_info *info;
@@ -1653,10 +1653,10 @@ rt_public void sort_attributes(int dtype)
 {
 	/* Sort the attributes alphabeticaly by type */
 	RT_GET_CONTEXT
-	struct cnode *class_info;		/* Info on the current type */
+	const struct cnode *class_info;		/* Info on the current type */
 	unsigned int *s_attr;			/* Sorted attributes for the type */
-	char **attr_names;
-	uint32 *attr_types;
+	const char **attr_names;
+	const uint32 *attr_types;
 	unsigned int no_swap, swapped, tmp;
 
 	unsigned long attr_nb;
@@ -1740,9 +1740,9 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype
 rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
 	RT_GET_CONTEXT
-	char *name = System (dtype).cn_names[attrib_index];
+	const char *name = System (dtype).cn_names[attrib_index];
 	int16 name_length = (int16) strlen (name);
-	EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
+	const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
 	int16 num_gtypes;
 	int16 i;
 	unsigned char basic_type;
@@ -1867,8 +1867,8 @@ rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 
 rt_private void widr_type (int16 dtype, int is_version_required)
 {
-	char *class_name = System (dtype).cn_generator;
-	char *l_storable_version = System (dtype).cn_version;
+	const char *class_name = System (dtype).cn_generator;
+	const char *l_storable_version = System (dtype).cn_version;
 	int16 name_length = (int16) strlen (class_name);
 	uint32 l_length;
 	int32 flags = (int32) System(dtype).cn_flags;
@@ -1960,7 +1960,7 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 	}
 }
 
-rt_shared void buffer_write(char *data, size_t size)
+rt_shared void buffer_write(const char *data, size_t size)
 {
 	RT_GET_CONTEXT
 	size_t l_cur_pos = current_position;

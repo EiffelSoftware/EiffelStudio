@@ -57,7 +57,7 @@ extern "C" {
 extern char *account;			/* Array of traversed dyn types */
 #endif
 RT_LNK void allocate_gen_buffer(void);
-RT_LNK void buffer_write(char *data, size_t size);
+RT_LNK void buffer_write(const char *data, size_t size);
 
 
 extern int char_write(char *pointer, int size);

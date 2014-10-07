@@ -43,6 +43,6 @@
 extern STREAM *app_sp;				/* Stream used for communications */
 extern void app_tpipe(STREAM *stream);		/* Open transfer "pipe" */
 extern char *app_tread(int *size);		/* Read from the transfer "pipe" */
-extern int app_twrite(void *buffer, size_t size);		/* Write to the transfer "pipe" */
+extern int app_twrite(const void *buffer, size_t size);		/* Write to the transfer "pipe" */
 
 #endif

@@ -1386,18 +1386,18 @@ feature -- Skeleton generation
 			skeleton_exists: skeleton /= Void
 		do
 			if not skeleton.empty then
-				buffer.put_string ("extern char *names")
+				buffer.put_string ("extern const char *names")
 				buffer.put_integer (type_id)
 				buffer.put_four_character ('[', ']', ';', '%N')
 
 					-- Generate attribute types sequence
-				buffer.put_string ("uint32 types")
+				buffer.put_string ("static const uint32 types")
 				buffer.put_integer (type_id)
 				buffer.put_string (" [] =%N")
 				skeleton.generate_type_array
 
 					-- Generate attribute flags sequence
-				buffer.put_string ("uint16 attr_flags")
+				buffer.put_string ("static const uint16 attr_flags")
 				buffer.put_integer (type_id)
 				buffer.put_string (" [] =%N")
 				skeleton.generate_flags_array
@@ -1408,13 +1408,13 @@ feature -- Skeleton generation
 
 				if byte_context.final_mode then
 						-- Generate attribute offset table pointer array
-					buffer.put_string ("static long offsets")
+					buffer.put_string ("static const long offsets")
 					buffer.put_integer (type_id)
 					buffer.put_string (" [] =%N")
 					skeleton.generate_offset_array
 				else
 						-- Generate attribute rout id array
-					buffer.put_string ("static int32 cn_attr")
+					buffer.put_string ("static const int32 cn_attr")
 					buffer.put_integer (type_id)
 					buffer.put_string (" [] =%N")
 					skeleton.generate_rout_id_array

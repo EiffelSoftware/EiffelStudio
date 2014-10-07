@@ -43,6 +43,7 @@
 #include "transfer.h"
 #include "request.h"
 #include "stream.h"
+#include "eif_network.h"
 #include <stdio.h>				/* To get BUFSIZ */
 #include <string.h>
 #include "rt_assert.h"
@@ -132,7 +133,7 @@ rt_public char *tread(STREAM *sp, int *size)
 	return reading_buffer;
 }
 
-rt_public int twrite(STREAM* sp, void *buffer, size_t size)
+rt_public int twrite(STREAM* sp, const void *buffer, size_t size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occurred.

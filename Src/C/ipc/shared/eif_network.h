@@ -44,7 +44,7 @@
 extern "C" {
 #endif
 
-extern int net_send(EIF_PSTREAM cs, char *buffer, size_t size);
+extern int net_send(EIF_PSTREAM cs, const char *buffer, size_t size);
 #ifdef EIF_WINDOWS
 extern int net_recv(EIF_PSTREAM cs, char *buf, size_t size, BOOL reset);
 #else

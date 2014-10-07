@@ -293,7 +293,7 @@ RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiff
 RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);			/* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
 RT_LNK EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object);
 #define eif_type_by_object(obj)	eiftype(obj)			/* Give dynamic type of EIF_OBJECT */
-RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
+RT_LNK const char *eifname(EIF_TYPE_ID cid);			/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK EIF_INTEGER eifaddr_offset(EIF_REFERENCE, char *name, int * const ret);	/* Compute offset to `object' of attribute `name' */
@@ -313,7 +313,7 @@ RT_LNK int eiflocate(EIF_OBJECT object, char *name); /* Return the index of attr
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
 RT_LNK void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **envp);				/* Eiffel run-time initialization */
 
-extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
+extern char *ct_value(const struct ctable *ct, const char *key);				/* Hash table query */
 
 #ifdef EIF_THREADS
 

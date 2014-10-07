@@ -82,13 +82,9 @@ typedef STREAM *EIF_PSTREAM;
 
 #ifdef EIF_WINDOWS
 extern EIF_PSTREAM new_stream(HANDLE read_fd, HANDLE write_fd, HANDLE er, HANDLE ew);
-extern int net_recv(EIF_PSTREAM , char *, size_t, BOOL);
-extern int net_send(EIF_PSTREAM , char *, size_t);
 #else
 extern EIF_PSTREAM new_stream(int read_fd, int write_fd);		/* Asks for a new STREAM structure */
 extern EIF_PSTREAM stream_by_fd[];		/* Maps a fd to a STREAM */
-rt_public int net_send(EIF_PSTREAM, char *buf, size_t size) ;
-rt_public int net_recv(EIF_PSTREAM, char *buf, size_t size) ;
 #endif
 
 extern void close_stream(STREAM *);			/* Close stream connection */

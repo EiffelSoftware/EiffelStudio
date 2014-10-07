@@ -144,8 +144,8 @@ rt_public void eifuvisex (void) {
 rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 	/* Return type of `routine' defined in class of type `cid' */
 
-	struct cnode *sk;	/* Skeleton entry in system */
-	char **n;	/* Pointer in cn_names array */
+	const struct cnode *sk;	/* Skeleton entry in system */
+	const char **n;	/* Pointer in cn_names array */
 	int nb_attr;	/* Number of attributes */
 	int i;
 	uint32 field_type;	/* for scanning type */
@@ -307,7 +307,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	 */
 
 	EIF_TYPE_INDEX dtype = To_dtype(cid_to_dftype(cid));		/* Compute dynamic type from class ID */
-	struct ctable *ptr_table;			/* H table holding function pointers */
+	const struct ctable *ptr_table;			/* H table holding function pointers */
 	EIF_REFERENCE_FUNCTION *ref;
 
 	if (cid == EIF_NO_TYPE)	/* No type id */
@@ -346,7 +346,7 @@ rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 	return Dftype(eif_access(object));
 }
 
-rt_public char *eifname(EIF_TYPE_ID cid)
+rt_public const char *eifname(EIF_TYPE_ID cid)
 {
 	/* Return the name of the class whose ID is cid. It is a pointer to
 	 * static data. For generic types, only the base name of the class
@@ -462,8 +462,8 @@ rt_private int locate(EIF_REFERENCE object, char *name)
 	 * in the cn_offsets array, or EIF_NO_ATTRIBUTE if there is no such attribute.
 	 */
 
-	struct cnode *sk;				/* Skeleton entry in system */
-	char **n;						/* Pointer in cn_names array */
+	const struct cnode *sk;				/* Skeleton entry in system */
+	const char **n;						/* Pointer in cn_names array */
 	int nb_attr;					/* Number of attributes */
 	int i;
 
@@ -507,7 +507,7 @@ rt_public void *old_eifaddr(EIF_REFERENCE object, char *name)
  * Hash table handling
  */
 
-rt_shared char *ct_value(struct ctable *ct, register char *key)
+rt_shared char *ct_value(const struct ctable *ct, const char *key)
 {
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.

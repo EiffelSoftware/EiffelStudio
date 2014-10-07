@@ -43,6 +43,7 @@
 #include "rqst_idrs.h"
 #include "com.h"
 #include "stream.h"
+#include "eif_network.h"
 #include "app_transfer.h"
 #include "ewbio.h"
 #include "stack.h"
@@ -1077,16 +1078,16 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 {
 	/* Inspect recursively `object''s attribute */
 
-	struct cnode *obj_desc;		/* Object type description */
+	const struct cnode *obj_desc;		/* Object type description */
 	int32 nb_attr;							/* Attribute number */
-	uint32 *types;				/* Attribute types */
-	int32 *cn_attr;				/* Attribute keys */
+	const uint32 *types;				/* Attribute types */
+	const int32 *cn_attr;				/* Attribute keys */
 	long offset;
 	EIF_TYPE_INDEX dtype;				/* Object dynamic type */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;		/* Reference attribute */
-	char **names;					/* Attribute names */
-	char *name;
+	const char **names;				/* Attribute names */
+	const char *name;
 	long i;
 	uint32 type, sk_type, ref_flags;
 
@@ -1524,13 +1525,13 @@ rt_private void string_inspect(EIF_OBJECT object)
 {
 		/* Inspect the string object to get the string value */
 
-	struct cnode *obj_desc;		/* Object type description */
+	const struct cnode *obj_desc;		/* Object type description */
 	long nb_attr;					/* Attribute number */
-	int32 *cn_attr;				/* Attribute keys */
+	const int32 *cn_attr;				/* Attribute keys */
 	long offset;
 	EIF_TYPE_INDEX dtype;				/* Object dynamic type */
 	char *o_ref;
-	char **names;					/* Attribute names */
+	const char **names;					/* Attribute names */
 	char *reference;
 	long i, string_count = 0;
 	char *string_area = NULL;
@@ -1633,9 +1634,9 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 {
 	/* modify recursively `object''s attribute */
 
-	struct cnode *obj_desc;		/* Object type description */
+	const struct cnode *obj_desc;		/* Object type description */
 	long nb_attr;				/* Attribute number */
-	int32 *cn_attr;				/* Attribute keys */
+	const int32 *cn_attr;				/* Attribute keys */
 	long offset;				/* Offset of the attribute within object structure */
 	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
 	char *o_ref;				/* Attribute address */

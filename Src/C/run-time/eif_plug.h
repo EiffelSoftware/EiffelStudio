@@ -62,11 +62,11 @@ RT_LNK EIF_TYPED_VALUE eif_do_nothing_value;	/* To store values of computation o
  * Run time functions used by generated C code.
  */
 
-RT_LNK EIF_REFERENCE makestr_with_hash(register char *s, register size_t len, register int a_hash);
-RT_LNK EIF_REFERENCE makestr_with_hash_as_old(register char *s, register size_t len, register int a_hash);
-RT_LNK EIF_REFERENCE makestr(register char *s, register size_t len);
-RT_LNK EIF_REFERENCE makestr32_with_hash(register char *s, register size_t len, register int a_hash);
-RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(register char *s, register size_t len, register int a_hash);
+RT_LNK EIF_REFERENCE makestr_with_hash(const char *s, size_t len, int a_hash);
+RT_LNK EIF_REFERENCE makestr_with_hash_as_old(const char *s, size_t len, int a_hash);
+RT_LNK EIF_REFERENCE makestr(const char *s, size_t len);
+RT_LNK EIF_REFERENCE makestr32_with_hash(const char *s, size_t len, int a_hash);
+RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(const char *s, size_t len, int a_hash);
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
 RT_LNK EIF_REFERENCE eif_arg_array(void);		/* ARRAY[STRING] creation from command line arguments */
@@ -85,7 +85,7 @@ extern void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite o
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.
  */
-RT_LNK struct cnode *esystem;	/* Describes a full Eiffel system */
+RT_LNK const struct cnode *esystem;	/* Describes a full Eiffel system */
 #define System(type)		esystem[type]	/* Object description */
 
 #ifndef WORKBENCH

@@ -39,6 +39,7 @@
 #include "app_proto.h"
 #include "ewbio.h"
 #include "stream.h"
+#include "eif_network.h"
 #include "com.h"
 #include "identify.h"
 #include "app_transfer.h"

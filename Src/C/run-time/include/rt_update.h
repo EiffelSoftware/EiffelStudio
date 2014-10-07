@@ -59,7 +59,6 @@ extern "C" {
 
 
 extern void update(char ignore_updt, EIF_NATIVE_CHAR *argv0);					/* Update of internal structures */
-extern void cnode_updt(void);				/* Update a cnode structure */
 extern void conform_updt(void);				/* Update conformance table */
 extern void option_updt(void);				/* Update of the option table */
 extern void routinfo_updt(void);			/* Update routine information table */

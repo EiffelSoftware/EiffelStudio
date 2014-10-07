@@ -233,7 +233,7 @@ closed:
 #endif
 }
 
-rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
+rt_public int net_send(EIF_PSTREAM cs, const char *buf, size_t size)
        				/* The connected socket descriptor */
           			/* Where data are stored */
          			/* Amount of data to be sent */

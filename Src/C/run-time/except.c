@@ -187,8 +187,8 @@ rt_public void enomem(void);			/* A critical "No more memory" exception */
 rt_public struct ex_vect *exret(struct ex_vect *rout_vect);	/* Retries execution of routine */
 rt_public void exinv(char *tag, char *object);			/* Invariant record */
 rt_public void exasrt(char *tag, int type);		/* Assertion record */
-rt_public void eraise(char *tag, long num);		/* Raises an Eiffel exception */
-rt_public void com_eraise(char *tag, long num);	/* Raises an EiffelCOM exception */
+rt_public void eraise(const char *tag, long num);		/* Raises an Eiffel exception */
+rt_public void com_eraise(const char *tag, long num);	/* Raises an EiffelCOM exception */
 rt_public void eviol(void);			/* Signals assertion violation */
 rt_public void exfail(void);			/* Signals: reached end of a rescue clause */
 rt_public void eif_panic(char *msg);			/* Run-time raised panic */
@@ -206,7 +206,7 @@ rt_public void exclear(void);			/* Clears the exception stack */
 rt_private jmp_buf *backtrack(void);	/* Backtrack in the calling stack */
 rt_private void unwind_trace (void);	/* Unwind the trace stack */
 rt_private void excur(void);			/* Current exception code in previous level */
-rt_private char *extag(struct ex_vect *trace);			/* Recompute exception tag */
+rt_private const char *extag(struct ex_vect *trace);			/* Recompute exception tag */
 
 rt_public void set_last_exception (EIF_REFERENCE ex);	/* Set `last_exception' of EXCEPTION_MANAGER with `ex'. */
 rt_public EIF_REFERENCE last_exception (void);			/* Get `last_exception' of EXCEPTION_MANAGER */
@@ -215,8 +215,8 @@ rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool); /* Set if ig
 rt_private struct ex_vect *top_n_call(struct xstack *stk, int n);	/* Get the n-th topest call vector from the stack */
 rt_private struct ex_vect *draise_recipient_call (struct xstack *stk); /* Get the second topest call vector from the stack, used by `draise' */
 rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not */
-rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, 
-								char *eclass, char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
+rt_private void make_exception (long except_code, int signal_code, int eno, const char *t_name, char *reci_name, 
+								const char *eclass, char *rf_routine, const char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
 rt_private int is_ex_assert (int ex_code);				/* Is exception of `ex_code' an assertion violation? */
 rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj);					/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
 
@@ -1121,7 +1121,7 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 #endif
 }
 
-rt_public void eraise(char *tag, long num)
+rt_public void eraise(const char *tag, long num)
 	/* May be called from Eiffel, and INTEGER is long */
 {
 	/* Raises the exception whose number is 'num'. The execution code is set,
@@ -1134,7 +1134,7 @@ rt_public void eraise(char *tag, long num)
 	EIF_GET_CONTEXT
 	struct ex_vect	*trace = NULL;			/* The stack trace entry */
 	struct ex_vect	*vector;		/* The stack trace entry */
-	char 			*tg;
+	const char 		*tg;
 	EIF_REFERENCE obj = NULL;
 	unsigned char	type;
 	int				line_number;	/* breakable point index */
@@ -1316,7 +1316,7 @@ rt_public void eraise(char *tag, long num)
 	/* NOTREACHED */
 }
 
-rt_public void com_eraise(char *tag, long num)
+rt_public void com_eraise(const char *tag, long num)
 			/* May be called from Eiffel, and INTEGER is long */
 {
 	/* Raises the exception whose number is 'num'. The execution code is set,
@@ -1329,7 +1329,7 @@ rt_public void com_eraise(char *tag, long num)
 	EIF_GET_CONTEXT
 	struct ex_vect *trace = NULL;		/* The stack trace entry */
 	struct ex_vect *vector;     /* The stack trace entry */
-	char *tg;
+	const char *tg;
 	EIF_REFERENCE obj = NULL;
 	unsigned char type;
 	int				signo, eno = signo = -1;
@@ -2147,7 +2147,7 @@ rt_private void excur(void)
 	memcpy (&eif_trace, &context, sizeof(struct xstack));
 }
 
-rt_private char *extag(struct ex_vect *trace)
+rt_private const char *extag(struct ex_vect *trace)
 		/* Faulty vector on trace stack */
 {
 	/* Recompute the exception tag associated with vector on stack. This burden
@@ -2817,9 +2817,9 @@ rt_private void recursive_dump(void (*append_trace)(char *), int level)
 
 rt_private void print_class_feature_tag (
 		void (*append_trace) (char *),
-		char *a_class_name,
-		char *a_feature_name,
-		char *a_tag_name
+		const char *a_class_name,
+		const char *a_feature_name,
+		const char *a_tag_name
 )
 	/* Prints first line of exception which contains `a_class_name', `a_feature_name'
 	 * and `a_tag_name' using `append_trace'. */
@@ -3005,7 +3005,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	int				finished = 0;
 	char			code = eif_except.code;	/* Exception's code */
 	struct ex_vect	*top;					/* Top of stack */
-	char*			class_name = NULL;		/* Class name */
+	const char*		class_name = NULL;		/* Class name */
 
 #ifdef DEBUG
 	dump_vector("print_top: top of trace is", eif_trace.st_bot);
@@ -3720,7 +3720,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	EIF_GET_CONTEXT
 	struct ex_vect	*trace = NULL;			/* The stack trace entry */
 	struct ex_vect	*vector;		/* The stack trace entry */
-	char			*tg;
+	const char		*tg;
 	EIF_REFERENCE obj = NULL;
 	unsigned char	type;
 	int				line_number;	/* line number within feature */
@@ -3870,8 +3870,8 @@ rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool)
 	is_ignore_contract_violation_once = a_bool;
 }
 
-rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, char *eclass, 
-								char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj)
+rt_private void make_exception (long except_code, int signal_code, int eno, const char *t_name, char *reci_name,
+	   	const char *eclass, char *rf_routine, const char *rf_class, int line_num, int is_inva_entry, int new_obj)
 	/* Collect information of the exception object, and pass all of them to EXCEPTION_MANAGER,
 	 * in which useful information is set and initialized in the exception object.
 	 */

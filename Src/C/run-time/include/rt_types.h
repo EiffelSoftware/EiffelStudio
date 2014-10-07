@@ -137,7 +137,7 @@ struct exprint {
 	unsigned char last;		/* The very last exception record */
 	unsigned char previous;	/* Previous exception code printed */
 	char *rname;			/* Routine name of enclosing call */
-	char *tag;				/* Exception tag of current exception */
+	const char *tag;		/* Exception tag of current exception */
 	char *obj_id;			/* Object's ID */
 	EIF_TYPE_INDEX from;	/* Where the routine comes from */
 };

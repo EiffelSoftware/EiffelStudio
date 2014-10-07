@@ -40,7 +40,7 @@
 #include "stream.h" 	/* %%ss added */
 
 extern char *tread(STREAM *sp, int *size);		/* Read from the transfer "pipe" */
-extern int twrite(STREAM *sp,void *buffer, size_t size);		/* Write to the transfer "pipe" */
+extern int twrite(STREAM *sp, const void *buffer, size_t size);		/* Write to the transfer "pipe" */
 extern void end_debug(void);		/* Free the communication buffer, should be called when debugging stops */
 
 extern void swallow(EIF_PSTREAM , size_t size);		/* Discard a certain amount of bytes from file */

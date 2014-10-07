@@ -66,7 +66,7 @@ rt_private rt_inline long ei_field_static_type_of_type(long i, EIF_INTEGER type_
 	/* Returns dynamic type of i-th logical field of `type_id' as
 	 * declared in associated class of `type_id'. */
 {
-	EIF_TYPE_INDEX *typearr;
+	const EIF_TYPE_INDEX *typearr;
 	typearr = System(To_dtype(type_id)).cn_gtypes[i];
 	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr);
 }
@@ -84,7 +84,7 @@ rt_private rt_inline void * ei_oref(long i, EIF_REFERENCE object)
 rt_private rt_inline char *ei_exp_type(long i, EIF_REFERENCE object)
 	/* Returns the class name of the i-th expanded field of `object'. */
 {
-	char *s;
+	const char *s;
 	s = System(HEADER(ei_oref(i,object))->ov_dtype).cn_generator;
 	return makestr(s,strlen(s));
 }

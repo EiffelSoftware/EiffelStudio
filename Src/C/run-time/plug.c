@@ -214,17 +214,18 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	EIF_REFERENCE new_obj = NULL;
 	EIF_REFERENCE attr = NULL;
 	long nbr_attr, stripped_nbr;
-	struct cnode *obj_desc;
+	const struct cnode *obj_desc;
 #ifndef WORKBENCH
-	long *offsets;
+	const long *offsets;
 #else
-	int32 *rout_ids;
+	const int32 *rout_ids;
 	long offset;
 #endif
-	char** attr_names;
+	const char** attr_names;
 	int i;
 	char found;
-	uint32 type, *types;
+	uint32 type;
+	const uint32 *types;
 	long offset_bis = 0;					/* offset already taken :-) */
 	EIF_TYPE_INDEX   typres;
 #ifdef WORKBENCH
@@ -365,7 +366,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	return array;
 }
 
-rt_public EIF_REFERENCE makestr(register char *s, register size_t len)
+rt_public EIF_REFERENCE makestr(const char *s, size_t len)
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -374,7 +375,7 @@ rt_public EIF_REFERENCE makestr(register char *s, register size_t len)
 	return makestr_with_hash (s, len, 0);
 }
 
-rt_public EIF_REFERENCE makestr_with_hash (register char *s, register size_t len, register int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash (const char *s, size_t len, int a_hash)
 	/* Makes an Eiffel STRING object from a C string with precomputed hash code value `a_hash'.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -422,7 +423,7 @@ doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register size_t len, register int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash_as_old (const char *s, size_t len, int a_hash)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
@@ -453,7 +454,7 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register siz
 	return string;
 }
 
-rt_public EIF_REFERENCE makestr32_with_hash (register char *s, register size_t len, register int a_hash)
+rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, int a_hash)
 	/* Makes an Eiffel STRING_32 object from a C string with precomputed hash code value `a_hash'.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -517,7 +518,7 @@ doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE makestr32_with_hash_as_old (register char *s, register size_t len, register int a_hash)
+rt_public EIF_REFERENCE makestr32_with_hash_as_old (const char *s, size_t len, int a_hash)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
@@ -758,11 +759,11 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	long nb_exp = 0L;
 	long nb_ref;					/* Number of references in `obj' */
 	uint32 type;
-	int32 *cn_attr;
-	uint32 *cn_types;
-	EIF_TYPE_INDEX **cn_gtypes;
+	const int32 *cn_attr;
+	const uint32 *cn_types;
+	const EIF_TYPE_INDEX **cn_gtypes;
 	long nb_attr;
-	struct cnode *desc;
+	const struct cnode *desc;
 	int has_expanded = 0;
 	RTLD;
 
@@ -787,12 +788,13 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		switch (type & SK_HEAD) {
 		case SK_EXP:						/* Found an expanded attribute */
 			{
-			struct cnode *exp_desc;			/* Expanded object description */
+			const struct cnode *exp_desc;			/* Expanded object description */
 			int32 routine_id;
 			/* char *OLD_IC; */ /* %%ss removed */
 			uint32 exp_offset;				/* Attribute offset */
 			EIF_TYPE_INDEX orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
-			EIF_TYPE_INDEX *cid, dftype;
+			const EIF_TYPE_INDEX *cid;
+			EIF_TYPE_INDEX dftype;
 
 				/* Current has some expanded objects, we need to make `obj' composite. */
 			has_expanded = 1;

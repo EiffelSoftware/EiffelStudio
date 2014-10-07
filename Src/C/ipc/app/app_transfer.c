@@ -80,7 +80,7 @@ rt_public char *app_tread(int *size)
 	return tread(app_sp, size);
 }
 
-rt_public int app_twrite(void *buffer, size_t size)
+rt_public int app_twrite(const void *buffer, size_t size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occurred.

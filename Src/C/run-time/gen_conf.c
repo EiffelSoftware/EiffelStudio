@@ -246,7 +246,7 @@ doc:	</attribute>
 */
 rt_shared EIF_CS_TYPE *eif_gen_mutex = NULL;
 
-rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
+rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, const EIF_TYPE_INDEX *);
 rt_public EIF_TYPE_INDEX eifthd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
 rt_shared uint32 eifthd_gen_count_with_dftype (EIF_TYPE_INDEX );
 rt_shared char eifthd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
@@ -279,7 +279,7 @@ rt_private size_t rt_typename_len (EIF_TYPE_INDEX dftype);
 rt_private void rt_internal_typename (EIF_TYPE_INDEX, char*);
 rt_private EIF_GEN_DER *rt_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void rt_expand_tables(int);
-rt_private EIF_TYPE_INDEX rt_id_of (EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX);
+rt_private EIF_TYPE_INDEX rt_id_of (const EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX);
 rt_private void rt_compute_ctab (EIF_TYPE_INDEX);
 rt_private EIF_CONF_TAB *rt_new_conf_tab (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void rt_enlarge_conf_tab (EIF_CONF_TAB *, EIF_TYPE_INDEX);
@@ -296,7 +296,7 @@ rt_private void rt_put_gen_seq (EIF_TYPE_INDEX, EIF_TYPE_INDEX*, EIF_TYPE_INDEX*
 /* Public features protected with a MUTEX.                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
 {
 	EIF_TYPE_INDEX   result;
 
@@ -439,7 +439,7 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX source_type, EIF_TYPE_INDEX target_ty
 rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 {
 	EIF_TYPE_INDEX dt;
-	char   *cname;
+	const char   *cname;
 	struct eif_par_types **pt;
 
 #ifdef EIF_THREADS
@@ -661,16 +661,15 @@ rt_shared void eif_gen_conf_cleanup (void)
 /* Result  : Resulting id;                                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
 {
-	EIF_TYPE_INDEX   outtab [256], *outtable, *intable;
+	EIF_TYPE_INDEX   outtab [256], *outtable;
 
 	REQUIRE("types not NULL", types);
 	REQUIRE("types not empty", types [0] != TERMINATOR);
 
-	intable  = types;
 	outtable = outtab;
-	return rt_id_of (&intable, &outtable, current_dftype);
+	return rt_id_of (&types, &outtable, current_dftype);
 }
 
 /*------------------------------------------------------------------*/
@@ -1241,7 +1240,7 @@ done:
 /* annotation : Annotation of type if any (see ANNOTATION_TYPE_MASK)*/
 /*------------------------------------------------------------------*/
 
-rt_private EIF_TYPE_INDEX rt_id_of (EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **outtab, EIF_TYPE_INDEX obj_type)
+rt_private EIF_TYPE_INDEX rt_id_of (const EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **outtab, EIF_TYPE_INDEX obj_type)
 {
 	EIF_TYPE_INDEX   dftype, gcount = 0, i, hcode, nb;
 	EIF_TYPE_INDEX   *save_otab, type_annotation;
@@ -1519,7 +1518,7 @@ rt_private EIF_GEN_DER *rt_new_gen_der(uint32 size, EIF_TYPE_INDEX *a_types, EIF
 {
 	EIF_GEN_DER *result;
 	EIF_TYPE_INDEX *tp, dt;
-	char *cname;
+	const char *cname;
 	struct eif_par_types **pt;
 
 	result = (EIF_GEN_DER *) cmalloc(sizeof (EIF_GEN_DER));
@@ -1865,7 +1864,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 		RT_GET_CONTEXT
 		result = non_generic_type_names [dftype];
 		if (result == NULL) {
-			char *l_class_name = System(par_info(dftype)->dtype).cn_generator;
+			const char *l_class_name = System(par_info(dftype)->dtype).cn_generator;
 
 			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
 				result = cmalloc (10 + strlen (l_class_name));
@@ -2227,6 +2226,7 @@ rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype)
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX l_result;
 	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
+	const EIF_TYPE_INDEX * l_intable;
 	uint32 nb, tuple_added_size;
 
 	if (RT_IS_NONE_TYPE(dftype)) {
@@ -2262,7 +2262,10 @@ rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype)
 				intable[tuple_added_size] = To_dtype(dftype);
 				memcpy (intable + (tuple_added_size + 1), gdp->types, sizeof(EIF_TYPE_INDEX) * nb);
 				intable[nb + tuple_added_size + 1] = TERMINATOR;
-				l_result = rt_id_of (&intable, &outtable, dftype);
+					/* Ensure proper usage of const qualifier without introducing a cast that will be damaging
+					 * to type safety in C. */
+				l_intable = intable;
+				l_result = rt_id_of (&l_intable, &outtable, dftype);
 
 				eif_rt_xfree(saved_out);
 				eif_rt_xfree(saved_in);
@@ -2287,6 +2290,7 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX l_result;
 	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
+	const EIF_TYPE_INDEX * l_intable;
 	uint32 nb, tuple_added_size;
 
 	if (RT_IS_NONE_TYPE(dftype)) {
@@ -2330,7 +2334,10 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 				memcpy (intable + (tuple_added_size + 2), gdp->types, sizeof(EIF_TYPE_INDEX) * nb);
 			}
 			intable[nb + tuple_added_size + 2] = TERMINATOR;
-			l_result = rt_id_of (&intable, &outtable, dftype);
+				/* Ensure proper usage of const qualifier without introducing a cast that will be damaging
+				 * to type safety in C. */
+			l_intable = intable;
+			l_result = rt_id_of (&l_intable, &outtable, dftype);
 
 			eif_rt_xfree(saved_out);
 			eif_rt_xfree(saved_in);
@@ -2351,6 +2358,7 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 
 {
 	EIF_TYPE_INDEX outtab [256], *outtable, *intable;
+	const EIF_TYPE_INDEX * l_intable;
 	EIF_TYPE_INDEX min_low, max_low, min_high, max_high, pftype, dtype, *ptypes, type_annotation;
 	int i, count, offset, pcount;
 	int repeat_parent_iteration, add_non_attached_parent;
@@ -2437,15 +2445,16 @@ non_attached_parents:
 		intable = pt->parents;
 
 		outtable = outtab;
-		while (*intable != TERMINATOR) {
-			pftype = rt_id_of (&intable, &outtable, dftype);
+		l_intable = intable;
+		while (*l_intable != TERMINATOR) {
+			pftype = rt_id_of (&l_intable, &outtable, dftype);
 			if (type_annotation) {
 				pftype = eif_attached_type(pftype);
 			}
-			if (*intable == PARENT_TYPE_SEPARATOR) {
-				intable++;
+			if (*l_intable == PARENT_TYPE_SEPARATOR) {
+				l_intable++;
 			} else {
-				CHECK("Terminator expected", *intable == TERMINATOR);
+				CHECK("Terminator expected", *l_intable == TERMINATOR);
 			}
 
 				/* Register parent type */

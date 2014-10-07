@@ -442,7 +442,7 @@ rt_public EIF_TYPE_INDEX egc_scp_mngr_dtype;
 
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;
-rt_public struct cnode *egc_fsystem;	
+rt_public const struct cnode *egc_fsystem;	
 rt_public struct conform **egc_fco_table;  
 rt_public struct eif_par_types **egc_partab;
 rt_public EIF_TYPE_INDEX egc_partab_size;

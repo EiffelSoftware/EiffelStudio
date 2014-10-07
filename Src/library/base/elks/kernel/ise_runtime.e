@@ -143,7 +143,7 @@ feature -- Internal C routines
 			"return (System(To_dtype($a_type_id)).cn_persistent_nbattr);"
 		end
 
-	frozen storable_version_of_type (a_type_id: INTEGER): STRING
+	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias

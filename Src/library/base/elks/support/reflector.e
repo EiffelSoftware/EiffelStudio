@@ -321,7 +321,7 @@ feature -- Access
 		require
 			a_type_id_nonnegative: a_type_id >= 0
 		local
-			l_result: STRING_8
+			l_result: detachable STRING_8
 		do
 			id_to_storable_version.search (a_type_id)
 			if id_to_storable_version.found then

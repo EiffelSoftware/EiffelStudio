@@ -58,6 +58,7 @@ feature -- nl_langinfo
 					iconv_t cd;
 					size_t nconv, avail, alloc;
 					char *res, *tres, *wrptr, *inptr;
+					char **l_inptr = &inptr;
 
 					alloc = avail = insize + insize/4;
 					if (!(res = malloc(alloc))) {
@@ -83,7 +84,7 @@ feature -- nl_langinfo
 					}
 
 					do {
-							nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
+							nconv = iconv (cd, l_inptr, &insize, &wrptr, &avail); /*convertions */
 							if (nconv == (size_t)(-1)) {
 									if (errno == E2BIG) { /* need more room for result */
 											tres = realloc(res, alloc += 20);

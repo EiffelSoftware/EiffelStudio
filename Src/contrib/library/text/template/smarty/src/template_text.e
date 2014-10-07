@@ -222,6 +222,7 @@ feature -- Get
 							end
 							if found_tag_open_closed_slash then
 								--| open/closed tag
+								--| TODO: handle {$foo|bar/}
 								rsv.match (str)
 								if rsv.has_matched then
 									--| is a variable tag
@@ -477,6 +478,7 @@ feature {NONE} -- Impl
 
 	Tag_regexp_tag: REGULAR_EXPRESSION
 				-- {$varname/}
+				-- also accept {$varname}
 				-- {action .... /}
 				-- {action .... }...{/action}
 				--| grp (1) -> is or not a closing tag
@@ -493,6 +495,7 @@ feature {NONE} -- Impl
 
 	Tag_regexp_sub_closing_tag: REGULAR_EXPRESSION
 				-- {$varname/}
+				-- also accept {$varname}
 				-- {action .... /}
 				-- {action .... }...{/action}
 				--| grp (1) -> is or not a closing tag
@@ -534,7 +537,7 @@ feature {NONE} -- Impl
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

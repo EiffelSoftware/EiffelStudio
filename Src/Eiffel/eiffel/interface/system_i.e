@@ -4560,7 +4560,6 @@ feature -- Generation
 			end
 
 				-- Generate skeleton.
-			end
 			buffer.put_string ("const struct cnode egc_fsystem_init[] = {")
 			from
 				i := 1

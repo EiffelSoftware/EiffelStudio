@@ -97,7 +97,7 @@ processor_registry::operator[] (spid_t pid)
 {
   assert (used_pids.has (pid));
   processor *proc = procs[pid];
-  assert (proc & "processor_registry: processor retreived was NULL");
+  assert (proc && "processor_registry: processor retreived was NULL");
   return proc;
 }
 
@@ -127,7 +127,7 @@ processor_registry::return_processor (processor *proc)
     }
   else
     {
-      assert (0 & "return_pid: shouldn't be here");
+      assert (0 && "return_pid: shouldn't be here");
     }
 }
 

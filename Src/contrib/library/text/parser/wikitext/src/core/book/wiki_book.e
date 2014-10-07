@@ -50,7 +50,10 @@ feature -- Access
 			-- Page representing the book if any.
 		local
 			wp: WIKI_PAGE
+			l_book_name: like name
+			l_index_page,l_book_page: detachable WIKI_PAGE
 		do
+			l_book_name := name
 			across
 				pages as ic
 			until
@@ -58,17 +61,25 @@ feature -- Access
 			loop
 				wp := ic.item
 				if wp.key.is_case_insensitive_equal_general ("index") then
+					l_index_page := wp
 					Result := wp
+				elseif wp.key.is_case_insensitive_equal_general (l_book_name) then
+					l_book_page := wp
 				end
+			end
+			if Result = Void then
+				Result := l_book_page
 			end
 		end		
 
 	top_pages: ARRAYED_LIST [WIKI_PAGE]
-			-- Top pages of the book, i.e either the root_page
-			-- or the immediate children of the root_page.
+			-- Top pages of the book, or the immediate children of the root_page.
+			-- The root_page is not a top page.
 		local
 			wp: WIKI_PAGE
+			l_key: READABLE_STRING_8
 			l_book_name: like name
+			l_index_page,l_book_page: detachable WIKI_PAGE
 		do
 			create Result.make (0)
 			l_book_name := name
@@ -76,10 +87,14 @@ feature -- Access
 				pages as ic
 			loop
 				wp := ic.item
-				if 
-					wp.key.is_case_insensitive_equal_general ("index") 
-					or wp.parent_key.is_case_insensitive_equal_general (l_book_name)
-				then
+				l_key := wp.key
+				if l_key.is_case_insensitive_equal_general (l_book_name) then
+					l_book_page := wp
+					--Result.force (wp)
+				elseif l_key.is_case_insensitive_equal_general ("index") then
+					l_index_page := wp
+					--Result.force (wp)
+				elseif wp.parent_key.is_case_insensitive_equal_general (l_book_name) then
 					Result.force (wp)
 				end
 			end

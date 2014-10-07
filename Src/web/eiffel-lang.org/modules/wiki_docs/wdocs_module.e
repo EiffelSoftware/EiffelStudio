@@ -189,13 +189,37 @@ feature -- Hooks
 			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
 				l_page_name := t
 			end
-			m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name)
+			m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
 			create b.make (m)
 			a_execution.add_block (b, "doc_sidebar")
 
 		end
 
-	wdocs_cms_menu (a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL): CMS_MENU
+	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN): CMS_LOCAL_LINK
+		local
+			l_book_name: READABLE_STRING_32
+			l_page: detachable WIKI_PAGE
+		do
+			l_book_name := a_book.name.as_string_32
+
+			if a_page = Void then
+				create Result.make (l_book_name, wdocs_book_link_location (a_version_id, l_book_name))
+			else
+				create Result.make (a_page.title, wdocs_page_link_location (a_version_id, l_book_name, a_page.title))
+			end
+			Result.set_expandable (True)
+			if a_page /= Void then
+				l_page := a_page
+			else
+				l_page := a_book.root_page
+			end
+			if l_page /= Void then
+				wdocs_append_pages_to_link (a_version_id, l_book_name, a_current_page_name, a_book.top_pages, Result, is_full)
+			end
+		end
+
+	wdocs_cms_menu (a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN): CMS_MENU
+			-- CMS Menu for wdocs books (version `a_version_id', with `a_book_name':`a_page_name' optionally selected.
 		local
 			ln: CMS_LOCAL_LINK
 			loc: STRING
@@ -205,110 +229,150 @@ feature -- Hooks
 		do
 			create Result.make_with_title ("wdocs-tree", "Documentation", 3)
 			mng := manager (a_version_id)
-
-			if a_book_name /= Void then
-				if a_page_name = Void then
-					create ln.make (a_book_name.to_string_32, wdocs_book_link_location (a_version_id, a_book_name))
-					ln.set_expandable (True)
-					Result.extend (ln)
-					wb := mng.book (a_book_name)
-					if wb /= Void then
-						if attached wb.root_page as wp then
-							if attached wp.pages as l_wp_pages then
-								ln.set_expanded (not l_wp_pages.is_empty)
-								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
-							end
+			if is_full then
+				across
+					mng.book_names as ic
+				loop
+					if
+						attached mng.book (ic.item) as i_wb and then
+						attached i_wb.root_page as l_root_page
+					then
+						if
+							a_book_name /= Void and then
+							i_wb.name.is_case_insensitive_equal_general (a_book_name)
+						then
+							ln := wdocs_page_cms_menu_link (a_version_id, i_wb, l_root_page, a_page_name, is_full)
+							ln.set_expanded (True)
 						else
-							wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, wb.top_pages, ln)
+							ln := wdocs_page_cms_menu_link (a_version_id, i_wb, l_root_page, Void, is_full)
+							ln.set_collapsed (not i_wb.top_pages.is_empty)
 						end
+						Result.extend (ln)
 					end
-				else
-					if a_book_name /= Void then
+				end
+			else
+				if a_book_name /= Void then
+					if a_page_name = Void then
+						create ln.make (a_book_name.to_string_32, wdocs_book_link_location (a_version_id, a_book_name))
+						ln.set_expandable (True)
+						Result.extend (ln)
 						wb := mng.book (a_book_name)
-						loc := wdocs_page_link_location (a_version_id, a_book_name, a_page_name)
-					else
-						loc := wdocs_page_link_location (a_version_id, "???", a_page_name)
-					end
-
-					if wb /= Void and then attached wb.page (a_page_name) as wp then
-						l_parent := wb.page_by_key (wp.parent_key)
-						if l_parent /= Void then
-							create ln.make ({STRING_32} "Parent <" + l_parent.title + ">", wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
-							ln.set_expandable (True)
-							Result.extend (ln)
-
-							if attached l_parent.pages as l_wp_pages and then not l_wp_pages.is_empty then
-								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
+						if wb /= Void then
+							if attached wb.root_page as wp then
+								if attached wp.pages as l_wp_pages then
+									ln.set_expanded (not l_wp_pages.is_empty)
+									wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln, is_full)
+								end
 							else
-								check has_wp: False end
+								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, wb.top_pages, ln, is_full)
 							end
+						end
+					else
+						if a_book_name /= Void then
+							wb := mng.book (a_book_name)
+							loc := wdocs_page_link_location (a_version_id, a_book_name, a_page_name)
 						else
-							create ln.make ({STRING_32} "Book %"" +wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
-							ln.set_expandable (True)
-							Result.extend (ln)
-
-							if attached wb.top_pages as l_pages and then not l_pages.is_empty then
-								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_pages, ln)
-							end
-
---								-- Is top  ..?
---							create ln.make (a_page_name.to_string_32, loc)
---							Result.extend (ln)
---							if attached wp.pages as l_wp_pages and then not l_wp_pages.is_empty then
---								ln.set_expandable (True)
---								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
---							end
+							loc := wdocs_page_link_location (a_version_id, "???", a_page_name)
 						end
 
-					else
-						create ln.make (a_page_name.to_string_32, loc)
+						if wb /= Void and then attached wb.page (a_page_name) as wp then
+							l_parent := wb.page_by_key (wp.parent_key)
+							if l_parent /= Void then
+								create ln.make ({STRING_32} "Parent <" + l_parent.title + ">", wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
+								ln.set_expandable (True)
+								Result.extend (ln)
+
+								if attached l_parent.pages as l_wp_pages and then not l_wp_pages.is_empty then
+									wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln, is_full)
+								else
+									check has_wp: False end
+								end
+							else
+								create ln.make ({STRING_32} "Book %"" +wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
+								ln.set_expandable (True)
+								Result.extend (ln)
+
+								if attached wb.top_pages as l_pages and then not l_pages.is_empty then
+									wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_pages, ln, is_full)
+								end
+
+	--								-- Is top  ..?
+	--							create ln.make (a_page_name.to_string_32, loc)
+	--							Result.extend (ln)
+	--							if attached wp.pages as l_wp_pages and then not l_wp_pages.is_empty then
+	--								ln.set_expandable (True)
+	--								wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln)
+	--							end
+							end
+
+						else
+							create ln.make (a_page_name.to_string_32, loc)
+							Result.extend (ln)
+						end
+					end
+				end
+				across
+					mng.book_names as ic
+				loop
+					if
+						a_book_name = Void
+						or else not a_book_name.is_case_insensitive_equal (ic.item)
+					then
+						create ln.make (ic.item, wdocs_book_link_location (a_version_id, ic.item))
 						Result.extend (ln)
 					end
 				end
 			end
-			across
-				mng.book_names as ic
-			loop
-				if
-					a_book_name = Void
-					or else not a_book_name.is_case_insensitive_equal (ic.item)
-				then
-					create ln.make (ic.item, wdocs_book_link_location (a_version_id, ic.item))
-					Result.extend (ln)
-				end
-			end
 		end
 
-	wdocs_append_pages_to_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_active_page_name: detachable READABLE_STRING_GENERAL; a_pages: LIST [WIKI_PAGE]; a_link: CMS_LOCAL_LINK)
+	wdocs_append_pages_to_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_active_page_name: detachable READABLE_STRING_GENERAL; a_pages: LIST [WIKI_PAGE]; a_link: CMS_LOCAL_LINK; is_full: BOOLEAN)
+			-- Append pages `a_pages' to link `a_link', for book `a_book_name' version `a_version_id'.
+			-- If `is_full' recursively appends sub pages as well.
+			-- Set page named `a_active_page_name' as active if any.
 		require
 			is_expandable: a_link.is_expandable
 		local
 			sub_ln: CMS_LOCAL_LINK
 			wp: WIKI_PAGE
+			l_is_active: BOOLEAN
 		do
-			a_link.set_expandable (True)
-			a_link.set_expanded (True)
-			across
-				a_pages as ic
-			loop
-				wp := ic.item
-				create sub_ln.make (wp.title, wdocs_page_link_location (a_version_id, a_book_name, wp.title))
-				if wp.has_page then
-					sub_ln.set_expandable (wp.has_page)
-					if
-						a_active_page_name /= Void and then
-						a_active_page_name.is_case_insensitive_equal (wp.title)
-					then
-							-- FIXME: find a way to mark it as current doc!
-						if
-							attached wp.pages as l_wp_pages and then
-							not l_wp_pages.is_empty
-						then
-							wdocs_append_pages_to_link (a_version_id, a_book_name, Void, l_wp_pages, sub_ln)
-						end
-					end
+			if a_pages.is_empty then
+				a_link.set_expandable (False)
+			else
+				a_link.set_expandable (True)
+				if not a_link.is_expanded and is_full then
+					a_link.set_collapsed (True)
 				end
-				a_link.add_link (sub_ln)
+				across
+					a_pages as ic
+				loop
+					wp := ic.item
+					create sub_ln.make (wp.title, wdocs_page_link_location (a_version_id, a_book_name, wp.title))
+					l_is_active := a_active_page_name /= Void and then
+									a_active_page_name.is_case_insensitive_equal (wp.title)
+					if l_is_active then
+						a_link.set_expanded (True)
+					end
+					if wp.has_page then
+						sub_ln.set_expandable (wp.has_page)
+
+						if is_full or l_is_active then
+								-- FIXME: find a way to mark it as current doc!
+							if
+								attached wp.pages as l_wp_pages and then
+								not l_wp_pages.is_empty
+							then
+								wdocs_append_pages_to_link (a_version_id, a_book_name, a_active_page_name, l_wp_pages, sub_ln, is_full)
+								if sub_ln.is_expanded and then not a_link.is_expanded then
+									a_link.set_expanded (True)
+								end
+							end
+						end
+					else
+					end
+					a_link.add_link (sub_ln)
+				end
+
 			end
 		end
 
@@ -420,6 +484,27 @@ feature -- Handler
 			if l_bookid /= Void then
 				e.set_value (l_bookid, "wiki_book_name")
 				pg := mnger.page (l_bookid, l_wiki_id)
+				if pg = Void and l_wiki_id /= Void then
+					if l_wiki_id.is_case_insensitive_equal_general ("index") then
+						pg := mnger.page (l_bookid, l_bookid)
+					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
+						pg := mnger.page (l_bookid, "index")
+					end
+					if
+						pg = Void and then
+						attached mnger.book (l_bookid) as wb
+					then
+						pg := wb.root_page
+						if pg = Void then
+							create pg.make (wb.name, wb.name)
+							across
+								wb.top_pages as ic
+							loop
+								pg.add_page (ic.item)
+							end
+						end
+					end
+				end
 			end
 
 			e.add_additional_head_line ("[

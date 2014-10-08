@@ -1,4 +1,4 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5-172]
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
 : $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
 
 case $CONFIG in
@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -70,9 +70,9 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(MT_LOBJ) \$(MT_QS_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
-LSCRIPTS =  eif_size.h
 SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) x2c.c runtime_validation.c
+LSCRIPTS =  eif_size.h
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -85,7 +85,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -95,7 +94,6 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 CPPFLAGS = -std=c++11 -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
@@ -1031,25 +1029,25 @@ eif_size.h: eif_size_h.SH
 	/bin/sh eif_size_h.SH
 
 local_install:: $(SCRIPTS) $(LSCRIPTS)
-	@case '${MFLAGS}' in *[i]*) set +e;; esac;		\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \
 	(set -x; test -d $(INSTALL_PREFIX)$(SCRIPTDIR) || \
-		$(INSTALLDIR) $(INSTALL_PREFIX)$(SCRIPTDIR)); \
+	$(INSTALLDIR) $(INSTALL_PREFIX)$(SCRIPTDIR)); \
 	for file in $(SCRIPTS) $(LSCRIPTS); do \
-		(set -x; \
-		$(INSTALL) -c -m 555 $$file $(INSTALL_PREFIX)$(SCRIPTDIR)) || \
-		exit 1; \
+	(set -x; \
+	$(INSTALL) -c -m 555 $$file $(INSTALL_PREFIX)$(SCRIPTDIR)) || \
+	exit 1; \
 	done
 
 local_deinstall::
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \
-		(set -x; $(RM) $(INSTALL_PREFIX)$(SCRIPTDIR)/$$file); \
+	case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	(set -x; $(RM) $(INSTALL_PREFIX)$(SCRIPTDIR)/$$file); \
 	done
 
 local_install.man:: eif_size_h.man
-	@case '${MFLAGS}' in *[i]*) set +e;; esac;		\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \
 	(set -x; test -d $(INSTALL_PREFIX)$(MANSRC) || \
-		$(INSTALLDIR) $(INSTALL_PREFIX)$(MANSRC)); \
+	$(INSTALLDIR) $(INSTALL_PREFIX)$(MANSRC)); \
 	$(INSTALL) -c -m 444 eif_size_h.man $(INSTALL_PREFIX)$(MANSRC)/eif_size.h.$(L)
 
 local_deinstall.man::
@@ -1061,19 +1059,9 @@ local_realclean::
 	$(RM) libmtfinalized.a
 
 libmtfinalized.a: $(MT_LOBJ)
-	       $(RM) $@
-	       $(AR) $@ $(MT_LOBJ)
-	       $(RANLIB) $@
-
-all:: libmtqsfinalized.a
-
-local_realclean::
-	$(RM) libmtqsfinalized.a
-
-libmtqsfinalized.a: $(MT_QS_LOBJ)
-	       $(RM) $@
-	       $(AR) $@ $(MT_QS_LOBJ)
-	       $(RANLIB) $@
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
 
 all:: libmtwkbench.a
 
@@ -1081,9 +1069,9 @@ local_realclean::
 	$(RM) libmtwkbench.a
 
 libmtwkbench.a: $(MT_WOBJ)
-	       $(RM) $@
-	       $(AR) $@ $(MT_WOBJ)
-	       $(RANLIB) $@
+	$(RM) $@
+	$(AR) $@ $(MT_WOBJ)
+	$(RANLIB) $@
 
 all:: libfinalized.a
 
@@ -1091,9 +1079,9 @@ local_realclean::
 	$(RM) libfinalized.a
 
 libfinalized.a: $(LOBJ)
-	       $(RM) $@
-	       $(AR) $@ $(LOBJ)
-	       $(RANLIB) $@
+	$(RM) $@
+	$(AR) $@ $(LOBJ)
+	$(RANLIB) $@
 
 all:: libwkbench.a
 
@@ -1101,54 +1089,45 @@ local_realclean::
 	$(RM) libwkbench.a
 
 libwkbench.a: $(WOBJ)
-	       $(RM) $@
-	       $(AR) $@ $(WOBJ)
-	       $(RANLIB) $@
+	$(RM) $@
+	$(AR) $@ $(WOBJ)
+	$(RANLIB) $@
 
 all:: libmtfinalized.so
 
 local_realclean::
 	$(RM) libmtfinalized.so
 
-libmtfinalized.so:  $(MT_LOBJ)
-	       $(RM) $@
-	       $(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_LOBJ) $(MTSHAREDLIBS)
-
-all:: libmtqsfinalized.so
-
-local_realclean::
-	$(RM) libmtqsfinalized.so
-
-libmtqsfinalized.so:  $(MT_QS_WOBJ)
-	       $(RM) $@
-	       $(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_QS_WOBJ) $(MTSHAREDLIBS)
+libmtfinalized.so: $(MT_LOBJ)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_LOBJ) $(MTSHAREDLIBS)
 
 all:: libmtwkbench.so
 
 local_realclean::
 	$(RM) libmtwkbench.so
 
-libmtwkbench.so:  $(MT_WOBJ)
-	       $(RM) $@
-	       $(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_WOBJ) $(MTSHAREDLIBS)
+libmtwkbench.so: $(MT_WOBJ)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_WOBJ) $(MTSHAREDLIBS)
 
 all:: libfinalized.so
 
 local_realclean::
 	$(RM) libfinalized.so
 
-libfinalized.so:  $(LOBJ)
-	       $(RM) $@
-	       $(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(LOBJ) $(SHAREDLIBS)
+libfinalized.so: $(LOBJ)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(LOBJ) $(SHAREDLIBS)
 
 all:: libwkbench.so
 
 local_realclean::
 	$(RM) libwkbench.so
 
-libwkbench.so:  $(WOBJ)
-	       $(RM) $@
-	       $(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(WOBJ) $(SHAREDLIBS)
+libwkbench.so: $(WOBJ)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(WOBJ) $(SHAREDLIBS)
 
 all:: x2c
 
@@ -1158,7 +1137,7 @@ local_realclean::
 x2c: x2c.o offset.o
 	$(RM) $@
 	if test -f $@$(_EXE); then \
-		$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
 	$(CC) -o $@ x2c.o offset.o $(JLKFLAGS) $(LIBS)
 
 all:: runtime_validation
@@ -1169,7 +1148,7 @@ local_realclean::
 runtime_validation: runtime_validation.o offset.o
 	$(RM) $@
 	if test -f $@$(_EXE); then \
-		$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
 	$(CC) -o $@ runtime_validation.o offset.o $(JLKFLAGS) $(LIBS)
 
 all:: eif_config.h eif_portable.h eif_confmagic.h
@@ -1198,8 +1177,8 @@ depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
 	$(SED) -e 's:/usr/lib[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
-		-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \
-		-e 'x; s/\\$$//; s/\\\n//g; s/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \
+	-e 'x; s/\\$$//; s/\\\n//g; s/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -1226,12 +1205,12 @@ mt: mtwork mtfinal mtebench
 .FORCE:
 
 $(TOP)/ipc/app/network.o: .FORCE
-	@echo "Checking "network.o" in "$(TOP)/ipc/app"..."
+	@echo "Checking "network.o " in "$(TOP)/ipc/app "..."
 	cd $(TOP)/ipc/app; $(MAKE) network.o
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/idrs/idrs.o: .FORCE
-	@echo "Checking "idrs.o" in "$(TOP)/idrs"..."
+	@echo "Checking "idrs.o " in "$(TOP)/idrs "..."
 	cd $(TOP)/idrs; $(MAKE) idrs.o
 	@echo "Continuing in $(CURRENT)..."
 
@@ -1246,12 +1225,12 @@ $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/ipc/ewb/wewb_proto.o: .FORCE
-	@echo "Checking "wewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	@echo "Checking "wewb_proto.o " in "$(TOP)/ipc/ewb "..."
 	cd $(TOP)/ipc/ewb; $(MAKE) wewb_proto.o
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/ipc/ewb/MTwewb_proto.o: .FORCE
-	@echo "Checking "MTwewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	@echo "Checking "MTwewb_proto.o " in "$(TOP)/ipc/ewb "..."
 	cd $(TOP)/ipc/ewb; $(MAKE) MTwewb_proto.o
 	@echo "Continuing in $(CURRENT)..."
 
@@ -1265,19 +1244,19 @@ test: $(TESTS)
 	sram >>test 2>&1
 
 mram: malloc.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ malloc.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ malloc.c
 
 gram: garcol.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ garcol.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ garcol.c
 
 lram: local.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ local.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ local.c
 
 eram: except.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ except.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ except.c
 
 sram: sig.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ sig.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ sig.c
 
 local_realclean::
 	$(RM) $(TESTS)
@@ -1305,12 +1284,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; fi
 
 Makefile: Makefile.SH
@@ -1352,4 +1331,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

@@ -174,7 +174,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 	if (idrs->i_op == IDR_DECODE) {
 		buf[0]='\0';
 		whe->wh_name = buf;
-		result = idr_string_decode(idrs, &whe->wh_name, 0, -MAX_FEATURE_LEN);
+		result = idr_string_decode(idrs, &whe->wh_name, -MAX_FEATURE_LEN);
 	} else {
 		l_str = whe->wh_name;
 		result = idr_string_encode(idrs, &l_str, 0, -MAX_FEATURE_LEN);
@@ -252,7 +252,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 				l_str = exv->exu.exur.exur_rout;
 				result = result && idr_string_encode (idrs, &l_str, 0, -MAX_FEATURE_LEN);
 			} else {
-				result = result && idr_string_decode (idrs, &exv->exu.exur.exur_rout, 0, -MAX_FEATURE_LEN);
+				result = result && idr_string_decode (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN);
 			}
 			result = result && idr_type_index (idrs, &exv -> exu.exur.exur_orig);
 			result = result && idr_type_index (idrs, &exv -> exu.exur.exur_dtype);
@@ -427,9 +427,9 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext, Dump *dum)
 			idrs->i_ptr += sizeof(EIF_POINTER);
 			return TRUE;
 		case SK_STRING:
-			return idr_string_decode (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_decode (idrs, &ext->it_ref, 0); /* 0 = no limit */
 		case SK_STRING32:
-			return idr_string_decode (idrs, &ext->it_ref, dum->dmp_info, 0); /* 0 = no limit */
+			return idr_string_decode (idrs, &ext->it_ref, 0); /* 0 = no limit */
 		default:
 			return idr_eif_reference (idrs, &ext->it_ref);
 		}

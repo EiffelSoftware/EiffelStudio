@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -67,7 +67,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -77,7 +76,6 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 # Files used to build the daemon
 SRC = child.c listen.c ecdbgd.c proto.c
 
@@ -213,4 +211,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

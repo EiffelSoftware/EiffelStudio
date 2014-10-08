@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -55,7 +55,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ)  \$(WOBJ)  \$(MT_LOBJ)  \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -68,7 +68,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -78,7 +77,6 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 # Files used to build the daemon
 LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c ewb_child.c ewb_transfer.c ewb_proto.c
 ALL_SRC = $(LSRC)
@@ -225,9 +223,9 @@ all:: libwewb.a
 local_realclean::
 	$(RM) libwewb.a
 
-libwewb.a:  $(WOBJ)
+libwewb.a: $(WOBJ)
 	$(RM) $@
-	$(AR) $@  $(WOBJ)
+	$(AR) $@ $(WOBJ)
 	$(RANLIB) $@
 
 all:: libmtewb.a
@@ -235,9 +233,9 @@ all:: libmtewb.a
 local_realclean::
 	$(RM) libmtewb.a
 
-libmtewb.a:  $(MT_LOBJ)
+libmtewb.a: $(MT_LOBJ)
 	$(RM) $@
-	$(AR) $@  $(MT_LOBJ)
+	$(AR) $@ $(MT_LOBJ)
 	$(RANLIB) $@
 
 all:: libmtwewb.a
@@ -245,9 +243,9 @@ all:: libmtwewb.a
 local_realclean::
 	$(RM) libmtwewb.a
 
-libmtwewb.a:  $(MT_WOBJ)
+libmtwewb.a: $(MT_WOBJ)
 	$(RM) $@
-	$(AR) $@  $(MT_WOBJ)
+	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
 
 all:: wewb_proto.o
@@ -346,4 +344,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

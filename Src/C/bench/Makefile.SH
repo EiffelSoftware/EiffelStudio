@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -56,8 +56,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-OBJECTS =  \$(FOBJ) \$(WOBJ) \$(MT_FOBJ) \$(MT_WOBJ) bytedump.o meltdump.o
 SOURCES =  \$(LSRC) \$(PSTORE) bytedump.c meltdump.c
+OBJECTS =  \$(FOBJ) \$(WOBJ) \$(MT_FOBJ) \$(MT_WOBJ) bytedump.o meltdump.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -71,7 +71,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -81,7 +80,6 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 # Files used to build the daemon
 LSRC = byte.c minilzo.c
 PSTORE = pstore.c pretrieve.c
@@ -110,7 +108,6 @@ MT_WOBJ = \
 	MTminilzo.o \
 	MTwpstore.o \
 	MTwpretrieve.o 
-
 wpstore.o: pstore.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -293,4 +290,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

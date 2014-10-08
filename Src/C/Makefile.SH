@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -51,7 +51,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Start of Jmakefile
 
@@ -168,7 +167,7 @@ Makefiles::
 	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \
 	for i in $(SUBDIRS);\
 	do \
-	echo "Making "Makefiles" in $(DIR)$$i..."; \
+	echo "Making "Makefiles " in $(DIR)$$i..."; \
 	(cd $$i || exit 1; \
 	if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \
 	$(MAKE) $(MFLAGS) Makefiles) || exit 1;\
@@ -203,4 +202,3 @@ all::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

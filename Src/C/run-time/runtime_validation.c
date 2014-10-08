@@ -119,6 +119,8 @@ int main(int argc, char **argv)
 
 	print_info();
 
+	double_alignment_speed_test ();
+
 	CHECK ("TAG: Proper header alignment", (OVERHEAD % MEM_ALIGNBYTES) == 0);
 	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(0,0,0,0,0,0,0) % MEM_ALIGNBYTES) == 0));
 	CHECK ("TAG: Proper EIF_REAL_64 alignment", ((eif_r64off(1,0,0,0,0,0,0) % MEM_ALIGNBYTES) == 0));

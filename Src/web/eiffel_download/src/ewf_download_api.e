@@ -339,7 +339,6 @@ feature -- Configuration
 	setup_config
 			-- Configure API.
 		local
-			l_path: PATH
 			l_database: DATABASE_CONNECTION
 		do
 			if attached separate_character_option_value ('d') as l_dir then

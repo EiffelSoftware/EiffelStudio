@@ -42,12 +42,12 @@ feature -- Access
 			Result := not ( is_membership(a_email) or is_contact(a_email) )
 		end
 
-	is_download_active (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32): BOOLEAN
-			-- Is download active for email `a_email' and token `a_token' and `a_platform'?
+	is_download_active ( a_token: READABLE_STRING_32): BOOLEAN
+			-- Is download active for token `a_token'?
 		local
 			l_result: INTEGER
 		do
-			l_result := data_provider.download_expiration_token_age (a_token, a_email)
+			l_result := data_provider.download_expiration_token_age (a_token)
 			if
 				l_result >= 0 and then
 		        l_result <= 10
@@ -57,6 +57,12 @@ feature -- Access
 		end
 
 feature -- Basic Operations
+
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email:READABLE_STRING_32; platform:READABLE_STRING_32]
+			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
+		do
+			Result := data_provider.retrieve_download_details (a_token)
+		end
 
 	add_download_interaction_membership (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)
 		do
@@ -75,7 +81,7 @@ feature -- Basic Operations
 	initialize_download (a_email, a_token, a_platform: READABLE_STRING_32)
 			-- Initialize product download.
 		do
-			data_provider.initialize_download (a_email, a_token)
+			data_provider.initialize_download (a_email, a_token, a_platform)
 		end
 
 	add_temporary_contact (a_first_name, a_last_name, a_email: READABLE_STRING_32; a_newsletter: INTEGER)

@@ -139,46 +139,46 @@ feature -- Workflow
 			--email is not already associated to a membership user, but there is a Contact entry, we do like the above and add a new interaction
 			--email is not in our database, we create a Contact user and add the interaction
 			--Once this is done, we associated a unique URL to the Contact and send that link to the user. In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
+		local
+			l_data: STRING
 		do
 			if attached database_service as l_service then
 				if
-					attached {WSF_STRING} req.query_parameter ("email") as l_email and then
 					attached {WSF_STRING} req.query_parameter ("token") as l_token and then
-					attached {WSF_STRING} req.query_parameter ("platform") as l_platform and then
-					attached {WSF_STRING} req.query_parameter ("link") as l_link
+					attached {TUPLE[email:READABLE_STRING_32; platform: READABLE_STRING_32]} l_service.retrieve_download_details (l_token.value) as l_tuple
 				then
-					if l_service.is_membership (l_email.value) then
-						log.write_debug (generator + "process_workflow:" + l_email.value +  " Membership")
-						if 	l_service.is_download_active (l_email.value, l_token.value) then
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
-							l_service.add_download_interaction_membership (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_link.value)
+					if l_service.is_membership (l_tuple.email) then
+						log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Membership")
+						if 	l_service.is_download_active (l_token.value) then
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download active")
+							l_service.add_download_interaction_membership (l_tuple.email, "EiffelStudio", l_tuple.platform, "", l_token.value)
+							enterprise_download_options (req, res, link (l_tuple.platform))
 						else
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
-					elseif l_service.is_contact (l_email.value) then
-						log.write_debug (generator + "process_workflow:" + l_email.value +  " Contact")
-						if 	l_service.is_download_active (l_email.value, l_token.value) then
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
-							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_link.value)
+					elseif l_service.is_contact (l_tuple.email) then
+						log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Contact")
+						if 	l_service.is_download_active (l_token.value) then
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download active")
+							l_service.add_download_interaction_contact (l_tuple.email, "EiffelStudio", l_tuple.platform, "", l_token.value)
+							enterprise_download_options (req, res, link (l_tuple.platform))
 						else
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
 					else
 						check
-							l_service.is_new_contact (l_email.value)
+							l_service.is_new_contact (l_tuple.email)
 						end
-						log.write_debug (generator + "process_workflow:" + l_email.value +  " New Contact")
-						if 	l_service.is_download_active (l_email.value, l_token.value ) then
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download active")
-							l_service.validate_contact (l_email.value) --(add a new contact, remove temporary contact)
-							l_service.add_download_interaction_contact (l_email.value, "EiffelStudio", l_platform.value, "", l_token.value)
-							enterprise_download_options (req, res, l_link.value)
+						log.write_debug (generator + "process_workflow:" + l_tuple.email +  " New Contact")
+						if 	l_service.is_download_active (l_token.value ) then
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download active")
+							l_service.validate_contact (l_tuple.email) --(add a new contact, remove temporary contact)
+							l_service.add_download_interaction_contact (l_tuple.email, "EiffelStudio", l_tuple.platform, "", l_token.value)
+							enterprise_download_options (req, res, link (l_tuple.platform))
 						else
-							log.write_debug (generator + "process_workflow:" + l_email.value +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + l_tuple.email +  " Download not active using token:" + l_token.value )
 							bad_request (req, res, "")
 						end
 					end
@@ -375,6 +375,53 @@ feature -- Send Email
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	link (a_platform: READABLE_STRING_32): READABLE_STRING_32
+		 	-- link={$mirror/}{$directory/}/{$selected_platform.filename/}		
+		local
+			l_result: STRING_32
+		do
+			create l_result.make_empty
+			if attached download_service as l_download_service then
+				if attached l_download_service.retrieve_mirror_enterprise as l_mirror then
+					l_result.append (l_mirror)
+				end
+				if
+					attached l_download_service.retrieve_product_enterprise as l_product and then
+					attached l_product.sub_directory as l_directory
+				then
+					l_result.append (l_directory)
+					l_result.append_character ('/')
+					if attached selected_platform (l_product.downloads, a_platform) as l_options  and then
+					   attached l_options.filename as l_filename
+					then
+						l_result.append (l_filename)
+					end
+				end
+			end
+			Result := l_result
+		end
+
+	selected_platform (a_downloads: detachable LIST[DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT_OPTIONS
+		local
+			l_found: BOOLEAN
+		do
+			if
+				attached a_downloads
+			then
+				from
+					a_downloads.start
+				until
+					a_downloads.after or l_found
+				loop
+					if a_downloads.item.platform ~ a_platform then
+						Result := a_downloads.item
+					end
+					a_downloads.forth
+				end
+			end
+		end
 
 feature -- Read file
 
@@ -389,4 +436,6 @@ feature -- Read file
 				Result := f.last_string
 			end
 		end
+
+
 end

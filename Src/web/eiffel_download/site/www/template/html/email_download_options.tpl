@@ -31,7 +31,7 @@
 
 							<p><strong> To start your download, click on the link below: </strong></p>
 
-							{$host/}/confirm_download?token={$token/}&email={$email/}&platform={$platform/}&link={$mirror/}{$directory/}/{$selected_platform.filename/}
+							{$host/}/confirm_download?token={$token/}
 							
 							<p>	Details: </p>
 								<ul>	

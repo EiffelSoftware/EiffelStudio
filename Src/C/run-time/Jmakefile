@@ -17,9 +17,6 @@ LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 EWB_PROTO_OBJ = $(TOP)/ipc/ewb/wewb_proto.o
 MTEWB_PROTO_OBJ = $(TOP)/ipc/ewb/MTwewb_proto.o
 
-SHAREDLINK=g++
-LDSHAREDFLAGS=-shared -o
-
 IDRS_OBJ = $(TOP)/idrs/idrs.o
 MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
 NETWORK_OBJ = $(TOP)/ipc/app/network.o

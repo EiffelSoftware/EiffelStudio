@@ -112,7 +112,7 @@ rt_private int get_pipe_data_from_socket(int a_port_number, char* id, int *p_in,
 	WSADATA wsaData;                    	/* Stuff for WSA functions */
 #else
 	socklen_t addr_len;		/* Internet address length */
-    int sockfd, new_fd;  	/* listen on sock_fd, new connection on new_fd */
+    int sockfd = -1, new_fd;  	/* listen on sock_fd, new connection on new_fd */
 	int retcode;         	/* Return code */
     struct addrinfo hints, *servinfo, *p;
 	char str_port_number[5]; /* max is 65535, see http://www.iana.org/assignments/port-numbers */

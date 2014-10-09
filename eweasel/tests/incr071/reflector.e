@@ -249,18 +249,15 @@ feature -- Access
 		require
 			a_type_id_nonnegative: a_type_id >= 0
 		local
-			l_result, l_null: POINTER
+			l_result: detachable STRING_8
 		do
 			id_to_storable_version.search (a_type_id)
 			if id_to_storable_version.found then
 				Result := id_to_storable_version.found_item
 			else
 				l_result := {ISE_RUNTIME}.storable_version_of_type (a_type_id)
-				if l_result /= l_null then
-					create Result.make_from_c (l_result)
-					if Result.is_empty then
-						Result := Void
-					end
+				if l_result /= Void then
+					create Result.make_from_string (l_result)
 				end
 				id_to_storable_version.put (Result, a_type_id)
 			end

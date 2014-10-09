@@ -228,7 +228,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -lstdc++ -pthread"
+mtlibs="$libs -pthread"
 
 mt_prefix='mt'
 qs_prefix='mtqs'
@@ -239,7 +239,7 @@ shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lm'
-mtsharedlibs='-lm -lstdc++ -lpthread'
+mtsharedlibs='-lm -lpthread'
 sharedlibversion='.14.11'
 sharedlink='ld'
 suffix='.a'

@@ -71,8 +71,8 @@ SED = $sed
 
 USRINC = $usrinc
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
-LSCRIPTS =  eif_size.h
 SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) x2c.c runtime_validation.c
+LSCRIPTS =  eif_size.h
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -106,9 +106,6 @@ LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 EWB_PROTO_OBJ = $(TOP)/ipc/ewb/wewb_proto.o
 MTEWB_PROTO_OBJ = $(TOP)/ipc/ewb/MTwewb_proto.o
-
-SHAREDLINK=g++
-LDSHAREDFLAGS=-shared -o
 
 IDRS_OBJ = $(TOP)/idrs/idrs.o
 MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o

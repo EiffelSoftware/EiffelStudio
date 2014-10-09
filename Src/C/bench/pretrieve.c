@@ -158,12 +158,15 @@ rt_private size_t parsing_retrieve_read_with_compression (void)
 	char* ptr = (char *)0;
 	int read_size = 0;
 	int part_read = 0;
+	int l_bytes_read;
 
 	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
 
 	ptr = cmps_general_buffer;
-	if (char_read_func ((char *) &read_size, sizeof(int)) < sizeof(int))
+	l_bytes_read = char_read_func ((char *) &read_size, sizeof(int));
+	if ((l_bytes_read < 0) || ((size_t) l_bytes_read < sizeof(int))) {
 	  eio();
+	}
 
 	dcmps_in_size = read_size;
 

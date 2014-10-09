@@ -225,9 +225,12 @@ rt_private int run_idr_read (IDR *bu)
 	long amount_left;
 	register int part_read;
 	register int total_read = 0;
+	int l_bytes_read;
 
-	if ((char_read_func ((char *)(&read_size), sizeof (int32))) < sizeof (int32))
+	l_bytes_read = char_read_func ((char *)(&read_size), sizeof (int32));
+	if ((l_bytes_read < 0) || ((size_t) l_bytes_read < sizeof (int32))) {
 		eise_io("Independent retrieve: unable to read buffer size.");
+	}
 
 	read_size = ntohl (read_size);
 #ifdef DEBUG

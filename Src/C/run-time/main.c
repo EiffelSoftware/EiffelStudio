@@ -699,8 +699,9 @@ rt_public void eif_alloc_init(void)
 			gs_limit = GS_LIMIT;	/* RT default setting. */
 		}
 	}
+	eif_gs_limit = gs_limit;
 		/* Reasonable gs_limit. */
-	eif_gs_limit = (gs_limit > GS_FLOATMARK ? GS_FLOATMARK : gs_limit);	
+	eif_gs_limit = (eif_gs_limit > GS_FLOATMARK ? GS_FLOATMARK : eif_gs_limit);	
 
 #endif /* ISE GC */
 

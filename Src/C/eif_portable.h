@@ -232,6 +232,11 @@ typedef int32			EIF_INTEGER;
 typedef int32			EIF_INTEGER_32;
 #if defined(EIF_WINDOWS) && !defined(CYGWIN)	/* or whatever they actually are */
 typedef __int64			EIF_INTEGER_64;
+#ifdef _WIN64
+typedef __int64			ssize_t;
+#else
+typedef int				ssize_t;
+#endif
 #elif defined(EIF_VMS)
 typedef long long int		EIF_INTEGER_64;
 #else

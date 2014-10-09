@@ -1514,8 +1514,8 @@ feature -- Basic Operations
 		end
 
 
-	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32;)
-			-- Initialize download for a given user with email `a_email' and token `a_token'.
+	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_32)
+			-- Initialize download for a given user with email `a_email' and token `a_token' and platform `a_platform'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
@@ -1524,9 +1524,34 @@ feature -- Basic Operations
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
+			l_parameters.put (a_platform, {DATA_PARAMETERS_NAMES}.Platform_param)
 
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeDownload", l_parameters))
 			db_handler.execute_writer
+			disconnect
+			post_execution
+		end
+
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email:READABLE_STRING_32; platform:READABLE_STRING_32]
+			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_information (generator + ".all_categories")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				create Result.default_create
+				if attached  db_handler.read_string (1) as l_email then
+					Result.email := l_email
+				end
+				if attached  db_handler.read_string (2) as l_platform then
+					Result.platform := l_platform
+				end
+			end
 			disconnect
 			post_execution
 		end
@@ -1758,14 +1783,13 @@ feature -- Status Report
 			end
 		end
 
-	download_expiration_token_age (a_token: STRING; a_email: STRING ): INTEGER
+	download_expiration_token_age (a_token: STRING ): INTEGER
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
 			log.write_information (generator + ".download_expiration_token_age")
 			connect
-			create l_parameters.make (2)
-			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
+			create l_parameters.make (1)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetDownloadExpirationTokenAge", l_parameters))
 			db_handler.execute_reader
@@ -2353,6 +2377,10 @@ feature -- Queries
 							)
 						]"
 
+
+	Select_download_details: STRING = "[
+				Select Email, Platform from DownloadExpiration where Token = :Token;
+	]"
 
 feature {NONE} -- Implementation
 

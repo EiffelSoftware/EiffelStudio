@@ -15,7 +15,7 @@ feature -- Access
 	token: STRING
 			-- Cryptographic random base 64 string.
 		do
-			Result := salt_with_size (5)
+			Result := salt_with_size (16)
 				--	Remove trailing equal sign
 			Result.keep_head (Result.count - 1)
 		end

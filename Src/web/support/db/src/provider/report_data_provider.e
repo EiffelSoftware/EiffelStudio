@@ -1537,7 +1537,8 @@ feature -- Basic Operations
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_information (generator + ".all_categories")
+			log.write_information (generator + ".retrieve_download_details")
+			connect
 			create l_parameters.make (1)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))

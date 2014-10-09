@@ -27,12 +27,7 @@ feature {NONE} --Initialization
 			set_template_file_name ("email_download_options.tpl")
 			template.add_value (a_host, "host")
 			template.add_value (l_url.encoded_string (a_token), "token")
-			template.add_value (a_form.platform, "selected_platform")
-			template.add_value (l_url.encoded_string (a_form.email), "email")
 			template.add_value (a_form.platform, "platform")
-			if attached a_download_service.retrieve_mirror_enterprise as l_mirror then
-				template.add_value (l_mirror, "mirror")
-			end
 			if
 				attached a_download_service.retrieve_product_enterprise as l_product
 			then

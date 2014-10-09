@@ -37,7 +37,8 @@
 								<ul>	
 								  	<li><strong>platform</strong>: {$selected_platform.platform/}</li>
 								  	<li><strong>size</strong>: {$selected_platform.size/}</li>
-								  	<li><strong>md5</strong>: {$selected_platform.md5/}
+								  	<li><strong>MD5</strong>: {$selected_platform.md5/}
+									<li><strong>CD key</strong>: {$selected_platform.key/}</li>
 								</ul>  	
 
 							<p>
@@ -111,7 +112,7 @@
 <div class="copyright">
 	<div class="footer_copyright">
 					<div class="execphpwidget"><br/>
-<p style="text-align: center;line-height:50px;">Copyright © 2014 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
+<p style="text-align: center;line-height:50px;">Copyright &copy; 2014 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
 </div>
 			</div>
 </div>

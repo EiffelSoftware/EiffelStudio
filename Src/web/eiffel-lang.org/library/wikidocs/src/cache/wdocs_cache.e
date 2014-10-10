@@ -73,7 +73,13 @@ feature -- Access
 
 feature -- Element change
 
+	delete
+			-- Remove cache.
+		deferred
+		end
+
 	put (g: G)
+			-- Put `g' into cache.
 		deferred
 		end
 

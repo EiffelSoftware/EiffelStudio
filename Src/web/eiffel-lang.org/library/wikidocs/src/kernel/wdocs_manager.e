@@ -23,8 +23,6 @@ inherit
 			content as template_content
 		end
 
-	SHARED_WSF_PERCENT_ENCODER
-
 create
 	make
 
@@ -48,6 +46,15 @@ feature -- Access
 
 	data: WDOCS_DATA
 
+feature -- Basic operations
+
+	refresh_data
+			-- Refresh manager data.
+		do
+			reset_data
+			get_data
+		end
+
 feature {NONE} -- Initialization
 
 	get_data
@@ -58,7 +65,7 @@ feature {NONE} -- Initialization
 			p: PATH
 			d,l_dir: DIRECTORY
 		do
-			if attached cached_data as l_stored_data then
+			if attached stored_data as l_stored_data then
 				data := l_stored_data
 			else
 				create l_data.make
@@ -233,7 +240,7 @@ feature {NONE} -- Initialization
 			a_data.templates_path_by_title_and_book.force (ht, a_book_name)
 		end
 
-	cached_data: detachable WDOCS_DATA
+	stored_data: detachable WDOCS_DATA
 			-- Retrieve data from cache, if any.
 		local
 			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
@@ -249,6 +256,15 @@ feature {NONE} -- Initialization
 		do
 			create c.make (wiki_database_path.appended_with_extension ("data"))
 			c.put (d)
+		end
+
+	reset_data
+			-- Reset data in cache, if any
+		local
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
+		do
+			create c.make (wiki_database_path.appended_with_extension ("data"))
+			c.delete
 		end
 
 feature -- Access
@@ -609,5 +625,14 @@ feature -- Access: Template
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	percent_encoder: PERCENT_ENCODER
+			-- Shared Percent encoding engine.
+		once
+			create Result
+		end
+
 
 end

@@ -9,7 +9,7 @@ class
 inherit
 	WDOCS_DEFAULT_CONFIG
 		rename
-			make as make_default
+			make as old_make
 		end
 
 create

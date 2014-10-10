@@ -75,7 +75,20 @@ feature -- Access
 
 feature -- Element change
 
+	delete
+			-- <Precursor>
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (path)
+				-- Create recursively parent directory if it does not exists.
+			if f.exists and then f.is_access_writable then
+				f.delete
+			end
+		end
+
 	put (g: G)
+			-- <Precursor>
 		local
 			f: RAW_FILE
 			d: DIRECTORY

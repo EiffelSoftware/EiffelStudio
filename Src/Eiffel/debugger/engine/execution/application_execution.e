@@ -1150,63 +1150,42 @@ feature -- Query
 		deferred
 		end
 
-	internal_info (a_value: DUMP_VALUE): detachable SPECIAL [TUPLE [name: STRING; value: detachable DUMP_VALUE]]
-			-- Internal info for `a_value'
+	object_internal_info (a_value: DUMP_VALUE): detachable SPECIAL [TUPLE [name: STRING; value: STRING]]
+			-- Get the `generating_type' as STRING by evaluation on the debuggee
 		require
-			is_stopped: is_stopped
+			a_value_attached: a_value /= Void
 		local
-			l_int, l_dv: DUMP_VALUE
-			l_int_cl: CLASS_C
-			eval: DBG_EVALUATOR
-			n: STRING
-			f: FEATURE_I
-			params: ARRAYED_LIST [DUMP_VALUE]
-			l_info: ARRAY [STRING]
-			i: INTEGER
+			i,p: INTEGER
+			s,n,v: STRING
 		do
-			l_int_cl := debugger_manager.compiler_data.internal_class_c
-			eval := debugger_manager.dbg_evaluator
-
-			eval.reset
-			eval.create_empty_instance_of (l_int_cl.actual_type)
-			if not eval.error_occurred then
-				l_int := eval.last_result_value
-				eval.reset
-				if l_int /= Void then
-					l_info := <<
-								"class_name",
-								"type_name",
-								"dynamic_type",
-								"field_count",
-								"deep_physical_size",
-								"physical_size"
-								>>
-
-					create Result.make_empty (l_info.count)
-					from
-						create params.make (1)
-						params.extend (a_value)
-
-						i := l_info.lower
-					until
-						i > l_info.upper
+			if a_value.is_void then
+				Result := Void
+			else
+				if
+					attached remote_rt_object as rto and then
+					attached rto.object_runtime_info_string_evaluation (a_value, Void) as l_representation
+				then
+					create Result.make_empty (l_representation.occurrences (';') + 1)
+					i := 0
+					across
+						l_representation.split (';') as ic
 					loop
-						n := l_info[i]
-						f := l_int_cl.feature_named_32 (n)
-						l_dv := Void
-						if f /= Void then
-							eval.reset
-							eval.evaluate_routine (Void, l_int, l_int_cl, f, params, False)
-							if not eval.error_occurred then
-								l_dv := eval.last_result_value
-							end
-							eval.reset
+						s := ic.item
+						p := s.index_of ('=', 1)
+						if p > 0 then
+							n := s.head (p - 1)
+							n.adjust
+							v := s.substring (p + 1, s.count)
+							v.adjust
+							Result.extend ([n, v])
 						end
-						Result.extend ([n, l_dv])
-						i := i + 1
 					end
+				else
+					create Result.make_empty (0)
 				end
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	internal_type_name_of_type (a_type_id: INTEGER): detachable STRING
@@ -1217,36 +1196,37 @@ feature -- Query
 		local
 			l_type_value: DUMP_VALUE
 			l_int, l_dv: DUMP_VALUE
-			l_int_cl: CLASS_C
 			eval: DBG_EVALUATOR
 			f: FEATURE_I
 			params: ARRAYED_LIST [DUMP_VALUE]
 			dbg: like debugger_manager
 		do
+				-- FIXME(sept2014): probably reuse remote_rt_object
+				-- and avoid creating new instance of REFLECTOR
 			dbg := debugger_manager
-			l_int_cl := dbg.compiler_data.internal_class_c
-			eval := dbg.dbg_evaluator
-
-			eval.reset
-			eval.create_empty_instance_of (l_int_cl.actual_type)
-			if not eval.error_occurred then
-				l_int := eval.last_result_value
+			if attached dbg.compiler_data.reflector_class_c as l_reflector_cl then
+				eval := dbg.dbg_evaluator
 				eval.reset
-				if l_int /= Void then
-					create params.make (1)
-					l_type_value := dbg.dump_value_factory.new_integer_32_value (a_type_id, dbg.compiler_data.integer_32_class_c)
-					params.extend (l_type_value)
-					f := l_int_cl.feature_named_32 ("type_name_of_type")
-					if f /= Void then
-						eval.reset
-						eval.evaluate_routine (Void, l_int, l_int_cl, f, params, False)
-						if not eval.error_occurred then
-							l_dv := eval.last_result_value
-							if l_dv /= Void then
-								Result := l_dv.string_representation
+				eval.create_empty_instance_of (l_reflector_cl.actual_type)
+				if not eval.error_occurred then
+					l_int := eval.last_result_value
+					eval.reset
+					if l_int /= Void then
+						create params.make (1)
+						l_type_value := dbg.dump_value_factory.new_integer_32_value (a_type_id, dbg.compiler_data.integer_32_class_c)
+						params.extend (l_type_value)
+						f := l_reflector_cl.feature_named_32 ("type_name_of_type")
+						if f /= Void then
+							eval.reset
+							eval.evaluate_routine (Void, l_int, l_reflector_cl, f, params, False)
+							if not eval.error_occurred then
+								l_dv := eval.last_result_value
+								if l_dv /= Void then
+									Result := l_dv.string_representation
+								end
 							end
+							eval.reset
 						end
-						eval.reset
 					end
 				end
 			end

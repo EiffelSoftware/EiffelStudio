@@ -81,6 +81,7 @@ feature -- Remote Invocation: Debuggee evaluation
 	is_equal_evaluation_feature_name: STRING = "is_equal_evaluation"
 	equal_sign_evaluation_feature_name: STRING = "equal_sign_evaluation"
 	debugger_type_string_evaluation_feature_name: STRING = "debugger_type_string"
+	object_runtime_info_string_evaluation_feature_name: STRING = "object_runtime_info"
 
 	tilda_equal_evaluation (a_value, a_other_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
@@ -112,6 +113,14 @@ feature -- Remote Invocation: Debuggee evaluation
 			a_value_is_not_void: a_value /= Void and then not a_value.is_void
 		do
 			Result := one_arg_resulting_string_evaluation (debugger_type_string_evaluation_feature_name, a_value, 0,0, error_handler)
+		end
+
+	object_runtime_info_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
+			-- Get the `object_runtime_info' as STRING by evaluation on the debuggee
+		require
+			a_value_is_not_void: a_value /= Void and then not a_value.is_void
+		do
+			Result := one_arg_resulting_string_evaluation (object_runtime_info_string_evaluation_feature_name, a_value, 0,0, error_handler)
 		end
 
 feature -- Remote Invocation: Object Storage
@@ -172,7 +181,7 @@ invariant
 	value_attached: value /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

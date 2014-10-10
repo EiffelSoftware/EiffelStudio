@@ -18,6 +18,7 @@
 		<library name="http" location="../../../../../network/protocol/http/http.ecf" readonly="false"/>
 		<library name="http_client" location="../../../../../network/http_client/http_client.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="..\wsf.ecf" readonly="false"/>
 		<cluster name="server" location=".\server\" recursive="true"/>
 	</target>

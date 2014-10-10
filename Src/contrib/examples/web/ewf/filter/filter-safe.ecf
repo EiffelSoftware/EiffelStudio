@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="filter" uuid="52FF4B77-0614-4D8B-9B96-C07EC852793E" library_target="filter">
 	<target name="common">
-		<root class="FILTER_SERVER" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
@@ -22,10 +21,12 @@
 		<library name="http_authorization" location="../../../../library/network/authentication/http_authorization/http_authorization-safe.ecf" readonly="true"/>
 	</target>
 	<target name="filter_nino" extends="common">
+		<root class="FILTER_SERVER" feature="make"/>
 		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="true"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
 	<target name="filter_fcgi" extends="common">
+		<root class="FILTER_SERVER" feature="make"/>
 		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>

@@ -405,7 +405,6 @@ feature {NONE} -- Implementation
 	create_empty_instance_of (a_type_i: CL_TYPE_A)
 			-- create an empty instance of `a_type_i'
 		local
-			l_class_c: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_class: ICOR_DEBUG_CLASS
 			l_adv: ABSTRACT_DEBUG_VALUE
@@ -419,16 +418,15 @@ feature {NONE} -- Implementation
 					l_gens_nb := l_gens.count
 				end
 				if l_gens_nb > 0 then
-						--| Create INTERNAL's object
-					l_class_c := debugger_manager.compiler_data.internal_class_c
-					if l_class_c /= Void then
-						l_class := eifnet_debugger.icor_debug_class (l_class_c.types.first)
+						--| Create REFLECTOR's object
+					if attached debugger_manager.compiler_data.reflector_class_c as l_reflector_class_c then
+						l_class := eifnet_debugger.icor_debug_class (l_reflector_class_c.types.first)
 						l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 						if not eifnet_evaluator.last_call_succeed then
 							dbg_error_handler.notify_error_evaluation (Void)
 						else
-								--| At this point l_icd_value represents an instance of INTERNAL
-							if attached new_empty_instance_of_using_internal (a_type_i, l_icd_value, l_class_c) as dv then
+								--| At this point l_icd_value represents an instance of REFLECTOR
+							if attached new_empty_instance_of_using_reflector (a_type_i, l_icd_value, l_reflector_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								--FIXME: should we return last_result.failed?
@@ -455,21 +453,19 @@ feature {NONE} -- Implementation
 
 	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER)
 		local
-			l_class_c: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_class: ICOR_DEBUG_CLASS
 		do
 			if a_type_i.has_associated_class_type (Void) then
-					--| Create INTERNAL's object
-				l_class_c := debugger_manager.compiler_data.internal_class_c
-				if l_class_c /= Void then
-					l_class := eifnet_debugger.icor_debug_class (l_class_c.types.first)
+					--| Create REFLECTOR's object
+				if attached debugger_manager.compiler_data.reflector_class_c as l_reflector_class_c then
+					l_class := eifnet_debugger.icor_debug_class (l_reflector_class_c.types.first)
 					l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 					if not eifnet_evaluator.last_call_succeed then
 						dbg_error_handler.notify_error_evaluation (Void)
 					else
-							--| At this point l_icd_value represents an instance of INTERNAL
-							if attached new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c) as dv then
+							--| At this point l_icd_value represents an instance of REFLECTOR
+							if attached new_special_any_instance_using_reflector (a_type_i, a_count, l_icd_value, l_reflector_class_c) as dv then
 								create last_result.make_with_value (dv)
 							else
 								-- FIXME: should we return last_result.failed?
@@ -483,25 +479,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_special_any_instance_using_internal (a_type_i: CL_TYPE_A; a_count: INTEGER; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE
+	new_special_any_instance_using_reflector (a_type_i: CL_TYPE_A; a_count: INTEGER; a_reflector_value: ICOR_DEBUG_VALUE; a_reflector_class_c: CLASS_C): DUMP_VALUE
 		local
 			l_dyn_type_from_str_feat_i,
 			l_new_instance_of_feat_i: FEATURE_I
 			l_icd_func: ICOR_DEBUG_FUNCTION
 			l_i_dv, l_dv, l_dv_count: DUMP_VALUE
 		do
-			l_dyn_type_from_str_feat_i := a_internal_class_c.feature_named ("dynamic_type_from_string")
-			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_dyn_type_from_str_feat_i)
+			l_dyn_type_from_str_feat_i := a_reflector_class_c.feature_named ("dynamic_type_from_string")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_reflector_value, a_reflector_class_c.types.first, l_dyn_type_from_str_feat_i)
 			l_i_dv := debugger_manager.dump_value_factory.new_manifest_string_value (a_type_i.name, debugger_manager.compiler_data.string_8_class_c)
-			l_dv := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_i_dv>>, False, True)
+			l_dv := dotnet_evaluate_icd_function (a_reflector_value, l_icd_func, <<l_i_dv>>, False, True)
 			l_dv_count := debugger_manager.dump_value_factory.new_integer_32_value (a_count, debugger_manager.compiler_data.integer_32_class_c)
 
-			l_new_instance_of_feat_i := a_internal_class_c.feature_named ("new_special_any_instance")
-			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_new_instance_of_feat_i)
-			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv, l_dv_count>>, False, True)
+			l_new_instance_of_feat_i := a_reflector_class_c.feature_named ("new_special_any_instance")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_reflector_value, a_reflector_class_c.types.first, l_new_instance_of_feat_i)
+			Result := dotnet_evaluate_icd_function (a_reflector_value, l_icd_func, <<l_dv, l_dv_count>>, False, True)
 		end
 
-	new_empty_instance_of_using_internal (a_type_i: CL_TYPE_A; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE
+	new_empty_instance_of_using_reflector (a_type_i: CL_TYPE_A; a_reflector_value: ICOR_DEBUG_VALUE; a_reflector_class_c: CLASS_C): DUMP_VALUE
 			--
 		local
 			l_dyn_type_from_str_feat_i,
@@ -509,14 +505,14 @@ feature {NONE} -- Implementation
 			l_icd_func: ICOR_DEBUG_FUNCTION
 			l_i_dv, l_dv: DUMP_VALUE
 		do
-			l_dyn_type_from_str_feat_i := a_internal_class_c.feature_named ("dynamic_type_from_string")
-			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_dyn_type_from_str_feat_i)
+			l_dyn_type_from_str_feat_i := a_reflector_class_c.feature_named ("dynamic_type_from_string")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_reflector_value, a_reflector_class_c.types.first, l_dyn_type_from_str_feat_i)
 			l_i_dv := debugger_manager.dump_value_factory.new_manifest_string_value (a_type_i.name, debugger_manager.compiler_data.string_8_class_c)
-			l_dv := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_i_dv>>, False, True)
+			l_dv := dotnet_evaluate_icd_function (a_reflector_value, l_icd_func, <<l_i_dv>>, False, True)
 
-			l_new_instance_of_feat_i := a_internal_class_c.feature_named ("new_instance_of")
-			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_new_instance_of_feat_i)
-			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv>>, False, True)
+			l_new_instance_of_feat_i := a_reflector_class_c.feature_named ("new_instance_of")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_reflector_value, a_reflector_class_c.types.first, l_new_instance_of_feat_i)
+			Result := dotnet_evaluate_icd_function (a_reflector_value, l_icd_func, <<l_dv>>, False, True)
 		end
 
 feature -- Query
@@ -1045,7 +1041,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

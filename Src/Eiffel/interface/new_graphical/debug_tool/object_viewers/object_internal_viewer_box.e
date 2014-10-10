@@ -120,7 +120,7 @@ feature -- Change
 	refresh
 			-- Recompute the displayed text.
 		local
-			cdv, dv: DUMP_VALUE
+			cdv: DUMP_VALUE
 			i,r: INTEGER
 			s: STRING_32
 			glab: EV_GRID_LABEL_ITEM
@@ -134,7 +134,7 @@ feature -- Change
 				if has_object then
 					cdv := current_dump_value
 					if cdv /= Void then
-						if attached debugger_manager.application.internal_info (cdv) as infos and then infos.count > 0 then
+						if attached debugger_manager.application.object_internal_info (cdv) as infos and then infos.count > 0 then
 							from
 								i := 0
 								r := 1
@@ -143,15 +143,9 @@ feature -- Change
 								i >= infos.count
 							loop
 								if attached infos[i] as info_item then
-									dv := info_item.value
 									grid.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text (info_item.name))
-									if dv /= Void then
-										if dv.has_formatted_output then
-											s := dv.attached_string_representation
-										else
-											s := dv.output_value (True)
-										end
-										create glab.make_with_text (s)
+									if attached info_item.value as dv then
+										create glab.make_with_text (dv)
 										grid.set_item (2, r, glab)
 										r := r + 1
 									else
@@ -168,8 +162,6 @@ feature -- Change
 								grid.column (1).resize_to_content
 								grid.column (2).resize_to_content
 							end
-						else
-							grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text (interface_names.l_no_information_available))
 						end
 					else
 						prompts.show_warning_prompt (Interface_names.l_dbg_unable_to_get_value_message, parent_window (widget), Void)
@@ -263,7 +255,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

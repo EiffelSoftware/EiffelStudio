@@ -129,19 +129,14 @@ feature -- Specific access
 			end
 		end
 
-	internal_class_c: detachable CLASS_C
-			--
+	reflector_class_c: detachable CLASS_C
+			-- REFLECTOR class
 		do
-			Result := opo_internal_class_c
+			Result := opo_reflector_class_c
 			if Result = Void then
 				Result := class_c_by_name ("REFLECTOR")
-				if Result = Void then
-					Result := class_c_by_name ("INTERNAL")
-				end
-				opo_internal_class_c := Result
+				opo_reflector_class_c := Result
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	ise_runtime_class_c: detachable CLASS_C
@@ -164,11 +159,11 @@ feature {NONE} -- Once per object
 
 	base_cluster_name: STRING_8 = "base"
 
-	opo_internal_class_c: like internal_class_c
+	opo_reflector_class_c: like reflector_class_c
 	opo_ise_runtime_class_c: like ise_runtime_class_c
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

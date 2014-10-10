@@ -211,53 +211,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
---	create_empty_instance_using_internal (a_type_i: CL_TYPE_A) is
---			--
---		require
---			is_not_special: not a_type_i.associated_class_type.associated_class.is_special
---		local
---			l_class_c: CLASS_C
---			l_params: LINKED_LIST [DUMP_VALUE]
---			f: FEATURE_I
---		do
---			l_class_c := debugger_manager.compiler_data.internal_class_c
---			if l_class_c /= Void then
---				create_empty_instance_of (l_class_c.types.first.type) -- Create instance of {INTERNAL}
---				if not error_occurred then
---					create l_params.make
---					l_params.extend (debugger_manager.dump_value_factory.new_integer_32_value (a_type_i.type_id, debugger_manager.compiler_data.integer_32_class_c))
---					f := l_class_c.feature_named ("new_instance_of")
---					effective_evaluate_routine (Void, last_result_value, f, f, l_class_c.types.first, l_class_c, l_params, False)
---				end
---			end
---		end
-
 	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER)
 		local
-			l_class_c: CLASS_C
 			l_params: LINKED_LIST [DUMP_VALUE]
 			l_id_dv: DUMP_VALUE
 			l_int_dv: DUMP_VALUE
 			l_int_ct: CLASS_TYPE
 			f: FEATURE_I
 		do
-			l_class_c := debugger_manager.compiler_data.internal_class_c
-			if l_class_c /= Void then
-				l_int_ct := l_class_c.types.first
-				create_empty_instance_of (l_int_ct.type) -- Create instance of {INTERNAL}
+			if attached debugger_manager.compiler_data.reflector_class_c as l_reflector_class_c then
+				l_int_ct := l_reflector_class_c.types.first
+				create_empty_instance_of (l_int_ct.type) -- Create instance of {REFLECTOR}
 				l_int_dv := last_result_value
 				if not error_occurred then
 					create l_params.make
 					l_params.extend (debugger_manager.dump_value_factory.new_manifest_string_value (a_type_i.name, debugger_manager.compiler_data.string_8_class_c))
-					f := l_class_c.feature_named ("dynamic_type_from_string")
-					effective_evaluate_routine (Void, l_int_dv, f, f, l_int_ct, l_class_c, l_params, False)
+					f := l_reflector_class_c.feature_named ("dynamic_type_from_string")
+					effective_evaluate_routine (Void, l_int_dv, f, f, l_int_ct, l_reflector_class_c, l_params, False)
 					l_id_dv := last_result_value
 					if not error_occurred then
 						create l_params.make
 						l_params.extend (l_id_dv)
 						l_params.extend (debugger_manager.dump_value_factory.new_integer_32_value (a_count, debugger_manager.compiler_data.integer_32_class_c))
-						f := l_class_c.feature_named ("new_special_any_instance")
-						effective_evaluate_routine (Void, l_int_dv, f, f, l_int_ct, l_class_c, l_params, False)
+						f := l_reflector_class_c.feature_named ("new_special_any_instance")
+						effective_evaluate_routine (Void, l_int_dv, f, f, l_int_ct, l_reflector_class_c, l_params, False)
 					end
 				end
 			end

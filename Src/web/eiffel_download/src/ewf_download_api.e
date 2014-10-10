@@ -367,9 +367,9 @@ feature -- Send Email
 				attached download_service as l_service then
 					create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service)
 					if attached l_hp.representation as l_html_download_options then
-						l_email_service.send_download_email (a_form.email,l_html_download_options, a_host)
+						l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
 					else
-						l_email_service.send_download_email (a_form.email,"Internal Server Error", a_host)
+						l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host)
 					end
 
 			end

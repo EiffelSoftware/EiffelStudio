@@ -44,17 +44,12 @@ feature -- Basic Operations
 			attached_to: a_to /= Void
 			attached_host: a_host /= Void
 		local
-			l_content: STRING
- 			l_path: PATH
 			l_email: EMAIL
 		do
-			create l_path.make_current
-			create l_content.make_from_string (a_content)
-			l_content.append (Disclaimer)
 				-- Create our message.
 			create l_email.make_with_entry (admin_email, a_to)
-			l_email.set_message (l_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Eiffel Site: EiffelStudio Download")
+			l_email.set_message (a_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Your EiffelStudio Download")
 			l_email.add_header_entry ("MIME-Version:", "1.0")
 			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
 			send_email (l_email)

@@ -128,7 +128,7 @@ feature -- Access: config
 				Result := cfg
 			else
 					-- Default
-				create {WDOCS_DEFAULT_CONFIG} Result.make
+				create {WDOCS_DEFAULT_CONFIG} Result.make_default
 			end
 		end
 

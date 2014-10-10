@@ -3,7 +3,7 @@
 	<head>
 		<title>Eiffel Software - Downloading EiffelStudio</title>
 	</head>
-	<body style="background: #ececf0; font-family: Arial, Tahoma, sans-serif; max-width:640px;">
+	<body style="background: #ececf0; font-family: Arial, Tahoma, sans-serif; font-size: 10pt; max-width:640px;">
 		<header>
 			<a href="https://www.eiffel.com">
 				<img src="https://www.eiffel.com/wp-content/themes/eiffeldesign/images/logo.png" alt="Eiffel Software Logo"/></a>
@@ -15,7 +15,7 @@
 			</p>
 
 			<p>
-				To get EiffelStudio <a href="{$host/}confirm_download?token={$token}">click here.</a>
+				<a href="{$host/}confirm_download?token={$token}">Click here to download EiffelStudio.</a>
 			</p>
 			<p>	Details: </p>
 			<ul>	
@@ -31,7 +31,7 @@
 
 			<p style="margin: 0px">For purchasing information or a trial extension please contact our sales department:</p>
 			<p style="margin-top: 0px; margin-left:30px">
-				Phone: +1-805-685-1006</br>
+				Phone: +1-805-685-1006<br/>
 				E-Mail: <a href="mailto:sales@eiffel.com">sales@eiffel.com</a>
 			</p>
 
@@ -39,11 +39,11 @@
 				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you run need any help along the way, do not hesitate to <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
 			</p>
 
-			<p>Best regards,</p>
-			<p>The Eiffel Software Team</p>
+			<p style="margin: 0px">Best regards,</p>
+			<p style="margin: 0px">The Eiffel Software Team</p>
 		</section>
 		<section>
-			<h2><a style="text-decoration: none;" href="https://www.eiffel.com/company/about-us/">About Eiffel Software</a></h2>
+			<h2 style="margin-top: 70px"><a style="text-decoration: none;" href="https://www.eiffel.com/company/about-us/">About Eiffel Software</a></h2>
 
 			<p>Eiffel Software is recognized as the thought leader in making software projects predictable and controllable. EiffelStudio, the company's flagship product and Integrated Development Environment (IDE), enables software developers to quickly develop systems that work the first time around and that are easy to adapt when the world and the needs change.</p>
 
@@ -80,10 +80,11 @@
 		</section>
 		<footer>
 			<br/>
-			<p style="text-align: center;line-height:50px;">Copyright &copy; 2014 Eiffel Software - 
+			<p style="text-align: center;margin-top:50px;">Copyright &copy; 2014 Eiffel Software - 
 				<a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a>
-				<br/>
-				<small>This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using "reply", you will not receive an answer.</small>
+			</p>
+			<p style="text-align: center; font-size: x-small">
+				This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using "reply", you will not receive an answer.
 			</p>
 		</footer>
 	</body>

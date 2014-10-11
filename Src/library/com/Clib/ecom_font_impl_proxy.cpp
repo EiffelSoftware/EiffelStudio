@@ -25,7 +25,7 @@ extern "C" {
 
 Font21_impl_proxy::Font21_impl_proxy( IUnknown * a_pointer )
 {
-  HRESULT hr, hr2;
+  HRESULT hr;
 
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
   rt.ccom_check_hresult (hr);
@@ -126,7 +126,7 @@ EIF_REFERENCE Font21_impl_proxy::ccom_name()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -191,7 +191,7 @@ void Font21_impl_proxy::ccom_set_name( EIF_OBJECT a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -244,7 +244,7 @@ EIF_REFERENCE Font21_impl_proxy::ccom_size()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -307,7 +307,7 @@ void Font21_impl_proxy::ccom_set_size( CURRENCY * a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -360,7 +360,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_bold()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -425,7 +425,7 @@ void Font21_impl_proxy::ccom_set_bold( EIF_BOOLEAN a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -478,7 +478,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_italic()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -543,7 +543,7 @@ void Font21_impl_proxy::ccom_set_italic( EIF_BOOLEAN a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -596,7 +596,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_underline()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -661,7 +661,7 @@ void Font21_impl_proxy::ccom_set_underline( EIF_BOOLEAN a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -714,7 +714,7 @@ EIF_BOOLEAN Font21_impl_proxy::ccom_strikethrough()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -779,7 +779,7 @@ void Font21_impl_proxy::ccom_set_strikethrough( EIF_BOOLEAN a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -832,7 +832,7 @@ EIF_INTEGER Font21_impl_proxy::ccom_weight()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -897,7 +897,7 @@ void Font21_impl_proxy::ccom_set_weight( EIF_INTEGER a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -950,7 +950,7 @@ EIF_INTEGER Font21_impl_proxy::ccom_charset()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -1015,7 +1015,7 @@ void Font21_impl_proxy::ccom_set_charset( EIF_INTEGER a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);

@@ -25,7 +25,7 @@ extern "C" {
 
 IFont20_impl_proxy::IFont20_impl_proxy( IUnknown * a_pointer )
 {
-	HRESULT hr, hr2;
+	HRESULT hr;
 
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
 	rt.ccom_check_hresult (hr);

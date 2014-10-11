@@ -10,6 +10,7 @@
 		</header>
 		<section>
 			<h2>Thank you for downloading EiffelStudio.</h2>
+
 			<p>
 				This is an evaluation version. It will expire 30 days after your first use. It requires a CD Key which is provided below.
 			</p>
@@ -26,17 +27,11 @@
 			</ul>
 
 			<p>
-				<a href="https://twitter.com/intent/tweet?button_hashtag=eiffel&hashtags=eiffel,programming,ide,programming,softwaredevelopment,softwareengineering&text=Just%20downloaded%20EiffelStudio.%20You%20should%20too.&url=http%3A%2F%2Fwww.eiffel.com%2Fdownload" target="_blank">Let your friends know! Tweet!</a>
-			</p>
-
-			<p style="margin: 0px">For purchasing information or a trial extension please contact our sales department:</p>
-			<p style="margin-top: 0px; margin-left:30px">
-				Phone: +1-805-685-1006<br/>
-				E-Mail: <a href="mailto:sales@eiffel.com">sales@eiffel.com</a>
+				<a href="https://twitter.com/intent/tweet?button_hashtag=eiffel&hashtags=eiffel,programming,ide,programming,softwaredevelopment,softwareengineering&text=Just%20downloaded%20EiffelStudio.%20You%20should%20too.&url=http%3A%2F%2Fwww.eiffel.com%2Fdownload" target="_blank">Tweet to let your friends know!</a>
 			</p>
 
 			<p>
-				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you run need any help along the way, do not hesitate to <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
+				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you wish to purchase, need a trial extension, or have any questions, do not hesitate to <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
 			</p>
 
 			<p style="margin: 0px">Best regards,</p>

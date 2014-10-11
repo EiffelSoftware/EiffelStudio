@@ -40,7 +40,7 @@ Formatter::~Formatter()
 EIF_REFERENCE Formatter::ccom_format_message( EIF_INTEGER Code )
 { 
 	char* szMessage = c_format_message ((long) Code);
-	int i = strlen ((char *)string_buffer);
+	size_t i = strlen ((char *)string_buffer);
 	return makestr (szMessage, i);
 };
 //--------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ char* Formatter::c_format_message( long Code )
 };
 //--------------------------------------------------------------------------------
   
-EIF_INTEGER Formatter::ccom_hresult (char * exception_code_name) 
+EIF_INTEGER Formatter::ccom_hresult (const char * exception_code_name) 
 {
   char *stopstring = NULL;
   long result = 0, high_bits = 0, low_bits = 0;

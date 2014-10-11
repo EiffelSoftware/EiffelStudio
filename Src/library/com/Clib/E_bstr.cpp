@@ -18,7 +18,6 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 
 // Transform BSTR into Eiffel STRING object
 {
-  EIF_GET_CONTEXT
   EIF_OBJ name;
   size_t bstr_size;
   char * str_name;

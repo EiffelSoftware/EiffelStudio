@@ -25,7 +25,7 @@ public:
   virtual ~Formatter();
   EIF_REFERENCE ccom_format_message( EIF_INTEGER Code );
   char* c_format_message( long Code );
-  EIF_INTEGER ccom_hresult (char * exception_code_name); 
+  EIF_INTEGER ccom_hresult (const char * exception_code_name); 
   EIF_REFERENCE ccom_hresult_to_string( EIF_INTEGER Code );
   HRESULT hresult (int code);
 

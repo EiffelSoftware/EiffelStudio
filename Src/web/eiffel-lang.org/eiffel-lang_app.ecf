@@ -23,7 +23,8 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser-safe.ecf"/>
-		<library name="wiki_docs" location=".\modules\wiki_docs\wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="wdocs_module" location=".\modules\wiki_docs\wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="wikidocs" location="library\wikidocs\wikidocs-safe.ecf"/>
 		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false" use_application_options="true">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>

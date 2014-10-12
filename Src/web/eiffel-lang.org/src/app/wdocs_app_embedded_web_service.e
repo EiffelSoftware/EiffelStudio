@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if cfg = Void then
-				create {WDOCS_DEFAULT_CONFIG} cfg.make
+				create {WDOCS_DEFAULT_CONFIG} cfg.make_default
 			end
 			Result := cfg
 		end

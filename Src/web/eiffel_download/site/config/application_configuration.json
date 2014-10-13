@@ -2,7 +2,7 @@
 	"database": {
 		"datasource": {
 			"driver": "SQL Server",
-			"environment": "development"
+			"environment": "test"
 		},
 		"environments": {
 			"test": {

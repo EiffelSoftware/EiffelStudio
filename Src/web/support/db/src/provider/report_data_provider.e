@@ -1532,15 +1532,16 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email:READABLE_STRING_32; platform:READABLE_STRING_32]
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [ANY]
+			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			log.write_information (generator + ".retrieve_download_details")
 			connect
 			create l_parameters.make (1)
-			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
+			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1551,6 +1552,21 @@ feature -- Basic Operations
 				end
 				if attached  db_handler.read_string (2) as l_platform then
 					Result.platform := l_platform
+				end
+				if attached  db_handler.read_string (3) as l_username then
+					Result.username := l_username
+				end
+				if attached  db_handler.read_string (4) as l_org_name then
+					Result.org_name := l_org_name
+				end
+				if attached  db_handler.read_string (5) as l_phone then
+					Result.phone := l_phone
+				end
+				if attached  db_handler.read_string (6) as l_org_email then
+					Result.org_email := l_org_email
+				end
+				if attached  db_handler.read_date_time (7) as l_date then
+					Result.date := l_date
 				end
 			end
 			disconnect
@@ -2380,7 +2396,10 @@ feature -- Queries
 
 
 	Select_download_details: STRING = "[
-				Select Email, Platform from DownloadExpiration where Token = :Token;
+				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate
+				from DownloadExpiration d
+				INNER JOIN Contacts as c ON c.ContactID = d.ContactID
+				where Token = :Token;
 	]"
 
 feature {NONE} -- Implementation

@@ -58,10 +58,20 @@ feature -- Access
 
 feature -- Basic Operations
 
-	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email:READABLE_STRING_32; platform:READABLE_STRING_32]
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable DOWNLOAD_INFORMATION
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		do
-			Result := data_provider.retrieve_download_details (a_token)
+				-- TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32]
+			if attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME]} data_provider.retrieve_download_details (a_token) as l_tuple then
+				create Result
+				Result.set_email (l_tuple.email)
+				Result.set_platform (l_tuple.platform)
+				Result.set_user (l_tuple.username)
+				Result.set_phone (l_tuple.phone)
+				Result.set_organization (l_tuple.org_name)
+				Result.set_organization_email (l_tuple.org_email)
+				Result.set_download_date (l_tuple.date)
+			end
 		end
 
 	add_download_interaction_membership (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)

@@ -33,6 +33,13 @@ feature {NONE} -- Initialization
 			Result := "Eiffel Software Evaluation <noreplies@eiffel.com>"
 		end
 
+
+	download_email: IMMUTABLE_STRING_8
+			-- Administrator email.
+		once
+			Result := "Eiffel Software Evaluation <download@eiffel.com>"
+		end
+
 	smtp_protocol: SMTP_PROTOCOL
 			-- SMTP protocol.
 
@@ -52,6 +59,17 @@ feature -- Basic Operations
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Your EiffelStudio Download")
 			l_email.add_header_entry ("MIME-Version:", "1.0")
 			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
+			send_email (l_email)
+		end
+
+	send_email_download_notification (a_content: READABLE_STRING_32)
+		local
+				l_email: EMAIL
+		do
+			-- Create our message.
+			create l_email.make_with_entry (admin_email, download_email)
+			l_email.set_message (a_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification EiffelStudio Download")
 			send_email (l_email)
 		end
 

@@ -27,7 +27,6 @@ feature -- Basic Operations
 			Result.set_product (retrieve_product_enterprise)
 		end
 
-
 feature -- Implementation
 
 	retrieve_mirror_enterprise: detachable READABLE_STRING_32

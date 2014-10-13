@@ -16,7 +16,7 @@
 			</p>
 
 			<p>
-				<a href="{$host/}confirm_download?token={$token}">Click here to download EiffelStudio.</a>
+				<a href="{$host/}/confirm_download?token={$token/}">Click here to download EiffelStudio.</a>
 			</p>
 			<p>	Details: </p>
 			<ul>	

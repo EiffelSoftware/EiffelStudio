@@ -151,7 +151,7 @@ feature -- Workflow
 				then
 					l_info.set_platform (platform)
 					l_info.set_product ("EiffelStudio enterprise")
-					l_info.set_filename (link (platform))
+					l_info.set_filename (downloaded_file (platform))
 					l_info.set_email_date (create {DATE_TIME}.make_now_utc)
 					if l_service.is_membership (email) then
 						log.write_debug (generator + "process_workflow:" + email +  " Membership")
@@ -423,6 +423,26 @@ feature {NONE} -- Implementation
 					   attached l_options.filename as l_filename
 					then
 						l_result.append (l_filename)
+					end
+				end
+			end
+			Result := l_result
+		end
+
+	downloaded_file (a_platform: READABLE_STRING_32): READABLE_STRING_32
+			-- Name of the downloaded file, or empty string.
+		local
+			l_result: STRING_32
+		do
+			l_result := "";
+			if attached download_service as l_download_service then
+				if
+					attached l_download_service.retrieve_product_enterprise as l_product
+				then
+					if attached selected_platform (l_product.downloads, a_platform) as l_options  and then
+					   attached l_options.filename as l_filename
+					then
+						l_result := l_filename
 					end
 				end
 			end

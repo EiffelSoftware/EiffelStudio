@@ -52,7 +52,7 @@ feature -- Element change
 		do
 			download_date := a_download_date
 			if a_download_date /= Void then
-				download_date_output := a_download_date.formatted_out ("yyyy/[0]mm/[0]dd")
+				download_date_output := a_download_date.formatted_out ("yyyy/[0]mm/[0]dd [0]hh:[0]mi:[0]ss am")
 			end
 		ensure
 			download_date_assigned: download_date = a_download_date
@@ -63,7 +63,7 @@ feature -- Element change
 		do
 			email_date := an_email_date
 			if an_email_date /= Void then
-				email_date_output := an_email_date.formatted_out ("yyyy/[0]mm/[0]dd")
+				email_date_output := an_email_date.formatted_out ("yyyy/[0]mm/[0]dd [0]hh:[0]mi:[0]ss am")
 			end
 		ensure
 			email_date_assigned: email_date = an_email_date

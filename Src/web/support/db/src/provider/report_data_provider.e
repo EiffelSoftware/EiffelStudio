@@ -1568,11 +1568,14 @@ feature -- Basic Operations
 				if attached  db_handler.read_date_time (7) as l_date then
 					Result.date := l_date
 				end
+				if attached  db_handler.read_string (8) as l_username then
+					Result.username := l_username
+				end
 			end
 			disconnect
 			post_execution
 		end
-		
+
 	retrieve_temporary_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32;date: DATE_TIME]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
@@ -2428,9 +2431,10 @@ feature -- Queries
 
 
 	Select_download_details: STRING = "[
-				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate
+				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate, m.Username MembershipUserName
 				from DownloadExpiration d
 				INNER JOIN Contacts as c ON c.ContactID = d.ContactID
+				LEFT JOIN Memberships as m on c.ContactID = m.ContactID
 				where Token = :Token;
 	]"
 

@@ -71,6 +71,12 @@ feature -- Basic Operations
 				Result.set_organization (l_tuple.org_name)
 				Result.set_organization_email (l_tuple.org_email)
 				Result.set_download_date (l_tuple.date)
+			elseif attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32;date: DATE_TIME]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple then
+				create Result
+				Result.set_email (l_tuple.email)
+				Result.set_platform (l_tuple.platform)
+				Result.set_user (l_tuple.username)
+				Result.set_download_date (l_tuple.date)
 			end
 		end
 

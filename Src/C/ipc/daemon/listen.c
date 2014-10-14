@@ -55,7 +55,9 @@
 #include <jpidef.h>
 #include <ssdef.h>
 #else
+#ifndef EOFPIPE
 #define ACTIVE_TM	10		/* Active checks performed every 10 seconds */
+#endif
 #endif
 
 #ifndef EOFPIPE

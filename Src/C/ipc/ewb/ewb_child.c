@@ -85,7 +85,6 @@
 #define PIPE_WRITE	1		/* File descriptor used for writing */
 
 extern unsigned int TIMEOUT;	/* Time to let the child initialize */
-#define dexit(i) return NULL;
 #define SPAWN_CHILD_FAILED(i) return NULL;
 
 #ifndef EIF_WINDOWS

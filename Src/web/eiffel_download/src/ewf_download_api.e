@@ -139,8 +139,6 @@ feature -- Workflow
 			--email is not already associated to a membership user, but there is a Contact entry, we do like the above and add a new interaction
 			--email is not in our database, we create a Contact user and add the interaction
 			--Once this is done, we associated a unique URL to the Contact and send that link to the user. In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
-		local
-			l_data: STRING
 		do
 			if attached database_service as l_service then
 				if

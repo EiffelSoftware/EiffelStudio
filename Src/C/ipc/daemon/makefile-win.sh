@@ -1,7 +1,6 @@
 TOP = ..$(DIR)..
 DIR = $dir_sep
 CC = $cc
-JCFLAGS = $(CFLAGS) $ccflags $optimize
 
 # Where shared archive is located (path and name)
 LIBDIR = ..$(DIR)shared
@@ -13,7 +12,10 @@ LIBIDRNAME = idrs.$obj
 LIBIDRARCH = $(LIBIDR)$(DIR)$(LIBIDRNAME)
 LIBS = $(LIBIDRARCH) $(LIBARCH)
 
-CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR) -I.
+CFLAGS = $(DPFLAGS)
+JCFLAGS = $(CFLAGS) $ccflags $optimize
+
 LDFLAGS = /NOLOGO
 
 # Derived object file names

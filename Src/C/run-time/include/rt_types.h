@@ -114,8 +114,8 @@ struct partial_sc_zone {
 	/* Structure used for keep stacks that are thread specific, so GC knows about all
 	 * stacks in all threads and traverse them when performing a collection. */
 struct stack_list {
-	int count;						/* Number of stacks in Current */
-	int capacity;					/* Number of possible stacks in Current */
+	size_t count;						/* Number of stacks in Current */
+	size_t capacity;					/* Number of possible stacks in Current */
 	union {
 		void ** volatile data;				/* Array of data */
 		struct stack ** volatile sstack;		/* Typed array of stack - GC stack */

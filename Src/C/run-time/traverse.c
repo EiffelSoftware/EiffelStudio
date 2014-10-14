@@ -725,7 +725,7 @@ doc:	</routine>
 
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type)
 {
-	int i = 0;
+	size_t i = 0;
 	char gc_stopped;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;

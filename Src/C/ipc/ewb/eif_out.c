@@ -337,19 +337,6 @@ rt_public void send_ref_value(EIF_REFERENCE value)
 	send_dmpitem_request(&item, 0);
 }
 
-/* send a reference+offset value to the application */
-rt_public void send_ref_offset_value(EIF_REFERENCE value, EIF_NATURAL_32 a_offset)
-{
-	EIF_TYPED_VALUE item;
-
-	/* fill in the item to send */
-	item.type = SK_REF;
-	item.it_ref = value;
-
-	/* send the request */
-	send_dmpitem_request(&item, 0);
-}
-
 /* send a pointer value to the application */
 rt_public void send_ptr_value(EIF_POINTER value)
 {
@@ -485,20 +472,20 @@ rt_public EIF_BOOLEAN recv_dead (EIF_INTEGER* perr)
 	}
 }
 
-rt_public void c_send_sized_str (char *s, int size)
+rt_public void c_send_sized_str (char *s, size_t size)
 {
 	send_sized_str (ewb_sp, s, size);
 }
 
-rt_public void c_twrite (char *s, long int l)
+rt_public void c_twrite (char *s, size_t size)
 {
-	ewb_twrite (s, (int) l);
+	ewb_twrite (s, size);
 }
 
 rt_public EIF_REFERENCE c_tread (void)
 {
 
-	int size;
+	size_t size;
 	char *str;
 	EIF_REFERENCE e_str;
 

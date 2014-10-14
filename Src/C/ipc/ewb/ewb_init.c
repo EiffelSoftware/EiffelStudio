@@ -47,6 +47,7 @@
 #include "ewbio.h"
 #include "ewb_child.h"
 #include "ewb_proto.h"
+#include "ewb_init.h"
 #include "ewb_transfer.h"
 #include <string.h>
 #include <signal.h>
@@ -60,7 +61,7 @@
 /* Data declaration */
 
 extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
-rt_public struct ewb_flags ewb_data = {	/* Internal ewb's flags */
+rt_private struct ewb_flags ewb_data = {	/* Internal ewb's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
@@ -347,13 +348,13 @@ void win_ioh_clean_client(void)
 	delay = 0; 
 }
 
-DWORD ewb_current_process_id(void)
+rt_public DWORD ewb_current_process_id(void)
 {
 	return GetCurrentProcessId();
 }
 #else
 
-int ewb_current_process_id(void)
+rt_public int ewb_current_process_id(void)
 {
 	return getpid();
 }

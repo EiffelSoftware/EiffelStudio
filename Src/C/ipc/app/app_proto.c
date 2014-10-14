@@ -93,7 +93,7 @@ rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a
 rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref);
 rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index);
 
-rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
+rt_private EIF_INTEGER sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 #ifdef EIF_THREADS
 rt_private EIF_THR_TYPE dthread_id;					/* Thread id used to precise current thread in debugger */
 #else
@@ -121,13 +121,13 @@ rt_private EIF_THR_TYPE dthread_id_saved;			/* Thread id used to backup previous
 
 /* Object/local modification routines */
 extern unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local variable/ an argument */
-rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip);
+rt_private void modify_local_variable(uint32 arg_stack_depth, uint32 arg_loc_type, uint32 arg_loc_number, EIF_TYPED_VALUE *ip);
 rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF_TYPED_VALUE *new_value);
-rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value);
+rt_private void modify_object_attribute(rt_uint_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value);
 
 /* Dynamic function evaluation */
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info);
-rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset);
+rt_private void opush_ref_offset_item(rt_uint_ptr a_addr, int a_offset);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private rt_uint_ptr nb_pushed = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int routine_id, int static_dtype, int is_basic_type);
@@ -193,7 +193,6 @@ static int curr_modify = NO_CURRMODIF;
 #define arg_2		rqst->rq_opaque.op_2
 #define arg_3_p		rqst->rq_opaque.op_3 /* rt_uint_ptr */
 #define arg_3		(int) rqst->rq_opaque.op_3
-#define arg_4		rqst->rq_opaque.op_4
 
 #ifdef USE_ADD_LOG
 	add_log(9, "received request type %d", rqst->rq_type);
@@ -223,7 +222,7 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DUMP_VARIABLES:
 		dthread_prepare();
-		send_stack_variables(sp, arg_1);
+		send_stack_variables(sp, (uint32) arg_1);
 		dthread_restore();
 		break;
 	case DUMP_THREADS:
@@ -238,7 +237,8 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_prepare();
 		{
 			EIF_GET_CONTEXT
-			app_send_integer (sp, d_data.db_callstack_depth);		/* Callstack depth */
+			CHECK("Callstack depth not too big", (d_data.db_callstack_depth & 0x7FFFFFFF) == d_data.db_callstack_depth);
+			app_send_integer (sp, (int) d_data.db_callstack_depth);		/* Callstack depth */
 			send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 		}
 		dthread_restore();
@@ -283,7 +283,10 @@ static int curr_modify = NO_CURRMODIF;
 		dbg_new_instance_of_type (sp, (EIF_TYPE_INDEX) arg_1);
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
-		modify_local_variable(arg_1,arg_2,arg_3,NULL);	             /* of a feature in the call stack */
+		CHECK("positive depth", arg_1 >= 0);
+		CHECK("positive type", arg_2 >= 0);
+		CHECK("positive index", arg_3 >= 0);
+		modify_local_variable((uint32) arg_1, (uint32) arg_2, (uint32) arg_3, NULL);	             /* of a feature in the call stack */
 		curr_modify = LOCAL_ITEM;
 		break;
 	case MODIFY_ATTR:				/* modify the value of an attribute of an object */
@@ -352,7 +355,8 @@ static int curr_modify = NO_CURRMODIF;
 		dbreak_clear_table();
 		break;
 	case BREAK:						/* Add/delete breakpoints */
-		dsetbreak(arg_1, arg_3, arg_2);
+		CHECK("positive body", arg_1 >= 0);
+		dsetbreak((BODY_INDEX) arg_1, arg_3, arg_2);
 		break;
 	case RESUME:					/* Resume execution */
 		if (!gc_stopped) eif_gc_run();
@@ -425,7 +429,6 @@ static int curr_modify = NO_CURRMODIF;
 #undef arg_2
 #undef arg_3
 #undef arg_3_p
-#undef arg_4
 }
 
 /*
@@ -607,17 +610,17 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 	ewhere(&wh);			/* Find out where we are */
 	if (wh.wh_type == -1){	/* Could not compute position */
 		rqst.st_wh.wh_name = "Unknown";			/* Feature name */
-		rqst.st_wh.wh_obj = (rt_int_ptr) NULL;	/* (char *) -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_obj =  (rt_uint_ptr) 0;	/* (char *) -> rt_uint_ptr for XDR */
 		rqst.st_wh.wh_origin = 0;				/* Written where? */
 		rqst.st_wh.wh_type = 0;					/* Dynamic type */
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
 		rqst.st_wh.wh_nested = 0;				/* breakable nested index */
 		rqst.st_wh.wh_scoop_pid = 0;			/* Scoop pid -> int for XDR */
-		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;	/* Thread id -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_thread_id = (rt_uint_ptr) 0;	/* Thread id -> rt_uint_ptr for XDR */
 	}
 	else {
 		rqst.st_wh.wh_name = wh.wh_name;			/* Feature name */
-		rqst.st_wh.wh_obj = (rt_int_ptr) wh.wh_obj;	/* (char *) -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_obj = (rt_uint_ptr) wh.wh_obj;	/* (char *) -> rt_uint_ptr for XDR */
 		rqst.st_wh.wh_origin = wh.wh_origin;		/* Written where? */
 		rqst.st_wh.wh_type = wh.wh_type;			/* Dynamic type */
 		rqst.st_wh.wh_offset = wh.wh_offset;		/* Offset in byte code for melted feature, line number for frozen one */
@@ -662,11 +665,11 @@ rt_shared void dnotify(int evt_type, rt_uint_ptr evt_data1, rt_uint_ptr evt_data
 
 
 /* Encapsulate the 'modify_local' function */
-rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip)
+rt_private void modify_local_variable(uint32 arg_stack_depth, uint32 arg_loc_type, uint32 arg_loc_number, EIF_TYPED_VALUE *ip)
 {
-	static long stack_depth = 0;
-	static long loc_type = 0;
-	static long loc_number = 0;
+	static uint32 stack_depth = 0;
+	static uint32 loc_type = 0;
+	static uint32 loc_number = 0;
 	unsigned char result;
 
 	if (ip == NULL) {
@@ -689,7 +692,7 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 }
 
 /* Encapsulate the 'modify_attr' function */
-rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value)
+rt_private void modify_object_attribute(rt_uint_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value)
 {
 	static EIF_REFERENCE object = NULL;
 	static long attr_number = 0;
@@ -825,8 +828,8 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 			} else {
 				app_twrite("false", 5);
 					/* Result */
-				if (((int) what->op_2) != 0) {
-					send_once_result(sp, OResult, (int) what->op_2);	/* Send result back to ewb */
+				if (what->op_2 != 0) {
+					send_once_result(sp, OResult, (uint32) what->op_2);	/* Send result back to ewb */
 															/* the last argument is the expected type */
 				}
 			}
@@ -881,13 +884,13 @@ rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
 	offset = what->op_2;
 	if (offset > 0) {
 		/* We are passing hector address + offset */
-		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect((EIF_REFERENCE) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) physical_addr), offset - 1)));
+		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) (EIF_POINTER) eif_protect((EIF_REFERENCE) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) physical_addr), offset - 1)));
 	} else {
 		if ((HEADER(physical_addr)->ov_flags & EO_STACK) == EO_STACK) {
 				/* Object is on the stack, it won't move but it cannot be stored in hector stack, we clone it. */
-			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect (RTCL(physical_addr)));
+			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) (EIF_POINTER) eif_protect (RTCL(physical_addr)));
 		} else {
-			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect((EIF_REFERENCE) physical_addr));
+			app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) (EIF_POINTER) eif_protect((EIF_REFERENCE) physical_addr));
 		}
 	}
 }
@@ -996,7 +999,7 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "received packet BYTECODE");
 #endif
-		bc = (unsigned char *) app_tread((int *) 0);			/* Get byte code in memory */
+		bc = (unsigned char *) app_tread(NULL);			/* Get byte code in memory */
 		if (bc == NULL) {			/* Not enough memory */
 			send_ack(sp, AK_ERROR);		/* Notify failure */
 			return;						/* And abort downloading */
@@ -1093,7 +1096,8 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 
 	dtype = Dtype(object);
 	obj_desc = &System(dtype);
-	nb_attr = obj_desc->cn_nbattr;
+	CHECK("Not too many attributes", (obj_desc->cn_nbattr & 0x7FFFFFF) == obj_desc->cn_nbattr);
+	nb_attr = (int32) obj_desc->cn_nbattr;
 	names = obj_desc->cn_names;
 	types = obj_desc->cn_types;
 
@@ -1134,13 +1138,13 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		case SK_REAL64: app_twrite (o_ref, sizeof (EIF_REAL_64)); break;
 		case SK_EXP:
 			{
-				int32 dtype = Dtype(o_ref);
+				int32 l_dtype = Dtype(o_ref);
 				int32 scp_pid=0;
 				if (o_ref) {
 					scp_pid = (int32) RTS_PID(o_ref);
 				}
 					
-				app_twrite (&dtype, sizeof(int32));
+				app_twrite (&l_dtype, sizeof(int32));
 				app_twrite (&scp_pid, sizeof(int32)); /* Send SCOOP pid */
 				app_twrite (&o_ref, sizeof(EIF_POINTER));
 			}
@@ -1153,7 +1157,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 
 				reference = *(EIF_REFERENCE *)o_ref;
 				if (reference) {
-					int32 dtype = Dtype(reference);
+					int32 l_dtype = Dtype(reference);
 					ref_flags = HEADER(reference)->ov_flags;
 					app_twrite (&sk_type, sizeof(uint32));
 						/* Send SCOOP pid */
@@ -1166,7 +1170,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 						app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 						if (is_tuple) {
-							app_twrite (&dtype, sizeof(int32));
+							app_twrite (&l_dtype, sizeof(int32));
 							app_twrite (&reference, sizeof(EIF_POINTER));
 						} else {
 							rec_sinspect (reference, EIF_TRUE);
@@ -1174,7 +1178,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 					} else {
 						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
-						app_twrite (&dtype, sizeof(int32));
+						app_twrite (&l_dtype, sizeof(int32));
 						app_twrite (&reference, sizeof(EIF_POINTER));
 					}
 				} else {
@@ -1204,7 +1208,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	char *reference;
 	int32 count,capacity;					/* Element count */
 	uint32 nb_attr, sk_type;
-	long sp_start, sp_end;		/* Bounds for inspection */
+	int32 sp_start, sp_end;		/* Bounds for inspection */
 	uint32 dtype;
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
@@ -1214,7 +1218,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	zone = HEADER(object);
 	count = RT_SPECIAL_COUNT(object);
 	capacity = RT_SPECIAL_CAPACITY(object);
-	elem_size = RT_SPECIAL_ELEM_SIZE(object);
+	CHECK("positive_size", RT_SPECIAL_ELEM_SIZE(object) >= 0);
+	elem_size = (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 	dtype = Dtype(object);
 
@@ -1241,10 +1246,11 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 		}
 
 			/* Compute number of items that will be inspected */
-		if (sp_start > sp_end)
+		if (sp_start > sp_end) {
 			nb_attr = 0;
-		else
-			nb_attr = sp_end - sp_start + 1;
+		} else {
+			nb_attr = (uint32) (sp_end - sp_start + 1);
+		}
 
 			/* Send the number of items to be inspected */
 		app_twrite (&nb_attr, sizeof(uint32));
@@ -1333,8 +1339,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				EIF_BOOLEAN is_void = EIF_FALSE;
 				EIF_BOOLEAN is_special = EIF_FALSE;
 				EIF_BOOLEAN is_tuple = EIF_FALSE;
-				uint32 sk_type = SK_REF;
 				int32 scp_pid = 0;
+				sk_type = SK_REF;
 				for (o_ref = (char *) ((char **)object + sp_start),
 							sp_index = sp_start; sp_index <= sp_end;
 							sp_index++, o_ref = (char *) ((char **)o_ref + 1)) {
@@ -1533,7 +1539,8 @@ rt_private void string_inspect(EIF_OBJECT object)
 	char *o_ref;
 	const char **names;					/* Attribute names */
 	char *reference;
-	long i, string_count = 0;
+	long i;
+	EIF_INTEGER_32 string_count = 0;
 	char *string_area = NULL;
 
 	reference = eif_access(object);
@@ -1547,7 +1554,7 @@ rt_private void string_inspect(EIF_OBJECT object)
 		CAttrOffs(offset,cn_attr[i],dtype);
 		o_ref = reference + offset;
 		if (strcmp(names[i], "count") == 0) {
-			string_count = *(long *) o_ref;
+			string_count = *(EIF_INTEGER_32 *) o_ref;
 		} else if (strcmp(names[i], "area") == 0) {
 			string_area = *(char **) o_ref;
 		}
@@ -1555,7 +1562,8 @@ rt_private void string_inspect(EIF_OBJECT object)
 	CHECK("has string area", string_area);
 	if (string_count > DEFAULT_SLICE + 1)	/* Send only the beginning of */
 		string_count = DEFAULT_SLICE + 1;	/* the string if it is too big */
-	app_twrite (string_area, string_count);
+	CHECK ("Positive string count", string_count >= 0);
+	app_twrite (string_area, (size_t) string_count);
 }
 
 rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_VALUE *new_value)
@@ -1572,7 +1580,8 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	REQUIRE("is_special", RT_IS_SPECIAL(object));
 
 	zone = HEADER(object);
-	elem_size = RT_SPECIAL_ELEM_SIZE(object);
+	CHECK("positive_size", RT_SPECIAL_ELEM_SIZE(object) >= 0);
+	elem_size = (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(object);
 	flags = zone->ov_flags;
 
 	/* Send the items within the bounds */
@@ -1747,7 +1756,7 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 	nb_pushed++;
 }
 
-rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset)
+rt_private void opush_ref_offset_item(rt_uint_ptr a_addr, int a_offset)
 {
 	/* Used for items of SPECIAL [expanded] */
 	EIF_TYPED_VALUE item;
@@ -1781,13 +1790,16 @@ rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, i
 	 */
 
 	REQUIRE("is_special", RT_IS_SPECIAL(a_obj));
+	rt_uint_ptr elem_size;
 	if (a_index < 0) {
 		eraise ("index_large_enough", EN_RT_CHECK);
 	}
 	if (a_index >= RT_SPECIAL_COUNT(a_obj)) {
 		eraise ("index_small_enough", EN_RT_CHECK);
 	}
-	return RTCL(a_obj + OVERHEAD + (rt_uint_ptr) a_index * RT_SPECIAL_ELEM_SIZE(a_obj));
+	CHECK("positive_size", RT_SPECIAL_ELEM_SIZE(a_obj) >= 0);
+	elem_size = (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(a_obj);
+	return RTCL(a_obj + OVERHEAD + (rt_uint_ptr) a_index * elem_size);
 }
 
 rt_private void dbg_dump_rt_object (EIF_PSTREAM sp, EIF_REFERENCE obj)

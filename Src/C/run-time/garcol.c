@@ -1367,7 +1367,7 @@ rt_public void reclaim(void)
 			}
 #ifdef EIF_THREADS
 			{
-				int i = EIF_process_once_count;
+				size_t i = EIF_process_once_count;
 				while (i > 0) {
 					i--;
 					eif_thr_mutex_destroy (EIF_process_once_values [i].mutex);
@@ -1502,7 +1502,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 	 */
 
 #ifdef EIF_THREADS
-	int i;
+	size_t i;
 #endif
 	int moving = rt_g_data.status & (GC_PART | GC_GEN);
 
@@ -1512,7 +1512,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 #ifdef EIF_THREADS
 		/* Initialize list of live indexes for threads. */
 		/* This should be done before any marking. */
-	prepare_live_index (MARK_SWITCH);
+	prepare_live_index ();
 #ifdef SCOOPQS
 	eveqs_mark_all(MARK_SWITCH);
 	if (!live_index_count)
@@ -3984,7 +3984,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 #ifdef EIF_THREADS
 		/* Initialize list of live indexes for threads. */
 		/* This should be done before any marking. */
-	prepare_live_index (GEN_SWITCH);
+	prepare_live_index ();
 #ifdef SCOOPQS
 	eveqs_mark_all(GEN_SWITCH);
 	if (!live_index_count)

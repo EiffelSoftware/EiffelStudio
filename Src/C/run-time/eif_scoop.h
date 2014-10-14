@@ -102,6 +102,8 @@ void eif_call_const (call_data * a);
 
 extern void eif_free_call (call_data * a);
 extern EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s);
+extern EIF_BOOLEAN eif_is_passive (EIF_SCP_PID s);
+extern EIF_BOOLEAN eif_is_synced_on (EIF_SCP_PID c, EIF_SCP_PID s );
 
 /* Request chain stack */
 

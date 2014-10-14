@@ -93,7 +93,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	char *c_rout_name;
 	char string [128], *ptr = string;
 	EIF_REFERENCE eif_rout_name, obj_addr;
-	uint32 orig, dtype;
+	EIF_TYPE_INDEX orig, dtype;
 	int bp_index;		/* line number (i.e. break index) where application is stopped within feature */
 	int bpnested_index;	/* breakable nested index */
 

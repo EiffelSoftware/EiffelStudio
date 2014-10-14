@@ -333,21 +333,21 @@ rt_public void rout_obj_call_function_dynamic (
 rt_public char eif_sk_type_to_type_code (uint32 sk_type)
 {
 	switch (sk_type) {
-		case SK_BOOL:    return EIF_BOOLEAN_CODE; break;
-		case SK_CHAR8:    return EIF_CHARACTER_8_CODE; break;
-		case SK_CHAR32:   return EIF_CHARACTER_32_CODE; break;
-		case SK_INT8:    return EIF_INTEGER_8_CODE; break;
-		case SK_INT16:   return EIF_INTEGER_16_CODE; break;
-		case SK_INT32:   return EIF_INTEGER_32_CODE; break;
-		case SK_INT64:   return EIF_INTEGER_64_CODE; break;
-		case SK_UINT8:   return EIF_NATURAL_8_CODE; break;
-		case SK_UINT16:  return EIF_NATURAL_16_CODE; break;
-		case SK_UINT32:  return EIF_NATURAL_32_CODE; break;
-		case SK_UINT64:  return EIF_NATURAL_64_CODE; break;
-		case SK_POINTER: return EIF_POINTER_CODE; break;
-		case SK_REAL32:  return EIF_REAL_32_CODE; break;
-		case SK_REAL64:  return EIF_REAL_64_CODE; break;
-		case SK_REF:     return EIF_REFERENCE_CODE; break;
+		case SK_BOOL:    return EIF_BOOLEAN_CODE;
+		case SK_CHAR8:    return EIF_CHARACTER_8_CODE;
+		case SK_CHAR32:   return EIF_CHARACTER_32_CODE;
+		case SK_INT8:    return EIF_INTEGER_8_CODE;
+		case SK_INT16:   return EIF_INTEGER_16_CODE;
+		case SK_INT32:   return EIF_INTEGER_32_CODE;
+		case SK_INT64:   return EIF_INTEGER_64_CODE;
+		case SK_UINT8:   return EIF_NATURAL_8_CODE;
+		case SK_UINT16:  return EIF_NATURAL_16_CODE;
+		case SK_UINT32:  return EIF_NATURAL_32_CODE;
+		case SK_UINT64:  return EIF_NATURAL_64_CODE;
+		case SK_POINTER: return EIF_POINTER_CODE;
+		case SK_REAL32:  return EIF_REAL_32_CODE;
+		case SK_REAL64:  return EIF_REAL_64_CODE;
+		case SK_REF:     return EIF_REFERENCE_CODE;
 	}
 	return EIF_REFERENCE_CODE;
 }

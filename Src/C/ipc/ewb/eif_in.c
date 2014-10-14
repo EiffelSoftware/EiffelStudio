@@ -158,7 +158,7 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data2);
 				ptr += strlen (ptr) + 1;
-				eif_string = makestr (string, ptr - string);
+				eif_string = makestr (string, (size_t) (ptr - string));
 				(notify_hdlr_set) (eif_access (notify_handler), eif_string);
 				return eif_access (notify_handler);
 			}
@@ -188,7 +188,7 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_exception);
 				ptr += strlen (ptr); /* terminating null so that (ptr - string) is the length */
-				eif_string = makestr (string, ptr - string);
+				eif_string = makestr (string, (size_t) (ptr - string));
 				(stopped_hdlr_set) (eif_access (stopped_handler), eif_string);
 				return eif_access (stopped_handler);
 			}

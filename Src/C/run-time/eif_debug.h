@@ -83,8 +83,8 @@ struct where {					/* Where the program stopped */
 	char *wh_obj;				/* Address of object (snapshot) */
 	int wh_origin;				/* Written type (where feature comes from) */
 	int wh_type;				/* Dynamic type of Current */
-	long wh_offset;				/* Offset within byte code if relevant */
-	long wh_nested;				/* Breakable nested index if relevant */
+	int wh_offset;				/* Offset within byte code if relevant */
+	int wh_nested;				/* Breakable nested index if relevant */
 	EIF_SCP_PID wh_scoop_pid;	/* Scoop processor id if relevant */
 };
 

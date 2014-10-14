@@ -59,7 +59,7 @@ typedef struct {
 /* Acknowledgment codes and object inspection codes defined in rqst_const.h */
 
 typedef struct {			/* Acknowledgment */
-	int ak_type;			/* General type of acknowledgment */
+	size_t ak_type;			/* General type of acknowledgment */
 } Acknlge;
 
 typedef struct {			/* Position in program execution flow */

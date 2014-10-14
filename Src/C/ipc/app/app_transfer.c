@@ -71,7 +71,7 @@ rt_public void app_tpipe(STREAM *stream)
 #endif
 }
 
-rt_public char *app_tread(int *size)
+rt_public char *app_tread(size_t *size)
           		/* Filled in with size of read string */
 {
 	/* Read bytes from the "pipe" and put them into a new allocated buffer.

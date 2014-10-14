@@ -58,7 +58,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
 	int done = 0;
-	int i = 0;
+	size_t i = 0;
 #if defined(EIF_THREADS) && defined(ISE_GC)
 	int j = 0;
 	int l_threads_count = 0;

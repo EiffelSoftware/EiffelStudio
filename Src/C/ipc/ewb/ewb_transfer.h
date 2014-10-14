@@ -43,7 +43,7 @@
 extern STREAM *ewb_sp;				/* Stream used for communications */
 
 extern void ewb_tpipe(STREAM *stream);		/* Open transfer "pipe" */
-extern char *ewb_tread(int *size);		/* Read from the transfer "pipe" */
+extern char *ewb_tread(size_t *size);		/* Read from the transfer "pipe" */
 extern int ewb_twrite(void *buffer, size_t size);		/* Write to the transfer "pipe" */
 
 #endif

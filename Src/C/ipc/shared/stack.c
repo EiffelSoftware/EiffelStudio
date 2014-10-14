@@ -78,7 +78,7 @@ rt_private struct dump 	*get_next_execution_vector(void);			/* List execution st
 rt_private struct dump	*get_next_variable(uint32 start);			/* Dump the locals and arguments of current feature */
 rt_private struct dcall *safe_dtop(void);							/* Perform a safe dtop() without eif_panic */
 rt_private void 		init_var_dump(struct dcall *call);			/* Initialize register context */
-rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level down the stack */
+rt_private uint32		go_ith_stack_level(uint32 level);				/* Go to the i-th level down the stack */
 rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start); /* Dump a local or an argument of active feature */
 
 /* Public Routines declarations */
@@ -86,8 +86,8 @@ rt_public void 			send_stack(EIF_PSTREAM s, uint32 elem_nb);	/* Dump the applica
 rt_public EIF_DEBUG_VALUE local_debug_value(uint32 stack_depth, uint32 loc_type, uint32 loc_number);
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type,
                                      uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local value */
-rt_public void			send_stack_variables(EIF_PSTREAM s, int where);	/* Dump the locals and arguments of a feature */
-rt_public void 			send_once_result(EIF_PSTREAM s, MTOT OResult, int otype); /* dump the results of onces feature */
+rt_public void			send_stack_variables(EIF_PSTREAM s, uint32 where);	/* Dump the locals and arguments of a feature */
+rt_public void 			send_once_result(EIF_PSTREAM s, MTOT OResult, uint32 otype); /* dump the results of onces feature */
 
 /* extern Routines used */
 extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
@@ -132,7 +132,7 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
  * stack. where=1 means dumping the locals of the feature located on top  *
  * of the stack                                                           *
  **************************************************************************/
-rt_public void send_stack_variables(EIF_PSTREAM s, int where)
+rt_public void send_stack_variables(EIF_PSTREAM s, uint32 where)
 {
 	/* This is the main routine. It send a whole stack dump to the remote
 	 * process through the connected socket and via XDR. The end of the dump
@@ -352,7 +352,7 @@ rt_private void init_var_dump(struct dcall *call)
  * Go down the stack. This is done before dumping the locals and the      *
  * arguments of a feature located on level `level' down the stack         *
  **************************************************************************/
-rt_private uint32 go_ith_stack_level(int level)
+rt_private uint32 go_ith_stack_level(uint32 level)
 {
 	EIF_GET_CONTEXT
 
@@ -361,7 +361,7 @@ rt_private uint32 go_ith_stack_level(int level)
 	struct dcall *dc;			/* Debugger's calling context */
 	uint32 start = 0;			/* start of operation stack for current feature */
 								/* within whole operation stack */
-	int i;						/* Current level */
+	uint32 i;						/* Current level */
 
 	for (i=0; i<level; i++) {
 		/* We either finished dealing with previous melted vector, or it was simply
@@ -506,7 +506,7 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
  * Ask the debugger for the result of already called once function        *
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
-rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
+rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, uint32 otype)
 {
 	uint32 type;
 	EIF_TYPED_VALUE ip;					/* Partial item pointer */

@@ -40,8 +40,8 @@
 #include "stream.h"
 #include "request.h"
 
-extern void send_bye(EIF_PSTREAM s, int code);				/* Send final acknowledgment */
-extern void send_ack(EIF_PSTREAM s, int code);				/* Send acknowledgment */
+extern void send_bye(EIF_PSTREAM s, size_t code);				/* Send final acknowledgment */
+extern void send_ack(EIF_PSTREAM s, size_t code);				/* Send acknowledgment */
 extern void send_info(EIF_PSTREAM s, int code);			/* Send information */
 extern void send_packet(EIF_PSTREAM s, Request *dans);	/* Send an answer to client */	
 #ifdef EIF_WINDOWS
@@ -50,7 +50,7 @@ extern int recv_packet(EIF_PSTREAM s, Request *rqst, BOOL reset);/* Receive data
 extern int recv_packet(EIF_PSTREAM s, Request *rqst);	/* Receive data from client */
 #endif
 
-extern int send_sized_str(EIF_PSTREAM sp, char *buffer, int size);		/* Send string to the remote process */
+extern int send_sized_str(EIF_PSTREAM sp, char *buffer, size_t size);		/* Send string to the remote process */
 extern int send_str(EIF_PSTREAM sp, char *buffer);						/* Send string to the remote process */
 extern char *recv_str(EIF_PSTREAM sp, size_t *sizeptr);					/* Receive string from the remote process */
 extern EIF_NATIVE_CHAR *recv_natstr(EIF_PSTREAM sp, size_t *sizeptr);	/* Receive Native string from the remote process */

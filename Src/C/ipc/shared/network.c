@@ -118,7 +118,7 @@ rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 #endif
 #else
 	Signal_t (*oldalrm)(int);
-	int length;
+	ssize_t length;
 #endif
 
 	REQUIRE("Valid size", size <= INT32_MAX);
@@ -192,29 +192,24 @@ closed:
 		return -1;
 	}
 
-
 	while (len < size) {
-
 		alarm(TIMEOUT);			/* Give read only TIMEOUT seconds to succeed */
 		length = read(readfd(cs), buf + len, size - len);
 		alarm(0);
 
-		if (length == 0)	/* connection closed */
+		if (length == 0) {	/* connection closed */
 			goto closed;
-
-		if (length == -1) {
+		} else if (length == -1) {
 			if (errno != EINTR) {
 				return -1;		/* failed */
 			} else {
-				length = 0;
+				/* Case of an interrupt, we retry the call. */
 			}
+		} else {
+			len += (size_t) length;
 		}
-
-		len += length;
 	}
-
 	signal(SIGALRM, oldalrm);	/* restore default handler */
-
 	return 0;
 
 closed:
@@ -248,7 +243,7 @@ rt_public int net_send(EIF_PSTREAM cs, const char *buf, size_t size)
 	BOOL fSuccess;
 #else
 	size_t length;
-	int error;
+	ssize_t error;
 	Signal_t (*oldpipe)(int);
 #endif
 
@@ -290,7 +285,8 @@ rt_public int net_send(EIF_PSTREAM cs, const char *buf, size_t size)
 	}
 
 
-	for (length = 0; length < size; length += error) {
+	length = 0;
+	while (length < size) {
 		amount = size - length;
 		if (amount > BUFSIZ) {	/* do not write more than BUFSIZ */
 			amount = BUFSIZ;
@@ -306,9 +302,11 @@ rt_public int net_send(EIF_PSTREAM cs, const char *buf, size_t size)
 				printf ("net_send: write failed. fdesc = %i, errno = %i\n", writefd(cs),  errno);
 #endif
 				return -1;
+			} else {
+				/* Case of an interrupt, we retry the call. */
 			}
-			else
-				error = 0;		/* number of bytes send */
+		} else {
+			length += (size_t) error;
 		}
 	}
 	signal(SIGPIPE, oldpipe);	/* restore default handler */

@@ -1,8 +1,8 @@
 /*
-	description: "Declarations for transfer routines of app."
+	description: "Declarations."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -34,15 +34,34 @@
 		]"
 */
 
-#ifndef _app_transfer_h_
-#define _app_transfer_h_
+#ifndef _ewb_init_h_
+#define _ewb_init_h_
 
-#include "stream.h" 	
-#include "transfer.h" 
+#include "eif_eiffel.h"
 
-extern STREAM *app_sp;				/* Stream used for communications */
-extern void app_tpipe(STREAM *stream);		/* Open transfer "pipe" */
-extern char *app_tread(size_t *size);		/* Read from the transfer "pipe" */
-extern int app_twrite(const void *buffer, size_t size);		/* Write to the transfer "pipe" */
+extern int is_ecdbgd_alive (void);
+extern int launch_ecdbgd (EIF_NATIVE_CHAR* progn, EIF_NATIVE_CHAR* cmd, int eif_timeout);
+extern int close_ecdbgd (int eif_timeout);
+extern void init_connection(int* err);
 
+#ifdef EIF_WINDOWS
+extern DWORD ewb_current_process_id(void);
+#else
+extern int ewb_current_process_id(void);
+extern int ewb_pipe_read_fd (void);
 #endif
+
+#ifdef EIF_WINDOWS
+#	ifndef USE_ADD_LOG
+extern char progname[30];	/* Otherwise defined in logfile.c */
+#	endif
+#else
+#	ifndef USE_ADD_LOG
+extern char *progname;	/* Otherwise defined in logfile.c */
+#	endif
+#endif
+
+
+
+#endif /* _ewb_init_h_ */
+

@@ -79,8 +79,8 @@ struct dump {
 
 /* Visible routine */
 extern void send_stack(EIF_PSTREAM s, uint32 nb_elems);	/* Send a stack dump to ewb */
-extern void send_stack_variables(EIF_PSTREAM s, int where); /* dump the locals/arguments for a given feature on stack */
-extern void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype); /* Send result of once function to ewb */
+extern void send_stack_variables(EIF_PSTREAM s, uint32 where); /* dump the locals/arguments for a given feature on stack */
+extern void send_once_result(EIF_PSTREAM s, MTOT OResult, uint32 otype); /* Send result of once function to ewb */
 extern EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type, uint32 loc_number);
 
 #endif /* _stack_h_ */

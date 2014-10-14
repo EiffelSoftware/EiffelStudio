@@ -64,7 +64,7 @@ RT_LNK int is_inside_rt_eiffel_code;
 
 RT_LNK long EIF_once_count;			/* Nr. of once routines */
 #ifdef EIF_THREADS
-RT_LNK long EIF_process_once_count;		/* Nr. of process-relative once routines */
+RT_LNK size_t EIF_process_once_count;		/* Nr. of process-relative once routines */
 #endif
 RT_LNK EIF_TYPE_INDEX scount;					/* Maximum dtype */
 RT_LNK void eif_alloc_init(void);

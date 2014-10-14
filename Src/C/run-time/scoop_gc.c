@@ -73,7 +73,7 @@ doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared size_t pid_index [RT_MAX_SCOOP_PROCESSOR_COUNT];
+rt_private size_t pid_index [RT_MAX_SCOOP_PROCESSOR_COUNT];
 #define INVALID_INDEX ((size_t) -1)
 
 /*

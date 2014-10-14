@@ -59,7 +59,9 @@
 #endif
 
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */
+#ifdef DEBUG
 #define MAX_STRING	512	/* Maximum string length for log messages */
+#endif
 
 /*
  * Registered send_packet and recv_packet functions management ... 
@@ -164,7 +166,7 @@ rt_public int recv_packet(EIF_PSTREAM sp, Request *dans)
 }
 
 /* VARARGS2 */
-rt_public void send_bye(EIF_PSTREAM sp, int code)
+rt_public void send_bye(EIF_PSTREAM sp, size_t code)
       		/* The socket descriptor */
          	/* The acknowledgment code */
 {
@@ -182,7 +184,7 @@ rt_public void send_bye(EIF_PSTREAM sp, int code)
 }
 
 /* VARARGS2 */
-rt_public void send_ack(EIF_PSTREAM sp, int code)
+rt_public void send_ack(EIF_PSTREAM sp, size_t code)
       		/* The socket descriptor */
          	/* The acknowledgment code */
 {
@@ -216,7 +218,7 @@ rt_public void send_info(EIF_PSTREAM sp, int code)
 	send_packet(sp, &rqst);
 }
 
-rt_public int send_sized_str(EIF_PSTREAM sp, char *buffer, int size)
+rt_public int send_sized_str(EIF_PSTREAM sp, char *buffer, size_t size)
            		/* The stream descriptor */
              	/* Where the string is held */
 {
@@ -298,7 +300,7 @@ rt_public int send_str(EIF_PSTREAM sp, char *buffer)
 
 	size_t size;				/* Size of the string (without final null) */
 	size = strlen(buffer);			/* Length of string */
-	return send_sized_str (sp, buffer, (int) size);
+	return send_sized_str (sp, buffer, size);
 }
 
 rt_public EIF_NATIVE_CHAR *recv_natstr(EIF_PSTREAM sp, size_t *sizeptr)

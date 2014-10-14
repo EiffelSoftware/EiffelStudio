@@ -94,7 +94,7 @@ rt_private void write_application_interruption_flag(unsigned char value); 	/* wr
 rt_public void dbg_send_packet(EIF_PSTREAM sp, Request *dans);				/* Send an asnwer to client */
 rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst);			/* General processing of requests */
 rt_private void transfer(EIF_PSTREAM sp, Request *rqst);					/* Handle transfer requests */
-rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size);		/* Commute data from one file to another */
+rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, size_t size);		/* Commute data from one file to another */
 rt_private void set_ipc_ewb_pid(int pid);						/* Set IPC ewb pid value */
 rt_private void set_ipc_timeout(unsigned int t);				/* Set IPC TIMEOUT value */
 rt_private void start_app(EIF_PSTREAM sp);						/* Start Eiffel application */
@@ -474,7 +474,7 @@ rt_private void transfer(EIF_PSTREAM sp, Request *rqst)
 	commute(sp, o_sp, rqst->rq_ack.ak_type);
 }
 
-rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size)
+rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, size_t size)
 				/* Source file descriptor */
 				/* Target file descriptor */
 				/* Amount of bytes to be commuted */

@@ -1193,7 +1193,7 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 
 rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 {
-	int count = st_list->count + 1;
+	size_t count = st_list->count + 1;
 	st_list->count = count;
 	if (st_list->capacity < count) {
 		void **stack;
@@ -1371,7 +1371,8 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 		struct stack_list running_thread_list = {0, 0, { NULL }};
 		rt_global_context_t *thread_globals;
 		rt_thr_context *ctxt;
-		int status, i;
+		int status;
+		size_t i;
 
 			/* We are marking ourself to show that we are requesting a safe access
 			 * to GC data. */

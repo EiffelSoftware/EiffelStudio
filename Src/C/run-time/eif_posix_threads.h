@@ -78,7 +78,7 @@
 /*
  * Posix 1003.1b signals
  */
-#if (_POSIX_C_SOURCE==199309L)
+#if defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
 #ifdef SIGRTMIN
 #define EIF_DFLT_SIGRTMIN
 #endif
@@ -90,7 +90,7 @@
 /*
  * Signals reserved for Posix 1003.1c.
  */
-#if (_POSIX_C_SOURCE==199506L)
+#if defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
 #ifdef SIGPTINTR
 #define EIF_DFLT_SIGPTINTR
 #endif

@@ -158,7 +158,7 @@ rt_private bool_t idr_Opaque(IDR *idrs, void *ext)
 
 rt_private bool_t idr_Acknlge(IDR *idrs, void *ext)
 {
-	return idr_int(idrs, &((Acknlge *)ext)->ak_type);
+	return idr_size_t(idrs, &((Acknlge *)ext)->ak_type);
 }
 
 rt_private bool_t idr_Where(IDR *idrs, void *ext)

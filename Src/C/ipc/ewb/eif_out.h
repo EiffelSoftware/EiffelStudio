@@ -67,8 +67,8 @@ extern void ewb_send_ack_ok(void);
 extern EIF_BOOLEAN recv_ack (void);
 extern EIF_BOOLEAN recv_dead (EIF_INTEGER* perr);
 
-extern void c_send_sized_str (char *s, int size);
-extern void c_twrite (char *s, long int l);
+extern void c_send_sized_str (char *s, size_t size);
+extern void c_twrite (char *s, size_t size);
 extern EIF_REFERENCE c_tread (void);
 
 #endif /* _eif_out_h_ */

@@ -365,14 +365,14 @@ rt_shared BODY_INDEX * EIF_once_indexes = NULL;
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="EIF_process_once_count" return_type="long" export="shared">
+doc:	<attribute name="EIF_process_once_count" return_type="size_t" export="shared">
 doc:		<summary>Total number of process-relative once routines (computed by run-time).</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized at beginning with EIF_Minitxxx routines in generated code.</synchronization>
 doc:	</attribute>
 */
-rt_shared long EIF_process_once_count = 0;
+rt_shared size_t EIF_process_once_count = 0;
 
 /*
 doc:	<attribute name="EIF_process_once_indexes" return_type="BODY_INDEX *" export="shared">
@@ -585,7 +585,7 @@ rt_public void once_init (void)
 			enomem();
 		memset (EIF_process_once_values, 0, EIF_process_once_count * sizeof *EIF_process_once_values);
 		{
-			int i = EIF_process_once_count;
+			size_t i = EIF_process_once_count;
 			while (i > 0) {
 				i--;
 				EIF_process_once_values [i].mutex = eif_thr_mutex_create ();

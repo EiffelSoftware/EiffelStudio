@@ -52,7 +52,7 @@ rt_private char* reading_buffer;		/* Buffer used for communication, grows as nee
 rt_private size_t allocated_buffer_size; 	/* Currently allocated size for buffer */
 
 
-rt_public char *tread(STREAM *sp, int *size)
+rt_public char *tread(STREAM *sp, size_t *size)
           		/* Filled in with size of read string */
 {
 	/* Read bytes from the "pipe" and put them into a new allocated buffer.
@@ -81,8 +81,9 @@ rt_public char *tread(STREAM *sp, int *size)
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot receive transfer request");
 #endif
-		if (size != (int *) 0)
+		if (size) {
 			*size = 0;
+		}
 		return (char *) 0;
 	}
 
@@ -93,11 +94,13 @@ rt_public char *tread(STREAM *sp, int *size)
 #endif
 	
 		/* + 1 to prevent errors if we need a 0-sized buffer and no buffer has been allocated yet */
-	if (allocated_buffer_size < (size_t) rqst.rq_ack.ak_type + 1) {
+	if (allocated_buffer_size < rqst.rq_ack.ak_type + 1) {
 			/* We need to allocate a bigger buffer */
-		if (reading_buffer != NULL) free (reading_buffer);
-		reading_buffer = (char *) malloc(rqst.rq_ack.ak_type + 1);
 		allocated_buffer_size = rqst.rq_ack.ak_type + 1;
+		if (reading_buffer != NULL) {
+		   	free (reading_buffer);
+		}
+		reading_buffer = (char *) malloc(allocated_buffer_size);
 	}
 		/* FIXME XR: Is this really needed?? If we can't allocate memory, we're really in deep trouble anyway */
 	if (reading_buffer == (char *) 0) {
@@ -105,8 +108,9 @@ rt_public char *tread(STREAM *sp, int *size)
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
 		swallow(sp, rqst.rq_ack.ak_type);
-		if (size != (int *) 0)
+		if (size) {
 			*size = 0;
+		}
 		return (char *) 0;
 	}
 
@@ -122,13 +126,15 @@ rt_public char *tread(STREAM *sp, int *size)
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR net_recv: %m (%e)");
 #endif
-		if (size != (int *) 0)
+		if (size) {
 			*size = 0;
+		}
 		return (char *) 0;
 	}
 
-	if (size != (int *) 0)
-		*size = (int) rqst.rq_ack.ak_type;
+	if (size) {
+		*size = rqst.rq_ack.ak_type;
+	}
 
 	return reading_buffer;
 }
@@ -140,14 +146,14 @@ rt_public int twrite(STREAM* sp, const void *buffer, size_t size)
 	 */
 
 	Request rqst;		/* Leading request */
-	size_t t;
+	int t;
 
 	REQUIRE("Valid size", size <= INT32_MAX);
 
 	Request_Clean (rqst);
 	rqst.rq_type = TRANSFER;
 		/* Safe cast since `size' is less than INT32_MAX. */
-	rqst.rq_ack.ak_type = (int) size;
+	rqst.rq_ack.ak_type = size;
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
@@ -169,7 +175,7 @@ rt_public int twrite(STREAM* sp, const void *buffer, size_t size)
 #endif
 
 		/* Cast safe since size is less than INT32_MAX. */
-	return (int) t;
+	return t;
 }
 
 rt_public void swallow(EIF_PSTREAM sp, size_t size)

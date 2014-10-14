@@ -1402,7 +1402,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)))
 #define EIF_IS_DIFFERENT_PROCESSOR_FOR_QUERY(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)) && !(EIF_IS_SYNCED_ON(o1,o2)))
 #else
-EIF_BOOLEAN eif_is_synced_on (EIF_SCP_PID c, EIF_SCP_PID );
 #define EIF_IS_SYNCED_ON(c,s) \
 	(eif_is_synced_on (RTS_PID (c), RTS_PID(s)) == EIF_TRUE)
 #define EIF_SET_SYNCED_ON(c,s) \

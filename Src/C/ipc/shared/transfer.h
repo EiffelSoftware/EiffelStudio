@@ -39,7 +39,7 @@
 
 #include "stream.h" 	/* %%ss added */
 
-extern char *tread(STREAM *sp, int *size);		/* Read from the transfer "pipe" */
+extern char *tread(STREAM *sp, size_t *size);		/* Read from the transfer "pipe" */
 extern int twrite(STREAM *sp, const void *buffer, size_t size);		/* Write to the transfer "pipe" */
 extern void end_debug(void);		/* Free the communication buffer, should be called when debugging stops */
 

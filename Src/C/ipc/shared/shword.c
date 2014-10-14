@@ -62,8 +62,8 @@ rt_private char *ifs = " ";		/* Input field separator */
  * argument array. This pointer can be passed as-is to the execvp() system call.
  */
 rt_private char **argv = NULL;		/* Argument pointer */
-rt_private int argc;				/* Argument count */
-rt_private int where;				/* Current position within argv[] */
+rt_private size_t argc;				/* Argument count */
+rt_private size_t where;				/* Current position within argv[] */
 
 /* Function declarations */
 rt_private void free_argv(void);		/* Free inside of argv[] array */
@@ -81,7 +81,7 @@ rt_private void free_argv(void)
 	 * array.
 	 */
 
-	int i;
+	size_t i;
 
 	for (i = 0; i < argc; i++)
 		if (argv[i] != (char *) 0) {
@@ -98,7 +98,7 @@ rt_private int init_argv(void)
 	 * it cannot initialize the array correctly.
 	 */
 
-	int size = ARGV_NUMBER * sizeof(char *);
+	size_t size = ARGV_NUMBER * sizeof(char *);
 
 	if (argv != (char **) 0) {		/* Array already allocated */
 		free_argv();				/* Free strings held within */
@@ -126,7 +126,7 @@ rt_private char *add_argv(char *word)
 
 	char *saved;					/* Save copy of string */
 	char **new_argv;				/* When reallocation is necessary */
-	int new_size;
+	size_t new_size;
 
 	if (word != (char *) 0) {
 		saved = str_save(word);		/* Save string in memory (duplicata) */

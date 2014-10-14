@@ -149,7 +149,7 @@ rt_private char** envstr_to_envp (char* aenvir)
 {
 	char** res = NULL;
 	if (aenvir) {
-		int i, n, len;
+		size_t i, n, len;
 		char* p;
 		n = 0;
 			/* Calculate the number of environment variables. */
@@ -177,7 +177,7 @@ rt_private EIF_NATIVE_CHAR* safe_unquoted_path (EIF_NATIVE_CHAR* a_path)
 {
 	EIF_NATIVE_CHAR* res = NULL;
 	if (a_path) {
-		int n = (int) rt_nstrlen(a_path);
+		size_t n = rt_nstrlen(a_path);
 		if (a_path[0] == '"' && a_path[n - 1] == '"') {
 			res = (EIF_NATIVE_CHAR*) malloc ((n - 1) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
@@ -211,7 +211,7 @@ rt_private EIF_NATIVE_CHAR* safe_quoted_path (EIF_NATIVE_CHAR* a_path)
 {
 	EIF_NATIVE_CHAR* res = NULL;
 	if (a_path) {
-		int n = (int) rt_nstrlen(a_path);
+		size_t n = rt_nstrlen(a_path);
 		if (a_path[0] == '"' && a_path[n - 1] == '"') {
 			res = (EIF_NATIVE_CHAR*) malloc ((n + 1) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
@@ -579,6 +579,7 @@ rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_
 		add_log(20, "Error code %d", GetLastError());
 #endif
 		error_msg = (EIF_NATIVE_CHAR*) malloc ((wcslen (exe_path) + wcslen (cmdline) + wcslen (startpath) + 128) * sizeof(EIF_NATIVE_CHAR));
+		error_msg[0] = (wchar_t) 0;
 		wcscat (error_msg, L"Cannot Launch the program \n\n");
 		wcscat (error_msg, exe_path);
 		wcscat (error_msg, L"\n\nMake sure you have correctly set up your installation.\n");
@@ -1319,7 +1320,7 @@ rt_private unsigned int attach_debuggee(unsigned int port_number, int* pc2p, int
 	struct sockaddr_in server_addr;     	/* Server Internet address */
 	SECURITY_ATTRIBUTES saAttr;
 #else /* non EIF_WINDOWS */
-	int socketfd;  		/* Client socket descriptor */
+	int socketfd = -1;  		/* Client socket descriptor */
 	struct addrinfo hints, *servinfo, *p;
 	char str_port_number[5]; /* INET6_ADDRSTRLEN ; max is 65535, see http://www.iana.org/assignments/port-numbers  */
 #endif

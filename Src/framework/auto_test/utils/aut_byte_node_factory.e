@@ -95,7 +95,8 @@ feature -- Byte node generation
 			a_feature_attached: a_feature /= Void
 			a_return_type_attached: a_return_type /= Void
 		do
-			Result ?= a_feature.access (a_return_type, True)
+				-- Currently the last argument is `False' because AutoTest does not support scoop yet.
+			Result ?= a_feature.access (a_return_type, True, False)
 			if a_parameters /= Void then
 				Result.set_parameters (a_parameters)
 			end
@@ -179,7 +180,7 @@ feature -- Byte node generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -649,6 +649,7 @@ rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collect
 		a_collection->capacity = a_collection->capacity * 2;
 		a_collection->area = realloc (a_collection->area, sizeof (EIF_REFERENCE) * (a_collection->capacity));
 		if (!a_collection->area) {
+				/* Cannot reallocate. */
 			enomem();
 		}
 	}

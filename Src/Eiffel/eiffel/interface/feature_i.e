@@ -3226,35 +3226,36 @@ feature -- Dead code removal
 
 feature -- Byte code access
 
-	frozen access (access_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
+	frozen access (access_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
 		require
 			access_type_not_void: access_type /= Void
 		do
-			Result := access_for_feature (access_type, Void, is_qualified)
+			Result := access_for_feature (access_type, Void, is_qualified, is_separate)
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	frozen access_for_multi_constraint (access_type: TYPE_A; a_static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
+	frozen access_for_multi_constraint (access_type: TYPE_A; a_static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
 			-- Creates a byte code access for a multi constraint target.
 			-- `a_static_type' is the type where the feature is from.
 			-- It is NOT a static call that will be generated, but a dynamic one. It is only needed for W_bench.
 		require
 			access_type_not_void: access_type /= Void
 		do
-			Result := access (access_type, is_qualified)
+			Result := access (access_type, is_qualified, is_separate)
 			check Result /= Void end
 			Result.set_multi_constraint_static (a_static_type)
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		require
 			access_type_not_void: access_type /= Void
+			is_separate_meaningful: -- is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
 		local
 			is_in_op: BOOLEAN
 			l_type: TYPE_A
@@ -3270,7 +3271,7 @@ feature -- Byte code access
 						written_in = System.predicate_class_id or else
 						written_in = System.procedure_class_id
 
-			if is_in_op then
+			if is_in_op and then not is_separate then
 				if feature_name_id = {PREDEFINED_NAMES}.call_name_id then
 					create {AGENT_CALL_B} Result.make (Current, l_type, static_type, False)
 				elseif feature_name_id = {PREDEFINED_NAMES}.item_name_id then

@@ -1956,7 +1956,7 @@ feature {NONE} -- Implementation
 								if not is_static then
 									if is_precursor then
 										l_cl_type_i ?= a_precursor_type
-										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False)
+										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False)
 											-- Strange situation where Precursor is an external, then we do as if
 											-- it was a static call.
 										l_ext ?= l_access
@@ -1966,16 +1966,16 @@ feature {NONE} -- Implementation
 									else
 										if l_is_multiple_constraint_case then
 											check not l_last_constrained.is_formal end
-											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified)
+											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified, a_type.is_separate)
 										else
-											l_access := l_feature.access (l_generated_result_type, is_qualified)
+											l_access := l_feature.access (l_generated_result_type, is_qualified, a_type.is_separate)
 										end
 										if l_is_in_assignment or else l_is_target_of_creation_instruction then
 											l_access.set_is_attachment
 										end
 									end
 								else
-									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified)
+									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified, a_type.is_separate)
 									if l_is_multiple_constraint_case then
 										check not l_last_constrained.is_formal end
 										l_access.set_multi_constraint_static (l_last_constrained)
@@ -4226,7 +4226,7 @@ feature {NONE} -- Visitor
 								if l_needs_byte_node then
 									if l_typed_pointer /= Void then
 										check is_attribte: l_feature.is_attribute end
-										l_access := l_feature.access (l_type, False)
+										l_access := l_feature.access (l_type, False, False)
 										create {HECTOR_B} last_byte_node.make_with_type (l_access, l_typed_pointer)
 									else
 										create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
@@ -4692,7 +4692,7 @@ feature {NONE} -- Visitor
 								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
 							end
 							if l_needs_byte_node then
-								l_access := l_prefix_feature.access (last_type, True)
+								l_access := l_prefix_feature.access (last_type, True, l_target_type.is_separate)
 									-- If we have something like `a.f' where `a' is predefined
 									-- and `f' is a constant then we simply generate a byte
 									-- node that will be the constant only. Otherwise if `a' is
@@ -5100,7 +5100,7 @@ feature {NONE} -- Visitor
 								l_binary.set_left (l_left_expr)
 								l_binary.set_right (l_right_expr)
 
-								l_call_access ?= last_alias_feature.access (last_type, True)
+								l_call_access ?= last_alias_feature.access (last_type, True, l_target_type.is_separate)
 									-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
 								if l_is_left_multi_constrained then
 									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type)
@@ -5996,9 +5996,9 @@ feature {NONE} -- Visitor
 									end
 										-- Evaluate assigner command byte node
 									if external_b /= Void and then external_b.static_class_type /= Void then
-										access_b := target_assigner.access_for_feature (void_type, external_b.static_class_type, True)
+										access_b := target_assigner.access_for_feature (void_type, external_b.static_class_type, True, target_type.is_separate)
 									else
-										access_b := target_assigner.access (void_type, True)
+										access_b := target_assigner.access (void_type, True, target_type.is_separate)
 									end
 									access_b.set_parameters (assigner_arguments)
 
@@ -7790,7 +7790,7 @@ feature {NONE} -- Visitor
 								access_expr_b.set_parent (new_cursor_b)
 								new_cursor_b.set_target (access_expr_b)
 							end
-							new_cursor_b.set_message (f.access_for_feature (local_type, Void, True))
+							new_cursor_b.set_message (f.access_for_feature (local_type, Void, True, iteration_type.is_separate))
 							new_cursor_b.message.set_parent (new_cursor_b)
 
 							create initialization_code.make (2)
@@ -10316,7 +10316,7 @@ feature {NONE} -- Agents
 				-- a compilation crash at degree 2; as well as test#agent004.
 			l_result_type := a_feature.type
 			l_result_type := l_result_type.instantiation_in (a_target_type.as_implicitly_detachable, a_rc.class_id)
-			compute_fake_inline_agent (a_rc, a_feature.access (l_result_type, True), l_result_type, a_target,
+			compute_fake_inline_agent (a_rc, a_feature.access (l_result_type, True, a_target_type.is_separate), l_result_type, a_target,
 									a_target_type, a_agent_type, a_feature)
 		end
 

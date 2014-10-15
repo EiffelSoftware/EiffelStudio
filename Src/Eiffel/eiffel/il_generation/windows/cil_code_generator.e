@@ -1746,7 +1746,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 						l_feat_not_void: l_feat /= Void
 					end
 				end
-				l_code ?= l_feat.access (void_type, False)
+				l_code ?= l_feat.access (void_type, False, False)
 				check
 					l_code_not_void: l_code /= Void
 				end

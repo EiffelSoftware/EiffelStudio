@@ -303,7 +303,7 @@ feature -- C code generation
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
 			-- Byte code access for constant. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		local
@@ -313,7 +313,7 @@ feature -- C code generation
 		do
 			if is_process_or_thread_relative_once then
 					-- Cannot hardwire string constants, ever.
-				Result := Precursor (access_type, static_type, is_qualified)
+				Result := Precursor (access_type, static_type, is_qualified, is_separate)
 			else
 				if is_qualified then
 						-- To fix eweasel test#term155 we remove all anchors from
@@ -335,7 +335,7 @@ feature -- C code generation
 				else
 						-- Constants are hardwired in final mode
 					create constant_b.make (value)
-					constant_b.set_access (Precursor (access_type, static_type, is_qualified))
+					constant_b.set_access (Precursor (access_type, static_type, is_qualified, is_separate))
 					Result := constant_b
 				end
 			end
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

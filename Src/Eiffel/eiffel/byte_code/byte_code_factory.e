@@ -186,7 +186,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_target (l_access_expr)
 
 				-- Create message.
-			l_access ?= a_feat.access (a_target_type, True)
+			l_access ?= a_feat.access (a_target_type, True, a_target_type.is_separate)
 			l_access.set_parent (Result)
 			Result.set_message (l_access)
 		end
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_type (a_target_type)
 
 				-- Create call.
-			l_access ?= a_feat.access (Void_type, True)
+			l_access ?= a_feat.access (Void_type, True, a_target_type.is_separate)
 			create l_param
 			l_param.set_expression (a_expr)
 			l_param.set_attachment_type (a_source_type)
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation: Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

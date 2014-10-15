@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 		local
 			p: like parent
 		do
-			Result := f.access (type, p/= Void)
+			Result := f.access (type, p /= Void, a_context_type.is_separate)
 			p := parent
 			if p /= Void then
 				Result.set_parent (p)

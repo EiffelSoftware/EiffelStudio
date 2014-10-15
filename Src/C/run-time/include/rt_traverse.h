@@ -93,9 +93,9 @@ struct mstack {
 
 struct obj_array {
 	EIF_REFERENCE *area;	/* Area where objects are stored */
-	size_t count;				/* Number of inserted items */
-	size_t capacity;			/* Capacity of `area' */
-	size_t index;				/* Cursor position */
+	uint32 count;				/* Number of inserted items */
+	uint32 capacity;			/* Capacity of `area' */
+	uint32 index;				/* Cursor position */
 };
 
 #ifdef __cplusplus

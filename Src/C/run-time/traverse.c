@@ -645,14 +645,16 @@ doc:	</routine>
 
 rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collection)
 {
-	a_collection->index = a_collection->index + 1;
-
 	if (a_collection->index >= a_collection->capacity) {
 		a_collection->capacity = a_collection->capacity * 2;
 		a_collection->area = realloc (a_collection->area, sizeof (EIF_REFERENCE) * (a_collection->capacity));
+		if (!a_collection->area) {
+			enomem();
+		}
 	}
 	a_collection->area [a_collection->index] = obj;
 	a_collection->count = a_collection->count + 1;
+	a_collection->index = a_collection->index + 1;
 }
 
 /*
@@ -738,7 +740,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	if (!l_found.area) {
 		enomem();
 	}
-	l_found.index = -1;
+	l_found.index = 0;
 	found_collection = &l_found;
 
 		/* Initialize structure that will hold marked objects */
@@ -749,7 +751,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		free(l_found.area);
 		enomem();
 	}
-	l_marked.index = -1;
+	l_marked.index = 0;
 	marked_collection = &l_marked;
 
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */

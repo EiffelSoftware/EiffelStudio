@@ -18,7 +18,7 @@ feature -- Test routines
 	test_line_break_filter
 			-- New test routine
 		local
-			f: LINE_BREAK_CONVERTER_CONTENT_FILTER
+			f: LINE_BREAK_TO_HTML_CONTENT_FILTER
 			text: STRING
 			expected_text: STRING
 		do

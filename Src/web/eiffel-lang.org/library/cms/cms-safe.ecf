@@ -13,8 +13,7 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="content_filter" location="..\content_filter\content_filter-safe.ecf"/>
-		<library name="content_format" location="..\content_format\content_format-safe.ecf"/>
+		<library name="text_filter" location="..\text_filter\text_filter-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
 		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf"/>

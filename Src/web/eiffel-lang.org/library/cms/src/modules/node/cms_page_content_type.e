@@ -35,7 +35,7 @@ feature -- Access
 			Result := "Use <em>basic pages</em> for your static content, such as an 'About us' page."
 		end
 
-	available_formats: LIST [CMS_FORMAT]
+	available_formats: LIST [CONTENT_FORMAT]
 
 feature -- Factory
 
@@ -99,7 +99,7 @@ feature -- Factory
 	change_node	(a_execution: CMS_EXECUTION; fd: WSF_FORM_DATA; a_node: like new_node)
 		local
 			b: detachable READABLE_STRING_8
-			f: detachable CMS_FORMAT
+			f: detachable CONTENT_FORMAT
 		do
 			if attached fd.integer_item ("id") as l_id and then l_id > 0 then
 				check a_node.id = l_id end
@@ -127,7 +127,7 @@ feature -- Factory
 			-- <Precursor>
 		local
 			b: detachable READABLE_STRING_8
-			f: detachable CMS_FORMAT
+			f: detachable CONTENT_FORMAT
 			l_node: detachable like new_node
 		do
 			l_node := a_node
@@ -174,7 +174,7 @@ feature -- Factory
 invariant
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -768,7 +768,7 @@ feature -- Helper: output
 		require
 			a_ellipsis /= Void implies a_ellipsis.count < nb
 		local
-			f: CMS_NO_HTML_FILTER
+			f: NO_HTML_CONTENT_FILTER
 		do
 			if s.count <= nb then
 				Result := s.string

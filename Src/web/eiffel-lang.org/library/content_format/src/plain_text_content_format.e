@@ -2,14 +2,14 @@ note
 	description : "[
 				Plain Text format
 			]"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	CMS_PLAIN_TEXT_FORMAT
+	PLAIN_TEXT_CONTENT_FORMAT
 
 inherit
-	CMS_FORMAT
+	CONTENT_FORMAT
 		redefine
 			default_create,
 			help
@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create filters.make (2)
-			filters.force (create {CMS_HTML_TO_TEXT_FILTER})
-			filters.force (create {CMS_LINE_BREAK_CONVERTER_FILTER})
+			filters.force (create {HTML_TO_TEXT_CONTENT_FILTER})
+			filters.force (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
 		end
 
 
@@ -44,6 +44,6 @@ feature -- Access
 --		</ul>
 --		]"
 
-	filters: ARRAYED_LIST [CMS_FILTER]
+	filters: ARRAYED_LIST [CONTENT_FILTER]
 
 end

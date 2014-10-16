@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	format (a_name: like {CMS_FORMAT}.name): detachable CMS_FORMAT
+	format (a_name: like {CONTENT_FORMAT}.name): detachable CONTENT_FORMAT
 		do
 			across
 				all_formats as c
@@ -22,33 +22,43 @@ feature -- Access
 			end
 		end
 
-	all_formats: LIST [CMS_FORMAT]
+	all_formats: LIST [CONTENT_FORMAT]
 		once
-			create {ARRAYED_LIST [CMS_FORMAT]} Result.make (3)
+			create {ARRAYED_LIST [CONTENT_FORMAT]} Result.make (3)
 			Result.force (plain_text)
 			Result.force (full_html)
 			Result.force (filtered_html)
 		end
 
-	default_format: CMS_FORMAT
+	default_format: CONTENT_FORMAT
 		do
 			Result := plain_text --FIXME
 		end
 
-	plain_text: CMS_PLAIN_TEXT_FORMAT
+	plain_text: PLAIN_TEXT_CONTENT_FORMAT
 		once
 			create Result
 		end
 
-	full_html: CMS_FULL_HTML_FORMAT
+	full_html: FULL_HTML_CONTENT_FORMAT
 		once
 			create Result
 		end
 
-	filtered_html: CMS_FILTERED_HTML_FORMAT
+	filtered_html: FILTERED_HTML_CONTENT_FORMAT
 		once
 			create Result
 		end
 
 
+note
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

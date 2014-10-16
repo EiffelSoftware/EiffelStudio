@@ -15,7 +15,7 @@ feature -- Form
 	edit_form_validate (fd: WSF_FORM_DATA; b: STRING)
 		local
 			l_preview: BOOLEAN
-			l_format: detachable CMS_FORMAT
+			l_format: detachable CONTENT_FORMAT
 		do
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
 			if l_preview then
@@ -29,7 +29,7 @@ feature -- Form
 				if attached fd.string_item ("body") as l_body then
 					b.append ("<strong>Body:</strong><div class=%"body%">")
 					if l_format /= Void then
-						b.append (l_format.to_html (l_body))
+						b.append (l_format.formatted_output (l_body))
 					else
 						b.append (html_encoded (l_body))
 					end
@@ -139,7 +139,7 @@ feature -- Form
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

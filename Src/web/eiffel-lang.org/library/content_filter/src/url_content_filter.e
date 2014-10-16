@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {CMS_URL_FILTER}."
+	description: "Summary description for {URL_CONTENT_FILTER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_URL_FILTER
+	URL_CONTENT_FILTER
 
 inherit
-	CMS_FILTER
+	CONTENT_FILTER
 		redefine
 			help
 		end
@@ -31,3 +31,4 @@ feature -- Conversion
 		end
 
 end
+

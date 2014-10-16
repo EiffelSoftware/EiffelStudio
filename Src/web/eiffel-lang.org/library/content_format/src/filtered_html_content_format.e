@@ -2,14 +2,14 @@ note
 	description : "[
 				Filtered html format
 			]"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	CMS_FILTERED_HTML_FORMAT
+	FILTERED_HTML_CONTENT_FORMAT
 
 inherit
-	CMS_FORMAT
+	CONTENT_FORMAT
 		redefine
 			default_create
 		end
@@ -20,9 +20,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create filters.make (3)
-			filters.force (create {CMS_URL_FILTER})
-			filters.force (create {CMS_HTML_FILTER})
-			filters.force (create {CMS_LINE_BREAK_CONVERTER_FILTER})
+			filters.force (create {URL_CONTENT_FILTER})
+			filters.force (create {HTML_CONTENT_FILTER})
+			filters.force (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
 
 --			help := "<ul><li>Web page addresses and e-mail addresses turn into links automatically.</li><li>Allowed HTML tags: "
 --			across
@@ -39,6 +39,7 @@ feature -- Access
 
 	title: STRING_8 = "Filtered HTML"
 
-	filters: ARRAYED_LIST [CMS_FILTER]
+	filters: ARRAYED_LIST [CONTENT_FILTER]
 
 end
+

@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {CMS_HTML_TO_TEXT_FILTER}."
+	description: "Summary description for {HTML_TO_TEXT_CONTENT_FILTER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_HTML_TO_TEXT_FILTER
+	HTML_TO_TEXT_CONTENT_FILTER
 
 inherit
-	CMS_FILTER
+	CONTENT_FILTER
 
 feature -- Access
 

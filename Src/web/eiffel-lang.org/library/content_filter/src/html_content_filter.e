@@ -1,30 +1,38 @@
 note
-	description: "Summary description for {CMS_HTML_FILTER}."
+	description: "Summary description for {HTML_CONTENT_FILTER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_HTML_FILTER
+	HTML_CONTENT_FILTER
 
 inherit
-	CMS_FILTER
+	CONTENT_FILTER
 		redefine
-			default_create
+			default_create,
+			html_help
 		end
 
 feature {NONE} -- Initialization
 
 	default_create
+		local
+			lst: ARRAYED_LIST [READABLE_STRING_8]
 		do
 			Precursor
-			allowed_html_tags := <<"a", "em", "strong", "cite", "blockquote", "code", "ul", "ol", "li", "dl">>
-			description := "Allowed HTML tags: "
-			across
-				allowed_html_tags as c
-			loop
-				description.append ("&lt;" + c.item + "&gt; ")
-			end
+			create lst.make (10)
+			lst.extend ("a")
+			lst.extend ("em")
+			lst.extend ("strong")
+			lst.extend ("cite")
+			lst.extend ("blockquote")
+			lst.extend ("code")
+			lst.extend ("ul")
+			lst.extend ("ol")
+			lst.extend ("li")
+			lst.extend ("dl")
+			allowed_html_tags := lst
 		end
 
 feature -- Access
@@ -34,8 +42,27 @@ feature -- Access
 	title: STRING_8 = "HTML filter"
 
 	description: STRING_8
+		do
+			create Result.make_from_string ("Allowed HTML tags: ")
+			across
+				allowed_html_tags as c
+			loop
+				Result.append ("<" + c.item + "> ")
+			end
+		end
 
-	allowed_html_tags: ITERABLE [READABLE_STRING_8]
+	html_help: STRING_8
+		do
+			create Result.make_from_string ("Allowed HTML tags: ")
+			across
+				allowed_html_tags as c
+			loop
+				Result.append ("&lt;" + c.item + "&gt; ")
+			end
+		end		
+
+	allowed_html_tags: LIST [READABLE_STRING_8]
+			-- HTML tag to preserve during filtering.
 
 feature -- Conversion
 
@@ -123,6 +150,5 @@ feature -- Conversion
 				Result := True
 			end
 		end
-
 
 end

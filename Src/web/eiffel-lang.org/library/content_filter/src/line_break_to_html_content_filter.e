@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {CMS_HTML_FILTER}."
+	description: "Summary description for {LINE_BREAK_TO_HTML_CONTENT_FILTER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_LINE_BREAK_CONVERTER_FILTER
+	LINE_BREAK_TO_HTML_CONTENT_FILTER
 
 inherit
-	CMS_FILTER
+	CONTENT_FILTER
 		redefine
 			help
 		end
@@ -21,7 +21,7 @@ feature -- Access
 
 	help: STRING = "Lines and paragraphs break automatically"
 	
-	description: STRING_8 = "Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags)."
+	description: STRING_8 = "Converts line breaks into HTML (i.e. <br> and <p> tags)."
 
 feature -- Conversion
 

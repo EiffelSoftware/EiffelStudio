@@ -5,10 +5,10 @@ if '%EWEASEL%' == '' echo Environment variable EWEASEL is missing
 if '%EWEASEL%' == '' GOTO END
 
 rem Compiling eweasel (single-threaded)
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -finalize -config %EWEASEL/source/eweasel.ecf -target eweasel_st -c_compile
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -finalize -config %EWEASEL%/source/eweasel.ecf -target eweasel_st -c_compile
 
 rem Compiling eweasel (multi-threaded)
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -finalize -config %EWEASEL/source/eweasel.ecf -target eweasel_mt -c_compile
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -finalize -config %EWEASEL%/source/eweasel.ecf -target eweasel_mt -c_compile
 
 rem Create delivery structure
 if not exist %EWEASEL%\spec (

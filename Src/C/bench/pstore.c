@@ -114,7 +114,7 @@ rt_public void parsing_store (EIF_INTEGER file_desc, EIF_REFERENCE object)
 		compiler_char_write,
 		flush_st_buffer,
 		st_write,
-		make_header,
+		NULL,
 		0);
 
 	allocate_gen_buffer();

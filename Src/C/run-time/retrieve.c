@@ -286,7 +286,6 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes></eiffel_classes>
 doc:	</attribute>
 */
-
 rt_private class_translations_table class_translations;	/* Table of class name translations */
 
 #endif
@@ -297,6 +296,7 @@ rt_private class_translations_table class_translations;	/* Table of class name t
 rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
 rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *);	/* Retrieve object store in stream */
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int));
+rt_private void free_sorted_attributes(void);
 rt_private EIF_REFERENCE grt_make (void);
 rt_private EIF_REFERENCE grt_nmake (long int objectCount);
 rt_private EIF_REFERENCE rrt_make (void);
@@ -442,6 +442,17 @@ doc:		<fixme>Fixed size is not good. It should be a resizable array.</fixme>
 doc:	</attribute>
 */
 rt_private EIF_TYPE_INDEX cidarr [CIDARR_SIZE];
+
+/*
+doc:	<attribute name="sorted_attributes" return_type="unsigned int **" export="private">
+doc:		<summary>Array of sorted attributes for retrieving General store 3.3 or later.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>[Dynamic type, attribute number]</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_private unsigned int **sorted_attributes = NULL;
 
 #endif
 
@@ -2439,6 +2450,94 @@ rt_private char *next_item (char *ptr)
 	return (ptr);
 }
 
+rt_private void free_sorted_attributes(void)
+	/* Free the memory allocated for `sorted_attributes'. */
+{
+	RT_GET_CONTEXT
+	int i;
+	unsigned int *s_attr;
+
+	if (sorted_attributes != (unsigned int **)0) {
+#ifdef DEBUG_GENERAL_STORE
+printf ("free_sorted_attributes %lx\n", sorted_attributes);
+#endif
+		for (i=0; i < scount; i++)
+			if ((s_attr = sorted_attributes[i])!= (unsigned int *) 0) {
+				eif_rt_xfree((char *) s_attr);
+#ifdef DEBUG_GENERAL_STORE
+printf ("Free s_attr (%d) %lx\n", i, s_attr);
+#endif
+			}
+		eif_rt_xfree((char *) sorted_attributes);
+		sorted_attributes = (unsigned int **)0;
+	}
+}
+
+rt_private void sort_attributes(int dtype)
+{
+	/* Sort the attributes alphabeticaly by type */
+	RT_GET_CONTEXT
+	const struct cnode *class_info;		/* Info on the current type */
+	unsigned int *s_attr;			/* Sorted attributes for the type */
+	const char **attr_names;
+	const uint32 *attr_types;
+	unsigned int no_swap, swapped, tmp;
+
+	unsigned long attr_nb;
+	unsigned long j;
+
+	class_info = &(System(dtype));
+	attr_nb = class_info->cn_nbattr;
+
+	if (attr_nb){
+		attr_names = class_info->cn_names;
+		attr_types = class_info->cn_types;
+
+#ifdef DEBUG_GENERAL_STORE
+printf ("attr_nb: %d class name: %s\n", attr_nb, class_info->cn_generator);
+printf ("Dtype: %d \n", dtype);
+#endif
+		s_attr = (unsigned int*) eif_rt_xmalloc (attr_nb * sizeof(unsigned int), C_T, GC_OFF);
+#ifdef DEBUG_GENERAL_STORE
+printf ("alloc s_attr (%d) %lx\n", dtype, s_attr);
+#endif
+		if (s_attr == (unsigned int*) 0)
+			xraise(EN_MEM);
+
+		sorted_attributes[dtype] = s_attr;
+
+		for (j=0; j < attr_nb; j++)
+			s_attr[j] = j;
+
+		swapped = no_swap = 1;
+
+		while (swapped)
+			for (j = swapped = 0; j < attr_nb-1; j ++)
+				if ((attr_types[s_attr[j]]==attr_types[s_attr[j+1]])&&
+					(strcmp (attr_names[s_attr[j]], attr_names[s_attr[j+1]]) > 0)) {
+#ifdef DEBUG
+printf ("Swapping %s and %s\n", attr_names[s_attr[j]], attr_names[s_attr[j+1]]);
+printf ("%d %d\n", s_attr[j], s_attr[j+1]);
+printf ("%d %d\n", attr_types[s_attr[j]], attr_types[s_attr[j+1]]);
+#endif
+						swapped = 1;
+						no_swap = 0;
+						tmp = s_attr[j];
+						s_attr[j] = s_attr[j+1];
+						s_attr[j+1] = tmp;
+					}
+
+			/* if the skeleton is already sorted, bcopy will work both for store and retrieve */
+		if (no_swap){
+#ifdef DEBUG_GENERAL_STORE
+printf ("Freeing s_attr %lx\n", s_attr);
+#endif
+			eif_rt_xfree((char *)s_attr);
+			sorted_attributes[dtype] = (unsigned int*)0;
+			}
+		}
+}
+
 rt_private void read_header(void)
 {
 	/* Read header and make the dynamic type correspondance table */
@@ -3992,6 +4091,33 @@ rt_public size_t retrieve_read_with_compression (void)
 	CHECK("dcmps_out_size_positive", dcmps_out_size > 0);
 	return (size_t) dcmps_out_size;
 }
+
+rt_private rt_uint_ptr get_alpha_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib_num)
+{
+	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
+	RT_GET_CONTEXT
+#ifdef WORKBENCH
+	int32 rout_id;				/* Attribute routine id */
+	BODY_INDEX offset;
+#endif
+	rt_uint_ptr alpha_attrib_num;
+
+	unsigned int *attr_types = sorted_attributes[dtype];
+
+	if (attr_types == (unsigned int *)0) {
+		alpha_attrib_num = attrib_num;
+	} else {
+		alpha_attrib_num = attr_types[attrib_num];
+	}
+#ifndef WORKBENCH
+	return (System(dtype).cn_offsets[alpha_attrib_num]);
+#else
+	rout_id = System(dtype).cn_attr[alpha_attrib_num];
+	CAttrOffs(offset,rout_id,dtype);
+	return offset;
+#endif
+}
+
 
 /*
 doc:	<routine name="gen_object_read" export="private">

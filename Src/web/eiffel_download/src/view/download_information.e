@@ -8,6 +8,12 @@ class
 
 feature -- Access
 
+	last_name: detachable READABLE_STRING_32
+			-- user's last name
+
+	first_name: detachable READABLE_STRING_32
+			-- user's first name.
+
 	download_date: detachable DATE_TIME
 			-- `download_date'
 
@@ -48,6 +54,22 @@ feature -- Access
 			-- User company.
 
 feature -- Element change
+
+	set_last_name (a_last_name: like last_name)
+			-- Assign `last_name' with `a_last_name'.
+		do
+			last_name := a_last_name
+		ensure
+			last_name_assigned: last_name = a_last_name
+		end
+
+	set_first_name (a_first_name: like first_name)
+			-- Assign `first_name' with `a_first_name'.
+		do
+			first_name := a_first_name
+		ensure
+			first_name_assigned: first_name = a_first_name
+		end
 
 	set_download_date (a_download_date: like download_date)
 			-- Assign `download_date' with `a_download_date'.

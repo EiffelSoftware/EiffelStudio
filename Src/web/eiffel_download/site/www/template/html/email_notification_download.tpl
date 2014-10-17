@@ -11,6 +11,7 @@ User information
 ----------------
 
 Contact: {$username/}
+Company: {$company/}
 Organization: {$organization/}
 Phone: {$phone/}
 Email: {$email/}

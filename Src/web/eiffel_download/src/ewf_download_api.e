@@ -113,14 +113,14 @@ feature -- Workflow
 					if l_form.newsletter then
 						l_service.register_newsletter (l_form.email)
 					end
-					l_service.initialize_download (l_form.email, l_token, l_form.platform )
+					l_service.initialize_download (l_form.email, l_token, l_form.platform, l_form.company )
 				else
 					   -- The email does not exist in the database.
 					check
 						l_service.is_new_contact (l_form.email)
 					end
 						l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
-						l_service.initialize_download (l_form.email, l_token, l_form.platform )
+						l_service.initialize_download (l_form.email, l_token, l_form.platform, l_form.company )
 				end
 				send_email (req, l_form, l_token, req.absolute_script_url (""))
 				compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
@@ -318,6 +318,9 @@ feature {NONE} -- Implementation
 			end
 			if attached {WSF_STRING} req.form_parameter ("email") as l_user_email then
 				Result.set_email (l_user_email.value)
+			end
+			if attached {WSF_STRING} req.form_parameter ("company") as l_user_company then
+				Result.set_company (l_user_company.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("platform") as l_platform then
 				Result.set_platform (l_platform.value)

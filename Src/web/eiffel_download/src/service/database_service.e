@@ -62,7 +62,7 @@ feature -- Basic Operations
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		do
 				-- TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32]
-			if attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME]} data_provider.retrieve_download_details (a_token) as l_tuple then
+			if attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32]} data_provider.retrieve_download_details (a_token) as l_tuple then
 				create Result
 				Result.set_email (l_tuple.email)
 				Result.set_platform (l_tuple.platform)
@@ -71,12 +71,14 @@ feature -- Basic Operations
 				Result.set_organization (l_tuple.org_name)
 				Result.set_organization_email (l_tuple.org_email)
 				Result.set_download_date (l_tuple.date)
-			elseif attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32;date: DATE_TIME]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple then
+				Result.set_company (l_tuple.company)
+			elseif attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple then
 				create Result
 				Result.set_email (l_tuple.email)
 				Result.set_platform (l_tuple.platform)
 				Result.set_user (l_tuple.username)
 				Result.set_download_date (l_tuple.date)
+				Result.set_company (l_tuple.company)
 			end
 		end
 
@@ -94,10 +96,10 @@ feature -- Basic Operations
 			end
 		end
 
-	initialize_download (a_email, a_token, a_platform: READABLE_STRING_32)
+	initialize_download (a_email, a_token, a_platform, a_company: READABLE_STRING_32)
 			-- Initialize product download.
 		do
-			data_provider.initialize_download (a_email, a_token, a_platform)
+			data_provider.initialize_download (a_email, a_token, a_platform, a_company)
 		end
 
 	add_temporary_contact (a_first_name, a_last_name, a_email: READABLE_STRING_32; a_newsletter: INTEGER)

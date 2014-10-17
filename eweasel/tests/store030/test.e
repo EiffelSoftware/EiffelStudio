@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 			create a.make
 
-				-- Independent store
+				-- Basic store
 			create l_file.make_with_name ("output.data.basic")
 			if l_is_storing then
 				l_file.open_write
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 
 			create a.make
 
-				-- Independent store
+				-- General store
 			create l_file.make_with_name ("output.data.general")
 			if l_is_storing then
 				l_file.open_write

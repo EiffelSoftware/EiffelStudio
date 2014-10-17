@@ -129,4 +129,6 @@ feature -- Download Parameter Names
 
 	Newsletter_param: STRING = "Newsletter"
 
+	Company_param: STRING = "Company"
+
 end

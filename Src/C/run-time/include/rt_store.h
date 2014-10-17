@@ -63,15 +63,6 @@ RT_LNK void buffer_write(const char *data, size_t size);
 extern int char_write(char *pointer, int size);
 
 extern rt_uint_ptr get_offset(EIF_TYPE_INDEX o_type, rt_uint_ptr attrib_num);          /* get offset of attrib in object*/
-extern rt_uint_ptr get_alpha_offset(EIF_TYPE_INDEX o_type, rt_uint_ptr attrib_num);
-
-	/* General store utilities (3.3 and later) */
-#ifndef EIF_THREADS
-extern unsigned int **sorted_attributes;
-#endif
-extern void sort_attributes(int dtype);
-extern void free_sorted_attributes(void);
-
 
 RT_LNK void internal_store(char *object);
 

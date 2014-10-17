@@ -308,28 +308,8 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 			net_char_write,
 			flush_st_buffer,
 			st_write,
-			make_header,
+			NULL,
 			0);
-
-	basic_general_free_store(object);
-
-	rt_reset_store();
-#endif
-}
-
-rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
-{
-#ifndef EIF_IL_DLL
-	GTCX
-	socket_fides = file_desc;
-
-	rt_init_store(
-			store_write,
-			net_char_write,
-			flush_st_buffer,
-			gst_write,
-			make_header,
-			TR_ACCOUNT);
 
 	basic_general_free_store(object);
 
@@ -355,4 +335,10 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 	rt_reset_store();
 #endif
 }
+
+rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
+{
+	eif_net_independent_store (file_desc, object);
+}
+
 

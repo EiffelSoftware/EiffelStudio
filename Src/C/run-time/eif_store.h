@@ -110,9 +110,7 @@ RT_LNK void rt_reset_store(void);
 RT_LNK void flush_st_buffer(void);
 RT_LNK void st_write(EIF_REFERENCE object, int);		/* Write an object in file */
 RT_LNK void ist_write(EIF_REFERENCE object, int);
-RT_LNK void gst_write(EIF_REFERENCE object, int);
 RT_LNK void store_write(size_t);
-RT_LNK void make_header(void);				/* Make header */
 RT_LNK void rmake_header(void);				/* Make header */
 
 #ifdef __cplusplus

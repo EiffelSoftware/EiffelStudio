@@ -89,8 +89,6 @@ rt_private long object_count;
 
 #include <string.h>				/* For strlen() */
 
-/*#define DEBUG_GENERAL_STORE */	/**/
-
 /*#define DEBUG 1 */	/**/
 
 /* compression */
@@ -708,7 +706,7 @@ rt_shared void internal_store(char *object)
 
 	/* Write the kind of store */
 	l_failure = (char_write_func(&c, sizeof(char)) < 0);
-	if ((c != INDEPENDENT_STORE_6_3) && (c != GENERAL_STORE_4_0) && (!l_failure)) {
+	if ((c != INDEPENDENT_STORE_6_3) && (!l_failure)) {
 			/* Then write the storable properties. */
 		l_failure = (char_write_func(&l_store_properties, sizeof(char)) < 0);
 	}

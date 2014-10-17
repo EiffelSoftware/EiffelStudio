@@ -44,6 +44,8 @@ feature -- Access
 	product: detachable READABLE_STRING_32
 			-- Downloaded `product'.
 
+	company: detachable READABLE_STRING_32
+			-- User company.
 
 feature -- Element change
 
@@ -131,6 +133,14 @@ feature -- Element change
 			product := a_product
 		ensure
 			product_assigned: product = a_product
+		end
+
+	set_company (a_company: like company)
+			-- Assign `company' with `a_company'.
+		do
+			company := a_company
+		ensure
+			company_assigned: company = a_company
 		end
 
 end

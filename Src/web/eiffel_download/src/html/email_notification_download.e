@@ -29,6 +29,7 @@ feature {NONE} --Initialization
 			template.add_value (a_download.platform, "platform")
 			template.add_value (a_download.filename, "filename")
 			template.add_value (a_download.user, "username")
+			template.add_value (a_download.company, "company")
 			template.add_value (a_download.organization, "organization")
 			template.add_value (a_download.email_date_output, "download_email")
 			template.add_value (a_download.download_date_output, "download_eiffelstudio")

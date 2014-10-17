@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			set_last_name ("")
 			set_email ("")
 			set_platform ("")
+			set_company ("")
 		end
 
 feature -- Access
@@ -32,17 +33,18 @@ feature -- Access
 		-- User last name.
 
 	email: READABLE_STRING_32
-		-- User email
+		-- User email.
 
 	platform: READABLE_STRING_32
 		-- Selected Platform.
 
+	company: READABLE_STRING_32
+		-- User's organization.	
+
 	newsletter: BOOLEAN
 		-- Newsletter subscription ?			
 
-
 feature -- Change elements
-
 
 	set_first_name (a_first_name: READABLE_STRING_32)
 			-- Set `first_name' as `a_first_name'.
@@ -82,6 +84,14 @@ feature -- Change elements
 			newsletter := a_newsletter
 		ensure
 			newsletter_set: newsletter = a_newsletter
+		end
+
+	set_company (a_organization: like company)
+			-- Set `company' to `a_organization'.
+		do
+			company := a_organization
+		ensure
+			organization_set: company = a_organization
 		end
 
 end

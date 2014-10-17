@@ -1514,7 +1514,7 @@ feature -- Basic Operations
 		end
 
 
-	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_32)
+	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_32; a_company: READABLE_STRING_32)
 			-- Initialize download for a given user with email `a_email' and token `a_token' and platform `a_platform'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -1525,14 +1525,14 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
 			l_parameters.put (a_platform, {DATA_PARAMETERS_NAMES}.Platform_param)
-
+			l_parameters.put (a_company, {DATA_PARAMETERS_NAMES}.Company_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeDownload", l_parameters))
 			db_handler.execute_writer
 			disconnect
 			post_execution
 		end
 
-	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME]
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -1571,12 +1571,15 @@ feature -- Basic Operations
 				if attached  db_handler.read_string (8) as l_username then
 					Result.username := l_username
 				end
+				if attached  db_handler.read_string (9) as l_company then
+					Result.company := l_company
+				end
 			end
 			disconnect
 			post_execution
 		end
 
-	retrieve_temporary_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32;date: DATE_TIME]
+	retrieve_temporary_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -1602,6 +1605,9 @@ feature -- Basic Operations
 				end
 				if attached  db_handler.read_date_time (4) as l_date then
 					Result.date := l_date
+				end
+				if attached  db_handler.read_string (5) as l_company then
+					Result.company := l_company
 				end
 			end
 			disconnect
@@ -2431,7 +2437,7 @@ feature -- Queries
 
 
 	Select_download_details: STRING = "[
-				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate, m.Username MembershipUserName
+				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate, m.Username MembershipUserName, d.Company
 				from DownloadExpiration d
 				INNER JOIN Contacts as c ON c.ContactID = d.ContactID
 				LEFT JOIN Memberships as m on c.ContactID = m.ContactID
@@ -2440,7 +2446,7 @@ feature -- Queries
 
 
 	Select_temporary_download_details: STRING = "[
-				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, d.CreatedDate
+				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, d.CreatedDate, d.Company
 				from DownloadExpiration d
 				INNER JOIN ContactsTemporary as c ON c.ContactID = d.ContactID
 				where Token = :Token;

@@ -18,6 +18,8 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="to_remove_wikidocs" location="library\wikidocs\wikidocs-safe.ecf" readonly="false"/>
+		<library name="to_remove_wikitext" location="$ISE_LIBRARY/contrib/library/text/parser/wikitext/wikitext-safe.ecf" readonly="false"/>
 		<library name="wiki_docs" location=".\modules\wiki_docs\wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>

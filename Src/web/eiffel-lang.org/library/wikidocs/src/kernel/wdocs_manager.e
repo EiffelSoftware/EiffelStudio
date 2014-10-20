@@ -28,21 +28,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_root_dir: PATH; a_wiki_dir: PATH; a_version_id: like version_id)
+	make (a_wiki_dir: PATH; a_version_id: like version_id; a_tmp_dir: PATH)
 		do
-			root_dir := a_root_dir
 			wiki_database_path := a_wiki_dir
 			version_id := a_version_id
+			tmp_dir := a_tmp_dir
 			get_data
 		end
 
 feature -- Access
 
-	root_dir: PATH
-
 	wiki_database_path: PATH
 
 	version_id: detachable READABLE_STRING_GENERAL
+
+	tmp_dir: PATH
 
 	data: WDOCS_DATA
 
@@ -64,6 +64,11 @@ feature {NONE} -- Initialization
 			l_data: like data
 			p: PATH
 			d,l_dir: DIRECTORY
+			wb: WIKI_BOOK
+			wp: WIKI_PAGE
+			md: detachable WDOCS_METADATA
+			wb_lst: ARRAYED_LIST [WIKI_BOOK]
+			utf: UTF_CONVERTER
 		do
 			if attached stored_data as l_stored_data then
 				data := l_stored_data
@@ -75,19 +80,43 @@ feature {NONE} -- Initialization
 				p := wiki_database_path
 				create d.make_with_path (p)
 				if d.exists then
+					create wb_lst.make (5)
 					across
 						d.entries as ic
 					loop
-						if not ic.item.is_parent_symbol and not ic.item.is_current_symbol then
+						if
+							not ic.item.is_parent_symbol and not ic.item.is_current_symbol and not ic.item.name.starts_with ("_")
+						then
 							create l_dir.make_with_path (p.extended_path (ic.item))
 							if l_dir.exists then
-								l_data.book_names.force (ic.item.name)
+										-- FIXME: unicode support in Wikitext lib?
+								create wb.make (utf.escaped_utf_32_string_to_utf_8_string_8 (ic.item.name), l_dir.path.extended_path (ic.item))
+								create wp.make ("index", wb.name)
+								md := metadata (wp, <<"weight">>)
+								if md = Void then
+									create wp.make (wb.name, wb.name)
+									md := metadata (wp, <<"weight">>)
+								end
+								if md /= Void and then attached md.item ("weight") as l_weight and then l_weight.is_integer then
+									wp.set_weight (l_weight.to_integer)
+								end
+								wb.add_page (wp)
+								wb_lst.force (wb)
 							end
 						end
+					end
+					sort_books (wb_lst)
+					across
+						wb_lst as ic
+					loop
+						l_data.book_names.force (ic.item.name)
 					end
 				end
 
 					-- Index images
+					-- global
+				index_images_for_book_info_data (Void, l_data)
+					-- and for each book
 				across
 					l_data.book_names as ic
 				loop
@@ -95,6 +124,9 @@ feature {NONE} -- Initialization
 				end
 
 					-- Index templates
+					-- global
+				index_templates_for_book_info_data (Void, l_data)
+					-- and for each book
 				across
 					l_data.book_names as ic
 				loop
@@ -106,50 +138,41 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	index_images_for_book_info_data (a_book_name: READABLE_STRING_GENERAL; a_data: WDOCS_DATA)
+	index_images_for_book_info_data (a_book_name: detachable READABLE_STRING_GENERAL; a_data: WDOCS_DATA)
+			-- Index wiki images for book `a_book_name' (or for all books if `a_book_name' is Void), and save it into `a_data'.
 		local
 			ht: STRING_TABLE [PATH]
 			i, p: PATH
 			d: DIRECTORY
 			f: RAW_FILE
-			l_line: READABLE_STRING_8
-			l_title: detachable STRING_8
+			l_title: detachable STRING_32
 			l_filename: detachable STRING_32
+			md: WDOCS_METADATA_FILE
 		do
 			create ht.make_caseless (0)
-			p := wiki_database_path.extended (a_book_name).extended ("_images")
+			if a_book_name /= Void then
+				p := wiki_database_path.extended (a_book_name).extended ("_images")
+			else
+					-- Common Images for all books
+				p := wiki_database_path.extended ("_images")
+			end
 			create d.make_with_path (p)
 			if d.exists and then d.is_readable then
 				across
 					d.entries as ic
 				loop
 					i := ic.item
+					l_title := Void
+					l_filename := Void
 					if i.is_current_symbol or i.is_parent_symbol then
 							-- Ignore
-					elseif attached i.extension as ext and then ext.is_case_insensitive_equal_general ("md") then
-						create f.make_with_path (p.extended_path (i))
-						if f.exists and then f.is_access_readable then
-							f.open_read
-							from
-								l_title := Void
-								l_filename := Void
-							until
-								f.exhausted or f.end_of_file
-							loop
-								f.read_line_thread_aware
-								l_line := f.last_string
-								if l_line.starts_with_general ("title=") then
-									l_title := l_line.substring (1 + ("title=").count, l_line.count)
-									l_title.left_adjust
-									l_title.right_adjust
-								elseif l_line.starts_with_general ("filename=") then
-									l_filename := l_line.substring (1 + ("filename=").count, l_line.count)
-									l_filename.left_adjust
-									l_filename.right_adjust
-								end
-							end
-							f.close
-							if l_title /= Void then
+					elseif attached i.extension as ext then
+						if ext.is_case_insensitive_equal_general ("md") then
+							create md.make_with_path (p.extended_path (i))
+							if md.exists then
+								md.get_only_items_named_as (<<"title", "filename">>)
+								l_title := md.item ("title")
+								l_filename := md.item ("filename")
 								if l_filename = Void then
 									if attached i.entry as e then
 										l_filename := e.name
@@ -160,84 +183,96 @@ feature {NONE} -- Initialization
 										end
 									end
 								end
-								if l_filename /= Void then
-									ht.force (d.path.extended (l_filename), l_title)
-								end
 							end
+						elseif attached i.entry as e then
+								-- Not . or ..
+								-- not a *.md file
+								-- hopefully .. an image file
+							l_filename := e.name
+							l_title := l_filename.head (l_filename.count - 1 - ext.count) -- removing "." + ext
+						end
+						if l_title /= Void and l_filename /= Void then
+							ht.force (d.path.extended (l_filename), l_title)
 						end
 					end
 				end
 			end
-			a_data.images_path_by_title_and_book.force (ht, a_book_name)
+			if a_book_name /= Void then
+				a_data.images_path_by_title_and_book.force (ht, a_book_name)
+			else
+				a_data.images_path_by_title_and_book.force (ht, a_data.common_book_name)
+			end
 		end
 
-	index_templates_for_book_info_data (a_book_name: READABLE_STRING_GENERAL; a_data: WDOCS_DATA)
+	index_templates_for_book_info_data (a_book_name: detachable READABLE_STRING_GENERAL; a_data: WDOCS_DATA)
+			-- Index wiki templates for book `a_book_name' (or for all books if `a_book_name' is Void), and save it into `a_data'.
 		local
 			ht: STRING_TABLE [PATH]
 			i, p: PATH
 			d: DIRECTORY
 			f: RAW_FILE
-			l_line: READABLE_STRING_8
 			l_title: detachable STRING_8
 			l_filename: detachable STRING_32
+			md: WDOCS_METADATA_FILE
 		do
 			create ht.make_caseless (0)
-			p := wiki_database_path.extended (a_book_name).extended ("_templates")
+			if a_book_name /= Void then
+				p := wiki_database_path.extended (a_book_name).extended ("_templates")
+			else
+				p := wiki_database_path.extended ("_templates")
+			end
 			create d.make_with_path (p)
 			if d.exists and then d.is_readable then
 				across
 					d.entries as ic
 				loop
 					i := ic.item
+					l_title := Void
+					l_filename := Void
 					if i.is_current_symbol or i.is_parent_symbol then
 							-- Ignore
-					elseif attached i.extension as ext and then ext.is_case_insensitive_equal_general ("md") then
-						create f.make_with_path (p.extended_path (i))
-						if f.exists and then f.is_access_readable then
-							f.open_read
-							from
-								l_title := Void
-								l_filename := Void
-							until
-								f.exhausted or f.end_of_file
-							loop
-								f.read_line_thread_aware
-								l_line := f.last_string
-								if l_line.starts_with_general ("title=") then
-									l_title := l_line.substring (1 + ("title=").count, l_line.count)
-									l_title.left_adjust
-									l_title.right_adjust
-								elseif l_line.starts_with_general ("filename=") then
-									l_filename := l_line.substring (1 + ("filename=").count, l_line.count)
-									l_filename.left_adjust
-									l_filename.right_adjust
-								end
-							end
-							f.close
-							if l_title /= Void then
-								if l_filename = Void then
-									if attached i.entry as e then
-										l_filename := e.name
-										l_filename.remove_tail (3) -- extension ".md"
-										create f.make_with_path (d.path.extended (l_filename))
-										if not f.exists then
-											l_filename.append (".tpl") -- use PATH.appended_with_extension !
+					elseif attached i.extension as ext then
+						if ext.is_case_insensitive_equal_general ("md") then
+							create md.make_with_path (p.extended_path (i))
+							if md.exists then
+								md.get_only_items_named_as (<<"title", "filename">>)
+								if l_title /= Void then
+									if l_filename = Void then
+										if attached i.entry as e then
+											l_filename := e.name
+											l_filename.remove_tail (3) -- extension ".md"
 											create f.make_with_path (d.path.extended (l_filename))
 											if not f.exists then
-												l_filename := Void
+												l_filename.append (".tpl") -- use PATH.appended_with_extension !
+												create f.make_with_path (d.path.extended (l_filename))
+												if not f.exists then
+													l_filename := Void
+												end
 											end
 										end
 									end
 								end
-								if l_filename /= Void then
-									ht.force (d.path.extended (l_filename), l_title)
-								end
 							end
+						elseif ext.is_case_insensitive_equal_general ("tpl") then
+								-- Not . or ..
+								-- Not *.md
+								-- Could be a template *.tpl or others ...
+							if attached i.entry as e then
+								l_filename := e.name
+								l_title := l_filename.head (l_filename.count - 1 - ext.count)
+							end
+						end
+						if l_title /= Void and l_filename /= Void then
+							ht.force (d.path.extended (l_filename), l_title)
 						end
 					end
 				end
 			end
-			a_data.templates_path_by_title_and_book.force (ht, a_book_name)
+			if a_book_name /= Void then
+				a_data.templates_path_by_title_and_book.force (ht, a_book_name)
+			else
+				a_data.templates_path_by_title_and_book.force (ht, a_data.common_book_name)
+			end
 		end
 
 	stored_data: detachable WDOCS_DATA
@@ -245,7 +280,7 @@ feature {NONE} -- Initialization
 		local
 			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
 		do
-			create c.make (wiki_database_path.appended_with_extension ("data"))
+			create c.make (data_filename)
 			Result := c.item
 		end
 
@@ -254,7 +289,7 @@ feature {NONE} -- Initialization
 		local
 			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
 		do
-			create c.make (wiki_database_path.appended_with_extension ("data"))
+			create c.make (data_filename)
 			c.put (d)
 		end
 
@@ -263,8 +298,21 @@ feature {NONE} -- Initialization
 		local
 			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_DATA]
 		do
-			create c.make (wiki_database_path.appended_with_extension ("data"))
+			create c.make (data_filename)
 			c.delete
+		end
+
+	data_filename: PATH
+		local
+			p: PATH
+		do
+			p := wiki_database_path
+			if attached p.entry as e then
+				Result := tmp_dir.extended ("cache").extended_path (e).appended_with_extension ("data")
+--				Result := p.parent.extended (".cache").extended_path (e).appended_with_extension ("data")
+			else
+				Result := p.appended_with_extension ("data")
+			end
 		end
 
 feature -- Access
@@ -291,6 +339,7 @@ feature -- Access
 					create w.make (a_bookid.as_string_8, ip)
 					Result := w.book
 					if Result /= Void then
+						Result.sort
 						data.books.force (Result)
 						store_data (data)
 					end
@@ -298,6 +347,7 @@ feature -- Access
 						-- Scan each folder, and sub folder(s)
 					create Result.make (a_bookid.as_string_8, p) -- FIXME: truncated
 					create vis.make (Result)
+					Result.sort
 					data.books.force (Result)
 					store_data (data)
 				end
@@ -340,7 +390,11 @@ feature -- Access
 				if pg /= Void then
 					p := wiki_database_path.extended (pg.src)
 				else
-					p := wiki_database_path.extended (a_bookid).extended (n)
+--					if n.is_case_insensitive_equal (a_bookid) or n.is_case_insensitive_equal ("index") then
+--						p := wiki_database_path.extended (a_bookid)
+--					else
+						p := wiki_database_path.extended (a_bookid).extended (n)
+--					end
 				end
 				p := p.extended ("index.wiki")
 				create f.make_with_path (p)
@@ -407,34 +461,37 @@ feature -- Access: link
 
 	wiki_page_path (pg: WIKI_PAGE): STRING
 		local
-			f: RAW_FILE
+			utf: UTF_CONVERTER
+			l_path: detachable READABLE_STRING_32
 		do
-			create f.make_with_path (wiki_database_path.extended (pg.src).appended_with_extension ("md"))
-			if attached md_item (f, "path") as l_path then
-				Result := "../../" + l_path
+			if attached metadata (pg, <<"path">>) as md then
+				l_path := md.item ("path")
+			end
+			if l_path /= Void then
+				Result := "../../" + utf.string_32_to_utf_8_string_8 (l_path)
 			else
 				Result := "/" + pg.src
 			end
 		end
 
-	md_item (f: FILE; k: READABLE_STRING_8): detachable STRING_8
+	metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
+			-- Metadata for page `pg',
+			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
+		local
+			md: WDOCS_METADATA_FILE
 		do
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				from
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_line_thread_aware
-					if f.last_string.starts_with_general (k + "=") then
-						create Result.make_from_string (f.last_string)
-						Result.remove_head (k.count + 1)
-						Result.left_adjust
-						Result.right_adjust
-					end
-				end
-				f.close
+			create md.make_with_path (wiki_database_path.extended (pg.src).appended_with_extension ("md"))
+			if not md.exists then
+				create md.make_with_path (wiki_database_path.extended (pg.parent_key).extended ("index").appended_with_extension ("md"))
 			end
+			if md.exists then
+				if a_restricted_names /= Void then
+					md.get_only_items_named_as (a_restricted_names)
+				end
+				Result := md
+			end
+		ensure
+			result_attached_implies_exists: Result /= Void implies not attached {WDOCS_METADATA_FILE} Result as mdf or else mdf.exists
 		end
 
 feature -- Access: Image
@@ -451,106 +508,123 @@ feature -- Access: Image
 
 	image_to_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		local
-			l_book_name: READABLE_STRING_GENERAL
+			l_book_name: detachable READABLE_STRING_32
 			db,p,pp,img: detachable PATH
 			d: DIRECTORY
 			f: RAW_FILE
-			s0,s1,s2: STRING_32
+			s0,s2: STRING_32
 			l_image_path: detachable PATH
 			bak: INTEGER
 		do
 			if a_page /= Void then
-				p := a_page.path
+				l_book_name := book_name (a_page)
 			end
-			db := wiki_database_path
-			if p = Void then
-				p := db
-			else
-				p := p.parent
-			end
-			s1 := p.name
-			from
-				pp := p
-				img := pp.extended ("_images")
-				create d.make_with_path (img)
-			until
-				d.exists or pp.same_as (db)
-			loop
-				bak := bak + 1
-				pp := pp.parent
-				img := pp.extended ("_images")
-				create d.make_with_path (img)
-			end
-			s0 := pp.name
-			if d.exists then
-				if attached d.path.parent.entry as l_book_entry then
-					l_book_name := l_book_entry.name
-				else
-					check has_book_name: False end
-					l_book_name := "_"
-				end
-				l_image_path := data.image_path (a_link.name, l_book_name)
-
---				l_image_path := images (d.path).item (a_link.name)
-				if l_image_path = Void then
-					p := d.path.extended (a_link.name).appended_with_extension ("png")
-					create f.make_with_path (p)
-					if f.exists then
---						images (d.path).force (p, a_link.name)
-						data.record_image_path (p, a_link.name, l_book_name)
-						store_data (data)
-						l_image_path := p
+				-- `l_book_name' could be Void
+			l_image_path := data.image_path (a_link.name, l_book_name)
+			if l_image_path /= Void then
+				s0 := l_image_path.parent.parent.name
+				if l_book_name = Void then
+					if attached l_image_path.parent.entry as l_book_entry then
+						l_book_name := l_book_entry.name
+					else
+						check has_book_name: False end
+						l_book_name := data.common_book_name
 					end
 				end
-				if l_image_path /= Void then
-					create f.make_with_path (l_image_path)
-					if f.exists then
-						s2 := l_image_path.name
-						if s2.starts_with (s0) then
-							s2 := s2.substring (s0.count + 1 + 1, s2.count)
-							create p.make_from_string (s2)
-						else
-							p := f.path
-							bak := 0
+			else
+				db := wiki_database_path
+				if a_page /= Void then
+					p := a_page.path
+				end
+				if p = Void then
+					p := db
+				else
+					p := p.parent
+				end
+				from
+					pp := p
+					img := pp.extended ("_images")
+					create d.make_with_path (img)
+				until
+					d.exists or pp.same_as (db)
+				loop
+					bak := bak + 1
+					pp := pp.parent
+					img := pp.extended ("_images")
+					create d.make_with_path (img)
+				end
+				s0 := pp.name
+				if d.exists then
+					if attached d.path.parent.entry as l_book_entry then
+						l_book_name := l_book_entry.name
+					else
+						check has_book_name: False end
+						l_book_name := data.common_book_name
+					end
+					l_image_path := data.image_path (a_link.name, l_book_name)
+	--				l_image_path := images (d.path).item (a_link.name)
+					if l_image_path = Void then
+						p := d.path.extended (a_link.name).appended_with_extension ("png")
+						create f.make_with_path (p)
+						if f.exists then
+	--						images (d.path).force (p, a_link.name)
+							data.record_image_path (p, a_link.name, l_book_name)
+							store_data (data)
+							l_image_path := p
 						end
-						if attached version_id as vid then
-							Result := "/version/" + percent_encoder.percent_encoded_string (vid)
-						else
-							create Result.make_empty
-						end
-						if a_page /= Void then
-							Result.append ("/book/" + l_book_name)
-							across
-								p.components as ic
-							loop
-								if not Result.is_empty then
-									Result.append_character ('/')
-								end
-								Result.append (percent_encoder.percent_encoded_string (ic.item.name))
+					end
+				end
+			end
+
+			if l_image_path /= Void and l_book_name /= Void then
+				create f.make_with_path (l_image_path)
+				if f.exists then
+					s2 := l_image_path.name
+					if s2.starts_with (s0) then
+						s2 := s2.substring (s0.count + 1 + 1, s2.count)
+						create p.make_from_string (s2)
+					else
+						p := f.path
+						bak := 0
+					end
+					if attached version_id as vid then
+						Result := "/version/" + percent_encoder.percent_encoded_string (vid)
+					else
+						create Result.make_empty
+					end
+					if a_page /= Void then
+						Result.append ("/book/")
+						Result.append (percent_encoder.percent_encoded_string (l_book_name))
+						across
+							p.components as ic
+						loop
+							if not Result.is_empty then
+								Result.append_character ('/')
 							end
-						else
-							Result.append ("/images/" + a_link.name)
-	--	This commented code was used to try to compute relative path, give another try later.
-	--						create Result.make (p.name.count)
-	--						from
-	--						until
-	--							bak <= 1
-	--						loop
-	--							if not Result.is_empty then
-	--								Result.append_character ('/')
-	--							end
-	--							Result.append ("..")
-	--							bak := bak - 1
-	--						end
-	--						across
-	--							p.components as ic
-	--						loop
-	--							if not Result.is_empty then
-	--								Result.append_character ('/')
-	--							end
-	--							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
-	--						end							
+							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 						end
+					else
+						Result.append ("/images/" + a_link.name)
+--	This commented code was used to try to compute relative path, give another try later.
+--						create Result.make (p.name.count)
+--						from
+--						until
+--							bak <= 1
+--						loop
+--							if not Result.is_empty then
+--								Result.append_character ('/')
+--							end
+--							Result.append ("..")
+--							bak := bak - 1
+--						end
+--						across
+--							p.components as ic
+--						loop
+--							if not Result.is_empty then
+--								Result.append_character ('/')
+--							end
+--							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
+--						end							
 					end
 				end
 			end
@@ -627,6 +701,39 @@ feature -- Access: Template
 		end
 
 feature {NONE} -- Implementation
+
+	book_name (a_page: WIKI_PAGE): detachable READABLE_STRING_32
+		local
+			db, p: detachable PATH
+			pp: PATH
+		do
+			p := a_page.path
+			if p /= Void then
+				db := wiki_database_path
+				from
+					pp := p
+				until
+					pp.same_as (db)
+				loop
+					p := pp
+					pp := p.parent
+				end
+				if p.same_as (db) then
+					Result := Void
+				elseif attached p.entry as e then
+					Result := e.name
+				end
+			end
+		end
+
+	sort_books (lst: LIST [WIKI_BOOK])
+			-- Sort `pages' and sub pages.
+		local
+			l_sorter: QUICK_SORTER [WIKI_BOOK]
+		do
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [WIKI_BOOK]})
+			l_sorter.sort (lst)
+		end
 
 	percent_encoder: PERCENT_ENCODER
 			-- Shared Percent encoding engine.

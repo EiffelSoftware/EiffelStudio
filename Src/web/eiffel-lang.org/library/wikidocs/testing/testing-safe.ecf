@@ -13,6 +13,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<library name="wikidocs-safe" location="..\wikidocs-safe.ecf" readonly="false"/>
+		<library name="wikitext-safe" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext-safe.ecf" readonly="false"/>
 		<tests name="src" location=".\" recursive="true"/>
 	</target>
 </system>

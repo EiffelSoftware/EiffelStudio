@@ -10,6 +10,8 @@ feature -- Access
 
 	root_dir: PATH
 
+	temp_dir: PATH
+
 	documentation_dir: PATH
 
 	documentation_default_version: STRING
@@ -21,6 +23,11 @@ feature -- Element change
 	set_root_dir (p: like root_dir)
 		do
 			root_dir := p
+		end
+
+	set_temp_dir (p: like temp_dir)
+		do
+			temp_dir := p
 		end
 
 	set_documentation_dir (p: like documentation_dir)

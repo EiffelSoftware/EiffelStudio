@@ -10,6 +10,8 @@ deferred class
 inherit
 	WIKI_ITEM
 
+	ITERABLE [G]
+
 feature {NONE} -- Initialization
 
 	initialize
@@ -24,6 +26,12 @@ feature -- Access
 	count: INTEGER
 		do
 			Result := elements.count
+		end
+
+	new_cursor: ITERATION_CURSOR [G]
+			-- Fresh cursor associated with current structure
+		do
+			Result := elements.new_cursor
 		end
 
 feature -- Status report
@@ -53,7 +61,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

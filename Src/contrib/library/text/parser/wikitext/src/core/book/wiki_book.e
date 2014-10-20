@@ -8,7 +8,12 @@ class
 	WIKI_BOOK
 
 inherit
+	COMPARABLE
+
 	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
 
 create
 	make
@@ -38,6 +43,37 @@ feature -- Visitor
 			end
 		end
 
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			if weight = other.weight then
+				Result := name < other.name
+			else
+				Result := weight < other.weight
+			end
+		end
+
+feature -- Sorting operation		
+
+	sort
+			-- Sort `pages' and sub pages.
+		local
+			l_sorter: QUICK_SORTER [WIKI_PAGE]
+		do
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [WIKI_PAGE]})
+			l_sorter.sort (pages)
+			across
+				pages as ic
+			loop
+				ic.item.sort
+			end
+			if attached root_page as rp then
+				check root_page_sorted: rp.pages_sorted end
+			end
+		end
+
 feature -- Access
 
 	path: PATH
@@ -46,11 +82,18 @@ feature -- Access
 
 	pages: ARRAYED_LIST [WIKI_PAGE]
 
+	weight: INTEGER
+		do
+			if attached root_page as rp then
+				Result := rp.weight
+			end
+		end
+
 	root_page: detachable WIKI_PAGE
 			-- Page representing the book if any.
 		local
 			wp: WIKI_PAGE
-			l_book_name: like name
+			l_book_name: READABLE_STRING_8
 			l_index_page,l_book_page: detachable WIKI_PAGE
 		do
 			l_book_name := name
@@ -70,7 +113,7 @@ feature -- Access
 			if Result = Void then
 				Result := l_book_page
 			end
-		end		
+		end
 
 	top_pages: ARRAYED_LIST [WIKI_PAGE]
 			-- Top pages of the book, or the immediate children of the root_page.
@@ -81,8 +124,8 @@ feature -- Access
 			l_book_name: like name
 			l_index_page,l_book_page: detachable WIKI_PAGE
 		do
-			create Result.make (0)
 			l_book_name := name
+			create Result.make (0)
 			across
 				pages as ic
 			loop
@@ -128,19 +171,21 @@ feature -- Access
 					Result := Void
 				end
 			end
-		end		
+		end
 
 	page_path (a_page: WIKI_PAGE): PATH
 		local
 			lst: LIST [READABLE_STRING_8]
+			l_name: READABLE_STRING_8
 		do
+			l_name := name
 			Result := path
 			lst := a_page.src.split ('/')
 			from
 				lst.start
 				if
 					not lst.off and then
-					lst.item.same_string (name)
+					l_name.same_string_general (lst.item) -- FIXME: #unicode  url decoded ?
 				then
 					lst.forth
 				end
@@ -171,6 +216,8 @@ feature -- Status report
 			Result.append_character (' ')
 			Result.append_integer (pages.count)
 			Result.append_string (" pages")
+			Result.append_string (" #")
+			Result.append_integer (weight)
 		end
 
 note

@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 			ends_with_double_curly_bracket: s.ends_with ("}}")
 		local
 			p: INTEGER
---			t: STRING
---			subs: LIST [STRING]
 		do
 			p := s.index_of ('|', 3)
 			if p > 0 then
@@ -33,7 +31,7 @@ feature {NONE} -- Initialization
 					parameters_string := s.substring (p + 1, s.count - 2)
 				end
 			else
-				name := s.string
+				name := s.substring (3, s.count - 2) -- Remove "{{" and "}}"
 			end
 		end
 

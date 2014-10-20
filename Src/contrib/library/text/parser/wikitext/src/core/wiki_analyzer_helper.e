@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Tag name from  inside of <...>
 			--| for instance ' abc def="geh"' will return abc
 		require
-			no_start_or_end_tag_char: not s.starts_with_general ("<") and not s.ends_with_general (">")
+			starts_and_ends_with_tag_char: s.starts_with_general ("<") and then s.ends_with_general (">")
 		local
 			i,n: INTEGER
 		do

@@ -29,7 +29,10 @@ feature {NONE} -- Initialization
 			-- Initialize current service.
 		do
 			Precursor
+				-- Default listening port for standalone nino connector: 9090
 			set_service_option ("port", 9090)
+
+				-- Options can be set in ewf.ini config file
 			service_options := create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("ewf.ini")
 
 			initialize_wdocs

@@ -68,9 +68,9 @@ feature {NONE} -- Events
 				d.recursive_create_dir
 			end
 			create book_infos.make (3)
-			book_infos.put (Void, "First_book")
-			book_infos.put (Void, "Second_book")
-			book_infos.put (Void, "Third_book")
+			book_infos.put (Void, "Book_Three")
+			book_infos.put (Void, "Book_Two")
+			book_infos.put (Void, "Book_One")
 
 			across
 				book_infos as ic
@@ -80,13 +80,27 @@ feature {NONE} -- Events
 				d.recursive_create_dir
 				create s.make_from_string ("Overview of ")
 				s.append_string_general (n)
-				create lst.make (1)
-				save_page (n, "index", s)
+				create lst.make (4)
+				if n.is_case_insensitive_equal ("Book_One") then
+					save_page (n, "index", s, <<["weight","1"]>>)
+				elseif n.is_case_insensitive_equal ("Book_Two") then
+					save_page (n, "index", s, <<["weight","2"]>>)
+				elseif n.is_case_insensitive_equal ("Book_Three") then
+					save_page (n, "index", s, <<["weight","3"]>>)
+				end
 				lst.force ("index")
+
+				save_page (n, "one", "First page",<<["weight","1"]>>)
+				lst.force ("one")
+				save_page (n, "two", "Second page",<<["weight","2"]>>)
+				lst.force ("two")
+				save_page (n, "three", "Third page",<<["weight","3"]>>)
+				lst.force ("three")
+
 				book_infos.force (lst, ic.key)
 			end
 
-			create wdocs.make (cfg.root_dir, p, cfg.documentation_default_version)
+			create wdocs.make (p, cfg.documentation_default_version, cfg.temp_dir)
 			wdocs.refresh_data
 		end
 
@@ -95,14 +109,20 @@ feature {NONE} -- Events
 			p: PATH
 			d: DIRECTORY
 		do
-			p := wdocs.root_dir
+			p := wdocs.tmp_dir
+			create d.make_with_path (p)
+			if d.exists then
+				d.recursive_delete
+			end
+
+			p := wdocs.wiki_database_path
 			create d.make_with_path (p)
 			if d.exists then
 				d.recursive_delete
 			end
 		end
 
-	save_page (a_book_name: READABLE_STRING_GENERAL; a_page_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_8)
+	save_page (a_book_name: READABLE_STRING_GENERAL; a_page_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_8; a_metadata: detachable ITERABLE [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]])
 		local
 			f: RAW_FILE
 		do
@@ -110,6 +130,19 @@ feature {NONE} -- Events
 			f.create_read_write
 			f.put_string (a_content)
 			f.close
+			if a_metadata /= Void then
+				create f.make_with_path (wikidocs_dir.extended (a_book_name).extended (a_page_name).appended_with_extension ("md"))
+				f.create_read_write
+				across
+					a_metadata as ic
+				loop
+					f.put_string (ic.item.name)
+					f.put_character ('=')
+					f.put_string (ic.item.value)
+					f.put_new_line
+				end
+				f.close
+			end
 		end
 
 	wdocs: WDOCS_MANAGER
@@ -137,6 +170,8 @@ feature -- Tests data
 feature -- Tests
 
 	test_books
+		note
+			testing:  "execution/isolated"
 		local
 			lst: STRING_TABLE [READABLE_STRING_GENERAL]
 		do
@@ -150,20 +185,39 @@ feature -- Tests
 		end
 
 	test_pages
+		note
+			testing:  "execution/isolated"
 		local
-			lst: STRING_TABLE [READABLE_STRING_GENERAL]
+			s,s1: STRING_32
 		do
 			across
 				book_infos as ic
 			loop
 				if attached wdocs.book (ic.key) as wb then
+					create s.make_empty
+					if
+						attached wb.root_page as rp and then
+						attached rp.pages as rp_pages
+					then
+						across
+							rp_pages as p_ic
+						loop
+							s.append_string_general (p_ic.item.title)
+							s.append_string_general (",")
+						end
+					end
+					s1 := s
+					create s.make_empty
 					if attached ic.item as l_page_names then
 						across
 							l_page_names as p_ic
 						loop
+							s.append_string_general (p_ic.item)
+							s.append_string_general (",")
 							assert ({STRING_32} "Page " + p_ic.item.to_string_32 + " exists", wdocs.page (ic.key, p_ic.item) /= Void)
 						end
 					end
+					assert("same ordered pages", s.tail (s.count - ("index,").count).same_string (s1))
 				else
 					assert ({STRING_32} "Book " + ic.key.to_string_32 + " exists", False)
 				end

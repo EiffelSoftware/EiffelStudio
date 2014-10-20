@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 				-- FIXME: maybe have a WDOCS_MODULE_EXECUTION to get those info when needed...
 				-- Note those values are really set in `register'
 			create root_dir.make_current
+			temp_dir := root_dir.extended ("tmp")
 			documentation_dir := root_dir.extended ("data").extended ("documentation")
 			default_version_id := "current"
 			cache_duration := 0
@@ -60,6 +61,7 @@ feature {CMS_SERVICE} -- Registration
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
 			cfg := configuration (a_service.site_var_dir)
 			root_dir := cfg.root_dir
+			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir
 			cache_duration := cfg.cache_duration
 			default_version_id := cfg.documentation_default_version
@@ -136,6 +138,8 @@ feature -- Access: docs
 
 	root_dir: PATH
 
+	temp_dir: PATH
+
 	documentation_dir: PATH
 
 	default_version_id: READABLE_STRING_GENERAL
@@ -161,9 +165,9 @@ feature -- Access: docs
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 		do
 			if a_version_id = Void then
-				create Result.make (root_dir, documentation_wiki_dir (default_version_id), a_version_id)
+				create Result.make (documentation_wiki_dir (default_version_id), a_version_id, temp_dir)
 			else
-				create Result.make (root_dir, documentation_wiki_dir (a_version_id), a_version_id)
+				create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
 			end
 		end
 
@@ -172,12 +176,17 @@ feature -- Hooks
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
 			Result := <<"wdocs-tree">>
+			debug ("wdocs")
+				Result := <<"wdocs-tree", "wdocs-page-info">>
+			end
 		end
 
 	get_block_view (a_block_id: detachable READABLE_STRING_8; a_execution: CMS_EXECUTION)
 		local
-			b: CMS_MENU_BLOCK
+			l_menublock: CMS_MENU_BLOCK
+			l_content_block: CMS_CONTENT_BLOCK
 			m: CMS_MENU
+			s: STRING
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
 		do
 			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_version_id") as t then
@@ -189,10 +198,52 @@ feature -- Hooks
 			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
 				l_page_name := t
 			end
-			m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
-			create b.make (m)
-			a_execution.add_block (b, "doc_sidebar")
+			if a_block_id /= Void then
+				if a_block_id.same_string_general ("wdocs-tree") then
+					m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
+					create l_menublock.make (m)
+					a_execution.add_block (l_menublock, "doc_sidebar")
+				elseif a_block_id.same_string_general ("wdocs-page-info") then
+					if
+						l_book_name /= Void and then l_page_name /= Void and then
+						attached manager (l_version_id) as mng and then
+						attached {WIKI_PAGE} mng.page (l_book_name, l_page_name) as wp
+					then
+						create s.make_empty
+						s.append ("<strong>title:</strong>")
+						s.append (wp.title)
+						s.append ("%N")
 
+						s.append ("<strong>key:</strong>")
+						s.append (wp.key)
+						s.append ("%N")
+
+						s.append ("<strong>src:</strong>")
+						s.append (wp.src)
+						s.append ("%N")
+
+						if attached wp.path as l_path then
+							s.append ("<strong>path:</strong>")
+							s.append (l_path.name.as_string_8)
+							s.append ("%N")
+						end
+
+						if attached mng.metadata (wp, Void) as md then
+							across
+								md as ic
+							loop
+								s.append_string (ic.key.as_string_8)
+								s.append_character ('=')
+								s.append_string (ic.item.as_string_8)
+								s.append_character ('%N')
+							end
+						end
+						create l_content_block.make (a_block_id, "Page info", s, a_execution.formats.filtered_html)
+						a_execution.add_block (l_content_block, "doc_sidebar")
+					end
+				end
+			else
+			end
 		end
 
 	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN): CMS_LOCAL_LINK
@@ -237,6 +288,7 @@ feature -- Hooks
 						attached mng.book (ic.item) as i_wb and then
 						attached i_wb.root_page as l_root_page
 					then
+						l_root_page.sort
 						if
 							a_book_name /= Void and then
 							i_wb.name.is_case_insensitive_equal_general (a_book_name)
@@ -259,6 +311,7 @@ feature -- Hooks
 						wb := mng.book (a_book_name)
 						if wb /= Void then
 							if attached wb.root_page as wp then
+								wp.sort
 								if attached wp.pages as l_wp_pages then
 									ln.set_expanded (not l_wp_pages.is_empty)
 									wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln, is_full)
@@ -282,6 +335,7 @@ feature -- Hooks
 								ln.set_expandable (True)
 								Result.extend (ln)
 
+								l_parent.sort
 								if attached l_parent.pages as l_wp_pages and then not l_wp_pages.is_empty then
 									wdocs_append_pages_to_link (a_version_id, a_book_name, a_page_name, l_wp_pages, ln, is_full)
 								else
@@ -358,6 +412,7 @@ feature -- Hooks
 
 						if is_full or l_is_active then
 								-- FIXME: find a way to mark it as current doc!
+							wp.sort
 							if
 								attached wp.pages as l_wp_pages and then
 								not l_wp_pages.is_empty
@@ -500,8 +555,9 @@ feature -- Handler
 							across
 								wb.top_pages as ic
 							loop
-								pg.add_page (ic.item)
+								pg.extend (ic.item)
 							end
+							pg.sort
 						end
 					end
 				end
@@ -571,6 +627,7 @@ feature -- Handler
 			p: PATH
 			h: HTTP_HEADER
 			dt: DATE_TIME
+			ut: FILE_UTILITIES
 		do
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)
@@ -578,30 +635,38 @@ feature -- Handler
 			if l_bookid /= Void and l_filename /= Void then
 				mnger := manager (l_version_id)
 				p := mnger.wiki_database_path.extended (l_bookid).extended ("_images").extended (l_filename)
+				if not ut.file_path_exists (p) then
+					p := mnger.wiki_database_path.extended ("_images").extended (l_filename)
+				end
 
-				if
-					attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
-					attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
-					attached file_date (p) as f_date and then
-					f_date <= l_if_modified_since_date
-				then
-					create dt.make_now_utc
-					create h.make
-					h.put_cache_control ("private, max-age=" + (cache_duration).out) -- 24 hours
-					h.put_utc_date (dt)
-					if cache_duration > 0 then
-						dt := dt.twin
-						dt.second_add (cache_duration)
+				if ut.file_path_exists (p) then
+					if
+						attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
+						attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
+						attached file_date (p) as f_date and then
+						f_date <= l_if_modified_since_date
+					then
+						create dt.make_now_utc
+						create h.make
+						h.put_cache_control ("private, max-age=" + (cache_duration).out) -- 24 hours
+						h.put_utc_date (dt)
+						if cache_duration > 0 then
+							dt := dt.twin
+							dt.second_add (cache_duration)
+						end
+						h.put_expires_date (dt)
+						h.put_last_modified (f_date)
+						res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
+						res.put_header_lines (h)
+						res.flush
+					else
+						create l_file_response.make (p.name)
+		--				l_file_response.set_expires_in_seconds (24*60*60)
+						res.send (l_file_response)
 					end
-					h.put_expires_date (dt)
-					h.put_last_modified (f_date)
-					res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
-					res.put_header_lines (h)
-					res.flush
 				else
-					create l_file_response.make (p.name)
-	--				l_file_response.set_expires_in_seconds (24*60*60)
-					res.send (l_file_response)
+					create l_not_found.make (req)
+					res.send (l_not_found)
 				end
 			elseif attached text_path_parameter (req, "image_id", Void) as l_img_id then
 				mnger := manager (l_version_id)
@@ -677,7 +742,7 @@ feature {NONE} -- Implementation: wiki render
 			l_version_id: like version_id
 		do
 			l_version_id := version_id (req, Void)
-			p := a_manager.wiki_database_path.appended_with_extension ("cache")
+			p := wiki_cache_directory (a_manager)
 			if a_book_name /= Void then
 				p := p.extended (a_book_name)
 			end
@@ -735,6 +800,7 @@ feature {NONE} -- Implementation: wiki render
 					l_xhtml.append ("&gt;</li>")
 				end
 
+				a_wiki_page.sort
 				if attached a_wiki_page.pages as l_sub_pages then
 					across
 						l_sub_pages as ic
@@ -773,6 +839,19 @@ feature {NONE} -- Implementation: wiki render
 
 feature {NONE} -- implementation: wiki docs
 
+	wiki_cache_directory (a_manager: WDOCS_MANAGER): PATH
+			-- Directory to store wikitext page output.
+		local
+			p: PATH
+		do
+			p := a_manager.wiki_database_path
+			if attached p.entry as e then
+				Result := temp_dir.extended ("cache").extended_path (e)
+			else
+				Result := p.appended_with_extension ("cache")
+			end
+		end
+
 	last_segment (s: READABLE_STRING_8): READABLE_STRING_8
 		local
 			i: INTEGER
@@ -798,6 +877,7 @@ feature {NONE} -- implementation: wiki docs
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			end
+			a_page.sort
 			l_pages := a_page.pages
 			if l_pages /= Void and then l_pages.is_empty then
 				l_pages := Void

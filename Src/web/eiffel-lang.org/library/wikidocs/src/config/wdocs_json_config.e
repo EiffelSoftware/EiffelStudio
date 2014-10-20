@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 			if attached cfg.text_item ("layout.root") as l_root then
 				create root_dir.make_from_string (l_root)
 			end
+			if attached cfg.text_item ("layout.tmp") as l_tmp then
+				create temp_dir.make_from_string (l_tmp)
+			end
 			if attached cfg.text_item ("layout.documentation") as l_documentation_dir then
 				create documentation_dir.make_from_string (l_documentation_dir)
 			end

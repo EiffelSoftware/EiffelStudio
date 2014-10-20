@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 			if attached ini.text_item ("root") as l_root then
 				create root_dir.make_from_string (l_root)
 			end
+			if attached ini.text_item ("tmp") as l_tmp then
+				create temp_dir.make_from_string (l_tmp)
+			end
 			if attached ini.text_item ("documentation") as l_doc then
 				create documentation_dir.make_from_string (l_doc)
 			end

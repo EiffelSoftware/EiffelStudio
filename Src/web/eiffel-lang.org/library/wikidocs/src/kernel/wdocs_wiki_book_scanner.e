@@ -12,7 +12,8 @@ inherit
 		redefine
 			process_directory,
 			process_file,
-			file_excluded
+			file_excluded,
+			directory_excluded
 		end
 
 create
@@ -54,7 +55,7 @@ feature -- Visiting
 						local_pages as ic
 					loop
 						if ic.item /= l_parent then
-							l_parent.add_page (ic.item)
+							l_parent.extend (ic.item)
 						end
 					end
 					local_pages.wipe_out
@@ -81,10 +82,9 @@ feature -- Visiting
 				if l_index_page = Void then
 					create l_index_page.make (l_name, l_name)
 					wiki_book.add_page (l_index_page)
-
 				end
 				if l_parent /= Void then
-					l_parent.add_page (l_index_page)
+					l_parent.extend (l_index_page)
 					l_index_page.set_parent (l_parent)
 				end
 			else
@@ -95,12 +95,13 @@ feature -- Visiting
 			push_parent_page (l_index_page)
 
 			Precursor (dn)
+			local_pages.start
 			local_pages.prune (l_index_page)
 
 			across
 				local_pages as ic
 			loop
-				l_index_page.add_page (ic.item)
+				l_index_page.extend (ic.item)
 			end
 			local_pages.wipe_out
 
@@ -165,7 +166,7 @@ feature -- Visiting
 				end
 
 				create wp.make (l_name, pk)
-				update_page_source (wiki_book, wp, fn, parent_page)
+				update_wiki_page (wiki_book, wp, fn, parent_page)
 --				if attached parent_page as pp then
 --					wp.set_src (pp.parent_key + "/" + l_name)
 --				else
@@ -176,7 +177,7 @@ feature -- Visiting
 			end
 		end
 
-	update_page_source (wb: WIKI_BOOK; wp: WIKI_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_PAGE)
+	update_wiki_page (wb: WIKI_BOOK; wp: WIKI_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_PAGE)
 		local
 			n1,n2: STRING_32
 			p: PATH
@@ -184,6 +185,12 @@ feature -- Visiting
 			k: STRING_32
 		do
 			wp.set_path (a_wp_path)
+			if attached metadata (wp, Void) as md then
+				if attached md.item ("weight") as l_weight and then l_weight.is_integer then
+					wp.set_weight (l_weight.to_integer)
+				end
+			end
+
 			n1 := wb.path.absolute_path.canonical_path.name
 			n2 := a_wp_path.absolute_path.canonical_path.name
 			if n2.ends_with_general (".wiki") then
@@ -192,7 +199,7 @@ feature -- Visiting
 			if n2.starts_with (n1) then
 				create p.make_from_string (n2.substring (n1.count + 1 + 1, n2.count)) -- remove first directory separator
 				create s.make (p.name.count + 10)
-				s.append (wb.name)
+				s.append (wb.name.as_string_8) -- FIXME: (#unicode) truncated to string8 !!!
 				across
 					p.components as ic
 				loop
@@ -230,6 +237,20 @@ feature -- Status report
 			end
 		end
 
+	directory_excluded (dn: PATH): BOOLEAN
+			-- Is directory `dn' excluded?
+		do
+			Result := Precursor (dn)
+			if not Result then
+				if
+					attached dn.entry as e and then
+					e.name.starts_with ("_")
+				then
+					Result := True
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	local_pages: STRING_TABLE [WIKI_PAGE]
@@ -256,6 +277,33 @@ feature {NONE} -- Implementation
 			parent_pages_not_empty: not parent_pages.is_empty
 		do
 			parent_pages.remove
+		end
+
+	metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
+			-- Metadata for page `pg',
+			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
+		local
+			md: WDOCS_METADATA_FILE
+			l_name: STRING_32
+		do
+			if attached pg.path as l_path then
+				if attached l_path.entry as e then
+					l_name := e.name
+					if l_name.ends_with_general (".wiki") then
+						l_name.remove_tail ((".wiki").count)
+						create md.make_with_path (l_path.parent.extended (l_name).appended_with_extension ("md"))
+						if not md.exists then
+							create md.make_with_path (l_path.parent.extended ("index").appended_with_extension ("md"))
+						end
+						if md.exists then
+							if a_restricted_names /= Void then
+								md.get_only_items_named_as (a_restricted_names)
+							end
+							Result := md
+						end
+					end
+				end
+			end
 		end
 
 end

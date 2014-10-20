@@ -58,7 +58,8 @@ feature {NONE} -- Initialization
 								l_parent_key.adjust
 								create wp.make (t, l_parent_key)
 								if attached ht.item (l_parent_key) as l_parent_page then
-									l_parent_page.add_page_with_weight (wp, l_weight)
+									wp.set_weight (l_weight)
+									l_parent_page.extend (wp)
 								end
 								wb.add_page (wp)
 								l_wp_key := Void

@@ -25,9 +25,14 @@
 
 #define EIF_USE_STD_MUTEX
 #ifdef EIF_USE_STD_MUTEX
+		/* Standard mutexes and locks on them. */
 	typedef std::mutex mutex_type;
 	typedef std::unique_lock<mutex_type> unique_lock_type;
 
+		/* Recursive mutexes. */
+	typedef std::recursive_mutex recursive_mutex_type;
+
+		/* Condition variabnles, mutexes and locks that can be used with condition variables. */
 	typedef std::mutex conditional_mutex_type;
 	typedef std::unique_lock <conditional_mutex_type> conditional_unique_lock_type;
 	typedef std::condition_variable condition_variable_type;
@@ -36,9 +41,15 @@
 #	include "concurrency/rt_unique_lock.hpp"
 #	include "concurrency/rt_condition_variable.hpp"
 
+		/* Standard mutexes and locks on them. */
 	typedef eiffel_run_time::mutex mutex_type;
 	typedef eiffel_run_time::unique_lock <mutex_type> unique_lock_type;
 
+		/* Recursive mutexes. */
+		/* The default implementation supports recursive mutexes. */
+	typedef mutex_type recursive_mutex_type;
+
+		/* Condition variabnles, mutexes and locks that can be used with condition variables. */
 	typedef eiffel_run_time::mutex conditional_mutex_type;
 	typedef eiffel_run_time::unique_lock<conditional_mutex_type> conditional_unique_lock_type;
 	typedef eiffel_run_time::condition_variable condition_variable_type;

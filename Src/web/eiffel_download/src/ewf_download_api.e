@@ -150,7 +150,7 @@ feature -- Workflow
 					l_info.set_platform (platform)
 					l_info.set_product ("EiffelStudio enterprise")
 					l_info.set_filename (downloaded_file (platform))
-					l_info.set_email_date (create {DATE_TIME}.make_now_utc)
+					l_info.set_download_date (create {DATE_TIME}.make_now_utc)
 					if l_service.is_membership (email) then
 						log.write_debug (generator + "process_workflow:" + email +  " Membership")
 						if 	l_service.is_download_active (l_token.value) then

@@ -284,7 +284,7 @@ processor::mark(marker_t mark)
 priv_queue*
 processor::new_priv_queue()
 {
-  std::unique_lock <mutex_type> lk (cache_mutex);
+  unique_lock_type lk (cache_mutex);
   private_queue_cache.push_back(new priv_queue(this));
   return private_queue_cache.back();
 }

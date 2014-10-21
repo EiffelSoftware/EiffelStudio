@@ -112,7 +112,7 @@ processor_registry::return_processor (processor *proc)
 
       if (used_pids.size() == 0)
 	{
-	  std::unique_lock <std::mutex> lock(all_done_mutex);
+	  conditional_unique_lock_type lock(all_done_mutex);
 	  all_done = true;
 	  all_done_cv.notify_one();
 	}
@@ -212,6 +212,9 @@ processor_registry::wait_for_all()
   while(!all_done)
     {
       eif_lock lock (all_done_mutex);
-      all_done_cv.wait(lock, [&](){return all_done;});
+      while(!all_done)
+        {
+          all_done_cv.wait(lock);
+        }
     }
 }

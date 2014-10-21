@@ -201,7 +201,7 @@ public:
     q.enqueue(v);
 
     {
-      std::unique_lock<std::mutex> lock (mutex);
+      conditional_unique_lock_type lock (mutex);
       cv.notify_one();
     }
   }
@@ -230,8 +230,8 @@ public:
   spsc_queue_impl<T> q;
 
 private:
-  std::mutex mutex;
-  std::condition_variable cv;
+  conditional_mutex_type mutex;
+  condition_variable_type cv;
 };
 
 #endif // _SPSC_H

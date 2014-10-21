@@ -26,9 +26,22 @@
 #define EIF_USE_STD_MUTEX
 #ifdef EIF_USE_STD_MUTEX
 	typedef std::mutex mutex_type;
+	typedef std::unique_lock<mutex_type> unique_lock_type;
+
+	typedef std::mutex conditional_mutex_type;
+	typedef std::unique_lock <conditional_mutex_type> conditional_unique_lock_type;
+	typedef std::condition_variable condition_variable_type;
 #else
 #	include "concurrency/rt_mutex.hpp"
+#	include "concurrency/rt_unique_lock.hpp"
+#	include "concurrency/rt_condition_variable.hpp"
+
 	typedef eiffel_run_time::mutex mutex_type;
+	typedef eiffel_run_time::unique_lock <mutex_type> unique_lock_type;
+
+	typedef eiffel_run_time::mutex conditional_mutex_type;
+	typedef eiffel_run_time::unique_lock<conditional_mutex_type> conditional_unique_lock_type;
+	typedef eiffel_run_time::condition_variable condition_variable_type;
 #endif
 
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);
@@ -52,12 +65,12 @@ public:
 };
 
 
-class eif_lock : eif_block_token, public std::unique_lock <std::mutex>
+class eif_lock : eif_block_token, public conditional_unique_lock_type
 {
 public:
-  eif_lock (std::mutex &mutex) :
+  eif_lock (conditional_mutex_type &mutex) :
     eif_block_token (),
-    std::unique_lock <std::mutex> (mutex)
+    conditional_unique_lock_type (mutex)
   {}
 };
 

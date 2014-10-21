@@ -17,7 +17,7 @@ public:
 			}
 		}
 
-	~condition_variable() _NOEXCEPT
+	~condition_variable()
 		{	// destroy
 			eif_pthread_cond_destroy (variable_pointer);
 			variable_pointer = 0;
@@ -27,12 +27,12 @@ private:
 	condition_variable(const condition_variable&);  // not defined
 	condition_variable& operator=(const condition_variable&);	// not defined
 public:
-	void notify_one() _NOEXCEPT
+	void notify_one()
 		{	// wake up one waiter
 			eif_pthread_cond_signal (variable_pointer);
 		}
 
-	void notify_all() _NOEXCEPT
+	void notify_all()
 		{	// wake up all waiters
 			eif_pthread_cond_broadcast (variable_pointer);
 		}

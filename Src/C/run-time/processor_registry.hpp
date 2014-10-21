@@ -113,14 +113,14 @@ private:
   void clear_from_caches (processor *proc);
 
 private:
-  std::mutex need_pid_mutex;
-  std::condition_variable need_pid_cv;
+  conditional_mutex_type need_pid_mutex;
+  condition_variable_type need_pid_cv;
 
   // end of life notification
 private:
   bool all_done;
-  std::mutex all_done_mutex;
-  std::condition_variable all_done_cv;
+  conditional_mutex_type all_done_mutex;
+  condition_variable_type all_done_cv;
 };
 
 void

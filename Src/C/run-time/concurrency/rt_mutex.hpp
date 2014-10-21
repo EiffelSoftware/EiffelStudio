@@ -13,7 +13,7 @@ class mutex
 public:
 	mutex ()
 		{
-			if (eif_pthread_cs_create (&section_pointer, 0) != T_OK)
+			if (eif_pthread_mutex_create (&mutex_pointer) != T_OK)
 			{
 				esys ();
 			}
@@ -21,8 +21,8 @@ public:
 
 	~ mutex ()
 		{	// clean up
-			eif_pthread_cs_destroy (section_pointer);
-			section_pointer = 0;
+			eif_pthread_mutex_destroy (mutex_pointer);
+			mutex_pointer = 0;
 		}
 
 private:
@@ -32,21 +32,22 @@ private:
 public:
 	void lock()
 		{	// lock the mutex
-			eif_pthread_cs_lock (section_pointer);
+			eif_pthread_mutex_lock (mutex_pointer);
 		}
 
 	bool try_lock()
 		{	// try to lock the mutex
-			return eif_pthread_cs_trylock (section_pointer) == T_OK;
+			return eif_pthread_mutex_trylock (mutex_pointer) == T_OK;
 		}
 
 	void unlock()
 		{	// unlock the mutex
-			eif_pthread_cs_unlock (section_pointer);
+			eif_pthread_mutex_unlock (mutex_pointer);
 		}
 
 private:
-	EIF_CS_TYPE * section_pointer;
+	friend class condition_variable;
+	EIF_MUTEX_TYPE * mutex_pointer;
 }; // class mutex
 
 } // namespace eiffel_run_time

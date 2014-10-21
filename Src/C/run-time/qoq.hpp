@@ -68,7 +68,7 @@ public:
     push_(node);
 
     {
-      std::unique_lock<std::mutex> lock (mutex);
+      conditional_unique_lock_type lock (mutex);
       cv.notify_all();
     }
   }
@@ -133,8 +133,8 @@ private:
   mpscq_node <V> *           tail_;
 
 private: // Synchronization structures
-  std::mutex mutex;
-  std::condition_variable cv;
+  conditional_mutex_type mutex;
+  condition_variable_type cv;
 };
 
 class processor;

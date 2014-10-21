@@ -24,7 +24,7 @@ public:
 	unique_lock (const unique_lock &);	// not defined
 	unique_lock & operator = (const unique_lock &);	// not defined
 
-	mutex_type * mutex () const _NOEXCEPT
+	mutex_type * mutex ()
 		{	// return pointer to managed mutex
 			return mutex_pointer;
 		}

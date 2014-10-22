@@ -10,10 +10,14 @@
 								<h1>Eiffel is a programming language,<br> method and environment for tackling tomorrow’s problems today.</h1>
 								<div class="btn-holder">
 									<div class="row">
-										<span class="release">LATEST RELEASE V 2.1.1</span>
-										<time datetime="2014-09-12" class="date">12.09.2014</time>
+										<span class="release">{$last_release/}</span>
+										<time datetime="{$date/}" class="date">{$date/}</time>
 									</div>
-									<a class="btn-download" href="#">Download Now</a>
+									<div class="row">		
+										<span class="versions"><a target="_blank"  href="http://sourceforge.net/projects/eiffelstudio/files/">Other versions</a></span>
+									</div>
+									<a class="btn-download" target="_blank"  href="{$link.location/}">Download Now</a>
 								</div>
+								
 							</div>
 						</div>

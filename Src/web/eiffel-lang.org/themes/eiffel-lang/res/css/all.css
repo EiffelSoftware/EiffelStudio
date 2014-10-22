@@ -517,6 +517,10 @@ table {
   float: left;
   padding: 0 8px;
 }
+.promo-area .holder .btn-holder .row .versions {
+  float: left;
+  padding: 0 8px;
+}
 .promo-area .holder .btn-holder .row .date {
   width: 96px;
   float: right;

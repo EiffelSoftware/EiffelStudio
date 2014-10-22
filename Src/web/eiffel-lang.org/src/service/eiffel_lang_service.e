@@ -55,7 +55,7 @@ feature	-- Initialization
 			fixme ("Remove this hack to provide about, contribute and download page")
 			cms_service.map_uri_template ("/about", agent handle_about)
 			cms_service.map_uri_template ("/contribute", agent handle_contribute)
-			cms_service.map_uri_template ("/download", agent handle_download)
+--			cms_service.map_uri_template ("/download", agent handle_download)
 		end
 
 feature -- Access: CMS
@@ -80,6 +80,11 @@ feature -- Implementation: CMS
 			m: CMS_MODULE
 		do
 			create {WDOCS_MODULE} m.make
+			m.enable
+			a_setup.add_module (m)
+
+
+			create {WDOCS_DOWNLOAD_MODULE} m.make
 			m.enable
 			a_setup.add_module (m)
 
@@ -134,16 +139,16 @@ feature	-- Execution
 			e.execute
 		end
 
-	handle_download (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			e: CMS_EXECUTION
-		do
-			fixme ("Use CMS node and associated content for Download link!")
-			create {ANY_CMS_EXECUTION} e.make (req, res, cms_service)
-			e.set_optional_content_type ("download")
-			e.set_title ("Download")
-			e.set_main_content ("")
-			e.execute
-		end
+--	handle_download (req: WSF_REQUEST; res: WSF_RESPONSE)
+--		local
+--			e: CMS_EXECUTION
+--		do
+--			fixme ("Use CMS node and associated content for Download link!")
+--			create {ANY_CMS_EXECUTION} e.make (req, res, cms_service)
+--			e.set_optional_content_type ("download")
+--			e.set_title ("Download")
+--			e.set_main_content ("")
+--			e.execute
+--		end
 
 end

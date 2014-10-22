@@ -21,6 +21,9 @@ feature -- Execution
 		do
 			set_title ("Home")
 			set_page_title (Void)
+			set_value ("Last Release 14.05", "last_release")
+			set_value ("2014-08-12", "date")
+			set_value ((create {CMS_LOCAL_LINK}.make ("download link", "download")), "link")
 			create b.make_empty
 			if attached service.storage.recent_nodes (1, 10) as l_nodes then
 				across

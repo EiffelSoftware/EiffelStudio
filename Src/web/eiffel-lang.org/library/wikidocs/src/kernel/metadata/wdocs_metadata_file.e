@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 			utf: UTF_CONVERTER
 			f: RAW_FILE
 			k: STRING_8
-			s: STRING
 			l_line: STRING_8
 			i: INTEGER
 		do

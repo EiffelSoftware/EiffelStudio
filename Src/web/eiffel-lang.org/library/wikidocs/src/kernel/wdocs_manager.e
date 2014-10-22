@@ -48,6 +48,13 @@ feature -- Access
 
 feature -- Basic operations
 
+	reload_data
+			-- Discard memory cache for `data',
+			-- and reload it from file system.
+		do
+			get_data
+		end
+
 	refresh_data
 			-- Refresh manager data.
 		do
@@ -110,6 +117,22 @@ feature {NONE} -- Initialization
 						wb_lst as ic
 					loop
 						l_data.book_names.force (ic.item.name)
+					end
+						-- Record association between wiki page title, and wiki files
+					across
+						l_data.book_names as ic
+					loop
+						if attached book (ic.item) as l_wikibook then
+							across
+								l_wikibook.pages as p_ic
+							loop
+								if attached p_ic.item.path as l_page_path then
+									l_data.record_page_path (l_page_path, p_ic.item.title, l_wikibook.name)
+								else
+									check has_path: False end
+								end
+							end
+						end
 					end
 				end
 
@@ -318,11 +341,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	book_names: ITERABLE [READABLE_STRING_32]
+			-- Available book names.
 		do
 			Result := data.book_names
 		end
 
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
+			-- Book named `a_bookid' if any.
 		local
 			p, ip: PATH
 			w: WIKI_INDEX
@@ -355,6 +380,7 @@ feature -- Access
 		end
 
 	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		local
 			n: READABLE_STRING_GENERAL
 			p: PATH
@@ -411,9 +437,18 @@ feature -- Access
 
 	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
-		local
 		do
-			-- TODO: implement this
+			if a_bookid /= Void then
+				Result := page (a_bookid, a_page_title)
+			elseif attached data.book_names_with_page_title (a_page_title) as lst and then not lst.is_empty then
+				across
+					lst as ic
+				until
+					Result /= Void
+				loop
+					Result := page (ic.item, a_page_title)
+				end
+			end
 		end
 
 	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL): detachable WIKI_PAGE
@@ -430,31 +465,46 @@ feature -- Access: link
 			db,p,pp,lnk: detachable PATH
 			f: RAW_FILE
 			wi: WIKI_INDEX
+			l_book_name: like book_name
 		do
 			if a_page /= Void then
-				p := a_page.path
+				l_book_name := book_name (a_page)
 			end
-			db := wiki_database_path
-			if p = Void then
-				p := db
-			else
-				p := p.parent
+			if attached page_by_title (a_link.name, l_book_name) as pg then
+				Result := wiki_page_path (pg)
 			end
-			from
-				pp := p
-				lnk := pp.extended ("book.index")
-				create f.make_with_path (lnk)
-			until
-				f.exists or pp.same_as (db)
-			loop
-				pp := pp.parent
-				lnk := pp.extended ("book.index")
-				create f.make_with_path (lnk)
+
+			if Result = Void then
+					-- Try to find a book.index if any.
+				db := wiki_database_path
+				if p = Void then
+					p := db
+				else
+					p := p.parent
+				end
+				from
+					pp := p
+					lnk := pp.extended ("book.index")
+					create f.make_with_path (lnk)
+				until
+					f.exists or pp.same_as (db) or pp.is_current_symbol
+				loop
+					pp := pp.parent
+					lnk := pp.extended ("book.index")
+					create f.make_with_path (lnk)
+				end
+				if f.exists then
+					create wi.make ("book", f.path)
+					if attached wi.page (a_link.name) as pg then
+						Result := wiki_page_path (pg)
+					end
+				end
+
 			end
-			if f.exists then
-				create wi.make ("book", f.path)
-				if attached wi.page (a_link.name) as pg then
-					Result := wiki_page_path (pg)
+
+			if Result /= Void then
+				if attached version_id as vid then
+					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
 				end
 			end
 		end
@@ -468,9 +518,12 @@ feature -- Access: link
 				l_path := md.item ("path")
 			end
 			if l_path /= Void then
-				Result := "../../" + utf.string_32_to_utf_8_string_8 (l_path)
+--				Result := "../../" + utf.string_32_to_utf_8_string_8 (l_path)
+				Result := "/" + utf.string_32_to_utf_8_string_8 (l_path)
+			elseif attached book_name (pg) as bn then
+				Result := "/book/" + bn + "/" + pg.title
 			else
-				Result := "/" + pg.src
+				Result := "/book/" + pg.src
 			end
 		end
 
@@ -498,12 +551,13 @@ feature -- Access: Image
 
 	image_to_wiki_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		do
-			if attached version_id as vid then
-				Result := "/version/" + percent_encoder.percent_encoded_string (vid)
-			else
-				create Result.make_empty
+			Result := "/images/" + a_link.name
+
+			if Result /= Void then
+				if attached version_id as vid then
+					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+				end
 			end
-			Result.append ("/images/" + a_link.name)
 		end
 
 	image_to_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
@@ -524,7 +578,7 @@ feature -- Access: Image
 			if l_image_path /= Void then
 				s0 := l_image_path.parent.parent.name
 				if l_book_name = Void then
-					if attached l_image_path.parent.entry as l_book_entry then
+					if attached l_image_path.parent.parent.entry as l_book_entry then
 						l_book_name := l_book_entry.name
 					else
 						check has_book_name: False end
@@ -546,7 +600,7 @@ feature -- Access: Image
 					img := pp.extended ("_images")
 					create d.make_with_path (img)
 				until
-					d.exists or pp.same_as (db)
+					d.exists or pp.same_as (db) or pp.is_current_symbol
 				loop
 					bak := bak + 1
 					pp := pp.parent
@@ -587,11 +641,7 @@ feature -- Access: Image
 						p := f.path
 						bak := 0
 					end
-					if attached version_id as vid then
-						Result := "/version/" + percent_encoder.percent_encoded_string (vid)
-					else
-						create Result.make_empty
-					end
+					create Result.make_empty
 					if a_page /= Void then
 						Result.append ("/book/")
 						Result.append (percent_encoder.percent_encoded_string (l_book_name))
@@ -628,6 +678,11 @@ feature -- Access: Image
 					end
 				end
 			end
+			if Result /= Void then
+				if attached version_id as vid then
+					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+				end
+			end
 		end
 
 feature -- Access: Template
@@ -640,67 +695,74 @@ feature -- Access: Template
 			s0,s1: STRING_32
 			l_template_path: detachable PATH
 			bak: INTEGER
-			l_book_name: READABLE_STRING_GENERAL
+			l_book_name: detachable READABLE_STRING_GENERAL
 		do
 			if a_page /= Void then
-				p := a_page.path
+				l_book_name := book_name (a_page)
 			end
-			db := wiki_database_path
-			if p = Void then
-				p := db
-			else
-				p := p.parent
-			end
-			s1 := p.name
-			from
-				pp := p
-				l_tpl_path := pp.extended ("_templates")
-				create d.make_with_path (l_tpl_path)
-			until
-				d.exists or pp.same_as (db)
-			loop
-				bak := bak + 1
-				pp := pp.parent
-				l_tpl_path := pp.extended ("_templates")
-				create d.make_with_path (l_tpl_path)
-			end
-			s0 := pp.name
-			if d.exists then
-				if attached d.path.parent.entry as l_book_entry then
-					l_book_name := l_book_entry.name
+			l_template_path := data.template_path (a_template.name, l_book_name)
+			if l_template_path = Void then
+				if a_page /= Void then
+					p := a_page.path
+				end
+				db := wiki_database_path
+				if p = Void then
+					p := db
 				else
-					check has_book_name: False end
-					l_book_name := "_"
+					p := p.parent
 				end
-				l_template_path := data.template_path (a_template.name, l_book_name)
-				if l_template_path = Void then
-					p := d.path.extended (a_template.name).appended_with_extension ("tpl")
-					create f.make_with_path (p)
-					if f.exists then
-						data.record_template_path (p, a_template.name, l_book_name)
-						store_data (data)
-						l_template_path := p
+				s1 := p.name
+				from
+					pp := p
+					l_tpl_path := pp.extended ("_templates")
+					create d.make_with_path (l_tpl_path)
+				until
+					d.exists or pp.same_as (db) or pp.is_current_symbol
+				loop
+					bak := bak + 1
+					pp := pp.parent
+					l_tpl_path := pp.extended ("_templates")
+					create d.make_with_path (l_tpl_path)
+				end
+				s0 := pp.name
+				if d.exists then
+					if attached d.path.parent.entry as l_book_entry then
+						l_book_name := l_book_entry.name
+					else
+						check has_book_name: False end
+						l_book_name := "_"
 					end
-				end
-				if l_template_path /= Void then
-					create f.make_with_path (l_template_path)
-					if f.exists then
-						create Result.make (f.count)
-						f.open_read
-						from
-						until
-							f.exhausted or f.end_of_file
-						loop
-							f.read_stream_thread_aware (1_024)
-							Result.append (f.last_string)
+					l_template_path := data.template_path (a_template.name, l_book_name)
+					if l_template_path = Void then
+						p := d.path.extended (a_template.name).appended_with_extension ("tpl")
+						create f.make_with_path (p)
+						if f.exists then
+							data.record_template_path (p, a_template.name, l_book_name)
+							store_data (data)
+							l_template_path := p
 						end
-						f.close
 					end
+				end
+			end
+
+			if l_template_path /= Void then
+				create f.make_with_path (l_template_path)
+				if f.exists then
+					create Result.make (f.count)
+					f.open_read
+					from
+					until
+						f.exhausted or f.end_of_file
+					loop
+						f.read_stream_thread_aware (1_024)
+						Result.append (f.last_string)
+					end
+					f.close
 				end
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Helpers
 
 	book_name (a_page: WIKI_PAGE): detachable READABLE_STRING_32
 		local
@@ -713,7 +775,7 @@ feature {NONE} -- Implementation
 				from
 					pp := p
 				until
-					pp.same_as (db)
+					pp.same_as (db) or pp.is_current_symbol
 				loop
 					p := pp
 					pp := p.parent
@@ -724,7 +786,12 @@ feature {NONE} -- Implementation
 					Result := e.name
 				end
 			end
+			if Result /= Void and then not across book_names as ic some ic.item.same_string (Result) end then
+				Result := Void
+			end
 		end
+
+feature {NONE} -- Implementation
 
 	sort_books (lst: LIST [WIKI_BOOK])
 			-- Sort `pages' and sub pages.

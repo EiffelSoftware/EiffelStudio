@@ -18,9 +18,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_portnumber: INTEGER)
+	make (a_home: READABLE_STRING_8)
 		do
-			port_number := a_portnumber
+			create home_url.make_from_string (a_home)
 			default_create
 		end
 
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			create forth_button.make_with_text ("Forth")
 			create refresh_button.make_with_text ("Refresh")
 			create stop_button.make_with_text ("Stop")
-			create url_text_field.make_with_text ("http://localhost:" + port_number.out)
+			create url_text_field.make_with_text (home_url)
 			create go_button.make_with_text ("Go")
 
 			create web_browser
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	port_number: INTEGER
+	home_url: IMMUTABLE_STRING_8
 
 feature -- Status report
 
@@ -121,10 +121,15 @@ feature -- Element change
 			on_go_button_action
 		end
 
-	set_port_number (p: INTEGER)
+	open_home
 		do
-			port_number := p
-			url_text_field.set_text ("http://localhost:" + port_number.out)
+			open (home_url)
+		end
+
+	set_home_url (a_url: READABLE_STRING_8)
+		do
+			create home_url.make_from_string (a_url)
+			url_text_field.set_text (a_url)
 		end
 
 feature {NONE} -- Implementation
@@ -151,7 +156,7 @@ feature {NONE} -- Implementation
 	on_home_button_action
 			-- Action for `home_button'
 		do
-			web_browser.load_uri ("http://localhost:" + port_number.out)
+			open_home
 		end
 
 	on_back_button_action

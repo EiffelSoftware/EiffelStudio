@@ -51,9 +51,8 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- Create objects
 		do
-			create wdocs_browser.make (port_number)
+			create wdocs_browser.make ("http://localhost")
 			create wdocs_control.make (port_number)
-
 		end
 
 	user_initialization
@@ -80,6 +79,9 @@ feature {NONE} -- Initialization
 			sp.resize_actions.extend_kamikaze (agent (ix,iy,iw,ih: INTEGER; isp: EV_SPLIT_AREA) do isp.set_split_position (180) end(?,?,?,?,sp))
 
 			wdocs_control.wiki_page_select_actions.extend (agent open_wiki_page)
+			wdocs_control.url_requested_actions.extend (agent open_url)
+
+			wdocs_control.refresh_now
 		end
 
 	is_in_default_state: BOOLEAN
@@ -90,14 +92,34 @@ feature {NONE} -- Initialization
 feature -- Basic operation
 
 	open_wiki_page (wp: WIKI_PAGE)
+		local
+			lnk: WIKI_LINK
+			l_url: READABLE_STRING_8
 		do
-			wdocs_browser.open ("http://localhost:" + port_number.out + "/book/" + wp.parent_key + "/" + wp.key)
+			create lnk.make ("[[" + wp.title + "]]")
+			if attached wdocs_control.new_wdocs_manager.link_to_wiki_url (lnk, wp) as u then
+				l_url := u
+			else
+				l_url := "/book/" + wp.parent_key + "/" + wp.key
+			end
+			if l_url.starts_with_general ("http:") or l_url.starts_with_general ("https:") then
+				wdocs_browser.open (l_url)
+			else
+				wdocs_browser.open ("http://localhost:" + port_number.out + l_url)
+			end
+----			wdocs_browser.open ("http://localhost:" + port_number.out + "/book/" + wp.parent_key + "/" + wp.key)
 		end
 
-	open_link
+	open_url (a_url: READABLE_STRING_8)
 		do
-			wdocs_browser.set_port_number (port_number)
-			wdocs_browser.open ("http://localhost:" + port_number.out)
+			wdocs_browser.open (a_url)
+		end
+
+	on_web_service_ready
+		do
+			wdocs_control.set_port_number (port_number)
+			wdocs_browser.set_home_url ("http://localhost:" + port_number.out)
+			wdocs_browser.open_home
 		end
 
 feature {NONE} -- Implementation

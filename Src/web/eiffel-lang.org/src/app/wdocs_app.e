@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 	on_web_service_launched (a_win: attached like main_window)
 		do
-			add_idle_action_kamikaze (agent a_win.open_link)
+			add_idle_action_kamikaze (agent a_win.on_web_service_ready)
 		end
 
 feature {NONE} -- Implementation

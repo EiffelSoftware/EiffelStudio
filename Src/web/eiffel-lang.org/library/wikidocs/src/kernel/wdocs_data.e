@@ -86,7 +86,7 @@ feature -- Query
 			end
 		end
 
-	template_path (a_title: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): detachable PATH
+	template_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
 		do
 			if a_book_name /= Void then
 				if a_book_name.same_string (common_book_name) then
@@ -119,12 +119,38 @@ feature -- Query
 			end
 		end
 
-	page (a_title: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	book_names_with_page_title (a_title: READABLE_STRING_GENERAL): ARRAYED_LIST [READABLE_STRING_32]
 		do
+			create Result.make (0)
+			across
+				book_names as ic
+			loop
+				if attached page_path (a_title, ic.item) as p then
+					Result.force (ic.item)
+				end
+			end
+		end
 
+	page_path (a_title: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): detachable PATH
+		do
+			if attached pages_path_by_title_and_book.item (a_book_name) as ht then
+				Result := ht.item (a_title)
+			end
 		end
 
 feature -- Element change
+
+	record_page_path (a_path: PATH; a_page_name: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL)
+		local
+			ht: detachable STRING_TABLE [PATH]
+		do
+			ht := pages_path_by_title_and_book.item (a_book_name)
+			if ht = Void then
+				create ht.make (1)
+				pages_path_by_title_and_book.force (ht, a_book_name)
+			end
+			ht.force (a_path, a_page_name)
+		end
 
 	record_image_path (a_path: PATH; a_image_name: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL)
 		local

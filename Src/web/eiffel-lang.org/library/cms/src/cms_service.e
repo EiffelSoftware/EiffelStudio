@@ -169,7 +169,7 @@ feature -- Hook: value alter
 
 	value_alter_hooks: detachable ARRAYED_LIST [CMS_HOOK_VALUE_ALTER]
 
-	call_value_alter_hooks (m: CMS_VALUE; a_execution: CMS_EXECUTION)
+	call_value_alter_hooks (m: CMS_VALUE_TABLE; a_execution: CMS_EXECUTION)
 		do
 			if attached value_alter_hooks as lst then
 				across

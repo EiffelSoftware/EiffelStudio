@@ -13,7 +13,7 @@ inherit
 
 feature -- Hook
 
-	value_alter (a_value: CMS_VALUE; a_execution: CMS_EXECUTION)
+	value_alter (a_value: CMS_VALUE_TABLE; a_execution: CMS_EXECUTION)
 		deferred
 		end
 note

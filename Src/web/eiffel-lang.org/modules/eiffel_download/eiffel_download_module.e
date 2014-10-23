@@ -94,7 +94,7 @@ feature -- Hooks
 
 	value_alter (a_value: CMS_VALUE_TABLE; a_execution: CMS_EXECUTION)
 		local
-			l_ua: WSF_USER_AGENT_ANALIZER
+			l_ua: CMS_USER_AGENT
 		do
 			if
 				attached retrieve_product_gpl as l_product and then
@@ -109,10 +109,10 @@ feature -- Hooks
 				a_value.force ((create {CMS_LOCAL_LINK}.make ("download link", "download")), "link")
 			end
 
-			create l_ua
-			l_ua.analizer (a_execution.request)
+			create l_ua.make_from_string (a_execution.request.http_user_agent)
+
 			if attached l_ua.os_family as l_os and then
-			   	attached l_ua.platform as l_platform
+			   	attached l_ua.address_register_size as l_platform
 			then
 			 	-- Todo build the link
 			end

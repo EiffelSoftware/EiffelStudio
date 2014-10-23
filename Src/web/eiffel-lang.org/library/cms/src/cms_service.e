@@ -151,6 +151,35 @@ feature -- Access
 
 	modules: LIST [CMS_MODULE]
 
+feature -- Hook: value alter
+
+	add_value_alter_hook (h: like value_alter_hooks.item)
+		local
+			lst: like value_alter_hooks
+		do
+			lst := value_alter_hooks
+			if lst = Void then
+				create lst.make (1)
+				value_alter_hooks := lst
+			end
+			if not lst.has (h) then
+				lst.force (h)
+			end
+		end
+
+	value_alter_hooks: detachable ARRAYED_LIST [CMS_HOOK_VALUE_ALTER]
+
+	call_value_alter_hooks (m: CMS_VALUE; a_execution: CMS_EXECUTION)
+		do
+			if attached value_alter_hooks as lst then
+				across
+					lst as c
+				loop
+					c.item.value_alter (m, a_execution)
+				end
+			end
+		end
+
 feature -- Hook: menu_alter
 
 	add_menu_alter_hook (h: like menu_alter_hooks.item)

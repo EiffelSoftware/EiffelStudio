@@ -4,9 +4,11 @@ note
 	revision: "$Revision$"
 
 class
-	WDOCS_DOWNLOAD_MODULE
+	EIFFEL_DOWNLOAD_MODULE
 inherit
 	CMS_MODULE
+
+	CMS_HOOK_VALUE_ALTER
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -33,6 +35,7 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Eiffel GPL Download"
 			package := "download"
+			create download_json
 			enable
 		end
 
@@ -43,19 +46,17 @@ feature {CMS_SERVICE} -- Registration
 	register (a_service: CMS_SERVICE)
 		local
 			fs: WSF_FILE_SYSTEM_HANDLER
-			cfg: detachable WDOCS_CONFIG
 		do
 			service := a_service
 
 				-- FIXME: this code could/should be retarded to when it is really needed
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
-			cfg := configuration (a_service.site_var_dir)
---			root_dir := cfg.root_dir
---			temp_dir := cfg.temp_dir
---			documentation_dir := cfg.documentation_dir
-			cache_duration := cfg.cache_duration
+			download_json := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (a_service.site_var_dir.extended ("downloads_configuration.json"))
 
 			a_service.map_uri_template ("/download", agent handle_download (a_service, ?, ?))
+
+			a_service.add_value_alter_hook (Current)
+
 
 			create fs.make_with_path (a_service.theme_location.extended ("res").extended ("images"))
 			fs.disable_index
@@ -64,76 +65,60 @@ feature {CMS_SERVICE} -- Registration
 
 feature -- Access: config
 
-	configuration (a_dir: PATH): WDOCS_CONFIG
-			-- Configuration setup.
-		local
-			cfg: detachable WDOCS_CONFIG
-			p: detachable PATH
-			ut: FILE_UTILITIES
+	gpl_version: detachable DOWNLOAD_OPTIONS
 		do
-			if attached execution_environment.item ("WDOCS_CONFIG") as s then
-				create p.make_from_string (s)
-				if not ut.file_path_exists (p) then
-					p := a_dir.extended (s)
-					if not ut.file_path_exists (p) then
-						p := Void
-					end
-				end
-			end
-			if p /= Void then
-				if attached p.extension as ext then
-					if ext.is_case_insensitive_equal_general ("ini") then
-						create {WDOCS_INI_CONFIG} cfg.make (p)
-					elseif ext.is_case_insensitive_equal_general ("json") then
-						create {WDOCS_JSON_CONFIG} cfg.make (p)
-					end
-				end
-				if cfg = Void then
-					create {WDOCS_INI_CONFIG} Result.make (p)
-				end
-			else
-				p := a_dir.extended ("eiffel-lang.ini")
-				if ut.file_path_exists (p) then
-					create {WDOCS_INI_CONFIG} cfg.make (p)
-				else
-					p := a_dir.extended ("eiffel-lang.json")
-					if ut.file_path_exists (p) then
-						create {WDOCS_JSON_CONFIG} cfg.make (p)
-					end
-				end
-			end
+			create Result
+			Result.set_product (retrieve_product_gpl)
+		end
 
-			if cfg /= Void then
-				Result := cfg
-			else
-					-- Default
-				create {WDOCS_DEFAULT_CONFIG} Result.make_default
+	retrieve_mirror_gpl: detachable READABLE_STRING_32
+		do
+			if attached download_json.mirror as l_mirror then
+				Result := l_mirror
 			end
 		end
 
-feature -- Access: docs
-
---	root_dir: PATH
-
---	temp_dir: PATH
-
---	documentation_dir: PATH
-
-	cache_duration: INTEGER
-			-- Caching duration
-			--|  0: disable
-			--| -1: cache always valie
-			--| nb: cache expires after nb seconds.
-
-	cache_disabled: BOOLEAN
+	retrieve_product_gpl: detachable DOWNLOAD_PRODUCT
 		do
-			Result := cache_duration = 0
+			if attached download_json.products as l_products then
+				Result := l_products.at (1)
+			end
 		end
+
+
+	download_json: DOWNLOAD_CONFIGURATION
+
 
 
 feature -- Hooks
 
+	value_alter (a_value: CMS_VALUE; a_execution: CMS_EXECUTION)
+		local
+			l_ua: WSF_USER_AGENT_ANALIZER
+		do
+			if
+				attached retrieve_product_gpl as l_product and then
+				attached l_product.release as l_release and then
+				attached l_product.date as l_date and then
+				attached l_product.version as l_version and then
+				attached retrieve_mirror_gpl as l_mirror
+			then
+				a_value.force (l_release +" " + l_version, "last_release")
+				a_value.force (l_date, "date")
+				a_value.force (l_mirror, "mirror")
+				a_value.force ((create {CMS_LOCAL_LINK}.make ("download link", "download")), "link")
+			end
 
+			create l_ua
+			l_ua.analizer (a_execution.request)
+			if attached l_ua.os_family as l_os and then
+			   	attached l_ua.platform as l_platform
+			then
+			 	-- Todo build the link
+			end
+
+			across a_value as ic loop a_execution.set_value (ic.item, ic.key)  end
+		end
 
 feature -- Handler		
 
@@ -163,26 +148,6 @@ feature -- Handler
 			res.put_header_text (h.string)
 		end
 
-
-feature {NONE} -- Implementation: date and time
-
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_string (s)
-			if not d.has_error then
-				Result := d.date_time
-			end
-		end
-
-	timestamp_to_date (n: INTEGER): DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_timestamp (n)
-			Result := d.date_time
-		end
 
 
 	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8

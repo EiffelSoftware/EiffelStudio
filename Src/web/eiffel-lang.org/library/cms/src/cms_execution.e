@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			get_theme
 			controller := service.session_controller (request)
 			create menu_system.make
+			create cms_value.make (3)
 			create blocks.make (3)
 
 			if attached {like message} session_item (pending_messages_session_item_name) as m then
@@ -204,6 +205,12 @@ feature -- Logging
 			l_log.set_info (request.http_user_agent)
 			service.storage.save_log (l_log)
 		end
+
+
+feature -- Values
+
+	cms_value: CMS_VALUE
+			-- Collection of values (k,v).
 
 feature -- Menu
 
@@ -456,12 +463,17 @@ feature -- Generation
 			if attached user as l_user then
 				page.register_variable (l_user, "user")
 			end
+				-- Cms values
+			service.call_value_alter_hooks (cms_value, Current)
+
 				-- Values Associated with current Execution object.
 			across
 				values as ic
 			loop
 				page.register_variable (ic.item, ic.key)
 			end
+
+
 
 				-- Specific values
 			page.register_variable (is_front, "is_front")

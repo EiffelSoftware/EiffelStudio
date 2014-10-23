@@ -84,7 +84,7 @@ feature -- Implementation: CMS
 			a_setup.add_module (m)
 
 
-			create {WDOCS_DOWNLOAD_MODULE} m.make
+			create {EIFFEL_DOWNLOAD_MODULE} m.make
 			m.enable
 			a_setup.add_module (m)
 

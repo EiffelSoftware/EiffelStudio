@@ -23,6 +23,8 @@
 		<library name="wiki_docs" location=".\modules\wiki_docs\wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<library name="eiffel_download" location=".\modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
+
 	</target>
 	<target name="eiffel_lang_any" extends="eiffel_lang_common">
 		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>

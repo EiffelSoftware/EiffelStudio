@@ -111,11 +111,12 @@ feature -- Hooks
 
 			create l_ua.make_from_string (a_execution.request.http_user_agent)
 
-			if attached l_ua.os_family as l_os and then
-			   	attached l_ua.address_register_size as l_platform
-			then
-			 	-- Todo build the link
+			if attached retrieve_product_gpl as l_product then
+				if attached selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then
+					a_value.force (l_selected.filename, "filename")
+				end
 			end
+
 
 			across a_value as ic loop a_execution.set_value (ic.item, ic.key)  end
 		end
@@ -123,27 +124,46 @@ feature -- Hooks
 feature -- Handler		
 
 	handle_download (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_link: STRING
+			l_ua: CMS_USER_AGENT
 		do
-			to_implement("Download Handler")
-			hardcode_download (req, res)
 
+			create l_ua.make_from_string (req.http_user_agent)
+
+			if attached retrieve_product_gpl as l_product and then
+			   attached l_product.build as l_build and then
+			   attached l_product.name as l_name and then
+			   attached l_product.number as l_number and then
+			   attached retrieve_mirror_gpl as l_mirror
+			then
+			    l_link := l_mirror
+			    l_link.append (l_name)
+			    l_link.append (" ")
+			    l_link.append (l_number)
+			    l_link.append_character ('/')
+			    l_link.append (l_build)
+			    l_link.append_character ('/')
+				if attached selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then
+					if attached l_selected.filename as l_filename then
+						l_link.append (l_filename)
+						file_download (req, res, l_link)
+					end
+				end
+			end
 		end
 
-	hardcode_download  (req: WSF_REQUEST; res: WSF_RESPONSE)
+	file_download  (req: WSF_REQUEST; res: WSF_RESPONSE a_link: READABLE_STRING_32)
 			-- Simple response to download content
 			-- Harcoded for testing.
 		local
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_disposition ("attachment; filename", "[
-						http://sourceforge.net/projects/eiffelstudio/files/EiffelStudio%2014.05/Build_95417/Eiffel_14.05_gpl_95417-windows.msi/download
-						]")
+			h.put_content_disposition ("attachment; filename", a_link)
 			h.put_current_date
 			h.put_header_key_value ("Content-type", "application/octet-stream")
-			h.put_location ("[
-						http://sourceforge.net/projects/eiffelstudio/files/EiffelStudio%2014.05/Build_95417/Eiffel_14.05_gpl_95417-windows.msi/download
-						]")
+			h.put_location (a_link)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end
@@ -156,6 +176,63 @@ feature -- Handler
 				Result := html_encoder.general_encoded_string (s)
 			else
 				create Result.make_empty
+			end
+		end
+
+feature {NONE}  -- Helper
+
+	selected_platform (a_downloads: detachable LIST[DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT_OPTIONS
+		local
+			l_found: BOOLEAN
+		do
+			if
+				attached a_downloads
+			then
+				from
+					a_downloads.start
+				until
+					a_downloads.after or l_found
+				loop
+					if a_downloads.item.platform ~ a_platform then
+						Result := a_downloads.item
+					end
+					a_downloads.forth
+				end
+			end
+		end
+
+
+	get_platform (a_user_agent: CMS_USER_AGENT)	: READABLE_STRING_32
+				-- Set by default win64
+				--	<option value="freebsd-x86">FreeBSD x86 32-bit</option>
+				--	<option value="freebsd-x86-64">FreeBSD x86 64-bit</option>
+				--	<option value="linux-x86">Linux x86 32-bit</option>
+				--	<option value="linux-x86-64">Linux x86 64-bit</option>
+				--	<option value="macosx-x86-64">Mac OS X</option>
+				--  <option value="openbsd-x86">OpenBSD x86 32-bit</option>
+				--	<option value="openbsd-x86-64">OpenBSD x86 64-bit</option>
+				--	<option value="solaris-x86">Solaris x86 32-bit</option>
+				--	<option value="solaris-x86-64">Solaris x64 64-bit</option>
+				--	<option value="solaris-sparc">Solaris Sparc 32-bit</option>
+				--	<option value="solaris-sparc-64">Solaris Sparc 64-bit</option>
+				--	<option value="win64" selected="">Windows 64-bit</option>
+				--	<option value="windows">Windows 32-bit</option>		
+		do
+			Result := "win64"
+			if a_user_agent.is_windows_os then
+				if a_user_agent.is_64bits then
+					Result := "win64"
+				else
+					Result := "windows"
+				end
+			elseif a_user_agent.is_linux_os then
+				if a_user_agent.is_64bits then
+					Result := "linux-x86-64"
+				else
+					Result := "linux-x86"
+				end
+			elseif a_user_agent.is_mac_os then
+				Result := "macosx-x86-64"
 			end
 		end
 

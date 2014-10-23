@@ -14,9 +14,11 @@
 										<time datetime="{$date/}" class="date">{$date/}</time>
 									</div>
 									<div class="row">		
+										<span class="release">{$filename/}</span>
 										<span class="versions"><a target="_blank"  href="{$mirror/}">Other versions</a></span>
 									</div>
 									<a class="btn-download" target="_blank"  href="{$link.location/}">Download Now</a>
+							
 								</div>
 								
 							</div>

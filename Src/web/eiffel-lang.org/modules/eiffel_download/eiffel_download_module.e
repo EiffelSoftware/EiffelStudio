@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WDOCS_DOWNLOAD_MODULE}."
+	description: "Summary description for {EIFFEL_DOWNLOAD_MODULE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -92,7 +92,7 @@ feature -- Access: config
 
 feature -- Hooks
 
-	value_alter (a_value: CMS_VALUE; a_execution: CMS_EXECUTION)
+	value_alter (a_value: CMS_VALUE_TABLE; a_execution: CMS_EXECUTION)
 		local
 			l_ua: WSF_USER_AGENT_ANALIZER
 		do

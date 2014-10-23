@@ -458,12 +458,12 @@ feature -- Handler
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)
 
-			e.set_value (l_version_id, "wiki_version_id")
+			e.values.force (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
 				e.set_optional_content_type ("doc")
 				e.set_title (l_bookid)
-				e.set_value (l_bookid, "wiki_book_name")
+				e.values.force (l_bookid, "wiki_book_name")
 				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
 				mnger := manager (l_version_id)
 				if attached mnger.book (l_bookid) as l_book then
@@ -534,10 +534,10 @@ feature -- Handler
 			l_wiki_id := wikipage_id (req, Void)
 			mnger := manager (l_version_id)
 
-			e.set_value (l_version_id, "wiki_version_id")
+			e.values.force (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
-				e.set_value (l_bookid, "wiki_book_name")
+				e.values.force (l_bookid, "wiki_book_name")
 				pg := mnger.page (l_bookid, l_wiki_id)
 				if pg = Void and l_wiki_id /= Void then
 					if l_wiki_id.is_case_insensitive_equal_general ("index") then
@@ -573,7 +573,7 @@ feature -- Handler
 
 			if pg /= Void then
 				e.set_title (pg.title)
-				e.set_value (pg.title, "wiki_page_name")
+				e.values.force (pg.title, "wiki_page_name")
 				create s.make_empty
 
 --				debug ("wdocs")

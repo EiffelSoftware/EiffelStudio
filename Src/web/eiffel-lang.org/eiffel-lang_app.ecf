@@ -34,6 +34,7 @@
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="wsf_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<library name="eiffel_download" location=".\modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/launcher$</exclude>

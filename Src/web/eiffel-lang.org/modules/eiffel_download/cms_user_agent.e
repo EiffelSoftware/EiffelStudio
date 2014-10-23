@@ -5,6 +5,7 @@ note
 	EIS: "name=Wikipedia", "src=http://en.wikipedia.org/wiki/User_agent", "protocol=url"
 	EIS: "name=Browser detection using user agent","src=https://developer.mozilla.org/en-US/docs/Browser_detection_using_the_user_agent", "protocol=url"
 	EIS: "name=Inspired by code at","src=https://github.com/JustinAzoff/splunk-scripts/blob/master/ua2os.py", "protocol=url"
+	EIS: "name=Inspired by code at","src=https://github.com/barisaydinoglu/Detectizr/blob/master/src/detectizr.js", "protocol=url"
 
 class
 	CMS_USER_AGENT
@@ -53,31 +54,31 @@ feature -- Query
 	is_64bits: BOOLEAN
 			-- Is a 64bits address register?
 		do
-			Result := address_register_size = x64_address_register_size
+			Result := address_register_size ~ x64_address_register_size
 		end
 
 	is_32bits: BOOLEAN
 			-- Is a 32bits address register?
 		do
-			Result := address_register_size = x32_address_register_size
+			Result := address_register_size ~ x32_address_register_size
 		end
 
 	is_windows_os: BOOLEAN
 			-- Is detected OS a Windows ?
 		do
-			Result := os_family = windows_os_family_name
+			Result := os_family ~ windows_os_family_name
 		end
 
 	is_mac_os: BOOLEAN
 			-- Is detected OS a MacOS ?
 		do
-			Result := os_family = mac_os_family_name
+			Result := os_family ~ mac_os_family_name
 		end
 
 	is_linux_os: BOOLEAN
 			-- Is detected OS a Linux ?
 		do
-			Result := os_family = linux_os_family_name
+			Result := os_family ~ linux_os_family_name
 		end
 
 feature -- Change Element

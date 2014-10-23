@@ -31,7 +31,7 @@
 								</ul>
 							</nav>
 							<div class="btn-holder">
-								<a class="btn-download" href="#">Download Now</a>
+								<a class="btn-download" href="{$link.location/}">Download Now</a>
 							</div>
 							<div class="social-holder">
 								<ul class="social-networks">

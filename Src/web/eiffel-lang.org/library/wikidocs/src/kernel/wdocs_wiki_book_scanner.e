@@ -81,6 +81,7 @@ feature -- Visiting
 				l_index_page := local_pages.item ("index")
 				if l_index_page = Void then
 					create l_index_page.make (l_name, l_name)
+					update_wiki_page (wiki_book, l_index_page, p, Void)
 					wiki_book.add_page (l_index_page)
 				end
 				if l_parent /= Void then
@@ -178,6 +179,8 @@ feature -- Visiting
 		end
 
 	update_wiki_page (wb: WIKI_BOOK; wp: WIKI_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_PAGE)
+		require
+			a_wp_path_set: a_wp_path /= Void
 		local
 			n1,n2: STRING_32
 			p: PATH
@@ -223,6 +226,8 @@ feature -- Visiting
 					wp.set_src (wp.parent_key + "/" + k)
 				end
 			end
+		ensure
+			path_set: wp.path /= Void
 		end
 
 feature -- Status report

@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		local
 			lab: EV_LABEL
 			box: EV_VERTICAL_BOX
+			l_name_tf: EV_TEXT_FIELD
 			src: EV_TEXT
 			hb: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
@@ -34,9 +35,18 @@ feature {NONE} -- Initialization
 			create box
 			widget := box
 
-			create lab.make_with_text ("Editing ...")
-			box.extend (lab)
-			box.disable_item_expand (lab)
+
+			create hb
+			box.extend (hb)
+			box.disable_item_expand (hb)
+
+			create lab.make_with_text ("Editing: ")
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+
+			create l_name_tf.make_with_text ("")
+			hb.extend (l_name_tf)
+			name_field := l_name_tf
 
 			create src
 			box.extend (src)
@@ -96,7 +106,7 @@ feature -- Access: callbacks
 
 	updated_actions: ACTION_SEQUENCE [TUPLE]
 
-	saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE]]
+	saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE; title_updated: BOOLEAN]]
 
 	close_actions: ACTION_SEQUENCE [TUPLE]
 
@@ -109,6 +119,8 @@ feature -- Access: widget
 	save_button: EV_BUTTON
 	preview_check_button: EV_CHECK_BUTTON
 
+	name_field: EV_TEXT_FIELD
+
 feature {NONE} -- Implementation: widget
 
 	source_text: EV_TEXT
@@ -117,14 +129,16 @@ feature -- Basic operation
 
 	reset
 		local
-			s: detachable STRING
-			l_done: BOOLEAN
+			s: detachable READABLE_STRING_8
 		do
-			if attached page as wp and then attached wp.path as p then
-				s := wiki_text_from_file (p)
+			if attached page as wp then
+				s := manager.wiki_text (wp)
+				name_field.set_text (wp.title)
+			else
+				name_field.remove_text
 			end
 			if s = Void then
-				source_text.set_text ("")
+				source_text.remove_text
 			else
 				source_text.set_text (s)
 			end
@@ -183,66 +197,41 @@ feature -- Events
 		end
 
 	on_save_operation
-		local
-			f: RAW_FILE
 		do
 			on_apply_operation
-			if attached page as p and then attached p.path as l_path then
-				create f.make_with_path (l_path)
-				if f.exists then
-					backup_file (f)
+			if attached page as wp then
+				manager.save_wiki_text (wp, wiki_text)
+				if
+					attached name_field.text as l_name and then
+					not l_name.is_whitespace and then
+					not l_name.is_case_insensitive_equal_general (wp.title)
+				then
+						-- Title changed!
+					manager.change_page_title (wp, l_name)
+					saved_actions.call ([wp, True])
+				else
+					saved_actions.call ([wp, False])
 				end
-				save_content_to_file (wiki_text, f)
-				saved_actions.call ([p])
 			end
 			close_actions.call (Void)
 		end
 
 	on_preview_selected (cbut: EV_CHECK_BUTTON)
-		local
---			s: STRING
---			p, l_wiki_path, l_xhtml_path: PATH
---			d: DIRECTORY
---			f: PLAIN_TEXT_FILE
---			l_wiki_page: WIKI_PAGE
 		do
---			p := manager.tmp_dir.extended ("app-live-preview")
---			create d.make_with_path (p)
---			if not d.exists then
---				d.recursive_create_dir
---			end
---			l_wiki_path := p.extended (page.title).appended_with_extension ("wiki")
---			l_xhtml_path := p.extended (page.title).appended_with_extension ("xhtml")
-
---			create f.make_with_path (l_wiki_path)
---			f.create_read_write
---			f.put_string (wiki_text)
---			f.close
-
---			create l_wiki_page.make (page.title, page.parent_key)
---			l_wiki_page.get_structure (l_wiki_path)
-
---			create s.make_empty
---			append_wiki_page_xhtml_to (l_wiki_page, manager, s)
-
---			create f.make_with_path (l_xhtml_path)
---			f.create_read_write
---			f.put_string (s)
---			f.close
+			request_invoke_updated_actions
 		end
 
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_manager: WDOCS_MANAGER; a_output: STRING)
 		local
 			l_xhtml: detachable STRING_8
 			wvis: WIKI_XHTML_GENERATOR
-			p: PATH
-			d: DIRECTORY
-			f: PLAIN_TEXT_FILE
+--			p: PATH
+--			d: DIRECTORY
+--			f: PLAIN_TEXT_FILE
 --			l_wiki_page_date_time: detachable DATE_TIME
 --			l_version_id: READABLE_STRING_GENERAL
 		do
 --			l_version_id := a_manager.version_id
-
 
 			create l_xhtml.make_empty
 
@@ -276,60 +265,5 @@ feature -- Events
 
 			a_output.append (l_xhtml)
 		end
-
-	wiki_text_from_file (fn: PATH): detachable STRING
-		local
-			f: RAW_FILE
-			l_done: BOOLEAN
-		do
-			create f.make_with_path (fn)
-			if f.exists and then f.is_access_readable then
-				create Result.make (f.count)
-				f.open_read
-				from
-					l_done := False
-				until
-					l_done
-				loop
-					f.read_stream (2_048)
-					Result.append (f.last_string)
-					l_done := f.exhausted or f.end_of_file or f.last_string.count < 2_048
-				end
-				f.close
-				Result.prune_all ('%R')
-			end
-		end
-
-	backup_file (a_file: FILE)
-		require
-			a_file.is_closed
-		local
-			bak: RAW_FILE
-		do
-			if a_file.exists and then a_file.is_access_readable then
-				create bak.make_with_path (a_file.path.appended_with_extension ("bak"))
-				if not bak.exists or else bak.is_access_writable then
-					bak.create_read_write
-					a_file.open_read
-					a_file.copy_to (bak)
-					a_file.close
-					bak.close
-				end
-			end
-		end
-
-	save_content_to_file (a_content: READABLE_STRING_8; a_file: FILE)
-		require
-			a_file.is_closed
-		local
-			l_close_after_saving: BOOLEAN
-		do
-			if not a_file.exists or else a_file.is_access_writable then
-				a_file.open_write
-				a_file.put_string (a_content)
-				a_file.close
-			end
-		end
-
 
 end

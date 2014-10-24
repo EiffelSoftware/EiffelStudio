@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 			create grid
 			create wiki_page_select_actions
 			create url_requested_actions
+			create edit_button.make_with_text ("Edit")
+			create delete_page_button.make_with_text ("Delete")
+			create new_page_button.make_with_text ("Add Page")
 		end
 
 	user_initialization
@@ -67,6 +70,7 @@ feature {NONE} -- Initialization
 			g.enable_single_row_selection
 			g.enable_tree
 			g.row_select_actions.extend (agent on_row_selected)
+			g.row_deselect_actions.extend (agent on_row_deselected)
 			g.row_expand_actions.extend (agent on_row_expanded)
 			g.row_collapse_actions.extend (agent on_row_collapsed)
 			vb.extend (g)
@@ -76,7 +80,21 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			create but.make_with_text_and_action ("Refresh", agent on_refresh_requested)
 			hb.extend (but)
-			create but.make_with_text_and_action ("Edit", agent on_edit_requested)
+
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+
+			but := edit_button
+			but.select_actions.extend (agent on_edit_requested)
+			hb.extend (but)
+
+			but := new_page_button
+			but.select_actions.extend (agent on_new_page_requested)
+			hb.extend (but)
+
+			but := delete_page_button
+			but.select_actions.extend (agent on_page_delete_requested)
 			hb.extend (but)
 		end
 
@@ -98,6 +116,12 @@ feature -- Access
 	wiki_page_select_actions: ACTION_SEQUENCE [TUPLE [WIKI_PAGE]]
 
 	url_requested_actions: ACTION_SEQUENCE [TUPLE [READABLE_STRING_8]]
+
+feature -- Widgets
+
+	edit_button,
+	new_page_button,
+	delete_page_button: EV_BUTTON
 
 feature -- Basic operation
 
@@ -134,6 +158,14 @@ feature -- Basic operation
 
 	on_wiki_page_selected (wp: WIKI_PAGE)
 		do
+			edit_button.enable_sensitive
+			new_page_button.enable_sensitive
+			if not wp.has_page then
+				delete_page_button.enable_sensitive
+			else
+				delete_page_button.disable_sensitive
+			end
+
 			wiki_page_select_actions.call ([wp])
 		end
 
@@ -142,6 +174,13 @@ feature -- Basic operation
 			if attached wiki_page_from_row (r) as wp then
 				on_wiki_page_selected (wp)
 			end
+		end
+
+	on_row_deselected (r: EV_GRID_ROW)
+		do
+			delete_page_button.disable_sensitive
+			edit_button.disable_sensitive
+			new_page_button.disable_sensitive
 		end
 
 	on_row_expanded (r: EV_GRID_ROW)
@@ -192,13 +231,85 @@ feature -- Basic operation
 			refresh_now
 		end
 
+	on_new_page_requested
+		local
+			dlg: EV_DIALOG
+			lab: EV_LABEL
+			tf: EV_TEXT_FIELD
+			but: EV_BUTTON
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+		do
+			if attached selected_wiki_page as wp then
+				create dlg.make_with_title ("Add Page")
+				create vb
+				dlg.extend (vb)
+				create lab.make_with_text ("Enter a valid wiki name:")
+				vb.extend (lab)
+				vb.disable_item_expand (lab)
+				create tf.make_with_text ("New Page")
+				vb.extend (tf)
+				vb.disable_item_expand (tf)
+				create hb
+				vb.extend (hb)
+
+				create but.make_with_text_and_action ("Ok", agent (ia_wp: WIKI_PAGE; ia_tf: EV_TEXT_FIELD; ia_dlg: EV_DIALOG)
+						do
+							if attached ia_tf.text as l_title and then not l_title.is_whitespace then
+								new_wdocs_manager.create_page_under (ia_wp, l_title)
+								refresh_now
+								ia_dlg.destroy_and_exit_if_last
+							else
+									-- FIXME: Report invalid wiki name!									
+							end
+						end(wp, tf, dlg)
+					)
+				hb.extend (create {EV_CELL})
+				hb.extend (but)
+				hb.disable_item_expand (but)
+				dlg.set_default_push_button (but)
+
+				create but.make_with_text_and_action ("Cancel", agent do end)
+				hb.extend (but)
+				hb.disable_item_expand (but)
+				hb.extend (create {EV_CELL})
+				dlg.set_default_cancel_button (but)
+
+				dlg.show
+			end
+		end
+
+	on_page_delete_requested
+		local
+			dlg: EV_CONFIRMATION_DIALOG
+		do
+			if attached selected_wiki_page as wp then
+				create dlg.make_with_text ({STRING_32} "Delete wiki page [[" + wp.title + "]]?" )
+				dlg.set_buttons_and_actions (<<"Cancel", "Delete">>, <<Void, agent delete_page (wp)>>)
+				dlg.show
+			end
+		end
+
 	on_edit_requested
 		do
-			if attached grid.selected_rows as l_rows and then l_rows.count = 1 then
-				if attached wiki_page_from_row (l_rows.first) as wp then
-					edit_page (wp)
-				end
+			if attached selected_wiki_page as wp then
+				edit_page (wp)
 			end
+		end
+
+	save_wiki_page (wp: WIKI_PAGE; a_text: READABLE_STRING_8)
+		require
+			path_set: wp.path /= Void
+		do
+			new_wdocs_manager.save_wiki_text (wp, a_text)
+		end
+
+	delete_page (wp: WIKI_PAGE)
+		require
+			path_set: wp.path /= Void
+		do
+			new_wdocs_manager.delete_page (wp)
+			refresh_now
 		end
 
 	edit_page (wp: WIKI_PAGE)
@@ -222,8 +333,11 @@ feature -- Basic operation
 			on_preview_requested (a_page, a_text)
 		end
 
-	on_page_saved (a_page: WIKI_PAGE)
+	on_page_saved (a_page: WIKI_PAGE; a_title_updated: BOOLEAN)
 		do
+			if a_title_updated then
+				on_refresh_requested
+			end
 			if attached new_wdocs_manager.page_url (a_page) as u then
 				url_requested_actions.call ([u])
 			end
@@ -273,15 +387,7 @@ feature -- Basic operation
 		local
 			l_xhtml: detachable STRING_8
 			wvis: WIKI_XHTML_GENERATOR
---			p: PATH
---			d: DIRECTORY
---			f: PLAIN_TEXT_FILE
---			l_wiki_page_date_time: detachable DATE_TIME
---			l_version_id: READABLE_STRING_GENERAL
 		do
---			l_version_id := a_manager.version_id
-
-
 			create l_xhtml.make_empty
 
 			create wvis.make (l_xhtml)
@@ -289,32 +395,19 @@ feature -- Basic operation
 			wvis.set_image_resolver (a_manager)
 			wvis.set_template_resolver (a_manager)
 			wvis.visit_page (a_wiki_page)
-
-			l_xhtml.append ("<ul class=%"wdocs-index%">")
---			if
---				a_book_name /= Void and then
---				attached a_manager.page (a_book_name, a_wiki_page.parent_key) as l_parent_page and then
---				l_parent_page /= a_wiki_page
---			then
---				l_xhtml.append ("<li><em>Parent</em> &lt;")
---				append_wiki_page_link (req, l_version_id, a_book_name, l_parent_page, False, l_xhtml)
---				l_xhtml.append ("&gt;</li>")
---			end
---			a_wiki_page.sort
---			if attached a_wiki_page.pages as l_sub_pages then
---				across
---					l_sub_pages as ic
---				loop
---					l_xhtml.append ("<li>")
---					append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, l_xhtml)
---					l_xhtml.append ("</li>")
---				end
---			end
---			l_xhtml.append ("</ul>")
-
 			a_output.append (l_xhtml)
 		end
+
 	edit_dialog: detachable WDOCS_EDIT_DIALOG
+
+feature -- Helpers
+
+	selected_wiki_page: detachable WIKI_PAGE
+		do
+			if attached grid.selected_rows as l_rows and then l_rows.count = 1 then
+				Result := wiki_page_from_row (l_rows.first)
+			end
+		end
 
 	wiki_page_from_row (r: EV_GRID_ROW): detachable WIKI_PAGE
 		do

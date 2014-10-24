@@ -58,7 +58,7 @@ feature -- Access
 
 	wiki_text_updated_actions: ACTION_SEQUENCE [TUPLE [page: detachable WIKI_PAGE; text: READABLE_STRING_8]]
 
-	wiki_page_saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE]]
+	wiki_page_saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE; title_updated: BOOLEAN]]
 
 feature -- Events
 
@@ -67,9 +67,9 @@ feature -- Events
 			wiki_text_updated_actions.call ([edit_box.page, edit_box.wiki_text])
 		end
 
-	on_saved (a_page: WIKI_PAGE)
+	on_saved (a_page: WIKI_PAGE; a_title_updated: BOOLEAN)
 		do
-			wiki_page_saved_actions.call ([a_page])
+			wiki_page_saved_actions.call ([a_page, a_title_updated])
 		end
 
 feature -- Element change

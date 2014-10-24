@@ -191,7 +191,9 @@ feature -- Status report: book
 	is_index_page: BOOLEAN
 			-- Is Current an index page?
 		do
-			Result := title.is_case_insensitive_equal_general ("index")
+			Result :=
+						(attached path as p and then attached p.entry as e and then e.name.is_case_insensitive_equal ("index.wiki"))
+						or else	title.is_case_insensitive_equal_general ("index")
 						or else title.is_case_insensitive_equal_general (parent_key) -- Same as parent page name.
 		end
 

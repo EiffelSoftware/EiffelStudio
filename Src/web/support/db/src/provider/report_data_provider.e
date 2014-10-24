@@ -2453,7 +2453,7 @@ feature -- Queries
 	Select_download_details: STRING = "[
 				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, c.organizationName, c.phone, c.organizationEmail, d.CreatedDate, m.Username MembershipUserName, d.Company, d.FirstName, d.LastName
 				from DownloadExpiration d
-				INNER JOIN Contacts as c ON c.ContactID = d.ContactID
+				INNER JOIN Contacts as c ON c.Email = d.Email
 				LEFT JOIN Memberships as m on c.ContactID = m.ContactID
 				where Token = :Token;
 	]"
@@ -2462,7 +2462,7 @@ feature -- Queries
 	Select_temporary_download_details: STRING = "[
 				Select d.Email, d.Platform, c.FirstName +' '+ c.LastName as UserName, d.CreatedDate, d.Company, d.FirstName, d.LastName
 				from DownloadExpiration d
-				INNER JOIN ContactsTemporary as c ON c.ContactID = d.ContactID
+				INNER JOIN ContactsTemporary as c ON c.Email = d.Email
 				where Token = :Token;
 	]"
 

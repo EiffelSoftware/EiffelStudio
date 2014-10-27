@@ -17,7 +17,7 @@ feature -- Access
 		do
 			Result := salt_with_size (16)
 				--	Remove trailing equal sign
-			Result.keep_head (Result.count - 1)
+			Result.keep_head (Result.count - 2)
 		end
 
 	salt: STRING

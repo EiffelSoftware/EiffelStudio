@@ -7,6 +7,10 @@ class
 
 	DATABASE_SERVICE
 
+inherit
+
+	SHARED_LOGGER
+
 create
 	make
 
@@ -61,6 +65,7 @@ feature -- Basic Operations
 	retrieve_download_details (a_token: READABLE_STRING_32): detachable DOWNLOAD_INFORMATION
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		do
+			log.write_debug (generator + "retrieve_download_details with token:" + a_token )
 				-- TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32]
 			if
 				attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_download_details (a_token) as l_tuple then

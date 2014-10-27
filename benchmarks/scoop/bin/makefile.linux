@@ -1,5 +1,6 @@
+DEFAULT_OUTPUT=scoop_benchmark.csv
 ifndef OUTPUT
-OUTPUT=scoop_benchmark.csv
+OUTPUT=$(DEFAULT_OUTPUT)
 endif
 
 ifdef QS
@@ -36,6 +37,7 @@ all:
 	$(ECHO_S)Available settings:$(ECHO_E)
 	$(ECHO_S)$(ECHO_E)
 	$(ECHO_S)	   QS=-qs - use new SCOOP run-time instead of the old one$(ECHO_E)
+	$(ECHO_S)	   OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')$(ECHO_E)
 
 benchmark::
 	echo "Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"> "$(OUTPUT)"

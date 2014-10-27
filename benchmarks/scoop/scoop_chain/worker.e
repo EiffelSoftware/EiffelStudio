@@ -254,7 +254,7 @@ feature -- Outer procedure
     do
       print ("Worker: start live_outer%N")
       create outer_matrix.make_filled (0, (win_final - win_start) * winnow_nelts)
-      create l_vector.make (win_start, win_final - 1)
+      create l_vector.make_filled (0.0, win_start, win_final - 1)
 
       from i := win_start
       until i >= win_final

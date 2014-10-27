@@ -1,0 +1,102 @@
+ifndef OUTPUT
+OUTPUT=scoop_benchmark.csv
+endif
+
+ifdef QS
+	ifneq "$(QS)" "-qs"
+		$(error Invalid value of the variable QS that is allowed to be either empty or equal to "-qs": "$(QS)")
+	endif
+endif
+
+EC="$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/ec"
+TOP=..
+
+ECHO_S=echo "
+ECHO_E="
+
+DO_MAKE=$(MAKE) -f makefile.linux
+
+EXE=
+RM=rm -f
+RD=rm -rf
+
+ELAPSED_TIME_DIR=$(TOP)/../tool/elapsed_time
+ELAPSED_TIME=$(ELAPSED_TIME_DIR)/EIFGENs/elapsed_time/F_code/elapsed_time$(EXE)
+MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c
+
+.SILENT:
+
+all:
+	$(ECHO_S)Available targets:$(ECHO_E)
+	$(ECHO_S)$(ECHO_E)
+	$(ECHO_S)	   benchmark - run benchmarks and record measurements to '$(OUTPUT)'$(ECHO_E)
+	$(ECHO_S)	   build     - compile benchmarks$(ECHO_E)
+	$(ECHO_S)	   clean     - remove all generated files, including benchmark executables$(ECHO_E)
+	$(ECHO_S)$(ECHO_E)
+	$(ECHO_S)Available settings:$(ECHO_E)
+	$(ECHO_S)$(ECHO_E)
+	$(ECHO_S)	   QS=-qs - use new SCOOP run-time instead of the old one$(ECHO_E)
+
+benchmark::
+	echo "Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"> "$(OUTPUT)"
+
+benchmark build clean::
+	$(DO_MAKE) ACTION=$@ chain
+	$(DO_MAKE) ACTION=$@ chameneos
+	$(DO_MAKE) ACTION=$@ condition
+	$(DO_MAKE) ACTION=$@ mutex
+	$(DO_MAKE) ACTION=$@ outer
+	$(DO_MAKE) ACTION=$@ prodcons
+	$(DO_MAKE) ACTION=$@ product
+	$(DO_MAKE) ACTION=$@ randmat
+	$(DO_MAKE) ACTION=$@ threadring
+	$(DO_MAKE) ACTION=$@ thresh
+	$(DO_MAKE) ACTION=$@ winnow
+	
+chain:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/main.in -bench" "REPEAT=-c 72"
+
+chameneos:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="1000000" "REPEAT=-c 6"
+
+condition:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="100000 32" "REPEAT=-c 13"
+
+mutex:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="1000000 64" "REPEAT=-c 9"
+
+outer:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/mainbig.in -bench" "REPEAT=-c 18"
+
+prodcons:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="40000 32" "REPEAT=-c 16"
+
+product:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/mainbig.in -bench" "REPEAT=-c 7"
+
+randmat:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/mainbig2.in -bench" "REPEAT=-c 8"
+
+threadring:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="3000000 64" "REPEAT=-c 14"
+
+thresh:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/mainbig.in -bench" "REPEAT=-c 117"
+
+winnow:
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/mainbig.in -bench" "REPEAT=-c 87"
+
+action.benchmark: $(ELAPSED_TIME) action.build
+	$(MEASURE) -w "$(TOP)/scoop_$(TARGET)" -n $(TARGET) $(REPEAT) "$(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+
+action.build: $(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE)
+
+action.clean:
+	-$(RD) "$(TOP)/scoop_$(TARGET)/EIFGENs"
+	-$(RM) $(TOP)/scoop_$(TARGET)/main.rc
+
+$(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE):
+	$(EC) -finalize -clean -c_compile -config $(TOP)/scoop_$(TARGET)/main.ecf -project_path $(TOP)/scoop_$(TARGET) -target main$(QS)
+
+"$(ELAPSED_TIME)": "$(ELAPSED_TIME_DIR)/elapsed_time.e" "$(ELAPSED_TIME_DIR)/elapsed_time.ecf"
+	$(EC) -finalize -clean -config "$(ELAPSED_TIME_DIR)/elapsed_time.ecf" -project_path "$(ELAPSED_TIME_DIR)" -c_compile

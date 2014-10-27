@@ -190,6 +190,7 @@ feature -- Workflow
 						end
 					end
 				else
+					log.write_debug (generator + "The request was invalid " + req.path_info)
 					bad_request (req, res, "")
 				end
 			else

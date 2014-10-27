@@ -139,11 +139,14 @@ feature -- Workflow
 			--email is not already associated to a membership user, but there is a Contact entry, we do like the above and add a new interaction
 			--email is not in our database, we create a Contact user and add the interaction
 			--Once this is done, we associated a unique URL to the Contact and send that link to the user. In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
+		local
+			l_url: URL_ENCODER
 		do
+			create l_url
 			if attached database_service as l_service then
 				if
 					attached {WSF_STRING} req.query_parameter ("token") as l_token and then
-					attached {DOWNLOAD_INFORMATION} l_service.retrieve_download_details (l_token.value) as l_info and then
+					attached {DOWNLOAD_INFORMATION} l_service.retrieve_download_details (l_token.url_encoded_value) as l_info and then
 					attached l_info.email  as email and then
 					attached l_info.platform as platform
 				then
@@ -153,24 +156,24 @@ feature -- Workflow
 					l_info.set_download_date (create {DATE_TIME}.make_now_utc)
 					if l_service.is_membership (email) then
 						log.write_debug (generator + "process_workflow:" + email +  " Membership")
-						if 	l_service.is_download_active (l_token.value) then
+						if 	l_service.is_download_active (l_url.decoded_string (l_token.url_encoded_value)) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
-							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, "", l_url.decoded_string (l_token.url_encoded_value))
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.url_encoded_value )
 							bad_request (req, res, "")
 						end
 					elseif l_service.is_contact (email) then
 						log.write_debug (generator + "process_workflow:" + email +  " Contact")
-						if 	l_service.is_download_active (l_token.value) then
+						if 	l_service.is_download_active (l_url.decoded_string (l_token.url_encoded_value)) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
-							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_url.decoded_string (l_token.url_encoded_value))
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.url_encoded_value )
 							bad_request (req, res, "")
 						end
 					else
@@ -178,14 +181,14 @@ feature -- Workflow
 							l_service.is_new_contact (email)
 						end
 						log.write_debug (generator + "process_workflow:" + email +  " New Contact")
-						if 	l_service.is_download_active (l_token.value ) then
+						if 	l_service.is_download_active (l_url.decoded_string (l_token.url_encoded_value) ) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
 							l_service.validate_contact (email) --(add a new contact, remove temporary contact)
-							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_url.decoded_string (l_token.url_encoded_value))
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.url_encoded_value )
 							bad_request (req, res, "")
 						end
 					end

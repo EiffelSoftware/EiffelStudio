@@ -1,5 +1,6 @@
+DEFAULT_OUTPUT=scoop_benchmark.csv
 !IFNDEF OUTPUT
-OUTPUT=scoop_benchmark.csv
+OUTPUT=$(DEFAULT_OUTPUT)
 !ENDIF
 
 !IFDEF QS
@@ -28,6 +29,7 @@ all:
 	"echo" Available settings:
 	"echo".
 	"echo"	^ ^ ^ QS=-qs - use new SCOOP run-time instead of the old one
+	"echo"	^ ^ ^ OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')
 
 benchmark::
 	echo Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count> "$(OUTPUT)"
@@ -52,7 +54,7 @@ chameneos:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000" "REPEAT=-c 6"
 
 condition:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="100000 32" "REPEAT=-c 13"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="100000 32" "REPEAT=-c 1"
 
 mutex:
 	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000 64" "REPEAT=-c 9"

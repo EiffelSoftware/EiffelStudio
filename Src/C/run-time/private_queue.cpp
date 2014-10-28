@@ -89,8 +89,7 @@ priv_queue::log_call(processor *client, call_data *call)
 
       if (call_stack_msg.type == notify_message::e_dirty)
 	{
-	  char *msg = "EVE/Qs dirty processor exception";
-	  eraise (msg, 32);
+	  eraise ((const char *) "EVE/Qs dirty processor exception", 32);
 	}
     }
 

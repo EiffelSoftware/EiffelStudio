@@ -1,9 +1,12 @@
 note
-	description: "Summary description for {WSF_FILE_UTILITIES}."
+	description: "[
+				This class is used to get a safe temporary file
+				in a specific directory, for an optional prefix, and an optional expected filename.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
+class
 	WSF_FILE_UTILITIES [G -> FILE create make_with_path end]
 
 feature -- Factory

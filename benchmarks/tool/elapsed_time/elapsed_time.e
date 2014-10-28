@@ -114,7 +114,7 @@ feature {NONE} -- Benchmarking
 					end
 					if n <= count + skip_maximum_count then
 							-- This is not one of the first runs that should be skipped.
-						duration := (stop_time.relative_duration (start_time).time.fine_second * 1_000).truncated_to_integer_64
+						duration := (stop_time.relative_duration (start_time).fine_seconds_count * 1_000).truncated_to_integer_64
 						time.extend (duration)
 					end
 					n := n - 1

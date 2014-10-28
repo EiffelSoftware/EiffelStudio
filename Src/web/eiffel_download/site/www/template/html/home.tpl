@@ -14,7 +14,7 @@
 	<li id="menu-item-3461" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3461"><a href="https://www.eiffel.com/eiffelstudio/screenshots/">Screenshots</a></li>
 	<li id="menu-item-3367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3367"><a href="https://www.eiffel.com/eiffelstudio/system-requirements/">System Requirements</a></li>
 	<li id="menu-item-5203" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5203"><a href="https://www.eiffel.com/eiffelstudio/licensing/">Licensing</a></li>
-	<li id="menu-item-4897" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4897"><a href="http://www2.eiffel.com/download/">Downloads</a></li>
+	<li id="menu-item-4897" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4897"><a href="http://www.eiffel.com/downloads">Downloads</a></li>
 	<li id="menu-item-3366" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3366"><a href="https://www.eiffel.com/eiffelstudio/purchase/">Purchase</a></li>
 </ul>
 </li>
@@ -259,7 +259,7 @@
 <li id="menu-item-3507" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3507"><a href="https://www.eiffel.com/eiffelstudio/screenshots/">Screenshots</a></li>
 <li id="menu-item-3508" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3508"><a href="https://www.eiffel.com/eiffelstudio/system-requirements/">System Requirements</a></li>
 <li id="menu-item-5202" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5202"><a href="https://www.eiffel.com/eiffelstudio/licensing/">Licensing</a></li>
-<li id="menu-item-4915" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4915"><a href="http://www2.eiffel.com/download/">Downloads</a></li>
+<li id="menu-item-4915" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4915"><a href="http://www.eiffel.com/downloads">Downloads</a></li>
 <li id="menu-item-3511" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3511"><a href="https://www.eiffel.com/eiffelstudio/purchase/">Purchase</a></li>
 </ul></div></div><div class="widget-area widget-footer-menu col"><h3>Values</h3><div class="menu-values-footer-menu-container"><ul id="menu-values-footer-menu" class="menu"><li id="menu-item-3512" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3512"><a href="https://www.eiffel.com/values/design-by-contract/">Design By Contract™</a></li>
 <li id="menu-item-3513" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3513"><a href="https://www.eiffel.com/values/seamless-development/">Seamless Development</a></li>

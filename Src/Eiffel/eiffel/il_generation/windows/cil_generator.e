@@ -595,6 +595,7 @@ feature {NONE} -- Type description
 			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
+			cl_type: CLASS_TYPE
 			l_class_processed: BOOLEAN
 		do
 			from
@@ -616,9 +617,11 @@ feature {NONE} -- Type description
 					loop
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
-						if types.item.is_generated then
-							cil_generator.set_current_module_with (types.item)
-							cil_generator.generate_class_attributes (types.item)
+						cl_type := types.item
+						if cl_type.is_generated then
+							context.init (cl_type)
+							cil_generator.set_current_module_with (cl_type)
+							cil_generator.generate_class_attributes (cl_type)
 							if not l_class_processed then
 								j := j - 1
 								l_class_processed := True

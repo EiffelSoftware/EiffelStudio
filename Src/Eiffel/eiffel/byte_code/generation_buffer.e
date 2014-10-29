@@ -334,7 +334,7 @@ feature -- Automatically indented output
 			-- Write `i' a non-negative integer as a sequence of 16-bit value.
 			-- For values between 0 and 0x7FFF, write the value itself.
 			-- For values between 0x8000 and 0x7FFFFFE, write 1xxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx.
-			-- We do not enabled 0x7FFFFFFF because this would generate 0x8FFF 0xFFFF and the 0xFFFF
+			-- We do not enable 0x7FFFFFFF because this would generate 0x8FFF 0xFFFF and the 0xFFFF
 			-- would be considered a terminator which is not what is intended.
 		require
 			i_non_negative: i >= 0

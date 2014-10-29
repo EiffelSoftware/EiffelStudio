@@ -573,11 +573,14 @@ feature {NONE} -- Implementation
 	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		local
-			edit_control: WEL_SINGLE_LINE_EDIT
+			edit_control: WEL_MULTIPLE_LINE_EDIT
 		do
 			create edit_control.make (Default_parent, "", 0, 0, 0, 0, 0)
 			edit_control.clip_paste
 			Result := edit_control.text
+			if is_replacing_nl_by_crnl then
+				Result.replace_substring_all ("%R%N", "%N")
+			end
 			edit_control.destroy
 		end
 

@@ -578,9 +578,9 @@ feature {NONE} -- Implementation
 			create edit_control.make (Default_parent, "", 0, 0, 0, 0, 0)
 			edit_control.clip_paste
 			Result := edit_control.text
-			if is_replacing_nl_by_crnl then
-				Result.replace_substring_all ("%R%N", "%N")
-			end
+				-- The multiline edit control gives us %R%N which we need to replace
+				-- by just %N.
+			Result.replace_substring_all ("%R%N", "%N")
 			edit_control.destroy
 		end
 

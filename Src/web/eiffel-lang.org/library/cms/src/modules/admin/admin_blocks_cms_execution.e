@@ -15,6 +15,20 @@ create
 
 feature -- Execution
 
+	blocks: ARRAYED_LIST [TUPLE [block: CMS_BLOCK; name: READABLE_STRING_8; region: READABLE_STRING_8]]
+		do
+			create Result.make (10)
+			across
+				regions as reg_ic
+			loop
+				across
+					reg_ic.item.blocks as ic
+				loop
+					Result.force ([ic.item, ic.item.name, reg_ic.item.name])
+				end
+			end
+		end
+
 	process
 			-- Computed response message.
 		local
@@ -54,4 +68,14 @@ feature -- Execution
 			set_main_content (b)
 		end
 
+note
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

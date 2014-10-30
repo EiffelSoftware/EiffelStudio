@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			get_theme
 			controller := service.session_controller (request)
 			create menu_system.make
-			create blocks.make (3)
+			initialize_block_region_settings
 
 			if attached {like message} session_item (pending_messages_session_item_name) as m then
 				message := m
@@ -234,6 +234,97 @@ feature -- Menu
 			Result := menu_system.primary_tabs
 		end
 
+feature -- Blocks
+
+	main_menu_block: detachable CMS_MENU_BLOCK
+		do
+			if attached main_menu as m and then not m.is_empty then
+				create Result.make (m)
+			end
+		end
+
+	management_menu_block: detachable CMS_MENU_BLOCK
+		do
+			if attached management_menu as m and then not m.is_empty then
+				create Result.make (m)
+			end
+		end
+
+	navigation_menu_block: detachable CMS_MENU_BLOCK
+		do
+			if attached navigation_menu as m and then not m.is_empty then
+				create Result.make (m)
+			end
+		end
+
+	user_menu_block: detachable CMS_MENU_BLOCK
+		do
+			if attached user_menu as m and then not m.is_empty then
+				create Result.make (m)
+			end
+		end
+
+	primary_tabs_block: detachable CMS_MENU_BLOCK
+		do
+			if attached primary_tabs as m and then not m.is_empty then
+				create Result.make (m)
+			end
+		end
+
+	top_header_block: CMS_CONTENT_BLOCK
+		local
+			s: STRING
+		do
+			create s.make_from_string ("<a href=%""+ url ("/", Void) +"%"><img id=%"logo%" src=%"" + logo_location + "%"/></a><div id=%"title%">" + html_encoded (site_name) + "</div>")
+			s.append ("<div id=%"menu-bar%">")
+			s.append (theme.menu_html (main_menu, True))
+			s.append ("</div>")
+			create Result.make ("top_header", Void, s, formats.full_html)
+			Result.set_is_raw (True)
+		end
+
+	header_block: CMS_CONTENT_BLOCK
+		local
+			s: STRING
+		do
+			create s.make_empty
+			create Result.make ("header", Void, s, formats.full_html)
+			Result.set_is_raw (True)
+		end
+
+	message_block: detachable CMS_CONTENT_BLOCK
+		do
+			if attached message as m and then not m.is_empty then
+				create Result.make ("message", Void, "<div id=%"message%">" + m + "</div>", formats.full_html)
+				Result.set_is_raw (True)
+			end
+		end
+
+	content_block: CMS_CONTENT_BLOCK
+		local
+			s: STRING
+		do
+			if attached main_content as l_content then
+				s := l_content
+			else
+				s := ""
+				debug
+					s := "No Content"
+				end
+			end
+			create Result.make ("content", Void, s, formats.full_html)
+			Result.set_is_raw (True)
+		end
+
+	footer_block: CMS_CONTENT_BLOCK
+		local
+			s: STRING
+		do
+			create s.make_empty
+			s.append ("Made with <a href=%"http://www.eiffel.com/%">EWF</a>")
+			create Result.make ("made_with", Void, s, formats.full_html)
+		end
+
 feature -- Menu: change
 
 	add_to_main_menu (lnk: CMS_LINK)
@@ -316,73 +407,112 @@ feature -- Message
 
 	message: detachable STRING_8
 
-feature -- Blocks	
+feature -- Formats
 
 	formats: CMS_FORMATS
 		once
 			create Result
 		end
 
-	blocks: ARRAYED_LIST [TUPLE [block: CMS_BLOCK; name: READABLE_STRING_8; region: READABLE_STRING_8]]
+feature -- Blocks initialization
 
-	add_block (b: CMS_BLOCK; a_region: detachable READABLE_STRING_8)
+	initialize_block_region_settings
+		local
+			l_table: like block_region_settings
 		do
-			if a_region /= Void then
-				blocks.extend ([b, b.name, a_region])
-			elseif attached block_region (b) as l_region then
-				blocks.extend ([b, b.name, l_region])
+			create regions.make_caseless (5)
+
+				-- FIXME: let the user choose ...
+			create l_table.make_caseless (10)
+			l_table["top_header"] := "header"
+			l_table["header"] := "header"
+			l_table["message"] := "content"
+			l_table["content"] := "content"
+			l_table["footer"] := "footer"
+			l_table["management"] := "first_sidebar"
+			l_table["navigation"] := "first_sidebar"
+			l_table["user"] := "first_sidebar"
+
+			l_table["top_content_anchor"] := "content"
+			l_table["page_title"] := "content"
+			block_region_settings := l_table
+		end
+
+feature -- Blocks regions
+
+	regions: STRING_TABLE [CMS_BLOCK_REGION]
+			-- Layout regions, that contains blocks.
+
+	block_region_settings: STRING_TABLE [STRING]
+
+	block_region (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8): CMS_BLOCK_REGION
+			-- Region associated with block `b', or else `a_default_region' if provided.
+		local
+			l_region_name: detachable READABLE_STRING_8
+		do
+			l_region_name := block_region_settings.item (b.name)
+			if l_region_name = Void then
+				if a_default_region /= Void then
+					l_region_name := a_default_region
+				else
+						-- Default .. put it in same named region
+						-- Maybe a bad idea
+
+					l_region_name := b.name.as_lower
+				end
+			end
+			if attached regions.item (l_region_name) as res then
+				Result := res
+			else
+				create Result.make (l_region_name)
+				regions.force (Result, l_region_name)
 			end
 		end
 
-	block_region (b: CMS_BLOCK): detachable READABLE_STRING_8
+feature -- Blocks 		
+
+	add_block (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8)
+			-- Add block `b' to associated region or `a_default_region' if provided.
 		local
-			l_name: READABLE_STRING_8
+			l_region: detachable like block_region
 		do
-			l_name := b.name
-			if l_name.starts_with ("footer") then
-				Result := "footer"
-			elseif l_name.starts_with ("management") then
-				Result := "first_sidebar"
-			elseif l_name.starts_with ("navigation") then
-				Result := "first_sidebar"
-			elseif l_name.starts_with ("user") then
-				Result := "first_sidebar"
-			else
-				Result := "first_sidebar"
-			end
-			-- FIXME: let the user choose ...
+			l_region := block_region (b, a_default_region)
+			l_region.extend (b)
 		end
 
 	get_blocks
-		local
-			b: CMS_CONTENT_BLOCK
-			s: STRING_8
-			m: CMS_MENU
 		do
-			m := management_menu
-			if not m.is_empty then
-				add_block (create {CMS_MENU_BLOCK}.make (m), Void)
+				-- FIXME: find a way to have this in configuration or database, and allow different order
+			add_block (top_header_block, "header")
+			add_block (header_block, "header")
+			if attached message_block as m then
+				add_block (m, "content")
+			end
+				-- FIXME: avoid hardcoded html! should be only in theme.
+			add_block (create {CMS_CONTENT_BLOCK}.make_raw ("top_content_anchor", Void, "<a id=%"main-content%"></a>%N", formats.full_html), "content")
+			if attached page_title as l_page_title then
+					-- FIXME: avoid hardcoded html! should be only in theme.
+				add_block (create {CMS_CONTENT_BLOCK}.make_raw ("page_title", Void, "<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N", formats.full_html), "content")
+			end
+			if attached primary_tabs_block as m then
+				add_block (m, "content")
+			end
+			add_block (content_block, "content")
+
+			if attached management_menu_block as l_block then
+				add_block (l_block, "first_sidebar")
+			end
+			if attached navigation_menu_block as l_block then
+				add_block (l_block, "first_sidebar")
 			end
 
-			m := navigation_menu
-			if not m.is_empty then
-				add_block (create {CMS_MENU_BLOCK}.make (m), Void)
+			if attached user_menu_block as l_block then
+				add_block (l_block, "first_sidebar")
 			end
 
-			m := user_menu
-			if not m.is_empty then
-				add_block (create {CMS_MENU_BLOCK}.make (m), Void)
+			if attached footer_block as l_block then
+				add_block (l_block, "footer")
 			end
-
---			create s.make_empty
---			s.append ("This site demonstrates a first implementation of CMS using EWF.%N")
---			create b.make ("about", "About", s, formats.plain_text)
---			add_block (b, "second_sidebar")
-
-			create s.make_empty
-			s.append ("Made with <a href=%"http://www.eiffel.com/%">EWF</a>")
-			create b.make ("made_with", Void, s, formats.full_html)
-			add_block (b, "footer")
 
 			service.hook_block_view (Current)
 		end
@@ -488,12 +618,23 @@ feature -- Generation
 
 			get_blocks
 			across
-				blocks as ic
+				regions as reg_ic
 			loop
-				if attached {CMS_MENU_BLOCK} ic.item.block as l_menu_block then
-					recursive_get_active (l_menu_block.menu, request)
+				across
+					reg_ic.item.blocks as ic
+				loop
+					if attached {CMS_MENU_BLOCK} ic.item as l_menu_block then
+						recursive_get_active (l_menu_block.menu, request)
+					end
 				end
 			end
+--			across
+--				blocks as ic
+--			loop
+--				if attached {CMS_MENU_BLOCK} ic.item.block as l_menu_block then
+--					recursive_get_active (l_menu_block.menu, request)
+--				end
+--			end
 
 			if attached title as l_title then
 				page.set_title (l_title)
@@ -501,36 +642,77 @@ feature -- Generation
 				page.set_title ("CMS::" + request.path_info)
 			end
 
-			page.add_to_header_region (top_header_region)
-			page.add_to_header_region (header_region)
-			if attached message as m and then not m.is_empty then
-				page.add_to_content_region ("<div id=%"message%">" + m + "</div>")
-			end
-			page.add_to_content_region ("<a id=%"main-content%"></a>%N")
-			if attached page_title as l_page_title then
-				page.add_to_content_region ("<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N")
-			end
-			if attached primary_tabs as tabs_menu and then not tabs_menu.is_empty then
-				page.add_to_content_region (theme.menu_html (tabs_menu, True))
-			end
-			page.add_to_content_region (content_region)
+--			l_block := top_header_block
+--			page.add_to_region (block_region (l_block), l_block)
+
+--			l_block := header_block
+--			page.add_to_region (block_region (l_block), l_block)
+
+--			if attached message_block as m then
+--				l_block := m
+--				page.add_to_region (block_region (l_block), l_block)
+--			end
+
+--			page.add_to_content_region ("<a id=%"main-content%"></a>%N")
+--			if attached page_title as l_page_title then
+--				page.add_to_content_region ("<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N")
+--			end
+--			if attached primary_tabs as tabs_menu and then not tabs_menu.is_empty then
+--				page.add_to_content_region (theme.menu_html (tabs_menu, True))
+--			end
+
+--			l_block := content_block
+--			page.add_to_region (block_region (l_block), l_block)
 
 			-- blocks
 			across
-				blocks as c
+				regions as reg_ic
 			loop
-				if attached c.item as b_info then
-					create s.make_from_string ("<div class=%"block%" id=%"" + b_info.name + "%">")
-					if attached b_info.block.title as l_title then
-						s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
+				across
+					reg_ic.item.blocks as ic
+				loop
+					if attached {CMS_CONTENT_BLOCK} ic.item as l_content_block and then l_content_block.is_raw then
+						create s.make_empty
+						if attached l_content_block.title as l_title then
+							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
+						end
+						s.append (l_content_block.to_html (theme))
+					else
+						create s.make_from_string ("<div class=%"block%" id=%"" + ic.item.name + "%">")
+						if attached ic.item.title as l_title then
+							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
+						end
+						s.append ("<div class=%"inside%">")
+						s.append (ic.item.to_html (theme))
+						s.append ("</div>")
+						s.append ("</div>")
 					end
-					s.append ("<div class=%"inside%">")
-					s.append (b_info.block.to_html (theme))
-					s.append ("</div>")
-					s.append ("</div>")
-					page.add_to_region (s, b_info.region)
+					page.add_to_region (s, reg_ic.item.name)
 				end
 			end
+--			across
+--				blocks as c
+--			loop
+--				if attached c.item as b_info then
+--					if attached {CMS_CONTENT_BLOCK} b_info.block as l_content_block and then l_content_block.is_raw then
+--						create s.make_empty
+--						if attached b_info.block.title as l_title then
+--							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
+--						end
+--						s.append (b_info.block.to_html (theme))
+--					else
+--						create s.make_from_string ("<div class=%"block%" id=%"" + b_info.name + "%">")
+--						if attached b_info.block.title as l_title then
+--							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
+--						end
+--						s.append ("<div class=%"inside%">")
+--						s.append (b_info.block.to_html (theme))
+--						s.append ("</div>")
+--						s.append ("</div>")
+--					end
+--					page.add_to_region (s, b_info.region)
+--				end
+--			end
 		end
 
 	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)
@@ -556,31 +738,6 @@ feature -- Generation
 	logo_location: STRING
 		do
 			Result := url ("/theme/logo.png", Void)
-		end
-
-	top_header_region: STRING_8
-		do
-			Result := "<a href=%""+ url ("/", Void) +"%"><img id=%"logo%" src=%"" + logo_location + "%"/></a><div id=%"title%">" + html_encoded (site_name) + "</div>"
-			Result.append ("<div id=%"menu-bar%">")
-			Result.append (theme.menu_html (main_menu, True))
-			Result.append ("</div>")
-		end
-
-	header_region: STRING_8
-		do
-			Result := ""
-		end
-
-	content_region: STRING_8
-		do
-			if attached main_content as l_content then
-				Result := l_content
-			else
-				Result := ""
-				debug
-					Result := "No Content"
-				end
-			end
 		end
 
 feature -- Head customization

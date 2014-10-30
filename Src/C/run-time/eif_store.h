@@ -82,6 +82,7 @@ extern "C" {
 #define SED_STORE				0x17
 
 RT_LNK void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN);
+RT_LNK void eif_set_is_discarding_qat (EIF_BOOLEAN);
 
 /*
  * Eiffel calls
@@ -115,7 +116,6 @@ RT_LNK void st_write(EIF_REFERENCE object, int);		/* Write an object in file */
 RT_LNK void ist_write(EIF_REFERENCE object, int);
 RT_LNK void store_write(size_t);
 RT_LNK void rmake_header(void);				/* Make header */
-RT_LNK EIF_BOOLEAN eif_is_discarding_qat_active (void);
 
 #ifdef __cplusplus
 }

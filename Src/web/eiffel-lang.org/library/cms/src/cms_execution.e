@@ -628,13 +628,6 @@ feature -- Generation
 					end
 				end
 			end
---			across
---				blocks as ic
---			loop
---				if attached {CMS_MENU_BLOCK} ic.item.block as l_menu_block then
---					recursive_get_active (l_menu_block.menu, request)
---				end
---			end
 
 			if attached title as l_title then
 				page.set_title (l_title)
@@ -642,77 +635,16 @@ feature -- Generation
 				page.set_title ("CMS::" + request.path_info)
 			end
 
---			l_block := top_header_block
---			page.add_to_region (block_region (l_block), l_block)
-
---			l_block := header_block
---			page.add_to_region (block_region (l_block), l_block)
-
---			if attached message_block as m then
---				l_block := m
---				page.add_to_region (block_region (l_block), l_block)
---			end
-
---			page.add_to_content_region ("<a id=%"main-content%"></a>%N")
---			if attached page_title as l_page_title then
---				page.add_to_content_region ("<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N")
---			end
---			if attached primary_tabs as tabs_menu and then not tabs_menu.is_empty then
---				page.add_to_content_region (theme.menu_html (tabs_menu, True))
---			end
-
---			l_block := content_block
---			page.add_to_region (block_region (l_block), l_block)
-
-			-- blocks
+				-- blocks
 			across
 				regions as reg_ic
 			loop
 				across
 					reg_ic.item.blocks as ic
 				loop
-					if attached {CMS_CONTENT_BLOCK} ic.item as l_content_block and then l_content_block.is_raw then
-						create s.make_empty
-						if attached l_content_block.title as l_title then
-							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
-						end
-						s.append (l_content_block.to_html (theme))
-					else
-						create s.make_from_string ("<div class=%"block%" id=%"" + ic.item.name + "%">")
-						if attached ic.item.title as l_title then
-							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
-						end
-						s.append ("<div class=%"inside%">")
-						s.append (ic.item.to_html (theme))
-						s.append ("</div>")
-						s.append ("</div>")
-					end
-					page.add_to_region (s, reg_ic.item.name)
+					page.add_to_region (theme.block_html (ic.item), reg_ic.item.name)
 				end
 			end
---			across
---				blocks as c
---			loop
---				if attached c.item as b_info then
---					if attached {CMS_CONTENT_BLOCK} b_info.block as l_content_block and then l_content_block.is_raw then
---						create s.make_empty
---						if attached b_info.block.title as l_title then
---							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
---						end
---						s.append (b_info.block.to_html (theme))
---					else
---						create s.make_from_string ("<div class=%"block%" id=%"" + b_info.name + "%">")
---						if attached b_info.block.title as l_title then
---							s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
---						end
---						s.append ("<div class=%"inside%">")
---						s.append (b_info.block.to_html (theme))
---						s.append ("</div>")
---						s.append ("</div>")
---					end
---					page.add_to_region (s, b_info.region)
---				end
---			end
 		end
 
 	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)

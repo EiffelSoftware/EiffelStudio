@@ -146,7 +146,9 @@ feature -- Processing
 						end
 					end
 				when ']' then
-					check no_link_closure: False end
+					debug ("wikitext")
+						check no_link_closure: False end
+					end
 					s.extend (c)
 				when '<' then
 					if

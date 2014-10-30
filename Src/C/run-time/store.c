@@ -372,7 +372,8 @@ rt_shared void eif_store_thread_init (void)
 	 * than the default value will be initialized. */
 {
 	RT_GET_CONTEXT;
-	eif_is_discarding_attachment_marks = EIF_TRUE;
+	eif_is_discarding_attachment_marks = EIF_FALSE;
+	eif_is_discarding_qat = EIF_TRUE;
 }
 #endif
 
@@ -522,9 +523,7 @@ rt_public EIF_BOOLEAN eif_is_discarding_attachment_marks_active (void)
 rt_public void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN state)
 {
 	RT_GET_CONTEXT
-		/* Until we support QAT, we ignore the user setting and keep
-		 * it set to True (see above initialization). */
-/*	eif_is_discarding_attachment_marks = state; */
+	eif_is_discarding_attachment_marks = state;
 }
 
 rt_public EIF_BOOLEAN eif_is_discarding_qat_active (void)
@@ -535,8 +534,10 @@ rt_public EIF_BOOLEAN eif_is_discarding_qat_active (void)
 
 rt_public void eif_set_is_discarding_qat (EIF_BOOLEAN state)
 {
-	RT_GET_CONTEXT
-	eif_is_discarding_qat = state;
+		/* Until we support QAT, we ignore the user setting and keep
+		 * it set to True (see above initialization). */
+/*	RT_GET_CONTEXT
+	eif_is_discarding_qat = state; */
 }
 
 /* Independent store */

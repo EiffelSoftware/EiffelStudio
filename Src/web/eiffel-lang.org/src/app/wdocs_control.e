@@ -19,9 +19,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_portnumber: INTEGER)
+	make (a_wdocs: WDOCS_EDIT_MANAGER)
 		do
-			port_number := a_portnumber
+			wdocs_manager := a_wdocs
 			default_create
 		end
 
@@ -56,7 +56,9 @@ feature {NONE} -- Initialization
 			lab: EV_LABEL
 			g: EV_GRID
 			but: EV_BUTTON
+			consts: EV_LAYOUT_CONSTANTS
 		do
+			create consts
 			create vb
 			extend (vb)
 			vb.set_border_width (3)
@@ -76,6 +78,8 @@ feature {NONE} -- Initialization
 			vb.extend (g)
 
 			create hb
+			hb.set_padding_width (consts.tiny_padding_size)
+			hb.set_border_width (consts.small_border_size)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			create but.make_with_text_and_action ("Refresh", agent on_refresh_requested)
@@ -85,30 +89,42 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 
-			but := edit_button
-			but.select_actions.extend (agent on_edit_requested)
+			but := delete_page_button
+			but.select_actions.extend (agent on_page_delete_requested)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
+			but.disable_sensitive
 
 			but := new_page_button
 			but.select_actions.extend (agent on_new_page_requested)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
+			but.disable_sensitive
 
-			but := delete_page_button
-			but.select_actions.extend (agent on_page_delete_requested)
+			but := edit_button
+			but.select_actions.extend (agent on_edit_requested)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
+			but.disable_sensitive
+
 		end
 
 feature -- Access
 
 	port_number: INTEGER
 
+	wdocs_manager: WDOCS_EDIT_MANAGER
+
 	new_wdocs_manager: WDOCS_EDIT_MANAGER
-		local
-			cfg: WDOCS_INI_CONFIG
+--		local
+--			cfg: WDOCS_INI_CONFIG
+--		do
+--			create cfg.make (create {PATH}.make_from_string ("eiffel-lang-app.ini"))
+--			create Result.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
+--			Result.set_server_url ("http://localhost:" + port_number.out)
+--		end
 		do
-			create cfg.make (create {PATH}.make_from_string ("eiffel-lang-app.ini"))
-			create Result.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
-			Result.set_server_url ("http://localhost:" + port_number.out)
+			Result := wdocs_manager
 		end
 
 	grid: EV_GRID
@@ -117,11 +133,102 @@ feature -- Access
 
 	url_requested_actions: ACTION_SEQUENCE [TUPLE [READABLE_STRING_8]]
 
+feature -- Access: window
+
+	associated_window: detachable WDOCS_WINDOW
+
+	set_associated_window (w: like associated_window)
+		do
+			associated_window := w
+		end
+
 feature -- Widgets
 
 	edit_button,
 	new_page_button,
 	delete_page_button: EV_BUTTON
+
+feature -- Docking
+
+	sd_edit_button,
+	sd_new_page_button,
+	sd_delete_page_button: detachable SD_TOOL_BAR_BUTTON
+
+	sd_content: SD_CONTENT
+		local
+			l_content: like internal_sd_content
+			l_mini_tb: SD_TOOL_BAR
+			l_mini_but: SD_TOOL_BAR_BUTTON
+		do
+			l_content := internal_sd_content
+			if l_content = Void then
+				create l_content.make_with_widget (Current, "Controller")
+				l_content.set_long_title ("Controller")
+				create l_mini_tb.make
+
+				create l_mini_but.make
+				l_mini_but.set_text ("Refresh")
+				l_mini_but.set_name ("refresh_button")
+				l_mini_but.set_tooltip ("Re-index wiki documentation files.")
+				l_mini_but.select_actions.extend (agent on_refresh_requested)
+				l_mini_tb.extend (l_mini_but)
+
+				create l_mini_but.make
+				l_mini_but.set_text ("Edit")
+				l_mini_but.set_name ("edit_button")
+				l_mini_but.set_tooltip ("Edit")
+				l_mini_but.select_actions.extend (agent on_edit_requested)
+				sd_edit_button := l_mini_but
+				l_mini_tb.extend (l_mini_but)
+
+				create l_mini_but.make
+				l_mini_but.set_text ("New")
+				l_mini_but.set_name ("newpage_button")
+				l_mini_but.set_tooltip ("Add a new page.")
+				l_mini_but.select_actions.extend (agent on_new_page_requested)
+				sd_new_page_button := l_mini_but
+				l_mini_tb.extend (l_mini_but)
+
+				create l_mini_but.make
+				l_mini_but.set_text ("Del")
+				l_mini_but.set_name ("delete_button")
+				l_mini_but.set_tooltip ("Delete selected page.")
+				l_mini_but.select_actions.extend (agent on_page_delete_requested)
+				sd_delete_page_button := l_mini_but
+				l_mini_tb.extend (l_mini_but)
+
+				l_content.set_mini_toolbar (l_mini_tb)
+				l_mini_tb.compute_minimum_size
+
+				internal_sd_content := l_content
+			end
+			Result := l_content
+		end
+
+	enable_mini_toolbar
+		local
+			l_content: like sd_content
+			l_mini_tb: SD_TOOL_BAR
+			l_mini_but: SD_TOOL_BAR_BUTTON
+		do
+			l_content := sd_content
+			if l_content.mini_toolbar = Void then
+				create l_mini_tb.make
+
+				create l_mini_but.make
+				l_mini_but.enable_displayed
+				l_mini_but.set_text ("Refresh")
+				l_mini_but.set_name ("refresh")
+				l_mini_but.set_tooltip ("Re-index wiki documentation files.")
+				l_mini_but.select_actions.extend (agent on_refresh_requested)
+				l_mini_tb.extend (l_mini_but)
+
+				l_content.set_mini_toolbar (l_mini_tb)
+				l_mini_tb.show
+			end
+		end
+
+	internal_sd_content: detachable like sd_content
 
 feature -- Basic operation
 
@@ -159,11 +266,25 @@ feature -- Basic operation
 	on_wiki_page_selected (wp: WIKI_PAGE)
 		do
 			edit_button.enable_sensitive
+			if attached sd_edit_button as sd_but then
+				sd_but.enable_sensitive
+			end
+
 			new_page_button.enable_sensitive
+			if attached sd_new_page_button as sd_but then
+				sd_but.enable_sensitive
+			end
+
 			if not wp.has_page then
 				delete_page_button.enable_sensitive
+				if attached sd_delete_page_button as sd_but then
+					sd_but.enable_sensitive
+				end
 			else
 				delete_page_button.disable_sensitive
+				if attached sd_delete_page_button as sd_but then
+					sd_but.disable_sensitive
+				end
 			end
 
 			wiki_page_select_actions.call ([wp])
@@ -181,6 +302,16 @@ feature -- Basic operation
 			delete_page_button.disable_sensitive
 			edit_button.disable_sensitive
 			new_page_button.disable_sensitive
+
+			if attached sd_edit_button as sd_but then
+				sd_but.disable_sensitive
+			end
+			if attached sd_new_page_button as sd_but then
+				sd_but.disable_sensitive
+			end
+			if attached sd_delete_page_button as sd_but then
+				sd_but.disable_sensitive
+			end
 		end
 
 	on_row_expanded (r: EV_GRID_ROW)
@@ -275,7 +406,11 @@ feature -- Basic operation
 				hb.extend (create {EV_CELL})
 				dlg.set_default_cancel_button (but)
 
-				dlg.show
+				if attached associated_window as w then
+					dlg.show_modal_to_window (w)
+				else
+					dlg.show
+				end
 			end
 		end
 
@@ -286,7 +421,12 @@ feature -- Basic operation
 			if attached selected_wiki_page as wp then
 				create dlg.make_with_text ({STRING_32} "Delete wiki page [[" + wp.title + "]]?" )
 				dlg.set_buttons_and_actions (<<"Cancel", "Delete">>, <<Void, agent delete_page (wp)>>)
-				dlg.show
+
+				if attached associated_window as w then
+					dlg.show_modal_to_window (w)
+				else
+					dlg.show
+				end
 			end
 		end
 
@@ -316,16 +456,27 @@ feature -- Basic operation
 		local
 			dlg: like edit_dialog
 		do
-			dlg := edit_dialog
-			if dlg = Void or else dlg.is_destroyed then
-				create dlg.make (new_wdocs_manager)
-				edit_dialog := dlg
-				dlg.wiki_text_updated_actions.extend (agent on_page_edited)
-				dlg.wiki_page_saved_actions.extend (agent on_page_saved)
-				dlg.set_size (600, 500)
+			initialize_edit_tool
+			if attached edit_tool as l_edit_tool then
+				l_edit_tool.set_page (wp)
+				l_edit_tool.show
+			else
+				dlg := edit_dialog
+				if dlg = Void or else dlg.is_destroyed then
+					create dlg.make (new_wdocs_manager)
+					edit_dialog := dlg
+					dlg.wiki_text_updated_actions.extend (agent on_page_edited)
+					dlg.wiki_page_saved_actions.extend (agent on_page_saved)
+					dlg.set_size (600, 500)
+				end
+				dlg.set_page (wp)
+
+				if attached associated_window as w then
+					dlg.show_modal_to_window (w)
+				else
+					dlg.show
+				end
 			end
-			dlg.set_page (wp)
-			dlg.show
 		end
 
 	on_page_edited (a_page: detachable WIKI_PAGE; a_text: READABLE_STRING_8)
@@ -398,7 +549,30 @@ feature -- Basic operation
 			a_output.append (l_xhtml)
 		end
 
+	initialize_edit_tool
+		local
+			l_tool: like edit_tool
+		do
+			if
+				attached associated_window as w and then
+				attached w.sd_manager as sd_manager
+			then
+				l_tool := edit_tool
+				if l_tool = Void then
+					create l_tool.make (new_wdocs_manager)
+					l_tool.wiki_text_updated_actions.extend (agent on_page_edited)
+					l_tool.wiki_page_saved_actions.extend (agent on_page_saved)
+					if attached l_tool.sd_content as l_editor then
+						sd_manager.contents.extend (l_editor)
+					end
+					edit_tool := l_tool
+				end
+			end
+		end
+
 	edit_dialog: detachable WDOCS_EDIT_DIALOG
+
+	edit_tool: detachable WDOCS_EDIT_TOOL
 
 feature -- Helpers
 
@@ -428,15 +602,5 @@ feature -- Status report
 		do
 			Result := True
 		end
-
-feature -- Element change
-
-	set_port_number (p: INTEGER)
-		do
-			port_number := p
-		end
-
-feature {NONE} -- Implementation
-
 
 end

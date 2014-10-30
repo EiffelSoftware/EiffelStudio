@@ -7,8 +7,12 @@ note
 class
 	WDOCS_EDIT_BOX
 
+inherit
+	EV_SHARED_APPLICATION
+
 create
-	make
+	make,
+	make_embedded
 
 feature {NONE} -- Initialization
 
@@ -22,6 +26,12 @@ feature {NONE} -- Initialization
 			reset
 		end
 
+	make_embedded (a_manager: WDOCS_EDIT_MANAGER)
+		do
+			is_embedded := True
+			make (a_manager)
+		end
+
 	build_widget
 		local
 			lab: EV_LABEL
@@ -31,7 +41,9 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
+			consts: EV_LAYOUT_CONSTANTS
 		do
+			create consts
 			create box
 			widget := box
 
@@ -40,7 +52,7 @@ feature {NONE} -- Initialization
 			box.extend (hb)
 			box.disable_item_expand (hb)
 
-			create lab.make_with_text ("Editing: ")
+			create lab.make_with_text ("Editing:")
 			hb.extend (lab)
 			hb.disable_item_expand (lab)
 
@@ -48,34 +60,70 @@ feature {NONE} -- Initialization
 			hb.extend (l_name_tf)
 			name_field := l_name_tf
 
+				-- toolbar			
+			create hb
+			hb.set_padding_width (consts.tiny_padding_size)
+			hb.set_border_width (consts.small_border_size)
+			box.extend (hb)
+			box.disable_item_expand (hb)
+
+			create but.make_with_text_and_action ("+Link", agent on_insert_wiki_link_menu_event)
+			hb.extend (but)
+			create but.make_with_text_and_action ("+Image", agent on_insert_wiki_image_menu_event)
+			hb.extend (but)
+			create but.make_with_text_and_action ("+Template", agent on_insert_wiki_template_menu_event)
+			hb.extend (but)
+			create but.make_with_text_and_action ("H1", agent apply_heading_on_text_selection (1))
+			hb.extend (but)
+			create but.make_with_text_and_action ("H2", agent apply_heading_on_text_selection (2))
+			hb.extend (but)
+			create but.make_with_text_and_action ("H3", agent apply_heading_on_text_selection (3))
+			hb.extend (but)
+			create but.make_with_text_and_action ("Bold", agent apply_bold_on_text_selection)
+			hb.extend (but)
+			create but.make_with_text_and_action ("Italic", agent apply_italic_on_text_selection)
+			hb.extend (but)
+
+				-- Source/text
 			create src
 			box.extend (src)
 			source_text := src
 			src.change_actions.extend (agent on_text_changed)
+			src.key_press_actions.extend (agent on_key_pressed)
 
+				-- Apply/Save...
 			create hb
+			hb.set_padding_width (consts.tiny_padding_size)
+			hb.set_border_width (consts.small_border_size)
 			box.extend (hb)
 			box.disable_item_expand (hb)
 
 			create but.make_with_text_and_action ("Reset", agent on_reset_operation)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
 
 			create but.make_with_text_and_action ("Cancel", agent on_cancel_operation)
-			hb.extend (but)
+			if not is_embedded then
+				hb.extend (but)
+			end
+			but.set_minimum_width (consts.default_button_width)
 			cancel_button := but
 
 			create but.make_with_text_and_action ("Apply", agent on_apply_operation)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
 			apply_button := but
 
 			create but.make_with_text_and_action ("Save", agent on_save_operation)
 			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
 			save_button := but
 
 			create cbut.make_with_text ("Preview ?")
 			cbut.select_actions.extend (agent on_preview_selected (cbut))
 			hb.extend (cbut)
 			preview_check_button := cbut
+			cbut.enable_select
 		end
 
 feature -- Element change
@@ -92,6 +140,8 @@ feature -- Element change
 		end
 
 feature -- Access
+
+	is_embedded: BOOLEAN
 
 	wiki_text: READABLE_STRING_8
 		do
@@ -170,7 +220,305 @@ feature -- UI
 			updated_actions.call (Void)
 		end
 
+feature -- Editor operation
+
+	insert_link_at_text_position (a_wiki_name: STRING; a_title: detachable READABLE_STRING_8)
+		do
+			if a_title /= Void then
+				source_text.insert_text ("[[" + a_wiki_name + "|" + a_title + "]]")
+			else
+				source_text.insert_text ("[[" + a_wiki_name + "]]")
+			end
+		end
+
+	insert_image_at_text_position (a_wiki_name: STRING; a_title: detachable READABLE_STRING_8)
+		do
+			if a_title /= Void then
+				source_text.insert_text ("[[Image:" + a_wiki_name + "|thumb|center|220px|" + a_title + "]]")
+			else
+				source_text.insert_text ("[[Image:" + a_wiki_name + "|thumb|center|220px]]")
+			end
+		end
+
+	insert_template_at_text_position (a_wiki_name: STRING; a_code: detachable READABLE_STRING_8)
+		do
+			if a_code /= Void then
+				source_text.insert_text ("{{" + a_wiki_name + "|" + a_code + "}}%N")
+			else
+				source_text.insert_text ("{{" + a_wiki_name + "}}%N")
+			end
+		end
+
+	apply_heading_on_text_selection (a_level: INTEGER)
+		local
+			s: STRING
+		do
+			if
+				attached source_text.selected_text as l_selected_text and then
+				not l_selected_text.is_empty
+			then
+				source_text.delete_selection
+				create s.make_filled ('=', a_level)
+				source_text.insert_text (s + " " + l_selected_text + " " + s + "%N")
+			end
+		end
+
+	apply_bold_on_text_selection
+		do
+			if
+				attached source_text.selected_text as l_selected_text and then
+				not l_selected_text.is_empty
+			then
+				source_text.delete_selection
+				source_text.insert_text ("'''" + l_selected_text + "'''")
+			end
+		end
+
+	apply_italic_on_text_selection
+		do
+			if
+				attached source_text.selected_text as l_selected_text and then
+				not l_selected_text.is_empty
+			then
+				source_text.delete_selection
+				source_text.insert_text ("''" + l_selected_text + "''")
+			end
+		end
+
+feature -- Dialog
+
+	popup (a_widget: EV_WIDGET; a_parent: detachable EV_WIDGET): EV_POPUP_WINDOW
+		local
+			pop: EV_POPUP_WINDOW
+			w,h: INTEGER
+		do
+			create pop.make_with_shadow
+			pop.extend (a_widget)
+			if a_parent /= Void then
+				w := a_parent.width
+				h := a_parent.height
+				w := (0.9 * w).truncated_to_integer
+				h := (0.9 * h).truncated_to_integer
+				pop.set_position (a_parent.screen_x + (a_parent.width - w) // 2, a_parent.screen_y + (a_parent.height - h) // 2)
+			else
+			end
+			w := a_widget.minimum_width.max (w)
+			h := a_widget.minimum_height.max (h)
+			pop.set_size (w, h)
+
+			pop.show_actions.extend_kamikaze (agent a_widget.set_focus)
+			pop.focus_out_actions.extend (agent pop.destroy)
+
+			Result := pop
+		end
+
+	popup_menu (a_menu: EV_MENU; a_parent: detachable EV_WIDGET)
+		local
+			g: EV_GRID
+			pop: like popup
+		do
+			create g
+			pop := popup (g, a_parent)
+
+			g.enable_tree
+			g.set_column_count_to (1)
+			g.row_expand_actions.extend (agent (i_g: EV_GRID; i_r: EV_GRID_ROW) do i_g.column (1).resize_to_content end (g, ?))
+			append_menu_to_grid (a_menu, g, agent pop.destroy)
+			g.column (1).resize_to_content
+			g.set_minimum_width (g.column (1).width + 3)
+
+			pop.show
+		end
+
 feature -- Events
+
+	close
+		do
+			close_actions.call (Void)
+		end
+
+	on_key_pressed (a_key: EV_KEY)
+		local
+		do
+			if
+				ev_application.ctrl_pressed and then
+				not ev_application.shift_pressed
+			then
+				if ev_application.alt_pressed then
+					if a_key.code = {EV_KEY_CONSTANTS}.key_L then
+						on_insert_wiki_link_menu_event
+					elseif a_key.code = {EV_KEY_CONSTANTS}.key_I then
+						on_insert_wiki_image_menu_event
+					elseif a_key.code = {EV_KEY_CONSTANTS}.key_T then
+						on_insert_wiki_template_menu_event
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_S then
+					on_save_operation
+				end
+			end
+		end
+
+	on_insert_wiki_link_menu_event
+		local
+			m,sm: EV_MENU
+			l_current_book_name: detachable READABLE_STRING_GENERAL
+		do
+			create m.make_with_text ("Insert Wiki link")
+			l_current_book_name := manager.current_book_name
+
+			if
+				l_current_book_name /= Void and then
+				attached {WIKI_BOOK} manager.book (l_current_book_name) as l_book
+			then
+				create sm.make_with_text (l_current_book_name)
+				append_wiki_link_to_menu (l_book.pages, sm)
+				if not sm.is_empty then
+					m.extend (sm)
+				end
+			end
+			across
+				manager.book_names as ic
+			loop
+				if
+					l_current_book_name = Void
+					or else not l_current_book_name.is_case_insensitive_equal (ic.item)
+				then
+					if attached manager.book (ic.item) as l_book then
+						create sm.make_with_text (ic.item)
+						append_wiki_link_to_menu (l_book.pages, sm)
+						if not sm.is_empty then
+							m.extend (sm)
+						end
+					end
+				end
+			end
+
+			popup_menu (m, source_text)
+--			m.show
+		end
+
+	append_menu_to_grid (a_menu: EV_MENU; a_grid: EV_GRID; a_post_selected_action: detachable PROCEDURE [ANY, TUPLE])
+		require
+			is_tree_enabled: a_grid.is_tree_enabled
+		local
+			glab: EV_GRID_LABEL_ITEM
+			r,sr: EV_GRID_ROW
+		do
+			a_grid.insert_new_row (a_grid.row_count + 1)
+			r := a_grid.row (a_grid.row_count)
+			create glab.make_with_text (a_menu.text)
+			r.set_item (1, glab)
+			across
+				a_menu.select_actions as ic
+			loop
+				glab.select_actions.extend (ic.item)
+			end
+			if a_post_selected_action /= Void then
+				glab.select_actions.extend (a_post_selected_action)
+			end
+
+			across
+				a_menu as ic
+			loop
+				if attached {EV_MENU} ic.item as m then
+					append_menu_to_grid (m, a_grid, a_post_selected_action)
+				else
+					r.insert_subrow (r.subrow_count + 1)
+					sr := r.subrow (r.subrow_count)
+					create glab.make_with_text (ic.item.text)
+					across
+						ic.item.select_actions as act_ic
+					loop
+						glab.select_actions.extend (act_ic.item)
+					end
+					if a_post_selected_action /= Void then
+						glab.select_actions.extend (a_post_selected_action)
+					end
+					sr.set_item (1, glab)
+				end
+			end
+		end
+
+	append_wiki_link_to_menu (a_pages: ITERABLE [WIKI_PAGE]; a_menu: EV_MENU)
+		local
+			lnk: EV_MENU_ITEM
+		do
+			across
+				a_pages as ic
+			loop
+				create lnk.make_with_text (ic.item.title)
+				lnk.select_actions.extend (agent insert_link_at_text_position (ic.item.title, Void))
+				a_menu.extend (lnk)
+			end
+		end
+
+	on_insert_wiki_image_menu_event
+		local
+			m,sm: EV_MENU
+			lnk: EV_MENU_ITEM
+			l_current_book_name: detachable READABLE_STRING_GENERAL
+			utf: UTF_CONVERTER
+		do
+			create m.make_with_text ("Insert Wiki Image")
+			l_current_book_name := manager.current_book_name
+			across
+				manager.data.images_path_by_title_and_book as ic
+			loop
+				if not ic.item.is_empty then
+					if ic.key.is_whitespace then
+						create sm.make_with_text ("Global")
+					else
+						create sm.make_with_text (ic.key)
+					end
+					across
+						ic.item as img_ic
+					loop
+						create lnk.make_with_text (img_ic.key)
+						lnk.select_actions.extend (agent insert_image_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (img_ic.key), Void)) --
+						sm.extend (lnk)
+					end
+					if not sm.is_empty then
+						m.extend (sm)
+					end
+				end
+			end
+--			m.show
+			popup_menu (m, source_text)
+		end
+
+	on_insert_wiki_template_menu_event
+		local
+			m,sm: EV_MENU
+			lnk: EV_MENU_ITEM
+			l_current_book_name: detachable READABLE_STRING_GENERAL
+			utf: UTF_CONVERTER
+		do
+			create m.make_with_text ("Insert Wiki Template")
+			l_current_book_name := manager.current_book_name
+			across
+				manager.data.templates_path_by_title_and_book as ic
+			loop
+				if not ic.item.is_empty then
+					if ic.key.is_whitespace then
+						create sm.make_with_text ("Global")
+					else
+						create sm.make_with_text (ic.key)
+					end
+					across
+						ic.item as tpl_ic
+					loop
+						create lnk.make_with_text (tpl_ic.key)
+						lnk.select_actions.extend (agent insert_template_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (tpl_ic.key), Void)) --
+						sm.extend (lnk)
+					end
+					if not sm.is_empty then
+						m.extend (sm)
+					end
+				end
+			end
+--			m.show
+			popup_menu (m, source_text)
+		end
 
 	on_text_changed
 		do
@@ -188,7 +536,7 @@ feature -- Events
 	on_cancel_operation
 		do
 			on_reset_operation
-			close_actions.call (Void)
+			close
 		end
 
 	on_apply_operation
@@ -213,12 +561,21 @@ feature -- Events
 					saved_actions.call ([wp, False])
 				end
 			end
-			close_actions.call (Void)
+			if not is_embedded then
+				close
+			end
 		end
 
 	on_preview_selected (cbut: EV_CHECK_BUTTON)
 		do
 			request_invoke_updated_actions
+			if cbut.is_selected then
+				apply_button.disable_sensitive
+--				apply_button.hide
+			else
+				apply_button.enable_sensitive
+--				apply_button.show
+			end
 		end
 
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_manager: WDOCS_MANAGER; a_output: STRING)

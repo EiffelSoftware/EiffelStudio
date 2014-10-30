@@ -39,15 +39,24 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	file_to_item (f: FILE): detachable STRING
+		local
+			retried: BOOLEAN
 		do
-			from
-				create Result.make_empty
-			until
-				f.exhausted or f.end_of_file
-			loop
-				f.read_stream_thread_aware (1_024)
-				Result.append (f.last_string)
+			if retried then
+				Result := Void
+			else
+				from
+					create Result.make_empty
+				until
+					f.exhausted or f.end_of_file
+				loop
+					f.read_stream_thread_aware (1_024)
+					Result.append (f.last_string)
+				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	item_to_file (a_data: STRING; f: FILE)

@@ -11,17 +11,24 @@ inherit
 	CMS_BLOCK
 
 create
-	make
+	make,
+	make_raw
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_title: like title; a_body: like body; a_format: like format)
+	make (a_name: like name; a_title: like title; a_content: like content; a_format: like format)
 		do
 			is_enabled := True
 			name := a_name
 			title := a_title
-			body := a_body
+			content := a_content
 			format := a_format
+		end
+
+	make_raw (a_name: like name; a_title: like title; a_content: like content; a_format: like format)
+		do
+			make (a_name, a_title, a_content, a_format)
+			set_is_raw (True)
 		end
 
 feature -- Access
@@ -30,18 +37,29 @@ feature -- Access
 
 	title: detachable READABLE_STRING_32
 
-	body: READABLE_STRING_8
+	content: READABLE_STRING_8
 
 	format: CONTENT_FORMAT
+
+feature -- Status report
+
+	is_raw: BOOLEAN
+			-- Is raw?
+			-- If True, do not get wrapped it with block specific div	
+
+feature -- Element change
+
+	set_is_raw (b: BOOLEAN)
+		do
+			is_raw := b
+		end
 
 feature -- Conversion
 
 	to_html (a_theme: CMS_THEME): STRING_8
 		do
-			Result := format.formatted_output (body)
+			Result := format.formatted_output (content)
 		end
-
-invariant
 
 note
 	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"

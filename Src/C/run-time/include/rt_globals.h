@@ -225,6 +225,7 @@ typedef struct tag_rt_globals
 	int accounting_cx;
 	int old_accounting_cx;
 	EIF_BOOLEAN eif_is_discarding_attachment_marks_cx;
+	EIF_BOOLEAN eif_is_discarding_qat_cx;
 	char *account_cx;
 	unsigned int **sorted_attributes_cx;
 	char *store_stream_buffer_cx;
@@ -454,6 +455,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define accounting						(rt_globals->accounting_cx)
 #define old_accounting					(rt_globals->old_accounting_cx)
 #define eif_is_discarding_attachment_marks	(rt_globals->eif_is_discarding_attachment_marks_cx)
+#define eif_is_discarding_qat			(rt_globals->eif_is_discarding_qat_cx)
 #define account							(rt_globals->account_cx)
 #define sorted_attributes				(rt_globals->sorted_attributes_cx)
 #define store_stream_buffer				(rt_globals->store_stream_buffer_cx)

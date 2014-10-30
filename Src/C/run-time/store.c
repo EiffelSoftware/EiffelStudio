@@ -372,7 +372,7 @@ rt_shared void eif_store_thread_init (void)
 	 * than the default value will be initialized. */
 {
 	RT_GET_CONTEXT;
-	eif_is_discarding_attachment_marks = EIF_FALSE;
+	eif_is_discarding_attachment_marks = EIF_TRUE;
 }
 #endif
 
@@ -495,13 +495,22 @@ rt_public void basic_general_free_store (EIF_REFERENCE object)
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_is_discarding_attachment_marks" return_type="EIF_BOOLEAN" export="private">
-doc:		<summary>Does `independent_store' discard the attachment marks if found during store operation? Default False.</summary>
+doc:		<summary>Does `independent_store' discard the attachment marks if found during store operation? Default False?</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_BOOLEAN eif_is_discarding_attachment_marks = EIF_FALSE;
+/*
+doc:	<attribute name="eif_is_discarding_qat" return_type="EIF_BOOLEAN" export="private">
+doc:		<summary>Boolean flag that changes the behavior of storable in 2 ways. First if there is a QAT in the storable and if set to true then an exception is raised. In addition, if it is set to true, we use INDEPENDENT_STORE_6_6 format to generate the storable, otherwise INDEPENDENT_STORE_14_11.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_private EIF_BOOLEAN eif_is_discarding_qat = EIF_TRUE;
 #endif
 
 rt_public EIF_BOOLEAN eif_is_discarding_attachment_marks_active (void)
@@ -513,7 +522,21 @@ rt_public EIF_BOOLEAN eif_is_discarding_attachment_marks_active (void)
 rt_public void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN state)
 {
 	RT_GET_CONTEXT
-	eif_is_discarding_attachment_marks = state;
+		/* Until we support QAT, we ignore the user setting and keep
+		 * it set to True (see above initialization). */
+/*	eif_is_discarding_attachment_marks = state; */
+}
+
+rt_public EIF_BOOLEAN eif_is_discarding_qat_active (void)
+{
+	RT_GET_CONTEXT
+	return eif_is_discarding_qat;
+}
+
+rt_public void eif_set_is_discarding_qat (EIF_BOOLEAN state)
+{
+	RT_GET_CONTEXT
+	eif_is_discarding_qat = state;
 }
 
 /* Independent store */

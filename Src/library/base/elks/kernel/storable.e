@@ -68,6 +68,16 @@ feature -- Setting
 			"eif_set_discard_pointer_values"
 		end
 
+	set_is_discarding_qat (v: BOOLEAN)
+			-- If `v', it will raise an exception when storing an object graph containing
+			-- an attribute declaration involving a qualified anchored type, and it will
+			-- use the old format for storing objects. Otherwise it will use the new format.
+		external
+			"C signature (EIF_BOOLEAN) use %"eif_store.h%""
+		alias
+			"eif_set_is_discarding_qat"
+		end
+
 	set_new_independent_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
@@ -159,7 +169,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

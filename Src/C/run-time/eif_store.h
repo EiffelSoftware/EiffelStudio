@@ -77,6 +77,9 @@ extern "C" {
 #define BASIC_STORE_6_6			0x13
 #define GENERAL_STORE_6_6		0x14
 #define INDEPENDENT_STORE_6_6	0x15
+#define INDEPENDENT_STORE_14_11	0x16
+	/* SED_STORE is a reserved value so that from C we use the SED mechanisms to store/retrieve objects. */
+#define SED_STORE				0x17
 
 RT_LNK void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN);
 
@@ -112,6 +115,7 @@ RT_LNK void st_write(EIF_REFERENCE object, int);		/* Write an object in file */
 RT_LNK void ist_write(EIF_REFERENCE object, int);
 RT_LNK void store_write(size_t);
 RT_LNK void rmake_header(void);				/* Make header */
+RT_LNK EIF_BOOLEAN eif_is_discarding_qat_active (void);
 
 #ifdef __cplusplus
 }

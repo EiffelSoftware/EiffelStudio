@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			valid_wiki_link: s.count > 0
 		local
 			p, n: INTEGER
+			l_text: detachable READABLE_STRING_8
 		do
 			from
 				n := s.count
@@ -39,11 +40,21 @@ feature {NONE} -- Initialization
 			loop
 				p := p + 1
 			end
-			url := s.substring (2, p - 1)
-			if p < n then
-				text := wiki_string (s.substring (p + 1, n - 1)) --| n -1: to ignore last "]"
+			if p > n then
+				url := s.substring (2, n - 1)
 			else
+				url := s.substring (2, p - 1)
+			end
+			if p < n then
+				l_text := s.substring (p + 1, n - 1) --| n -1: to ignore last "]"
+				if l_text.is_whitespace then
+					l_text := Void
+				end
+			end
+			if l_text = Void then
 				text := wiki_raw_string (url)
+			else
+				text := wiki_raw_string (l_text)
 			end
 		end
 

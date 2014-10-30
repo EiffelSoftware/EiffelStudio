@@ -86,6 +86,8 @@ feature -- Region
 		end
 
 	html_head: STRING_8
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		local
 			t: like title
 			lines: like head_lines
@@ -110,16 +112,22 @@ feature -- Region
 		end
 
 	header_region: STRING_8
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			Result := region ("header")
 		end
 
 	content_region: STRING_8
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			Result := region ("content")
 		end
 
 	footer_region: STRING_8
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			Result := region ("content")
 		end
@@ -145,16 +153,22 @@ feature -- Element change
 		end
 
 	add_to_header_region (s: STRING)
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			add_to_region (s, "header")
 		end
 
 	add_to_content_region (s: STRING)
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			add_to_region (s, "content")
 		end
 
 	add_to_footer_region (s: STRING)
+		obsolete
+			"code should not expect any predefined region [Oct/2014]"
 		do
 			add_to_region (s, "footer")
 		end
@@ -163,21 +177,6 @@ feature -- Element change
 		do
 			regions.force (s, k)
 		end
-
---	set_header_region (s: STRING)
---		do
---			set_region (s, "header")
---		end
-
---	set_content_region (s: STRING)
---		do
---			set_region (s, "content")
---		end
-
---	set_footer_region (s: STRING)
---		do
---			set_region (s, "footer")
---		end
 
 feature -- Element change
 

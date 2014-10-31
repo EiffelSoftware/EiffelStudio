@@ -1,0 +1,29 @@
+test_name	 type-invalid-in-melted-mode
+test_description When the TYPE class is melted, calling `default' will actually raise an exception when none should be.
+
+define NEW_TYPE	""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output_1
+execute_result	ok
+compare	exec_output_1 output
+
+define	NEW_TYPE	"a: TEST1"
+copy_sub	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output_2
+execute_result	ok
+compare	exec_output_2 output
+
+test_end

@@ -30,6 +30,11 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	SED_STORABLE_FACILITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -82,7 +87,7 @@ feature {NONE} -- Initialization
 						do
 							if not l_retried then
 								a_file.open_read
-								if attached a_file.retrieved as l_retrieved then
+								if attached retrieved_from_medium (a_file) as l_retrieved then
 									Result := l_retrieved
 								end
 							end
@@ -312,7 +317,7 @@ feature {NONE} -- Implementation
 				create l_raw_file.make_with_path (
 					eiffel_project.project_directory.testing_results_path.extended (statistics_file_name + "." + statistics_file_extension))
 				l_raw_file.open_write
-				l_raw_file.independent_store (test_statistics)
+				store_in_medium (test_statistics, l_raw_file)
 			end
 			if l_raw_file /= Void and then not l_raw_file.is_closed then
 				l_raw_file.close
@@ -402,7 +407,7 @@ invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

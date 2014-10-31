@@ -12,6 +12,14 @@ note
 frozen class
 	ETEST_EVALUATOR_CONNECTION [G -> detachable ANY, H]
 
+inherit
+	ANY
+
+	SED_STORABLE_FACILITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -177,14 +185,14 @@ feature {NONE} -- Status setting
 							mutex.unlock
 
 								-- Send request
-							l_connection.independent_store (l_request)
+							store_in_medium (l_request, l_connection)
 
 								-- Wait for response
 							l_connection.read_boolean
 							if
 								l_connection.readable and then
 								l_connection.last_boolean and then
-								attached {H} l_connection.retrieved as l_retrieved
+								attached {H} retrieved_from_medium (l_connection) as l_retrieved
 							then
 								mutex.lock
 								next_request := ({detachable G}).default
@@ -219,7 +227,7 @@ invariant
 	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

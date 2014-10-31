@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	SED_STORABLE_FACILITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -128,7 +133,7 @@ feature {NONE} -- Initialization
 				if
 					a_file.is_open_read and then
 					a_file.readable and then
-					attached {TUPLE [record: TEST_SESSION_RECORD; props: detachable TUPLE]} a_file.retrieved as l_retrieved and then
+					attached {TUPLE [record: TEST_SESSION_RECORD; props: detachable TUPLE]} retrieved_from_medium (a_file) as l_retrieved and then
 					not has_record (l_retrieved.record)
 				then
 					append_record_sorted (l_retrieved.record, new_property_tuple (l_retrieved.props))
@@ -338,7 +343,7 @@ feature {NONE} -- Element change
 				l_record := record_storage.i_th (an_index)
 				l_file := file (l_record)
 				l_file.create_read_write
-				l_file.independent_store ([l_record, property_storage.i_th (an_index)])
+				store_in_medium ([l_record, property_storage.i_th (an_index)], l_file)
 			end
 			if attached l_file and then not l_file.is_closed then
 				l_file.close
@@ -501,7 +506,7 @@ invariant
 	same_record_and_property_count: record_storage.count = property_storage.count
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

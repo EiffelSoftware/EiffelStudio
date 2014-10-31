@@ -58,6 +58,8 @@ inherit
 
 	AUT_SHARED_CONSTANTS
 
+	SED_STORABLE_FACILITIES
+
 create
 	make
 
@@ -697,6 +699,7 @@ feature{NONE} -- Process scheduling
 			failed: BOOLEAN
 			l_last_request: like last_request
 			l_last_bc_request: TUPLE [flag: NATURAL_8; data: detachable ANY]
+			l_socket_writer: SED_MEDIUM_READER_WRITER
 		do
 			if not failed then
 					-- Log request
@@ -712,7 +715,8 @@ feature{NONE} -- Process scheduling
 					if socket /= Void and then socket.is_open_write and socket.extendible then
 						l_last_bc_request := socket_data_printer.last_request
 						socket.put_natural_32 (l_last_bc_request.flag)
-						socket.independent_store (l_last_bc_request.data)
+						create l_socket_writer.make_for_writing (socket)
+						store (l_last_bc_request.data, l_socket_writer)
 					end
 				else
 					log_line ("-- Error: could not send instruction to interpreter due its input stream being closed.")
@@ -819,7 +823,7 @@ feature -- Socket IPC
 				l_socket := socket
 				l_socket.read_natural_32
 				l_response_flag := l_socket.last_natural_32
-				l_data ?= l_socket.retrieved
+				l_data ?= retrieved_from_medium (l_socket)
 				process.set_timeout (0)
 				if l_data /= Void then
 					create last_raw_response.make (create {STRING}.make_from_string (l_data.output), create {STRING}.make_from_string (l_data.error), l_response_flag)

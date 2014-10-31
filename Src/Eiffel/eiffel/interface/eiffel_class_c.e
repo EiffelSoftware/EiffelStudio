@@ -183,16 +183,11 @@ feature -- Action
 	remove_c_generated_files
 			-- Remove the C generated files when we remove `Current' from system.
 		local
-			retried, file_exists: BOOLEAN
+			retried: BOOLEAN
 			l_types: TYPE_LIST
 			cl_type: CLASS_TYPE
-			object_name: STRING
-			c_file_name: PATH
-			file: PLAIN_TEXT_FILE
-			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
-
 				from
 					l_types := types
 					l_types.start

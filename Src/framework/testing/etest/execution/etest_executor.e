@@ -229,7 +229,7 @@ feature {NONE} -- Status setting
 					not l_test_class.is_generic and then not l_test_class.types.is_empty and then
 					attached l_test_class.feature_named (l_test.routine_name) as l_test_routine
 				then
-					l_body_id := l_test_routine.real_body_id (l_test_class.types.first) - 1
+					l_body_id := l_test_routine.real_body_index (l_test_class.types.first) - 1
 
 					if test_execution.is_debugging then
 						set_breakpoint (a_task_data, l_test_routine)
@@ -523,7 +523,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

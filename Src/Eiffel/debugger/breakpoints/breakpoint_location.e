@@ -234,7 +234,7 @@ feature -- Query
 				until
 					l_class_type_list.after
 				loop
-					Result.extend (fi.real_body_id (l_class_type_list.item))
+					Result.extend (fi.real_body_index (l_class_type_list.item))
 					l_class_type_list.forth
 				end
 				if l_class_type_list.valid_cursor (lcurs) then

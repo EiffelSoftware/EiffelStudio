@@ -55,7 +55,7 @@ feature -- IL code generation
 
 feature -- Byte Code generation
 
-	melt (exec: EXECUTION_UNIT)
+	melt (a_class_type: CLASS_TYPE)
 			-- Generate byte code for the current feature
 		local
 			byte_code: INVARIANT_B
@@ -70,12 +70,12 @@ feature -- Byte Code generation
 			byte_context.clear_feature_data
 
 			melted_feature := Byte_array.melted_feature
-			melted_feature.set_real_body_id (exec.real_body_id)
+			melted_feature.set_real_body_id (real_body_index (a_class_type))
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Execution_table.mark_melted (exec)
+			Execution_table.mark_melted (body_index, a_class_type)
 		end
 
 feature -- Access
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

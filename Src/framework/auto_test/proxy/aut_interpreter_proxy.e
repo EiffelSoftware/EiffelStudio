@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 				-- You can only do this after the compilation of the interpreter.
 			check attached feature_for_byte_code_injection as l_feature then
 				l_itp_class := l_feature.written_class
-				injected_feature_body_id := l_feature.real_body_id (l_itp_class.types.first)
+				injected_feature_body_id := l_feature.real_body_index (l_itp_class.types.first)
 				injected_feature_pattern_id := l_feature.real_pattern_id (l_itp_class.types.first)
 			end
 
@@ -1029,7 +1029,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

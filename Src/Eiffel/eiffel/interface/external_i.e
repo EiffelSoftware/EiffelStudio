@@ -244,7 +244,7 @@ feature
 					-- Generation of the C routine
 				l_byte_context.set_current_feature (Current)
 				byte_code.analyze
-				byte_code.set_real_body_id (real_body_id (class_type))
+				byte_code.set_real_body_id (real_body_index (class_type))
 				byte_code.generate
 				l_byte_context.clear_feature_data
 			else

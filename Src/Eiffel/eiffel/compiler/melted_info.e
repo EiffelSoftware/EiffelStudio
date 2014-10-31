@@ -68,12 +68,6 @@ feature -- Update
 			exec_unit := execution_unit (class_type)
 		end
 
-	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE)
-			-- Melt the feature
-		do
-			associated_feature (class_type.associated_class, feat_tbl).melt (execution_unit (class_type))
-		end
-
 feature -- Access
 
 	body_index: INTEGER
@@ -95,6 +89,16 @@ feature -- Access
 			-- Is `other' equal to Current ?
 		do
 			Result := body_index = other.body_index
+		end
+
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
+			-- Associated feature
+		require
+			class_c_not_void: class_c /= Void
+			feat_tbl__not_void: feat_tbl /= Void
+		deferred
+		ensure
+			Result_exists: Result /= Void
 		end
 
 feature -- Status report
@@ -139,18 +143,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
-			-- Associated feature
-		require
-			class_c_not_void: class_c /= Void
-			feat_tbl__not_void: feat_tbl /= Void
-		deferred
-		ensure
-			Result_exists: Result /= Void
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

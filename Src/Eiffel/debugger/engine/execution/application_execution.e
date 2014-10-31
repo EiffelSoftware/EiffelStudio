@@ -500,7 +500,7 @@ feature -- Remote: execution recorder on RT_
 							--| Don't forget to withdraw "-1" to convert compiler id to runtime id !
 						cid := ct.type_id - 1
 						if fi.valid_body_id then
-							fid := fi.real_body_id (ct) - 1
+							fid := fi.real_body_index (ct) - 1
 						else
 							fid := fi.body_index - 1
 						end

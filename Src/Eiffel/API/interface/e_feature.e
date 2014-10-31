@@ -1185,7 +1185,7 @@ feature -- Implementation
 				-- `f' can be Void when there is an error
 				-- and user wants to get a flat view
 			if f /= Void then
-				Result := f.real_body_id (f.written_class.types.first)
+				Result := f.real_body_index (f.written_class.types.first)
 			end
 		end
 
@@ -1293,7 +1293,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

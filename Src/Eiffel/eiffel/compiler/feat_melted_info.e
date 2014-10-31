@@ -33,6 +33,38 @@ feature {NONE} -- Initialization
 			enclosing_feature := f.enclosing_feature
 		end
 
+feature -- Access
+
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
+			-- Associated feature
+		local
+			eiffel_class: EIFFEL_CLASS_C
+		do
+			eiffel_class ?= class_c
+			if eiffel_class /= Void then
+				Result := eiffel_class.inline_agent_of_name_id (feature_name_id)
+			end
+
+			if Result = Void then --| Its not an inline agent
+				if
+					enclosing_feature.is_hidden
+					and then not feat_tbl.has_id (feature_name_id)
+				then
+					if
+						Result = Void and then
+						attached class_c.object_relative_once_infos as l_obj_infos
+					then
+						Result := l_obj_infos.attribute_of_feature_name_id (feature_name_id)
+					end
+				else
+					check
+						consistency: feat_tbl.has_id (feature_name_id)
+					end
+					Result := feat_tbl.item_id (feature_name_id)
+				end
+			end
+		end
+
 feature -- Status report
 
 	debug_output: STRING_32
@@ -74,41 +106,11 @@ feature {NONE} -- Implementation
 			Result.set_type (result_type.adapted_in (class_type).c_type)
 		end
 
-	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
-			-- Associated feature
-		local
-			eiffel_class: EIFFEL_CLASS_C
-		do
-			eiffel_class ?= class_c
-			if eiffel_class /= Void then
-				Result := eiffel_class.inline_agent_of_name_id (feature_name_id)
-			end
-
-			if Result = Void then --| Its not an inline agent
-				if
-					enclosing_feature.is_hidden
-					and then not feat_tbl.has_id (feature_name_id)
-				then
-					if
-						Result = Void and then
-						attached class_c.object_relative_once_infos as l_obj_infos
-					then
-						Result := l_obj_infos.attribute_of_feature_name_id (feature_name_id)
-					end
-				else
-					check
-						consistency: feat_tbl.has_id (feature_name_id)
-					end
-					Result := feat_tbl.item_id (feature_name_id)
-				end
-			end
-		end
-
 invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

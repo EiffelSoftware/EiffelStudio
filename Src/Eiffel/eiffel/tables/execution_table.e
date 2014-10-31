@@ -77,8 +77,6 @@ feature -- Access
 	counter: REAL_BODY_ID_COUNTER
 			-- Counter for real body id
 
-feature -- Access
-
 	melted_list: MELTED_EXECUTION_TABLE
 			-- List of melted unit
 
@@ -94,18 +92,6 @@ feature -- Access
 			unit := unit_of_body_index (body_index, class_type)
 			if unit /= Void then
 				Result := unit.real_body_index
-			end
-		end
-
-	real_body_id (body_index: INTEGER; class_type: CLASS_TYPE): INTEGER
-			-- Real body id associated to an instance of FEATURE_I of
-			-- body index `body_index' in a class type `class_type'.
-		local
-			unit: EXECUTION_UNIT
-		do
-			unit := unit_of_body_index (body_index, class_type)
-			if unit /= Void then
-				Result := unit.real_body_id
 			end
 		end
 
@@ -189,6 +175,14 @@ feature -- Removal
 	dead_attributes: SEARCH_TABLE [INTEGER]
 			-- Record dead functions transformed into attributes.
 
+feature -- Status Report
+
+	has_unit (a_body_index: INTEGER; a_class_type: CLASS_TYPE): BOOLEAN
+			-- Does execution unit associated to `a_body_index' in `a_class_type' exist in Current?
+		do
+			Result := unit_of_body_index (a_body_index, a_class_type) /= Void
+		end
+
 feature -- Comparison
 
 	same_keys (a_search_key, a_key: EXECUTION_UNIT): BOOLEAN
@@ -199,10 +193,12 @@ feature -- Comparison
 
 feature -- Update
 
-	mark_melted (t: EXECUTION_UNIT)
-			-- Insert `t' in `melted_list'.
+	mark_melted (a_body_index: INTEGER; a_class_type: CLASS_TYPE)
+			-- Insert execution unit associated to `a_body_index' in `a_class_type' in `melted_list'.
+		require
+			has_unit: has_unit (a_body_index, a_class_type)
 		do
-			melted_list.force (t)
+			melted_list.force (unit_of_body_index (a_body_index, a_class_type))
 		end
 
 	nb_frozen_features: INTEGER
@@ -282,7 +278,7 @@ feature -- Byte Code generation
 			loop
 				e := melted_list.item_for_iteration
 				if e.is_valid then
-					l_real_body_id := e.real_body_id
+					l_real_body_id := e.real_body_index
 					melted_feature := M_feature_server.item (l_real_body_id)
 						-- Write the body id
 					write_int (file.file_pointer, l_real_body_id - 1)
@@ -438,7 +434,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

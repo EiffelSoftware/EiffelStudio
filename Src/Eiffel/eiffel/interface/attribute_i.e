@@ -292,7 +292,7 @@ feature -- Element Change
 					l_byte_context.set_byte_code (l_byte_code)
 					l_byte_context.set_current_feature (Current)
 					l_byte_code.analyze
-					l_byte_code.set_real_body_id (real_body_id (class_type))
+					l_byte_code.set_real_body_id (real_body_index (class_type))
 					l_byte_code.generate
 					l_byte_context.clear_feature_data
 				end
@@ -550,13 +550,12 @@ feature -- Element Change
 			set_is_transient (other.is_transient)
 		end
 
-	melt (exec: EXECUTION_UNIT)
+	melt (a_class_type: CLASS_TYPE)
 			-- Melt an attribute
 		local
 			melted_feature: MELT_FEATURE
 			ba: BYTE_ARRAY
 			result_type: TYPE_A
-			current_type: CLASS_TYPE
 			l_byte_context: like byte_context
 			tmp_body_index: like body_index
 			byte_code: BYTE_CODE
@@ -565,8 +564,7 @@ feature -- Element Change
 			ba := Byte_array
 			ba.clear
 
-			current_type := l_byte_context.class_type
-			result_type := type.adapted_in (exec.class_type)
+			result_type := type.adapted_in (a_class_type)
 			if not result_type.is_expanded and then has_body then
 				tmp_body_index := body_index
 				byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
@@ -588,7 +586,7 @@ feature -- Element Change
 				ba.append_integer (-1)
 					-- Meta-type of Result
 				result_type := l_byte_context.real_type (type)
-				ba.append_natural_32 (result_type.sk_value (l_byte_context.context_class_type.type))
+				ba.append_natural_32 (result_type.sk_value (a_class_type.type))
 					-- Argument count
 				ba.append_short_integer (0)
 					-- Local count
@@ -596,12 +594,12 @@ feature -- Element Change
 					-- Precise result type (if required)
 				if result_type.is_true_expanded then
 						-- Generate full type info.
-					type.make_full_type_byte_code (ba, l_byte_context.context_class_type.type)
+					type.make_full_type_byte_code (ba, a_class_type.type)
 				end
 					-- Feature name
 				ba.append_raw_string (feature_name)
 					-- Type where the feature is written in
-				ba.append_short_integer (current_type.type_id - 1)
+				ba.append_short_integer (a_class_type.type_id - 1)
 
 					-- No rescue
 				ba.append_boolean (False)
@@ -611,19 +609,19 @@ feature -- Element Change
 					-- Routine id
 				ba.append_integer (rout_id_set.first)
 					-- Attribute meta-type
-				ba.append_natural_32 (result_type.sk_value (l_byte_context.context_class_type.type))
+				ba.append_natural_32 (result_type.sk_value (a_class_type.type))
 				ba.append (Bc_rassign)
 					-- End mark
 				ba.append (Bc_null)
 			end
 
 			melted_feature := ba.melted_feature
-			melted_feature.set_real_body_id (exec.real_body_id)
+			melted_feature.set_real_body_id (real_body_index (a_class_type))
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Execution_table.mark_melted (exec)
+			Execution_table.mark_melted (body_index, a_class_type)
 		end
 
 feature {NONE} -- Implementation

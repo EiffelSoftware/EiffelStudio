@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 						ft.after or fi /= Void
 					loop
 						fi := ft.item_for_iteration
-						if not fi.valid_body_id or else fi.real_body_id (ct) /= feature_body_id then
+						if not fi.valid_body_id or else fi.real_body_index (ct) /= feature_body_id then
 							fi := Void
 						end
 						ft.forth
@@ -214,7 +214,7 @@ feature -- Properties
 			Result.append_character ('.')
 			if attached feature_i as fi then
 				if fi.valid_body_id then
-					Result.append_integer (fi.real_body_id (class_type))
+					Result.append_integer (fi.real_body_index (class_type))
 				else
 					Result.append_integer (fi.body_index)
 				end
@@ -366,7 +366,7 @@ feature -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -261,7 +261,7 @@ feature -- C code generation
 						buffer.put_string (once "RTOTC (")
 						buffer.put_string (internal_name)
 						buffer.put_character (',')
-						buffer.put_integer (real_body_id (class_type))
+						buffer.put_integer (real_body_index (class_type))
 					elseif System.has_multithreaded then
 						buffer.put_string (once "RTOUC (")
 						buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
@@ -366,7 +366,7 @@ feature -- IL Code generation
 
 feature -- Byte code generation
 
-	melt (exec: EXECUTION_UNIT)
+	melt (a_class_type: CLASS_TYPE)
 			-- Generate byte code for constant.
 			-- [Remember there is no byte code tree for constant].
 		local
@@ -401,7 +401,7 @@ feature -- Byte code generation
 			ba.append_integer (-1)
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type)
-			ba.append_natural_32 (result_type.sk_value (byte_context.context_class_type.type))
+			ba.append_natural_32 (result_type.sk_value (a_class_type.type))
 				-- Argument count
 			ba.append_short_integer (0)
 
@@ -424,12 +424,12 @@ feature -- Byte code generation
 			ba.append (Bc_null)
 
 			melted_feature := ba.melted_feature
-			melted_feature.set_real_body_id (exec.real_body_id)
+			melted_feature.set_real_body_id (real_body_index (a_class_type))
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Execution_table.mark_melted (exec)
+			Execution_table.mark_melted (body_index, a_class_type)
 		end
 
 	is_once: BOOLEAN

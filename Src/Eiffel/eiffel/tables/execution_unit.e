@@ -80,17 +80,10 @@ feature -- Access
 	real_body_index: INTEGER
 			-- Index of the unit in an array
 
-	real_body_id: INTEGER
-			-- Real body id
-			--| To be redefined in EXT_EXECUTION_UNIT
-		do
-			Result := real_body_index
-		end
-
 	is_precompiled: BOOLEAN
 			-- Is `index' coming from a precompiled library?
 		do
-			Result := real_body_id_counter.is_precompiled (real_body_id)
+			Result := real_body_id_counter.is_precompiled (real_body_index)
 		end
 
 	type_id: INTEGER
@@ -325,7 +318,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1892,35 +1892,39 @@ feature -- IL code generation
 
 feature -- Byte code computation
 
-	melt (exec: EXECUTION_UNIT)
+	melt (a_class_type: CLASS_TYPE)
 			-- Generate byte code for current feature
 			-- [To be redefined in CONSTANT_I, ATTRIBUTE_I and in EXTERNAL_I].
 		require
-			good_argument: exec /= Void
+			class_type_not_void: a_class_type /= Void
 		local
 			byte_code: BYTE_CODE
+			l_byte_context: like byte_context
 			melted_feature: MELT_FEATURE
+			l_real_body_index: INTEGER
 		do
 			byte_code := Byte_server.disk_item (body_index)
 
 			prepare_object_relative_once (byte_code)
 
-			byte_context.set_byte_code (byte_code)
-			byte_context.set_current_feature (Current)
+			l_byte_context := byte_context
+			l_byte_context.set_byte_code (byte_code)
+			l_byte_context.set_current_feature (Current)
+			l_real_body_index := real_body_index (a_class_type)
 
 			Byte_array.clear
-			byte_code.set_real_body_id (exec.real_body_id)
+			byte_code.set_real_body_id (l_real_body_index)
 			byte_code.make_byte_code (Byte_array)
 			byte_context.clear_feature_data
 
 			melted_feature := Byte_array.melted_feature
-			melted_feature.set_real_body_id (exec.real_body_id)
+			melted_feature.set_real_body_id (l_real_body_index)
 
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Execution_table.mark_melted (exec)
+			Execution_table.mark_melted (body_index, a_class_type)
 		end
 
 feature -- Polymorphism
@@ -3341,7 +3345,7 @@ feature -- C code generation
 				l_byte_context.set_byte_code (l_byte_code)
 				l_byte_context.set_current_feature (Current)
 				l_byte_code.analyze
-				l_byte_code.set_real_body_id (real_body_id (class_type))
+				l_byte_code.set_real_body_id (real_body_index (class_type))
 				l_byte_code.generate
 				l_byte_context.clear_feature_data
 			else
@@ -3421,15 +3425,15 @@ feature -- Debugging
 			end
 		end
 
-	real_body_id (class_type: CLASS_TYPE): INTEGER
+	real_body_index (class_type: CLASS_TYPE): INTEGER
 			-- Real body id at compilation time for `class_type'.
 			-- This id might be obsolete after supermelting this feature.
-			--| In latter case, new real body id is kept
+			--| In latter case, new real body index is kept
 			--| in DEBUGGABLE objects.
 		require
 			valid_body_id: valid_body_id
 		do
-			Result := execution_table.real_body_id (body_index, class_type)
+			Result := execution_table.real_body_index (body_index, class_type)
 		end
 
 	real_pattern_id (class_type: CLASS_TYPE): INTEGER

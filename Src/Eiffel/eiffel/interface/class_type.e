@@ -1261,6 +1261,7 @@ feature -- Byte code generation
 		local
 			melted_set: SEARCH_TABLE [MELTED_INFO]
 			feat_tbl: FEATURE_TABLE
+			l_melted_info: MELTED_INFO
 		do
 			from
 					-- Iteration on the melted list of the associated class
@@ -1275,10 +1276,22 @@ feature -- Byte code generation
 			until
 				melted_set.after
 			loop
+				l_melted_info := melted_set.item_for_iteration
+					-- We need to record the EXECUTION_UNIT associated to the MELTED_INFO
+					-- object. This is necesary if this is a new routine that was never generated before.
+				l_melted_info.update_execution_unit (Current)
 					-- Generation of byte code
-				melted_set.item_for_iteration.melt (Current, feat_tbl)
+				melt_feature (l_melted_info.associated_feature (associated_class, feat_tbl))
 				melted_set.forth
 			end
+		end
+
+	melt_feature (f: FEATURE_I)
+			-- Generate feature `feat' in Current class type
+		require
+			to_generate_in: f.to_generate_in (associated_class)
+		do
+			f.melt (Current)
 		end
 
 	melt_feature_table

@@ -67,7 +67,7 @@ feature -- Header
 
 feature -- Region
 
-	regions: HASH_TABLE [STRING_8, STRING_8]
+	regions: STRING_TABLE [STRING_8]
 			-- header
 			-- content
 			-- footer
@@ -83,53 +83,6 @@ feature -- Region
 					Result := "{{" + n + "}}"
 				end
 			end
-		end
-
-	html_head: STRING_8
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		local
-			t: like title
-			lines: like head_lines
-		do
-			t := title
-			lines := head_lines
-			if t /= Void or else lines.count > 0 then
-				create Result.make (50)
-				if t /= Void then
-					Result.append ("<title>" + t + "</title>%N")
-				end
-				Result.append_character ('%N')
-				across
-					lines as l
-				loop
-					Result.append (l.item)
-					Result.append_character ('%N')
-				end
-			else
-				create Result.make_empty
-			end
-		end
-
-	header_region: STRING_8
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			Result := region ("header")
-		end
-
-	content_region: STRING_8
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			Result := region ("content")
-		end
-
-	footer_region: STRING_8
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			Result := region ("content")
 		end
 
 feature -- Element change
@@ -150,27 +103,6 @@ feature -- Element change
 			else
 				r.append (s)
 			end
-		end
-
-	add_to_header_region (s: STRING)
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			add_to_region (s, "header")
-		end
-
-	add_to_content_region (s: STRING)
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			add_to_region (s, "content")
-		end
-
-	add_to_footer_region (s: STRING)
-		obsolete
-			"code should not expect any predefined region [Oct/2014]"
-		do
-			add_to_region (s, "footer")
 		end
 
 	set_region (s: STRING; k: STRING)

@@ -352,8 +352,9 @@ feature -- Basic operation
 				n = 0
 			loop
 				g.remove_row (i + n)
-				i := i - 1
+				n := n - 1
 			end
+			r.ensure_expandable
 		end
 
 	on_refresh_requested

@@ -146,6 +146,7 @@ feature -- Access: docking
 	sd_manager_config_path: PATH
 		once
 			create Result.make_from_string ("wdocs_layout.cfg")
+			Result := Result.absolute_path
 		end
 
 	reset_layout_requested: BOOLEAN

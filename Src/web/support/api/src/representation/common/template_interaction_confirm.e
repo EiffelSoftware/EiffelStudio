@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 					template.add_value (a_form.category, "new_category")
 				end
 
-				if l_report.confidential /= a_form.private then
+				if a_form.private then
 					template.add_value (a_form.private, "private")
 				end
 			end

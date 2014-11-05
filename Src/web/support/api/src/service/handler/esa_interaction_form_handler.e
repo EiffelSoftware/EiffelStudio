@@ -108,7 +108,7 @@ feature -- Edit Report Problem
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				if attached current_media_type (req) as l_type then
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).add_interaction_form (req, res, edit_form (a_report_id, a_interaction_id))
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).add_interaction_form (req, res, edit_form (a_report_id, a_interaction_id, l_user))
 				else
 					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).add_interaction_form (req, res, Void)
 				end
@@ -121,13 +121,14 @@ feature -- Edit Report Problem
 			end
 		end
 
-	edit_form (a_report_id, a_interaction_id: INTEGER): ESA_INTERACTION_FORM_VIEW
+	edit_form (a_report_id, a_interaction_id: INTEGER; a_user: STRING): ESA_INTERACTION_FORM_VIEW
 		local
 			l_tuple: detachable TUPLE[content : detachable READABLE_STRING_32;
 									   username: detachable READABLE_STRING_32;
 									   status: detachable READABLE_STRING_32;
 									   private: detachable READABLE_STRING_32;
 									   category: detachable READABLE_STRING_32]
+			l_role: USER_ROLE
 		do
 			create Result.make (api_service.status, api_service.all_categories)
 			Result.set_report (api_service.problem_report_details_guest (a_report_id))
@@ -135,6 +136,12 @@ feature -- Edit Report Problem
 			   attached l_report.category as l_category then
 			   	Result.set_category_by_synopsis (l_category.synopsis)
 			end
+
+			l_role := api_service.user_role (a_user)
+			if l_role.is_administrator or else l_role.is_responsible then
+				Result.set_responsible_or_admin (True)
+			end
+
 			Result.set_id (a_interaction_id)
 			l_tuple := api_service.temporary_interaction_2 (a_interaction_id)
 			if l_tuple /= Void then
@@ -175,7 +182,6 @@ feature -- New Report Problem
 					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						create l_form.make (api_service.status, api_service.all_categories)
 						l_form.set_report (l_report)
-
 						l_role := api_service.user_role (l_user)
 						if l_role.is_administrator or else l_role.is_responsible then
 							l_form.set_responsible_or_admin (True)
@@ -210,6 +216,7 @@ feature -- Update Report Problem
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_form: ESA_INTERACTION_FORM_VIEW
+			l_role: USER_ROLE
 		do
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
@@ -221,6 +228,10 @@ feature -- Update Report Problem
 						l_form.set_id (a_interaction_id)
 						l_form.set_report (l_report)
 
+						l_role := api_service.user_role (l_user)
+						if l_role.is_administrator or else l_role.is_responsible then
+							l_form.set_responsible_or_admin (True)
+						end
 						if l_form.is_valid_form then
 							update_report_problem_internal (req, l_form, l_type)
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm (req, res, l_form)
@@ -396,8 +407,8 @@ feature {NONE} -- Implementation
 				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 					l_name.item.same_string ("description") and then attached {JSON_STRING} l_form_data.item ("value") as l_value and then not l_value.item.is_empty then
 					Result.set_description (l_value.item)
-					i := 2
 				end
+				i := 2
 				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 					l_name.item.same_string ("category") then
 					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
@@ -414,8 +425,13 @@ feature {NONE} -- Implementation
 				end
 				if attached {JSON_OBJECT} l_data.i_th (i) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
 					l_name.item.same_string ("private") then
-					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_boolean then
-						Result.set_private (l_value.item.to_boolean)
+					if attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
+						if l_value.item = 0 then
+							Result.set_private (False)
+						else
+							Result.set_private (True)
+						end
+
 					end
 					i := i + 1
 				end

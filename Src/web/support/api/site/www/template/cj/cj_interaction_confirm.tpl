@@ -60,7 +60,7 @@
                         {if isset="$new_status"}  
                          {foreach from="$status" item="item"} 
                              {if condition="$item.id = $form.selected_status"} 
-                               {assign name="new_status" value="$item.synopsis"/} 
+                               {assign name="new_status" expression="$item.synopsis"/} 
                              {/if} 
                          {/foreach} 
                           ,
@@ -72,26 +72,28 @@
                         {/if}
                         {if isset="$new_category"}  
                             {foreach from="$categories" item="item"} 
-                                 {if condition="$item.id = $form.category"} 
-                                   {assign name="new_category" value="$item.synopsis"/} 
+                                 {if condition="$item.id = $new_category"} 
+                                   {assign name="new_category_synopsis" expression="$item.synopsis"/} 
                                  {/if} 
                              {/foreach} 
                               ,
                              <
                                 "name": "Category",
                                 "prompt": "Category",
-                                "value": "Change Category from {$form.report.category.synopsis/} to {$new_category/}"
+                                "value": "Change Category from {$form.report.category.synopsis/} to {$new_category_synopsis/}"
                              >
                         {/if}
                     {/if}
 
-                    {if isset="$private"}  
+                    {if condition="$form.is_responsible_or_admin"}    
+                        {if isset="$private"}  
                          ,<
                             "name": "private",
                             "prompt": "private",
-                            "value": "Change Private from {$form.report.confidential/} to {$private/}"
+                            "value": "Change Private from False to {$private/}"
                          >
-                    {/if}
+                        {/if}
+                    {/if}    
                     {if isset="$attachments"}
                             ,<
                             "name": "Attachments",

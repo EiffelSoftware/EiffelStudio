@@ -10,10 +10,10 @@
 						<legend><h1>Interaction Submission Confirmation</h1></legend>
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="description">Confidential</label>
-							{if condition="$form.private"}
+							{if condition="$form.report.confidential"}
 								<div class="controls">Yes</div>
 							{/if}
-							{unless condition="$form.private"}
+							{unless condition="$form.report.confidential"}
 								<div class="controls">No</div>
 							{/unless}
 						</div>
@@ -50,12 +50,14 @@
 								</div>
 							{/if}
 						{/if}	
-						{if isset="$private"}
-							<div class="control-group">
-								<label class="control-label" for="textarea" itemprop="private">Change Private from {$form.report.confidential/} to</label>
-								<div class="controls">{$private/}</div>
-							</div>
-						{/if}
+						{if condition="$form.is_responsible_or_admin"}
+							{if condition="$private"}
+								<div class="control-group">
+									<label class="control-label" for="textarea" itemprop="private">Change Private from False to</label>
+									<div class="controls">{$private/}</div>
+								</div>
+							{/if}
+						{/if}	
 						{if isset="$attachments"}
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="attachments">Attachments</label>

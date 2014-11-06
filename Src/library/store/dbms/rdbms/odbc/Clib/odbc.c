@@ -121,7 +121,7 @@ rt_private void string_right_adjust(COUNTABLE_STRING *buf);
 
 /*
 SQLTXTCMP	- SQL text cmp
-SQLTXTCPY	- SQL text copy
+SQLTXTCPY	- SQL text copy len + one character for the null character
 ATSTXTCPY	- ASCII to SQL text copy
 SQLTXTCAT	- SQL text cat
 ATSTXTCAT	- ASCII to SQL text cat
@@ -1585,10 +1585,8 @@ void odbc_fetch_connection_info (void *con)
 	SQLSMALLINT indColName;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, dbmsName, sizeof(dbmsName), &indColName);
-	SQLTXTCPY(storedProc, dbmsName, indColName);
-	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, dbmsName, sizeof(dbmsName), &indColName);
-	SQLTXTCPY(CreateStoredProc, dbmsName, indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, storedProc, sizeof(storedProc), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, CreateStoredProc, sizeof(CreateStoredProc), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_NAME, dbmsName, sizeof(dbmsName), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_VER, dbmsVer, sizeof(dbmsVer), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_IDENTIFIER_QUOTE_CHAR, idQuoter, sizeof(idQuoter), &indColName);

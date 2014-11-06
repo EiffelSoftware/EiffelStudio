@@ -236,13 +236,6 @@ feature -- Menu
 
 feature -- Blocks
 
-	main_menu_block: detachable CMS_MENU_BLOCK
-		do
-			if attached main_menu as m and then not m.is_empty then
-				create Result.make (m)
-			end
-		end
-
 	management_menu_block: detachable CMS_MENU_BLOCK
 		do
 			if attached management_menu as m and then not m.is_empty then
@@ -271,31 +264,25 @@ feature -- Blocks
 			end
 		end
 
-	top_header_block: CMS_CONTENT_BLOCK
-		local
-			s: STRING
+	horizontal_main_menu_html: STRING
 		do
-			create s.make_from_string ("<a href=%""+ url ("/", Void) +"%"><img id=%"logo%" src=%"" + logo_location + "%"/></a><div id=%"title%">" + html_encoded (site_name) + "</div>")
-			s.append ("<div id=%"menu-bar%">")
-			s.append (theme.menu_html (main_menu, True))
-			s.append ("</div>")
-			create Result.make ("top_header", Void, s, formats.full_html)
-			Result.set_is_raw (True)
+			create Result.make_empty
+			Result.append ("<div id=%"menu-bar%">")
+			Result.append (theme.menu_html (main_menu, True))
+			Result.append ("</div>")
 		end
 
-	header_block: CMS_CONTENT_BLOCK
-		local
-			s: STRING
+	message_html: detachable STRING
 		do
-			create s.make_empty
-			create Result.make ("header", Void, s, formats.full_html)
-			Result.set_is_raw (True)
+			if attached message as m and then not m.is_empty then
+				Result := "<div id=%"message%">" + m + "</div>"
+			end
 		end
 
 	message_block: detachable CMS_CONTENT_BLOCK
 		do
-			if attached message as m and then not m.is_empty then
-				create Result.make ("message", Void, "<div id=%"message%">" + m + "</div>", formats.full_html)
+			if attached message_html as m and then not m.is_empty then
+				create Result.make ("message", Void, m, Void)
 				Result.set_is_raw (True)
 			end
 		end
@@ -312,17 +299,19 @@ feature -- Blocks
 					s := "No Content"
 				end
 			end
-			create Result.make ("content", Void, s, formats.full_html)
+			create Result.make ("content", Void, s, Void)
 			Result.set_is_raw (True)
 		end
 
-	footer_block: CMS_CONTENT_BLOCK
-		local
-			s: STRING
+	made_with_html: STRING
 		do
-			create s.make_empty
-			s.append ("Made with <a href=%"http://www.eiffel.com/%">EWF</a>")
-			create Result.make ("made_with", Void, s, formats.full_html)
+			create Result.make_empty
+			Result.append ("Made with <a href=%"http://www.eiffel.com/%">EWF</a>")
+		end
+
+	footer_block: CMS_CONTENT_BLOCK
+		do
+			create Result.make ("made_with", Void, made_with_html, Void)
 		end
 
 feature -- Menu: change
@@ -429,9 +418,9 @@ feature -- Blocks initialization
 			l_table["message"] := "content"
 			l_table["content"] := "content"
 			l_table["footer"] := "footer"
-			l_table["management"] := "first_sidebar"
-			l_table["navigation"] := "first_sidebar"
-			l_table["user"] := "first_sidebar"
+			l_table["management"] := "sidebar_first"
+			l_table["navigation"] := "sidebar_first"
+			l_table["user"] := "sidebar_first"
 
 			l_table["top_content_anchor"] := "content"
 			l_table["page_title"] := "content"
@@ -483,16 +472,14 @@ feature -- Blocks
 	get_blocks
 		do
 				-- FIXME: find a way to have this in configuration or database, and allow different order
-			add_block (top_header_block, "header")
-			add_block (header_block, "header")
 			if attached message_block as m then
-				add_block (m, "content")
+				add_block (m, "highlighted")
 			end
 				-- FIXME: avoid hardcoded html! should be only in theme.
-			add_block (create {CMS_CONTENT_BLOCK}.make_raw ("top_content_anchor", Void, "<a id=%"main-content%"></a>%N", formats.full_html), "content")
+			add_block (create {CMS_CONTENT_BLOCK}.make_raw ("top_content_anchor", Void, "<a id=%"main-content%"></a>%N", Void), "content")
 			if attached page_title as l_page_title then
 					-- FIXME: avoid hardcoded html! should be only in theme.
-				add_block (create {CMS_CONTENT_BLOCK}.make_raw ("page_title", Void, "<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N", formats.full_html), "content")
+				add_block (create {CMS_CONTENT_BLOCK}.make_raw ("page_title", Void, "<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N", Void), "content")
 			end
 			if attached primary_tabs_block as m then
 				add_block (m, "content")
@@ -500,14 +487,14 @@ feature -- Blocks
 			add_block (content_block, "content")
 
 			if attached management_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_first")
 			end
 			if attached navigation_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_first")
 			end
 
 			if attached user_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_first")
 			end
 
 			if attached footer_block as l_block then
@@ -580,42 +567,13 @@ feature -- Generation
 		end
 
 	prepare (page: CMS_HTML_PAGE)
-		local
-			s: STRING_8
 		do
-			if attached user as l_user then
-				page.register_variable (l_user, "user")
-			end
-				-- Cms values
-			service.call_value_alter_hooks (values, Current)
-
-				-- Values Associated with current Execution object.
-			across
-				values as ic
-			loop
-				page.register_variable (ic.item, ic.key)
-			end
-
-				-- Specific values
-			page.register_variable (is_front, "is_front")
-			page.register_variable (request.absolute_script_url (""), "site_url")
-
-				-- Additional lines in <head ../>
-			if attached additional_page_head_lines as l_head_lines then
-				across
-					l_head_lines as hl
-				loop
-					page.head_lines.force (hl.item)
-				end
-			end
-
-				-- Main menu
+				-- Menu
 			add_to_main_menu (create {CMS_LOCAL_LINK}.make ("Home", "/"))
-
-				-- ...
 			service.call_menu_alter_hooks (menu_system, Current)
 			prepare_menu_system (menu_system)
 
+				-- Blocks
 			get_blocks
 			across
 				regions as reg_ic
@@ -629,13 +587,40 @@ feature -- Generation
 				end
 			end
 
+				-- Values
+			if attached user as l_user then
+				page.register_variable (l_user, "user")
+			end
+
+				-- Cms values
+			service.call_value_alter_hooks (values, Current)
+
+
+				-- Predefined values
 			if attached title as l_title then
 				page.set_title (l_title)
 			else
 				page.set_title ("CMS::" + request.path_info)
 			end
+			page.register_variable (page, "page")
 
-				-- blocks
+			page.register_variable (is_front, "is_front")
+			page.register_variable (request.absolute_script_url (""), "site_url")
+			page.register_variable (title, "site_title")
+--			page.register_variable (site_name_and_slogan, "site_name_and_slogan")
+			if attached logo_location as l_logo then
+				page.register_variable (l_logo, "logo")
+			end
+			page.register_variable (horizontal_main_menu_html, "primary_nav")
+
+				-- Values Associated with current Execution object.
+			across
+				values as ic
+			loop
+				page.register_variable (ic.item, ic.key)
+			end
+
+				-- Block rendering
 			across
 				regions as reg_ic
 			loop
@@ -645,6 +630,16 @@ feature -- Generation
 					page.add_to_region (theme.block_html (ic.item), reg_ic.item.name)
 				end
 			end
+
+				-- Additional lines in <head ../>
+			if attached additional_page_head_lines as l_head_lines then
+				across
+					l_head_lines as hl
+				loop
+					page.head_lines.force (hl.item)
+				end
+			end
+
 		end
 
 	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)

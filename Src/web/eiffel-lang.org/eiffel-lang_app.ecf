@@ -18,7 +18,6 @@
 		<library name="cms" location=".\library\cms\cms.ecf" readonly="false"/>
 		<library name="connector_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf"/>
-		<library name="eiffel_download" location=".\modules\eiffel_download\eiffel_download.ecf" readonly="false" use_application_options="true"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
@@ -27,7 +26,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="wdocs_module" location=".\modules\wiki_docs\wiki_docs.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_eiffel_download" location=".\modules\eiffel_download\eiffel_download.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_eiffel_lang_misc" location=".\modules\eiffel_lang_misc\eiffel_lang_misc.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_wdocs" location=".\modules\wiki_docs\wiki_docs.ecf" readonly="false" use_application_options="true"/>
 		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser.ecf"/>
 		<library name="wikidocs" location="library\wikidocs\wikidocs.ecf" readonly="false"/>
 		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext.ecf" readonly="false" use_application_options="true">

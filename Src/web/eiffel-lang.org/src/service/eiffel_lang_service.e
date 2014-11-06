@@ -64,7 +64,7 @@ feature -- Access: CMS
 
 feature -- Implementation: CMS
 
-	cms_setup (a_cfg_fn: detachable READABLE_STRING_GENERAL): CMS_CUSTOM_SETUP
+	cms_setup (a_cfg_fn: detachable READABLE_STRING_GENERAL): EIFFEL_LANG_CMS_SETUP
 		do
 			if a_cfg_fn /= Void then
 				create Result.make_from_file (a_cfg_fn)
@@ -83,6 +83,9 @@ feature -- Implementation: CMS
 			m.enable
 			a_setup.add_module (m)
 
+			create {EIFFEL_LANG_MISC_MODULE} m.make
+			m.enable
+			a_setup.add_module (m)
 
 			create {EIFFEL_DOWNLOAD_MODULE} m.make
 			m.enable
@@ -135,7 +138,47 @@ feature	-- Execution
 			create {ANY_CMS_EXECUTION} e.make (req, res, cms_service)
 			e.set_optional_content_type ("contribute")
 			e.set_title ("Contribute")
-			e.set_main_content ("")
+			e.set_main_content ("[
+							<section class="contribute-block">
+								<ul>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico1.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Libraries</h2>
+											<p>Detailed definitions behind all aspects of the Eiffel Language and Development Environment.</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico2.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Projects</h2>
+											<p>Step by step instructions on specific Eiffel features so that you can become proficient with them easily and quickly. </p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico3.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Tools</h2>
+											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico4.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Feature Requests</h2>
+											<p>Where to go for a general overview of Eiffel and some of its core principles and functionalities.</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Forums</h2>
+											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
+										</a>
+									</li>
+								</ul>
+							</section>
+			]")
 			e.execute
 		end
 

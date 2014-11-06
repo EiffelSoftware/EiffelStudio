@@ -1,6 +1,6 @@
 <head>
 	<meta charset="utf-8">
-	<title>Eiffel</title>
+	<title>{if isset="$site_title"}{$site_title/}{/if}</title>
 	{include file="optional_styling_css.tpl"/}
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}

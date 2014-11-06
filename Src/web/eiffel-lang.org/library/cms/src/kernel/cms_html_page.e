@@ -68,10 +68,7 @@ feature -- Header
 feature -- Region
 
 	regions: STRING_TABLE [STRING_8]
-			-- header
-			-- content
-			-- footer
-			-- could have sidebar first, sidebar second, ...
+			-- Regions content indexed by region identifier.
 
 	region (n: STRING_8): STRING_8
 		do

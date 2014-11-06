@@ -189,60 +189,62 @@ feature -- Hooks
 			s: STRING
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
 		do
-			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_version_id") as t then
-				l_version_id := t
-			end
-			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_book_name") as t then
-				l_book_name := t
-			end
-			if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
-				l_page_name := t
-			end
-			if a_block_id /= Void then
-				if a_block_id.same_string_general ("wdocs-tree") then
-					m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
-					create l_menublock.make (m)
-					a_execution.add_block (l_menublock, "doc_sidebar")
-				elseif a_block_id.same_string_general ("wdocs-page-info") then
-					if
-						l_book_name /= Void and then l_page_name /= Void and then
-						attached manager (l_version_id) as mng and then
-						attached {WIKI_PAGE} mng.page (l_book_name, l_page_name) as wp
-					then
-						create s.make_empty
-						s.append ("<strong>title:</strong>")
-						s.append (wp.title)
-						s.append ("%N")
-
-						s.append ("<strong>key:</strong>")
-						s.append (wp.key)
-						s.append ("%N")
-
-						s.append ("<strong>src:</strong>")
-						s.append (wp.src)
-						s.append ("%N")
-
-						if attached wp.path as l_path then
-							s.append ("<strong>path:</strong>")
-							s.append (l_path.name.as_string_8)
-							s.append ("%N")
-						end
-
-						if attached mng.metadata (wp, Void) as md then
-							across
-								md as ic
-							loop
-								s.append_string (ic.key.as_string_8)
-								s.append_character ('=')
-								s.append_string (ic.item.as_string_8)
-								s.append_character ('%N')
-							end
-						end
-						create l_content_block.make (a_block_id, "Page info", s, a_execution.formats.filtered_html)
-						a_execution.add_block (l_content_block, "doc_sidebar")
-					end
+			if attached a_execution.optional_content_type as l_type and then l_type.is_case_insensitive_equal_general ("doc") then
+				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_version_id") as t then
+					l_version_id := t
 				end
-			else
+				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_book_name") as t then
+					l_book_name := t
+				end
+				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
+					l_page_name := t
+				end
+				if a_block_id /= Void then
+					if a_block_id.same_string_general ("wdocs-tree") then
+						m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
+						create l_menublock.make (m)
+						a_execution.add_block (l_menublock, "sidebar_second")
+					elseif a_block_id.same_string_general ("wdocs-page-info") then
+						if
+							l_book_name /= Void and then l_page_name /= Void and then
+							attached manager (l_version_id) as mng and then
+							attached {WIKI_PAGE} mng.page (l_book_name, l_page_name) as wp
+						then
+							create s.make_empty
+							s.append ("<strong>title:</strong>")
+							s.append (wp.title)
+							s.append ("%N")
+
+							s.append ("<strong>key:</strong>")
+							s.append (wp.key)
+							s.append ("%N")
+
+							s.append ("<strong>src:</strong>")
+							s.append (wp.src)
+							s.append ("%N")
+
+							if attached wp.path as l_path then
+								s.append ("<strong>path:</strong>")
+								s.append (l_path.name.as_string_8)
+								s.append ("%N")
+							end
+
+							if attached mng.metadata (wp, Void) as md then
+								across
+									md as ic
+								loop
+									s.append_string (ic.key.as_string_8)
+									s.append_character ('=')
+									s.append_string (ic.item.as_string_8)
+									s.append_character ('%N')
+								end
+							end
+							create l_content_block.make (a_block_id, "Page info", s, a_execution.formats.filtered_html)
+							a_execution.add_block (l_content_block, "sidebar_second")
+						end
+					end
+				else
+				end
 			end
 		end
 

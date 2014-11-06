@@ -20,6 +20,7 @@
 									</li>
 								</ul>
 							</nav>
+							<!--
 							<div class="header-right">
 								<nav class="add-links">
 									<ul>
@@ -37,4 +38,5 @@
 									<input type="search" placeholder="">
 								</form>
 							</div>
+							-->
 						</div>

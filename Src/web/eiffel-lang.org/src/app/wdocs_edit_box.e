@@ -217,7 +217,9 @@ feature -- UI
 				l_timer.destroy
 				invoke_updated_actions_timer := Void
 			end
-			updated_actions.call (Void)
+			if page /= Void then
+				updated_actions.call (Void)
+			end
 		end
 
 feature -- Editor operation

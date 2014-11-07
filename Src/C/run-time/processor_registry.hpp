@@ -21,7 +21,6 @@
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
-#include <atomic>
 #include "mpmc.hpp"
 #include "processor.hpp"
 
@@ -69,8 +68,8 @@ public:
   }
 
 private:
-  std::atomic<size_t> size_;
-  std::atomic<bool> proc_set [MAX_PROCS];
+  atomic_size_t_type size_;
+  atomic_bool_type proc_set [MAX_PROCS];
 };
 
 
@@ -109,7 +108,7 @@ private:
 
   // GC
 private:
-  std::atomic<bool> is_marking;
+  atomic_bool_type is_marking;
   void clear_from_caches (processor *proc);
 
 private:

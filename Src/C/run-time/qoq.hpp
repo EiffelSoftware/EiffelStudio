@@ -35,15 +35,12 @@
 // This class is an adaptation of the MPSC queue by Dmitry Vyukov to use
 // a TBB allocator and offer a blocking behaviour when the queue is empty.
 
-#include <atomic>
-#include <mutex>
-#include <condition_variable>
 #include "eif_utils.hpp"
 
 template <typename V>
 struct mpscq_node
 { 
-  std::atomic<mpscq_node <V> *> volatile next;
+  atomic_type<mpscq_node <V> *> volatile next;
   V state;
 }; 
 
@@ -129,7 +126,7 @@ private:
   }
 
 private:
-  std::atomic<mpscq_node <V>*> volatile  head_;
+  atomic_type<mpscq_node <V>*> volatile  head_;
   mpscq_node <V> *           tail_;
 
 private: // Synchronization structures

@@ -35,4 +35,4 @@ all:
 action.echo:
 	echo "$(MESSAGE)"> "$(OUTPUT)"
 
-include "makefile.common"
+include makefile.common

@@ -25,7 +25,6 @@
 #include "processor.hpp"
 #include <cassert>
 #include <chrono>
-#include <condition_variable>
 #include <eif_macros.h>
 #include <eif_scoop.h>
 #include <iostream>

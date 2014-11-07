@@ -48,37 +48,37 @@ benchmark build clean::
 	$(MAKE) ACTION=$* winnow
 	
 chain:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\main.in -bench" "REPEAT=-c 72"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 22"
 
 chameneos:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000" "REPEAT=-c 6"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="300000" "REPEAT=-c 22"
 
 condition:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="100000 32" "REPEAT=-c 1"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="18000 32" "REPEAT=-c 21"
 
 mutex:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="1000000 64" "REPEAT=-c 9"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="500000 64" "REPEAT=-c 19"
 
 outer:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 18"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 22"
 
 prodcons:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="40000 32" "REPEAT=-c 16"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="33000 32" "REPEAT=-c 18"
 
 product:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 7"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 25"
 
 randmat:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig2.in -bench" "REPEAT=-c 8"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 22"
 
 threadring:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="3000000 64" "REPEAT=-c 14"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="2100000 64" "REPEAT=-c 19"
 
 thresh:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 117"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 20"
 
 winnow:
-	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\mainbig.in -bench" "REPEAT=-c 87"
+	$(MAKE) action.$(ACTION) TARGET=$* ARGUMENT="-i $(TOP)\scoop_$*\test.in -bench" "REPEAT=-c 18"
 
 action.benchmark: $(ELAPSED_TIME) action.build
 	$(MEASURE) -w "$(TOP)\scoop_$(TARGET)" -n $(TARGET) $(REPEAT) "$(TOP)\scoop_$(TARGET)\EIFGENs\main$(QS)\F_code\main.exe $(ARGUMENT)" >> "$(OUTPUT)"

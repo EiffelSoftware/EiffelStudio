@@ -24,14 +24,13 @@
 #include "internal.hpp"
 #include "private_queue.hpp"
 #include "processor.hpp"
-#include <atomic>
 #include <algorithm>
 #include <eif_posix_threads.h>
 #include <eif_threads.h>
 #include <stdarg.h>
 #include <cassert>
 
-std::atomic_int active_count = ATOMIC_VAR_INIT (0);
+atomic_int_type active_count = atomic_var_init;
 
 processor::processor(spid_t _pid,
                      bool _has_backing_thread) :

@@ -58,6 +58,7 @@ feature {NONE} -- Implementation
 			until
 				l_tasks.is_empty
 			loop
+				min_sleep_time := {NATURAL_32}.max_value
 				proceed_all_tasks
 				if not l_tasks.is_empty and min_sleep_time > 0 then
 					l_int_64 := min_sleep_time.as_integer_64

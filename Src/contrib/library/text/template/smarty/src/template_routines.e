@@ -79,6 +79,24 @@ feature -- Inspectors
 			template_inspectors.force (ti, ti_name)
 		end
 
+	unregister_template_inspector (ti: TEMPLATE_INSPECTOR)
+		local
+			l_inspectors: like template_inspectors
+		do
+			l_inspectors := template_inspectors
+			from
+				l_inspectors.start
+			until
+				l_inspectors.off
+			loop
+				if ti = l_inspectors.item_for_iteration then
+					l_inspectors.remove (l_inspectors.key_for_iteration)
+				else
+					l_inspectors.forth
+				end
+			end
+		end
+
 	template_inspectors: STRING_TABLE [TEMPLATE_INSPECTOR]
 		once
 			create Result.make (10)

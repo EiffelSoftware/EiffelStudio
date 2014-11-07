@@ -14,6 +14,11 @@ feature -- Change
 			Template_routines.register_template_inspector (Current, a_inspector_name)
 		end
 
+	unregister
+		do
+			Template_routines.unregister_template_inspector (Current)
+		end
+
 feature {TEMPLATE_ROUTINES}
 
 	internal_data (field_name: STRING; object: detachable ANY): detachable CELL [detachable ANY]

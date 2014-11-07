@@ -1,12 +1,12 @@
 Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count
-chain,72,3376,4483,3742,262,..\scoop_chain\EIFGENs\main\F_code\main.exe -i ..\scoop_chain\main.in -bench,..\scoop_chain,1,0
-chameneos,6,44330,45175,44741,320,..\scoop_chameneos\EIFGENs\main\F_code\main.exe 1000000,..\scoop_chameneos,1,0
-condition,13,13424,16113,14722,667,..\scoop_condition\EIFGENs\main\F_code\main.exe 100000 32,..\scoop_condition,1,0
-mutex,9,30595,32939,31730,744,..\scoop_mutex\EIFGENs\main\F_code\main.exe 1000000 64,..\scoop_mutex,1,0
-outer,18,2118,59556,24456,16603,..\scoop_outer\EIFGENs\main\F_code\main.exe -i ..\scoop_outer\mainbig.in -bench,..\scoop_outer,1,0
-prodcons,16,19048,19345,19192,127,..\scoop_prodcons\EIFGENs\main\F_code\main.exe 40000 32,..\scoop_prodcons,1,0
-product,7,12492,22104,16665,3886,..\scoop_product\EIFGENs\main\F_code\main.exe -i ..\scoop_product\mainbig.in -bench,..\scoop_product,1,0
-randmat,8,1807,53714,42154,17102,..\scoop_randmat\EIFGENs\main\F_code\main.exe -i ..\scoop_randmat\mainbig2.in -bench,..\scoop_randmat,1,0
-threadring,14,21969,23345,22396,540,..\scoop_threadring\EIFGENs\main\F_code\main.exe 3000000 64,..\scoop_threadring,1,0
-thresh,117,2358,2609,2380,23,..\scoop_thresh\EIFGENs\main\F_code\main.exe -i ..\scoop_thresh\mainbig.in -bench,..\scoop_thresh,1,0
-winnow,87,3094,3437,3184,78,..\scoop_winnow\EIFGENs\main\F_code\main.exe -i ..\scoop_winnow\mainbig.in -bench,..\scoop_winnow,1,0
+chain,22,11329,14281,12571,985,..\scoop_chain\EIFGENs\main\F_code\main.exe -i ..\scoop_chain\test.in -bench,..\scoop_chain,1,0
+chameneos,22,12844,13405,13155,151,..\scoop_chameneos\EIFGENs\main\F_code\main.exe 300000,..\scoop_chameneos,1,0
+condition,21,12969,13532,13262,107,..\scoop_condition\EIFGENs\main\F_code\main.exe 18000 32,..\scoop_condition,1,0
+mutex,19,14749,16563,15127,484,..\scoop_mutex\EIFGENs\main\F_code\main.exe 500000 64,..\scoop_mutex,1,0
+outer,22,11282,17047,13237,1430,..\scoop_outer\EIFGENs\main\F_code\main.exe -i ..\scoop_outer\test.in -bench,..\scoop_outer,1,0
+prodcons,18,14829,15640,15279,203,..\scoop_prodcons\EIFGENs\main\F_code\main.exe 33000 32,..\scoop_prodcons,1,0
+product,25,10749,11798,11270,274,..\scoop_product\EIFGENs\main\F_code\main.exe -i ..\scoop_product\test.in -bench,..\scoop_product,1,0
+randmat,22,10983,14656,13086,1145,..\scoop_randmat\EIFGENs\main\F_code\main.exe -i ..\scoop_randmat\test.in -bench,..\scoop_randmat,1,0
+threadring,19,14547,14860,14648,110,..\scoop_threadring\EIFGENs\main\F_code\main.exe 2100000 64,..\scoop_threadring,1,0
+thresh,20,13141,14517,13915,346,..\scoop_thresh\EIFGENs\main\F_code\main.exe -i ..\scoop_thresh\test.in -bench,..\scoop_thresh,1,0
+winnow,18,14922,15766,15440,224,..\scoop_winnow\EIFGENs\main\F_code\main.exe -i ..\scoop_winnow\test.in -bench,..\scoop_winnow,1,0

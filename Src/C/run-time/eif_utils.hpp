@@ -20,11 +20,12 @@
 
 #ifndef _EIF_UTILS_H
 #define _EIF_UTILS_H
-#include <mutex>
 #include "eif_macros.h"
 
 #define EIF_USE_STD_MUTEX
 #ifdef EIF_USE_STD_MUTEX
+#	include <mutex>
+#	include <condition_variable>
 		/* Standard mutexes and locks on them. */
 	typedef std::mutex mutex_type;
 	typedef std::unique_lock<mutex_type> unique_lock_type;
@@ -53,6 +54,33 @@
 	typedef eiffel_run_time::mutex conditional_mutex_type;
 	typedef eiffel_run_time::unique_lock<conditional_mutex_type> conditional_unique_lock_type;
 	typedef eiffel_run_time::condition_variable condition_variable_type;
+#endif
+
+#define EIF_USE_STD_ATOMIC
+#ifdef EIF_USE_STD_ATOMIC
+#	include <atomic>
+#	define atomic_var_init ATOMIC_VAR_INIT (0)
+	typedef std::atomic_int	atomic_int_type;
+	typedef std::atomic<bool> atomic_bool_type;
+	typedef std::atomic<size_t> atomic_size_t_type;
+#	define atomic_type std::atomic
+#	define memory_order_release_const std::memory_order_release
+#	define memory_order_relaxed_const std::memory_order_relaxed
+#	define memory_order_acquire_const std::memory_order_acquire
+#	define memory_order_seq_cst_const std::memory_order_seq_cst
+#	define memory_barrier() atomic_thread_fence (memory_order_seq_cst_const)
+#else
+#	include "concurrency/rt_atomic.hpp"
+#	define atomic_var_init 0
+	typedef eiffel_run_time::atomic_int atomic_int_type;
+	typedef eiffel_run_time::atomic_bool atomic_bool_type;
+	typedef eiffel_run_time::atomic_size_t atomic_size_t_type;
+#	define atomic_type eiffel_run_time::atomic
+#	define memory_order_release_const eiffel_run_time::memory_order_release
+#	define memory_order_relaxed_const eiffel_run_time::memory_order_relaxed
+#	define memory_order_acquire_const eiffel_run_time::memory_order_acquire
+#	define memory_order_seq_cst_const eiffel_run_time::memory_order_seq_cst
+#	define memory_barrier() EIF_MEMORY_BARRIER
 #endif
 
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);

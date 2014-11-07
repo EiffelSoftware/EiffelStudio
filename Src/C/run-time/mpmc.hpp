@@ -28,8 +28,8 @@
 // are those of the authors and should not be interpreted as representing
 // official policies, either expressed or implied, of Dmitry Vyukov.
 
-#include <atomic>
 #include <cassert>
+#include "eif_utils.hpp"
 
 template<typename T>
 class mpmc_bounded_queue
@@ -41,9 +41,9 @@ public:
   {
     assert((buffer_size >= 2) && ((buffer_size & (buffer_size - 1)) == 0));
     for (size_t i = 0; i != buffer_size; i += 1)
-      buffer_[i].sequence_.store(i, std::memory_order_relaxed);
-    enqueue_pos_.store(0, std::memory_order_relaxed);
-    dequeue_pos_.store(0, std::memory_order_relaxed);
+      buffer_[i].sequence_.store(i, memory_order_relaxed_const);
+    enqueue_pos_.store(0, memory_order_relaxed_const);
+    dequeue_pos_.store(0, memory_order_relaxed_const);
     size_ = 0;
   }
 
@@ -55,26 +55,26 @@ public:
   bool enqueue(T const& data)
   {
     cell_t* cell;
-    size_t pos = enqueue_pos_.load(std::memory_order_relaxed);
+    size_t pos = enqueue_pos_.load(memory_order_relaxed_const);
     for (;;)
       {
 	cell = &buffer_[pos & buffer_mask_];
-	size_t seq = cell->sequence_.load(std::memory_order_acquire);
+	size_t seq = cell->sequence_.load(memory_order_acquire_const);
 	intptr_t dif = (intptr_t)seq - (intptr_t)pos;
 	if (dif == 0)
 	  {
 	    if (enqueue_pos_.compare_exchange_weak (pos,
 						    pos + 1,
-						    std::memory_order_relaxed))
+						    memory_order_relaxed_const))
 	      break;
 	  }
 	else if (dif < 0)
 	  return false;
 	else
-	  pos = enqueue_pos_.load(std::memory_order_relaxed);
+	  pos = enqueue_pos_.load(memory_order_relaxed_const);
       }
     cell->data_ = data;
-    cell->sequence_.store(pos + 1, std::memory_order_release);
+    cell->sequence_.store(pos + 1, memory_order_release_const);
     size_++;
     return true;
   }
@@ -82,26 +82,26 @@ public:
   bool dequeue(T& data)
   {
     cell_t* cell;
-    size_t pos = dequeue_pos_.load(std::memory_order_relaxed);
+    size_t pos = dequeue_pos_.load(memory_order_relaxed_const);
     for (;;)
       {
 	cell = &buffer_[pos & buffer_mask_];
-	size_t seq = cell->sequence_.load(std::memory_order_acquire);
+	size_t seq = cell->sequence_.load(memory_order_acquire_const);
 	intptr_t dif = (intptr_t)seq - (intptr_t)(pos + 1);
 	if (dif == 0)
 	  {
 	    if (dequeue_pos_.compare_exchange_weak (pos,
 						    pos + 1,
-						    std::memory_order_relaxed))
+						    memory_order_relaxed_const))
 	      break;
 	  }
 	else if (dif < 0)
 	  return false;
 	else
-	  pos = dequeue_pos_.load(std::memory_order_relaxed);
+	  pos = dequeue_pos_.load(memory_order_relaxed_const);
       }
     data = cell->data_;
-    cell->sequence_.store (pos + buffer_mask_ + 1, std::memory_order_release);
+    cell->sequence_.store (pos + buffer_mask_ + 1, memory_order_release_const);
     size_--;
     return true;
   }
@@ -114,21 +114,21 @@ public:
 private:
   struct cell_t
   {
-    std::atomic<size_t>   sequence_;
+    atomic_size_t_type    sequence_;
     T                     data_;
   };
 
   static size_t const     cacheline_size = 64;
   typedef char            cacheline_pad_t [cacheline_size];
-  std::atomic <size_t>         size_;
+  atomic_size_t_type      size_;
 
   cacheline_pad_t         pad0_;
   cell_t* const           buffer_;
   size_t const            buffer_mask_;
   cacheline_pad_t         pad1_;
-  std::atomic<size_t>     enqueue_pos_;
+  atomic_size_t_type      enqueue_pos_;
   cacheline_pad_t         pad2_;
-  std::atomic<size_t>     dequeue_pos_;
+  atomic_size_t_type      dequeue_pos_;
   cacheline_pad_t         pad3_;
 
   mpmc_bounded_queue(mpmc_bounded_queue const&);

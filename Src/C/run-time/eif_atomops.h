@@ -107,6 +107,32 @@ extern "C" {
 #define RTS_AD_I32(dest) RTS_AA_I32(dest, -1)
 
 
+#if defined(_WIN32)
+#	define RTS_ACAS_PTR(dest,setter,compare) InterlockedCompareExchangePointer(dest, setter, compare)
+#elif defined (__EIF_GNUC_ATOMOPS__)
+#	define RTS_ACAS_PTR(dest,setter,compare) __sync_val_compare_and_swap (dest, compare, setter)
+#elif defined (__EIF_SUNPRO_C_ATOMOPS__)
+#	define RTS_ACAS_PTR(dest,setter,compare) atomic_cas_ptr (dest, compare, setter)
+#else
+#	error "Missing atomic compare-exchange functionality."
+#endif
+
+
+#if defined(_WIN32) 
+#	define RTS_AS_PTR(dest, setter) InterlockedExchangePointer(dest, setter)
+#elif defined (__EIF_GNUC_ATOMOPS__)
+#	define RTS_AS_PTR(dest, setter) __sync_val_compare_and_swap (dest, *dest, setter)
+#elif defined (__EIF_SUNPRO_C_ATOMOPS__)
+#	define RTS_AS_PTR(dest, setter) atomic_swap_ptr (dest, setter)
+#else
+#	error "Missing atomic exchange functionality."
+#endif
+
+
+#define RTS_AI_PTR(dest) RTS_AI_I32(dest)
+#define RTS_AD_PTR(dest) RTS_AD_I32(dest)
+
+
 #ifdef __cplusplus
 }
 

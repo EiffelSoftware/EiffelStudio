@@ -1,12 +1,12 @@
 Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count
-chain,72,506,13011,8837,2884,../scoop_chain/EIFGENs/main/F_code/main -i ../scoop_chain/main.in -bench,../scoop_chain,1,0
-chameneos,6,1132,30102,17909,9828,../scoop_chameneos/EIFGENs/main/F_code/main 1000000,../scoop_chameneos,1,0
-condition,13,27848,31101,29310,749,../scoop_condition/EIFGENs/main/F_code/main 100000 32,../scoop_condition,1,0
-mutex,9,7331,11083,9193,1324,../scoop_mutex/EIFGENs/main/F_code/main 1000000 64,../scoop_mutex,1,0
-outer,18,1161,59619,31659,19751,../scoop_outer/EIFGENs/main/F_code/main -i ../scoop_outer/mainbig.in -bench,../scoop_outer,1,0
-prodcons,16,14275,17776,16509,1027,../scoop_prodcons/EIFGENs/main/F_code/main 40000 32,../scoop_prodcons,1,0
-product,7,1430,59459,25412,20431,../scoop_product/EIFGENs/main/F_code/main -i ../scoop_product/mainbig.in -bench,../scoop_product,1,0
-randmat,8,6649,56895,32696,18282,../scoop_randmat/EIFGENs/main/F_code/main -i ../scoop_randmat/mainbig2.in -bench,../scoop_randmat,1,0
-threadring,14,8297,13293,11008,1295,../scoop_threadring/EIFGENs/main/F_code/main 3000000 64,../scoop_threadring,1,0
-thresh,117,5006,7508,6232,422,../scoop_thresh/EIFGENs/main/F_code/main -i ../scoop_thresh/mainbig.in -bench,../scoop_thresh,1,0
-winnow,87,11758,15758,13860,859,../scoop_winnow/EIFGENs/main/F_code/main -i ../scoop_winnow/mainbig.in -bench,../scoop_winnow,1,0
+chain,22,17012,31766,22989,3943,../scoop_chain/EIFGENs/main/F_code/main -i ../scoop_chain/test.in -bench,../scoop_chain,1,0
+chameneos,22,76531,85536,81257,2278,../scoop_chameneos/EIFGENs/main/F_code/main 300000,../scoop_chameneos,1,0
+condition,21,60018,60771,60388,257,../scoop_condition/EIFGENs/main/F_code/main 18000 32,../scoop_condition,1,0
+mutex,19,115796,118801,117588,826,../scoop_mutex/EIFGENs/main/F_code/main 500000 64,../scoop_mutex,1,0
+outer,22,24760,44516,36219,4985,../scoop_outer/EIFGENs/main/F_code/main -i ../scoop_outer/test.in -bench,../scoop_outer,1,0
+prodcons,18,63519,64521,63978,261,../scoop_prodcons/EIFGENs/main/F_code/main 33000 32,../scoop_prodcons,1,0
+product,25,49516,59022,52488,2929,../scoop_product/EIFGENs/main/F_code/main -i ../scoop_product/test.in -bench,../scoop_product,1,0
+randmat,22,22759,35519,28762,3054,../scoop_randmat/EIFGENs/main/F_code/main -i ../scoop_randmat/test.in -bench,../scoop_randmat,1,0
+threadring,19,105533,118535,110191,5188,../scoop_threadring/EIFGENs/main/F_code/main 2100000 64,../scoop_threadring,1,0
+thresh,20,37263,52266,44315,4126,../scoop_thresh/EIFGENs/main/F_code/main -i ../scoop_thresh/test.in -bench,../scoop_thresh,1,0
+winnow,18,64519,81287,71082,5052,../scoop_winnow/EIFGENs/main/F_code/main -i ../scoop_winnow/test.in -bench,../scoop_winnow,1,0

@@ -22,9 +22,7 @@
 #define _PROCESSOR_H
 #include <memory>
 #include <vector>
-#include <mutex>
 #include <queue>
-#include <condition_variable>
 #include <unordered_map>
 #include "qoq.hpp"
 #include "eif_utils.hpp"
@@ -82,24 +80,6 @@ struct notifier : spsc <notify_message> {
     this->push(notify_message(notify_message::e_callback, client, call));
   }
 
-  /* Mark this queue.
-   *
-   * This queue may contain calls (for callbacks), so we have to be able
-   * to mark it.
-   */
-  void mark (marker_t mark)
-  {
-    auto mark_call =
-      [&](notify_message msg)
-      {
-	call_data *call = msg.call;
-        if (call)
-          {
-            mark_call_data (mark, call);
-          }
-      };
-    unsafe_map_ (mark_call);
-  }
 };
 
 /* The SCOOP logical unit of processing.

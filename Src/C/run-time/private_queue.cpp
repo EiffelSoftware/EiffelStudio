@@ -111,14 +111,7 @@ priv_queue::unlock()
 void
 priv_queue::mark(marker_t mark)
 {
-  for (auto n = q.tail_->next_ ; n ; n = n->next_)
-    {
-      call_data* call = n->value_.call;
-      if (call)
-        {
-          mark_call_data (mark, call);
-        }
-    }
+  spsc <pq_message>::mark (mark);
 
   if (call_stack_msg.call)
     {

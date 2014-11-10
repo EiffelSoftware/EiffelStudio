@@ -67,8 +67,8 @@ public:
 		}
 	bool compare_exchange_strong (bool& e, bool v)
 		{
-			EIF_INTEGER_32 prev = RTS_ACAS_I32(&value, (EIF_INTEGER_32) e, (EIF_INTEGER_32) v);
-			if (prev == (EIF_INTEGER_32) v) {
+			EIF_INTEGER_32 prev = RTS_ACAS_I32(&value, (EIF_INTEGER_32) v, (EIF_INTEGER_32) e);
+			if (prev == (EIF_INTEGER_32) e) {
 				return true;
 			}
 			else {
@@ -132,8 +132,8 @@ public:
 
 	bool compare_exchange_weak (size_t& e, size_t v, memory_order o = memory_order_seq_cst)
 		{
-			EIF_INTEGER_32 prev = RTS_ACAS_I32 (&value, (EIF_INTEGER_32) e, (EIF_INTEGER_32) v);
-			if (prev == (EIF_INTEGER_32) v) {
+			EIF_INTEGER_32 prev = RTS_ACAS_I32 (&value, (EIF_INTEGER_32) v, (EIF_INTEGER_32) e);
+			if (prev == (EIF_INTEGER_32) e) {
 				return true;
 			}
 			else {

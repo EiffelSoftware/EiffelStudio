@@ -102,7 +102,7 @@ public:
 			return (size_t) value;
 		}
 
-	size_t load (memory_order Order = memory_order_seq_cst) const
+	size_t load (memory_order Order = memory_order_seq_cst)
 		{
 			return RTS_AA_I32 (&value, 0);
 		}
@@ -143,7 +143,7 @@ public:
 		}
 
 private:
-	EIF_INTEGER_32 value;
+	volatile EIF_INTEGER_32 value;
 
 }; // class atomic_size_t
 

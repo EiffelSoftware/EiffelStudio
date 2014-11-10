@@ -30,11 +30,7 @@
 
 #ifndef _SPSC_H
 #define _SPSC_H
-#include <atomic>
-#include <mutex>
-#include <condition_variable>
-
-#define __memory_barrier() atomic_thread_fence (std::memory_order_seq_cst)
+#include "eif_utils.hpp"
 
 // load with 'consume' (data-dependent) memory ordering
 template<typename T>
@@ -42,7 +38,7 @@ T load_consume(T const* addr)
 {
   // hardware fence is implicit on x86
   T v = *const_cast<T const volatile*>(addr);
-  __memory_barrier(); // compiler fence
+  memory_barrier(); // compiler fence
   return v;
 }
 
@@ -51,7 +47,7 @@ template<typename T>
 void store_release(T* addr, T v)
 {
   // hardware fence is implicit on x86
-  __memory_barrier(); // compiler fence
+  memory_barrier(); // compiler fence
   *const_cast<T volatile*>(addr) = v;
 }
 
@@ -218,12 +214,20 @@ public:
     return s;
   }
 
-  void
-  unsafe_map_ (std::function <void(T)> f)
+  /* Mark this queue.
+   *
+   * This queue may contain calls (for callbacks), so we have to be able
+   * to mark it.
+   */
+  void mark (marker_t mark)
   {
     for (auto n = q.tail_->next_ ; n ; n = n->next_)
       {
-        f (n->value_);
+	call_data *call = n->value_.call;
+        if (call)
+          {
+            mark_call_data (mark, call);
+          }
       }
   }
 

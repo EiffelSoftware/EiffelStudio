@@ -548,7 +548,9 @@ rt_public void once_init (void)
 #endif
 
 	ALLOC_ONCE_INDEXES; 	/* Allocate array of once indexes. */
-	egc_system_mod_init (); /* Assign once indexes. */
+	if (egc_system_mod_init) {
+		egc_system_mod_init(); /* Assign once indexes. */
+	}
 
 #if !defined(WORKBENCH) && !defined (EIF_THREADS)
 	egc_prof_enabled = old_egc_prof_enabled; /* Restore profiler status. */

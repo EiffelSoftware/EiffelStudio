@@ -7,7 +7,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<div class="hero-unit center" itemscope itemtype="https://www2.eiffel.com/beta/profile/esa_api.xml">
+						<div class="hero-unit center" itemscope itemtype="https://www2.eiffel.com/beta/static/profile/esa_api.xml">
 							<h1>Unauthorized Request <small><font face="Tahoma" color="red">Error 401</font></small></h1>
 							<br />
 							<p>The page you requested could not be served because user <b>{$user/}</b> doesn't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
@@ -24,7 +24,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<div class="modal-body" id="redirecLoginForm" itemscope itemtype="{$host/}/profile/esa_api.xml">
+						<div class="modal-body" id="redirecLoginForm" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 							<a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
 							<p></p>
 							<form class="form-inline well"	data-rel="login" itemprop="login">

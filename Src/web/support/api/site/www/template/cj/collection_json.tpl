@@ -3,7 +3,7 @@
     "href": "{$host/}/", 
     "links": [
             <
-                "href": "{$host/}/profile/esa_api.xml",
+                "href": "{$host/}/static/profile/esa_api.xml",
                 "rel": "profile"
             >, 
             <

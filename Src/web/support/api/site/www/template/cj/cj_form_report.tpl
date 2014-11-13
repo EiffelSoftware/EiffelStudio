@@ -14,7 +14,7 @@
                 "prompt": "Reports"
             >,
             <
-                "href": "{$host/}/profile/esa_api.xml",
+                "href": "{$host/}/static/profile/esa_api.xml",
                 "rel": "profile"
             >,
             {if isset="$user"}

@@ -6,7 +6,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="span12">
-					<div class="hero-unit center" itemscope itemtype="{$host/}/profile/esa_api.xml">
+					<div class="hero-unit center" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 						<h1>You have successfully signed out</h1>
 						<br />
 						<p>You may want to return</p>

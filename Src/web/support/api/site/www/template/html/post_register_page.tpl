@@ -3,7 +3,7 @@
 	{include file="master/head.tpl"/}
 	<body>
 		{include file="master/navbar.tpl"/}
-		<div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+		<div class="container" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 			<div class="hero-unit center">
 				<h1>Eiffel Support Activation</h1>
 				<br/>

@@ -8,7 +8,7 @@
      {/unless}
     "links": [
             <
-                "href": "{$host/}",
+                "href": "{$host/}/",
                 "rel": "home",
                 "prompt": "Home"
             >,
@@ -65,7 +65,7 @@
              "prompt": "Logoff"
             >,
             <
-                "href": "{$host/}/profile/esa_api.xml",
+                "href": "{$host/}/static/profile/esa_api.xml",
                 "rel": "profile"
             >
           ],

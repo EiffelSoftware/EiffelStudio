@@ -6,7 +6,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="span12">
-					<div class="hero-unit center" itemscope itemtype="{$host/}/profile/esa_api.xml">
+					<div class="hero-unit center" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 						<h1>Bad Request <small><font face="Tahoma" color="red">Error 400</font></small></h1>
 						<br/>
 						<p>The page you requested could not be served because it's not well formed. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>

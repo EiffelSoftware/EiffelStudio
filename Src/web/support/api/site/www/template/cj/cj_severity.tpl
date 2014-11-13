@@ -3,7 +3,7 @@
      "href": "{$host/}/severity", 
     "links": [
             <
-                "href": "{$host/}",
+                "href": "{$host/}/",
                 "rel": "home",
                 "prompt": "Home"
             >,

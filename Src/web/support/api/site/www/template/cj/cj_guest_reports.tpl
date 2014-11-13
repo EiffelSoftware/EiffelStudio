@@ -4,7 +4,7 @@
     {include file="cj_metadata.tpl"/}                
     "links": [
             <
-                "href": "{$host/}",
+                "href": "{$host/}/",
                 "rel": "home",
                 "prompt": "Home"
             >,
@@ -51,7 +51,7 @@
               "prompt": "Register"
             >,
             <
-                "href": "{$host/}/profile/esa_api.xml",
+                "href": "{$host/}/static/profile/esa_api.xml",
                 "rel": "profile"
             >
           ],

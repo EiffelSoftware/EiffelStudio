@@ -3,7 +3,7 @@
 	{include file="master/head.tpl"/}
 	<body>
 		{include file="master/navbar.tpl"/}
-		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
+		<div class="container-fluid" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 			<div class="col-xs-12">
 				<form class="form-inline well" data-rel="register" id="registerHere" method='POST' action='{$host/}/register' itemprop="create">
 					<fieldset>

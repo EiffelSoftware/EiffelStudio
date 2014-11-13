@@ -3,7 +3,7 @@
 	{include file="master/head.tpl"/}
 	<body>
 		{include file="master/navbar.tpl"/}
-		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
+		<div class="container-fluid" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 			<div class="main">
 				{if isset="$id"}
 					<form class="form-inline well" action="{$host/}/report_form/{$id/}" id="report" method="POST" enctype="multipart/form-data" itemprop="update">

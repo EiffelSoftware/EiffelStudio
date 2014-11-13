@@ -207,17 +207,17 @@ rt_shared struct stack_list rt_globals_list = {
 /* Debugger usage */
 #ifdef WORKBENCH
 /*
-doc:	<routine name="get_thread_index" export="private">
+doc:	<routine name="get_thread_index" return_type="size_t" export="private">
 doc:		<summary>This is used to get the index of thread `th_id' in rt_globals_list.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_private int get_thread_index(EIF_THR_TYPE th_id)
+rt_private size_t get_thread_index(EIF_THR_TYPE th_id)
 {
 #ifdef EIF_THREADS
-	int count;
-	int i;
+	size_t count;
+	size_t i;
 	rt_global_context_t ** lst;
 	
 	REQUIRE("eif GC synchronized", eif_is_synchronized());
@@ -1221,8 +1221,8 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 
 rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 {
-	int count = st_list->count;
-	int i = 0;
+	size_t count = st_list->count;
+	size_t i = 0;
 	void **stack = st_list->threads.data;
 
 	REQUIRE("Stack not empty", count > 0);

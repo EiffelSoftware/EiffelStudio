@@ -16,52 +16,128 @@
     <div class=""> 
         <hr> 
         <div class="page-header">
-          <h1>ESA API: Collection+JSON <small> Getting started using CJ</small></h1>
+          <h1>Eiffel Support Site<h1>
+          <h2> Hypermedia API using Collection+JSON <small> Getting started using CJ</small></h2>
         </div>
     <div> 
         
         <h2> Introduction </h2>
+
+         <p>Eiffel Support site is a Hypermedia API supporting two media types (HTML5 and Collection+JSON). Internally the api is known as ESA. So, since here we will refer the
+            Eiffel Support Site API as ESA.
+            What does it means Hypermedia API?. Basically the use of HTTP to its fullest and the responses will be served as hypermedia that manages the application state.
+          </p>  
+            <blockquote> 
+                A REST API should spend almost all of its descriptive effort in defining the media type(s) used for representing resources and driving application state, or in defining extended relation names and/or hypertext-enabled mark-up for existing standard media types. Any effort spent describing what methods to use on what URIs of interest should be entirely defined within the scope of the processing rules for a media type (and, in most cases, already defined by existing media types).
+
+                Roy Fielding <a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">REST APIs Must ne Hypertext Driven"</a>
+            </blockquote>    
+         
+
+         <h3>Collection+JSON </h3>
+         What's Collection+JSON?. It's a JSON-based read/write hypermedia type desinged to suport the mangement and querying of simple collections. It define the format and the semantics in a single document.The media type is designed to support full read/write for collections. The application semantics include Create, Read, Update, and Delete, it also has support for queries, using query templates. Write operations are defined using a template object send by the server.
+ 
+         As a simple introduction, below a template collection document
+            </p>     
+            
+            <pre>
+            <code>
+            {
+              "collection": {
+                  "version":"1.0",
+                  "href":URI,
+                  "links":[ARRAY],
+                  "items":[ARRAY],
+                  "queries":[ARRAY],
+                  "template":{OBJECT},
+                  "error":{OBJECT}      
+              }
+            }
+            </code>
+            </pre>
+
+         <b>Our API use some Collection+JSON extensions:</b>
+         <ol>
+             <li>Metadata</li>
+             <li>Lookup values</li>
+             <li>Value types</li> 
+             <li>Attachments</li>   
+         </ol>       
+        </p>   
+
+        Before to start using CJ we will describe what our API need to do.
+
+        <h3>Business Process</h3>
+        Here we define what our API need to do, workflows and what are the paths one need to follow to accomplish a particular tasks.
+        <ul>
+            <li>Register new users.</li>
+            <li>Anonymous users can browser the API/Web, retrieve public information, but they can’t execute secured  actions.</li>
+            <li>Secured operations will require users permissions and authorization, but not every user will be able to see everything.</li>
+        </ul>    
+     
+
+        <b>Bellow we describe the possible states that need to be represented (not all of them, check the state machine below)</b>    
+        <ol>    
+            <li>A User</li>        
+            <li>A User profile</li>
+            <li>A Problem Report</li> 
+            <li>A List of Problem Report</li>
+            <li>A Report connected with a report interaction/ report interactions</li>
+            <li>A query by report number connected with a  Report Problem</li>
+            <li>A query by (synopsis | description) connected with a Report/Reports.</li>
+            <li>Filters by Report properties connected with a Report/Reports</li>
+        </ol> 
+
+        <b>Use Cases</b> 
+
+        <ol>    
+           <li>A logged-in user will see the reports he has submitted</li>
+           <li>A logged-in user will see the private reports if he has authorization.</li>
+           <li>A logged-in user will be able to submit a new problem report</li>
+           <li>A logged-in user will be able to view and edit an existing problem report if he has authorization.</li>
+           <li>A logged-in user will be able to submit a new comment (interaction report)</li>
+           <li>A logged-in user will be able to submit a new comment (interaction report)
+             to private reports if he has authorization.</li>
+            <li>A logged-in user admin will see the all reports (public and privates).</li>
+            <li>A logged-in user admin will be able to submit a new comment (interaction report)
+            to (public or private)</li>
+            <li>A logged-in user admin will be able to view and edit an existing problem</li> 
+            <li>Anonymous User will only see public reports</li>             
+            <li>Anonymous User will see a given public report</li>          
+            <li>Anonymous User will see, interactions reports for a given public report.</li> 
+            <li>Anonymous User will be able to search for reports filtering by number</li>
+            <li>Anonymous User will be able to search for reports filtering by synopsis, description</li>
+            <li>Anonymous User will be able to filter reports by category, severity, priority, status, etc</li>
+            <li>A logged-in user will be able to subscribe to categories</li>
+            <li>A logged-in user will be able to unsubscribe to categories</li>
+            <li>A logged-in user will be able to see the reports he has submitted.</li>
+            <li>A logged-in user will be able to see the reports he has commented.</li>
+        </ol> 
+        <br>
+
+        <p>    
+        So, to formalize in which states our application can be, we will describe a state machine, and we will have a API root in our case <b>HOME</b>, and 
+        that's all we need to know to browse and use the API.  
+        <p><br>
+        <b>Conventions used in the diagram</b>    
         <p>
-            ESA API uses Collection+JSON as a media type (also you can use HTML). This means that you can use any generic CJ client with ESA API. If you don't have one handy, it's easy!.
-            Examples in this tutorial make use of the command line tool cURL to construct HTTP requests.
-            We use this tool regularly in development and likely you will find it quite useful as well when working with the HTTP API.
-            ESA API uses two Collection+JSON extension (file upload [5] and lookup values[6]) and maybe more in the future.
-        </p>    
+           <b>Safe</b>:are HTTP methods that do not modify resources.<br>
+           <b>Idempotent</b>: An idempotent HTTP method is a HTTP method that can be called many times without different outcomes.<br>
+           <b>Unsafe</b>: not Safe, i.e may modify resources.<br>
+        </p></br>
+
         
+        <b>ESA API state machine</b>
         <img src="./esa_api_state_machine.png" class="img-thumbnail">
 
-        <p>Safe:are HTTP methods that do not modify resources.</p>
-        <p>Idempotent: An idempotent HTTP method is a HTTP method that can be called many times without different outcomes.</p>
-        <p>Unsafe: not Safe, i.e may modify resources.</p>
+
+        <p>Using the ESA API: make a request to the ROOT uri:</p>
 
 
-            If you're not familiar with Collection+JSON, here's how it works (please to learn more read [1,2,3,4]). As a simple introduction, below a template collection
-            json template document
-        </p>     
-        
-        <pre>
-        <code>
-        {
-          "collection": {
-              "version":"1.0",
-              "href":URI,
-              "links":[ARRAY],
-              "items":[ARRAY],
-              "queries":[ARRAY],
-              "template":{OBJECT},
-              "error":{OBJECT}      
-          }
-        }
-        </code>
-        </pre>
-
-        <p>Using the ESA API: make a request to the API:</p>
-
-
-        <pre><code>$ curl -i -H "Accept: application/vnd.collection+json" http://localhost:9999</code></pre>
+        <pre><code>$ curl -i -H "Accept: application/vnd.collection+json" https://www2.eiffel.com/beta/</code></pre>
 
         
-        <p><a href="http://www.hurl.it/" target="_blank" class="btn btn-info btn-medium">Try it »</a></p>
+        <p><a href="http://hurl.eu/hurls/066a2b687b761cb96e9a8cb2076d5de8a5740201/fcee3b417636bd7e5c8b13565cf84a03c8d24b89" target="_blank" class="btn btn-info btn-medium">Try it »</a></p>
 
 
 
@@ -69,48 +145,53 @@
             Here's a full response, with the details filled in:
         </p>
            
-        <pre>    
-        <code>
+    <pre>    
+    <code>
         {
           "collection": {
             "version": "1.0",
-            "href": "https://localhost",
+            "href": "https://www2.eiffel.com/beta/",
             "links": [
-                    {
-                        "href": "https://localhost/reports",
-                        "rel": "collection",
-                        "prompt": "Reports"
-                    },
-                    {
-                        "href": "http://alps.io/iana/relations.xml",
-                        "rel": "profile"
-                    },
-                    {
-                        "href": "https://localhost/login",
-                        "rel": "login",
-                        "prompt": "Login"
-                    },
-                     {
-                        "href": "https://localhost/register",
-                        "rel": "register",
-                        "prompt": "Register"
-                    }
-
-                  ],
-            "queries" :
-                [
-                 {
-                  "href" : "https://localhost/report_detail/",
-                  "rel" : "search",
-                  "prompt" : "Search by Report #...",
-                  "data" :
-                    [
-                        {"name" : "search", "value" : ""}
-                    ]
-                }
+              {
+                "href": "https://www2.eiffel.com/beta/profile/esa_api.xml",
+                "rel": "profile"
+              },
+              {
+                "href": "https://www2.eiffel.com/beta/reports",
+                "rel": "all",
+                "prompt": "Reports"
+              },
+              {
+                "href": "https://www2.eiffel.com/beta/login",
+                "rel": "login",
+                "prompt": "Login"
+              },
+              {
+                "href": "https://www2.eiffel.com/beta/register",
+                "rel": "register",
+                "prompt": "Register"
+              },
+              {
+                "href": "https://www2.eiffel.com/beta/reminder",
+                "rel": "reminder",
+                "prompt": "Recover Username/Password"
+              }
+            ],
+            "queries": [
+              {
+                "href": "https://www2.eiffel.com/beta/report_detail/",
+                "rel": "search",
+                "prompt": "Search by Report #...",
+                "data": [
+                  {
+                    "name": "search",
+                    "value": ""
+                  }
+                ]
+              }
             ]
           }
-        }
+        }  
     </code>
     </pre>
 
@@ -125,161 +206,159 @@
     Let's make that request:
     </p>
 
-    <pre><code> $ curl -i --insecure -H "Accept: application/vnd.collection+json" "https://localhost/report_detail/?search=1"</code></pre>
+    <pre><code> $ curl -i --insecure -H "Accept: application/vnd.collection+json" "https://www2.eiffel.com/beta/report_detail/?search=18902"</code></pre>
 
    
     <p><a href="http://www.hurl.it/" target="_blank" class="btn btn-info btn-medium">Try it »</a></p>
 
     <pre>
     <code>    
-        {"collection": {
-            "version": "1.0",
-            "href": "https://localhost/report_detail/2",
-            "links": [
-                    {
-                        "href": "https://localhost",
-                        "rel": "home",
-                        "prompt": "Home"
-                    },
-                     {
-                        "href": "https://localhost/reports",
-                        "rel": "collection",
-                        "prompt": "Reports"
-                    },
-                    {
-                        "href": "http://alps.io/iana/relations.xml",
-                        "rel": "profile"
-                    }
+     {
+  "collection": {
+    "version": "1.0",
+    "href": "https://www2.eiffel.com/beta/report_detail/18902",
+    "links": [
+      {
+        "href": "https://www2.eiffel.com/beta",
+        "rel": "home",
+        "prompt": "Home"
+      },
+      {
+        "href": "https://www2.eiffel.com/beta/reports",
+        "rel": "all",
+        "prompt": "Reports"
+      },
+      {
+        "href": "https://www2.eiffel.com/beta/profile/esa_api.xml",
+        "rel": "profile"
+      },
+      {
+        "href": "https://www2.eiffel.com/beta/login",
+        "rel": "login",
+        "prompt": "Login"
+      },
+      {
+        "href": "https://www2.eiffel.com/beta/register",
+        "rel": "register",
+        "prompt": "Register"
+      }
+    ],
+    "items": [
+      {
+        "href": "https://www2.eiffel.com/beta/report_detail/18902",
+        "data": [
+          {
+            "name": "Group",
+            "prompt": "group",
+            "value": "Description"
+          },
+          {
+            "name": "Submitter",
+            "prompt": "submitter",
+            "value": "jinnydev"
+          },
+          {
+            "name": "Category",
+            "prompt": "category",
+            "value": "EiffelStudio"
+          },
+          {
+            "name": "Priority",
+            "prompt": "priority",
+            "value": "Medium"
+          },
+          {
+            "name": "Category",
+            "prompt": "category",
+            "value": ""
+          },
+          {
+            "name": "Date",
+            "prompt": "date",
+            "value": "06/26/2014 8:10:26.000 AM"
+          },
+          {
+            "name": "Class",
+            "prompt": "class",
+            "value": "Bug"
+          },
+          {
+            "name": "Severity",
+            "prompt": "severity",
+            "value": "Serious"
+          },
+          {
+            "name": "Number",
+            "prompt": "number",
+            "value": "18902"
+          },
+          {
+            "name": "Release",
+            "prompt": "release",
+            "value": "13.11.9.3542"
+          },
+          {
+            "name": "Confidential",
+            "prompt": "confidential",
+            "value": "False"
+          },
+          {
+            "name": "Status",
+            "prompt": "status",
+            "value": "Open"
+          },
+          {
+            "name": "Responsible",
+            "prompt": "responsible",
+            "value": ""
+          },
+          {
+            "name": "Environment",
+            "prompt": "environment",
+            "value": "EiffelStudio 13.11.9.3542 Enterprise Edition - windows"
+          },
+          {
+            "name": "Synopsys",
+            "prompt": "synopsis",
+            "value": "Floating point exception in {EV_GRID_I}.recompute_vertical_scroll_bar in EiffelStudio."
+          },
+          {
+            "name": "Description",
+            "prompt": "description",
+            "value": "Again -- this is a resulting of:\n\n1. Organize Desc alpha sort on \"Declared in class\" column of the Class tool in the \"Routines\" view.\n2. Once sorted, start collapsing the various classes until fully collapsed.\n3. Finally -- start expanding and collapsing the items one by one.\n4. BOOM! Breaks at some point while (apparently) attempting to recalc the scrollbar.\n\n-- Larry Rix\n\nProject loaded: True\nProject compiled: True\nIs compiling: False\nLast known class processed: DATA_EXTRACTION_TEST_SET\n\n******************************** Thread exception *****************************\nIn thread           Root thread            0x0 (thread id)\n*******************************************************************************\n-------------------------------------------------------------------------------\nClass / Object      Routine                Nature of exception           Effect\n-------------------------------------------------------------------------------\nEV_GRID_IMP         recompute_vertical_scroll_bar @20\n                                           Integer division by Zero:\n{000000000CE8FB8C}  (From EV_GRID_I)       Floating point exception.     Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         recompute_vertical_scroll_bar @20\n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         perform_vertical_computation @6\n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         visible_row_count @2                                \n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         last_first_row_in_per_item_scrolling @6\n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         recompute_vertical_scroll_bar @16\n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_GRID_IMP         recompute_vertical_scroll_bar_from_once_idle_actions @2\n{000000000CE8FB8C}  (From EV_GRID_I)       Routine failure.              Fail\n-------------------------------------------------------------------------------\nPROCEDURE           call @4                                             \n{0000000008B42A18}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nPROCEDURE           apply @1                                            \n{0000000008B42A18}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION_IMP  call_separate_action @1\n{0000000009698B1C}  (From EV_APPLICATION_I)\n                                           Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION_IMP  process_event_queue @48\n{0000000009698B1C}  (From EV_APPLICATION_I)\n                                           Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION_HANDLER\n                    process_application_event_queue @1\n{0000000009699458}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION_HANDLER\n                    launch @4              \n{0000000009699458}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION      internal_launch_application @3\n{0000000009698D2C}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEV_APPLICATION      launch @2                                           \n{0000000009698D2C}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nES_GRAPHIC          make @12                                            \n{0000000009698D14}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEB_KERNEL           make @4                                             \n{0000000009583220}                         Routine failure.              Fail\n-------------------------------------------------------------------------------\nEB_KERNEL           root's creation                                     \n{0000000009583220}                         Routine failure.              Exit\n-------------------------------------------------------------------------------\n"
+          },
+          {
+            "name": "To reproduce",
+            "prompt": "to reproduce",
+            "value": ""
+          }
+        ],
+        "links": [
 
+        ]
+      }
+    ]
+  }
+}
 
-                     ,
-                     {
-                      "href": "https://localhost/login",
-                      "rel": "login",
-                      "prompt": "Login"
-                     },
-                     {
-                       "href": "https://localhost/register",
-                       "rel": "register",
-                       "prompt": "Register"
-                     }
-
-                  ],
-             "items": [
-                       {
-                        "href": "https://localhost/report_detail/2",
-                        "data": [
-                            {
-                                "name": "Group",
-                                "prompt": "group",
-                                "value": "Description"
-                            },
-                            {
-                                "name": "Submitter",
-                                "prompt": "submitter",
-                                "value": "user0"
-                            },
-                            {
-                                "name": "Category",
-                                "prompt": "category",
-                                "value": ".NET"
-                            },
-                            {
-                                "name": "Priority",
-                                "prompt": "priority",
-                                "value": "High"
-                            },
-                            {
-                                "name": "Category",
-                                "prompt": "category",
-                                "value": ""
-                            },
-                            {
-                                "name": "Date",
-                                "prompt": "date",
-                                "value": "05/09/2014 4:59:08.000 PM"
-                            },
-                            {
-                                "name": "Class",
-                                "prompt": "class",
-                                "value": "Bug"
-                            },
-                            {
-                                "name": "Severity",
-                                "prompt": "severity",
-                                "value": "Critical"
-                            },
-                            {
-                                "name": "Number",
-                                "prompt": "number",
-                                "value": "2"
-                            },
-                            {
-                                "name": "Release",
-                                "prompt": "release",
-                                "value": "10"
-                            },
-                            {
-                                "name": "Confidential",
-                                "prompt": "confidential",
-                                "value": "False"
-                            },
-                            {
-                                "name": "Status",
-                                "prompt": "status",
-                                "value": "Open"
-                            },
-                            {
-                                "name": "Responsible",
-                                "prompt": "responsible",
-                                "value": ""
-                            },
-                            {
-                                "name": "Environment",
-                                "prompt": "environment",
-                                "value": "test"
-                            },
-                            {
-                                "name": "Synopsys",
-                                "prompt": "synopsis",
-                                "value": "test"
-                            },
-                            {
-                                "name": "Description",
-                                "prompt": "description",
-                                "value": "test"
-                            },
-                            {
-                                "name": "To reproduce",
-                                "prompt": "to reproduce",
-                                "value": "test"
-                            }
-                           ],
-                        "links":[
-                        {"rel":"create-form", "href": "https://localhost/report_detail/2/interaction_form", "prompt": "Interaction Form"}
-
-                        ]
-
-                       }
-                    ]
-
-           }
-        }
-    </code>    
+         </code>    
     </pre>
 
     <p>
     What's new is that we now have an items array. This items array contain an object, with a data array inside of it. This data array have objects with a name, a value and prompt. The name is a descriptive explanation, in this case, that we're showing different report properties, the prompt is the a value to show in a GUI, and the actual value.
     </p>    
 
-
-1.http://amundsen.com/media-types/collection/format/
-2.http://amundsen.com/media-types/collection/examples/
-3.https://groups.google.com/forum/#!forum/collectionjson
-4.https://groups.google.com/forum/#!topic/collectionjson/7dkgjBWItrE
-5.https://github.com/jvelilla/collection-json/blob/jv_extensions/extensions/attachment.md
-6.https://github.cmo/jvelilla/collection-json/blob/jv_extensions/extensions/lookup.md
-
+<h3>References</h3>
+<ol>
+    <li><a href="http://amundsen.com/media-types/collection/format/">CollectionJSON Documentation</a></li>
+    <li><a href="http://amundsen.com/media-types/collection/examples/">CollectionJSON Exaples</a></li>
+    <li><a href="https://groups.google.com/forum/#!forum/collectionjson">CollectionJSON forum</a></li>
+    <li><a href="https://groups.google.com/forum/#!topic/collectionjson/7dkgjBWItrE">CollectionJSON Design</a></li>
+    <li><a href="https://github.com/jvelilla/collection-json/blob/jv_extensions/extensions/attachment.md">Attachment</a></li>
+    <li><a href="https://github.cmo/jvelilla/collection-json/blob/jv_extensions/extensions/lookup.md">Lookup</a> </li>
+    <li><a href="https://github.com/collection-json/extensions/blob/master/value-types.md">Value Types</a> </li>
+    <li><a href="https://github.com/mustmodify/collection-json.rb#meta">Metadata</a> </li>
+</ol>
 </div>
         <hr>
         <hr>

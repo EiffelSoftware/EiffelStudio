@@ -39,7 +39,7 @@
 	</div>
 </div>
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope="itemscope" itemtype="{$host/}/profile/esa_api.xml">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" itemscope="itemscope" itemtype="{$host/}/static/profile/esa_api.xml">
 	<input id="host_pe" type="hidden" name="host" value="{$host/}"/>
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -48,7 +48,7 @@
 			</button>
 			<a class="navbar-brand" href="{$host/}" itemprop="home" rel="home">Eiffel Support Site</a>
 		</div>
-		<div class="navbar-collapse collapse" itemscope="itemscope" itemtype="{$host/}/profile/esa_api.xml#report" >
+		<div class="navbar-collapse collapse" itemscope="itemscope" itemtype="{$host/}/static/profile/esa_api.xml#report" >
 			<ul class="nav navbar-nav navbar-left">
 				<li><a href="{$host/}/reports" class="active" itemprop="all" rel="all">Reports</a></li>
 					{if isset="$user"}

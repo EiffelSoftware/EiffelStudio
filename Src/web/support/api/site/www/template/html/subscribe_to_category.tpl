@@ -3,7 +3,7 @@
 	{include file="master/head.tpl"/}
 	<body>
 		{include file="master/navbar.tpl"/}
-		<div class="container-fluid" itemscope itemtype="{$host/}/profile/esa_api.xml">
+		<div class="container-fluid" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 			<form class="form-inline well" id="registerHere" method='POST' action='{$host/}/subscribe_to_category' itemprop="update">
 				<fieldset>
 					<legend>Problem Report Categories Selection</legend>

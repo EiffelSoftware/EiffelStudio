@@ -3,7 +3,7 @@
 	{include file="master/head.tpl"/}
 	<body>
 		{include file="master/navbar.tpl"/}
-		<div class="container" itemscope itemtype="{$host/}/profile/esa_api.xml">
+		<div class="container" itemscope itemtype="{$host/}/static/profile/esa_api.xml">
 			<div class="main">
 				<form class="form-horizontal well" id="reminder" method='POST' action='{$host/}/reminder' itemprop="create">
 					<fieldset>

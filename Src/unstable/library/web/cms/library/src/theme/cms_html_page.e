@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_typed (a_type: like type)
+	make_typed (a_type: attached like type)
 			-- Make current page with optional page type `a_type'.
 		do
 			make

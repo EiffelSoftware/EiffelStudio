@@ -23,21 +23,31 @@
         
         <h2> Introduction </h2>
 
-         <p>Eiffel Support site is a Hypermedia API supporting two media types (HTML5 and Collection+JSON). Internally the api is known as ESA. So, since here we will refer the
-            Eiffel Support Site API as ESA.
-            What does it means Hypermedia API?. Basically the use of HTTP to its fullest and the responses will be served as hypermedia that manages the application state.
+         <p>Eiffel Support site is a Hypermedia API supporting two <a href="http://tools.ietf.org/html/rfc2046">media types</a> (HTML5 and Collection+JSON). Internally the API is known  as ESA. So, since here we will refer the Eiffel Support Site API as ESA.
           </p>  
-            <blockquote> 
-                A REST API should spend almost all of its descriptive effort in defining the media type(s) used for representing resources and driving application state, or in defining extended relation names and/or hypertext-enabled mark-up for existing standard media types. Any effort spent describing what methods to use on what URIs of interest should be entirely defined within the scope of the processing rules for a media type (and, in most cases, already defined by existing media types).
 
-                Roy Fielding <a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">REST APIs Must ne Hypertext Driven"</a>
-            </blockquote>    
+         <h3> Hypermedia API </h3>  
+
+          <p>What does it means <a href="http://blog.steveklabnik.com/posts/2012-02-23-rest-is-over">Hypermedia API</a>?. Basically the use of HTTP to its fullest and the responses will be served as hypermedia that manages the application state.</p>
+
+
+
+            <blockquote> 
+              A REST API should spend almost all of its descriptive effort in defining the media type(s) used for representing resources and driving application state, or in defining extended relation names and/or hypertext-enabled mark-up for existing standard media types. Any effort spent describing what methods to use on what URIs of interest should be entirely defined within the scope of the processing rules for a media type (and, in most cases, already defined by existing media types).<br>
+
+              Roy Fielding <a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">REST APIs Must ne Hypertext Driven</a>
+            </blockquote> 
+
+            <blockquote>
+             Hypermedia Types are MIME media types that contain native hyper-linking semantics that induce application flow. For example, HTML is a hypermedia type; XML is not.<br>
+             Mike Amundsen (2010)
+            </blockquote>   
          
 
          <h3>Collection+JSON </h3>
-         What's Collection+JSON?. It's a JSON-based read/write hypermedia type desinged to suport the mangement and querying of simple collections. It define the format and the semantics in a single document.The media type is designed to support full read/write for collections. The application semantics include Create, Read, Update, and Delete, it also has support for queries, using query templates. Write operations are defined using a template object send by the server.
+         What's <a href="http://amundsen.com/media-types/collection/">Collection+JSON</a>?. It's a JSON-based read/write <a href="http://amundsen.com/hypermedia/">hypermedia type</a> desinged to suport the mangement and querying of simple collections. It define the format and the semantics in a single document.The media type is designed to support full read/write for collections. The application semantics include Create, Read, Update, and Delete, it also has support for queries, using query templates. Write operations are defined using a template object send by the server. <br>
  
-         As a simple introduction, below a template collection document
+         As a simple introduction, a sample collection
             </p>     
             
             <pre>
@@ -56,16 +66,16 @@
             </code>
             </pre>
 
-         <b>Our API use some Collection+JSON extensions:</b>
+         <b>Our API uses some Collection+JSON extensions:</b>
          <ol>
-             <li>Metadata</li>
-             <li>Lookup values</li>
-             <li>Value types</li> 
-             <li>Attachments</li>   
+             <li><a href="https://github.com/jvelilla/collection-json/blob/jv_extensions/extensions/attachment.md">Attachment</a></li>
+             <li><a href="https://github.cmo/jvelilla/collection-json/blob/jv_extensions/extensions/lookup.md">Lookup</a> </li>
+             <li><a href="https://github.com/collection-json/extensions/blob/master/value-types.md">Value Types</a> </li>
+             <li><a href="https://github.com/mustmodify/collection-json.rb#meta">Metadata</a> </li>
          </ol>       
         </p>   
 
-        Before to start using CJ we will describe what our API need to do.
+        Before to start using CJ we will describe what our API needs to do.
 
         <h3>Business Process</h3>
         Here we define what our API need to do, workflows and what are the paths one need to follow to accomplish a particular tasks.
@@ -88,7 +98,7 @@
             <li>Filters by Report properties connected with a Report/Reports</li>
         </ol> 
 
-        <b>Use Cases</b> 
+        <b>Use Cases:</b> state transitions. 
 
         <ol>    
            <li>A logged-in user will see the reports he has submitted</li>
@@ -116,7 +126,7 @@
         <br>
 
         <p>    
-        So, to formalize in which states our application can be, we will describe a state machine, and we will have a API root in our case <b>HOME</b>, and 
+        So, to formalize in which states our application can be, we will describe a state machine, and we will have an API root in our case <b>HOME</b>, and 
         that's all we need to know to browse and use the API.  
         <p><br>
         <b>Conventions used in the diagram</b>    
@@ -131,7 +141,18 @@
         <img src="./esa_api_state_machine.png" class="img-thumbnail">
 
 
-        <p>Using the ESA API: make a request to the ROOT uri:</p>
+        <h3>Using the CJ ESA API </h3>
+        
+        <p>       
+        A generic Collection+JSON client is a software that understands the Collection+JSON media type, so it's a useful tool to inspect collections while developing or debugging an application. Unfortunatelly CJ does not have an online web service tool to use. So for development purposes we have developed an stand-alone client for<a href="https://github.com/EiffelWebFramework/CJ-browser">CJ client</a> and we have a  <a href="https://github.com/jvelilla/CJ-browser/tree/jv_cjb">version</a> supporting the extensions already mention.<br>
+
+        As we are using CollectionJSON, this means that you can use any generic CJ client with ESA API. If you don't have one handy, it's easy!. You can use cURL or some online services
+        to make an HTTP request, like <a href="http://hurl.eu/">Hurl.eu</a> As we have some extentions, a generic client will not handle all the cases.
+        </p>
+
+        
+
+        <p><b>Making a request to the ROOT uri:</b></p>
 
 
         <pre><code>$ curl -i -H "Accept: application/vnd.collection+json" https://www2.eiffel.com/beta/</code></pre>
@@ -358,6 +379,7 @@
     <li><a href="https://github.cmo/jvelilla/collection-json/blob/jv_extensions/extensions/lookup.md">Lookup</a> </li>
     <li><a href="https://github.com/collection-json/extensions/blob/master/value-types.md">Value Types</a> </li>
     <li><a href="https://github.com/mustmodify/collection-json.rb#meta">Metadata</a> </li>
+    <li><a href="http://davejonathangoldberg.github.io/apis/hypermedia/2014/08/08/hypermedia-resources/">Hypermedia Resources</a></li>
 </ol>
 </div>
         <hr>

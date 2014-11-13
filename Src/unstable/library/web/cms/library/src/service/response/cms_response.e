@@ -88,7 +88,7 @@ feature -- URL utilities
 		local
 			l_path_info: READABLE_STRING_8
 		do
-			l_path_info := request.path_info
+			l_path_info := request.percent_encoded_path_info
 			if attached setup.front_page_path as l_front_page_path then
 				Result := l_front_page_path.same_string (l_path_info)
 			else
@@ -964,8 +964,13 @@ feature {NONE} -- Execution
 		local
 			cms_page: CMS_HTML_PAGE
 			page: CMS_HTML_PAGE_RESPONSE
+			utf: UTF_CONVERTER
 		do
-			create cms_page.make
+			if attached {READABLE_STRING_GENERAL} values.item ("optional_content_type") as l_type then
+				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
+			else
+				create cms_page.make
+			end
 			prepare (cms_page)
 			create page.make (theme.page_html (cms_page))
 			page.set_status_code (status_code)

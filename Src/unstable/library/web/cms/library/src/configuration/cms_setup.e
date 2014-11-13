@@ -54,8 +54,8 @@ feature -- Access: Theme
 	theme_location: PATH
 			-- Path to a particular theme.
 
-	theme_resource_location: PATH
-			-- Path to a particular theme resource.
+	theme_assets_location: PATH
+			-- Path to a particular theme assets folder.
 
 	theme_information_location: PATH
 			-- theme informations.

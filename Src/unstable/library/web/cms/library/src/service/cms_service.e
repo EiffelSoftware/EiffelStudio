@@ -144,6 +144,16 @@ feature -- Settings: router
 			fhdl: WSF_FILE_SYSTEM_HANDLER
 		do
 			log.write_debug (generator + ".configure_api_file_handler")
+
+			create fhdl.make_hidden_with_path (setup.theme_assets_location)
+			fhdl.disable_index
+			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+				do
+					execute_default (ia_req, ia_res)
+				end)
+			a_router.handle_with_request_methods ("/theme/", fhdl, router.methods_GET)
+
+
 			create fhdl.make_hidden_with_path (setup.layout.www_path)
 			fhdl.disable_index
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
@@ -244,8 +254,12 @@ feature -- Execution
 
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Default request handler if no other are relevant
+		local
+			r: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
 			to_implement ("Default response for CMS_SERVICE")
+			create r.make (req, res, api)
+			r.execute
 		end
 
 note

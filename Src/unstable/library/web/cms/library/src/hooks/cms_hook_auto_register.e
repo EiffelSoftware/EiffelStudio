@@ -30,6 +30,9 @@ feature -- Hook
 			if attached {CMS_HOOK_FORM_ALTER} Current as h_form then
 				a_response.subscribe_to_form_alter_hook (h_form)
 			end
+			if attached {CMS_HOOK_VALUE_TABLE_ALTER} Current as h_value then
+				a_response.subscribe_to_value_table_alter_hook (h_value)
+			end
 		end
 
 end

@@ -41,8 +41,12 @@ feature {NONE} -- Initialization
 			themes_location := configuration.themes_location
 			theme_name := configuration.theme_name ("default")
 
+			debug ("refactor_fixme")
+				fixme ("Review export clause for configuration and layout")
+			end
+
 			compute_theme_location
-			compute_theme_resource_location
+			compute_theme_assets_location
 		end
 
 	initialize_modules
@@ -100,14 +104,15 @@ feature -- Compute location
 			theme_location := themes_location.extended (theme_name)
 		end
 
-	compute_theme_resource_location
+	compute_theme_assets_location
 			-- assets (js, css, images, etc)
 			-- Not used at the moment.
 		do
 			debug ("refactor_fixme")
 				fixme ("Check if we really need it")
 			end
-			theme_resource_location := theme_location
+			-- Check how to get this path from the CMS_THEME information.
+			theme_assets_location := theme_location.extended ("assets")
 		end
 
 end

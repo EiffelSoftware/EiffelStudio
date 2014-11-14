@@ -13,7 +13,6 @@
 		<library name="layout" location="..\..\..\layout\layout-safe.ecf"/>
 		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
-		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql-safe.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>

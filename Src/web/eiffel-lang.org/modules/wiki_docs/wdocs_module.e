@@ -8,6 +8,9 @@ class
 
 inherit
 	CMS_MODULE
+		redefine
+			register_hooks
+		end
 
 	CMS_HOOK_BLOCK
 
@@ -46,43 +49,57 @@ feature {NONE} -- Initialization
 			cache_duration := 0
 		end
 
-feature {CMS_SERVICE} -- Registration
+feature -- Router
 
-	service: detachable CMS_SERVICE
-
-	register (a_service: CMS_SERVICE)
+	router (a_api: CMS_API): WSF_ROUTER
+			-- Router configuration.
 		local
-			fs: WSF_FILE_SYSTEM_HANDLER
+--			fs: WSF_FILE_SYSTEM_HANDLER
 			cfg: detachable WDOCS_CONFIG
+			h: WSF_URI_TEMPLATE_AGENT_HANDLER
 		do
-			service := a_service
-
 				-- FIXME: this code could/should be retarded to when it is really needed
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
-			cfg := configuration (a_service.site_var_dir)
+			cfg := configuration (a_api.setup.layout.config_path)
 			root_dir := cfg.root_dir
 			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir
 			cache_duration := cfg.cache_duration
 			default_version_id := cfg.documentation_default_version
 
-			a_service.map_uri_template ("/learn", agent handle_learn (a_service, ?, ?))
-			a_service.map_uri_template ("/book/", agent handle_book (a_service, ?, ?))
-			a_service.map_uri_template ("/book/{bookid}/_images/{filename}", agent handle_wiki_image (a_service, ?, ?))
-			a_service.map_uri_template ("/book/{bookid}", agent handle_book (a_service, ?, ?))
-			a_service.map_uri_template ("/book/{bookid}/{wikipageid}", agent handle_wikipage (a_service, ?, ?))
+				-- Router			
+			create Result.make (5)
 
-			a_service.map_uri_template ("/version/{version_id}/book/", agent handle_book (a_service, ?, ?))
-			a_service.map_uri_template ("/version/{version_id}/book/{bookid}/_images/{filename}", agent handle_wiki_image (a_service, ?, ?))
-			a_service.map_uri_template ("/version/{version_id}/book/{bookid}", agent handle_book (a_service, ?, ?))
-			a_service.map_uri_template ("/version/{version_id}/book/{bookid}/{wikipageid}", agent handle_wikipage (a_service, ?, ?))
+			create h.make (agent handle_learn (a_api, ?, ?))
+			Result.handle_with_request_methods ("/learn", h, Result.methods_get)
 
-			a_service.map_uri_template ("/images/{image_id}", agent handle_wiki_image (a_service, ?, ?))
-			a_service.map_uri_template ("/version/{version_id}/images/{image_id}", agent handle_wiki_image (a_service, ?, ?))
+			create h.make (agent handle_book (a_api, ?, ?))
+			Result.handle_with_request_methods ("/book/", h, Result.methods_get)
+			Result.handle_with_request_methods ("/book/{bookid}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/book/", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}", h, Result.methods_get)
 
-			create fs.make_with_path (a_service.theme_location.extended ("res").extended ("images"))
-			fs.disable_index
-			a_service.router.handle ("/theme/images", fs)
+			create h.make (agent handle_wikipage (a_api, ?, ?))
+			Result.handle_with_request_methods ("/book/{bookid}/{wikipageid}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}", h, Result.methods_get)
+
+			create h.make (agent handle_wiki_image (a_api, ?, ?))
+			Result.handle_with_request_methods ("/book/{bookid}/_images/{filename}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/_images/{filename}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/images/{image_id}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/images/{image_id}", h, Result.methods_get)
+
+--			create fs.make_with_path (a_api.setup.theme_location.extended ("assets").extended ("images"))
+--			fs.disable_index
+--			Result.handle_with_request_methods ("/theme/images", fs, Result.methods_get)
+		end
+
+feature -- Hooks configuration
+
+	register_hooks (a_response: CMS_RESPONSE)
+			-- Module hooks configuration.
+		do
+			auto_subscribe_to_hooks (a_response)
 		end
 
 feature -- Access: config
@@ -181,7 +198,7 @@ feature -- Hooks
 			end
 		end
 
-	get_block_view (a_block_id: detachable READABLE_STRING_8; a_execution: CMS_EXECUTION)
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		local
 			l_menublock: CMS_MENU_BLOCK
 			l_content_block: CMS_CONTENT_BLOCK
@@ -189,21 +206,24 @@ feature -- Hooks
 			s: STRING
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
 		do
-			if attached a_execution.optional_content_type as l_type and then l_type.is_case_insensitive_equal_general ("doc") then
-				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_version_id") as t then
+			if
+				attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
+				l_type.is_case_insensitive_equal ("doc")
+			then
+				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_version_id") as t then
 					l_version_id := t
 				end
-				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_book_name") as t then
+				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
 					l_book_name := t
 				end
-				if attached {READABLE_STRING_GENERAL} a_execution.values.item ("wiki_page_name") as t then
+				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
 					l_page_name := t
 				end
 				if a_block_id /= Void then
 					if a_block_id.same_string_general ("wdocs-tree") then
 						m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
 						create l_menublock.make (m)
-						a_execution.add_block (l_menublock, "sidebar_second")
+						a_response.add_block (l_menublock, "sidebar_second")
 					elseif a_block_id.same_string_general ("wdocs-page-info") then
 						if
 							l_book_name /= Void and then l_page_name /= Void and then
@@ -239,8 +259,8 @@ feature -- Hooks
 									s.append_character ('%N')
 								end
 							end
-							create l_content_block.make (a_block_id, "Page info", s, a_execution.formats.filtered_html)
-							a_execution.add_block (l_content_block, "sidebar_second")
+							create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
+							a_response.add_block (l_content_block, "sidebar_second")
 						end
 					end
 				else
@@ -435,14 +455,14 @@ feature -- Hooks
 
 feature -- Handler		
 
-	handle_learn (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_learn (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			handle_book (cms, req, res)
+			handle_book (api, req, res)
 		end
 
-	handle_book (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_book (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			e: CMS_EXECUTION
+			r: CMS_RESPONSE
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
@@ -452,20 +472,21 @@ feature -- Handler
 			end
 
 			if req.is_get_request_method then
-				create {ANY_CMS_EXECUTION} e.make (req, res, cms)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else
-				create {NOT_FOUND_CMS_EXECUTION} e.make (req, res, cms)
+				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)
 
-			e.values.force (l_version_id, "wiki_version_id")
+			r.values.force (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
-				e.set_optional_content_type ("doc")
-				e.set_title (l_bookid)
-				e.values.force (l_bookid, "wiki_book_name")
+--				r.set_optional_content_type ("doc")
+				r.set_value ("doc", "optional_content_type")
+				r.set_title (l_bookid)
+				r.values.force (l_bookid, "wiki_book_name")
 				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
 				mnger := manager (l_version_id)
 				if attached mnger.book (l_bookid) as l_book then
@@ -484,8 +505,9 @@ feature -- Handler
 					end
 				end
 			else
-				e.set_optional_content_type ("doc")
-				e.set_title ("Book list ...")
+--				r.set_optional_content_type ("doc")
+				r.set_value ("doc", "optional_content_type")
+				r.set_title ("Book list ...")
 				create b.make_from_string ("<ul class=%"books%">")
 				mnger := manager (l_version_id)
 				across
@@ -507,16 +529,16 @@ feature -- Handler
 				append_navigation_to (req, b)
 			end
 
-			e.set_main_content (b)
-			e.execute
+			r.set_main_content (b)
+			r.execute
 		end
 
-	handle_wikipage (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_wikipage (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_version_id, l_bookid, l_wiki_id: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 			pg: detachable WIKI_PAGE
-			e: CMS_EXECUTION
+			r: CMS_RESPONSE
 			s: STRING
 		do
 			debug ("refactor_fixme")
@@ -524,22 +546,23 @@ feature -- Handler
 			end
 
 			if req.is_get_request_method then
-				create {ANY_CMS_EXECUTION} e.make (req, res, cms)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else
-				create {NOT_FOUND_CMS_EXECUTION} e.make (req, res, cms)
+				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
-			e.set_optional_content_type ("doc")
+--			r.set_optional_content_type ("doc")
+			r.set_value ("doc", "optional_content_type")
 
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)
 			l_wiki_id := wikipage_id (req, Void)
 			mnger := manager (l_version_id)
 
-			e.values.force (l_version_id, "wiki_version_id")
+			r.values.force (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
-				e.values.force (l_bookid, "wiki_book_name")
+				r.values.force (l_bookid, "wiki_book_name")
 				pg := mnger.page (l_bookid, l_wiki_id)
 				if pg = Void and l_wiki_id /= Void then
 					if l_wiki_id.is_case_insensitive_equal_general ("index") then
@@ -565,7 +588,7 @@ feature -- Handler
 				end
 			end
 
-			e.add_additional_head_line ("[
+			r.add_additional_head_line ("[
 						<style>
 							table {border: solid 1px blue;}
 							td {border: solid 1px blue;}
@@ -574,8 +597,8 @@ feature -- Handler
 				)
 
 			if pg /= Void then
-				e.set_title (pg.title)
-				e.values.force (pg.title, "wiki_page_name")
+				r.set_title (pg.title)
+				r.values.force (pg.title, "wiki_page_name")
 				create s.make_empty
 
 --				debug ("wdocs")
@@ -605,7 +628,7 @@ feature -- Handler
 					s.append ("</pre>")
 				end
 			else
-				e.set_title ("Wiki page not found!")
+				r.set_title ("Wiki page not found!")
 				create s.make_from_string ("Page not found")
 			end
 
@@ -613,11 +636,11 @@ feature -- Handler
 				append_navigation_to (req, s)
 			end
 
-			e.set_main_content (s)
-			e.execute
+			r.set_main_content (s)
+			r.execute
 		end
 
-	handle_wiki_image (cms: CMS_SERVICE; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_wiki_image (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 			--|	map: "/book/_images/{filename}"
 		local
 			l_version_id,
@@ -774,7 +797,7 @@ feature {NONE} -- Implementation: wiki render
 
 			if
 				not client_request_no_server_cache and then
-				l_cache /= Void and then -- i.e: cache enabled
+				l_cache /= Void and then -- i.r: cache enabled
 				l_cache.exists and then
 				not l_cache.expired (l_wiki_page_date_time, cache_duration)
 			then
@@ -847,8 +870,8 @@ feature {NONE} -- implementation: wiki docs
 			p: PATH
 		do
 			p := a_manager.wiki_database_path
-			if attached p.entry as e then
-				Result := temp_dir.extended ("cache").extended_path (e)
+			if attached p.entry as r then
+				Result := temp_dir.extended ("cache").extended_path (r)
 			else
 				Result := p.appended_with_extension ("cache")
 			end
@@ -966,12 +989,12 @@ feature {NONE} -- Implementation: date and time
 
 feature {NONE} -- Implementation		
 
-	append_info_to (n: READABLE_STRING_8; v: detachable READABLE_STRING_GENERAL; e: CMS_EXECUTION; t: STRING)
+	append_info_to (n: READABLE_STRING_8; v: detachable READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; t: STRING)
 		do
 			t.append ("<li>")
 			t.append ("<strong>" + n + "</strong>: ")
 			if v /= Void then
-				t.append (e.html_encoded (v))
+				t.append (a_response.html_encoded (v))
 			end
 			t.append ("</li>")
 		end

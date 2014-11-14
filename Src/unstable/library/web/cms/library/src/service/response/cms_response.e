@@ -81,6 +81,37 @@ feature -- Access
 	additional_page_head_lines: detachable LIST [READABLE_STRING_8]
 			-- HTML>head>...extra lines
 
+feature -- Module
+
+	module_resource_path (a_module: CMS_MODULE; a_resource: PATH): detachable PATH
+			-- Resource path of `a_resource' for module `a_module', if resource exists.
+		local
+			rp: PATH
+			ut: FILE_UTILITIES
+		do
+			rp := module_assets_theme_location (a_module)
+			Result := rp.extended_path (a_resource)
+			if not ut.file_path_exists (Result) then
+				rp := module_assets_location (a_module)
+				Result := rp.extended_path (a_resource)
+				if not ut.file_path_exists (Result) then
+					Result := Void
+				end
+			end
+		end
+
+	module_assets_location (a_module: CMS_MODULE): PATH
+			-- Location for the assets associated with `a_module'.
+		do
+			Result := setup.layout.path.extended ("modules").extended (a_module.name)
+		end
+
+	module_assets_theme_location (a_module: CMS_MODULE): PATH
+			-- Location for the assets associated with `a_module'.
+		do
+			Result := setup.theme_location.extended ("modules").extended (a_module.name)
+		end
+
 feature -- URL utilities
 
 	is_front: BOOLEAN
@@ -372,11 +403,10 @@ feature -- Blocks
 				add_block (l_block, "first_sidebar")
 			end
 
-			if attached footer_block as l_block then
-				add_block (l_block, "footer")
-			end
-
 			invoke_block
+			debug ("cms")
+				add_block (create {CMS_CONTENT_BLOCK}.make ("made_with", Void, "Made with <a href=%"http://www.eiffel.com/%">EWF</a>", Void), "footer")
+			end
 		end
 
 	primary_menu_block: detachable CMS_MENU_BLOCK
@@ -472,18 +502,6 @@ feature -- Blocks
 			create Result.make ("content", Void, s, formats.full_html)
 			Result.set_is_raw (True)
 		end
-
-	made_with_html: STRING
-		do
-			create Result.make_empty
-			Result.append ("Made with <a href=%"http://www.eiffel.com/%">EWF</a>")
-		end
-
-	footer_block: CMS_CONTENT_BLOCK
-		do
-			create Result.make ("made_with", Void, made_with_html, Void)
-		end
-
 
 feature -- Hooks
 
@@ -786,6 +804,13 @@ feature -- Generation
 				across
 					reg_ic.item.blocks as ic
 				loop
+--					if attached {CMS_SMARTY_CONTENT_BLOCK} ic.item as l_tpl_block then
+--						across
+--							page.variables as var_ic
+--						loop
+--							l_tpl_block.set_value (var_ic.item, var_ic.key)
+--						end
+--					end
 					page.add_to_region (theme.block_html (ic.item), reg_ic.item.name)
 				end
 			end

@@ -29,7 +29,28 @@ feature -- Access
 
 	title: detachable READABLE_STRING_32
 
+feature -- Status report
+
 	is_horizontal: BOOLEAN
+
+	is_raw: BOOLEAN = False
+			-- <Precursor>
+
+feature -- Element change
+
+	set_name (n: like name)
+			-- Set `name' to `n'.
+		require
+			not n.is_whitespace
+		do
+			name := n
+		end
+
+	set_title (a_title: like title)
+			-- Set `title' to `a_title'.
+		do
+			title := a_title
+		end
 
 feature -- Conversion
 

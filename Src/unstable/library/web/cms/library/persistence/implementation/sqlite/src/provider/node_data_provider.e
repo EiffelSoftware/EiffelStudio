@@ -23,7 +23,7 @@ feature -- Initialization
 			-- Create a data provider.
 		do
 			create {DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
-			post_execution
+
 		end
 
 	db_handler: DATABASE_HANDLER
@@ -34,7 +34,7 @@ feature -- Status Report
 	is_successful: BOOLEAN
 			-- Is the last execution sucessful?
 		do
-			Result := db_handler.successful
+			Result := not db_handler.has_error
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Access
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_nodes, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent fetch_node)
-			post_execution
+
 		end
 
 	recent_nodes (a_lower, a_rows: INTEGER): DATABASE_ITERATION_CURSOR [CMS_NODE]
@@ -66,7 +66,7 @@ feature -- Access
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent fetch_node)
-			post_execution
+
 		end
 
 	node (a_id: INTEGER_64): detachable CMS_NODE
@@ -82,7 +82,7 @@ feature -- Access
 			if db_handler.count = 1 then
 				Result := fetch_node
 			end
-			post_execution
+
 		end
 
 	count: INTEGER
@@ -97,7 +97,7 @@ feature -- Access
 			if db_handler.count = 1 then
 				Result := db_handler.read_integer_32 (1)
 			end
-			post_execution
+
 		end
 
 feature -- Basic operations
@@ -117,7 +117,7 @@ feature -- Basic operations
 			l_parameters.put (a_node.modification_date, "modification_date")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_insert_node, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	update_node_title (a_id: INTEGER_64; a_title: READABLE_STRING_32)
@@ -132,7 +132,7 @@ feature -- Basic operations
 			l_parameters.put (a_id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_update_node_title, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	update_node_summary (a_id: INTEGER_64; a_summary: READABLE_STRING_32)
@@ -147,7 +147,7 @@ feature -- Basic operations
 			l_parameters.put (a_id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_update_node_summary, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	update_node_content (a_id: INTEGER_64; a_content: READABLE_STRING_32)
@@ -162,7 +162,7 @@ feature -- Basic operations
 			l_parameters.put (a_id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_update_node_content, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	update_node (a_node: CMS_NODE)
@@ -181,7 +181,7 @@ feature -- Basic operations
 			l_parameters.put (a_node.id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_update_node, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	delete_node (a_id: INTEGER_64;)
@@ -194,7 +194,6 @@ feature -- Basic operations
 			l_parameters.put (a_id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_delete_node, l_parameters))
 			db_handler.execute_change
-			post_execution
 		end
 
 feature -- Connection
@@ -272,18 +271,5 @@ feature -- New Object
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	post_execution
-			-- Post database execution.
-		do
-			if db_handler.successful then
-				set_successful
-			else
-				if attached db_handler.last_error then
-					set_last_error_from_handler (db_handler.last_error)
-				end
-			end
-		end
 
 end

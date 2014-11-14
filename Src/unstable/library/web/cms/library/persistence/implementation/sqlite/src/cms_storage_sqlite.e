@@ -24,8 +24,7 @@ feature {NONE} -- Initialization
 			log.write_information (generator+".make_with_database is database connected?  "+ a_connection.is_connected.out )
 			create node_provider.make (a_connection)
 			create user_provider.make (a_connection)
-			post_node_provider_execution
-			post_user_provider_execution
+			create error_handler.make
 		end
 
 
@@ -35,7 +34,7 @@ feature -- Access: user
 			-- Has any user?
 		do
 			Result := user_provider.has_user
-			post_user_provider_execution
+
 		end
 
 
@@ -48,19 +47,19 @@ feature -- Access: user
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
 		do
 			Result := user_provider.user (a_id)
-			post_user_provider_execution
+
 		end
 
 	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
 		do
 			Result := user_provider.user_by_name (a_name)
-			post_user_provider_execution
+
 		end
 
 	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
 		do
 			Result := user_provider.user_by_email (a_email)
-			post_user_provider_execution
+
 		end
 
 	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
@@ -82,7 +81,7 @@ feature -- Access: user
 					log.write_information (generator + ".login_valid User:" + l_auth_login + "does not exist" )
 				end
 			end
-			post_user_provider_execution
+
 		end
 
 feature -- Change: user
@@ -149,7 +148,7 @@ feature -- Access: node
 			across node_provider.nodes as c loop
 				Result.force (c.item)
 			end
-			post_node_provider_execution
+
 		end
 
 	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -159,14 +158,14 @@ feature -- Access: node
 			across node_provider.recent_nodes (a_lower,a_count) as c loop
 				Result.force (c.item)
 			end
-			post_node_provider_execution
+
 		end
 
 	node (a_id: INTEGER_64): detachable CMS_NODE
 			--
 		do
 			Result :=  node_provider.node (a_id)
-			post_node_provider_execution
+
 		end
 
 
@@ -176,37 +175,37 @@ feature -- Node
 			-- Add a new node
 		do
 			node_provider.new_node (a_node)
-			post_node_provider_execution
+
 		end
 
 	delete_node (a_id: INTEGER_64)
 		do
 			node_provider.delete_node (a_id)
-			post_node_provider_execution
+
 		end
 
 	update_node (a_id: like {CMS_USER}.id; a_node: CMS_NODE)
 		do
 			node_provider.update_node (a_node)
-			post_node_provider_execution
+
 		end
 
 	update_node_title (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
 		do
 			node_provider.update_node_title (a_id, a_title)
-			post_node_provider_execution
+
 		end
 
 	update_node_summary (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
 		do
 			node_provider.update_node_summary (a_id, a_summary)
-			post_node_provider_execution
+
 		end
 
 	update_node_content (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
 		do
 			node_provider.update_node_content (a_id, a_content)
-			post_node_provider_execution
+
 		end
 
 
@@ -239,29 +238,7 @@ feature -- User
 			end
 		end
 
-feature {NONE} -- Post process
-
-	post_node_provider_execution
-		do
-			if node_provider.successful then
-				set_successful
-			else
-				if attached node_provider.last_error then
-					set_last_error_from_handler (node_provider.last_error)
-				end
-			end
-		end
-
-	post_user_provider_execution
-		do
-			if user_provider.successful then
-				set_successful
-			else
-				if attached user_provider.last_error then
-					set_last_error_from_handler (user_provider.last_error)
-				end
-			end
-		end
+feature {NONE} -- Implementation
 
 	node_provider: NODE_DATA_PROVIDER
 			-- Node Data provider.

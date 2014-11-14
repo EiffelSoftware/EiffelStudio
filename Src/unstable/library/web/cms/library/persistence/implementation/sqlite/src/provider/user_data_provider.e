@@ -23,7 +23,7 @@ feature -- Initialization
 			-- Create a data provider.
 		do
 			create {DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
-			post_execution
+
 		end
 
 	db_handler: DATABASE_HANDLER
@@ -34,7 +34,7 @@ feature -- Status Report
 	is_successful: BOOLEAN
 			-- Is the last execution sucessful?
 		do
-			Result := db_handler.successful
+			Result := not db_handler.has_error
 		end
 
 	has_user: BOOLEAN
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			l_parameters.put (a_email,"email")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (sql_insert_user, l_parameters))
 			db_handler.execute_change
-			post_execution
+
 		end
 
 	user (a_id: INTEGER_64): detachable CMS_USER
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			if db_handler.count = 1 then
 				Result := fetch_user
 			end
-			post_execution
+
 		end
 
 	user_by_name (a_name: READABLE_STRING_32): detachable CMS_USER
@@ -96,7 +96,7 @@ feature -- Basic Operations
 			if db_handler.count = 1 then
 				Result := fetch_user
 			end
-			post_execution
+
 		end
 
 
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			if db_handler.count = 1 then
 				Result := fetch_user
 			end
-			post_execution
+
 		end
 
 	user_salt (a_username: READABLE_STRING_32): detachable READABLE_STRING_32
@@ -131,7 +131,7 @@ feature -- Basic Operations
 					Result := l_salt.as_string_32
 				end
 			end
-			post_execution
+
 		end
 
 	count: INTEGER
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			if db_handler.count = 1 then
 				Result := db_handler.read_integer_32 (1)
 			end
-			post_execution
+
 		end
 
 feature -- New Object
@@ -189,18 +189,5 @@ feature -- Sql Queries
 		-- SQL Insert to add a new node.
 
 
-feature {NONE} -- Implementation
-
-	post_execution
-			-- Post database execution.
-		do
-			if db_handler.successful then
-				set_successful
-			else
-				if attached db_handler.last_error then
-					set_last_error_from_handler (db_handler.last_error)
-				end
-			end
-		end
 
 end

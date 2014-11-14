@@ -8,10 +8,15 @@ class
 
 inherit
 	CMS_MODULE
+		redefine
+			register_hooks
+		end
 
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
+
+	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	SHARED_EXECUTION_ENVIRONMENT
 		export
@@ -41,18 +46,6 @@ feature {NONE} -- Initialization
 			cache_duration := 0
 		end
 
-feature {CMS_SERVICE} -- Registration
-
-	service: detachable CMS_SERVICE
-
-	register (a_service: CMS_SERVICE)
-		do
-			service := a_service
-
-				-- FIXME: this code could/should be retarded to when it is really needed
-				-- then if the module is disabled, it won't take CPU+memory for nothing.
-		end
-
 feature -- Access: docs
 
 	root_dir: PATH
@@ -68,53 +61,183 @@ feature -- Access: docs
 			Result := cache_duration = 0
 		end
 
+feature -- Router
+
+	router (a_api: CMS_API): WSF_ROUTER
+			-- Router configuration.
+		do
+			create Result.make (0)
+			Result.handle_with_request_methods ("/about", create {WSF_URI_AGENT_HANDLER}.make (agent handle_about (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), Result.methods_head_get)
+		end
+
+feature -- Hooks configuration
+
+	register_hooks (a_response: CMS_RESPONSE)
+			-- Module hooks configuration.
+		do
+			auto_subscribe_to_hooks (a_response)
+			a_response.subscribe_to_block_hook (Current)
+		end
+
 feature -- Hooks
+
+	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
+			-- Hook execution on collection of menu contained by `a_menu_system'
+			-- for related response `a_response'.
+		do
+			debug ("refactor_fixme")
+				fixme ("add /about and /contribute to primary menu")
+			end
+		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"social_buttons", "popular_nodes", "eiffel_copyright">>
+			Result := <<"social_buttons", "updates", "popular_nodes", "libraries", "social_area", "eiffel_copyright">>
 		end
 
-	get_block_view (a_block_id: detachable READABLE_STRING_8; a_execution: CMS_EXECUTION)
-		local
-			l_menublock: CMS_MENU_BLOCK
-			l_content_block: CMS_CONTENT_BLOCK
-			s: STRING
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
-			-- FIXME: we should try to use template for that .. find a solution, maybe CMS_TEMPLATE_BLOCK ?
-			if a_block_id /= Void then
-				if a_block_id.is_case_insensitive_equal_general ("social_buttons") then
-					s := "[
-							<div class="social-plugin"><img src="/theme/images/img-plugin.jpg" width="248" height="88" alt="Image Description"></div>
-						]"
-					create l_content_block.make (a_block_id, Void, s, Void)
-					a_execution.add_block (l_content_block, "sidebar_second")
-				elseif a_block_id.is_case_insensitive_equal_general ("popular_nodes") then
-					s := "[
-							<nav class="widget popular">
-								<h2><a href="#">Popular</a></h2>
-								<ul>
-									<li><a href="#"><img src="/theme/images/ico6.png" width="24" height="25" alt="Image Description"> EiffelBase</a></li>
-									<li><a href="#"><img src="/theme/images/ico7.png" width="26" height="23" alt="Image Description"> EiffelVision 2</a></li>
-									<li><a href="#"><img src="/theme/images/ico8.png" width="24" height="24" alt="Image Description"> EiffelCOM</a></li>
-									<li><a href="#">EiffelNet</a></li>
-								</ul>
-							</nav>
-						]"
-					create l_content_block.make (a_block_id, Void, s, Void)
-					a_execution.add_block (l_content_block, "sidebar_second")
-				elseif a_block_id.is_case_insensitive_equal_general ("eiffel_copyright") then
-					s := "[
-							<ul class="copyrights">
-								<li><a href="#">Eiffel Language Community</a></li>
-								<li>&copy; Copyright 2014</li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Terms of use</a></li>
-							</ul>
-						]"
-					create l_content_block.make (a_block_id, Void, s, Void)
-					a_execution.add_block (l_content_block, "footer")
+			if a_block_id.is_case_insensitive_equal_general ("social_buttons") then
+				if
+					attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
+					l_type.same_string ("doc")
+				then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "sidebar_second")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("popular_nodes") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "sidebar_second")
 				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("social_area") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					l_tpl_block.set_is_raw (True)
+					a_response.add_block (l_tpl_block, "header")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("eiffel_copyright") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					l_tpl_block.set_is_raw (True)
+					a_response.add_block (l_tpl_block, "footer")
+				else
+					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("updates") then
+				if a_response.is_front then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "sidebar_second")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("libraries") then
+				if a_response.is_front then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "sidebar_second")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
+				end
+			end
+		end
+
+	handle_about (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			fixme ("Use CMS node and associated content for About link!")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("about", "optional_content_type")
+			r.set_title ("About")
+			r.set_main_content ("About Eiffel Programming Language...")
+			r.execute
+		end
+
+	handle_contribute (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			fixme ("Use CMS node and associated content for Contribute link!")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("contribute", "optional_content_type")
+			r.set_title ("Contribute")
+			r.set_main_content ("[
+							<section class="contribute-block">
+								<ul>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico1.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Libraries</h2>
+											<p>Detailed definitions behind all aspects of the Eiffel Language and Development Environment.</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico2.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Projects</h2>
+											<p>Step by step instructions on specific Eiffel features so that you can become proficient with them easily and quickly. </p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico3.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Tools</h2>
+											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico4.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Feature Requests</h2>
+											<p>Where to go for a general overview of Eiffel and some of its core principles and functionalities.</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span class="ico"><img src="/theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Forums</h2>
+											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
+										</a>
+									</li>
+								</ul>
+							</section>
+			]")
+			r.execute
+		end
+
+feature {NONE} -- Helpers
+
+	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
+			-- Smarty content block for `a_block_id'
+		local
+			p: detachable PATH
+			vals: CMS_VALUE_TABLE
+		do
+			create p.make_from_string ("templates")
+			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
+			p := a_response.module_resource_path (Current, p)
+			if p /= Void then
+				if attached p.entry as e then
+					create Result.make (a_block_id, Void, p.parent, e)
+				else
+					create Result.make (a_block_id, Void, p.parent, p)
 				end
 			end
 		end

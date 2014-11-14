@@ -10,17 +10,15 @@ class
 inherit
 	CMS_CUSTOM_SETUP
 		redefine
-			build_modules
+			initialize_modules
 		end
 
 create
-	default_create,
-	make,
-	make_from_file
+	make
 
 feature {NONE} -- Initialization		
 
-	build_modules
+	initialize_modules
 		local
 			m: CMS_MODULE
 		do

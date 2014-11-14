@@ -75,10 +75,10 @@ feature -- Access
 
 feature	-- Initialization
 
-	initialize_cms (a_root_dir: PATH)
+	initialize_cms (a_setup: CMS_SETUP)
 		do
-			Precursor (a_root_dir)
-			cms_service.map_uri_template ("/exit", agent handle_exit)
+			Precursor (a_setup)
+			cms_service.map_uri_template_agent_with_request_methods ("/exit", agent handle_exit, cms_service.router.methods_get)
 		end
 
 feature -- Execution

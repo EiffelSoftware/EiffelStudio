@@ -14,7 +14,8 @@
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
-		<library name="cms" location=".\library\cms\cms-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms-safe.ecf" readonly="false"/>		
+		<library name="cms_layout" location="$ISE_LIBRARY\unstable\library\web\cms\library\layout\layout-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

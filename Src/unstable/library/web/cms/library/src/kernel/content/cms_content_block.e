@@ -17,6 +17,8 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like name; a_title: like title; a_content: like content; a_format: like format)
+		require
+			a_name_not_blank: not a_name.is_whitespace
 		do
 			is_enabled := True
 			name := a_name
@@ -26,6 +28,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_raw (a_name: like name; a_title: like title; a_content: like content; a_format: like format)
+		require
+			a_name_not_blank: not a_name.is_whitespace
 		do
 			make (a_name, a_title, a_content, a_format)
 			set_is_raw (True)
@@ -52,6 +56,20 @@ feature -- Element change
 	set_is_raw (b: BOOLEAN)
 		do
 			is_raw := b
+		end
+
+	set_name (n: like name)
+			-- Set `name' to `n'.
+		require
+			not n.is_whitespace
+		do
+			name := n
+		end
+
+	set_title (a_title: like title)
+			-- Set `title' to `a_title'.
+		do
+			title := a_title
 		end
 
 feature -- Conversion

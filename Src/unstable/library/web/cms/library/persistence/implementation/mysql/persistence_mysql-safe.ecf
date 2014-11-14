@@ -9,16 +9,21 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
-
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="layout" location="..\..\..\layout\layout-safe.ecf"/>
-		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
+		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
 		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<cluster name="common" location="..\common\" recursive="true">
+			<file_rule>
+				<exclude>/database/database_connection_odbc.e</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="interface" location="..\..\interface\" recursive="true"/>
 		<cluster name="persistence_mysql" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
@@ -26,12 +31,5 @@
 				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="interface" location="..\..\interface\" recursive="true"/>
-		<cluster name="common" location="..\common\" recursive="true">
-			<file_rule>
-				<exclude>/database/database_connection_odbc.e</exclude>
-			</file_rule>
-		</cluster>			
-
 	</target>
 </system>

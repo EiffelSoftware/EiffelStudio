@@ -62,12 +62,12 @@ feature -- Conversion
 			debug ("refactor_fixme")
 				fixme ("Refactor HTML code to use the new Bootstrap theme template")
 			end
-			if attached {CMS_CONTENT_BLOCK} a_block as l_content_block and then l_content_block.is_raw then
+			if attached a_block.is_raw then
 				create s.make_empty
-				if attached l_content_block.title as l_title then
+				if attached a_block.title as l_title then
 					s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
 				end
-				s.append (l_content_block.to_html (Current))
+				s.append (a_block.to_html (Current))
 			else
 				create s.make_from_string ("<div class=%"block%" id=%"" + a_block.name + "%">")
 				if attached a_block.title as l_title then
@@ -80,6 +80,7 @@ feature -- Conversion
 			end
 			Result := s
 		end
+
 	page_html (page: CMS_HTML_PAGE): STRING_8
 			-- Render `page' as html.
 		deferred

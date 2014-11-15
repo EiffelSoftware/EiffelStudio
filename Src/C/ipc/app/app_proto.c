@@ -1788,9 +1788,9 @@ rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, i
 	/*
 	 * boxed expanded item referenced by hector address `a_obj' and `a_index' as offset
 	 */
+	rt_uint_ptr elem_size;
 
 	REQUIRE("is_special", RT_IS_SPECIAL(a_obj));
-	rt_uint_ptr elem_size;
 	if (a_index < 0) {
 		eraise ("index_large_enough", EN_RT_CHECK);
 	}

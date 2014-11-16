@@ -98,9 +98,6 @@ feature
 			prepared_statement: is_prepared
 		do
 			if is_ok then
-				db_spec.unset_catalog_flag(descriptor)
-			end
-			if is_ok then
 				db_spec.start_order (descriptor)
 			end
 			set_executed (True)

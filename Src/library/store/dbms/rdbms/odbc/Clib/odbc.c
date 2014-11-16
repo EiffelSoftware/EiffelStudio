@@ -585,19 +585,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 
 void odbc_start_order (void *con, int no_desc)
 {
-	short colNum = 0;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-
-	/* Added by Jacques. 5/14/98 */
-	SQLTCHAR     szCatalog[DB_REP_LEN], szSchema[DB_REP_LEN];
-	SQLTCHAR     szTableName[DB_REP_LEN], szColumnName[DB_REP_LEN];
-	SQLTCHAR     szTypeName[DB_REP_LEN];
-	SQLINTEGER  ColumnSize, BufferLength;
-	SQLSMALLINT DataType, DecimalDigits, NumPrecRadix, Nullable;
-
-	SQLLEN cbCatalog, cbSchema, cbTableName, cbColumnName;
-	SQLLEN cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
-	SQLLEN cbDecimalDigits, cbNumPrecRadix, cbNullable;
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
 			/* Process general ODBC SQL statements    */
@@ -2430,3 +2418,4 @@ rt_public EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
 	}
 	return value;
 }
+

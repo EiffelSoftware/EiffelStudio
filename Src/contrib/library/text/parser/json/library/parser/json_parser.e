@@ -166,6 +166,18 @@ feature -- Obsolete commands
 			end
 		end
 
+	parse_object: detachable JSON_OBJECT
+			-- Parse JSON data `representation'
+			-- start ::= object | array
+		obsolete
+			"Use `parse_content' and `parsed_json_value'  [nov/2014]."
+		do
+			parse_content
+			if is_parsed and then attached {JSON_OBJECT} parsed_json_value as jo then
+				Result := jo
+			end
+		end
+
 	parse: detachable JSON_VALUE
 			-- Next JSON value from current position on `representation'.
 		obsolete
@@ -197,7 +209,7 @@ feature {NONE} -- Implementation: parsing
 				c := actual
 				inspect c
 				when token_object_open then
-					Result := parse_object
+					Result := next_json_object
 				when token_double_quote then
 					Result := parse_string
 				when token_array_open then
@@ -231,7 +243,7 @@ feature {NONE} -- Implementation: parsing
 			is_parsed_implies_result_not_void: not has_error implies Result /= Void
 		end
 
-	parse_object: JSON_OBJECT
+	next_json_object: JSON_OBJECT
 			-- object
 			-- {}
 			-- {"key" : "value" [,]}

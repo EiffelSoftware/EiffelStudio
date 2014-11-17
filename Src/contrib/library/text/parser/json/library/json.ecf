@@ -9,20 +9,13 @@
 		</file_rule>
 		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" void_safety="none" syntax="standard" namespace="EJSON.Library">
 			<assertions/>
-			<warning name="export_class_missing" enabled="false"/>
-			<warning name="old_verbatim_strings" enabled="false"/>
-			<warning name="syntax" enabled="false"/>
-			<warning name="vjrv" enabled="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<cluster name="json" location=".\" recursive="true">
-			<file_rule>
-				<exclude>^/gobo$</exclude>
-				<exclude>^/kernel$</exclude>
-				<exclude>^/extras$</exclude>
-			</file_rule>
-			<cluster name="kernel" location=".\kernel\" recursive="true"/>
-			<cluster name="extras" location=".\extras\" recursive="true"/>
+		<cluster name="json" location=".\" >
+			<cluster name="json_kernel" location=".\kernel" recursive="true"/>
+			<cluster name="json_parser" location=".\parser" recursive="true"/>
+			<cluster name="json_utility" location=".\utility" recursive="true"/>
 		</cluster>
+		<cluster name="json_converter" location=".\converter" recursive="true"/>
 	</target>
 </system>

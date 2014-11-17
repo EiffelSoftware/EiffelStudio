@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="basic" uuid="5156B9EE-0436-42A3-BDA1-74710DF05A35">
+	<target name="basic">
+		<root class="BASIC" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="json" location="..\..\library\json-safe.ecf" readonly="false"/>
+		<cluster name="basic" location=".\"/>
+	</target>
+</system>

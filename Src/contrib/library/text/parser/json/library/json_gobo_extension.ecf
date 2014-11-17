@@ -12,6 +12,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="json" location="json.ecf" readonly="true"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<cluster name="json_gobo" location=".\gobo" recursive="true" />
+		<cluster name="json_gobo_converter" location=".\gobo_converter" recursive="true" />
 	</target>
 </system>

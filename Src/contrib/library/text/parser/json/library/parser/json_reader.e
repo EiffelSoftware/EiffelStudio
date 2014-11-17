@@ -12,22 +12,28 @@ create
 
 feature {NONE} -- Initialization
 
-    make (a_json: STRING)
-            -- Initialize Reader
-        do
-            set_representation (a_json)
-        end
+	make (a_json: STRING)
+			-- Initialize Reader
+		do
+			set_representation (a_json)
+		end
 
 feature -- Commands
 
-	 set_representation (a_json: STRING)
-            -- Set `representation'.
-        do
-        	a_json.left_adjust
-        	a_json.right_adjust
+	reset
+			-- Reset reader
+		do
+			index := 1
+		end
+
+	set_representation (a_json: STRING)
+			-- Set `representation'.
+		do
+			a_json.left_adjust
+			a_json.right_adjust
 			representation := a_json
-            index := 1
-        end
+			reset
+		end
 
 	read: CHARACTER
 			-- Read character
@@ -65,7 +71,7 @@ feature -- Commands
 			from
 				c := actual
 			until
-				(c /= ' ' and c /= '%N' and c /= '%R' and c /= '%U' and c /= '%T' ) or not has_next
+				(c /= ' ' and c /= '%N' and c /= '%R' and c /= '%U' and c /= '%T') or not has_next
 			loop
 				next
 				c := actual
@@ -115,4 +121,7 @@ feature {NONE} -- Implementation
 invariant
 	representation_not_void: representation /= Void
 
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

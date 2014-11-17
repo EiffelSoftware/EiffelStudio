@@ -1,53 +1,142 @@
 note
-
 	description: "Parse serialized JSON data"
-	author: "jvelilla"
-	date: "2008/08/24"
-	revision: "Revision 0.1"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	JSON_PARSER
 
 inherit
 	JSON_READER
+		rename
+			make as make_reader,
+			reset as reset_reader
+		end
+
 	JSON_TOKENS
 
 create
+	make_with_string,
 	make_parser
 
 feature {NONE} -- Initialize
 
+	make_with_string (a_content: STRING)
+			-- Initialize parser with JSON content `a_content'.
+		require
+			a_content_not_empty: a_content /= Void and then not a_content.is_empty
+		do
+			create errors.make
+			make_reader (a_content)
+			reset
+		end
+
 	make_parser (a_json: STRING)
 			-- Initialize.
-		require
-			json_not_empty: a_json /= Void and then not a_json.is_empty
+		obsolete
+			"Use `make_with_string' [sept/2014]."
 		do
-			make (a_json)
-			is_parsed := True
-			create errors.make
+			make_with_string (a_json)
 		end
 
 feature -- Status report
 
 	is_parsed: BOOLEAN
-			-- Is parsed?
+			-- Is parsed ?
+
+	is_valid: BOOLEAN
+			-- Is valid?
+		do
+			Result := not has_error
+		end
+
+	has_error: BOOLEAN
+			-- Has error?
 
 	errors: LINKED_LIST [STRING]
 			-- Current errors
 
-	current_errors: STRING
-			-- Current errors as string
+	errors_as_string: STRING
+			-- String representation of `errors'.
 		do
 			create Result.make_empty
-			from
-				errors.start
-			until
-				errors.after
+			across
+				errors as ic
 			loop
-				Result.append_string (errors.item + "%N")
-				errors.forth
+				Result.append_string (ic.item)
+				Result.append_character ('%N')
 			end
 		end
+
+	current_errors: STRING
+			-- Current errors as string
+		obsolete
+			"USe errors_as_string [sept/2014]"
+		do
+			Result := errors_as_string
+		end
+
+feature -- Access
+
+	parsed_json_value: detachable JSON_VALUE
+			-- Parsed json value if any.
+		require
+			is_parsed: is_parsed
+		attribute
+		ensure
+			attached_result_if_valid: is_valid implies Result /= Void
+		end
+
+	parsed_json_object: detachable JSON_OBJECT
+			-- parsed json value as a JSON_OBJECT if it is an object.
+		require
+			is_parsed: is_parsed
+		do
+			if attached {JSON_OBJECT} parsed_json_value as j_object then
+				Result := j_object
+			end
+		end
+
+	parsed_json_array: detachable JSON_ARRAY
+			-- parsed json value as a JSON_OBJECT if it is an array.
+		require
+			is_parsed: is_parsed
+		do
+			if attached {JSON_ARRAY} parsed_json_value as j_array then
+				Result := j_array
+			end
+		end
+
+feature -- Commands
+
+	reset
+			-- Reset parsing values.
+		do
+			parsed_json_value := Void
+			errors.wipe_out
+			has_error := False
+			is_parsed := False
+		end
+
+	parse_content
+			-- Parse JSON content `representation'.
+			-- start ::= object | array
+		do
+			reset
+			reset_reader
+
+			if is_valid_start_symbol then
+				parsed_json_value := next_json_value
+				if extra_elements then
+					report_error ("Remaining element outside the main json value!")
+				end
+			else
+				report_error ("Syntax error unexpected token, expecting `{' or `['")
+			end
+			is_parsed := is_valid
+		end
+
 
 feature -- Element change
 
@@ -56,43 +145,65 @@ feature -- Element change
 		require
 			e_not_void: e /= Void
 		do
+			has_error := True
 			errors.force (e)
+		ensure
+			has_error: has_error
+			is_not_valid: not is_valid
 		end
 
-feature -- Commands
+feature -- Obsolete commands		
 
 	parse_json: detachable JSON_VALUE
-		    -- Parse JSON data `representation'
-		    -- start ::= object | array
+			-- Parse JSON data `representation'
+			-- start ::= object | array
+		obsolete
+			"Use `parse_content' and `parsed_json_value'  [sept/2014]."
 		do
-		   	if is_valid_start_symbol then
-		   	    Result := parse
-		        if extra_elements then
-		            is_parsed := False
-		        end
-		    else
-		        is_parsed := False
-		        report_error ("Syntax error unexpected token, expecting `{' or `['")
-		    end
+			parse_content
+			if is_parsed then
+				Result := parsed_json_value
+			end
 		end
 
 	parse: detachable JSON_VALUE
-			-- Parse JSON data `representation'
+			-- Next JSON value from current position on `representation'.
+		obsolete
+			"Use restricted `next_parsed_json_value' [sept/2014]."
+		do
+			Result := next_parsed_json_value
+			is_parsed := is_valid
+		end
+
+feature {JSON_PARSER_ACCESS} -- Obsolete commands: restricted area		
+
+	next_parsed_json_value: detachable JSON_VALUE
+			-- Return next json value from current position.
+			--| this does not call `reset_reader'.
+		do
+			reset
+			Result := next_json_value
+		end
+
+feature {NONE} -- Implementation: parsing
+
+	next_json_value: detachable JSON_VALUE
+			-- Next JSON value from current position on `representation'.
 		local
 			c: CHARACTER
 		do
-			if is_parsed then
+			if not has_error then
 				skip_white_spaces
 				c := actual
 				inspect c
-				when j_OBJECT_OPEN then
+				when token_object_open then
 					Result := parse_object
-				when j_STRING then
+				when token_double_quote then
 					Result := parse_string
-				when j_ARRAY_OPEN then
+				when token_array_open then
 					Result := parse_array
 				else
-					if c.is_digit or c = j_MINUS  then
+					if c.is_digit or c = token_minus then
 						Result := parse_number
 					elseif is_null then
 						Result := create {JSON_NULL}
@@ -100,25 +211,24 @@ feature -- Commands
 						next
 						next
 					elseif is_true then
-						Result := create {JSON_BOOLEAN}.make_boolean (True)
+						Result := create {JSON_BOOLEAN}.make_true
 						next
 						next
 						next
 					elseif is_false then
-						Result := create {JSON_BOOLEAN}.make_boolean (False)
+						Result := create {JSON_BOOLEAN}.make_false
 						next
 						next
 						next
 						next
 					else
-						is_parsed := False
 						report_error ("JSON is not well formed in parse")
 						Result := Void
 					end
 				end
 			end
 		ensure
-			is_parsed_implies_result_not_void: is_parsed implies Result /= Void
+			is_parsed_implies_result_not_void: not has_error implies Result /= Void
 		end
 
 	parse_object: JSON_OBJECT
@@ -131,44 +241,45 @@ feature -- Commands
 			l_value: detachable JSON_VALUE
 		do
 			create Result.make
-			-- check if is an empty object {}
+				--| check if is an empty object {}
 			next
 			skip_white_spaces
-			if actual = j_OBJECT_CLOSE then
-				--is an empty object
+			if actual = token_object_close then
+					--| is an empty object
 			else
-				-- a complex object {"key" : "value"}
+					--| a complex object {"key" : "value"}
 				previous
-				from has_more := True until not has_more loop
+				from
+					has_more := True
+				until
+					not has_more
+				loop
 					next
 					skip_white_spaces
 					l_json_string := parse_string
 					next
 					skip_white_spaces
-					if actual = ':' then
+					if actual = token_colon then --| token_colon = ':'
 						next
 						skip_white_spaces
 					else
-						is_parsed := False
 						report_error ("%N Input string is a not well formed JSON, expected: : found: " + actual.out)
 						has_more := False
 					end
-
-					l_value := parse
-					if is_parsed and then (l_value /= Void and l_json_string /= Void) then
+					l_value := next_json_value
+					if not has_error and then (l_value /= Void and l_json_string /= Void) then
 						Result.put (l_value, l_json_string)
 						next
 						skip_white_spaces
-						if actual = j_OBJECT_CLOSE then
+						if actual = token_object_close then
 							has_more := False
-						elseif actual /= ',' then
+						elseif actual /= token_comma then
 							has_more := False
-							is_parsed := False
 							report_error ("JSON Object syntactically malformed expected , found: [" + actual.out + "]")
 						end
 					else
 						has_more := False
-						-- explain the error
+							-- explain the error
 					end
 				end
 			end
@@ -183,7 +294,7 @@ feature -- Commands
 			c: like actual
 		do
 			create l_json_string.make_empty
-			if actual = j_STRING then
+			if actual = token_double_quote then
 				from
 					has_more := True
 				until
@@ -191,9 +302,9 @@ feature -- Commands
 				loop
 					next
 					c := actual
-					if c = j_STRING then
+					if c = token_double_quote then
 						has_more := False
-					elseif c = '%H' then
+					elseif c = '%H' then -- '%H' = '\' = reverse solidus
 						next
 						c := actual
 						if c = 'u' then
@@ -204,12 +315,10 @@ feature -- Commands
 								l_json_string.append (l_unicode)
 							else
 								has_more := False
-								is_parsed := False
 								report_error ("Input String is not well formed JSON, expected a Unicode value, found [" + c.out + " ]")
 							end
 						elseif (not is_special_character (c) and not is_special_control (c)) or c = '%N' then
 							has_more := False
-							is_parsed := False
 							report_error ("Input String is not well formed JSON, found [" + c.out + " ]")
 						else
 							l_json_string.append_character ('\')
@@ -218,14 +327,13 @@ feature -- Commands
 					else
 						if is_special_character (c) and c /= '/' then
 							has_more := False
-							is_parsed := False
 							report_error ("Input String is not well formed JSON, found [" + c.out + " ]")
 						else
 							l_json_string.append_character (c)
 						end
 					end
 				end
-				create Result.make_with_escaped_json (l_json_string)
+				create Result.make_from_escaped_json_string (l_json_string)
 			else
 				Result := Void
 			end
@@ -240,12 +348,12 @@ feature -- Commands
 			l_value: detachable JSON_VALUE
 			c: like actual
 		do
-			create Result.make_array
-			--check if is an empty array []
+			create Result.make_empty
+				-- check if is an empty array []
 			next
 			skip_white_spaces
-			if actual = j_array_close then
-				--is an empty array
+			if actual = token_array_close then
+					-- is an empty array
 			else
 				previous
 				from
@@ -255,17 +363,16 @@ feature -- Commands
 				loop
 					next
 					skip_white_spaces
-					l_value := parse
-					if is_parsed and then l_value /= Void then
+					l_value := next_json_value
+					if not has_error and then l_value /= Void then
 						Result.add (l_value)
 						next
 						skip_white_spaces
 						c := actual
-						if c = j_ARRAY_CLOSE then
+						if c = token_array_close then
 							flag := False
- 						elseif c /= ',' then
+						elseif c /= token_comma then
 							flag := False
-							is_parsed := False
 							report_error ("Array is not well formed JSON,  found [" + c.out + " ]")
 						end
 					else
@@ -286,7 +393,6 @@ feature -- Commands
 		do
 			create sb.make_empty
 			sb.append_character (actual)
-
 			from
 				flag := True
 			until
@@ -294,16 +400,13 @@ feature -- Commands
 			loop
 				next
 				c := actual
-				if not has_next or is_close_token (c)
-					or c = ',' or c = '%N' or c = '%R'
-				then
+				if not has_next or is_close_token (c) or c = token_comma or c = '%N' or c = '%R' then
 					flag := False
 					previous
 				else
 					sb.append_character (c)
 				end
 			end
-
 			if is_valid_number (sb) then
 				if sb.is_integer then
 					create Result.make_integer (sb.to_integer)
@@ -312,8 +415,7 @@ feature -- Commands
 					create Result.make_real (sb.to_double)
 				end
 			else
-				is_parsed := False
-				report_error ("Expected a number, found: [ " + sb  + " ]")
+				report_error ("Expected a number, found: [ " + sb + " ]")
 			end
 		end
 
@@ -324,7 +426,7 @@ feature -- Commands
 			l_string: STRING
 		do
 			l_null := null_id
-			l_string := json_substring (index,index + l_null.count - 1)
+			l_string := json_substring (index, index + l_null.count - 1)
 			if l_string.is_equal (l_null) then
 				Result := True
 			end
@@ -350,14 +452,14 @@ feature -- Commands
 			l_string: STRING
 		do
 			l_true := true_id
-			l_string := json_substring (index,index + l_true.count - 1)
+			l_string := json_substring (index, index + l_true.count - 1)
 			if l_string.is_equal (l_true) then
 				Result := True
 			end
 		end
 
 	read_unicode: STRING
-			-- Read Unicode and return value
+			-- Read unicode and return value.
 		local
 			i: INTEGER
 		do
@@ -376,12 +478,12 @@ feature -- Commands
 feature {NONE} -- Implementation
 
 	is_valid_number (a_number: STRING): BOOLEAN
-            -- is 'a_number' a valid number based on this regular expression
-            -- "-?(?: 0|[1-9]\d+)(?: \.\d+)?(?: [eE][+-]?\d+)?\b"?
+			-- is 'a_number' a valid number based on this regular expression
+			-- "-?(?: 0|[1-9]\d+)(?: \.\d+)?(?: [eE][+-]?\d+)?\b"?
 		local
 			s: detachable STRING
 			c: CHARACTER
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			create s.make_empty
 			n := a_number.count
@@ -390,34 +492,52 @@ feature {NONE} -- Implementation
 			else
 				Result := True
 				i := 1
-				--| "-?"
-				c := a_number[i]
-				if c = '-' then
-					s.extend (c); i := i + 1; c := a_number[i]
+					--| "-?"
+				c := a_number [i]
+				if c = token_minus then
+					s.extend (c)
+					i := i + 1
+					c := a_number [i]
 				end
-				--| "0|[1-9]\d*
+					--| "0|[1-9]\d*
 				if c.is_digit then
 					if c = '0' then
-						--| "0"
-						s.extend (c); i := i + 1; c := a_number[i]
+							--| "0"
+						s.extend (c)
+						i := i + 1
+						c := a_number [i]
 					else
-						--| "[1-9]"
-						s.extend (c); i := i + 1; c := a_number[i]
-						--| "\d*"
-						from until i > n or not c.is_digit loop
-							s.extend (c); i := i + 1; c := a_number[i]
+							--| "[1-9]"
+						s.extend (c)
+						i := i + 1
+						c := a_number [i]
+							--| "\d*"
+						from
+						until
+							i > n or not c.is_digit
+						loop
+							s.extend (c)
+							i := i + 1
+							c := a_number [i]
 						end
 					end
 				end
 			end
 			if Result then
-					--| "(\.\d+)?"			
-				if c = '.' then
-					--| "\.\d+"  =  "\.\d\d*"
-					s.extend (c); i := i + 1; c := a_number[i]
+					--| "(\.\d+)?"
+				if c = token_dot then
+						--| "\.\d+"  =  "\.\d\d*"
+					s.extend (c)
+					i := i + 1
+					c := a_number [i]
 					if c.is_digit then
-						from until i > n or not c.is_digit loop
-							s.extend (c); i := i + 1; c := a_number[i]
+						from
+						until
+							i > n or not c.is_digit
+						loop
+							s.extend (c)
+							i := i + 1
+							c := a_number [i]
 						end
 					else
 						Result := False --| expecting digit
@@ -425,48 +545,57 @@ feature {NONE} -- Implementation
 				end
 			end
 			if Result then --| "(?:[eE][+-]?\d+)?\b"
-				if c = 'e' or c = 'E' then
-					--| "[eE][+-]?\d+"
-					s.extend (c); i := i + 1; c := a_number[i]
-					if c = '+' or c = '-' then
- 							s.extend (c); i := i + 1; c := a_number[i]
+				if is_exp_token (c) then
+						--| "[eE][+-]?\d+"
+					s.extend (c)
+					i := i + 1
+					c := a_number [i]
+					if c = token_plus or c = token_minus then
+						s.extend (c)
+						i := i + 1
+						c := a_number [i]
 					end
 					if c.is_digit then
-						from until i > n or not c.is_digit loop
-							s.extend (c); i := i + 1; c := a_number[i]
+						from
+						until
+							i > n or not c.is_digit
+						loop
+							s.extend (c)
+							i := i + 1
+							c := a_number [i]
 						end
 					else
-						Result := False --| expecting digit							
+						Result := False --| expecting digit
 					end
 				end
 			end
 			if Result then --| "\b"
-				from until i > n or not c.is_space loop
-					s.extend (c); i := i + 1; c := a_number[i]
+				from
+				until
+					i > n or not c.is_space
+				loop
+					s.extend (c)
+					i := i + 1
+					c := a_number [i]
 				end
 				Result := i > n and then s.same_string (a_number)
 			end
 		end
 
 	is_valid_unicode (a_unicode: STRING): BOOLEAN
-			-- is 'a_unicode' a valid Unicode based on this regular expression
-			-- "\\u[0-9a-fA-F]{4}"
+			-- is 'a_unicode' a valid unicode based on the regular expression "\\u[0-9a-fA-F]{4}" .
 		local
 			i: INTEGER
 		do
-			if
-				a_unicode.count = 6 and then
-				a_unicode[1] = '\' and then
-				a_unicode[2] = 'u'
-			then
+			if a_unicode.count = 6 and then a_unicode [1] = '\' and then a_unicode [2] = 'u' then
 				from
 					Result := True
 					i := 3
 				until
 					i > 6 or Result = False
 				loop
-					inspect a_unicode[i]
-					when '0'..'9', 'a'..'f', 'A'..'F'  then
+					inspect a_unicode [i]
+					when '0'..'9', 'a'..'f', 'A'..'F' then
 					else
 						Result := False
 					end
@@ -493,11 +622,11 @@ feature {NONE} -- Implementation
 			Result := has_next
 		end
 
-	is_valid_start_symbol : BOOLEAN
+	is_valid_start_symbol: BOOLEAN
 			-- expecting `{' or `[' as start symbol
 		do
 			if attached representation as s and then s.count > 0 then
-				Result := s[1] = '{' or s[1] = '['
+				Result := s [1] = token_object_open or s [1] = token_array_open
 			end
 		end
 
@@ -509,5 +638,7 @@ feature {NONE} -- Constants
 
 	null_id: STRING = "null"
 
-
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

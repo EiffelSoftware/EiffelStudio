@@ -1,74 +1,72 @@
-class TEST_DS
+note
+	description: "Linked list and hash table converters test."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	TEST_DS
 
 inherit
-    SHARED_EJSON
-	  	rename default_create as shared_default_create end
-	EQA_TEST_SET
-		select default_create end
 
+	SHARED_EJSON
+		undefine
+			default_create
+		end
+
+	EQA_TEST_SET
 
 feature -- Test
 
-    test_linked_list_converter
-        local
-            jc: JSON_LINKED_LIST_CONVERTER
-            l: LINKED_LIST [STRING]
-            l2: detachable LINKED_LIST [detachable ANY]
-            s: STRING
-            jv: detachable JSON_VALUE
-        do
-            create jc.make
-            json.add_converter (jc)
-            create l.make
-            s := "foo"
-            l.force (s)
-            s := "bar"
-            l.force (s)
-            jv := json.value (l)
-            assert ("jv /= Void", jv /= Void)
-            if attached jv as l_jv then
-	            s := jv.representation
-	            l2 ?= json.object (jv, "LINKED_LIST")
-	            assert ("l2 /= Void", l2 /= Void)
-            end
-        end
+	test_linked_list_converter
+			-- Convert a linked list to a json value and
+			-- convert this one to a linked list.
+		local
+			l: LINKED_LIST [STRING]
+			s: STRING
+		do
+			create l.make
+			l.force ("foo")
+			l.force ("bar")
+			if attached json.value (l) as l_value then
+				s := l_value.representation
+				assert ("JSON array converted to LINKED_LIST", attached {LINKED_LIST [detachable ANY]} json.object (l_value, "LINKED_LIST"))
+			else
+				assert ("LINKED_LIST converted to a JSON value", False)
+			end
+		end
 
-    test_hash_table_converter
-        local
-            tc: JSON_HASH_TABLE_CONVERTER
-            t: HASH_TABLE [STRING, STRING]
-            t2: detachable HASH_TABLE [ANY, HASHABLE]
-            s: STRING
-            ucs_key, ucs_value: detachable STRING_32
-            jv: detachable JSON_VALUE
-        do
-            create tc.make
-            json.add_converter (tc)
-            create t.make (2)
-            t.put ("foo", "1")
-            t.put ("bar", "2")
-            jv := json.value (t)
-            assert ("jv /= Void", jv /= Void)
-            if attached jv as l_jv then
-	            s := l_jv.representation
-	            t2 ?= json.object (l_jv, "HASH_TABLE")
-	            assert ("t2 /= Void", t2 /= Void)
-	        end
-            create ucs_key.make_from_string ("1")
-            if attached t2 as l_t2 then
-	            ucs_value ?= t2 @ ucs_key
-	            assert ("ucs_value /= Void", ucs_value /= Void)
-	            if attached ucs_value as l_ucs_value then
-	            	assert ("ucs_value.string.is_equal (%"foo%")", l_ucs_value.string.is_equal ("foo"))
-	            end
-	            create ucs_key.make_from_string ("2")
-	            ucs_value ?= t2 @ ucs_key
-	            assert ("ucs_value /= Void", ucs_value /= Void)
-	            if attached ucs_value as l_ucs_value then
-	            	assert ("ucs_value.string.is_equal (%"bar%")", l_ucs_value.string.is_equal ("bar"))
-	            end
-
-        	end
-        end
+	test_hash_table_converter
+			-- Convert a hash table to a json value and
+			-- convert this one to a hash table.
+		local
+			t: HASH_TABLE [STRING, STRING]
+			s: STRING
+			l_ucs_key: detachable STRING_32
+		do
+			create t.make (2)
+			t.put ("foo", "1")
+			t.put ("bar", "2")
+			if attached json.value (t) as l_value then
+				s := l_value.representation
+				if attached {HASH_TABLE [ANY, HASHABLE]} json.object (l_value, "HASH_TABLE") as t2 then
+					create l_ucs_key.make_from_string ("1")
+					if attached {STRING_32} t2 [l_ucs_key] as l_ucs_value then
+						assert ("ucs_value.string.is_equal (%"foo%")", l_ucs_value.same_string_general ("foo"))
+					else
+						assert ("ucs_value /= Void", False)
+					end
+					create l_ucs_key.make_from_string ("2")
+					if attached {STRING_32} t2 [l_ucs_key] as l_ucs_value then
+						assert ("ucs_value.string.is_equal (%"bar%")", l_ucs_value.same_string_general ("bar"))
+					else
+						assert ("ucs_value /= Void", False)
+					end
+				else
+					assert ("JSON object converted to HASH_TABLE", False);
+				end
+			else
+				assert ("HASH_TABLE converted to a JSON value", False)
+			end
+		end
 
 end -- class TEST_DS

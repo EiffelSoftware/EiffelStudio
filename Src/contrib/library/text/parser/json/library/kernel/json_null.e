@@ -1,47 +1,51 @@
 note
-    description: "JSON Null Values"
-    author: "Javier Velilla"
-    date: "2008/08/24"
-    revision: "Revision 0.1"
+	description: "JSON Null Values"
+	author: "Javier Velilla"
+	date: "2008/08/24"
+	revision: "Revision 0.1"
 
 class
-    JSON_NULL
+	JSON_NULL
 
 inherit
-    JSON_VALUE
+
+	JSON_VALUE
 
 feature --Access
 
-    hash_code: INTEGER
-            -- Hash code value
-        do
-            Result := null_value.hash_code
-        end
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := null_value.hash_code
+		end
 
-    representation: STRING
-        do
-            Result := "null"
-        end
-        
+	representation: STRING
+		do
+			Result := "null"
+		end
+
 feature -- Visitor pattern
 
-    accept (a_visitor: JSON_VISITOR)
-            -- Accept `a_visitor'.
-            -- (Call `visit_element_a' procedure on `a_visitor'.)
-        do
-            a_visitor.visit_json_null (Current)
-        end
+	accept (a_visitor: JSON_VISITOR)
+			-- Accept `a_visitor'.
+			-- (Call `visit_element_a' procedure on `a_visitor'.)
+		do
+			a_visitor.visit_json_null (Current)
+		end
 
 feature -- Status report
 
-    debug_output: STRING
-            -- String that should be displayed in debugger to represent `Current'.
-        do
-            Result := null_value
-        end
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := null_value
+		end
 
-feature {NONE}-- Implementation        
+feature {NONE} -- Implementation
 
-    null_value: STRING = "null"
+	null_value: STRING = "null"
 
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

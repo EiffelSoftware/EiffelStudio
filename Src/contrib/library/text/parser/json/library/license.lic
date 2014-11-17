@@ -1,0 +1,4 @@
+${NOTE_KEYWORD}
+	copyright: "2010-${YEAR}, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
+

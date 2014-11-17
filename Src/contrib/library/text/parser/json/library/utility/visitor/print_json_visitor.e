@@ -8,9 +8,11 @@ class
 	PRINT_JSON_VISITOR
 
 inherit
+
 	JSON_VISITOR
 
-create make
+create
+	make
 
 feature -- Initialization
 
@@ -23,7 +25,7 @@ feature -- Initialization
 feature -- Access
 
 	to_json: STRING
-		-- JSON representation
+			-- JSON representation
 
 feature -- Visitor Pattern
 
@@ -33,7 +35,7 @@ feature -- Visitor Pattern
 			value: JSON_VALUE
 			l_json_array: ARRAYED_LIST [JSON_VALUE]
 		do
-			l_json_array:=a_json_array.array_representation
+			l_json_array := a_json_array.array_representation
 			to_json.append ("[")
 			from
 				l_json_array.start
@@ -44,7 +46,7 @@ feature -- Visitor Pattern
 				value.accept (Current)
 				l_json_array.forth
 				if not l_json_array.after then
-					to_json.append(",")
+					to_json.append (",")
 				end
 			end
 			to_json.append ("]")
@@ -71,7 +73,7 @@ feature -- Visitor Pattern
 	visit_json_object (a_json_object: JSON_OBJECT)
 			-- Visit `a_json_object'.
 		local
-			l_pairs: HASH_TABLE[JSON_VALUE,JSON_STRING]
+			l_pairs: HASH_TABLE [JSON_VALUE, JSON_STRING]
 		do
 			l_pairs := a_json_object.map_representation
 			to_json.append ("{")
@@ -91,7 +93,7 @@ feature -- Visitor Pattern
 			to_json.append ("}")
 		end
 
-    visit_json_string (a_json_string: JSON_STRING)
+	visit_json_string (a_json_string: JSON_STRING)
 			-- Visit `a_json_string'.
 		do
 			to_json.append ("%"")
@@ -99,4 +101,7 @@ feature -- Visitor Pattern
 			to_json.append ("%"")
 		end
 
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

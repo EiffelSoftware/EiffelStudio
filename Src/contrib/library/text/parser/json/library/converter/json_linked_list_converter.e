@@ -5,20 +5,25 @@ note
 	revision: "$Revision$"
 	file: "$HeadURL: $"
 
-class JSON_LINKED_LIST_CONVERTER
+class
+	JSON_LINKED_LIST_CONVERTER
+
+obsolete
+	"This JSON converter design has issues [Sept/2014]."
 
 inherit
-    JSON_LIST_CONVERTER
+
+	JSON_LIST_CONVERTER
 		redefine
 			object
 		end
 
 create
-    make
+	make
 
 feature -- Access
 
-    object: LINKED_LIST [detachable ANY]
+	object: LINKED_LIST [detachable ANY]
 
 feature {NONE} -- Factory
 
@@ -27,4 +32,7 @@ feature {NONE} -- Factory
 			create Result.make
 		end
 
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end -- class JSON_LINKED_LIST_CONVERTER

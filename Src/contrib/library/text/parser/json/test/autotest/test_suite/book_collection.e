@@ -1,80 +1,82 @@
-class BOOK_COLLECTION
+class
+	BOOK_COLLECTION
 
 create
-    make
+	make
 
 feature {NONE} -- Initialization
 
-    make (a_name: STRING_32)
-        do
-            set_name (a_name)
-            create book_index.make (10)
-        end
+	make (a_name: STRING_32)
+			-- Create a book collection with `a_name' as `name'.
+		do
+			set_name (a_name)
+			create book_index.make (10)
+		ensure
+			name_set: name = a_name
+		end
 
 feature -- Access
 
-    name: STRING_32
+	name: STRING_32
+			-- Name.
 
-    books: LIST [BOOK]
-        do
-            from
-                create {LINKED_LIST [BOOK]} Result.make
-				book_index.start
-            until
-                book_index.after
-            loop
-                Result.append (book_index.item_for_iteration)
-                book_index.forth
-            end
-        end
+	books: LIST [BOOK]
+			-- collection of book.
+		do
+			create {LINKED_LIST [BOOK]} Result.make
+			across
+				book_index as it
+			loop
+				Result.append (it.item)
+			end
+		end
 
-    books_by_author (an_author: STRING_32): detachable LIST [BOOK]
-        do
-            if book_index.has (an_author) then
-                Result := book_index @ an_author
-            else
-                create {LINKED_LIST [BOOK]} Result.make
-            end
-        end
+	books_by_author (a_author: STRING_32): LIST [BOOK]
+			-- Books wrote by `a_author' in this collection.
+		do
+			if attached book_index [a_author] as l_result then
+				Result := l_result
+			else
+				create {LINKED_LIST [BOOK]} Result.make
+			end
+		end
 
-feature -- Status setting
+feature -- Change
 
-    set_name (a_name: STRING_32)
-        do
-            name := a_name
-        end
+	set_name (a_name: STRING_32)
+			-- Set `name' with `a_name'.
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
 
-    add_book (a_book: BOOK)
-        local
-            l: detachable LIST [BOOK]
-        do
-            if book_index.has (a_book.author.name) then
-                l := book_index.at ( a_book.author.name )
-            else
-                create {LINKED_LIST [BOOK]} l.make
-                book_index.put (l, a_book.author.name)
-            end
-            if attached l as la then
-           	 	la.force (a_book)
-            end
+	add_book (a_book: BOOK)
+			-- Extend collection with `a_book'.
+		local
+			l: detachable LIST [BOOK]
+		do
+			l := book_index.at (a_book.author.name)
+			if l = Void then
+				create {LINKED_LIST [BOOK]} l.make
+				book_index.put (l, a_book.author.name)
+			end
+			l.force (a_book)
+		end
 
-        end
-
-    add_books (book_list: like books)
-
-        do
-            from
-                book_list.start
-            until
-                book_list.after
-            loop
-                add_book (book_list.item)
-                book_list.forth
-            end
-        end
+	add_books (book_list: like books)
+			-- Append collection with `book_list'.
+		do
+			across
+				book_list as it
+			loop
+				add_book (it.item)
+			end
+		end
 
 feature {NONE} -- Implementation
 
-    book_index: HASH_TABLE [LIST [BOOK], STRING_32]
+	book_index: HASH_TABLE [LIST [BOOK], STRING_32]
+			-- Association of author name and its books.
 
 end -- class BOOK_COLLECTION

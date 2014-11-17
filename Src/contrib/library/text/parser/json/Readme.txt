@@ -1,21 +1,26 @@
 ﻿Readme file for eJSON
 =====================
 
-team: "Javier Velilla,Jocelyn Fiat, Paul Cohen"
-date: "$Date$"
-revision: "$Revision$"
+team: "Javier Velilla, Jocelyn Fiat"
+previous contributors: "Paul Cohen"
+date: "2014-nov-17"
 
 1. Introduction
 ---------------
 
 eJSON stands for Eiffel JSON library and is a small Eiffel library for dealing
-with the JSON format. The objective of the library is to provide two basic
-features Eiffel2JSON and JSON2Eiffel.
+with the JSON format. This library provides a JSON parser and visitors,
+including a pretty printer.
+
+The converters part is now obsolete and not recommended (remember: the
+objective of converters were to provide two basic features Eiffel2JSON and
+JSON2Eiffel). There will be a new design for converters as a standalone
+library on top of Current json library.
 
 2. Legal stuff
 --------------
 
-eJSON is copyrighted by the author Javier Velilla and others. It is licensed
+eJSON is copyrighted by the author Javier Velilla, Jocelyn Fiat and others. It is licensed
 under the MIT License. See the file license.txt in the same directory as this
 readme file.
 
@@ -46,18 +51,18 @@ Currently the only documentation on eJSON is available at:
 
 EJSON requires that you have:
 
-1. Gobo 3.9 installed or later
-2. One of the following compiler combinations installed:
-   * ISE Eiffel 6.5 or later.
+1. One of the following compiler combinations installed:
+   * ISE Eiffel 13.11 or later.
    * gec [try to test]
-   * tecomp [try to test]
 
 eJSON probably works fine with other versions of the above compilers.
 There are no known platform dependencies (Windows, Linux).
 
 To install eJSON simply extract the ejson-X.Y.Z.zip file to some appropriate
 place on your hard disk. There are no requirements on environment variables or
-registry variables.
+registry variables. 
+Note eJSON is also delivered within EiffelStudio release, under
+$ISE_LIBRARY/contrib/library/text/parser/json
 
 To verify that everything works you should compile the example programs and/or
 the test program.
@@ -70,18 +75,18 @@ installation.
 
 Directory   Description
 ---------   -----------
-doc         Contains the eJSON.pdf documentation file.
-examples    Contains the two example programs.
-ejson       Contains the actual eJSON library classes.
-test        Contains a test program for eJSON.
+doc         Contains documentation file.
+examples    Contains example codes.
+library     Contains the actual eJSON library classes.
+test        Contains test suite for eJSON.
 
 7. Contacting the Team
 ----------------------
 
 Contact the team: 
 
+ https://github.com/eiffelhub/json/issues
  Javier Velilla «javier.hector@gmail.com»
- Paul Cohen «paco@seibostudios.se»
  Jocelyn Fiat «jfiat@eiffel.com»
 
 8. Releases
@@ -92,6 +97,14 @@ history.txt.
 
 Version Date            Description
 ------- ----            -----------
+0.6.0   2014-11-17      Fixed various issue with parsing string (such as \t and related),
+						Implemented escaping of slash '/' only in case of '</' to avoid 
+						  potential issue with javascript and </script>
+						Many feature renaming to match Eiffel style and naming convention, 
+						  kept previous feature as obsolete.
+				        Restructured the library to make easy extraction of "converter" 
+						  classes if needed in the future.
+				        Marked converters classes as obsolete.
 0.5.0   2013-11-dd      Added JSON_ITERATOR, simplified JSON_OBJECT
 0.4.0   2012-12-12      Updated documentation URI
 0.3.0   2011-07-06      JSON Factory Converters

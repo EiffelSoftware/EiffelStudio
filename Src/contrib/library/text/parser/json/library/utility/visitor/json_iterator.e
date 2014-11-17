@@ -1,11 +1,8 @@
 note
-	description:
-
-		"JSON Iterator"
-
+	description: "JSON Iterator"
 	pattern: "Iterator visitor"
 	author: "Jocelyn Fiat"
-	license:"MIT (see http://www.opensource.org/licenses/mit-license.php)"
+	license: "MIT (see http://www.opensource.org/licenses/mit-license.php)"
 	date: "2013/08/01"
 	revision: "Revision 0.1"
 
@@ -13,6 +10,7 @@ deferred class
 	JSON_ITERATOR
 
 inherit
+
 	JSON_VISITOR
 
 feature -- Visitor Pattern
@@ -52,9 +50,12 @@ feature -- Visitor Pattern
 			end
 		end
 
-    visit_json_string (a_json_string: JSON_STRING)
+	visit_json_string (a_json_string: JSON_STRING)
 			-- Visit `a_json_string'.
 		do
 		end
 
+note
+	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

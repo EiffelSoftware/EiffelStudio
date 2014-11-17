@@ -14,6 +14,12 @@ feature -- Status report
 		deferred
 		end
 
+	has_error: BOOLEAN
+			-- Has error?
+			--| Syntax error, source not found, ...
+		deferred
+		end
+
 feature -- Query
 
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32

@@ -52,6 +52,7 @@ inherit
 
 create
 	make_from_file,
+	make_from_string,
 	make_from_items
 
 feature {NONE} -- Initialization
@@ -59,7 +60,13 @@ feature {NONE} -- Initialization
 	make_from_file (p: PATH)
 		do
 			initialize
-			parse (p)
+			parse_file (p)
+		end
+
+	make_from_string (a_content: STRING_8)
+		do
+			initialize
+			parse_content (a_content)
 		end
 
 	make_from_items (a_items: like items)
@@ -75,6 +82,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize data.
 		do
+			create utf
 			create items.make (0)
 			create sections.make (0)
 		end
@@ -82,6 +90,7 @@ feature {NONE} -- Initialization
 	reset
 			-- Reset internal data.
 		do
+			has_error := False
 			items.wipe_out
 			sections.wipe_out
 		end
@@ -94,12 +103,15 @@ feature -- Status report
 			Result := item (k) /= Void
 		end
 
+	has_error: BOOLEAN
+			-- Has error?
+			--| Syntax error, source not found, ...
+
 feature -- Access: Config Reader
 
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.	
 		local
-			utf: UTF_CONVERTER
 			obj: like item
 		do
 			obj := item (k)
@@ -219,18 +231,44 @@ feature {NONE} -- Implementation
 			v.force (obj, k)
 		end
 
-	parse (p: PATH)
+	parse_content (a_content: STRING_8)
+		local
+			i,j,n: INTEGER
+			s: READABLE_STRING_8
+		do
+			last_section_name := Void
+			from
+				i := 1
+				n := a_content.count
+			until
+				i > n
+			loop
+				j := a_content.index_of ('%N', i)
+				if j > 0 then
+					s := a_content.substring (i, j - 1)
+					i := j + 1
+					if i <= n and then a_content[i] = '%R' then
+						i := i + 1
+					end
+				else
+					j := n
+					s := a_content.substring (i, n)
+				end
+				analyze_line (s)
+			variant
+				i
+			end
+			last_section_name := Void
+		rescue
+			last_section_name := Void
+			has_error := True
+		end
+
+	parse_file (p: PATH)
 		local
 			f: PLAIN_TEXT_FILE
-			k,sk: STRING_32
-			s,v: STRING_8
-			obj: detachable ANY
-			l_section: detachable STRING_32
-			lst: LIST [STRING_8]
-			tb: STRING_TABLE [STRING_8]
-			i,j: INTEGER
-			utf: UTF_CONVERTER
 		do
+			last_section_name := Void
 			create f.make_with_path (p)
 			if f.exists and then f.is_access_readable then
 				f.open_read
@@ -238,71 +276,110 @@ feature {NONE} -- Implementation
 				until
 					f.exhausted or f.end_of_file
 				loop
-					obj := Void
 					f.read_line_thread_aware
-					s := f.last_string
-					s.left_adjust
-					if s.is_empty or s.starts_with_general ("#") or s.starts_with_general (";") or s.starts_with_general ("--") then
-							-- Ignore
-					elseif s.starts_with_general ("[") then
-						i := s.index_of (']', 1)
-						l_section := utf.utf_8_string_8_to_string_32 (s.substring (2, i - 1))
-					else
-						i := s.index_of ('=', 1)
-						if i > 1 then
-							k := utf.utf_8_string_8_to_string_32 (s.head (i - 1))
-							k.right_adjust
-
-							v := s.substring (i + 1, s.count)
-							v.left_adjust
-							v.right_adjust
-
-							i := k.index_of ('[', 1)
-							if i > 0 then
-								j := k.index_of (']', i + 1)
-								if j = i + 1 then -- ends_with "[]"
-									k.keep_head (i - 1)
-									if attached {LIST [STRING_8]} items.item (k) as l_list then
-										lst := l_list
-									else
-										create {ARRAYED_LIST [STRING_8]} lst.make (1)
-										items.force (lst, k)
-									end
-									lst.force (v)
-									obj := lst
-								elseif j > i then
-										-- table
-									sk := k.substring (i + 1, j - 1)
-									sk.left_adjust
-									sk.right_adjust
-									k.keep_head (i - 1)
-									if attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
-										tb := l_table
-									else
-										create tb.make (1)
-										items.force (tb, k)
-									end
-									tb.force (v, sk)
-									obj := tb
-								else
-									-- Error missing closing ']'
-								end
-							else
-								items.force (v, k)
-								obj := v
-							end
-
-							if l_section /= Void and then obj /= Void then
-								record_in_section (obj, k, l_section)
-							end
-						else
-								-- Error
-						end
-					end
+					analyze_line (f.last_string)
 				end
 				f.close
+			else
+					-- File not readable
+				has_error := True
+			end
+			last_section_name := Void
+		rescue
+			last_section_name := Void
+			has_error := True
+		end
+
+	analyze_line (a_line: STRING_8)
+			-- Analyze line `a_line'.
+		local
+			k,sk: STRING_32
+			v: STRING_8
+			obj: detachable ANY
+			lst: LIST [STRING_8]
+			tb: STRING_TABLE [STRING_8]
+			i,j: INTEGER
+			l_section_name: like last_section_name
+		do
+			obj := Void
+			a_line.left_adjust
+			if
+				a_line.is_empty
+				or a_line.is_whitespace
+				or a_line.starts_with_general ("#")
+				or a_line.starts_with_general (";")
+				or a_line.starts_with_general ("--")
+			then
+					-- Ignore
+			elseif a_line.starts_with_general ("[") then
+				i := a_line.index_of (']', 1)
+				l_section_name := utf.utf_8_string_8_to_string_32 (a_line.substring (2, i - 1))
+				l_section_name.left_adjust
+				l_section_name.right_adjust
+				last_section_name := l_section_name
+			else
+				i := a_line.index_of ('=', 1)
+				if i > 1 then
+					k := utf.utf_8_string_8_to_string_32 (a_line.head (i - 1))
+					k.right_adjust
+
+					v := a_line.substring (i + 1, a_line.count)
+					v.left_adjust
+					v.right_adjust
+
+					i := k.index_of ('[', 1)
+					if i > 0 then
+						j := k.index_of (']', i + 1)
+						if j = i + 1 then -- ends_with "[]"
+							k.keep_head (i - 1)
+							if attached {LIST [STRING_8]} items.item (k) as l_list then
+								lst := l_list
+							else
+								create {ARRAYED_LIST [STRING_8]} lst.make (1)
+								items.force (lst, k)
+							end
+							lst.force (v)
+							obj := lst
+						elseif j > i then
+								-- table
+							sk := k.substring (i + 1, j - 1)
+							sk.left_adjust
+							sk.right_adjust
+							k.keep_head (i - 1)
+							if attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
+								tb := l_table
+							else
+								create tb.make (1)
+								items.force (tb, k)
+							end
+							tb.force (v, sk)
+							obj := tb
+						else
+								-- Error missing closing ']'
+							has_error := True
+						end
+					else
+						items.force (v, k)
+						obj := v
+					end
+
+					if attached last_section_name as l_session and then obj /= Void then
+						record_in_section (obj, k, l_session)
+					end
+				else
+						-- Error
+					has_error := True
+				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	last_section_name: detachable STRING_32
+
+	utf: UTF_CONVERTER
+
+invariant
 
 note
 	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"

@@ -11,6 +11,7 @@ inherit
 
 create
 	make_from_file,
+	make_from_string,
 	make_from_json_object
 
 feature {NONE} -- Initialization
@@ -20,6 +21,23 @@ feature {NONE} -- Initialization
 		do
 			parse (p)
 		end
+
+	make_from_string (a_json: READABLE_STRING_8)
+			-- Create current config from string `a_json'.
+		local
+			l_parser: JSON_PARSER
+		do
+			create l_parser.make_parser (a_json)
+			if
+				attached {JSON_OBJECT} l_parser.parse_json as j_o and then
+				l_parser.is_parsed
+			then
+				make_from_json_object (j_o)
+			else
+				has_error := True
+			end
+		end
+
 
 	make_from_json_object (a_object: JSON_OBJECT)
 			-- Create current config from JSON `a_object'.
@@ -35,6 +53,10 @@ feature -- Status report
 			Result := item (k) /= Void
 		end
 
+	has_error: BOOLEAN
+			-- Has error?
+			--| Syntax error, source not found, ...
+
 feature -- Access: Config Reader
 
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
@@ -42,6 +64,8 @@ feature -- Access: Config Reader
 		do
 			if attached {JSON_STRING} item (k) as l_string then
 				Result := l_string.unescaped_string_32
+			elseif attached {JSON_NUMBER} item (k) as l_number then
+				Result := l_number.item
 			end
 		end
 
@@ -101,11 +125,16 @@ feature {NONE} -- Implementation
 		local
 			l_parser: JSON_PARSER
 		do
+			has_error := False
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
 				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed then
 					json_value := jv
+				else
+					has_error := True
 				end
+			else
+				has_error := True
 			end
 		end
 

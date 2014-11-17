@@ -46,21 +46,58 @@ class
 	INI_CONFIG
 
 inherit
+	CONFIG_READER
+
 	TABLE_ITERABLE [ANY, READABLE_STRING_GENERAL]
 
 create
-	make_from_file
+	make_from_file,
+	make_from_items
 
 feature {NONE} -- Initialization
 
 	make_from_file (p: PATH)
 		do
+			initialize
 			parse (p)
 		end
 
-feature -- Access
+	make_from_items (a_items: like items)
+		do
+			initialize
+			across
+				a_items as ic
+			loop
+				items.force (ic.item, ic.key)
+			end
+		end
+
+	initialize
+			-- Initialize data.
+		do
+			create items.make (0)
+			create sections.make (0)
+		end
+
+	reset
+			-- Reset internal data.
+		do
+			items.wipe_out
+			sections.wipe_out
+		end
+
+feature -- Status report
+
+	has_item  (k: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has item associated with key `k'?
+		do
+			Result := item (k) /= Void
+		end
+
+feature -- Access: Config Reader
 
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- String item associated with key `k'.	
 		local
 			utf: UTF_CONVERTER
 			obj: like item
@@ -73,7 +110,28 @@ feature -- Access
 			end
 		end
 
+	integer_item (k: READABLE_STRING_GENERAL): INTEGER
+			-- Integer item associated with key `k'.
+		do
+			if attached {READABLE_STRING_GENERAL} item (k) as s then
+				Result := s.to_integer
+			end
+		end
+
+feature -- Duplication
+
+	sub_config (k: READABLE_STRING_GENERAL): detachable CONFIG_READER
+			-- Configuration representing a subset of Current for key `k'.
+		do
+			if attached sections.item (k) as l_items then
+				create {INI_CONFIG} Result.make_from_items (l_items)
+			end
+		end
+
+feature -- Access		
+
 	item (k: READABLE_STRING_GENERAL): detachable ANY
+			-- Value associated with key `k'.
 		local
 			i: INTEGER
 			s,sk: READABLE_STRING_GENERAL
@@ -173,8 +231,6 @@ feature {NONE} -- Implementation
 			i,j: INTEGER
 			utf: UTF_CONVERTER
 		do
-			create items.make (0)
-			create sections.make (0)
 			create f.make_with_path (p)
 			if f.exists and then f.is_access_readable then
 				f.open_read
@@ -248,4 +304,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

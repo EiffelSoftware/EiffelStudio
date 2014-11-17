@@ -19,11 +19,14 @@ feature {NONE} -- Initialization
 
 	make (p: PATH)
 		local
-			cfg: JSON_CONFIG
+			cfg: CONFIG_READER
 		do
 			make_default
-
-			create cfg.make_from_file (p)
+			if attached p.extension as e and then e.is_case_insensitive_equal_general ("ini") then
+				create {INI_CONFIG} cfg.make_from_file (p)
+			else
+				create {JSON_CONFIG} cfg.make_from_file (p)
+			end
 
 			if attached cfg.text_item ("layout.root") as l_root then
 				create root_dir.make_from_string (l_root)

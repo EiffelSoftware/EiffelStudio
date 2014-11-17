@@ -25,7 +25,10 @@ The goal of the library is to provide the following features.
  - doc  -- Documentation. 	 
 
 **Documentation**
- >[CMS design](https://github.com/EiffelWebFramework/ROC).
- >[CMS concepts](https://github.com/EiffelWebFramework/ROC).
+
+ >[CMS concepts](/doc/concepts.md).
  
+ >[CMS design](/doc/design.md).
+
+ >[CMS tutorial](/doc/tutorial.md).
 	 

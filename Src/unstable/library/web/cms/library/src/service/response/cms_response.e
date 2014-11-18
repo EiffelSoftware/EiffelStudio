@@ -740,7 +740,8 @@ feature -- Theme
 			if l_info.engine.is_case_insensitive_equal_general ("smarty") then
 				create {SMARTY_CMS_THEME} theme.make (setup, l_info)
 			else
-				create {DEFAULT_CMS_THEME} theme.make (setup, l_info)
+				to_implement ("Add a default SMARTY_CMS_THEME")
+				create {SMARTY_CMS_THEME} theme.make (setup, l_info)
 			end
 		end
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WSF_CMS_THEME}."
+	description: "Abstract class describing a generic theme"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {SMARTY_CMS_THEME}."
+	description: "Smarty template CMS theme."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ feature -- Access
 						i := i + 1
 					end
 				else
-					l_regions := <<"top","header", "content", "footer", "first_sidebar", "second_sidebar","bottom">>
+					l_regions := <<"top","header", "highlighted","help", "content", "footer", "first_sidebar", "second_sidebar", "bottom">>
 				end
 				internaL_regions := l_regions
 			end

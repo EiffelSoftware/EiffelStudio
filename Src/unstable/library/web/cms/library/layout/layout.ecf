@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="layout" uuid="7AE9E48B-5A15-43F8-B99A-04F4185DED6B" library_target="layout">
 	<target name="layout">
 		<root all_classes="true"/>
-		<option warning="true">
+		<option warning="true" void_safety="none">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

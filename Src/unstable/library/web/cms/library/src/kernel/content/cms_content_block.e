@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_CONTENT_BLOCK}."
-	author: ""
+	description: "CMS_BLOCK implemented with a `content' associated with a specific `format'."
 	date: "$Date$"
 	revision: "$Revision$"
 

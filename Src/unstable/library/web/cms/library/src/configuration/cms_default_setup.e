@@ -77,14 +77,13 @@ feature -- Access
 			-- <Precursor>
 		do
 				-- Enable change the mode
-			Result := (create {CMS_JSON_CONFIGURATION}).is_html_mode(layout.application_config_path)
+			Result := (create {CMS_JSON_CONFIGURATION}).is_html_mode (layout.application_config_path)
 		end
 
 	is_web: BOOLEAN
 			-- <Precursor>
 		do
-			Result := (create {CMS_JSON_CONFIGURATION}).is_web_mode(layout.application_config_path)
-
+			Result := (create {CMS_JSON_CONFIGURATION}).is_web_mode (layout.application_config_path)
 		end
 
 	build_auth_engine
@@ -111,7 +110,7 @@ feature -- Compute location
 			debug ("refactor_fixme")
 				fixme ("Check if we really need it")
 			end
-			-- Check how to get this path from the CMS_THEME information.
+				-- Check how to get this path from the CMS_THEME information.
 			theme_assets_location := theme_location.extended ("assets")
 		end
 

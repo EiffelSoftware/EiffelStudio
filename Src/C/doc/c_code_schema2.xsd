@@ -40,6 +40,18 @@
 		<xs:attribute name="return_type" type="xs:string"/>
 		<xs:attribute name="export" type="xs:string" use="required"/>
 	</xs:complexType>
+	<xs:complexType name="structType" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="summary"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="field" type="paramType"/>
+			</xs:choice>
+			<xs:element name="eiffel_classes"/>
+			<xs:element name="fixme"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="export" type="xs:string" use="required"/>
+	</xs:complexType>
 	<xs:element name="doc">
 		<xs:complexType>
 			<xs:sequence>
@@ -53,6 +65,7 @@
 			<xs:element name="summary"/>
 			<xs:element name="attribute" type="attributeType"/>
 			<xs:element name="routine" type="routineType"/>
+			<xs:element name="struct" type="structType"/>
 		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="header" type="xs:string"/>

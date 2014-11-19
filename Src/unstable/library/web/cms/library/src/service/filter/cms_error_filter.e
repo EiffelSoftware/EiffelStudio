@@ -20,6 +20,7 @@ feature -- Basic operations
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter
 		do
+			fixme ("Check if it's ok to add new fetures CMS_API.has_error:BOOLEAN and CMS_API.error_description.")
 			if not api.error_handler.has_error then
 				log.write_information (generator + ".execute")
 				execute_next (req, res)

@@ -8,8 +8,6 @@ class
 
 inherit
 
-	SHARED_ERROR
-
 	REFACTORING_HELPER
 
 create
@@ -23,7 +21,6 @@ feature -- Initialize
 			setup := a_setup
 			create error_handler.make
 			initialize
-			set_successful
 		ensure
 			setup_set: setup = a_setup
 			error_handler_set: not error_handler.has_error

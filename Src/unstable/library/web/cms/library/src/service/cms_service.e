@@ -64,21 +64,8 @@ feature {NONE} -- Initialization
 
 	initialize_modules
 			-- Intialize modules and keep only enabled modules.
-		local
-			l_module: CMS_MODULE
-			l_available_modules: CMS_MODULE_COLLECTION
 		do
-			log.write_debug (generator + ".initialize_modules")
-			l_available_modules := setup.modules
-			create modules.make (l_available_modules.count)
-			across
-				l_available_modules as ic
-			loop
-				l_module := ic.item
-				if l_module.is_enabled then
-					modules.extend (l_module)
-				end
-			end
+			modules := setup.enabled_modules
 		ensure
 			only_enabled_modules: across modules as ic all ic.item.is_enabled end
 		end

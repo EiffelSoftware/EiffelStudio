@@ -24,9 +24,27 @@ feature -- Access
 		deferred
 		end
 
-	modules: CMS_MODULE_COLLECTION
+	available_modules: CMS_MODULE_COLLECTION
 			-- List of available modules.
 		deferred
+		end
+
+	enabled_modules: CMS_MODULE_COLLECTION
+			-- List of enabled modules.
+		local
+			l_module: CMS_MODULE
+		do
+			create Result.make (available_modules.count)
+			across
+				available_modules as ic
+			loop
+				l_module := ic.item
+				if l_module.is_enabled then
+					Result.extend (l_module)
+				end
+			end
+		ensure
+			only_enabled_modules: across Result as ic all ic.item.is_enabled end
 		end
 
 feature -- Access: Site

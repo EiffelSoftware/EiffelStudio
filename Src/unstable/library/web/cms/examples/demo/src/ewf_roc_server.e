@@ -135,11 +135,11 @@ feature -- CMS setup
 		do
 			create {BASIC_AUTH_MODULE} m.make
 			m.enable
-			a_setup.modules.extend (m)
+			a_setup.available_modules.extend (m)
 
 			create {CMS_DEMO_MODULE} m.make
 			m.enable
-			a_setup.modules.extend (m)
+			a_setup.available_modules.extend (m)
 		end
 
 	setup_storage (a_setup: CMS_SETUP)

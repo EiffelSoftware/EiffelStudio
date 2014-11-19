@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CMS_HOOK_BLOCK}."
+	description: "[
+				Hook providing a way to alter a block.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

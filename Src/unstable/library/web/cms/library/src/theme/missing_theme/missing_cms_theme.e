@@ -1,5 +1,8 @@
 note
-	description: "Describe a missing theme."
+	description: "[
+			Theme used when expected theme is missing.
+			It is mainly used to report missing theme error.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

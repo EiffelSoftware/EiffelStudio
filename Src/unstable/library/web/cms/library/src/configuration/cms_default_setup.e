@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Initialize varius cms components.
 		do
 			configure
-			create modules.make (3)
+			create available_modules.make (3)
 			build_mailer
 			initialize_modules
 		end
@@ -65,12 +65,12 @@ feature {NONE} -- Initialization
 
 			create {NODE_MODULE} m.make (Current)
 			m.enable
-			modules.extend (m)
+			available_modules.extend (m)
 		end
 
 feature -- Access
 
-	modules: CMS_MODULE_COLLECTION
+	available_modules: CMS_MODULE_COLLECTION
 			-- <Precursor>
 
 	is_html: BOOLEAN

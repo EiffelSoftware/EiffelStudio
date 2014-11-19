@@ -4,6 +4,31 @@
 #include "eif_portable.h"
 #include "eif_atomops.h"
 
+// Microsoft Visual C++ does not support "noexcept" modifier.
+#ifndef RT_NOEXCEPT
+#	if defined NOEXCEPT
+#		define RT_NOEXCEPT NOEXCEPT
+#	elif defined _NOEXCEPT
+#		define RT_NOEXCEPT _NOEXCEPT
+#	elif defined _MSC_VER
+#		define RT_NOEXCEPT
+#	else
+#		define RT_NOEXCEPT noexcept
+#	endif
+#endif
+
+// Microsoft Visual C++ does not support "default", "delete" and "constexpr" modifiers.
+#ifdef _MSC_VER
+#	define RT_CONSTEXPR
+#	define RT_DEFAULT {}
+#	define RT_DELETE
+#else
+#	define RT_CONSTEXPR constexpr
+#	define RT_DEFAULT = default
+#	define RT_DELETE = delete
+#endif
+
+
 namespace eiffel_run_time
 {
 
@@ -20,22 +45,21 @@ class atomic_int
 {
 
 public:
-	constexpr atomic_int (EIF_INTEGER_32 v) noexcept : value (v)
-		{
-		}
 
-	atomic_int() noexcept = default;
-	~atomic_int() noexcept = default;
-	atomic_int(const atomic_int&) = delete;
-	atomic_int& operator=(const atomic_int&) = delete;
-	atomic_int& operator=(const atomic_int&) volatile = delete;
-	operator EIF_INTEGER_32() const noexcept = delete;
-	operator EIF_INTEGER_32() const volatile noexcept = delete;
+// Non-default constructors prevent aggregate initialization.
+//
+//	RT_CONSTEXPR atomic_int (EIF_INTEGER_32 v) RT_NOEXCEPT : value (v)
+//		{
+//		}
+//
+//	atomic_int() RT_NOEXCEPT: value () RT_DEFAULT;
+//
+//	~atomic_int() RT_NOEXCEPT RT_DEFAULT;
 
 	EIF_INTEGER_32 operator++ (int)
 		{
 			// post-increment
-			return RTS_AI_I32(&value);
+			return RTS_AI_I32(&value) - 1;
 		}
 
 	EIF_INTEGER_32 operator-- ()
@@ -43,8 +67,23 @@ public:
 			// pre-decrement
 			return RTS_AD_I32(&value);
 		}
-private:
+
+public: // Should not be accessed directly, but has to be public to allow aggregate initializers under MSC.
+
 	EIF_INTEGER_32 value;
+
+private: // Not defined
+
+// Non-default constructors prevent aggregate initialization.
+//
+//	atomic_int(const atomic_int&) RT_DELETE;
+
+	atomic_int& operator=(const atomic_int&) RT_DELETE;
+// MSC complains there are too many assignment operators.
+//	atomic_int& operator=(const atomic_int&) volatile RT_DELETE;
+
+	operator EIF_INTEGER_32() const RT_NOEXCEPT RT_DELETE;
+	operator EIF_INTEGER_32() const volatile RT_NOEXCEPT RT_DELETE;
 
 }; // class atomic_int
 
@@ -52,11 +91,11 @@ class atomic_bool
 {
 
 public:
-	atomic_bool () noexcept :  value (false)
+	atomic_bool () RT_NOEXCEPT :  value (false)
 		{
 		}
 
-	atomic_bool (bool v) noexcept : value (v)
+	atomic_bool (bool v) RT_NOEXCEPT : value (v)
 		{
 		}
 
@@ -97,11 +136,11 @@ class atomic_size_t
 {
 
 public:
-	atomic_size_t () noexcept: value (0)
+	atomic_size_t () RT_NOEXCEPT: value (0)
 		{
 		}
 
-	operator size_t () const
+	operator size_t () const RT_NOEXCEPT
 		{	// current value
 			return (size_t) value;
 		}
@@ -125,13 +164,13 @@ public:
 	size_t operator++ (int)
 		{
 			// post-increment
-			return RTS_AI_I32 (&value);
+			return RTS_AI_I32 (&value) - 1;
 		}
 
 	size_t operator-- (int)
 		{
 			// post-decrement
-			return RTS_AD_I32 (&value);
+			return RTS_AD_I32 (&value) + 1;
 		}
 
 	bool compare_exchange_weak (size_t& e, size_t v, memory_order o = memory_order_seq_cst)
@@ -156,24 +195,24 @@ template <class ptr_type>
 class atomic {
 
 public:
-	atomic () noexcept: value (0)
+	atomic () RT_NOEXCEPT: value (0)
 		{
 		}
 
-	atomic (ptr_type v) noexcept: value (v)
+	atomic (ptr_type v) RT_NOEXCEPT: value (v)
 		{
 		}
 
-	atomic (const atomic& v) noexcept: value (v.value)
+	atomic (const atomic& v) RT_NOEXCEPT: value (v.value)
 		{
 		}
 
-	operator ptr_type () const
+	operator ptr_type () const RT_NOEXCEPT
 		{	// current value
 			return value;
 		}
 
-	operator ptr_type () const volatile
+	operator ptr_type () const volatile RT_NOEXCEPT
 		{	// current value
 			return value;
 		}

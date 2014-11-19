@@ -1,3 +1,21 @@
+== "ecf_tool updater" command ==
+
+For a collection of ecf files, update the library location to reflect existing project.
+This can be used when moving a library from a location to another, and update all existing ecf that uses this.
+
+== Examples ==
+
+* update ecf files from %ISE_LIBRARY%, for instance if a library is moved or renamed.
+> ecf_tool updater --simulation --force --diff --root %ISE_LIBRARY%\library %ISE_LIBRARY%\library 
+
+* update ecf files from %MY_PROJECTS%, in case libraries were renamed or moved in %ISE_LIBRARY%
+> ecf_tool updater --simulation --force --diff --root %ISE_LIBRARY%\library %MY_PROJECTS%
+
+* Replace $ISE_LIBRARY by $EIFFEL_LIBRARY
+> ecf_tool updater --simulation --force --diff --replace ISE_LIBRARY=EIFFEL_LIBRARY --root %ISE_LIBRARY%\library %ISE_LIBRARY%\library 
+
+== Usage ==
+
 updater - Version: 14.11
 Copyright Eiffel Software 1985-2014. All Rights Reserved.
 

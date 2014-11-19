@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			cmd: APPLICATION_COMMAND
 			cmds: like commands
 		do
-			create cmds.make_caseless (3)
+			create cmds.make_caseless (5)
 
 			create {ECF_UPDATER_COMMAND} cmd.make ("updater")
 			cmds.force (cmd, cmd.name)
@@ -71,6 +71,13 @@ feature {NONE} -- Initialization
 
 			create {ECF_RESAVE_COMMAND} cmd.make ("resave")
 			cmds.force (cmd, cmd.name)
+
+			create {ECF_CREATE_COMMAND} cmd.make ("create")
+			cmds.force (cmd, cmd.name)
+
+			create {ECF_REDIRECTION_BUILDER_COMMAND} cmd.make ("redirection")
+			cmds.force (cmd, cmd.name)
+
 
 				-- Assign `commands'
 			commands := cmds

@@ -1,3 +1,16 @@
+== "ecf_tool integration" command ==
+
+This command will create an Eiffel Configuration File (ecf) that includes a collection of .ecf files.
+Such generated ecf can be used during integration/testing to compile many ecf projects at once,
+and then, for instance this can help refactorying operations across many projects.
+
+== Examples ==
+
+>  ecf_tool integration -o all.ecf path-to-libs
+
+
+== Usage ==
+
 integration - Version: 14.11
 Copyright Eiffel Software 1985-2014. All Rights Reserved.
 

@@ -740,8 +740,9 @@ feature -- Theme
 			if l_info.engine.is_case_insensitive_equal_general ("smarty") then
 				create {SMARTY_CMS_THEME} theme.make (setup, l_info)
 			else
-				to_implement ("Add a default SMARTY_CMS_THEME")
-				create {SMARTY_CMS_THEME} theme.make (setup, l_info)
+				create {MISSING_CMS_THEME} theme.make (setup)
+				status_code := {HTTP_STATUS_CODE}.service_unavailable
+				to_implement ("Check how to add the Retry-after, http://tools.ietf.org/html/rfc7231#section-6.6.4 and http://tools.ietf.org/html/rfc7231#section-7.1.3")
 			end
 		end
 

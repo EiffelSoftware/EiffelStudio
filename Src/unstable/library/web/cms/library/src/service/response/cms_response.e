@@ -36,19 +36,17 @@ feature {NONE} -- Initialization
 	register_hooks
 		local
 			l_module: CMS_MODULE
-			l_available_modules: CMS_MODULE_COLLECTION
+			l_enabled_modules: CMS_MODULE_COLLECTION
 		do
-			l_available_modules := setup.modules
+			l_enabled_modules := setup.enabled_modules
 			across
-				l_available_modules as ic
+				l_enabled_modules as ic
 			loop
 				l_module := ic.item
-				if l_module.is_enabled then
-					if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
-						l_auto.auto_subscribe_to_hooks (Current)
-					end
-					l_module.register_hooks (Current)
+				if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
+					l_auto.auto_subscribe_to_hooks (Current)
 				end
+				l_module.register_hooks (Current)
 			end
 		end
 

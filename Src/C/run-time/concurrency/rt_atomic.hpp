@@ -20,10 +20,17 @@ class atomic_int
 {
 
 public:
-	atomic_int (EIF_INTEGER_32 v)
+	constexpr atomic_int (EIF_INTEGER_32 v) noexcept : value (v)
 		{
-			value = v;
 		}
+
+	atomic_int() noexcept = default;
+	~atomic_int() noexcept = default;
+	atomic_int(const atomic_int&) = delete;
+	atomic_int& operator=(const atomic_int&) = delete;
+	atomic_int& operator=(const atomic_int&) volatile = delete;
+	operator EIF_INTEGER_32() const noexcept = delete;
+	operator EIF_INTEGER_32() const volatile noexcept = delete;
 
 	EIF_INTEGER_32 operator++ (int)
 		{
@@ -45,14 +52,12 @@ class atomic_bool
 {
 
 public:
-	atomic_bool ()
+	atomic_bool () noexcept :  value (false)
 		{
-			value = false;
 		}
 
-	atomic_bool (bool v)
+	atomic_bool (bool v) noexcept : value (v)
 		{
-			value = v;
 		}
 
 	operator bool ()
@@ -92,9 +97,8 @@ class atomic_size_t
 {
 
 public:
-	atomic_size_t ()
+	atomic_size_t () noexcept: value (0)
 		{
-			value = 0;
 		}
 
 	operator size_t () const
@@ -147,25 +151,22 @@ private:
 
 }; // class atomic_size_t
 
+
 template <class ptr_type>
 class atomic {
 
 public:
-	atomic ()
+	atomic () noexcept: value (0)
 		{
-			value = 0;
 		}
 
-	atomic (ptr_type v)
+	atomic (ptr_type v) noexcept: value (v)
 		{
-			value = v;
 		}
 
-	atomic (const atomic& v)
+	atomic (const atomic& v) noexcept: value (v.value)
 		{
-			value = v.value;
 		}
-
 
 	operator ptr_type () const
 		{	// current value
@@ -203,6 +204,7 @@ private:
 	ptr_type value;
 
 }; // class atomic
+
 
 } // namespace eiffel_run_time
 

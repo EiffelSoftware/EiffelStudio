@@ -255,6 +255,10 @@ RT_LNK void eif_thr_rwl_destroy (EIF_POINTER rwlp);
 #	elif defined(MemoryBarrier)
 #		define EIF_MEMORY_BARRIER MemoryBarrier()
 #	endif
+#else
+#	if defined(__GNUC__)
+#		define EIF_MEMORY_BARRIER __sync_synchronize()
+#	endif
 #endif
 
 #ifdef EIF_MEMORY_BARRIER

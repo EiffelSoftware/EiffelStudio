@@ -71,7 +71,7 @@
 #	define memory_barrier() atomic_thread_fence (memory_order_seq_cst_const)
 #else
 #	include "concurrency/rt_atomic.hpp"
-#	define atomic_var_init 0
+#	define atomic_var_init {0}
 	typedef eiffel_run_time::atomic_int atomic_int_type;
 	typedef eiffel_run_time::atomic_bool atomic_bool_type;
 	typedef eiffel_run_time::atomic_size_t atomic_size_t_type;

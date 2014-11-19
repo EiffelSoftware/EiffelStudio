@@ -1595,7 +1595,7 @@ finish_simple:
 
 	cname = System ((par_info(base_id))->dtype).cn_generator;
 
-	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt) {
+	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt) {
 		if (*pt == (struct eif_par_types *)0)
 			continue;
 

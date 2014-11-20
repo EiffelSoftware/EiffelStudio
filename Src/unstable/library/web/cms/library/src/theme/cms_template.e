@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {WSF_CMS_PAGE_TEMPLATE}."
+	description: "[
+		Abstract interface for a CMS Template, as part of the theme design.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,18 +11,22 @@ deferred class
 feature -- Access
 
 	theme: CMS_THEME
+			-- Associated theme.
 		deferred
 		end
 
 	variables: STRING_TABLE [detachable ANY]
+			-- Variables used for Current template rendering.
 		deferred
 		end
 
 	prepare (page: CMS_HTML_PAGE)
+			-- Prepare `page' with current template.
 		deferred
 		end
 
 	to_html (page: CMS_HTML_PAGE): STRING
+			-- HTML rendering for page `page'.
 		deferred
 		end
 

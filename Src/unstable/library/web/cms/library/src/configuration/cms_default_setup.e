@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CMS_DEFAULT_SETUP}."
+	description: "[
+			Default CMS_SETUP that can be reused easily, and/or redefined to match specific setup.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +12,7 @@ inherit
 	CMS_SETUP
 
 	REFACTORING_HELPER
+
 create
 	make
 
@@ -24,10 +27,10 @@ feature {NONE} -- Initialization
 		end
 
 	initialize
-			-- Initialize varius cms components.
+			-- Initialize various cms components.
 		do
 			configure
-			create available_modules.make (3)
+			create modules.make (3)
 			build_mailer
 			initialize_modules
 		end
@@ -57,20 +60,20 @@ feature {NONE} -- Initialization
 --			-- Core
 --			create {USER_MODULE} m.make (Current)
 --			m.enable
---			modules.extend (m)
+--			register_module (m)
 
 --			create {ADMIN_MODULE} m.make (Current)
 --			m.enable
---			modules.extend (m)
+--			register_module (m)
 
 			create {NODE_MODULE} m.make (Current)
 			m.enable
-			available_modules.extend (m)
+			register_module (m)
 		end
 
 feature -- Access
 
-	available_modules: CMS_MODULE_COLLECTION
+	modules: CMS_MODULE_COLLECTION
 			-- <Precursor>
 
 	is_html: BOOLEAN
@@ -94,6 +97,14 @@ feature -- Access
 	build_mailer
 		do
 			to_implement ("Not implemented mailer")
+		end
+
+feature -- Element change
+
+	register_module (m: CMS_MODULE)
+			-- <Precursor>
+		do
+			modules.extend (m)
 		end
 
 feature -- Compute location

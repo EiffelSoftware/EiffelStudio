@@ -24,19 +24,14 @@ feature -- Access
 		deferred
 		end
 
-	available_modules: CMS_MODULE_COLLECTION
-			-- List of available modules.
-		deferred
-		end
-
 	enabled_modules: CMS_MODULE_COLLECTION
 			-- List of enabled modules.
 		local
 			l_module: CMS_MODULE
 		do
-			create Result.make (available_modules.count)
+			create Result.make (modules.count)
 			across
-				available_modules as ic
+				modules as ic
 			loop
 				l_module := ic.item
 				if l_module.is_enabled then
@@ -47,9 +42,18 @@ feature -- Access
 			only_enabled_modules: across Result as ic all ic.item.is_enabled end
 		end
 
+feature {CMS_MODULE} -- Restricted access
+
+	modules: CMS_MODULE_COLLECTION
+			-- List of available modules.
+		deferred
+		end
+
 feature -- Access: Site
 
 	site_id: READABLE_STRING_8
+			-- String identifying current CMS.
+			-- This could be used in webform, for cookie name, ...
 
 	site_name: READABLE_STRING_32
 			-- Name of the site.
@@ -70,18 +74,27 @@ feature -- Access: Theme
 			-- Path to themes.
 
 	theme_location: PATH
-			-- Path to a particular theme.
+			-- Path to a active theme.
 
 	theme_assets_location: PATH
-			-- Path to a particular theme assets folder.
+			-- Path to a active theme assets folder.
 
 	theme_information_location: PATH
-			-- theme informations.
+			-- Active theme informations.
 		do
 			Result := theme_location.extended ("theme.info")
 		end
 
 	theme_name: READABLE_STRING_32
 			-- theme name.
+
+feature -- Element change
+
+	register_module (m: CMS_MODULE)
+			-- Add module `m' to `modules'
+		deferred
+		ensure
+			module_added: modules.has (m)
+		end
 
 end

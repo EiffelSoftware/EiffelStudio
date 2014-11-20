@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize values.
 		do
+			metadata_extension := "md"
+			index_name := "index"
+
 			get_data
 		end
 
@@ -53,6 +56,14 @@ feature -- Access
 	tmp_dir: PATH
 
 	data: WDOCS_DATA
+
+feature -- Settings
+
+	metadata_extension: STRING
+			-- Default: "md"
+
+	index_name: STRING
+			-- Default: "index"
 
 feature -- Basic operations
 
@@ -259,7 +270,6 @@ feature -- Access: link
 				l_path := md.item ("path")
 			end
 			if l_path /= Void then
---				Result := "../../" + utf.string_32_to_utf_8_string_8 (l_path)
 				Result := "/" + utf.string_32_to_utf_8_string_8 (l_path)
 			elseif attached book_name (pg) as bn then
 				Result := "/book/" + bn + "/" + pg.title
@@ -274,9 +284,9 @@ feature -- Access: link
 		local
 			md: WDOCS_METADATA_FILE
 		do
-			create md.make_with_path (wiki_database_path.extended (pg.src).appended_with_extension ("md"))
+			create md.make_with_path (wiki_database_path.extended (pg.src).appended_with_extension (metadata_extension))
 			if not md.exists then
-				create md.make_with_path (wiki_database_path.extended (pg.parent_key).extended ("index").appended_with_extension ("md"))
+				create md.make_with_path (wiki_database_path.extended (pg.parent_key).extended (index_name).appended_with_extension (metadata_extension))
 			end
 			if md.exists then
 				if a_restricted_names /= Void then
@@ -357,12 +367,10 @@ feature -- Access: Image
 						l_book_name := data.common_book_name
 					end
 					l_image_path := data.image_path (a_link.name, l_book_name)
-	--				l_image_path := images (d.path).item (a_link.name)
 					if l_image_path = Void then
 						p := d.path.extended (a_link.name).appended_with_extension ("png")
 						create f.make_with_path (p)
 						if f.exists then
-	--						images (d.path).force (p, a_link.name)
 							data.record_image_path (p, a_link.name, l_book_name)
 							store_data (data)
 							l_image_path := p
@@ -657,7 +665,7 @@ feature {NONE} -- Implementation: data
 					if i.is_current_symbol or i.is_parent_symbol then
 							-- Ignore
 					elseif attached i.extension as ext then
-						if ext.is_case_insensitive_equal_general ("md") then
+						if ext.is_case_insensitive_equal_general (metadata_extension) then
 							create md.make_with_path (p.extended_path (i))
 							if md.exists then
 								md.get_only_items_named_as (<<"title", "filename">>)
@@ -722,7 +730,7 @@ feature {NONE} -- Implementation: data
 					if i.is_current_symbol or i.is_parent_symbol then
 							-- Ignore
 					elseif attached i.extension as ext then
-						if ext.is_case_insensitive_equal_general ("md") then
+						if ext.is_case_insensitive_equal_general (metadata_extension) then
 							create md.make_with_path (p.extended_path (i))
 							if md.exists then
 								md.get_only_items_named_as (<<"title", "filename">>)
@@ -799,7 +807,6 @@ feature {NONE} -- Implementation: data
 			p := wiki_database_path
 			if attached p.entry as e then
 				Result := tmp_dir.extended ("cache").extended_path (e).appended_with_extension ("data")
---				Result := p.parent.extended (".cache").extended_path (e).appended_with_extension ("data")
 			else
 				Result := p.appended_with_extension ("data")
 			end

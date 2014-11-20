@@ -54,7 +54,8 @@ extern "C" {
  * Utilities
  */
 #ifndef EIF_THREADS
-extern char *account;			/* Array of traversed dyn types */
+extern struct rt_traversal_info *account;	/* Array of traversed dyn types */
+extern size_t account_count;				/* Capacity of `account'. */
 #endif
 RT_LNK void allocate_gen_buffer(void);
 RT_LNK void buffer_write(const char *data, size_t size);

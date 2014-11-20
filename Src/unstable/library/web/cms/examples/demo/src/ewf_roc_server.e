@@ -101,7 +101,7 @@ feature {NONE} -- Launch operation
 
 feature -- CMS Initialization
 
-	cms_setup: CMS_CUSTOM_SETUP
+	cms_setup: CMS_DEFAULT_SETUP
 		do
 			if attached separate_character_option_value ('d') as  l_dir then
 				log.write_debug (generator + ".cms_setup using a command line argument -d " + l_dir )
@@ -135,11 +135,11 @@ feature -- CMS setup
 		do
 			create {BASIC_AUTH_MODULE} m.make
 			m.enable
-			a_setup.available_modules.extend (m)
+			a_setup.register_module (m)
 
 			create {CMS_DEMO_MODULE} m.make
 			m.enable
-			a_setup.available_modules.extend (m)
+			a_setup.register_module (m)
 		end
 
 	setup_storage (a_setup: CMS_SETUP)

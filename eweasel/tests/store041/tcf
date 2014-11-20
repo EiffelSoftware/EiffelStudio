@@ -58,4 +58,15 @@ execute_work 	NONE 	exec_output
 execute_result 	ok
 compare		exec_output output_failure
 
+define ACTUAL_GENERIC_1 "like {like Current}.default"
+define ACTUAL_GENERIC_2 "STRING"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_failure
+
 test_end

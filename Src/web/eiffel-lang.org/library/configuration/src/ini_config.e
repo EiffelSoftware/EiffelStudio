@@ -38,6 +38,11 @@ note
 				it is considered that the .ini file is utf-8 encoded
 				keys are unicode string
 				values are stored UTF-8 string, but one can use unicode_string_item to convert to STRING_32
+				
+			Additional features:
+			- Include other files:
+				@include=file-to-include
+
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +54,8 @@ inherit
 	CONFIG_READER
 
 	TABLE_ITERABLE [ANY, READABLE_STRING_GENERAL]
+
+	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make_from_file,
@@ -254,7 +261,7 @@ feature {NONE} -- Implementation
 					j := n
 					s := a_content.substring (i, n)
 				end
-				analyze_line (s)
+				analyze_line (s, Void)
 			variant
 				i
 			end
@@ -265,32 +272,47 @@ feature {NONE} -- Implementation
 		end
 
 	parse_file (p: PATH)
-		local
-			f: PLAIN_TEXT_FILE
 		do
 			last_section_name := Void
-			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				from
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_line_thread_aware
-					analyze_line (f.last_string)
-				end
-				f.close
-			else
-					-- File not readable
-				has_error := True
-			end
+			import_path (p, Void)
 			last_section_name := Void
-		rescue
-			last_section_name := Void
-			has_error := True
 		end
 
-	analyze_line (a_line: STRING_8)
+	import_path (p: PATH; a_section_prefix: detachable READABLE_STRING_32)
+			-- Import config from path `p'.
+		local
+			f: PLAIN_TEXT_FILE
+			l_last_section_name: like last_section_name
+			retried: BOOLEAN
+		do
+			if retried then
+				has_error := True
+			else
+				l_last_section_name := last_section_name
+				last_section_name := Void
+				create f.make_with_path (p)
+				if f.exists and then f.is_access_readable then
+					f.open_read
+					from
+					until
+						f.exhausted or f.end_of_file
+					loop
+						f.read_line_thread_aware
+						analyze_line (f.last_string, a_section_prefix)
+					end
+					f.close
+				else
+						-- File not readable
+					has_error := True
+				end
+			end
+			last_section_name := l_last_section_name
+		rescue
+			retried := True
+			retry
+		end
+
+	analyze_line (a_line: STRING_8; a_section_prefix: detachable READABLE_STRING_32)
 			-- Analyze line `a_line'.
 		local
 			k,sk: STRING_32
@@ -316,60 +338,77 @@ feature {NONE} -- Implementation
 				l_section_name := utf.utf_8_string_8_to_string_32 (a_line.substring (2, i - 1))
 				l_section_name.left_adjust
 				l_section_name.right_adjust
+				if a_section_prefix /= Void then
+					l_section_name.prepend_character ('.')
+					l_section_name.prepend (a_section_prefix)
+				end
 				last_section_name := l_section_name
 			else
 				i := a_line.index_of ('=', 1)
 				if i > 1 then
 					k := utf.utf_8_string_8_to_string_32 (a_line.head (i - 1))
 					k.right_adjust
-
 					v := a_line.substring (i + 1, a_line.count)
 					v.left_adjust
 					v.right_adjust
 
-					i := k.index_of ('[', 1)
-					if i > 0 then
-						j := k.index_of (']', i + 1)
-						if j = i + 1 then -- ends_with "[]"
-							k.keep_head (i - 1)
-							if attached {LIST [STRING_8]} items.item (k) as l_list then
-								lst := l_list
-							else
-								create {ARRAYED_LIST [STRING_8]} lst.make (1)
-								items.force (lst, k)
-							end
-							lst.force (v)
-							obj := lst
-						elseif j > i then
-								-- table
-							sk := k.substring (i + 1, j - 1)
-							sk.left_adjust
-							sk.right_adjust
-							k.keep_head (i - 1)
-							if attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
-								tb := l_table
-							else
-								create tb.make (1)
-								items.force (tb, k)
-							end
-							tb.force (v, sk)
-							obj := tb
-						else
-								-- Error missing closing ']'
-							has_error := True
-						end
-					else
-						items.force (v, k)
-						obj := v
-					end
 
-					if attached last_section_name as l_session and then obj /= Void then
-						record_in_section (obj, k, l_session)
+					if k.is_case_insensitive_equal_general ("@include") then
+						import_path (create {PATH}.make_from_string (v), last_section_name)
+					else
+						i := k.index_of ('[', 1)
+						if i > 0 then
+							j := k.index_of (']', i + 1)
+							if j = i + 1 then -- ends_with "[]"
+								k.keep_head (i - 1)
+								if attached {LIST [STRING_8]} items.item (k) as l_list then
+									lst := l_list
+								else
+									create {ARRAYED_LIST [STRING_8]} lst.make (1)
+									record_item (lst, k, a_section_prefix)
+								end
+								lst.force (v)
+								obj := lst
+							elseif j > i then
+									-- table
+								sk := k.substring (i + 1, j - 1)
+								sk.left_adjust
+								sk.right_adjust
+								k.keep_head (i - 1)
+								if attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
+									tb := l_table
+								else
+									create tb.make (1)
+									record_item (tb, k, a_section_prefix)
+								end
+								tb.force (v, sk)
+								obj := tb
+							else
+									-- Error missing closing ']'
+								has_error := True
+							end
+						else
+							record_item (v, k, a_section_prefix)
+							obj := v
+						end
+
+						if attached last_section_name as l_session and then obj /= Void then
+							record_in_section (obj, k, l_session)
+						end
 					end
 				else
 						-- Error
 					has_error := True
 				end
+			end
+		end
+
+	record_item (v: ANY; k: READABLE_STRING_32; a_section_prefix: detachable READABLE_STRING_32)
+		do
+			if a_section_prefix /= Void then
+				items.force (v, a_section_prefix + {STRING_32} "." + k)
+			else
+				items.force (v, k)
 			end
 		end
 

@@ -1,8 +1,3 @@
-note
-	description : "apple_bug application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
-
 class
 	TEST
 

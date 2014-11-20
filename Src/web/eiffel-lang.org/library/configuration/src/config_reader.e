@@ -7,6 +7,9 @@ note
 deferred class
 	CONFIG_READER
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 feature -- Status report
 
 	has_item  (k: READABLE_STRING_GENERAL): BOOLEAN
@@ -22,6 +25,14 @@ feature -- Status report
 
 feature -- Query
 
+	resolved_text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- String item associated with key `k' and expanded to resolved variables ${varname}.
+		do
+			if attached text_item (k) as s then
+				Result := resolved_expression (s)
+			end
+		end
+
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.
 		deferred
@@ -32,6 +43,62 @@ feature -- Query
 		deferred
 		ensure
 			not has_item (k) implies Result = 0
+		end
+
+feature {NONE} -- Implementation
+
+	resolved_items: detachable STRING_TABLE [READABLE_STRING_32]
+			-- Resolved items indexed by expression.
+
+	resolved_expression (exp: READABLE_STRING_8): STRING_32
+			-- Resolved `exp' using `Current' or else environment variables.
+		local
+			i,n,b,e: INTEGER
+			k: detachable READABLE_STRING_8
+			c: CHARACTER_32
+			l_resolved_items: like resolved_items
+			l_text: detachable READABLE_STRING_GENERAL
+		do
+			from
+				i := 1
+				n := exp.count
+				create Result.make (n)
+			until
+				i > n
+			loop
+				c := exp[i]
+				if i + 1 < n and then c = '$' and then exp[i+1] = '{' then
+					b := i + 2
+					e := exp.index_of ('}', b) - 1
+					if e > 0 then
+						k := exp.substring (b, e)
+						l_text := Void
+						l_resolved_items := resolved_items
+						if
+							l_resolved_items /= Void and then
+							attached l_resolved_items.item (k) as s
+						then
+								-- Already resolved, reuse value.
+							l_text := s
+						elseif attached text_item (k) as s then
+								-- has such item
+							l_text := s
+						elseif attached execution_environment.item (k) as v then
+								-- Or from environment
+							l_text := v
+						else
+							l_text := exp.substring (i, e + 1)
+						end
+						i := e + 1
+						Result.append_string_general (l_text)
+					else
+						Result.extend (c)
+					end
+				else
+					Result.extend (c)
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Duplication

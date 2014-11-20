@@ -168,7 +168,6 @@ feature -- Basic operation
 		require
 			page_path_set: a_page.path /= Void
 		local
-			f: RAW_FILE
 			d: DIRECTORY
 		do
 			if a_page.has_page then

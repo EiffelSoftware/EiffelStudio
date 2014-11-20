@@ -65,6 +65,61 @@ feature -- Test
 			else
 				assert ("has second", False)
 			end
+
+		end
+
+	test_resolver_ini
+		local
+			cfg: CONFIG_READER
+		do
+			create {INI_CONFIG} cfg.make_from_string ("[
+				foo = bar
+				
+				[extra]
+				a.b.c = abc
+				
+				[expression]
+				text = ${foo}/${a.b.c}
+			]")
+
+			assert ("is valid", not cfg.has_error)
+			assert ("has_item (extra.a.b.c)", cfg.has_item ("extra.a.b.c"))
+			assert ("has_item (extra.a.b.c)", cfg.has_item ("extra.a.b.c"))
+			assert ("has_item (expression.text)", cfg.has_item ("expression.text"))
+			assert ("item (expression.text)", attached cfg.resolved_text_item ("expression.text") as s and then s.same_string_general ("bar/abc"))
+		end
+
+	test_deep_ini
+		local
+			cfg: CONFIG_READER
+			f: RAW_FILE
+		do
+
+			create f.make_with_name ("test_deep.ini")
+			f.create_read_write
+			f.put_string ("[
+					test = extra
+					[new]
+					enabled = true
+				]"
+			)
+			f.close
+			create {INI_CONFIG} cfg.make_from_string ("[
+				foo = bar
+				
+				[extra]
+				a.b.c = abc
+							
+				[outside]
+				@include=test_deep.ini
+
+			]")
+			f.delete
+
+			assert ("is valid", not cfg.has_error)
+			assert ("has_item (extra.a.b.c)", cfg.has_item ("extra.a.b.c"))
+			assert ("has_item (extra.a.b.c)", cfg.has_item ("extra.a.b.c"))
+			assert ("has_item (outside.new.enabled)", cfg.has_item ("outside.new.enabled"))
 		end
 
 

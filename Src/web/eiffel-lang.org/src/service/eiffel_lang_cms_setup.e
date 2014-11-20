@@ -8,7 +8,7 @@ class
 	EIFFEL_LANG_CMS_SETUP
 
 inherit
-	CMS_CUSTOM_SETUP
+	CMS_DEFAULT_SETUP
 		redefine
 			initialize_modules
 		end

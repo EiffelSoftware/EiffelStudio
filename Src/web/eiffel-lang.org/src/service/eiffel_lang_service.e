@@ -80,20 +80,20 @@ feature -- Implementation: CMS
 		do
 			create {WDOCS_MODULE} m.make
 			m.enable
-			a_setup.modules.extend (m)
+			a_setup.register_module (m)
 
 			create {EIFFEL_LANG_MISC_MODULE} m.make
 			m.enable
-			a_setup.modules.extend (m)
+			a_setup.register_module (m)
 
 			create {EIFFEL_DOWNLOAD_MODULE} m.make
 			m.enable
-			a_setup.modules.extend (m)
+			a_setup.register_module (m)
 
 			debug
 				create {CMS_DEBUG_MODULE} m.make
 				m.enable
-				a_setup.modules.extend (m)
+				a_setup.register_module (m)
 			end
 		end
 

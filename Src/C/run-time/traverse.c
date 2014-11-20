@@ -146,48 +146,49 @@ rt_public void eif_unlock_marking (void)
 }
 
 /*
-doc:	<routine name="account_attributes" export="private">
-doc:		<summary>Account for types of attributes of dynamic type `dtype'.</summary>
-doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type from which we want to know the types of its attributes.</param>
+doc:	<routine name="account_type" export="private">
+doc:		<summary>Account for types only, ignoring any attributes. Attributes are only processed when encountering an object of type `dftype' in `internal_traversal'.</summary>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type from which we want to know the types of its attributes.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private void account_attributes (EIF_TYPE_INDEX dtype)
+rt_private void account_type (EIF_TYPE_INDEX dftype)
 {
 	RT_GET_CONTEXT
-	long num_attrib = System (dtype).cn_nbattr;
-	long i, k;
-	for (i=0; i<num_attrib; i++) {
-		const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[i];
-		for (k=0; gtypes[k] != TERMINATOR; k++) {
-			EIF_TYPE_INDEX gtype = gtypes[k];
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 
-				/* Skip all annotations. */
-			while (RT_HAS_ANNOTATION_TYPE(gtype)) {
-				k++;
-				gtype = gtypes[k];
-			}
+		/* Check that we are within bounds. */
+	if (dftype >= account_count) {
+			/* Increase by 50%. */
+		size_t old_count = account_count;
+		account_count = account_count + (account_count / 2);
+		account = (struct rt_traversal_info *) crealloc (account, account_count * sizeof(struct rt_traversal_info));
+		memset (account + old_count, 0, (account_count - old_count) * sizeof(struct rt_traversal_info));	/* Reset an empty stack */
 
-			if (gtype == TUPLE_TYPE) {
-				k = k + TUPLE_OFFSET;
-				gtype = gtypes[k];
-			}
-			if (gtype == FORMAL_TYPE) {
-					/* Skip formal position, no special treatment to be done. */
-				k = k + 1;
-			} else {
-				if (gtype <= MAX_DTYPE) {
-					account[gtype] |= ACCOUNT_TYPE;
-				}
+	}
+		/* Only process the type if not yet processed. */
+	if (!account[dftype].processed) {
+			/* We mark `dftype' as processed and `dtype' too. Note that
+			 * `dtype' might have already been processed in the case `dftype'
+			 * is another generic derivation of the same base class `dtype'. */
+		account[dftype].processed = 1;
+		account[dtype].processed = 1;
+		if (dftype != dtype) {
+				/* Type is generic, we need to record both the type and its actual
+				 * generic parameters as well. */
+			uint32 i, l_nb_gen = eif_gen_count_with_dftype(dftype);
+			for (i = 0; i < l_nb_gen; i++) {
+					/* + 1 here because it is 1-based. */
+				account_type (eif_gen_param_id (dftype, i + 1));
 			}
 		}
 	}
 }
 
 /*
-doc:	<routine name="account_type" export="private">
+doc:	<routine name="account_type_with_attributes" export="private">
 doc:		<summary>Account for type of object found.</summary>
 doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type from which we want to know the types of its attributes.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
@@ -195,69 +196,26 @@ doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</sync
 doc:	</routine>
 */
 
-rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
+rt_private void account_type_with_attributes (EIF_TYPE_INDEX dftype, int p_accounting)
 {
 	RT_GET_CONTEXT
-	EIF_TYPE_INDEX  *l_cidarr;
-	rt_uint_ptr count, i;
-	EIF_TYPE_INDEX dtype;
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 
-	dtype = To_dtype(dftype);
+	account_type(dftype);
 
-# ifdef RECOVERABLE_DEBUG
-	if ((account[dtype] & ACCOUNT_TYPE) == 0) {
-		printf ("Processing traversal of %s\n", eif_typename (dftype));
-	}
-# endif
-
-	account[dtype] |= ACCOUNT_TYPE;	/* This type is present */
-
-	/* Account for declared types of the attributes of the type. This
-	 * is important because the declared type of an attribute may be
-	 * different from the object which is attached to it (through
-	 * conformance).
-	 */
-	if (p_accounting & TR_ACCOUNT_ATTR)
-		if ((account[dtype] & ACCOUNT_ATTRIBUTES) == 0) {
-			account[dtype] |= ACCOUNT_ATTRIBUTES;
-			account_attributes (dtype);
-		}
-
-	if (dftype != dtype) {
-		/* Now insert generics if any */
-		l_cidarr = eif_gen_cid (dftype);
-		count = *l_cidarr;
-		l_cidarr++; /* count */
-
-		for (i = 0; i < count; i++, l_cidarr++) {
-			dtype = *l_cidarr;
-
-				/* There is an annotation, we can simply discard all of them. */
-			while (RT_HAS_ANNOTATION_TYPE(dtype)) {
-				l_cidarr++;
-				dtype = *l_cidarr;
-			}
-
-			if (dtype == TUPLE_TYPE) {
-				i = i + TUPLE_OFFSET;
-					/* We have already advanced the cursor, so we have to substract 1. */
-				l_cidarr += TUPLE_OFFSET;
-				dtype = *l_cidarr;
-			}
-
-				/* No need to handle special type since they should not appear in an object
-				 * type.
-				 */
-			CHECK ("No special type",
-				(dtype != LIKE_CURRENT_TYPE) &&
-				(dtype != LIKE_ARG_TYPE) &&
-				(dtype != LIKE_FEATURE_TYPE) &&
-				(dtype != QUALIFIED_FEATURE_TYPE) &&
-				(dtype != FORMAL_TYPE));
-
-			if (dtype <= MAX_DTYPE) {
-				account[dtype] |= ACCOUNT_TYPE;
-			}
+		/* Account for declared types of the attributes of the type. This
+		 * is important because the declared type of an attribute may be
+		 * different from the object which is attached to it (through
+		 * conformance).
+		 */
+	if ((p_accounting & TR_ACCOUNT_ATTR) && (!account[dftype].attributes_processed)) {
+		account[dftype].attributes_processed = 1;
+		long i, num_attrib = System (dtype).cn_nbattr;
+		for (i = 0; i < num_attrib; i++) {
+				/* Resolve type of attributes in context of `dftype'.
+				 * Which means that if the attributes involves some formal generic parameters
+				 * they are fully resolved with the actual generic parameter held via `dftype'. */
+			account_type (eif_compound_id (dftype, System (dtype).cn_gtypes[i]));
 		}
 	}
 }
@@ -267,7 +225,7 @@ doc:	<routine name="traversal" export="shared">
 doc:		<summary>First pass of the store mechanism consisting in marking objects with the EO_STORE flag.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object from which we start the marking mechanism.</param>
 doc:		<param name="for_persistence" type="int">Is traversal for persistence?.</param>
-doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, RECOVER_ACCOUNT).</param>
+doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, TR_STORE_ACCOUNT).</param>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
@@ -337,7 +295,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int for_persistence, in
 
 #if !defined CUSTOM || defined NEED_STORE_H
 	if (p_accounting & TR_ACCOUNT) {	/* Possible accounting */
-		account_type (zone->ov_dftype, p_accounting);
+		account_type_with_attributes (zone->ov_dftype, p_accounting);
 # ifdef RECOVERABLE_DEBUG
 		if (eif_is_nested_expanded(flags))
 			printf ("      expanded %s [%p]\n", eif_typename (zone->ov_dftype), object);
@@ -645,7 +603,7 @@ doc:	</routine>
 
 rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collection)
 {
-	if (a_collection->index >= a_collection->capacity) {
+	if (a_collection->count >= a_collection->capacity) {
 		a_collection->capacity = a_collection->capacity * 2;
 		a_collection->area = realloc (a_collection->area, sizeof (EIF_REFERENCE) * (a_collection->capacity));
 		if (!a_collection->area) {
@@ -653,9 +611,8 @@ rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collect
 			enomem();
 		}
 	}
-	a_collection->area [a_collection->index] = obj;
+	a_collection->area [a_collection->count] = obj;
 	a_collection->count = a_collection->count + 1;
-	a_collection->index = a_collection->index + 1;
 }
 
 /*
@@ -741,7 +698,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	if (!l_found.area) {
 		enomem();
 	}
-	l_found.index = 0;
 	found_collection = &l_found;
 
 		/* Initialize structure that will hold marked objects */
@@ -752,7 +708,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		free(l_found.area);
 		enomem();
 	}
-	l_marked.index = 0;
 	marked_collection = &l_marked;
 
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */

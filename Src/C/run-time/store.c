@@ -309,7 +309,7 @@ doc:	</attribute>
 rt_private int old_accounting = 0;
 
 /*
-doc:	<attribute name="account" return_type="char *" export="shared">
+doc:	<attribute name="account" return_type="struct rt_traversal_info *" export="shared">
 doc:		<summary>Array of traversed dynamic types during accounting.</summary>
 doc:		<access>Read/Write</access>
 doc:		<indexing>Dynamic type</indexing>
@@ -317,7 +317,8 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared char *account = NULL;
+rt_shared struct rt_traversal_info *account = NULL;
+rt_shared size_t account_count = 0;
 
 /* Declarations to work with streams */
 /*
@@ -417,9 +418,10 @@ rt_public void rt_reset_store(void) {
 	accounting = old_accounting;
 	buffer_size = old_store_buffer_size;
 
-	if (account != (char *) 0) {
+	if (account) {
 		eif_rt_xfree(account);
-		account = (char *) 0;
+		account = NULL;
+		account_count = 0;
 	}
 
 	if (idr_temp_buf != (char *) 0) {
@@ -555,7 +557,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 		idr_flush,
 		ist_write,
 		rmake_header,
-		RECOVER_ACCOUNT);
+		TR_STORE_ACCOUNT);
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
@@ -582,7 +584,7 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		idr_flush,
 		ist_write,
 		rmake_header,
-		RECOVER_ACCOUNT);
+		TR_STORE_ACCOUNT);
 
 	store_stream_buffer = *buffer;
 	store_stream_buffer_size = size;
@@ -702,10 +704,12 @@ rt_shared void internal_store(char *object)
 	}
 
 	if (accounting) {		/* Prepare character array */
-		account = (char *) eif_rt_xmalloc(scount * sizeof(char), C_T, GC_OFF);
-		if (account == (char *) 0)
+		account_count = eif_next_gen_id;
+		account = (struct rt_traversal_info *) cmalloc(account_count * sizeof(struct rt_traversal_info));
+		if (!account) {
 			xraise(EN_MEM);
-		memset (account, 0, scount * sizeof(char));
+		}
+		memset (account, 0, account_count * sizeof(struct rt_traversal_info));
 			/* To help a better transition for the storable changes in 6.6, if the code is compiled
 			 * in compatible mode, then we use the old storable format which does not store the version
 			 * of the class. */
@@ -735,7 +739,7 @@ rt_shared void internal_store(char *object)
 		l_failure = (char_write_func(&l_store_properties, sizeof(char)) < 0);
 	}
 	if (l_failure) {
-		if (accounting) {
+		if (account) {
 			eif_rt_xfree(account);
 			account = NULL;
 		}
@@ -745,14 +749,13 @@ rt_shared void internal_store(char *object)
 		obj_nb = 0;
 		traversal(object, 1, accounting);
 
-		if (accounting) {
+		if (account) {
 			make_header_func();			/* Make header */
 			eif_rt_xfree(account);			/* Free accouting character array */
-
-			account = (char *) 0;
+			account = NULL;
 		}
-		/* Write the count of stored objects */
-		if (accounting == RECOVER_ACCOUNT) {
+			/* Write the count of stored objects */
+		if (accounting) {
 			widr_multi_uint32 (&obj_nb, 1);
 		} else {
 			buffer_write((char *)(&obj_nb), sizeof(uint32));
@@ -1262,44 +1265,101 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	int16 name_length = (int16) strlen (name);
 	const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
 	int16 num_gtypes;
-	int16 i;
+	size_t i;
 	unsigned char basic_type;
-#ifdef RECOVERABLE_DEBUG
-	int16 *typearr = gtypes;
-#endif
+	EIF_TYPE_INDEX l_attr_type;
+	EIF_TYPE_INDEX gtype;
+	struct rt_id_of_context gen_conf_context;
 
 	REQUIRE("valid name_length", (size_t) name_length == strlen (name));
 
-	num_gtypes = 0;
-	for (i=0; gtypes[i] != TERMINATOR; i++) {
-		 	/* count types, and ignore attachment marks if any and requested. */
-		if (eif_is_discarding_attachment_marks) {
-			while (RT_HAS_ANNOTATION_TYPE (gtypes[i])) {
-				i++;
+		/* Old INDEPENDENT_STORE_6_6 format. */
+
+		/* Compute the actual type of the attribute and then extract its decomposition
+		 * which will we store. 
+		 * We cannot store its original typearr because it may involve qualified
+		 * anchored types (see test#store040).
+		 */
+
+	int l_done = 0;
+	while (!l_done) {
+			/* We assume we will be done in one iteration. Unless we meet some
+			 * qualified anchored types. */
+		l_done = 1;
+		num_gtypes = 0;
+		for (i = 0; gtypes[i] != TERMINATOR; i++) {
+			gtype = gtypes[i];
+				/* If we are storing for INDEPENDENT_STORE_6_6 then we
+				 * should remove all attachment marks. */
+			if (eif_is_discarding_attachment_marks) {
+				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+					i++;
+					gtype = gtypes [i];
+				}
+			}
+			switch (gtype) {
+				case TUPLE_TYPE:
+					i += TUPLE_OFFSET - 1;
+					num_gtypes += TUPLE_OFFSET;
+					break;
+				case FORMAL_TYPE:
+						/* Formal + position */	
+					num_gtypes += 2;
+					i += 1;
+					break;
+				case QUALIFIED_FEATURE_TYPE:
+					gen_conf_context.has_no_context = 1;
+					gen_conf_context.is_invalid = 0;
+					gen_conf_context.next_address_requested = 1;
+					l_attr_type = rt_compound_id_with_context (&gen_conf_context, dtype, &gtypes[i]);
+						/* If resolution of the type of the qualified anchored type uses
+						 * a formal or a type that is not accounted for, we cannot process
+						 * the type. */
+					if (gen_conf_context.is_invalid) {
+						eise_io("Store: Qualified Anchored Types referring to a formal generic paramter are not supported");
+					} else {
+							/* We have to repeat the whole thing, but this time we 
+							 * will be using the decoded type. */
+						l_done = 0;
+						i += (gen_conf_context.next_address - &gtypes[i]) - 1;
+					}
+					gen_conf_context.next_address_requested = 0;
+					break;
+				default:
+						/* No need to handle special type since they should not appear in an object type.
+						 * This can be attachment marks or actual types. */
+					CHECK("No special type",
+						(gtype != LIKE_CURRENT_TYPE) &&
+						(gtype != LIKE_ARG_TYPE) &&
+						(gtype != LIKE_FEATURE_TYPE));
+
+					num_gtypes++;
 			}
 		}
-		num_gtypes++;
+		if (!l_done) {
+				/* We had some qualified anchored type that did not depend on the
+				 * dynamic type (i.e. they had no formal. So we repeat the above
+				 * but this time we remove the qualified anchored type and resolve
+				 * the attribute type into a type array sequence. */
+			l_attr_type = eif_compound_id (dtype, gtypes);
+			gtypes = eif_gen_cid (l_attr_type);
+				/* In the above array, the first entry contains the count. */
+			gtypes++;
+		}
 	}
 
-#ifdef RECOVERABLE_DEBUG
-	printf ("        %s:", name);
-#endif
-	/* Write name information: "name_length name" */
+		/* Write attribute name information: "name_length name" */
 	widr_multi_int16 (&name_length, 1);
 	widr_multi_char ((EIF_CHARACTER_8 *) name, strlen (name));
 	basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
 	widr_multi_char (&basic_type, 1);
 
-	/* Write type information: "num_gtypes attribute_type {gen_types}*" */
+		/* Write type information: "num_gtypes attribute_type {gen_types}*" */
 	widr_multi_int16 (&num_gtypes, 1);
-	/* Write type array */
+
+		/* Write type array for INDEPENDENT_STORE_6_6 format */
 	for (i=0; gtypes[i] != TERMINATOR; i++) {
-		EIF_TYPE_INDEX gtype = gtypes[i];
-#ifdef RECOVERABLE_DEBUG
-		rt_shared char *name_of_attribute_type (int16 **type);
-		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
-		typearr++;
-#endif
+		gtype = gtypes[i];
 		if (eif_is_discarding_attachment_marks) {
 			while (RT_HAS_ANNOTATION_TYPE (gtype)) {
 				i++;
@@ -1324,15 +1384,19 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 			widr_multi_uint16 (gtypes + i, 2);
 			i += 1;
 		} else {
+				/* No need to handle special type since they should not appear in an object type. */
+			CHECK("No special type",
+				(gtype != LIKE_CURRENT_TYPE) &&
+				(gtype != LIKE_ARG_TYPE) &&
+				(gtype != LIKE_FEATURE_TYPE) &&
+				(gtype != QUALIFIED_FEATURE_TYPE));
+
 			widr_multi_uint16 (&gtype, 1);
 		}
 	}
-#ifdef RECOVERABLE_DEBUG
-	printf ("%s\n", num_gtypes > 1 ? "]" : "");
-#endif
 }
 
-rt_private void widr_type_attributes (int16 dtype)
+rt_private void widr_type_attributes (EIF_TYPE_INDEX dtype)
 {
 	int16 num_attrib = (int16) System(dtype).cn_nbattr;
 	int16 persistent_num_attrib = (int16) System(dtype).cn_persistent_nbattr;
@@ -1391,11 +1455,8 @@ rt_private void widr_type (int16 dtype, int is_version_required)
 	uint32 l_length;
 	int32 flags = (int32) System(dtype).cn_flags;
 
-	REQUIRE("valid name_length", (size_t) name_length == strlen (class_name));
+	CHECK("valid name_length", (size_t) name_length == strlen (class_name));
 
-#ifdef RECOVERABLE_DEBUG
-	printf ("Type %d %s", dtype, class_name);
-#endif
 	/* Write type information: "name_length name flags dynamic_type" */
 	widr_multi_int16 (&name_length, 1);
 	widr_multi_char ((EIF_CHARACTER_8 *) class_name, name_length);
@@ -1434,7 +1495,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 
 	/* count number of types actually present in objects to be stored */
 	for (type_count=0, i=0; i<scount; i++) {
-		if (account[i])
+		if (account[i].processed)
 			type_count++;
 	}
 
@@ -1450,7 +1511,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	widr_multi_int16 (&type_count, 1);
 
 	for (i=0; i<scount; i++) {
-		if (account[i])
+		if (account[i].processed)
 			widr_type (i, l_is_version_required);
 	}
 }

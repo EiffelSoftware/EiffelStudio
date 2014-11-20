@@ -144,6 +144,7 @@ typedef struct tag_rt_globals
 		/* gen_conf.c */
 	EIF_TYPE_INDEX cid_array_cx[3];
 	char **non_generic_type_names_cx;
+	struct rt_id_of_context rt_context_cx;
 
 		/* out.c */
 	char buffero_cx[TAG_SIZE];			/* Buffer for printing an object in a string */
@@ -226,7 +227,8 @@ typedef struct tag_rt_globals
 	int old_accounting_cx;
 	EIF_BOOLEAN eif_is_discarding_attachment_marks_cx;
 	EIF_BOOLEAN eif_is_discarding_qat_cx;
-	char *account_cx;
+	struct rt_traversal_info *account_cx;
+	size_t account_count_cx;
 	unsigned int **sorted_attributes_cx;
 	char *store_stream_buffer_cx;
 	size_t store_stream_buffer_position_cx;
@@ -373,8 +375,9 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #endif	/* WORKBENCH */
 
 	/* gen_conf.c */
-#define cid_array				(rt_globals->cid_array_cx)
-#define non_generic_type_names	(rt_globals->non_generic_type_names_cx)
+#define cid_array					(rt_globals->cid_array_cx)
+#define non_generic_type_names		(rt_globals->non_generic_type_names_cx)
+#define rt_context					(rt_globals->rt_context_cx)
 
 	/* out.c */
 #define buffero				(rt_globals->buffero_cx)		/* rt_private */
@@ -457,6 +460,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define eif_is_discarding_attachment_marks	(rt_globals->eif_is_discarding_attachment_marks_cx)
 #define eif_is_discarding_qat			(rt_globals->eif_is_discarding_qat_cx)
 #define account							(rt_globals->account_cx)
+#define account_count					(rt_globals->account_count_cx)
 #define sorted_attributes				(rt_globals->sorted_attributes_cx)
 #define store_stream_buffer				(rt_globals->store_stream_buffer_cx)
 #define store_stream_buffer_position	(rt_globals->store_stream_buffer_position_cx)

@@ -53,6 +53,8 @@ extern void eif_gen_conf_init (EIF_TYPE_INDEX);
 /* Clean up module. */
 extern void eif_gen_conf_cleanup (void);
 
+extern EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types);
+
 /* Is current tuple made of basic types? */
 extern int eif_tuple_is_atomic (EIF_REFERENCE tuple);
 
@@ -75,6 +77,10 @@ extern EIF_TYPE_INDEX eif_par_table2_size;
 
 /* Current maximum number of types. */
 extern EIF_TYPE_INDEX eif_next_gen_id;
+
+#ifndef EIF_THREADS
+extern struct rt_id_of_context rt_context;
+#endif
 
 #ifdef EIF_THREADS
 extern EIF_CS_TYPE *eif_gen_mutex;

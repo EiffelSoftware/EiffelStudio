@@ -60,8 +60,8 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	int done = 0;
 	size_t i = 0;
 #if defined(EIF_THREADS) && defined(ISE_GC)
-	int j = 0;
-	int l_threads_count = 0;
+	size_t j = 0;
+	size_t l_threads_count = 0;
 	int l_thread_once_set = 0;
 #endif
 	rt_uint_ptr n;
@@ -90,7 +90,6 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	if (!l_found.area) {
 		enomem();
 	}
-	l_found.index = -1;
 
 	while (l_once_set) {
 		for (s = l_once_set->st_hd, done = 0; s && !done; s = s->sk_next) {
@@ -119,9 +118,8 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 #endif
 #endif
 				if (o_ref) {
-					l_found.index = l_found.index + 1;
 
-					if (l_found.index >= l_found.capacity) {
+					if (l_found.count >= l_found.capacity) {
 						l_found.capacity = l_found.capacity * 2;
 						l_area = realloc (l_found.area, sizeof (EIF_REFERENCE) * (l_found.capacity));
 						if (!l_area) {
@@ -131,7 +129,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 							l_found.area = l_area;
 						}
 					}
-					l_found.area [l_found.index] = o_ref;
+					l_found.area [l_found.count] = o_ref;
 					l_found.count = l_found.count + 1;
 				}
 			}

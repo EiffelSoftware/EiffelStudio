@@ -1,0 +1,61 @@
+test_name	storable-with-qualified-anchors-reject
+test_description When storing a type involving qualified anchored types in the types of attributes that involved a formal, it should fail when trying to store that instance using the old independent format. We do not check for retrieval at all in this particular case.
+
+define ACTUAL_GENERIC_1 "STRING"
+define ACTUAL_GENERIC_2 "STRING"
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_normal
+
+define ACTUAL_GENERIC_1 "G"
+define ACTUAL_GENERIC_2 "STRING"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_failure
+
+define ACTUAL_GENERIC_1 "STRING"
+define ACTUAL_GENERIC_2 "G"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_failure
+
+define ACTUAL_GENERIC_1 "STRING"
+define ACTUAL_GENERIC_2 "like formal_g.out"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_failure
+
+define ACTUAL_GENERIC_1 "like formal_g.out"
+define ACTUAL_GENERIC_2 "STRING"
+copy_sub	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output_failure
+
+test_end

@@ -15,12 +15,16 @@ feature -- Application Configuration
 		do
 			Result := ""
 			if attached json_file_from (a_path) as json_file then
-			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
-			     attached {JSON_STRING} l_smtp.item ("server") as l_server then
-			     Result := l_server.item
-			 end
+				l_parser := new_json_parser (json_file)
+				l_parser.parse_content
+				if
+					l_parser.is_valid and then
+					attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then
+					attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
+					attached {JSON_STRING} l_smtp.item ("server") as l_server
+				then
+					Result := l_server.item
+				end
 			end
 		end
 
@@ -30,20 +34,23 @@ feature -- Application Configuration
 			l_parser: JSON_PARSER
 		do
 			if attached json_file_from (a_path) as json_file then
-			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
-			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
-			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
-			     attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
-			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
-				 attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
-				 attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string then
-				create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
-			 end
+				l_parser := new_json_parser (json_file)
+				l_parser.parse_content
+				if
+					l_parser.is_valid and then
+					attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then
+					attached {JSON_OBJECT} jv.item ("database") as l_database and then
+					attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
+					attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
+					attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
+					attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
+					attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
+					attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string
+				then
+					create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
+				end
 			end
 		end
-
 
 	new_logger_level_configuration (a_path: PATH): READABLE_STRING_32
 			-- Retrieve a new logger level configuration.
@@ -53,12 +60,16 @@ feature -- Application Configuration
 		do
 			Result := "DEBUG"
 			if attached json_file_from (a_path) as json_file then
-			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
-			     attached {JSON_STRING} l_logger.item ("level") as l_level then
-			     Result := l_level.item
-			 end
+				l_parser := new_json_parser (json_file)
+				l_parser.parse_content
+				if
+					l_parser.is_valid and then
+					attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then
+					attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
+					attached {JSON_STRING} l_logger.item ("level") as l_level
+				then
+					Result := l_level.item
+				end
 			end
 		end
 
@@ -68,22 +79,26 @@ feature -- Application Configuration
 			l_parser: JSON_PARSER
 		do
 			if attached json_file_from (a_path) as json_file then
-			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
-			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
-			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
-			     attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
-			     attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
-			     attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
-				 attached {JSON_OBJECT} l_environments.item ("test") as l_environment_selected and then
-				 attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string and then
-				 attached {JSON_STRING} l_environment_selected.item ("name") as l_name then
-				create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
-			 end
+				l_parser := new_json_parser (json_file)
+				l_parser.parse_content
+				if
+					l_parser.is_valid and then
+					attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then
+					l_parser.is_parsed and then
+					attached {JSON_OBJECT} jv.item ("database") as l_database and then
+					attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
+					attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
+					attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
+					attached {JSON_STRING} l_datasource.item ("trusted") as l_trusted and then
+					attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
+					attached {JSON_OBJECT} l_environments.item ("test") as l_environment_selected and then
+					attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string and then
+					attached {JSON_STRING} l_environment_selected.item ("name") as l_name
+				then
+					create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
+				end
 			end
 		end
-
 
 feature {NONE} -- JSON
 
@@ -100,4 +115,5 @@ feature {NONE} -- JSON
 note
 	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+
 end

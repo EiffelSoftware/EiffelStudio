@@ -16,9 +16,12 @@ indexing
 	Eiffel Net C interfacing --- 	.../library/net/Clib/storable.c
 */
 
-
 #include "eif_config.h"
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
+
+#ifdef EIF_WINDOWS
+#include <winsock2.h>
+#endif
 
 #include "eif_except.h"		/* eraise */
 #include "eif_store.h"
@@ -27,9 +30,7 @@ indexing
 #include "eif_traverse.h"
 
 #ifdef EIF_WINDOWS
-#include "winsock.h"
 #define GET_SOCKET_ERROR WSAGetLastError()
-#define EWOULDBLOCK WSAEWOULDBLOCK
 #else
 #ifdef I_SYS_TIME
 #include <sys/time.h>		/* select */
@@ -50,6 +51,15 @@ indexing
 #ifdef VXWORKS
 #include <string.h>
 #include <selectLib.h>	/* For select. */
+#endif
+
+#ifdef EIF_WINDOWS
+/* To create portable code we override the definition of some errno constants to
+ * map what winsock returns to us for error codes. */
+#ifdef EWOULDBLOCK
+	#undef EWOULDBLOCK
+#endif
+#define EWOULDBLOCK WSAEWOULDBLOCK
 #endif
 
 #define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"

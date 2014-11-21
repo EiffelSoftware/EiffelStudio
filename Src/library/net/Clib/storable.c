@@ -329,7 +329,7 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 		idr_flush,
 		ist_write,
 		rmake_header,
-		RECOVER_ACCOUNT);
+		0x1 | 0x4);
 
 	independent_free_store (object);
 	rt_reset_store();

@@ -23,15 +23,13 @@
 							<div class="header-right">
 								<nav class="add-links">
 									<ul>
-								<!--
-								-->
 										{if isset="$user"}
-										<li><a href="{$site_url/}/user">My-Account</a></li>
-										<li><a href="{$site_url/}/user/logout">LOG OUT</a></li>
+											<li><a href="{$site_url/}/user">My-Account</a></li>
+											<li><a href="{$site_url/}/user/logout">LOG OUT</a></li>
 										{/if}
 										{unless isset="$user"}
-										<li><a href="{$site_url/}/user/register">register</a></li>
-										<li><a href="{$site_url/}/user">LOG IN</a></li>
+											<li><a href="{$site_url/}/user/register">register</a></li>
+											<li><a href="{$site_url/}/user">LOG IN</a></li>
 										{/unless}
 									</ul>
 								</nav>
@@ -39,7 +37,7 @@
 									<input type="search" placeholder="">
 								</form>
 							</div>
-							{unless empty="$page.region_header"}
-							<div class="container">{$page.region_header/}</div>
-							{/unless}
 						</div>
+						{unless empty="$page.region_header"}
+							<div class="container promo-area">{$page.region_header/}</div>
+						{/unless}

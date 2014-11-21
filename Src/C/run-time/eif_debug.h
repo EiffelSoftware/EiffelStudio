@@ -139,7 +139,7 @@ extern void dmove(int offset);							/* Move active routine cursor */
  */
 
 extern void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3);
-extern void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_dyn_type, int a_routine_id, 
+extern void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, EIF_TYPE_INDEX a_dyn_type,
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted);
 extern int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value);
 extern EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);

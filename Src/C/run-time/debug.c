@@ -2235,7 +2235,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 		};
 	};
 }
-rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, int a_dyn_type,
+rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, EIF_TYPE_INDEX a_dyn_type,
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted)
 {
 

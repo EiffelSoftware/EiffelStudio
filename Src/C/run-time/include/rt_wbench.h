@@ -87,6 +87,8 @@ extern "C" {
 #define MPatId(x) mpatidtab[x]
 #define FPatId(x) egc_fpatidtab[x]
 
+extern void rt_wexp(int routine_id, EIF_TYPE_INDEX dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
+
 #ifdef __cplusplus
 }
 #endif

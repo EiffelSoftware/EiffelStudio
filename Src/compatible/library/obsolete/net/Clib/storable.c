@@ -16,9 +16,12 @@ indexing
 	Eiffel Net C interfacing --- 	.../library/net/Clib/storable.c
 */
 
-
 #include "eif_config.h"
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
+
+#ifdef EIF_WINDOWS
+#include <winsock2.h>
+#endif
 
 #include "eif_except.h"		/* eraise */
 #include "eif_store.h"
@@ -27,9 +30,7 @@ indexing
 #include "eif_traverse.h"
 
 #ifdef EIF_WINDOWS
-#include "winsock.h"
 #define GET_SOCKET_ERROR WSAGetLastError()
-#define EWOULDBLOCK WSAEWOULDBLOCK
 #else
 #ifdef I_SYS_TIME
 #include <sys/time.h>		/* select */
@@ -50,6 +51,15 @@ indexing
 #ifdef VXWORKS
 #include <string.h>
 #include <selectLib.h>	/* For select. */
+#endif
+
+#ifdef EIF_WINDOWS
+/* To create portable code we override the definition of some errno constants to
+ * map what winsock returns to us for error codes. */
+#ifdef EWOULDBLOCK
+	#undef EWOULDBLOCK
+#endif
+#define EWOULDBLOCK WSAEWOULDBLOCK
 #endif
 
 #define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"
@@ -301,39 +311,16 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
+	struct rt_store_context a_context;	
 	socket_fides = file_desc;
 
-	rt_init_store(
-			store_write,
-			net_char_write,
-			flush_st_buffer,
-			st_write,
-			make_header,
-			0);
+	a_context.write_buffer_function = store_write;
+	a_context.flush_buffer_function = flush_st_buffer;
+	a_context.write_function = net_char_write;
+	a_context.object_write_function = st_write;
+	a_context.header_function = NULL;
 
-	basic_general_free_store(object);
-
-	rt_reset_store();
-#endif
-}
-
-rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
-{
-#ifndef EIF_IL_DLL
-	GTCX
-	socket_fides = file_desc;
-
-	rt_init_store(
-			store_write,
-			net_char_write,
-			flush_st_buffer,
-			gst_write,
-			make_header,
-			TR_ACCOUNT);
-
-	basic_general_free_store(object);
-
-	rt_reset_store();
+	eif_store_object (&a_context, object, BASIC_STORE);
 #endif
 }
 
@@ -341,18 +328,22 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
+	struct rt_store_context a_context;	
 	socket_fides = file_desc;
 
-	rt_init_store(
-		store_write,
-		net_char_write,
-		idr_flush,
-		ist_write,
-		rmake_header,
-		RECOVER_ACCOUNT);
+	a_context.write_buffer_function = store_write;
+	a_context.flush_buffer_function = idr_flush;
+	a_context.write_function = net_char_write;
+	a_context.object_write_function = ist_write;
+	a_context.header_function = rmake_header;
 
-	independent_free_store (object);
-	rt_reset_store();
+	eif_store_object (&a_context, object, INDEPENDENT_STORE);
 #endif
 }
+
+rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
+{
+	eif_net_independent_store (file_desc, object);
+}
+
 

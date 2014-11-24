@@ -53,34 +53,25 @@ extern "C" {
 /*
  * Utilities
  */
-#ifndef EIF_THREADS
-extern struct rt_traversal_info *account;	/* Array of traversed dyn types */
-extern size_t account_count;				/* Capacity of `account'. */
-#endif
-RT_LNK void allocate_gen_buffer(void);
-RT_LNK void buffer_write(const char *data, size_t size);
-
+extern void allocate_gen_buffer(void);
+extern void buffer_write(const char *data, size_t size);
 
 extern int char_write(char *pointer, int size);
 
 extern rt_uint_ptr get_offset(EIF_TYPE_INDEX o_type, rt_uint_ptr attrib_num);          /* get offset of attrib in object*/
 
-RT_LNK void internal_store(char *object);
+extern void rt_setup_store (struct rt_store_context *a_context);
 
 #ifndef EIF_THREADS
-RT_LNK char * general_buffer;
-RT_LNK size_t current_position;
+extern char * general_buffer;
+extern size_t current_position;
 extern size_t buffer_size;
-RT_LNK size_t cmp_buffer_size;
-#endif
+extern size_t cmp_buffer_size;
 
 /* compression */
-#ifndef EIF_THREADS
-RT_LNK char * cmps_general_buffer;
-#endif
+extern char * cmps_general_buffer;
 
 /* Actions */
-#ifndef EIF_THREADS
 extern int (*char_write_func)(char *, int);
 #endif
 

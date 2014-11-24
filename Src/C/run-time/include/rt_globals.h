@@ -41,6 +41,7 @@
 #endif
 
 #include "eif_globals.h"
+#include "eif_traverse.h"
 #include "rt_hash.h"
 #include "rt_retrieve.h"
 #include "idrs.h"
@@ -210,25 +211,15 @@ typedef struct tag_rt_globals
 	char *general_buffer_cx;
 	size_t current_position_cx;
 	size_t buffer_size_cx;
-	size_t old_store_buffer_size_cx;
 	size_t cmp_buffer_size_cx;
 	int s_fides_cx;
 	void (*store_write_func_cx)(size_t);
 	void (*flush_buffer_func_cx)(void);
 	void (*st_write_func_cx)(EIF_REFERENCE, int);
-	void (*make_header_func_cx)(void);
+	void (*make_header_func_cx)(struct rt_traversal_context *);
 	int (*char_write_func_cx)(char *, int);
-	void (*old_store_write_func_cx)(size_t);
-	int (*old_char_write_func_cx)(char *, int);
-	void (*old_flush_buffer_func_cx)(void);
-	void (*old_st_write_func_cx)(EIF_REFERENCE, int);
-	void (*old_make_header_func_cx)(void);
-	int accounting_cx;
-	int old_accounting_cx;
 	EIF_BOOLEAN eif_is_discarding_attachment_marks_cx;
 	EIF_BOOLEAN eif_is_discarding_qat_cx;
-	struct rt_traversal_info *account_cx;
-	size_t account_count_cx;
 	unsigned int **sorted_attributes_cx;
 	char *store_stream_buffer_cx;
 	size_t store_stream_buffer_position_cx;
@@ -442,7 +433,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define general_buffer					(rt_globals->general_buffer_cx)
 #define current_position				(rt_globals->current_position_cx)
 #define buffer_size						(rt_globals->buffer_size_cx)
-#define old_store_buffer_size			(rt_globals->old_store_buffer_size_cx)
 #define cmp_buffer_size					(rt_globals->cmp_buffer_size_cx)
 #define s_fides							(rt_globals->s_fides_cx)
 #define store_write_func				(rt_globals->store_write_func_cx)
@@ -450,17 +440,8 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define st_write_func					(rt_globals->st_write_func_cx)
 #define make_header_func				(rt_globals->make_header_func_cx)
 #define char_write_func			 		(rt_globals->char_write_func_cx)
-#define old_store_write_func			(rt_globals->old_store_write_func_cx)
-#define old_char_write_func 			(rt_globals->old_char_write_func_cx)
-#define old_flush_buffer_func			(rt_globals->old_flush_buffer_func_cx)
-#define old_st_write_func				(rt_globals->old_st_write_func_cx)
-#define old_make_header_func			(rt_globals->old_make_header_func_cx)
-#define accounting						(rt_globals->accounting_cx)
-#define old_accounting					(rt_globals->old_accounting_cx)
 #define eif_is_discarding_attachment_marks	(rt_globals->eif_is_discarding_attachment_marks_cx)
 #define eif_is_discarding_qat			(rt_globals->eif_is_discarding_qat_cx)
-#define account							(rt_globals->account_cx)
-#define account_count					(rt_globals->account_count_cx)
 #define sorted_attributes				(rt_globals->sorted_attributes_cx)
 #define store_stream_buffer				(rt_globals->store_stream_buffer_cx)
 #define store_stream_buffer_position	(rt_globals->store_stream_buffer_position_cx)

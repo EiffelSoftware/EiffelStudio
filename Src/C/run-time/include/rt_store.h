@@ -41,6 +41,7 @@
 #endif
 
 #include "eif_store.h"
+#include "rt_traverse.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,6 +50,26 @@ extern "C" {
 /* Properties configuring how the storable was made. */
 #define STORE_DISCARD_ATTACHMENT_MARKS 0x01
 #define STORE_OLD_SPECIAL_SEMANTIC 0x02
+
+/*
+doc:	<struct name="rt_store_context" export="public">
+doc:		<summary>Context used to configure how objects are stored.</summary>
+doc:		<field name="write_function" type="int (*)(char *, int)">Function used to actually write data on medium. Used for initializing `char_write_func'.</field>
+doc:		<field name="write_buffer_function" type="void (*)(size_t)">Function used to actually write the buffered data on medium (normally using `write_function'). In basic store, the buffer is compressed before being written. Used for initializing `store_write_func'.</field>
+doc:		<field name="flush_buffer_function" type="void (*)(void)">Function used to flush any data left in buffer at the end of the store operation.</field>
+doc:		<field name="object_write_function" type="void (*)(EIF_REFERENCE, int)">Function used to store an Eiffel object.</field>
+doc:		<field name="header_function" type="void (*)(struct rt_traversal_context *)">Function used to write a header to the storable data. Only used for recoverable storable to store some metadata about the types included in the storable.</field>
+doc:	</struct>
+*/
+struct rt_store_context {
+	int (*write_function)(char *, int);
+	void (*write_buffer_function) (size_t);
+		/* The members below are private and should only be used in the Eiffel runtime only. */
+	void (*flush_buffer_function) (void);
+	void (*object_write_function) (EIF_REFERENCE, int);
+	void (*header_function) (struct rt_store_context *);
+	struct rt_traversal_context traversal_context;
+};
 
 /*
  * Utilities
@@ -60,7 +81,8 @@ extern int char_write(char *pointer, int size);
 
 extern rt_uint_ptr get_offset(EIF_TYPE_INDEX o_type, rt_uint_ptr attrib_num);          /* get offset of attrib in object*/
 
-extern void rt_setup_store (struct rt_store_context *a_context);
+extern void rt_store_object(struct rt_store_context *a_context, EIF_REFERENCE object, char store_type);
+extern void rt_setup_store (struct rt_store_context *a_context, char store_type);
 
 #ifndef EIF_THREADS
 extern char * general_buffer;

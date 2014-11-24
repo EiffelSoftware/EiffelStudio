@@ -53,23 +53,6 @@ RT_LNK EIF_REFERENCE find_all_instances (EIF_INTEGER result_type);
 RT_LNK void eif_lock_marking (void);
 RT_LNK void eif_unlock_marking (void);
 
-/*
-doc:	<struct name="rt_traversal_context" export="public">
-doc:		<summary>Context used to configure or get results from a call to `traversal'.</summary>
-doc:		<field name="accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, TR_STORE_ACCOUNT).</field>
-doc:		<field name="is_for_persistence" type="int">Is traversal for persistence purpose? If not it is for copy purpose.</field>
-doc:		<field name="account" type="struct rt_traversal_info *">Array of traversed dynamic types.</field>
-doc:	</struct>
-*/
-struct rt_traversal_context {
-	uint32 obj_nb;						/* Number of objects found during traversal. */
-	int accounting;						/* Type of accounting being done. */
-	struct rt_traversal_info *account;	/* Array of traversed dyn types */
-	size_t account_count;
-		/* The members below are private and should only be used inside `traverse.c'. */
-	int is_for_persistence;			
-};
-
 #ifdef __cplusplus
 }
 #endif

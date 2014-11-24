@@ -93,7 +93,6 @@ rt_public void parsing_store_initialize (void) {
 	parsing_context.object_write_function = st_write;
 	parsing_context.header_function = NULL;
 
-
 	if (parsing_buffer == (char *) 0) {
 			/* We need to initialize `buffer_size' now as otherwise `allocate_gen_buffer'
 			 * will initialize a zero-sized buffer. */

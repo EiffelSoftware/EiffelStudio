@@ -72,8 +72,7 @@ extern EIF_CS_TYPE *eif_eo_store_mutex;
 #define TR_ACCOUNT_ATTR	0x04		/* Accounting of types of attributes */
 #define TR_STORE_ACCOUNT	(TR_ACCOUNT | TR_ACCOUNT_ATTR)
 
-RT_LNK uint32 obj_nb;					/* Count of marked objects */
-RT_LNK void traversal(EIF_REFERENCE object, int for_persistence, int p_accounting); /* Traversal of objects */
+RT_LNK void traversal(struct rt_traversal_context *a_context, EIF_REFERENCE object); /* Traversal of objects */
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */

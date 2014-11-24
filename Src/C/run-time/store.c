@@ -141,16 +141,6 @@ doc:	</attribute>
 rt_shared size_t buffer_size = 0;
 
 /*
-doc:	<attribute name="old_store_buffer_size" return_type="size_t" export="private">
-doc:		<summary>Store default version of `buffer_size'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private size_t old_store_buffer_size = 0;
-
-/*
 doc:	<attribute name="cmp_buffer_size" return_type="size_t" export="shared">
 doc:		<summary>Size of compression buffer `cmps_general_buffer', computed from `buffer_size'</summary>
 doc:		<access>Read/Write</access>
@@ -174,16 +164,14 @@ rt_private int s_fides;
 /*
  * Function declarations
  */
-rt_shared void internal_store(char *object);
+rt_private void internal_store(struct rt_traversal_context *a_context, char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
-rt_public void rmake_header(void);
+rt_public void rmake_header(struct rt_traversal_context *a_context);
 rt_private void object_write (char *object, uint16, EIF_TYPE_INDEX);
 rt_private void st_write_cid (EIF_TYPE_INDEX);
 rt_private void ist_write_cid (EIF_TYPE_INDEX);
 rt_public void allocate_gen_buffer(void);
 rt_shared void buffer_write(const char *data, size_t size);
-
-rt_public void rt_reset_store (void);
 
 rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype);
 
@@ -219,14 +207,14 @@ doc:	</attribute>
 rt_private void (*st_write_func)(EIF_REFERENCE, int);
 
 /*
-doc:	<attribute name="make_header_func" return_type="void (*)(void)" export="private">
+doc:	<attribute name="make_header_func" return_type="void (*)(struct rt_traversal_context *)" export="private">
 doc:		<summary>Action called to write storable header.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*make_header_func)(void);
+rt_private void (*make_header_func)(struct rt_traversal_context *);
 
 /*
 doc:	<attribute name="char_write_func" return_type="int (*)(char *, int)" export="shared">
@@ -237,76 +225,6 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_shared int (*char_write_func)(char *, int);
-
-/*
-doc:	<attribute name="old_store_write_func" return_type="void (*)(size_t)" export="private">
-doc:		<summary>Store default version of `store_write_func'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private void (*old_store_write_func)(size_t);
-
-/*
-doc:	<attribute name="old_char_write_func" return_type="int (*)(char *, int)" export="private">
-doc:		<summary>Store default version of `char_write_func'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private int (*old_char_write_func)(char *, int);
-
-/*
-doc:	<attribute name="old_flush_buffer_func" return_type="void (*)()" export="private">
-doc:		<summary>Store default version of `buffer_write_func'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private void (*old_flush_buffer_func)(void);
-
-/*
-doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE, int)" export="private">
-doc:		<summary>Store default version of `st_write_func'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private void (*old_st_write_func)(EIF_REFERENCE, int);
-
-/*
-doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
-doc:		<summary>Store default version of `make_header_func'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private void (*old_make_header_func)(void);
-
-/*
-doc:	<attribute name="accounting" return_type="int" export="private">
-doc:		<summary>Do we account for something while traversing first set of objects to be stored? If so, its value tells us what to do (See `eif_traverse.h' for explanation of possible values)</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private int accounting = 0;
-
-/*
-doc:	<attribute name="old_accounting" return_type="int" export="private">
-doc:		<summary>Store default version of `accounting'.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private int old_accounting = 0;
 
 /*
 doc:	<attribute name="account" return_type="struct rt_traversal_info *" export="shared">
@@ -378,56 +296,66 @@ rt_shared void eif_store_thread_init (void)
 }
 #endif
 
-/* Initialize store function pointers and globals */
-/* reset buffer size if argument is non null */
-rt_public void rt_init_store(
-	void (*store_function) (size_t),
-	int (*char_write_function)(char *, int),
-	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE, int),
-	void (*make_header_function) (void),
-	int accounting_type)
+/*
+doc:	<routine name="eif_store_object" export="public">
+doc:		<summary>Store object `object' using `a_context' and storable type `store_type'.</summary>
+doc:		<param name="a_context" type="struct rt_store_context *a_context">Context used to perform the store operation.</param>
+doc:		<param name="object" type="EIF_REFERENCE">Object to store.</param>
+doc:		<param name="store_type" type="char">Type of storable used. It can be either of BASIC_STORE, GENERAL_STORE or INDEPENDENT_STORE.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_store_object(
+	struct rt_store_context *a_context,
+	EIF_REFERENCE object,
+	char store_type)
 {
 	RT_GET_CONTEXT
-	old_store_write_func = store_write_func;
-	old_char_write_func = char_write_func;
-	old_flush_buffer_func = flush_buffer_func;
-	old_st_write_func = st_write_func;
-	old_make_header_func = make_header_func;
-	old_accounting = accounting;
-	old_store_buffer_size = buffer_size;
+	struct rt_traversal_context traversal_context;
 
-	store_write_func = store_function;
-	char_write_func = char_write_function;
-	flush_buffer_func = flush_buffer_function;
-	st_write_func = st_write_function;
-	make_header_func = make_header_function;
-	accounting = accounting_type;
+	rt_setup_store (a_context);
+	memset(&traversal_context, 0, sizeof(struct rt_traversal_context));
+	if (store_type == INDEPENDENT_STORE) {
+		traversal_context.accounting = TR_STORE_ACCOUNT;
+	}
+	traversal_context.is_for_persistence = 1;
+
 	buffer_size = EIF_BUFFER_SIZE;
+
+	if ((store_type == BASIC_STORE) || (store_type == GENERAL_STORE)) {
+		allocate_gen_buffer();
+	} else if (store_type == INDEPENDENT_STORE) {
+			/* Initialize serialization streams for writting (1 stands for write) */
+		run_idr_init (buffer_size, 1);
+		idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
+		if (!idr_temp_buf) {
+			xraise (EN_MEM);
+		}
+	}
+
+	internal_store(&traversal_context, object);
+
+	if (traversal_context.account) {
+		eif_rt_xfree(traversal_context.account);
+		traversal_context.account = NULL;
+		traversal_context.account_count = 0;
+	}
+
+	if (store_type == INDEPENDENT_STORE) {
+		run_idr_destroy ();
+		eif_rt_xfree (idr_temp_buf);
+		idr_temp_buf = NULL;
+	}
 }
-
-/* Reset store function pointers and globals to their default values */
-
-rt_public void rt_reset_store(void) {
+rt_shared void rt_setup_store (struct rt_store_context *a_context)
+{
 	RT_GET_CONTEXT
-	store_write_func = old_store_write_func;
-	char_write_func = old_char_write_func;
-	flush_buffer_func = old_flush_buffer_func;
-	st_write_func = old_st_write_func;
-	make_header_func = old_make_header_func;
-	accounting = old_accounting;
-	buffer_size = old_store_buffer_size;
-
-	if (account) {
-		eif_rt_xfree(account);
-		account = NULL;
-		account_count = 0;
-	}
-
-	if (idr_temp_buf != (char *) 0) {
-		eif_rt_xfree(idr_temp_buf);
-		idr_temp_buf = (char *) 0;
-	}
+	store_write_func = a_context->write_buffer_function;
+	char_write_func = a_context->write_function;
+	flush_buffer_func = a_context->flush_buffer_function;
+	st_write_func = a_context->object_write_function;
+	make_header_func = a_context->header_function;
 }
 
 /* Functions definitions */
@@ -437,42 +365,37 @@ rt_public void rt_reset_store(void) {
 rt_public void estore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	RT_GET_CONTEXT
+	struct rt_store_context a_context;
+
 	s_fides = (int) file_desc;
 
-	rt_init_store (
-		store_write,
-		char_write,
-		flush_st_buffer,
-		st_write,
-		NULL,
-		0);
+	a_context.write_buffer_function = store_write;
+	a_context.flush_buffer_function = flush_st_buffer;
+	a_context.write_function = char_write;
+	a_context.object_write_function = st_write;
+	a_context.header_function = NULL;
 
-	allocate_gen_buffer();
-	internal_store(object);
-
-	rt_reset_store ();
+	eif_store_object (&a_context, object, BASIC_STORE);
 }
 
 rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	RT_GET_CONTEXT
-	rt_init_store (
-		store_write,
-		stream_write,
-		flush_st_buffer,
-		st_write,
-		NULL,
-		0);
+	struct rt_store_context a_context;
 
 	store_stream_buffer = *buffer;
 	store_stream_buffer_size = size;
 	store_stream_buffer_position = 0;
 
-	allocate_gen_buffer();
-	internal_store(object);
+	a_context.write_buffer_function = store_write;
+	a_context.flush_buffer_function = flush_st_buffer;
+	a_context.write_function = stream_write;
+	a_context.object_write_function = st_write;
+	a_context.header_function = NULL;
+
+	eif_store_object (&a_context, object, BASIC_STORE);
 
 	*buffer = store_stream_buffer;
-	rt_reset_store ();
 	*real_size = (EIF_INTEGER) store_stream_buffer_position;
 	CHECK("not too big", store_stream_buffer_size <= 0x7FFFFFFF);
 	return (EIF_INTEGER) store_stream_buffer_size;
@@ -487,12 +410,6 @@ rt_public void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	return stream_sstore(buffer, size, object, real_size);
-}
-
-rt_public void basic_general_free_store (EIF_REFERENCE object)
-{
-	allocate_gen_buffer();
-	internal_store(object);
 }
 
 #ifndef EIF_THREADS
@@ -550,81 +467,38 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	RT_GET_CONTEXT
 	s_fides = (int) file_desc;
+	struct rt_store_context a_context;
 
-	rt_init_store (
-		NULL,
-		char_write,
-		idr_flush,
-		ist_write,
-		rmake_header,
-		TR_STORE_ACCOUNT);
+	a_context.write_buffer_function = NULL;
+	a_context.flush_buffer_function = idr_flush;
+	a_context.write_function = char_write;
+	a_context.object_write_function = ist_write;
+	a_context.header_function = rmake_header;
 
-		/* Initialize serialization streams for writting (1 stands for write) */
-	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
-	if (!idr_temp_buf) {
-		xraise (EN_MEM);
-	}
-
-	internal_store(object);
-
-	run_idr_destroy ();
-	eif_rt_xfree (idr_temp_buf);
-	idr_temp_buf = (char *)0;
-
-	rt_reset_store ();
+	eif_store_object (&a_context, object, INDEPENDENT_STORE);
 }
 
 rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	RT_GET_CONTEXT
-	rt_init_store (
-		NULL,
-		stream_write,
-		idr_flush,
-		ist_write,
-		rmake_header,
-		TR_STORE_ACCOUNT);
+	struct rt_store_context a_context;
 
 	store_stream_buffer = *buffer;
 	store_stream_buffer_size = size;
 	store_stream_buffer_position = 0;
 
-		/* Initialize serialization streams for writting (1 stands for write) */
-	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
-	if (!idr_temp_buf) {
-		xraise (EN_MEM);
-	}
+	a_context.write_buffer_function = NULL;
+	a_context.flush_buffer_function = idr_flush;
+	a_context.write_function = stream_write;
+	a_context.object_write_function = ist_write;
+	a_context.header_function = rmake_header;
 
-	internal_store(object);
-
-	run_idr_destroy ();
-	eif_rt_xfree (idr_temp_buf);
-	idr_temp_buf = (char *)0;
+	eif_store_object (&a_context, object, INDEPENDENT_STORE);
 
 	*buffer = store_stream_buffer;
-	rt_reset_store ();
 	*real_size = (EIF_INTEGER) store_stream_buffer_position;
 	CHECK("not too big", store_stream_buffer_size <= 0x7FFFFFFF);
 	return (EIF_INTEGER) store_stream_buffer_size;
-}
-
-rt_public void independent_free_store (EIF_REFERENCE object)
-{
-	RT_GET_CONTEXT
-		/* Initialize serialization streams for writting (1 stands for write) */
-	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
-	if (!idr_temp_buf) {
-		xraise (EN_MEM);
-	}
-
-	internal_store(object);
-
-	run_idr_destroy ();
-	eif_rt_xfree (idr_temp_buf);
-	idr_temp_buf = (char *)0;
 }
 
 /* Stream allocation */
@@ -682,7 +556,7 @@ rt_public void allocate_gen_buffer (void)
 	end_of_buffer = 0;
 }
 
-rt_shared void internal_store(char *object)
+rt_private void internal_store(struct rt_traversal_context *a_context, char *object)
 {
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
@@ -699,17 +573,16 @@ rt_shared void internal_store(char *object)
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
-		rt_reset_store ();				/* Reset data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
-	if (accounting) {		/* Prepare character array */
-		account_count = eif_next_gen_id;
-		account = (struct rt_traversal_info *) cmalloc(account_count * sizeof(struct rt_traversal_info));
-		if (!account) {
+	if (a_context->accounting) {		/* Prepare character array */
+		a_context->account_count = eif_next_gen_id;
+		a_context->account = (struct rt_traversal_info *) eif_rt_xmalloc(a_context->account_count * sizeof(struct rt_traversal_info), C_T, GC_OFF);
+		if (!a_context->account) {
 			xraise(EN_MEM);
 		}
-		memset (account, 0, account_count * sizeof(struct rt_traversal_info));
+		memset (a_context->account, 0, a_context->account_count * sizeof(struct rt_traversal_info));
 			/* To help a better transition for the storable changes in 6.6, if the code is compiled
 			 * in compatible mode, then we use the old storable format which does not store the version
 			 * of the class. */
@@ -739,30 +612,30 @@ rt_shared void internal_store(char *object)
 		l_failure = (char_write_func(&l_store_properties, sizeof(char)) < 0);
 	}
 	if (l_failure) {
-		if (account) {
-			eif_rt_xfree(account);
-			account = NULL;
+		if (a_context->account) {
+			eif_rt_xfree(a_context->account);
+			a_context->account = NULL;
 		}
 		eise_io("Store: unable to write the kind of storable.");
 	} else {
 		EIF_EO_STORE_LOCK;
-		obj_nb = 0;
-		traversal(object, 1, accounting);
+		a_context->obj_nb = 0;
+		traversal(a_context, object);
 
-		if (account) {
-			make_header_func();			/* Make header */
-			eif_rt_xfree(account);			/* Free accouting character array */
-			account = NULL;
+		if (a_context->account) {
+			make_header_func(a_context);			/* Make header */
+			eif_rt_xfree(a_context->account);			/* Free accouting character array */
+			a_context->account = NULL;
 		}
 			/* Write the count of stored objects */
-		if (accounting) {
-			widr_multi_uint32 (&obj_nb, 1);
+		if (a_context->accounting) {
+			widr_multi_uint32 (&a_context->obj_nb, 1);
 		} else {
-			buffer_write((char *)(&obj_nb), sizeof(uint32));
+			buffer_write((char *)(&a_context->obj_nb), sizeof(uint32));
 		}
 
 #if DEBUG & 3
-			printf (" %x", obj_nb);
+			printf (" %x", a_context->obj_nb);
 #endif
 
 		st_store(object);		/* Write objects to be stored */
@@ -1261,8 +1134,8 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype
 rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
 	RT_GET_CONTEXT
-	const char *name = System (dtype).cn_names[attrib_index];
-	int16 name_length = (int16) strlen (name);
+	const char *attr_name = System (dtype).cn_names[attrib_index];
+	int16 attr_name_length = (int16) strlen (attr_name);
 	const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
 	int16 num_gtypes;
 	size_t i;
@@ -1271,7 +1144,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	EIF_TYPE_INDEX gtype;
 	struct rt_id_of_context gen_conf_context;
 
-	REQUIRE("valid name_length", (size_t) name_length == strlen (name));
+	REQUIRE("valid name_length", (size_t) attr_name_length == strlen (attr_name));
 
 		/* Old INDEPENDENT_STORE_6_6 format. */
 
@@ -1347,10 +1220,10 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 			gtypes++;
 		}
 	}
-
-		/* Write attribute name information: "name_length name" */
-	widr_multi_int16 (&name_length, 1);
-	widr_multi_char ((EIF_CHARACTER_8 *) name, strlen (name));
+	
+		/* Write attribute name information: "attr_name_length attr_name" */
+	widr_multi_int16 (&attr_name_length, 1);
+	widr_multi_char ((EIF_CHARACTER_8 *) attr_name, strlen (attr_name));
 	basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
 	widr_multi_char (&basic_type, 1);
 
@@ -1483,7 +1356,7 @@ rt_private void widr_type (int16 dtype, int is_version_required)
 	widr_type_attributes (dtype);
 }
 
-rt_public void rmake_header(EIF_CONTEXT_NOARG)
+rt_public void rmake_header(struct rt_traversal_context *a_context)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	RT_GET_CONTEXT
@@ -1495,7 +1368,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 
 	/* count number of types actually present in objects to be stored */
 	for (type_count=0, i=0; i<scount; i++) {
-		if (account[i].processed)
+		if (a_context->account[i].processed)
 			type_count++;
 	}
 
@@ -1511,7 +1384,7 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	widr_multi_int16 (&type_count, 1);
 
 	for (i=0; i<scount; i++) {
-		if (account[i].processed)
+		if (a_context->account[i].processed)
 			widr_type (i, l_is_version_required);
 	}
 }

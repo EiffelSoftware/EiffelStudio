@@ -74,9 +74,9 @@ rt_private long parsing_buffer_size = 0;
 rt_private int file_descriptor;
 rt_private struct rt_store_context parsing_context;
 
-rt_private uint32 pst_store(char *object, uint32 a_object_count);	/* Recursive store */
+rt_private uint32 pst_store(struct rt_store_context *a_context, char *object, uint32 a_object_count);	/* Recursive store */
 rt_private void parsing_store_write(size_t);
-rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid);
+rt_private void parsing_store_append(struct rt_store_context *a_context, char *object, fnptr mid, fnptr nid);
 rt_private int compiler_char_write(char *pointer, int size);
 
 /* Memory writing function */
@@ -87,11 +87,8 @@ rt_private void parsing_compiler_write(size_t);
 
 rt_public void parsing_store_initialize (void) {
 	RT_GET_CONTEXT
-	parsing_context.write_buffer_function = parsing_store_write;
-	parsing_context.flush_buffer_function = flush_st_buffer;
 	parsing_context.write_function = parsing_char_write;
-	parsing_context.object_write_function = st_write;
-	parsing_context.header_function = NULL;
+	parsing_context.write_buffer_function = parsing_store_write;
 
 	if (parsing_buffer == (char *) 0) {
 			/* We need to initialize `buffer_size' now as otherwise `allocate_gen_buffer'
@@ -113,14 +110,11 @@ rt_public void parsing_store (EIF_INTEGER file_desc, EIF_REFERENCE object)
 	struct rt_store_context a_context;
 
 	file_descriptor = (int) file_desc;
-
-	a_context.write_buffer_function = parsing_compiler_write;
-	a_context.flush_buffer_function = flush_st_buffer;
+	memset(&a_context, 0, sizeof(struct rt_store_context));
 	a_context.write_function = compiler_char_write;
-	a_context.object_write_function = st_write;
-	a_context.header_function = NULL;
+	a_context.write_buffer_function = parsing_compiler_write;
 
-	eif_store_object (&a_context, object, BASIC_STORE);
+	rt_store_object (&a_context, object, BASIC_STORE);
 }
 
 rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, EIF_REFERENCE s)
@@ -136,9 +130,9 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 		eraise ("Unable to seek on internal data files", EN_SYS);
 
 		/* Initialize store context used to store objects for appending. */
-	rt_setup_store (&parsing_context);
+	rt_setup_store (&parsing_context, BASIC_STORE);
 
-	parsing_store_append(object, mid, nid);
+	parsing_store_append(&parsing_context, object, mid, nid);
 
 	write (f_desc, parsing_buffer, parsing_position);
 	parsing_position = 0;
@@ -146,7 +140,7 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 	return file_position;
 }
 
-rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
+rt_private void parsing_store_append(struct rt_store_context *a_context, EIF_REFERENCE object, fnptr mid, fnptr nid)
 {
 	RT_GET_CONTEXT
 	struct rt_traversal_context traversal_context;
@@ -177,10 +171,10 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	buffer_write((char *) (&traversal_context.obj_nb), sizeof(uint32));
 
 #ifndef DEBUG
-	(void) pst_store(object,0L);		/* Recursive store process */
+	(void) pst_store(a_context, object,0L);		/* Recursive store process */
 #else
 	{
-		uint32 nb_stored = pst_store(object,0L);
+		uint32 nb_stored = pst_store(a_context, object,0L);
 
 		if (traversal_context.obj_nb != nb_stored) {
 			printf("obj_nb = %d nb_stored = %d\n", traversal_context.obj_nb, nb_stored);
@@ -191,7 +185,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		eraise ("Partial store inconsistency", EN_IO);
 #endif
 
-	flush_st_buffer();				/* Flush the buffer */
+	a_context->flush_buffer_function();				/* Flush the buffer */
 
 	EIF_EO_STORE_UNLOCK;	/* Unlock our mutex. */
 	if (!gc_stopped)
@@ -199,7 +193,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 
 }
 
-rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
+rt_private uint32 pst_store(struct rt_store_context *a_context, EIF_REFERENCE object, uint32 a_object_count)
 {
 	/* Second pass of the store mechanism: writing on the disk. */
 	EIF_REFERENCE o_ref;
@@ -222,7 +216,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 				 * a new compression header is stored just before the object
 				 * thus the decompression will work when starting the retrieve
 				 * there */
-			flush_st_buffer();
+			a_context->flush_buffer_function();
 			saved_file_pos = file_position + parsing_position;
 		}
 	} else {
@@ -259,7 +253,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 					if (eif_is_reference_tuple_item(l_item)) {
 						o_ref = eif_reference_tuple_item(l_item);
 						if (o_ref) {
-							a_object_count = pst_store (o_ref, a_object_count);
+							a_object_count = pst_store (a_context, o_ref, a_object_count);
 						}
 					}
 				}
@@ -268,13 +262,13 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 						ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
 					o_ref = *(EIF_REFERENCE *) ref;
 					if (o_ref != (EIF_REFERENCE) 0)
-						a_object_count = pst_store(o_ref,a_object_count);
+						a_object_count = pst_store (a_context, o_ref,a_object_count);
 				}
 			} else {						/* Special of composites */
 				elem_size = RT_SPECIAL_ELEM_SIZE(object);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
-					a_object_count = pst_store(ref,a_object_count);
+					a_object_count = pst_store (a_context, ref,a_object_count);
 				}
 			}
 		}
@@ -290,7 +284,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			o_ref = *(EIF_REFERENCE *)o_ptr;
 			if (o_ref) {
 				if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(zone->ov_dtype), i)) {
-					a_object_count = pst_store(o_ref, a_object_count);
+					a_object_count = pst_store (a_context, o_ref, a_object_count);
 				} else {
 					has_volatile_attributes = 1;
 				}
@@ -299,7 +293,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	}
 
 	if (!is_expanded) {
-		st_write(object, has_volatile_attributes);		/* write the object */
+		a_context->object_write_function(object, has_volatile_attributes);		/* write the object */
 	}
 
 	/* Call `make_index' on `server' with `object' */

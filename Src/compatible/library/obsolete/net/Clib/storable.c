@@ -311,16 +311,8 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
-	struct rt_store_context a_context;	
 	socket_fides = file_desc;
-
-	a_context.write_buffer_function = store_write;
-	a_context.flush_buffer_function = flush_st_buffer;
-	a_context.write_function = net_char_write;
-	a_context.object_write_function = st_write;
-	a_context.header_function = NULL;
-
-	eif_store_object (&a_context, object, BASIC_STORE);
+	eif_store_object (net_char_write, object, BASIC_STORE);
 #endif
 }
 
@@ -328,16 +320,8 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
-	struct rt_store_context a_context;	
 	socket_fides = file_desc;
-
-	a_context.write_buffer_function = store_write;
-	a_context.flush_buffer_function = idr_flush;
-	a_context.write_function = net_char_write;
-	a_context.object_write_function = ist_write;
-	a_context.header_function = rmake_header;
-
-	eif_store_object (&a_context, object, INDEPENDENT_STORE);
+	eif_store_object (net_char_write, object, INDEPENDENT_STORE);
 #endif
 }
 

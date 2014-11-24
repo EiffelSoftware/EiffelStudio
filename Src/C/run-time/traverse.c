@@ -199,8 +199,8 @@ rt_private void account_type_with_attributes (struct rt_traversal_context *a_con
 		 * conformance).
 		 */
 	if ((a_context->accounting & TR_ACCOUNT_ATTR) && (!a_context->account[dftype].attributes_processed)) {
-		a_context->account[dftype].attributes_processed = 1;
 		long i, num_attrib = System (dtype).cn_nbattr;
+		a_context->account[dftype].attributes_processed = 1;
 		for (i = 0; i < num_attrib; i++) {
 				/* Resolve type of attributes in context of `dftype'.
 				 * Which means that if the attributes involves some formal generic parameters

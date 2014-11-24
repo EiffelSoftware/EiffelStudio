@@ -1110,6 +1110,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	EIF_TYPE_INDEX l_attr_type;
 	EIF_TYPE_INDEX gtype;
 	struct rt_id_of_context gen_conf_context;
+	int l_done = 0;
 
 	REQUIRE("valid name_length", (size_t) attr_name_length == strlen (attr_name));
 
@@ -1121,7 +1122,6 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		 * anchored types (see test#store040).
 		 */
 
-	int l_done = 0;
 	while (!l_done) {
 			/* We assume we will be done in one iteration. Unless we meet some
 			 * qualified anchored types. */

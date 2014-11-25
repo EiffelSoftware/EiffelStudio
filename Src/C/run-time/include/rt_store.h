@@ -47,9 +47,13 @@
 extern "C" {
 #endif
 
+	
 /* Properties configuring how the storable was made. */
-#define STORE_DISCARD_ATTACHMENT_MARKS 0x01
-#define STORE_OLD_SPECIAL_SEMANTIC 0x02
+	/* Are we storing attachment marks in storable? */
+#define STORE_DISCARD_ATTACHMENT_MARKS	0x01
+	/* Are we storing a system compiled in compatible mode
+	 * where `capacity == count' for SPECIAL? */
+#define STORE_OLD_SPECIAL_SEMANTIC		0x02
 
 /*
 doc:	<struct name="rt_store_context" export="public">
@@ -83,6 +87,8 @@ extern rt_uint_ptr get_offset(EIF_TYPE_INDEX o_type, rt_uint_ptr attrib_num);   
 
 extern void rt_store_object(struct rt_store_context *a_context, EIF_REFERENCE object, char store_type);
 extern void rt_setup_store (struct rt_store_context *a_context, char store_type);
+
+extern const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes, int is_discarding_attachment_marks, int is_raising_exception, int16 *num_gtypes);
 
 #ifndef EIF_THREADS
 extern char * general_buffer;

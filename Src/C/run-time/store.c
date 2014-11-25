@@ -266,7 +266,6 @@ rt_shared void eif_store_thread_init (void)
 {
 	RT_GET_CONTEXT;
 	eif_is_discarding_attachment_marks = EIF_FALSE;
-	eif_is_discarding_qat = EIF_TRUE;
 }
 #endif
 
@@ -405,15 +404,6 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_BOOLEAN eif_is_discarding_attachment_marks = EIF_FALSE;
-/*
-doc:	<attribute name="eif_is_discarding_qat" return_type="EIF_BOOLEAN" export="private">
-doc:		<summary>Boolean flag that changes the behavior of storable in 2 ways. First if there is a QAT in the storable and if set to true then an exception is raised. In addition, if it is set to true, we use INDEPENDENT_STORE_6_6 format to generate the storable, otherwise INDEPENDENT_STORE_14_11.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private EIF_BOOLEAN eif_is_discarding_qat = EIF_TRUE;
 #endif
 
 rt_public EIF_BOOLEAN eif_is_discarding_attachment_marks_active (void)
@@ -426,20 +416,6 @@ rt_public void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN state)
 {
 	RT_GET_CONTEXT
 	eif_is_discarding_attachment_marks = state;
-}
-
-rt_public EIF_BOOLEAN eif_is_discarding_qat_active (void)
-{
-	RT_GET_CONTEXT
-	return eif_is_discarding_qat;
-}
-
-rt_public void eif_set_is_discarding_qat (EIF_BOOLEAN state)
-{
-		/* Until we support QAT, we ignore the user setting and keep
-		 * it set to True (see above initialization). */
-/*	RT_GET_CONTEXT
-	eif_is_discarding_qat = state; */
 }
 
 /* Independent store */
@@ -1098,40 +1074,35 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype
 	return result;
 }
 
-rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
+/*
+doc:	<routine name="rt_canonical_types" return_type="const EIF_TYPE_INDEX *" export="private">
+doc:		<summary>Given a type array `gtypes' filter it to compute how many entries will be actually needed to get just what we need and reconstruct the type properly. This is mostly used to remove attachment marks and qualified anchored type qualification.</summary>
+doc:		<param name="gtypes" type="const EIF_TYPE_INDEX *">Type array containing the type description.</param>
+doc:		<param name="is_discarding_attachment_marks" type="int">Are we ignoring attachment marks?</param>
+doc:		<param name="is_raising_exception" type="int">Are we raising an exception when we encounter a type that we cannot resolve without a context? (i.e. a qualified anchored type that involves a formal generic parameter).</param>
+doc:		<param name="num_gtypes" type="int16 *">Number of entries that will be effectively in use in the returned type arrays.</param>
+doc:		<return>Type arrays that is either `gtypes' or a new one if it involved some qualified anchored type for example.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes, int is_discarding_attachment_marks, int is_raising_exception, int16 *num_gtypes)
 {
-	RT_GET_CONTEXT
-	const char *attr_name = System (dtype).cn_names[attrib_index];
-	int16 attr_name_length = (int16) strlen (attr_name);
-	const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
-	int16 num_gtypes;
-	size_t i;
-	unsigned char basic_type;
-	EIF_TYPE_INDEX l_attr_type;
-	EIF_TYPE_INDEX gtype;
-	struct rt_id_of_context gen_conf_context;
 	int l_done = 0;
-
-	REQUIRE("valid name_length", (size_t) attr_name_length == strlen (attr_name));
-
-		/* Old INDEPENDENT_STORE_6_6 format. */
-
-		/* Compute the actual type of the attribute and then extract its decomposition
-		 * which will we store. 
-		 * We cannot store its original typearr because it may involve qualified
-		 * anchored types (see test#store040).
-		 */
+	int16 l_num_gtypes;
+	size_t i;
+	EIF_TYPE_INDEX gtype, l_attr_type;
+	struct rt_id_of_context gen_conf_context;
 
 	while (!l_done) {
 			/* We assume we will be done in one iteration. Unless we meet some
 			 * qualified anchored types. */
 		l_done = 1;
-		num_gtypes = 0;
+		l_num_gtypes = 0;
 		for (i = 0; gtypes[i] != TERMINATOR; i++) {
 			gtype = gtypes[i];
 				/* If we are storing for INDEPENDENT_STORE_6_6 then we
 				 * should remove all attachment marks. */
-			if (eif_is_discarding_attachment_marks) {
+			if (is_discarding_attachment_marks) {
 				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
 					i++;
 					gtype = gtypes [i];
@@ -1140,23 +1111,28 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 			switch (gtype) {
 				case TUPLE_TYPE:
 					i += TUPLE_OFFSET - 1;
-					num_gtypes += TUPLE_OFFSET;
+					l_num_gtypes += TUPLE_OFFSET;
 					break;
 				case FORMAL_TYPE:
 						/* Formal + position */	
-					num_gtypes += 2;
+					l_num_gtypes += 2;
 					i += 1;
 					break;
 				case QUALIFIED_FEATURE_TYPE:
 					gen_conf_context.has_no_context = 1;
 					gen_conf_context.is_invalid = 0;
 					gen_conf_context.next_address_requested = 1;
-					l_attr_type = rt_compound_id_with_context (&gen_conf_context, dtype, &gtypes[i]);
+					l_attr_type = rt_compound_id_with_context (&gen_conf_context, 0, &gtypes[i]);
 						/* If resolution of the type of the qualified anchored type uses
 						 * a formal or a type that is not accounted for, we cannot process
 						 * the type. */
 					if (gen_conf_context.is_invalid) {
-						eise_io("Store: Qualified Anchored Types referring to a formal generic paramter are not supported");
+						if (is_raising_exception) {
+							eise_io("Store: Qualified Anchored Types referring to a formal generic paramter are not supported");
+						} else {
+								/* No exception was requested, we return NULL. */
+							return NULL;
+						}
 					} else {
 							/* We have to repeat the whole thing, but this time we 
 							 * will be using the decoded type. */
@@ -1173,7 +1149,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 						(gtype != LIKE_ARG_TYPE) &&
 						(gtype != LIKE_FEATURE_TYPE));
 
-					num_gtypes++;
+					l_num_gtypes++;
 			}
 		}
 		if (!l_done) {
@@ -1181,12 +1157,39 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 				 * dynamic type (i.e. they had no formal. So we repeat the above
 				 * but this time we remove the qualified anchored type and resolve
 				 * the attribute type into a type array sequence. */
-			l_attr_type = eif_compound_id (dtype, gtypes);
+			l_attr_type = eif_compound_id (0, gtypes);
 			gtypes = eif_gen_cid (l_attr_type);
 				/* In the above array, the first entry contains the count. */
 			gtypes++;
 		}
 	}
+	if (num_gtypes) {
+		*num_gtypes = l_num_gtypes;
+	}
+	return gtypes;
+}
+
+rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
+{
+	RT_GET_CONTEXT
+	const char *attr_name = System (dtype).cn_names[attrib_index];
+	int16 attr_name_length = (int16) strlen (attr_name);
+	const EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index];
+	int16 num_gtypes;
+	size_t i;
+	unsigned char basic_type;
+	EIF_TYPE_INDEX gtype;
+
+	REQUIRE("valid name_length", (size_t) attr_name_length == strlen (attr_name));
+
+		/* Old INDEPENDENT_STORE_6_6 format. */
+
+		/* Compute the actual type of the attribute and then extract its decomposition
+		 * which will we store. 
+		 * We cannot store its original typearr because it may involve qualified
+		 * anchored types (see test#store040).
+		 */
+	gtypes = rt_canonical_types (gtypes, eif_is_discarding_attachment_marks, 1, &num_gtypes);
 	
 		/* Write attribute name information: "attr_name_length attr_name" */
 	widr_multi_int16 (&attr_name_length, 1);

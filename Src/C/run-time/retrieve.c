@@ -3150,6 +3150,13 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 							result = 0;
 						}
 					} else {
+						/* No need to handle special type since they should not appear in an object type. */
+						CHECK("No special type",
+							(result != LIKE_CURRENT_TYPE) &&
+							(result != LIKE_ARG_TYPE) &&
+							(result != LIKE_FEATURE_TYPE) &&
+							(result != QUALIFIED_FEATURE_TYPE));
+
 						result = (dftype == aftype ? 1 : 0);
 					}
 				}
@@ -3162,50 +3169,19 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 
 rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_ptr att_index, const EIF_TYPE_INDEX *gtypes, const EIF_TYPE_INDEX *atypes)
 {
-	RT_GET_CONTEXT
 	int result;
 	EIF_TYPE_INDEX atype = atypes[0];
 	if (type_defined (atype) && type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		EIF_TYPE_INDEX dftype;
-		int i, l_count = CIDARR_SIZE;
-		EIF_TYPE_INDEX *l_cid = cidarr;
-		for (i = 0; gtypes[i] != TERMINATOR; i++) {
-				/* Make sure we don't go outside the bounds of `l_cid'. */
-			if (i >= l_count) {
-					/* Reallocate array to allow ranges between `0' and `(i + 1) + 1'. */
-				if (l_count >= CIDARR_SIZE) {
-						/* Let's resize our existing allocated `l_cid' array by 1.5 times. */
-					l_count = (2 * (i + 3)) / 2;
-					l_cid = (EIF_TYPE_INDEX *) realloc (l_cid, l_count * sizeof(EIF_TYPE_INDEX));
-					if (!l_cid) {
-						xraise(EN_MEM);
-					}
-				} else {
-						/* Create a new memory block and copy content of `cidarr' in it. */
-					l_cid = (EIF_TYPE_INDEX *) malloc ((i + 3) * sizeof(EIF_TYPE_INDEX));
-					if (!l_cid) {
-						xraise(EN_MEM);
-					}
-					l_count = i + 3;
-					memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(EIF_TYPE_INDEX));
-				}
-			}
-			l_cid [i] = gtypes[i];
-		}
-		CHECK("valid cound", rt_valid_type_index(i));
-		CHECK("i large enough", i > 0);
-		l_cid [i] = TERMINATOR;
-		dftype = eif_compound_id (0, l_cid);
-		if (l_cid != cidarr) {
-			free(l_cid);
-		}
+		dftype = eif_compound_id (0, gtypes);
 		result = (dftype == type_description (atype)->new_dftype);
 	} else {
-		/* If `gtypes' is shorter than `atypes', we accept this, as it
-		 * means that generic parameters were removed.
-		 */
 		int level = 0;
-		result = 1;
+		gtypes = rt_canonical_types (gtypes, 0, 0, NULL);
+		result = (gtypes != NULL);
+			/* If `gtypes' is shorter than `atypes', we accept this, as it
+			 * means that generic parameters were removed.
+			 */
 		for (; (result == 1) && (*gtypes != TERMINATOR); gtypes++, atypes++) {
 			result = attribute_type_matched (context_type, att_index, &gtypes, &atypes, level);
 			level++;

@@ -78,7 +78,6 @@ extern "C" {
 #define BASIC_STORE_6_6			0x13
 #define GENERAL_STORE_6_6		0x14
 #define INDEPENDENT_STORE_6_6	0x15
-#define INDEPENDENT_STORE_14_11	0x16
 	/* SED_STORE is a reserved value so that from C we use the SED mechanisms to store/retrieve objects. */
 #define SED_STORE				0x17
 

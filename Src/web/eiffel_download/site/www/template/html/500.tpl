@@ -90,9 +90,18 @@
 			<div class="widget-area widget-sidebar">			
 				<!-- class="execphpwidget"-->
 						<div class="box2 ">
-							<h3>Internal Server Error <strong>500</strong> </h3>
-							<p>The page you requested could not be served because the server is down, either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
-				    	</div>
+							{assign name="error_500" value="500"/}
+							{assign name="error_503" value="503"/}
+							{if condition="$status ~ $error_500"}
+								<h3>Internal Server Error <strong>500</strong> </h3>
+								<p>The page you requested could not be served because the server is down, either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
+
+							{/if}
+							{if condition="$status ~ $error_503"}
+								<h3>Service Unavailable <strong>503</strong> </h3>
+							<p>The page you requested could not be served because the service is unavailable, either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
+							{/if}
+						</div>	
 				<!--/div-->
 			</div>
 				<div class="widget-area widget-sidebar"><div class="execphpwidget"><section class="news_sec">

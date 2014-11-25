@@ -21,6 +21,7 @@ feature {NONE} -- Initialize
 		require
 			is_connected: a_connection.is_connected
 		do
+			connection := a_connection
 			create data_provider.make (a_connection)
 			create login_provider.make (a_connection)
 		end
@@ -58,6 +59,15 @@ feature -- Access
 		    then
 		    	Result := True
 		    end
+		end
+
+feature -- Status Report
+
+	is_available: BOOLEAN
+			-- Is the current service available?
+			-- If False, the database could be down or it's restaring.
+		do
+			Result := connection.is_connected
 		end
 
 feature -- Basic Operations
@@ -138,4 +148,5 @@ feature {NONE} -- Database Providers
 	login_provider: LOGIN_DATA_PROVIDER
 			-- Login data provider.
 
+	connection: DATABASE_CONNECTION
 end

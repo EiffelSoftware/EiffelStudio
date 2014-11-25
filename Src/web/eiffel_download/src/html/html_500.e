@@ -17,12 +17,13 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_path: PATH; a_host: READABLE_STRING_GENERAL;)
+	make (a_path: PATH; a_host: READABLE_STRING_GENERAL; a_status: INTEGER)
 			-- Initialize `Current'.
 		do
 			set_template_folder (a_path)
 			set_template_file_name ("500.tpl")
 			template.add_value (a_host, "host")
+			template.add_value (a_status.out, "status")
 			process
 		end
 end

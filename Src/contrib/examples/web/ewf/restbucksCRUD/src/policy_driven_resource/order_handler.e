@@ -140,6 +140,14 @@ feature -- Access
 			-- since it's commercial data.
 		end
 
+	allowed_cross_origins (req: WSF_REQUEST): detachable STRING
+			-- Value for Access-Control-Allow-Origin header;
+			-- If supplied, should be a single URI, or the values "*" or "null".
+			-- This is currently supported only for GET requests, and POSTs that functions as GET.
+		do
+			-- To implement
+		end
+
 	matching_etag (req: WSF_REQUEST; a_etag: READABLE_STRING_32; a_strong: BOOLEAN): BOOLEAN
 			-- Is `a_etag' a match for resource requested in `req'?
 			-- If `a_strong' then the strong comparison function must be used.
@@ -166,6 +174,13 @@ feature -- Access
 			if attached {ORDER} req.execution_variable (Order_execution_variable) as l_order then
 				Result := l_etag_utils.md5_digest (l_order.out)
 			end
+		end
+
+	last_modified (req: WSF_REQUEST): detachable DATE_TIME
+			-- When representation of resource selected in `req' was last modified;
+			-- SHOULD be set whenever it can reasonably be determined.
+		do
+			-- To Implement
 		end
 
 	modified_since (req: WSF_REQUEST; a_date_time: DATE_TIME): BOOLEAN
@@ -552,6 +567,6 @@ feature {NONE} -- Implementation Repository Layer
 		end
 
 note
-	copyright: "2011-2013, Javier Velilla and others"
+	copyright: "2011-2014, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

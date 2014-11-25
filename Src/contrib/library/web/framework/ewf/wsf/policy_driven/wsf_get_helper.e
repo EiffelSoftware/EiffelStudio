@@ -49,6 +49,13 @@ feature {NONE} -- Implementation
 			if attached a_handler.etag (req) as l_etag then
 				a_header.put_header_key_value ({HTTP_HEADER_NAMES}.header_etag, l_etag)
 			end
+			if attached a_handler.last_modified (req) as l_last_modified then
+				l_dt := (create {HTTP_DATE}.make_from_date_time (l_last_modified)).rfc1123_string
+				a_header.put_header_key_value ({HTTP_HEADER_NAMES}.header_last_modified, l_dt)
+			end
+			if attached a_handler.allowed_cross_origins (req) as l_cors then
+				a_header.put_header_key_value ({HTTP_HEADER_NAMES}.header_access_control_allow_origin, l_cors)
+			end
 			res.put_header_text (a_header.string)
 			if l_ok then
 				if l_chunked then

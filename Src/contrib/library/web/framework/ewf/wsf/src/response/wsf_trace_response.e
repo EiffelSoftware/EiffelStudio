@@ -33,6 +33,8 @@ feature -- Header
 feature {WSF_RESPONSE} -- Output
 
 	send_to (res: WSF_RESPONSE)
+		note
+			EIS: "name=RFC7231 section 4.3.8", "protocol=URI", "src=https://tools.ietf.org/html/rfc7231#section-4.3.8"
 		local
 			s: STRING
 			t: STRING
@@ -42,6 +44,7 @@ feature {WSF_RESPONSE} -- Output
 		do
 			h := header
 			res.set_status_code ({HTTP_STATUS_CODE}.ok)
+			h.put_content_type_message_http
 			req := request
 			if attached req.raw_header_data as l_header then
 				create s.make (l_header.count)

@@ -146,6 +146,17 @@ feature -- Access
 			Result := True
 			-- redefine to return `False', so as to induce a Vary: * header
 		end
+	
+	allowed_cross_origins (req: WSF_REQUEST): detachable STRING
+			-- Value for Access-Control-Allow-Origin header;
+			-- If supplied, should be a single URI, or the values "*" or "null".
+			-- This is currently supported only for GET requests, and POSTs that functions as GET.
+		note
+			EIS: "name=specification", "protocol=URI", "src=http://www.w3.org/TR/cors/#http-access-control-allow-origin"
+		require
+			req_attached: req /= Void
+		deferred
+		end
 
 	matching_etag (req: WSF_REQUEST; a_etag: READABLE_STRING_32; a_strong: BOOLEAN): BOOLEAN
 			-- Is `a_etag' a match for resource requested in `req'?
@@ -162,6 +173,16 @@ feature -- Access
 			-- "NEGOTIATED_LANGUAGE"
 			-- "NEGOTIATED_CHARSET"
 			-- "NEGOTIATED_ENCODING"
+		require
+			req_attached: req /= Void
+		deferred
+		end
+	
+	last_modified (req: WSF_REQUEST): detachable DATE_TIME
+			-- When representation of resource selected in `req' was last modified;
+			-- SHOULD be set whenever it can reasonably be determined.
+		note
+			EIS: "name=specification", "protocol=URI", "src=https://tools.ietf.org/html/rfc7232#section-2.2.1"
 		require
 			req_attached: req /= Void
 		deferred
@@ -421,7 +442,7 @@ feature -- PUT/POST
 
 	check_request (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Check that the request entity is a valid request.
-			-- The entity is available as `req.execution_variable (Conflict_check_code_execution_variable)'.
+			-- The entity is available as `req.execution_variable (Request_entity_execution_variable)'.
 			-- Set `req.execution_variable (Request_check_code_execution_variable)' to {NATURAL} zero if OK, or 400 if not.
 			-- In the latter case, write the full error response to `res'.
 		require
@@ -464,7 +485,9 @@ feature -- Execution
 			if req.is_request_method ({HTTP_REQUEST_METHODS}.method_options) then
 				execute_options (req, res, router)
 			else
-				if attached new_method_helper (req.request_method) as l_helper then
+				if req.is_request_method ({HTTP_REQUEST_METHODS}.method_put) and attached req.http_content_range then
+					handle_invalid_content_range (res)
+				elseif attached new_method_helper (req.request_method) as l_helper then
 					execute_method (req, res, l_helper)
 				else
 					handle_internal_server_error (res)
@@ -515,7 +538,29 @@ feature -- Execution
 		end
 
 feature {NONE} -- Implementation
-
+	
+	handle_invalid_content_range (res: WSF_RESPONSE)
+			-- Write "Bad Request" response to `res' for Content-Range header present in PUT request.
+		require
+			res_attached: res /= Void
+		local
+			h: HTTP_HEADER
+			m: STRING_8
+		do
+			create h.make
+			h.put_content_type_text_plain
+			m := "Content-Range header present in PUT request"
+			h.put_content_length (m.count)
+			h.put_current_date
+			res.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+			res.put_header_lines (h)
+			res.put_string (m)
+		ensure
+			response_status_is_set: res.status_is_set
+			status_is_service_unavailable: res.status_code = {HTTP_STATUS_CODE}.internal_server_error
+			body_sent: res.message_committed and then res.transfered_content_length > 0
+		end
+	
 	handle_internal_server_error (res: WSF_RESPONSE)
 			-- Write "Internal Server Error" response to `res'.
 		require

@@ -43,6 +43,10 @@ feature -- Access
 	http_accept_language: STRING = "HTTP_ACCEPT_LANGUAGE"
 
 	http_connection: STRING = "HTTP_CONNECTION"
+	
+	http_content_range: STRING = "HTTP_CONTENT_RANGE"
+
+	http_content_encoding: STRING = "HTTP_CONTENT_ENCODING"
 
 	http_expect: STRING = "HTTP_EXPECT"
 

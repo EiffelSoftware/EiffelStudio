@@ -17,8 +17,6 @@ feature {NONE} -- Initialization
 		do
 			if not retried then
 				create t1.make
-					-- If we encounter a QAT that cannot be resolved an exception will be raised.
-				set_is_discarding_qat (True)
 				store_object (t1, "stored")
 			else
 				io.put_string ("Failure%N")

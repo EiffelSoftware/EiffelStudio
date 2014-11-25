@@ -188,7 +188,7 @@ feature -- Content negotiation
 			l_conneg := a_handler.conneg (req)
 			l_mime_types := a_handler.mime_types_supported (req)
 			l_media := l_conneg.media_type_preference (l_mime_types, req.http_accept)
-			if not l_vary_star and l_mime_types.count > 1 and attached l_media.media_type as l_media_variant then
+			if not l_vary_star and l_mime_types.count > 1 and attached l_media.vary_header_value as l_media_variant then
 				h.add_header_key_value ({HTTP_HEADER_NAMES}.header_vary, l_media_variant)
 			end
 			if not l_media.is_acceptable then
@@ -196,7 +196,7 @@ feature -- Content negotiation
 			else
 				l_langs := a_handler.languages_supported (req)
 				l_lang := l_conneg.language_preference (l_langs, req.http_accept_language)
-				if not l_vary_star and l_langs.count > 1 and attached l_lang.language as l_lang_variant then
+				if not l_vary_star and l_langs.count > 1 and attached l_lang.vary_header_value as l_lang_variant then
 					h.add_header_key_value ({HTTP_HEADER_NAMES}.header_vary, l_lang_variant)
 				end
 				if not l_lang.is_acceptable then
@@ -208,7 +208,7 @@ feature -- Content negotiation
 					end
 					l_charsets := a_handler.charsets_supported (req)
 					l_charset := l_conneg.charset_preference (l_charsets, req.http_accept_charset)
-					if not l_vary_star and l_charsets.count > 1 and attached l_charset.charset as l_charset_variant then
+					if not l_vary_star and l_charsets.count > 1 and attached l_charset.vary_header_value as l_charset_variant then
 						h.add_header_key_value ({HTTP_HEADER_NAMES}.header_vary, l_charset_variant)
 					end
 					if not l_charset.is_acceptable then
@@ -225,7 +225,7 @@ feature -- Content negotiation
 						end
 						l_encodings := a_handler.encodings_supported (req)
 						l_encoding := l_conneg.encoding_preference (l_encodings, req.http_accept_encoding)
-						if not l_vary_star and l_encodings.count > 1 and attached l_encoding.encoding as l_encoding_variant then
+						if not l_vary_star and l_encodings.count > 1 and attached l_encoding.vary_header_value as l_encoding_variant then
 							h.add_header_key_value ({HTTP_HEADER_NAMES}.header_vary, l_encoding_variant)
 						end
 						if not l_encoding.is_acceptable then

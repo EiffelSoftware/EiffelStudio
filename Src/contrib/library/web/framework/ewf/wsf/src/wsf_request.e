@@ -1228,6 +1228,18 @@ feature -- HTTP_*
 			Result := wgi_request.http_range
 		end
 
+	http_content_range: detachable READABLE_STRING_8
+			-- Partial range of selected representation enclosed in message payload
+		do
+			Result := wgi_request.http_content_range
+		end
+
+	http_content_encoding: detachable READABLE_STRING_8
+			-- Encoding (usually compression) of message payload
+		do
+			Result := wgi_request.http_content_encoding
+		end
+
 feature -- Extra CGI environment variables
 
 	request_uri: READABLE_STRING_8
@@ -1305,7 +1317,20 @@ feature {NONE} -- Cookies
 							p < 1
 						loop
 							i := s.index_of ('=', p)
-							if i > 0 then
+							if i = 0 then
+								i := s.index_of (';', p)
+								if i = 0 then
+										-- name without value, let's consider as empty value.
+										--| name=value; foo
+									k := s.substring (p, n)
+									p := 0 -- force termination
+								else
+										-- name without value, let's consider as empty value.
+									k := s.substring (p, i - 1)
+									p := i + 1 	--| name=value; foo ; name2=value2
+								end
+								create v.make_empty
+							else
 								j := s.index_of (';', i)
 								if j = 0 then
 									j := n + 1
@@ -1317,9 +1342,14 @@ feature {NONE} -- Cookies
 									k := s.substring (p, i - 1)
 									v := s.substring (i + 1, j - 1)
 									p := j + 1
+									if p > n then
+										p := 0 -- force termination
+									end
 								end
-								k.left_adjust
-								k.right_adjust
+							end
+							k.left_adjust
+							k.right_adjust
+							if not k.is_empty then
 								add_value_to_table (k, v, l_cookies)
 							end
 						end

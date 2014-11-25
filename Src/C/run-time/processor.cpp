@@ -45,7 +45,7 @@ processor::processor(spid_t _pid,
   cache_mutex(),
   dirty_for_set(),
   current_msg (),
-  parent_obj (std::make_shared<std::nullptr_t>(nullptr))
+  parent_obj (std::make_shared<void *>((void *) 0))
 {
   active_count++;
 }

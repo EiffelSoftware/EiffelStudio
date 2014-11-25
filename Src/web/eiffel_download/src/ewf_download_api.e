@@ -119,27 +119,31 @@ feature -- Workflow
 			end
 
 
-			if attached database_service as l_service then
-					-- The email exist (membership or contact).
-				if l_service.is_membership (l_form.email) or else l_service.is_contact (l_form.email) then
-					if l_form.newsletter then
-						l_service.register_newsletter (l_form.email)
-					end
-					l_service.initialize_download (l_token, l_form)
-				else
-					   -- The email does not exist in the database.
-					check
-						l_service.is_new_contact (l_form.email)
-					end
-						l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
+			if
+				attached database_service as l_service
+			then
+				if l_service.is_available then
+						-- The email exist (membership or contact).
+					if l_service.is_membership (l_form.email) or else l_service.is_contact (l_form.email) then
+						if l_form.newsletter then
+							l_service.register_newsletter (l_form.email)
+						end
 						l_service.initialize_download (l_token, l_form)
+					else
+						   -- The email does not exist in the database.
+						check
+							l_service.is_new_contact (l_form.email)
+						end
+							l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
+							l_service.initialize_download (l_token, l_form)
+					end
+					send_email (req, l_form, l_token, req.absolute_script_url (""))
+					compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
+				else
+					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
---				send_email (req, l_form, l_token, req.absolute_script_url (""))
-				compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
 			else
-				if attached read_file ("500.html") as l_output then
-					compute_response_500 (req, res, l_output, {HTTP_STATUS_CODE}.internal_server_error)
-				end
+				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
 
@@ -231,6 +235,7 @@ feature -- Workflow
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
+
 
 feature -- Response
 

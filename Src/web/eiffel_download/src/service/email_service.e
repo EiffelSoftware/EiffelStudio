@@ -72,8 +72,8 @@ feature -- Basic Operations
 		local
 				l_email: EMAIL
 		do
-			-- Create our message.
-			create l_email.make_with_entry (admin_email, download_email)
+				-- Create our message.
+			create l_email.make_with_entry (download_email, admin_email)
 			l_email.set_message (a_content)
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification EiffelStudio Download")
 			send_email (l_email)
@@ -84,8 +84,8 @@ feature -- Basic Operations
 		local
 				l_email: EMAIL
 		do
-			-- Create our message.
-			create l_email.make_with_entry (webmaster_email, download_email)
+				-- Create our message.
+			create l_email.make_with_entry (download_email, webmaster_email)
 			l_email.set_message (a_content)
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Internal Server Error")
 			send_email (l_email)

@@ -1,5 +1,5 @@
 test_name	storable-with-qualified-anchors-reject
-test_description When storing a type involving qualified anchored types in the types of attributes that involved a formal, it should fail when trying to store that instance using the old independent format. We do not check for retrieval at all in this particular case.
+test_description When storing a type involving qualified anchored types in the types of attributes that involved a formal, it should fail when trying to store that instance when using the INDEPENDENT_STORE_6_6 format. We do not check for retrieval at all in this particular case. Note that the test will need updating when the format of storable knows how to process qualified anchored type properly.
 
 define ACTUAL_GENERIC_1 "STRING"
 define ACTUAL_GENERIC_2 "STRING"

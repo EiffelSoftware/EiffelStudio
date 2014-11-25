@@ -134,11 +134,11 @@ feature -- Workflow
 						l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
 						l_service.initialize_download (l_token, l_form)
 				end
-				send_email (req, l_form, l_token, req.absolute_script_url (""))
+--				send_email (req, l_form, l_token, req.absolute_script_url (""))
 				compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
 			else
 				if attached read_file ("500.html") as l_output then
-					compute_response_500 (req, res, l_output)
+					compute_response_500 (req, res, l_output, {HTTP_STATUS_CODE}.internal_server_error)
 				end
 			end
 		end
@@ -152,7 +152,8 @@ feature -- Workflow
 			--email is not in our database, we create a Contact user and add the interaction
 			--Once this is done, we associated a unique URL to the Contact and send that link to the user. In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
 		do
-			if attached database_service as l_service then
+			if attached database_service as l_service  and then
+				l_service.is_available then
 				if
 					attached {WSF_STRING} req.query_parameter ("token") as l_token and then
 					attached {DOWNLOAD_INFORMATION} l_service.retrieve_download_details (l_token.value) as l_info and then
@@ -171,8 +172,13 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
-							bad_request (req, res, "")
+							if l_service.is_available then
+								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								bad_request (req, res, "")
+							else
+								log.write_debug (generator + ".process_workflow The service unavailable")
+								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+							end
 						end
 					elseif l_service.is_contact (email) then
 						log.write_debug (generator + "process_workflow:" + email +  " Contact")
@@ -182,8 +188,13 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
-							bad_request (req, res, "")
+							if l_service.is_available then
+								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								bad_request (req, res, "")
+							else
+								log.write_debug (generator + ".process_workflow The service unavailable")
+								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+							end
 						end
 					else
 						check
@@ -197,16 +208,27 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
-							bad_request (req, res, "")
+						    if l_service.is_available then
+								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								bad_request (req, res, "")
+							else
+								log.write_debug (generator + ".process_workflow The service unavailable")
+								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+							end
 						end
 					end
 				else
-					log.write_debug (generator + ".process_workflow The request was invalid " + req.path_info)
-					bad_request (req, res, "")
+					if l_service.is_available then
+						log.write_debug (generator + ".process_workflow The request was invalid " + req.path_info)
+						bad_request (req, res, "")
+					else
+						log.write_debug (generator + ".process_workflow The service unavailable")
+						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+					end
 				end
 			else
-				internal_server_error (req, res, "")
+				log.write_debug (generator + ".process_workflow The service unavailable")
+				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
 
@@ -230,14 +252,14 @@ feature -- Response
 			end
 		end
 
-	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
+	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_status: INTEGER)
 		local
 			l_hp: HTML_500
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make (layout.html_template_path, req.absolute_script_url (""))
+				create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_status)
 				if attached l_hp.representation as l_html_500 then
-					compute_response_500 (req, res, l_html_500)
+					compute_response_500 (req, res, l_html_500, a_status)
 				end
 			end
 		end
@@ -273,7 +295,7 @@ feature -- Response
 		end
 
 
-	compute_response_500 (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+	compute_response_500 (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING; a_status:INTEGER)
 		local
 			h: HTTP_HEADER
 			l_msg: STRING
@@ -283,7 +305,7 @@ feature -- Response
 			h.put_content_type_text_html
 			h.put_content_length (l_msg.count)
 			h.put_current_date
-			res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error)
+			res.set_status_code (a_status)
 			res.put_header_text (h.string)
 			res.put_string (l_msg)
 		end
@@ -412,7 +434,16 @@ feature -- Send Email
 						end
 
 			end
+		end
 
+
+	send_internal_server_error (a_description: READABLE_STRING_32)
+		local
+			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
+		do
+			if attached email_service as l_email_service then
+				l_email_service.send_email_internal_server_error (a_description)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -449,15 +480,13 @@ feature {NONE} -- Implementation
 			l_result: STRING_32
 		do
 			l_result := "";
-			if attached download_service as l_download_service then
-				if
-					attached l_download_service.retrieve_product_enterprise as l_product
+			if  attached download_service as l_download_service and then
+				attached l_download_service.retrieve_product_enterprise as l_product
+			then
+				if attached selected_platform (l_product.downloads, a_platform) as l_options  and then
+				   attached l_options.filename as l_filename
 				then
-					if attached selected_platform (l_product.downloads, a_platform) as l_options  and then
-					   attached l_options.filename as l_filename
-					then
-						l_result := l_filename
-					end
+					l_result := l_filename
 				end
 			end
 			Result := l_result

@@ -33,6 +33,12 @@ feature {NONE} -- Initialization
 			Result := "Eiffel Software Evaluation <noreplies@eiffel.com>"
 		end
 
+	webmaster_email: IMMUTABLE_STRING_8
+			-- WebMaster email.
+		once
+			Result := "Eiffel Software Web Master <webmaster@eiffel.com>"
+		end
+
 
 	download_email: IMMUTABLE_STRING_8
 			-- Administrator email.
@@ -70,6 +76,18 @@ feature -- Basic Operations
 			create l_email.make_with_entry (admin_email, download_email)
 			l_email.set_message (a_content)
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification EiffelStudio Download")
+			send_email (l_email)
+		end
+
+
+	send_email_internal_server_error (a_content: READABLE_STRING_32)
+		local
+				l_email: EMAIL
+		do
+			-- Create our message.
+			create l_email.make_with_entry (webmaster_email, download_email)
+			l_email.set_message (a_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Internal Server Error")
 			send_email (l_email)
 		end
 

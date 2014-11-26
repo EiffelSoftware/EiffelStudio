@@ -10,8 +10,15 @@ class
 
 inherit
 	CMS_BLOCK
-
+		redefine
+			out
+		select
+			out
+		end
 	SHARED_TEMPLATE_CONTEXT
+		rename
+			out as tpl_out
+		end
 
 create
 	make,
@@ -145,4 +152,35 @@ feature -- Conversion
 			end
 		end
 
+feature -- Debug
+
+	out: STRING
+		do
+			create Result.make_from_string (generator)
+			Result.append ("%Nname:")
+			Result.append (name)
+			if attached title as l_title then
+				Result.append ("%N%Ttitle:")
+				Result.append (l_title)
+			end
+			Result.append ("%Nlocation:")
+			Result.append (location.out)
+			Result.append ("%Ntemplate_root_path:")
+			Result.append (template_root_path.out)
+			Result.append ("%NValues: {")
+			from
+				values.start
+			until
+				values.after
+			loop
+				Result.append ("%NKey:")
+				Result.append (values.key_for_iteration.as_string_8)
+				Result.append (" - Value:")
+				if attached values.item_for_iteration as l_item then
+					Result.append (l_item.out)
+				end
+				values.forth
+			end
+			Result.append ("%N}")
+		end
 end

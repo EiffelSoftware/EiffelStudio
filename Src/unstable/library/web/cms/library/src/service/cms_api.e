@@ -73,7 +73,29 @@ feature -- Initialize
 			retry
 		end
 
-feature -- Access
+feature -- Access: Error
+
+	has_error: BOOLEAN
+			-- Has error?
+		do
+			Result := error_handler.has_error
+		end
+
+	as_string_representation: STRING_32
+			-- String representation of all error(s).
+		do
+			Result := error_handler.as_string_representation
+		end
+
+feature -- Element Change: Error
+
+	reset
+			-- Reset error handler.
+		do
+			error_handler.reset
+		end
+
+feature {NONE}-- Error handler implemenations
 
 	error_handler: ERROR_HANDLER
 			-- Error handler.

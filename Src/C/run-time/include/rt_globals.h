@@ -205,6 +205,7 @@ typedef struct tag_rt_globals
 #endif
 
 		/* store.c */
+	char info_tag_cx[TAG_SIZE];
 	long object_count_cx;
 	char *cmps_general_buffer_cx;
 	char *general_buffer_cx;
@@ -424,6 +425,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #endif
 
 	/* store.c */
+#define info_tag						(rt_globals->info_tag_cx)
 #define object_count					(rt_globals->object_count_cx)
 #define cmps_general_buffer				(rt_globals->cmps_general_buffer_cx)
 #define general_buffer					(rt_globals->general_buffer_cx)

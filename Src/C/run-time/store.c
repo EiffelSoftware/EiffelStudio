@@ -101,6 +101,16 @@ rt_private long object_count;
 
 #ifndef EIF_THREADS
 /*
+doc:	<attribute name="info_tag" return_type="char [TAG_SIZE]" export="shared">
+doc:		<summary>Buffer in which we write the reason of a store failure.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_shared char info_tag[TAG_SIZE];
+
+/*
 doc:	<attribute name="cmps_general_buffer" return_type="char *" export="shared">
 doc:		<summary>Buffer in which result of compression in `store_write' is stored. Apply only for basic and general store.</summary>
 doc:		<access>Read/Write</access>
@@ -1076,16 +1086,15 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype
 
 /*
 doc:	<routine name="rt_canonical_types" return_type="const EIF_TYPE_INDEX *" export="private">
-doc:		<summary>Given a type array `gtypes' filter it to compute how many entries will be actually needed to get just what we need and reconstruct the type properly. This is mostly used to remove attachment marks and qualified anchored type qualification.</summary>
-doc:		<param name="gtypes" type="const EIF_TYPE_INDEX *">Type array containing the type description.</param>
+doc:		<summary>Given a types array `gtypes' filter it to compute how many entries will be actually needed to get just what we need and reconstruct the type properly. This is mostly used to remove attachment marks and qualified anchored type qualification.</summary>
+doc:		<param name="gtypes" type="const EIF_TYPE_INDEX *">Types array containing the type description.</param>
 doc:		<param name="is_discarding_attachment_marks" type="int">Are we ignoring attachment marks?</param>
-doc:		<param name="is_raising_exception" type="int">Are we raising an exception when we encounter a type that we cannot resolve without a context? (i.e. a qualified anchored type that involves a formal generic parameter).</param>
-doc:		<param name="num_gtypes" type="int16 *">Number of entries that will be effectively in use in the returned type arrays.</param>
-doc:		<return>Type arrays that is either `gtypes' or a new one if it involved some qualified anchored type for example.</param>
+doc:		<param name="num_gtypes" type="int16 *">Number of entries that will be effectively in use in the returned types array.</param>
+doc:		<return>NULL if it cannot produce a types array (case where it involves some formal generic parameter), otherwise a types array that is either `gtypes' or a new one (case where it involved some qualified anchored type).</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */
-rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes, int is_discarding_attachment_marks, int is_raising_exception, int16 *num_gtypes)
+rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes, int is_discarding_attachment_marks, int16 *num_gtypes)
 {
 	int l_done = 0;
 	int16 l_num_gtypes;
@@ -1127,12 +1136,7 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 						 * a formal or a type that is not accounted for, we cannot process
 						 * the type. */
 					if (gen_conf_context.is_invalid) {
-						if (is_raising_exception) {
-							eise_io("Store: Qualified Anchored Types referring to a formal generic paramter are not supported");
-						} else {
-								/* No exception was requested, we return NULL. */
-							return NULL;
-						}
+						return NULL;
 					} else {
 							/* We have to repeat the whole thing, but this time we 
 							 * will be using the decoded type. */
@@ -1189,53 +1193,62 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		 * We cannot store its original typearr because it may involve qualified
 		 * anchored types (see test#store040).
 		 */
-	gtypes = rt_canonical_types (gtypes, eif_is_discarding_attachment_marks, 1, &num_gtypes);
-	
-		/* Write attribute name information: "attr_name_length attr_name" */
-	widr_multi_int16 (&attr_name_length, 1);
-	widr_multi_char ((EIF_CHARACTER_8 *) attr_name, strlen (attr_name));
-	basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
-	widr_multi_char (&basic_type, 1);
+	gtypes = rt_canonical_types (gtypes, eif_is_discarding_attachment_marks, &num_gtypes);
+	if (gtypes) {
+			/* Write attribute name information: "attr_name_length attr_name" */
+		widr_multi_int16 (&attr_name_length, 1);
+		widr_multi_char ((EIF_CHARACTER_8 *) attr_name, strlen (attr_name));
+		basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
+		widr_multi_char (&basic_type, 1);
 
-		/* Write type information: "num_gtypes attribute_type {gen_types}*" */
-	widr_multi_int16 (&num_gtypes, 1);
+			/* Write type information: "num_gtypes attribute_type {gen_types}*" */
+		widr_multi_int16 (&num_gtypes, 1);
 
-		/* Write type array for INDEPENDENT_STORE_6_6 format */
-	for (i=0; gtypes[i] != TERMINATOR; i++) {
-		gtype = gtypes[i];
-		if (eif_is_discarding_attachment_marks) {
-			while (RT_HAS_ANNOTATION_TYPE (gtype)) {
-				i++;
+			/* Write type array for INDEPENDENT_STORE_6_6 format */
+		for (i=0; gtypes[i] != TERMINATOR; i++) {
+			gtype = gtypes[i];
+			if (eif_is_discarding_attachment_marks) {
+				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+					i++;
+					gtype = gtypes [i];
+				}
+			} else {
+				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+						/* Write annotation mark. */
+					widr_multi_uint16 (&gtype, 1);
+					i++;
+					gtype = gtypes [i];
+				}
+			}
+			if (gtype == TUPLE_TYPE) {
+					/* Write TUPLE_TYPE, nb generic parames */
+				widr_multi_uint16 (gtypes + i, TUPLE_OFFSET);
+				i += TUPLE_OFFSET;
 				gtype = gtypes [i];
 			}
-		} else {
-			while (RT_HAS_ANNOTATION_TYPE (gtype)) {
-					/* Write annotation mark. */
+			if (gtype == FORMAL_TYPE) {
+					/* Write FORMAL_TYPE and formal position */
+				widr_multi_uint16 (gtypes + i, 2);
+				i += 1;
+			} else {
+					/* No need to handle special type since they should not appear in an object type. */
+				CHECK("No special type",
+					(gtype != LIKE_CURRENT_TYPE) &&
+					(gtype != LIKE_ARG_TYPE) &&
+					(gtype != LIKE_FEATURE_TYPE) &&
+					(gtype != QUALIFIED_FEATURE_TYPE));
+
 				widr_multi_uint16 (&gtype, 1);
-				i++;
-				gtype = gtypes [i];
 			}
 		}
-		if (gtype == TUPLE_TYPE) {
-				/* Write TUPLE_TYPE, nb generic parames */
-			widr_multi_uint16 (gtypes + i, TUPLE_OFFSET);
-			i += TUPLE_OFFSET;
-			gtype = gtypes [i];
-		}
-		if (gtype == FORMAL_TYPE) {
-				/* Write FORMAL_TYPE and formal position */
-			widr_multi_uint16 (gtypes + i, 2);
-			i += 1;
-		} else {
-				/* No need to handle special type since they should not appear in an object type. */
-			CHECK("No special type",
-				(gtype != LIKE_CURRENT_TYPE) &&
-				(gtype != LIKE_ARG_TYPE) &&
-				(gtype != LIKE_FEATURE_TYPE) &&
-				(gtype != QUALIFIED_FEATURE_TYPE));
-
-			widr_multi_uint16 (&gtype, 1);
-		}
+	} else {
+		info_tag[0]= (char) 0;
+			/* Buffer should be large enough, the manifest string is 116 characters plus
+			 * 100 for attribute name and class name. */
+		CHECK("info_tag large enough", sizeof(info_tag) >= 256);
+		sprintf(info_tag, "Not supported: Attribute `{%.50s}.%.50s' involves a qualified anchored type referring to a formal generic parameter",
+			System(dtype).cn_generator, attr_name);
+		eise_io(info_tag);
 	}
 }
 

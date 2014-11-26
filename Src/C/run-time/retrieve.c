@@ -3177,7 +3177,7 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 		result = (dftype == type_description (atype)->new_dftype);
 	} else {
 		int level = 0;
-		gtypes = rt_canonical_types (gtypes, 0, 0, NULL);
+		gtypes = rt_canonical_types (gtypes, 0, NULL);
 		result = (gtypes != NULL);
 			/* If `gtypes' is shorter than `atypes', we accept this, as it
 			 * means that generic parameters were removed.

@@ -29,6 +29,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	SHARED_LOGGER
+
 create
 	make
 
@@ -138,14 +140,18 @@ feature -- Hooks
 			vals: CMS_VALUE_TABLE
 			p: detachable PATH
 		do
+		    log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
 				if a_response.is_front then
 						-- FIXME: this relies on theme location, where it should rely on module assets location.
 						-- TODO
 					create p.make_from_string ("templates")
+						-- Note: template name harcoded.
 					p := p.extended ("block_download_area").appended_with_extension ("tpl")
 					p := a_response.module_resource_path (Current, p)
 					if p /= Void then
+						log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+
 						if attached p.entry as e then
 							create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
 						else
@@ -159,9 +165,15 @@ feature -- Hooks
 						loop
 							l_tpl_block.set_value (ic.item, ic.key)
 						end
+						if l_tpl_block /= Void then
+							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						else
+							log.write_debug (generator + ".get_block_view with template_block: Void")
+						end
 						a_response.add_block (l_tpl_block, "header")
 					else
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						log.write_warning ("Error with block [" + a_block_id + "]")
 					end
 				end
 			end

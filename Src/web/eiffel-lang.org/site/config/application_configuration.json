@@ -1,0 +1,6 @@
+{
+	"logger": { 
+			"level":"DEBUG",
+			"backup_count":"4"
+		}
+}

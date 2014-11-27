@@ -45,7 +45,7 @@ processor::processor(spid_t _pid,
   cache_mutex(),
   dirty_for_set(),
   current_msg (),
-  parent_obj (std::make_shared<void *>((void *) 0))
+  parent_obj (make_shared_function <void *> ((void *) 0))
 {
   active_count++;
 }

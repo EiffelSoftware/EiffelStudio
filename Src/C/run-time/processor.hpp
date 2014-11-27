@@ -245,7 +245,7 @@ private:
   /* A vacuous pointer object to satisfy the Eiffel runtime's requirement
    * for an object to be the "current" object for a thread.
    */
-  std::shared_ptr<void *> parent_obj;
+  shared_ptr_type <void *> parent_obj;
 
   /* Try to execute a call from the private queue.
    * @pq private queue to take the call from

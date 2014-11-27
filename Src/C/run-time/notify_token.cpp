@@ -23,7 +23,7 @@
 
 notify_token::notify_token(processor *client) :
   client_(client),
-  token_queue_(std::make_shared <mpscq<processor*> > ())
+  token_queue_(make_shared_function <mpscq <processor*>> ())
 {
 }
 

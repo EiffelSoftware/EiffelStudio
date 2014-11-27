@@ -68,7 +68,7 @@ public:
 
 private:
   processor *client_;
-  std::shared_ptr <mpscq<processor*> > token_queue_;
+  shared_ptr_type <mpscq<processor*> > token_queue_;
 };
 
 #endif // _NOTIFY_TOKEN_H

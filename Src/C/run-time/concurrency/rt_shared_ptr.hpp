@@ -51,10 +51,114 @@ template<class _Ty> inline
 	return (static_cast<_Ty&&>(_Arg));
 	}
 
+template<class _Ty>
+	struct _Get_align
+	{	
+	_Ty _Elt0;
+	char _Elt1;
+	_Ty _Elt2;
+
+	_Get_align();	
+	};
+
+template<class _Ty,
+	size_t _Len>
+	union _Align_type
+	{	
+	_Ty _Val;
+	char _Pad[_Len];
+	};
+
+template<size_t _Len,
+	size_t _Align,
+	class _Ty,
+	bool _Ok>
+	struct _Aligned;
+
+template<size_t _Len,
+	size_t _Align,
+	class _Ty>
+	struct _Aligned<_Len, _Align, _Ty, true>
+	{	
+	typedef _Align_type<_Ty, _Len> type;
+	};
+
+typedef double max_align_t;
+
+template<size_t _Len,
+	size_t _Align>
+	struct _Aligned<_Len, _Align, double, false>
+	{	
+ 
+	typedef _Align_type<max_align_t, _Len> type;
+	};
+
+template<size_t _Len,
+	size_t _Align>
+	struct _Aligned<_Len, _Align, int, false>
+	{	
+	typedef typename _Aligned<_Len, _Align, double, _Align <= (sizeof (_Get_align<double>) - 2 * sizeof (double))>::type type;
+	};
+
+template<size_t _Len,
+	size_t _Align>
+	struct _Aligned<_Len, _Align, short, false>
+	{	
+	typedef typename _Aligned<_Len, _Align, int, _Align <= (sizeof (_Get_align<int>) - 2 * sizeof (int))>::type type;
+	};
+
+template<size_t _Len,
+	size_t _Align>
+	struct _Aligned<_Len, _Align, char, false>
+	{	
+	typedef typename _Aligned<_Len, _Align, short, _Align <= (sizeof (_Get_align<short>) - 2 * sizeof (short))>::type type;
+	};
+
+template<class _Ty,
+	_Ty _Val>
+	struct integral_constant
+	{	
+	static const _Ty value = _Val;
+
+	typedef _Ty value_type;
+	typedef integral_constant<_Ty, _Val> type;
+
+	operator value_type() const
+		{	
+		return (value);
+		}
+	};
+
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
+
+template<class _Ty>
+	struct alignment_of
+		: integral_constant<size_t, (sizeof (_Get_align<_Ty>) - 2 * sizeof (_Ty))>
+	{	
+	};
+
+template<class _Ty>
+	struct alignment_of<_Ty&>
+		: integral_constant<size_t, (sizeof (_Get_align<_Ty *>) - 2 * sizeof (_Ty *))>
+	{	
+	};
+
+template<size_t _Len,
+	size_t _Align = alignment_of<max_align_t>::value>
+	struct aligned_storage
+	{	
+	typedef typename _Aligned<_Len, _Align, char, _Align <= (sizeof (_Get_align<char>) - 2 * sizeof (char))>::type type;
+	};
+
 class _Ref_count_base
 	{	
 private:
 	EIF_INTEGER_32 _Uses;
+
+private:
+	virtual void _Destroy() = 0;
+	virtual void _Delete_this() = 0;
 
 protected:
 	_Ref_count_base()
@@ -90,12 +194,66 @@ public:
 
 	void _Decref()
 		{	
-			RTS_AD_I32(&_Uses);
+			if (RTS_AD_I32(&_Uses) == 0) {
+				_Destroy();
+				_Delete_this();
+			}
 		}
 
 };
 
+template<class _Ty>
+	class _Ref_count_obj
+	: public _Ref_count_base
+	{	
+public:
+
+	_Ref_count_obj() : _Ref_count_base() { ::new ((void *)&_Storage) _Ty(); }
 	
+	template<class _V0_t> _Ref_count_obj(_V0_t&& _V0) : _Ref_count_base() { ::new ((void *)&_Storage) _Ty(::std:: forward<_V0_t>(_V0)); }
+	
+	_Ty *_Getptr() const
+		{	
+		return ((_Ty *)&_Storage);
+		}
+
+private:
+	virtual void _Destroy()
+		{	
+		_Getptr()->~_Ty();
+		}
+
+	virtual void _Delete_this()
+		{	
+		delete this;
+		}
+
+	typename aligned_storage<sizeof (_Ty),
+		alignment_of<_Ty>::value>::type _Storage;
+
+	};
+	
+template<class _Ty>
+	class enable_shared_from_this;
+
+template<class _Ty1,
+	class _Ty2>
+	void _Do_enable(_Ty1 *, enable_shared_from_this<_Ty2> *,
+		_Ref_count_base *);
+
+template<class _Ty>
+	inline void _Enable_shared(_Ty *_Ptr, _Ref_count_base *_Refptr,
+		typename _Ty::_EStype * = 0)
+	{	
+	if (_Ptr)
+		_Do_enable(_Ptr,
+			(enable_shared_from_this<typename _Ty::_EStype>*)_Ptr, _Refptr);
+	}
+
+inline void _Enable_shared(const volatile void *, const volatile void *)
+	{	
+	}
+
 template<class _Ty>
 	class _Ptr_base
 	{	
@@ -324,6 +482,13 @@ template<class _Ty>
 	_Left.swap(_Right);
 	}
 
+template<class _Ty  > inline shared_ptr<_Ty> make_shared() {
+	_Ref_count_obj<_Ty> *_Rx = new _Ref_count_obj<_Ty>();
+	shared_ptr<_Ty> _Ret;
+	_Ret._Resetp0(_Rx->_Getptr(), _Rx);
+	return (_Ret);
+	}
+	
 template<class _Ty , class _V0_t> inline shared_ptr<_Ty> make_shared(_V0_t&& _V0) {
 	_Ref_count_obj<_Ty> *_Rx = new _Ref_count_obj<_Ty>(forward<_V0_t>(_V0));
 	shared_ptr<_Ty> _Ret;

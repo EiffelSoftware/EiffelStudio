@@ -8,6 +8,24 @@
 namespace eiffel_run_time
 {
 
+template<class _Ty,
+	_Ty _Val>
+	struct integral_constant
+	{	
+	static const _Ty value = _Val;
+
+	typedef _Ty value_type;
+	typedef integral_constant<_Ty, _Val> type;
+
+	operator value_type() const
+		{	
+		return (value);
+		}
+	};
+
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
+
 template<class _Ty>
 	struct is_lvalue_reference
 		: false_type
@@ -113,24 +131,6 @@ template<size_t _Len,
 	{	
 	typedef typename _Aligned<_Len, _Align, short, _Align <= (sizeof (_Get_align<short>) - 2 * sizeof (short))>::type type;
 	};
-
-template<class _Ty,
-	_Ty _Val>
-	struct integral_constant
-	{	
-	static const _Ty value = _Val;
-
-	typedef _Ty value_type;
-	typedef integral_constant<_Ty, _Val> type;
-
-	operator value_type() const
-		{	
-		return (value);
-		}
-	};
-
-typedef integral_constant<bool, true> true_type;
-typedef integral_constant<bool, false> false_type;
 
 template<class _Ty>
 	struct alignment_of

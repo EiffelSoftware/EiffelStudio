@@ -5,10 +5,10 @@ ELAPSED_TIME_DIR=$(TOP)/../tool/elapsed_time
 ELAPSED_TIME=$(ELAPSED_TIME_DIR)/EIFGENs/elapsed_time/F_code/elapsed_time$(EXE)
 MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c
 
-benchmark::
+benchmark benchmark_1::
 	$(DO_MAKE) action.echo "MESSAGE=Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"
 
-benchmark build clean::
+benchmark benchmark_1 build clean::
 	$(DO_MAKE) ACTION=$@ chain
 	$(DO_MAKE) ACTION=$@ chameneos
 	$(DO_MAKE) ACTION=$@ condition
@@ -56,6 +56,9 @@ winnow:
 
 action.benchmark: $(ELAPSED_TIME) action.build
 	$(MEASURE) -w "$(TOP)/scoop_$(TARGET)" -n $(TARGET) $(REPEAT) "$(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+
+action.benchmark_1: $(ELAPSED_TIME) action.build
+	$(MEASURE) -w "$(TOP)/scoop_$(TARGET)" -n $(TARGET) -c 1 "$(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
 
 action.build: $(TOP)/scoop_$(TARGET)/EIFGENs/main$(QS)/F_code/main$(EXE)
 

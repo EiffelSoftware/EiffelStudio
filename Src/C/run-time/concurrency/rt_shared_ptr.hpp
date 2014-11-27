@@ -480,6 +480,6 @@ template<class _Ty , class _V0_t> inline shared_ptr<_Ty> make_shared(_V0_t&& _V0
 	return (_Ret);
 	}
 
-};
+}
 
 #endif /* _RT_SHARED_PTR_HPP */

@@ -1165,10 +1165,10 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 			gtypes = eif_gen_cid (l_attr_type);
 				/* In the above array, the first entry contains the count. */
 			gtypes++;
+		} else if (num_gtypes) {
+				/* We are done, so let's update `num_gtypes'. */
+			*num_gtypes = l_num_gtypes;
 		}
-	}
-	if (num_gtypes) {
-		*num_gtypes = l_num_gtypes;
 	}
 	return gtypes;
 }

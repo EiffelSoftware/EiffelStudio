@@ -8,6 +8,18 @@
 namespace eiffel_run_time
 {
 
+template<class _Ty>
+	struct is_lvalue_reference
+		: false_type
+	{	
+	};
+
+template<class _Ty>
+	struct is_lvalue_reference<_Ty&>
+		: true_type
+	{	
+	};
+
 inline void _Init_atomic_counter(EIF_INTEGER_32& _Counter,
 	EIF_INTEGER_32 _Value)
 	{	

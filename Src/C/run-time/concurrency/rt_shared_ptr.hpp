@@ -265,36 +265,6 @@ public:
 		{	
 		}
 
-/*
-	_Ptr_base(_Myt&& _Right)
-		: _Ptr(0), _Rep(0)
-		{	
-		_Assign_rv(::std:: forward<_Myt>(_Right));
-		}
-*/
-
-	template<class _Ty2>
-		_Ptr_base(_Ptr_base<_Ty2>&& _Right)
-		: _Ptr(_Right._Ptr), _Rep(_Right._Rep)
-		{	
-		_Right._Ptr = 0;
-		_Right._Rep = 0;
-		}
-
-/*
-	void _Assign_rv(_Myt&& _Right)
-		{	
-		if (this != &_Right)
-			_Swap(_Right);
-		}
-
-	void _Swap(_Ptr_base& _Right)
-		{	
-		::std:: swap(_Rep, _Right._Rep);
-		::std:: swap(_Ptr, _Right._Ptr);
-		}
-*/
-
 	_Ty *_Get() const
 		{	
 		return (_Ptr);
@@ -358,97 +328,32 @@ public:
 		{	
 		}
 
-/*
-	template<class _Ux>
-		explicit shared_ptr(_Ux *_Px)
-		{	
-		_Resetp(_Px);
-		}
-*/
-
 	shared_ptr(const _Myt& _Other) throw ()
 		{	
 		this->_Reset(_Other);
 		}
 
+/*
 	shared_ptr(_Myt&& _Right) throw ()
 		: _Mybase(forward<_Myt>(_Right))
 		{	
 		}
+*/
 
 	~shared_ptr() throw ()
 		{	
 		this->_Decref();
 		}
 
-/*
-	void swap(_Myt& _Other) throw ()
-		{	
-		this->_Swap(_Other);
-		}
-*/
-
 	_Ty *get() const throw ()
 		{	
 		return (this->_Get());
 		}
 
-/*
-	typename add_reference<_Ty>::type operator*() const throw ()
-		{	
-		return (*this->_Get());
-		}
-*/
-
 	_Ty *operator->() const throw ()
 		{	
 		return (this->_Get());
 		}
-
-private:
-/*
-	template<class _Ux>
-		void _Resetp(_Ux *_Px)
-		{	
-		try {	
-		_Resetp0(_Px, new _Ref_count<_Ux>(_Px));
-		} catch (...) {	
-		delete _Px;
-		throw;
-		}
-		}
-
-	template<class _Ux,
-		class _Dx>
-		void _Resetp(_Ux *_Px, _Dx _Dt)
-		{	
-		try {	
-		_Resetp0(_Px, new _Ref_count_del<_Ux, _Dx>(_Px, _Dt));
-		} catch (...) {	
-		_Dt(_Px);
-		throw;
-		}
-		}
-
-
-	template<class _Ux,
-		class _Dx,
-		class _Alloc>
-		void _Resetp(_Ux *_Px, _Dx _Dt, _Alloc _Ax)
-		{	
-		typedef _Ref_count_del_alloc<_Ux, _Dx, _Alloc> _Refd;
-		typename _Alloc::template rebind<_Refd>::other _Al = _Ax;
-
-		try {	
-		_Refd *_Ptr = _Al.allocate(1);
-		::new (_Ptr) _Refd(_Px, _Dt, _Al);
-		_Resetp0(_Px, _Ptr);
-		} catch (...) {	
-		_Dt(_Px);
-		throw;
-		}
-		}
-*/
 
 public:
 	template<class _Ux>

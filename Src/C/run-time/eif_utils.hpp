@@ -83,6 +83,15 @@
 #	define memory_barrier() EIF_MEMORY_BARRIER
 #endif
 
+#define EIF_USE_STD_SHARED_PTR
+#ifdef EIF_USE_STD_SHARED_PTR
+#	include <memory>
+#	define shared_ptr_type std::shared_ptr
+#else
+#	include "concurrency/rt_shared_ptr.hpp"
+#	define shared_ptr_type eiffel_run_time::shared_ptr
+#endif
+
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);
 
 void

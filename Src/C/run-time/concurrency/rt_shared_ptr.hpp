@@ -333,13 +333,6 @@ public:
 		this->_Reset(_Other);
 		}
 
-/*
-	shared_ptr(_Myt&& _Right) throw ()
-		: _Mybase(forward<_Myt>(_Right))
-		{	
-		}
-*/
-
 	~shared_ptr() throw ()
 		{	
 		this->_Decref();

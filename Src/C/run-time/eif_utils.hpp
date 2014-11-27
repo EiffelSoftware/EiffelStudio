@@ -87,9 +87,11 @@
 #ifdef EIF_USE_STD_SHARED_PTR
 #	include <memory>
 #	define shared_ptr_type std::shared_ptr
+#	define make_shared_function std::make_shared
 #else
 #	include "concurrency/rt_shared_ptr.hpp"
 #	define shared_ptr_type eiffel_run_time::shared_ptr
+#	define make_shared_function eiffel_run_time::make_shared
 #endif
 
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);

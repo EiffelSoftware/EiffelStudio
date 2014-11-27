@@ -318,12 +318,6 @@ public:
 		}
 
 	template<class _Ty2>
-		void _Reset(const _Ptr_base<_Ty2>& _Other, bool _Throw)
-		{	
-		_Reset(_Other._Ptr, _Other._Rep, _Throw);
-		}
-
-	template<class _Ty2>
 		void _Reset(_Ty *_Ptr, const _Ptr_base<_Ty2>& _Other)
 		{	
 		_Reset(_Ptr, _Other._Rep);
@@ -334,16 +328,6 @@ public:
 		if (_Other_rep)
 			_Other_rep->_Incref();
 		_Reset0(_Other_ptr, _Other_rep);
-		}
-
-	void _Reset(_Ty *_Other_ptr, _Ref_count_base *_Other_rep, bool _Throw)
-		{	
-			
-			
-		if (_Other_rep && _Other_rep->_Incref_nz())
-			_Reset0(_Other_ptr, _Other_rep);
-		else if (_Throw)
-			throw bad_weak_ptr(0);
 		}
 
 	void _Reset0(_Ty *_Other_ptr, _Ref_count_base *_Other_rep)

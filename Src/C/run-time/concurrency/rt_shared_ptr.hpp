@@ -23,21 +23,6 @@ template<class _Ty,
 		}
 	};
 
-typedef integral_constant<bool, true> true_type;
-typedef integral_constant<bool, false> false_type;
-
-template<class _Ty>
-	struct is_lvalue_reference
-		: false_type
-	{	
-	};
-
-template<class _Ty>
-	struct is_lvalue_reference<_Ty&>
-		: true_type
-	{	
-	};
-
 inline void _Init_atomic_counter(EIF_INTEGER_32& _Counter,
 	EIF_INTEGER_32 _Value)
 	{	
@@ -48,25 +33,6 @@ inline EIF_INTEGER_32
 	_Get_atomic_count(const EIF_INTEGER_32& _Counter)
 	{	
 	return (_Counter);
-	}
-
-template<class _Ty>
-	struct remove_reference
-	{	
-	typedef _Ty type;
-	};
-
-template<class _Ty> inline
-	_Ty&& forward(typename remove_reference<_Ty>::type& _Arg)
-	{	
-	return (static_cast<_Ty&&>(_Arg));
-	}
-
-template<class _Ty> inline
-	_Ty&& forward(typename remove_reference<_Ty>::type&& _Arg) throw ()
-	{	
-	static_assert(!is_lvalue_reference<_Ty>::value, "bad forward call");
-	return (static_cast<_Ty&&>(_Arg));
 	}
 
 template<class _Ty>
@@ -208,9 +174,15 @@ template<class _Ty>
 	{	
 public:
 
-	_Ref_count_obj() : _Ref_count_base() { ::new ((void *)&_Storage) _Ty(); }
+	_Ref_count_obj() : _Ref_count_base()
+		{
+			::new ((void *)&_Storage) _Ty();
+		}
 	
-	template<class _V0_t> _Ref_count_obj(_V0_t&& _V0) : _Ref_count_base() { ::new ((void *)&_Storage) _Ty(::std:: forward<_V0_t>(_V0)); }
+	template<class _V0_t> _Ref_count_obj(_V0_t _V0) : _Ref_count_base()
+		{
+			::new ((void *)&_Storage) _Ty(_V0);
+		}
 	
 	_Ty *_Getptr() const
 		{	
@@ -228,10 +200,9 @@ private:
 		delete this;
 		}
 
-	typename aligned_storage<sizeof (_Ty),
-		alignment_of<_Ty>::value>::type _Storage;
+	typename aligned_storage<sizeof (_Ty), alignment_of<_Ty>::value>::type _Storage;
 
-	};
+};
 	
 template<class _Ty>
 	class enable_shared_from_this;
@@ -371,8 +342,8 @@ template<class _Ty  > inline shared_ptr<_Ty> make_shared() {
 	return (_Ret);
 	}
 	
-template<class _Ty , class _V0_t> inline shared_ptr<_Ty> make_shared(_V0_t&& _V0) {
-	_Ref_count_obj<_Ty> *_Rx = new _Ref_count_obj<_Ty>(forward<_V0_t>(_V0));
+template<class _Ty , class _V0_t> inline shared_ptr<_Ty> make_shared(_V0_t _V0) {
+	_Ref_count_obj<_Ty> *_Rx = new _Ref_count_obj<_Ty>(_V0);
 	shared_ptr<_Ty> _Ret;
 	_Ret._Resetp0(_Rx->_Getptr(), _Rx);
 	return (_Ret);

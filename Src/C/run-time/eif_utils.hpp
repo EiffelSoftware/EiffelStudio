@@ -83,7 +83,7 @@
 #	define memory_barrier() EIF_MEMORY_BARRIER
 #endif
 
-#define EIF_USE_STD_SHARED_PTR
+// #define EIF_USE_STD_SHARED_PTR
 #ifdef EIF_USE_STD_SHARED_PTR
 #	include <memory>
 #	define shared_ptr_type std::shared_ptr

@@ -22,7 +22,7 @@
 #define _EIF_UTILS_H
 #include "eif_macros.h"
 
-#define EIF_USE_STD_MUTEX
+// #define EIF_USE_STD_MUTEX
 #ifdef EIF_USE_STD_MUTEX
 #	include <mutex>
 #	include <condition_variable>
@@ -56,7 +56,7 @@
 	typedef eiffel_run_time::condition_variable condition_variable_type;
 #endif
 
-#define EIF_USE_STD_ATOMIC
+// #define EIF_USE_STD_ATOMIC
 #ifdef EIF_USE_STD_ATOMIC
 #	include <atomic>
 #	define atomic_var_init ATOMIC_VAR_INIT (0)

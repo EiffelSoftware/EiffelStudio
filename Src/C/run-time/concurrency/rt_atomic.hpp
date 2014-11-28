@@ -19,8 +19,9 @@
 #	endif
 #endif
 
-// Microsoft Visual C++ does not support "default", "delete" and "constexpr" modifiers.
-#ifdef _MSC_VER
+// Microsoft Visual C++ does not support "default", "delete" and "constexpr" modifiers
+// as well as some older GCC.
+#if defined _MSC_VER || 1
 #	define RT_CONSTEXPR
 #	define RT_DEFAULT {}
 #	define RT_DELETE
@@ -40,7 +41,7 @@ typedef enum memory_order {
 	memory_order_acquire,
 	memory_order_release,
 	memory_order_acq_rel,
-	memory_order_seq_cst,
+	memory_order_seq_cst
 } memory_order;
 
 class atomic_int

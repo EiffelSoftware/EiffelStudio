@@ -104,10 +104,11 @@ public:
   push (const queue_cache* other)
   {
     std::set <processor*> new_locks;
-    for (const auto pair : other->queue_map)
+    auto other_queue_map = other -> queue_map;
+    for (auto pair = other_queue_map.cbegin (); pair != other_queue_map.cend (); ++ pair)
       {
-	const auto supplier = pair.first;
-	auto &stack = pair.second;
+	const auto supplier = (*pair).first;
+	auto &stack = (*pair).second;
 
 	if (!stack.empty() && stack.back()->is_locked())
 	  {
@@ -124,10 +125,11 @@ public:
     lock_stack.push (new_locks);
 
     std::set <processor*> new_subs;
-    for (const auto pair : other->sub_map)
+    auto other_sub_map = other->sub_map;
+    for (auto pair = other_sub_map.cbegin (); pair != other_sub_map.cend (); ++ pair )
       {
-	const auto supplier = pair.first;
-	const auto count = pair.second;
+	const auto supplier = (*pair).first;
+	const auto count = (*pair).second;
 
 	if (count > 0)
 	  {
@@ -153,16 +155,16 @@ public:
   pop ()
   {
     const auto newest_locks = lock_stack.top();
-    for (const auto &supplier : newest_locks)
+    for (auto supplier = newest_locks.cbegin (); supplier != newest_locks.cend (); ++ supplier)
       {
-	queue_map[supplier].pop_back();
+	queue_map [*supplier].pop_back();
       }
     lock_stack.pop();
 
     auto newest_subs = sub_stack.top();
-    for (const auto &supplier : newest_subs)
+    for (auto supplier = newest_subs.cbegin (); supplier != newest_subs.cend (); ++ supplier)
       {
-	sub_map[supplier]--;
+	sub_map [*supplier]--;
       }
     sub_stack.pop();
   }
@@ -178,12 +180,12 @@ public:
   void
   mark (marker_t mark)
   {
-    for (const auto &pair : queue_map)
+    for (auto pair = queue_map.cbegin (); pair != queue_map.cend (); ++ pair)
     {
-      auto &stack = pair.second;
-      for (auto &pq : stack)
+      auto &stack = (*pair).second;
+      for (auto pq = stack.begin (); pq != stack.end (); ++ pq)
 	{
-	  pq->mark (mark);
+	  (* pq) -> mark (mark);
 	}
     }
   }

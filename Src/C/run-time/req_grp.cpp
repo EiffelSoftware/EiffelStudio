@@ -40,9 +40,9 @@ req_grp::add(processor *supplier)
 void
 req_grp::wait()
 {
-  for (auto &pq : *this)
+  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
-      pq->register_wait(client);
+      (*pq) -> register_wait (client);
     }
 
   unlock();
@@ -65,14 +65,14 @@ req_grp::lock()
 
   sorted = true;
 
-  for (auto pq : *this)
+  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
-      pq->supplier->qoq_mutex.lock();
+      (*pq) -> supplier -> qoq_mutex.lock ();
     }
 
-  for (auto &pq : *this)
+  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
-      pq->lock(client);
+      (*pq) -> lock (client);
     }
 
   for (auto it = rbegin(); it != rend(); ++it)

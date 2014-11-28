@@ -10,10 +10,12 @@
 #		define RT_NOEXCEPT NOEXCEPT
 #	elif defined _NOEXCEPT
 #		define RT_NOEXCEPT _NOEXCEPT
+#	elif defined _GLIBCXX_NOEXCEPT
+#		define RT_NOEXCEPT _GLIBCXX_NOEXCEPT
 #	elif defined _MSC_VER
 #		define RT_NOEXCEPT
 #	else
-#		define RT_NOEXCEPT noexcept
+#		define RT_NOEXCEPT
 #	endif
 #endif
 

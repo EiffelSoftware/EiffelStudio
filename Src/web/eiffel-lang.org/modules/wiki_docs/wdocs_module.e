@@ -223,7 +223,7 @@ feature -- Hooks
 					if a_block_id.same_string_general ("wdocs-tree") then
 						m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True)
 						create l_menublock.make (m)
-						a_response.add_block (l_menublock, "sidebar_second")
+						a_response.add_block (l_menublock, "sidebar_first")
 					elseif a_block_id.same_string_general ("wdocs-page-info") then
 						if
 							l_book_name /= Void and then l_page_name /= Void and then

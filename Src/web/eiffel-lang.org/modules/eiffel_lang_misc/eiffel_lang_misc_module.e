@@ -119,9 +119,10 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("social_area") then
+			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  a_response.request.path_info ~ "/" then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					l_tpl_block.set_is_raw (True)
+					-- TODO: double check: Social Header is only included in the home page.
 					a_response.add_block (l_tpl_block, "header")
 				else
 					debug ("cms")

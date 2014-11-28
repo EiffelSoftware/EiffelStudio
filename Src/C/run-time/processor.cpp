@@ -52,9 +52,9 @@ processor::processor(spid_t _pid,
 
 processor::~processor()
 {
-  for (auto &pq : private_queue_cache)
+  for (auto pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
     {
-      delete pq;
+      delete *pq;
     }
 }
 
@@ -273,9 +273,9 @@ processor::mark(marker_t mark)
       mark_call_data (mark, current_msg.call);
     }
 
-  for (auto &pq : private_queue_cache)
+  for (auto pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
     {
-      pq->mark(mark);
+      (* pq) -> mark (mark);
     }
 }
 

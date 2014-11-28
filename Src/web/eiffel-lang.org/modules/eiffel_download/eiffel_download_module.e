@@ -130,17 +130,27 @@ feature -- Hooks
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
+				-- <Precursor>
+		local
+			l_string: STRING
 		do
 			Result := <<"download_area">>
+			create l_string.make_empty
+			across Result as ic loop
+				l_string.append (ic.item)
+				l_string.append_character (' ')
+			end
+			log.write_debug (generator + ".block_list:" + l_string )
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+				-- <Precursor>
 		local
 			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
 			vals: CMS_VALUE_TABLE
 			p: detachable PATH
 		do
-		    log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
+			log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
 				if a_response.is_front then
 						-- FIXME: this relies on theme location, where it should rely on module assets location.

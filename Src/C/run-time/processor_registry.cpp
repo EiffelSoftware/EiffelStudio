@@ -24,7 +24,6 @@
 #include "internal.hpp"
 #include "processor.hpp"
 #include <cassert>
-#include <chrono>
 #include <eif_macros.h>
 #include <eif_scoop.h>
 #include <iostream>

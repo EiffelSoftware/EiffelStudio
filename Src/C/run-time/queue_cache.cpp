@@ -17,7 +17,7 @@ queue_cache::operator[] (processor * const supplier)
     }
   else
     {
-      const auto &res = queue_map.emplace (supplier, queue_stack());
+      const auto &res = queue_map.emplace (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
       auto &stack = res.first->second;
       stack.emplace_back (supplier->new_priv_queue());
       pq = stack.back();

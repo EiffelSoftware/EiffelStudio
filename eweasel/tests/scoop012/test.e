@@ -1,7 +1,7 @@
 class TEST
 
 create
-	default_create, make
+	make, make_with_current, make_with_waiting_instance
 
 feature {NONE} -- Creation
 
@@ -9,16 +9,47 @@ feature {NONE} -- Creation
         		-- Run test.
 		local
 			is_retried: BOOLEAN
+        		t: separate TEST
 		do
 			if is_retried then
+				waiting_instance := Current
 				io.put_string ("Failed")
 				io.put_new_line
 			else
-				f (create {separate TEST})
+				create waiting_instance.make_with_current
+					-- This processor or the one created next are going to change the state of `waiting_instance'
+					-- so that `is_valid' becomes true and `f (waiting_instance)' can proceed.
+				create t.make_with_waiting_instance (waiting_instance)
+				make_valid (t)
+				make_valid (Current)
 			end
 		rescue
 			is_retried := True
 			retry
+		end
+
+	make_with_current
+			-- Initialize an object with `waiting_instance' pointing to `Current'.
+		do
+			waiting_instance := Current
+		ensure
+			waiting_instance = Current
+		end
+
+	make_with_waiting_instance (w: separate TEST)
+			-- Initialize an object with `w'.
+		do
+			waiting_instance := w
+		ensure
+			waiting_instance = w
+		end
+
+feature -- Test
+
+        make_valid (client: separate TEST)
+        		-- Call `f' on `client' with `waiting_instance'.
+		do
+			client.f (waiting_instance)
 		end
 
 feature -- Access
@@ -44,5 +75,8 @@ feature -- Access
 			io.put_string ("OK")
 			io.put_new_line
 		end
+
+	waiting_instance: separate TEST
+			-- An instance to wait on until it becomes valid.
 
 end

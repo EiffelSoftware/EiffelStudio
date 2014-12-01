@@ -49,10 +49,10 @@ private:
   // The goal is to first have efficient priv_queue lookup, as that is a very
   // common operation, while the push/pop operations are somewhat more expensive.
   unordered_map <processor*, uint32_t> sub_map;
-  std::stack<std::set<processor*>> sub_stack;
+  std::stack<std::set<processor*> > sub_stack;
 
   unordered_map <processor*, queue_stack> queue_map;
-  std::stack<std::set<processor*>> lock_stack;
+  std::stack<std::set<processor*> > lock_stack;
 
 public:
   /* Fetches a new private queue.

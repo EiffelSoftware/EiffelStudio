@@ -32,11 +32,12 @@ private:
   typedef std::vector<priv_queue*> queue_stack;
  
   processor *owner;
+
   // The scheme for tracking the locks is to now use maps to stacks (or counts
   // for subordinates) to provide a mechanism that can have efficient
   // lookup, and still be able to push/pop these values.
   //
-  // The goalis to first have efficient priv_queue lookup, as that is a very
+  // The goal is to first have efficient priv_queue lookup, as that is a very
   // common operation, while the push/pop operations are somewhat more expensive.
   std::unordered_map<processor*, uint32_t> sub_map;
   std::stack<std::set<processor*>> sub_stack;

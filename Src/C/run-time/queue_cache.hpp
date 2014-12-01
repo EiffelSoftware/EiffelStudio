@@ -165,14 +165,14 @@ public:
   pop ()
   {
     const std::set<processor*> newest_locks = lock_stack.top();
-    for (std::set<processor*>::const_iterator supplier = newest_locks.cbegin (); supplier != newest_locks.cend (); ++ supplier)
+    for (std::set<processor*>::const_iterator supplier = newest_locks.begin (); supplier != newest_locks.end (); ++ supplier)
       {
 	queue_map [*supplier].pop_back();
       }
     lock_stack.pop();
 
-    std::set<processor*> newest_subs = sub_stack.top();
-    for (std::set<processor*>::const_iterator supplier = newest_subs.cbegin (); supplier != newest_subs.cend (); ++ supplier)
+    const std::set<processor*> newest_subs = sub_stack.top();
+    for (std::set<processor*>::const_iterator supplier = newest_subs.begin (); supplier != newest_subs.end (); ++ supplier)
       {
 	sub_map [*supplier]--;
       }

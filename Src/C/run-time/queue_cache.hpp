@@ -164,15 +164,15 @@ public:
   void
   pop ()
   {
-    const auto newest_locks = lock_stack.top();
-    for (auto supplier = newest_locks.cbegin (); supplier != newest_locks.cend (); ++ supplier)
+    const std::set<processor*> newest_locks = lock_stack.top();
+    for (std::set<processor*>::const_iterator supplier = newest_locks.cbegin (); supplier != newest_locks.cend (); ++ supplier)
       {
 	queue_map [*supplier].pop_back();
       }
     lock_stack.pop();
 
-    auto newest_subs = sub_stack.top();
-    for (auto supplier = newest_subs.cbegin (); supplier != newest_subs.cend (); ++ supplier)
+    std::set<processor*> newest_subs = sub_stack.top();
+    for (std::set<processor*>::const_iterator supplier = newest_subs.cbegin (); supplier != newest_subs.cend (); ++ supplier)
       {
 	sub_map [*supplier]--;
       }

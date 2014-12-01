@@ -115,10 +115,10 @@ public:
   {
     std::set <processor*> new_locks;
     unordered_map <processor*, queue_stack> other_queue_map = other -> queue_map;
-    for (auto pair = other_queue_map.cbegin (); pair != other_queue_map.cend (); ++ pair)
+    for (unordered_map <processor*, queue_stack>::const_iterator pair = other_queue_map.cbegin (); pair != other_queue_map.cend (); ++ pair)
       {
-	const auto supplier = (*pair).first;
-	auto &stack = (*pair).second;
+	processor* const supplier = (*pair).first;
+	const queue_stack &stack = (*pair).second;
 
 	if (!stack.empty() && stack.back()->is_locked())
 	  {
@@ -136,10 +136,10 @@ public:
 
     std::set <processor*> new_subs;
     unordered_map <processor*, uint32_t> other_sub_map = other->sub_map;
-    for (auto pair = other_sub_map.cbegin (); pair != other_sub_map.cend (); ++ pair )
+    for (unordered_map <processor*, uint32_t>::const_iterator pair = other_sub_map.cbegin (); pair != other_sub_map.cend (); ++ pair )
       {
-	const auto supplier = (*pair).first;
-	const auto count = (*pair).second;
+	processor* const supplier = (*pair).first;
+	const uint32_t count = (*pair).second;
 
 	if (count > 0)
 	  {

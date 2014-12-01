@@ -40,9 +40,10 @@
 						</div>
 						{assign name="empty" value=""/}
 						{unless condition="$page.region_header ~ $empty"}
-							<div class="container promo-area">{$page.region_header/}</div>
+							<div class="container">
+									<div class="promo-area">
+											{$page.region_header/}
+									</div>	
+							</div>
 						{/unless}	
 
-						<!--{unless empty="$page.region_header"}
-							<div class="container promo-area">{$page.region_header/}</div>
-						{/unless}--> 

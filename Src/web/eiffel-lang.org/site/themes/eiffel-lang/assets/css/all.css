@@ -494,6 +494,49 @@ table {
   top: 24px;
   right: 11px;
 }
+
+
+.btn-codeboard {
+  background-color: #769830;
+  background-image: -webkit-linear-gradient(top, #99cc33, #769830);
+  background-image: -moz-linear-gradient(top, #99cc33, #769830);
+  background-image: -ms-linear-gradient(top, #99cc33, #769830);
+  background-image: -o-linear-gradient(top, #99cc33, #769830);
+  background-image: linear-gradient(top, #99cc33, #769830);
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  /*width: 263px;
+  height: 63px;*/
+  display: block;
+  margin: 0 auto;
+  font: 12px/35px "museo_sans500", Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 25px;
+  right: 230px;
+  padding: 0 2px 0 2px;
+}
+
+.btn-codeboard:after {
+  width: 37px;
+  height: 37px;
+  position: absolute;
+  right: 16px;
+  top: 13px;
+  content: '';
+}
+
+.btn-codeboard:hover {
+  background-color: #6a8c28;
+  background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
+  background-image: -moz-linear-gradient(top, #89bc2b, #6a8c28);
+  background-image: -ms-linear-gradient(top, #89bc2b, #6a8c28);
+  background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
+  background-image: linear-gradient(top, #89bc2b, #6a8c28);
+}
+
+
 .promo-area .holder {
   width: 700px;
   overflow: hidden;
@@ -510,6 +553,12 @@ table {
   border: 1px solid #98dcd4;
   padding: 0 0 16px;
   margin: 0 0 0 2px;
+}
+.promo-area .holder .btn-holder-left {
+  width: 347px;
+  border: 1px solid #98dcd4;
+  padding: 0 0 16px;
+  margin: 0 0 0 200px;
 }
 .promo-area .holder .btn-holder .row {
   overflow: hidden;
@@ -576,6 +625,11 @@ table {
 .social-networks {
   float: right;
 }
+
+.codeboard {
+  float: right;
+}
+
 .social-networks li {
   float: left;
   margin: 0 0 0 10px;

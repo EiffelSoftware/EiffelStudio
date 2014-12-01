@@ -17,6 +17,7 @@
 											<li><a href="#">Tutorials</a></li>
 											<li><a href="#">Packages</a></li>
 											<li><a href="#">FAQs</a></li>
+											<li><a href="http://codeboard.io" target="_blank">Try Eiffel Online</a></li>
 										</ul>
 									</li>
 									<li><a href="#">Contribute</a>
@@ -28,6 +29,7 @@
 											<li><a href="#">Forum</a></li>
 										</ul>
 									</li>
+						
 								</ul>
 							</nav>
 							<div class="btn-holder">

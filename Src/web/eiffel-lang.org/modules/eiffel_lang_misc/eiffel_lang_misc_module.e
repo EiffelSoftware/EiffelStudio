@@ -29,6 +29,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	SHARED_LOGGER
+
 create
 	make
 
@@ -92,8 +94,16 @@ feature -- Hooks
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
+		local
+			l_string: STRING
 		do
-			Result := <<"social_buttons", "updates", "popular_nodes", "libraries", "social_area", "eiffel_copyright">>
+			Result := <<"social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "social_area", "eiffel_copyright">>
+			create l_string.make_empty
+			across Result as ic loop
+					l_string.append (ic.item)
+					l_string.append_character (' ')
+				end
+			log.write_debug (generator + ".block_list:" + l_string )
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -156,7 +166,18 @@ feature -- Hooks
 						end
 					end
 				end
+			elseif a_block_id.is_case_insensitive_equal_general ("codeboard") and then  a_response.request.path_info ~ "/" then
+				if a_response.is_front then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "header")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
+				end
 			end
+
 		end
 
 	handle_about (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)

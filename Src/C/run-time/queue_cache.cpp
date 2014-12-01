@@ -11,7 +11,7 @@ queue_cache::operator[] (processor * const supplier)
       auto &stack = found_it->second;
       if (stack.empty())
 	{
-	  stack.emplace_back (supplier->new_priv_queue());
+	  stack.EMPLACE_BACK (supplier->new_priv_queue());
 	}
       pq = stack.back();
     }
@@ -19,7 +19,7 @@ queue_cache::operator[] (processor * const supplier)
     {
       const auto &res = queue_map.emplace (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
       auto &stack = res.first->second;
-      stack.emplace_back (supplier->new_priv_queue());
+      stack.EMPLACE_BACK (supplier->new_priv_queue());
       pq = stack.back();
     }
 

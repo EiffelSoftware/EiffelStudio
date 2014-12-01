@@ -10,9 +10,20 @@
 #if defined (__EIF_GNUC_VERSION__) && (__EIF_GNUC_VERSION__ < 40300)
 #	include <ext/hash_map>
 #	define unordered_map __gnu_cxx::hash_map
+#elif defined (__GNUC__) && (__cplusplus < 201103L)
+#	include <tr1/unordered_map>
+#	define unordered_map std::tr1::unordered_map
 #else
 #	include <unordered_map>
 #	define unordered_map std::unordered_map
+#endif
+
+/* vector::emplace_back is not available on all platforms.
+ * It is replaced conditionally by push_back that might be less efficient. */
+#if defined (__GNUC__) && (__cplusplus < 201103L)
+#	define EMPLACE_BACK push_back
+#else
+#	define EMPLACE_BACK emplace_back
 #endif
 
 /* A cache of private queues.
@@ -129,7 +140,7 @@ public:
 	      {
 		queue_map [supplier] = queue_stack();
 	      }
-	    queue_map [supplier].emplace_back (pq);
+	    queue_map [supplier].EMPLACE_BACK (pq);
 	  }
       }
     lock_stack.push (new_locks);

@@ -81,7 +81,7 @@ public:
     unordered_map <processor*, queue_stack>::const_iterator found_it = queue_map.find (proc);
     if (found_it != queue_map.end())
       {
-	auto &stack = found_it->second;
+	const queue_stack &stack = found_it->second;
 	return !stack.empty() && stack.back()->is_locked();
       }
 
@@ -97,7 +97,7 @@ public:
   bool
   has_subordinate (processor *proc) const
   {
-    const auto res = sub_map.find (proc);
+    unordered_map <processor*, uint32_t>::const_iterator res = sub_map.find (proc);
     return res != sub_map.end() && res->second > 0;
   }
   
@@ -135,7 +135,7 @@ public:
     lock_stack.push (new_locks);
 
     std::set <processor*> new_subs;
-    auto other_sub_map = other->sub_map;
+    unordered_map <processor*, uint32_t> other_sub_map = other->sub_map;
     for (auto pair = other_sub_map.cbegin (); pair != other_sub_map.cend (); ++ pair )
       {
 	const auto supplier = (*pair).first;
@@ -192,8 +192,8 @@ public:
   {
     for (unordered_map <processor*, queue_stack>::const_iterator pair = queue_map.cbegin (); pair != queue_map.cend (); ++ pair)
     {
-      auto &stack = (*pair).second;
-      for (auto pq = stack.begin (); pq != stack.end (); ++ pq)
+      const queue_stack &stack = (*pair).second;
+      for (queue_stack::const_iterator pq = stack.begin (); pq != stack.end (); ++ pq)
 	{
 	  (* pq) -> mark (mark);
 	}

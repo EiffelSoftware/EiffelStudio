@@ -79,7 +79,7 @@ feature {NONE} -- setup and teardown
 			class_variable_comment_string := s
 		end
 
-	html_start_code: STRING = "<BR><code>"
+	html_start_code: STRING = "<br><code>"
 	html_end_code: STRING = "</code>"
 	space: STRING = "&nbsp"
 
@@ -88,7 +88,7 @@ feature {NONE} -- setup and teardown
 		local
 			l_stuff: STRING_8
 		do
-			l_stuff := html_start_code + s + html_end_code
+			l_stuff := "%N" + s
 			class_variable_comment_string.append (l_stuff)
 		end
 
@@ -173,6 +173,72 @@ feature {NONE} -- setup and teardown
 
 
 feature {ES_SUITE}
+
+	failed_cases: LIST [STRING]
+		local
+			failed: ARRAYED_LIST [STRING]
+			unkn: CELL [INTEGER]
+		do
+			create failed.make (10)
+			create unkn.put (0)
+			if attached cases as cases1 then
+				across cases1 as it loop
+					create_case_name (it.item, unkn)
+					if it.item.passed then
+						-- do nothing
+					else
+						failed.extend (case_name)
+					end
+				end
+			else
+				-- do nothing
+			end
+			Result := failed
+		end
+
+	create_case_name (case: ES_TEST_CASE; unkn: CELL [INTEGER])
+		local
+			ls: LIST [STRING]
+		do
+			ls := case.case_name.split (':')
+			if not case.case_name.has (':') or ls.is_empty then
+				unkn.put (unkn.item + 1)
+				case_name := "unknown_" + unkn.item.out + " -- use ':' in a `comment' in the test case"
+			else
+				case_name := ls.first
+			end
+			if attached name as n then
+				case_name := n + "." + case_name
+			end
+		end
+
+	case_name: STRING
+		attribute
+			Result := ""
+		end
+
+	passed_cases: LIST [STRING]
+		local
+			success: ARRAYED_LIST [STRING]
+			unkn: CELL [INTEGER]
+		do
+			create success.make (10)
+			create unkn.put (0)
+			if attached cases as cases1 then
+				across cases1 as it loop
+					create_case_name (it.item, unkn)
+					if it.item.passed then
+						success.extend (case_name)
+					else
+						-- do nothing
+					end
+				end
+			else
+				-- do nothing
+			end
+			Result := success
+		end
+
 	count: INTEGER_32
 			-- number of test cases in `Current'
 		do
@@ -283,7 +349,6 @@ feature {ES_SUITE}
 				retry
 			end
 		end
-
 
 	to_message_string (item: ES_TEST_CASE): STRING_8
 			-- text represenation of a test case

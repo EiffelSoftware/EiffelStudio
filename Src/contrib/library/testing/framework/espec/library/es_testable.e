@@ -14,6 +14,7 @@ feature
 		do
 			if not problem then
 				run_es_test
+				print_console_report
 			end
 		rescue
 			problem := True
@@ -133,6 +134,48 @@ feature
 				end
 			else
 				Result := (generating_type.name + ".html").as_string_8
+			end
+		end
+
+	passed_cases: LIST [STRING]
+			-- list of the name of all the successful test cases
+		deferred
+		end
+
+	failed_cases: LIST [STRING]
+			-- list of the name of all the failed test cases
+		deferred
+		end
+
+	print_console_report
+			-- print a summary of all the test case results to the
+			-- console.
+		local
+			failed: LIST [STRING]
+			success: LIST [STRING]
+			passed, total : INTEGER
+			line: STRING
+		do
+			failed := failed_cases
+			success := passed_cases
+			passed := success.count
+			total := success.count + failed.count
+			create line.make_filled ('=', 60)
+			io.put_string (line)
+			io.put_new_line
+			safe_put_string ("passing tests%N")
+			across success as it loop
+				safe_put_string ("> " + it.item + "%N")
+			end
+			safe_put_string ("failing tests%N")
+			across failed as it loop
+				safe_put_string ("> " + it.item + "%N")
+			end
+			safe_put_string (passed.out + "/" + total.out + " passed%N")
+			if number_of_tests = number_passed_tests then
+				safe_put_string ("passed%N")
+			else
+				safe_put_string ("failed%N")
 			end
 		end
 

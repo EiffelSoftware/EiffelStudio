@@ -307,23 +307,53 @@ feature {NONE} -- Implementation
 
 	Wrap_length: INTEGER_32 = 100
 
+	wrap_line (line : STRING) : STRING
+		local
+			ln, ws: INTEGER_32
+			ls: LIST [STRING]
+		do
+			ls := line.split (' ')
+			create Result.make (line.count + ls.count)
+			from
+				ln := 0
+				ws := 0
+				ls.start
+			until
+				ls.after
+			loop
+				if ln + ls.item.count + 1 <= wrap_length or ws = 0 then
+					Result.append (ls.item)
+					Result.extend (' ')
+					ln := ln + ls.item.count + 1
+					ws := ws + 1
+					ls.forth
+				else
+					Result.append ("<br>")
+					ln := 0
+					ws := 0
+				end
+			variant
+				2 * (ls.count - ls.index + 1) + ws
+			end
+		end
+
 	wrap_html_comments (comment: STRING_8): attached STRING_8
 			-- wraps the comments in the HTML code
 		local
-			i: INTEGER_32
+			ls: LIST [STRING]
+			is_first: BOOLEAN
 		do
 			if attached comment as comment1 then
 				if comment1.count > Wrap_length then
-					Result := comment1.twin
-					from
-						i := 1
-					until
-						i > comment1.count
-					loop
-						if i \\ Wrap_length = 0 then
-							comment1.insert_string ("<br>", i)
+					ls := comment1.split ('%N')
+					create Result.make (comment1.count)
+					is_first := True
+					across ls as line loop
+						if not is_first then
+							Result.append ("<br>")
 						end
-						i := i + 1
+						Result.append (wrap_line (line.item))
+						is_first := false
 					end
 				else
 					Result := comment1

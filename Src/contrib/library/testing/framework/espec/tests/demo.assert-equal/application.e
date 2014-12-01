@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			add_boolean_case (agent t2)
 			add_boolean_case (agent t3)
 			add_boolean_case (agent t4)
+			add_boolean_case (agent t5)
 			--show_errors
 			show_browser
 			run_espec
@@ -92,6 +93,14 @@ feature -- tests
 			a := <<41, 27>>
 			assert("a.count = 2", a.count=2, a.count)
 			assert("a.count /= 2", a.count/=2, a.count)
+		end
+
+	t5: BOOLEAN
+			-- formatting error test: not an input JSON string
+		do
+			comment("t5: Problem with wrapping of subcomments to be fixed")
+			sub_comment ("'deposit(999,55)' instead of 'deposit(Steve,99)'")
+			Result := true
 		end
 
 

@@ -207,7 +207,7 @@ public:
   size ()
   {
     int s = 0;
-    for (spsc_queue_impl<T>::node* n = q.tail_->next_ ; n ; n = n->next_)
+    for (struct spsc_queue_impl<T>::node* n = q.tail_->next_ ; n ; n = n->next_)
       {
         s++;
       }
@@ -221,7 +221,7 @@ public:
    */
   void mark (marker_t mark)
   {
-    for (spsc_queue_impl<T>::node* n = q.tail_->next_ ; n ; n = n->next_)
+    for (struct spsc_queue_impl<T>::node* n = q.tail_->next_ ; n ; n = n->next_)
       {
 	call_data *call = n->value_.call;
         if (call)

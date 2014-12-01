@@ -23,7 +23,6 @@
 #include <memory>
 #include <vector>
 #include <queue>
-#include <unordered_map>
 #include "qoq.hpp"
 #include "eif_utils.hpp"
 #include "private_queue.hpp"

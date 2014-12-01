@@ -78,7 +78,7 @@ public:
   bool
   has_locked (processor *proc) const
   {
-    auto found_it = queue_map.find (proc);
+    unordered_map <processor*, queue_stack>::const_iterator found_it = queue_map.find (proc);
     if (found_it != queue_map.end())
       {
 	auto &stack = found_it->second;
@@ -114,7 +114,7 @@ public:
   push (const queue_cache* other)
   {
     std::set <processor*> new_locks;
-    auto other_queue_map = other -> queue_map;
+    unordered_map <processor*, queue_stack> other_queue_map = other -> queue_map;
     for (auto pair = other_queue_map.cbegin (); pair != other_queue_map.cend (); ++ pair)
       {
 	const auto supplier = (*pair).first;
@@ -190,7 +190,7 @@ public:
   void
   mark (marker_t mark)
   {
-    for (auto pair = queue_map.cbegin (); pair != queue_map.cend (); ++ pair)
+    for (unordered_map <processor*, queue_stack>::const_iterator pair = queue_map.cbegin (); pair != queue_map.cend (); ++ pair)
     {
       auto &stack = (*pair).second;
       for (auto pq = stack.begin (); pq != stack.end (); ++ pq)

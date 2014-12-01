@@ -1,10 +1,19 @@
 #ifndef _QUEUE_CACHE_H_
 #define _QUEUE_CACHE_H_
-#include <unordered_map>
 #include <stack>
 #include <set>
 #include <vector>
 #include "private_queue.hpp"
+
+/* unordered_map is not available on all platforms.
+ * It is replaced conditionally by something else. */
+#if defined (__EIF_GNUC_VERSION__) && (__EIF_GNUC_VERSION__ < 40300)
+#	include <ext/hash_map>
+#	define unordered_map __gnu_cxx::hash_map
+#else
+#	include <unordered_map>
+#	define unordered_map std::unordered_map
+#endif
 
 /* A cache of private queues.
  *
@@ -39,10 +48,10 @@ private:
   //
   // The goal is to first have efficient priv_queue lookup, as that is a very
   // common operation, while the push/pop operations are somewhat more expensive.
-  std::unordered_map<processor*, uint32_t> sub_map;
+  unordered_map <processor*, uint32_t> sub_map;
   std::stack<std::set<processor*>> sub_stack;
 
-  std::unordered_map <processor*, queue_stack> queue_map;
+  unordered_map <processor*, queue_stack> queue_map;
   std::stack<std::set<processor*>> lock_stack;
 
 public:

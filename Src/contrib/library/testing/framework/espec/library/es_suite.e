@@ -92,6 +92,30 @@ feature {ES_TEST} -- Implementation
 			end
 		end
 
+	passed_cases: LIST [STRING]
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (10)
+			if attached classes as classes1 then
+				across classes1 as it loop
+					Result.append (it.item.passed_cases)
+				end
+			else
+				-- do nothing
+			end
+		end
+
+	failed_cases: LIST [STRING]
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (10)
+			if attached classes as classes1 then
+				across classes1 as it loop
+					Result.append (it.item.failed_cases)
+				end
+			else
+				-- do nothing
+			end
+		end
+
 	make_test (v: BOOLEAN)
 			-- Initialize Current
 		do

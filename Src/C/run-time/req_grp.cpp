@@ -24,7 +24,7 @@
 #include "processor.hpp"
 
 req_grp::req_grp(processor *_client) :
-  vector<priv_queue*> (),
+  std::vector<priv_queue*> (),
   client (_client),
   sorted (false)
 {

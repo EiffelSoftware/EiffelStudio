@@ -146,7 +146,7 @@ feature -- Access
 			Result := True
 			-- redefine to return `False', so as to induce a Vary: * header
 		end
-	
+
 	allowed_cross_origins (req: WSF_REQUEST): detachable STRING
 			-- Value for Access-Control-Allow-Origin header;
 			-- If supplied, should be a single URI, or the values "*" or "null".
@@ -177,7 +177,7 @@ feature -- Access
 			req_attached: req /= Void
 		deferred
 		end
-	
+
 	last_modified (req: WSF_REQUEST): detachable DATE_TIME
 			-- When representation of resource selected in `req' was last modified;
 			-- SHOULD be set whenever it can reasonably be determined.
@@ -503,7 +503,7 @@ feature -- Execution
 			a_helper_attached: a_helper /= Void
 		do
 			a_helper.handle_content_negotiation (req, res, Current)
-			if not res.status_is_set or else res.status_code /= {HTTP_STATUS_CODE}.Not_acceptable then
+			if res.status_code /= {HTTP_STATUS_CODE}.Not_acceptable then
 				check_resource_exists (req, a_helper)
 				if a_helper.resource_exists then
 					a_helper.execute_existing_resource (req, res, Current)
@@ -538,7 +538,7 @@ feature -- Execution
 		end
 
 feature {NONE} -- Implementation
-	
+
 	handle_invalid_content_range (res: WSF_RESPONSE)
 			-- Write "Bad Request" response to `res' for Content-Range header present in PUT request.
 		require
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			status_is_service_unavailable: res.status_code = {HTTP_STATUS_CODE}.internal_server_error
 			body_sent: res.message_committed and then res.transfered_content_length > 0
 		end
-	
+
 	handle_internal_server_error (res: WSF_RESPONSE)
 			-- Write "Internal Server Error" response to `res'.
 		require
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

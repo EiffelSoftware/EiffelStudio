@@ -23,7 +23,8 @@ inherit
 	PERCENT_ENCODER
 		rename
 			percent_encoded_string as general_encoded_string,
-			percent_decoded_string as general_decoded_string
+			percent_decoded_string as general_decoded_string,
+			percent_decoded_utf_8_string as general_decoded_utf_8_string
 		end
 
 feature -- Access
@@ -47,6 +48,12 @@ feature -- Decoder
 			-- The URL-encoded equivalent of the given string
 		do
 			Result := general_decoded_string (v)
+		end
+
+	decoded_utf_8_string (v: READABLE_STRING_8): STRING_8
+			-- The URL-encoded equivalent of the given string
+		do
+			Result := general_decoded_utf_8_string (v)
 		end
 
 note

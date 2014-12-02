@@ -253,7 +253,7 @@ feature -- Access: HTTP_* CGI meta parameters - 1.1
 		do
 			Result := meta_string_variable ({WGI_META_NAMES}.http_if_match)
 		end
-	
+
 	http_if_modified_since: detachable READABLE_STRING_8
 			-- Modification check on resource
 		do
@@ -319,8 +319,11 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			s: like meta_string_variable
 			table: STRING_TABLE [READABLE_STRING_8]
 			l_query_string: like query_string
-			l_request_uri: detachable STRING_32
+			l_request_uri: detachable READABLE_STRING_8
+			s8: STRING_8
 			l_empty_string: like empty_string
+			enc: PERCENT_ENCODER
+			utf: UTF_CONVERTER
 		do
 			create {STRING_8} l_empty_string.make_empty
 			empty_string := l_empty_string
@@ -332,7 +335,11 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			until
 				a_vars.after
 			loop
-				table.force (a_vars.item_for_iteration.to_string_8, a_vars.key_for_iteration)
+				if attached {READABLE_STRING_32} a_vars.item_for_iteration as s32  then
+					table.force (utf.utf_32_string_to_utf_8_string_8 (s32), a_vars.key_for_iteration)
+				else
+					table.force (a_vars.item_for_iteration.to_string_8, a_vars.key_for_iteration)
+				end
 				a_vars.forth
 			end
 
@@ -382,14 +389,19 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			if s /= Void then
 				l_request_uri := s
 			else
-					--| It might occur that REQUEST_URI is not available, so let's compute it from SCRIPT_NAME
-				create l_request_uri.make_from_string (script_name)
+					--| REQUEST_URI is not always available, in this case,
+					--| compute it from SCRIPT_NAME, PATH_INFO and QUERY_STRING which are required by CGI.
+				create s8.make_from_string (script_name)
+				create enc
+				enc.append_partial_percent_encoded_string_to (utf.utf_8_string_8_to_string_32 (path_info), s8, <<'/', '!', '$', '&', '%'', '(', ')', '*', '+', ',', ';', '='>>)
 				if not l_query_string.is_empty then
-					 l_request_uri.append_character ('?')
-					 l_request_uri.append (l_query_string)
+					 s8.append_character ('?')
+					 s8.append (l_query_string)
 				end
+				l_request_uri := s8
 			end
-			request_uri := single_slash_starting_string (l_request_uri)
+			set_meta_string_variable ({WGI_META_NAMES}.request_uri, l_request_uri)
+			request_uri := l_request_uri
 		end
 
 	set_orig_path_info (s: READABLE_STRING_8)
@@ -416,6 +428,7 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 			l_path_info: STRING
 		do
 			l_path_info := path_info
+
 			--| Warning
 			--| on IIS: we might have   PATH_INFO = /sample.exe/foo/bar
 			--| on apache:				PATH_INFO = /foo/bar
@@ -494,7 +507,7 @@ invariant
 	empty_string_unchanged: empty_string.is_empty
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -13,6 +13,8 @@ inherit
 feature -- Change
 
 	set_action (a_action: like action)
+		require
+			a_action_attached: a_action /= Void
 		do
 			action := a_action
 		end
@@ -29,7 +31,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -18,7 +18,7 @@ queue_cache::operator[] (processor * const supplier)
   else
     {
       const std::pair <unordered_map <processor*, queue_stack>::iterator, bool> &res =
-      	queue_map.emplace (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
+      	queue_map.EMPLACE (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
       queue_stack &stack = res.first->second;
       stack.EMPLACE_BACK (supplier->new_priv_queue());
       pq = stack.back();

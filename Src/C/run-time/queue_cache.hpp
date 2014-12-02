@@ -5,8 +5,10 @@
 #include <vector>
 #include "private_queue.hpp"
 
-/* unordered_map is not available on all platforms.
- * It is replaced conditionally by something else. */
+/**
+ * 'std::unordered_map' is not available on all platforms.
+ * It is replaced conditionally by something else.
+ */
 #if defined (__GNUC__) && (__cplusplus < 201103L)
 #	include <tr1/unordered_map>
 #	define unordered_map std::tr1::unordered_map
@@ -15,11 +17,17 @@
 #	define unordered_map std::unordered_map
 #endif
 
-/* vector::emplace_back is not available on all platforms.
- * It is replaced conditionally by push_back that might be less efficient. */
+/**
+ * 'unordered_map::emplace' is not available on all platforms.
+ * It is replaced conditionally by 'insert' that might be less efficient.
+ * 'vector::emplace_back' is not available on all platforms.
+ * It is replaced conditionally by 'push_back' that might be less efficient.
+ */
 #if defined (__GNUC__) && (__cplusplus < 201103L)
+#	define EMPLACE      insert
 #	define EMPLACE_BACK push_back
 #else
+#	define EMPLACE      emplace
 #	define EMPLACE_BACK emplace_back
 #endif
 

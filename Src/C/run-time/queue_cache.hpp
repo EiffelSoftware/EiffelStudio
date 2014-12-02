@@ -7,10 +7,7 @@
 
 /* unordered_map is not available on all platforms.
  * It is replaced conditionally by something else. */
-#if defined (__EIF_GNUC_VERSION__) && (__EIF_GNUC_VERSION__ < 40300)
-#	include <ext/hash_map>
-#	define unordered_map __gnu_cxx::hash_map
-#elif defined (__GNUC__) && (__cplusplus < 201103L)
+#if defined (__GNUC__) && (__cplusplus < 201103L)
 #	include <tr1/unordered_map>
 #	define unordered_map std::tr1::unordered_map
 #else

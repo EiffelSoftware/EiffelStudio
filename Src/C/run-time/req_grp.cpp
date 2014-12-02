@@ -40,7 +40,7 @@ req_grp::add(processor *supplier)
 void
 req_grp::wait()
 {
-  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
+  for (iterator pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
       (*pq) -> register_wait (client);
     }
@@ -65,17 +65,17 @@ req_grp::lock()
 
   sorted = true;
 
-  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
+  for (iterator pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
       (*pq) -> supplier -> qoq_mutex.lock ();
     }
 
-  for (auto pq = (*this).begin (); pq != (*this).end (); ++ pq)
+  for (iterator pq = (*this).begin (); pq != (*this).end (); ++ pq)
     {
       (*pq) -> lock (client);
     }
 
-  for (auto it = rbegin(); it != rend(); ++it)
+  for (reverse_iterator it = rbegin(); it != rend(); ++it)
     {
       (*it)->supplier->qoq_mutex.unlock();
     }
@@ -85,7 +85,7 @@ void
 req_grp::unlock()
 {
   // Unlock in the opposite order that they were locked
-  for (auto it = rbegin(); it != rend(); ++it)
+  for (reverse_iterator it = rbegin(); it != rend(); ++it)
     {
       (*it)->unlock();
     }

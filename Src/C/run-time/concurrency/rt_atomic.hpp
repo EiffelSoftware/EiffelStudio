@@ -228,7 +228,7 @@ public:
 
 	ptr_type operator= (ptr_type v) volatile
 		{	// assign from v
-			(void) RTS_AS_PTR ((void * volatile *) &value, v);
+			(void) RTS_AS_PTR (&value, v);
 			return v;
 		}
 
@@ -239,11 +239,11 @@ public:
 
 	ptr_type exchange(ptr_type v, memory_order o = memory_order_seq_cst) volatile
 		{
-			return (ptr_type) RTS_AS_PTR ((void * volatile *) &value, v);
+			return (ptr_type) RTS_AS_PTR (&value, v);
 		}
 
 private:
-	ptr_type value;
+	ptr_type volatile value;
 
 }; // class atomic
 

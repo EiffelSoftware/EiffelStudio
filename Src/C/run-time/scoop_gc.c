@@ -74,7 +74,7 @@ doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronizat
 doc:	</attribute>
 */
 rt_private size_t pid_index [RT_MAX_SCOOP_PROCESSOR_COUNT];
-#define INVALID_INDEX ((size_t) -1)
+#define INVALID_INDEX (~ (size_t) 0)
 
 /*
 doc:	<attribute name="live_index" return_type="site_t *" export="shared">
@@ -126,7 +126,7 @@ rt_shared void prepare_live_index ()
 	memset (live_pid_map, 0, sizeof (live_pid_map));
 		/* Clean "PID->index" mapping. */
 		/* Use -1 to indicate that no thread index is allocated for the processor yet. */
-	memset (pid_index, INVALID_INDEX, sizeof (pid_index));
+	memset (pid_index, (int) INVALID_INDEX, sizeof (pid_index));
 		/* Clean live indexes. */
 	memset (live_index, 0, sizeof (live_index));
 	live_index_count = 0;

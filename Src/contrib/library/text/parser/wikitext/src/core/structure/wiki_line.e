@@ -38,6 +38,19 @@ feature -- Status report
 			Result := text.is_empty
 		end
 
+	is_property_line: BOOLEAN
+			-- Does Current line contains only properties or whitespace?
+			-- Warning: this is relevant only if `text' has been analyzed.
+		require
+			is_analyzed: text.parts /= Void
+		do
+			if attached text.parts as l_parts then
+				Result := across l_parts as ic all attached {WIKI_PROPERTY} ic.item or else ic.item.is_whitespace end
+			else
+				check is_analyzed: False end
+			end
+		end
+
 	is_whitespace: BOOLEAN
 		do
 			Result := text.is_whitespace

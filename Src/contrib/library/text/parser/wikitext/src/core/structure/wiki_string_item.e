@@ -18,6 +18,13 @@ feature -- Status report
 		deferred
 		end
 
+	is_whitespace: BOOLEAN
+			-- Is empty or blank text?
+		do
+				--| Redefined where a string item may be whitespace.
+			Result := False
+		end
+
 note
 	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

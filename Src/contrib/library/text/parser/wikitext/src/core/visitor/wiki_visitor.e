@@ -167,6 +167,12 @@ feature -- Links
 		deferred
 		end
 
+	visit_property (a_prop: WIKI_PROPERTY)
+		require
+			a_prop_attached: a_prop /= Void
+		deferred
+		end
+
 feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)

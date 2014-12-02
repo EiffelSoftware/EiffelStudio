@@ -124,6 +124,12 @@ feature -- Links
 		do
 		end
 
+feature -- Property
+
+	visit_property (a_prop: WIKI_PROPERTY)
+		do
+		end
+
 feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)
@@ -137,7 +143,7 @@ feature -- Table
 	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
 		do
 		end
-		
+
 	visit_table_cell (a_cell: WIKI_TABLE_CELL)
 		do
 		end

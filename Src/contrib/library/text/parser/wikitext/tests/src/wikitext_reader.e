@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		local
 			f: RAW_FILE
 			fn: PATH
-			wp: detachable WIKI_PAGE
+			wp: detachable WIKI_BOOK_PAGE
 			wi: WIKI_INDEX
 		do
 			create fn.make_from_string (a_dir)

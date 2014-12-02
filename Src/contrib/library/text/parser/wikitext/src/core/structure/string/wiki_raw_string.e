@@ -9,6 +9,9 @@ class
 
 inherit
 	WIKI_STRING_ITEM
+		redefine
+			is_whitespace
+		end
 
 	DEBUG_OUTPUT
 
@@ -32,6 +35,12 @@ feature -- Status report
 			-- Is empty text?
 		do
 			Result := text.is_empty
+		end
+
+	is_whitespace: BOOLEAN
+			-- <Precursor>
+		do
+			Result := text.is_whitespace
 		end
 
 feature -- Visitor

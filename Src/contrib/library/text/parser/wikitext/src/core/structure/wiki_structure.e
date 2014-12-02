@@ -20,16 +20,11 @@ create
 
 feature {NONE} -- Make
 
-	make (a_meta_data: like meta_data; a_text: STRING)
+	make (a_text: STRING)
 		do
 			initialize
-			meta_data := a_meta_data
 			analyze (a_text)
 		end
-
-feature -- Access
-
-	meta_data: detachable STRING_TABLE [STRING]
 
 feature -- Basic operation
 
@@ -308,37 +303,49 @@ feature -- Basic operation
 							l_tag /= Void and then
 							next_following_character_matched (a_text, i + 2, l_tag + ">", True)
 						then
-							on_wiki_item_begin_token (l_items, i, "tag:" + l_tag)
+							on_wiki_item_end_token (l_items, i, "tag:" + l_tag)
 							multiline_level := multiline_level - 1
 							i := i + 1 + l_tag.count + 1  --| /tag>
 						end
 					else
 						p := next_end_of_tag_character (a_text, i + 1)
 						if p > 0 then
-							l_tag := tag_name_from (a_text.substring (i, p))
+							if a_text[p-1] = '/' then
+								l_tag := tag_name_from (a_text.substring (i, p))
+								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
+								on_wiki_item_end_token (l_items, i + 1, "tag:" + l_tag)
+								if p > 0 then
+									i := p
+								else
+									check has_end_of_tag_character: False end
+									i := i + (l_tag).count + 1 + 1
+								end
+							else
+								l_tag := tag_name_from (a_text.substring (i, p))
+								if l_tag.is_empty then
+										-- ???
+								else
+									multiline_level := multiline_level + 1
+									keep_formatting := False
+									if l_tag.is_case_insensitive_equal_general ("nowiki") then
+										ignore_wiki := True
+									elseif l_tag.is_case_insensitive_equal_general ("pre") then
+										keep_formatting := True
+										ignore_wiki := True
+									else
+										ignore_wiki := False
+									end
+									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
+									if p > 0 then
+										i := p
+									else
+										check has_end_of_tag_character: False end
+										i := i + (l_tag).count + 1
+									end
+								end
+							end
 						else
 							l_tag := ""
-						end
-						if l_tag.is_empty then
-								-- ???
-						else
-							multiline_level := multiline_level + 1
-							keep_formatting := False
-							if l_tag.is_case_insensitive_equal_general ("nowiki") then
-								ignore_wiki := True
-							elseif l_tag.is_case_insensitive_equal_general ("pre") then
-								keep_formatting := True
-								ignore_wiki := True
-							else
-								ignore_wiki := False
-							end
-							on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
-							if p > 0 then
-								i := p
-							else
-								check has_end_of_tag_character: False end
-								i := i + (l_tag).count + 1
-							end
 						end
 					end
 				else

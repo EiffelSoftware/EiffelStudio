@@ -150,19 +150,33 @@ feature -- status: pre block
 	current_page: detachable WIKI_PAGE
 			-- Current page being processed.
 
+feature -- Helper
+
+	page_title (a_page: WIKI_PAGE): STRING_8
+			-- Title for page `a_page'.
+		do
+			Result := a_page.title
+		end
+
+	book_title (a_book: WIKI_BOOK): STRING_8
+			-- Title for book `a_book'.
+		do
+			Result := a_book.name
+		end
+
 feature -- Book processing
 
 	visit_book (a_book: WIKI_BOOK)
 		do
 			output ("<div class=%"wikibook%">")
-			output ("<div class=%"title%">"+ a_book.name +"</div>")
+			output ("<div class=%"title%">"+ book_title (a_book) +"</div>")
 
 			across
 				a_book.pages as c
 			loop
 
 				output ("<div class=%"wikipage%">")
-				output ("<div class=%"title%">"+ c.item.title +"</div>")
+				output ("<div class=%"title%">"+ page_title (c.item) +"</div>")
 				c.item.process (Current)
 				output ("</div>%N")
 			end
@@ -331,12 +345,16 @@ feature -- Processing
 
 	visit_line (a_line: WIKI_LINE)
 		do
-			if not a_line.is_empty then
-				a_line.text.process (Current)
-				set_next_output_require_newline
+			if a_line.is_property_line then
+					-- skip
 			else
-				output ("")
-				set_next_output_require_newline
+				if a_line.is_empty then -- FIXME: or is_whitespace ??
+					output ("")
+					set_next_output_require_newline
+				else
+					a_line.text.process (Current)
+					set_next_output_require_newline
+				end
 			end
 		end
 
@@ -540,9 +558,9 @@ feature -- Links
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
 		do
 			if a_link.inlined then
-				output ("CATEGORY("+ a_link.name + ", %"")
+				output ("<!-- Category: "+ a_link.name + "=")
 				a_link.text.process (Current)
-				output ("%")")
+				output (" -->")
 			else
 				-- FIXME: not implemented
 			end
@@ -551,9 +569,16 @@ feature -- Links
 	visit_media_link (a_link: WIKI_MEDIA_LINK)
 		do
 				-- FIXME: not implemented
-			output ("MEDIA("+ a_link.name + ", %"")
+			output ("<!-- Media: "+ a_link.name + "=")
 			a_link.text.process (Current)
-			output ("%")")
+			output (" -->")
+		end
+
+	visit_property (a_prop: WIKI_PROPERTY)
+		do
+			output ("<!-- Property: "+ a_prop.name + "=")
+			a_prop.text.process (Current)
+			output (" -->%N")
 		end
 
 feature -- Table

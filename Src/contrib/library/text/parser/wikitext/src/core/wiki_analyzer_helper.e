@@ -133,9 +133,11 @@ feature -- Helpers
 			Result := s.substring_index ("</" + a_tag_name + ">", a_start)
 		end
 
-	new_wiki_link (s: STRING; is_followed_by_new_line: BOOLEAN): WIKI_LINK
+	new_wiki_link (s: STRING; is_followed_by_new_line: BOOLEAN): WIKI_STRING_ITEM
 			-- [[name|title]]
+			-- [[Image:name|title]]
 			-- [[:image:name|title]]
+			-- [[Property:name|value]]
 			-- ..
 		require
 			s_not_empty: s.count > 0
@@ -166,8 +168,8 @@ feature -- Helpers
 				end
 			end
 			if t = Void then
-				create Result.make (s)
-			elseif     t.is_case_insensitive_equal ("image:") then
+				create {WIKI_LINK} Result.make (s)
+			elseif t.is_case_insensitive_equal ("image:") then
 				if is_followed_by_new_line then
 					create {WIKI_IMAGE_LINK} Result.make (s)
 				else
@@ -180,10 +182,13 @@ feature -- Helpers
 			elseif t.is_case_insensitive_equal ("category:") then
 					-- Not a link ... this categories the article !!!
 					-- FIXME
-				create {WIKI_LINK} Result.make (s)
+				create {WIKI_PROPERTY} Result.make (s)
+			elseif t.is_case_insensitive_equal ("property:") then
+					-- Not a link ... this is a property !!!
+				create {WIKI_PROPERTY} Result.make (s)
 			else
 					-- Unknown
-				create Result.make (s)
+				create {WIKI_LINK} Result.make (s)
 			end
 		end
 
@@ -211,6 +216,10 @@ feature {NONE} -- Implementation
 			end
 			Result.left_adjust
 			Result.right_adjust
+			if not Result.is_empty and then Result [Result.count] = '/' then
+				Result.remove_tail (1)
+				Result.right_adjust
+			end
 		end
 
 

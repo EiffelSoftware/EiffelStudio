@@ -116,7 +116,7 @@ feature -- Processing
 								flush_buffer (a_parts, s)
 								w_item := new_wiki_link (a_text.substring (i, p + 2), safe_character (a_text, p + 2 + 1) = '%N')
 								a_parts.add_element (w_item)
-								w_item.process (Current) -- Check recursion...							
+								w_item.process (Current) -- Check recursion...
 								w_item := Void
 							else
 								s.append (a_text.substring (i, p + 2))
@@ -176,32 +176,57 @@ feature -- Processing
 						if p > 0 then
 							t := tag_name_from (a_text.substring (i, p))
 								-- FIXME: do not ignore params ...
-							q := next_closing_tag (a_text, t, p + 1)
-							if q > 0 then
-								r := next_end_of_tag_character (a_text, q + 1)
-								if r > 0 then
-									flush_buffer (a_parts, s)
-									if in_items.is_empty then
-										if t.is_case_insensitive_equal_general ("code") then
-											create {WIKI_CODE} w_item.make (a_text.substring (i, p), a_text.substring (p + 1, q - 1))
-										elseif t.is_case_insensitive_equal_general ("nowiki") then
-											create {WIKI_RAW_STRING} w_item.make (a_text.substring (p + 1, q - 1))
-										else
-											create {WIKI_TAG} w_item.make (a_text.substring (i, p), a_text.substring (p + 1, q - 1))
-										end
-										a_parts.add_element (w_item)
-										w_item.process (Current) -- Check recursion...							
-										w_item := Void
-										create s.make_empty
+
+							if a_text [p - 1] = '/' then
+									-- <tag/>
+								q := p
+								r := p
+
+								flush_buffer (a_parts, s)
+								if in_items.is_empty then
+									if t.is_case_insensitive_equal_general ("code") then
+										create {WIKI_CODE} w_item.make (a_text.substring (i, p - 1), "")
+									elseif t.is_case_insensitive_equal_general ("nowiki") then
+										create {WIKI_RAW_STRING} w_item.make ("")
 									else
-										s.append (a_text.substring (i, r))
+										create {WIKI_TAG} w_item.make (a_text.substring (i, p - 1), "")
 									end
-									i := r
+									a_parts.add_element (w_item)
+									w_item.process (Current) -- Check recursion...							
+									w_item := Void
+									create s.make_empty
+								else
+									s.append (a_text.substring (i, r))
+								end
+								i := r
+							else
+								q := next_closing_tag (a_text, t, p + 1)
+								if q > 0 then
+									r := next_end_of_tag_character (a_text, q + 1)
+									if r > 0 then
+										flush_buffer (a_parts, s)
+										if in_items.is_empty then
+											if t.is_case_insensitive_equal_general ("code") then
+												create {WIKI_CODE} w_item.make (a_text.substring (i, p), a_text.substring (p + 1, q - 1))
+											elseif t.is_case_insensitive_equal_general ("nowiki") then
+												create {WIKI_RAW_STRING} w_item.make (a_text.substring (p + 1, q - 1))
+											else
+												create {WIKI_TAG} w_item.make (a_text.substring (i, p), a_text.substring (p + 1, q - 1))
+											end
+											a_parts.add_element (w_item)
+											w_item.process (Current) -- Check recursion...							
+											w_item := Void
+											create s.make_empty
+										else
+											s.append (a_text.substring (i, r))
+										end
+										i := r
+									else
+										s.extend (c)
+									end
 								else
 									s.extend (c)
 								end
-							else
-								s.extend (c)
 							end
 						else
 							s.extend (c)

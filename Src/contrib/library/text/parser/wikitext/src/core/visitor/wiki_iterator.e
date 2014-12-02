@@ -174,6 +174,11 @@ feature -- Links
 			a_link.text.process (Current)
 		end
 
+	visit_property (a_prop: WIKI_PROPERTY)
+		do
+			a_prop.text.process (Current)
+		end
+
 feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)

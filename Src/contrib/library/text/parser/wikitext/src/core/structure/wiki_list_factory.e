@@ -35,7 +35,11 @@ feature -- Access
 				loop
 					t.append_character (c)
 					v := v + 1
-					c := s.item (v)
+					if s.valid_index (v) then
+						c := s.item (v)
+					else
+						c := '%U'
+					end
 				end
 				check t.count = v - 1 end
 				inspect t.item (t.count)

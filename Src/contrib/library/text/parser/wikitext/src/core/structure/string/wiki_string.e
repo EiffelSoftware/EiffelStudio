@@ -9,6 +9,9 @@ class
 
 inherit
 	WIKI_STRING_ITEM
+		redefine
+			is_whitespace
+		end
 
 	DEBUG_OUTPUT
 

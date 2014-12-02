@@ -117,9 +117,9 @@ feature {NONE} -- Initialization
 							create s.make (1024)
 							create {WIKI_XHTML_GENERATOR} vis.make (s)
 							if attached p.entry as e then
-								create wp.make (e.utf_8_name, e.utf_8_name)
+								create wp.make_with_title (e.utf_8_name)
 							else
-								create wp.make ("Index", "index")
+								create wp.make_with_title ("Index")
 							end
 
 							wp.get_structure (p)

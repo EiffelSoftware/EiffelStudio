@@ -60,9 +60,9 @@ feature -- Sorting operation
 	sort
 			-- Sort `pages' and sub pages.
 		local
-			l_sorter: QUICK_SORTER [WIKI_PAGE]
+			l_sorter: QUICK_SORTER [WIKI_BOOK_PAGE]
 		do
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [WIKI_PAGE]})
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [WIKI_BOOK_PAGE]})
 			l_sorter.sort (pages)
 			across
 				pages as ic
@@ -80,7 +80,7 @@ feature -- Access
 
 	name: READABLE_STRING_8
 
-	pages: ARRAYED_LIST [WIKI_PAGE]
+	pages: ARRAYED_LIST [WIKI_BOOK_PAGE]
 
 	weight: INTEGER
 		do
@@ -89,12 +89,12 @@ feature -- Access
 			end
 		end
 
-	root_page: detachable WIKI_PAGE
+	root_page: detachable WIKI_BOOK_PAGE
 			-- Page representing the book if any.
 		local
-			wp: WIKI_PAGE
+			wp: WIKI_BOOK_PAGE
 			l_book_name: READABLE_STRING_8
-			l_index_page,l_book_page: detachable WIKI_PAGE
+			l_index_page,l_book_page: detachable WIKI_BOOK_PAGE
 		do
 			l_book_name := name
 			across
@@ -115,14 +115,14 @@ feature -- Access
 			end
 		end
 
-	top_pages: ARRAYED_LIST [WIKI_PAGE]
+	top_pages: ARRAYED_LIST [WIKI_BOOK_PAGE]
 			-- Top pages of the book, or the immediate children of the root_page.
 			-- The root_page is not a top page.
 		local
-			wp: WIKI_PAGE
+			wp: WIKI_BOOK_PAGE
 			l_key: READABLE_STRING_8
 			l_book_name: like name
-			l_index_page,l_book_page: detachable WIKI_PAGE
+			l_index_page,l_book_page: detachable WIKI_BOOK_PAGE
 		do
 			l_book_name := name
 			create Result.make (0)
@@ -143,7 +143,7 @@ feature -- Access
 			end
 		end
 
-	page (a_title: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page (a_title: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
 			-- Page with title `a_title'.
 		do
 			across
@@ -158,7 +158,7 @@ feature -- Access
 			end
 		end
 
-	page_by_key (a_key: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_key (a_key: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
 			-- Page identified with key `a_key'.
 		do
 			across
@@ -173,7 +173,7 @@ feature -- Access
 			end
 		end
 
-	page_path (a_page: WIKI_PAGE): PATH
+	page_path (a_page: WIKI_BOOK_PAGE): PATH
 		local
 			lst: LIST [READABLE_STRING_8]
 			l_name: READABLE_STRING_8
@@ -200,7 +200,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_page (a_page: WIKI_PAGE)
+	add_page (a_page: WIKI_BOOK_PAGE)
 			-- Add page `a_page' to current book.
 		do
 			pages.extend (a_page)

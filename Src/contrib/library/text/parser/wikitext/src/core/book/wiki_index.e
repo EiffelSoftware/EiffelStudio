@@ -20,8 +20,8 @@ feature {NONE} -- Initialization
 			s, t, l_parent_key: STRING
 			ln, p, l_weight: INTEGER
 			wb: detachable WIKI_BOOK
-			pwp, wp: detachable WIKI_PAGE
-			ht: STRING_TABLE [WIKI_PAGE]
+			pwp, wp: detachable WIKI_BOOK_PAGE
+			ht: STRING_TABLE [WIKI_BOOK_PAGE]
 			l_wp_key: detachable READABLE_STRING_8
 		do
 			create f.make_with_path (fn)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 								end
 								t.adjust
 								l_parent_key.adjust
-								create wp.make (t, l_parent_key)
+								wp := new_wiki_page (t, l_parent_key)
 								if attached ht.item (l_parent_key) as l_parent_page then
 									wp.set_weight (l_weight)
 									l_parent_page.extend (wp)
@@ -94,11 +94,19 @@ feature {NONE} -- Initialization
 			book := wb
 		end
 
+feature -- Factory
+
+	new_wiki_page (a_title: READABLE_STRING_8; a_parent_key: READABLE_STRING_8): WIKI_BOOK_PAGE
+			-- Instantiate a new wiki page with title `a_title' and a parent key `a_parent_key'.
+		do
+			create Result.make (a_title, a_parent_key)
+		end
+
 feature -- Access
 
 	book: detachable WIKI_BOOK
 
-	page (a_name: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page (a_name: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
 		do
 			if attached book as bk then
 				across
@@ -113,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	page_by_id (a_id: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_id (a_id: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
 		local
 			l_src, s: STRING
 			p,q: INTEGER

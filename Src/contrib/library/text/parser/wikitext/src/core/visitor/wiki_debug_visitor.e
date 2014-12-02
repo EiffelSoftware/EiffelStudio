@@ -399,6 +399,18 @@ feature -- Links
 			set_next_output_appended
 		end
 
+feature -- Property
+
+	visit_property (a_prop: WIKI_PROPERTY)
+		do
+			output ("Property("+ a_prop.name + ", %"")
+			set_next_output_appended
+			a_prop.text.process (Current)
+			set_next_output_appended
+			output ("%")")
+			set_next_output_appended
+		end
+
 feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)

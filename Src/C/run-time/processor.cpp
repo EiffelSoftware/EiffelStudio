@@ -52,7 +52,7 @@ processor::processor(spid_t _pid,
 
 processor::~processor()
 {
-  for (auto pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
+  for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
     {
       delete *pq;
     }
@@ -138,7 +138,7 @@ processor::operator()(processor *client, call_data* call)
 
   if (sync_pid != NULL_PROCESSOR_ID)
     {
-      auto it = dirty_for_set.find (client);
+      std::set<processor*>::iterator it = dirty_for_set.find (client);
 
       if (it != dirty_for_set.end())
 	{
@@ -205,10 +205,10 @@ processor::register_notify_token (notify_token token)
 void
 processor::notify_next(processor *client)
 {
-  auto n = token_queue.size();
-  for (auto i = 0U; i < n && !token_queue.empty(); i++)
+  std::queue <notify_token>::size_type n = token_queue.size();
+  for (std::queue <notify_token>::size_type i = 0U; i < n && !token_queue.empty(); i++)
     {
-      auto token = token_queue.front();
+      std::queue <notify_token>::reference token = token_queue.front();
       token_queue.pop();
 
       if (token.client() == client)
@@ -273,7 +273,7 @@ processor::mark(marker_t mark)
       mark_call_data (mark, current_msg.call);
     }
 
-  for (auto pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
+  for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq)
     {
       (* pq) -> mark (mark);
     }

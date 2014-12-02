@@ -172,12 +172,12 @@ feature -- Initialization
 							l_loader.set_has_library_conversion (not has_no_library_conversion)
 							if is_single_file_compilation then
 								l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested)
-							elseif old_project_file /= Void then
-								l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
-							elseif old_ace_file /= Void then
-								l_loader.open_project_file (old_ace_file, Void, project_path, is_clean_requested)
+							elseif attached old_project_file as l_old_project_file then
+								l_loader.open_project_file (l_old_project_file, Void, project_path, is_clean_requested)
+							elseif attached old_ace_file as l_old_ace_file then
+								l_loader.open_project_file (l_old_ace_file, Void, project_path, is_clean_requested)
 							else
-								l_loader.open_project_file (config_file_name, target_name, project_path, is_clean_requested)
+								l_loader.open_project_file (config_file_name.absolute_path.canonical_path, target_name, project_path, is_clean_requested)
 							end
 
 							if not error_occurred and not l_loader.has_error then

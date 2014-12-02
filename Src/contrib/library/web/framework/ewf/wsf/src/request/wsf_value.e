@@ -71,6 +71,7 @@ feature -- Query
 	string_representation: STRING_32
 			-- String representation of Current
 			-- if possible
+			-- note: unicode value.
 		deferred
 		end
 
@@ -127,7 +128,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

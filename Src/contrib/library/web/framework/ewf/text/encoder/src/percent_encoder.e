@@ -208,8 +208,15 @@ feature {NONE} -- Implementation: character encoding
 feature -- Percent decoding
 
 	percent_decoded_string (v: READABLE_STRING_GENERAL): STRING_32
-			-- Return the percent decoded string equivalent to the percent-encoded string `v'
-			--| Note that is `a_result' is a STRING_8, any Unicode character will be kept as UTF-8
+			-- Return the percent decoded unicode string equivalent to the percent-encoded string `v'
+		do
+			create Result.make (v.count)
+			append_percent_decoded_string_to (v, Result)
+		end
+
+	percent_decoded_utf_8_string (v: READABLE_STRING_GENERAL): STRING_8
+			-- Return the percent decoded UTF-8 string equivalent to the percent-encoded string `v'
+			--| Note that any Unicode character will be kept as UTF-8
 		do
 			create Result.make (v.count)
 			append_percent_decoded_string_to (v, Result)

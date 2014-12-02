@@ -259,16 +259,19 @@ feature -- Header output operation: helpers
 	put_header (a_status_code: INTEGER; a_headers: detachable ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]])
 			-- Put headers with status `a_status', and headers from `a_headers'
 		require
+			a_status_code_valid: a_status_code > 0
 			status_not_committed: not status_committed
 			header_not_committed: not header_committed
 		local
 			h: HTTP_HEADER
 		do
+			set_status_code (a_status_code)
 			if a_headers /= Void then
 				create h.make_from_array (a_headers)
 				put_header_text (h.string)
 			end
 		ensure
+			status_code_set: status_code = a_status_code
 			status_set: status_is_set
 			message_writable: message_writable
 		end
@@ -276,16 +279,19 @@ feature -- Header output operation: helpers
 	add_header (a_status_code: INTEGER; a_headers: detachable ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]])
 			-- Put headers with status `a_status', and headers from `a_headers'
 		require
+			a_status_code_valid: a_status_code > 0
 			status_not_committed: not status_committed
 			header_not_committed: not header_committed
 		local
 			h: HTTP_HEADER
 		do
+			set_status_code (a_status_code)
 			if a_headers /= Void then
 				create h.make_from_array (a_headers)
 				add_header_text (h.string)
 			end
 		ensure
+			status_code_set: status_code = a_status_code
 			status_set: status_is_set
 			message_writable: message_writable
 		end
@@ -473,9 +479,7 @@ feature -- Redirect
 				end
 				h.put_location (a_url)
 				if a_status_code = 0 then
-					if not status_is_set then
-						set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
-					end
+					set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
 				else
 					set_status_code (a_status_code)
 				end

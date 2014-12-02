@@ -70,23 +70,24 @@ feature -- Request processing
 
 			e: EXECUTION_ENVIRONMENT
 			enc: URL_ENCODER
+			utf: UTF_CONVERTER
 		do
 			l_request_uri := a_handler.uri
 			l_headers_map := a_handler.request_header_map
 			create e
+			create enc
 			if attached e.starting_environment as vars then
-				create enc
 				create env.make_equal (vars.count)
 				across
 					vars as c
 				loop
-					env.force (enc.encoded_string (c.item), enc.encoded_string (c.key))
+					env.force (utf.utf_32_string_to_utf_8_string_8 (c.item), utf.utf_32_string_to_utf_8_string_8 (c.key))
 				end
 			else
 				create env.make (0)
 			end
 
-			--| for Any Abc-Def-Ghi add (or replace) the HTTP_ABC_DEF_GHI variable to `env'
+				--| for Any Abc-Def-Ghi add (or replace) the HTTP_ABC_DEF_GHI variable to `env'
 			from
 				l_headers_map.start
 			until
@@ -168,9 +169,28 @@ feature -- Request processing
 					if p > 0 then
 						l_path_info.keep_head (p - 1)
 					end
-					env.force (l_path_info, "PATH_INFO")
 					env.force (l_base, "SCRIPT_NAME")
+				else
+						-- This should not happen, this means the `base' is not correctly set.
+						-- It is better to consider base as empty, rather than having empty PATH_INFO
+					check valid_base_value: False end
+
+					l_path_info := l_request_uri
+					p := l_request_uri.index_of ('?', 1)
+					if p > 0 then
+						l_path_info := l_request_uri.substring (1, p - 1)
+					else
+						l_path_info := l_request_uri.string
+					end
+					env.force ("", "SCRIPT_NAME")
 				end
+					--| In order to have same path value for PATH_INFO on various connectors and servers
+					--| the multiple slashes must be stripped to single slash.
+					--| tested with: CGI+apache, libfcgi+apache on Windows and Linux
+					--| 
+					--| For example: "////abc/def///end////" to "/abc/def/end/" ?
+				convert_multiple_slashes_to_single (l_path_info)
+				env.force (enc.decoded_utf_8_string (l_path_info), "PATH_INFO")
 			end
 
 			callback.process_request (env, a_handler.request_header, a_socket)
@@ -195,6 +215,35 @@ feature -- Request processing
 		do
 			if a_value /= Void then
 				env.force (a_value, a_var_name)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	convert_multiple_slashes_to_single (s: STRING_8)
+			-- Replace multiple slashes sequence by a single slash character.
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				if s[i] = '/' then
+						-- Remove following slashes '/'.
+					from 
+						i := i + 1
+					until 
+						i > n or s[i] /= '/' 
+					loop
+						s.remove (i)
+						n := n - 1
+					end
+				else
+					i := i + 1
+				end
 			end
 		end
 

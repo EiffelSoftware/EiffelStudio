@@ -87,18 +87,19 @@ feature {NONE} -- Initialization
 		local
 			s8: detachable READABLE_STRING_8
 			req: WGI_REQUEST
+			utf: UTF_CONVERTER
 		do
 			init_mime_handlers
 			req := wgi_request
 
-			--| Content-Length
+				--| Content-Length
 			if attached content_length as s and then s.is_natural_64 then
 				content_length_value := s.to_natural_64
 			else
 				content_length_value := 0
 			end
 
-			-- Content-Type
+				--| Content-Type
 			s8 := req.content_type
 			if s8 /= Void then
 				create content_type.make_from_string (s8)
@@ -106,18 +107,11 @@ feature {NONE} -- Initialization
 				content_type := Void
 			end
 
-			--| Request Methods
+				--| Request Methods
 			request_method := req.request_method
 
-			--| PATH_INFO
-			percent_encoded_path_info := req.path_info
-			path_info := url_decoded_string (req.path_info)
-
-			--| PATH_TRANSLATED
-			s8 := req.path_translated
-			if s8 /= Void then
-				path_translated := url_decoded_string (s8)
-			end
+				--| PATH_INFO
+			path_info := utf.utf_8_string_8_to_string_32 (req.path_info)
 
 				--| Here one can set its own environment entries if needed
 			if meta_variable ({WSF_META_NAMES}.request_time) = Void then
@@ -139,8 +133,18 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature {WSF_REQUEST_EXPORTER} -- Restricted Access		
+
 	wgi_request: WGI_REQUEST
 			-- Associated WGI request
+
+	cgi_variables: WGI_REQUEST_CGI_VARIABLES
+			-- Object containing the CGI variables
+			--| mainly for debugging purpose.
+			--| note: a new instance is created on each call!
+		do
+			Result := wgi_request.cgi_variables
+		end
 
 feature -- Destroy
 
@@ -166,9 +170,9 @@ feature -- Destroy
 			form_parameters_table.wipe_out
 			mime_handlers := Void
 			path_info := empty_string_32
+			internal_percent_encoded_path_info := Void
 			path_parameters_source := Void
 			path_parameters_table := Void
-			path_translated := Void
 			raw_input_data := Void
 			raw_input_data_recorded := False
 			request_method := empty_string_8
@@ -612,6 +616,12 @@ feature -- Helpers: global variables
 
 feature -- Execution variables
 
+	execution_variables: TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL]
+			-- Execution variables values.
+		do
+			Result := execution_variables_table
+		end
+
 	has_execution_variable (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has execution variable related to `a_name'?
 		require
@@ -829,19 +839,52 @@ feature -- Access: CGI meta parameters - 1.1
 		end
 
 	percent_encoded_path_info: READABLE_STRING_8
-			-- Non decoded PATH_INFO value from CGI.
+			-- Percent encoded PATH_INFO value from CGI.
 			-- See `path_info' for the related percent decoded value.
 			--| This value should be used by component dealing only with ASCII path
+			--| this value is not always available, so it requires to be computed.
+		local
+			l_result: like internal_percent_encoded_path_info
+			r: READABLE_STRING_8
+			i: INTEGER
+		do
+			l_result := internal_percent_encoded_path_info
+			if l_result = Void then
+				r := request_uri
+				i := r.index_of ('?', 1)
+				if i > 0 then
+					l_result := r.substring (1, i - 1)
+				else
+					l_result := r.string
+				end
+				if attached script_name as s then
+					if l_result.starts_with (s) then
+						l_result := l_result.substring (s.count + 1, l_result.count)
+					end
+				end
+				internal_percent_encoded_path_info := l_result
+			end
+			Result := l_result
+		end
+
+	utf_8_path_info: READABLE_STRING_8
+			-- UTF-8 encoded value for PATH_INFO.
+			-- See `path_info' for extended description.
+		do
+			Result := wgi_request.path_info
+		end
 
 	path_info: READABLE_STRING_32
 			-- The PATH_INFO metavariable specifies a path to be interpreted
 			-- by the CGI script. It identifies the resource or sub-resource
 			-- to be returned by the CGI script, and it is derived from the
 			-- portion of the URI path following the script name but
-			-- preceding any query data. The syntax and semantics are similar
-			-- to a decoded HTTP URL 'path' token (defined in RFC 2396 [4]),
-			-- with the exception that a PATH_INFO of "/" represents a single
-			-- void path segment.
+			-- preceding any query data.
+			-- Unlike a URI path, the PATH_INFO is not URL-encoded, and cannot
+   			-- contain path-segment parameters.
+			-- The syntax and semantics are similar to a decoded HTTP URL 'path' token
+			-- (defined in RFC 2396 [4]), with the exception that a PATH_INFO of "/"
+			-- represents a single void path segment.
 			--
 			--  PATH_INFO = "" | ( "/" path )
 			--  path      = segment *( "/" segment )
@@ -862,9 +905,10 @@ feature -- Access: CGI meta parameters - 1.1
 			-- preserve the case of the PATH_INFO element of the URI when
 			-- making it available to scripts.
 			--
-			-- See `percent_encoded_path_info' to get the original non decoded path info.
+			-- Note: this is the unicode version of PATH_INFO, for utf-8 version
+			-- please use `utf_8_path_info', which is the real CGI value of PATH_INFO.
 
-	path_translated: detachable READABLE_STRING_32
+	path_translated: detachable READABLE_STRING_8
 			-- PATH_TRANSLATED is derived by taking any path-info component
 			-- of the wgi_request URI (see section 6.1.6), decoding it (see
 			-- section 3.1), parsing it as a URI in its own right, and
@@ -907,6 +951,11 @@ feature -- Access: CGI meta parameters - 1.1
 			--
 			-- Servers SHOULD provide this metavariable to scripts if and
 			-- only if the wgi_request URI includes a path-info component.
+			--
+			-- note: it is UTF_8 encoded.
+		do
+			Result := wgi_request.path_translated
+		end
 
 	query_string: READABLE_STRING_8
 			-- A URL-encoded string; the <query> part of the Script-URI. (See
@@ -1853,7 +1902,7 @@ feature -- URL Utility
 							elseif spos > 0 then
 								i := spos
 							end
-							spos := l_rq_uri.substring_index (percent_encoded_path_info, i)
+							spos := l_rq_uri.substring_index (path_info, i)
 							if spos > 0 then
 								l_base_url := l_rq_uri.substring (1, spos - 1)
 							else
@@ -1878,6 +1927,9 @@ feature {NONE} -- Implementation: URL Utility
 
 	internal_url_base: detachable STRING
 			-- URL base of potential script
+
+	internal_percent_encoded_path_info: detachable like percent_encoded_path_info
+			-- Cache value of `percent_encoded_path_info'
 
 feature -- Element change
 

@@ -15,20 +15,6 @@ inherit
 
 	WSF_SELF_DOCUMENTED_HANDLER
 
-	SHARED_HTML_ENCODER
-
-	SHARED_WSF_PERCENT_ENCODER
-		rename
-			percent_encoder as url_encoder
-		export
-			{NONE} all
-		end
-
-	SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_hidden
@@ -58,109 +44,61 @@ feature -- Documentation
 			Result.add_description ("Debug handler (mainly to return request information)")
 		end
 
-feature -- Access	
+feature -- Access
 
 	execute_starts_with (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			s: STRING_8
 			p: WSF_PAGE_RESPONSE
-			v: STRING_8
+			l_len: INTEGER
+			dbg: WSF_DEBUG_INFORMATION
 		do
 			create s.make (2048)
-			s.append ("**DEBUG**%N")
-			req.set_raw_input_data_recorded (True)
+			s.append ("= EWF DEBUG =")
+			s.append ("%N")
 
-			append_iterable_to ("Meta variables:", req.meta_variables, s)
-			s.append_character ('%N')
+			create dbg.make
+			dbg.set_is_verbose (True)
+			dbg.append_cgi_variables_to (req, res, s)
+			dbg.append_information_to (req, res, s)
 
-			append_iterable_to ("Path parameters", req.path_parameters, s)
-			s.append_character ('%N')
+			s.append ("= END =")
+			s.append ("%N")
 
-			append_iterable_to ("Query parameters", req.query_parameters, s)
-			s.append_character ('%N')
-
-			append_iterable_to ("Form parameters", req.form_parameters, s)
-			s.append_character ('%N')
-
-			if attached req.content_type as l_type then
-				s.append ("Content: type=" + l_type.debug_output)
-				s.append (" length=")
-				s.append_natural_64 (req.content_length_value)
-				s.append_character ('%N')
-				create v.make (req.content_length_value.to_integer_32)
-				req.read_input_data_into (v)
-				across
-					v.split ('%N') as v_cursor
-				loop
-					s.append ("     |")
-					s.append (v_cursor.item)
-					s.append_character ('%N')
-				end
-			end
 
 			create p.make_with_body (s)
-			p.header.put_content_type_text_plain
-			res.send (p)
-
-		end
-
-feature {NONE} -- Implementation
-
-	append_iterable_to (a_title: READABLE_STRING_8; it: detachable ITERABLE [WSF_VALUE]; s: STRING_8)
-		local
-			n: INTEGER
-			t: READABLE_STRING_8
-			v: READABLE_STRING_8
-		do
-			s.append (a_title)
-			s.append_character (':')
-			if it /= Void then
-				across it as c loop
-					n := n + 1
-				end
-				if n = 0 then
-					s.append (" empty")
-					s.append_character ('%N')
-				else
-					s.append_character ('%N')
-					across
-						it as c
-					loop
-						s.append ("  - ")
-						s.append (c.item.url_encoded_name)
-						t := c.item.generating_type
-						if t.same_string ("WSF_STRING") then
-						else
-							s.append_character (' ')
-							s.append_character ('{')
-							s.append (t)
-							s.append_character ('}')
+			if {PLATFORM}.is_windows and req.wgi_connector.name.is_case_insensitive_equal ("cgi") then
+					--| FIXME: the CGI connector add %R for any single %N character, so update the Content-Length accordingly.
+					-- Dirty hack to handle correctly CGI on Windows, since it seems "abc%N" will be sent as "abc%R%N"
+				l_len := 0
+				across s as ic loop
+					if ic.item = '%R' then
+						l_len := l_len + 1
+						ic.forth
+						if
+							not ic.after and then
+							ic.item = '%N'
+						then
+							l_len := l_len + 1
 						end
-						s.append_character ('=')
-						v := c.item.string_representation.as_string_8
-						if v.has ('%N') then
-							s.append_character ('%N')
-							across
-								v.split ('%N') as v_cursor
-							loop
-								s.append ("     |")
-								s.append (v_cursor.item)
-								s.append_character ('%N')
-							end
-						else
-							s.append (v)
-							s.append_character ('%N')
-						end
+					elseif ic.item = '%N' then
+						l_len := l_len + 2 -- %R will be added by the CGI connector...
+					else
+						l_len := l_len + 1
 					end
 				end
 			else
-				s.append (" none")
-				s.append_character ('%N')
+				l_len := s.count
 			end
+
+			p.header.put_content_length (l_len)
+			p.header.put_content_type_utf_8_text_plain
+			res.send (p)
 		end
 
+
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

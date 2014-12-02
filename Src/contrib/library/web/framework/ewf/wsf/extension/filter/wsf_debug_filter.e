@@ -28,20 +28,16 @@ feature -- Basic operations
 			-- Execute the filter
 		local
 			s: STRING_8
+			dbg: WSF_DEBUG_INFORMATION
 		do
 			create s.make (2048)
-			if attached req.content_type as l_type then
-				s.append ("[length=")
-				s.append_natural_64 (req.content_length_value)
-				s.append_character (']')
-				s.append_character (' ')
-				s.append (l_type.debug_output)
-				s.append_character ('%N')
-			end
+			create dbg.make
+			dbg.set_is_verbose (False)
 
-			append_iterable_to ("Path parameters", req.path_parameters, s)
-			append_iterable_to ("Query parameters", req.query_parameters, s)
-			append_iterable_to ("Form parameters", req.form_parameters, s)
+			dbg.append_content_information_to (req, res, s)
+			dbg.append_path_parameters_to (req, res, s)
+			dbg.append_query_parameters_to (req, res, s)
+			dbg.append_form_parameters_to (req, res, s)
 
 			if not s.is_empty then
 				s.prepend ("**DEBUG**%N")
@@ -84,8 +80,8 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

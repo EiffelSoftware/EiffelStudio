@@ -53,7 +53,7 @@ req_grp::wait()
 bool sort_func (priv_queue *pq1, priv_queue *pq2)
 {
 	return pq1->supplier->pid <= pq2->supplier->pid; 
-};
+}
 
 void
 req_grp::lock()

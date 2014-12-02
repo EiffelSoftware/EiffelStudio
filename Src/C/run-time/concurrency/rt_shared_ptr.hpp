@@ -6,9 +6,11 @@
 #include "eif_atomops.h"
 
 /**
- * GCC does not support 'final' modifier in non-C++11 mode.
+ * GCC supports neither 'final' modifier in non-C++11 mode nor '__final' in earlier versions.
  */
-#if defined (__GNUC__) && (__cplusplus < 201103L)
+#if (__EIF_GNUC_VERSION__ < 40700)
+#	define RT_FINAL
+#elif defined (__GNUC__) && (__cplusplus < 201103L)
 #	define RT_FINAL __final
 #else
 #	define RT_FINAL final

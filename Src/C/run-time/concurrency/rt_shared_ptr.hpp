@@ -5,6 +5,15 @@
 #include "eif_portable.h"
 #include "eif_atomops.h"
 
+/**
+ * GCC does not support 'final' modifier in non-C++11 mode.
+ */
+#if defined (__GNUC__) && (__cplusplus < 201103L)
+#	define RT_FINAL __final
+#else
+#	define RT_FINAL final
+#endif
+
 namespace eiffel_run_time
 {
 
@@ -169,7 +178,7 @@ public:
 };
 
 template<class _Ty>
-	class _Ref_count_obj
+	class _Ref_count_obj RT_FINAL
 	: public _Ref_count_base
 	{	
 public:

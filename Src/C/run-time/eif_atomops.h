@@ -84,7 +84,7 @@ extern "C" {
 #	define RTS_ACAS_I32(dest,setter,compare) InterlockedCompareExchange ((long *) dest, setter, compare)
 #	define RTS_AS_I32(dest, setter)          InterlockedExchange ((long *) dest, setter)
 #	define RTS_AA_I32(dest, val)             (InterlockedExchangeAdd ((long *) dest, val) + val) // Add val to return new value.
-#	define RTS_AS_PTR(dest, setter)          InterlockedExchangePointer (dest, setter)
+#	define RTS_AS_PTR(dest, setter)          InterlockedExchangePointer ((PVOID volatile *)dest, (PVOID) setter)
 #elif defined (__EIF_GNUC_ATOMOPS__) || defined (__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4) || (defined (__clang__) && (defined (__x86_64__) || defined (__i386__)))
 #	define RTS_ACAS_I32(dest,setter,compare) __sync_val_compare_and_swap (dest, compare, setter)
 #	define RTS_AS_I32(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 		do
 			source := a_source
 			if {PLATFORM}.is_thread_capable then
-				internal_thread_id := get_current_thread_id.to_integer_32
+				internal_thread_id := get_current_thread_id
 			end
 		ensure
 			source_set: source = a_source
@@ -349,14 +349,14 @@ feature -- Status report
 			if {PLATFORM}.is_thread_capable then
 				--Result := sqlite_api.is_thread_safe or else
 					-- The Eiffel object is NOT thread safe!
-				Result := internal_thread_id = get_current_thread_id.to_integer_32
+				Result := internal_thread_id = get_current_thread_id
 			else
 				Result := True
 			end
 		ensure
 			true_result: not {PLATFORM}.is_thread_capable implies Result
 			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable and not sqlite_api.is_thread_safe) implies
-				internal_thread_id = get_current_thread_id.to_integer_32
+				internal_thread_id = get_current_thread_id
 		end
 
 	is_readable: BOOLEAN
@@ -1047,7 +1047,7 @@ feature {NONE} -- Implementation
 	internal_lock_count: INTEGER
 			-- Internal lock count for thread protection.
 
-	internal_thread_id: INTEGER
+	internal_thread_id: POINTER
 			-- The thread the database was connected using.
 			--|In mono-threaded systems this will always be 0.
 
@@ -1107,11 +1107,11 @@ feature {NONE} -- Externals
 invariant
 	source_attached: attached source
 	is_readable: not is_closed implies is_readable
-	locked_thread_id_unset: not {PLATFORM}.is_thread_capable implies internal_thread_id = 0
-	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id > 0
+	locked_thread_id_unset: not {PLATFORM}.is_thread_capable implies internal_thread_id = default_pointer
+	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id /= default_pointer
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

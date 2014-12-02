@@ -222,13 +222,13 @@ public:
 
 	ptr_type operator= (ptr_type v)
 		{	// assign from v
-			RTS_AS_PTR (&value, v);
+			(void) RTS_AS_PTR (&value, v);
 			return v;
 		}
 
 	ptr_type operator= (ptr_type v) volatile
 		{	// assign from v
-			RTS_AS_PTR ((void * volatile *) &value, v);
+			(void) RTS_AS_PTR ((void * volatile *) &value, v);
 			return v;
 		}
 

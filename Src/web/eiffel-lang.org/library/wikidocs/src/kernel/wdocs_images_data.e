@@ -7,6 +7,8 @@ class
 	WDOCS_IMAGES_DATA
 
 inherit
+	WDOCS_DATA_I
+	
 	WDOCS_HELPER
 
 create

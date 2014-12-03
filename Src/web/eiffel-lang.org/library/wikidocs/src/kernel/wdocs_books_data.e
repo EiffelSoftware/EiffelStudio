@@ -16,13 +16,17 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create book_names.make (0)
 			create books.make (0)
 		end
 
-feature {WDOCS_DATA_ACCESS} -- Access
+feature {WDOCS_DATA_ACCESS} -- Basic operation
 
-	book_names: ARRAYED_LIST [READABLE_STRING_32]
+	reset
+		do
+			books.wipe_out
+		end
+
+feature {WDOCS_DATA_ACCESS} -- Access
 
 	books: ARRAYED_LIST [WIKI_BOOK]
 

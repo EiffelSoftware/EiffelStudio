@@ -23,6 +23,12 @@ inherit
 			print as ascii_print
 		end
 
+	WDOCS_DATA_ACCESS
+		rename
+			print as ascii_print
+		end
+
+
 create
 	make
 

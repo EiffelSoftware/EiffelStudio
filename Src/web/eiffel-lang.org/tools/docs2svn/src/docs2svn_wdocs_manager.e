@@ -10,7 +10,7 @@ class
 inherit
 	WDOCS_MANAGER
 		redefine
-			get_data,
+			get_all_data,
 			book_from_index_file
 		end
 
@@ -41,7 +41,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: data		
 
-	get_data
+	get_all_data
 		do
 			if clear_cache_requested then
 				reset_data

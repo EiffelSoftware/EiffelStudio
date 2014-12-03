@@ -11,7 +11,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make 
+	make
 		do
 			cache_date_time := current_date_time
 		end
@@ -33,7 +33,7 @@ feature -- Access
 			-- <Precursor>
 		do
 			create Result.make_now
-		end	
+		end
 
 	item: detachable G
 
@@ -41,8 +41,10 @@ feature -- Element change
 
 	delete
 			-- <Precursor>
+		local
+			l_default: detachable G
 		do
-			item := Void
+			item := l_default
 			cache_date_time := current_date_time
 		end
 

@@ -131,7 +131,7 @@ feature {NONE} -- Events
 			f.put_string (a_content)
 			f.close
 			if a_metadata /= Void then
-				create f.make_with_path (wikidocs_dir.extended (a_book_name).extended (a_page_name).appended_with_extension ({WDOCS_MANAGER}.metadata_extension))
+				create f.make_with_path (wikidocs_dir.extended (a_book_name).extended (a_page_name).appended_with_extension ("data"))
 				f.create_read_write
 				across
 					a_metadata as ic

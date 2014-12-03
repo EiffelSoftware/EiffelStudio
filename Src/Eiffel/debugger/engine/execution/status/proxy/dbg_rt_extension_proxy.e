@@ -161,6 +161,15 @@ feature -- Remote Invocation: Object Storage
 			Result := query_evaluation_on ("object_loaded_from", params)
 		end
 
+feature -- SCOOP Access
+
+	scoop_processor_id_from_object (a_add: DBG_ADDRESS; a_dtype: detachable CLASS_C): INTEGER
+			-- SCOOP Processor id from object at `a_add'
+		do
+			Result := one_arg_resulting_integer_32_evaluation ("scoop_processor_id_from_object", dump_value_factory.new_object_value (a_add, a_dtype, 0), Void)
+			-- CHECKME: use 0 for scp_pid since we don't really care about the scoop pid here.
+		end
+
 feature {NONE} -- Implementation
 
 	query_evaluation_on (fname: STRING_8; params: LIST [DUMP_VALUE]): detachable DUMP_VALUE

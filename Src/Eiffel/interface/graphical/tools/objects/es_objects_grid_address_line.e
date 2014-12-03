@@ -90,9 +90,9 @@ feature -- Properties
 			if Result = 0 then
 				if
 					attached debugger_manager.application as app and then
-					attached app.remote_rt_scoop_manager as scp_mng
+					attached app.remote_rt_object as rt_obj
 				then
-					i := scp_mng.processor_id_from_object (object_address, object_dynamic_class)
+					i := rt_obj.scoop_processor_id_from_object (object_address, object_dynamic_class)
 					Result := i.to_natural_16
 					internal_object_scoop_processor_id := Result
 				end
@@ -224,7 +224,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

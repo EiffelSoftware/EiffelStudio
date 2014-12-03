@@ -424,28 +424,10 @@ feature -- Access: Remote access to RT_
 			end
 		end
 
-	remote_rt_scoop_manager: detachable DBG_RT_SCOOP_MANAGER_PROXY
-			-- Return the remote rt_object
-		do
-			Result := internal_remote_rt_scoop_manager
-			if Result = Void and not remote_rt_scoop_manager_set then
-				if attached imp_remote_rt_scoop_manager as rto then
-					create Result.make (rto, Current)
-					internal_remote_rt_scoop_manager := Result
-				end
-				remote_rt_scoop_manager_set := True
-			end
-		end
-
 feature {NONE} -- Implementation: Remote
 
 	imp_remote_rt_object: detachable ABSTRACT_REFERENCE_VALUE
 			-- Return the remote rt_object
-		deferred
-		end
-
-	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
-			-- Return the remote rt_scoop_manager
 		deferred
 		end
 
@@ -454,11 +436,6 @@ feature {NONE} -- Implementation: Remote
 
 	internal_remote_rt_execution_recorder: like remote_rt_execution_recorder
 			-- Cached value of `remote_rt_execution_recorder'.
-
-	internal_remote_rt_scoop_manager: like remote_rt_scoop_manager
-			-- Cached value of `remote_rt_scoop_manager'.
-
-	remote_rt_scoop_manager_set: BOOLEAN
 
 feature -- Remote: execution recorder on RT_
 

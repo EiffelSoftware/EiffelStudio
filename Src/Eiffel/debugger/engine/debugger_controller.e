@@ -579,6 +579,8 @@ feature -- Environment related
 			-- String representation of the Environment variables
 		local
 			k,v,n: STRING_32
+			kmp: detachable KMP_WILD
+			lst: ARRAYED_LIST [STRING_32]
 		do
 			if (env = Void or else env.is_empty) and return_void_if_unchanged then
 				--| Result := Void
@@ -600,11 +602,40 @@ feature -- Environment related
 						if k.substring (1,2).same_string (environment_variable_unset_prefix) then
 								--| Environment variable removal if started by "&-" such as "&-FOOBAR"
 								--| this is an internal representation to precise "removal"
-							n := k.substring (3, k.count)
-							if n.same_string ({STRING_32} "*") then
-								Result.wipe_out
-							else
-								Result.remove (n)
+							if not Result.is_empty then
+								n := k.substring (3, k.count)
+								if n.same_string ({STRING_32} "*") then
+										--| This is an optimization, since "*" will match all entries
+										--| it is faster to directly wipe out the table.
+									Result.wipe_out
+								elseif n.has ('*') then
+										-- such as "&-ISE_*"
+									create kmp.make_empty
+									kmp.set_pattern (n)
+
+										-- Record the keys of items to remove.
+									from
+										create lst.make (Result.count)
+										Result.start
+									until
+										Result.after
+									loop
+										kmp.set_text (Result.key_for_iteration)
+										if kmp.pattern_matches then
+											lst.force (Result.key_for_iteration)
+										end
+										Result.forth
+									end
+
+										--| Operate the removal
+									across
+										lst as ic
+									loop
+										Result.remove (ic.item)
+									end
+								else
+									Result.remove (n)
+								end
 							end
 						elseif v /= Void then
 							Result.force (v, k)
@@ -646,7 +677,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

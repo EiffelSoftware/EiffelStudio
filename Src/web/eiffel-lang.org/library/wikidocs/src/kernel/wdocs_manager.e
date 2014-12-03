@@ -157,19 +157,19 @@ feature -- Access
 			end
 		end
 
---	book_from_index_file (a_book_id: READABLE_STRING_GENERAL; p: PATH): detachable WIKI_BOOK
---			-- Book built with index file `p'
---			-- usually "book.index".
+	book_from_index_file (a_book_id: READABLE_STRING_GENERAL; p: PATH): detachable WIKI_BOOK
+			-- Book built with index file `p'
+			-- usually "book.index".
 --		local
 --			w: WIKI_INDEX
 --			ut: FILE_UTILITIES
---		do
+		do
 --			if ut.file_path_exists (p) then
 --					-- Based on book.index
 --				create w.make (a_book_id.as_string_8, p)
 --				Result := w.book
 --			end
---		end
+		end
 
 	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.

@@ -19,8 +19,6 @@ create
 feature {NONE} -- Initialization		
 
 	initialize_modules
-		local
-			m: CMS_MODULE
 		do
 			create modules.make (3)
 		end

@@ -25,6 +25,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	WDOCS_DATA_ACCESS
+
 create
 	make
 
@@ -41,10 +43,10 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize values.
 		do
-			metadata_extension := "md"
+			metadata_extension := "data"
 			index_name := "index"
 
-			get_data
+			get_all_data
 		end
 
 feature -- Access
@@ -57,10 +59,50 @@ feature -- Access
 
 	data: WDOCS_DATA
 
+	books_data: WDOCS_BOOKS_DATA
+
+feature -- Data access
+
+	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
+		local
+			l_common_book_name: STRING
+		do
+			l_common_book_name := {WDOCS_DATA}.common_book_name
+			if a_book_name /= Void then
+				if a_book_name.same_string (l_common_book_name) then
+					if attached data.images_path_by_title_and_book.item (l_common_book_name) as ht then
+						Result := ht.item (a_title)
+					end
+				else
+					if attached data.images_path_by_title_and_book.item (a_book_name) as ht then
+						Result := ht.item (a_title)
+					end
+					if Result = Void then
+							-- Try with common resource
+						Result := image_path (a_title, l_common_book_name)
+					end
+				end
+			elseif attached image_path (a_title, l_common_book_name) as l_path then
+					-- Try with common book resources.
+				Result := l_path
+			else
+					-- Try with others books resources.
+				across
+					book_names as ic
+				until
+					Result /= Void
+				loop
+					if attached image_path (a_title, ic.item) as l_path then
+						Result := l_path
+					end
+				end
+			end
+		end
+
 feature -- Settings
 
 	metadata_extension: STRING
-			-- Default: "md"
+			-- Default: "data"
 
 	index_name: STRING
 			-- Default: "index"
@@ -71,14 +113,15 @@ feature -- Basic operations
 			-- Discard memory cache for `data',
 			-- and reload it from file system.
 		do
-			get_data
+			get_all_data
 		end
 
 	refresh_data
 			-- Refresh manager data.
 		do
+			reset_books_data
 			reset_data
-			get_data
+			get_all_data
 		end
 
 feature -- Access
@@ -92,44 +135,50 @@ feature -- Access
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 			-- Book named `a_bookid' if any.
 		local
-			p, ip: PATH
-			w: WIKI_INDEX
-			ut: FILE_UTILITIES
+			p: PATH
 			vis: WDOCS_WIKI_BOOK_SCANNER
 		do
-			if attached data.book (a_bookid) as b then
+			if attached books_data.book (a_bookid) as b then
 				Result := b
 			else
 				p := wiki_database_path.extended (a_bookid)
-				ip := p.extended ("book.index")
-				if ut.file_path_exists (ip) then
-						-- Based on book.index
-					create w.make (a_bookid.as_string_8, ip)
-					Result := w.book
-					if Result /= Void then
-						Result.sort
-						data.books.force (Result)
-						store_data (data)
-					end
-				else
+				-- Remove support for book.index file.
+--				Result := book_from_index_file (a_bookid, p.extended ("book.index"))
+				if Result = Void then
 						-- Scan each folder, and sub folder(s)
 					create Result.make (a_bookid.as_string_8, p) -- FIXME: truncated
-					create vis.make (Result)
+					create vis.make (Result, Current)
+				end
+				if Result /= Void then
 					Result.sort
-					data.books.force (Result)
-					store_data (data)
+					books_data.books.force (Result)
+					store_books_data (books_data)
 				end
 			end
 		end
 
-	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+--	book_from_index_file (a_book_id: READABLE_STRING_GENERAL; p: PATH): detachable WIKI_BOOK
+--			-- Book built with index file `p'
+--			-- usually "book.index".
+--		local
+--			w: WIKI_INDEX
+--			ut: FILE_UTILITIES
+--		do
+--			if ut.file_path_exists (p) then
+--					-- Based on book.index
+--				create w.make (a_book_id.as_string_8, p)
+--				Result := w.book
+--			end
+--		end
+
+	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		local
 			n: READABLE_STRING_GENERAL
 			p: PATH
 			f: PLAIN_TEXT_FILE
 			wi: WIKI_INDEX
-			pg: detachable WIKI_PAGE
+			pg: detachable like new_wiki_page
 			ut: FILE_UTILITIES
 		do
 			if a_bookpage = Void then
@@ -148,22 +197,18 @@ feature -- Access
 					pg := wb.page_by_key (n)
 				end
 			end
-			if pg /= Void then
-				p := wiki_database_path.extended (pg.src)
+			if attached {WIKI_BOOK_PAGE} pg as l_book_page then
+				p := wiki_database_path.extended (l_book_page.src)
 			else
 				p := wiki_database_path.extended (a_bookid).extended (n)
 			end
 			p := p.appended_with_extension ("wiki")
 			create f.make_with_path (p)
 			if not f.exists then
-				if pg /= Void then
-					p := wiki_database_path.extended (pg.src)
+				if attached {WIKI_BOOK_PAGE} pg as l_book_pg then
+					p := wiki_database_path.extended (l_book_pg.src)
 				else
---					if n.is_case_insensitive_equal (a_bookid) or n.is_case_insensitive_equal ("index") then
---						p := wiki_database_path.extended (a_bookid)
---					else
-						p := wiki_database_path.extended (a_bookid).extended (n)
---					end
+					p := wiki_database_path.extended (a_bookid).extended (n)
 				end
 				p := p.extended ("index.wiki")
 				create f.make_with_path (p)
@@ -172,7 +217,7 @@ feature -- Access
 				if pg /= Void then
 					Result := pg
 				else
-					create Result.make (n.as_string_8, n.as_string_8)
+					Result := new_wiki_page (n.as_string_8, n.as_string_8)
 				end
 				Result.get_structure (p)
 			end
@@ -223,7 +268,7 @@ feature -- Access: link
 				l_book_name := book_name (a_page)
 			end
 			if attached page_by_title (a_link.name, l_book_name) as pg then
-				Result := wiki_page_path (pg)
+				Result := wiki_page_uri_path (pg)
 			end
 
 			if Result = Void then
@@ -248,7 +293,7 @@ feature -- Access: link
 				if f.exists then
 					create wi.make ("book", f.path)
 					if attached wi.page (a_link.name) as pg then
-						Result := wiki_page_path (pg)
+						Result := wiki_page_uri_path (pg)
 					end
 				end
 
@@ -261,41 +306,126 @@ feature -- Access: link
 			end
 		end
 
-	wiki_page_path (pg: WIKI_PAGE): STRING
+	wiki_page_uri_path (pg: WIKI_PAGE): STRING
 		local
 			utf: UTF_CONVERTER
 			l_path: detachable READABLE_STRING_32
 		do
-			if attached metadata (pg, <<"path">>) as md then
+			if attached page_metadata (pg, <<"path">>) as md then
 				l_path := md.item ("path")
 			end
 			if l_path /= Void then
 				Result := "/" + utf.string_32_to_utf_8_string_8 (l_path)
 			elseif attached book_name (pg) as bn then
 				Result := "/book/" + bn + "/" + pg.title
+			elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
+				Result := "/book/" + l_book_pg.src
 			else
-				Result := "/book/" + pg.src
+				Result := "/book/" -- FIXME
 			end
 		end
 
-	metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
+	wiki_page_title (pg: WIKI_PAGE): STRING
+		local
+			utf: UTF_CONVERTER
+		do
+			if pg.metadata_count > 0 then
+				Result := pg.title -- metadata already associated, so `title' should have expected value.
+			else
+				if
+					attached page_metadata (pg, <<"title">>) as md and then
+					attached md.item ("title") as l_title and then
+					not l_title.is_whitespace
+				then
+					Result := utf.escaped_utf_32_string_to_utf_8_string_8 (l_title)
+				else
+					Result := pg.title
+				end
+			end
+		end
+
+	wiki_page_link_title (pg: WIKI_PAGE): STRING
+		local
+			utf: UTF_CONVERTER
+			l_title: detachable READABLE_STRING_32
+		do
+			l_title := pg.metadata ("link_title")
+			if l_title = Void or else l_title.is_whitespace then
+				if attached page_metadata (pg, <<"link_title">>) as md then
+					l_title := md.item ("link_title")
+				end
+			end
+			if l_title /= Void then
+				Result := utf.escaped_utf_32_string_to_utf_8_string_8 (l_title)
+			else
+				Result := wiki_page_title (pg)
+			end
+		end
+
+	page_metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
 			-- Metadata for page `pg',
 			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
-		local
-			md: WDOCS_METADATA_FILE
 		do
-			create md.make_with_path (wiki_database_path.extended (pg.src).appended_with_extension (metadata_extension))
-			if not md.exists then
-				create md.make_with_path (wiki_database_path.extended (pg.parent_key).extended (index_name).appended_with_extension (metadata_extension))
+			if attached pg.path as l_path then
+					-- Try from WIKI_PAGE.path if any
+				Result := metadata (l_path, a_restricted_names)
 			end
-			if md.exists then
-				if a_restricted_names /= Void then
-					md.get_only_items_named_as (a_restricted_names)
+			if Result = Void and attached {WIKI_BOOK_PAGE} pg as l_book_pg then
+					-- Try from src + .wiki or related metadata file.
+				Result := metadata (wiki_database_path.extended (l_book_pg.src).appended_with_extension ("wiki"), a_restricted_names)
+				if Result = Void then
+						-- Try from src and altered index.wiki or related metadata file.
+					Result := metadata (wiki_database_path.extended (l_book_pg.parent_key).extended (index_name).appended_with_extension ("wiki"), a_restricted_names)
 				end
-				Result := md
 			end
 		ensure
 			result_attached_implies_exists: Result /= Void implies not attached {WDOCS_METADATA_FILE} Result as mdf or else mdf.exists
+		end
+
+	metadata (a_source: PATH; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
+			-- Metadata for page `pg',
+			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
+		local
+			mdf: WDOCS_METADATA_FILE
+			mdw: WDOCS_METADATA_WIKI
+			p: PATH
+			n: STRING_32
+		do
+			if attached a_source.extension as ext and then ext.is_case_insensitive_equal_general ("wiki") then
+				create mdw.make_with_path (a_source)
+				if mdw.exists then
+					if a_restricted_names /= Void then
+						mdw.get_only_items_named_as (a_restricted_names)
+					end
+					if mdw.has_metadata then
+						Result := mdw
+					end
+				end
+			end
+			if Result = Void then
+				create mdf.make_with_path (a_source.appended_with_extension (metadata_extension))
+				if
+					not mdf.exists and then
+					attached a_source.extension as ext
+				then
+					n := a_source.name
+					n.remove_tail (1 + ext.count) -- remove .wiki or similar
+					create p.make_from_string (n)
+					create mdf.make_with_path (p.appended_with_extension (metadata_extension))
+				end
+				if mdf.exists then
+					if a_restricted_names /= Void then
+						mdf.get_only_items_named_as (a_restricted_names)
+					end
+					Result := mdf
+				end
+			end
+		ensure
+			result_attached_implies_exists: Result /= Void implies (
+						(not attached {WDOCS_METADATA_FILE} Result as en_mdf or else en_mdf.exists)
+					or
+						(not attached {WDOCS_METADATA_WIKI} Result as en_mdw or else en_mdw.exists)
+					)
 		end
 
 feature -- Access: Image
@@ -325,7 +455,7 @@ feature -- Access: Image
 				l_book_name := book_name (a_page)
 			end
 				-- `l_book_name' could be Void
-			l_image_path := data.image_path (a_link.name, l_book_name)
+			l_image_path := image_path (a_link.name, l_book_name)
 			if l_image_path /= Void then
 				s0 := l_image_path.parent.parent.name
 				if l_book_name = Void then
@@ -366,7 +496,7 @@ feature -- Access: Image
 						check has_book_name: False end
 						l_book_name := data.common_book_name
 					end
-					l_image_path := data.image_path (a_link.name, l_book_name)
+					l_image_path := image_path (a_link.name, l_book_name)
 					if l_image_path = Void then
 						p := d.path.extended (a_link.name).appended_with_extension ("png")
 						create f.make_with_path (p)
@@ -508,24 +638,31 @@ feature -- Helpers
 	book_name (a_page: WIKI_PAGE): detachable READABLE_STRING_32
 		local
 			db, p: detachable PATH
-			pp: PATH
+			pp: detachable PATH
 		do
 			p := a_page.path
 			if p /= Void then
-				db := wiki_database_path
-					-- Search book folder, which has `db' as parent.
-				from
-					pp := p
-				until
-					pp.same_as (db) or pp.is_current_symbol
-				loop
-					p := pp
-					pp := p.parent
-				end
-				if p.same_as (db) then
-					Result := Void
-				elseif attached p.entry as e then
-					Result := e.name
+				p := p.absolute_path.canonical_path
+				db := wiki_database_path.absolute_path.canonical_path
+				if p.name.starts_with (db.name) then
+						-- Search book folder, which has `db' as parent.
+					from
+						pp := p
+					until
+						pp = Void or else (pp.same_as (db) or pp.is_current_symbol)
+					loop
+						p := pp
+						pp := p.parent
+						if p.same_as (pp) then
+							pp := Void
+						end
+					end
+					if p.same_as (db) then
+						Result := Void
+					elseif attached p.entry as e then
+						Result := e.name
+					end
+				else
 				end
 			end
 			if
@@ -539,24 +676,28 @@ feature -- Helpers
 
 feature {NONE} -- Implementation: data
 
-	get_data
+	get_all_data
 			-- Read data from the wikidatabase and save it on `data'.
 			-- Save the data on a cache.
 		local
 			l_data: like data
+			l_books_data: like books_data
 			p: PATH
 			d,l_dir: DIRECTORY
 			wb: WIKI_BOOK
-			wp: WIKI_PAGE
+			wp: like new_wiki_page
 			md: detachable WDOCS_METADATA
 			wb_lst: ARRAYED_LIST [WIKI_BOOK]
 			utf: UTF_CONVERTER
+			l_name: READABLE_STRING_32
 		do
-			if attached stored_data as l_stored_data then
-				data := l_stored_data
+			if attached stored_books_data as l_stored_books_data then
+				l_books_data := l_stored_books_data
+				books_data := l_books_data
 			else
-				create l_data.make
-				data := l_data
+				reset_data -- Reset WDOCS_DATA mainly because it depends on books_data
+				create l_books_data.make
+				books_data := l_books_data
 
 					-- Book names
 				p := wiki_database_path
@@ -566,74 +707,193 @@ feature {NONE} -- Implementation: data
 					across
 						d.entries as ic
 					loop
+						l_name := ic.item.name
 						if
-							not ic.item.is_parent_symbol and not ic.item.is_current_symbol and not ic.item.name.starts_with ("_")
+							not ic.item.is_parent_symbol and
+							not ic.item.is_current_symbol and
+							not l_name.starts_with ("_") and
+							not l_name.starts_with (".")
 						then
-							create l_dir.make_with_path (p.extended_path (ic.item))
+							create l_dir.make_with_path (p.extended (l_name))
 							if l_dir.exists then
 										-- FIXME: unicode support in Wikitext lib?
-								create wb.make (utf.escaped_utf_32_string_to_utf_8_string_8 (ic.item.name), l_dir.path.extended_path (ic.item))
-								create wp.make ("index", wb.name)
-								md := metadata (wp, <<"weight">>)
+								create wb.make (utf.escaped_utf_32_string_to_utf_8_string_8 (l_name), l_dir.path.extended (l_name))
+
+								wp := new_wiki_page ("index", wb.name)
+								md := page_metadata (wp, Void)
 								if md = Void then
-									create wp.make (wb.name, wb.name)
-									md := metadata (wp, <<"weight">>)
+									wp := new_wiki_page (wb.name, wb.name)
+									md := page_metadata (wp, Void)
 								end
-								if md /= Void and then attached md.item ("weight") as l_weight and then l_weight.is_integer then
-									wp.set_weight (l_weight.to_integer)
+								if md /= Void then
+									if attached md.item ("weight") as l_weight and then l_weight.is_integer then
+										wp.set_weight (l_weight.to_integer)
+									end
+									if attached md.item ("title") as l_title and then not l_title.is_whitespace then
+										wp.set_title (l_title)
+									end
+									across
+										md as md_ic
+									loop
+										wp.set_metadata (md_ic.item, md_ic.key)
+									end
+									if wp.metadata ("link_title") = Void then
+										wp.set_metadata (wp.title, "link_title") -- Avoid multiple queries.
+									end
 								end
 								wb.add_page (wp)
 								wb_lst.force (wb)
 							end
 						end
 					end
+						-- Sort by name and weight
 					sort_books (wb_lst)
+
+						-- Records book names.
 					across
 						wb_lst as ic
 					loop
-						l_data.book_names.force (ic.item.name)
+						l_books_data.book_names.force (ic.item.name)
 					end
-						-- Record association between wiki page title, and wiki files
-					across
-						l_data.book_names as ic
-					loop
-						if attached book (ic.item) as l_wikibook then
-							across
-								l_wikibook.pages as p_ic
-							loop
-								if attached p_ic.item.path as l_page_path then
-									l_data.record_page_path (l_page_path, p_ic.item.title, l_wikibook.name)
-								else
-									check has_path: False end
-								end
+				end
+				store_books_data (books_data)
+			end
+
+			if attached stored_data as l_stored_data then
+				data := l_stored_data
+			else
+				create l_data.make
+				data := l_data
+
+				across
+					l_books_data.book_names as ic
+				loop
+					l_data.book_names.force (ic.item)
+				end
+
+					-- Record association between wiki page title, and wiki files
+				across
+					l_data.book_names as ic
+				loop
+					if attached book (ic.item) as l_wikibook then
+						across
+							l_wikibook.pages as p_ic
+						loop
+							if attached p_ic.item.path as l_page_path then
+								l_data.record_page_path (l_page_path, p_ic.item.title, l_wikibook.name)
+							else
+								check has_path: False end
 							end
 						end
 					end
 				end
 
 					-- Index images
-					-- global
-				index_images_for_book_info_data (Void, l_data)
-					-- and for each book
-				across
-					l_data.book_names as ic
-				loop
-					index_images_for_book_info_data (ic.item, l_data)
-				end
+				get_images_data
 
 					-- Index templates
-					-- global
-				index_templates_for_book_info_data (Void, l_data)
-					-- and for each book
-				across
-					l_data.book_names as ic
-				loop
-					index_templates_for_book_info_data (ic.item, l_data)
-				end
+				get_templates_data
 
-					-- Index pages
+					-- Store result
 				store_data (l_data)
 			end
+		end
+
+	get_images_data
+		local
+			l_data: like data
+		do
+			l_data := data
+
+				-- Index images
+				-- global
+			index_images_for_book_info_data (Void, l_data)
+				-- and for each book
+			across
+				l_data.book_names as ic
+			loop
+				index_images_for_book_info_data (ic.item, l_data)
+			end
+		end
+
+	get_templates_data
+		local
+			l_data: like data
+		do
+			l_data := data
+
+				-- Index images
+				-- global
+			index_templates_for_book_info_data (Void, l_data)
+				-- and for each book
+			across
+				l_data.book_names as ic
+			loop
+				index_templates_for_book_info_data (ic.item, l_data)
+			end
+		end
+
+	update_wiki_page (wb: WIKI_BOOK; wp: WIKI_BOOK_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_BOOK_PAGE)
+		require
+			a_wp_path_set: a_wp_path /= Void
+		local
+			n1,n2: STRING_32
+			p: PATH
+			s: STRING_32
+			k: STRING_32
+		do
+			wp.set_path (a_wp_path)
+			if attached page_metadata (wp, Void) as md then
+				if attached md.item ("weight") as l_weight and then l_weight.is_integer then
+					wp.set_weight (l_weight.to_integer)
+				end
+				if attached md.item ("title") as l_title and then not l_title.is_whitespace then
+					wp.set_title (l_title)
+				end
+				across
+					md as md_ic
+				loop
+					wp.set_metadata (md_ic.item, md_ic.key)
+				end
+				if wp.metadata ("link_title") = Void then
+					wp.set_metadata (wp.title, "link_title") -- Avoid multiple queries.
+				end
+			end
+
+			n1 := wb.path.absolute_path.canonical_path.name
+			n2 := a_wp_path.absolute_path.canonical_path.name
+			if n2.ends_with_general (".wiki") then
+				n2.remove_tail (5)
+			end
+			if n2.starts_with (n1) then
+				create p.make_from_string (n2.substring (n1.count + 1 + 1, n2.count)) -- remove first directory separator
+				create s.make (p.name.count + 10)
+				s.append (wb.name.as_string_8) -- FIXME: (#unicode) truncated to string8 !!!
+				across
+					p.components as ic
+				loop
+					s.append_character ('/')
+					s.append (ic.item.name)
+				end
+				wp.set_src (s)
+			else
+				check page_under_book_directory: False end
+				if attached a_wp_path.entry as e then
+					k := e.name
+				else
+					k := a_wp_path.name
+				end
+				if k.ends_with_general (".wiki") then
+					k.remove_tail (5) -- remove ".wiki"
+				end
+				if a_parent /= Void then
+					wp.set_src (a_parent.src + "/" + k)
+				else
+					wp.set_src (wp.parent_key + "/" + k)
+				end
+			end
+		ensure
+			path_set: wp.path /= Void
 		end
 
 	index_images_for_book_info_data (a_book_name: detachable READABLE_STRING_GENERAL; a_data: WDOCS_DATA)
@@ -674,7 +934,7 @@ feature {NONE} -- Implementation: data
 								if l_filename = Void then
 									if attached i.entry as e then
 										l_filename := e.name
-										l_filename.remove_tail (3) -- extension ".md"
+										l_filename.remove_tail (1 + metadata_extension.count) -- extension ".data"
 										create f.make_with_path (d.path.extended (l_filename))
 										if not f.exists then
 											l_filename := Void
@@ -684,7 +944,7 @@ feature {NONE} -- Implementation: data
 							end
 						elseif attached i.entry as e then
 								-- Not . or ..
-								-- not a *.md file
+								-- not a *.data file
 								-- hopefully .. an image file
 							l_filename := e.name
 							l_title := l_filename.head (l_filename.count - 1 - ext.count) -- removing "." + ext
@@ -738,7 +998,7 @@ feature {NONE} -- Implementation: data
 									if l_filename = Void then
 										if attached i.entry as e then
 											l_filename := e.name
-											l_filename.remove_tail (3) -- extension ".md"
+											l_filename.remove_tail (1 + metadata_extension.count) -- extension ".data"
 											create f.make_with_path (d.path.extended (l_filename))
 											if not f.exists then
 												l_filename.append (".tpl") -- use PATH.appended_with_extension !
@@ -810,6 +1070,53 @@ feature {NONE} -- Implementation: data
 			else
 				Result := p.appended_with_extension ("data")
 			end
+		end
+
+	stored_books_data: detachable WDOCS_BOOKS_DATA
+			-- Retrieve books data from cache, if any.
+		local
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_BOOKS_DATA]
+		do
+			create c.make (books_data_filename)
+			Result := c.item
+		end
+
+	store_books_data (d: WDOCS_BOOKS_DATA)
+			-- Store books data on cahce.
+		local
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_BOOKS_DATA]
+		do
+			create c.make (books_data_filename)
+			c.put (d)
+		end
+
+	reset_books_data
+			-- Reset books data in cache, if any
+		local
+			c: WDOCS_FILE_OBJECT_CACHE [WDOCS_BOOKS_DATA]
+		do
+			create c.make (books_data_filename)
+			c.delete
+		end
+
+	books_data_filename: PATH
+		local
+			p: PATH
+		do
+			p := wiki_database_path
+			if attached p.entry as e then
+				Result := tmp_dir.extended ("cache").extended_path (e).appended ("-books").appended_with_extension ("data")
+			else
+				Result := p.appended ("-books").appended_with_extension ("data")
+			end
+		end
+
+feature -- Factory
+
+	new_wiki_page (a_title: READABLE_STRING_8; a_parent_key: READABLE_STRING_8): WIKI_BOOK_PAGE
+			-- Instantiate a new wiki page with title `a_title' and a parent key `a_parent_key'.
+		do
+			create Result.make (a_title, a_parent_key)
 		end
 
 feature {NONE} -- Implementation

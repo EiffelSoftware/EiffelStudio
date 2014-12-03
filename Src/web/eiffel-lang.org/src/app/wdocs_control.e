@@ -501,7 +501,7 @@ feature -- Basic operation
 			p, l_wiki_path, l_xhtml_path: PATH
 			d: DIRECTORY
 			f: PLAIN_TEXT_FILE
-			l_wiki_page: WIKI_PAGE
+			l_wiki_page: WIKI_BOOK_PAGE
 			url: PATH_URI
 			l_wdocs_manager: like new_wdocs_manager
 		do
@@ -520,7 +520,7 @@ feature -- Basic operation
 			f.put_string (a_text)
 			f.close
 
-			create l_wiki_page.make ("Preview", "Preview")
+			l_wiki_page := l_wdocs_manager.new_wiki_page ("Preview", "Preview")
 			l_wiki_page.get_structure (l_wiki_path)
 
 			create s.make_empty
@@ -538,7 +538,7 @@ feature -- Basic operation
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_manager: WDOCS_MANAGER; a_output: STRING)
 		local
 			l_xhtml: detachable STRING_8
-			wvis: WIKI_XHTML_GENERATOR
+			wvis: WDOCS_WIKI_XHTML_GENERATOR
 		do
 			create l_xhtml.make_empty
 

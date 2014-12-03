@@ -149,7 +149,7 @@ feature -- Basic operation
 			l_target_folder_path: PATH
 			d: DIRECTORY
 		do
-			create wp.make (a_title, a_parent.key)
+			create wp.make_with_title (a_title)
 			if attached a_parent.path as l_parent_path then
 				l_target_folder_path := wiki_folder_path (a_parent)
 				create d.make_with_path (l_target_folder_path)
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation: File system
 			l_name: STRING_32
 		do
 			if attached a_page.path as l_path then
-				if a_page.is_index_page then
+				if attached {WIKI_BOOK_PAGE} a_page as l_book_page and then l_book_page.is_index_page then
 					Result := l_path.parent
 				else
 					l_name := l_path.name

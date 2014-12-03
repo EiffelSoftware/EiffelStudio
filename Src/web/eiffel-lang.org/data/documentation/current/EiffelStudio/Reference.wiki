@@ -1,1 +1,4 @@
+[[Property:weight|10]]
+[[Property:title|Reference Page]]
+[[Category:reference]]
 EiffelStudio Reference Guide

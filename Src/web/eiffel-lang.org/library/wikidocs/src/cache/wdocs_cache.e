@@ -32,7 +32,7 @@ feature -- Status report
 						Result := True -- Always expires
 					elseif a_duration_in_seconds > 0 then
 						d1 := cache_date_time
-						create d2.make_now_utc
+						d2 := current_date_time
 						d2.second_add (- a_duration_in_seconds) --| do not modify `cache_date_time'
 						Result := d2 > d1 -- cached date + duration is older than current date
 					else
@@ -53,7 +53,7 @@ feature -- Access
 		end
 
 	cache_date_time: DATE_TIME
-			-- UTC date time for current cache if exists.
+			-- Date time for current cache if exists.
 		require
 			exists: exists
 		deferred
@@ -67,8 +67,13 @@ feature -- Access
 			d1, d2: DATE_TIME
 		do
 			d1 := cache_date_time
-			create d2.make_now_utc
+			d2 := current_date_time
 			Result := d2.relative_duration (d1).seconds_count
+		end
+
+	current_date_time: DATE_TIME
+			-- Current date time for relative duration with cache_date_time.
+		deferred
 		end
 
 feature -- Element change

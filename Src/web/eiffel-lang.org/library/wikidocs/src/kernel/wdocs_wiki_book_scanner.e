@@ -21,10 +21,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (wb: WIKI_BOOK)
+	make (wb: WIKI_BOOK; a_wdocs: WDOCS_MANAGER)
 		local
 			ut: FILE_UTILITIES
 		do
+			wdocs := a_wdocs
 			wiki_book := wb
 			create parent_pages.make (0)
 			create local_pages.make (0)
@@ -38,15 +39,22 @@ feature -- Access
 
 	wiki_book: WIKI_BOOK
 
+feature -- Settings
+
+	wdocs: WDOCS_MANAGER
+
 feature -- Visiting
 
 	process_directory (dn: PATH)
 		local
 			p: PATH
 			ut: FILE_UTILITIES
-			l_parent, l_index_page: detachable WIKI_PAGE
+			l_parent, l_index_page: detachable WIKI_BOOK_PAGE
 			l_name: STRING_32
+			l_old_current_directory: like current_directory
 		do
+			l_old_current_directory := current_directory
+			current_directory := dn
 			l_parent := parent_page
 			if not local_pages.is_empty then
 					-- Process previous pages for parent_page
@@ -80,7 +88,7 @@ feature -- Visiting
 				end
 				l_index_page := local_pages.item ("index")
 				if l_index_page = Void then
-					create l_index_page.make (l_name, l_name)
+					l_index_page := wdocs.new_wiki_page (l_name, l_name)
 					update_wiki_page (wiki_book, l_index_page, p, Void)
 					wiki_book.add_page (l_index_page)
 				end
@@ -112,6 +120,7 @@ feature -- Visiting
 --			else
 --				parent_page := Void
 --			end
+			current_directory := l_old_current_directory
 		ensure then
 			local_pages.is_empty
 		end
@@ -119,7 +128,7 @@ feature -- Visiting
 	process_file (fn: PATH)
 		local
 			pn: PATH
-			wp: WIKI_PAGE
+			wp: WIKI_BOOK_PAGE
 			l_name: STRING_32
 			wk, pk: detachable STRING
 		do
@@ -166,7 +175,8 @@ feature -- Visiting
 					end
 				end
 
-				create wp.make (l_name, pk)
+				wp := wdocs.new_wiki_page (l_name, pk)
+
 				update_wiki_page (wiki_book, wp, fn, parent_page)
 --				if attached parent_page as pp then
 --					wp.set_src (pp.parent_key + "/" + l_name)
@@ -178,7 +188,7 @@ feature -- Visiting
 			end
 		end
 
-	update_wiki_page (wb: WIKI_BOOK; wp: WIKI_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_PAGE)
+	update_wiki_page (wb: WIKI_BOOK; wp: WIKI_BOOK_PAGE; a_wp_path: PATH; a_parent: detachable WIKI_BOOK_PAGE)
 		require
 			a_wp_path_set: a_wp_path /= Void
 		local
@@ -188,9 +198,20 @@ feature -- Visiting
 			k: STRING_32
 		do
 			wp.set_path (a_wp_path)
-			if attached metadata (wp, Void) as md then
+			if attached page_metadata (wp, Void) as md then
 				if attached md.item ("weight") as l_weight and then l_weight.is_integer then
 					wp.set_weight (l_weight.to_integer)
+				end
+				if attached md.item ("title") as l_title and then not l_title.is_whitespace then
+					wp.set_title (l_title)
+				end
+				across
+					md as md_ic
+				loop
+					wp.set_metadata (md_ic.item, md_ic.key)
+				end
+				if wp.metadata ("link_title") = Void then
+					wp.set_metadata (wp.title, "link_title") -- Avoid multiple queries.
 				end
 			end
 
@@ -244,32 +265,50 @@ feature -- Status report
 
 	directory_excluded (dn: PATH): BOOLEAN
 			-- Is directory `dn' excluded?
+		local
+			ut: FILE_UTILITIES
+			l_name: READABLE_STRING_32
 		do
 			Result := Precursor (dn)
 			if not Result then
+				if attached dn.entry as e then
+					l_name := e.name
+				else
+					l_name := dn.name
+				end
 				if
-					attached dn.entry as e and then
-					e.name.starts_with ("_")
+					l_name.starts_with ("_")
+					or l_name.starts_with (".")
 				then
 					Result := True
+				elseif l_name.ends_with_general (".revs") then
+					if
+						attached current_directory as l_dir and then
+						ut.file_path_exists (l_dir.extended (l_name.head (l_name.count - 5)))
+					then
+							-- This is a folder to contains revisions to an associated wiki or related file.
+						Result := True
+					end
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	local_pages: STRING_TABLE [WIKI_PAGE]
+	current_directory: detachable PATH
 
-	parent_page: detachable WIKI_PAGE
+	local_pages: STRING_TABLE [WIKI_BOOK_PAGE]
+
+	parent_page: detachable WIKI_BOOK_PAGE
 		do
 			if not parent_pages.is_empty then
 				Result := parent_pages.item
 			end
 		end
 
-	parent_pages: ARRAYED_STACK [WIKI_PAGE]
+	parent_pages: ARRAYED_STACK [WIKI_BOOK_PAGE]
 
-	push_parent_page (wp: WIKI_PAGE)
+	push_parent_page (wp: WIKI_BOOK_PAGE)
 		do
 			parent_pages.force (wp)
 		ensure
@@ -284,31 +323,13 @@ feature {NONE} -- Implementation
 			parent_pages.remove
 		end
 
-	metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
+	page_metadata (pg: WIKI_PAGE; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
 			-- Metadata for page `pg',
 			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
-		local
-			md: WDOCS_METADATA_FILE
-			l_name: STRING_32
 		do
-			if attached pg.path as l_path then
-				if attached l_path.entry as e then
-					l_name := e.name
-					if l_name.ends_with_general (".wiki") then
-						l_name.remove_tail ((".wiki").count)
-						create md.make_with_path (l_path.parent.extended (l_name).appended_with_extension ("md"))
-						if not md.exists then
-							create md.make_with_path (l_path.parent.extended ("index").appended_with_extension ("md"))
-						end
-						if md.exists then
-							if a_restricted_names /= Void then
-								md.get_only_items_named_as (a_restricted_names)
-							end
-							Result := md
-						end
-					end
-				end
-			end
+				--| Note: do not use wdocs.page_metadata (...)
+				--| since it relies on `WIKI_PAGE.src' ...
+			Result := wdocs.page_metadata (pg, a_restricted_names)
 		end
 
 end

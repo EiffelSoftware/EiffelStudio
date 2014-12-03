@@ -31,6 +31,7 @@ feature -- Status report
 feature -- Access
 
 	cache_date_time: DATE_TIME
+			-- <Precursor>	
 		local
 			f: RAW_FILE
 		do
@@ -40,6 +41,12 @@ feature -- Access
 			else
 				create Result.make_now
 			end
+		end
+
+	current_date_time: DATE_TIME
+			-- <Precursor>
+		do
+			create Result.make_now
 		end
 
 	file_size: INTEGER

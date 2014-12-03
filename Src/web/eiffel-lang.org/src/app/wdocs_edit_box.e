@@ -10,6 +10,8 @@ class
 inherit
 	EV_SHARED_APPLICATION
 
+	WDOCS_DATA_ACCESS
+
 create
 	make,
 	make_embedded
@@ -583,7 +585,7 @@ feature -- Events
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_PAGE; a_manager: WDOCS_MANAGER; a_output: STRING)
 		local
 			l_xhtml: detachable STRING_8
-			wvis: WIKI_XHTML_GENERATOR
+			wvis: WDOCS_WIKI_XHTML_GENERATOR
 --			p: PATH
 --			d: DIRECTORY
 --			f: PLAIN_TEXT_FILE

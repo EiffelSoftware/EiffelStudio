@@ -177,8 +177,10 @@ feature -- Basic operation
 			create lnk.make ("[[" + wp.title + "]]")
 			if attached wdocs_control.new_wdocs_manager.link_to_wiki_url (lnk, wp) as u then
 				l_url := u
+			elseif attached {WIKI_BOOK_PAGE} wp as l_book_page then
+				l_url := "/book/" + l_book_page.parent_key + "/" + l_book_page.key
 			else
-				l_url := "/book/" + wp.parent_key + "/" + wp.key
+				l_url := "/book/" -- FIXME
 			end
 			if l_url.starts_with_general ("http:") or l_url.starts_with_general ("https:") then
 				wdocs_browser.open (l_url)
@@ -208,8 +210,10 @@ feature {NONE} -- Implementation
 		local
 			cfg: WDOCS_INI_CONFIG
 			wdocs: like wdocs_manager
+			lay: CMS_LAYOUT
 		do
-			create cfg.make (create {PATH}.make_from_string ("eiffel-lang-app.ini"))
+			create lay.make_default
+			create cfg.make (lay.config_path.extended ("eiffel-lang.ini"))
 			create wdocs.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
 			wdocs.set_server_url ("http://localhost:" + port_number.out)
 			wdocs_manager := wdocs

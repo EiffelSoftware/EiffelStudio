@@ -37,7 +37,6 @@ feature {NONE} -- Execution
     		--     `req.meta_variables' for the CGI meta variable
 			-- and `res' for output buffer
 		local
-			filter: WSF_AGENT_FILTER
 			m: WSF_PAGE_RESPONSE
 		do
 			if local_connection_restriction_enabled then

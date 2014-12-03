@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {WDOCS_METADATA_FILE}."
+	description: "Summary description for {WDOCS_METADATA_WIKI}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WDOCS_METADATA_FILE
+	WDOCS_METADATA_WIKI
 
 inherit
 	WDOCS_METADATA
@@ -44,17 +44,13 @@ feature -- Element change
 
 	reset
 		do
+			end_position_of_properties_area := 0
 			internal_items := Void
-		end
-
-	force (a_value: READABLE_STRING_32; a_key: READABLE_STRING_GENERAL)
-		do
-			items.force (a_value, a_key)
 		end
 
 feature -- Access
 
-	item (a_key: READABLE_STRING_GENERAL): detachable STRING_32
+	item (a_key: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- <Precursor>
 		do
 			Result := items.item (a_key)
@@ -64,6 +60,16 @@ feature -- Access
 			-- <Precursor>
 		do
 			Result := items.count
+		end
+
+	end_position_of_properties_area: INTEGER
+			-- the end position of the properties area, if any.
+
+feature -- Element change
+
+	force (a_value: READABLE_STRING_32; a_key: READABLE_STRING_GENERAL)
+		do
+			items.force (a_value, a_key)
 		end
 
 feature -- Access
@@ -80,6 +86,15 @@ feature -- Status report
 			-- Is metadata file exists?
 		do
 			Result := (create {FILE_UTILITIES}).file_path_exists (path)
+		end
+
+	has_metadata: BOOLEAN
+			-- Does current wiki file contains metadata as property?
+		do
+			if internal_items = Void then
+				get_all_items
+			end
+			Result := end_position_of_properties_area > 0
 		end
 
 feature {NONE} -- Implementation
@@ -106,32 +121,48 @@ feature {NONE} -- Implementation
 		local
 			utf: UTF_CONVERTER
 			f: RAW_FILE
-			k: STRING_8
+			n,v: detachable STRING_8
 			l_line: STRING_8
-			i: INTEGER
+			i,j,k: INTEGER
+			done: BOOLEAN
+			prop: WIKI_PROPERTY
 		do
 			create f.make_with_path (path)
 			if f.exists and then f.is_access_readable then
 				f.open_read
 				from
 				until
-					f.exhausted or f.end_of_file
+					f.exhausted or f.end_of_file or done
 				loop
+					n := Void
 					f.read_line_thread_aware
 					l_line := f.last_string
-					i := l_line.index_of ('=', 1)
-					if i > 0 then
-						k := utf.utf_32_string_to_utf_8_string_8 (l_line.head (i - 1))
-						k.left_adjust
-						k.right_adjust
-						if
-							a_restricted_names = Void
-							or else across a_restricted_names as ic some k.same_string_general (ic.item)  end
-						then
-							l_line.remove_head (i)
-							l_line.left_adjust
-							l_line.right_adjust
-							a_items.force (utf.utf_8_string_8_to_string_32 (l_line), k)
+					if not l_line.is_whitespace then
+						i := l_line.substring_index ("[[", 1)
+						if i = 0 then
+							done := True
+						else
+							if l_line.same_caseless_characters_general ("Property:", 1, 8, i + 2) then
+								j := i
+								i := i + 2 + 8
+								k := l_line.substring_index ("]]", i)
+								if k > 0 then
+									create prop.make (l_line.substring (j, k + 1))
+									end_position_of_properties_area := k + 1
+									n := prop.name
+									v := prop.text.text
+									if
+										a_restricted_names = Void
+										or else across a_restricted_names as ic some n.same_string_general (ic.item)  end
+									then
+										a_items.force (utf.utf_8_string_8_to_string_32 (v), n)
+									end
+								else
+									done := True
+								end
+							else
+								done := True
+							end
 						end
 					end
 				end

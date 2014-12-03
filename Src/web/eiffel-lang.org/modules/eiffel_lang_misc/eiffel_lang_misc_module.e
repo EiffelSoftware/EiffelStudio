@@ -250,7 +250,6 @@ feature {NONE} -- Helpers
 			-- Smarty content block for `a_block_id'
 		local
 			p: detachable PATH
-			vals: CMS_VALUE_TABLE
 		do
 			create p.make_from_string ("templates")
 			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")

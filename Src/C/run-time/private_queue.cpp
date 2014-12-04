@@ -69,13 +69,16 @@ priv_queue::register_wait(processor *client)
 void
 priv_queue::log_call(processor *client, call_data *call)
 {
-  bool will_sync = call_data_sync_pid (call) != NULL_PROCESSOR_ID;
+  spid_t l_sync_pid = call_data_sync_pid(call);
+  bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
+	  // NOTE: After this push(), call might be free'd,
+	  // therefore processor ID should be stored before it.
   push (pq_message (pq_message::e_normal, client, call));
 
   if (will_sync)
     {
-      processor *client = registry[call_data_sync_pid (call)];
+      processor *client = registry[l_sync_pid];
 
       call_stack_msg = client->result_notify.wait();
 

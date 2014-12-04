@@ -208,7 +208,7 @@ processor::notify_next(processor *client)
   std::queue <notify_token>::size_type n = token_queue.size();
   for (std::queue <notify_token>::size_type i = 0U; i < n && !token_queue.empty(); i++)
     {
-      std::queue <notify_token>::reference token = token_queue.front();
+      notify_token token = token_queue.front();
       token_queue.pop();
 
       if (token.client() == client)

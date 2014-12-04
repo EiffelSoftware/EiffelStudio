@@ -96,22 +96,26 @@ feature -- Access
 			l_book_name: READABLE_STRING_8
 			l_index_page,l_book_page: detachable WIKI_BOOK_PAGE
 		do
-			l_book_name := name
-			across
-				pages as ic
-			until
-				Result /= Void
-			loop
-				wp := ic.item
-				if wp.key.is_case_insensitive_equal_general ("index") then
-					l_index_page := wp
-					Result := wp
-				elseif wp.key.is_case_insensitive_equal_general (l_book_name) then
-					l_book_page := wp
-				end
-			end
+			Result := internal_root_page
 			if Result = Void then
-				Result := l_book_page
+				l_book_name := name
+				across
+					pages as ic
+				until
+					Result /= Void
+				loop
+					wp := ic.item
+					if wp.key.is_case_insensitive_equal_general ("index") then
+						l_index_page := wp
+						Result := wp
+					elseif wp.key.is_case_insensitive_equal_general (l_book_name) then
+						l_book_page := wp
+					end
+				end
+				if Result = Void then
+					Result := l_book_page
+				end
+				internal_root_page := Result
 			end
 		end
 
@@ -124,21 +128,30 @@ feature -- Access
 			l_book_name: like name
 			l_index_page,l_book_page: detachable WIKI_BOOK_PAGE
 		do
-			l_book_name := name
-			create Result.make (0)
-			across
-				pages as ic
-			loop
-				wp := ic.item
-				l_key := wp.key
-				if l_key.is_case_insensitive_equal_general (l_book_name) then
-					l_book_page := wp
-					--Result.force (wp)
-				elseif l_key.is_case_insensitive_equal_general ("index") then
-					l_index_page := wp
-					--Result.force (wp)
-				elseif wp.parent_key.is_case_insensitive_equal_general (l_book_name) then
-					Result.force (wp)
+			if attached root_page as rp and then attached rp.pages as rp_pages then
+				create Result.make (rp_pages.count)
+				across
+					rp_pages as ic
+				loop
+					Result.force (ic.item)
+				end
+			else
+				l_book_name := name
+				create Result.make (0)
+				across
+					pages as ic
+				loop
+					wp := ic.item
+					l_key := wp.key
+					if l_key.is_case_insensitive_equal_general (l_book_name) then
+						l_book_page := wp
+						--Result.force (wp)
+					elseif l_key.is_case_insensitive_equal_general ("index") then
+						l_index_page := wp
+						--Result.force (wp)
+					elseif wp.parent_key.is_case_insensitive_equal_general (l_book_name) then
+						Result.force (wp)
+					end
 				end
 			end
 		end
@@ -198,11 +211,16 @@ feature -- Access
 			Result := Result.appended_with_extension ("wiki")
 		end
 
+feature {NONE} -- Internal
+
+	internal_root_page: detachable like root_page
+
 feature -- Element change
 
 	add_page (a_page: WIKI_BOOK_PAGE)
 			-- Add page `a_page' to current book.
 		do
+			internal_root_page := Void
 			pages.extend (a_page)
 		end
 

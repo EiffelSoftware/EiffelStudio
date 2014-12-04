@@ -466,7 +466,7 @@ feature -- Events
 			create m.make_with_text ("Insert Wiki Image")
 			l_current_book_name := manager.current_book_name
 			across
-				manager.images_data.images_path_by_title_and_book as ic
+				manager.storage.images_path_by_title_and_book as ic
 			loop
 				if not ic.item.is_empty then
 					if ic.key.is_whitespace then
@@ -500,7 +500,7 @@ feature -- Events
 			create m.make_with_text ("Insert Wiki Template")
 			l_current_book_name := manager.current_book_name
 			across
-				manager.data.templates_path_by_title_and_book as ic
+				manager.storage.templates_path_by_title_and_book as ic
 			loop
 				if not ic.item.is_empty then
 					if ic.key.is_whitespace then

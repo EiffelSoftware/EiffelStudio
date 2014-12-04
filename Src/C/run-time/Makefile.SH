@@ -42,7 +42,6 @@ INSTALLDIR = $INSTALLDIR
 
 AR = ar rc
 CC = $cc
-CPP = $cpp $cppminus $cppflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
@@ -71,7 +70,7 @@ SED = $sed
 
 USRINC = $usrinc
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
-SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) x2c.c runtime_validation.c
+SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -95,7 +94,7 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
-CPPFLAGS = -std=c++11 -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
+CPPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
 LIB_SHARED= $(TOP)/ipc/shared
@@ -121,7 +120,9 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c offset.c main.c except.c
 
-EVEQSSRC = \
+WADD = debug.c interp.c update.c wbench.c
+
+MTADD_CPP = \
 	eif_utils.cpp \
 	eveqs.cpp \
 	processor_registry.cpp \
@@ -131,9 +132,9 @@ EVEQSSRC = \
 	queue_cache.cpp \
 	req_grp.cpp
 
-WADD = debug.c interp.c update.c wbench.c
-
-MTADD = scoop.c scoop_gc.c
+MTADD = \
+	scoop.c \
+	scoop_gc.c
 
 WOBJ = \
 	$(IDRS_OBJ) \
@@ -247,6 +248,14 @@ MT_WOBJ = \
 	MTwbench.o \
 	MTwscoop.o \
 	MTwscoop_gc.o \
+	MTweif_utils.o \
+	MTweveqs.o \
+	MTwprocessor_registry.o \
+	MTwnotify_token.o \
+	MTwprivate_queue.o \
+	MTwprocessor.o \
+	MTwqueue_cache.o \
+	MTwreq_grp.o \
 	MTwmalloc.o \
 	MTwgarcol.o \
 	MTwlocal.o \
@@ -297,6 +306,14 @@ MT_LOBJ = \
 	$(MTIDRS_OBJ) \
 	MTscoop.o \
 	MTscoop_gc.o \
+	MTeif_utils.o \
+	MTeveqs.o \
+	MTprocessor_registry.o \
+	MTnotify_token.o \
+	MTprivate_queue.o \
+	MTprocessor.o \
+	MTqueue_cache.o \
+	MTreq_grp.o \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
@@ -342,64 +359,6 @@ MT_LOBJ = \
 	MToffset.o \
 	MTmain.o \
 	MTexcept.o 
-
-MT_QS_LOBJ = \
-	$(MTIDRS_OBJ) \
-	MTqseif_utils.o \
-	MTqseveqs.o \
-	MTqsprocessor_registry.o \
-	MTqsnotify_token.o \
-	MTqsprivate_queue.o \
-	MTqsprocessor.o \
-	MTqsqueue_cache.o \
-	MTqsreq_grp.o \
-	MTqsscoop.o \
-	MTqsscoop_gc.o \
-	MTqsmalloc.o \
-	MTqsgarcol.o \
-	MTqslocal.o \
-	MTqsstore.o \
-	MTqsretrieve.o \
-	MTqshash.o \
-	MTqstraverse.o \
-	MTqshashin.o \
-	MTqstools.o \
-	MTqsinternal.o \
-	MTqsplug.o \
-	MTqscopy.o \
-	MTqsequal.o \
-	MTqslmalloc.o \
-	MTqsout.o \
-	MTqstimer.o \
-	MTqsurgent.o \
-	MTqssig.o \
-	MTqshector.o \
-	MTqscecil.o \
-	MTqsfile.o \
-	MTqsdir.o \
-	MTqsmisc.o \
-	MTqserror.o \
-	MTqsumain.o \
-	MTqsmemory.o \
-	MTqsmemory_analyzer.o \
-	MTqsargv.o \
-	MTqsboolstr.o \
-	MTqssearch.o \
-	MTqsrun_idr.o \
-	MTqspath_name.o \
-	MTqsobject_id.o \
-	MTqseif_threads.o \
-	MTqseif_project.o \
-	MTqsposix_threads.o \
-	MTqsgen_conf.o \
-	MTqseif_type_id.o \
-	MTqsrout_obj.o \
-	MTqsoption.o \
-	MTqscompress.o \
-	MTqsconsole.o \
-	MTqsoffset.o \
-	MTqsmain.o \
-	MTqsexcept.o 
 
 wmalloc.o: malloc.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
@@ -809,142 +768,6 @@ MTwexcept.o: except.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
-MTqsmalloc.o: malloc.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsgarcol.o: garcol.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqslocal.o: local.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsstore.o: store.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsretrieve.o: retrieve.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqshash.o: hash.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqstraverse.o: traverse.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqshashin.o: hashin.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqstools.o: tools.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsinternal.o: internal.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsplug.o: plug.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqscopy.o: copy.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsequal.o: equal.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqslmalloc.o: lmalloc.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsout.o: out.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqstimer.o: timer.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsurgent.o: urgent.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqssig.o: sig.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqshector.o: hector.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqscecil.o: cecil.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsfile.o: file.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsdir.o: dir.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsmisc.o: misc.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqserror.o: error.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsumain.o: umain.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsmemory.o: memory.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsmemory_analyzer.o: memory_analyzer.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsargv.o: argv.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsboolstr.o: boolstr.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqssearch.o: search.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsrun_idr.o: run_idr.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqspath_name.o: path_name.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsobject_id.o: object_id.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqseif_threads.o: eif_threads.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqseif_project.o: eif_project.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsposix_threads.o: posix_threads.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsgen_conf.o: gen_conf.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqseif_type_id.o: eif_type_id.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsrout_obj.o: rout_obj.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsoption.o: option.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqscompress.o: compress.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsconsole.o: console.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsoffset.o: offset.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsmain.o: main.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-MTqsexcept.o: except.c
-	       $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
-
 debug.o: debug.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -985,36 +808,54 @@ MTscoop_gc.o: scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
-MTqsscoop.o: scoop.c
-	$(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
+MTweif_utils.o: eif_utils.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTqsscoop_gc.o: scoop_gc.c
-	$(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
+MTweveqs.o: eveqs.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwprocessor_registry.o: processor_registry.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwnotify_token.o: notify_token.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwprivate_queue.o: private_queue.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwprocessor.o: processor.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwqueue_cache.o: queue_cache.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
+MTwreq_grp.o: req_grp.cpp
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 
-MTqseif_utils.o: eif_utils.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTeif_utils.o: eif_utils.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqseveqs.o: eveqs.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTeveqs.o: eveqs.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsprocessor_registry.o: processor_registry.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTprocessor_registry.o: processor_registry.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsnotify_token.o: notify_token.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTnotify_token.o: notify_token.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsprivate_queue.o: private_queue.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTprivate_queue.o: private_queue.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsprocessor.o: processor.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTprocessor.o: processor.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsqueue_cache.o: queue_cache.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTqueue_cache.o: queue_cache.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqsreq_grp.o: req_grp.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+MTreq_grp.o: req_grp.cpp
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
 
 all:: eif_size.h

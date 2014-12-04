@@ -5,7 +5,7 @@
 #include "../U/runtime.H"
 
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
-CPPFLAGS = -std=c++11 -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
+CPPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
 LIB_SHARED= $(TOP)/ipc/shared
@@ -34,7 +34,15 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c offset.c main.c except.c
 
-EVEQSSRC = \
+/*
+ * Files addedd only for workbench-type archive
+ */
+WADD = debug.c interp.c update.c wbench.c
+
+/*
+ * Files addedd only for multithreaded archive
+ */
+MTADD_CPP = \
 	eif_utils.cpp \
 	eveqs.cpp \
 	processor_registry.cpp \
@@ -44,15 +52,9 @@ EVEQSSRC = \
 	queue_cache.cpp \
 	req_grp.cpp
 
-/*
- * Files addedd only for workbench-type archive
- */
-WADD = debug.c interp.c update.c wbench.c
-
-/*
- * Files addedd only for multithreaded archive
- */
-MTADD = scoop.c scoop_gc.c
+MTADD = \
+	scoop.c \
+	scoop_gc.c
 
 /*
  * Files for workbench have a 'w' pre-pended if they already exist for
@@ -92,6 +94,9 @@ MT_WOBJ = \
 |expand f!$(MTADD)!
 	MTw!f:\.c=.o \
 -expand
+|expand f!$(MTADD_CPP)!
+	MTw!f:\.cpp=.o \
+-expand
 |expand f!$(LSRC)!
 	MTw!f:\.c=.o \
 -expand \\
@@ -104,24 +109,11 @@ MT_LOBJ = \
 |expand f!$(MTADD)!
 	MT!f:\.c=.o \
 -expand
+|expand f!$(MTADD_CPP)!
+	MT!f:\.cpp=.o \
+-expand
 |expand f!$(LSRC)!
 	MT!f:\.c=.o \
--expand \\
-
-
-/*
- * Object files for finalized run-time archive
- */
-MT_QS_LOBJ = \
-	$(MTIDRS_OBJ) \
-|expand f!$(EVEQSSRC)!
-	MTqs!f:\.cpp=.o \
--expand
-|expand f!$(MTADD)!
-	MTqs!f:\.c=.o \
--expand
-|expand f!$(LSRC)!
-	MTqs!f:\.c=.o \
 -expand \\
 
 
@@ -145,13 +137,6 @@ MTw!f:\.c=.o: !f
         $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 -expand
-
-|expand f!$(LSRC)!
-MTqs!f:\.c=.o: !f
-        $(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
-
--expand
-
 
 |expand f!$(WADD)!
 !f:\.c=.o: !f
@@ -177,32 +162,29 @@ MT!f:\.c=.o: !f
 
 -expand
 
-
-|expand f!$(MTADD)!
-MTqs!f:\.c=.o: !f
-	$(CC) -c $(JMTCFLAGS) -DSCOOPQS $? -o $@
+|expand f!$(MTADD_CPP)!
+MTw!f:\.cpp=.o: !f
+	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 -expand
 
-|expand f!$(EVEQSSRC)!
-MTqs!f:\.cpp=.o: !f
-	$(CPP) -c $(JMTCPPFLAGS) -DSCOOPQS $? -o $@
+|expand f!$(MTADD_CPP)!
+MT!f:\.cpp=.o: !f
+	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
 -expand
 
 
 NormalObjectRule()
 ShellScriptLongTarget(eif_size_h,eif_size.h)
-AddSource($(LSRC) $(WADD) $(MTADD))
+AddSource($(LSRC) $(WADD) $(MTADD) $(MTADD_CPP))
 
 CustomLibraryTarget(mtfinalized,$(MT_LOBJ))
-/* Uncomment when new SCOOP run-time compiles with old C++: CustomLibraryTarget(mtqsfinalized,$(MT_QS_LOBJ)) */
 CustomLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomLibraryTarget(finalized,$(LOBJ))
 CustomLibraryTarget(wkbench,$(WOBJ))
 
 CustomMTSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
-/* Uncomment when new SCOOP run-time compiles with old C++: CustomMTSharedLibraryTarget(mtqsfinalized,$(MT_QS_WOBJ)) */
 CustomMTSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomSharedLibraryTarget(finalized,$(LOBJ))
 CustomSharedLibraryTarget(wkbench,$(WOBJ))

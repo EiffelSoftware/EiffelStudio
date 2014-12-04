@@ -16,7 +16,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="main-qs" extends="main">
-		<setting name="eveqs" value="true"/>
-	</target>
 </system>

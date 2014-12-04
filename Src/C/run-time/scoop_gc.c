@@ -152,25 +152,10 @@ rt_shared void prepare_live_index ()
 			live_index_count++;
 		}
 	}
-
-#ifdef SCOOPQS
 	eveqs_enumerate_live ();
 	if (!live_index_count) {
 		update_live_index ();
 	}
-#else
-		/* Check if system is running with SCOOP manager. */
-	if (scp_mnger) {
-			/* Record live SCOOP processors. */
-		RTS_TCB(scoop_task_enumerate_live_processors,0,0,0);
-
-			/* Update live indexes for processors reported by SCOOP manager.
-			 * This step is postponed if there are already known live threads. */
-		if (!live_index_count) {
-			update_live_index ();
-		}
-	}
-#endif
 }
 
 /*
@@ -255,15 +240,7 @@ rt_shared void complement_live_index (void)
 }
 
 
-#ifdef SCOOPQS
 #define RTS_UNMARKED(pid) eveqs_unmarked(pid);
-#else
-#define RTS_UNMARKED(pid)															\
-	if (scp_mnger)																			\
-		{																									\
-			RTS_TCB(scoop_task_free_processor, pid, 0, 0);	\
-		}
-#endif
 
 /*
 doc:	<routine name="report_live_index" export="shared">

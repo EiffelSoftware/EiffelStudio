@@ -51,11 +51,7 @@ extern "C" {
 /* Separate calls */
 
 typedef struct call_data {
-#ifdef SCOOPQS
-	EIF_REFERENCE        target;          /* Target of a call */
-#else
-	EIF_OBJECT        target;          /* Target of a call */
-#endif
+	EIF_REFERENCE     target;          /* Target of a call */
 
 #ifdef WORKBENCH
 	BODY_INDEX        body_index;      /* Routine to be called */
@@ -76,25 +72,14 @@ typedef struct call_data {
 } call_data;
 
 #ifdef WORKBENCH
-#ifdef SCOOPQS
 #define eif_log_call(static_type_id, feature_id, current_pid, data)
 #define eif_log_callp(origin, offset, current_pid, data)
 #define eif_try_call(a)
 #else
-void eif_call_const (call_data * a);
-extern void eif_log_call (int routine_id, EIF_SCP_PID current_pid, call_data * data);
-extern void eif_log_callp (int origin, int offset, EIF_SCP_PID current_pid, call_data * data);
-extern void eif_try_call (call_data * a);
-#endif
-#else
-#ifdef SCOOPQS
-#define eif_log_call(p,a)                                               \
-  eveqs_call_on((EIF_SCP_PID)(p),                                       \
+#define eif_log_call(p,a)                                   \
+  eveqs_call_on((EIF_SCP_PID)(p),                           \
                 RTS_PID(((call_data*)(a))->target),         \
                 ((call_data*)(a)));
-#else
-#define eif_log_call(p,a) RTS_TCB(scoop_task_add_call,((EIF_SCP_PID)(p)),RTS_PID(eif_access (((call_data*)(a))->target)),((call_data*)(a)));
-#endif
 #define eif_try_call(a) ((call_data *)(a))->pattern (a);
 void eif_call_const (call_data * a);
 #endif

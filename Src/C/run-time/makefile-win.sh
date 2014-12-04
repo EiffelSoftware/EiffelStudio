@@ -132,7 +132,7 @@ WOBJECTS = $(WORKBENCH_OBJECTS) \
 	$(INDIR)wmain.$obj \
 	$(NETWORK)
 
-MT_COMMON_F_OBJECTS = \
+MT_OBJECTS = \
 	$(INDIR)MTlmalloc.$obj \
 	$(INDIR)MTmalloc.$obj \
 	$(INDIR)offset.$obj \
@@ -178,17 +178,10 @@ MT_COMMON_F_OBJECTS = \
 	$(INDIR)MTeif_type_id.$obj \
 	$(INDIR)MTrout_obj.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
-	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
-
-MT_FINAL_OBJECTS = $(MT_COMMON_F_OBJECTS) \
+	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib \
 	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTscoop.$obj \
 	$(INDIR)MTscoop_gc.$obj \
-
-MTQS_F_OBJECTS = $(MT_COMMON_F_OBJECTS) \
-	$(INDIR)MTqsgarcol.$obj \
-	$(INDIR)MTqsscoop.$obj \
-	$(INDIR)MTqsscoop_gc.$obj \
 	$(INDIR)MTeif_utils.$obj \
 	$(INDIR)MTeveqs.$obj \
 	$(INDIR)MTprocessor_registry.$obj \
@@ -199,10 +192,7 @@ MTQS_F_OBJECTS = $(MT_COMMON_F_OBJECTS) \
 	$(INDIR)MTreq_grp.$obj \
 	$(INDIR)MTmain.$obj
 
-MT_OBJECTS = $(MT_FINAL_OBJECTS) \
-	$(INDIR)MTmain.$obj
-
-MT_COMMON_W_OBJECTS = \
+MT_WOBJECTS = \
 	$(INDIR)MTwlmalloc.$obj \
 	$(INDIR)MTwmalloc.$obj \
 	$(INDIR)offset.$obj \
@@ -250,19 +240,11 @@ MT_COMMON_W_OBJECTS = \
 	$(INDIR)MTwgen_conf.$obj \
 	$(INDIR)MTweif_type_id.$obj \
 	$(INDIR)MTwrout_obj.$obj \
-	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
-
-MT_WORKBENCH_OBJECTS = $(MT_COMMON_W_OBJECTS) \
+	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib \
 	$(INDIR)MTwgarcol.$obj \
 	$(INDIR)MTinterp.$obj \
 	$(INDIR)MTwscoop.$obj \
-	$(INDIR)MTwscoop_gc.$obj
-
-MTQS_W_OBJECTS = $(MT_COMMON_W_OBJECTS) \
-	$(INDIR)MTqswgarcol.$obj \
-	$(INDIR)MTqsinterp.$obj \
-	$(INDIR)MTqswscoop.$obj \
-	$(INDIR)MTqswscoop_gc.$obj \
+	$(INDIR)MTwscoop_gc.$obj \
 	$(INDIR)MTweif_utils.$obj \
 	$(INDIR)MTweveqs.$obj \
 	$(INDIR)MTwprocessor_registry.$obj \
@@ -274,16 +256,11 @@ MTQS_W_OBJECTS = $(MT_COMMON_W_OBJECTS) \
 	$(INDIR)MTwmain.$obj \
 	$(MT_NETWORK)
 
-MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
-	$(INDIR)MTwmain.$obj \
-	$(MT_NETWORK)
-
 all:: eif_size.h
 all:: $output_libraries
 
 standard:: $(OUTDIR)finalized.$lib $(OUTDIR)wkbench.$lib
 mtstandard:: $(OUTDIR)mtfinalized.$lib $(OUTDIR)mtwkbench.$lib
-mtqsstandard:: $(OUTDIR)mtqsfinalized.$lib $(OUTDIR)mtqswkbench.$lib
 
 $(OUTDIR)finalized.$lib: $(OBJECTS)
 	$alib_line
@@ -297,12 +274,6 @@ $(OUTDIR)mtfinalized.$lib: $(MT_OBJECTS)
 $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
 	$alib_line
 
-$(OUTDIR)mtqsfinalized.$lib: $(MTQS_F_OBJECTS)
-	$alib_line
-
-$(OUTDIR)mtqswkbench.$lib: $(MTQS_W_OBJECTS)
-	$alib_line
-
 dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll
 
@@ -311,12 +282,6 @@ $(OUTDIR)mtwkbench.dll : $(MT_WOBJECTS)
 
 $(OUTDIR)mtfinalized.dll : $(MT_OBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS) $(DLL_LIBS)
-
-$(OUTDIR)mtqswkbench.dll : $(MTQS_W_OBJECTS)
-	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtqswkbench.lib $(MTQS_W_OBJECTS) $(DLL_LIBS)
-
-$(OUTDIR)mtqsfinalized.dll : $(MTQS_F_OBJECTS)
-	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtqsfinalized.lib $(MTQS_F_OBJECTS) $(DLL_LIBS)
 
 $(OUTDIR)wkbench.dll : $(WOBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS)  $(DLL_LIBS)
@@ -705,9 +670,6 @@ $(INDIR)MTexcept.$obj: $(RTSRC)except.c
 $(INDIR)MTfile.$obj: $(RTSRC)file.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)file.c
 
-$(INDIR)MTgarcol.$obj: $(RTSRC)garcol.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)garcol.c
-
 $(INDIR)MTgen_conf.$obj: $(RTSRC)gen_conf.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)gen_conf.c
 
@@ -717,19 +679,13 @@ $(INDIR)MTeif_type_id.$obj: $(RTSRC)eif_type_id.c
 $(INDIR)MTrout_obj.$obj: $(RTSRC)rout_obj.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)rout_obj.c
 
-$(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)scoop.c
-
-$(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)scoop_gc.c
-
-$(INDIR)MTqsgarcol.$obj: $(RTSRC)garcol.c
+$(INDIR)MTgarcol.$obj: $(RTSRC)garcol.c
 	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)garcol.c
 
-$(INDIR)MTqsscoop.$obj: $(RTSRC)scoop.c
+$(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
 	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop.c
 
-$(INDIR)MTqsscoop_gc.$obj: $(RTSRC)scoop_gc.c
+$(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop_gc.c
 
 $(INDIR)MTeif_utils.$obj: $(RTSRC)eif_utils.cpp
@@ -897,16 +853,16 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop_gc.c
 
-$(INDIR)MTqswgarcol.$obj: $(RTSRC)garcol.c
+$(INDIR)MTwgarcol.$obj: $(RTSRC)garcol.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)garcol.c
 
-$(INDIR)MTqsinterp.$obj: $(RTSRC)interp.c
+$(INDIR)MTinterp.$obj: $(RTSRC)interp.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)interp.c
 
-$(INDIR)MTqswscoop.$obj: $(RTSRC)scoop.c
+$(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop.c
 
-$(INDIR)MTqswscoop_gc.$obj: $(RTSRC)scoop_gc.c
+$(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop_gc.c
 
 $(INDIR)MTweif_utils.$obj: $(RTSRC)eif_utils.cpp

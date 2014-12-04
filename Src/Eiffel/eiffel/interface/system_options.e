@@ -588,17 +588,6 @@ feature -- Update
 			total_order_on_reals_set: total_order_on_reals = v
 		end
 
-feature -- EVE/Qs
-
-	use_eveqs: BOOLEAN
-			-- Shall new SCOOP run-time be used?
-
-	set_use_eveqs (b: BOOLEAN)
-			-- Set `use_eveqs' to `b'.
-		do
-			use_eveqs := b
-		end
-
 feature -- Status report
 
 	is_freeze_requested: BOOLEAN

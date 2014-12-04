@@ -360,8 +360,6 @@ feature {NONE} -- Implementation
 			Result.force (s_use_cluster_name_as_namespace)
 			Result.force (s_use_all_cluster_name_as_namespace)
 			Result.force (s_old_feature_replication)
-					-- Add EVE/Qs as a valid setting
-			Result.force (s_eveqs)
 		ensure
 			Result_not_void: Result /= Void
 		end

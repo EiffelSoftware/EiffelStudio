@@ -776,12 +776,6 @@ feature -- Access: concurrency setting
 			immediate_setting_concurrency_set: immediate_setting_concurrency = v
 		end
 
-	setting_eveqs: BOOLEAN
-			-- A flag that indicates whether the new SCOOP run-time has to be used.
-		do
-			Result := setting_boolean (s_eveqs)
-		end
-
 feature {NONE} -- Access: concurrency setting
 
 	setting_concurrency_name: ARRAY [READABLE_STRING_32]

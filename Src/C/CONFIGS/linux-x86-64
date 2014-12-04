@@ -231,7 +231,6 @@ mtldsharedflags="$ldsharedflags"
 mtlibs="$libs -pthread"
 
 mt_prefix='mt'
-qs_prefix='mtqs'
 mv='/bin/mv'
 prefix='lib'
 ranlib=':'

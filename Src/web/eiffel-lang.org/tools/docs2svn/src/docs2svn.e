@@ -92,7 +92,7 @@ feature -- Access
 
 	target_dir: PATH
 
-	wdocs: WDOCS_MANAGER
+	wdocs: DOCS2SVN_WDOCS_MANAGER
 
 feature -- Settings
 
@@ -169,7 +169,7 @@ feature -- Execution
 					end
 				end
 
-				if attached wd.data.templates_path_by_title_and_book as tpl_table then
+				if attached wd.storage.templates_path_by_title_and_book as tpl_table then
 					across
 						tpl_table as tb_ic
 					loop
@@ -203,7 +203,7 @@ feature -- Execution
 					end
 				end
 
-				if attached wd.data.images_path_by_title_and_book as img_table then
+				if attached wd.storage.images_path_by_title_and_book as img_table then
 					across
 						img_table as tb_ic
 					loop
@@ -331,8 +331,8 @@ feature -- Operation
 
 	prepare_documentation (wd: DOCS2SVN_WDOCS_MANAGER)
 		do
-			reuse_documentation_items (wd, "templates", wd.data.templates_path_by_title_and_book)
-			reuse_documentation_items (wd, "images", wd.data.images_path_by_title_and_book)
+			reuse_documentation_items (wd, "templates", wd.storage.templates_path_by_title_and_book)
+			reuse_documentation_items (wd, "images", wd.storage.images_path_by_title_and_book)
 		end
 
 	reuse_documentation_items (wd: DOCS2SVN_WDOCS_MANAGER; a_id: READABLE_STRING_8; a_table: STRING_TABLE [STRING_TABLE [PATH]])
@@ -348,13 +348,13 @@ feature -- Operation
 				a_table as tb_ic
 			loop
 				l_book_name := tb_ic.key
-				if l_book_name.is_case_insensitive_equal ({WDOCS_DATA}.common_book_name) then
+				if l_book_name.is_case_insensitive_equal ({WDOCS_PAGES_DATA}.common_book_name) then
 					l_common_table := tb_ic.item
 				end
 			end
 			if l_common_table = Void then
 				create l_common_table.make (0)
-				a_table.force (l_common_table, {WDOCS_DATA}.common_book_name)
+				a_table.force (l_common_table, {WDOCS_PAGES_DATA}.common_book_name)
 			end
 
 			across
@@ -376,7 +376,7 @@ feature -- Operation
 							a_table as itb_ic
 						loop
 							if
-								itb_ic.key.is_case_insensitive_equal ({WDOCS_DATA}.common_book_name)
+								itb_ic.key.is_case_insensitive_equal ({WDOCS_PAGES_DATA}.common_book_name)
 								or itb_ic.key = l_book_name
 							then
 									-- Skip

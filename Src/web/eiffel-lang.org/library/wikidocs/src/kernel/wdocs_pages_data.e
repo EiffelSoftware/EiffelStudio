@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {WDOCS_DATA}."
+	description: "Summary description for {WDOCS_PAGES_DATA}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WDOCS_DATA
+	WDOCS_PAGES_DATA
 
 inherit
 	WDOCS_DATA_I

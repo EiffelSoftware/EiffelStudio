@@ -10,8 +10,7 @@ class
 inherit
 	WDOCS_MANAGER
 		redefine
-			get_all_data,
-			book_from_index_file
+			initialize
 		end
 
 create
@@ -26,28 +25,29 @@ feature {NONE} -- Initialization
 			make (a_wiki_dir, a_version_id, a_tmp_dir)
 		end
 
-feature -- Access
-
-	book_from_index_file (a_book_id: READABLE_STRING_GENERAL; p: PATH): detachable WIKI_BOOK
-			-- <Precursor>
-		do
-			-- Do not use book.index for this purpose.
-		end
-
 feature -- Settings
+
+	metadata_extension: STRING
+		do
+			if attached {WDOCS_FS_STORAGE} storage as fs then
+				Result := fs.metadata_extension
+			else
+				Result := "data"
+			end
+		end
 
 	clear_cache_requested: BOOLEAN
 			-- Request trigger to clear cache?		
 
 feature {NONE} -- Implementation: data		
 
-	get_all_data
+	initialize
 		do
+			Precursor
 			if clear_cache_requested then
-				reset_data
+				refresh_data
 				clear_cache_requested := False
 			end
-			Precursor
 		end
 
 end

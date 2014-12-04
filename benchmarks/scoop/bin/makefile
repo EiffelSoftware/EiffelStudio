@@ -3,12 +3,6 @@ DEFAULT_OUTPUT=scoop_benchmark.csv
 OUTPUT=$(DEFAULT_OUTPUT)
 !ENDIF
 
-!IFDEF QS
-!IF "$(QS)" != "-qs"
-!ERROR Invalid value of the variable QS that is allowed to be either empty or equal to "-qs": "$(QS)"
-!ENDIF
-!ENDIF
-
 DO_MAKE=$(MAKE) -nologo
 
 EXE=.exe
@@ -26,7 +20,6 @@ all:
 	"echo".
 	"echo" Available settings:
 	"echo".
-	"echo"	^ ^ ^ QS=-qs - use new SCOOP run-time instead of the old one
 	"echo"	^ ^ ^ OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')
 
 action.echo:

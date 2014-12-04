@@ -3,12 +3,6 @@ ifndef OUTPUT
 OUTPUT=$(DEFAULT_OUTPUT)
 endif
 
-ifdef QS
-	ifneq "$(QS)" "-qs"
-		$(error Invalid value of the variable QS that is allowed to be either empty or equal to "-qs": "$(QS)")
-	endif
-endif
-
 ECHO_S=echo "
 ECHO_E="
 
@@ -29,7 +23,6 @@ all:
 	$(ECHO_S)$(ECHO_E)
 	$(ECHO_S)Available settings:$(ECHO_E)
 	$(ECHO_S)$(ECHO_E)
-	$(ECHO_S)	   QS=-qs - use new SCOOP run-time instead of the old one$(ECHO_E)
 	$(ECHO_S)	   OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')$(ECHO_E)
 
 action.echo:

@@ -1357,20 +1357,6 @@ feature {NONE} -- Implementation
 				system.set_use_all_cluster_as_namespace (True)
 			end
 
-			l_s := l_settings.item (s_eveqs)
-			if l_s /= Void then
-				if l_s.is_boolean then
-					system.set_use_eveqs (l_s.to_boolean)
-				else
-					create vd15
-					vd15.set_option_name (s_eveqs)
-					vd15.set_option_value (l_s)
-					Error_handler.insert_error (vd15)
-				end
-			else
-				system.set_use_eveqs (False)
-			end
-
 			Error_handler.checksum
 		end
 

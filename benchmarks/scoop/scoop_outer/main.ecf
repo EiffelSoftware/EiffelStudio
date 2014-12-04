@@ -7,7 +7,4 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="main" location=".\"/>
 	</target>
-	<target name="main-qs" extends="main">
-		<setting name="eveqs" value="true"/>
-	</target>
 </system>

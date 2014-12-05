@@ -75,7 +75,7 @@ feature -- Access
 							end
 						when ']' then
 							if i < n and then l_params [i + 1] = ']' then
-								if l_stack.item.same_string ("[[") then
+								if not l_stack.is_empty and then l_stack.item.same_string ("[[") then
 									-- Closing link
 									l_stack.remove
 								else
@@ -94,7 +94,7 @@ feature -- Access
 								l_split_positions.force (i)
 							else
 								if i < n and then l_params [i + 1] = '}' then
-									if l_stack.item.same_string ("{|") then
+									if not l_stack.is_empty and then l_stack.item.same_string ("{|") then
 											-- Closing table
 										l_stack.remove
 									else

@@ -69,7 +69,6 @@ feature -- Change
 	set_text (t: STRING)
 		local
 			i,n,p: INTEGER
-			tbls_level: INTEGER
 			r: detachable WIKI_TABLE_ROW
 			cl: detachable WIKI_TABLE_CELL
 			s: STRING
@@ -78,23 +77,57 @@ feature -- Change
 			l_style,l_caption: detachable STRING
 			l_modifier: detachable STRING
 			l_is_sep: BOOLEAN
+			l_stack: ARRAYED_STACK [READABLE_STRING_8]
 		do
 			create text.make (t)
 			from
+				create l_stack.make (1)
 				i := 1 + 2  -- 2="{|"
 				n := t.count - 2 --| skip last "|}"
 				create s.make_empty
 			until
 				i > n
 			loop
-				if tbls_level > 0 then
+				if not l_stack.is_empty then
 					if safe_character (t, i) = '|' and then safe_character (t, i+1) = '}' then
 						s.extend (t[i])
 						i := i + 1
 						s.extend (t[i])
-						tbls_level := tbls_level - 1
+						if not l_stack.is_empty and then l_stack.item.same_string ("table") then
+							l_stack.remove
+						else
+								-- closing table without starting table
+						end
 					elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '|' then
-						tbls_level := tbls_level + 1
+						l_stack.force ("table")
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
+					elseif safe_character (t, i) = ']' and then safe_character (t, i+1) = ']' then
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
+						if not l_stack.is_empty and then l_stack.item.same_string ("link") then
+							l_stack.remove
+						else
+								-- closing link without starting table
+						end
+					elseif safe_character (t, i) = '[' and then safe_character (t, i + 1) = '[' then
+						l_stack.force ("link")
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
+					elseif safe_character (t, i) = '}' and then safe_character (t, i+1) = '}' then
+						s.extend (t[i])
+						i := i + 1
+						s.extend (t[i])
+						if not l_stack.is_empty and then l_stack.item.same_string ("tpl") then
+							l_stack.remove
+						else
+								-- closing template without starting table
+						end
+					elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '{' then
+						l_stack.force ("tpl")
 						s.extend (t[i])
 						i := i + 1
 						s.extend (t[i])
@@ -102,7 +135,17 @@ feature -- Change
 						s.extend (t[i])
 					end
 				elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '|' then
-					tbls_level := tbls_level + 1
+					l_stack.force ("table")
+					s.extend (t[i])
+					i := i + 1
+					s.extend (t[i])
+				elseif safe_character (t, i) = '[' and then safe_character (t, i + 1) = '[' then
+					l_stack.force ("link")
+					s.extend (t[i])
+					i := i + 1
+					s.extend (t[i])
+				elseif safe_character (t, i) = '{' and then safe_character (t, i + 1) = '{' then
+					l_stack.force ("tpl")
 					s.extend (t[i])
 					i := i + 1
 					s.extend (t[i])

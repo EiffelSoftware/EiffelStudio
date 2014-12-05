@@ -226,12 +226,10 @@ feature -- Access
 	template_content (a_template: WIKI_TEMPLATE; a_page: detachable WIKI_PAGE): detachable STRING
 			-- Text content for template `a_template' in the context of `a_page' if precised.
 		local
-			db,p,pp,l_tpl_path: detachable PATH
-			d: DIRECTORY
+			db,p: detachable PATH
+			d: detachable DIRECTORY
 			f: RAW_FILE
-			s0,s1: STRING_32
 			l_template_path: detachable PATH
-			bak: INTEGER
 			l_book_name: detachable READABLE_STRING_GENERAL
 		do
 			if a_page /= Void then
@@ -244,25 +242,11 @@ feature -- Access
 				end
 				db := wiki_database_path
 				if p = Void then
-					p := db
+					d := directory_within ("_templates", db, db)
 				else
-					p := p.parent
+					d := directory_within ("_templates", p.parent, db)
 				end
-				s1 := p.name
-				from
-					pp := p
-					l_tpl_path := pp.extended ("_templates")
-					create d.make_with_path (l_tpl_path)
-				until
-					d.exists or pp.same_as (db) or pp.is_current_symbol
-				loop
-					bak := bak + 1
-					pp := pp.parent
-					l_tpl_path := pp.extended ("_templates")
-					create d.make_with_path (l_tpl_path)
-				end
-				s0 := pp.name
-				if d.exists then
+				if d /= Void and then d.exists then
 					if attached d.path.parent.entry as l_book_entry then
 						l_book_name := l_book_entry.name
 					else
@@ -895,6 +879,44 @@ feature {NONE} -- Storage: images
 		end
 
 feature {NONE} -- Helpers
+
+	directory_within (a_name: READABLE_STRING_GENERAL; a_path: PATH; a_root: detachable PATH): detachable DIRECTORY
+			-- Directory named `a_name' in a_path, or if `a_root' is set, search in parents until `a_root' is reached.
+		local
+			p: PATH
+			l_root: PATH
+			l_root_name: READABLE_STRING_32
+			l_path_name: READABLE_STRING_32
+			done: BOOLEAN
+		do
+			p := a_path.extended (a_name)
+			create Result.make_with_path (p)
+			if not Result.exists then
+				Result := Void
+					-- Search in parent until a_root is found.
+				if a_root /= Void then
+					l_root := a_root.absolute_path.canonical_path
+					l_root_name := l_root.name
+					l_path_name := a_path.absolute_path.canonical_path.name
+					if l_path_name.starts_with (l_root_name) then
+						from
+							done := False
+						until
+							done
+						loop
+							p := p.parent
+							create Result.make_with_path (p.extended (a_name))
+							done := Result.exists or else p.same_as (l_root) or p.is_current_symbol
+						end
+						if Result /= Void and then not Result.exists then
+							Result := Void
+						end
+					end
+				end
+			end
+		ensure
+			Result /= Void implies Result.exists
+		end
 
 	wiki_text_from_file (fn: PATH): detachable STRING
 		local

@@ -419,30 +419,25 @@ feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
 		local
-			wstr: WIKI_STRING
+			witem: WIKI_ITEM
 		do
 			if
 				attached template_resolver as r and then
 				attached r.content (a_template, current_page) as tpl
 			then
-				wstr := a_template.text (tpl)
-				wstr.process (Current)
+				witem := a_template.text (tpl)
+				witem.process (Current)
 			else
 				output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
 				output ("<strong>" + a_template.name + "</strong>: ")
-				if attached a_template.parameters_string as st then
-					st.process (Current)
+				if attached a_template.parameters as l_params then
+					across
+						l_params as ic
+					loop
+						visit_string (create {WIKI_STRING}.make (ic.item))
+					end
 				end
 				output ("</div>")
-			end
-			debug
-				output ("{{TEMPLATE %"" + a_template.name + "%"")
-				if attached a_template.parameters_string as str then
-					output (" => ")
-					str.process (Current)
-				end
-				output ("}}")
-				set_next_output_require_newline
 			end
 		end
 

@@ -124,9 +124,6 @@ feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
 		do
-			if attached a_template.parameters_string as pstr then
-				pstr.process (Current)
-			end
 		end
 
 feature -- Tag

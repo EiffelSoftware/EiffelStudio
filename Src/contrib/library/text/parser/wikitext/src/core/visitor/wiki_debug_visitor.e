@@ -287,13 +287,21 @@ feature -- Strings
 feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
+		local
+			l_key: STRING
 		do
 			output ("{{TEMPLATE %"" + a_template.name + "%"")
 			set_next_output_appended
-			if attached a_template.parameters_string as str then
+			if attached a_template.parameters as lst then
 				output (" => ")
 				set_next_output_appended
-				str.process (Current)
+				across
+					lst as ic
+				loop
+					l_key := ic.key.as_string_8
+					visit_raw_string (create {WIKI_RAW_STRING}.make (l_key + "="))
+					visit_string (create {WIKI_STRING}.make (ic.item))
+				end
 				set_next_output_appended
 			end
 			output ("}}")

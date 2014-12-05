@@ -189,8 +189,10 @@ feature -- Hooks
 						log.write_warning ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("download_options") and then
-			       a_response.request.path_info ~ "/download_options" then
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("download_options") and then
+				a_response.request.path_info.same_string ("/download_options")
+			then
 						-- FIXME: this relies on theme location, where it should rely on module assets location.
 						-- TODO
 				create p.make_from_string ("templates")

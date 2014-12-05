@@ -58,6 +58,19 @@ feature -- Access
 			Result := l_book_names
 		end
 
+	books_with_root_page: ITERABLE [WIKI_BOOK]
+			-- Available books filled with only the root page.	
+		local
+			l_books: like internal_books_with_root_page
+		do
+			l_books := internal_books_with_root_page
+			if l_books = Void then
+				l_books := new_books_with_root_page
+				internal_books_with_root_page := l_books
+			end
+			Result := l_books
+		end
+
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 			-- Book named `a_bookid' if any.
 		local
@@ -374,9 +387,11 @@ feature {NONE} -- Implementation
 
 	internal_book_names: detachable like book_names
 
+	internal_books_with_root_page: detachable like books_with_root_page
+
 feature {NONE} -- Implamentation: books
 
-	new_book_names: ARRAYED_LIST [READABLE_STRING_32]
+	new_books_with_root_page: ARRAYED_LIST [WIKI_BOOK]
 		local
 			p: PATH
 			d,l_dir: DIRECTORY
@@ -439,8 +454,17 @@ feature {NONE} -- Implamentation: books
 				-- Sort by name and weight
 			sort_books (wb_lst)
 
+			Result := wb_lst
+		end
+
+	new_book_names: ARRAYED_LIST [READABLE_STRING_32]
+		local
+			wb_lst: ITERABLE [WIKI_BOOK]
+		do
+			wb_lst := books_with_root_page
+
 				-- Records book names.
-			create Result.make (wb_lst.count)
+			create Result.make (3)
 			across
 				wb_lst as ic
 			loop

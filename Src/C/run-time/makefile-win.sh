@@ -680,37 +680,37 @@ $(INDIR)MTrout_obj.$obj: $(RTSRC)rout_obj.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)rout_obj.c
 
 $(INDIR)MTgarcol.$obj: $(RTSRC)garcol.c
-	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)garcol.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)garcol.c
 
 $(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
-	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)scoop.c
 
 $(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
-	$(CC) $(JMTCFLAGS) -DSCOOPQS $(RTSRC)scoop_gc.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)scoop_gc.c
 
 $(INDIR)MTeif_utils.$obj: $(RTSRC)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eif_utils.cpp
 
 $(INDIR)MTeveqs.$obj: $(RTSRC)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)eveqs.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)eveqs.cpp
 	
 $(INDIR)MTprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor_registry.cpp
 
 $(INDIR)MTnotify_token.$obj: $(RTSRC)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)notify_token.cpp
 
 $(INDIR)MTprivate_queue.$obj: $(RTSRC)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)private_queue.cpp
 
 $(INDIR)MTprocessor.$obj: $(RTSRC)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)processor.cpp
 
 $(INDIR)MTqueue_cache.$obj: $(RTSRC)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)queue_cache.cpp
 
 $(INDIR)MTreq_grp.$obj: $(RTSRC)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) -DSCOOPQS $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) $(RTSRC)req_grp.cpp
 
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c
@@ -853,41 +853,29 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop_gc.c
 
-$(INDIR)MTwgarcol.$obj: $(RTSRC)garcol.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)garcol.c
-
-$(INDIR)MTinterp.$obj: $(RTSRC)interp.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)interp.c
-
-$(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop.c
-
-$(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)scoop_gc.c
-
 $(INDIR)MTweif_utils.$obj: $(RTSRC)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)eif_utils.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eif_utils.cpp
 
 $(INDIR)MTweveqs.$obj: $(RTSRC)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)eveqs.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)eveqs.cpp
 
 $(INDIR)MTwprocessor_registry.$obj: $(RTSRC)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)processor_registry.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor_registry.cpp
 
 $(INDIR)MTwnotify_token.$obj: $(RTSRC)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)notify_token.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)notify_token.cpp
 
 $(INDIR)MTwprivate_queue.$obj: $(RTSRC)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)private_queue.cpp
 
 $(INDIR)MTwprocessor.$obj: $(RTSRC)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)processor.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)processor.cpp
 
 $(INDIR)MTwqueue_cache.$obj: $(RTSRC)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)queue_cache.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)queue_cache.cpp
 
 $(INDIR)MTwreq_grp.$obj: $(RTSRC)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH -DSCOOPQS $(RTSRC)req_grp.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $(RTSRC)req_grp.cpp
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

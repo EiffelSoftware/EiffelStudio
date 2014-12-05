@@ -301,11 +301,14 @@ feature -- Execution
 
 					create l_sorter.make (create {COMPARABLE_COMPARATOR [WDOCS_REVISION_INFO]})
 					l_sorter.sort (Result)
-				else
-					create l_rev.make (p)
-					l_rev.set_data (wdocs.metadata (l_rev.location, Void))
-					Result.force (l_rev)
+--				else
+--					create l_rev.make (p)
+--					l_rev.set_data (wdocs.metadata (l_rev.location, Void))
+--					Result.force (l_rev)
 				end
+				create l_rev.make (p)
+				l_rev.set_data (wdocs.metadata (l_rev.location, Void))
+				Result.force (l_rev)
 			end
 		end
 

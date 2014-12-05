@@ -985,9 +985,9 @@ border: 1px solid #a9a9a9;
 #content {
   display: inline;
   float: left;
-  margin-left: 10px;
+  margin-left: -100px;
   margin-right: 10px;
-  width: 660px;
+  width: 860px;
 }
 #content .holder {
   overflow: hidden;
@@ -1205,3 +1205,57 @@ border: 1px solid #a9a9a9;
   top: -5px;
 }
 
+
+/***********************/
+/*    Download         */   
+/***********************/
+
+.toggleDownload {
+  cursor: pointer;
+}
+
+
+table.download_decorator { margin-left: auto; margin-right: auto; border-style: none; text-align: left;}
+table.download_decorator td { padding-right: 10px; }
+
+
+table.download_decorator {
+      margin-left:0px; margin-right: 20px;
+      border-collapse: collapse;
+    
+}    table.download_decorator tr {
+      background-color: #f0f0f0;
+    }
+    table.download_decorator tr:nth-child(2n), table.download_decorator tr.first {
+      background-color: rgb(173, 201, 188);
+    }
+    table.download_decorator td, table.download_decorator th {
+      white-space: nowrap;
+      padding: 6px 10px;
+    }
+    table.download_decorator tt {
+      font-size: x-small;
+    }
+    table.download_decorator tr.highlight td {
+      font-weight: bold;
+    }
+
+    /* unvisited link */
+    table.download_decorator tr, a:link {
+        color: #000080;
+    }
+
+    /* visited link 
+     table.download_decorator tr, a:visited {
+        color: #006400  ;
+    } */
+
+    /* mouse over link */
+     table.download_decorator tr, a:hover {
+        color: #000000;
+    }
+
+    /* selected link 
+     table.download_decorator tr,a:active {
+        color: #0000FF;
+    }*/

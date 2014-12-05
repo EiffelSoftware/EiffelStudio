@@ -1,6 +1,10 @@
-						 <div>
-		  					<iframe class="container-codeboard" frameborder="0"  src="http://codeboard.io/projects/20" frameborder="20"></iframe>
-						</div>
+						{if isset=$home} 
+							 <div>
+			  					<iframe class="container-codeboard" frameborder="0"  src="http://codeboard.io/projects/20" frameborder="20"></iframe>
+							</div>
+						{/if}
+
+				
 						{if condition="False"}
 							<div class="column">
 								{include file="blocks/news-holder.tpl"/}

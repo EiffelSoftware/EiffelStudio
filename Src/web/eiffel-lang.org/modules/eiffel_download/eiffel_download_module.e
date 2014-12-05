@@ -53,6 +53,7 @@ feature -- Router
 		do
 			create Result.make (3)
 			Result.handle_with_request_methods ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), Result.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -134,7 +135,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"download_area">>
+			Result := <<"download_area","download_options">>
 			create l_string.make_empty
 			across Result as ic loop
 				l_string.append (ic.item)
@@ -151,6 +152,8 @@ feature -- Hooks
 			p: detachable PATH
 		do
 			log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
+				-- Download header
+				-- Todo extact Method
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
 				if a_response.is_front then
 						-- FIXME: this relies on theme location, where it should rely on module assets location.
@@ -186,10 +189,64 @@ feature -- Hooks
 						log.write_warning ("Error with block [" + a_block_id + "]")
 					end
 				end
+			elseif a_block_id.is_case_insensitive_equal_general ("download_options") and then
+			       a_response.request.path_info ~ "/download_options" then
+						-- FIXME: this relies on theme location, where it should rely on module assets location.
+						-- TODO
+				create p.make_from_string ("templates")
+					-- Note: template name harcoded.
+				p := p.extended ("block_download_options").appended_with_extension ("tpl")
+				p := a_response.module_resource_path (Current, p)
+				if p /= Void then
+					log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+					if attached p.entry as e then
+						create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
+					else
+						create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
+					end
+
+					create vals.make (5)
+					get_download_configuration (a_response.api)
+					if attached download_configuration as cfg then
+						vals.force (retrieve_product_gpl (cfg), "product")
+						vals.force (retrieve_mirror_gpl (cfg), "mirror")
+
+						across
+							vals as ic
+						loop
+							l_tpl_block.set_value (ic.item, ic.key)
+						end
+						if l_tpl_block /= Void then
+							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						else
+							log.write_debug (generator + ".get_block_view with template_block: Void")
+						end
+						a_response.add_block (l_tpl_block, "content")
+					else
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						log.write_warning ("Error with block [" + a_block_id + "]")
+					end
+				end
 			end
 		end
 
-feature -- Handler		
+feature -- Handler	
+
+	handle_download_options (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			b: STRING
+		do
+			log.write_debug (generator + ".handle_download_options")
+
+			if req.is_get_request_method then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			else
+				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.values.force ("download_options", "download_options")
+			r.execute
+		end
 
 	handle_download (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local

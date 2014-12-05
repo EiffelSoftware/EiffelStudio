@@ -1,7 +1,9 @@
 note
+	description: "Makefile generator for final mode C compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Makefile generator for final mode C compilation
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FINAL_MAKER
 
@@ -125,66 +127,74 @@ feature
 				cecil_basket.extend ("offset.o"); cecil_basket.finish
 			else
 				cecil_basket := cecil_rt_basket
-				cecil_basket.extend ("MTmalloc.o"); cecil_basket.finish
-				cecil_basket.extend ("MTgarcol.o"); cecil_basket.finish
-				cecil_basket.extend ("MTlocal.o"); cecil_basket.finish
-				cecil_basket.extend ("MTexcept.o"); cecil_basket.finish
-				cecil_basket.extend ("MTstore.o"); cecil_basket.finish
-				cecil_basket.extend ("MTretrieve.o"); cecil_basket.finish
-				cecil_basket.extend ("MThash.o"); cecil_basket.finish
-				cecil_basket.extend ("MTtraverse.o"); cecil_basket.finish
-				cecil_basket.extend ("MThashin.o"); cecil_basket.finish
-				cecil_basket.extend ("MTtools.o"); cecil_basket.finish
-				cecil_basket.extend ("MTinternal.o"); cecil_basket.finish
-				cecil_basket.extend ("MTplug.o"); cecil_basket.finish
-				cecil_basket.extend ("MTcopy.o"); cecil_basket.finish
-				cecil_basket.extend ("MTequal.o"); cecil_basket.finish
-				cecil_basket.extend ("MTlmalloc.o"); cecil_basket.finish
-				cecil_basket.extend ("MTout.o"); cecil_basket.finish
-				cecil_basket.extend ("MTtimer.o"); cecil_basket.finish
-				cecil_basket.extend ("MTurgent.o"); cecil_basket.finish
-				cecil_basket.extend ("MTsig.o"); cecil_basket.finish
-				cecil_basket.extend ("MThector.o"); cecil_basket.finish
-				cecil_basket.extend ("MTcecil.o"); cecil_basket.finish
-				cecil_basket.extend ("MTbits.o"); cecil_basket.finish
-				cecil_basket.extend ("MTfile.o"); cecil_basket.finish
-				cecil_basket.extend ("MTdir.o"); cecil_basket.finish
-				cecil_basket.extend ("MTmisc.o"); cecil_basket.finish
-				cecil_basket.extend ("MTerror.o"); cecil_basket.finish
-				cecil_basket.extend ("MTumain.o"); cecil_basket.finish
-				cecil_basket.extend ("MTmemory.o"); cecil_basket.finish
 				cecil_basket.extend ("MTargv.o"); cecil_basket.finish
 				cecil_basket.extend ("MTboolstr.o"); cecil_basket.finish
-				cecil_basket.extend ("MTsearch.o"); cecil_basket.finish
-				cecil_basket.extend ("MTmain.o"); cecil_basket.finish
-				cecil_basket.extend ("MTrun_idr.o"); cecil_basket.finish
+				cecil_basket.extend ("MTcecil.o"); cecil_basket.finish
 				cecil_basket.extend ("MTcompress.o"); cecil_basket.finish
 				cecil_basket.extend ("MTconsole.o"); cecil_basket.finish
-				cecil_basket.extend ("MTpath_name.o"); cecil_basket.finish
-				cecil_basket.extend ("MTobject_id.o"); cecil_basket.finish
-				cecil_basket.extend ("MToption.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_threads.o"); cecil_basket.finish
-				cecil_basket.extend ("MTgen_conf.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
-				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
+				cecil_basket.extend ("MTcopy.o"); cecil_basket.finish
+				cecil_basket.extend ("MTdir.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
+				cecil_basket.extend ("MTeif_threads.o"); cecil_basket.finish
+				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
+				cecil_basket.extend ("MTeif_utils.o"); cecil_basket.finish
+				cecil_basket.extend ("MTequal.o"); cecil_basket.finish
+				cecil_basket.extend ("MTerror.o"); cecil_basket.finish
+				cecil_basket.extend ("MTeveqs.o"); cecil_basket.finish
+				cecil_basket.extend ("MTexcept.o"); cecil_basket.finish
+				cecil_basket.extend ("MTfile.o"); cecil_basket.finish
+				cecil_basket.extend ("MTgarcol.o"); cecil_basket.finish
+				cecil_basket.extend ("MTgen_conf.o"); cecil_basket.finish
+				cecil_basket.extend ("MThash.o"); cecil_basket.finish
+				cecil_basket.extend ("MThashin.o"); cecil_basket.finish
+				cecil_basket.extend ("MThector.o"); cecil_basket.finish
 				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
-				cecil_basket.extend ("MTposix_threads.o"); cecil_basket.finish
-				cecil_basket.extend ("MTscoop.o"); cecil_basket.finish
+				cecil_basket.extend ("MTinternal.o"); cecil_basket.finish
+				cecil_basket.extend ("MTlmalloc.o"); cecil_basket.finish
+				cecil_basket.extend ("MTlocal.o"); cecil_basket.finish
+				cecil_basket.extend ("MTmain.o"); cecil_basket.finish
+				cecil_basket.extend ("MTmalloc.o"); cecil_basket.finish
+				cecil_basket.extend ("MTmemory.o"); cecil_basket.finish
 				cecil_basket.extend ("MTmemory_analyzer.o"); cecil_basket.finish
+				cecil_basket.extend ("MTmisc.o"); cecil_basket.finish
+				cecil_basket.extend ("MTnotify_token.o"); cecil_basket.finish
+				cecil_basket.extend ("MTobject_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MToffset.o"); cecil_basket.finish
+				cecil_basket.extend ("MToption.o"); cecil_basket.finish
+				cecil_basket.extend ("MTout.o"); cecil_basket.finish
+				cecil_basket.extend ("MTpath_name.o"); cecil_basket.finish
+				cecil_basket.extend ("MTplug.o"); cecil_basket.finish
+				cecil_basket.extend ("MTposix_threads.o"); cecil_basket.finish
+				cecil_basket.extend ("MTprivate_queue.o"); cecil_basket.finish
+				cecil_basket.extend ("MTprocessor.o"); cecil_basket.finish
+				cecil_basket.extend ("MTprocessor_registry.o"); cecil_basket.finish
+				cecil_basket.extend ("MTqueue_cache.o"); cecil_basket.finish
+				cecil_basket.extend ("MTreq_grp.o"); cecil_basket.finish
+				cecil_basket.extend ("MTretrieve.o"); cecil_basket.finish
+				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
+				cecil_basket.extend ("MTrun_idr.o"); cecil_basket.finish
+				cecil_basket.extend ("MTscoop.o"); cecil_basket.finish
+				cecil_basket.extend ("MTscoop_gc.o"); cecil_basket.finish
+				cecil_basket.extend ("MTsearch.o"); cecil_basket.finish
+				cecil_basket.extend ("MTsig.o"); cecil_basket.finish
+				cecil_basket.extend ("MTstore.o"); cecil_basket.finish
+				cecil_basket.extend ("MTtimer.o"); cecil_basket.finish
+				cecil_basket.extend ("MTtools.o"); cecil_basket.finish
+				cecil_basket.extend ("MTtraverse.o"); cecil_basket.finish
+				cecil_basket.extend ("MTumain.o"); cecil_basket.finish
+				cecil_basket.extend ("MTurgent.o"); cecil_basket.finish
 			end
-		end;
+		end
 
 	add_eiffel_objects
 			-- Add class C code objects.
 		local
-			a_class: CLASS_C;
-			types: TYPE_LIST;
-			cl_type: CLASS_TYPE;
-			file_name: STRING;
-			class_array: ARRAY [CLASS_C];
-			i, nb: INTEGER;
+			a_class: CLASS_C
+			types: TYPE_LIST
+			cl_type: CLASS_TYPE
+			file_name: STRING
+			class_array: ARRAY [CLASS_C]
+			i, nb: INTEGER
 			string_list: LINKED_LIST [STRING]
 		do
 			from
@@ -220,7 +230,7 @@ feature
 				end
 				i := i + 1
 			end
-		end;
+		end
 
 	run_time: STRING
 			-- Run time with which the application must be linked
@@ -255,7 +265,7 @@ feature
 			end
 
 			Result.append (boehm_library)
-		end;
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2014, Eiffel Software"

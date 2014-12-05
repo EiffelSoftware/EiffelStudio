@@ -235,7 +235,6 @@ feature -- Handler
 	handle_download_options (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			b: STRING
 		do
 			log.write_debug (generator + ".handle_download_options")
 

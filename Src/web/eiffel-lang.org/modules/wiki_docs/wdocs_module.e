@@ -204,7 +204,6 @@ feature -- Hooks
 		local
 			l_menublock: CMS_MENU_BLOCK
 			l_content_block: CMS_CONTENT_BLOCK
-			l_tpl_block: CMS_SMARTY_TEMPLATE_BLOCK
 			m: CMS_MENU
 			s: STRING
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
@@ -521,7 +520,6 @@ feature -- Handler
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
-			sb: CMS_SMARTY_TEMPLATE_BLOCK
 		do
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")

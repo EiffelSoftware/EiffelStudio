@@ -18,7 +18,7 @@ DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 
 CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
-CPPFLAGS = -I.
+CPPFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)network.$lib
 MT_NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)mtnetwork.$lib
 LIBNAME = ipc.$lib

@@ -14,6 +14,13 @@ feature -- Access
 		deferred
 		end
 
+	books_with_root_page: ITERABLE [WIKI_BOOK]
+			-- Available books filled with only the root page.
+		deferred
+		ensure
+			has_root_pages: across Result as ic all ic.item.root_page /= Void end
+		end
+
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 			-- Book named `a_bookid' if any.
 		deferred

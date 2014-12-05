@@ -194,9 +194,9 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"wdocs-tree">>
+			Result := <<"wdocs-tree", "wdocs-cards">>
 			debug ("wdocs")
-				Result := <<"wdocs-tree", "wdocs-page-info">>
+				Result := <<"wdocs-tree", "wdocs-cards", "wdocs-page-info">>
 			end
 		end
 
@@ -204,6 +204,7 @@ feature -- Hooks
 		local
 			l_menublock: CMS_MENU_BLOCK
 			l_content_block: CMS_CONTENT_BLOCK
+			l_tpl_block: CMS_SMARTY_TEMPLATE_BLOCK
 			m: CMS_MENU
 			s: STRING
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
@@ -213,61 +214,110 @@ feature -- Hooks
 				attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
 				l_type.is_case_insensitive_equal ("doc")
 			then
-				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_version_id") as t then
-					l_version_id := t
-				end
-				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
-					l_book_name := t
-				end
-				if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
-					l_page_name := t
-				end
 				if a_block_id /= Void then
+					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_version_id") as t then
+						l_version_id := t
+					end
 					mng := manager (l_version_id)
-					if a_block_id.same_string_general ("wdocs-tree") then
-						m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True, mng)
-						create l_menublock.make (m)
-						a_response.add_block (l_menublock, "sidebar_first")
-					elseif a_block_id.same_string_general ("wdocs-page-info") then
+					if a_block_id.same_string_general ("wdocs-cards") then
 						if
-							l_book_name /= Void and then l_page_name /= Void and then
-							attached mng.page (l_book_name, l_page_name) as wp
+							a_response.request.percent_encoded_path_info.starts_with ("/learn")
+							or a_response.request.percent_encoded_path_info.same_string ("/book/")
 						then
-							create s.make_empty
-							s.append ("<strong>title:</strong>")
-							s.append (wp.title)
-							s.append ("%N")
+							a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
+						end
+					else
+						if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
+							l_book_name := t
+						end
+						if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
+							l_page_name := t
+						end
 
-							s.append ("<strong>key:</strong>")
-							s.append (wp.key)
-							s.append ("%N")
-
-							s.append ("<strong>src:</strong>")
-							s.append (wp.src)
-							s.append ("%N")
-
-							if attached wp.path as l_path then
-								s.append ("<strong>path:</strong>")
-								s.append (l_path.name.as_string_8)
+						if a_block_id.same_string_general ("wdocs-tree") then
+							m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True, mng)
+							create l_menublock.make (m)
+							a_response.add_block (l_menublock, "sidebar_first")
+						elseif a_block_id.same_string_general ("wdocs-cards") then
+							if
+								a_response.request.percent_encoded_path_info.starts_with ("/learn")
+								or a_response.request.percent_encoded_path_info.same_string ("/book/")
+							then
+								a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
+							end
+						elseif a_block_id.same_string_general ("wdocs-page-info") then
+							if
+								l_book_name /= Void and then l_page_name /= Void and then
+								attached mng.page (l_book_name, l_page_name) as wp
+							then
+								create s.make_empty
+								s.append ("<strong>title:</strong>")
+								s.append (wp.title)
 								s.append ("%N")
-							end
 
-							if attached mng.page_metadata (wp, Void) as l_metadata then
-								across
-									l_metadata as ic
-								loop
-									s.append_string (ic.key.as_string_8)
-									s.append_character ('=')
-									s.append_string (ic.item.as_string_8)
-									s.append_character ('%N')
+								s.append ("<strong>key:</strong>")
+								s.append (wp.key)
+								s.append ("%N")
+
+								s.append ("<strong>src:</strong>")
+								s.append (wp.src)
+								s.append ("%N")
+
+								if attached wp.path as l_path then
+									s.append ("<strong>path:</strong>")
+									s.append (l_path.name.as_string_8)
+									s.append ("%N")
 								end
+
+								if attached mng.page_metadata (wp, Void) as l_metadata then
+									across
+										l_metadata as ic
+									loop
+										s.append_string (ic.key.as_string_8)
+										s.append_character ('=')
+										s.append_string (ic.item.as_string_8)
+										s.append_character ('%N')
+									end
+								end
+								create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
+								a_response.add_block (l_content_block, "sidebar_second")
 							end
-							create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
-							a_response.add_block (l_content_block, "sidebar_second")
 						end
 					end
 				else
 				end
+			end
+		end
+
+	wdocs_cards_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE; a_manager: WDOCS_MANAGER): CMS_BLOCK
+		local
+			tb: STRING_TABLE [WIKI_PAGE] -- book root page indexed by url
+			l_url: READABLE_STRING_8
+		do
+			if attached template_block (a_block_id, a_response) as l_tpl_block then
+				l_tpl_block.set_title (Void) --("Documentation")
+				l_tpl_block.set_is_raw (True)
+				create tb.make (5)
+				across
+					a_manager.books_with_root_page as book_ic
+				loop
+					if attached book_ic.item as l_book then
+						if attached a_manager.version_id as l_version_id then
+							l_url := a_response.request.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/book/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
+						else
+							l_url := a_response.request.script_url ("/book/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
+						end
+						if attached l_book.root_page as l_root_page then
+							tb.force (l_root_page, l_url)
+--						else
+--							tb.force (l_book, l_url)
+						end
+					end
+				end
+				l_tpl_block.set_value (tb, "root_pages_by_url")
+				Result := l_tpl_block
+			else
+				create {CMS_CONTENT_BLOCK} Result.make_raw (a_block_id, Void, "", Void)
 			end
 		end
 
@@ -455,7 +505,6 @@ feature -- Hooks
 					end
 					a_link.add_link (sub_ln)
 				end
-
 			end
 		end
 
@@ -472,6 +521,7 @@ feature -- Handler
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
+			sb: CMS_SMARTY_TEMPLATE_BLOCK
 		do
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
@@ -513,27 +563,28 @@ feature -- Handler
 			else
 --				r.set_optional_content_type ("doc")
 				r.set_value ("doc", "optional_content_type")
-				r.set_title ("Book list ...")
-				create b.make_from_string ("<ul class=%"books%">")
-				mnger := manager (l_version_id)
-				across
-					mnger.book_names as ic
-				loop
-					b.append ("<li>")
-					if l_version_id /= Void then
-						b.append ("<a href=%""+ req.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
-					else
-						b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
-					end
-					b.append (html_encoded (ic.item))
-					b.append ("</a>")
-					b.append ("</li>")
-				end
-				b.append ("</ul>")
+				r.set_title ("Documentation")
+				b := ""
+--				create b.make_from_string ("<ul class=%"books%">")
+--				mnger := manager (l_version_id)
+--				across
+--					mnger.book_names as ic
+--				loop
+--					b.append ("<li>")
+--					if l_version_id /= Void then
+--						b.append ("<a href=%""+ req.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
+--					else
+--						b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
+--					end
+--					b.append (html_encoded (ic.item))
+--					b.append ("</a>")
+--					b.append ("</li>")
+--				end
+--				b.append ("</ul>")
 			end
-			debug ("wdocs")
-				append_navigation_to (req, b)
-			end
+--			debug ("wdocs")
+--				append_navigation_to (req, b)
+--			end
 
 			r.set_main_content (b)
 			r.execute
@@ -1005,6 +1056,23 @@ feature {NONE} -- Implementation: date and time
 		end
 
 feature {NONE} -- Implementation		
+
+	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
+			-- Smarty content block for `a_block_id'
+		local
+			p: detachable PATH
+		do
+			create p.make_from_string ("templates")
+			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
+			p := a_response.module_resource_path (Current, p)
+			if p /= Void then
+				if attached p.entry as e then
+					create Result.make (a_block_id, Void, p.parent, e)
+				else
+					create Result.make (a_block_id, Void, p.parent, p)
+				end
+			end
+		end
 
 	append_info_to (n: READABLE_STRING_8; v: detachable READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; t: STRING)
 		do

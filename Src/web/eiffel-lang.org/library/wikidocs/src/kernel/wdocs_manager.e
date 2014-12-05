@@ -95,6 +95,12 @@ feature -- Access
 			Result := storage.book_names
 		end
 
+	books_with_root_page: ITERABLE [WIKI_BOOK]
+			-- Available books filled with only the root page.
+		do
+			Result := storage.books_with_root_page
+		end
+
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 			-- Book named `a_bookid' if any.
 		do

@@ -25,7 +25,7 @@
 #include "processor.hpp"
 #include <cassert>
 #include <eif_macros.h>
-#include <eif_scoop.h>
+#include "eif_scoop.h"
 #include <iostream>
 #include <stdlib.h>
 

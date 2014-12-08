@@ -43,6 +43,8 @@ feature -- Callback
 
 	template_resolver: detachable WIKI_TEMPLATE_RESOLVER assign set_template_resolver
 
+	file_resolver: detachable WIKI_FILE_RESOLVER assign set_file_resolver
+
 feature -- Callback change
 
 	set_link_resolver (r: like link_resolver)
@@ -58,6 +60,11 @@ feature -- Callback change
 	set_template_resolver (r: like template_resolver)
 		do
 			template_resolver := r
+		end
+
+	set_file_resolver (r: like file_resolver)
+		do
+			file_resolver := r
 		end
 
 feature -- Output
@@ -228,7 +235,7 @@ feature -- Processing
 				l_level := a_section.level
 				set_level (l_level)
 				unset_next_output_require_newline
-				output ("%N<h" + l_level.out + ">%N")
+				output ("%N<h" + l_level.out + ">")
 				t.process (Current)
 				output ("</h" + l_level.out + ">%N")
 				unset_next_output_require_newline
@@ -458,7 +465,9 @@ feature -- Tag
 			end
 			a_code.text.process (Current)
 			output ("</" + a_code.tag_name + ">")
-			ignore_next_newline
+			if not l_is_inline then
+				set_next_output_require_newline
+			end
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
@@ -548,6 +557,26 @@ feature -- Links
 			if not a_link.inlined then
 				set_next_output_require_newline
 			end
+		end
+
+	visit_file_link (a_link: WIKI_FILE_LINK)
+		local
+			l_url: detachable READABLE_STRING_8
+		do
+			if
+				attached file_resolver as r and then
+				attached r.file_url (a_link) as u
+			then
+				l_url := u
+			else
+				l_url := a_link.name
+			end
+			debug
+--				output ("#" + l_url + "#")
+			end
+			output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
+			a_link.text.process (Current)
+			output ("</a>")
 		end
 
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)

@@ -155,6 +155,12 @@ feature -- Links
 		deferred
 		end
 
+	visit_file_link (a_file: WIKI_FILE_LINK)
+		require
+			a_file_attached: a_file /= Void
+		deferred
+		end
+
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
 		require
 			a_link_attached: a_link /= Void

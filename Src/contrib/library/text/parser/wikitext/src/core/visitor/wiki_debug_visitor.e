@@ -383,6 +383,16 @@ feature -- Links
 			end
 		end
 
+	visit_file_link (a_link: WIKI_FILE_LINK)
+		do
+			output ("FILE("+ a_link.name + ", %"")
+			set_next_output_appended
+			a_link.text.process (Current)
+			set_next_output_appended
+			output ("%")")
+			set_next_output_appended
+		end
+
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
 		do
 			if a_link.inlined then

@@ -11,11 +11,11 @@
 //
 // EVE/Qs is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with EVE/Qs.  If not, see <http://www.gnu.org/licenses/>.
+// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
 //
 
 #ifndef _EIF_UTILS_H
@@ -96,32 +96,32 @@
 
 typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);
 
-void
-mark_call_data(marker_t mark, call_data* call);
+void mark_call_data(marker_t mark, call_data* call);
 
 class eif_block_token
 {
 public:
-  eif_block_token ()
-  {
-    EIF_ENTER_C;
-  }
+	eif_block_token ()
+	{
+		EIF_ENTER_C;
+	}
 
-  ~eif_block_token()
-  {
-    EIF_EXIT_C;
-    RTGC;
-  }
+	~eif_block_token()
+	{
+		EIF_EXIT_C;
+		RTGC;
+	}
 };
 
 
 class eif_lock : eif_block_token, public conditional_unique_lock_type
 {
 public:
-  eif_lock (conditional_mutex_type &mutex) :
-    eif_block_token (),
-    conditional_unique_lock_type (mutex)
-  {}
+	eif_lock (conditional_mutex_type &mutex) :
+		eif_block_token (),
+		conditional_unique_lock_type (mutex)
+	{
+	}
 };
 
 #endif // _EIF_UTILS_H

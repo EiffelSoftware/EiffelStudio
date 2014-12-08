@@ -11,11 +11,11 @@
 //
 // EVE/Qs is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with EVE/Qs.  If not, see <http://www.gnu.org/licenses/>.
+// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
 //
 
 #ifndef _NOTIFY_TOKEN_H
@@ -35,40 +35,40 @@ class processor;
 class notify_token
 {
 public:
-  /* Construct a notify token.
-   * @client the owner of the token
-   */
-  notify_token(processor *client);
+	/* Construct a notify token.
+	 * @client the owner of the token
+	 */
+	notify_token(processor *client);
 
-  /* Copy constructor.
-   * @other the token to copy.
-   */
-  notify_token(const notify_token& other);
+	/* Copy constructor.
+	 * @other the token to copy.
+	 */
+	notify_token(const notify_token& other);
 
-  /* Register with a new supplier.
-   * @supplier the new supplier to register with.
-   *
-   * This token is added to the notification list of the supplier.
-   */
-  void register_supplier (processor *supplier);
+	/* Register with a new supplier.
+	 * @supplier the new supplier to register with.
+	 *
+	 * This token is added to the notification list of the supplier.
+	 */
+	void register_supplier (processor *supplier);
 
-  /* Wait for a signal from any supplier.
-   */
-  void wait();
+	/* Wait for a signal from any supplier.
+	 */
+	void wait();
 
-  /* Wake the supplier assocated with this token
-   */
-  void notify(processor *client);
+	/* Wake the supplier assocated with this token
+	 */
+	void notify(processor *client);
 
-  /* The processor for which this token is <processor::my_token>.
-   *
-   * @return the client associated with this token.
-   */
-  processor *client() const;
+	/* The processor for which this token is <processor::my_token>.
+	 *
+	 * @return the client associated with this token.
+	 */
+	processor *client() const;
 
 private:
-  processor *client_;
-  shared_ptr_type <mpscq<processor*> > token_queue_;
+	processor *client_;
+	shared_ptr_type <mpscq<processor*> > token_queue_;
 };
 
 #endif // _NOTIFY_TOKEN_H

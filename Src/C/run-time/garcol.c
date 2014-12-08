@@ -86,7 +86,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_interp.h"
 #endif
 
-#include "eveqs.h"
+#include "scoop/eveqs.h"
 
 #ifdef __cplusplus
 extern "C" {

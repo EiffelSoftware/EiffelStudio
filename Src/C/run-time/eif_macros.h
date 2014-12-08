@@ -56,7 +56,7 @@
 #include "eif_gen_conf.h"
 #include "eif_rout_obj.h"
 #include "eif_option.h"
-#include "eif_scoop.h"
+#include "scoop/eif_scoop.h"
 
 #include "eveqs.h"
 

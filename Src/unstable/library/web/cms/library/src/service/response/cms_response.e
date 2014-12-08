@@ -911,7 +911,11 @@ feature -- Generation
 			-- Update the active status recursively on `a_comp'.
 		local
 			ln: CMS_LINK
+			l_comp_link: detachable CMS_LOCAL_LINK
 		do
+			if attached {CMS_LOCAL_LINK} a_comp as lnk then
+				l_comp_link := lnk
+			end
 			if attached a_comp.items as l_items then
 				across
 					l_items as ic
@@ -922,6 +926,11 @@ feature -- Generation
 					end
 					if (ln.is_expanded or ln.is_collapsed) and then attached {CMS_LINK_COMPOSITE} ln as l_comp then
 						recursive_get_active (l_comp, req)
+					end
+					if l_comp_link /= Void then
+						if ln.is_expanded or (not ln.is_expandable and ln.is_active) then
+							l_comp_link.set_expanded (True)
+						end
 					end
 				end
 			end

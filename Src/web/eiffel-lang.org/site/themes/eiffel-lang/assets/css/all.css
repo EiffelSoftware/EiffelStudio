@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  color: #6d8083;
+  color: #000000;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -985,7 +985,7 @@ border: 1px solid #a9a9a9;
 #content {
   display: inline;
   float: left;
-  margin-left: -100px;
+  margin-left: -10px;
   margin-right: 10px;
   width: 860px;
 }
@@ -1122,16 +1122,16 @@ border: 1px solid #a9a9a9;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
 .contribute-block ul li p {
-  color: #6d8083;
+  color: #000000;
 }
 
 #sidebar {
   display: inline;
   float: left;
-  margin-left: 10px;
+  margin-left: -150px;
   margin-right: 10px;
   width: 320px;
-  padding: 76px 0 0;
+  padding: 16px 0 0;
 }
 #sidebar .holder {
   padding: 0 0 0 56px;

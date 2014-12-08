@@ -5,7 +5,8 @@
 									<li><a href="{$site_url/}/about#">about</a></li>
 									<li><a href="{$site_url/}/learn">learn</a></li>
 									<li><a href="{$site_url/}/contribute">contribute</a></li>
-									<li><a href="{$site_url/}/download#">download</a>
+									<li><a href="{$site_url/}/download_options">download</a>
+                                        {if condition = "False"}
 										<div class="dropdown">
 											<ul>
 												<li><a href="#">Libraries</a></li>
@@ -17,9 +18,11 @@
 												<li><a href="#">Social Media</a></li>
 											</ul>
 										</div>
+									    {/if}	
 									</li>
 								</ul>
 							</nav>
+							{if condition = "False"}
 							<div class="header-right">
 								<nav class="add-links">
 									<ul>
@@ -37,6 +40,7 @@
 									<input type="search" placeholder="">
 								</form>
 							</div>
+							{/if}
 						</div>
 						{assign name="empty" value=""/}
 						{unless condition="$page.region_header ~ $empty"}

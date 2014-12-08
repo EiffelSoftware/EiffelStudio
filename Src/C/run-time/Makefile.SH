@@ -69,9 +69,9 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
+LSCRIPTS =  eif_size.h
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
-LSCRIPTS =  eif_size.h
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -794,67 +794,67 @@ MTwbench.o: wbench.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
-MTwscoop.o: scoop.c
+MTwscoop.o: scoop/scoop.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MTwscoop_gc.o: scoop_gc.c
+MTwscoop_gc.o: scoop/scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
-MTscoop.o: scoop.c
+MTscoop.o: scoop/scoop.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTscoop_gc.o: scoop_gc.c
+MTscoop_gc.o: scoop/scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
-MTweif_utils.o: eif_utils.cpp
+MTweif_utils.o: scoop/eif_utils.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTweveqs.o: eveqs.cpp
+MTweveqs.o: scoop/eveqs.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwprocessor_registry.o: processor_registry.cpp
+MTwprocessor_registry.o: scoop/processor_registry.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwnotify_token.o: notify_token.cpp
+MTwnotify_token.o: scoop/notify_token.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwprivate_queue.o: private_queue.cpp
+MTwprivate_queue.o: scoop/private_queue.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwprocessor.o: processor.cpp
+MTwprocessor.o: scoop/processor.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwqueue_cache.o: queue_cache.cpp
+MTwqueue_cache.o: scoop/queue_cache.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-MTwreq_grp.o: req_grp.cpp
+MTwreq_grp.o: scoop/req_grp.cpp
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 
-MTeif_utils.o: eif_utils.cpp
+MTeif_utils.o: scoop/eif_utils.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTeveqs.o: eveqs.cpp
+MTeveqs.o: scoop/eveqs.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTprocessor_registry.o: processor_registry.cpp
+MTprocessor_registry.o: scoop/processor_registry.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTnotify_token.o: notify_token.cpp
+MTnotify_token.o: scoop/notify_token.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTprivate_queue.o: private_queue.cpp
+MTprivate_queue.o: scoop/private_queue.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTprocessor.o: processor.cpp
+MTprocessor.o: scoop/processor.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTqueue_cache.o: queue_cache.cpp
+MTqueue_cache.o: scoop/queue_cache.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
-MTreq_grp.o: req_grp.cpp
+MTreq_grp.o: scoop/req_grp.cpp
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
 

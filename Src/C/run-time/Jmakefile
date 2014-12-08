@@ -151,25 +151,25 @@ MT!f:\.c=.o: !f
 -expand
 
 |expand f!$(MTADD)!
-MTw!f:\.c=.o: !f
+MTw!f:\.c=.o: scoop/!f
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 -expand
 
 |expand f!$(MTADD)!
-MT!f:\.c=.o: !f
+MT!f:\.c=.o: scoop/!f
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 -expand
 
 |expand f!$(MTADD_CPP)!
-MTw!f:\.cpp=.o: !f
+MTw!f:\.cpp=.o: scoop/!f
 	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 -expand
 
 |expand f!$(MTADD_CPP)!
-MT!f:\.cpp=.o: !f
+MT!f:\.cpp=.o: scoop/!f
 	$(CC) -c $(JMTCPPFLAGS) $? -o $@
 
 -expand

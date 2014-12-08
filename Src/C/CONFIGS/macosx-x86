@@ -166,7 +166,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC'
+	ccflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC -std=c99'
 fi
 ccldflags='-arch i386'
 if [ -n "$CPP" ]; then
@@ -177,7 +177,7 @@ fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
 else
-	cppflags="$ccflags"
+	cppflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC =std=c++11"
 fi
 cpp_stuff='42'
 defvoidused='15'
@@ -197,7 +197,7 @@ mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="-O3"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall -Wparentheses-equality'
+warning_level='-Wall -Wextra -Wno-unused-parameter -pedantic'
 wkoptimize="-O0"
 
 #Makefiles
@@ -236,7 +236,7 @@ shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.14.11'
-sharedlink='gcc'
+sharedlink=$cc
 suffix='.a'
 wkeiflib='wkbench'
 

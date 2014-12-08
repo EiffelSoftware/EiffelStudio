@@ -234,7 +234,8 @@ feature -- Hooks
 						end
 
 						if a_block_id.same_string_general ("wdocs-tree") then
-							m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True, mng)
+--							m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True, mng)
+							m := cached_wdocs_cms_menu (l_version_id, l_book_name, mng)
 							create l_menublock.make (m)
 							a_response.add_block (l_menublock, "sidebar_first")
 						elseif a_block_id.same_string_general ("wdocs-cards") then
@@ -342,6 +343,31 @@ feature -- Hooks
 			end
 			if l_page /= Void then
 				wdocs_append_pages_to_link (a_version_id, l_book_name, a_current_page_name, a_book.top_pages, Result, is_full, mng)
+			end
+		end
+
+	cached_wdocs_cms_menu (a_version_id, a_book_name: detachable READABLE_STRING_GENERAL; mng: WDOCS_MANAGER): CMS_MENU
+		local
+			c: WDOCS_FILE_OBJECT_CACHE [CMS_MENU]
+			p: PATH
+		do
+			p := mng.tmp_dir.extended ("cache").extended ("cms_menu__book__")
+			if a_version_id /= Void then
+				p := p.appended (a_version_id)
+				p := p.appended ("_")
+			end
+			if a_book_name /= Void then
+				p := p.appended (a_book_name)
+			else
+				p := p.appended ("all")
+			end
+			p := p.appended_with_extension ("cache")
+			create c.make (p)
+			if attached c.item as l_menu then
+				Result := l_menu
+			else
+				Result := wdocs_cms_menu (a_version_id, a_book_name, Void, True, mng)
+				c.put (Result)
 			end
 		end
 

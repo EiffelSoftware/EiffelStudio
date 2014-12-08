@@ -164,13 +164,13 @@ MT!f:\.c=.o: scoop/!f
 
 |expand f!$(MTADD_CPP)!
 MTw!f:\.cpp=.o: scoop/!f
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 -expand
 
 |expand f!$(MTADD_CPP)!
 MT!f:\.cpp=.o: scoop/!f
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 -expand
 

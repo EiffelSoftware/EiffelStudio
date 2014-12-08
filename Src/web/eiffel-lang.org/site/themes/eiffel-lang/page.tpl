@@ -30,12 +30,13 @@
 							{if isset="$page.region_content"}{$page.region_content/}{/if}
 						</div>
 							{/unless}
-						<aside>	
-							{if isset="$page.region_sidebar_second"}
-							<div class="holder">{$page.region_sidebar_second/}</div>
-							{/if}
-						</aside>
-
+						{if condition="False"}	
+							<aside>	
+								{if isset="$page.region_sidebar_second"}
+								<div class="holder">{$page.region_sidebar_second/}</div>
+								{/if}
+							</aside>
+                        {/if} 
 
 						{/unless}
 						

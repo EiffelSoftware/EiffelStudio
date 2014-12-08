@@ -57,8 +57,7 @@
 #include "eif_rout_obj.h"
 #include "eif_option.h"
 #include "scoop/eif_scoop.h"
-
-#include "eveqs.h"
+#include "scoop/eveqs.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"

@@ -161,6 +161,11 @@ feature -- Links
 			a_link.text.process (Current)
 		end
 
+	visit_file_link (a_link: WIKI_FILE_LINK)
+		do
+			a_link.text.process (Current)
+		end
+
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
 		do
 			a_link.text.process (Current)

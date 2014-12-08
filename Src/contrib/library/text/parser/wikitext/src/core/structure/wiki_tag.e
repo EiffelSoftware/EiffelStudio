@@ -13,7 +13,8 @@ inherit
 	DEBUG_OUTPUT
 
 create
-	make
+	make,
+	make_from_source
 
 feature {NONE} -- Initialization
 
@@ -40,6 +41,48 @@ feature {NONE} -- Initialization
 			text := s
 		end
 
+	make_from_source (s: STRING)
+		require
+			valid_code_string: s.starts_with_general ("<") and s.ends_with_general (">")
+		local
+			i,j,e: INTEGER
+			t,l_content: detachable STRING
+		do
+			i := s.index_of ('<', 1)
+			e := s.index_of ('>', i + 1)
+			if i = 0 or e = 0 then
+				check s_is_valid: False end
+				tag_name := default_tag_name
+				tag := "<" + tag_name + ">"
+				create text.make (s)
+			else
+				tag := s.substring (i, e)
+
+				from
+					j := i + 1
+				until
+					j >= e or s[j].is_space or s[j] = '/'
+				loop
+					j := j + 1
+				end
+				t := s.substring (i + 1, j - 1)
+				t.left_adjust
+				t.right_adjust
+				tag_name := t
+				if s[e-1] = '/' then
+					create {WIKI_STRING} text.make ("")
+				else
+					j := s.substring_index ("</"+ t +">", j + 1)
+					if j > 0 then
+						l_content := s.substring (e + 1, j - 1)
+					else
+						l_content := s.substring (e + 1, s.count)
+					end
+					create {WIKI_STRING} text.make (l_content)
+				end
+			end
+		end
+
 feature -- Access
 
 	tag: STRING
@@ -47,6 +90,11 @@ feature -- Access
 	tag_name: STRING
 
 	text: WIKI_STRING
+
+	default_tag_name: STRING
+		do
+			Result := "Missing-Tag-Name"
+		end
 
 feature -- Status report
 

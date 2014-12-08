@@ -116,6 +116,10 @@ feature -- Links
 		do
 		end
 
+	visit_file_link (a_link: WIKI_FILE_LINK)
+		do
+		end
+
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
 		do
 		end

@@ -92,7 +92,8 @@ feature -- Basic operation
 		local
 			i,n,ln,m: INTEGER
 			b: INTEGER --| Beginning of line
-			p: INTEGER
+			q: INTEGER
+			l_eol: INTEGER
 			is_start_of_line: BOOLEAN
 			c: CHARACTER
 			w_box: detachable WIKI_BOX [WIKI_ITEM]
@@ -124,7 +125,7 @@ feature -- Basic operation
 			loop
 				c := a_text.item (i)
 				if is_start_of_line then
-					p := index_of_end_of_line (a_text, i)
+					l_eol := index_of_end_of_line (a_text, i)
 					inspect c
 					when '-' then
 						w_plist := Void
@@ -137,12 +138,12 @@ feature -- Basic operation
 							add_element_box_to (w_psec, new_boxed_item (create {WIKI_LINE_SEPARATOR}))
 
 							w_box := new_paragraph (w_psec)
-							add_element_to (w_box, create {WIKI_LINE}.make (a_text.substring (i + 4, p)))
+							add_element_to (w_box, create {WIKI_LINE}.make (a_text.substring (i + 4, l_eol)))
 						end
 					when '=' then
 						w_block := Void
 						w_plist := Void
-						create w_sec.make (a_text.substring (i, p))
+						create w_sec.make (a_text.substring (i, l_eol))
 						if w_sec.is_valid then
 							if
 								w_sec.level > 1 and then
@@ -164,7 +165,7 @@ feature -- Basic operation
 					when '*','#',';',':' then
 						w_box := Void
 						w_block := Void
-						s := a_text.substring (i, p)
+						s := a_text.substring (i, l_eol)
 						w_list_item := new_list_item (s)
 						if
 							w_plist /= Void and then --| has previous section, check if is potential parent
@@ -189,9 +190,9 @@ feature -- Basic operation
 						w_box := Void
 						w_plist := Void
 						if w_block /= Void then
-							w_block.add_element (create {WIKI_LINE}.make (a_text.substring (i + 1, p)))
+							w_block.add_element (create {WIKI_LINE}.make (a_text.substring (i + 1, l_eol)))
 						else
-							create w_block.make (a_text.substring (i, p))
+							create w_block.make (a_text.substring (i, l_eol))
 							add_element_box_to (w_psec, w_block)
 						end
 						is_start_of_line := True
@@ -202,7 +203,7 @@ feature -- Basic operation
 					end
 
 					if is_start_of_line then
-						i := p + 1
+						i := l_eol + 1
 						b := i + 1
 						ln := ln + 1
 					end
@@ -212,13 +213,13 @@ feature -- Basic operation
 					if multiline_level > 0 then
 						-- Continue to next line ...
 						mt_ln := mt_ln + 1
-						p := index_of_end_of_line (a_text, i + 1)
+						l_eol := index_of_end_of_line (a_text, i + 1)
 						check w_plist = Void and w_block = Void end
 					else
 						w_plist := Void
 						w_block := Void
 						is_start_of_line := True
-						create w_line.make (a_text.substring (b, p))
+						create w_line.make (a_text.substring (b, l_eol))
 
 						if w_box = Void then
 							w_box := new_paragraph (w_psec)
@@ -294,7 +295,7 @@ feature -- Basic operation
 							m := a_text.substring_index ("-->", i + 4)
 							if m > 0 then
 								i := m + 3
-								p := index_of_end_of_line (a_text, i)
+								l_eol := index_of_end_of_line (a_text, i)
 							end
 						end
 					elseif safe_character (a_text, i + 1) = '/' then
@@ -308,20 +309,20 @@ feature -- Basic operation
 							i := i + 1 + l_tag.count + 1  --| /tag>
 						end
 					else
-						p := next_end_of_tag_character (a_text, i + 1)
-						if p > 0 then
-							if a_text[p-1] = '/' then
-								l_tag := tag_name_from (a_text.substring (i, p))
+						q := next_end_of_tag_character (a_text, i + 1)
+						if q > 0 then
+							if a_text[q-1] = '/' then
+								l_tag := tag_name_from (a_text.substring (i, q))
 								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
 								on_wiki_item_end_token (l_items, i + 1, "tag:" + l_tag)
-								if p > 0 then
-									i := p
+								if q > 0 then
+									i := q
 								else
 									check has_end_of_tag_character: False end
 									i := i + (l_tag).count + 1 + 1
 								end
 							else
-								l_tag := tag_name_from (a_text.substring (i, p))
+								l_tag := tag_name_from (a_text.substring (i, q))
 								if l_tag.is_empty then
 										-- ???
 								else
@@ -336,8 +337,8 @@ feature -- Basic operation
 										ignore_wiki := False
 									end
 									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
-									if p > 0 then
-										i := p
+									if q > 0 then
+										i := q
 									else
 										check has_end_of_tag_character: False end
 										i := i + (l_tag).count + 1
@@ -349,9 +350,27 @@ feature -- Basic operation
 						end
 					end
 				else
+
 				end
 				i := i + 1
 			end
+				-- Remaining entries.
+			if l_eol > b then
+				create w_line.make (a_text.substring (b, l_eol))
+				if w_box = Void then
+					w_box := new_paragraph (w_psec)
+				end
+				add_element_to (w_box, w_line)
+				if mt_ln > 0 then
+					w_line.set_line_count (mt_ln)
+					mt_ln := 0
+					ln := ln + 1 + mt_ln
+				else
+					ln := ln + 1
+				end
+				b := l_eol + 1
+			end
+
 			analyze_strings
 		end
 

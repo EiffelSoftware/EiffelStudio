@@ -53,8 +53,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-SOURCES =  \$(LSRC)
 OBJECTS =  \$(LOBJ)
+SOURCES =  \$(LSRC)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care

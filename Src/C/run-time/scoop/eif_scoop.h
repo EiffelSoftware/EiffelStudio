@@ -72,8 +72,7 @@ typedef struct call_data {
 } call_data;
 
 #ifdef WORKBENCH
-#define eif_log_call(static_type_id, feature_id, current_pid, data)
-#define eif_log_callp(origin, offset, current_pid, data)
+#define eif_log_call(rid, current_pid, data)
 #define eif_try_call(a)
 #else
 #define eif_log_call(p,a)                                   \

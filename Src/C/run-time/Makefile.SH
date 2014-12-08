@@ -42,6 +42,7 @@ INSTALLDIR = $INSTALLDIR
 
 AR = ar rc
 CC = $cc
+CPP = $cpp $cppminus $cppflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
@@ -69,8 +70,8 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
+SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -809,53 +810,53 @@ MTscoop_gc.o: scoop/scoop_gc.c
 
 
 MTweif_utils.o: scoop/eif_utils.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTweveqs.o: scoop/eveqs.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwprocessor_registry.o: scoop/processor_registry.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwnotify_token.o: scoop/notify_token.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwprivate_queue.o: scoop/private_queue.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwprocessor.o: scoop/processor.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwqueue_cache.o: scoop/queue_cache.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 MTwreq_grp.o: scoop/req_grp.cpp
-	$(CC) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
 
 MTeif_utils.o: scoop/eif_utils.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTeveqs.o: scoop/eveqs.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTprocessor_registry.o: scoop/processor_registry.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTnotify_token.o: scoop/notify_token.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTprivate_queue.o: scoop/private_queue.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTprocessor.o: scoop/processor.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTqueue_cache.o: scoop/queue_cache.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTreq_grp.o: scoop/req_grp.cpp
-	$(CC) -c $(JMTCPPFLAGS) $? -o $@
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 
 all:: eif_size.h

@@ -89,6 +89,12 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 
+			but := edit_button
+			but.select_actions.extend (agent on_edit_requested)
+			hb.extend (but)
+			but.set_minimum_width (consts.default_button_width)
+			but.disable_sensitive
+
 			but := delete_page_button
 			but.select_actions.extend (agent on_page_delete_requested)
 			hb.extend (but)
@@ -100,13 +106,6 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			but.set_minimum_width (consts.default_button_width)
 			but.disable_sensitive
-
-			but := edit_button
-			but.select_actions.extend (agent on_edit_requested)
-			hb.extend (but)
-			but.set_minimum_width (consts.default_button_width)
-			but.disable_sensitive
-
 		end
 
 feature -- Access

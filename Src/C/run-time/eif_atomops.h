@@ -37,13 +37,11 @@
 #ifndef _eif_atomops_h_
 #define _eif_atomops_h_
 
-#if defined(__SUNPRO_C)
-#	if defined (__SunOS_5_9)
-	// Atomic Operations are for Solaris 10 and above
-#	else
-#		include <sys/atomic.h>
-#		define __EIF_SUNPRO_C_ATOMOPS__
-#	endif
+#include "eif_config.h"
+
+#if EIF_OS == EIF_OS_SUNOS
+#	include <sys/atomic.h>
+#	define __EIF_SUNPRO_C_ATOMOPS__
 #endif
 
 #ifdef __cplusplus

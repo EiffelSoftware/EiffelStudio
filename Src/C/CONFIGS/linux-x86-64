@@ -214,7 +214,7 @@ else
 fi
 lintflags=''
 ldflags="-m elf_x86_64"
-ldsharedflags="$ldflags -shared -o"
+ldsharedflags="$ccldflags -shared -o"
 
 libs='-lm'
 
@@ -238,9 +238,9 @@ shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lm'
-mtsharedlibs='-lm -lpthread'
+mtsharedlibs='-lm -lpthread -lstdc++'
 sharedlibversion='.14.11'
-sharedlink='ld'
+sharedlink="$cc"
 suffix='.a'
 wkeiflib='wkbench'
 

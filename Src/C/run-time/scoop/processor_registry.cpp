@@ -26,7 +26,6 @@
 #include <cassert>
 #include <eif_macros.h>
 #include "eif_scoop.h"
-#include <iostream>
 #include <stdlib.h>
 
 processor_registry registry;

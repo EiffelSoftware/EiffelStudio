@@ -33,11 +33,11 @@ processor_registry registry;
 processor_registry::processor_registry () :
 	free_pids (MAX_PROCS)
 {
-	for (spid_t i = 1; i < MAX_PROCS; i++) {
+	for (EIF_SCP_PID i = 1; i < MAX_PROCS; i++) {
 		free_pids.enqueue (i);
 	}
 
-	for (spid_t i = 0; i < MAX_PROCS; i++) {
+	for (EIF_SCP_PID i = 0; i < MAX_PROCS; i++) {
 		procs [i] = NULL;
 	}
 
@@ -57,7 +57,7 @@ processor_registry::processor_registry () :
 
 processor* processor_registry::create_fresh (void* obj)
 {
-	spid_t pid = 0;
+	EIF_SCP_PID pid = 0;
 	processor *proc;
 
 	if (!free_pids.dequeue (pid)) {
@@ -85,7 +85,7 @@ processor* processor_registry::create_fresh (void* obj)
 	return proc;
 }
 
-processor* processor_registry::operator[] (spid_t pid)
+processor* processor_registry::operator[] (EIF_SCP_PID pid)
 {
 	assert (used_pids.has (pid));
 	processor *proc = procs[pid];
@@ -95,7 +95,7 @@ processor* processor_registry::operator[] (spid_t pid)
 
 void processor_registry::return_processor (processor *proc)
 {
-	spid_t pid = proc->pid;
+	EIF_SCP_PID pid = proc->pid;
 	if (used_pids.erase (pid)) {
 		delete proc;
 		procs [pid] = NULL;
@@ -120,7 +120,7 @@ void processor_registry::return_processor (processor *proc)
 // GC activities
 void processor_registry::enumerate_live ()
 {
-	for (spid_t i = 0; i < MAX_PROCS ; i++) {
+	for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
 		if (used_pids.has (i)) {
 			processor* proc = (*this) [i];
 		
@@ -137,7 +137,7 @@ void processor_registry::mark_all (marker_t mark)
 	bool f = false;
 
 	if (is_marking.compare_exchange_strong(f, true)) {
-		for (spid_t i = 0; i < MAX_PROCS ; i++) {
+		for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
 			if (used_pids.has (i)) {
 				processor *proc = (*this) [i];
 				proc->mark (mark);
@@ -148,7 +148,7 @@ void processor_registry::mark_all (marker_t mark)
 }
 
 
-void processor_registry::unmark (spid_t pid)
+void processor_registry::unmark (EIF_SCP_PID pid)
 {
 		// This is a callback from the GC, which will notify us
 		// of all unused processors, even those that have already been
@@ -165,7 +165,7 @@ void processor_registry::unmark (spid_t pid)
 
 void processor_registry::clear_from_caches (processor *proc)
 {
-	for (spid_t i = 0; i < MAX_PROCS ; i++) {
+	for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
 		if (used_pids.has (i)) {
 			procs[i]->cache.clear (proc);
 		}

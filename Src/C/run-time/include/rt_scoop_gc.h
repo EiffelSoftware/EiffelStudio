@@ -41,7 +41,7 @@
 #endif
 
 #include "eif_macros.h"
-#include "scoop/eif_scoop.h"
+#include "eif_scoop.h"
 
 #ifdef __cplusplus
 extern "C" {

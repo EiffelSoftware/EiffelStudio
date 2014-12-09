@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			ends_with_double_bracket: s.ends_with ("]]")
 		local
 			i, p, n: INTEGER
-			t,l_title: detachable STRING
+			t,l_value: detachable STRING
 			in_link: INTEGER -- depth
 			l_lower_name: like name
 		do
@@ -59,11 +59,11 @@ feature {NONE} -- Initialization
 					else
 						inspect s[p]
 						when '|' then
-							if l_title = Void or else l_title.is_empty then
-								l_title := t
+							if l_value = Void or else l_value.is_empty then
+								l_value := t
 							else
-								add_parameter (l_title)
-								l_title := t
+								add_parameter (l_value)
+								l_value := t
 							end
 							create t.make_empty
 						when '[' then
@@ -79,20 +79,12 @@ feature {NONE} -- Initialization
 					end
 					p := p + 1
 				end
-				if t.is_empty then
-					if l_title = Void or else l_title.is_empty then
-						text := wiki_raw_string (name)
-					else
-						text := wiki_raw_string (l_title)
-					end
-				else
-					if l_title /= Void then
-						add_parameter (l_title)
-					end
-					text := wiki_raw_string (t)
+				text := wiki_raw_string (t)
+				if l_value /= Void then
+					add_parameter (l_value)
 				end
 			else
-				text := wiki_raw_string (name)
+				text := wiki_raw_string ("")
 			end
 			l_lower_name := name.as_lower
 			i := l_lower_name.index_of (':', 1)

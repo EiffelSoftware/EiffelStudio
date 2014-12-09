@@ -1,0 +1,12 @@
+Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count
+chain,1,2520,2520,2520,,../scoop_chain/EIFGENs/main/F_code/main -i ../scoop_chain/test.in -bench,../scoop_chain,1,0
+chameneos,1,10786,10786,10786,,../scoop_chameneos/EIFGENs/main/F_code/main 300000,../scoop_chameneos,1,0
+condition,1,8031,8031,8031,,../scoop_condition/EIFGENs/main/F_code/main 18000 32,../scoop_condition,1,0
+mutex,1,211274,211274,211274,,../scoop_mutex/EIFGENs/main/F_code/main 500000 64,../scoop_mutex,1,0
+outer,1,1009,1009,1009,,../scoop_outer/EIFGENs/main/F_code/main -i ../scoop_outer/test.in -bench,../scoop_outer,1,0
+prodcons,1,25761,25761,25761,,../scoop_prodcons/EIFGENs/main/F_code/main 33000 32,../scoop_prodcons,1,0
+product,1,758,758,758,,../scoop_product/EIFGENs/main/F_code/main -i ../scoop_product/test.in -bench,../scoop_product,1,0
+randmat,1,758,758,758,,../scoop_randmat/EIFGENs/main/F_code/main -i ../scoop_randmat/test.in -bench,../scoop_randmat,1,0
+threadring,1,13778,13778,13778,,../scoop_threadring/EIFGENs/main/F_code/main 2100000 64,../scoop_threadring,1,0
+thresh,1,1259,1259,1259,,../scoop_thresh/EIFGENs/main/F_code/main -i ../scoop_thresh/test.in -bench,../scoop_thresh,1,0
+winnow,1,4529,4529,4529,,../scoop_winnow/EIFGENs/main/F_code/main -i ../scoop_winnow/test.in -bench,../scoop_winnow,1,0

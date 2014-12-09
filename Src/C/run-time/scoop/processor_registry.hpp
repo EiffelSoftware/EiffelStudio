@@ -38,7 +38,7 @@ public:
       }
   }
 
-  void add (spid_t pid)
+  void add (EIF_SCP_PID pid)
   {
     bool expected = false;
     if (proc_set [pid].compare_exchange_strong (expected, true))
@@ -47,12 +47,12 @@ public:
       }
   }
 
-  bool has (spid_t pid)
+  bool has (EIF_SCP_PID pid)
   {
     return proc_set [pid];
   }
 
-  bool erase (spid_t pid)
+  bool erase (EIF_SCP_PID pid)
   {
     bool result = proc_set [pid].exchange (false);
     if (result)
@@ -82,7 +82,7 @@ public:
   create_fresh (void* obj);
 
   processor*
-  operator[] (spid_t pid);
+  operator[] (EIF_SCP_PID pid);
 
   void
   return_processor (processor* proc);
@@ -96,7 +96,7 @@ public:
   mark_all (marker_t mark);
 
   void
-  unmark (spid_t pid);
+  unmark (EIF_SCP_PID pid);
 
   void
   wait_for_all();
@@ -104,7 +104,7 @@ public:
 private:
   processor* procs[MAX_PROCS];
   pid_set used_pids;
-  mpmc_bounded_queue<spid_t> free_pids;
+  mpmc_bounded_queue<EIF_SCP_PID> free_pids;
 
   // GC
 private:
@@ -123,7 +123,7 @@ private:
 };
 
 void
-call_on (spid_t client_pid, spid_t supplier_pid, void* data);
+call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
 
 
 extern processor_registry registry;

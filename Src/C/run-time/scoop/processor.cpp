@@ -32,7 +32,7 @@
 
 atomic_int_type active_count = atomic_var_init;
 
-processor::processor(spid_t _pid, bool _has_backing_thread) :
+processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	cache (this),
 	group_stack (),
 	my_token (this),
@@ -99,7 +99,7 @@ bool processor::try_call (call_data *call)
 
 void processor::operator()(processor *client, call_data* call)
 {
-	spid_t sync_pid = call_data_sync_pid (call);
+	EIF_SCP_PID sync_pid = call_data_sync_pid (call);
 
 	if (call_data_is_lock_passing (call)) {
 		cache.push (&client->cache);
@@ -144,7 +144,7 @@ void processor::process_priv_queue(priv_queue *pq)
 }
 
 
-void spawn_main(char* data, spid_t pid)
+void spawn_main(char* data, EIF_SCP_PID pid)
 {
 	processor *proc = registry [pid];
 	(void)data;

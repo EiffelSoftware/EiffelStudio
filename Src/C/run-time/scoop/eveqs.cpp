@@ -29,14 +29,14 @@ extern "C" {
 #endif
 
 // RTS_RC (o) - create request group for o
-void eveqs_req_grp_new (spid_t client_pid)
+void eveqs_req_grp_new (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.push_back (req_grp(client));
 }
 
 // RTS_RD (o) - delete chain (release locks?)
-void eveqs_req_grp_delete (spid_t client_pid)
+void eveqs_req_grp_delete (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().unlock();
@@ -44,14 +44,14 @@ void eveqs_req_grp_delete (spid_t client_pid)
 }
 
 // RTS_RF (o) - wait condition fails
-void eveqs_req_grp_wait (spid_t client_pid)
+void eveqs_req_grp_wait (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().wait();
 }
 
 // RTS_RS (c, s) - add supplier s to current group for c
-void eveqs_req_grp_add_supplier (spid_t client_pid, spid_t supplier_pid)
+void eveqs_req_grp_add_supplier (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -59,7 +59,7 @@ void eveqs_req_grp_add_supplier (spid_t client_pid, spid_t supplier_pid)
 }
 
 // RTS_RW (o) - sort all suppliers in the group and get exclusive access
-void eveqs_req_grp_lock (spid_t client_pid)
+void eveqs_req_grp_lock (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().lock();
@@ -79,7 +79,7 @@ void eveqs_processor_fresh (void *obj)
 // Call logging
 //
 
-void eveqs_call_on (spid_t client_pid, spid_t supplier_pid, void* data)
+void eveqs_call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data)
 {
 	call_data *call = (call_data*) data;
 	processor *client = registry [client_pid];
@@ -101,7 +101,7 @@ void eveqs_call_on (spid_t client_pid, spid_t supplier_pid, void* data)
 	}
 }
 
-int eveqs_is_synced_on (spid_t client_pid, spid_t supplier_pid)
+int eveqs_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -110,7 +110,7 @@ int eveqs_is_synced_on (spid_t client_pid, spid_t supplier_pid)
 	return pq->is_synced();
 }
 
-int eveqs_is_uncontrolled (spid_t client_pid, spid_t supplier_pid)
+int eveqs_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -122,7 +122,7 @@ int eveqs_is_uncontrolled (spid_t client_pid, spid_t supplier_pid)
 // Callback from garbage collector to indicate that the
 // processor isn't used anymore.
 //
-void eveqs_unmarked(spid_t pid)
+void eveqs_unmarked(EIF_SCP_PID pid)
 {
 	registry.unmark(pid);
 }

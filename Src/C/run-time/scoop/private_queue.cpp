@@ -62,7 +62,7 @@ void priv_queue::register_wait(processor *client)
 
 void priv_queue::log_call(processor *client, call_data *call)
 {
-	spid_t l_sync_pid = call_data_sync_pid(call);
+	EIF_SCP_PID l_sync_pid = call_data_sync_pid(call);
 	bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
 		// NOTE: After this push(), call might be free'd,

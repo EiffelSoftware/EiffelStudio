@@ -21,7 +21,7 @@
 #ifndef _INTERNAL_HPP
 #define _INTERNAL_HPP
 
-#define NULL_PROCESSOR_ID ((spid_t)-1)
+#define NULL_PROCESSOR_ID ((EIF_SCP_PID)-1)
 
 
 #endif /* __INTERNAL_HPP*/

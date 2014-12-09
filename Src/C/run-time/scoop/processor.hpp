@@ -99,7 +99,7 @@ public:
    *
    * The new processor will usually not yet have a thread backing it.
    */
-  processor(spid_t _pid,
+  processor(EIF_SCP_PID _pid,
             bool _has_backing_thread = false);
 
   ~processor();
@@ -215,7 +215,7 @@ public:
 
   /* The processor ID.
    */
-  spid_t pid;
+  EIF_SCP_PID pid;
 
 public:
   /* New private queue.

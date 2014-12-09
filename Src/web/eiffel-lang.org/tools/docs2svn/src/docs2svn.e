@@ -652,13 +652,18 @@ feature -- Operation
 	copy_text_file_from_to (f_src, f_target: RAW_FILE)
 		local
 			done: BOOLEAN
+			s: STRING
 		do
 			from
 			until
 				done
 			loop
 				f_src.read_line_thread_aware
-				f_target.put_string (f_src.last_string)
+				s := f_src.last_string
+				if s[s.count] = '%R' then
+					s.remove_tail (1)
+				end
+				f_target.put_string (s)
 				f_target.put_new_line
 				done := f_src.exhausted or f_src.end_of_file
 			end

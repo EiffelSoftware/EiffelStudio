@@ -515,12 +515,12 @@ border: 1px solid #a9a9a9;
 
 
 .btn-codeboard {
-  background-color: #769830;
-  background-image: -webkit-linear-gradient(top, #99cc33, #769830);
-  background-image: -moz-linear-gradient(top, #99cc33, #769830);
-  background-image: -ms-linear-gradient(top, #99cc33, #769830);
-  background-image: -o-linear-gradient(top, #99cc33, #769830);
-  background-image: linear-gradient(top, #99cc33, #769830);
+  background-color: #193653;
+  background-image: -webkit-linear-gradient(top, #304A64, #223648);
+  background-image: -moz-linear-gradient(top, #304A64, #223648);
+  background-image: -ms-linear-gradient(top, #304A64, #223648);
+  background-image: -o-linear-gradient(top, #304A64, #223648);
+  background-image: linear-gradient(top, #304A64, #223648);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   /*width: 263px;
@@ -546,12 +546,13 @@ border: 1px solid #a9a9a9;
 }
 
 .btn-codeboard:hover {
-  background-color: #6a8c28;
-  background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
-  background-image: -moz-linear-gradient(top, #89bc2b, #6a8c28);
-  background-image: -ms-linear-gradient(top, #89bc2b, #6a8c28);
-  background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
-  background-image: linear-gradient(top, #89bc2b, #6a8c28);
+  color: white;
+  background-color: #131E29;
+  background-image: -webkit-linear-gradient(top, #121232, #131E29);
+  background-image: -moz-linear-gradient(top, #121232, #131E29);
+  background-image: -ms-linear-gradient(top, #121232, #131E29);
+  background-image: -o-linear-gradient(top, #121232, #131E29);
+  background-image: linear-gradient(top, #121232, #131E29);
 }
 
 
@@ -904,8 +905,8 @@ border: 1px solid #a9a9a9;
   background-image: linear-gradient(top, #99cc33, #769830);
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  width: 200px;
-  height: 42px;
+  width: 100px;
+  height: 32px;
   display: block;
   margin: 0 0 0 -31px;
   color: white;
@@ -1259,3 +1260,16 @@ table.download_decorator {
      table.download_decorator tr,a:active {
         color: #0000FF;
     }*/
+
+
+/***********************************/
+/*   Link                          */
+/**********************************/
+
+a.link-options {
+  color: white;
+}  
+
+a.link-options:hover {
+  color: black;
+}     

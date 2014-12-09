@@ -120,7 +120,9 @@ feature -- Hooks
 					a_value.force ((create {CMS_LOCAL_LINK}.make ("download link", "download")), "link")
 				end
 
+
 				create l_ua.make_from_string (a_response.request.http_user_agent)
+				a_value.force (get_platform (l_ua), "platform")
 
 				if attached retrieve_product_gpl (cfg) as l_product then
 					if attached selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then

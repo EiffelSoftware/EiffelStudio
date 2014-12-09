@@ -86,8 +86,6 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_interp.h"
 #endif
 
-#include "eveqs.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -463,13 +461,6 @@ rt_private struct stack c_stack_object_set = {
 	(EIF_REFERENCE *) 0,	/* st_top */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
-
-
-	/* Signature of marking functions. They take the address where
-	 * reference is stored (to be updated by `mark_overflow_stack'
-	 * if we are too deep in the call stack) and return new location
-	 * of object. */
-typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
 
 #endif
 
@@ -1483,7 +1474,7 @@ rt_private void run_collector(void)
 
 #ifdef EIF_THREADS
 		/* Notify SCOOP manager about any unused processors. */
-	report_live_index ();
+	rt_report_live_index ();
 #endif
 
 #ifdef DEBUG
@@ -1510,12 +1501,11 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 #ifdef EIF_THREADS
 		/* Initialize list of live indexes for threads. */
 		/* This should be done before any marking. */
-	prepare_live_index ();
-	eveqs_mark_all(MARK_SWITCH);
-	if (!live_index_count)
-	  {
-	    update_live_index();
-	  }
+	rt_prepare_live_index ();
+	rt_mark_all_processors(MARK_SWITCH);
+	if (!live_index_count) {
+		rt_update_live_index();
+	}
 #endif
 
 		/* Perform marking */
@@ -1655,14 +1645,14 @@ rt_private void internal_marking(MARKER marking, int moving)
 #endif
 			}
 				/* Check if there are new live indexes. */
-			update_live_index ();
+			rt_update_live_index ();
 		}
 			/* Perform marking for dead indexes.
 			 * This slowdowns GC a bit, because objects, corresponding to dead processors
 			 * are not released immediately, but allows SCOOP manager to proceed normally
 			 * and manage threads in any suitable way, including reuse.
 			 */
-		complement_live_index ();
+		rt_complement_live_index ();
 	} else {
 			/* Partical GC: duplicate indexes to mark all processors. */
 		j = 0;
@@ -2575,7 +2565,9 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 marked: /* Goto label needed to avoid code duplication */
 
 			/* Mark associated SCOOP processor. */
-		RT_MARK_PROCESSOR(current);
+#ifdef EIF_THREADS
+		rt_mark_live_pid(RTS_PID(current));
+#endif
 
 		/* Now explore all the references of the current object.
 		 * For each object of type 'type', References(type) gives the number
@@ -2776,7 +2768,7 @@ rt_private void full_sweep(void)
 		) {
 			size = zone->ov_size;			/* Size and flags */
 			if (!(size & B_BUSY)) {
-					/* Object belongs to the free list (not busy).  */
+					/* Object belongs to the free list (not busy). */
 			} else if (size & B_C) {
 				/* Object is a C one.
 				 * However, any Eiffel object is marked during the marking phase and has
@@ -3049,7 +3041,7 @@ rt_private void init_plsc(void)
 
 /*
 doc:	<routine name="split_to_block" return_type="int" export="private">
-doc:		<summary>The `ps_to' space may  well not be full. Thus if `is_to_keep' is set to `0' then we will return the remaining part at the end to the free list, if `is_to_keep' is set to `1' then we will not return the end to the free list, it will be used for the next partial collection as the new `ps_to' zone. This routine is also responsible to set the B_LAST flag to the last block in `ps_to'.</summary>
+doc:		<summary>The `ps_to' space may well not be full. Thus if `is_to_keep' is set to `0' then we will return the remaining part at the end to the free list, if `is_to_keep' is set to `1' then we will not return the end to the free list, it will be used for the next partial collection as the new `ps_to' zone. This routine is also responsible to set the B_LAST flag to the last block in `ps_to'.</summary>
 doc:		<param name="is_to_keep" type="int">Is the remaining part of `ps_to' being kept for next partial collection?</param>
 doc:		<return>1 when block was split, 0 otherwise.</return>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
@@ -3980,12 +3972,11 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 #ifdef EIF_THREADS
 		/* Initialize list of live indexes for threads. */
 		/* This should be done before any marking. */
-	prepare_live_index ();
-	eveqs_mark_all(GEN_SWITCH);
-	if (!live_index_count)
-	  {
-	    update_live_index();
-	  }
+	rt_prepare_live_index ();
+	rt_mark_all_processors(GEN_SWITCH);
+	if (!live_index_count) {
+		rt_update_live_index();
+	}
 #endif
 
 	/* First deal with the root object. If it is not old, then mark it */

@@ -57,7 +57,6 @@
 #include "eif_rout_obj.h"
 #include "eif_option.h"
 #include "eif_scoop.h"
-#include "eveqs.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"
@@ -285,18 +284,18 @@ RT_LNK void eif_exit_eiffel_code(void);
 #ifdef ISE_GC
 #define RTLI(x) \
 	{ \
-		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) \
+		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) { \
 			loc_set.st_top += (x); \
-		else { \
+		} else { \
 			ol = l; \
 			l = eget(x); \
 		} \
 	}
 #define RTLE \
 	{ \
-		if (ol == (EIF_REFERENCE *) 0) \
+		if (ol == (EIF_REFERENCE *) 0) { \
 			loc_set.st_top = l; \
-		else { \
+		} else { \
 			eback(ol); \
 		} \
 	}
@@ -309,10 +308,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTXI(x) \
 	{ \
-		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) \
+		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) { \
 			loc_set.st_top += (x); \
-		else \
+		} else { \
 			l = eget(x); \
+		} \
 	}
 #define RTXE \
 	loc_set.st_cur = lc; \
@@ -587,8 +587,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
 	if (PResult) {                                                       \
 		Result = *PResult;                                           \
-	}                                                                    \
-	else {                                                               \
+	} else {                                                               \
 		PResult = RTOC(0);                                           \
 		MTOP(EIF_REFERENCE,OResult,PResult);                         \
 		Result = (value);                                            \
@@ -727,8 +726,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 					/* Evaluation has been started. */               \
 					/* Let it to complete.          */               \
 				RTOPW(mutex, thread_id);                                 \
-			}                                                                \
-			else {                                                           \
+			} else {                                                           \
 					/* Current thread has not started evaluation. */ \
 					/* It's safe to lock a mutex.                 */ \
 				RTOPL (mutex);                                           \
@@ -777,8 +775,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 						/* Raise the saved exception if any.*/					\
 				RTOPRE(failed);											\
 			}															\
-		}                                                                        \
-		else {                                                                   \
+		} else {                                                                   \
 				/* Mutex cannot be locked.      */                       \
 				/* Evaluation has been started. */                       \
 				/* Let it to complete.          */                       \
@@ -1124,7 +1121,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		hec_stack.st_cur = hc; \
 		if (hc) hec_stack.st_end = hc->sk_end; \
 		hec_stack.st_top = ht; \
-	}else if (hec_stack.st_top) { \
+	} else if (hec_stack.st_top) { \
 		hec_stack.st_cur = hec_stack.st_hd; \
 		hec_stack.st_top = hec_stack.st_cur->sk_arena; \
 		hec_stack.st_end = hec_stack.st_cur->sk_end; \
@@ -1150,7 +1147,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		loc_stack.st_cur = lsc; \
 		if (lsc) loc_stack.st_end = lsc->sk_end; \
 		loc_stack.st_top = lst; \
-	}else if (loc_stack.st_top) { \
+	} else if (loc_stack.st_top) { \
 		loc_stack.st_cur = loc_stack.st_hd; \
 		loc_stack.st_top = loc_stack.st_cur->sk_arena; \
 		loc_stack.st_end = loc_stack.st_cur->sk_end; \
@@ -1355,12 +1352,12 @@ RT_LNK void eif_exit_eiffel_code(void);
  * `eif_globals' should be reloaded after the restoration.
  */
 #define RTS_IMPERSONATE(pid)						\
-  {                                                                     \
-    EIF_ENTER_C;							\
-    eif_globals = (eif_global_context_t*) eif_thr_impersonate(pid);	\
-    EIF_EXIT_C;								\
-    RTGC;								\
-  }
+{                                                                     \
+	EIF_ENTER_C;							\
+	eif_globals = (eif_global_context_t*) eif_thr_impersonate(pid);	\
+	EIF_EXIT_C;								\
+	RTGC;								\
+}
 
 /*
  * Object status:
@@ -1369,7 +1366,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
 
-#define EIF_IS_SYNCED_ON(c,s) eveqs_is_synced_on (RTS_PID(c), RTS_PID(s))
+#define EIF_IS_SYNCED_ON(c,s) eif_is_synced_on (RTS_PID(c), RTS_PID(s))
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)))
 #define EIF_IS_DIFFERENT_PROCESSOR_FOR_QUERY(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)) && !(EIF_IS_SYNCED_ON(o1,o2)))
 
@@ -1377,7 +1374,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
 
 
-#define RTS_OU(c,o) ((o) && eveqs_is_uncontrolled (RTS_PID (c), RTS_PID (o)))
+#define RTS_OU(c,o) ((o) && eif_is_uncontrolled (RTS_PID (c), RTS_PID (o)))
 
 #define EIF_SET_ACTIVE(o) ; //  "SCOOP/Qs: set_active not implemented" o;
 #define EIF_SET_PASSIVE(o) ; //  "SCOOP/Qs: set_passive not implemented" o;
@@ -1387,7 +1384,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * Processor:
  * RTS_PA(o) - associate a fresh processor with an object o
  */
-#define RTS_PA(o) eveqs_processor_fresh (o);
+#define RTS_PA(o) eif_new_processor (o);
 
 /*
  * Request chain:
@@ -1399,11 +1396,11 @@ RT_LNK void eif_exit_eiffel_code(void);
  * The only valid sequence of calls is
  *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
  */
-#define RTS_RC(p) eveqs_req_grp_new(RTS_PID(p));
-#define RTS_RD(p) eveqs_req_grp_delete(RTS_PID(p));
-#define RTS_RF(p)   eveqs_req_grp_wait (RTS_PID(p));
-#define RTS_RS(p,s) eveqs_req_grp_add_supplier(RTS_PID(p), RTS_PID(s));
-#define RTS_RW(p) eveqs_req_grp_lock(RTS_PID(p));
+#define RTS_RC(p) eif_new_scoop_request_group(RTS_PID(p));
+#define RTS_RD(p) eif_delete_scoop_request_group(RTS_PID(p));
+#define RTS_RF(p)   eif_scoop_wait_request_group (RTS_PID(p));
+#define RTS_RS(p,s) eif_scoop_add_supplier_request_group(RTS_PID(p), RTS_PID(s));
+#define RTS_RW(p) eif_scoop_lock_request_group(RTS_PID(p));
 
 /*
  * Request chain stack:
@@ -1429,8 +1426,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		if (q && q < sep_stack.st_end) {                \
 			*q = p;                                 \
 			sep_stack.st_top = q + 1;               \
-		}                                               \
-		else {                                          \
+		} else {                                          \
 			eif_request_chain_push (p, &sep_stack); \
 			q = (EIF_REFERENCE *) 0;                \
 		}                                               \
@@ -1439,8 +1435,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_SRP(p) \
 	if (q == (EIF_REFERENCE *) 0) {             \
 		eif_request_chain_pop (&sep_stack); \
-	}                                           \
-	else {                                      \
+	} else {                                      \
 		sep_stack.st_top = q;               \
 	}
 #define RTS_SRF(p) {RTS_SRP (p); RTS_RF (p);}
@@ -1464,11 +1459,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 	{                                                         \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (rid, RTS_PID(Current), (call_data*) a);         \
+		eif_log_wcall (rid, RTS_PID(Current), (call_data*) a);         \
 	}
-#define RTS_CP(rid,n,t,a)  eif_log_call  (rid, RTS_PID(Current), (call_data*) a);
+#define RTS_CP(rid,n,t,a)  eif_log_wcall  (rid, RTS_PID(Current), (call_data*) a);
 
-#define RTS_CC(rid,d,a)  eif_log_call  (rid, RTS_PID(Current), (call_data*) a);
+#define RTS_CC(rid,d,a)  eif_log_wcall  (rid, RTS_PID(Current), (call_data*) a);
 #else /* WORKBENCH */
 #define RTS_CF(fptr,p,t,a,r) \
 	{                                                         \
@@ -1476,13 +1471,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CP(fptr,p,t,a) \
 	{                                                         \
 		((call_data*)(a)) -> feature.address = (fnptr) fptr; \
 		((call_data*)(a)) -> pattern = p;                 \
-		eif_log_call (RTS_PID(Current), (call_data*) a);               \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CC(fptr,p,t,a) RTS_CP(fptr,p,t,a)
 #define RTS_CA(o,p,t,a,r) \
@@ -1491,13 +1486,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CS(t,a) \
 	{                                                         \
 		((call_data*)(a)) -> pattern = eif_call_const;    \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #endif /* WORKBENCH */
 
@@ -1535,9 +1530,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 					}	\
 				}	\
-			}	\
-			else	\
-			{	\
+			} else {	\
 			  ((call_data*)(a)) -> argument [(n) - 1].it_r = (v);  	\
 			}	\
 		}
@@ -1550,7 +1543,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_AS(v,f,t,n,a)
 #endif
 
-#define RTS_WPR eveqs_wait_for_all();
+#define RTS_WPR eif_wait_for_all_processors();
 
 #define RTS_SEMAPHORE_CLIENT_WAIT(semaddr) EIF_ENTER_C; eif_pthread_sem_wait(semaddr); EIF_EXIT_C; RTGC;
 #define RTS_SEMAPHORE_SUPPLIER_SIGNAL(semaddr) eif_pthread_sem_post(semaddr);

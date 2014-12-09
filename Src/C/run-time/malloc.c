@@ -3965,7 +3965,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 
 	// Set SCOOP Processor if available.
 #ifdef EIF_THREADS
-	zone->ov_pid = (EIF_SCP_PID)(eif_thr_context->logical_id != -1 ? eif_thr_context->logical_id : 0);
+	zone->ov_pid = (eif_thr_context->logical_id != (EIF_SCP_PID) -1 ? eif_thr_context->logical_id : 0);
 #else
 	zone->ov_pid = (EIF_SCP_PID)0;
 #endif
@@ -4052,7 +4052,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 
 	// Set SCOOP Processor if available.
 #ifdef EIF_THREADS
-	zone->ov_pid = (EIF_SCP_PID)(eif_thr_context->logical_id != -1 ? eif_thr_context->logical_id : 0);
+	zone->ov_pid = (eif_thr_context->logical_id != (EIF_SCP_PID) -1 ? eif_thr_context->logical_id : 0);
 #else
 	zone->ov_pid = (EIF_SCP_PID)0;
 #endif

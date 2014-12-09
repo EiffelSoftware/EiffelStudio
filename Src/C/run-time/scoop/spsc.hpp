@@ -30,7 +30,9 @@
 
 #ifndef _SPSC_H
 #define _SPSC_H
+
 #include "eif_utils.hpp"
+#include "rt_scoop_gc.h"
 
 // load with 'consume' (data-dependent) memory ordering
 template<typename T>
@@ -219,14 +221,14 @@ public:
    * This queue may contain calls (for callbacks), so we have to be able
    * to mark it.
    */
-  void mark (marker_t mark)
+  void mark (MARKER marking)
   {
     for (struct spsc_queue_impl<T>::node* n = q.tail_->next_ ; n ; n = n->next_)
       {
 	call_data *call = n->value_.call;
         if (call)
           {
-            mark_call_data (mark, call);
+            rt_mark_call_data (marking, call);
           }
       }
   }

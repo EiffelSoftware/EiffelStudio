@@ -124,7 +124,6 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 WADD = debug.c interp.c update.c wbench.c
 
 MTADD_CPP = \
-	eif_utils.cpp \
 	eveqs.cpp \
 	processor_registry.cpp \
 	notify_token.cpp \
@@ -249,7 +248,6 @@ MT_WOBJ = \
 	MTwbench.o \
 	MTwscoop.o \
 	MTwscoop_gc.o \
-	MTweif_utils.o \
 	MTweveqs.o \
 	MTwprocessor_registry.o \
 	MTwnotify_token.o \
@@ -307,7 +305,6 @@ MT_LOBJ = \
 	$(MTIDRS_OBJ) \
 	MTscoop.o \
 	MTscoop_gc.o \
-	MTeif_utils.o \
 	MTeveqs.o \
 	MTprocessor_registry.o \
 	MTnotify_token.o \
@@ -809,9 +806,6 @@ MTscoop_gc.o: scoop/scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
-MTweif_utils.o: scoop/eif_utils.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
-
 MTweveqs.o: scoop/eveqs.cpp
 	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
@@ -833,9 +827,6 @@ MTwqueue_cache.o: scoop/queue_cache.cpp
 MTwreq_grp.o: scoop/req_grp.cpp
 	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
-
-MTeif_utils.o: scoop/eif_utils.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTeveqs.o: scoop/eveqs.cpp
 	$(CPP) -c $(JMTCPPFLAGS) $? -o $@

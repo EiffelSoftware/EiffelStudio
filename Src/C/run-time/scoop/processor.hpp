@@ -28,7 +28,6 @@
 #include "private_queue.hpp"
 #include "req_grp.hpp"
 #include "spsc.hpp"
-#include "eveqs.h"
 #include "notify_token.hpp"
 #include "queue_cache.hpp"
 
@@ -183,7 +182,7 @@ public:
   /* Marks the processor's <priv_queues>
    * @mark The specific marking routine.
    */
-  void mark (marker_t mark);
+  void mark (MARKER marking);
 
 public:
   /* A result notifier.

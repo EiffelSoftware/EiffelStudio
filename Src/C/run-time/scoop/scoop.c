@@ -70,8 +70,6 @@ rt_public void eif_free_call (call_data * a)
 			eif_unsafe_wean ((EIF_OBJECT) v -> it_r);
 		}
 	}
-		/* Unprotect target of a call. */
-	eif_unsafe_wean (a -> target);
 		/* Free memory, allocated for `a'. */
 	eif_rt_xfree (a);
 }

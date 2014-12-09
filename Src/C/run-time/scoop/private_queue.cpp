@@ -18,7 +18,6 @@
 // along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "eveqs.h"
 #include "internal.hpp"
 #include "processor.hpp"
 #include "processor_registry.hpp"
@@ -100,11 +99,11 @@ void priv_queue::unlock()
 	}
 }
 
-void priv_queue::mark(marker_t mark)
+void priv_queue::mark(MARKER marking)
 {
-	spsc <pq_message>::mark (mark);
+	spsc <pq_message>::mark (marking);
 
 	if (call_stack_msg.call) {
-		mark_call_data (mark, call_stack_msg.call);
+		rt_mark_call_data (marking, call_stack_msg.call);
 	}
 }

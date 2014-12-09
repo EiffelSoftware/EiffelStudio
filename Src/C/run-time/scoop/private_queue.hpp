@@ -162,7 +162,7 @@ public:
    * so that the target and arguments of the calls in the call data
    * (which is here outside the view of the runtime) will not be collected.
    */
-  void mark (marker_t mark);
+  void mark (MARKER marking);
 
 private:
   notify_message call_stack_msg;

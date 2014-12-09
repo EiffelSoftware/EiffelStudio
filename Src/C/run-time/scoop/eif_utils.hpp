@@ -20,7 +20,8 @@
 
 #ifndef _EIF_UTILS_H
 #define _EIF_UTILS_H
-#include "eif_macros.h"
+
+#include "eif_portable.h"
 
 // #define EIF_USE_STD_MUTEX
 #ifdef EIF_USE_STD_MUTEX
@@ -93,10 +94,6 @@
 #	define shared_ptr_type eiffel_run_time::shared_ptr
 #	define make_shared_function eiffel_run_time::make_shared
 #endif
-
-typedef EIF_REFERENCE marker_t(EIF_REFERENCE *);
-
-void mark_call_data(marker_t mark, call_data* call);
 
 class eif_block_token
 {

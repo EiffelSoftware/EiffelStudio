@@ -19,7 +19,6 @@
 //
 
 #include "eif_utils.hpp"
-#include "eveqs.h"
 #include "processor_registry.hpp"
 #include "internal.hpp"
 #include "private_queue.hpp"
@@ -58,43 +57,42 @@ processor::~processor()
 
 bool processor::try_call (call_data *call)
 {
-	if (true) { // Switch this on to catch exceptions
-			// This section slows down some benchmarks by 2x. I believe
-			// this is due to either some locking in the allocation routines (again)
-			// or reloading the thread local variables often.
-		bool success;
-		struct ex_vect * EIF_VOLATILE exvect;
-		EIF_REFERENCE EIF_VOLATILE saved_except = 0;
-		jmp_buf exenv;
+#if 1
+		// Switch this on to catch exceptions
+		// This section slows down some benchmarks by 2x. I believe
+		// this is due to either some locking in the allocation routines (again)
+		// or reloading the thread local variables often.
+	bool success;
+	struct ex_vect * EIF_VOLATILE exvect;
+	EIF_REFERENCE EIF_VOLATILE saved_except = 0;
+	jmp_buf exenv;
 
-#ifndef WORKBENCH
-		exvect = exft();
-#endif
+	exvect = exset((char *) 0, 0, (char *) 0);
 
-		saved_except = RTLA;
-		exvect->ex_jbuf = &exenv;
+	saved_except = RTLA;
+	exvect->ex_jbuf = &exenv;
 
-		if (!setjmp(exenv)) {
-			eif_try_call (call);
-			success = true;
-		} else {
-			exvect = exret(exvect);
-			success = false;
-		}
-		set_last_exception (saved_except);
-
-		exok();
-		return success;
+	if (!setjmp(exenv)) {
+		eif_try_call (call);
+		success = true;
 	} else {
-		// This just shows that the jmp_buf isn't the bottle-neck: this is fast.
-		jmp_buf buf;
-		if (!setjmp(buf)) {
-			eif_try_call (call);
-			return true;
-		} else {
-			return false;
-		}
+		exvect = exret(exvect);
+		success = false;
 	}
+	set_last_exception (saved_except);
+
+	exok();
+	return success;
+#else
+		// This just shows that the jmp_buf isn't the bottle-neck: this is fast.
+	jmp_buf buf;
+	if (!setjmp(buf)) {
+		eif_try_call (call);
+		return true;
+	} else {
+		return false;
+	}
+#endif
 }
 
 void processor::operator()(processor *client, call_data* call)
@@ -221,15 +219,14 @@ void processor::shutdown()
 	qoq.push (qoq_item());
 }
 
-void
-processor::mark(marker_t mark)
+void processor::mark(MARKER marking)
 {
 	if (current_msg.call) {
-		mark_call_data (mark, current_msg.call);
+		rt_mark_call_data (marking, current_msg.call);
 	}
 
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
-		(* pq) -> mark (mark);
+		(* pq) -> mark (marking);
 	}
 }
 

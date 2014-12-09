@@ -20,7 +20,6 @@
 
 #include "eif_utils.hpp"
 #include "internal.hpp"
-#include "eveqs.h"
 #include "processor_registry.hpp"
 #include "processor.hpp"
 
@@ -29,14 +28,14 @@ extern "C" {
 #endif
 
 // RTS_RC (o) - create request group for o
-void eveqs_req_grp_new (EIF_SCP_PID client_pid)
+rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.push_back (req_grp(client));
 }
 
 // RTS_RD (o) - delete chain (release locks?)
-void eveqs_req_grp_delete (EIF_SCP_PID client_pid)
+rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().unlock();
@@ -44,14 +43,14 @@ void eveqs_req_grp_delete (EIF_SCP_PID client_pid)
 }
 
 // RTS_RF (o) - wait condition fails
-void eveqs_req_grp_wait (EIF_SCP_PID client_pid)
+rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().wait();
 }
 
 // RTS_RS (c, s) - add supplier s to current group for c
-void eveqs_req_grp_add_supplier (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
+rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -59,7 +58,7 @@ void eveqs_req_grp_add_supplier (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pi
 }
 
 // RTS_RW (o) - sort all suppliers in the group and get exclusive access
-void eveqs_req_grp_lock (EIF_SCP_PID client_pid)
+rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().lock();
@@ -70,7 +69,7 @@ void eveqs_req_grp_lock (EIF_SCP_PID client_pid)
 //
 
 // RTS_PA
-void eveqs_processor_fresh (void *obj)
+rt_public void eif_new_processor (EIF_REFERENCE obj)
 {
 	registry.create_fresh (obj);
 }
@@ -79,7 +78,7 @@ void eveqs_processor_fresh (void *obj)
 // Call logging
 //
 
-void eveqs_call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data)
+rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data)
 {
 	call_data *call = (call_data*) data;
 	processor *client = registry [client_pid];
@@ -101,7 +100,7 @@ void eveqs_call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data
 	}
 }
 
-int eveqs_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
+rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -110,7 +109,7 @@ int eveqs_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 	return pq->is_synced();
 }
 
-int eveqs_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
+int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
@@ -122,24 +121,24 @@ int eveqs_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 // Callback from garbage collector to indicate that the
 // processor isn't used anymore.
 //
-void eveqs_unmarked(EIF_SCP_PID pid)
+rt_shared void rt_unmark_processor (EIF_SCP_PID pid)
 {
 	registry.unmark(pid);
 }
 
-void eveqs_enumerate_live(void)
+rt_shared void rt_enumerate_live_processors(void)
 {
 	registry.enumerate_live();
 }
 
-void eveqs_wait_for_all()
+rt_public void eif_wait_for_all_processors(void)
 {
 	registry.wait_for_all();
 }
 
-void eveqs_mark_all (marker_t mark)
+rt_shared void rt_mark_all_processors (MARKER marking)
 {
-	registry.mark_all(mark);
+	registry.mark_all(marking);
 }
 
 #ifdef __cplusplus

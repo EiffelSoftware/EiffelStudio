@@ -19,7 +19,6 @@
 //
 
 #include "eif_utils.hpp"
-#include "eveqs.h"
 #include "processor_registry.hpp"
 #include "internal.hpp"
 #include "processor.hpp"
@@ -55,7 +54,7 @@ processor_registry::processor_registry () :
 	is_marking = false;
 }
 
-processor* processor_registry::create_fresh (void* obj)
+processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 {
 	EIF_SCP_PID pid = 0;
 	processor *proc;
@@ -125,14 +124,14 @@ void processor_registry::enumerate_live ()
 			processor* proc = (*this) [i];
 		
 			if (proc->has_client) {
-				eif_mark_live_pid (proc->pid);
+				rt_mark_live_pid (proc->pid);
 			}
 		}
 	}
 }
 
 // use cas here for operations on is_marking
-void processor_registry::mark_all (marker_t mark)
+void processor_registry::mark_all (MARKER marking)
 {
 	bool f = false;
 
@@ -140,7 +139,7 @@ void processor_registry::mark_all (marker_t mark)
 		for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
 			if (used_pids.has (i)) {
 				processor *proc = (*this) [i];
-				proc->mark (mark);
+				proc->mark (marking);
 			}
 		}
 		is_marking = false;

@@ -85,7 +85,7 @@ struct tag_rt_thr_context {
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
 	DWORD win_thread_id;			/* Thread identifier for Windows. */
 #endif
-	EIF_INTEGER_32 logical_id;		/* Logical identifier for associated thread. */
+	EIF_SCP_PID logical_id;		/* Logical identifier for associated thread. */
 	EIF_BOOLEAN is_processor;		/* Is thread used as a SCOOP processor? */
 	rt_thr_context *parent_context;	/* Context of parent thread, NULL if root class. */
 };

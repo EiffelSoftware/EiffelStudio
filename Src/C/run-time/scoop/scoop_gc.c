@@ -45,7 +45,19 @@ doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP
 #include "rt_scoop_gc.h"
 #include "rt_threads.h"
 
+#define PID_MAP_ITEM_TYPE uint32                       /* Type of items in `live_pid_map'. (It must be unsigned.) */
+#define PID_MAP_ITEM_SIZE (sizeof (PID_MAP_ITEM_TYPE)) /* Size of one element in `live_pid_map' in bytes. */
+#define PID_MAP_ITEM_BITS (PID_MAP_ITEM_SIZE*8)        /* Size of one element in `live_pid_map' in bits. */
+#define PID_MAP_ITEM(x)   live_pid_map [x / PID_MAP_ITEM_BITS] /* Item of `live_pid_map' corresponding to PID `x'. */
+#define PID_MAP_BIT(x)    (((PID_MAP_ITEM_TYPE)1) << ((x) & ~(PID_MAP_ITEM_TYPE)0)) /* Bit in item corresponding to PID `x'. */
+
 #define PID_MAP_COUNT     ((RT_MAX_SCOOP_PROCESSOR_COUNT + PID_MAP_ITEM_BITS - 1) / PID_MAP_ITEM_BITS)
+
+#define RT_MARK_PID(pid) \
+	{ \
+		EIF_SCP_PID x = pid; \
+		PID_MAP_ITEM (x) |= PID_MAP_BIT (x); \
+	}
 
 #define RT_UNMARK_PID(pid) \
 	{ \
@@ -56,14 +68,14 @@ doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP
 #define RT_IS_LIVE_PID(pid) (PID_MAP_ITEM (pid) & PID_MAP_BIT (pid))
 
 /*
-doc:	<attribute name="live_pid_map" return_type="PID_MAP_ITEM_TYPE" export="shared">
+doc:	<attribute name="live_pid_map" return_type="PID_MAP_ITEM_TYPE" export="private">
 doc:		<summary>Bitmap of live processors IDs (1 corresponds to live, 0 - to dead processor).</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>None required</synchronization>
 doc:	</attribute>
 */
-rt_shared PID_MAP_ITEM_TYPE live_pid_map [PID_MAP_COUNT];
+rt_private PID_MAP_ITEM_TYPE live_pid_map [PID_MAP_COUNT];
 
 /*
 doc:	<attribute name="pid_index" return_type="size_t *" export="shared">
@@ -97,26 +109,26 @@ doc:	</attribute>
 rt_shared size_t live_index_count;
 
 /*
-doc:	<routine name="eif_mark_live_pid" export="public">
+doc:	<routine name="rt_mark_live_pid" export="shared">
 doc:		<summary>Mark processor as live.</summary>
 doc:		<param name="pid" type="EIF_SCP_PID">ID of the processor.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
-rt_public void eif_mark_live_pid (EIF_SCP_PID pid)
+rt_shared void rt_mark_live_pid (EIF_SCP_PID pid)
 {
 	RT_MARK_PID (pid);
 }
 
 /*
-doc:	<routine name="prepare_live_index" export="shared">
+doc:	<routine name="rt_prepare_live_index" export="shared">
 doc:		<summary>Prepare `live_index' and `live_index_count' to track live indexes during GC.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_shared void prepare_live_index ()
+rt_shared void rt_prepare_live_index ()
 {
 	size_t i;
 	size_t count = rt_globals_list.count;
@@ -125,8 +137,10 @@ rt_shared void prepare_live_index ()
 		/* Clean live processor bit map. */
 	memset (live_pid_map, 0, sizeof (live_pid_map));
 		/* Clean "PID->index" mapping. */
-		/* Use -1 to indicate that no thread index is allocated for the processor yet. */
-	memset (pid_index, (int) INVALID_INDEX, sizeof (pid_index));
+	for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) { 
+			/* Use -1 to indicate that no thread index is allocated for the processor yet. */
+		pid_index[i] = INVALID_INDEX;
+	}
 		/* Clean live indexes. */
 	memset (live_index, 0, sizeof (live_index));
 	live_index_count = 0;
@@ -144,22 +158,21 @@ rt_shared void prepare_live_index ()
 				/* Liveness of processor will be reported by SCOOP manager and detected during GC. */
 				/* Record "PID->index" relation for future use. */
 			pid_index [c -> logical_id] = i;
-		}
-		else {
+		} else {
 				/* This is a non-SCOOP thread. */
 				/* Add it to the live indexes. */
 			live_index [live_index_count] = i;
 			live_index_count++;
 		}
 	}
-	eveqs_enumerate_live ();
+	rt_enumerate_live_processors ();
 	if (!live_index_count) {
-		update_live_index ();
+		rt_update_live_index ();
 	}
 }
 
 /*
-doc:	<routine name="update_live_index" export="shared">
+doc:	<routine name="rt_update_live_index" export="shared">
 doc:		<summary>Update (already initialized) `live_index', `live_index_count'
 doc:                     to include live indexes between `0' and `live_index_count - 1'.
 doc:                     Add all remaining indexes to the end if no new live indexes are found
@@ -168,7 +181,7 @@ doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void update_live_index (void)
+rt_shared void rt_update_live_index (void)
 {
 		/* Unmark any processors that were marked before. */
 	size_t i;
@@ -205,14 +218,13 @@ rt_shared void update_live_index (void)
 }
 
 /*
-doc:	<routine name="update_live_index" export="shared">
-doc:		<summary>Add indexes of dead processors at the end of the list
-doc:                     leaving `live_index_count' without a change.</summary>
+doc:	<routine name="rt_complement_live_index" export="shared">
+doc:		<summary>Add indexes of dead processors at the end of the list leaving `live_index_count' without a change.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void complement_live_index (void)
+rt_shared void rt_complement_live_index (void)
 {
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
@@ -240,16 +252,14 @@ rt_shared void complement_live_index (void)
 }
 
 
-#define RTS_UNMARKED(pid) eveqs_unmarked(pid);
-
 /*
-doc:	<routine name="report_live_index" export="shared">
+doc:	<routine name="rt_report_live_index" export="shared">
 doc:		<summary>Notify SCOOP manager about live indexes.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void report_live_index (void)
+rt_shared void rt_report_live_index (void)
 {
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
@@ -259,7 +269,7 @@ rt_shared void report_live_index (void)
 	for (i = live_index_count; i < count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
 		/* Notify SCOOP manager that the processor is not used anymore. */
-		RTS_UNMARKED(c->logical_id);
+		rt_unmark_processor(c->logical_id);
 	}
 	/* Notify SCOOP manager that the GC cycle is over. */
 	/* Unused currently, don't want to come up with another replacement
@@ -267,6 +277,26 @@ rt_shared void report_live_index (void)
 	/* RTS_TCB(scoop_task_update_statistics, 0, 0, 0); */
 }
 
+rt_private void rt_mark_ref (MARKER marking, EIF_REFERENCE *ref)
+{
+	REQUIRE("ref not null", ref);
+	*ref = marking (ref);
+}
+
+rt_shared void rt_mark_call_data(MARKER marking, call_data* call)
+{
+	size_t i;
+
+	REQUIRE("Cannot mark NULL calls", call);
+
+	rt_mark_ref (marking, &call->target);
+
+	for (i = 0; i < call->count; i++) {
+		if (call->argument[i].type == SK_REF) {
+			rt_mark_ref (marking, &call->argument[i].it_r);
+		}
+	}
+}
 
 /*
 doc:</file>

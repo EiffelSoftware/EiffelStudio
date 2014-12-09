@@ -78,28 +78,21 @@ class processor_registry
 public:
   processor_registry ();
 
-  processor*
-  create_fresh (void* obj);
+  processor* create_fresh (EIF_REFERENCE obj);
 
-  processor*
-  operator[] (EIF_SCP_PID pid);
+  processor* operator[] (EIF_SCP_PID pid);
 
-  void
-  return_processor (processor* proc);
+  void return_processor (processor* proc);
 
   // GC activities
 public:
-  void
-  enumerate_live ();
+  void enumerate_live ();
 
-  void
-  mark_all (marker_t mark);
+  void mark_all (MARKER marking);
 
-  void
-  unmark (EIF_SCP_PID pid);
+  void unmark (EIF_SCP_PID pid);
 
-  void
-  wait_for_all();
+  void wait_for_all();
 
 private:
   processor* procs[MAX_PROCS];
@@ -122,12 +115,8 @@ private:
   condition_variable_type all_done_cv;
 };
 
-void
-call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
-
+void call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
 
 extern processor_registry registry;
-
-
 
 #endif // _GLOBAL_H

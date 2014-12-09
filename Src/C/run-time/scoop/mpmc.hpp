@@ -35,12 +35,12 @@ template<typename T>
 class mpmc_bounded_queue
 {
 public:
-  mpmc_bounded_queue(size_t buffer_size)
-    : buffer_(new cell_t [buffer_size])
-    , buffer_mask_(buffer_size - 1)
+  mpmc_bounded_queue(size_t a_buffer_size)
+    : buffer_(new cell_t [a_buffer_size])
+    , buffer_mask_(a_buffer_size - 1)
   {
-    assert((buffer_size >= 2) && ((buffer_size & (buffer_size - 1)) == 0));
-    for (size_t i = 0; i != buffer_size; i += 1)
+    assert((a_buffer_size >= 2) && ((a_buffer_size & (a_buffer_size - 1)) == 0));
+    for (size_t i = 0; i != a_buffer_size; i += 1)
       buffer_[i].sequence_.store(i, memory_order_relaxed_const);
     enqueue_pos_.store(0, memory_order_relaxed_const);
     dequeue_pos_.store(0, memory_order_relaxed_const);

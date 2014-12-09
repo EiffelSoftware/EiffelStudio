@@ -803,7 +803,10 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
 		routine_ctxt->win_thread_id = (DWORD) 0;
 #endif
-		routine_ctxt->logical_id = thr_logical_id;
+			/* The Eiffel code should be updated to reflect that the logical ID can only be
+			 * a valid 16-bits unsigned integer. */
+		CHECK("Valid_id", (thr_logical_id >= 0) && (thr_logical_id <= 0xFFFF));
+		routine_ctxt->logical_id = (EIF_SCP_PID) thr_logical_id;
 		routine_ctxt->is_processor = is_processor;
 		routine_ctxt->parent_context = eif_thr_context;
 		routine_ctxt->is_alive = 1;
@@ -907,7 +910,7 @@ rt_private void eif_thr_entry (void *arg)
 		}
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
-		if (eif_thr_context->logical_id != -1) {
+		if (eif_thr_context->logical_id != (EIF_SCP_PID) -1) {
 				// A logical ID has been set so pass to Eiffel thread init callback.
 			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_INTEGER_32)) eif_thr_context->routine)(eif_access(routine_ctxt->current), eif_thr_context->logical_id);
 		} else {

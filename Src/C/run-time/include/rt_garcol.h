@@ -103,6 +103,13 @@ extern EIF_CS_TYPE *eif_rt_g_data_mutex;
 #endif
 
 #ifdef ISE_GC
+
+	/* Signature of marking functions. They take the address where
+	 * reference is stored (to be updated by `mark_overflow_stack'
+	 * if we are too deep in the call stack) and return new location
+	 * of object. */
+typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
+
 extern EIF_INTEGER clsc_per;			/* Period of full coalescing: 0 => never. */
 extern struct gacinfo rt_g_data;			/* Garbage collection status */
 extern struct gacstat rt_g_stat[GST_NBR];	/* Collection statistics */

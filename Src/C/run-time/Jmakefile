@@ -43,7 +43,6 @@ WADD = debug.c interp.c update.c wbench.c
  * Files addedd only for multithreaded archive
  */
 MTADD_CPP = \
-	eif_utils.cpp \
 	eveqs.cpp \
 	processor_registry.cpp \
 	notify_token.cpp \

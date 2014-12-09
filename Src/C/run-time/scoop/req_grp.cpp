@@ -19,7 +19,6 @@
 //
 
 #include <algorithm>
-#include "eveqs.h"
 #include "req_grp.hpp"
 #include "processor.hpp"
 

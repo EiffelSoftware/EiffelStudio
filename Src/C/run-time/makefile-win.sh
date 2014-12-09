@@ -182,7 +182,6 @@ MT_OBJECTS = \
 	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTscoop.$obj \
 	$(INDIR)MTscoop_gc.$obj \
-	$(INDIR)MTeif_utils.$obj \
 	$(INDIR)MTeveqs.$obj \
 	$(INDIR)MTprocessor_registry.$obj \
 	$(INDIR)MTnotify_token.$obj \
@@ -245,7 +244,6 @@ MT_WOBJECTS = \
 	$(INDIR)MTinterp.$obj \
 	$(INDIR)MTwscoop.$obj \
 	$(INDIR)MTwscoop_gc.$obj \
-	$(INDIR)MTweif_utils.$obj \
 	$(INDIR)MTweveqs.$obj \
 	$(INDIR)MTwprocessor_registry.$obj \
 	$(INDIR)MTwnotify_token.$obj \
@@ -688,9 +686,6 @@ $(INDIR)MTscoop.$obj: $(RTSRC)scoop$(DIR)scoop.c
 $(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop$(DIR)scoop_gc.c
 	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTeif_utils.$obj: $(RTSRC)scoop$(DIR)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
-
 $(INDIR)MTeveqs.$obj: $(RTSRC)scoop$(DIR)eveqs.cpp
 	$(CPP) $(JMTCPPFLAGS) $?
 	
@@ -852,9 +847,6 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop$(DIR)scoop.c
 
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop$(DIR)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
-
-$(INDIR)MTweif_utils.$obj: $(RTSRC)scoop$(DIR)eif_utils.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
 
 $(INDIR)MTweveqs.$obj: $(RTSRC)scoop$(DIR)eveqs.cpp
 	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?

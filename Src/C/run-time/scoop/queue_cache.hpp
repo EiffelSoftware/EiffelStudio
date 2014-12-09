@@ -203,15 +203,14 @@ public:
    * Marks the calls that may be in the queues and thus otherwise invisible,
    * to the Eiffel runtime.
    */
-  void
-  mark (marker_t mark)
+  void mark (MARKER marking)
   {
     for (unordered_map <processor*, queue_stack>::const_iterator pair = queue_map.begin (); pair != queue_map.end (); ++ pair)
     {
       const queue_stack &stack = (*pair).second;
       for (queue_stack::const_iterator pq = stack.begin (); pq != stack.end (); ++ pq)
 	{
-	  (* pq) -> mark (mark);
+	  (* pq) -> mark (marking);
 	}
     }
   }

@@ -42,42 +42,27 @@
 
 #include "eif_macros.h"
 #include "eif_scoop.h"
+#include "rt_garcol.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifdef EIF_THREADS
-
-#define PID_MAP_ITEM_TYPE uint32                       /* Type of items in `live_pid_map'. (It must be unsigned.) */
-#define PID_MAP_ITEM_SIZE (sizeof (PID_MAP_ITEM_TYPE)) /* Size of one element in `live_pid_map' in bytes. */
-#define PID_MAP_ITEM_BITS (PID_MAP_ITEM_SIZE*8)        /* Size of one element in `live_pid_map' in bits. */
-#define PID_MAP_ITEM(x)   live_pid_map [x / PID_MAP_ITEM_BITS] /* Item of `live_pid_map' corresponding to PID `x'. */
-#define PID_MAP_BIT(x)    (((PID_MAP_ITEM_TYPE)1) << ((x) & ~(PID_MAP_ITEM_TYPE)0)) /* Bit in item corresponding to PID `x'. */
-
-extern PID_MAP_ITEM_TYPE live_pid_map []; /* Bitmap of live processors IDs (1 corresponds to live, 0 - to dead processor). */
-
-#define RT_MARK_PID(pid) \
-	{ \
-		EIF_SCP_PID x = (EIF_SCP_PID)(pid); \
-		PID_MAP_ITEM (x) |= PID_MAP_BIT (x); \
-	}
-
-#define RT_MARK_PROCESSOR(obj) eif_mark_live_pid(RTS_PID(obj))
-
+extern void rt_mark_live_pid(EIF_SCP_PID pid);
+extern void rt_mark_call_data(MARKER mark, call_data* call);
 extern size_t live_index [];    /* Indexes of live threads. */
 extern size_t live_index_count; /* Total number of valid items in `live_index' starting from 0 index. */
+#endif
 
-#else /* EIF_THREADS */
+extern void rt_prepare_live_index (void); /* Initialize live indexes. */
+extern void rt_update_live_index (void);  /* Update live indexes by taking into account marked processors. */
+extern void rt_complement_live_index (void); /* Add indexes of dead processors at the end of the live index list. */
+extern void rt_report_live_index (void); /* Notify SCOOP manager about live indexes. */
 
-#define RT_MARK_PROCESSOR(obj)
-
-#endif /* EIF_THREADS */
-
-extern void prepare_live_index (void); /* Initialize live indexes. */
-extern void update_live_index (void);  /* Update live indexes by taking into account marked processors. */
-extern void complement_live_index (void); /* Add indexes of dead processors at the end of the live index list. */
-extern void report_live_index (void); /* Notify SCOOP manager about live indexes. */
+extern void rt_unmark_processor(EIF_SCP_PID pid);
+extern void rt_mark_all_processors (MARKER marking);
+extern void rt_enumerate_live_processors(void);
 
 #ifdef __cplusplus
 }

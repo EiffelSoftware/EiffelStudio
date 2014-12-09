@@ -72,25 +72,23 @@ typedef struct call_data {
 } call_data;
 
 #ifdef WORKBENCH
-#define eif_log_call(rid, current_pid, data)
+#define eif_log_wcall(rid, current_pid, data)
 #define eif_try_call(a)
 #else
-#define eif_log_call(p,a)	eveqs_call_on((EIF_SCP_PID)(p), RTS_PID(((call_data*)(a))->target), ((call_data*)(a)));
+RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
 #define eif_try_call(a)		((call_data *)(a))->pattern (a);
-void eif_call_const (call_data * a);
+RT_LNK void eif_call_const (call_data * a);
 #endif
 
 
-extern void eif_free_call (call_data * a);
-extern EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s);
-extern EIF_BOOLEAN eif_is_passive (EIF_SCP_PID s);
-extern EIF_BOOLEAN eif_is_synced_on (EIF_SCP_PID c, EIF_SCP_PID s );
+/* Used only by ISE_SCOOP_MANAGER. */
+RT_LNK void eif_free_call (call_data * a);
 
 /* Request chain stack */
 
-extern void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);	/* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
-extern void eif_request_chain_pop (struct stack * stk);	/* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
-extern void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
+RT_LNK void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);	/* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
+RT_LNK void eif_request_chain_pop (struct stack * stk);	/* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
+RT_LNK void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
 
 /* Scoop Macros */
 
@@ -101,13 +99,25 @@ extern void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /
 #define call_data_is_lock_passing(a_call_data) ((call_data*) a_call_data)->is_lock_passing
 
 /* Processor properties */
+RT_LNK void eif_new_processor(EIF_REFERENCE obj);
+RT_LNK int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
+RT_LNK int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
+RT_LNK void eif_wait_for_all_processors(void);
 
-extern void eif_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
-extern void eif_unset_processor_id (void);	/* Dissociate processor from the current thread. */
+/* Only used by ISE_SCOOP_MANAGER. */
+RT_LNK void eif_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
+RT_LNK void eif_unset_processor_id (void);	/* Dissociate processor from the current thread. */
 
 /* Garbage collection */
+/* Used by ISE_SCOOP_MANAGER and privately. */
+#define eif_mark_live_pid(x)
 
-extern void eif_mark_live_pid (EIF_SCP_PID pid); /* Mark processor `pid' as live. */
+/* Request chain operations */
+RT_LNK void eif_new_scoop_request_group (EIF_SCP_PID client_pid);
+RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid);
+RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
+RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
+RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 
 #ifdef __cplusplus
 }

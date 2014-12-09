@@ -2476,7 +2476,7 @@ rt_private void interpret(int flag, int where)
 					/* Perform a separate call. */
 				unsigned long   stagval = tagval; /* Save tag value */
 				unsigned char * OLD_IC  = NULL;   /* Saved IC */
-				call_data *     a;                /* Call structure */
+				call_data *     a = NULL;                /* Call structure */
 
 				RTS_AC (n, target -> it_ref, a); /* Create call structure. */
 				opop ();                /* Remove target of a call. */

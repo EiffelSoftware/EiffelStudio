@@ -6,7 +6,7 @@ endif
 ECHO_S=echo "
 ECHO_E="
 
-DO_MAKE=$(MAKE) -f makefile.linux
+DO_MAKE=$(MAKE)
 
 EXE=
 RM=rm -f

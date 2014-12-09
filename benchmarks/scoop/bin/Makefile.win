@@ -3,7 +3,7 @@ DEFAULT_OUTPUT=scoop_benchmark.csv
 OUTPUT=$(DEFAULT_OUTPUT)
 !ENDIF
 
-DO_MAKE=$(MAKE) -nologo
+DO_MAKE=$(MAKE) -nologo -f Makefile.win
 
 EXE=.exe
 RM=del

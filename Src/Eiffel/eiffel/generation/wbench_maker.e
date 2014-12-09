@@ -123,7 +123,6 @@ feature
 				cecil_basket.extend ("MTweif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_type_id.o"); cecil_basket.finish
-				cecil_basket.extend ("MTweif_utils.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwequal.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwerror.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweveqs.o"); cecil_basket.finish

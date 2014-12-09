@@ -137,7 +137,6 @@ feature
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_utils.o"); cecil_basket.finish
 				cecil_basket.extend ("MTequal.o"); cecil_basket.finish
 				cecil_basket.extend ("MTerror.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeveqs.o"); cecil_basket.finish

@@ -2,11 +2,10 @@
 
 Status: working on Windows and Linux
 
-This code is the result of an old patch from Guus Leeuw jr.  (from itpassion.com)
-updated by Jocelyn Fiat to void-safety and provided as an extension to EiffelNet.
-
-This supports only Linux and Windows so far.
-This "project" is open for contribution, and looking for maintainer.
+Contributors:
+- Guus Leeuw jr. (itpassion.com)
+- Jocelyn Fiat (eiffel.com)
+- Javier Velilla (eiffel.com)
 
 
 How to build OpenSSL on Windows.
@@ -14,13 +13,13 @@ How to build OpenSSL on Windows.
 
 Requirements.
 	* Perl Installation    : http://www.activestate.com/activeperl/downloads
-    * OpenSSL source code  : http://www.openssl.org/source/
-    * C compiler
+	* OpenSSL source code  : http://www.openssl.org/source/
+	* C compiler
 
 
 How to build OpenSSL with VisualStudio  
 ======================================
-Guide :http://developer.covenanteyes.com/building-openssl-for-visual-studio/
+Tutorial :http://developer.covenanteyes.com/building-openssl-for-visual-studio/
 
 Building OpenSSL for Visual Studio on Windows:
 
@@ -28,14 +27,14 @@ Building OpenSSL for Visual Studio on Windows:
 
 Setting up for the build
 
-Unzip3 the OpenSSL source code into two different folders, one for the 32-bit build and one for the 64-bit build4. 
+Unzip the OpenSSL source code into two different folders, one for the 32-bit build and one for the 64-bit build. 
 So, for example, you might end up with C:\openssl-src-32 and C:\openssl-src-64.
 
 Building the 32-bit static libraries
 
 Open the Visual Studio Command Prompt (2010)5.
 cd to your OpenSSL source folder for 32-bit (e.g. cd C:\openssl-src-32).
-Run the following: 6
+Run the following: 
 
 1: perl Configure VC-WIN32 --prefix=C:\Build-OpenSSL-VC-32
 2: ms\do_ms
@@ -56,7 +55,7 @@ Run the following:
 1: perl Configure debug-VC-WIN32 --prefix=C:\Build-OpenSSL-VC-32-dbg
 2: ms\do_ms
 
-In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7. There should be three replacements.7
+In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7. There should be three replacements.
 Run the following:
 
 
@@ -91,7 +90,7 @@ Run the following:
 1: perl Configure debug-VC-WIN64A --prefix=C:\Build-OpenSSL-VC-64-dbg
 2: ms\do_win64a
 
-In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7 except on the line starting with ASM. There should be two replacements. 8
+In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7 except on the line starting with ASM. There should be two replacements. 
 Run the following:
 
 

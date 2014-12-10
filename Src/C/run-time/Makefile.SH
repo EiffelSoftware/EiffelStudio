@@ -70,9 +70,9 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
+LSCRIPTS =  eif_size.h
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
-LSCRIPTS =  eif_size.h
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care

@@ -24,13 +24,14 @@
 	background-color: #fff;
 	padding: 0;
 	>ul>li {
+		padding: 5px 0 3px 5px;
 		border-top: solid 1px #bbf;
 		>a {
 			color: $green-light;
 		}
-		&.expanded>a+a {
+		&.expandable>*+a {
 			display: inline-block;
-			width: 90%;
+			width: 85%;
 			border-bottom: dotted 1px #bbf;
 		}
 	}
@@ -41,6 +42,12 @@
 		&:hover {
 			background-color: $base-link-color;
 			color: #fff;
+		}
+	}
+	>ul>li>ul>li>ul>li {
+		font-size: smaller;
+		a {
+			color: #669;
 		}
 	}
 
@@ -64,6 +71,7 @@
 		padding: 0;
 	}
 	ul li {
+		padding-left: 10px;
 		&:hover {
 			background-color: #ddd;
 		}
@@ -100,3 +108,27 @@
 	//}
 }
 
+.wikipage {
+	table {
+		border: solid 1px #000;
+		margin-bottom: 5px;
+	}
+	td {
+		border: solid 1px #000;
+		padding: 2px;
+	}
+	code {
+		display: block;
+		font-family: monospace;
+		border: solid 1px #999;
+		background-color: #ffc;
+		padding: 3px;
+		margin: 2px 0 2px 0;
+	}
+	code.inline {
+		border: dotted 1px #ccc;
+		display: inline-block;
+		padding: 0 2px 0 2px;
+		margin: 0;
+	}
+}

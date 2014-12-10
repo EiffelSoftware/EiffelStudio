@@ -288,6 +288,16 @@ feature -- Basic operation
 							else
 								check False end
 							end
+						elseif next_following_character_matched (a_text, i + 1, "/code>", True) then
+							if is_wiki_item_token_of_kind (l_items, "tag:code") then
+								on_wiki_item_end_token (l_items, i, "tag:code")
+								ignore_wiki := False
+								keep_formatting := False
+								multiline_level := multiline_level - 1
+								i := i + 6 --| = ("/code>").count
+							else
+								check False end
+							end
 						end
 
 					elseif safe_character (a_text, i + 1) = '!' then
@@ -299,7 +309,9 @@ feature -- Basic operation
 							end
 						end
 					elseif safe_character (a_text, i + 1) = '/' then
-						l_tag := wiki_item_tag_token_kind (l_items)
+							-- FIXME: if closing tag does not match previous
+							-- cancel previous, until expected tag is found, if any...
+
 						if
 							l_tag /= Void and then
 							next_following_character_matched (a_text, i + 2, l_tag + ">", True)
@@ -331,6 +343,9 @@ feature -- Basic operation
 									if l_tag.is_case_insensitive_equal_general ("nowiki") then
 										ignore_wiki := True
 									elseif l_tag.is_case_insensitive_equal_general ("pre") then
+										keep_formatting := True
+										ignore_wiki := True
+									elseif l_tag.is_case_insensitive_equal_general ("code") then
 										keep_formatting := True
 										ignore_wiki := True
 									else

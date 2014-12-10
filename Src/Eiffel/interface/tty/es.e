@@ -176,8 +176,10 @@ feature -- Initialization
 								l_loader.open_project_file (l_old_project_file, Void, project_path, is_clean_requested)
 							elseif attached old_ace_file as l_old_ace_file then
 								l_loader.open_project_file (l_old_ace_file, Void, project_path, is_clean_requested)
-							else
+							elseif config_file_name /= Void then
 								l_loader.open_project_file (config_file_name.absolute_path.canonical_path, target_name, project_path, is_clean_requested)
+							else
+								l_loader.open_project_file (Void, target_name, project_path, is_clean_requested)
 							end
 
 							if not error_occurred and not l_loader.has_error then

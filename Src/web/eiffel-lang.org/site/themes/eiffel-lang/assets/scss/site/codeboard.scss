@@ -1,3 +1,8 @@
+@import "../variables";
+@import "../base/base-reset";
+@import "../markup-mixins";
+@import "../960";
+
 /* Codeboard */
 
 .codeboard {
@@ -17,12 +22,12 @@
 }
 
 .btn-codeboard {
-  background-color: #769830;
-  background-image: -webkit-linear-gradient(top, #99cc33, #769830);
-  background-image: -moz-linear-gradient(top, #99cc33, #769830);
-  background-image: -ms-linear-gradient(top, #99cc33, #769830);
-  background-image: -o-linear-gradient(top, #99cc33, #769830);
-  background-image: linear-gradient(top, #99cc33, #769830);
+  background-color: #2B4054;
+  background-image: -webkit-linear-gradient(top, #2B4054, #2B4054);
+  background-image: -moz-linear-gradient(top, #2B4054, #2B4054);
+  background-image: -ms-linear-gradient(top, #2B4054, #2B4054);
+  background-image: -o-linear-gradient(top, #2B4054, #2B4054);
+  background-image: linear-gradient(top, #2B4054, #2B4054);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   /*width: 263px;
@@ -45,12 +50,13 @@
 	  content: '';
   }
   &:hover {
-	  background-color: #6a8c28;
-	  background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
-	  background-image: -moz-linear-gradient(top, #89bc2b, #6a8c28);
-	  background-image: -ms-linear-gradient(top, #89bc2b, #6a8c28);
-	  background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
-	  background-image: linear-gradient(top, #89bc2b, #6a8c28);
+    color: white;
+	  background-color: #12273A;
+	  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
+	  background-image: -moz-linear-gradient(top, #12273A, #12273A);
+	  background-image: -ms-linear-gradient(top, #12273A, #12273A);
+	  background-image: -o-linear-gradient(top, #12273A, #12273A);
+	  background-image: linear-gradient(top, #12273A, #12273A);
   }
 }
 

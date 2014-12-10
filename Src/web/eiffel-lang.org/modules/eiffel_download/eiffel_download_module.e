@@ -154,89 +154,109 @@ feature -- Hooks
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 				-- <Precursor>
-		local
-			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
-			vals: CMS_VALUE_TABLE
-			p: detachable PATH
 		do
 			log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 				-- Download header
-				-- Todo extact Method
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
 				if a_response.is_front then
-						-- FIXME: this relies on theme location, where it should rely on module assets location.
-						-- TODO
-					create p.make_from_string ("templates")
-						-- Note: template name harcoded.
-					p := p.extended ("block_download_area").appended_with_extension ("tpl")
-					p := a_response.module_resource_path (Current, p)
-					if p /= Void then
-						log.write_debug (generator + ".get_block_view with template_path:" + p.out)
-
-						if attached p.entry as e then
-							create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
-						else
-							create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
-						end
-
-						create vals.make (5)
-						value_table_alter (vals, a_response)
-						across
-							vals as ic
-						loop
-							l_tpl_block.set_value (ic.item, ic.key)
-						end
-						if l_tpl_block /= Void then
-							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-						else
-							log.write_debug (generator + ".get_block_view with template_block: Void")
-						end
-						a_response.add_block (l_tpl_block, "header")
-					else
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						log.write_warning ("Error with block [" + a_block_id + "]")
-					end
+					get_block_view_download_area (a_block_id, a_response)
 				end
 			elseif
 				a_block_id.is_case_insensitive_equal_general ("download_options") and then
 				a_response.request.path_info.same_string ("/download_options")
 			then
-						-- FIXME: this relies on theme location, where it should rely on module assets location.
-						-- TODO
-				create p.make_from_string ("templates")
-					-- Note: template name harcoded.
-				p := p.extended ("block_download_options").appended_with_extension ("tpl")
-				p := a_response.module_resource_path (Current, p)
-				if p /= Void then
-					log.write_debug (generator + ".get_block_view with template_path:" + p.out)
-					if attached p.entry as e then
-						create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
-					else
-						create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
-					end
+				get_block_view_download_options (a_block_id, a_response)
+			end
+		end
 
-					create vals.make (5)
-					get_download_configuration (a_response.api)
-					if attached download_configuration as cfg then
-						vals.force (retrieve_product_gpl (cfg), "product")
-						vals.force (retrieve_products (cfg), "products")
-						vals.force (retrieve_mirror_gpl (cfg), "mirror")
+feature {NONE} -- Block view implementation
 
-						across
-							vals as ic
-						loop
-							l_tpl_block.set_value (ic.item, ic.key)
-						end
-						if l_tpl_block /= Void then
-							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-						else
-							log.write_debug (generator + ".get_block_view with template_block: Void")
-						end
-						a_response.add_block (l_tpl_block, "content")
-					else
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						log.write_warning ("Error with block [" + a_block_id + "]")
+	get_block_view_download_area (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+				--  Get block download area object identified by `a_block_id' and associate with `a_response'.
+		local
+			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
+			vals: CMS_VALUE_TABLE
+			p: detachable PATH
+		do
+			-- FIXME: this relies on theme location, where it should rely on module assets location.
+			-- TODO
+			create p.make_from_string ("templates")
+				-- Note: template name harcoded.
+			p := p.extended ("block_download_area").appended_with_extension ("tpl")
+			p := a_response.module_resource_path (Current, p)
+			if p /= Void then
+				log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+
+				if attached p.entry as e then
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
+				else
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
+				end
+
+				create vals.make (5)
+				value_table_alter (vals, a_response)
+				across
+					vals as ic
+				loop
+					l_tpl_block.set_value (ic.item, ic.key)
+				end
+
+				if l_tpl_block /= Void then
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+				else
+					log.write_debug (generator + ".get_block_view with template_block: Void")
+				end
+				a_response.add_block (l_tpl_block, "header")
+
+			else
+				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+				log.write_warning ("Error with block [" + a_block_id + "]")
+			end
+		end
+
+
+	get_block_view_download_options (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+				--  Get block download options object identified by `a_block_id' and associate with `a_response'.
+		local
+			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
+			vals: CMS_VALUE_TABLE
+			p: detachable PATH
+		do
+			create p.make_from_string ("templates")
+				-- Note: template name harcoded.
+			p := p.extended ("block_download_options").appended_with_extension ("tpl")
+			p := a_response.module_resource_path (Current, p)
+
+			if p /= Void then
+				log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+				if attached p.entry as e then
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
+				else
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
+				end
+
+				create vals.make (5)
+				get_download_configuration (a_response.api)
+
+				if attached download_configuration as cfg then
+					vals.force (retrieve_product_gpl (cfg), "product")
+					vals.force (retrieve_products (cfg), "products")
+					vals.force (retrieve_mirror_gpl (cfg), "mirror")
+
+					across
+						vals as ic
+					loop
+						l_tpl_block.set_value (ic.item, ic.key)
 					end
+					if l_tpl_block /= Void then
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					else
+						log.write_debug (generator + ".get_block_view with template_block: Void")
+					end
+					a_response.add_block (l_tpl_block, "content")
+				else
+					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+					log.write_warning ("Error with block [" + a_block_id + "]")
 				end
 			end
 		end
@@ -298,7 +318,7 @@ feature -- Handler
 			end
 		end
 
-	file_download  (req: WSF_REQUEST; res: WSF_RESPONSE a_link: READABLE_STRING_32)
+	file_download  (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: READABLE_STRING_32)
 			-- Simple response to download content
 			-- Harcoded for testing.
 		local

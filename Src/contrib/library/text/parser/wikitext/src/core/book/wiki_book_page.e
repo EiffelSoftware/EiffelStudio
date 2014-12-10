@@ -13,7 +13,6 @@ inherit
 		rename
 			make as old_make
 		redefine
-			is_less,
 			debug_output,
 			process,
 			page,
@@ -117,27 +116,6 @@ feature {NONE} -- Implementation
 
 	internal_key: detachable like key
 			-- Cached value for `key'
-
-feature -- Comparison
-
-	is_less alias "<" (other: like Current): BOOLEAN
-			-- Is current object less than `other'?
-			--| index page are always on top, then depends on `weight', and then on `title'.
-		do
-			if is_index_page or other.is_index_page then
-				if is_index_page then
-					if other.is_index_page then
-						Result := Precursor (other)
-					else
-						Result := True
-					end
-				else
-					Result := False
-				end
-			else
-				Result := Precursor (other)
-			end
-		end
 
 feature -- Access: book
 

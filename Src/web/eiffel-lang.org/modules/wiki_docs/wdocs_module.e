@@ -928,7 +928,7 @@ feature {NONE} -- Implementation: wiki render
 					across
 						l_sub_pages as ic
 					loop
-						l_xhtml.append ("<li> # ")
+						l_xhtml.append ("<li> ")
 						append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, a_manager, l_xhtml)
 						l_xhtml.append ("</li>")
 					end

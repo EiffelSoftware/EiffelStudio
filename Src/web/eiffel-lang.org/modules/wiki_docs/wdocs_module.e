@@ -248,7 +248,7 @@ feature -- Hooks
 						elseif a_block_id.same_string_general ("wdocs-page-info") then
 							if
 								l_book_name /= Void and then l_page_name /= Void and then
-								attached mng.page (l_book_name, l_page_name) as wp
+								attached mng.page (l_page_name, l_book_name) as wp
 							then
 								create s.make_empty
 								s.append ("<strong>title:</strong>")
@@ -504,7 +504,7 @@ feature -- Hooks
 				loop
 					wp := ic.item
 					l_title := mng.wiki_page_link_title (wp)
-					create sub_ln.make (l_title, wdocs_page_link_location (a_version_id, a_book_name, l_title))
+					create sub_ln.make (l_title, wdocs_page_link_location (a_version_id, a_book_name, wp.title))
 					l_is_active := a_active_page_name /= Void and then
 									a_active_page_name.is_case_insensitive_equal (wp.title)
 					if l_is_active then
@@ -645,35 +645,41 @@ feature -- Handler
 
 			if l_bookid /= Void then
 				r.values.force (l_bookid, "wiki_book_name")
-				pg := mnger.page (l_bookid, l_wiki_id)
+				pg := mnger.page (l_wiki_id, l_bookid)
 				if pg = Void and l_wiki_id /= Void then
 					if l_wiki_id.is_case_insensitive_equal_general ("index") then
 						pg := mnger.page (l_bookid, l_bookid)
 					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
-						pg := mnger.page (l_bookid, "index")
+						pg := mnger.page ("index", l_bookid)
 					end
-					if
-						pg = Void and then
-						attached mnger.book (l_bookid) as wb
-					then
-						pg := wb.root_page
-						if pg = Void then
-							create pg.make (wb.name, wb.name)
-							across
-								wb.top_pages as ic
-							loop
-								pg.extend (ic.item)
-							end
-							pg.sort
-						end
+					if pg = Void then
+						pg := mnger.page_by_title (l_wiki_id, l_bookid)
 					end
+					if pg = Void then
+						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
+					end
+--					if
+--						pg = Void and then
+--						attached mnger.book (l_bookid) as wb
+--					then
+--						pg := wb.root_page
+--						if pg = Void then
+--							create pg.make (wb.name, wb.name)
+--							across
+--								wb.top_pages as ic
+--							loop
+--								pg.extend (ic.item)
+--							end
+--							pg.sort
+--						end
+--					end
 				end
 			end
 
 			r.add_additional_head_line ("[
 						<style>
-							table {border: solid 1px blue;}
-							td {border: solid 1px blue;}
+							.wikipage table {border: solid 1px blue;}
+							.wikipage td {border: solid 1px blue;}
 						</style>
 					]", False
 				)
@@ -909,7 +915,7 @@ feature {NONE} -- Implementation: wiki render
 				l_xhtml.append ("<ul class=%"wdocs-index%">")
 				if
 					a_book_name /= Void and then
-					attached a_manager.page (a_book_name, a_wiki_page.parent_key) as l_parent_page and then
+					attached a_manager.page (a_wiki_page.parent_key, a_book_name) as l_parent_page and then
 					l_parent_page /= a_wiki_page
 				then
 					l_xhtml.append ("<li><em>Parent</em> &lt;")
@@ -922,7 +928,7 @@ feature {NONE} -- Implementation: wiki render
 					across
 						l_sub_pages as ic
 					loop
-						l_xhtml.append ("<li>")
+						l_xhtml.append ("<li> # ")
 						append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, a_manager, l_xhtml)
 						l_xhtml.append ("</li>")
 					end

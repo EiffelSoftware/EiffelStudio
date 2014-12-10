@@ -26,17 +26,23 @@ feature -- Access
 		deferred
 		end
 
-	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable like new_page
+	page (a_bookpage: detachable READABLE_STRING_GENERAL; a_bookid: READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		deferred
 		end
 
-	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		deferred
 		end
 
-	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_metadata (a_metadataname, a_metadata_value: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like new_page
+			-- Wiki page with metadata named `a_metadata_name' and value `a_metadata_value' (compare caseless or not depending on `is_caseless',
+			-- and in book related to `a_bookid' if provided.
+		deferred
+		end
+
+	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page associated to UUID `a_page_uuid'.
 		deferred
 		end

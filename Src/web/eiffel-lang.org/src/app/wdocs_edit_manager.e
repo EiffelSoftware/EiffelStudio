@@ -42,7 +42,7 @@ feature -- Error management
 
 feature -- Query
 
-	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do
 			if a_bookid = Void and attached current_book_name as bn then

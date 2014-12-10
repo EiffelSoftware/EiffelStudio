@@ -102,32 +102,53 @@ feature -- Access
 			end
 		end
 
-	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable like new_page
+	page (a_bookpage: READABLE_STRING_GENERAL; a_bookid: READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		do
-			Result := manager.page (a_bookid, a_bookpage)
+			Result := manager.page (a_bookpage, a_bookid)
 		end
 
-	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do
 			if a_bookid /= Void then
-				Result := page (a_bookid, a_page_title)
+				if attached book (a_bookid) as wb then
+					Result := wb.page (a_page_title)
+				end
 			elseif attached pages_data.book_names_with_page_title (a_page_title) as lst and then not lst.is_empty then
 				across
 					lst as ic
 				until
 					Result /= Void
 				loop
-					Result := page (ic.item, a_page_title)
+					Result := page_by_title (a_page_title, ic.item)
 				end
 			end
 		end
 
-	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_metadata (a_metadata_name, a_metadata_value: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like new_page
+			-- Wiki page with metadata named `a_metadata_name' and value `a_metadata_value' (compare caseless or not depending on `is_caseless',
+			-- and in book related to `a_bookid' if provided.
+		do
+			if a_bookid /= Void then
+				if attached book (a_bookid) as wb then
+					Result := wb.page_by_metadata (a_metadata_name, a_metadata_value, is_caseless)
+				end
+			else
+				across
+					book_names as ic
+				until
+					Result /= Void
+				loop
+					Result := page_by_metadata (a_metadata_name, a_metadata_value, ic.item, is_caseless)
+				end
+			end
+		end
+
+	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page associated to UUID `a_page_uuid'.
 		do
-			-- To Implement
+			Result := page_by_metadata ("uuid", a_page_uuid, a_bookid, True)
 		end
 
 	metadata (a_source: PATH; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA

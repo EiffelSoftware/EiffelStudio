@@ -385,7 +385,6 @@ table {
 #wdocs-tree.menu > ul > li.expandable > * + a {
   display: inline-block;
   width: 85%;
-  border-bottom: dotted 1px #bbf;
 }
 #wdocs-tree.menu > ul > li > span.treeitemcontrol {
   border: solid 1px #ccf;

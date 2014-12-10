@@ -20,14 +20,24 @@
 /* WDOCS nav tree */
 
 #wdocs-tree.menu {
+	border: solid 1px #ccc;
+	background-color: #fff;
+	padding: 0;
 	>ul>li {
-		background-color: $green-light-bg;
-		border-top: dotted 1px #bbf;
-		margin: 2px;
+		border-top: solid 1px #bbf;
+		>a {
+			color: $green-light;
+		}
+		&.expanded>a+a {
+			display: inline-block;
+			width: 90%;
+			border-bottom: dotted 1px #bbf;
+		}
 	}
 	>ul>li>a.treeitemcontrol {
-		background-color: #fff;
 		border: solid 1px #ccf;
+		background-color: $green-light-bg;
+		color: $base-link-color;
 		&:hover {
 			background-color: $base-link-color;
 			color: #fff;
@@ -38,30 +48,37 @@
 		font-family: "Lucida Console", "Courier New", "serif";
 		padding-left: 2px;
 		padding-right: 2px;
-		margin-left: -2px;
+		margin-left: 2px;
 		&:hover {
 			background-color: $base-link-color;
 			color: #fff;
 		}
 	}
 	>ul>li>ul>* {
+		font-size: smaller;
 		background-color: #fff;
+		padding-left: 10px;
 	}
 	ul {
 		list-style-type: none;
-		padding: 0px;
+		padding: 0;
 	}
 	ul li {
-		padding-left: 0px;
+		&:hover {
+			background-color: #ddd;
+		}
+		a:hover {
+			color: blue;
+		}
 	}
 
 	li.active {
 		font-weight: bold;
-		border-right: solid 2px #ccc;
+		border-right: solid 3px #ccc;
 	}
 	li.active li {
 		font-weight: normal;
-		border-right: dotted 2px #eee;
+		border-right: dotted 3px #eee;
 	}
 
 	li.expandable:not(.expanded) li {

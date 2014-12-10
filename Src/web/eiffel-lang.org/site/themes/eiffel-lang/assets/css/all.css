@@ -370,14 +370,26 @@ table {
 }
 
 /* WDOCS nav tree */
+#wdocs-tree.menu {
+  border: solid 1px #ccc;
+  background-color: #fff;
+  padding: 0;
+}
 #wdocs-tree.menu > ul > li {
-  background-color: #d4ebb0;
-  border-top: dotted 1px #bbf;
-  margin: 2px;
+  border-top: solid 1px #bbf;
+}
+#wdocs-tree.menu > ul > li > a {
+  color: #99cc33;
+}
+#wdocs-tree.menu > ul > li.expanded > a + a {
+  display: inline-block;
+  width: 90%;
+  border-bottom: dotted 1px #bbf;
 }
 #wdocs-tree.menu > ul > li > a.treeitemcontrol {
-  background-color: #fff;
   border: solid 1px #ccf;
+  background-color: #d4ebb0;
+  color: #00008F;
 }
 #wdocs-tree.menu > ul > li > a.treeitemcontrol:hover {
   background-color: #00008F;
@@ -387,29 +399,34 @@ table {
   font-family: "Lucida Console", "Courier New", "serif";
   padding-left: 2px;
   padding-right: 2px;
-  margin-left: -2px;
+  margin-left: 2px;
 }
 #wdocs-tree.menu a.treeitemcontrol:hover {
   background-color: #00008F;
   color: #fff;
 }
 #wdocs-tree.menu > ul > li > ul > * {
+  font-size: smaller;
   background-color: #fff;
+  padding-left: 10px;
 }
 #wdocs-tree.menu ul {
   list-style-type: none;
-  padding: 0px;
+  padding: 0;
 }
-#wdocs-tree.menu ul li {
-  padding-left: 0px;
+#wdocs-tree.menu ul li:hover {
+  background-color: #ddd;
+}
+#wdocs-tree.menu ul li a:hover {
+  color: blue;
 }
 #wdocs-tree.menu li.active {
   font-weight: bold;
-  border-right: solid 2px #ccc;
+  border-right: solid 3px #ccc;
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
-  border-right: dotted 2px #eee;
+  border-right: dotted 3px #eee;
 }
 #wdocs-tree.menu li.expandable:not(.expanded) li {
   border-left: dotted 4px red;
@@ -1428,8 +1445,6 @@ a.link-options:hover {
   margin: 0 2px 0 2px;
 }
 #sidebar .holder {
-  border: solid 1px #ddd;
-  background-color: #fff;
   padding: 5px;
 }
 #sidebar div.title, #sidebar h2 {

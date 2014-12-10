@@ -387,12 +387,12 @@ table {
   width: 85%;
   border-bottom: dotted 1px #bbf;
 }
-#wdocs-tree.menu > ul > li > a.treeitemcontrol {
+#wdocs-tree.menu > ul > li > span.treeitemcontrol {
   border: solid 1px #ccf;
   background-color: #d4ebb0;
   color: #00008F;
 }
-#wdocs-tree.menu > ul > li > a.treeitemcontrol:hover {
+#wdocs-tree.menu > ul > li > span.treeitemcontrol:hover {
   background-color: #00008F;
   color: #fff;
 }
@@ -402,13 +402,13 @@ table {
 #wdocs-tree.menu > ul > li > ul > li > ul > li a {
   color: #669;
 }
-#wdocs-tree.menu a.treeitemcontrol {
+#wdocs-tree.menu span.treeitemcontrol {
   font-family: "Lucida Console", "Courier New", "serif";
   padding-left: 2px;
   padding-right: 2px;
   margin-left: 2px;
 }
-#wdocs-tree.menu a.treeitemcontrol:hover {
+#wdocs-tree.menu span.treeitemcontrol:hover {
   background-color: #00008F;
   color: #fff;
 }

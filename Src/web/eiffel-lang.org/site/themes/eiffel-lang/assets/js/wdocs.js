@@ -3,12 +3,12 @@ var WDOCSMOD = WDOCSMOD || { };
 WDOCSMOD.prepareTreeMenuItem = function (li) {
 	if (li.hasClass("expandable")) {
 		if (li.hasClass("expanded")) {
-			li.prepend("<a class=\"treeitemcontrol\" href=\"#\">-</a> ");
+			li.prepend("<span class=\"treeitemcontrol\">-</span> ");
 		} else {
-			li.prepend("<a class=\"treeitemcontrol\" href=\"#\">+</a> ");
+			li.prepend("<span class=\"treeitemcontrol\">+</span> ");
 		}
 
-		li.children("a.treeitemcontrol").click(function () {
+		li.children("span.treeitemcontrol").click(function () {
 				WDOCSMOD.toggleTreeMenuItem($(this).parent("li.expandable"));
 			}
 		);
@@ -17,7 +17,7 @@ WDOCSMOD.prepareTreeMenuItem = function (li) {
 	}
 }
 WDOCSMOD.refreshTreeMenuItem = function (li) {
-	li.children("a.treeitemcontrol").each (function () {
+	li.children("span.treeitemcontrol").each (function () {
 		var ctrl = $(this);
 		var li = ctrl.parent("li.expandable");
 		if (li.hasClass("expandable")) {

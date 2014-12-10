@@ -35,7 +35,7 @@
 			border-bottom: dotted 1px #bbf;
 		}
 	}
-	>ul>li>a.treeitemcontrol {
+	>ul>li>span.treeitemcontrol {
 		border: solid 1px #ccf;
 		background-color: $green-light-bg;
 		color: $base-link-color;
@@ -51,7 +51,7 @@
 		}
 	}
 
-	a.treeitemcontrol {
+	span.treeitemcontrol {
 		font-family: "Lucida Console", "Courier New", "serif";
 		padding-left: 2px;
 		padding-right: 2px;

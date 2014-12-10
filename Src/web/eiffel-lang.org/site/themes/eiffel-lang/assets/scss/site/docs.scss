@@ -26,12 +26,23 @@
 		margin: 2px;
 	}
 	>ul>li>a.treeitemcontrol {
-		font-family: "Lucida Console", "Courier New", "serif";
 		background-color: #fff;
 		border: solid 1px #ccf;
-		padding-left: 3px;
-		padding-right: 3px;
-		margin-left: -3px;
+		&:hover {
+			background-color: $base-link-color;
+			color: #fff;
+		}
+	}
+
+	a.treeitemcontrol {
+		font-family: "Lucida Console", "Courier New", "serif";
+		padding-left: 2px;
+		padding-right: 2px;
+		margin-left: -2px;
+		&:hover {
+			background-color: $base-link-color;
+			color: #fff;
+		}
 	}
 	>ul>li>ul>* {
 		background-color: #fff;

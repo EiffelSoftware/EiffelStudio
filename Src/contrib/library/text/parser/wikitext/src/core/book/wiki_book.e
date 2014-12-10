@@ -171,7 +171,30 @@ feature -- Access
 			end
 		end
 
-	page_by_key (a_key: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
+	page_by_metadata (a_metadata_name: READABLE_STRING_GENERAL; a_metadata_value: READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like page
+			-- Page with metadata `a_metadata_name' matching value `a_metadata_value'.
+		do
+			across
+				pages as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if attached Result.metadata (a_metadata_name) as md then
+					if is_caseless and a_metadata_value.same_string (md) then
+							-- Found
+					elseif not is_caseless and a_metadata_value.is_case_insensitive_equal (md) then
+							-- Found caseless
+					else
+						Result := Void
+					end
+				else
+					Result := Void
+				end
+			end
+		end
+
+	page_by_key (a_key: READABLE_STRING_GENERAL): detachable like page
 			-- Page identified with key `a_key'.
 		do
 			across

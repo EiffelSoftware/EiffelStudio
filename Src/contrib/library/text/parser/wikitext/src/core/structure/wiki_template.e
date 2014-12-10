@@ -115,7 +115,7 @@ feature -- Access
 							i := 1
 							l_split_positions.start
 						until
-							i > n
+							i > n or l_split_positions.after
 						loop
 							j := l_split_positions.item
 							s := l_params.substring (i, j - 1)

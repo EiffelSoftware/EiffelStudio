@@ -1,0 +1,66 @@
+@import "../variables";
+@import "../base/base-reset";
+@import "../markup-mixins";
+@import "../960";
+
+/* doc specific */
+
+#content.documentation {
+	@include grid(8);
+	padding: 0;
+	width: 757px;
+	overflow:hidden;
+	border: solid 1px red;
+	.holder {
+		@include grid(8);
+		overflow:scroll;
+		width: 757px;
+	}
+}
+
+/* WDOCS nav tree */
+
+#wdocs-tree.menu {
+	>ul>li {
+		background-color: #ffd;
+		margin: 2px;
+	}
+	>ul>li>ul {
+		background-color: #ddd;
+	}
+	ul {
+		list-style-type: none;
+		padding-left: 2px;
+	}
+	ul li {
+		padding: 0;
+	}
+
+	li.active {
+		font-weight: bold;
+		border-right: solid 2px #ccc;
+	}
+	li.active li {
+		font-weight: normal;
+		border-right: dotted 2px #eee;
+	}
+
+	li.expandable:not(.expanded) li {
+		border-left: dotted 4px red;
+		display: none;
+	}
+	li.expandable.expanded>a {
+		font-weight: bold;
+	}
+	//li:not(.expandable)>a:before {
+	//content: "- ";
+	//}
+
+	//li.expandable:not(.expanded)>a:before {
+	//content: "[>] "
+	//}
+	//li.expandable.expanded>a:before {
+	//content: "[V] "
+	//}
+}
+

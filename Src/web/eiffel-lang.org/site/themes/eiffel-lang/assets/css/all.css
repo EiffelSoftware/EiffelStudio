@@ -376,12 +376,22 @@ table {
   margin: 2px;
 }
 #wdocs-tree.menu > ul > li > a.treeitemcontrol {
-  font-family: "Lucida Console", "Courier New", "serif";
   background-color: #fff;
   border: solid 1px #ccf;
-  padding-left: 3px;
-  padding-right: 3px;
-  margin-left: -3px;
+}
+#wdocs-tree.menu > ul > li > a.treeitemcontrol:hover {
+  background-color: #00008F;
+  color: #fff;
+}
+#wdocs-tree.menu a.treeitemcontrol {
+  font-family: "Lucida Console", "Courier New", "serif";
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: -2px;
+}
+#wdocs-tree.menu a.treeitemcontrol:hover {
+  background-color: #00008F;
+  color: #fff;
 }
 #wdocs-tree.menu > ul > li > ul > * {
   background-color: #fff;

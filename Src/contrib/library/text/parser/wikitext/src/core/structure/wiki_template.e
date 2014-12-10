@@ -113,6 +113,7 @@ feature -- Access
 					else
 						from
 							i := 1
+							l_split_positions.force (n) -- so that last parameter is included.
 							l_split_positions.start
 						until
 							i > n or l_split_positions.after

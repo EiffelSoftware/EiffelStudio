@@ -281,7 +281,7 @@ feature -- Access: link
 					l_title := md.item ("link_title")
 				end
 			end
-			if l_title /= Void then
+			if l_title /= Void and then not l_title.is_whitespace then
 				Result := utf.escaped_utf_32_string_to_utf_8_string_8 (l_title)
 			else
 				Result := wiki_page_title (pg)

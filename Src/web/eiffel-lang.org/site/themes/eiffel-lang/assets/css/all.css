@@ -1262,6 +1262,23 @@ table.download_decorator {
     }*/
 
 
+.less.active .button-read-more {
+    display: none;
+}
+.button-read-less {
+    display: none;
+}
+.less.active .button-read-less {
+    display: block;
+}
+.more {
+    margin-top: 10px;
+}
+.more table {
+    margin: 0;
+    padding: 0;
+}
+
 /***********************************/
 /*   Link                          */
 /**********************************/

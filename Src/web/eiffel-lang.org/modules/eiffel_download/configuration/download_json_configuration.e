@@ -159,10 +159,6 @@ feature {NONE} -- Implemenation: Products
 					if attached {JSON_STRING} ji.item ("mirrors") as l_mirrors then
 						l_item.set_mirrors (l_mirrors.item)
 					end
-					if attached {JSON_STRING} ji.item ("blerb") as l_blerb then
-						l_item.set_blerb (l_blerb.item)
-					end
-
 					if
 						attached {JSON_OBJECT} ji.item ("license") as l_license and then
 						attached {JSON_STRING} l_license.item ("name") as l_name and then

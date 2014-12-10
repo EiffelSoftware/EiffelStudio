@@ -99,6 +99,14 @@ feature -- Access: config
 			end
 		end
 
+	retrieve_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+		do
+			if attached cfg.products as l_products then
+				Result := l_products
+			end
+		end
+
+
 feature -- Hooks
 
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
@@ -109,13 +117,11 @@ feature -- Hooks
 			if attached download_configuration as cfg then
 				if
 					attached retrieve_product_gpl (cfg) as l_product and then
-					attached l_product.release as l_release and then
-					attached l_product.date as l_date and then
-					attached l_product.version as l_version and then
+					attached l_product.name as l_name and then
+					attached l_product.version  as l_version and then
 					attached retrieve_mirror_gpl (cfg) as l_mirror
 				then
-					a_value.force (l_release +" " + l_version, "last_release")
-					a_value.force (l_date, "date")
+					a_value.force (l_name +" " + l_version, "last_release")
 					a_value.force (l_mirror, "mirror")
 					a_value.force ((create {CMS_LOCAL_LINK}.make ("download link", "download")), "link")
 				end
@@ -213,6 +219,7 @@ feature -- Hooks
 					get_download_configuration (a_response.api)
 					if attached download_configuration as cfg then
 						vals.force (retrieve_product_gpl (cfg), "product")
+						vals.force (retrieve_products (cfg), "products")
 						vals.force (retrieve_mirror_gpl (cfg), "mirror")
 
 						across

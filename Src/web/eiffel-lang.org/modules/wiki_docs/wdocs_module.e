@@ -658,21 +658,6 @@ feature -- Handler
 					if pg = Void then
 						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
 					end
---					if
---						pg = Void and then
---						attached mnger.book (l_bookid) as wb
---					then
---						pg := wb.root_page
---						if pg = Void then
---							create pg.make (wb.name, wb.name)
---							across
---								wb.top_pages as ic
---							loop
---								pg.extend (ic.item)
---							end
---							pg.sort
---						end
---					end
 				end
 			end
 

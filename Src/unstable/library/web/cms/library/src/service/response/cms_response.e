@@ -934,6 +934,9 @@ feature -- Generation
 					end
 				end
 			end
+			if l_comp_link /= Void and then l_comp_link.is_active then
+				l_comp_link.set_expanded (True)
+			end
 		end
 
 	get_local_link_active_status (a_lnk: CMS_LOCAL_LINK)

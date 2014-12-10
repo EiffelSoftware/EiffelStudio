@@ -358,7 +358,6 @@ table {
   padding: 0;
   width: 757px;
   overflow: hidden;
-  border: solid 1px red;
 }
 #content.documentation .holder {
   display: inline;
@@ -1179,8 +1178,8 @@ a.link-options:hover {
   background-image: linear-gradient(top, #99cc33, #769830);
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  width: 200px;
-  height: 42px;
+  width: 100px;
+  height: 32px;
   display: block;
   margin: 0 0 0 -31px;
   color: white;

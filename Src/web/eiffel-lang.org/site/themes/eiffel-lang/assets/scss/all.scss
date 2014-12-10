@@ -2,6 +2,11 @@
 @import "base/base-reset";
 @import "markup-mixins";
 @import "960";
+@import "site/docs";
+@import "site/codeboard";
+@import "site/download_product";
+@import "site/custom";
+
 
 @font-face {
 	font-family: 'museo_slab500';
@@ -42,6 +47,7 @@
 	@include grid-container;
 	@extend %clearfix;
 }
+
 #header{
 	background: url(../images/bg-head.jpg);
 	position: relative;
@@ -525,7 +531,7 @@
 					margin: 0 5px 0 0;
 				}
 				a{
-					color: $white;
+					color: #7FB514;
 					&:hover{
 						color: $yellow-lt;
 					}
@@ -581,8 +587,8 @@
 		.btn-download{
 			@include linear-gradient(#99cc33, #769830);
 			@include border-radius(4px);
-			width: 95px;
-			height: 32px;
+			width: 200px;
+			height: 42px;
 			display: block;
 			margin: 0 0 0 -31px;
 			color: $white;
@@ -656,7 +662,7 @@
 	@include grid(8);
 	.holder{
 		overflow: hidden;
-		width: 615px;
+		width: 300px;
 	}
 	.head{
 		overflow: hidden;
@@ -790,12 +796,15 @@
 }
 
 #sidebar{
-	@include grid(4);
-	padding: 76px 0 0;
+	@include grid(3);
+	padding: 0;
+	margin: 0 2px 0 2px;
 	.holder{
-		padding: 0 0 0 56px;
+		border: solid 1px #999;
+		background-color: #ddd;
+		padding: 5px;
 	}
-	h2{
+	div.title, h2{
 		color: $green-light;
 		margin: 0 0 17px;
 		padding: 0 0 15px;
@@ -867,3 +876,4 @@
 		}
 	}
 }
+

@@ -1,0 +1,30 @@
+
+/* Custom */
+
+.less.active {
+	.button-read-more {
+    	display: none;
+	}
+	.button-read-less {
+		display: block;
+	}
+}
+.button-read-less {
+    display: none;
+}
+.more {
+    margin-top: 10px;
+	table {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+/* Link */
+
+a.link-options {
+  color: white;
+  &:hover {
+	  color: black;
+  }
+}  

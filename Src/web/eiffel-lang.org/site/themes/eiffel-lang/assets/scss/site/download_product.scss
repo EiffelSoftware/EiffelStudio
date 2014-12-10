@@ -1,0 +1,48 @@
+/***********************/
+/*    Download         */   
+/***********************/
+
+.toggleDownload {
+  cursor: pointer;
+}
+
+table.download_decorator { 
+    margin-left:0px; 
+	margin-right: 20px;
+    border-collapse: collapse;
+	border-style: none; 
+	text-align: left;
+	a:link { 
+		color: #6600CC;
+	}
+	a:hover { 
+		color: #00001E;
+	}
+	a:visited { 
+		color: #6600CC;
+	}
+	a:active { 
+		color: #6600CC;
+	}
+	td { 
+		padding-right: 10px; 
+	}
+	tr {
+		background-color: #f0f0f0;
+		color: #000080;
+	}
+	tr:nth-child(2n), tr.first {
+		background-color: rgb(173, 201, 188);
+	}
+	td,th {
+		white-space: nowrap;
+		padding: 6px 10px;
+	}
+	tt {
+		font-size: x-small;
+	}
+	tr.highlight td {
+		font-weight: bold;
+	}
+}
+

@@ -89,7 +89,7 @@ feature -- Execution
 			b: STRING
 		do
 			create m.make
-			create b.make_from_string ("<h1>Wiki Docs is about to shutdown</h1>")
+			create b.make_from_string ("<h1>Eiffel Lang is about to shutdown</h1>")
 			m.set_body (b)
 			res.send (m)
 			if attached {WGI_NINO_CONNECTOR} req.wgi_connector as nino then

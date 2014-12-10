@@ -13,11 +13,13 @@
 				<main id="main" role="main">
 					{assign name="doc_page_type" value="doc"/}
 					<div class="container">
+						{unless isempty="$page.region_sidebar_first"}
 						<aside id="sidebar">
 							{if isset="$page.region_sidebar_first"}
 							<div class="holder">{$page.region_sidebar_first/}</div>
 							{/if}
 						</aside>
+						{/unless}
 						{if condition="$page.is_front"}
 							{include file="front/container-main.tpl"/}
 						{/if}

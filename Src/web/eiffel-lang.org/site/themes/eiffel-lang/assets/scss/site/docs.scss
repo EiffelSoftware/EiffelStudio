@@ -10,7 +10,6 @@
 	padding: 0;
 	width: 757px;
 	overflow:hidden;
-	border: solid 1px red;
 	.holder {
 		@include grid(8);
 		overflow:scroll;

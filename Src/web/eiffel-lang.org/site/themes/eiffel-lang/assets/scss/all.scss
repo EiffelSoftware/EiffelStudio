@@ -587,8 +587,8 @@
 		.btn-download{
 			@include linear-gradient(#99cc33, #769830);
 			@include border-radius(4px);
-			width: 200px;
-			height: 42px;
+			width: 100px;
+			height: 32px;
 			display: block;
 			margin: 0 0 0 -31px;
 			color: $white;

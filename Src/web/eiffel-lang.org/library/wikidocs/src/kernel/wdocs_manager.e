@@ -107,7 +107,7 @@ feature -- Access
 			Result := storage.book (a_bookid)
 		end
 
-	page (a_bookid: READABLE_STRING_GENERAL; a_bookpage: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
+	page (a_bookpage: detachable READABLE_STRING_GENERAL; a_bookid: READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		local
 			n: READABLE_STRING_GENERAL
@@ -159,16 +159,21 @@ feature -- Access
 			end
 		end
 
-	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do
 			Result := storage.page_by_title (a_page_title, a_bookid)
 		end
 
-	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL): detachable WIKI_PAGE
+	page_by_metadata (a_metadataname, a_metadata_value: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like new_wiki_page
+		do
+			Result := storage.page_by_metadata (a_metadataname, a_metadata_value, a_bookid, is_caseless)
+		end
+
+	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page associated to UUID `a_page_uuid'.
 		do
-			Result := storage.page_by_uuid (a_page_uuid)
+			Result := storage.page_by_uuid (a_page_uuid, Void)
 		end
 
 	wiki_text (p: WIKI_PAGE): detachable READABLE_STRING_8

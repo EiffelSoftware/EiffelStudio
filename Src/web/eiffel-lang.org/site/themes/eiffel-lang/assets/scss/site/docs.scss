@@ -21,18 +21,27 @@
 
 #wdocs-tree.menu {
 	>ul>li {
-		background-color: #ffd;
+		background-color: $green-light-bg;
+		border-top: dotted 1px #bbf;
 		margin: 2px;
 	}
-	>ul>li>ul {
-		background-color: #ddd;
+	>ul>li>a.treeitemcontrol {
+		font-family: "Lucida Console", "Courier New", "serif";
+		background-color: #fff;
+		border: solid 1px #ccf;
+		padding-left: 3px;
+		padding-right: 3px;
+		margin-left: -3px;
+	}
+	>ul>li>ul>* {
+		background-color: #fff;
 	}
 	ul {
 		list-style-type: none;
-		padding-left: 2px;
+		padding: 0px;
 	}
 	ul li {
-		padding: 0;
+		padding-left: 0px;
 	}
 
 	li.active {

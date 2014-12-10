@@ -34,7 +34,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #abc4d4;
+  color: #00008F;
 }
 a:hover {
   color: #5082D9;
@@ -209,7 +209,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #abc4d4;
+  color: #00008F;
 }
 a:hover {
   color: #5082D9;
@@ -371,18 +371,27 @@ table {
 
 /* WDOCS nav tree */
 #wdocs-tree.menu > ul > li {
-  background-color: #ffd;
+  background-color: #d4ebb0;
+  border-top: dotted 1px #bbf;
   margin: 2px;
 }
-#wdocs-tree.menu > ul > li > ul {
-  background-color: #ddd;
+#wdocs-tree.menu > ul > li > a.treeitemcontrol {
+  font-family: "Lucida Console", "Courier New", "serif";
+  background-color: #fff;
+  border: solid 1px #ccf;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: -3px;
+}
+#wdocs-tree.menu > ul > li > ul > * {
+  background-color: #fff;
 }
 #wdocs-tree.menu ul {
   list-style-type: none;
-  padding-left: 2px;
+  padding: 0px;
 }
 #wdocs-tree.menu ul li {
-  padding: 0;
+  padding-left: 0px;
 }
 #wdocs-tree.menu li.active {
   font-weight: bold;
@@ -1239,7 +1248,7 @@ a.link-options:hover {
   display: inline-block;
 }
 .footer-nav ul li a:hover {
-  color: #abc4d4;
+  color: #00008F;
 }
 .footer-nav ul li ul {
   overflow: hidden;
@@ -1249,7 +1258,7 @@ a.link-options:hover {
   padding: 6px 0 0;
 }
 .footer-nav ul li ul li a {
-  color: #abc4d4;
+  color: #00008F;
   display: inline-block;
 }
 .footer-nav ul li ul li a:hover {
@@ -1409,8 +1418,8 @@ a.link-options:hover {
   margin: 0 2px 0 2px;
 }
 #sidebar .holder {
-  border: solid 1px #999;
-  background-color: #ddd;
+  border: solid 1px #ddd;
+  background-color: #fff;
   padding: 5px;
 }
 #sidebar div.title, #sidebar h2 {

@@ -51,7 +51,7 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #error "SCOOP is currenly supported only in multithreaded mode."
 #endif
 
-void eif_call_const (call_data * a)
+rt_public void eif_call_const (call_data * a)
 {
 	/* Constant value is hard-coded in the generated code: nothing to do here. */
 	/* Avoid C compiler error about unreferenced parameter. */

@@ -1457,13 +1457,17 @@ RT_LNK void eif_exit_eiffel_code(void);
 #ifdef WORKBENCH
 #define RTS_CF(rid,n,t,a,r) \
 	{                                                         \
+		((call_data*)(a)) -> routine_id = rid;               \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_wcall (rid, RTS_PID(Current), (call_data*) a);         \
+		eif_log_call (((call_data *)(a))->sync_pid, RTS_PID(t), (call_data*) a); \
 	}
-#define RTS_CP(rid,n,t,a)  eif_log_wcall  (rid, RTS_PID(Current), (call_data*) a);
+#define RTS_CP(rid,n,t,a) {\
+		((call_data*)(a)) -> routine_id = rid; \
+		eif_log_call (RTS_PID(Current), RTS_PID(t), (call_data*) a); \
+	}
 
-#define RTS_CC(rid,d,a)  eif_log_wcall  (rid, RTS_PID(Current), (call_data*) a);
+#define RTS_CC(rid,t,a) RTS_CP(rid,NULL,((call_data*)a)->target,a)
 #else /* WORKBENCH */
 #define RTS_CF(fptr,p,t,a,r) \
 	{                                                         \
@@ -1503,45 +1507,37 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_AS(v,f,t,n,a) - same as RTS_AA except that that argument is checked if it is controlled or not that is recorded to make synchronous call if required
  */
 #define RTS_AC(n,t,a) \
-	{                                                                                                              \
+	{ \
 		a = malloc (sizeof (call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
-		((call_data*)(a)) -> target = (t);								\
-		((call_data*)(a)) -> count = (n);                                                                      \
-		((call_data*)(a)) -> result = (EIF_TYPED_VALUE *) 0;                                                   \
-		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1;                                                      \
-		((call_data*)(a)) -> is_lock_passing = EIF_FALSE;                                                      \
+		((call_data*)(a)) -> target = (t); \
+		((call_data*)(a)) -> count = (n); \
+		((call_data*)(a)) -> result = NULL; \
+		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1; \
+		((call_data*)(a)) -> is_lock_passing = EIF_FALSE; \
 	}
-#	define RTS_AA(v,f,t,n,a) \
-		{                                                         \
+#ifdef WORKBENCH
+#define RTS_AA(v,f,t,n,a) ((call_data*)(a)) -> argument [(n) - 1] = (v);
+#else
+#define RTS_AA(v,f,t,n,a) \
+		{ \
 			((call_data*)(a)) -> argument [(n) - 1].f = (v);  \
-			((call_data*)(a)) -> argument [(n) - 1].type = (t);	\
+			((call_data*)(a)) -> argument [(n) - 1].type = (t); \
 		}
-#	define RTS_AS(v,f,t,n,a) \
-		{	                                                                                 \
-			((call_data*)(a)) -> argument [(n) - 1].type = SK_REF;                           \
-			if (v) \
-			{	\
-			  ((call_data*)(a)) -> argument [(n) - 1].it_r = (EIF_REFERENCE) (v); \
-				if (!RTS_OU(Current, ((call_data*)(a)) -> argument [(n) - 1].it_r ) )	\
-				{	\
-					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, ((call_data*)(a))->argument [(n)-1].it_r)) \
-					{	\
+#endif
+#define RTS_AS(v,f,t,n,a) \
+		{ \
+			EIF_REFERENCE val; \
+			RTS_AA(v,f,t,n,a); \
+			val = ((call_data*)(a))->argument [(n) - 1].f; \
+			if (val) { \
+				if (!RTS_OU(Current, val)) { \
+					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, val)) { \
 						((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
 						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-					}	\
-				}	\
-			} else {	\
-			  ((call_data*)(a)) -> argument [(n) - 1].it_r = (v);  	\
-			}	\
+					} \
+				} \
+			} \
 		}
-#ifdef WORKBENCH
-#undef RTS_AC
-#undef RTS_AA
-#undef RTS_AS
-#define RTS_AC(n,t,a)
-#define RTS_AA(v,f,t,n,a)
-#define RTS_AS(v,f,t,n,a)
-#endif
 
 #define RTS_WPR eif_wait_for_all_processors();
 

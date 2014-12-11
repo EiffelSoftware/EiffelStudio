@@ -167,6 +167,7 @@ public:
 
 private:
   std::queue <notify_token> token_queue;
+  mutex_type token_queue_mutex;
   void notify_next(processor *);
 
 

@@ -24,15 +24,11 @@ feature {NONE} -- Initialization
 	make (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Create an empty table with key order `o'.
 		require
-			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True
 			--- o_is_total_order: is_total_order (o)
 		do
 			key_order := o
-			create set.make (agent (kv1, kv2: TUPLE [key: K; value: V]; key_o: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
-					do
-						Result := key_o.item ([kv1.key, kv2.key])
-					end (?, ?, o))
+			create set.make ((create {V_TUPLE_PROJECTOR [K, V, BOOLEAN]}).project_two_predicate (o))
 		ensure
 			map_effect: map.is_empty
 			--- key_less_order_effect: key_less_order |=| o
@@ -104,6 +100,5 @@ feature -- Specification
 ---		end
 
 invariant
-	key_less_order_exists: key_order /= Void
 	--- key_order_is_total_order: is_total_order (key_order)
 end

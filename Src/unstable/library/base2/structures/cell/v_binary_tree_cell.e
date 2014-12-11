@@ -17,13 +17,13 @@ create
 
 feature -- Access
 
-	right: V_BINARY_TREE_CELL [G]
+	right: detachable V_BINARY_TREE_CELL [G]
 			-- Right child.
 
-	left: V_BINARY_TREE_CELL [G]
+	left: detachable V_BINARY_TREE_CELL [G]
 			-- Left child.
 
-	parent: V_BINARY_TREE_CELL [G]
+	parent: detachable V_BINARY_TREE_CELL [G]
 			-- Parent.
 
 feature -- Status report
@@ -47,22 +47,22 @@ feature -- Status report
 	is_left: BOOLEAN
 			-- Is the left child of its parent?
 		do
-			Result := (not is_root and then parent.left = Current)
+			Result := attached parent as p and then p.left = Current
 		ensure
-			definition: Result = (parent /= Void and then parent.left = Current)
+			definition: Result = (attached parent as p and then p.left = Current)
 		end
 
 	is_right: BOOLEAN
 			-- Is the right child of its parent?
 		do
-			Result := (not is_root and then parent.right = Current)
+			Result := attached parent as p and then p.right = Current
 		ensure
-			definition: Result = (parent /= Void and then parent.right = Current)
+			definition: Result = (attached parent as p and then p.right = Current)
 		end
 
 feature -- Replacement
 
-	connect_right_child (r: V_BINARY_TREE_CELL [G])
+	connect_right_child (r: detachable V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r' and `r.parent' to `Current'.
 		note
 			modify: right, r__parent
@@ -76,7 +76,7 @@ feature -- Replacement
 			r_parent_effect: r /= Void implies r.parent = Current
 		end
 
-	connect_left_child (l: V_BINARY_TREE_CELL [G])
+	connect_left_child (l: detachable V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l' and `l.parent' to `Current'.
 		note
 			modify: left, l__parent
@@ -90,7 +90,7 @@ feature -- Replacement
 			l_parent_effect: l /= Void implies l.parent = Current
 		end
 
-	put_right (r: V_BINARY_TREE_CELL [G])
+	put_right (r: detachable V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r'.
 		note
 			modify: right
@@ -100,7 +100,7 @@ feature -- Replacement
 			right_effect: right = r
 		end
 
-	put_left (l: V_BINARY_TREE_CELL [G])
+	put_left (l: detachable V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l'.
 		note
 			modify: left
@@ -110,7 +110,7 @@ feature -- Replacement
 			left_effect: left = l
 		end
 
-	put_parent (p: V_BINARY_TREE_CELL [G])
+	put_parent (p: detachable V_BINARY_TREE_CELL [G])
 			-- Set `parent' to `p'.
 		note
 			modify: parent

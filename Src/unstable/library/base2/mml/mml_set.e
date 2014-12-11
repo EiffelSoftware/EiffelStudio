@@ -18,8 +18,8 @@ create
 create {MML_MODEL}
 	make_from_array
 
-convert
-	singleton ({G})
+--convert
+--	singleton ({G})
 
 feature {NONE} -- Initialization
 
@@ -34,8 +34,7 @@ feature {NONE} -- Initialization
 	singleton (x: G)
 			-- Create a set that contains only `x'.
 		do
-			create array.make (1, 1)
-			array [1] := x
+			create array.make_filled (1, 1, x)
 		ensure
 			one_element: count = 1
 			has_x: has (x)
@@ -60,7 +59,6 @@ feature -- Properties
 	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does `test' hold for all elements?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
 		do
 			Result := array.for_all (test)
@@ -69,7 +67,6 @@ feature -- Properties
 	exists (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does `test' hold for at least one element?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
 		do
 			Result := array.exists (test)
@@ -83,8 +80,9 @@ feature -- Elements
 			not_empty: not is_empty
 		do
 			if not is_empty then
-				-- Workaround for semistrict postconditions
 				Result := array [1]
+			else
+				Result := array.default_value
 			end
 		ensure
 			element: has (Result)
@@ -94,7 +92,6 @@ feature -- Elements
 			-- Least element with respect to `order'.
 		require
 			not_empty: not is_empty
-			order_exists: order /= Void
 			order_has_one_arg: order.open_count = 2
 			--- transitive: forall x, y, z: G :: order (x, y) and order (y, z) implies order (x, z)
 			--- total: forall x, y: G :: order (x, y) or order (y, x)
@@ -102,7 +99,6 @@ feature -- Elements
 			i: INTEGER
 		do
 			if not is_empty then
-				-- Workaround for semistrict postconditions
 				from
 					Result := array.first
 					i := 2
@@ -114,6 +110,8 @@ feature -- Elements
 					end
 					i := i + 1
 				end
+			else
+				Result := array.default_value
 			end
 		ensure
 			element: has (Result)
@@ -128,7 +126,6 @@ feature -- Subsets
 	filtered alias "|" (test: PREDICATE [ANY, TUPLE [G]]): MML_SET [G]
 			-- Set of all elements that satisfy `test'.
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
 		local
 			a: V_ARRAY [G]
@@ -174,8 +171,6 @@ feature -- Comparison
 
 	is_subset_of alias "<=" (other: MML_SET [G]): BOOLEAN
 			-- Does `other' have all elements of `Current'?
-		require
-			other_exists: other /= Void
 		do
 			Result := for_all (agent other.has)
 		ensure
@@ -184,8 +179,6 @@ feature -- Comparison
 
 	is_superset_of alias ">=" (other: MML_SET [G]): BOOLEAN
 			-- Does `Current' have all elements of `other'?
-		require
-			other_exists: other /= Void
 		do
 			Result := other <= Current
 		ensure
@@ -194,8 +187,6 @@ feature -- Comparison
 
 	disjoint (other: MML_SET [G]): BOOLEAN
 			-- Do no elements of `other' occur in `Current'?
-		require
-			other_exists: other /= Void
 		do
 			Result := not other.exists (agent has)
 		ensure
@@ -211,7 +202,7 @@ feature -- Modification
 		do
 			if not Current [x] then
 				create a.make (1, array.count + 1)
-				a.copy_range (array, 1, array.count, 1)
+				a.array_copy_range (array, 1, array.count, 1)
 				a [a.count] := x
 				create Result.make_from_array (a)
 			else
@@ -230,8 +221,8 @@ feature -- Modification
 			i := array.index_satisfying (agent meq (x, ?))
 			if array.has_index (i) then
 				create a.make (1, array.count - 1)
-				a.copy_range (array, 1, i - 1, a.lower)
-				a.copy_range (array, i + 1, array.count, i)
+				a.array_copy_range (array, 1, i - 1, a.lower)
+				a.array_copy_range (array, i + 1, array.count, i)
 				create Result.make_from_array (a)
 			else
 				Result := Current
@@ -242,12 +233,10 @@ feature -- Modification
 
 	union alias "+" (other: MML_SET [G]): MML_SET [G]
 			-- Set of values contained in either `Current' or `other'.
-		require
-			other_exists: other /= Void
 		do
 			Result := Current - other
 			Result.array.resize (1, Result.array.count + other.array.count)
-			Result.array.copy_range (other.array, 1, other.array.count, Result.array.count - other.count + 1)
+			Result.array.array_copy_range (other.array, 1, other.array.count, Result.array.count - other.count + 1)
 		ensure
 			contains_current: Current <= Result
 			contains_other: other <= Result
@@ -259,8 +248,6 @@ feature -- Modification
 
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]
 			-- Set of values contained in both `Current' and `other'.
-		require
-			other_exists: other /= Void
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -291,8 +278,6 @@ feature -- Modification
 
 	difference alias "-" (other: MML_SET [G]): MML_SET [G]
 			-- Set of values contained in `Current' but not in `other'.
-		require
-			other_exists: other /= Void
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -323,8 +308,6 @@ feature -- Modification
 
 	sym_difference alias "^" (other: MML_SET [G]): MML_SET [G]
 			-- Set of values contained in either `Current' or `other', but not in both.
-		require
-			other_exists: other /= Void
 		do
 			Result := (Current + other) - (Current * other)
 		ensure
@@ -334,7 +317,6 @@ feature -- Modification
 	mapped (f: FUNCTION [ANY, TUPLE [G], G]): MML_SET [G]
 			-- Set of elements of `Current' with `f' applied to each of them.
 		require
-			f_exists: f /= Void
 			f_has_one_arg: f.open_count = 1
 		local
 			a: V_ARRAY [G]
@@ -360,7 +342,6 @@ feature {MML_MODEL} -- Implementation
 	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array.
 		require
-			a_exists: a /= Void
 			starts_from_one: a.lower = 1
 			no_duplicates: a.bag.is_constant (1)
 		do
@@ -376,6 +357,5 @@ feature {MML_MODEL} -- Implementation
 		end
 
 invariant
-	array_exists: array /= Void
 	starts_from_one: array.lower = 1
 end

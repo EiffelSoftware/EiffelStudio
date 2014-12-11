@@ -19,9 +19,6 @@ feature {NONE} -- Initialization
 
 	make (t: V_CONTAINER [G]; it: V_ITERATOR [G])
 			-- Create a proxy for `it' with target `t'.
-		require
-			t_exists: t /= Void
-			it_exists: it /= Void
 		do
 			target := t
 			iterator := it
@@ -145,7 +142,4 @@ feature -- Specification
 		do
 			Result := iterator.sequence
 		end
-
-invariant
-	iterator_exists: iterator /= Void
 end

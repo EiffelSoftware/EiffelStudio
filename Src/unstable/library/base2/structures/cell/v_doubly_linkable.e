@@ -14,15 +14,15 @@ create
 
 feature -- Access
 
-	right: V_DOUBLY_LINKABLE [G]
+	right: detachable V_DOUBLY_LINKABLE [G]
 			-- Next cell.
 
-	left: V_DOUBLY_LINKABLE [G]
+	left: detachable V_DOUBLY_LINKABLE [G]
 			-- Previous cell.
 
 feature -- Replacement
 
-	put_right (cell: V_DOUBLY_LINKABLE [G])
+	put_right (cell: detachable V_DOUBLY_LINKABLE [G])
 			-- Replace `right' with `cell'.
 		note
 			modify: right
@@ -32,7 +32,7 @@ feature -- Replacement
 			right_effect: right = cell
 		end
 
-	put_left (cell: V_DOUBLY_LINKABLE [G])
+	put_left (cell: detachable V_DOUBLY_LINKABLE [G])
 			-- Replace `left' with `cell'.
 		note
 			modify: left
@@ -47,8 +47,6 @@ feature -- Replacement
 			-- Do not modify `right' and `cell.left'.
 		note
 			modify: right, cell__left
-		require
-			cell_exists: cell /= Void
 		do
 			put_right (cell)
 			cell.put_left (Current)

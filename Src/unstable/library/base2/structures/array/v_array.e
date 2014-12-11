@@ -18,8 +18,15 @@ inherit
 			is_equal,
 			put,
 			fill,
-			clear,
-			copy_range
+			clear
+		end
+
+	V_DEFAULT [G]
+		undefine
+			out
+		redefine
+			copy,
+			is_equal
 		end
 
 create
@@ -40,10 +47,10 @@ feature {NONE} -- Initialization
 				lower := 1
 				upper := 0
 			end
-			create area.make_filled (({G}).default, upper - lower + 1)
+			create area.make_filled (default_value, upper - lower + 1)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTERVAL}[[l, u]]
-			map_effect: map.is_constant (({G}).default)
+			map_domain_effect: map.domain |=| create {MML_INTERVAL}.from_range (l, u)
+			map_effect: map.is_constant (default_value)
 		end
 
 	make_filled (l, u: INTEGER; v: G)
@@ -60,7 +67,7 @@ feature {NONE} -- Initialization
 			end
 			create area.make_filled (v, u - l + 1)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTERVAL}[[l, u]]
+			map_domain_effect: map.domain |=| create {MML_INTERVAL}.from_range (l, u)
 			map_effect: map.is_constant (v)
 		end
 
@@ -90,7 +97,11 @@ feature -- Access
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
-			Result := area [i - lower]
+			if attached area [i - lower] as res then
+				Result := res
+			else
+				Result := default_value
+			end
 		end
 
 	subarray (l, u: INTEGER): V_ARRAY [G]
@@ -101,9 +112,9 @@ feature -- Access
 			l_not_too_large: l <= u + 1
 		do
 			create Result.make (l, u)
-			Result.copy_range (Current, l, u, Result.lower)
+			Result.array_copy_range (Current, l, u, Result.lower)
 		ensure
-			map_domain_definition: Result.map.domain |=| {MML_INTERVAL}[[l, u]]
+			map_domain_definition: Result.map.domain |=| create {MML_INTERVAL}.from_range (l, u)
 			map_definition: Result.map.for_all (agent (i: INTEGER; x: G): BOOLEAN
 				do
 					Result := x = map [i]
@@ -159,19 +170,30 @@ feature -- Replacement
 	clear (l, u: INTEGER)
 			-- Put default value at positions [`l', `u'].		
 		do
-			area.fill_with_default (l - lower, u - lower)
+			area.fill_with (default_value, l - lower, u - lower)
 		end
 
-	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
+	array_copy_range (other: V_ARRAY [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `i'.
+		require
+			other_first_not_too_small: other_first >= other.lower
+			other_last_not_too_large: other_last <= other.upper
+			other_first_not_too_large: other_first <= other_last + 1
+			index_not_too_small: index >= lower
+			enough_space: upper - index >= other_last - other_first
 		do
-			if attached {V_ARRAY [G]} other as a then
-				if other_last >= other_first then
-					area.copy_data (a.area, other_first - other.lower, index - lower, other_last - other_first + 1)
-				end
-			else
-				Precursor (other, other_first, other_last, index)
+			if other_last >= other_first then
+				area.copy_data (other.area, other_first - other.lower, index - lower, other_last - other_first + 1)
 			end
+		ensure
+			map_domain_effect: map.domain |=| old map.domain
+			map_changed_effect: (create {MML_INTERVAL}.from_range (index, index + other_last - other_first)).for_all (
+				agent (i: INTEGER; other_map: MML_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
+					do
+						Result := map [i] = other_map [i - f + of]
+					end (?, old other.map, index, other_first))
+			map_unchanged_effect: (map | (map.domain - create {MML_INTERVAL}.from_range (index, index + other_last - other_first))) |=|
+				old (map | (map.domain - create {MML_INTERVAL}.from_range (index, index + other_last - other_first)))
 		end
 
 feature -- Resizing
@@ -193,18 +215,18 @@ feature -- Resizing
 				upper := 0
 			else
 				if new_count > area.count then
-					area := area.aliased_resized_area_with_default (({G}).default, new_count)
+					area := area.aliased_resized_area_with_default (default_value, new_count)
 				end
 				x := lower.max (l)
 				y := upper.min (u)
 				if x > y then
 					-- No intersection
-					area.fill_with_default (0, area.count - 1)
+					area.fill_with (default_value, 0, area.count - 1)
 				else
 					-- Intersection
 					area.move_data (x - lower, x - l, y - x + 1)
-					area.fill_with_default (0, x - l - 1)
-					area.fill_with_default (y - l + 1, area.count - 1)
+					area.fill_with (default_value, 0, x - l - 1)
+					area.fill_with (default_value, y - l + 1, area.count - 1)
 				end
 				if new_count < area.count then
 					area := area.resized_area (new_count)
@@ -213,9 +235,9 @@ feature -- Resizing
 				upper := u
 			end
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTERVAL} [[l, u]]
+			map_domain_effect: map.domain |=| create {MML_INTERVAL}.from_range (l, u)
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
-			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
+			map_new_effect: (map | (map.domain - old map.domain)).is_constant (default_value)
 		end
 
 	include (i: INTEGER)
@@ -232,10 +254,10 @@ feature -- Resizing
 				resize (lower, i)
 			end
 		ensure
-			map_domain_effect_empty: old map.is_empty implies map.domain |=| {MML_SET [INTEGER]} [i]
-			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
+			map_domain_effect_empty: old map.is_empty implies map.domain |=| create {MML_SET [INTEGER]}.singleton (i)
+			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| create {MML_INTERVAL}.from_range (i.min (old lower), i.max (old upper))
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
-			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
+			map_new_effect: (map | (map.domain - old map.domain)).is_constant (default_value)
 		end
 
 	force (v: G; i: INTEGER)
@@ -247,11 +269,11 @@ feature -- Resizing
 			include (i)
 			put (v, i)
 		ensure
-			map_domain_effect_empty: old map.is_empty implies map.domain |=| {MML_SET [INTEGER]} [i]
-			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
+			map_domain_effect_empty: old map.is_empty implies map.domain |=| create {MML_SET [INTEGER]}.singleton (i)
+			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| create {MML_INTERVAL}.from_range (i.min (old lower), i.max (old upper))
 			map_i_effect: map [i] = v
-			map_old_effect: (map | (map.domain * old map.domain - {MML_INTERVAL}[i])) |=| (old map | (map.domain * old map.domain - {MML_INTERVAL}[i]))
-			map_new_effect: (map | (map.domain - old map.domain - {MML_INTERVAL}[i])).is_constant (({G}).default)
+			map_old_effect: (map | (map.domain * old map.domain - create {MML_INTERVAL}.singleton (i))) |=| (old map | (map.domain * old map.domain - create {MML_INTERVAL}.singleton (i)))
+			map_new_effect: (map | (map.domain - old map.domain - create {MML_INTERVAL}.singleton (i))).is_constant (default_value)
 		end
 
 	wipe_out
@@ -266,11 +288,10 @@ feature -- Resizing
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
-	area: SPECIAL [G]
+	area: SPECIAL [detachable G]
 			-- Memory area where elements are stored.
 
 invariant
-	area_exists: area /= Void
 	lower_definition_empty: map.is_empty implies lower = 1
 	upper_definition_empty: map.is_empty implies upper = 0
 

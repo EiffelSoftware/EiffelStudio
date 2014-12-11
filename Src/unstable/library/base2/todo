@@ -1,0 +1,34 @@
+Structures:
+
+- Character streams that can read arbitrary objects (Alexander)?
+- Relax preconditons of forth/back and extend_left/right?
+- V_SET: weaker contracts for extend and remove (only require sets to be the same up to equivalence)
+- Tree nodes should not have parent pointers? (less consistentcy problems,
+more sharing possible)
+- Do not rely on agents in standard sorted and hash structures
+- Finite streams: filter, mapper, folder
+- Extender iterator
+- V_STRING, V_MUTABLE_STRING
+
+MML:
+
+- Add contracts to model classes
+- Add disjoint union to sets
+- Carlo's convention for sequence indexing?
+- Efficient implementation
+
+Overall:
+
+- Void safety?
+
+Disadvantages of agents vs. infinite models
+
+- Had to introduce "filtered" instead of "intersection" with infinite set
+(but user interface is better)
+- Cannot express an image of a finite set under infinite map
+(because of generic params)
+- Cannot have "compliment" for sets and relations 
+
+Known bugs:
+
+- Search doesn't work properly if model objects put inside data structures (wrong meaning of the postcondition)

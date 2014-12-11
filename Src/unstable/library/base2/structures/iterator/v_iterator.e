@@ -224,7 +224,6 @@ feature -- Cursor movement
 		note
 			modify: index
 		require else
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -274,7 +273,6 @@ feature -- Cursor movement
 		note
 			modify: index
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -303,12 +301,9 @@ feature -- Specification
 		note
 			status: specification
 		deferred
-		ensure
-			exists: Result /= Void
 		end
 
 invariant
-	target_exists: target /= Void
 	target_bag_constraint: target.bag |=| sequence.to_bag
 	index_constraint: 0 <= index and index <= sequence.count + 1
 	box_definition_empty: not sequence.domain [index] implies box.is_empty

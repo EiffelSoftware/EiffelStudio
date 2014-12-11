@@ -45,7 +45,7 @@ feature -- Iteration
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
-			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_SEQUENCE [BOOLEAN]} [True]
+			path_definition_non_empty: not map.is_empty implies Result.path |=| create {MML_SEQUENCE [BOOLEAN]}.singleton (True)
 			path_definition_empty: map.is_empty implies Result.path.is_empty
 		end
 
@@ -98,7 +98,7 @@ feature -- Extension
 			create root.put (v)
 			count := 1
 		ensure
-			map_effect: map |=| create {like map}.singleton (True, v)
+			map_effect: map |=| create {like map}.singleton (create {MML_SEQUENCE [BOOLEAN]}.singleton (True), v)
 		end
 
 feature -- Removal
@@ -124,7 +124,7 @@ feature -- Output
 
 feature {V_CONTAINER, V_BINARY_TREE_CURSOR} -- Implementation
 
-	root: V_BINARY_TREE_CELL [G]
+	root: detachable V_BINARY_TREE_CELL [G]
 			-- Root node.
 
 feature {V_BINARY_TREE_CURSOR} -- Implementation
@@ -132,7 +132,6 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 	extend_left (v: G; cell: V_BINARY_TREE_CELL [G])
 			-- Add a left child with value `v' to `cell'.
 		require
-			cell_exists: cell /= Void
 			not_cell_has_left: cell.left = Void
 		do
 			cell.connect_left_child (create {V_BINARY_TREE_CELL [G]}.put (v))
@@ -142,7 +141,6 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 	extend_right (v: G; cell: V_BINARY_TREE_CELL [G])
 			-- Add a right child with value `v' to `cell'.
 		require
-			cell_exists: cell /= Void
 			not_cell_has_left: cell.right = Void
 		do
 			cell.connect_right_child (create {V_BINARY_TREE_CELL [G]}.put (v))
@@ -152,10 +150,9 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 	remove (cell: V_BINARY_TREE_CELL [G])
 			-- Remove `cell' from the tree (it must have less than two child nodes).
 		require
-			cell_exists: cell /= Void
 			not_two_children: cell.left = Void or cell.right = Void
 		local
-			child: V_BINARY_TREE_CELL [G]
+			child: detachable V_BINARY_TREE_CELL [G]
 		do
 			if cell.left /= Void then
 				child := cell.left
@@ -168,10 +165,12 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 					child.put_parent (Void)
 				end
 			else
-				if cell.is_left then
-					cell.parent.connect_left_child (child)
-				else
-					cell.parent.connect_right_child (child)
+				check attached cell.parent as p then
+					if cell.is_left then
+						p.connect_left_child (child)
+					else
+						p.connect_right_child (child)
+					end
 				end
 			end
 			count := count - 1
@@ -179,7 +178,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	subtree_twin (cell: V_BINARY_TREE_CELL [G]): V_BINARY_TREE_CELL [G]
+	subtree_twin (cell: detachable V_BINARY_TREE_CELL [G]): detachable V_BINARY_TREE_CELL [G]
 			-- Copy of subtree with root `cell'.
 		do
 			if cell /= Void then
@@ -189,7 +188,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	equal_subtree (i, j: V_BINARY_TREE_CELL [G]): BOOLEAN
+	equal_subtree (i, j: detachable V_BINARY_TREE_CELL [G]): BOOLEAN
 			-- Is subtree with root `i' equal to that with root `j' both in structure in values?
 		do
 			if i /= Void and j /= Void then
@@ -199,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	subtree_to_string (cell: V_BINARY_TREE_CELL [G]; indent: INTEGER): STRING
+	subtree_to_string (cell: detachable V_BINARY_TREE_CELL [G]; indent: INTEGER): STRING
 			-- String representation of a subtree with root `cell' indented by `indent'.
 		require
 			indent_non_negative: indent >= 0
@@ -215,8 +214,6 @@ feature {NONE} -- Implementation
 			else
 				Result := ""
 			end
-		ensure
-			result_exists: Result /= Void
 		end
 
 feature -- Specification
@@ -226,14 +223,12 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := map_from (root, {MML_SEQUENCE [BOOLEAN]} [True])
-		ensure
-			exists: Result /= Void
+			Result := map_from (root, create {MML_SEQUENCE [BOOLEAN]}.singleton (True))
 		end
 
 feature {NONE} -- Specification
 
-	map_from (cell: V_BINARY_TREE_CELL [G]; path: MML_SEQUENCE [BOOLEAN]): MML_MAP [MML_SEQUENCE [BOOLEAN], G]
+	map_from (cell: detachable V_BINARY_TREE_CELL [G]; path: MML_SEQUENCE [BOOLEAN]): MML_MAP [MML_SEQUENCE [BOOLEAN], G]
 			-- Map from paths to elements in a subtree starting from `cell' and `path' leading from `root' to `cell'.
 		note
 			status: specification
@@ -244,8 +239,6 @@ feature {NONE} -- Specification
 				create Result.singleton (path, cell.item)
 				Result := Result + map_from (cell.left, path & False) + map_from (cell.right, path & True)
 			end
-		ensure
-			exists: Result /= Void
 		end
 
 invariant

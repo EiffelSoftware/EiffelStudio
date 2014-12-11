@@ -44,7 +44,6 @@ feature -- Search
 	exists_key (pred: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
 			-- Is there a key that satisfies `pred'?
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
 				do
@@ -69,7 +68,6 @@ feature -- Search
 	for_all_keys (pred: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
 			-- Do all keys satisfy `pred'?
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
 				do
@@ -171,7 +169,6 @@ feature -- Specification
 ---		end
 
 invariant
-	key_equivalence_exists: key_equivalence /= Void
 	--- equivalence_is_total: equivalence.precondition |=| True
 	--- equivalence_is_equivalence: is_equivalence (key_equivalence)
 	bag_domain_definition: bag.domain |=| map.range

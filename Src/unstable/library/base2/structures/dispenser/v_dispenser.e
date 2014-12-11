@@ -71,8 +71,6 @@ feature -- Specification
 			status: specification
 		do
 			Result := new_cursor.sequence
-		ensure
-			exists: Result /= Void
 		end
 
 invariant

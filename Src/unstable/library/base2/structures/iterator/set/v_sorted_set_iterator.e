@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
 		require
-			s_exists: s /= Void
 			valid_tree: t = s.tree
 		do
 			target := s
@@ -174,7 +173,7 @@ feature -- Cursor movement
 			-- Move to an element equivalent to `v'.
 			-- (Use `target.equivalence'.)
 		local
-			c: V_BINARY_TREE_CELL [G]
+			c: detachable V_BINARY_TREE_CELL [G]
 		do
 			c := target.cell_equivalent (v)
 			if c = Void then
@@ -298,7 +297,6 @@ feature -- Specification
 		end
 
 invariant
-	 tree_iterator_exists: tree_iterator /= Void
 	 valid_tree: tree_iterator.target = target.tree
 
 end

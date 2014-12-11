@@ -6,7 +6,7 @@ note
 	author: "Nadia Polikarpova"
 
 class
-	V_HASH [G -> HASHABLE]
+	V_HASH [G -> detachable HASHABLE]
 
 feature -- Basic operations
 

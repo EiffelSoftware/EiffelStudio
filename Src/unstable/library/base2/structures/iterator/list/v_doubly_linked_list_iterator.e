@@ -31,8 +31,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 
 	make (list: V_DOUBLY_LINKED_LIST [G])
 			-- Create iterator over `list'.
-		require
-			list_exists: list /= Void
 		do
 			target := list
 			active := Void
@@ -120,7 +118,9 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward.
 		do
-			active := active.right
+			check not_off: attached active as a then
+				active := a.right
+			end
 			if active = Void then
 				after := True
 			end
@@ -129,7 +129,9 @@ feature -- Cursor movement
 	back
 			-- Go one position backwards.
 		do
-			active := active.left
+			check not_off: attached active as a then
+				active := a.left
+			end
 		end
 
 	go_before
@@ -196,7 +198,9 @@ feature -- Extension
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
 		do
-			target.extend_after (v, active)
+			check not_off: attached active as a then
+				target.extend_after (v, a)
+			end
 		end
 
 	insert_left (other: V_ITERATOR [G])
@@ -229,7 +233,6 @@ feature -- Extension
 		note
 			modify: sequence, other__sequence
 		require
-			other_exists: other /= Void
 			other_not_target: other /= target
 			not_after: not after
 		do
@@ -268,12 +271,14 @@ feature -- Removal
 	remove_right
 			-- Remove element to the right of current position. Do not move cursor.
 		do
-			target.remove_after (active)
+			check not_off: attached active as a then
+				target.remove_after (a)
+			end
 		end
 
 feature {V_CELL_CURSOR} -- Implementation
 
-	active: V_DOUBLY_LINKABLE [G]
+	active: detachable V_DOUBLY_LINKABLE [G]
 			-- Cell at current position.
 			-- If unreachable from `target.first_cell' iterator is considered `before'.					
 
@@ -283,7 +288,7 @@ feature {V_CELL_CURSOR} -- Implementation
 		require
 			active_exists: active /= Void
 		local
-			cf, cb: V_DOUBLY_LINKABLE [G]
+			cf, cb: detachable V_DOUBLY_LINKABLE [G]
 			i, j: INTEGER
 		do
 			from
@@ -296,22 +301,19 @@ feature {V_CELL_CURSOR} -- Implementation
 			loop
 				i := i + 1
 				j := j - 1
-				cf := cf.right
-				cb := cb.left
+				check not_off: attached cf as cf_ then
+					cf := cf_.right
+				end
+				check not_off: attached cb as cb_ then
+					cb := cb_.left
+				end
 			end
 			if cf = active then
 				Result := i
-			elseif cb = active then
+			else
+				check cb = active end
 				Result := j
-			else -- active is unreachable
-				active := Void
 			end
-		end
-
-	reachable: BOOLEAN
-			--Is `active' part of the target container?
-		do
-			Result := active_index > 0
 		end
 
 invariant

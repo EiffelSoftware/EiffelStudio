@@ -7,7 +7,7 @@ class
 	V_STANDARD_OUTPUT
 
 inherit
-	V_OUTPUT_STREAM [ANY]
+	V_OUTPUT_STREAM [detachable ANY]
 		redefine
 			default_create
 		end
@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 
 	make_with_separator (sep: STRING)
 			-- Create a stream and set `separator' to `s'.
-		require
-			sep_exists: sep /= Void
 		do
 			separator := sep
 		ensure
@@ -51,7 +49,7 @@ feature -- Status report
 
 feature -- Replacement
 
-	output (v: ANY)
+	output (v: detachable ANY)
 			-- Put `v' into the stream and move to the next position.
 		note
 			modify: nothing__
@@ -60,6 +58,4 @@ feature -- Replacement
 			print (separator)
 		end
 
-invariant
-	separator_exists: separator /= Void
 end

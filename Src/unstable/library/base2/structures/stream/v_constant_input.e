@@ -9,6 +9,9 @@ class
 inherit
 	V_INPUT_STREAM [G]
 
+create
+	make
+
 feature {NONE} -- Initialization
 
 	make (v: G)

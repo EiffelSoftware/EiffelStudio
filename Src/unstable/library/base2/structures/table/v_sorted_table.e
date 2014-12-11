@@ -12,19 +12,6 @@ inherit
 			default_create
 		end
 
-inherit {NONE}
-	V_ORDER [K]
-		rename
-			less_equal as comparable_less_equal
-		export {NONE}
-			all
-		undefine
-			default_create,
-			out,
-			copy,
-			is_equal
-		end
-
 create
 	default_create
 
@@ -33,6 +20,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
 		do
-			make (agent comparable_less_equal)
+			key_order := agent (create {V_ORDER [K]}).less_equal
+			create set.make ((create {V_TUPLE_PROJECTOR [K, V, BOOLEAN]}).project_two_predicate (key_order))
 		end
 end

@@ -30,8 +30,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
-		require
-			list_exists: list /= Void
 		do
 			target := list
 			active := Void
@@ -121,7 +119,9 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward.
 		do
-			active := active.right
+			check not_off: attached active as a then
+				active := a.right
+			end
 			if active = Void then
 				after := True
 			end
@@ -130,7 +130,7 @@ feature -- Cursor movement
 	back
 			-- Go one position backwards.
 		local
-			old_active: V_LINKABLE [G]
+			old_active: detachable V_LINKABLE [G]
 		do
 			if is_first then
 				go_before
@@ -139,7 +139,7 @@ feature -- Cursor movement
 				from
 					start
 				until
-					active.right = old_active
+					attached active as a and then a.right = old_active
 				loop
 					forth
 				end
@@ -178,7 +178,9 @@ feature -- Extension
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
 		do
-			target.extend_after (v, active)
+			check not_off: attached active as a then
+				target.extend_after (v, a)
+			end
 		end
 
 	insert_left (other: V_ITERATOR [G])
@@ -211,7 +213,6 @@ feature -- Extension
 		note
 			modify: sequence, other__sequence
 		require
-			other_exists: other /= Void
 			other_not_target: other /= target
 			not_after: not after
 		do
@@ -250,12 +251,14 @@ feature -- Removal
 	remove_right
 			-- Remove element to the right of current position. Do not move cursor.
 		do
-			target.remove_after (active)
+			check not_off: attached active as a then
+				target.remove_after (a)
+			end
 		end
 
 feature {V_CELL_CURSOR} -- Implementation
 
-	active: V_LINKABLE [G]
+	active: detachable V_LINKABLE [G]
 			-- Cell at current position.
 			-- If unreachable from `target.first_cell' iterator is considered `before'.
 
@@ -265,7 +268,7 @@ feature {V_CELL_CURSOR} -- Implementation
 		require
 			active_exists: active /= Void
 		local
-			c: V_LINKABLE [G]
+			c: detachable V_LINKABLE [G]
 		do
 			from
 				c := target.first_cell
@@ -276,16 +279,6 @@ feature {V_CELL_CURSOR} -- Implementation
 				Result := Result + 1
 				c := c.right
 			end
-			if c = Void then
-				Result := 0
-				active := Void
-			end
-		end
-
-	reachable: BOOLEAN
-			--Is `active' part of the target container?
-		do
-			Result := active_index > 0
 		end
 
 invariant

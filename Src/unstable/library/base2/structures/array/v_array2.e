@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			column_count := m
 			create array.make (1, n * m)
 		ensure
-			matrix_rows_effect: matrix.domain |=| {MML_INTERVAL} [[1, n]]
+			matrix_rows_effect: matrix.domain |=| create {MML_INTERVAL}.from_range (1, n)
 			matrix_columns_effect: matrix.range.for_all (agent (r: MML_SEQUENCE [G]; m_: INTEGER): BOOLEAN
 				do
-					Result := r.domain |=| {MML_INTERVAL} [[1, m_]] and r.is_constant (({G}).default)
+					Result := r.domain |=| create {MML_INTERVAL}.from_range (1, m_) and r.is_constant (({G}).default)
 				end (?, m))
 		end
 
@@ -52,10 +52,10 @@ feature {NONE} -- Initialization
 			column_count := m
 			create array.make_filled (1, n * m, v)
 		ensure
-			matrix_rows_effect: matrix.domain |=| {MML_INTERVAL} [[1, n]]
+			matrix_rows_effect: matrix.domain |=| create {MML_INTERVAL}.from_range (1, n)
 			matrix_columns_effect: matrix.range.for_all (agent (r: MML_SEQUENCE [G]; m_: INTEGER; v_: G): BOOLEAN
 				do
-					Result := r.domain |=| {MML_INTERVAL} [[1, m_]] and r.is_constant (v_)
+					Result := r.domain |=| create {MML_INTERVAL}.from_range (1, m_) and r.is_constant (v_)
 				end (?, m, v))
 		end
 
@@ -240,8 +240,6 @@ feature -- Specification
 		end
 
 invariant
-	array_exists: array /= Void
-
 	row_count_definition: row_count = matrix.count
 	column_count_definition_empty: matrix.is_empty implies column_count = 0
 	column_count_definition_nonempty: not matrix.is_empty implies column_count = matrix.first.count
@@ -251,7 +249,7 @@ invariant
 			Result := not r.is_empty and r.count = column_count
 		end)
 
-	map_domain_definition: map.domain |=| {MML_INTERVAL} [[1, row_count * column_count]]
+	map_domain_definition: map.domain |=| create {MML_INTERVAL}.from_range (1, row_count * column_count)
 	map_definition: map.domain.for_all (agent (i: INTEGER): BOOLEAN
 		do
 			Result := map [i] = (matrix [row_index (i)])[column_index (i)]

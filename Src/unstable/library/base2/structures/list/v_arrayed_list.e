@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 				new_size := n.max (capacity * growth_rate)
 				array.resize (0, new_size - 1)
 				if first_index > 0 then
-					array.copy_range (array, first_index, old_size - 1, new_size - old_size + first_index)
+					array.array_copy_range (array, first_index, old_size - 1, new_size - old_size + first_index)
 					array.clear (first_index, (old_size - 1).min (new_size - old_size + first_index - 1))
 					first_index := new_size - old_size + first_index
 				end
@@ -287,7 +287,6 @@ feature -- Specification
 		end
 
 invariant
-	array_exists: array /= Void
 	array_non_empty: capacity > 0
 	array_starts_from_zero: array.lower = 0
 	first_index_in_bounds: 0 <= first_index and first_index < capacity

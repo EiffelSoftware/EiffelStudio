@@ -18,6 +18,14 @@ inherit
 			new_cursor
 		end
 
+	V_DEFAULT [G]
+		undefine
+			is_equal,
+			out
+		redefine
+			copy
+		end
+
 create
 	make
 
@@ -26,13 +34,11 @@ feature {NONE} -- Initialization
 	make (o: PREDICATE [ANY, TUPLE [G, G]])
 			-- Create an empty set with elements order `o'.
 		require
-			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True
 			--- o_is_total_order: is_total_order (o)
 		do
 			order := o
 			create tree
-			create iterator.make (Current, tree)
 		ensure
 			set_effect: set.is_empty
 			--- order_effect: order |=| o
@@ -50,7 +56,6 @@ feature -- Initialization
 				if tree = Void then
 					-- Copy used as a creation procedure
 					tree := other.tree.twin
-					create iterator.make (Current, tree)
 				else
 					tree.copy (other.tree)
 				end
@@ -80,7 +85,11 @@ feature -- Search
 	item (v: G): G
 			-- Element of `set' equivalent to `v' according to `relation'.
 		do
-			Result := cell_equivalent (v).item
+			if attached cell_equivalent (v) as c then
+				Result := c.item
+			else
+				Result := default_value
+			end
 		end
 
 	order: PREDICATE [ANY, TUPLE [G, G]]
@@ -127,11 +136,13 @@ feature -- Extension
 			-- Add `v' to the set.
 		local
 			done: BOOLEAN
+			iterator: V_SORTED_SET_ITERATOR [G]
 		do
 			if tree.is_empty then
 				tree.add_root (v)
 			else
 				from
+					create iterator.make (Current, tree)
 					iterator.go_root
 				until
 					done
@@ -171,7 +182,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			-- Element storage.
 			-- Should not be reassigned after creation.
 
-	cell_equivalent (v: G): V_BINARY_TREE_CELL [G]
+	cell_equivalent (v: G): detachable V_BINARY_TREE_CELL [G]
 			-- Tree cell where item is equivalent to `v'.
 		do
 			from
@@ -187,11 +198,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	iterator: V_SORTED_SET_ITERATOR [G]
-			-- Internal cursor.
-
 feature -- Specification
 ---	is_total_order (o: PREDICATE [ANY, TUPLE [G, G]])
 			-- Is `o' a total order relation?
@@ -206,9 +212,6 @@ feature -- Specification
 ---		end
 
 invariant
-	order_exists: order /= Void
-	tree_exists: tree /= Void
-	iterator_exists: iterator /= Void
 	--- order_is_total: order.precondition |=| True
 	--- order_is_total_order: is_total_order (order)
 end

@@ -51,8 +51,6 @@ feature {NONE} -- Initialization
 
 	from_tuple (t: TUPLE [l: INTEGER; u: INTEGER])
 			-- Create interval [l, u].
-		require
-			t_exists: t /= Void
 		do
 			from_range (t.l, t.u)
 		end
@@ -123,8 +121,6 @@ feature -- Modification
 
 	interval_union alias "|+|" (other: MML_INTERVAL): MML_INTERVAL
 			-- Minimal interval that includes this interval and `other'.
-		require
-			other_exists: other /= Void
 		do
 			if is_empty then
 				Result := other

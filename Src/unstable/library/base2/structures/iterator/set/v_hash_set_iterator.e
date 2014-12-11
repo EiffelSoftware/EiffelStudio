@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 
 	make (s: V_GENERAL_HASH_SET [G])
 			-- Create an iterator over `s'.
-		require
-			s_exists: s /= Void
 		do
 			target := s
 			create list_iterator.make (create {V_LINKED_LIST [G]})
@@ -257,5 +255,4 @@ feature -- Specification
 invariant
 	bucket_index_non_negative: bucket_index >= 0
 	-- Cannot guarantee bucket_index <= target.capacity + 1 because target might shrink behind my back
-	list_iterator_exists: list_iterator /= Void
 end

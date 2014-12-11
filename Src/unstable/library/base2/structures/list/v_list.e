@@ -99,7 +99,6 @@ feature -- Extension
 		note
 			modify: sequence, input__index
 		require
-			input_exists: input /= Void
 			different_target: input.target /= Current
 			not_before: not input.before
 		do
@@ -120,7 +119,6 @@ feature -- Extension
 		note
 			modify: sequence, input__index
 		require
-			input_exists: input /= Void
 			different_target: input.target /= Current
 			not_before: not input.before
 		deferred
@@ -135,7 +133,6 @@ feature -- Extension
 			modify: sequence, input__index
 		require
 			valid_index: has_index (i) or i = count + 1
-			input_exists: input /= Void
 			different_target: input.target /= Current
 			not_before: not input.before
 		deferred
@@ -236,7 +233,6 @@ feature -- Removal
 		note
 			modify: sequence
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -274,8 +270,6 @@ feature -- Specification
 		note
 			status: specification
 		deferred
-		ensure
-			exists: Result /= Void
 		end
 
 invariant

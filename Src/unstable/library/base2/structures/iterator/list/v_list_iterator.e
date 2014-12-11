@@ -53,7 +53,6 @@ feature -- Extension
 			modify: sequence, index, other__index
 		require
 			not_off: not off
-			other_exists: other /= Void
 			different_target: target /= other.target
 			other_not_before: not other.before
 		deferred
@@ -70,7 +69,6 @@ feature -- Extension
 			modify: sequence, index, other__index
 		require
 			not_off: not off
-			other_exists: other /= Void
 			different_target: target /= other.target
 			other_not_before: not other.before
 		deferred

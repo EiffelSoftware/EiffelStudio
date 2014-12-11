@@ -30,10 +30,8 @@ feature {NONE} -- Initialization
 	singleton (k: K; x: V)
 			-- Create a map with just one key-value pair <`k', `x'>.
 		do
-			create keys.make (1, 1)
-			keys [1] := k
-			create values.make (1, 1)
-			values [1] := x
+			create keys.make_filled (1, 1, k)
+			create values.make_filled (1, 1, x)
 		end
 
 feature -- Properties
@@ -59,7 +57,6 @@ feature -- Properties
 	for_all (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
 			-- Does `test' hold for all indexe-value pairs?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 2
 		local
 			i: INTEGER
@@ -78,7 +75,6 @@ feature -- Properties
 	exists (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
 			-- Does `test' hold for any indexe-value pair?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 2
 		local
 			i: INTEGER
@@ -106,6 +102,8 @@ feature -- Elements
 			i := keys.index_satisfying (agent meq_key (k, ?))
 			if keys.has_index (i) then
 				Result := values [i]
+			else
+				Result := values.default_value
 			end
 		end
 
@@ -135,8 +133,6 @@ feature -- Conversion
 
 	image (subdomain: MML_SET [K]): MML_SET [V]
 			-- Set of values corresponding to keys in `subdomain'.
-		require
-			subdomain_exists: subdomain /= Void
 		do
 			Result := restricted (subdomain).range
 		end
@@ -144,8 +140,6 @@ feature -- Conversion
 	sequence_image (s: MML_SEQUENCE [K]): MML_SEQUENCE [V]
 			-- Sequence of images of `s' elements under `Current'.
 			-- (Skip elements of `s' that are not in domain of `Current').
-		require
-			sequence_exists: s /= Void
 		local
 			i: INTEGER
 			a: V_ARRAY [V]
@@ -175,7 +169,7 @@ feature -- Conversion
 			until
 				i > values.count
 			loop
-				Result := result & values [i]
+				Result := Result & values [i]
 				i := i + 1
 			end
 		end
@@ -225,10 +219,10 @@ feature -- Modification
 				create Result.make_from_arrays (keys, vs)
 			else
 				create ks.make (1, keys.count + 1)
-				ks.copy_range (keys, 1, keys.count, 1)
+				ks.array_copy_range (keys, 1, keys.count, 1)
 				ks [ks.count] := k
 				create vs.make (1, values.count + 1)
-				vs.copy_range (values, 1, values.count, 1)
+				vs.array_copy_range (values, 1, values.count, 1)
 				vs [vs.count] := x
 				create Result.make_from_arrays (ks, vs)
 			end
@@ -246,10 +240,10 @@ feature -- Modification
 			if keys.has_index (i) then
 				create ks.make (1, keys.count - 1)
 				create vs.make (1, values.count - 1)
-				ks.copy_range (keys, 1, i - 1, 1)
-				ks.copy_range (keys, i + 1, keys.count, i)
-				vs.copy_range (values, 1, i - 1, 1)
-				vs.copy_range (values, i + 1, values.count, i)
+				ks.array_copy_range (keys, 1, i - 1, 1)
+				ks.array_copy_range (keys, i + 1, keys.count, i)
+				vs.array_copy_range (values, 1, i - 1, 1)
+				vs.array_copy_range (values, i + 1, values.count, i)
 				create Result.make_from_arrays (ks, vs)
 			else
 				Result := Current
@@ -258,8 +252,6 @@ feature -- Modification
 
 	restricted alias "|" (subdomain: MML_SET [K]): MML_MAP [K, V]
 			-- Map that consists of all key-value pairs in `Current' whose key is in `subdomain'.
-		require
-			subdomain_exists: subdomain /= Void
 		local
 			i, j: INTEGER
 			ks: V_ARRAY [K]
@@ -287,8 +279,6 @@ feature -- Modification
 
 	override alias "+" (other: MML_MAP [K, V]): MML_MAP [K, V]
 			-- Map that is equal to `other' on its domain and to `Current' on its domain minus the domain of `other'.
-		require
-			other_exists: other /= Void
 		local
 			i, j: INTEGER
 			ks: V_ARRAY [K]
@@ -296,8 +286,8 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.copy_range (other.keys, 1, other.keys.count, 1)
-			vs.copy_range (other.values, 1, other.values.count, 1)
+			ks.array_copy_range (other.keys, 1, other.keys.count, 1)
+			vs.array_copy_range (other.values, 1, other.values.count, 1)
 			from
 				i := 1
 				j := other.keys.count + 1
@@ -333,8 +323,6 @@ feature {MML_MODEL} -- Implementation
 	make_from_arrays (ks: V_ARRAY [K]; vs: V_ARRAY [V])
 			-- Create with predefined arrays.
 		require
-			ks_exists: ks /= Void
-			vs_exists: vs /= Void
 			same_lower: ks.lower = vs.lower
 			same_upper: ks.upper = vs.upper
 			start_from_one: ks.lower = 1
@@ -361,8 +349,6 @@ feature {MML_MODEL} -- Implementation
 		end
 
 invariant
-	keys_exists: keys /= Void
-	values_exists: values /= Void
 	same_lower: keys.lower = values.lower
 	same_upper: keys.upper = values.upper
 	start_from_one: keys.lower = 1

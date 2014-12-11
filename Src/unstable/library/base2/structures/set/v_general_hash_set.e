@@ -16,6 +16,14 @@ inherit
 			copy
 		end
 
+	V_DEFAULT [G]
+		undefine
+			is_equal,
+			out
+		redefine
+			copy
+		end
+
 create
 	make
 
@@ -24,8 +32,6 @@ feature {NONE} -- Initialization
 	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
 		require
-			eq_exists: eq /= Void
-			h_exists: h /= Void
 			--- eq_is_total: eq.precondition |=| True
 			--- eq_is_equivalence: is_equivalence (eq)
 			--- h_is_total: h.precondition |=| True
@@ -35,7 +41,6 @@ feature {NONE} -- Initialization
 			equivalence := eq
 			hash := h
 			buckets := empty_buckets (default_capacity)
-			create iterator.make (Current)
 		ensure
 			set_effect: set.is_empty
 			--- equivalence_effect: equivalence |=| eq
@@ -64,7 +69,6 @@ feature -- Initialization
 					buckets [i] := other.buckets [i].twin
 					i := i + 1
 				end
-				create iterator.make (Current)
 			end
 		ensure then
 			set_effect: set |=| other.set
@@ -89,7 +93,11 @@ feature -- Search
 	item (v: G): G
 			-- Element of `set' equivalent to `v' according to `relation'.
 		do
-			Result := buckets [index (v)].cell_satisfying (agent equivalent (v, ?)).item
+			if attached buckets [index (v)].cell_satisfying (agent equivalent (v, ?)) as c then
+				Result := c.item
+			else
+				Result := default_value
+			end
 		end
 
 	equivalence: PREDICATE [ANY, TUPLE [G, G]]
@@ -190,9 +198,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	iterator: V_HASH_SET_ITERATOR [G]
-			-- Internal iterator.
-
 	bucket_index (v: G; n: INTEGER): INTEGER
 			-- Index of `v' into in a bucket array of size `n'.
 		require
@@ -238,10 +243,11 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			b: V_ARRAY [V_LINKED_LIST [G]]
+			iterator: V_HASH_SET_ITERATOR [G]
 		do
 			b := empty_buckets (c)
 			from
-				iterator.start
+				iterator := new_cursor
 			until
 				iterator.after
 			loop
@@ -255,10 +261,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	hash_exists: hash /= Void
-	buckets_exists: buckets /= Void
-	iterator_exists: iterator /= Void
-	all_buckets_exist: buckets.for_all (agent (x: V_LINKED_LIST [G]): BOOLEAN do Result := x /= Void end)
 	--- hash_non_negative: forall x: G :: hash (x) >= 0
 	count_definition: count = set.count
 end

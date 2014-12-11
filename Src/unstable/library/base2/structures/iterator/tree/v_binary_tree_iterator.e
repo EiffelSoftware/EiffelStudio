@@ -55,7 +55,7 @@ feature -- Status report
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		local
-			old_active: V_BINARY_TREE_CELL [G]
+			old_active: detachable V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
 			if not target.is_empty then
@@ -71,7 +71,7 @@ feature -- Status report
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		local
-			old_active: V_BINARY_TREE_CELL [G]
+			old_active: detachable V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
 			if not target.is_empty then
@@ -133,8 +133,6 @@ feature {V_ITERATOR} -- Cursor movement
 
 	go_to_cell (c: V_BINARY_TREE_CELL [G])
 			-- Set cursor to cell `c'.
-		require
-			c_exists: c /= Void
 		do
 			active := c
 			after := False
@@ -144,11 +142,10 @@ feature {NONE} -- Implementation
 
 	active_index: INTEGER
 			-- Index of `active' in inorder.
-			-- 0 if `active' is not part of the tree.
 		require
 			active_exists: active /= Void
 		local
-			old_active: V_BINARY_TREE_CELL [G]
+			old_active: detachable V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
 			old_active := active
@@ -162,11 +159,7 @@ feature {NONE} -- Implementation
 				forth
 				Result := Result + 1
 			end
-			if active = Void then
-				Result := 0
-			else
-				active := old_active
-			end
+			active := old_active
 			after := old_after
 		end
 
@@ -177,7 +170,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			old_active: V_BINARY_TREE_CELL [G]
+			old_active: detachable V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
 			old_active := active
@@ -200,17 +193,15 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := subtree_path_sequence (True)
+			Result := subtree_path_sequence (create {MML_SEQUENCE [BOOLEAN]}.singleton (True))
 		ensure
-			definition: Result |=| subtree_path_sequence (True)
+			definition: Result |=| subtree_path_sequence (create {MML_SEQUENCE [BOOLEAN]}.singleton (True))
 		end
 
 	subtree_path_sequence (root: MML_SEQUENCE [BOOLEAN]): MML_SEQUENCE [MML_SEQUENCE [BOOLEAN]]
 			-- Sequence of paths in subtree of `target.map' strating from `root' in order of traversal.
 		note
 			status: specification
-		require
-			root_exists: root /= Void
 		deferred
 		end
 

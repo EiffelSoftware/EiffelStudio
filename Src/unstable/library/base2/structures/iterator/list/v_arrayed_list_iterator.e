@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 
 	make (list: V_ARRAYED_LIST [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `list'.
-		require
-			list_exists: list /= Void
 		do
 			target := list
 			if i < 1 then

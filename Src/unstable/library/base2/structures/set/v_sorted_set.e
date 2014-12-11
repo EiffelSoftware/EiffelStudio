@@ -12,19 +12,6 @@ inherit
 			default_create
 		end
 
-inherit {NONE}
-	V_ORDER [G]
-		rename
-			less_equal as comparable_less_equal
-		export {NONE}
-			all
-		undefine
-			default_create,
-			out,
-			copy,
-			is_equal
-		end
-
 create
 	default_create
 
@@ -33,6 +20,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
 		do
-			make (agent comparable_less_equal)
+			order := agent (create {V_ORDER [G]}).less_equal
+			create tree
 		end
 end

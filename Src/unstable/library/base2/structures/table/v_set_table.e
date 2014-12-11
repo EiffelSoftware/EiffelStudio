@@ -78,6 +78,4 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 		deferred
 		end
 
-invariant
-	set_exists: set /= Void
 end

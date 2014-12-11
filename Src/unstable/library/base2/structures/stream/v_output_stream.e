@@ -29,7 +29,6 @@ feature -- Replacement
 		note
 			modify: off, input__box
 		require
-			input_exists: input /= Void
 			input_not_current: input /= Current
 		do
 			from
@@ -48,7 +47,6 @@ feature -- Replacement
 		note
 			modify: off, input__box
 		require
-			input_exists: input /= Void
 			input_not_current: input /= Current
 			n_non_negative: n >= 0
 		local

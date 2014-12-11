@@ -92,8 +92,6 @@ feature -- Comparison
 	is_subset_of (other: V_SET [G]): BOOLEAN
 			-- Does `other' have all elements of `Current'?
 			-- (Uses `other.equivalence'.)
-		require
-			other_exists: other /= Void
 		do
 			Result := for_all (agent other.has)
 		ensure
@@ -103,8 +101,6 @@ feature -- Comparison
 	is_superset_of (other: V_SET [G]): BOOLEAN
 			-- Does `Current' have all elements of `other'?
 			-- (Uses `equivalence'.)
-		require
-			other_exists: other /= Void
 		do
 			Result := other.is_subset_of (Current)
 		ensure
@@ -114,8 +110,6 @@ feature -- Comparison
 	disjoint (other: V_SET [G]): BOOLEAN
 			-- Do no elements of `other' occur in `Current'?
 			-- (Uses `equivalence'.)
-		require
-			other_exists: other /= Void
 		do
 			Result := not other.exists (agent has)
 		ensure
@@ -166,17 +160,17 @@ feature -- Extension
 			-- Add all elements from `other'.
 		note
 			modify: set
-		require
-			other_exists: other /= Void
+		local
+			other_iterator: V_SET_ITERATOR [G]
 		do
 			if other /= Current then
 				from
-					other.iterator.start
+					other_iterator := other.new_cursor
 				until
-					other.iterator.after
+					other_iterator.after
 				loop
-					extend (other.iterator.item)
-					other.iterator.forth
+					extend (other_iterator.item)
+					other_iterator.forth
 				end
 			end
 		ensure
@@ -195,8 +189,10 @@ feature -- Removal
 			-- Otherwise do nothing.		
 		note
 			modify: set
+		local
+			iterator: V_SET_ITERATOR [G]
 		do
-			iterator.search (v)
+			iterator := at (v)
 			if not iterator.after then
 				iterator.remove
 			end
@@ -209,12 +205,12 @@ feature -- Removal
 			-- Keep only elements that are also in `other'.
 		note
 			modify: set
-		require
-			other_exists: other /= Void
+		local
+			iterator: V_SET_ITERATOR [G]
 		do
 			if other /= Current then
 				from
-					iterator.start
+					iterator := new_cursor
 				until
 					iterator.after
 				loop
@@ -237,17 +233,17 @@ feature -- Removal
 			-- Remove elements that are in `other'.
 		note
 			modify: set
-		require
-			other_exists: other /= Void
+		local
+			other_iterator: V_SET_ITERATOR [G]
 		do
 			if other /= Current then
 				from
-					other.iterator.start
+					other_iterator := other.new_cursor
 				until
-					other.iterator.after
+					other_iterator.after
 				loop
-					remove (other.iterator.item)
-					other.iterator.forth
+					remove (other_iterator.item)
+					other_iterator.forth
 				end
 			else
 				wipe_out
@@ -264,21 +260,21 @@ feature -- Removal
 			-- Keep elements that are only in `Current' or only in `other'.
 		note
 			modify: set
-		require
-			other_exists: other /= Void
+		local
+			other_iterator: V_SET_ITERATOR [G]
 		do
 			if other /= Current then
 				from
-					other.iterator.start
+					other_iterator := other.new_cursor
 				until
-					other.iterator.after
+					other_iterator.after
 				loop
-					if has (other.iterator.item) then
-						remove (other.iterator.item)
+					if has (other_iterator.item) then
+						remove (other_iterator.item)
 					else
-						extend (other.iterator.item)
+						extend (other_iterator.item)
 					end
-					other.iterator.forth
+					other_iterator.forth
 				end
 			else
 				wipe_out
@@ -307,13 +303,6 @@ feature -- Removal
 			set_effect: set.is_empty
 		end
 
-feature {V_CONTAINER, V_ITERATOR} -- Implementation
-
-	iterator: V_SET_ITERATOR [G]
-			-- Internal iterator (to be used only in procedures).		
-		deferred
-		end
-
 feature -- Specification
 
 	set: MML_SET [G]
@@ -327,8 +316,6 @@ feature -- Specification
 			loop
 				Result := Result & i.item
 			end
-		ensure
-			exists: Result /= Void
 		end
 
 ---	is_equivalence (r: PREDICATE [ANY, TUPLE [G, G]])
@@ -344,7 +331,6 @@ feature -- Specification
 ---		end		
 
 invariant
-	equivalence_exists: equivalence /= Void
 	bag_domain_definition: bag.domain |=| set
 	bag_definition: bag.is_constant (1)
 	--- equivalence_is_total: equivalence.precondition |=| True

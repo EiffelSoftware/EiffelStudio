@@ -7,7 +7,7 @@ class
 	V_STRING_OUTPUT
 
 inherit
-	V_OUTPUT_STREAM [ANY]
+	V_OUTPUT_STREAM [detachable ANY]
 
 create
 	make,
@@ -18,8 +18,6 @@ feature {NONE} -- Initialization
 	make (dest: STRING)
 			-- Create a stream that outputs into `dest'.
 			-- (Use `default_separator' as `separator').
-		require
-			dest_exists: dest /= Void
 		do
 			make_with_separator (dest, default_separator)
 		ensure
@@ -30,9 +28,6 @@ feature {NONE} -- Initialization
 	make_with_separator (dest, sep: STRING)
 			-- Create a stream that outputs into `dest'
 			-- and uses `sep' as `separator'.
-		require
-			dest_exists: dest /= Void
-			sep_exists: sep /= Void
 		do
 			destination := dest
 			separator := sep
@@ -62,7 +57,7 @@ feature -- Status report
 
 feature -- Replacement
 
-	output (v: ANY)
+	output (v: detachable ANY)
 			-- Put `v' into the stream and move to the next position.
 		note
 			modify: destination
@@ -77,8 +72,4 @@ feature -- Replacement
 			string_effect_void: v = Void implies destination ~ (old destination.twin) + Void_out + separator
 			string_effect_non_void: v /= Void implies destination ~ (old destination.twin) + v.out + separator
 		end
-
-invariant
-	destination_exists: destination /= Void
-	separator_exists: separator /= Void
 end

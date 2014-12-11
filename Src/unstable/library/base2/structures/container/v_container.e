@@ -67,7 +67,6 @@ feature -- Search
 	count_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- How many elements satisfy `pred'?
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -88,7 +87,6 @@ feature -- Search
 	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Is there an element that satisfies `pred'?
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -103,7 +101,6 @@ feature -- Search
 	for_all (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Do all elements satisfy `pred'?
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
@@ -149,8 +146,6 @@ feature -- Specification
 			across Current as i loop
 				Result := Result & i.item
 			end
-		ensure
-			exists: Result /= Void
 		end
 
 end

@@ -30,10 +30,8 @@ feature {NONE} -- Initialization
 	singleton (x: G; y: H)
 			-- Create a relation with just one pair <`x', `y'>.
 		do
-			create lefts.make (1, 1)
-			lefts [1] := x
-			create rights.make (1, 1)
-			rights [1] := y
+			create lefts.make_filled (1, 1, x)
+			create rights.make_filled (1, 1, y)
 		end
 
 feature -- Properties
@@ -101,8 +99,6 @@ feature -- Sets
 
 	image (subdomain: MML_SET [G]): MML_SET [H]
 			-- Set of values related to any value in `subdomain'.
-		require
-			subdomain_exists: subdomain /= Void
 		do
 			Result := restricted (subdomain).range
 		end
@@ -145,10 +141,10 @@ feature -- Modification
 		do
 			if not Current [x, y] then
 				create ls.make (1, lefts.count + 1)
-				ls.copy_range (lefts, 1, lefts.count, 1)
+				ls.array_copy_range (lefts, 1, lefts.count, 1)
 				ls [ls.count] := x
 				create rs.make (1, rights.count + 1)
-				rs.copy_range (rights, 1, rights.count, 1)
+				rs.array_copy_range (rights, 1, rights.count, 1)
 				rs [rs.count] := y
 				create Result.make_from_arrays (ls, rs)
 			else
@@ -166,11 +162,11 @@ feature -- Modification
 			i := lefts.index_satisfying (agent meq_left (x, ?))
 			if lefts.has_index (i) and then model_equals (y, rights [i]) then
 				create ls.make (1, lefts.count - 1)
-				ls.copy_range (lefts, 1, i - 1, 1)
-				ls.copy_range (lefts, i + 1, lefts.count, i)
+				ls.array_copy_range (lefts, 1, i - 1, 1)
+				ls.array_copy_range (lefts, i + 1, lefts.count, i)
 				create rs.make (1, rights.count - 1)
-				rs.copy_range (rights, 1, i - 1, 1)
-				rs.copy_range (rights, i + 1, rights.count, i)
+				rs.array_copy_range (rights, 1, i - 1, 1)
+				rs.array_copy_range (rights, i + 1, rights.count, i)
 				create Result.make_from_arrays (ls, rs)
 			else
 				Result := Current
@@ -179,8 +175,6 @@ feature -- Modification
 
 	restricted alias "|" (subdomain: MML_SET [G]): MML_RELATION [G, H]
 			-- Relation that consists of all pairs in `Current' whose left component is in `subdomain'.
-		require
-			subdomain_exists: subdomain /= Void
 		local
 			ls: V_ARRAY [G]
 			rs: V_ARRAY [H]
@@ -214,20 +208,16 @@ feature -- Modification
 
 	union alias "+" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
 			-- Relation that consists of pairs contained in either `Current' or `other'.
-		require
-			other_exists: other /= Void
 		do
 			Result := Current - other
 			Result.lefts.resize (1, Result.lefts.count + other.lefts.count)
 			Result.rights.resize (1, Result.rights.count + other.rights.count)
-			Result.lefts.copy_range (other.lefts, 1, other.lefts.count, Result.lefts.count - other.count + 1)
-			Result.rights.copy_range (other.rights, 1, other.rights.count, Result.rights.count - other.count + 1)
+			Result.lefts.array_copy_range (other.lefts, 1, other.lefts.count, Result.lefts.count - other.count + 1)
+			Result.rights.array_copy_range (other.rights, 1, other.rights.count, Result.rights.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
 			-- Relation that consists of pairs contained in both `Current' and `other'.
-		require
-			other_exists: other /= Void
 		local
 			ls: V_ARRAY [G]
 			rs: V_ARRAY [H]
@@ -255,8 +245,6 @@ feature -- Modification
 
 	difference alias "-" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
 			-- Relation that consists of pairs contained in `Current' but not in `other'.
-		require
-			other_exists: other /= Void
 		local
 			ls: V_ARRAY [G]
 			rs: V_ARRAY [H]
@@ -284,8 +272,6 @@ feature -- Modification
 
 	sym_difference alias "^" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
 			-- Relation that consists of pairs contained in either `Current' or `other', but not in both.
-		require
-			other_exists: other /= Void
 		do
 			Result := (Current + other) - (Current * other)
 		end
@@ -302,8 +288,6 @@ feature {MML_MODEL} -- Implementation
 	make_from_arrays (ls: V_ARRAY [G]; rs: V_ARRAY [H])
 			-- Create with predefined arrays.
 		require
-			ls_exists: ls /= Void
-			rs_exists: rs /= Void
 			same_lower: ls.lower = rs.lower
 			same_upper: ls.upper = rs.upper
 			start_from_one: ls.lower = 1
@@ -329,8 +313,6 @@ feature {MML_MODEL} -- Implementation
 		end
 
 invariant
-	lefts_exists: lefts /= Void
-	rights_exists: rights /= Void
 	same_lower: lefts.lower = rights.lower
 	same_upper: lefts.upper = rights.upper
 	start_from_one: lefts.lower = 1

@@ -13,6 +13,12 @@ inherit
 			is_equal
 		end
 
+	V_DEFAULT [G]
+		redefine
+			copy,
+			is_equal
+		end
+
 create
 	make,
 	make_with_separators
@@ -23,11 +29,12 @@ feature {NONE} -- Initialization
 			-- Create a stream that reads from `src' and uses function `fs' to convert from string to `G'.
 			-- (Use function `default_is_separator' to recognize separator characters).
 		require
-			src_exists: src /= Void
-			fs_exists: fs /= Void
 			fs_one_argument: fs.open_count = 1
 		do
-			make_with_separators (src, fs, agent default_is_separator)
+			source := src.twin
+			from_string := fs
+			is_separator := agent default_is_separator
+			start
 		ensure
 			source_effect: source ~ src
 			index_effect: index = index_satisfying_from (source, agent non_separator, 1)
@@ -39,10 +46,7 @@ feature {NONE} -- Initialization
 			-- Create a stream that reads from `src', uses function `fs' to convert from string to `G'
 			-- and function `is_sep' to recognize separator characters.
 		require
-			src_exists: src /= Void
-			fs_exists: fs /= Void
 			fs_one_argument: fs.open_count = 1
-			is_sep_exists: is_sep /= Void
 			is_sep_one_argument: is_sep.open_count = 1
 			--- is_sep_is_total: is_sep.precondition |=| True
 		do
@@ -68,7 +72,7 @@ feature -- Initialization
 			from_string := other.from_string
 			is_separator := other.is_separator
 			index := other.index
-			item := other.item
+			item_ := other.item_
 			next := other.next
 		ensure then
 			source_effect: source ~ other.source
@@ -81,6 +85,13 @@ feature -- Access
 
 	item: G
 			-- Current token.
+		do
+			if attached item_ as i then
+				Result := i
+			else
+				Result := default_value
+			end
+		end
 
 	source: STRING
 			-- Source string remained to be read.
@@ -160,6 +171,9 @@ feature -- Cursor movement
 
 feature {V_STRING_INPUT} -- Implementation
 
+	item_: detachable G
+			-- Current token.
+
 	next: INTEGER
 			-- Position of the first character of next token in `source'.
 
@@ -195,7 +209,7 @@ feature {NONE} -- Implementation
 			if not from_string.precondition ([s]) then
 				index := source.count + 1
 			else
-				item := from_string.item ([s])
+				item_ := from_string.item ([s])
 				index := i
 			end
 		end

@@ -58,13 +58,17 @@ feature -- Access
 	first: G
 			-- First element.
 		do
-			Result := first_cell.item
+			check not_empty: attached first_cell as f then
+				Result := f.item
+			end
 		end
 
 	last: G
 			-- Last element.
 		do
-			Result := last_cell.item
+			check not_empty: attached last_cell as l then
+				Result := l.item
+			end
 		end
 
 feature -- Measurement
@@ -102,7 +106,7 @@ feature -- Replacement
 		note
 			modify: sequence
 		local
-			rest, next: V_DOUBLY_LINKABLE [G]
+			rest, next: detachable V_DOUBLY_LINKABLE [G]
 		do
 			from
 				last_cell := first_cell
@@ -130,7 +134,9 @@ feature -- Extension
 			if is_empty then
 				last_cell := cell
 			else
-				cell.connect (first_cell)
+				check not_empty: attached first_cell as f then
+					cell.connect (f)
+				end
 			end
 			first_cell := cell
 			count := count + 1
@@ -145,7 +151,9 @@ feature -- Extension
 			if is_empty then
 				first_cell := cell
 			else
-				last_cell.connect (cell)
+				check not_empty: attached last_cell as l then
+					l.connect (cell)
+				end
 			end
 			last_cell := cell
 			count := count + 1
@@ -208,24 +216,32 @@ feature -- Removal
 	remove_front
 			-- Remove first element.
 		do
-			if count = 1 then
-				last_cell := Void
-			else
-				first_cell.right.put_left (Void)
+			check not_empty: attached first_cell as f then
+				if count = 1 then
+					last_cell := Void
+				else
+					check more_than_one: attached f.right as f1 then
+						f1.put_left (Void)
+					end
+				end
+				first_cell := f.right
 			end
-			first_cell := first_cell.right
 			count := count - 1
 		end
 
 	remove_back
 			-- Remove last element.
 		do
-			if count = 1 then
-				first_cell := Void
-			else
-				last_cell.left.put_right (Void)
+			check not_empty: attached last_cell as l then
+				if count = 1 then
+					first_cell := Void
+				else
+					check more_than_one: attached l.left as l1 then
+						l1.put_right (Void)
+					end
+				end
+				last_cell := l.left
 			end
-			last_cell := last_cell.left
 			count := count - 1
 		end
 
@@ -249,10 +265,10 @@ feature -- Removal
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
-	first_cell: V_DOUBLY_LINKABLE [G]
+	first_cell: detachable V_DOUBLY_LINKABLE [G]
 			-- First cell of the list.
 
-	last_cell: V_DOUBLY_LINKABLE [G]
+	last_cell: detachable V_DOUBLY_LINKABLE [G]
 			-- Last cell of the list.
 
 	cell_at (i: INTEGER): V_DOUBLY_LINKABLE [G]
@@ -265,21 +281,29 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			if i <= count // 2 then
 				from
 					j := 1
-					Result := first_cell
+					check not_empty: attached first_cell as f then
+						Result := f
+					end
 				until
 					j = i
 				loop
-					Result := Result.right
+					check not_off: attached Result.right as r then
+						Result := r
+					end
 					j := j + 1
 				end
 			else
 				from
 					j := count
-					Result := last_cell
+					check not_empty: attached last_cell as l then
+						Result := l
+					end
 				until
 					j = i
 				loop
-					Result := Result.left
+					check not_off: attached Result.left as l then
+						Result := l
+					end
 					j := j - 1
 				end
 			end
@@ -287,16 +311,14 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 	extend_after (v: G; c: V_DOUBLY_LINKABLE [G])
 			-- Add a new cell with value `v' after `c'.
-		require
-			c_exists: c /= Void
 		local
 			new: V_DOUBLY_LINKABLE [G]
 		do
 			create new.put (v)
-			if c.right = Void then
-				last_cell := new
+			if attached c.right as r then
+				new.connect (r)
 			else
-				new.connect (c.right)
+				last_cell := new
 			end
 			c.connect (new)
 			count := count + 1
@@ -305,44 +327,42 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	remove_after (c: V_DOUBLY_LINKABLE [G])
 			-- Remove the cell to the right of `c'.
 		require
-			c_exists: c /= Void
 			c_right_exists: c.right /= Void
 		do
-			c.put_right (c.right.right)
-			if c.right = Void then
-				last_cell := c
-			else
-				c.right.put_left (c)
+			check pre: attached c.right as r then
+				c.put_right (r.right)
+				if attached c.right as r1 then
+					r1.put_left (c)
+				else
+					last_cell := c
+				end
+				count := count - 1
 			end
-			count := count - 1
 		end
 
-	merge_after (other: V_DOUBLY_LINKED_LIST [G]; c: V_DOUBLY_LINKABLE [G])
+	merge_after (other: V_DOUBLY_LINKED_LIST [G]; c: detachable V_DOUBLY_LINKABLE [G])
 			-- Merge `other' into `Current' after cell `c'. If `c' is `Void', merge to the front.
-		require
-			other_exists: other /= Void
-		local
-			other_first, other_last: V_DOUBLY_LINKABLE [G]
 		do
 			if not other.is_empty then
-				other_first := other.first_cell
-				other_last := other.last_cell
-				count := count + other.count
-				other.wipe_out
-				if c = Void then
-					if first_cell = Void then
-						last_cell := other_last
+				check not_empty: attached other.first_cell as other_first
+					and attached other.last_cell as other_last then
+					count := count + other.count
+					other.wipe_out
+					if c = Void then
+						if attached first_cell as f then
+							other_last.connect (f)
+						else
+							last_cell := other_last
+						end
+						first_cell := other_first
 					else
-						other_last.connect (first_cell)
+						if attached c.right as r then
+							other_last.connect (r)
+						else
+							last_cell := other_last
+						end
+						c.connect (other_first)
 					end
-					first_cell := other_first
-				else
-					if c.right = Void then
-						last_cell := other_last
-					else
-						other_last.connect (c.right)
-					end
-					c.connect (other_first)
 				end
 			end
 		end
@@ -354,7 +374,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			c: V_DOUBLY_LINKABLE [G]
+			c: detachable V_DOUBLY_LINKABLE [G]
 		do
 			create Result
 			from

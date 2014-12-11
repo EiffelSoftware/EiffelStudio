@@ -14,12 +14,12 @@ create
 
 feature -- Access
 
-	right: V_LINKABLE [G]
+	right: detachable V_LINKABLE [G]
 			-- Next cell.
 
 feature -- Replacement
 
-	put_right (cell: V_LINKABLE [G])
+	put_right (cell: detachable V_LINKABLE [G])
 			-- Replace `right' with `cell'.
 		note
 			modify: right

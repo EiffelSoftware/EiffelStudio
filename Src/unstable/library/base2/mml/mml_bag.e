@@ -50,10 +50,8 @@ feature {NONE} -- Initialization
 			if n = 0 then
 				default_create
 			else
-				create keys.make (1, 1)
-				keys [1] := x
-				create values.make (1, 1)
-				values [1] := n
+				create keys.make_filled (1, 1, x)
+				create values.make_filled (1, 1, n)
 				count := n
 			end
 		end
@@ -147,11 +145,11 @@ feature -- Modification
 					vs [i] := vs [i] + n
 				else
 					create ks.make (1, keys.count + 1)
-					ks.copy_range (keys, 1, keys.count, 1)
+					ks.array_copy_range (keys, 1, keys.count, 1)
 					ks [ks.count] := x
 					create vs.make (1, values.count + 1)
 					vs [vs.count] := n
-					vs.copy_range (values, 1, values.count, 1)
+					vs.array_copy_range (values, 1, values.count, 1)
 				end
 				create Result.make_from_arrays (ks, vs, count + n)
 			else
@@ -179,11 +177,11 @@ feature -- Modification
 				Result := Current
 			elseif values [i] <= n then
 				create ks.make (1, keys.count - 1)
-				ks.copy_range (keys, 1, i - 1, 1)
-				ks.copy_range (keys, i + 1, keys.count, i)
+				ks.array_copy_range (keys, 1, i - 1, 1)
+				ks.array_copy_range (keys, i + 1, keys.count, i)
 				create vs.make (1, values.count - 1)
-				vs.copy_range (values, 1, i - 1, 1)
-				vs.copy_range (values, i + 1, values.count, i)
+				vs.array_copy_range (values, 1, i - 1, 1)
+				vs.array_copy_range (values, i + 1, values.count, i)
 				create Result.make_from_arrays (ks, vs, count - n)
 			else
 				vs := values.twin
@@ -200,8 +198,6 @@ feature -- Modification
 
 	restricted alias "|" (subdomain: MML_SET [G]): MML_BAG [G]
 			-- Bag that consists of all elements of `Current' that are in `subdomain'.
-		require
-			subdomain_exists: subdomain /= Void
 		local
 			i, j: INTEGER
 			ks: V_ARRAY [G]
@@ -231,8 +227,6 @@ feature -- Modification
 
 	union alias "+" (other: MML_BAG [G]): MML_BAG [G]
 			-- Bag that contains all elements from `other' and `Current'.
-		require
-			other_exists: other /= Void
 		local
 			i, j, k: INTEGER
 			ks: V_ARRAY [G]
@@ -240,8 +234,8 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.copy_range (keys, 1, keys.count, 1)
-			vs.copy_range (values, 1, values.count, 1)
+			ks.array_copy_range (keys, 1, keys.count, 1)
+			vs.array_copy_range (values, 1, values.count, 1)
 			from
 				i := 1
 				j := keys.count + 1
@@ -265,8 +259,6 @@ feature -- Modification
 
 	difference alias "-" (other: MML_BAG [G]): MML_BAG[G]
 			-- Current bag with all occurrences of values from `other' removed.
-		require
-			other_exists: other /= Void
 		local
 			i, j, k, c: INTEGER
 			ks: V_ARRAY [G]
@@ -305,13 +297,11 @@ feature {MML_MODEL} -- Implementation
 	make_from_arrays (ks: V_ARRAY [G]; vs: V_ARRAY [INTEGER]; n: INTEGER)
 			-- Create with predefined arrays and count.
 		require
-			ks_exists: ks /= Void
-			vs_exists: vs /= Void
 			same_lower: ks.lower = vs.lower
 			same_upper: ks.upper = vs.upper
 			start_at_one: ks.lower = 1
 			ks_has_no_duplicates: ks.bag.is_constant (1)
-			vs_positive: vs.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
+--			vs_positive: vs.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 			--- n_valid: n = sum i: INTEGER :: vs.lower <= i and i <= vs.upper ==> vs [i]
 		do
 			keys := ks
@@ -328,8 +318,6 @@ feature {MML_MODEL} -- Implementation
 		end
 
 invariant
-	keys_exists: keys /= Void
-	values_exists: values /= Void
 	same_lower: keys.lower = values.lower
 	same_upper: keys.upper = values.upper
 	start_at_one: keys.lower = 1

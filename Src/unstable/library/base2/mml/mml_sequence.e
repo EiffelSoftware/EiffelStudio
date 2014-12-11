@@ -18,8 +18,8 @@ create
 create {MML_MODEL}
 	make_from_array
 
-convert
-	singleton ({G})
+--convert
+--	singleton ({G})
 
 feature {NONE} -- Initialization
 
@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 	singleton (x: G)
 			-- Create a sequence with one element `x'.
 		do
-			create array.make (1, 1)
-			array [1] := x
+			create array.make_filled (1, 1, x)
 		end
 
 feature -- Properties
@@ -59,7 +58,6 @@ feature -- Properties
 	for_all (test: PREDICATE [ANY, TUPLE [INTEGER, G]]): BOOLEAN
 			-- Does `test' hold for all indexe-value pairs?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 2
 		do
 			Result := across array as it all test.item ([it.index, it.item]) end
@@ -68,7 +66,6 @@ feature -- Properties
 	exists (test: PREDICATE [ANY, TUPLE [INTEGER, G]]): BOOLEAN
 			-- Does `test' hold for any indexe-value pair?
 		require
-			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 2
 		do
 			Result := across array as it some test.item ([it.index, it.item]) end
@@ -149,8 +146,6 @@ feature -- Comparison
 
 	is_prefix_of alias "<=" (other: MML_SEQUENCE [G]): BOOLEAN
 			-- Is this sequence a prefix of `other'?
-		require
-			other_exists: other /= Void
 		local
 			i: INTEGER
 		do
@@ -220,7 +215,7 @@ feature -- Decomposition
 			l := lower.max (1)
 			u := upper.min (count).max (l - 1)
 			create a.make (1, u - l + 1)
-			a.copy_range (array, l, u, 1)
+			a.array_copy_range (array, l, u, 1)
 			create Result.make_from_array (a)
 		end
 
@@ -232,15 +227,13 @@ feature -- Decomposition
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count - 1)
-			a.copy_range (array, 1, i - 1, 1)
-			a.copy_range (array, i + 1, array.count, i)
+			a.array_copy_range (array, 1, i - 1, 1)
+			a.array_copy_range (array, i + 1, array.count, i)
 			create Result.make_from_array (a)
 		end
 
 	restricted (subdomain: MML_SET [INTEGER]): MML_SEQUENCE [G]
 			-- Current sequence with all elements with indexes outside of `subdomain' removed.
-		require
-			subdomain_exists: subdomain /= Void
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -264,8 +257,6 @@ feature -- Decomposition
 
 	removed (subdomain: MML_SET [INTEGER]): MML_SEQUENCE [G]
 			-- Current sequence with all elements with indexes from `subdomain' removed.
-		require
-			subdomain_exists: subdomain /= Void
 		do
 			Result := restricted (domain - subdomain)
 		end
@@ -286,9 +277,9 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.copy_range (array, 1, i - 1, 1)
+			a.array_copy_range (array, 1, i - 1, 1)
 			a [i] := x
-			a.copy_range (array, i, array.count, i + 1)
+			a.array_copy_range (array, i, array.count, i + 1)
 			create Result.make_from_array (a)
 		end
 
@@ -298,15 +289,13 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.copy_range (array, 1, array.count, 2)
+			a.array_copy_range (array, 1, array.count, 2)
 			a [1] := x
 			create Result.make_from_array (a)
 		end
 
 	concatenation alias "+" (other: MML_SEQUENCE [G]): MML_SEQUENCE [G]
 			-- The concatenation of the current sequence and `other'.
-		require
-			other_exists: other /= Void
 		local
 			a: V_ARRAY[G]
 		do
@@ -316,8 +305,8 @@ feature -- Modification
 				Result := Current
 			else
 				create a.make (1, count + other.count)
-				a.copy_range(array, 1, array.count, 1)
-				a.copy_range(other.array, 1, other.array.count, count + 1)
+				a.array_copy_range (array, 1, array.count, 1)
+				a.array_copy_range (other.array, 1, other.array.count, count + 1)
 				create Result.make_from_array (a)
 			end
 		end
@@ -348,7 +337,6 @@ feature {MML_MODEL} -- Implementation
 	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array.
 		require
-			a_exists: a /= Void
 			starts_from_one: a.lower = 1
 		do
 			array := a
@@ -363,7 +351,6 @@ feature {MML_MODEL} -- Implementation
 		end
 
 invariant
-	array_exists: array /= Void
 	starts_from_one: array.lower = 1
 end
 

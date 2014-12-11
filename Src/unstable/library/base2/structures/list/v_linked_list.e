@@ -64,13 +64,17 @@ feature -- Access
 	first: G
 			-- First element.
 		do
-			Result := first_cell.item
+			check not_empty: attached first_cell as f then
+				Result := f.item
+			end
 		end
 
 	last: G
 			-- Last element.
 		do
-			Result := last_cell.item
+			check not_empty: attached last_cell as l then
+				Result := l.item
+			end
 		end
 
 feature -- Measurement
@@ -116,7 +120,7 @@ feature -- Replacement
 		note
 			modify: sequence
 		local
-			rest, next: V_LINKABLE [G]
+			rest, next: detachable V_LINKABLE [G]
 		do
 			from
 				last_cell := first_cell
@@ -158,7 +162,9 @@ feature -- Extension
 			if is_empty then
 				first_cell := cell
 			else
-				last_cell.put_right (cell)
+				check not_empty: attached last_cell as l then
+					l.put_right (cell)
+				end
 			end
 			last_cell := cell
 			count := count + 1
@@ -224,7 +230,9 @@ feature -- Removal
 			if count = 1 then
 				last_cell := Void
 			end
-			first_cell := first_cell.right
+			check not_empty: attached first_cell as f then
+				first_cell := f.right
+			end
 			count := count - 1
 		end
 
@@ -260,10 +268,10 @@ feature -- Removal
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
-	first_cell: V_LINKABLE [G]
+	first_cell: detachable V_LINKABLE [G]
 			-- First cell of the list.
 
-	last_cell: V_LINKABLE [G]
+	last_cell: detachable V_LINKABLE [G]
 			-- Last cell of the list.
 
 	cell_at (i: INTEGER): V_LINKABLE [G]
@@ -275,16 +283,20 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 		do
 			from
 				j := 1
-				Result := first_cell
+				check not_empty: attached first_cell as f then
+					Result := f
+				end
 			until
 				j = i
 			loop
-				Result := Result.right
+				check not_last: attached Result.right as r then
+					Result := r
+				end
 				j := j + 1
 			end
 		end
 
-	cell_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): V_LINKABLE [G]
+	cell_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): detachable V_LINKABLE [G]
 			-- Cell where item satisfies `pred'.
 		do
 			from
@@ -298,8 +310,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 	extend_after (v: G; c: V_LINKABLE [G])
 			-- Add a new cell with value `v' after `c'.
-		require
-			c_exists: c /= Void
 		local
 			new: V_LINKABLE [G]
 		do
@@ -316,42 +326,40 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	remove_after (c: V_LINKABLE [G])
 			-- Remove the cell to the right of `c'.
 		require
-			c_exists: c /= Void
 			c_right_exists: c.right /= Void
 		do
-			c.put_right (c.right.right)
+			check pre: attached c.right as r then
+				c.put_right (r.right)
+			end
 			if c.right = Void then
 				last_cell := c
 			end
 			count := count - 1
 		end
 
-	merge_after (other: V_LINKED_LIST [G]; c: V_LINKABLE [G])
+	merge_after (other: V_LINKED_LIST [G]; c: detachable V_LINKABLE [G])
 			-- Merge `other' into `Current' after cell `c'. If `c' is `Void', merge to the front.
-		require
-			other_exists: other /= Void
-		local
-			other_first, other_last: V_LINKABLE [G]
 		do
 			if not other.is_empty then
-				other_first := other.first_cell
-				other_last := other.last_cell
-				count := count + other.count
-				other.wipe_out
-				if c = Void then
-					if first_cell = Void then
-						last_cell := other_last
+				check not_empty: attached other.first_cell as other_first
+					and attached other.last_cell as other_last then
+					count := count + other.count
+					other.wipe_out
+					if c = Void then
+						if first_cell = Void then
+							last_cell := other_last
+						else
+							other_last.put_right (first_cell)
+						end
+						first_cell := other_first
 					else
-						other_last.put_right (first_cell)
+						if c.right = Void then
+							last_cell := other_last
+						else
+							other_last.put_right (c.right)
+						end
+						c.put_right (other_first)
 					end
-					first_cell := other_first
-				else
-					if c.right = Void then
-						last_cell := other_last
-					else
-						other_last.put_right (c.right)
-					end
-					c.put_right (other_first)
 				end
 			end
 		end
@@ -363,7 +371,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			c: V_LINKABLE [G]
+			c: detachable V_LINKABLE [G]
 		do
 			create Result
 			from

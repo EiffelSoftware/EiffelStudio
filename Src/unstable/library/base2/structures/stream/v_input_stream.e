@@ -54,13 +54,12 @@ feature -- Cursor movement
 			box_effect: box.is_empty or else box.any_item = v
 		end
 
-	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
+	satisfy (pred: PREDICATE [ANY, TUPLE [detachable G]])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		note
 			modify: box
 		require
-			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
 			--- pred_is_total: pred.precondition |=| True
 		do
@@ -86,8 +85,6 @@ feature -- Specification
 			else
 				create Result.singleton (item)
 			end
-		ensure
-			exists: Result /= Void
 		end
 
 invariant

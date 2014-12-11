@@ -23,7 +23,7 @@ feature -- Cursor movement
 				from
 					go_root
 				until
-					active.left = Void
+					attached active as a and then a.left = Void
 				loop
 					left
 				end
@@ -43,7 +43,7 @@ feature -- Cursor movement
 				from
 					go_root
 				until
-					active.right = Void
+					attached active as a and then a.right = Void
 				loop
 					right
 				end
@@ -58,22 +58,24 @@ feature -- Cursor movement
 		note
 			modify: path, after
 		do
-			if active.right /= Void then
-				right
-				from
-				until
-					active.left = Void
-				loop
-					left
-				end
-			else
-				from
-				until
-					active.is_root or active.is_left
-				loop
+			check not_off: attached active as a then
+				if a.right /= Void then
+					right
+					from
+					until
+						attached active as a1 and then a1.left = Void
+					loop
+						left
+					end
+				else
+					from
+					until
+						attached active as a2 and then (a2.is_root or a2.is_left)
+					loop
+						up
+					end
 					up
 				end
-				up
 			end
 			if active = Void then
 				after := True
@@ -85,22 +87,24 @@ feature -- Cursor movement
 		note
 			modify: path, after
 		do
-			if active.left /= Void then
-				left
-				from
-				until
-					active.right = Void
-				loop
-					right
-				end
-			else
-				from
-				until
-					active.is_root or active.is_right
-				loop
+			check attached active as a then
+				if a.left /= Void then
+					left
+					from
+					until
+						attached active as a1 and then a1.right = Void
+					loop
+						right
+					end
+				else
+					from
+					until
+						attached active as a2 and then (a2.is_root or a2.is_right)
+					loop
+						up
+					end
 					up
 				end
-				up
 			end
 		end
 

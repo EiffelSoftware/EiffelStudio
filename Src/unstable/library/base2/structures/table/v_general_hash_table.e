@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
 			-- Create an empty table with key equivalence `eq' and hash function `h'.
 		require
-			eq_exists: eq /= Void
-			h_exists: h /= Void
 			--- eq_is_total: eq.precondition |=| True
 			--- eq_is_equivalence: is_equivalence (eq)
 			--- h_is_total: h.precondition |=| True
@@ -35,14 +33,8 @@ feature {NONE} -- Initialization
 			key_equivalence := eq
 			key_hash := h
 			create set.make (
-				agent (kv1, kv2: TUPLE [key: K; value: V]; key_eq: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
-					do
-						Result := key_eq.item ([kv1.key, kv2.key])
-					end (?, ?, eq),
-				agent (kv: TUPLE [key: K; value: V]; key_h: FUNCTION [ANY, TUPLE [K], INTEGER]): INTEGER
-					do
-						Result := key_h.item ([kv.key])
-					end (?, h))
+				(create {V_TUPLE_PROJECTOR [K, V, BOOLEAN]}).project_two_predicate (eq),
+				(create {V_TUPLE_PROJECTOR [K, V, INTEGER]}).project_one (h))
 		ensure
 			map_effect: map.is_empty
 			--- key_equivalence_effect: key_equivalence |=| eq
@@ -87,6 +79,5 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			-- Should not be reassigned after creation.
 
 invariant
-	key_hash_exists: key_hash /= Void
 	--- key_hash_non_negative: forall x: K :: key_hash (x) >= 0
 end

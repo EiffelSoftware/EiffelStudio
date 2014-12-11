@@ -81,8 +81,8 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (v)
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
+			map_changed_effect: (map | create {MML_INTERVAL}.from_range (l, u)).is_constant (v)
+			map_unchanged_effect: (map | (map.domain - create {MML_INTERVAL}.from_range (l, u))) |=| old (map | (map.domain - create {MML_INTERVAL}.from_range (l, u)))
 		end
 
 	clear (l, u: INTEGER)
@@ -97,8 +97,8 @@ feature -- Replacement
 			fill (({G}).default, l, u)
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (({G}).default)
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
+			map_changed_effect: (map | create {MML_INTERVAL}.from_range (l, u)).is_constant (({G}).default)
+			map_unchanged_effect: (map | (map.domain - create {MML_INTERVAL}.from_range (l, u))) |=| old (map | (map.domain - create {MML_INTERVAL}.from_range (l, u)))
 		end
 
 	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
@@ -106,7 +106,7 @@ feature -- Replacement
 		note
 			modify: map
 		require
-			other_exists: other /= Void
+			not_current: other /= Current
 			other_first_not_too_small: other_first >= other.lower
 			other_last_not_too_large: other_last <= other.upper
 			other_first_not_too_large: other_first <= other_last + 1
@@ -132,13 +132,13 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: {MML_INTERVAL} [[index, index + other_last - other_first]].for_all (
+			map_changed_effect: (create {MML_INTERVAL}.from_range (index, index + other_last - other_first)).for_all (
 				agent (i: INTEGER; other_map: MML_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
 					do
 						Result := map [i] = other_map [i - f + of]
 					end (?, old other.map, index, other_first))
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]])) |=|
-				old (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]]))
+			map_unchanged_effect: (map | (map.domain - create {MML_INTERVAL}.from_range (index, index + other_last - other_first))) |=|
+				old (map | (map.domain - create {MML_INTERVAL}.from_range (index, index + other_last - other_first)))
 		end
 
 	sort (order: PREDICATE [ANY, TUPLE [G, G]])
@@ -146,7 +146,6 @@ feature -- Replacement
 		note
 			modify: map
 		require
-			order_exists: order /= Void
 			order_has_two_args: order.open_count = 2
 			--- order_is_total: order.precondition |=| True
 			--- order_is_total_order: is_total_order (order)
@@ -194,7 +193,6 @@ feature {NONE} -- Implementation
 			-- Sort element in index range [`left', `right'] in `order' left to right.
 		require
 			in_range: right > left implies has_index (left) and has_index (right)
-			order_exists: order /= Void
 			order_has_two_args: order.open_count = 2
 			--- is_total_order: is_total_order (order)
 		local

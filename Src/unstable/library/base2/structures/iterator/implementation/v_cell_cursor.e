@@ -13,7 +13,9 @@ feature -- Access
 		require
 			not_off: not off
 		do
-			Result := active.item
+			check not_off: attached active as a then
+				Result := a.item
+			end
 		ensure
 			defintion: Result = box.any_item
 		end
@@ -23,7 +25,7 @@ feature -- Status report
 	off: BOOLEAN
 			-- Is current position off scope?
 		do
-			Result := active = Void or not reachable
+			Result := active = Void
 		ensure
 			definition: Result = box.is_empty
 		end
@@ -37,20 +39,17 @@ feature -- Replacement
 		require
 			not_off: not off
 		do
-			active.put (v)
+			check not_off: attached active as a then
+				a.put (v)
+			end
 		ensure
 			box_effect: box.any_item = v
 		end
 
 feature {V_CELL_CURSOR} -- Implementation
 
-	active: V_CELL [G]
+	active: detachable V_CELL [G]
 			-- Cell at current position.
-		deferred
-		end
-
-	reachable: BOOLEAN
-			-- Is `active' part of the target container?
 		deferred
 		end
 
@@ -66,8 +65,6 @@ feature -- Specification
 			else
 				create Result.singleton (item)
 			end
-		ensure
-			exists: Result /= Void
 		end
 
 invariant

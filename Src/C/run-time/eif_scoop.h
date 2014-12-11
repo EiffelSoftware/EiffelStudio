@@ -54,9 +54,9 @@ typedef struct call_data {
 	EIF_REFERENCE target;			/* Target of a call */
 
 #ifdef WORKBENCH
-	BODY_INDEX body_index;			/* Routine to be called */
+	BODY_INDEX body_index;	/* Used by ISE_SCOOP_MANAGER */
+	int routine_id;					/* Routine to be called */
 	EIF_TYPED_VALUE *result;		/* Address of a result for queries */
-	EIF_REFERENCE *result_address;	/* Address of GC-protected address for a reference result. */
 #else
 	union {
 		fnptr address;				/* Routine to be called */
@@ -71,18 +71,15 @@ typedef struct call_data {
 	EIF_TYPED_VALUE argument [1];	/* Arguments excluding target object */
 } call_data;
 
+RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data* data);
 #ifdef WORKBENCH
-#define eif_log_wcall(rid, current_pid, data)
-#define eif_try_call(a)
-#else
-RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
-#define eif_try_call(a)		((call_data *)(a))->pattern (a);
-RT_LNK void eif_call_const (call_data * a);
+RT_LNK void eif_apply_wcall (call_data *data);
 #endif
-
+RT_LNK void eif_call_const (call_data * a);
 
 /* Used only by ISE_SCOOP_MANAGER. */
 RT_LNK void eif_free_call (call_data * a);
+#define eif_try_call(a)
 
 /* Request chain stack */
 

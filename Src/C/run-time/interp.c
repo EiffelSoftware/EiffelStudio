@@ -2483,10 +2483,11 @@ rt_private void interpret(int flag, int where)
 				while (n > 0) {         /* Record arguments of a call. */
 					EIF_TYPED_VALUE * p = opop ();
 					if ((p -> type & SK_HEAD) == SK_REF) {
-						RTS_AS(*p, "", p -> type, n, a); /* Record a possibly separate argument. */
-					}
-					else {
-						RTS_AA(*p, "", p -> type, n, a); /* Record non-separate argument. */
+						RTS_AS(*p, it_r, p->type, n, a); /* Record a possibly separate argument. */
+					} else {
+							/* We use `0' for the second argument because the macro does not actually use it
+							 * in workbench mode. */
+						RTS_AA(*p, 0, p -> type, n, a); /* Record non-separate argument. */
 					}
 					n--;
 				};
@@ -2501,17 +2502,16 @@ rt_private void interpret(int flag, int where)
 					if (q) {
 						last = iget ();                             /* Allocate a cell to store result of a call. */
 						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
-						RTS_CF (routine_id, string, 0, a, *last); /* Make a separate call to a function. */
-					}
-					else {
-						RTS_CP (routine_id, string, 0, a);       /* Make a separate call to a procedure. */
+						RTS_CF (routine_id, string, target->it_ref, a, *last); /* Make a separate call to a function. */
+					} else {
+						RTS_CP (routine_id, string, target->it_ref, a);       /* Make a separate call to a procedure. */
 					}
 					break;
 				case BC_CREATION:
 					routine_id = get_int32(&IC);       /* Get the feature id. */
 					GET_PTYPE;                         /* Get precursor type. */
 					OLD_IC = IC;
-					RTS_CC (routine_id, 0, a);       /* Make a separate call to a creation procedure. */
+					RTS_CC (routine_id, target->it_ref, a);       /* Make a separate call to a creation procedure. */
 					break;
 				default:
 					OLD_IC  = IC;

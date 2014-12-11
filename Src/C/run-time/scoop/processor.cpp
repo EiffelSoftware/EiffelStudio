@@ -36,6 +36,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	group_stack (),
 	my_token (this),
 	token_queue (),
+	token_queue_mutex(),
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
@@ -73,7 +74,11 @@ bool processor::try_call (call_data *call)
 	exvect->ex_jbuf = &exenv;
 
 	if (!setjmp(exenv)) {
-		eif_try_call (call);
+#ifdef WORKBENCH
+		eif_apply_wcall (call);
+#else
+		call->pattern (call);
+#endif
 		success = true;
 	} else {
 		exvect = exret(exvect);
@@ -87,9 +92,15 @@ bool processor::try_call (call_data *call)
 		// This just shows that the jmp_buf isn't the bottle-neck: this is fast.
 	jmp_buf buf;
 	if (!setjmp(buf)) {
-		eif_try_call (call);
+#ifdef WORKBENCH
+		eif_apply_wcall (call);
+#else
+		call->pattern (call);
+#endif
+		success = true;
 		return true;
 	} else {
+		success = false;
 		return false;
 	}
 #endif
@@ -165,11 +176,13 @@ void processor::spawn()
 
 void processor::register_notify_token (notify_token token)
 {
+	unique_lock_type lock(token_queue_mutex);
 	token_queue.push (token);
 }
 
 void processor::notify_next(processor *client)
 {
+	unique_lock_type lock(token_queue_mutex);
 	std::queue <notify_token>::size_type n = token_queue.size();
 	for (std::queue <notify_token>::size_type i = 0U; i < n && !token_queue.empty(); i++) {
 		notify_token token = token_queue.front();

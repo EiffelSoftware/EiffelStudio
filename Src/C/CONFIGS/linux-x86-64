@@ -228,7 +228,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -pthread"
+mtlibs="$libs -lpthread -lstdc++"
 
 mt_prefix='mt'
 mv='/bin/mv'

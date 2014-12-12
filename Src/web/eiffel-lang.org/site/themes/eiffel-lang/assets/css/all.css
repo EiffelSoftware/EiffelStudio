@@ -34,11 +34,11 @@ img {
 
 a {
   text-decoration: none;
-  color: #00008F;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
-  color: #abc4d4;
+  color: #3498db;
 }
 
 input,
@@ -209,11 +209,11 @@ img {
 
 a {
   text-decoration: none;
-  color: #00008F;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
-  color: #abc4d4;
+  color: #3498db;
 }
 
 input,
@@ -373,42 +373,41 @@ table {
 #wdocs-tree.menu {
   border: solid 1px #ccc;
   background-color: #fff;
+  color: #112935;
   padding: 0;
 }
+#wdocs-tree.menu a {
+  color: #112935;
+}
 #wdocs-tree.menu > ul > li {
+  cursor: pointer;
   padding: 5px 0 3px 5px;
-  border-top: solid 1px #bbf;
+  border-top: solid 1px #ccc;
 }
 #wdocs-tree.menu > ul > li > a {
-  color: #99cc33;
+  color: #5082D9;
 }
 #wdocs-tree.menu > ul > li.expandable > * + a {
   display: inline-block;
   width: 85%;
 }
-#wdocs-tree.menu > ul > li > span.treeitemcontrol {
-  border: solid 1px #ccf;
+#wdocs-tree.menu > ul > li > .treeitemcontrol {
+  border: solid 1px #ccc;
   background-color: #d4ebb0;
-  color: #00008F;
+  color: #5082D9;
 }
-#wdocs-tree.menu > ul > li > span.treeitemcontrol:hover {
-  background-color: #00008F;
+#wdocs-tree.menu > ul > li > .treeitemcontrol:hover {
+  background-color: #5082D9;
   color: #fff;
 }
-#wdocs-tree.menu > ul > li > ul > li > ul > li {
-  font-size: smaller;
-}
-#wdocs-tree.menu > ul > li > ul > li > ul > li a {
-  color: #669;
-}
-#wdocs-tree.menu span.treeitemcontrol {
+#wdocs-tree.menu .treeitemcontrol {
   font-family: "Lucida Console", "Courier New", "serif";
   padding-left: 2px;
   padding-right: 2px;
   margin-left: 2px;
 }
-#wdocs-tree.menu span.treeitemcontrol:hover {
-  background-color: #00008F;
+#wdocs-tree.menu .treeitemcontrol:hover {
+  background-color: #5082D9;
   color: #fff;
 }
 #wdocs-tree.menu > ul > li > ul > * {
@@ -423,28 +422,27 @@ table {
 #wdocs-tree.menu ul li {
   padding-left: 10px;
 }
-#wdocs-tree.menu ul li:hover {
-  background-color: #ddd;
-}
 #wdocs-tree.menu ul li a:hover {
-  color: blue;
+  color: #3498db;
 }
 #wdocs-tree.menu li.active {
   font-weight: bold;
+  border-left: dotted 1px #ccc;
   border-right: solid 3px #ccc;
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
-  border-right: dotted 3px #eee;
 }
 #wdocs-tree.menu li.expandable:not(.expanded) li {
-  border-left: dotted 4px red;
   display: none;
 }
 #wdocs-tree.menu li.expandable.expanded > a {
   font-weight: bold;
 }
 
+.wikipage {
+  line-height: 1.8;
+}
 .wikipage table {
   border: solid 1px #000;
   margin-bottom: 5px;
@@ -466,6 +464,18 @@ table {
   display: inline-block;
   padding: 0 2px 0 2px;
   margin: 0;
+}
+.wikipage h1 {
+  margin-top: 5px;
+  border-bottom: solid 2px #ccc;
+}
+.wikipage h2 {
+  margin-top: 5px;
+  border-bottom: solid 1px #ccc;
+}
+.wikipage h3 {
+  margin-top: 3px;
+  border-bottom: dotted 1px #ccc;
 }
 
 body {
@@ -504,11 +514,11 @@ img {
 
 a {
   text-decoration: none;
-  color: #00008F;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
-  color: #abc4d4;
+  color: #3498db;
 }
 
 input,
@@ -1365,7 +1375,7 @@ a.link-options:hover {
   overflow: hidden;
   position: relative;
   font-size: 13px;
-  color: #abc4d4;
+  color: #6d8083;
 }
 #footer .copyrights {
   display: inline;
@@ -1376,6 +1386,9 @@ a.link-options:hover {
   margin-bottom: 40px;
   border-top: 1px solid #1a3d50;
   padding: 8px 0 0;
+}
+#footer .copyrights a {
+  color: #abc4d4;
 }
 #footer .copyrights li {
   float: left;
@@ -1483,7 +1496,7 @@ a.link-options:hover {
   display: inline-block;
 }
 .footer-nav ul li a:hover {
-  color: #00008F;
+  color: #abc4d4;
 }
 .footer-nav ul li ul {
   overflow: hidden;
@@ -1493,11 +1506,11 @@ a.link-options:hover {
   padding: 6px 0 0;
 }
 .footer-nav ul li ul li a {
-  color: #00008F;
+  color: #abc4d4;
   display: inline-block;
 }
 .footer-nav ul li ul li a:hover {
-  color: white;
+  color: #fff;
 }
 
 #content {

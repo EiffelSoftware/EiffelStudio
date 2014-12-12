@@ -542,13 +542,16 @@
 }
 
 #footer{
-	background: #4c6877;
+	background: $footer-bg-color;
 	@include mask;
 	font-size: $base-footer-size;
-	color: #abc4d4;
+	color: $footer-text-color;
 	.copyrights{
 		@extend %listreset;
 		@include grid(12);
+		a {
+			color: $footer-link-color;
+		}
 		margin-bottom: 40px;
 		border-top: 1px solid #1a3d50;
 		padding: 8px 0 0;
@@ -634,7 +637,7 @@
 				color: $white;
 				display: inline-block;
 				&:hover{
-					color: $base-link-color;
+					color: $footer-link-color;
 				}
 			}
 			ul{
@@ -646,10 +649,10 @@
 				padding: 6px 0 0;
 				li{
 					a{
-						color: $base-link-color;
+						color: $footer-link-color;
 						display: inline-block;
 						&:hover{
-							color: $white;
+							color: $footer-link-h-color;
 						}
 					}
 				}

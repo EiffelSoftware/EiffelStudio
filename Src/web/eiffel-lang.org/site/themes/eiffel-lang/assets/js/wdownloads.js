@@ -25,9 +25,6 @@ WDOWNLOAD.toggle2 = function () {
 };
 
 
-
-
-
 $(document).ready(function() {
 		/* toogle EiffelSutdio Product*/
 

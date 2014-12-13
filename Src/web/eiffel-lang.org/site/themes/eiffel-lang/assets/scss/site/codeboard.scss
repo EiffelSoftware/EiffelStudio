@@ -22,16 +22,7 @@
 }
 
 .btn-codeboard {
-  background-color: #2B4054;
-  background-image: -webkit-linear-gradient(top, #2B4054, #2B4054);
-  background-image: -moz-linear-gradient(top, #2B4054, #2B4054);
-  background-image: -ms-linear-gradient(top, #2B4054, #2B4054);
-  background-image: -o-linear-gradient(top, #2B4054, #2B4054);
-  background-image: linear-gradient(top, #2B4054, #2B4054);
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  /*width: 263px;
-  height: 63px;*/
+  @include linear-gradient(#2B4054, #12273A);
   display: block;
   margin: 0 auto;
   font: 12px/35px "museo_sans500", Arial, Helvetica, sans-serif;
@@ -42,21 +33,18 @@
   right: 230px;
   padding: 0 2px 0 2px;
   &:after {
+    background: #2B4054 no-repeat;
+    background-color: #2B4054;
 	  width: 37px;
 	  height: 37px;
 	  position: absolute;
 	  right: 16px;
 	  top: 13px;
-	  content: '';
   }
   &:hover {
     color: white;
 	  background-color: #12273A;
-	  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
-	  background-image: -moz-linear-gradient(top, #12273A, #12273A);
-	  background-image: -ms-linear-gradient(top, #12273A, #12273A);
-	  background-image: -o-linear-gradient(top, #12273A, #12273A);
-	  background-image: linear-gradient(top, #12273A, #12273A);
+    @include linear-gradient(#12273A, #12273A);
   }
 }
 

@@ -1,9 +1,10 @@
-						{if isset=$home} 
-							 <div>
-			  					<iframe class="container-codeboard" frameborder="0"  src="http://codeboard.io/projects/20" frameborder="20"></iframe>
-							</div>
-						{/if}
-
+						<h1>
+							<span class="tooltip-label" data-tooltip="A tooltip!">Play with Eiffel </span>
+                		</h1>
+						<div>
+			  				<img src="/theme/images/eiffel_source.png">
+						</div>
+						
 				
 						{if condition="False"}
 							<div class="column">

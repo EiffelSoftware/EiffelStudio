@@ -2,7 +2,7 @@
 							<strong class="logo"><a href="{$site_url/}"><img src="/theme/images/logo.png" width="226" height="60" alt="Eiffel"></a></strong>
 							<nav id="nav">
 								<ul>
-									<li><a href="{$site_url/}/about#">about</a></li>
+									<li><a href="{$site_url/}/about">about</a></li>
 									<li><a href="{$site_url/}/learn">learn</a></li>
 									<li><a href="{$site_url/}/contribute">contribute</a></li>
 									<li><a href="{$site_url/}/download_options">download</a>
@@ -22,10 +22,10 @@
 									</li>
 								</ul>
 							</nav>
-							{if condition = "False"}
 							<div class="header-right">
 								<nav class="add-links">
-									<ul>
+									<ul> <li></li>
+							{if condition = "False"}
 										{if isset="$user"}
 											<li><a href="{$site_url/}/user">My-Account</a></li>
 											<li><a href="{$site_url/}/user/logout">LOG OUT</a></li>
@@ -34,20 +34,21 @@
 											<li><a href="{$site_url/}/user/register">register</a></li>
 											<li><a href="{$site_url/}/user">LOG IN</a></li>
 										{/unless}
+							{/if}
 									</ul>
 								</nav>
-								<form class="search-form">
-									<input type="search" placeholder="">
+								<form class="search-form" method="GET" action="http://www.google.com/search"> 
+									<input type="text" name="q" size="25" maxlength="255" value=""placeholder=""/>
+									<input type="checkbox" name="sitesearch" value="eiffel-lang.org" checked style="opacity:0; position:absolute; left:9999px;"/>
 								</form>
 							</div>
-							{/if}
 						</div>
 						{assign name="empty" value=""/}
 						{unless condition="$page.region_header ~ $empty"}
 							<div class="container">
-									<div class="promo-area">
-											{$page.region_header/}
-									</div>	
+								<div class="promo-area">
+									{$page.region_header/}
+								</div>	
 							</div>
 						{/unless}	
 

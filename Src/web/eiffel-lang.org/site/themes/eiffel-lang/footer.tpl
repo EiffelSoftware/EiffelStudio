@@ -3,12 +3,12 @@
 						<div class="footer-holder">
 							<nav class="footer-nav">
 								<ul>
-									<li><a href="#">ABOUT</a>
+									<li><a href="/about">ABOUT</a>
 										<ul>
-											<li><a href="#">Purpose</a></li>
-											<li><a href="#">News</a></li>
-											<li><a href="#">Articles</a></li>
-											<li><a href="#">Contact</a></li>
+											<li><a href="/purpose">Purpose</a></li>
+											<li><a href="/news">News</a></li>
+											<li><a href="/articles">Articles</a></li>
+											<li><a href="/contact">Contact</a></li>
 										</ul>
 									</li>
 									<li><a href="#">LEARN</a>
@@ -17,8 +17,7 @@
 											<li><a href="#">Tutorials</a></li>
 											<li><a href="#">Packages</a></li>
 											<li><a href="#">FAQs</a></li>
-											<li><a href="http://codeboard.io" target="_blank">Try Eiffel Online</a></li>
-										</ul>
+										</ul>	
 									</li>
 									<li><a href="#">Contribute</a>
 										<ul>
@@ -34,6 +33,7 @@
 							</nav>
 							<div class="btn-holder">
 								<a class="btn-download" href="{$site_url/}/download_options">Download Now</a>
+								<a class="btn-tryonline" href="http://codeboard.io" target="_blank">Try Eiffel Online</a>
 							</div>
 							<div class="social-holder">
 								<ul class="social-networks">

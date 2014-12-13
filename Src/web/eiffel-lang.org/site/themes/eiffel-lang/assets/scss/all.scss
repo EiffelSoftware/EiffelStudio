@@ -6,6 +6,7 @@
 @import "site/codeboard";
 @import "site/download_product";
 @import "site/custom";
+@import "site/contact";
 
 
 @font-face {
@@ -309,11 +310,11 @@
 	position: relative;
 	.social-networks{
 		position: absolute;
-		top: 24px;
-		right: 11px;
+		top: 14px;
+		right: 15px;
 	}
 	.holder{
-		width: 700px;
+		width: 400px;
 		overflow: hidden;
 		padding: 0 0 0 9px;
 		h1{
@@ -327,6 +328,7 @@
 			border: 1px solid #98dcd4;
 			padding: 0 0 16px;
 			margin: 0 0 0 2px;
+			float:left;
 			.row{
 				overflow: hidden;
 				color: #112935;
@@ -371,6 +373,70 @@
 				}
 				&:hover{
 					@include linear-gradient(#89bc2b, #6a8c28);
+				}
+			}
+		}
+	}
+	.holder2{
+		width: 400px;
+		overflow: overlay;
+		margin-left: 400px;
+		position:absolute;
+		top: 252px;
+		h1{
+			font: 36px/36px $museo-sans500;
+			color: #112935;
+			margin: 0 0 35px;
+			letter-spacing: 2px;
+		}
+		.btn-holder2{
+			width: 347px;
+			border: 1px solid #98dcd4;
+			padding: 0 0 16px;
+			margin: 0 0 0 2px;
+			.row{
+				overflow: hidden;
+				color: #112935;
+				margin: 0 0 14px;
+				font: 14px/19px $museo-sans500;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				border-bottom: 1px solid #98dcd4;
+				.release{
+					float: left;
+					padding: 0 8px;
+				}
+				.date{
+					width: 96px;
+					float: right;
+					text-align: center;
+					font-style: normal;
+					border-left: 1px solid #98dcd4;
+				}
+			}
+			.btn-download2{
+				@include linear-gradient(#2B4054, #12273A);
+				@include border-radius(4px);
+				width: 263px;
+				height: 63px;
+				display: block;
+				margin: 0 auto;
+				font: 30px/63px $museo-sans500;
+				color: $white;
+				letter-spacing: 1px;
+				text-align: center;
+				position: relative;
+				padding: 0 57px 0 0;
+				&:after{
+					background_color:#2B4054 ;
+					width: 37px;
+					height: 37px;
+					position: absolute;
+					right: 16px;
+					top: 13px;
+				}
+				&:hover{
+					@include linear-gradient(#12273A, #12273A);
 				}
 			}
 		}
@@ -612,6 +678,31 @@
 				@include linear-gradient(#89bc2b, #6a8c28);
 			}
 		}
+		.btn-tryonline{
+			@include linear-gradient(#2B4054, #12273A);
+			width: 100px;
+			height: 32px;
+			display: block;
+			margin: 5px 0 0 -31px;
+			color: $white;
+			letter-spacing: 1px;
+			position: relative;
+			padding: 7px 42px 7px 14px;
+			font: #{$base-font-size}/16px $museo-sans500;
+			&:after{
+				background: #2B4054 no-repeat;
+				background-color: #2B4054;
+				width: 30px;
+				height: 30px;
+				position: absolute;
+				right: 10px;
+				top: 8px;
+			}
+			&:hover{
+				 background-color: #12273A;
+			  	 @include linear-gradient(#12273A, #12273A);
+			}
+		}
 	}
 	.social-holder{
 		@include grid(3);
@@ -795,6 +886,79 @@
 				color: #6d8083;
 			}
 		}
+	}
+}
+
+.about-block{
+	overflow: hidden;
+	padding: 8px 0 0;
+	margin: 0 0 -46px;
+	ul{
+		@extend %listreset;
+		overflow: hidden;
+		margin: 0 0 0 -73px;
+		li{
+			width: 285px;
+			height: 261px;
+			float: left;
+			margin: 0 0 64px 73px;
+			h2{
+					color: $green-light;
+						margin: 0 0 11px;
+						font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+						background: #2B4054;
+					}
+				p{
+					color: #0C0D0D;
+					a{
+						background: #e9eced;
+						display: block;
+						text-align: center;
+						padding: 24px 20px 11px;
+						@include border-radius(7px);
+						&:hover{
+							background: #e3e7e8;
+					}
+				}
+			}
+		}	
+	}
+}
+
+
+.promo-block{
+	overflow: hidden;
+	padding: 8px 0 0;
+	margin: 0 0 -46px;
+	ul{
+		@extend %listreset;
+		overflow: hidden;
+		margin: 0 0 0 -73px;
+		li{
+			width: 285px;
+			height: 261px;
+			float: left;
+			margin: 0 0 64px 73px;
+			h2{
+					color: $green-light;
+						margin: 0 0 11px;
+						font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+						background: #2B4054;
+					}
+				p{
+					color: #0C0D0D;
+					a{
+						background: #e9eced;
+						display: block;
+						text-align: center;
+						padding: 24px 20px 11px;
+						@include border-radius(7px);
+						&:hover{
+							background: #e3e7e8;
+					}
+				}
+			}
+		}	
 	}
 }
 

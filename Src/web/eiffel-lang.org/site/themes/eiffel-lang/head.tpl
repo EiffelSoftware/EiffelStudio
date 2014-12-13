@@ -6,4 +6,5 @@
 {if isset="$styles"}{$styles/}{/if}
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
+
 </head>

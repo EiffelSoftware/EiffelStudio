@@ -90,6 +90,10 @@ feature -- Implementation: CMS
 			m.enable
 			a_setup.register_module (m)
 
+			create {EIFFEL_LANG_ABOUT_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 			debug
 				create {CMS_DEBUG_MODULE} m.make
 				m.enable

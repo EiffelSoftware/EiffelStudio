@@ -55,6 +55,16 @@ feature
 
 	template_folder: detachable PATH
 
+	template_file (fn: READABLE_STRING_GENERAL): PATH
+		do
+			create Result.make_from_string (fn)
+			if Result.is_absolute then
+					-- Ok
+			elseif attached template_folder as l_folder then
+				Result := l_folder.extended_path (Result)
+			end
+		end
+
 feature -- Backup
 
 	backup

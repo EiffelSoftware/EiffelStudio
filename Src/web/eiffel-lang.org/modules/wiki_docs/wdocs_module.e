@@ -589,27 +589,7 @@ feature -- Handler
 				r.set_value ("doc", "optional_content_type")
 				r.set_title ("Documentation")
 				b := ""
---				create b.make_from_string ("<ul class=%"books%">")
---				mnger := manager (l_version_id)
---				across
---					mnger.book_names as ic
---				loop
---					b.append ("<li>")
---					if l_version_id /= Void then
---						b.append ("<a href=%""+ req.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
---					else
---						b.append ("<a href=%""+ req.script_url ("/book/" + percent_encoder.percent_encoded_string (ic.item)) +"/index%">")
---					end
---					b.append (html_encoded (ic.item))
---					b.append ("</a>")
---					b.append ("</li>")
---				end
---				b.append ("</ul>")
 			end
---			debug ("wdocs")
---				append_navigation_to (req, b)
---			end
-
 			r.set_main_content (b)
 			r.execute
 		end
@@ -660,14 +640,6 @@ feature -- Handler
 					end
 				end
 			end
-
-			r.add_additional_head_line ("[
-						<style>
-							.wikipage table {border: solid 1px blue;}
-							.wikipage td {border: solid 1px blue;}
-						</style>
-					]", False
-				)
 
 			if pg /= Void then
 				create s.make_empty

@@ -304,6 +304,7 @@
 	@include box-shadow(0 0 5px rgba(13,65,67,0.9), inset 1px 1px 1px 0 rgba(0,0,0,0.4));
 }
 
+
 .promo-area{
 	padding: 103px 0 20px;
 	min-height: 370px;
@@ -391,7 +392,6 @@
 		}
 		.btn-holder2{
 			width: 347px;
-			border: 1px solid #98dcd4;
 			padding: 0 0 16px;
 			margin: 0 0 0 2px;
 			.row{
@@ -443,42 +443,6 @@
 	}
 }
 
-.social-networks{
-	@extend %listreset;
-	float: right;
-	li{
-		float: left;
-		margin: 0 0 0 10px;
-		a{
-			display: block;
-			width: 35px;
-			height: 34px;
-			background: url(../images/ico-social.png) no-repeat;
-			@include hide-text;
-			&:hover{ background: url(../images/ico-social-h.png) no-repeat; }
-		}
-		.facebook{
-			width: 34px;
-		}
-		.linkedin{
-			background-position: -44px 0;
-			&:hover{ background-position: -44px 0; }
-		}
-		.youtube{ 
-			background-position: -89px 0;
-			&:hover{ background-position: -89px 0; }
-		}
-		.twitter{
-			background-position: -134px 0;
-			&:hover{ background-position: -134px 0; }
-		}
-		.googleplus{
-			background-position: -179px 0;
-			width: 34px;
-			&:hover{ background-position: -179px 0; }
-		}
-	}
-}
 
 #main{
 	@include mask;
@@ -680,6 +644,7 @@
 		}
 		.btn-tryonline{
 			@include linear-gradient(#2B4054, #12273A);
+			@include border-radius(4px);
 			width: 100px;
 			height: 32px;
 			display: block;
@@ -753,10 +718,23 @@
 }
 
 #content{
-	@include grid(8);
+	@include grid(12);
+	overflow: hidden;
 	.holder{
-		overflow: hidden;
-		width: 300px;
+		overflow: scroll;
+		@include grid(12);
+	}
+	&.with-first-sidebar, &.with-second-sidebar {
+		@include grid(9);
+		.holder{
+			@include grid(9);
+		}
+	}
+	&.with-first-sidebar.with-second-sidebar {
+		@include grid(4);
+		.holder{
+			@include grid(4);
+		}
 	}
 	.head{
 		overflow: hidden;
@@ -770,197 +748,146 @@
 			margin: 0 0 10px;
 		}
 	}
+	.ico{
+		display: inline-block;
+		vertical-align: top;
+		background: #1f3d4d;
+		margin: 2px 5px 0 0;
+		width: 18px;
+		height: 18px;
+		padding: 5px;
+		@include border-radius(100%);
+		img{
+			vertical-align: top;
+		}
+	}
 	h1{
 		color: $blue;
 		margin: 0 0 35px;
 		letter-spacing: 2px;
 		font: #{$base-h1-size}/#{$base-h1-lineheight} $museo_slab500;
 		.ico{
-			display: inline-block;
-			vertical-align: top;
-			background: #1f3d4d;
 			margin: 2px 10px 0 0;
 			width: 21px;
 			height: 21px;
 			padding: 5px;
-			@include border-radius(100%);
-			img{
-				vertical-align: top;
-			}
 		}
 	}
 }
 
-.info-block{
-	overflow: hidden;
-	position: relative;
-	&:after{
-		background: url(../images/sep.png) no-repeat;
-		width: 22px;
-		height: 2px;
-		position: absolute;
-		bottom: 1px;
-		left: 0;
-		content: ''
-	}
-	h2{
-		color: $green-light;
-		margin: 0 0 19px;
-		padding: 0 0 14px;
-		border-bottom: 1px solid #bfd1da;
-		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
-	}
-	.post{
+/* Content */
+#content {
+	.contribute-block, .about-block, .promo-block {
 		overflow: hidden;
-		margin: 0 0 13px;
-		h3{
-			color: #0d4143;
-			margin: 0 0 9px;
-			font: #{$base-h3-size}/#{$base-h3-lineheight} $museo-sans500;
-			a{
-				color: #0d4143;
-				&:hover{
-					color: $blue-light;
+		padding: 8px 0 0;
+		margin: 0 0 -46px;
+		ul{
+			@extend %listreset;
+			overflow: hidden;
+			margin: 0 0 0 -73px;
+			li{
+				width: 285px;
+				height: 261px;
+				float: left;
+				margin: 0 0 24px 33px;
+				a{
+					background: #e9eced;
+					display: block;
+					text-align: center;
+					padding: 24px 20px 11px;
+					@include border-radius(7px);
+					&:hover{
+						background: #e3e7e8;
+					}
 				}
-			}
-		}
-		.date{
-			display: block;
-			text-transform: uppercase;
-			color: $green;
-			margin: 0 0 2px;
-			font: #{$base-date-size} $museo-sans500;
-		}
-		p{
-			margin: 0 0 10px;
-			a{
-				font: #{$base-date-size} $museo-sans500;
-				color: #1f3d4d;
-				text-transform: uppercase;
-				&:hover{
-					color: #4c6877;
+				.ico{
+					width: 52px;
+					height: 52px;
+					padding: 10px;
+					display: inline-block;
+					vertical-align: top;
+					background: #1e3b4b;
+					margin: 0 0 30px;
+					@include border-radius(100%);
 				}
-			}
-		}
-	}
-}
-
-.contribute-block{
-	overflow: hidden;
-	padding: 8px 0 0;
-	margin: 0 0 -46px;
-	ul{
-		@extend %listreset;
-		overflow: hidden;
-		margin: 0 0 0 -73px;
-		li{
-			width: 285px;
-			float: left;
-			margin: 0 0 64px 73px;
-			a{
-				background: #e9eced;
-				display: block;
-				text-align: center;
-				padding: 24px 20px 11px;
-				@include border-radius(7px);
-				&:hover{
-					background: #e3e7e8;
-				}
-			}
-			.ico{
-				width: 52px;
-				height: 52px;
-				padding: 10px;
-				display: inline-block;
-				vertical-align: top;
-				background: #1e3b4b;
-				margin: 0 0 30px;
-				@include border-radius(100%);
-			}
-			h2{
+				h2{
 					color: $green-light;
 					margin: 0 0 11px;
 					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
 				}
-			p{
-				color: #6d8083;
+				p{
+					color: #0C0D0D;
+					color: #6d8083;
+				}
 			}
 		}
 	}
-}
 
-.about-block{
-	overflow: hidden;
-	padding: 8px 0 0;
-	margin: 0 0 -46px;
-	ul{
-		@extend %listreset;
+	.about-block, .promo-block {
+		ul li {
+			height: 320px;
+			h2 {
+				@include border-radius(7px);
+				/* background: #2B4054; */
+				padding: 0; //22px 20px 11px;
+			}
+		}
+	}
+
+	.info-block {
 		overflow: hidden;
-		margin: 0 0 0 -73px;
-		li{
-			width: 285px;
-			height: 261px;
-			float: left;
-			margin: 0 0 64px 73px;
-			h2{
-					color: $green-light;
-						margin: 0 0 11px;
-						font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
-						background: #2B4054;
-					}
-				p{
-					color: #0C0D0D;
-					a{
-						background: #e9eced;
-						display: block;
-						text-align: center;
-						padding: 24px 20px 11px;
-						@include border-radius(7px);
-						&:hover{
-							background: #e3e7e8;
+		position: relative;
+		&:after{
+			background: url(../images/sep.png) no-repeat;
+			width: 22px;
+			height: 2px;
+			position: absolute;
+			bottom: 1px;
+			left: 0;
+			content: ''
+		}
+		h2{
+			color: $green-light;
+			margin: 0 0 19px;
+			padding: 0 0 14px;
+			border-bottom: 1px solid #bfd1da;
+			font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		}
+		.post{
+			overflow: hidden;
+			margin: 0 0 13px;
+			h3{
+				color: #0d4143;
+				margin: 0 0 9px;
+				font: #{$base-h3-size}/#{$base-h3-lineheight} $museo-sans500;
+				a{
+					color: #0d4143;
+					&:hover{
+						color: $blue-light;
 					}
 				}
 			}
-		}	
-	}
-}
-
-
-.promo-block{
-	overflow: hidden;
-	padding: 8px 0 0;
-	margin: 0 0 -46px;
-	ul{
-		@extend %listreset;
-		overflow: hidden;
-		margin: 0 0 0 -73px;
-		li{
-			width: 285px;
-			height: 261px;
-			float: left;
-			margin: 0 0 64px 73px;
-			h2{
-					color: $green-light;
-						margin: 0 0 11px;
-						font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
-						background: #2B4054;
-					}
-				p{
-					color: #0C0D0D;
-					a{
-						background: #e9eced;
-						display: block;
-						text-align: center;
-						padding: 24px 20px 11px;
-						@include border-radius(7px);
-						&:hover{
-							background: #e3e7e8;
+			.date{
+				display: block;
+				text-transform: uppercase;
+				color: $green;
+				margin: 0 0 2px;
+				font: #{$base-date-size} $museo-sans500;
+			}
+			p{
+				margin: 0 0 10px;
+				a{
+					font: #{$base-date-size} $museo-sans500;
+					color: #1f3d4d;
+					text-transform: uppercase;
+					&:hover{
+						color: #4c6877;
 					}
 				}
 			}
-		}	
+		}
 	}
-}
+} /* #content */
 
 #sidebar{
 	@include grid(3);
@@ -981,14 +908,6 @@
 				color: $white;
 			}
 		}
-	}
-}
-
-.socail-plugin{
-	overflow: hidden;
-	margin: 0 0 30px -2px;
-	img{
-		vertical-align: top;
 	}
 }
 
@@ -1021,6 +940,52 @@
 				}
 			}
 		}
+	}
+}
+
+
+.social-networks{
+	@extend %listreset;
+	float: right;
+	li{
+		float: left;
+		margin: 0 0 0 10px;
+		a{
+			display: block;
+			width: 35px;
+			height: 34px;
+			background: url(../images/ico-social.png) no-repeat;
+			@include hide-text;
+			&:hover{ background: url(../images/ico-social-h.png) no-repeat; }
+		}
+		.facebook{
+			width: 34px;
+		}
+		.linkedin{
+			background-position: -44px 0;
+			&:hover{ background-position: -44px 0; }
+		}
+		.youtube{ 
+			background-position: -89px 0;
+			&:hover{ background-position: -89px 0; }
+		}
+		.twitter{
+			background-position: -134px 0;
+			&:hover{ background-position: -134px 0; }
+		}
+		.googleplus{
+			background-position: -179px 0;
+			width: 34px;
+			&:hover{ background-position: -179px 0; }
+		}
+	}
+}
+
+.social-plugin{
+	overflow: hidden;
+	margin: 0 0 30px -2px;
+	img{
+		vertical-align: top;
 	}
 }
 

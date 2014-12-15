@@ -186,47 +186,14 @@ feature -- Hooks
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("contribute", "optional_content_type")
 			r.set_title ("Contribute")
-			r.set_main_content ("[
-							<section class="contribute-block">
-								<ul>
-									<li>
-										<a href="#">
-											<span class="ico"><img src="/theme/images/ico1.png" width="52" height="52" alt="Image Description"></span>
-											<h2>Libraries</h2>
-											<p>Detailed definitions behind all aspects of the Eiffel Language and Development Environment.</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="ico"><img src="/theme/images/ico2.png" width="52" height="52" alt="Image Description"></span>
-											<h2>Projects</h2>
-											<p>Step by step instructions on specific Eiffel features so that you can become proficient with them easily and quickly. </p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="ico"><img src="/theme/images/ico3.png" width="52" height="52" alt="Image Description"></span>
-											<h2>Tools</h2>
-											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="ico"><img src="/theme/images/ico4.png" width="52" height="52" alt="Image Description"></span>
-											<h2>Feature Requests</h2>
-											<p>Where to go for a general overview of Eiffel and some of its core principles and functionalities.</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<span class="ico"><img src="/theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
-											<h2>Forums</h2>
-											<p>Libraries that you can download to use with Eiffel. Start your project by choosing the package you need. </p>
-										</a>
-									</li>
-								</ul>
-							</section>
-			]")
+			r.set_main_content ("")
+			if attached template_block ("contribute_page", r) as l_tpl_block then
+				r.add_block (l_tpl_block, "content")
+			else
+				debug ("cms")
+					r.add_warning_message ("Error with block [contribute_page]")
+				end
+			end
 			r.execute
 		end
 

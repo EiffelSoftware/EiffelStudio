@@ -380,12 +380,6 @@ feature -- Blocks
 			if attached message_block as m then
 				add_block (m, "content")
 			end
-				-- FIXME: avoid hardcoded html! should be only in theme.
-			add_block (create {CMS_CONTENT_BLOCK}.make_raw ("top_content_anchor", Void, "<a id=%"main-content%"></a>%N", Void), "content")
-			if attached page_title as l_page_title then
-					-- FIXME: avoid hardcoded html! should be only in theme.
-				add_block (create {CMS_CONTENT_BLOCK}.make_raw ("page_title", Void, "<h1 id=%"page-title%" class=%"title%">"+ l_page_title +"</h1>%N", Void), "content")
-			end
 			if attached primary_tabs_block as m then
 				add_block (m, "content")
 			end
@@ -862,6 +856,11 @@ feature -- Generation
 
 				-- Menu...
 			page.register_variable (horizontal_primary_menu_html, "primary_nav")
+
+				-- Page related
+			if attached page_title as l_page_title then
+				page.register_variable (l_page_title, "page_title")
+			end
 		end
 
 	custom_prepare (page: CMS_HTML_PAGE)

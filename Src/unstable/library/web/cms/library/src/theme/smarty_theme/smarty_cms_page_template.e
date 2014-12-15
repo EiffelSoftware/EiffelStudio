@@ -68,6 +68,7 @@ feature -- Access
 			ut: FILE_UTILITIES
 			p: detachable PATH
 			n: STRING_32
+			fn: STRING_32
 		do
 				-- Process html generation
 			template_context.set_template_folder (theme.templates_directory)
@@ -75,26 +76,29 @@ feature -- Access
 			debug ("smarty")
 				template_context.enable_verbose
 			end
-			p := template_context.template_folder
-			if p = Void then
-				create p.make_current
-			end
+
 			if attached page.type as l_page_type then
 				create n.make_from_string_general (l_page_type)
 				n.append_character ('-')
 				n.append_string_general (template_name)
 				n.append_string_general (".tpl")
-				if ut.file_path_exists (p.extended (n)) then
+
+				p := template_context.template_file (n)
+
+				if ut.file_path_exists (p) then
 					create tpl.make_from_file (n)
 				end
 			end
 			if tpl = Void then
 				create n.make_from_string_general (template_name)
 				n.append_string_general (".tpl")
-				if ut.file_path_exists (p.extended (n)) then
+
+				p := template_context.template_file (n)
+				if ut.file_path_exists (p) then
 					create tpl.make_from_file (n)
 				end
 			end
+
 			if tpl /= Void then
 				across
 					variables as ic

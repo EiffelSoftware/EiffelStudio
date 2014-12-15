@@ -5,7 +5,8 @@ This is only for Windows
 
 openssl
 =======
-	copy libeay32.dll and ssleay32.dll to delivery ..
+	copy libeay32.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
+	copy ssleay32.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
 
 curl
 ====
@@ -13,17 +14,17 @@ curl
 	$(EIFFEL_SRC)\C_library\openssl\include
 	$(EIFFEL_SRC)\C_library\openssl\include\openssl
 - actions:
-	cp libcurl_imp.lib $(EIFFEL_SRC)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
-	copy libcurl.dll to delivery ..
+	cp libcurl_imp.lib ..\..\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	copy libcurl.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin
 
 libpng
 ======
-	copy libpng.lib to $(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
-	copy libpng.lib to $(EIFFEL_SRC)\compatible\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	copy libpng\libpng.lib to ..\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	copy libpng\libpng.lib to ..\compatible\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
 
 zlib
 ====
-	copy to vision2
-	copy zlib.lib to $(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
-	copy zlib.lib to $(EIFFEL_SRC)\compatible\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	copy zlib\zlib.lib to ..\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	copy zlib\zlib.lib to ..\compatible\library\vision2\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib
+	
 	

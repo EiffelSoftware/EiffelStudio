@@ -12,9 +12,12 @@
 #if defined (__GNUC__) && (__cplusplus < 201103L)
 #	include <tr1/unordered_map>
 #	define unordered_map std::tr1::unordered_map
-#else
+#elif !defined (__sun)
 #	include <unordered_map>
 #	define unordered_map std::unordered_map
+#else
+#	include "unordered_map.hpp"
+#	define unordered_map eiffel_run_time::unordered_map
 #endif
 
 /**
@@ -23,7 +26,7 @@
  * 'vector::emplace_back' is not available on all platforms.
  * It is replaced conditionally by 'push_back' that might be less efficient.
  */
-#if defined (__GNUC__) && (__cplusplus < 201103L)
+#if (defined (__GNUC__) && (__cplusplus < 201103L)) || defined (__sun)
 #	define EMPLACE      insert
 #	define EMPLACE_BACK push_back
 #else

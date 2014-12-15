@@ -73,7 +73,7 @@ bool processor::try_call (call_data *call)
 	if (saved_except) {
 		safe_saved_except = eif_protect(saved_except);
 	}
-	excatch(&exenv);
+	excatch(&exenv);	/* Record pseudo execution vector */
 
 	if (!setjmp(exenv)) {
 #ifdef WORKBENCH

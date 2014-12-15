@@ -1,22 +1,43 @@
-//
-// EVE/Qs - A new runtime for the EVE SCOOP implementation
-// Copyright (C) 2014 Scott West <scott.gregory.west@gmail.com>
-//
-// This file is part of EVE/Qs.
-//
-// EVE/Qs is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// EVE/Qs is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
-//
+/*
+	description:	"SCOOP support."
+	date:		"$Date$"
+	revision:	"$Revision: 96304 $"
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version="$Id$" summary="SCOOP support.">
+*/
 
 #include "eif_utils.hpp"
 #include "processor_registry.hpp"
@@ -47,10 +68,10 @@ processor_registry::processor_registry () :
 
 	procs[0] = root_proc;
 
-		// end of life notification
+		/* end of life notification */
 	all_done = false;
 
-		// GC
+		/* GC */
 	is_marking = false;
 }
 
@@ -105,7 +126,7 @@ void processor_registry::return_processor (processor *proc)
 			all_done_cv.notify_one();
 		}
 
-			// pid 0 is special so we don't recycle that one.
+			/* pid 0 is special so we don't recycle that one. */
 		if (pid) {
 			eif_lock lock (need_pid_mutex);
 			free_pids.enqueue (pid);
@@ -116,7 +137,7 @@ void processor_registry::return_processor (processor *proc)
 	}
 }
 
-// GC activities
+/* GC activities */
 void processor_registry::enumerate_live ()
 {
 	for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
@@ -130,7 +151,7 @@ void processor_registry::enumerate_live ()
 	}
 }
 
-// use cas here for operations on is_marking
+/* use cas here for operations on is_marking */
 void processor_registry::mark_all (MARKER marking)
 {
 	bool f = false;
@@ -149,11 +170,11 @@ void processor_registry::mark_all (MARKER marking)
 
 void processor_registry::unmark (EIF_SCP_PID pid)
 {
-		// This is a callback from the GC, which will notify us
-		// of all unused processors, even those that have already been
-		// shutdown, but still have a thread of execution.
-		// To avoid double free/shutdown we check first to see if they're
-		// still active.
+		/* This is a callback from the GC, which will notify us */
+		/* of all unused processors, even those that have already been */
+		/* shutdown, but still have a thread of execution. */
+		/* To avoid double free/shutdown we check first to see if they're */
+		/* still active. */
 	if (used_pids.has (pid)) {
 		processor *proc = (*this) [pid];
 		clear_from_caches (proc);
@@ -187,3 +208,7 @@ void processor_registry::wait_for_all()
 		}
 	}
 }
+
+/*
+doc:</file>
+*/

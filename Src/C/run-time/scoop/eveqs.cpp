@@ -1,22 +1,43 @@
-//
-// EVE/Qs - A new runtime for the EVE SCOOP implementation
-// Copyright (C) 2014 Scott West <scott.gregory.west@gmail.com>
-//
-// This file is part of EVE/Qs.
-//
-// EVE/Qs is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// EVE/Qs is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
-//
+/*
+	description:	"SCOOP support."
+	date:		"$Date$"
+	revision:	"$Revision: 96304 $"
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
+*/
 
 #include "eif_portable.h"
 #include "eif_utils.hpp"
@@ -32,14 +53,14 @@
 extern "C" {
 #endif
 
-// RTS_RC (o) - create request group for o
+/* RTS_RC (o) - create request group for o */
 rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.push_back (req_grp(client));
 }
 
-// RTS_RD (o) - delete chain (release locks?)
+/* RTS_RD (o) - delete chain (release locks?) */
 rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
@@ -47,14 +68,14 @@ rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 	client->group_stack.pop_back();
 }
 
-// RTS_RF (o) - wait condition fails
+/* RTS_RF (o) - wait condition fails */
 rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().wait();
 }
 
-// RTS_RS (c, s) - add supplier s to current group for c
+/* RTS_RS (c, s) - add supplier s to current group for c */
 rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
@@ -62,26 +83,21 @@ rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF
 	client->group_stack.back().add (supplier);
 }
 
-// RTS_RW (o) - sort all suppliers in the group and get exclusive access
+/* RTS_RW (o) - sort all suppliers in the group and get exclusive access */
 rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 	client->group_stack.back().lock();
 }
 
-//
-// Processor creation
-//
-
-// RTS_PA
+/* Processor creation */
+/* RTS_PA */
 rt_public void eif_new_processor (EIF_REFERENCE obj)
 {
 	registry.create_fresh (obj);
 }
 
-//
-// Call logging
-//
+/* Call logging */
 
 #ifdef WORKBENCH
 rt_public void eif_apply_wcall (call_data *data)
@@ -167,10 +183,8 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 	return client != supplier && !client->cache.has_locked(supplier);
 }
 
-//
-// Callback from garbage collector to indicate that the
-// processor isn't used anymore.
-//
+/* Callback from garbage collector to indicate that the */
+/* processor isn't used anymore. */
 rt_shared void rt_unmark_processor (EIF_SCP_PID pid)
 {
 	registry.unmark(pid);
@@ -194,3 +208,7 @@ rt_shared void rt_mark_all_processors (MARKER marking)
 #ifdef __cplusplus
 }
 #endif
+
+/*
+doc:</file>
+*/

@@ -1,22 +1,43 @@
-//
-// EVE/Qs - A new runtime for the EVE SCOOP implementation
-// Copyright (C) 2014 Scott West <scott.gregory.west@gmail.com>
-//
-// This file is part of EVE/Qs.
-//
-// EVE/Qs is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// EVE/Qs is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
-//
+/*
+	description:	"SCOOP support."
+	date:		"$Date$"
+	revision:	"$Revision: 96304 $"
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SCOOP support.">
+*/
 
 #include "eif_utils.hpp"
 #include "processor_registry.hpp"
@@ -58,10 +79,10 @@ processor::~processor()
 
 bool processor::try_call (call_data *call)
 {
-		// Switch this on to catch exceptions
-		// This section slows down some benchmarks by 2x. I believe
-		// this is due to either some locking in the allocation routines (again)
-		// or reloading the thread local variables often.
+		/* Switch this on to catch exceptions */
+		/* This section slows down some benchmarks by 2x. I believe */
+		/* this is due to either some locking in the allocation routines (again) */
+		/* or reloading the thread local variables often. */
 	EIF_GET_CONTEXT
 	bool success;
 	EIF_REFERENCE EIF_VOLATILE saved_except = NULL;
@@ -158,12 +179,12 @@ void spawn_main(char* data, EIF_SCP_PID pid)
 
 void processor::spawn()
 {
-	eif_thr_create_with_attr_new ((char**)parent_obj.get(), // No root object, if this is only
-															// passed to spawn_main this is OK
+	eif_thr_create_with_attr_new ((char**)parent_obj.get(), /* No root object, if this is only */
+															/* passed to spawn_main this is OK */
 		(void (*)(char* data, ...)) spawn_main,
-		pid, // Logical PID
-		EIF_TRUE, // We are a processor
-		NULL); // There are no attributes
+		pid, /* Logical PID */
+		EIF_TRUE, /* We are a processor */
+		NULL); /* There are no attributes */
 }
 
 void processor::register_notify_token (notify_token token)
@@ -194,11 +215,11 @@ void processor::application_loop()
 	for (;;) {
 		qoq_item res;
 
-			// Triggering the collection happens when all
-			// processors are idle. This is sufficient for
-			// program termination, but not sufficient for
-			// freeing threads to let new ones take their
-			// place.
+			/* Triggering the collection happens when all */
+			/* processors are idle. This is sufficient for */
+			/* program termination, but not sufficient for */
+			/* freeing threads to let new ones take their */
+			/* place. */
 		if (--active_count == 0 && qoq.is_empty()) {
 			plsc();
 		}
@@ -242,3 +263,7 @@ priv_queue* processor::new_priv_queue()
 	private_queue_cache.push_back(new priv_queue(this));
 	return private_queue_cache.back();
 }
+
+/*
+doc:</file>
+*/

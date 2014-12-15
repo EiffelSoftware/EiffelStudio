@@ -1,22 +1,39 @@
-//
-// EVE/Qs - A new runtime for the EVE SCOOP implementation
-// Copyright (C) 2014 Scott West <scott.gregory.west@gmail.com>
-//
-// This file is part of EVE/Qs.
-//
-// EVE/Qs is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// EVE/Qs is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with EVE/Qs.  If not, see <http://www.gnu.org/licenses/>.
-//
+/*
+	description:	"SCOOP support."
+	date:		"$Date$"
+	revision:	"$Revision: 96304 $"
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+*/
 
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
@@ -84,7 +101,7 @@ public:
 
   void return_processor (processor* proc);
 
-  // GC activities
+  /* GC activities */
 public:
   void enumerate_live ();
 
@@ -99,7 +116,7 @@ private:
   pid_set used_pids;
   mpmc_bounded_queue<EIF_SCP_PID> free_pids;
 
-  // GC
+  /* GC */
 private:
   atomic_bool_type is_marking;
   void clear_from_caches (processor *proc);
@@ -108,7 +125,7 @@ private:
   conditional_mutex_type need_pid_mutex;
   condition_variable_type need_pid_cv;
 
-  // end of life notification
+  /* end of life notification */
 private:
   bool all_done;
   conditional_mutex_type all_done_mutex;
@@ -119,4 +136,4 @@ void call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
 
 extern processor_registry registry;
 
-#endif // _GLOBAL_H
+#endif

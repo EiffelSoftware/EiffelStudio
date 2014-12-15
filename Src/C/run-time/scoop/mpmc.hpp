@@ -29,7 +29,6 @@
 // official policies, either expressed or implied, of Dmitry Vyukov.
 
 #include <cassert>
-#include "eif_utils.hpp"
 
 template<typename T>
 class mpmc_bounded_queue

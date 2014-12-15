@@ -1,29 +1,50 @@
-//
-// EVE/Qs - A new runtime for the EVE SCOOP implementation
-// Copyright (C) 2014 Scott West <scott.gregory.west@gmail.com>
-//
-// This file is part of EVE/Qs.
-//
-// EVE/Qs is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// EVE/Qs is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with EVE/Qs.	If not, see <http://www.gnu.org/licenses/>.
-//
+/*
+	description:	"SCOOP support."
+	date:		"$Date$"
+	revision:	"$Revision: 96304 $"
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
+*/
 
 #ifndef _EIF_UTILS_H
 #define _EIF_UTILS_H
 
 #include "eif_portable.h"
 
-// #define EIF_USE_STD_MUTEX
+/* #define EIF_USE_STD_MUTEX */
 #ifdef EIF_USE_STD_MUTEX
 #	include <mutex>
 #	include <condition_variable>
@@ -57,7 +78,7 @@
 	typedef eiffel_run_time::condition_variable condition_variable_type;
 #endif
 
-// #define EIF_USE_STD_ATOMIC
+/* #define EIF_USE_STD_ATOMIC */
 #ifdef EIF_USE_STD_ATOMIC
 #	include <atomic>
 #	define atomic_var_init ATOMIC_VAR_INIT (0)
@@ -84,7 +105,7 @@
 #	define memory_barrier() EIF_MEMORY_BARRIER
 #endif
 
-// #define EIF_USE_STD_SHARED_PTR
+/* #define EIF_USE_STD_SHARED_PTR */
 #ifdef EIF_USE_STD_SHARED_PTR
 #	include <memory>
 #	define shared_ptr_type std::shared_ptr
@@ -121,4 +142,4 @@ public:
 	}
 };
 
-#endif // _EIF_UTILS_H
+#endif

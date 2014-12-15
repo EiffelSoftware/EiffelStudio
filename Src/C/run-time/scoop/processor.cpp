@@ -24,10 +24,10 @@
 #include "private_queue.hpp"
 #include "processor.hpp"
 #include <algorithm>
-#include <eif_posix_threads.h>
-#include <eif_threads.h>
+#include "eif_posix_threads.h"
+#include "eif_threads.h"
 #include <stdarg.h>
-#include <cassert>
+#include "rt_except.h"
 
 atomic_int_type active_count = atomic_var_init;
 
@@ -58,20 +58,22 @@ processor::~processor()
 
 bool processor::try_call (call_data *call)
 {
-#if 1
 		// Switch this on to catch exceptions
 		// This section slows down some benchmarks by 2x. I believe
 		// this is due to either some locking in the allocation routines (again)
 		// or reloading the thread local variables often.
+	EIF_GET_CONTEXT
 	bool success;
-	struct ex_vect * EIF_VOLATILE exvect;
-	EIF_REFERENCE EIF_VOLATILE saved_except = 0;
+	EIF_REFERENCE EIF_VOLATILE saved_except = NULL;
+	EIF_OBJECT EIF_VOLATILE safe_saved_except = NULL;
 	jmp_buf exenv;
-
-	exvect = exset((char *) 0, 0, (char *) 0);
+	RTYL;
 
 	saved_except = RTLA;
-	exvect->ex_jbuf = &exenv;
+	if (saved_except) {
+		safe_saved_except = eif_protect(saved_except);
+	}
+	excatch(&exenv);
 
 	if (!setjmp(exenv)) {
 #ifdef WORKBENCH
@@ -80,30 +82,20 @@ bool processor::try_call (call_data *call)
 		call->pattern (call);
 #endif
 		success = true;
+		if (safe_saved_except) {
+			set_last_exception (eif_access(safe_saved_except));
+		}
 	} else {
-		exvect = exret(exvect);
 		success = false;
 	}
-	set_last_exception (saved_except);
 
-	exok();
-	return success;
-#else
-		// This just shows that the jmp_buf isn't the bottle-neck: this is fast.
-	jmp_buf buf;
-	if (!setjmp(buf)) {
-#ifdef WORKBENCH
-		eif_apply_wcall (call);
-#else
-		call->pattern (call);
-#endif
-		success = true;
-		return true;
-	} else {
-		success = false;
-		return false;
+	if (safe_saved_except) {
+		eif_wean(safe_saved_except);
 	}
-#endif
+
+	RTXE;
+	expop(&eif_stack);					/* Pop pseudo vector */
+	return success;
 }
 
 void processor::operator()(processor *client, call_data* call)

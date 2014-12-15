@@ -4,20 +4,6 @@
 @import "../960";
 @import "variables";
 
-/* doc specific */
-
-#content.documentation {
-	@include grid(8);
-	padding: 0;
-	width: 757px;
-	overflow:hidden;
-	.holder {
-		@include grid(8);
-		overflow:scroll;
-		width: 757px;
-	}
-}
-
 /* WDOCS nav tree */
 
 #wdocs-tree.menu {

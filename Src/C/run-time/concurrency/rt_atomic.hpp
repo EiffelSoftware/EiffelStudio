@@ -210,10 +210,12 @@ public:
 		{
 		}
 
+/* This declaration does not work on SunOS:
 	operator ptr_type () const RT_NOEXCEPT
 		{	// current value
 			return value;
 		}
+*/
 
 	operator ptr_type () const volatile RT_NOEXCEPT
 		{	// current value

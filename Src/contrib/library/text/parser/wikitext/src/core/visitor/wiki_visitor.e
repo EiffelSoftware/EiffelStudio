@@ -37,6 +37,12 @@ feature -- Processing
 		deferred
 		end
 
+	visit_indentation (a_indent: WIKI_INDENTATION)
+		require
+			a_indent_attached: a_indent /= Void
+		deferred
+		end
+
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		require
 			a_paragraph_attached: a_paragraph /= Void

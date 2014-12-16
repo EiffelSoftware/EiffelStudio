@@ -166,40 +166,32 @@ feature -- Element change
 		local
 			w, wp: WIKI_LIST
 			ve,vp: NATURAL_8
---			d: STRING
 		do
---			if attached {WIKI_LIST} e as l_list then
-				ve := e.level
-				vp := level
-				if ve = vp + 1 then
-					e.set_parent (Current)
-					Precursor (e)
-				else
-					--| build intermediate list
-					from
-						w := e
-					until
-						w.level = vp + 1
-					loop
-						create wp.make (w.expected_parent_description)
-						wp.add_element (w)
-						w := wp
-					end
-					Precursor (w)
-					w.set_parent (Current)
+			ve := e.level
+			vp := level
+			if ve = vp + 1 then
+				if kind = list_kind then
+					kind := e.kind
+				elseif kind /= e.kind then
+					kind := list_kind
 				end
---			else
---				Precursor (e)
---			end
+				e.set_parent (Current)
+				Precursor (e)
+			else
+					--| build intermediate list
+				from
+					w := e
+				until
+					w.level = vp + 1
+				loop
+					create wp.make (w.expected_parent_description)
+					wp.add_element (w)
+					w := wp
+				end
+				Precursor (w)
+				w.set_parent (Current)
+			end
 		end
-
---	set_parent (p: like parent)
---			-- Set `parent' to `p'
---		require
---			parent_upper: p /= Void implies (p.level < level and p.description.same_string (description.substring (1, level - 1)))
---		do
---			parent := p
---		end
 
 feature -- Visitor
 
@@ -220,7 +212,7 @@ invariant
 	valid_parent: attached {WIKI_LIST} parent as p implies (p.level < level and p.description.same_string (description.substring (1, level - 1)))
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

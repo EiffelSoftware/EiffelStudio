@@ -118,6 +118,14 @@ feature -- Processing
 			visit_composite (a_section)
 		end
 
+	visit_indentation (a_indentation: WIKI_INDENTATION)
+		do
+			a_indentation.get_structure
+			if attached a_indentation.structure as struct then
+				visit_structure (struct)
+			end
+		end
+
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		do
 --			output("%N")

@@ -53,6 +53,19 @@ feature -- Basic operation
 			end
 		end
 
+	last_element (a_section: detachable WIKI_COMPOSITE [WIKI_ITEM]): detachable WIKI_ITEM
+		do
+			if a_section /= Void then
+				if a_section.count = 0 then
+					Result := a_section
+				else
+					Result := a_section.elements.last
+				end
+			elseif count > 0 then
+				Result := elements.last
+			end
+		end
+
 	analyze (a_text: STRING)
 			--| To support:
 			--| = Text =
@@ -90,7 +103,7 @@ feature -- Basic operation
 			--? <code>text</code>
 			--? <eiffel>text</eiffel>
 		local
-			i,n,ln,m: INTEGER
+			i,n,ln,m,tmp: INTEGER
 			b: INTEGER --| Beginning of line
 			q: INTEGER
 			l_eol: INTEGER
@@ -103,6 +116,7 @@ feature -- Basic operation
 			w_list_item: detachable WIKI_LIST
 			w_plist: detachable WIKI_LIST
 			w_block: detachable WIKI_PREFORMATTED_TEXT
+			w_indent: detachable WIKI_INDENTATION
 			multiline_level: INTEGER
 			ignore_wiki: BOOLEAN
 			keep_formatting: BOOLEAN
@@ -125,6 +139,7 @@ feature -- Basic operation
 			loop
 				c := a_text.item (i)
 				if is_start_of_line then
+--				from until not is_start_of_line loop
 					l_eol := index_of_end_of_line (a_text, i)
 					inspect c
 					when '-' then
@@ -162,16 +177,17 @@ feature -- Basic operation
 							is_start_of_line := True
 						end
 						w_box := Void
-					when '*','#',';',':' then
+					when '*','#',';' then
 						w_box := Void
 						w_block := Void
+
 						s := a_text.substring (i, l_eol)
 						w_list_item := new_list_item (s)
 						if
 							w_plist /= Void and then --| has previous section, check if is potential parent
 							attached w_plist.adapted_parent_list (w_list_item) as l_parent_list
 						then
-							--| FIXME: should check if list's kind is the same ... otherwise close/open lists
+								--| FIXME: should check if list's kind is the same ... otherwise close/open lists
 							l_parent_list.add_element (w_list_item)
 						else
 							if w_plist = Void then
@@ -185,6 +201,35 @@ feature -- Basic operation
 						w_plist := w_list_item
 						w_list_item := Void
 
+						is_start_of_line := True
+					when ':' then
+						w_box := Void
+						w_block := Void
+						w_indent := Void
+
+						s := a_text.substring (i, l_eol)
+							-- Hack to handle indented table
+						tmp := a_text.substring_index_in_bounds ("{|", i + 1, l_eol)
+						if tmp > 0 then
+							tmp := next_closing_table (a_text, tmp + 2)
+							if tmp > 0 then
+								s := a_text.substring (i, tmp + 2)
+								ln := ln + s.occurrences ('%N')
+								i := tmp + 2
+								l_eol := index_of_end_of_line (a_text, tmp + 1)
+							end
+						end
+						w_indent := new_indented_string (s)
+						if
+							attached {WIKI_INDENTATION} last_element (w_psec) as l_prev_indent and then
+							l_prev_indent.indentation_level = w_indent.indentation_level
+						then
+							l_prev_indent.append_text ("%N")
+							l_prev_indent.append_text (w_indent.text)
+						else
+							add_element_box_to (w_psec, w_indent)
+						end
+						w_indent := Void
 						is_start_of_line := True
 					when ' ', '%T' then
 						w_box := Void
@@ -207,7 +252,9 @@ feature -- Basic operation
 						b := i + 1
 						ln := ln + 1
 					end
+--					c := a_text.item (i)
 				end
+--				c := a_text.item (i)
 				inspect c
 				when '%N' then
 					if multiline_level > 0 then
@@ -462,6 +509,22 @@ feature -- Factory
 		do
 			create f
 			Result := f.new_list (s)
+		end
+
+	new_indented_string (s: STRING): WIKI_INDENTATION
+		local
+			f: WIKI_FACTORY
+		do
+			create f
+			Result := f.new_indented_string (s)
+		end
+
+	new_indentation (s: STRING): WIKI_INDENTATION
+		local
+			f: WIKI_FACTORY
+		do
+			create f
+			Result := f.new_indentation (s)
 		end
 
 feature -- Visitor

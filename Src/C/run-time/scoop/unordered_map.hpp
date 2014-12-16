@@ -16,10 +16,20 @@ public:
 			return value; // (*this->_Ptr);
 		}
 
+	Value & operator*()
+		{	
+			return value; // (*this->_Ptr);
+		}
 
 	Value * operator->()
 		{
 			return & value;
+			// return (&**this);
+		}
+
+	Value * operator->() const
+		{
+			return (Value *) & value;
 			// return (&**this);
 		}
 
@@ -111,7 +121,7 @@ public: // Iteration
 
 public: // Modification
 
-	std::pair<iterator, bool> insert (const value_type& val)
+	std::pair<iterator, bool> insert (const std::pair <Key, Value> & val)
 	{
 		return std::pair<iterator, bool> ();
 	}

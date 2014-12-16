@@ -44,7 +44,6 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 #include "internal.hpp"
 #include "private_queue.hpp"
 #include "processor.hpp"
-#include <algorithm>
 #include "eif_posix_threads.h"
 #include "eif_threads.h"
 #include <stdarg.h>

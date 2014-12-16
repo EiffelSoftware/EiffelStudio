@@ -367,7 +367,7 @@ feature -- Processing
 
 	visit_line_separator (a_sep: WIKI_LINE_SEPARATOR)
 		do
-			output (create {STRING}.make_filled ('-', 72))
+			output ("<hr/>")
 		end
 
 	visit_string (a_string: WIKI_STRING)

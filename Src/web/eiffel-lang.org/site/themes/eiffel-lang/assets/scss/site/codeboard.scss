@@ -12,6 +12,7 @@
 .container-codeboard {
 	@include grid-container;
 	@extend %clearfix;
+  width: 920px;
   height: 800px;
 }
 

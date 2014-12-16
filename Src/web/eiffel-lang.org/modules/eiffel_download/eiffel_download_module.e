@@ -235,7 +235,14 @@ feature {NONE} -- Block view implementation
 					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
 				end
 
-				create vals.make (5)
+				create vals.make (8)
+				value_table_alter (vals, a_response)
+				across
+					vals as ic
+				loop
+					l_tpl_block.set_value (ic.item, ic.key)
+				end
+
 				get_download_configuration (a_response.api)
 
 				if attached download_configuration as cfg then

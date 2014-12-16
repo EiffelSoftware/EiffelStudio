@@ -27,8 +27,6 @@
 		<library name="module_eiffel_lang_misc" location="modules/eiffel_lang_misc/eiffel_lang_misc-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_lang_about" location="modules/eiffel_lang_about/eiffel_lang_about-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules/wiki_docs/wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_eiffel_lang_about" location="modules/eiffel_lang_about/eiffel_lang_about-safe.ecf" readonly="false" use_application_options="true"/>
-
 	</target>
 	<target name="eiffel_lang_any" extends="eiffel_lang_common">
 		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>

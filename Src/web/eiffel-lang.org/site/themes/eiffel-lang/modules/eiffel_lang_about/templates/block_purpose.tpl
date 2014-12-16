@@ -1,6 +1,6 @@
 <div id="breadcumb">
 	<span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>
-			  		<a href="/about">About</a>
+			  		<a href="{$site_url/}/about">About</a>
 			  		:: Purpose
 </div>
 <h1>Purpose</h1>
@@ -17,7 +17,7 @@ a handful of volunteers from the community (known as the review board) serve to 
 content throughout the site when necessary.</p>
 
 <p>If you have an questions or would like to volunteer to help administrate the site (space is limited), please
-<a href="/contact">contact us.</a></p>
+<a href="{$site_url/}/contact">contact us.</a></p>
 
 <p>Best regards,
 

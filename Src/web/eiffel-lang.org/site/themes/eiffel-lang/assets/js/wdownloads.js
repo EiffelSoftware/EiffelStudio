@@ -25,10 +25,18 @@ WDOWNLOAD.toggle2 = function () {
 };
 
 
+WDOWNLOAD.expand_first = function () {
+    $('div.more:first').show();
+    $('div.less:first').addClass('active');
+    $('div.less:first').next().stop(true).slideDown("1000"); 
+}
+
 $(document).ready(function() {
 		/* toogle EiffelSutdio Product*/
 
 	WDOWNLOAD.toggle2 ();
+    WDOWNLOAD.expand_first();
+ 
 		/* Download a particular EiffelStudio version */
 	$('.download_link').click(function(e) {
 		e.preventDefault();	

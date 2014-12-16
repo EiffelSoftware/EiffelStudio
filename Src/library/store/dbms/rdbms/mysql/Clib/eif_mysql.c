@@ -9,6 +9,12 @@
  *
  */
 
+#include "eif_config.h"
+
+#ifdef EIF_WINDOWS
+#include <winsock2.h>
+#endif
+
 /* System Include Files */
 #include <stdio.h>
 #include <stdlib.h>
@@ -296,7 +302,6 @@ MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr, const char *command)
 	int res = 0;
 	MYSQL_RES *result = (MYSQL_RES *) 0;
 	size_t c_len = 0;
-
 
 	c_len = strlen(command);
 	res = mysql_real_query(mysql_ptr, command, c_len + 1);

@@ -103,13 +103,16 @@
 	code {
 		display: block;
 		font-family: monospace;
-		border: solid 1px #999;
-		background-color: #ffc;
+		white-space: pre-wrap;
+
+		border: solid 1px #ccc;
+		background-color: #e8e8e8;
+		line-height: 1.3;
 		padding: 3px;
 		margin: 2px 0 2px 0;
 	}
 	code.inline {
-		border: dotted 1px #ccc;
+		border: dotted 1px #ddd;
 		display: inline-block;
 		padding: 0 2px 0 2px;
 		margin: 0;
@@ -127,4 +130,14 @@
 		margin-top: 3px;
 		border-bottom: dotted 1px $wdocs-border-color;
 	}
+
+	.wdocs-nav {
+		border-top: solid 1px #999;
+		color: $wdocs-nav-color;
+		background-color: $wdocs-nav-bg-color;
+		a.wdocs-folder:after {
+			content: " ...";
+		}
+	}
 }
+

@@ -570,6 +570,7 @@ feature -- Handler
 				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
 				mnger := manager (l_version_id)
 				if attached mnger.book (l_bookid) as l_book then
+					b.append ("<ul class=%"wdocs-nav%">")
 					if attached l_book.root_page as wp then
 						b.append ("<li>")
 						append_wiki_page_link (req, l_version_id, l_bookid, wp, True, mnger, b)
@@ -583,6 +584,7 @@ feature -- Handler
 							b.append ("</li>")
 						end
 					end
+					b.append ("</ul>")
 				end
 			else
 --				r.set_optional_content_type ("doc")
@@ -869,7 +871,7 @@ feature {NONE} -- Implementation: wiki render
 					wvis.visit_page (a_wiki_page)
 				end
 
-				l_xhtml.append ("<ul class=%"wdocs-index%">")
+				l_xhtml.append ("<ul class=%"wdocs-nav%">")
 				if
 					a_book_name /= Void and then
 					attached a_manager.page (a_wiki_page.parent_key, a_book_name) as l_parent_page and then
@@ -970,9 +972,9 @@ feature {NONE} -- implementation: wiki docs
 				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%"")
 			end
 			if l_pages /= Void then
-				a_output.append (" class=%"wdocslink folder%"")
+				a_output.append (" class=%"wdocs-folder%"")
 			else
-				a_output.append (" class=%"wdocslink%"")
+				a_output.append (" class=%"wdocs-page%"")
 			end
 			a_output.append (">")
 			a_output.append (html_encoder.general_encoded_string (a_manager.wiki_page_link_title (a_page)))

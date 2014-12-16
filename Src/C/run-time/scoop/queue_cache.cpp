@@ -44,7 +44,7 @@ doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary
 
 priv_queue* queue_cache::operator[] (processor * const supplier)
 {
-	unordered_map <processor*, queue_stack>::iterator found_it = queue_map.find (supplier);
+	RT_UNORDERED_MAP <processor*, queue_stack>::iterator found_it = queue_map.find (supplier);
 	priv_queue *pq;
 	if (found_it != queue_map.end()) {
 		queue_stack &stack = found_it->second;
@@ -53,7 +53,7 @@ priv_queue* queue_cache::operator[] (processor * const supplier)
 		}
 		pq = stack.back();
 	} else {
-		const std::pair <unordered_map <processor*, queue_stack>::iterator, bool> &res =
+		const std::pair <RT_UNORDERED_MAP <processor*, queue_stack>::iterator, bool> &res =
 			queue_map.EMPLACE (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
 		queue_stack &stack = res.first->second;
 		stack.EMPLACE_BACK (supplier->new_priv_queue());

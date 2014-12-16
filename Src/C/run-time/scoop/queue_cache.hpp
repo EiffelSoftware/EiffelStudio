@@ -48,13 +48,13 @@
  */
 #if defined (__GNUC__) && (__cplusplus < 201103L)
 #	include <tr1/unordered_map>
-#	define unordered_map std::tr1::unordered_map
+#	define RT_UNORDERED_MAP std::tr1::unordered_map
 #elif !defined (__sun)
 #	include <unordered_map>
-#	define unordered_map std::unordered_map
+#	define RT_UNORDERED_MAP std::unordered_map
 #else
 #	include "unordered_map.hpp"
-#	define unordered_map eiffel_run_time::unordered_map
+#	define RT_UNORDERED_MAP eiffel_run_time::unordered_map
 #endif
 
 /**
@@ -104,10 +104,10 @@ private:
   /* */
   /* The goal is to first have efficient priv_queue lookup, as that is a very */
   /* common operation, while the push/pop operations are somewhat more expensive. */
-  unordered_map <processor*, uint32_t> sub_map;
+  RT_UNORDERED_MAP <processor*, uint32_t> sub_map;
   std::stack<std::set<processor*> > sub_stack;
 
-  unordered_map <processor*, queue_stack> queue_map;
+  RT_UNORDERED_MAP <processor*, queue_stack> queue_map;
   std::stack<std::set<processor*> > lock_stack;
 
 public:
@@ -134,7 +134,7 @@ public:
   bool
   has_locked (processor *proc) const
   {
-    unordered_map <processor*, queue_stack>::const_iterator found_it = queue_map.find (proc);
+    RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator found_it = queue_map.find (proc);
     if (found_it != queue_map.end())
       {
 	const queue_stack &stack = found_it->second;
@@ -153,7 +153,7 @@ public:
   bool
   has_subordinate (processor *proc) const
   {
-    unordered_map <processor*, uint32_t>::const_iterator res = sub_map.find (proc);
+    RT_UNORDERED_MAP <processor*, uint32_t>::const_iterator res = sub_map.find (proc);
     return res != sub_map.end() && res->second > 0;
   }
   
@@ -170,8 +170,8 @@ public:
   push (const queue_cache* other)
   {
     std::set <processor*> new_locks;
-    unordered_map <processor*, queue_stack> other_queue_map = other -> queue_map;
-    for (unordered_map <processor*, queue_stack>::const_iterator pair = other_queue_map.begin (); pair != other_queue_map.end (); ++ pair)
+    RT_UNORDERED_MAP <processor*, queue_stack> other_queue_map = other -> queue_map;
+    for (RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator pair = other_queue_map.begin (); pair != other_queue_map.end (); ++ pair)
       {
 	processor* const supplier = (*pair).first;
 	const queue_stack &stack = (*pair).second;
@@ -191,8 +191,8 @@ public:
     lock_stack.push (new_locks);
 
     std::set <processor*> new_subs;
-    unordered_map <processor*, uint32_t> other_sub_map = other->sub_map;
-    for (unordered_map <processor*, uint32_t>::const_iterator pair = other_sub_map.begin (); pair != other_sub_map.end (); ++ pair )
+    RT_UNORDERED_MAP <processor*, uint32_t> other_sub_map = other->sub_map;
+    for (RT_UNORDERED_MAP <processor*, uint32_t>::const_iterator pair = other_sub_map.begin (); pair != other_sub_map.end (); ++ pair )
       {
 	processor* const supplier = (*pair).first;
 	const uint32_t count = (*pair).second;
@@ -245,7 +245,7 @@ public:
    */
   void mark (MARKER marking)
   {
-    for (unordered_map <processor*, queue_stack>::const_iterator pair = queue_map.begin (); pair != queue_map.end (); ++ pair)
+    for (RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator pair = queue_map.begin (); pair != queue_map.end (); ++ pair)
     {
       const queue_stack &stack = (*pair).second;
       for (queue_stack::const_iterator pq = stack.begin (); pq != stack.end (); ++ pq)

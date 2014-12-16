@@ -507,6 +507,7 @@ feature -- Tag
 				else
 					output (l_tag)
 				end
+				unset_next_output_require_newline
 				a_code.text.process (Current)
 				output ("</" + a_code.tag_name + ">")
 				if not l_is_inline then

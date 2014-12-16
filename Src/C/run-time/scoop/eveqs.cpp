@@ -39,7 +39,6 @@
 doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
 */
 
-#include "eif_portable.h"
 #include "eif_utils.hpp"
 #include "internal.hpp"
 #include "processor_registry.hpp"

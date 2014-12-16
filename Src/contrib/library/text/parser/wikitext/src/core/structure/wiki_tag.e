@@ -78,6 +78,17 @@ feature {NONE} -- Initialization
 					else
 						l_content := s.substring (e + 1, s.count)
 					end
+					if not l_content.is_empty then
+						if l_content[1] = '%N' then
+							l_content.remove_head (1)
+						end
+						if
+							not l_content.is_empty and then
+							l_content[l_content.count] = '%N'
+						then
+							l_content.remove_tail (1)
+						end
+					end
 					create {WIKI_STRING} text.make (l_content)
 				end
 			end

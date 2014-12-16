@@ -121,7 +121,7 @@ rt_private void string_right_adjust(COUNTABLE_STRING *buf);
 
 /*
 SQLTXTCMP	- SQL text cmp
-SQLTXTCPY	- SQL text copy
+SQLTXTCPY	- SQL text copy len + one character for the null character
 ATSTXTCPY	- ASCII to SQL text copy
 SQLTXTCAT	- SQL text cat
 ATSTXTCAT	- ASCII to SQL text cat
@@ -585,83 +585,7 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 
 void odbc_start_order (void *con, int no_desc)
 {
-	short colNum = 0;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-
-	/* Added by Jacques. 5/14/98 */
-	SQLTCHAR     szCatalog[DB_REP_LEN], szSchema[DB_REP_LEN];
-	SQLTCHAR     szTableName[DB_REP_LEN], szColumnName[DB_REP_LEN];
-	SQLTCHAR     szTypeName[DB_REP_LEN];
-	SQLINTEGER  ColumnSize, BufferLength;
-	SQLSMALLINT DataType, DecimalDigits, NumPrecRadix, Nullable;
-
-	SQLLEN cbCatalog, cbSchema, cbTableName, cbColumnName;
-	SQLLEN cbDataType, cbTypeName, cbColumnSize, cbBufferLength;
-	SQLLEN cbDecimalDigits, cbNumPrecRadix, cbNullable;
-
-	if (l_con->flag[no_desc] == ODBC_CATALOG_COL) {
-			SQLBindCol(l_con->hstmt, 1, SQL_C_TCHAR, szCatalog, DB_REP_LEN,&cbCatalog);
-			SQLBindCol(l_con->hstmt, 2, SQL_C_TCHAR, szSchema, DB_REP_LEN, &cbSchema);
-			SQLBindCol(l_con->hstmt, 3, SQL_C_TCHAR, szTableName, DB_REP_LEN,&cbTableName);
-			SQLBindCol(l_con->hstmt, 4, SQL_C_TCHAR, szColumnName, DB_REP_LEN, &cbColumnName);
-			SQLBindCol(l_con->hstmt, 5, SQL_C_SSHORT, &DataType, 0, &cbDataType);
-			SQLBindCol(l_con->hstmt, 6, SQL_C_TCHAR, szTypeName, DB_REP_LEN, &cbTypeName);
-			SQLBindCol(l_con->hstmt, 7, SQL_C_SLONG, &ColumnSize, 0, &cbColumnSize);
-			SQLBindCol(l_con->hstmt, 8, SQL_C_SLONG, &BufferLength, 0, &cbBufferLength);
-			SQLBindCol(l_con->hstmt, 9, SQL_C_SSHORT, &DecimalDigits, 0, &cbDecimalDigits);
-			SQLBindCol(l_con->hstmt, 10, SQL_C_SSHORT, &NumPrecRadix, 0, &cbNumPrecRadix);
-			SQLBindCol(l_con->hstmt, 11, SQL_C_SSHORT, &Nullable, 0, &cbNullable);
-  			while(1) {
-				l_con->rc = SQLFetch(l_con->hstmt);
-				if (l_con->rc == SQL_ERROR || l_con->rc == SQL_SUCCESS_WITH_INFO) {
-					odbc_error_handler(con, l_con->hstmt[no_desc],7);
-					if (l_con->error_number > 0) {
-						free_sqldata (l_con->odbc_descriptor[no_desc]);
-						l_con->odbc_descriptor[no_desc] = NULL;
-						if (l_con->pcbValue[no_desc] != NULL) {
-							ODBC_C_FREE(l_con->pcbValue[no_desc]);
-							l_con->pcbValue[no_desc] = NULL;
-						}
-						l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
-						return;
-					}
-				}
-				if (l_con->rc == SQL_SUCCESS || l_con->rc == SQL_SUCCESS_WITH_INFO){
-					l_con->rc = SQLNumResultCols(l_con->hstmt[no_desc], &colNum);
-					if (l_con->rc) {
-						odbc_error_handler(con, l_con->hstmt[no_desc],5);
-						if (l_con->error_number) {
-							free_sqldata (l_con->odbc_descriptor[no_desc]);
-							l_con->odbc_descriptor[no_desc] = NULL;
-							if (l_con->pcbValue[no_desc] != NULL) {
-								ODBC_C_FREE(l_con->pcbValue[no_desc]);
-								l_con->pcbValue[no_desc] = NULL;
-							}
-							l_con->rc = SQLFreeHandle (SQL_HANDLE_STMT, l_con->hstmt[no_desc]);
-							return;
-						}
-					}
-
-				}
-				else if (l_con->rc == SQL_ROW_UPDATED) {
-						break;
-				}
-				else if (l_con->rc == SQL_ROW_DELETED) {
-						break;
-				}
-				else if (l_con->rc == SQL_ROW_ADDED) {
-						break;
-				}
-				else if (l_con->rc == SQL_ROW_NOROW) {
-						break;
-				}
-				else {
-					break;
-				}
-			}
-	}
-
-
 
 	if (l_con->flag[no_desc] == ODBC_SQL) {
 			/* Process general ODBC SQL statements    */
@@ -698,6 +622,7 @@ void setup_result_space (void *con, int no_desc)
 	SQLSMALLINT tmpNullable;
 	char *dataBuf;
 	SQLHDESC hdesc = NULL;
+	SQLTCHAR l_temp[2];
 
 	/* Save old val numbers */
 	oldVarNum = GetVarNum(dap);
@@ -757,8 +682,12 @@ void setup_result_space (void *con, int no_desc)
 	SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_ROW_DESC, &hdesc, 0, NULL);
 
 	for (i=0; i < colNum && !l_con->error_number; i++) {
-		/* Get column name length */
+		/* Get column name length. Ideally we would want to do that:
 		l_con->rc = SQLDescribeCol(l_con->hstmt[no_desc], (SQLSMALLINT) i+1, NULL, 0, &indColName, NULL, NULL, NULL, NULL);
+		but it does not work on some ODBC driver implementation that fails to recognize we are just interested in computing
+		the length of the column name.
+		*/
+		l_con->rc = SQLDescribeCol(l_con->hstmt[no_desc], (SQLSMALLINT) i+1, l_temp, 1, &indColName, NULL, NULL, NULL, NULL);
 		/* Allocate string for column name, extra character for null character */
 		ALLOC_STRING(&((dap->sqlvar)[i].sqlname),indColName+1);
 
@@ -1302,54 +1231,6 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 /*                                                               */
 /*                     ROUTINE  DESCRIPTION                      */
 /*                                                               */
-/* NAME: odbc_set_col_flag()                                     */
-/* PARAMETER: no_desc - the index of descriptor                  */
-/* DESCRIPTION:                                                  */
-/*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get column(s) (of a special table or whole data source).      */
-/*                                                               */
-/*****************************************************************/
-void odbc_set_col_flag(void *con, int no_desc) {
-	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-	l_con->flag[no_desc] = ODBC_CATALOG_COL;
-}
-
-/*****************************************************************/
-/*                                                               */
-/*                     ROUTINE  DESCRIPTION                      */
-/*                                                               */
-/* NAME: odbc_set_tab_flag()                                     */
-/* PARAMETER: no_desc - the index of descriptor                  */
-/* DESCRIPTION:                                                  */
-/*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get  table(s) in the current Data Source.                     */
-/*                                                               */
-/*****************************************************************/
-void odbc_set_tab_flag(void *con, int no_desc) {
-	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-	l_con->flag[no_desc] = ODBC_CATALOG_TAB;
-}
-
-/*****************************************************************/
-/*                                                               */
-/*                     ROUTINE  DESCRIPTION                      */
-/*                                                               */
-/* NAME: odbc_set_proc_flag()                                    */
-/* PARAMETER: no_desc - the index of descriptor                  */
-/* DESCRIPTION:                                                  */
-/*   to indicate the statement for descriptor 'no_desc' is to    */
-/* get stored procedure(s) in the current Data Source.           */
-/*                                                               */
-/*****************************************************************/
-void odbc_set_proc_flag(void *con, int no_desc) {
-	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-	l_con->flag[no_desc] = ODBC_CATALOG_PROC;
-}
-
-/*****************************************************************/
-/*                                                               */
-/*                     ROUTINE  DESCRIPTION                      */
-/*                                                               */
 /* NAME: odbc_hide_qualifier                                     */
 /* PARAMETER: buf -- the content of a SQL command                */
 /* DESCRIPTION:                                                  */
@@ -1463,22 +1344,6 @@ void odbc_set_owner(void *con, SQLTCHAR *owner, int len) {
 }
 
 /*****************************************************************/
-/*                                                               */
-/*                     ROUTINE  DESCRIPTION                      */
-/*                                                               */
-/* NAME: odbc_unset_catalog_flag()                               */
-/* PARAMETER: no_desc - the index of descriptor                  */
-/* DESCRIPTION:                                                  */
-/*   to indicate the statement for descriptor 'no_desc' is  a    */
-/* general ODBC SQL statement.                                   */
-/*                                                               */
-/*****************************************************************/
-void odbc_unset_catalog_flag(void *con, int no_desc) {
-	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
-	l_con->flag[no_desc] = ODBC_SQL;
-}
-
-/*****************************************************************/
 /*The following are the function related with DATABASE CONTROL   */
 /*****************************************************************/
 
@@ -1585,10 +1450,8 @@ void odbc_fetch_connection_info (void *con)
 	SQLSMALLINT indColName;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
-	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, dbmsName, sizeof(dbmsName), &indColName);
-	SQLTXTCPY(storedProc, dbmsName, indColName);
-	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, dbmsName, sizeof(dbmsName), &indColName);
-	SQLTXTCPY(CreateStoredProc, dbmsName, indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, storedProc, sizeof(storedProc), &indColName);
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, CreateStoredProc, sizeof(CreateStoredProc), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_NAME, dbmsName, sizeof(dbmsName), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_DBMS_VER, dbmsVer, sizeof(dbmsVer), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_IDENTIFIER_QUOTE_CHAR, idQuoter, sizeof(idQuoter), &indColName);
@@ -1706,7 +1569,7 @@ void odbc_rollback (void *con)
 	}
 	l_con->odbc_tranNumber = 0;
 
-	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+	l_con->rc = SQLSetConnectAttr(l_con->hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER) SQL_AUTOCOMMIT_ON, 0);
 	if (l_con->rc) {
 		odbc_error_handler(con, NULL, 12);
 	}
@@ -1739,7 +1602,7 @@ void odbc_commit (void *con)
 	}
 	l_con->odbc_tranNumber = 0;
 
-	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_ON);
+	l_con->rc = SQLSetConnectAttr(l_con->hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER) SQL_AUTOCOMMIT_ON, 0);
 	if (l_con->rc) {
 		odbc_error_handler(con, NULL, 12);
 	}
@@ -1759,7 +1622,7 @@ void odbc_begin (void *con)
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	odbc_clear_error (con);
 
-	l_con->rc = SQLSetConnectOption(l_con->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF);
+	l_con->rc = SQLSetConnectAttr(l_con->hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER) SQL_AUTOCOMMIT_OFF, 0);
 	if (l_con->rc) {
 		odbc_error_handler(con, NULL, 12);
 	}
@@ -1934,7 +1797,7 @@ SQLULEN odbc_put_data (void *con, int no_des, int index, char **result)
 			g = (SQLGUID *)GetDbColPtr(dap, i);
 				/* We allocate 37 because `snprintf' will add a null terminating character. */
 			*result = (char *)malloc(37);
-			snprintf (*result, 36,
+			snprintf (*result, 37,
 				"%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
 				(unsigned long) g->Data1,
 				g->Data2, g->Data3,
@@ -2555,3 +2418,4 @@ rt_public EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
 	}
 	return value;
 }
+

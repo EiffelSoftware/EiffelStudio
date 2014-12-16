@@ -20,50 +20,11 @@ indexing
 #include "eif_config.h"
 
 #ifdef EIF_WINDOWS
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #endif
 
 #include "eif_portable.h"	/* required for VMS, recommended for all */
-
-#ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#define EWOULDBLOCK             WSAEWOULDBLOCK
-#define EINPROGRESS             WSAEINPROGRESS
-#define EALREADY                WSAEALREADY
-#define ENOTSOCK                WSAENOTSOCK
-#define EDESTADDRREQ            WSAEDESTADDRREQ
-#define EMSGSIZE                WSAEMSGSIZE
-#define EPROTOTYPE              WSAEPROTOTYPE
-#define ENOPROTOOPT             WSAENOPROTOOPT
-#define EPROTONOSUPPORT         WSAEPROTONOSUPPORT
-#define ESOCKTNOSUPPORT         WSAESOCKTNOSUPPORT
-#define EOPNOTSUPP              WSAEOPNOTSUPP
-#define EPFNOSUPPORT            WSAEPFNOSUPPORT
-#define EAFNOSUPPORT            WSAEAFNOSUPPORT
-#define EADDRINUSE              WSAEADDRINUSE
-#define EADDRNOTAVAIL           WSAEADDRNOTAVAIL
-#define ENETDOWN                WSAENETDOWN
-#define ENETUNREACH             WSAENETUNREACH
-#define ENETRESET               WSAENETRESET
-#define ECONNABORTED            WSAECONNABORTED
-#define ECONNRESET              WSAECONNRESET
-#define ENOBUFS                 WSAENOBUFS
-#define EISCONN                 WSAEISCONN
-#define ENOTCONN                WSAENOTCONN
-#define ESHUTDOWN               WSAESHUTDOWN
-#define ETOOMANYREFS            WSAETOOMANYREFS
-#define ETIMEDOUT               WSAETIMEDOUT
-#define ECONNREFUSED            WSAECONNREFUSED
-#define ELOOP                   WSAELOOP
-#define EHOSTDOWN               WSAEHOSTDOWN
-#define EHOSTUNREACH            WSAEHOSTUNREACH
-#define EPROCLIM                WSAEPROCLIM
-#define EUSERS                  WSAEUSERS
-#define EDQUOT                  WSAEDQUOT
-#define ESTALE                  WSAESTALE
-#define EREMOTE                 WSAEREMOTE
-#endif
 
 #ifdef EIF_VMS
 #include "netvmsdef.h"
@@ -111,6 +72,152 @@ indexing
 #ifndef FASYNC
 #define FASYNC O_SYNC
 #endif
+
+#ifdef EIF_WINDOWS
+/* To create portable code we override the definition of some errno constants to
+ * map what winsock returns to us for error codes. */
+#ifdef EWOULDBLOCK
+	#undef EWOULDBLOCK
+#endif
+#define EWOULDBLOCK             WSAEWOULDBLOCK
+#ifdef EINPROGRESS
+	#undef EINPROGRESS
+#endif
+#define EINPROGRESS             WSAEINPROGRESS
+#ifdef EALREADY
+	#undef EALREADY
+#endif
+#define EALREADY                WSAEALREADY
+#ifdef ENOTSOCK
+	#undef ENOTSOCK
+#endif
+#define ENOTSOCK                WSAENOTSOCK
+#ifdef EDESTADDRREQ
+	#undef EDESTADDRREQ
+#endif
+#define EDESTADDRREQ            WSAEDESTADDRREQ
+#ifdef EMSGSIZE
+	#undef EMSGSIZE
+#endif
+#define EMSGSIZE                WSAEMSGSIZE
+#ifdef EPROTOTYPE
+	#undef EPROTOTYPE
+#endif
+#define EPROTOTYPE              WSAEPROTOTYPE
+#ifdef ENOPROTOOPT
+	#undef ENOPROTOOPT
+#endif
+#define ENOPROTOOPT             WSAENOPROTOOPT
+#ifdef EPROTONOSUPPORT
+	#undef EPROTONOSUPPORT
+#endif
+#define EPROTONOSUPPORT         WSAEPROTONOSUPPORT
+#ifdef ESOCKTNOSUPPORT
+	#undef ESOCKTNOSUPPORT
+#endif
+#define ESOCKTNOSUPPORT         WSAESOCKTNOSUPPORT
+#ifdef EOPNOTSUPP
+	#undef EOPNOTSUPP
+#endif
+#define EOPNOTSUPP              WSAEOPNOTSUPP
+#ifdef EPFNOSUPPORT
+	#undef EPFNOSUPPORT
+#endif
+#define EPFNOSUPPORT            WSAEPFNOSUPPORT
+#ifdef EAFNOSUPPORT
+	#undef EAFNOSUPPORT
+#endif
+#define EAFNOSUPPORT            WSAEAFNOSUPPORT
+#ifdef EADDRINUSE
+	#undef EADDRINUSE
+#endif
+#define EADDRINUSE              WSAEADDRINUSE
+#ifdef EADDRNOTAVAIL
+	#undef EADDRNOTAVAIL
+#endif
+#define EADDRNOTAVAIL           WSAEADDRNOTAVAIL
+#ifdef ENETDOWN
+	#undef ENETDOWN
+#endif
+#define ENETDOWN                WSAENETDOWN
+#ifdef ENETUNREACH
+	#undef ENETUNREACH
+#endif
+#define ENETUNREACH             WSAENETUNREACH
+#ifdef ENETRESET
+	#undef ENETRESET
+#endif
+#define ENETRESET               WSAENETRESET
+#ifdef ECONNABORTED
+	#undef ECONNABORTED
+#endif
+#define ECONNABORTED            WSAECONNABORTED
+#ifdef ECONNRESET
+	#undef ECONNRESET
+#endif
+#define ECONNRESET              WSAECONNRESET
+#ifdef ENOBUFS
+	#undef ENOBUFS
+#endif
+#define ENOBUFS                 WSAENOBUFS
+#ifdef EISCONN
+	#undef EISCONN
+#endif
+#define EISCONN                 WSAEISCONN
+#ifdef ENOTCONN
+	#undef ENOTCONN
+#endif
+#define ENOTCONN                WSAENOTCONN
+#ifdef ESHUTDOWN
+	#undef ESHUTDOWN
+#endif
+#define ESHUTDOWN               WSAESHUTDOWN
+#ifdef ETOOMANYREFS
+	#undef ETOOMANYREFS
+#endif
+#define ETOOMANYREFS            WSAETOOMANYREFS
+#ifdef ETIMEDOUT
+	#undef ETIMEDOUT
+#endif
+#define ETIMEDOUT               WSAETIMEDOUT
+#ifdef ECONNREFUSED
+	#undef ECONNREFUSED
+#endif
+#define ECONNREFUSED            WSAECONNREFUSED
+#ifdef ELOOP
+	#undef ELOOP
+#endif
+#define ELOOP                   WSAELOOP
+#ifdef EHOSTDOWN
+	#undef EHOSTDOWN
+#endif
+#define EHOSTDOWN               WSAEHOSTDOWN
+#ifdef EHOSTUNREACH
+	#undef EHOSTUNREACH
+#endif
+#define EHOSTUNREACH            WSAEHOSTUNREACH
+#ifdef EPROCLIM
+	#undef EPROCLIM
+#endif
+#define EPROCLIM                WSAEPROCLIM
+#ifdef EUSERS
+	#undef EUSERS
+#endif
+#define EUSERS                  WSAEUSERS
+#ifdef EDQUOT
+	#undef EDQUOT
+#endif
+#define EDQUOT                  WSAEDQUOT
+#ifdef ESTALE
+	#undef ESTALE
+#endif
+#define ESTALE                  WSAESTALE
+#ifdef EREMOTE
+	#undef EREMOTE
+#endif
+#define EREMOTE                 WSAEREMOTE
+#endif
+
 
 
 /*x** Error numbers ***/

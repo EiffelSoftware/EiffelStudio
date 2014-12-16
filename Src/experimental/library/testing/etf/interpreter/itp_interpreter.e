@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	SED_STORABLE_FACILITIES
+		export
+			{NONE} all
+		end
+
 	EQA_EXTERNALS
 
 create
@@ -67,7 +72,7 @@ feature {NONE} -- Initialization
 			create error_buffer.make (buffer_size)
 
 				-- Create object pool
-			create store.make
+			create object_store.make
 
 				-- Create log file.
 			create log_file.make_with_name (l_log_filename)
@@ -148,15 +153,15 @@ feature {NONE} -- Handlers
 			b: BOOLEAN
 			l_index: INTEGER
 			l_value: detachable ANY
-			l_store: like store
+			l_object_store: like object_store
 			l_type: STRING
 		do
 			if attached {STRING} last_request as l_obj_index then
 				log_message ("report_type_request start%N")
 				l_index := l_obj_index.to_integer
-				l_store := store
-				if l_store.is_variable_defined (l_index) then
-					l_value := l_store.variable_value (l_index)
+				l_object_store := object_store
+				if l_object_store.is_variable_defined (l_index) then
+					l_value := l_object_store.variable_value (l_index)
 					if l_value = Void then
 						create l_type.make (4)
 						l_type.append (none_type_name)
@@ -432,7 +437,7 @@ feature {NONE} -- Socket IPC
 				socket.read_natural_32
 				last_request_type := socket.last_natural_32
 
-				if attached {like last_request} socket.retrieved as l_request then
+				if attached {like last_request} retrieved_from_medium (socket) as l_request then
 					last_request := l_request
 				end
 			end
@@ -454,7 +459,7 @@ feature {NONE} -- Socket IPC
 			if not l_retried then
 				socket.put_natural_32 (last_response_flag)
 				if attached last_response as l_last_response then
-					socket.independent_store (l_last_response)
+					store_in_medium (l_last_response, socket)
 				end
 			end
 		rescue
@@ -505,7 +510,7 @@ feature {NONE} -- Parsing
 
 feature {NONE} -- Object pool
 
-	store: ITP_STORE
+	object_store: ITP_STORE
 			-- Object store
 
 feature {NONE} -- Byte code
@@ -547,15 +552,15 @@ feature {NONE} -- Byte code
 		end
 
 	store_variable_at_index	(a_object: ANY; a_index: INTEGER)
-			-- Store `a_object' at `a_index' in `store'.
+			-- Store `a_object' at `a_index' in `object_store'.
 		do
-			store.assign_value (a_object, a_index)
+			object_store.assign_value (a_object, a_index)
 		end
 
 	variable_at_index (a_index: INTEGER): detachable ANY
-			-- Object in `store' at position `a_index'.
+			-- Object in `object_store' at position `a_index'.
 		do
-			Result := store.variable_value (a_index)
+			Result := object_store.variable_value (a_index)
 		end
 
 	main_loop
@@ -605,7 +610,7 @@ feature{NONE} -- Invariant checking
 
 invariant
 	log_file_open_write: log_file.is_open_write
-	store_not_void: store /= Void
+	store_not_void: object_store /= Void
 	output_buffer_attached: output_buffer /= Void
 	error_buffer_attached: error_buffer /= Void
 	socket_attached: socket /= Void

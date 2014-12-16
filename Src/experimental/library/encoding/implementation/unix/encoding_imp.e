@@ -432,6 +432,7 @@ feature {NONE} -- Implementation
 				iconv_t cd = (iconv_t) $a_cd;
 				size_t nconv, avail, alloc;
 				char *res, *tres, *wrptr, *inptr;
+				char **l_inptr = &inptr;
 				
 				insize = (size_t)$a_size;
 				alloc = avail = insize + insize/4;
@@ -448,7 +449,7 @@ feature {NONE} -- Implementation
 					iconv (cd, NULL, 0, NULL, 0);
 					
 					do {				
-						nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
+						nconv = iconv (cd, l_inptr, &insize, &wrptr, &avail); /*convertions */
 						
 						if (nconv == (size_t)(-1)) {
 							if (errno == E2BIG) { /* need more room for result */							

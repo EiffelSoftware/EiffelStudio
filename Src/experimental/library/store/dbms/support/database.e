@@ -553,14 +553,6 @@ feature -- For DATABASE_REPOSITORY
 		deferred
 		end
 
-feature -- For DATABASE_DYN_STORE
-
-	unset_catalog_flag (desc: INTEGER)
-			-- Default value zero
-			-- Only for ODBC.
-		do
-		end
-
 feature -- For database types
 
 	is_convert_string_type_required: BOOLEAN

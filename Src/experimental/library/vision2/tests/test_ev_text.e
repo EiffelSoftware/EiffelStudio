@@ -50,6 +50,146 @@ feature -- Test routines
 			end
 		end
 
+	test_text_caret_positioning_at_newlines
+			-- Demonstrate that 'internal' caret positioning
+			-- before '%N' causes problems!
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					txt: EV_TEXT
+					l_clipboard: EV_CLIPBOARD
+				do
+					create txt
+					txt.set_text ("123%N567")
+
+					txt.set_caret_position (4)
+					txt.insert_text ("X")
+					assert ("Text updated before %N", txt.text.same_string_general ("123X%N567"))
+
+					txt.set_caret_position (4)
+					txt.insert_text ("%N")
+					assert ("Text updated before %N", txt.text.same_string_general ("123%NX%N567"))
+
+					txt.set_caret_position (7)
+					txt.insert_text ("Y")
+					assert ("Text updated after %N", txt.text.same_string_general ("123%NX%NY567"))
+
+					txt.select_all
+					txt.copy_selection
+
+					if attached application as l_application then
+						l_clipboard := l_application.clipboard
+						assert ("Text in clipboard", l_clipboard.has_text)
+						assert ("Text is valid", l_clipboard.text.same_string_general ("123%NX%NY567"))
+					else
+						assert ("An application should be running", False)
+					end
+				end)
+		end
+
+	test_text_select_region_at_newlines
+			-- Demonstrate that 'internal' caret positioning
+			-- before '%N' causes problems!
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					txt: EV_TEXT
+					l_clipboard: EV_CLIPBOARD
+				do
+					create txt
+					txt.set_text ("123%N567")
+					txt.select_region (4, 4)
+					txt.delete_selection
+					assert ("Text updated", txt.text ~ "123567")
+
+					txt.select_all
+					txt.copy_selection
+
+					if attached application as l_application then
+						l_clipboard := l_application.clipboard
+						assert ("Text in clipboard", l_clipboard.has_text)
+						assert ("Text is valid", l_clipboard.text.same_string_general ("123567"))
+					else
+						assert ("An application should be running", False)
+					end
+
+				end)
+		end
+
+	test_rich_text_caret_positioning_at_newlines
+			-- Demonstrate that 'internal' caret positioning
+			-- before '%N' causes problems!
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					txt: EV_RICH_TEXT
+					l_clipboard: EV_CLIPBOARD
+				do
+					create txt
+					txt.set_text ("123%N567")
+
+					txt.set_caret_position (4)
+					txt.insert_text ("X")
+					assert ("Text updated before %N", txt.text.same_string_general ("123X%N567"))
+
+					txt.set_caret_position (4)
+					txt.insert_text ("%N")
+					assert ("Text updated before %N", txt.text.same_string_general ("123%NX%N567"))
+
+					txt.set_caret_position (7)
+					txt.insert_text ("Y")
+					assert ("Text updated after %N", txt.text.same_string_general ("123%NX%NY567"))
+
+					txt.select_all
+					txt.copy_selection
+
+					if attached application as l_application then
+						l_clipboard := l_application.clipboard
+						assert ("Text in clipboard", l_clipboard.has_text)
+						assert ("Text is valid", l_clipboard.text.same_string_general ("123%NX%NY567"))
+					else
+						assert ("An application should be running", False)
+					end
+				end)
+		end
+
+	test_rich_text_select_region_at_newlines
+			-- Demonstrate that 'internal' caret positioning
+			-- before '%N' causes problems!
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					txt: EV_RICH_TEXT
+					l_clipboard: EV_CLIPBOARD
+				do
+					create txt
+					txt.set_text ("123%N567")
+					txt.select_region (4, 4)
+					txt.delete_selection
+					assert ("Text updated", txt.text ~ "123567")
+
+					txt.select_all
+					txt.copy_selection
+
+					if attached application as l_application then
+						l_clipboard := l_application.clipboard
+						assert ("Text in clipboard", l_clipboard.has_text)
+						assert ("Text is valid", l_clipboard.text.same_string_general ("123567"))
+					else
+						assert ("An application should be running", False)
+					end
+
+				end)
+		end
+
 feature -- Unicode selection
 
 	test_unicode_selection_ev_text

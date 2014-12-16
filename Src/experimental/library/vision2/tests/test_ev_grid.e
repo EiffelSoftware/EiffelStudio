@@ -52,6 +52,7 @@ feature -- Test routines
 
 					create l_grid
 					l_grid.set_minimum_size (50, 50)
+					l_grid.hide_header
 
 					window.extend (l_grid)
 					window.show
@@ -133,6 +134,52 @@ feature -- Test routines
 					assert ("Number of visible rows", l_grid.visible_row_count = 30)
 					assert ("Last visible row", attached l_grid.last_visible_row as l_row and then l_row.index = 10)
 					assert ("20 visible rows", l_grid.visible_row_indexes.count = 10)
+				end
+			)
+		end
+
+	test_size_validity
+			-- Check some internal validity regarding sizes.
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					l_grid: EV_GRID
+					l_old_height: INTEGER
+					window: EV_TITLED_WINDOW
+					i: INTEGER
+				do
+					create window
+
+					create l_grid
+					l_grid.hide_header
+
+					window.extend (l_grid)
+					window.set_size (100, 100)
+					window.show
+
+					l_grid.set_row_count_to (1)
+
+						-- We know for sure that the grid is fully contained in the visible part.
+					assert ("virtual_height", l_grid.virtual_height = l_grid.viewable_height)
+					assert ("virtual_width", l_grid.virtual_width = l_grid.viewable_width)
+					assert ("viewable_height", l_grid.viewable_height = l_grid.height)
+
+						-- Now with the header. It is still fully contained in the visible part.
+					l_grid.show_header
+					assert ("virtual_height", l_grid.virtual_height = l_grid.viewable_height)
+					assert ("virtual_width", l_grid.virtual_width = l_grid.viewable_width)
+					assert ("viewable_height", l_grid.viewable_height + l_grid.header.height = l_grid.height)
+
+						-- Add 10 rows which makes the grid content larger than its container.
+						-- Now we check that the minimum height if set is properly set.
+					l_grid.set_row_count_to (10)
+					assert ("viewable_height", l_grid.viewable_height + l_grid.header.height = l_grid.height)
+					l_old_height := l_grid.virtual_height + l_grid.header.height
+					l_grid.set_minimum_height (l_old_height)
+					assert ("Minumum_height updated", l_old_height = l_grid.minimum_height)
+					assert ("Same virtual height", l_old_height = l_grid.virtual_height + l_grid.header.height)
 				end
 			)
 		end

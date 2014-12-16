@@ -372,6 +372,16 @@ feature -- debug purpose: to remove
 			]"
 		end
 
+feature -- SCOOP Access	
+
+	scoop_processor_id_from_object (a_object: ANY): INTEGER_32
+			-- SCOOP Processor id for object `a_object'.
+		external
+			"C inline use %"eif_scoop.h%""
+		alias
+			"RTS_PID(eif_access($a_object))"
+		end
+
 invariant
 	no_attribute: (create {REFLECTED_REFERENCE_OBJECT}.make (Current)).field_count = 0
 			-- Since this object is shared among threads,
@@ -379,7 +389,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

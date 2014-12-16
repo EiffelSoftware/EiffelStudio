@@ -183,12 +183,18 @@ feature {EV_ANY_I}-- Status setting
 					i := i + 1
 					if c < 0xD800 or c >= 0xE000 then
 							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
-						if c /= ('%R').natural_32_code or else not l_ignore_cr then
+						if c /= ('%N').natural_32_code or else not l_ignore_cr then
 							l_pos := l_pos + 1
 							if l_pos = pos then
 									-- Get proper result and jump out of the loop
 								Result := i - 1
 								i := l_text_length + 1
+							end
+						else
+							check
+								new_line: c = ('%N').natural_32_code
+								not_first_character: i - 2 >= 0
+								is_cr: m.read_natural_16 ((i - 2) * 2) = ('%R').natural_32_code
 							end
 						end
 					else
@@ -573,11 +579,14 @@ feature {NONE} -- Implementation
 	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		local
-			edit_control: WEL_SINGLE_LINE_EDIT
+			edit_control: WEL_MULTIPLE_LINE_EDIT
 		do
 			create edit_control.make (Default_parent, "", 0, 0, 0, 0, 0)
 			edit_control.clip_paste
 			Result := edit_control.text
+				-- The multiline edit control gives us %R%N which we need to replace
+				-- by just %N.
+			Result.replace_substring_all ("%R%N", "%N")
 			edit_control.destroy
 		end
 

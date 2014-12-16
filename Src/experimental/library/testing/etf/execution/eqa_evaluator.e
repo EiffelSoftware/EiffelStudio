@@ -20,6 +20,8 @@ inherit
 
 	EQA_EXTERNALS
 
+	SED_STORABLE_FACILITIES
+
 create
 	make
 
@@ -83,7 +85,7 @@ feature {NONE} -- Initialization
 				l_done
 			loop
 				if
-					attached {TUPLE [test_name, class_name: detachable STRING_8; body_id: INTEGER_32]} socket.retrieved as l_retrieved and then
+					attached {TUPLE [test_name, class_name: detachable STRING_8; body_id: INTEGER_32]} retrieved_from_medium (socket) as l_retrieved and then
 					attached l_retrieved.test_name as l_test_name and then attached l_retrieved.class_name as l_class_name
 				then
 						-- TODO: initialize working directory and environment variables for system level testing
@@ -92,7 +94,7 @@ feature {NONE} -- Initialization
 
 					l_result := execute_test (l_class_name, l_retrieved.body_id)
 					socket.put_boolean (True)
-					socket.independent_store (l_result)
+					store_in_medium (l_result, socket)
 
 					l_environment.reset
 				else

@@ -13,7 +13,7 @@
 								</div>
 								<div class="holder2">									
 										<div class="btn-holder2">
-											<a class="btn-download2" target="_blank"  href="http://codeboard.io">Try Eiffel Online</a>
+											<a class="btn-download2" href="{$site_url/}/try_eiffel">Try Eiffel Online</a>
 										</div>
 								</div>		
 							

@@ -1,4 +1,4 @@
 								<div class="btn-holder">
-									<a class="btn-codeboard" target="_blank"  href="http://codeboard.io">Try Eiffel from your Browser</a>
+									<a class="btn-codeboard" href="{$site_url/}/try_eiffel">Try Eiffel from your Browser</a>
 								</div>
 								

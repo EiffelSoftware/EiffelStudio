@@ -47,6 +47,19 @@ WDOCSMOD.toggleTreeMenuItem = function (li) {
 $(document).ready(function() {
 		// ....
 	$("#wdocs-tree.menu li").each(function() { WDOCSMOD.prepareTreeMenuItem($(this));});
+
+	$('code').each(function(i, block) {
+		var codelang = $(block).attr("lang");
+		if (codelang !== undefined) {
+			$(block).addClass("lang-"+codelang);
+		} else {
+			$(block).addClass("lang-eiffel");
+		}
+		$(block).addClass("prettyprint");
+	});
+
+	prettyPrint();
+
 //	$("#wdocs-tree.menu li.expandable>a").click(function() {
 //		WDOCSMOD.toggleTreeMenuItem($(this).parent("li.expandable"));
 //		return false;

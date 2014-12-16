@@ -185,11 +185,11 @@ feature -- Processing
 								flush_buffer (a_parts, s)
 								if in_items.is_empty then
 									if t.is_case_insensitive_equal_general ("code") then
-										create {WIKI_CODE} w_item.make (a_text.substring (i, p - 1), "")
+										create {WIKI_CODE} w_item.make (a_text.substring (i, p), "")
 									elseif t.is_case_insensitive_equal_general ("nowiki") then
 										create {WIKI_RAW_STRING} w_item.make ("")
 									else
-										create {WIKI_TAG} w_item.make (a_text.substring (i, p - 1), "")
+										create {WIKI_TAG} w_item.make (a_text.substring (i, p), "")
 									end
 									a_parts.add_element (w_item)
 									w_item.process (Current) -- Check recursion...							

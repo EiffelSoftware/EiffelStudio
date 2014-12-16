@@ -60,6 +60,14 @@ feature -- Processing
 			visit_composite (a_section)
 		end
 
+	visit_indentation (a_indent: WIKI_INDENTATION)
+		do
+			a_indent.get_structure
+			if attached a_indent.structure as struct then
+				visit_structure (struct)
+			end
+		end
+
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		do
 			visit_composite (a_paragraph)

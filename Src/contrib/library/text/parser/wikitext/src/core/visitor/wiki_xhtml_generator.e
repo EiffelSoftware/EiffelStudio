@@ -245,6 +245,33 @@ feature -- Processing
 			visit_composite (a_section)
 		end
 
+	visit_indentation (a_indent: WIKI_INDENTATION)
+		local
+			i, lev: NATURAL
+		do
+			lev := a_indent.indentation_level
+			from
+				i := 0
+			until
+				i > lev
+			loop
+				output ("<dl><dd>")
+				i := i + 1
+			end
+			a_indent.get_structure
+			if attached a_indent.structure as struct then
+				struct.process (Current)
+			end
+			from
+				i := 0
+			until
+				i > lev
+			loop
+				output ("</dd></dl>")
+				i := i + 1
+			end
+		end
+
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		do
 --			output("%N")
@@ -286,22 +313,27 @@ feature -- Processing
 	visit_list_item (a_list_item: WIKI_LIST_ITEM)
 		local
 			l_level: like {WIKI_LIST}.level
-			l_tag: READABLE_STRING_8
+			l_item_tag, l_tag: READABLE_STRING_8
 		do
 			l_level := a_list_item.level
 			list_level := l_level
 			if a_list_item.is_ordered_kind then
-				l_tag := "li"
+				l_tag := "ol"
+				l_item_tag := "li"
 			elseif a_list_item.is_unordered_kind then
-				l_tag := "li"
+				l_tag := "ul"
+				l_item_tag := "li"
 			elseif a_list_item.is_definition_term_kind then
-				l_tag := "dt"
+				l_tag := "dl"
+				l_item_tag := "dt"
 			elseif a_list_item.is_definition_description_kind then
-				l_tag := "div"
+				l_tag := "dl"
+				l_item_tag := "div"
 			else
-				l_tag := "li"
+				l_tag := "ul"
+				l_item_tag := "li"
 			end
-			output ("<" + l_tag + ">")
+			output ("<" + l_item_tag + ">")
 			unset_next_output_require_newline
 
 			if attached a_list_item.text as t then
@@ -313,9 +345,13 @@ feature -- Processing
 			then
 				l_def.process (Current)
 			end
-			visit_composite (a_list_item)
+			if a_list_item.count > 0 then
+				output ("<" + l_tag + ">")
+				visit_composite (a_list_item)
+				output ("</" + l_tag + ">")
+			end
 			unset_next_output_require_newline
-			output ("</" + l_tag + ">%N")
+			output ("</" + l_item_tag + ">%N")
 		end
 
 	visit_preformatted_text (a_block: WIKI_PREFORMATTED_TEXT)
@@ -327,8 +363,8 @@ feature -- Processing
 				output ("<pre>")
 				enter_pre_block
 				visit_composite (a_block)
-				output ("</pre>")
 				exit_pre_block
+				output ("</pre>")
 				ignore_next_newline
 			end
 		end
@@ -455,26 +491,39 @@ feature -- Tag
 			l_is_inline: BOOLEAN
 			l_tag: STRING
 		do
-			l_tag := a_code.tag
-			l_is_inline := a_code.is_inline
-			if l_is_inline then
-				output (l_tag.substring (1, l_tag.count - 1))
-				output (" class=%"inline%">")
+			if a_code.is_open_close_tag then
+					-- Ignore
 			else
-				output (l_tag)
-			end
-			a_code.text.process (Current)
-			output ("</" + a_code.tag_name + ">")
-			if not l_is_inline then
-				set_next_output_require_newline
+				l_tag := a_code.tag
+				l_is_inline := a_code.is_inline
+				if l_is_inline then
+					l_tag := l_tag.substring (1, l_tag.count - 1)
+					if l_tag.ends_with_general ("/") then
+						check is_not_open_close_tag: False end
+						l_tag.remove_tail (1)
+					end
+					output (l_tag)
+					output (" class=%"inline%">")
+				else
+					output (l_tag)
+				end
+				a_code.text.process (Current)
+				output ("</" + a_code.tag_name + ">")
+				if not l_is_inline then
+					set_next_output_require_newline
+				end
 			end
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
 		do
-			output (a_tag.tag)
-			a_tag.text.process (Current)
-			output ("</" + a_tag.tag_name + ">")
+			if a_tag.is_open_close_tag then
+				output (a_tag.tag)
+			else
+				output (a_tag.tag)
+				a_tag.text.process (Current)
+				output ("</" + a_tag.tag_name + ">")
+			end
 		end
 
 feature -- Entity

@@ -104,6 +104,12 @@ feature -- Status report
 			Result := tag.is_empty and text.is_empty
 		end
 
+	is_open_close_tag: BOOLEAN
+			-- Is tag a open-close tag such as <tag/>?
+		do
+			Result := tag.ends_with_general ("/>")
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)

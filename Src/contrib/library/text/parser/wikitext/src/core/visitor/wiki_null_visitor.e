@@ -34,6 +34,10 @@ feature -- Processing
 		do
 		end
 
+	visit_indentation (a_indentation: WIKI_INDENTATION)
+		do
+		end
+
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		do
 		end

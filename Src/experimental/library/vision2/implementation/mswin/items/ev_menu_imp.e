@@ -195,10 +195,13 @@ feature {EV_ANY_I} -- Implementation
 			max_width: INTEGER
 			plain_text_pos: INTEGER
 			accelerator_text_pos: INTEGER
-			border_width: INTEGER
 		do
-			space_width := menu_font.string_width ("W")
-			border_width := menu_font.string_width ("WC")
+				-- By default we assume that with or without a pixmap a menu item should have the same alignment.
+				-- Usually pixmaps are 16 by 16 pixels, thus the default size.
+			max_pixmap_width := 16
+				-- Default spacing between text and accelerator, and the right border.
+				-- We use the letter `o' so that the spacing is proportional to the chosen font.
+			space_width := menu_font.string_width ("o")
 			from
 				ev_children.start
 			until
@@ -215,27 +218,19 @@ feature {EV_ANY_I} -- Implementation
 				ev_children.forth
 			end
 
-			if max_pixmap_width = 0 then
-				plain_text_pos := border_width
-				if max_accel_text_width = 0 then
-					max_width := border_width + max_plain_text_width + border_width
-					accelerator_text_pos := 0
-				else
-					max_width := border_width + max_plain_text_width + space_width + max_accel_text_width + border_width
-					accelerator_text_pos := plain_text_pos + max_plain_text_width + space_width
-				end
+				-- Put text about 6 pixels away from the pixmap to handle various
+				-- ways to draw the pixmap (normal, disabled, selected).
+			plain_text_pos := max_pixmap_width + 6
+
+			if max_accel_text_width = 0 then
+				accelerator_text_pos := 0
+				max_width := plain_text_pos + max_plain_text_width
 			else
-				plain_text_pos := max_pixmap_width + 6
-				if max_accel_text_width = 0 then
-					max_width := max_pixmap_width + 6 + max_plain_text_width + border_width
-					accelerator_text_pos := 0
-				else
-					max_width := max_pixmap_width + 6 + max_plain_text_width + space_width + max_accel_text_width + border_width
-					accelerator_text_pos := plain_text_pos + max_plain_text_width + space_width
-				end
+				accelerator_text_pos := plain_text_pos + max_plain_text_width + space_width
+				max_width := accelerator_text_pos + max_accel_text_width
 			end
-			max_width := max_width - 2 * menu_font.string_width ("B")
-			measure_item_struct.set_item_width (max_width)
+
+			measure_item_struct.set_item_width (max_width + space_width)
 			measure_item_struct.set_item_height (max_height)
 
 				-- Update the tabulation margins
@@ -382,14 +377,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MENU_IMP

@@ -25,7 +25,7 @@ extern "C" {
 
 IEnumVARIANT1_impl_proxy::IEnumVARIANT1_impl_proxy( IUnknown * a_pointer )
 {
-	HRESULT hr, hr2;
+	HRESULT hr;
 	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
 	rt.ccom_check_hresult (hr);
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);

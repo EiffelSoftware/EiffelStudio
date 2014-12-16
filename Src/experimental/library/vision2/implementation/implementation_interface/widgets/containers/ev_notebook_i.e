@@ -67,8 +67,25 @@ feature -- Status report
 		end
 
 	pointed_tab_index: INTEGER
-			-- index of tab currently under mouse pointer, or 0 if none.
+			-- Index of tab currently under mouse pointer, or 0 if none.
 		deferred
+		ensure
+			result_valid: Result >= 0 and Result <= count
+		end
+
+	tab_index_at_screen_position (a_x, a_y: INTEGER): INTEGER
+			-- Index of tab currently at screen position (a_x, a_y), or 0 if none.
+		local
+			l_screen: EV_SCREEN
+			l_old_cursor: EV_COORDINATE
+		do
+			create l_screen
+				-- Store previous cursor position
+			l_old_cursor := l_screen.pointer_position
+			l_screen.set_pointer_position (a_x, a_y)
+			Result := pointed_tab_index
+				-- Restore previous cursor position
+			l_screen.set_pointer_position (l_old_cursor.x, l_old_cursor.y)
 		ensure
 			result_valid: Result >= 0 and Result <= count
 		end

@@ -143,11 +143,18 @@ feature -- Internal C routines
 			"return (System(To_dtype($a_type_id)).cn_persistent_nbattr);"
 		end
 
-	frozen storable_version_of_type (a_type_id: INTEGER): POINTER
+	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"return System(To_dtype($a_type_id)).cn_version;"
+			"[
+				const char *l_version = System(To_dtype($a_type_id)).cn_version;
+				if (l_version && (l_version[0] != (char) 0)) {
+					return RTMS(l_version);
+				} else {
+					return NULL;
+				}
+			]"
 		end
 
 	compiler_version: INTEGER
@@ -641,7 +648,7 @@ feature -- Object marking
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

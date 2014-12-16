@@ -111,10 +111,13 @@ feature {NONE} -- Implementation
 
 feature -- Debugger: interaction with run-time
 
-    frozen rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
-            -- Initialize workbench debugging using socket connection
+	frozen rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
+			-- Initialize workbench debugging using socket connection
 			-- used to launch the application, and then attach the debugger.
 			-- if `a_port_number' <= 0 then check for ISE_DBG_PORTNUM environment variable.
+			--
+			--| Note: The port number shoud be greater than 1023, and available.
+			--| 	  The port range 49152-65535 can be used for such custom or temporary purposes.
 		external
 			"C inline use %"eif_main.h%""
 		alias
@@ -138,7 +141,7 @@ feature -- Debugger: interaction with run-time
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -56,7 +56,7 @@ feature -- Execution
 				if is_trusted then
 					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + ";Trusted_Connection=Yes;")
 				else
-					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + "Uid=" + user_login + ";Pwd=" + user_password)
+					set_connection_string_information ("Driver={SQL Server Native Client 10.0};Server=" + host + ";Database=" + database_name + ";Uid=" + user_login + ";Pwd=" + user_password)
 				end
 			else
 				set_connection_information (user_login, user_password, database_name)

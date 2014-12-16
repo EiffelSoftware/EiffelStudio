@@ -109,6 +109,45 @@ feature -- Object storage Access
 			retry
 		end
 
+feature -- Object storage Access
+
+	object_runtime_info (r: detachable ANY): STRING
+			-- Representation of the internal information for object `r'.
+			--| Semi-colon separated information
+			--| class_name=FOO; type_name=FOO; dynamic_type=123;
+		local
+			int: INTERNAL
+		do
+			if r /= Void then
+				create Result.make (0)
+				Result.append ("class_name=")
+				Result.append (r.generator)
+				Result.append (";")
+				Result.append ("type_name=")
+				Result.append (r.generating_type)
+				Result.append (";")
+
+				create int
+				Result.append ("dynamic_type=")
+				Result.append_integer (int.dynamic_type (r))
+				Result.append (";")
+
+				Result.append ("field_count=")
+				Result.append_integer (int.field_count (r))
+				Result.append (";")
+
+				Result.append ("deep_physical_size=")
+				Result.append_natural_64 (int.deep_physical_size_64 (r))
+				Result.append (";")
+
+				Result.append ("physical_size=")
+				Result.append_natural_64 (int.physical_size_64 (r))
+
+			else
+				create Result.make_empty
+			end
+		end
+
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"

@@ -84,6 +84,17 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
+	store_in_medium (an_object: ANY; a_medium: IO_MEDIUM)
+			-- Serialization of `an_object' in `a_medium'
+			-- Object stored can only be retrieved by programs having the same set of types.
+		require
+			an_object_not_void: an_object /= Void
+			a_medium_not_void: a_medium /= Void
+			a_medium_writable: a_medium.is_open_write
+		do
+			store (an_object, create {SED_MEDIUM_READER_WRITER}.make_for_writing (a_medium))
+		end
+
 	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): detachable ANY
 			-- Deserialization of object from `a_reader'.
 			-- Garbage collection will be enabled if `a_is_gc_enabled'.
@@ -112,6 +123,15 @@ feature -- Serialization routines
 					a_reader.read_footer
 				end
 			end
+		end
+
+	retrieved_from_medium (a_medium: IO_MEDIUM): detachable ANY
+			-- Deserialization of object from `a_reader'.
+		require
+			a_medium_not_void: a_medium /= Void
+			a_medium_open_for_reading: a_medium.is_open_read
+		do
+			Result := retrieved (create {SED_MEDIUM_READER_WRITER}.make_for_reading (a_medium), False)
 		end
 
 	retrieved_error: detachable SED_ERROR
@@ -302,7 +322,7 @@ feature {NONE} -- Data
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

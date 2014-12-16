@@ -27,7 +27,7 @@ indexing
 
 #ifdef EIF_WINDOWS
 #define FD_SETSIZE 256
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #endif
 
@@ -38,9 +38,7 @@ indexing
 
 
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#define EWOULDBLOCK WSAEWOULDBLOCK
-#define EINPROGRESS WSAEINPROGRESS
+
 #include <stdio.h>
 #endif
 
@@ -127,6 +125,19 @@ typedef union {
     struct sockaddr_in6 him6;
 } SOCKETADDRESS;
 
+#ifdef EIF_WINDOWS
+/* To create portable code we override the definition of some errno constants to
+ * map what winsock returns to us for error codes. */
+#ifdef EWOULDBLOCK
+	#undef EWOULDBLOCK
+#endif
+#define EWOULDBLOCK WSAEWOULDBLOCK
+
+#ifdef EINPROGRESS
+	#undef EINPROGRESS
+#endif
+#define EINPROGRESS WSAEINPROGRESS
+#endif
 
 	/* Raise an Eiffel exception in case an error occurred */
 void eif_net_check (int retcode) {

@@ -25,7 +25,7 @@ extern "C" {
 
 Picture23_impl_proxy::Picture23_impl_proxy( IUnknown * a_pointer )
 {
-  HRESULT hr, hr2;
+  HRESULT hr;
 
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
   rt.ccom_check_hresult (hr);
@@ -126,7 +126,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_handle()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -182,7 +182,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_h_pal()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -247,7 +247,7 @@ void Picture23_impl_proxy::ccom_set_h_pal( EIF_INTEGER a_value )
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -300,7 +300,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_type()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -356,7 +356,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_width()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -412,7 +412,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_height()
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);
@@ -502,7 +502,7 @@ void Picture23_impl_proxy::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */
     char  arg_no[20];
     itoa (nArgErr, arg_no, 10);
     char * arg_name = "Argument No: ";
-    int size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
+    size_t size = strlen (hresult_error) + strlen (arg_no) + strlen (arg_name) + 1;
     char * message;
     message = (char *)calloc (size, sizeof (char));
     strcat (message, hresult_error);

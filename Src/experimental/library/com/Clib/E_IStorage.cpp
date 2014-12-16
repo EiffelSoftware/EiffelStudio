@@ -58,7 +58,6 @@ void E_IStorage::ccom_create_doc_file (WCHAR * pwcsName, DWORD grfMode)
 //  storage object. Must be one of the STGM enumeration values.
 {
   HRESULT hr;
-  DWORD mode;
    hr = StgCreateDocfile (pwcsName, grfMode, 0, &pStorage);
   if (hr != S_OK)
   {

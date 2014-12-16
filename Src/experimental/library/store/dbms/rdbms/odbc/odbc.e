@@ -27,7 +27,6 @@ inherit
 			drop_proc_not_supported,
 			text_not_supported,
 			exec_proc_not_supported,
-			unset_catalog_flag,
 			is_convert_string_type_required,
 			is_connection_string_supported
 		end
@@ -86,8 +85,7 @@ feature -- For DATABASE_CHANGE
 	pre_immediate (descriptor, i: INTEGER)
 		do
 			odbc_pre_immediate (con_context_pointer, descriptor, i)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 feature -- For DATABASE_FORMAT
@@ -158,8 +156,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					else
 						odbc_init_order (con_context_pointer, descriptor, c_temp.item, c_temp.count, uht.count)
 					end
-					is_error_updated := False
-					is_warning_updated := False
+					update_status
 					bind_arguments (descriptor, uht, ht_order)
 				end
 				Result := True
@@ -507,13 +504,6 @@ feature -- For DATABASE_REPOSITORY
 
 	Max_char_size: INTEGER = 254
 
-feature -- For DATABASE_DYN_STORE
-
-	unset_catalog_flag (desc:INTEGER)
-		do
-			odbc_unset_catalog_flag (con_context_pointer, desc)
-		end
-
 feature -- External
 
 	get_error_message: POINTER
@@ -566,23 +556,20 @@ feature -- External
 		do
 			create c_temp.make (command)
 			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	start_order (no_descriptor: INTEGER)
 		do
 			odbc_set_decimal_presicion_and_scale (con_context_pointer, default_decimal_presicion, default_decimal_scale)
 			odbc_start_order (con_context_pointer, no_descriptor)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	next_row (no_descriptor: INTEGER)
 		do
 			found := odbc_next_row (con_context_pointer, no_descriptor) = 0
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	close_cursor (no_descriptor: INTEGER)
@@ -599,8 +586,7 @@ feature -- External
 				l_para.release
 			end
 			odbc_terminate_order (con_context_pointer, no_descriptor)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
@@ -609,8 +595,7 @@ feature -- External
 		do
 			create c_temp.make (command)
 			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item, c_temp.count)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
@@ -826,8 +811,7 @@ feature -- External
 			create c_temp2.make (user_passwd)
 			create c_temp3.make (data_source)
 			odbc_connect (con_context_pointer, c_temp1.item, c_temp1.count, c_temp2.item, c_temp2.count, c_temp3.item, c_temp3.count)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 --			initialize_date_type_values
 		end
 
@@ -838,30 +822,26 @@ feature -- External
 		do
 			create l_string.make (a_connect_string)
 			odbc_connect_by_connection_string (con_context_pointer, l_string.item, l_string.count)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	disconnect
 		do
 			odbc_disconnect (con_context_pointer)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 			found := False
 		end
 
 	commit
 		do
 			odbc_commit (con_context_pointer)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	rollback
 		do
 			odbc_rollback (con_context_pointer)
-			is_error_updated := False
-			is_warning_updated := False
+			update_status
 		end
 
 	trancount: INTEGER
@@ -895,6 +875,18 @@ feature {NONE} -- Implementation
 	temporary_reusable_managed_pointer: MANAGED_POINTER
 		once
 			create Result.share_from_pointer (default_pointer, 0)
+		end
+
+	update_status
+			-- Update `is_error_updated' and `is_warning_updated' so
+			-- that callers know that their last call to the database
+			-- may have updated the error or warning.
+		do
+			is_error_updated := False
+			is_warning_updated := False
+		ensure
+			is_error_updated_set: not is_error_updated
+			is_warning_updated_set: not is_warning_updated
 		end
 
 feature {NONE} -- Disposal
@@ -1165,11 +1157,6 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_unset_catalog_flag (a_con: POINTER; desc: INTEGER)
-		external
-			"C use %"odbc.h%""
-		end
-
 	odbc_hide_qualifier (command: POINTER; char_count: INTEGER): POINTER
 		external
 			"C use %"odbc.h%""
@@ -1329,8 +1316,7 @@ feature {NONE} -- External features
 
 					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, a_para.get (i))
 
-					is_error_updated := False
-					is_warning_updated := False
+					update_status
 					i := i + 1
 					ht_order.forth
 				end

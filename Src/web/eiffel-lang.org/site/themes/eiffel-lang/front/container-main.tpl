@@ -1,5 +1,5 @@
 						<h1>
-							<span class="tooltip-label" data-tooltip="A tooltip!">Play with Eiffel </span>
+							<span class="tooltip-label" data-tooltip="A tooltip!"><a href="{$site_url/}/launch_codeboard">Play with Eiffel </span>
                 		</h1>
 						<div>
 			  				<img src="/theme/images/eiffel_source.png">

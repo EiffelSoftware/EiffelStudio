@@ -70,6 +70,7 @@ feature -- Router
 		do
 			create Result.make (0)
 			Result.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/launch_codeboard", create {WSF_URI_AGENT_HANDLER}.make (agent handle_launch_codeboard (a_api, ?, ?)), Result.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -96,7 +97,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "social_area", "eiffel_copyright">>
+			Result := <<"social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "social_area", "eiffel_copyright","launch_codeboard">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -175,7 +176,16 @@ feature -- Hooks
 						end
 					end
 				end
+			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info ~ "/launch_codeboard" then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
 			end
+
 		end
 
 	handle_contribute (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -194,6 +204,17 @@ feature -- Hooks
 					r.add_warning_message ("Error with block [contribute_page]")
 				end
 			end
+			r.execute
+		end
+
+	handle_launch_codeboard (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			fixme ("Use CMS node and associated content for Contribute link!")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("Codeboard", "optional_content_type")
+			r.set_title ("Codeboard")
 			r.execute
 		end
 

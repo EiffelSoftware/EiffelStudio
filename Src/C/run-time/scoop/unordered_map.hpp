@@ -49,16 +49,15 @@ public:
 		return (_Tmp); */
 		}
 
-	bool operator==(const unordered_map_const_iterator& _Right) const
+	bool operator==(const unordered_map_const_iterator & other) const
 		{	
 			return false;	
 /*		return (this->_Ptr == _Right._Ptr); */
 		}
 
-	bool operator!=(const unordered_map_const_iterator& _Right) const
+	bool operator!=(const unordered_map_const_iterator & other) const
 		{
-			return false;	
-/*		return (!(*this == _Right)); */
+			return !(*this == other);
 		}
 
 private:

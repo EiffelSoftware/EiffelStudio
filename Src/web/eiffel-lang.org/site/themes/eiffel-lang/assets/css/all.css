@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  color: black;
+  color: #000000;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -34,7 +34,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082d9;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
@@ -175,7 +175,7 @@ table {
 
 body {
   margin: 0;
-  color: black;
+  color: #000000;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -209,7 +209,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082d9;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
@@ -350,8 +350,8 @@ table {
 
 /* WDOCS nav tree */
 #wdocs-tree.menu {
-  border: solid 1px #cccccc;
-  background-color: white;
+  border: solid 1px #ccc;
+  background-color: #fff;
   color: #112935;
   padding: 0;
 }
@@ -361,23 +361,23 @@ table {
 #wdocs-tree.menu > ul > li {
   cursor: pointer;
   padding: 5px 0 3px 5px;
-  border-top: solid 1px #cccccc;
+  border-top: solid 1px #ccc;
 }
 #wdocs-tree.menu > ul > li > a {
-  color: #5082d9;
+  color: #5082D9;
 }
 #wdocs-tree.menu > ul > li.expandable > * + a {
   display: inline-block;
   width: 85%;
 }
 #wdocs-tree.menu > ul > li > .treeitemcontrol {
-  border: solid 1px #cccccc;
+  border: solid 1px #ccc;
   background-color: #d4ebb0;
-  color: #5082d9;
+  color: #5082D9;
 }
 #wdocs-tree.menu > ul > li > .treeitemcontrol:hover {
-  background-color: #5082d9;
-  color: white;
+  background-color: #5082D9;
+  color: #fff;
 }
 #wdocs-tree.menu .treeitemcontrol {
   font-family: "Lucida Console", "Courier New", "serif";
@@ -386,12 +386,12 @@ table {
   margin-left: 2px;
 }
 #wdocs-tree.menu .treeitemcontrol:hover {
-  background-color: #5082d9;
-  color: white;
+  background-color: #5082D9;
+  color: #fff;
 }
 #wdocs-tree.menu > ul > li > ul > * {
   font-size: smaller;
-  background-color: white;
+  background-color: #fff;
   padding-left: 10px;
 }
 #wdocs-tree.menu ul {
@@ -406,8 +406,8 @@ table {
 }
 #wdocs-tree.menu li.active {
   font-weight: bold;
-  border-left: dotted 1px #cccccc;
-  border-right: solid 3px #cccccc;
+  border-left: dotted 1px #ccc;
+  border-right: solid 3px #ccc;
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
@@ -430,38 +430,38 @@ table {
   border: solid 1px #000;
   padding: 2px;
 }
-.wikipage code {
+.wikipage h1 {
+  font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
+  margin-top: 15px;
+  border-bottom: solid 2px #ccc;
+}
+.wikipage h2 {
+  font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
+  margin-top: 5px;
+  border-bottom: solid 1px #ccc;
+}
+.wikipage h3 {
+  font: 24px/24px "museo_slab500", Arial, Helvetica, sans-serif;
+  margin-top: 3px;
+  border-bottom: dotted 1px #ccc;
+}
+.wikipage pre {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
   display: block;
   font-family: monospace;
   white-space: pre-wrap;
   border: solid 1px #ccc;
-  background-color: #e8e8e8;
+  background-color: #FFFFD8;
   line-height: 1.3;
-  padding: 3px;
+  padding: 10px;
   margin: 2px 0 2px 0;
-}
-.wikipage code.inline {
-  border: dotted 1px #ddd;
-  display: inline-block;
-  padding: 0 2px 0 2px;
-  margin: 0;
-}
-.wikipage h1 {
-  margin-top: 5px;
-  border-bottom: solid 2px #cccccc;
-}
-.wikipage h2 {
-  margin-top: 5px;
-  border-bottom: solid 1px #cccccc;
-}
-.wikipage h3 {
-  margin-top: 3px;
-  border-bottom: dotted 1px #cccccc;
+  overflow: auto;
 }
 .wikipage .wdocs-nav {
   border-top: solid 1px #999;
-  color: #5082d9;
-  background-color: #dddddd;
+  color: #5082D9;
+  background-color: #ddd;
 }
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
@@ -469,7 +469,7 @@ table {
 
 body {
   margin: 0;
-  color: black;
+  color: #000000;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -503,7 +503,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082d9;
+  color: #5082D9;
 }
 a:hover {
   color: #5082D9;
@@ -662,12 +662,12 @@ table {
 }
 
 .btn-codeboard {
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
-  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
-  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
-  background-image: -o-linear-gradient(top, #2b4054, #12273a);
-  background-image: linear-gradient(top, #2b4054, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
+  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
+  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
+  background-image: -o-linear-gradient(top, #2B4054, #12273A);
+  background-image: linear-gradient(top, #2B4054, #12273A);
   display: block;
   margin: 0 auto;
   font: 12px/35px "museo_sans500", Arial, Helvetica, sans-serif;
@@ -690,12 +690,12 @@ table {
 .btn-codeboard:hover {
   color: white;
   background-color: #12273A;
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
-  background-image: -moz-linear-gradient(top, #12273a, #12273a);
-  background-image: -ms-linear-gradient(top, #12273a, #12273a);
-  background-image: -o-linear-gradient(top, #12273a, #12273a);
-  background-image: linear-gradient(top, #12273a, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
+  background-image: -moz-linear-gradient(top, #12273A, #12273A);
+  background-image: -ms-linear-gradient(top, #12273A, #12273A);
+  background-image: -o-linear-gradient(top, #12273A, #12273A);
+  background-image: linear-gradient(top, #12273A, #12273A);
 }
 
 /***********************/
@@ -882,7 +882,7 @@ a.link-platforms:hover {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  background: #ffe6e6 url(../img/cancel_48.png) no-repeat 405px center;
+  background: #FFE6E6 url(../img/cancel_48.png) no-repeat 405px center;
   display: none;
 }
 
@@ -912,7 +912,7 @@ a.link-platforms:hover {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  background: #d3edd3 url(../img/accepted_48.png) no-repeat 405px center;
+  background: #D3EDD3 url(../img/accepted_48.png) no-repeat 405px center;
   font-weight: bold;
   display: none;
 }
@@ -1380,12 +1380,12 @@ input.placeholder-text, textarea.placeholder-text {
   border-left: 1px solid #98dcd4;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2 {
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
-  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
-  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
-  background-image: -o-linear-gradient(top, #2b4054, #12273a);
-  background-image: linear-gradient(top, #2b4054, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
+  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
+  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
+  background-image: -o-linear-gradient(top, #2B4054, #12273A);
+  background-image: linear-gradient(top, #2B4054, #12273A);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   width: 263px;
@@ -1400,7 +1400,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 0 57px 0 0;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2:after {
-  background_color: #2b4054;
+  background_color: #2B4054;
   width: 37px;
   height: 37px;
   position: absolute;
@@ -1408,12 +1408,12 @@ input.placeholder-text, textarea.placeholder-text {
   top: 13px;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2:hover {
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
-  background-image: -moz-linear-gradient(top, #12273a, #12273a);
-  background-image: -ms-linear-gradient(top, #12273a, #12273a);
-  background-image: -o-linear-gradient(top, #12273a, #12273a);
-  background-image: linear-gradient(top, #12273a, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
+  background-image: -moz-linear-gradient(top, #12273A, #12273A);
+  background-image: -ms-linear-gradient(top, #12273A, #12273A);
+  background-image: -o-linear-gradient(top, #12273A, #12273A);
+  background-image: linear-gradient(top, #12273A, #12273A);
 }
 
 .promo-area .holder .btn-holder {
@@ -1662,12 +1662,12 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
 .footer-holder .btn-holder .btn-tryonline {
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
-  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
-  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
-  background-image: -o-linear-gradient(top, #2b4054, #12273a);
-  background-image: linear-gradient(top, #2b4054, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
+  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
+  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
+  background-image: -o-linear-gradient(top, #2B4054, #12273A);
+  background-image: linear-gradient(top, #2B4054, #12273A);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   width: 100px;
@@ -1691,12 +1691,12 @@ input.placeholder-text, textarea.placeholder-text {
 }
 .footer-holder .btn-holder .btn-tryonline:hover {
   background-color: #12273A;
-  background-color: #12273a;
-  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
-  background-image: -moz-linear-gradient(top, #12273a, #12273a);
-  background-image: -ms-linear-gradient(top, #12273a, #12273a);
-  background-image: -o-linear-gradient(top, #12273a, #12273a);
-  background-image: linear-gradient(top, #12273a, #12273a);
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
+  background-image: -moz-linear-gradient(top, #12273A, #12273A);
+  background-image: -ms-linear-gradient(top, #12273A, #12273A);
+  background-image: -o-linear-gradient(top, #12273A, #12273A);
+  background-image: linear-gradient(top, #12273A, #12273A);
 }
 .footer-holder .social-holder {
   display: inline;
@@ -1746,7 +1746,7 @@ input.placeholder-text, textarea.placeholder-text {
   display: inline-block;
 }
 .footer-nav ul li ul li a:hover {
-  color: white;
+  color: #fff;
 }
 
 #content {
@@ -1758,12 +1758,10 @@ input.placeholder-text, textarea.placeholder-text {
   overflow: hidden;
 }
 #content .holder {
-  overflow: scroll;
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 1000px;
+  margin-left: 0px;
+  margin-right: 0px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 #content.with-first-sidebar, #content.with-second-sidebar {
   display: inline;
@@ -1772,21 +1770,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 745px;
 }
-#content.with-first-sidebar .holder, #content.with-second-sidebar .holder {
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 745px;
-}
 #content.with-first-sidebar.with-second-sidebar {
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 320px;
-}
-#content.with-first-sidebar.with-second-sidebar .holder {
   display: inline;
   float: left;
   margin-left: 10px;
@@ -1839,7 +1823,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 -46px;
 }
 #content .contribute-block ul, #content .about-block ul, #content .promo-block ul {
-  overflow: hidden;
   margin: 0 0 0 -73px;
 }
 #content .contribute-block ul li, #content .about-block ul li, #content .promo-block ul li {
@@ -1981,6 +1964,30 @@ input.placeholder-text, textarea.placeholder-text {
   color: white;
 }
 
+/* Code elements */
+code {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  display: block;
+  font-family: monospace;
+  white-space: pre-wrap;
+  border: solid 1px #ccc;
+  background-color: #FFFFD8;
+  line-height: 1.3;
+  padding: 10px;
+  margin: 2px 0 2px 0;
+}
+
+code.inline {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  border: dotted 1px #ddd;
+  display: inline-block;
+  padding: 0 2px 0 2px;
+  margin: 0;
+}
+
+/* ... */
 .widget {
   overflow: hidden;
   margin: 0 0 34px;

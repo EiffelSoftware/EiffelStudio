@@ -1,6 +1,3 @@
-		<div id="breadcumb">
-		<span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>
-			  		<a href="{$site_url/}/about">About</a>
 		<section class="about-block">
 				<ul>
 					<li>

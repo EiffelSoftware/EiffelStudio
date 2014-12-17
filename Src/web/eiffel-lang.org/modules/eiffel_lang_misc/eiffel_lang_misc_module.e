@@ -194,7 +194,7 @@ feature -- Hooks
 			fixme ("Use CMS node and associated content for Contribute link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("contribute", "optional_content_type")
-			r.set_title ("Contribute")
+--			r.set_title ("Contribute")
 			r.set_main_content ("")
 			if attached template_block ("contribute_page", r) as l_tpl_block then
 				r.add_block (l_tpl_block, "content")

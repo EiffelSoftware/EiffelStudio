@@ -92,6 +92,7 @@
 }
 
 .wikipage {
+	line-height: 1.8;
 	table {
 		border: solid 1px #000;
 		margin-bottom: 5px;
@@ -100,35 +101,34 @@
 		border: solid 1px #000;
 		padding: 2px;
 	}
-	code {
+	h1 {
+		font: #{$base-h1-size}/#{$base-h1-lineheight} $museo_slab500;
+		margin-top: 15px;
+		border-bottom: solid 2px $wdocs-border-color;
+	}
+	h2 {
+		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		margin-top: 5px;
+		border-bottom: solid 1px $wdocs-border-color;
+	}
+	h3 {
+		font: #{$base-h3-size}/#{$base-h3-lineheight} $museo_slab500;
+		margin-top: 3px;
+		border-bottom: dotted 1px $wdocs-border-color;
+	}
+	pre {
+		@include border-radius(4px);
 		display: block;
 		font-family: monospace;
 		white-space: pre-wrap;
 
 		border: solid 1px #ccc;
-		background-color: #e8e8e8;
+		background-color: #FFFFD8;
 		line-height: 1.3;
-		padding: 3px;
+		padding: 10px;
 		margin: 2px 0 2px 0;
-	}
-	code.inline {
-		border: dotted 1px #ddd;
-		display: inline-block;
-		padding: 0 2px 0 2px;
-		margin: 0;
-	}
-	line-height: 1.8;
-	h1 {
-		margin-top: 5px;
-		border-bottom: solid 2px $wdocs-border-color;
-	}
-	h2 {
-		margin-top: 5px;
-		border-bottom: solid 1px $wdocs-border-color;
-	}
-	h3 {
-		margin-top: 3px;
-		border-bottom: dotted 1px $wdocs-border-color;
+		overflow: auto;
+
 	}
 
 	.wdocs-nav {

@@ -31,7 +31,7 @@ table.download_decorator {
 		background-color: #f0f0f0;
 		color: #000080;
 	}
-	tr:nth-child(2n), tr.first {
+	tr:nth-child(0), tr.first {
 		background-color: rgb(173, 201, 188);
 	}
 	td,th {

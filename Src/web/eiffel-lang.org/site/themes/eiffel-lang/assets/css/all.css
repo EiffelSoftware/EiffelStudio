@@ -731,7 +731,7 @@ table.download_decorator tr {
   background-color: #f0f0f0;
   color: #000080;
 }
-table.download_decorator tr:nth-child(2n), table.download_decorator tr.first {
+table.download_decorator tr:nth-child(0), table.download_decorator tr.first {
   background-color: #adc9bc;
 }
 table.download_decorator td, table.download_decorator th {

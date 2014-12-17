@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			get_var_location
 			get_themes_location
 			get_files_location
+			get_smtp
 		end
 
 feature -- Access
@@ -165,6 +166,9 @@ feature -- Access
 			end
 		end
 
+	smtp: detachable READABLE_STRING_8
+
+
 feature -- Change
 
 	get_var_location
@@ -202,6 +206,13 @@ feature -- Change
 				create themes_location.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (s))
 			else
 				themes_location := root_location.extended ("themes")
+			end
+		end
+
+	get_smtp
+		do
+			if attached options.item ("smtp") as s then
+				smtp := s
 			end
 		end
 

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  color: #000000;
+  color: black;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -34,7 +34,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082D9;
+  color: #5082d9;
 }
 a:hover {
   color: #5082D9;
@@ -175,7 +175,7 @@ table {
 
 body {
   margin: 0;
-  color: #000000;
+  color: black;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -209,7 +209,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082D9;
+  color: #5082d9;
 }
 a:hover {
   color: #5082D9;
@@ -350,8 +350,8 @@ table {
 
 /* WDOCS nav tree */
 #wdocs-tree.menu {
-  border: solid 1px #ccc;
-  background-color: #fff;
+  border: solid 1px #cccccc;
+  background-color: white;
   color: #112935;
   padding: 0;
 }
@@ -361,23 +361,23 @@ table {
 #wdocs-tree.menu > ul > li {
   cursor: pointer;
   padding: 5px 0 3px 5px;
-  border-top: solid 1px #ccc;
+  border-top: solid 1px #cccccc;
 }
 #wdocs-tree.menu > ul > li > a {
-  color: #5082D9;
+  color: #5082d9;
 }
 #wdocs-tree.menu > ul > li.expandable > * + a {
   display: inline-block;
   width: 85%;
 }
 #wdocs-tree.menu > ul > li > .treeitemcontrol {
-  border: solid 1px #ccc;
+  border: solid 1px #cccccc;
   background-color: #d4ebb0;
-  color: #5082D9;
+  color: #5082d9;
 }
 #wdocs-tree.menu > ul > li > .treeitemcontrol:hover {
-  background-color: #5082D9;
-  color: #fff;
+  background-color: #5082d9;
+  color: white;
 }
 #wdocs-tree.menu .treeitemcontrol {
   font-family: "Lucida Console", "Courier New", "serif";
@@ -386,12 +386,12 @@ table {
   margin-left: 2px;
 }
 #wdocs-tree.menu .treeitemcontrol:hover {
-  background-color: #5082D9;
-  color: #fff;
+  background-color: #5082d9;
+  color: white;
 }
 #wdocs-tree.menu > ul > li > ul > * {
   font-size: smaller;
-  background-color: #fff;
+  background-color: white;
   padding-left: 10px;
 }
 #wdocs-tree.menu ul {
@@ -406,8 +406,8 @@ table {
 }
 #wdocs-tree.menu li.active {
   font-weight: bold;
-  border-left: dotted 1px #ccc;
-  border-right: solid 3px #ccc;
+  border-left: dotted 1px #cccccc;
+  border-right: solid 3px #cccccc;
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
@@ -433,17 +433,17 @@ table {
 .wikipage h1 {
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 15px;
-  border-bottom: solid 2px #ccc;
+  border-bottom: solid 2px #cccccc;
 }
 .wikipage h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 5px;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px #cccccc;
 }
 .wikipage h3 {
   font: 24px/24px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 3px;
-  border-bottom: dotted 1px #ccc;
+  border-bottom: dotted 1px #cccccc;
 }
 .wikipage pre {
   -webkit-border-radius: 4px;
@@ -460,8 +460,8 @@ table {
 }
 .wikipage .wdocs-nav {
   border-top: solid 1px #999;
-  color: #5082D9;
-  background-color: #ddd;
+  color: #5082d9;
+  background-color: #dddddd;
 }
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
@@ -469,7 +469,7 @@ table {
 
 body {
   margin: 0;
-  color: #000000;
+  color: black;
   background: #f0f3f5;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   min-width: 1020px;
@@ -503,7 +503,7 @@ img {
 
 a {
   text-decoration: none;
-  color: #5082D9;
+  color: #5082d9;
 }
 a:hover {
   color: #5082D9;
@@ -662,12 +662,12 @@ table {
 }
 
 .btn-codeboard {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
-  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
-  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
-  background-image: -o-linear-gradient(top, #2B4054, #12273A);
-  background-image: linear-gradient(top, #2B4054, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
+  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
+  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
+  background-image: -o-linear-gradient(top, #2b4054, #12273a);
+  background-image: linear-gradient(top, #2b4054, #12273a);
   display: block;
   margin: 0 auto;
   font: 12px/35px "museo_sans500", Arial, Helvetica, sans-serif;
@@ -690,12 +690,12 @@ table {
 .btn-codeboard:hover {
   color: white;
   background-color: #12273A;
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
-  background-image: -moz-linear-gradient(top, #12273A, #12273A);
-  background-image: -ms-linear-gradient(top, #12273A, #12273A);
-  background-image: -o-linear-gradient(top, #12273A, #12273A);
-  background-image: linear-gradient(top, #12273A, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
+  background-image: -moz-linear-gradient(top, #12273a, #12273a);
+  background-image: -ms-linear-gradient(top, #12273a, #12273a);
+  background-image: -o-linear-gradient(top, #12273a, #12273a);
+  background-image: linear-gradient(top, #12273a, #12273a);
 }
 
 /***********************/
@@ -732,7 +732,7 @@ table.download_decorator tr {
   color: #000080;
 }
 table.download_decorator tr:nth-child(0), table.download_decorator tr.first {
-  background-color: #adc9bc;
+  background-color: #0E9A8F;
 }
 table.download_decorator td, table.download_decorator th {
   white-space: nowrap;
@@ -882,7 +882,7 @@ a.link-platforms:hover {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  background: #FFE6E6 url(../img/cancel_48.png) no-repeat 405px center;
+  background: #ffe6e6 url(../img/cancel_48.png) no-repeat 405px center;
   display: none;
 }
 
@@ -912,7 +912,7 @@ a.link-platforms:hover {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-  background: #D3EDD3 url(../img/accepted_48.png) no-repeat 405px center;
+  background: #d3edd3 url(../img/accepted_48.png) no-repeat 405px center;
   font-weight: bold;
   display: none;
 }
@@ -1380,12 +1380,12 @@ input.placeholder-text, textarea.placeholder-text {
   border-left: 1px solid #98dcd4;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2 {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
-  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
-  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
-  background-image: -o-linear-gradient(top, #2B4054, #12273A);
-  background-image: linear-gradient(top, #2B4054, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
+  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
+  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
+  background-image: -o-linear-gradient(top, #2b4054, #12273a);
+  background-image: linear-gradient(top, #2b4054, #12273a);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   width: 263px;
@@ -1400,7 +1400,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 0 57px 0 0;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2:after {
-  background_color: #2B4054;
+  background_color: #2b4054;
   width: 37px;
   height: 37px;
   position: absolute;
@@ -1408,12 +1408,12 @@ input.placeholder-text, textarea.placeholder-text {
   top: 13px;
 }
 .promo-area .holder2 .btn-holder2 .btn-download2:hover {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
-  background-image: -moz-linear-gradient(top, #12273A, #12273A);
-  background-image: -ms-linear-gradient(top, #12273A, #12273A);
-  background-image: -o-linear-gradient(top, #12273A, #12273A);
-  background-image: linear-gradient(top, #12273A, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
+  background-image: -moz-linear-gradient(top, #12273a, #12273a);
+  background-image: -ms-linear-gradient(top, #12273a, #12273a);
+  background-image: -o-linear-gradient(top, #12273a, #12273a);
+  background-image: linear-gradient(top, #12273a, #12273a);
 }
 
 .promo-area .holder .btn-holder {
@@ -1662,12 +1662,12 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
 .footer-holder .btn-holder .btn-tryonline {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
-  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
-  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
-  background-image: -o-linear-gradient(top, #2B4054, #12273A);
-  background-image: linear-gradient(top, #2B4054, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #2b4054, #12273a);
+  background-image: -moz-linear-gradient(top, #2b4054, #12273a);
+  background-image: -ms-linear-gradient(top, #2b4054, #12273a);
+  background-image: -o-linear-gradient(top, #2b4054, #12273a);
+  background-image: linear-gradient(top, #2b4054, #12273a);
   -webkit-border-radius: 4px;
   border-radius: 4px;
   width: 100px;
@@ -1691,12 +1691,12 @@ input.placeholder-text, textarea.placeholder-text {
 }
 .footer-holder .btn-holder .btn-tryonline:hover {
   background-color: #12273A;
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
-  background-image: -moz-linear-gradient(top, #12273A, #12273A);
-  background-image: -ms-linear-gradient(top, #12273A, #12273A);
-  background-image: -o-linear-gradient(top, #12273A, #12273A);
-  background-image: linear-gradient(top, #12273A, #12273A);
+  background-color: #12273a;
+  background-image: -webkit-linear-gradient(top, #12273a, #12273a);
+  background-image: -moz-linear-gradient(top, #12273a, #12273a);
+  background-image: -ms-linear-gradient(top, #12273a, #12273a);
+  background-image: -o-linear-gradient(top, #12273a, #12273a);
+  background-image: linear-gradient(top, #12273a, #12273a);
 }
 .footer-holder .social-holder {
   display: inline;
@@ -1746,7 +1746,7 @@ input.placeholder-text, textarea.placeholder-text {
   display: inline-block;
 }
 .footer-nav ul li ul li a:hover {
-  color: #fff;
+  color: white;
 }
 
 #content {

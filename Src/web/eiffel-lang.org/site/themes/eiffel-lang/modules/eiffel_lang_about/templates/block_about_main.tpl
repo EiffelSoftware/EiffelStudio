@@ -5,9 +5,9 @@
 				<ul>
 					<li>
 						<h2>Purpose</h2>
-						<p>The Eiffel Programming Language is a forum that bring together the thousands of Eiffel developers 
+						<p>The Eiffel Programming Language is a forum that bring together Eiffel developers 
 							around the world to build libraries, share experiences, help 
-							each other on all matters relatedto open-source Eiffel. 
+							each other on all matters related to open-source Eiffel. 
 							<a href="{$site_url/}/purpose">Go to page ….</a></p>
 					</li>
 					<li>

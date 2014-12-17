@@ -3,7 +3,6 @@
 			  		<a href="{$site_url/}/about">About</a>
 			  		:: Articles
 </div>
-<h1>Articles</h1>
 
 <p>The point of access to dive into technical issues behind Eiffel such as how-tos, best practices, or current events:</p>
 

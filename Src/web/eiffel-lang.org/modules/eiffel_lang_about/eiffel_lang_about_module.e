@@ -71,6 +71,7 @@ feature -- Router
 			Result.handle_with_request_methods ("/articles", create {WSF_URI_AGENT_HANDLER}.make (agent handle_articles (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/blogs", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/post_contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), Result.methods_put_post)
 		end
 
 feature -- Hooks configuration
@@ -215,6 +216,37 @@ feature -- Hooks
 			r.values.force ("contact", "contact")
 			r.execute
 		end
+
+
+	handle_post_contact (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			es: EMAIL_SERVICE
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
+			if attached {WSF_STRING} req.form_parameter ("name") as l_name and then
+			   attached {WSF_STRING} req.form_parameter ("email") as l_email and then
+			   attached {WSF_STRING} req.form_parameter ("message") as l_message and then
+			   attached api.setup.smtp as l_smtp then
+				create es.make (l_smtp)
+				es.send_contact_email (l_email.value, l_message.value)
+				es.send_internal_email (l_message.value)
+				r.values.force ("post_contact", "post_contact")
+				r.set_page_title ("Contact")
+				r.set_main_content ("Thank you for contact us")
+				r.execute
+
+			else
+				-- Internal server error
+				r.values.force ("post_contact", "post_contact")
+				r.set_page_title ("Contact")
+				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
+				r.execute
+			end
+
+		end
+
 
 
 feature {NONE} -- Helpers

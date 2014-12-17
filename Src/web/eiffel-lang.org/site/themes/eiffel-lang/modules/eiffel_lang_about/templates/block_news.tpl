@@ -3,7 +3,6 @@
 			  		<a href="{$site_url/}/about">About</a>
 			  		:: News
 </div>
-<h1>News</h1>
 
 <p>From new libraries, functionalities, contributions , and events, check out the latest happenings within the Eiffel
 Community: </p>

@@ -3,7 +3,6 @@
 			  		<a href="{$site_url/}/about">About</a>
 			  		:: Blogs
 </div>
-<h1>Blogs</h1>
 
 <p>The place to find the latest opinions from users throughout the globe on important Eiffel subjects::</p>
 

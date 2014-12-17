@@ -3,7 +3,6 @@
 			  		<a href="{$site_url/}/about">About</a>
 			  		:: Contact
 </div>
-<h1>Contact</h1>
 
 <p>Have a question? Something you see doesn't work? Anything else? You can leave a message using the contact
 form below.</p>
@@ -16,7 +15,7 @@ form below.</p>
         <li id="info">There were some problems with your form submission:</li>
     </ul>
     <p id="success">Thanks for your message! We will get back to you ASAP!</p>
-    <form method="post" action="#">
+    <form method="post" action="{$site_url/}/post_contact">
         <label for="name">Name: <span class="required">*</span></label>
         <input type="text" id="name" name="name" value="" placeholder="John Doe" required="required" autofocus="autofocus" />
          

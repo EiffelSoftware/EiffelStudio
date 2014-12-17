@@ -356,7 +356,7 @@
 				width: 263px;
 				height: 63px;
 				display: block;
-				margin: 0 auto;
+				margin: 0 auto 13px auto;
 				font: 30px/63px $museo-sans500;
 				color: $white;
 				letter-spacing: 1px;
@@ -443,6 +443,9 @@
 	}
 }
 
+.promo-area .holder .btn-holder {
+	padding: 0 0 0px;
+}
 
 #main{
 	@include mask;
@@ -817,7 +820,6 @@
 				}
 				p{
 					color: #0C0D0D;
-					color: #6d8083;
 				}
 			}
 		}

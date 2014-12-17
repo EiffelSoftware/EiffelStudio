@@ -1,4 +1,4 @@
-								<h2>Welcome to the community portal for Eiffel<br>the programming language <br> for tackling tomorrow’s problems today.</h2>
+								<h2>Welcome to the community portal for Eiffel,<br>the programming language <br> for tackling tomorrow’s problems today.</h2>
 										
 								<div class="holder">
 										<div class="btn-holder">
@@ -8,7 +8,7 @@
 											<a class="btn-download" href="{$site_url/}/download">Download Now</a>
 										</div>
 										<div class="btn-holder">
-												<a class="link-platforms" href="{$site_url/}/download_options"><span class="release"> Looking for other platforms? </span></a>
+												<a class="link-platforms row" href="{$site_url/}/download_options"><span class="release">LOOKING FOR OTHER PLATFORMS? </span></a>
 										</div>
 								</div>
 								<div class="holder2">									

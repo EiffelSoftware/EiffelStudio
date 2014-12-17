@@ -68,6 +68,9 @@ feature -- Access: Site
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 
+	smtp: detachable READABLE_STRING_8
+			-- 	Smtp server
+			
 feature -- Access: Theme	
 
 	themes_location: PATH

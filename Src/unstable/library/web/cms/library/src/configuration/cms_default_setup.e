@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			site_email := configuration.site_email ("webmaster")
 			themes_location := configuration.themes_location
 			theme_name := configuration.theme_name ("default")
+			smtp := configuration.smtp
 
 			debug ("refactor_fixme")
 				fixme ("Review export clause for configuration and layout")

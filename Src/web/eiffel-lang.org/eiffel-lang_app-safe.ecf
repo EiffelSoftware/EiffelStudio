@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel-lang-app" uuid="133EFD54-F660-4F6A-975C-6599394C8917">
 	<target name="eiffel-lang-app">
+		<description>Desktop Wikidocs Editor for eiffel-lang</description>
 		<root class="WDOCS_APP" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -24,9 +25,10 @@
 		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
+		<library name="module_codeboard" location="modules\codeboard\codeboard-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_eiffel_lang_misc" location="modules\eiffel_lang_misc\eiffel_lang_misc-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_lang_about" location="modules\eiffel_lang_about\eiffel_lang_about-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_eiffel_lang_misc" location="modules\eiffel_lang_misc\eiffel_lang_misc-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wiki_docs\wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

@@ -16,7 +16,7 @@
 			</div>
 		</div>
 	  </div>
-
+	<br/>  
 	<h2>{$product.name/}</h2>
 
 	<h3>Stable versions</h3>

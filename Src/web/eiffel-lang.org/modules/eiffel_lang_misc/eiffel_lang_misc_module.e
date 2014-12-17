@@ -70,6 +70,7 @@ feature -- Router
 		do
 			create Result.make (0)
 			Result.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), Result.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -205,6 +206,26 @@ feature -- Hooks
 			end
 			r.execute
 		end
+
+	handle_contribute_description (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			fixme ("Use CMS node and associated content for Contribute link!")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("contribute", "optional_content_type")
+--			r.set_title ("Contribute")
+			r.set_main_content ("")
+			if attached template_block ("contribute_description", r) as l_tpl_block then
+				r.add_block (l_tpl_block, "content")
+			else
+				debug ("cms")
+					r.add_warning_message ("Error with block [contribute_page]")
+				end
+			end
+			r.execute
+		end
+
 
 feature {NONE} -- Helpers
 

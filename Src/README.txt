@@ -11,7 +11,8 @@ and other product from EiffelStudio open source project.
 
 1) First you need to checkout the source.
 for instance
-svn checkout https://svn.eiffel.com/eiffelstudio/trunk ESdev
+* svn checkout https://svn.eiffel.com/eiffelstudio/trunk/Src ESdev_src
+* set the EIFFEL_SRC environment variable to this path
 
 Note: the whole trunk or branches is checkouted into a single folder
 
@@ -38,9 +39,9 @@ cd $HOME/compile
 	geant -b $EIFFEL_SRC/build.eant make_delivery
 
 Those scripts are in progress for now.
-Please report any issue on the forum: http://eiffelstudio.origo.ethz.ch/
+Please report any issue on the forum: https://forum.eiffel.com/
 
 -------------------------------------------
- Web: http://dev.eiffel.com/
- Web: http://eiffelstudio.origo.ethz.ch/
+ Web: https://dev.eiffel.com/
+ Web: https://svn.eiffel.com/eiffelstudio/
 -------------------------------------------

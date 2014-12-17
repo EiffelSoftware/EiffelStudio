@@ -12,6 +12,8 @@ inherit
 			register_hooks
 		end
 
+	SHARED_HTML_ENCODER
+
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
@@ -98,7 +100,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"about_main","purpose","news","articles","blogs","contact">>
+			Result := <<"about_main","purpose","news","articles","blogs","contact","post_contact">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -153,6 +155,15 @@ feature -- Hooks
 					end
 			elseif a_block_id.is_case_insensitive_equal_general ("contact") and then a_response.request.path_info.starts_with ("/contact") then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
+			elseif a_block_id.is_case_insensitive_equal_general ("post_contact") and then a_response.request.path_info.starts_with ("/post_contact") then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -223,27 +234,33 @@ feature -- Hooks
 			r: CMS_RESPONSE
 			es: EMAIL_SERVICE
 			m: STRING
+			um:STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-
+			r.values.force (False, "has_error")
 			if attached {WSF_STRING} req.form_parameter ("name") as l_name and then
 			   attached {WSF_STRING} req.form_parameter ("email") as l_email and then
 			   attached {WSF_STRING} req.form_parameter ("message") as l_message and then
 			   attached api.setup.smtp as l_smtp then
-				create m.make_from_string (l_message.value)
-				m.append ("%N")
-				m.append (contact_message)
+				create m.make_from_string (contact_message)
 				create es.make (l_smtp)
 				es.send_contact_email (l_email.value, m)
-				es.send_internal_email (m)
-				r.values.force ("post_contact", "post_contact")
-				r.set_page_title ("Contact")
-				r.set_main_content (contact_message)
+
+				create um.make_from_string (user_contact)
+				um.replace_substring_all ("$name", l_name.value)
+				um.replace_substring_all ("$email", l_email.value)
+				um.replace_substring_all ("$message", l_message.value)
+
+				es.send_internal_email (um)
+				if attached es.last_error then
+					r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
+					r.values.force (True, "has_error")
+				end
 				r.execute
-		else
+			else
 					-- Internal server error
 				r.values.force ("post_contact", "post_contact")
-				r.set_page_title ("Contact")
+				r.values.force (True, "has_error")
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 				r.execute
 			end
@@ -301,10 +318,35 @@ feature {NONE} -- Implementation: date and time
 			Result := d.date_time
 		end
 
+feature {NONE} -- HTML ENCODING.
+
+	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
+		do
+			if s /= Void then
+				Result := html_encoder.general_encoded_string (s)
+			else
+				create Result.make_empty
+			end
+		end
 
 feature {NONE} -- Contact Message
 
-	contact_message: STRING = "Thank you for contacting the Eiffel Programming Language community. We will get back to you promptly on your contact request."
+
+	contact_message: STRING = "[
+						<p>
+							Thank you for contacting the Eiffel Programming Language community.<br/>
+							We will get back to you promptly on your contact request.
+						</p>
+						]"
+
+	user_contact: STRING = "[
+	                        <h2> Notification contact form</h2>  
+							<div>
+								<strong>Name<strong>: $name <br/>
+								<strong>Email<strong>: $email <br/>
+								<strong>Message<strong>: $message <br/>
+							</div> <br/>			
+		]"
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

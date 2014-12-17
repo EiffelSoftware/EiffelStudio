@@ -36,7 +36,12 @@ feature {NONE} -- Initialization
 	webmaster_email: IMMUTABLE_STRING_8
 			-- WebMaster email.
 		once
-			Result := "Eiffel Lang Web Master <web@eiffel-lang.org>"
+			Result := "Eiffel Lang Notification Contact <info@eiffel-lang.org>"
+		end
+
+	site_email: IMMUTABLE_STRING_8
+		do
+			Result := "eiffel.lang.org@gmail.com"
 		end
 
 	smtp_protocol: SMTP_PROTOCOL
@@ -65,9 +70,11 @@ feature -- Basic Operations
 				l_email: EMAIL
 		do
 				-- Create our message.
-			create l_email.make_with_entry (contact_email, webmaster_email)
+			create l_email.make_with_entry (webmaster_email, site_email)
 			l_email.set_message (a_content)
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification Contact")
+			l_email.add_header_entry ("MIME-Version:", "1.0")
+			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 
@@ -80,6 +87,8 @@ feature -- Basic Operations
 			create l_email.make_with_entry (contact_email, webmaster_email)
 			l_email.set_message (a_content)
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Internal Server Error")
+			l_email.add_header_entry ("MIME-Version:", "1.0")
+			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 

@@ -4,24 +4,15 @@
 						<!--<div>
 			  				<img src="/theme/images/eiffel_source.png">
 						</div> -->
-						<pre class="prettyprint lang-eiffel">
-note
-	description : "hello_world application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
-
+						<pre class="prettyprint lang-eiffel" style="border-radius: 10px; background-color:white; width:700px;">
 class
 	HELLO_WORLD
-inherit
-	ARGUMENTS
 create
 	make
 feature {NONE} -- Initialization
 
 	make
-			-- Run application.
 		do
-			--| Add your code here
 			print ("Hello Eiffel World!%N")
 		end
 end

@@ -222,6 +222,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 			es: EMAIL_SERVICE
+			m: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
@@ -229,16 +230,18 @@ feature -- Hooks
 			   attached {WSF_STRING} req.form_parameter ("email") as l_email and then
 			   attached {WSF_STRING} req.form_parameter ("message") as l_message and then
 			   attached api.setup.smtp as l_smtp then
+				create m.make_from_string (l_message.value)
+				m.append ("%N")
+				m.append (contact_message)
 				create es.make (l_smtp)
-				es.send_contact_email (l_email.value, l_message.value)
-				es.send_internal_email (l_message.value)
+				es.send_contact_email (l_email.value, m)
+				es.send_internal_email (m)
 				r.values.force ("post_contact", "post_contact")
 				r.set_page_title ("Contact")
-				r.set_main_content ("Thank you for contact us")
+				r.set_main_content (contact_message)
 				r.execute
-
-			else
-				-- Internal server error
+		else
+					-- Internal server error
 				r.values.force ("post_contact", "post_contact")
 				r.set_page_title ("Contact")
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
@@ -297,6 +300,11 @@ feature {NONE} -- Implementation: date and time
 			create d.make_from_timestamp (n)
 			Result := d.date_time
 		end
+
+
+feature {NONE} -- Contact Message
+
+	contact_message: STRING = "Thank you for contacting the Eiffel Programming Language community. We will get back to you promptly on your contact request."
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

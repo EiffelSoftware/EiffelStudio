@@ -9,6 +9,7 @@ deferred class
 inherit
 
 	SHARED_ERROR
+	SHARED_LOGGER
 
 feature {NONE} -- Initialization
 
@@ -59,6 +60,7 @@ feature -- Basic Operations
 			l_email: EMAIL
 			utf: UTF_CONVERTER
 		do
+			log.write_debug (generator + ".send_contact_email: [from:" + a_from_address + ", to:" + a_to_address + ", subject:" + a_subjet + ", content:" + a_content)
 			create l_email.make_with_entry (a_from_address, a_to_address)
 			l_email.set_message (utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet))
@@ -86,7 +88,7 @@ feature {NONE} -- Implementation
 					set_successful
 				end
 			else
-				log.write_error (generator + ".send_email Email not send" + last_error_message )
+				log.write_error (generator + ".send_email Email not send " + last_error_message )
 			end
 		rescue
 			set_last_error_from_exception (generator + ".send_email")

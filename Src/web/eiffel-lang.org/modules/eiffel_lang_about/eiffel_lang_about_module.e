@@ -239,28 +239,36 @@ feature -- Hooks
 			m: STRING
 			um: STRING
 		do
+			log.write_information (generator + ".handle_post_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force (False, "has_error")
+			log.write_debug (generator + ".handle_post_contact {Form Parameters:" + print_form_parameters (req) +"}")
 			if
 				attached {WSF_STRING} req.form_parameter ("name") as l_name and then
 				attached {WSF_STRING} req.form_parameter ("email") as l_email and then
 				attached {WSF_STRING} req.form_parameter ("message") as l_message
 			then
+				fixme ("Contact message could be readed from a smarty template")
 				create m.make_from_string (contact_message)
+				log.write_information (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message))
 				create es.make (create {EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS}.make (api))
+				log.write_debug (generator + ".handle_post_contact: send_contact_email")
 				es.send_contact_email (l_email.value, m)
 				create um.make_from_string (user_contact)
 				um.replace_substring_all ("$name", l_name.value)
 				um.replace_substring_all ("$email", l_email.value)
 				um.replace_substring_all ("$message", l_message.value)
+				log.write_debug (generator + ".handle_post_contact: send_internal_email")
 				es.send_internal_email (um)
 				if attached es.last_error then
+					log.write_error (generator + ".handle_post_contact:  error message:["+ es.last_error_message +"]")
 					r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 					r.values.force (True, "has_error")
 				end
 				r.execute
 			else
 					-- Internal server error
+				log.write_error (generator + ".handle_post_contact:  Internal Server error")
 				r.values.force ("post_contact", "post_contact")
 				r.values.force (True, "has_error")
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
@@ -285,6 +293,23 @@ feature {NONE} -- Helpers
 					create Result.make (a_block_id, Void, p.parent, p)
 				end
 			end
+		end
+
+	print_form_parameters (req: WSF_REQUEST): STRING
+		do
+			create Result.make_empty
+			across req.form_parameters as ic loop
+					 Result.append (ic.item.key)
+					Result.append_character ('=')
+					 if attached {WSF_STRING} req.form_parameter (ic.item.key) as l_value then
+					 	Result.append_string (l_value.value)
+					 elseif attached {WSF_MULTIPLE_STRING} req.form_parameter (ic.item.key) as l_value  then
+					 	Result.append_character ('[')
+					 	Result.append_string (l_value.string_representation)
+					 	Result.append_character (']')
+					 end
+					 Result.append_character ('%N')
+				end
 		end
 
 feature {NONE} -- Implementation: date and time

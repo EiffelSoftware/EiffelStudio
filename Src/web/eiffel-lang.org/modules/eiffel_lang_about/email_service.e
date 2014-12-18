@@ -3,92 +3,67 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EMAIL_SERVICE
 
 inherit
 
 	SHARED_ERROR
 
-create
-	make
-
 feature {NONE} -- Initialization
 
-	make (a_smtp_server: READABLE_STRING_32)
-			-- Create an instance of {EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
-			-- Using "noreplies@eiffel.com" as admin email.
+	make (a_params: EMAIL_SERVICE_PARAMETERS)
+			-- Create instance of {EMAIL_SERVICE} with smtp_server `a_params.smtp_server'.
+			-- Using `a_params.admin_email' as admin email.
+		do
+			parameters := a_params
+			initialize
+		end
+
+	initialize
+			-- Initialize service.
 		local
 			l_address_factory: INET_ADDRESS_FACTORY
 		do
-					-- Get local host name needed in creation of SMTP_PROTOCOL.
+			admin_email := parameters.admin_email_address
+
+				-- Get local host name needed in creation of SMTP_PROTOCOL.
 			create l_address_factory
-			create smtp_protocol.make (a_smtp_server, l_address_factory.create_localhost.host_name)
+			create smtp_protocol.make (parameters.smtp_server, l_address_factory.create_localhost.host_name)
 			set_successful
 		end
 
-	contact_email: IMMUTABLE_STRING_8
-			-- Contact email.
-		once
-			Result := "Eiffel-Lang Community <contact@eiffel-lang.org>"
-		end
+	parameters: EMAIL_SERVICE_PARAMETERS
+			-- Associated parameters.
 
-	webmaster_email: IMMUTABLE_STRING_8
-			-- WebMaster email.
-		once
-			Result := "Eiffel Lang Notification Contact <info@eiffel-lang.org>"
-		end
-
-	site_email: IMMUTABLE_STRING_8
-		do
-			Result := "eiffel.lang.org@gmail.com"
-		end
+	admin_email: IMMUTABLE_STRING_8
+			-- Site admin's email.
 
 	smtp_protocol: SMTP_PROTOCOL
 			-- SMTP protocol.
 
 feature -- Basic Operations
 
-	send_contact_email (a_to, a_content: STRING)
-			-- Send successful contact message `a_token' to `a_to'.
-		require
-			attached_to: a_to /= Void
+	send_internal_email (a_content: READABLE_STRING_GENERAL)
+		do
+			send_message (admin_email, admin_email, "Notification Contact", a_content)
+		end
+
+	send_email_internal_server_error (a_content: READABLE_STRING_GENERAL)
+		do
+			send_message (admin_email, admin_email, "Internal Server Error", a_content)
+		end
+
+	send_message (a_from_address, a_to_address: READABLE_STRING_8; a_subjet: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
 		local
 			l_email: EMAIL
+			utf: UTF_CONVERTER
 		do
-				-- Create our message.
-			create l_email.make_with_entry (contact_email, a_to)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Thank you for contact us")
+			create l_email.make_with_entry (a_from_address, a_to_address)
+			l_email.set_message (utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet))
 			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
-			send_email (l_email)
-		end
-
-	send_internal_email (a_content: READABLE_STRING_32)
-		local
-				l_email: EMAIL
-		do
-				-- Create our message.
-			create l_email.make_with_entry (webmaster_email, site_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification Contact")
-			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
-			send_email (l_email)
-		end
-
-
-	send_email_internal_server_error (a_content: READABLE_STRING_32)
-		local
-				l_email: EMAIL
-		do
-				-- Create our message.
-			create l_email.make_with_entry (contact_email, webmaster_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Internal Server Error")
-			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
+			l_email.add_header_entry ("Content-Type", "text/html; charset=utf-8")
 			send_email (l_email)
 		end
 
@@ -105,7 +80,11 @@ feature {NONE} -- Implementation
 				smtp_protocol.transfer (a_email)
 				smtp_protocol.close_protocol
 				log.write_information (generator + ".send_email Email sent.")
-				set_successful
+				if smtp_protocol.error then
+					set_last_error ("smtp_protocol reported an error", generator + ".send_email")
+				else
+					set_successful
+				end
 			else
 				log.write_error (generator + ".send_email Email not send" + last_error_message )
 			end
@@ -114,8 +93,5 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-
-	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
-		-- Email not monitored disclaimer.
 
 end

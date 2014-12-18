@@ -7,6 +7,7 @@ class
 	EIFFEL_LANG_ABOUT_MODULE
 
 inherit
+
 	CMS_MODULE
 		redefine
 			register_hooks
@@ -41,7 +42,6 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Eiffel Lang About module"
 			package := "about"
-
 			create root_dir.make_current
 			cache_duration := 0
 		end
@@ -100,76 +100,81 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"about_main","purpose","news","articles","blogs","contact","post_contact">>
+			Result := <<"about_main", "purpose", "news", "articles", "blogs", "contact", "post_contact">>
 			create l_string.make_empty
-			across Result as ic loop
-					l_string.append (ic.item)
-					l_string.append_character (' ')
-				end
-			log.write_debug (generator + ".block_list:" + l_string )
+			across
+				Result as ic
+			loop
+				l_string.append (ic.item)
+				l_string.append_character (' ')
+			end
+			log.write_debug (generator + ".block_list:" + l_string)
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+		local
+			l_path_info: READABLE_STRING_8
 		do
+			l_path_info := a_response.request.percent_encoded_path_info
 
 				--"purpose","news","articles","blogs","contact"
-			if a_block_id.is_case_insensitive_equal_general ("about_main") and then a_response.request.path_info.starts_with ("/about") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+			if a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then a_response.request.path_info.starts_with ("/purpose") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then l_path_info.starts_with ("/purpose") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("news") and then a_response.request.path_info.starts_with ("/news") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("news") and then l_path_info.starts_with ("/news") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("articles") and then a_response.request.path_info.starts_with ("/articles") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("articles") and then l_path_info.starts_with ("/articles") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("blogs") and then a_response.request.path_info.starts_with ("/blogs") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("blogs") and then l_path_info.starts_with ("/blogs") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("contact") and then a_response.request.path_info.starts_with ("/contact") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("contact") and then l_path_info.starts_with ("/contact") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("post_contact") and then a_response.request.path_info.starts_with ("/post_contact") then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
-						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("post_contact") and then l_path_info.starts_with ("/post_contact") then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
+				end
 			end
 		end
 
@@ -181,7 +186,6 @@ feature -- Hooks
 			r.values.force ("about_main", "about_main")
 			r.execute
 		end
-
 
 	handle_purpose (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -228,29 +232,27 @@ feature -- Hooks
 			r.execute
 		end
 
-
 	handle_post_contact (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			es: EMAIL_SERVICE
+			es: EIFFEL_LANG_EMAIL_SERVICE
 			m: STRING
-			um:STRING
+			um: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force (False, "has_error")
-			if attached {WSF_STRING} req.form_parameter ("name") as l_name and then
-			   attached {WSF_STRING} req.form_parameter ("email") as l_email and then
-			   attached {WSF_STRING} req.form_parameter ("message") as l_message and then
-			   attached api.setup.smtp as l_smtp then
+			if
+				attached {WSF_STRING} req.form_parameter ("name") as l_name and then
+				attached {WSF_STRING} req.form_parameter ("email") as l_email and then
+				attached {WSF_STRING} req.form_parameter ("message") as l_message
+			then
 				create m.make_from_string (contact_message)
-				create es.make (l_smtp)
+				create es.make (create {EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS}.make (api))
 				es.send_contact_email (l_email.value, m)
-
 				create um.make_from_string (user_contact)
 				um.replace_substring_all ("$name", l_name.value)
 				um.replace_substring_all ("$email", l_email.value)
 				um.replace_substring_all ("$message", l_message.value)
-
 				es.send_internal_email (um)
 				if attached es.last_error then
 					r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
@@ -264,10 +266,7 @@ feature -- Hooks
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 				r.execute
 			end
-
 		end
-
-
 
 feature {NONE} -- Helpers
 
@@ -331,31 +330,31 @@ feature {NONE} -- HTML ENCODING.
 
 feature {NONE} -- Contact Message
 
-
 	contact_message: STRING = "[
-						<p>
-							Thank you for contacting the Eiffel Programming Language community.<br/>
-							We will get back to you promptly on your contact request.
-						</p>
-						]"
+			<p>
+				Thank you for contacting the Eiffel Programming Language community.<br/>
+				We will get back to you promptly on your contact request.
+			</p>
+		]"
 
 	user_contact: STRING = "[
-	                        <h2> Notification contact form</h2>  
-							<div>
-								<strong>Name<strong>: $name <br/>
-								<strong>Email<strong>: $email <br/>
-								<strong>Message<strong>: $message <br/>
-							</div> <br/>			
+			                        <h2> Notification contact form</h2>  
+									<div>
+										<strong>Name<strong>: $name <br/>
+										<strong>Email<strong>: $email <br/>
+										<strong>Message<strong>: $message <br/>
+									</div> <br/>
 		]"
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
+
 end

@@ -59,7 +59,8 @@ feature -- Access: Site
 			-- Name of the site.
 
 	site_email: READABLE_STRING_8
-			-- Email for the site.
+			-- Admin email address for the site.
+			-- Mainly used for internal notification.
 
 	site_url: detachable READABLE_STRING_8
 			-- Optional base url of the site.
@@ -70,7 +71,7 @@ feature -- Access: Site
 
 	smtp: detachable READABLE_STRING_8
 			-- 	Smtp server
-			
+
 feature -- Access: Theme	
 
 	themes_location: PATH

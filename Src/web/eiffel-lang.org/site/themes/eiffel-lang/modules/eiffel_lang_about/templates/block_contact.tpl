@@ -23,7 +23,7 @@ form below.</p>
         <input type="email" id="email" name="email" value="" placeholder="johndoe@example.com" required="required" />
          
         <label for="message">Message: <span class="required">*</span></label>
-        <textarea id="message" name="message" placeholder="Your message must be greater than 20 charcters" required="required" data-minlength="20" minlength="20" ></textarea>
+        <textarea id="message" name="message" placeholder="Your message" required="required" data-minlength="20" minlength="20" ></textarea>
          
         <span id="loading"></span>
         <input type="submit" value="Send" id="submit-button" />

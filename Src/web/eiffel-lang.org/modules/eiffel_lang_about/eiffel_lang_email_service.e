@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {EIFFEL_LANG_EMAIL_SERVICE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

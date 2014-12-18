@@ -48,8 +48,10 @@ def package_name_from_iron_package_file (pf):
 	return pf_name
 
 def get_ise_libraries(basedir, v):
-	branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
-	#branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
+	if v == 'trunk':
+		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
+	else:
+		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
 
 	print "Getting source code from %s ..." % (branch_dir)
 

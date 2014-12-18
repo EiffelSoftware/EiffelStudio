@@ -8,9 +8,6 @@ deferred class
 
 feature -- Access
 
-	configuration: CMS_CONFIGURATION
-			-- cms configuration.
-
 	layout: CMS_LAYOUT
 			-- CMS layout.
 
@@ -70,7 +67,30 @@ feature -- Access: Site
 			-- By default "" or "/".
 
 	smtp: detachable READABLE_STRING_8
-			-- 	Smtp server
+			-- Smtp server
+
+feature -- Query
+
+	text_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Configuration value associated with `a_name', if any.
+		deferred
+		end
+
+	text_item_or_default (a_name: READABLE_STRING_GENERAL; a_default_value: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- `text_item' associated with `a_name' or if none, `a_default_value'.
+		do
+			if attached text_item (a_name) as v then
+				Result := v
+			else
+				Result := a_default_value.as_string_32
+			end
+		end
+
+	string_8_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- Configuration value associated with `a_name', if any.
+		deferred
+		end
+
 
 feature -- Access: Theme	
 

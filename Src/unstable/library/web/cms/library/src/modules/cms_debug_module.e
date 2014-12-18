@@ -82,7 +82,7 @@ feature -- Handler
 				append_info_to ("Name", api.setup.site_name, r, s)
 				append_info_to ("Url", api.setup.site_url, r, s)
 
-				if attached api.setup.configuration.configuration_location as l_loc then
+				if attached api.setup.layout.cms_config_ini_path as l_loc then
 					s.append ("<hr/>")
 					append_info_to ("Configuration file", l_loc.name, r, s)
 				end

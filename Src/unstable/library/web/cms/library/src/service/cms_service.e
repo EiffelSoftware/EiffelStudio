@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			-- Build a CMS service with `a_api'
 		do
 			api := a_api
-			configuration := a_api.setup.configuration
 			initialize
 		ensure
 			api_set: api = a_api
@@ -229,10 +228,6 @@ feature -- Access
 		do
 			Result := api.setup
 		end
-
-	configuration: CMS_CONFIGURATION
-		   	-- CMS configuration.
-		   	--| Maybe we can compute it (using `setup') instead of using memory.
 
 	modules: CMS_MODULE_COLLECTION
 			-- Configurator of possible modules.

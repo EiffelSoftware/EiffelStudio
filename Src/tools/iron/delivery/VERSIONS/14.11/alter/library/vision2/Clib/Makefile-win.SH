@@ -5,7 +5,7 @@ INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
 CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. \
-	-I$(IRON_PATH)\packages\C_library\libpng  -I$(IRON_PATH)\packages\C_library\zlib
+	-I"$(IRON_PATH)\packages\C_library\libpng"  -I"$(IRON_PATH)\packages\C_library\zlib"
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL

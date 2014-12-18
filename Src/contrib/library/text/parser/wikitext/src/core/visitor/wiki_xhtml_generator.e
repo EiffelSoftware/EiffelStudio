@@ -278,7 +278,7 @@ feature -- Processing
 		do
 			lev := a_indent.indentation_level
 			from
-				i := 0
+				i := 1
 			until
 				i > lev
 			loop
@@ -290,7 +290,7 @@ feature -- Processing
 				struct.process (Current)
 			end
 			from
-				i := 0
+				i := 1
 			until
 				i > lev
 			loop

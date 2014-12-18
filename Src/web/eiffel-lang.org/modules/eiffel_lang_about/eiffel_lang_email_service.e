@@ -9,7 +9,8 @@ class
 inherit
 	EMAIL_SERVICE
 		redefine
-			make
+			initialize,
+			parameters
 		end
 
 create
@@ -17,23 +18,19 @@ create
 
 feature {NONE} -- Initialization	
 
-	make (a_params: EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS)
-			-- <Precursor>
+	initialize
 		do
-			parameters := a_params
-			initialize
-			if not admin_email.has ('<') then
-				admin_email := "Eiffel Lang Notification Contact <" + admin_email +">"
-			end
+			Precursor
+			contact_email := parameters.contact_email
 		end
+
+	parameters: EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS
+			-- Associated parameters.		
 
 feature -- Access		
 
 	contact_email: IMMUTABLE_STRING_8
 			-- Contact email.
-		once
-			Result := "Eiffel-Lang Community <contact@eiffel-lang.org>"
-		end
 
 feature -- Basic Operations
 
@@ -42,7 +39,7 @@ feature -- Basic Operations
 		require
 			attached_to: a_to /= Void
 		do
-			send_message (contact_email, a_to, "Thank you for contacting us", a_content)
+			send_message (contact_email, a_to, parameters.contact_subject_text, a_content)
 		end
 
 end

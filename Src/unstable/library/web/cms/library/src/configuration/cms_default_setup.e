@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 				-- Create a default setup with `a_layout'.
 		do
 			layout := a_layout
-			create configuration.make (layout)
+			create {INI_CONFIG} configuration.make_from_file (layout.cms_config_ini_path)
 			initialize
 		end
 
@@ -37,13 +37,24 @@ feature {NONE} -- Initialization
 
 	configure
 		do
-			site_id := configuration.site_id
-			site_url := configuration.site_url (Void)
-			site_name := configuration.site_name ("EWF::CMS")
-			site_email := configuration.site_email ("webmaster")
-			themes_location := configuration.themes_location
-			theme_name := configuration.theme_name ("default")
-			smtp := configuration.smtp
+			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
+			site_url := string_8_item ("site_url")
+			if attached site_url as l_url and then not l_url.is_empty then
+				if l_url[l_url.count] /= '/' then
+					site_url := l_url + "/"
+				end
+			end
+			site_name := text_item_or_default ("site.name", "EWF::CMS")
+			site_email := text_item_or_default ("site.email", "webmaster")
+
+			if attached text_item ("themes-dir") as s then
+				create themes_location.make_from_string (s)
+			else
+				themes_location := layout.www_path.extended ("themes")
+			end
+
+			theme_name := text_item_or_default ("theme", "default")
+			smtp := string_8_item ("smtp")
 
 			debug ("refactor_fixme")
 				fixme ("Review export clause for configuration and layout")
@@ -72,10 +83,35 @@ feature {NONE} -- Initialization
 			register_module (m)
 		end
 
+feature {NONE} -- Configuration
+
+	configuration: CONFIG_READER
+			-- Association configuration file.		
+
 feature -- Access
 
 	modules: CMS_MODULE_COLLECTION
 			-- <Precursor>
+
+	text_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Configuration value associated with `a_name', if any.
+		do
+			Result := configuration.resolved_text_item (a_name)
+		end
+
+	string_8_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- String 8 configuration value associated with `a_name', if any.
+		local
+			utf: UTF_CONVERTER
+		do
+			if attached text_item (a_name) as s then
+				if s.is_valid_as_string_8 then
+					Result := s.as_string_8
+				else
+					Result := utf.escaped_utf_32_string_to_utf_8_string_8 (s)
+				end
+			end
+		end
 
 	is_html: BOOLEAN
 			-- <Precursor>

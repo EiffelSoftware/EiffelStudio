@@ -50,11 +50,11 @@ feature {NONE} -- Implementation
 	resolved_items: detachable STRING_TABLE [READABLE_STRING_32]
 			-- Resolved items indexed by expression.
 
-	resolved_expression (exp: READABLE_STRING_8): STRING_32
+	resolved_expression (exp: READABLE_STRING_GENERAL): STRING_32
 			-- Resolved `exp' using `Current' or else environment variables.
 		local
 			i,n,b,e: INTEGER
-			k: detachable READABLE_STRING_8
+			k: detachable READABLE_STRING_GENERAL
 			c: CHARACTER_32
 			l_resolved_items: like resolved_items
 			l_text: detachable READABLE_STRING_GENERAL

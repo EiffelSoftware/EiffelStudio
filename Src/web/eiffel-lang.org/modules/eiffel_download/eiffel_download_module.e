@@ -75,7 +75,7 @@ feature -- Access: config
 			-- Get `download_configuration' value.
 		do
 			if download_configuration = Void then
-				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.configuration.layout.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
+				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.layout.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
 			end
 		end
 

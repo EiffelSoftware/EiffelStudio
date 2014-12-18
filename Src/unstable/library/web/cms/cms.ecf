@@ -12,6 +12,7 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
+		<library name="config" location=".\library\configuration\config.ecf"/>
 		<library name="layout" location=".\library\layout\layout.ecf"/>
 		<library name="model" location=".\library\model\cms_model.ecf" readonly="false"/>
 		<library name="persistence_mysql" location=".\library\persistence\implementation\mysql\persistence_mysql.ecf" readonly="false"/>

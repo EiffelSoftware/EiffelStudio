@@ -27,10 +27,11 @@ feature {NONE} -- Initialization
 		local
 			l_parser: JSON_PARSER
 		do
-			create l_parser.make_parser (a_json)
+			create l_parser.make_with_string (a_json)
+			l_parser.parse_content
 			if
-				attached {JSON_OBJECT} l_parser.parse_json as j_o and then
-				l_parser.is_parsed
+				l_parser.is_valid and then
+				attached l_parser.parsed_json_object as j_o
 			then
 				make_from_json_object (j_o)
 			else
@@ -38,10 +39,10 @@ feature {NONE} -- Initialization
 			end
 		end
 
-
 	make_from_json_object (a_object: JSON_OBJECT)
 			-- Create current config from JSON `a_object'.
 		do
+			associated_path := Void
 			json_value := a_object
 		end
 
@@ -76,6 +77,9 @@ feature -- Access: Config Reader
 				Result := l_number.item.to_integer
 			end
 		end
+
+	associated_path: detachable PATH
+			-- If current was built from a filename, return this path.
 
 feature -- Duplication
 
@@ -125,10 +129,15 @@ feature {NONE} -- Implementation
 		local
 			l_parser: JSON_PARSER
 		do
+			associated_path := a_path
 			has_error := False
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed then
+				l_parser.parse_content
+				if
+					l_parser.is_valid and then
+					attached l_parser.parsed_json_object as jv
+				then
 					json_value := jv
 				else
 					has_error := True
@@ -150,7 +159,7 @@ feature {NONE} -- JSON
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 note

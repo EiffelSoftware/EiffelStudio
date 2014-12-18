@@ -89,6 +89,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize data.
 		do
+			associated_path := Void
 			create utf
 			create items.make (0)
 			create sections.make (0)
@@ -137,6 +138,9 @@ feature -- Access: Config Reader
 			end
 		end
 
+	associated_path: detachable PATH
+			-- If current was built from a filename, return this path.
+
 feature -- Duplication
 
 	sub_config (k: READABLE_STRING_GENERAL): detachable CONFIG_READER
@@ -153,7 +157,7 @@ feature -- Access
 			-- Value associated with key `k'.
 		local
 			i: INTEGER
-			s,sk: READABLE_STRING_GENERAL
+			s,sk: detachable READABLE_STRING_GENERAL
 		do
 				-- Try first directly in values
 			Result := items.item (k)
@@ -172,9 +176,33 @@ feature -- Access
 						if Result = Void then
 							Result := item_from_values (l_section, sk)
 						end
-					else
-							-- otherwise in values object.
-						Result := item_from_values (items, k)
+					end
+					if Result = Void then
+						i := k.index_of ('.', i + 1)
+						if i > 0 then
+								-- There is another dot .. could be due to include
+							across
+								sections as ic
+							until
+								Result /= Void
+							loop
+								s := ic.key
+									-- If has other dot, this may be in sub sections ...
+								if s.has ('.') and then k.starts_with (s) and then k[s.count + 1] = '.' then
+									if attached sections.item (s) as l_section then
+										sk := k.substring (s.count + 2, k.count)
+										Result := l_section.item (sk)
+										if Result = Void then
+											Result := item_from_values (l_section, sk)
+										end
+									end
+								end
+							end
+						end
+						if Result = Void then
+								-- otherwise in values object.
+							Result := item_from_values (items, k)
+						end
 					end
 				else
 						--| Could be
@@ -259,7 +287,8 @@ feature {NONE} -- Implementation
 					end
 				else
 					j := n
-					s := a_content.substring (i, n)
+					s := a_content.substring (i, j)
+					i := j + 1
 				end
 				analyze_line (s, Void)
 			variant
@@ -273,6 +302,7 @@ feature {NONE} -- Implementation
 
 	parse_file (p: PATH)
 		do
+			associated_path := p
 			last_section_name := Void
 			import_path (p, Void)
 			last_section_name := Void

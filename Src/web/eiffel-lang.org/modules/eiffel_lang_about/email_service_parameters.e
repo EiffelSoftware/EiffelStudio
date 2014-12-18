@@ -13,7 +13,7 @@ feature	-- Access
 		deferred
 		end
 
-	admin_email_address: IMMUTABLE_STRING_8
+	admin_email: IMMUTABLE_STRING_8
 		deferred
 		end
 

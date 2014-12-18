@@ -22,13 +22,27 @@ feature {NONE} -- Initialization
 			else
 				smtp_server := "localhost"
 			end
-			admin_email_address := a_cms_api.setup.site_email
+			admin_email := a_cms_api.setup.site_email
+			if not admin_email.has ('<') then
+				admin_email := "Eiffel Lang Notification Contact <" + admin_email +">"
+			end
 		end
 
 feature	-- Access
 
 	smtp_server: IMMUTABLE_STRING_8
 
-	admin_email_address: IMMUTABLE_STRING_8
+	admin_email: IMMUTABLE_STRING_8
+
+	contact_email: IMMUTABLE_STRING_8
+			-- Contact email.
+		once
+			Result := "Eiffel-Lang Community <contact@eiffel-lang.org>"
+		end
+
+	contact_subject_text: IMMUTABLE_STRING_8
+		once
+			Result := "Thank you for contacting us"
+		end
 
 end

@@ -111,6 +111,7 @@ feature -- Test
 				a.b.c = abc
 							
 				[outside]
+				before = include
 				@include=test_deep.ini
 
 			]")

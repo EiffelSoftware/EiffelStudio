@@ -3,7 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EMAIL_SERVICE
 
 inherit
@@ -11,9 +11,12 @@ inherit
 	SHARED_ERROR
 	SHARED_LOGGER
 
+create
+	make
+
 feature {NONE} -- Initialization
 
-	make (a_params: EMAIL_SERVICE_PARAMETERS)
+	make (a_params: like parameters)
 			-- Create instance of {EMAIL_SERVICE} with smtp_server `a_params.smtp_server'.
 			-- Using `a_params.admin_email' as admin email.
 		do
@@ -26,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			l_address_factory: INET_ADDRESS_FACTORY
 		do
-			admin_email := parameters.admin_email_address
+			admin_email := parameters.admin_email
 
 				-- Get local host name needed in creation of SMTP_PROTOCOL.
 			create l_address_factory

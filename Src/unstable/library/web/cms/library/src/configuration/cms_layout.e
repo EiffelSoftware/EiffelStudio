@@ -38,7 +38,7 @@ feature -- Access
 		end
 
 	cms_config_ini_path: PATH
-			-- Database Configuration file path.
+			-- CMS Configuration file path.
 		local
 			p: detachable PATH
 		do

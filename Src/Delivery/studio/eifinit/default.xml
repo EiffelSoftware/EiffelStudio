@@ -3,7 +3,7 @@
 	
 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.hide_from_callstack_enabled"  DESCRIPTION="Hide entries in call stack for feature with note clause 'debugger: hidden' (used to hide implementation details not pertaining to end users.)"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.hidden_enabled"  DESCRIPTION="Hide entries in call stack for feature with note clause 'debugger: hidden' (used to hide implementation details not pertaining to end users.)"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>

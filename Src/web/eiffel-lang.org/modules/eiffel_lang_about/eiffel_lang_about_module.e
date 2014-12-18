@@ -249,7 +249,7 @@ feature -- Hooks
 				attached {WSF_STRING} req.form_parameter ("message") as l_message
 			then
 				fixme ("Contact message could be readed from a smarty template")
-				create m.make_from_string (contact_message)
+				create m.make_from_string (email_template ("email", r))
 				log.write_information (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message))
 				create es.make (create {EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS}.make (api))
 				log.write_debug (generator + ".handle_post_contact: send_contact_email")
@@ -354,6 +354,27 @@ feature {NONE} -- HTML ENCODING.
 		end
 
 feature {NONE} -- Contact Message
+
+	email_template (a_template: READABLE_STRING_8; a_response: CMS_RESPONSE): STRING
+			-- Smarty email template.
+		local
+			p: detachable PATH
+			l_block: CMS_SMARTY_TEMPLATE_BLOCK
+		do
+			create p.make_from_string ("templates")
+			p := p.extended ("block_").appended (a_template).appended_with_extension ("tpl")
+			p := a_response.module_resource_path (Current, p)
+			if p /= Void then
+				if attached p.entry as e then
+					create l_block.make (a_template, Void, p.parent, e)
+				else
+					create l_block.make (a_template, Void, p.parent, p)
+				end
+				Result := l_block.to_html (a_response.theme)
+			else
+				Result := contact_message
+			end
+		end
 
 	contact_message: STRING = "[
 			<p>

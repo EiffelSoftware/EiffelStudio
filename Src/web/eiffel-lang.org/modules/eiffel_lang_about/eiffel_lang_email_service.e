@@ -42,7 +42,7 @@ feature -- Basic Operations
 		require
 			attached_to: a_to /= Void
 		do
-			send_message (contact_email, a_to, "Thank you for contact us", a_content)
+			send_message (contact_email, a_to, "Thank you for contacting us", a_content)
 		end
 
 end

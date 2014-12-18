@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   enable-background="new 0 0 10 16"
+   xml:space="preserve"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="light5.svg"><metadata
+   id="metadata11309"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+   id="defs11307" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="708"
+   inkscape:window-height="480"
+   id="namedview11305"
+   showgrid="false"
+   inkscape:zoom="14.75"
+   inkscape:cx="5"
+   inkscape:cy="8"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Capa_1" />
+<g
+   id="g11299"
+   style="fill:#99cc33;fill-opacity:1"
+   transform="translate(3,0)">
+	<path
+   d="m 2,13 c 0,1.656 1.347,3 3,3 1.657,0 3,-1.35 3,-3 V 12 H 2 v 1 z"
+   id="path11301"
+   style="fill:#99cc33;fill-opacity:1"
+   inkscape:connector-curvature="0" />
+	<path
+   d="M 5,0 C 2.238,0 0,2.238 0,5 0,6.636 0.785,8.088 2,9 v 2 H 8 V 9 C 9.215,8.088 10,6.636 10,5 10,2.238 7.762,0 5,0 z"
+   id="path11303"
+   style="fill:#99cc33;fill-opacity:1"
+   inkscape:connector-curvature="0" />
+</g>
+</svg>

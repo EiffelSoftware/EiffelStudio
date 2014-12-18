@@ -1,0 +1,5 @@
+p { display: inline-block; margin: 20px; padding: 10px; border: solid 1px #ddd; text-align: center; } 
+p:hover {
+	border: solid 1px #99c;
+}
+img { margin: 5px 0 3px 0 } 

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 --				tag_name := a_tag_name
 			end
 
-			text := s
+			create text.make (s)
 		end
 
 	make_from_source (s: STRING)
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 				t.right_adjust
 				tag_name := t
 				if s[e-1] = '/' then
-					create {WIKI_STRING} text.make ("")
+					create text.make ("")
 				else
 					j := s.substring_index ("</"+ t +">", j + 1)
 					if j > 0 then
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 							l_content.remove_tail (1)
 						end
 					end
-					create {WIKI_STRING} text.make (l_content)
+					create text.make (l_content)
 				end
 			end
 		end

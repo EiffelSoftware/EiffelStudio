@@ -1391,7 +1391,7 @@ test	scoop-external-call				scoop007 tcf pass scoop multithreaded execution
 test	scoop-freeze-condition				scoop008 tcf pass scoop multithreaded execution incrementality
 test	scoop-wait-condition				scoop009 tcf pass scoop multithreaded execution assertion
 test	scoop-request-chain-exception			scoop011 tcf pass scoop multithreaded execution exception
-test	scoop-false-wait-condition			scoop012 tcf pass scoop multithreaded execution assertion exception
+test	scoop-false-wait-condition			scoop012 tcf pass scoop multithreaded execution assertion exception manual
 test	scoop-inline-separate-call			scoop013 tcf pass scoop multithreaded finalizing inlining
 test	scoop-separate-expanded				scoop014 tcf pass scoop multithreaded expanded
 test	scoop-separate-patterns-crash			scoop015 tcf pass scoop multithreaded finalizing stable attribute

@@ -94,6 +94,33 @@ feature -- Output
 			buf.append (s)
 		end
 
+	append_html_escaped_to (s: STRING; a_output: STRING)
+		local
+			i,n: INTEGER
+			c: CHARACTER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				c := s[i]
+				inspect
+					c
+				when '<' then
+					a_output.append ("&lt;")
+				when '>' then
+					a_output.append ("&gt;")
+				when '&' then
+					a_output.append ("&amp;")
+				else
+					a_output.append_character (c)
+				end
+				i := i + 1
+			end
+		end
+
 	ignore_next_newline
 		do
 			next_newline_ignored := True
@@ -517,13 +544,26 @@ feature -- Tag
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
+		local
+			s: STRING
 		do
-			if a_tag.is_open_close_tag then
-				output (a_tag.tag)
+			if in_pre_block then
+				create s.make_empty
+				append_html_escaped_to (a_tag.tag, s)
+				output (s)
+
+				if not a_tag.is_open_close_tag then
+					a_tag.text.process (Current)
+					create s.make_empty
+					append_html_escaped_to ("</" + a_tag.tag_name + ">", s)
+					output (s)
+				end
 			else
 				output (a_tag.tag)
-				a_tag.text.process (Current)
-				output ("</" + a_tag.tag_name + ">")
+				if not a_tag.is_open_close_tag then
+					a_tag.text.process (Current)
+					output ("</" + a_tag.tag_name + ">")
+				end
 			end
 		end
 

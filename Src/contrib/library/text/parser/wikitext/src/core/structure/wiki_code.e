@@ -10,6 +10,8 @@ class
 inherit
 	WIKI_TAG
 		redefine
+			make,
+			make_from_source,
 			default_tag_name,
 			process
 		end
@@ -17,6 +19,22 @@ inherit
 create
 	make,
 	make_from_source
+
+feature {NONE} -- Initialization
+
+	make (a_tag, s: STRING_8)
+			-- <Precursor>
+		do
+			Precursor (a_tag, s)
+			set_is_inline (text.is_single_line and not s.has ('%N'))
+		end
+
+	make_from_source (s: STRING)
+			-- <Precursor>
+		do
+			Precursor (s)
+			set_is_inline (text.is_single_line and not s.has ('%N'))
+		end
 
 feature -- Access
 
@@ -28,8 +46,13 @@ feature -- Access
 feature -- Status report
 
 	is_inline: BOOLEAN
+
+feature -- Element change
+
+	set_is_inline (b: BOOLEAN)
+			-- Set `is_inline' to `b'.
 		do
-			Result := text.is_single_line
+			is_inline := b
 		end
 
 feature -- Visitor

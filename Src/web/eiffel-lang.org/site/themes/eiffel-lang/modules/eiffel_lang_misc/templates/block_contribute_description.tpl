@@ -18,4 +18,8 @@
 <p><a href="http://www.ecma-international.org/publications/standards/Ecma-367.htm"> http://www.ecma-international.org/publications/standards/Ecma-367.htm</a></p>
 
 
+{include file="../../eiffel_lang_about/templates/block_coming_soon.tpl"/}
+
+
+
 

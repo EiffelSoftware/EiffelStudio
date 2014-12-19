@@ -21,11 +21,11 @@
 									</li>
 									<li><a href="#">Contribute</a>
 										<ul>
-											<li><a href="#">Libraries</a></li>
-											<li><a href="#">Projects</a></li>
-											<li><a href="#">Tools</a></li>
-											<li><a href="#">Feature Requests</a></li>
-											<li><a href="#">Forum</a></li>
+											<li><a href="{$site_url/}/contribute_description">Libraries</a></li>
+											<li><a href="{$site_url/}/contribute_description">Projects</a></li>
+											<li><a href="{$site_url/}/contribute_description">Tools</a></li>
+											<li><a href="{$site_url/}/contribute_description">Feature Requests</a></li>
+											<li><a href="{$site_url/}/contribute_description">Forum</a></li>
 										</ul>
 									</li>
 						

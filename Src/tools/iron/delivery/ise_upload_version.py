@@ -65,6 +65,17 @@ def get_ise_libraries(basedir, v):
 	shutil.rmtree (os.path.join (d, "wizard"))
 	shutil.rmtree (os.path.join (d, "base", "test"))
 	shutil.rmtree (os.path.join (d, "base", "testing"))
+	alter_folder_with (os.path.join (d, "library", "vision2"), os.path.join (basedir, "..", "alter", "library", "vision2"))
+
+	d = os.path.join (basedir, "C_library")
+	if os.path.exists (d):
+		call(["svn", "update", d ])
+	else:
+		call(["svn", "checkout", "%s/Src/C_library" % (branch_dir), d ])
+	shutil.rmtree (os.path.join (d, "openssl"))
+	shutil.rmtree (os.path.join (d, "curl"))
+	os.remove (os.path.join (d, "build.eant"))
+	alter_folder_with (d, os.path.join (basedir, "..", "alter", "C_library"))
 
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
@@ -77,6 +88,21 @@ def get_ise_libraries(basedir, v):
 		call(["svn", "update", d ])
 	else:
 		call(["svn", "checkout", "%s/Src/unstable" % (branch_dir), d ])
+
+def alter_folder_with (a_source, a_alter):
+	print "Altering %s with %s." % (a_source, a_alter)
+	if os.path.exists (a_alter):
+		if os.path.exists (a_source):
+			names = os.listdir(a_alter)
+			for name in names:
+				srcname = os.path.join (a_alter, name)
+				dstname = os.path.join (a_source, name)
+				if os.path.isdir(srcname):
+					alter_folder_with (dstname, srcname)
+				else:
+					shutil.copy2(srcname, dstname)
+		else:
+			shutil.copytree (a_alter, a_source)
 
 def process_iron_package (ipfn, a_sources_dir, a_packages_dir, u,p,repo,v):
 	import re;

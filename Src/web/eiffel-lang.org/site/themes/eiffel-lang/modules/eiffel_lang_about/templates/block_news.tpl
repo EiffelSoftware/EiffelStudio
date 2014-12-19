@@ -7,8 +7,10 @@
 <p>From new libraries, functionalities, contributions , and events, check out the latest happenings within the Eiffel
 Community: </p>
 
-<h2> News </h2>
 
+{include file="block_coming_soon.tpl"/}
 
+{if condition="false"}
 <p><a href="#"> Read all news ... </a></p>
 </p>
+{/if}

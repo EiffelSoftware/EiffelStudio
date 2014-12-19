@@ -6,9 +6,8 @@
 
 <p>The place to find the latest opinions from users throughout the globe on important Eiffel subjects::</p>
 
-<h2> Updated Blogs </h2>
+{include file="block_coming_soon.tpl"/}
 
-
-<p><a href="#"> List eiffelroom blogs ... </a> <a href="#"> Read all Blogs ... </a></p>
-</p>
-
+{if condition="false"}
+	<p><a href="#"> List eiffelroom blogs ... </a> <a href="#"> Read all Blogs ... </a></p>
+{/if}

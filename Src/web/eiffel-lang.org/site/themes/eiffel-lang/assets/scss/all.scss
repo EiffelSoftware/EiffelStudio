@@ -380,10 +380,9 @@
 	}
 	.holder2{
 		width: 400px;
-		overflow: overlay;
-		margin-left: 400px;
+		margin-left: 600px;
 		position:absolute;
-		top: 252px;
+		top: 55px;
 		h1{
 			font: 36px/36px $museo-sans500;
 			color: #112935;
@@ -391,7 +390,7 @@
 			letter-spacing: 2px;
 		}
 		.btn-holder2{
-			width: 347px;
+			width:40,347px, 0, 260px;
 			padding: 0 0 16px;
 			margin: 0 0 0 2px;
 			.row{
@@ -416,17 +415,17 @@
 			}
 			.btn-download2{
 				@include linear-gradient(#2B4054, #12273A);
-				@include border-radius(4px);
-				width: 263px;
-				height: 63px;
+				@include border-radius(10px);
+				width: 143px;
+				height: 43px;
 				display: block;
-				margin: 0 auto;
-				font: 30px/63px $museo-sans500;
+				margin: 40px 0 0 260px;
+				font: 15px/43px $museo-sans500;
 				color: $white;
 				letter-spacing: 1px;
 				text-align: center;
-				position: relative;
-				padding: 0 57px 0 0;
+				position: absolute;
+				padding: 0 7px 0 0;
 				&:after{
 					background_color:#2B4054 ;
 					width: 37px;

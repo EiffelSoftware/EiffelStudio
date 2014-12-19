@@ -275,7 +275,6 @@ feature -- Handler
 			r: CMS_RESPONSE
 		do
 			log.write_debug (generator + ".handle_download_options")
-
 			if req.is_get_request_method then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else

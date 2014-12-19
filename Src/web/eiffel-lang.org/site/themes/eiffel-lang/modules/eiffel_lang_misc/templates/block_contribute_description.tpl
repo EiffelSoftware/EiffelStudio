@@ -5,8 +5,17 @@
 
 <p>This document explains how to contribute to the Eiffel Community</p>
 
+<h2>Eiffel <small>Libraries</small>, <small>Tools</small> </h2>
+<p>
+	To contribute with Eiffel libraries and tools you could 
+	<ul>
+		<li>Use svn and send a patch request to <a href="https://svn.eiffel.com/eiffelstudio/trunk/">https://svn.eiffel.com/eiffelstudio/trunk/</a></li>
+		<li>Use git and create a new branch and send a pull request to <a href="https://github.com/EiffelSoftware/EiffelStudio">https://github.com/EiffelSoftware/EiffelStudio</a></li>
+	</ul>	
+</p>
 
-<h2>ECMA Eiffel</h2>
-Describe
-<p><a href="http://www.ecma-international.org/publications/standards/Ecma-367.htm"> ECMA Eiffel</a></p>
+<h2>Eiffel Standardization Process</h2>
+<p><a href="http://www.ecma-international.org/publications/standards/Ecma-367.htm"> http://www.ecma-international.org/publications/standards/Ecma-367.htm</a></p>
+
+
 

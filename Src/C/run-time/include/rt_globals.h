@@ -430,7 +430,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define cmps_general_buffer				(rt_globals->cmps_general_buffer_cx)
 #define general_buffer					(rt_globals->general_buffer_cx)
 #define current_position				(rt_globals->current_position_cx)
-//#define buffer_size						(rt_globals->buffer_size_cx)
+#define buffer_size						(rt_globals->buffer_size_cx)
 #define cmp_buffer_size					(rt_globals->cmp_buffer_size_cx)
 #define s_fides							(rt_globals->s_fides_cx)
 #define store_write_func				(rt_globals->store_write_func_cx)

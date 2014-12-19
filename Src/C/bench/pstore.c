@@ -91,9 +91,9 @@ rt_public void parsing_store_initialize (void) {
 	parsing_context.write_buffer_function = parsing_store_write;
 
 	if (parsing_buffer == (char *) 0) {
-			/* We need to initialize `buffer_size' now as otherwise `allocate_gen_buffer'
+			/* We need to initialize `store_buffer_size' now as otherwise `allocate_gen_buffer'
 			 * will initialize a zero-sized buffer. */
-		buffer_size = EIF_BUFFER_SIZE;
+		store_buffer_size = EIF_BUFFER_SIZE;
 		allocate_gen_buffer ();
 		parsing_buffer = (char *) malloc (sizeof (char) * EIF_BUFFER_SIZE);
 	}
@@ -321,7 +321,7 @@ rt_private void parsing_store_write(size_t size)
 	lzo_uint cmps_out_size = (lzo_uint) cmp_buffer_size;
 	int signed_cmps_out_size;
 	
-	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
+	REQUIRE("cmp_buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
 	REQUIRE("size not too big", size <= 0x7FFFFFFF);
 
 	lzo1x_1_compress (
@@ -362,7 +362,7 @@ rt_private void parsing_compiler_write(size_t size)
 	int signed_cmps_out_size;
 	int number_written;
 
-	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
+	REQUIRE("cmp_buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
 	REQUIRE("size not too big", size <= 0x7FFFFFFF);
 	
 	lzo1x_1_compress (

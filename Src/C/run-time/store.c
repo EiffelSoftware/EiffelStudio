@@ -141,18 +141,18 @@ doc:	</attribute>
 rt_shared size_t current_position = 0;
 
 /*
-doc:	<attribute name="buffer_size" return_type="size_t" export="shared">
+doc:	<attribute name="store_buffer_size" return_type="size_t" export="shared">
 doc:		<summary>Size of various buffers (general_buffer, run_idr buffer)</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared size_t buffer_size = 0;
+rt_shared size_t store_buffer_size = 0;
 
 /*
 doc:	<attribute name="cmp_buffer_size" return_type="size_t" export="shared">
-doc:		<summary>Size of compression buffer `cmps_general_buffer', computed from `buffer_size'</summary>
+doc:		<summary>Size of compression buffer `cmps_general_buffer', computed from `store_buffer_size'</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
@@ -261,11 +261,11 @@ rt_private int stream_write (char *, int);
 
 /* Convenience functions */
 
-/* Set the default buffer_size to a certain value */
+/* Set the default store_buffer_size to a certain value */
 rt_public void set_buffer_size (EIF_INTEGER new_size)
 {
 	RT_GET_CONTEXT
-	buffer_size = new_size;
+	store_buffer_size = new_size;
 }
 
 #ifdef EIF_THREADS
@@ -315,13 +315,13 @@ rt_shared void rt_store_object(struct rt_store_context *a_context, EIF_REFERENCE
 
 	rt_setup_store (a_context, store_type);
 
-	buffer_size = EIF_BUFFER_SIZE;
+	store_buffer_size = EIF_BUFFER_SIZE;
 
 	if ((store_type == BASIC_STORE) || (store_type == GENERAL_STORE)) {
 		allocate_gen_buffer();
 	} else if (store_type == INDEPENDENT_STORE) {
 			/* Initialize serialization streams for writting (1 stands for write) */
-		run_idr_init (buffer_size, 1);
+		run_idr_init (store_buffer_size, 1);
 		idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 		if (!idr_temp_buf) {
 			xraise (EN_MEM);
@@ -489,7 +489,7 @@ rt_public void allocate_gen_buffer (void)
 {
 	RT_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
-		general_buffer = (char *) eif_rt_xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
+		general_buffer = (char *) eif_rt_xmalloc (store_buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
 			eraise ("Out of memory for general_buffer creation", EN_PROG);
 
@@ -498,7 +498,7 @@ rt_public void allocate_gen_buffer (void)
 		  		/* Compute size of a compression block. It has to be the size of
 				 * what we want to compress plus 6 bytes for the header and 1 bit
 				 * for every 8 bytes. */
-			size_t length = buffer_size * sizeof(char);
+			size_t length = store_buffer_size * sizeof(char);
 			cmp_buffer_size = (length * 9) / 8 + 1 + EIF_CMPS_HEAD_SIZE;
 			cmps_general_buffer = (char *) eif_rt_xmalloc (cmp_buffer_size, C_T, GC_OFF);
 			if (cmps_general_buffer == (char *) 0)
@@ -1376,11 +1376,11 @@ rt_shared void buffer_write(const char *data, size_t size)
 {
 	RT_GET_CONTEXT
 	size_t l_cur_pos = current_position;
-	size_t l_buffer_upper = buffer_size - 1;
+	size_t l_buffer_upper = store_buffer_size - 1;
 
 	REQUIRE("data_not_null", data);
 	REQUIRE("size_positive", size > 0);
-	REQUIRE("buffer_size_positive", buffer_size > 0);
+	REQUIRE("buffer_size_positive", store_buffer_size > 0);
 
 	while (size > 0) {
 		if (l_cur_pos + size - 1 > l_buffer_upper) {
@@ -1425,7 +1425,7 @@ rt_private int stream_write (char *pointer, int size)
 {
 	RT_GET_CONTEXT
 	if (store_stream_buffer_size < store_stream_buffer_position + (size_t) size) {
-		store_stream_buffer_size += buffer_size;
+		store_stream_buffer_size += store_buffer_size;
 		store_stream_buffer = (char *) eif_realloc (store_stream_buffer, store_stream_buffer_size);
 		if (!store_stream_buffer) {
 			xraise(EN_MEM);

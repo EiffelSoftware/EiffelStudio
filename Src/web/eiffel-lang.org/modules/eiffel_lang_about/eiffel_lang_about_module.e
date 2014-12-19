@@ -182,7 +182,13 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			log.write_debug (generator + ".handle_about")
+			if req.is_get_request_method then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			else
+				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+
 			r.values.force ("about_main", "about_main")
 			r.execute
 		end
@@ -191,6 +197,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
+			log.write_debug (generator + ".handle_purpose")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("purpose", "purpose")
 			r.execute
@@ -200,6 +207,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
+			log.write_debug (generator + ".handle_about")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("news", "news")
 			r.execute
@@ -248,7 +256,6 @@ feature -- Hooks
 				attached {WSF_STRING} req.form_parameter ("email") as l_email and then
 				attached {WSF_STRING} req.form_parameter ("message") as l_message
 			then
-				fixme ("Contact message could be readed from a smarty template")
 				create m.make_from_string (email_template ("email", r))
 				log.write_information (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message))
 				create es.make (create {EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS}.make (api))

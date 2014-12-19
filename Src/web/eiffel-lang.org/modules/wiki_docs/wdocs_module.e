@@ -234,17 +234,17 @@ feature -- Hooks
 						end
 
 						if a_block_id.same_string_general ("wdocs-tree") then
-							if
-								a_response.request.percent_encoded_path_info.starts_with ("/learn")
-								or a_response.request.percent_encoded_path_info.same_string ("/book/")
-							then
-									-- Do not display the tree view.
-							else
-	--							m := wdocs_cms_menu (l_version_id, l_book_name, l_page_name, True, mng)
+-- Uncomment to avoid displaying the tree menu for /learn
+--							if
+--								a_response.request.percent_encoded_path_info.starts_with ("/learn")
+--								or a_response.request.percent_encoded_path_info.same_string ("/book/")
+--							then
+--									-- Do not display the tree view.
+--							else
 								m := cached_wdocs_cms_menu (l_version_id, l_book_name, mng)
 								create l_menublock.make (m)
 								a_response.add_block (l_menublock, "sidebar_first")
-							end
+--							end
 						elseif a_block_id.same_string_general ("wdocs-cards") then
 							if
 								a_response.request.percent_encoded_path_info.starts_with ("/learn")

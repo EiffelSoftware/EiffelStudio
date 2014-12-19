@@ -166,7 +166,7 @@ table {
   clear: both;
 }
 
-#nav ul, .add-links ul, .column .libraries ul,
+#content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, .widget ul, .social-networks {
   margin: 0;
   padding: 0;
@@ -341,7 +341,7 @@ table {
   clear: both;
 }
 
-#nav ul, .add-links ul, .column .libraries ul,
+#content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, .widget ul, .social-networks {
   margin: 0;
   padding: 0;
@@ -397,7 +397,7 @@ table {
 #wdocs-tree.menu li.arrowed:not(.expandable) > .arrow {
   left: -4px;
   border-width: 3px;
-  border-color: #ccc;
+  border-color: #ddd;
   top: 0;
 }
 #wdocs-tree.menu li.arrowed:not(.expandable) > a {
@@ -442,9 +442,13 @@ table {
   color: #3498db;
 }
 #wdocs-tree.menu li.active {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   font-weight: bold;
   border-left: dotted 1px #ccc;
-  border-right: solid 3px #ccc;
+  border-top: dotted 1px #ccc;
+  border-bottom: dotted 1px #ccc;
+  border-right: solid 4px #ccc;
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
@@ -460,26 +464,26 @@ table {
   line-height: 1.8;
 }
 .wikipage table {
-  border: solid 1px #000;
+  border: solid 1px #666;
   margin-bottom: 5px;
 }
 .wikipage td {
-  border: solid 1px #000;
-  padding: 2px;
+  border: solid 1px #999;
+  padding: 2px 4px 2px 4px;
 }
 .wikipage h1 {
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
-  margin-top: 15px;
+  margin-top: 25px;
   border-bottom: solid 2px #ccc;
 }
 .wikipage h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
-  margin-top: 5px;
+  margin-top: 20px;
   border-bottom: solid 1px #ccc;
 }
 .wikipage h3 {
   font: 24px/24px "museo_slab500", Arial, Helvetica, sans-serif;
-  margin-top: 3px;
+  margin-top: 10px;
   border-bottom: dotted 1px #ccc;
 }
 .wikipage pre {
@@ -502,6 +506,47 @@ table {
 }
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
+}
+
+#content .bookcards {
+  padding: 0;
+  margin: 0;
+}
+#content .bookcards ul li {
+  display: inline-block;
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 320px;
+  height: auto;
+}
+#content .bookcards ul li a {
+  border: solid 1px #ddd;
+  margin: 10px;
+  padding: 7px;
+  background: #e9eced;
+  display: block;
+  text-align: left;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+}
+#content .bookcards ul li a:hover {
+  background: #e3e7e8;
+}
+#content .bookcards ul li img {
+  float: left;
+  opacity: 0.4;
+}
+#content .bookcards ul li h2 {
+  font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#content .bookcards ul li p {
+  font-size: smaller;
+  padding-left: 55px;
+  color: #666;
 }
 
 body {
@@ -672,7 +717,7 @@ table {
   clear: both;
 }
 
-#nav ul, .add-links ul, .column .libraries ul,
+#content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, .widget ul, .social-networks {
   margin: 0;
   padding: 0;

@@ -104,9 +104,12 @@
 	}
 
 	li.active {
+		@include border-radius(5px);
 		font-weight: bold;
 		border-left: dotted 1px $wdocs-border-color;
-		border-right: solid 3px $wdocs-border-color;
+		border-top: dotted 1px $wdocs-border-color;
+		border-bottom: dotted 1px $wdocs-border-color;
+		border-right: solid 4px $wdocs-border-color;
 	}
 	li.active li {
 		font-weight: normal;
@@ -118,41 +121,31 @@
 	li.expandable.expanded>a {
 		font-weight: bold;
 	}
-	//li:not(.expandable)>a:before {
-	//content: "- ";
-	//}
-
-	//li.expandable:not(.expanded)>a:before {
-	//content: "[>] "
-	//}
-	//li.expandable.expanded>a:before {
-	//content: "[V] "
-	//}
 }
 
 .wikipage {
 	line-height: 1.8;
 	table {
-		border: solid 1px #000;
+		border: solid 1px #666;
 		margin-bottom: 5px;
 	}
 	td {
-		border: solid 1px #000;
-		padding: 2px;
+		border: solid 1px #999;
+		padding: 2px 4px 2px 4px;
 	}
 	h1 {
 		font: #{$base-h1-size}/#{$base-h1-lineheight} $museo_slab500;
-		margin-top: 15px;
+		margin-top: 25px;
 		border-bottom: solid 2px $wdocs-border-color;
 	}
 	h2 {
 		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
-		margin-top: 5px;
+		margin-top: 20px;
 		border-bottom: solid 1px $wdocs-border-color;
 	}
 	h3 {
 		font: #{$base-h3-size}/#{$base-h3-lineheight} $museo_slab500;
-		margin-top: 3px;
+		margin-top: 10px;
 		border-bottom: dotted 1px $wdocs-border-color;
 	}
 	pre {
@@ -176,6 +169,47 @@
 		background-color: $wdocs-nav-bg-color;
 		a.wdocs-folder:after {
 			content: " ...";
+		}
+	}
+}
+
+#content {
+	.bookcards {
+		padding: 0;
+		margin: 0;
+		ul{
+			@extend %listreset;
+			li{
+				display: inline-block;
+				@include grid(4);
+				height: auto;
+				a{
+					border: solid 1px #ddd;
+					margin: 10px;
+					padding: 7px;
+					background: #e9eced;
+					display: block;
+					text-align: left;
+					@include border-radius(7px);
+					&:hover{
+						background: #e3e7e8;
+					}
+				}
+				img {
+					float: left;
+					opacity: 0.4;
+				}
+				h2{
+					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+					margin-top: 10px;
+					margin-bottom: 10px;
+				}
+				p{
+					font-size: smaller;
+					padding-left: 55px;
+					color: #666;
+				}
+			}
 		}
 	}
 }

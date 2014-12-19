@@ -589,7 +589,7 @@ feature -- Handler
 			else
 --				r.set_optional_content_type ("doc")
 				r.set_value ("doc", "optional_content_type")
-				r.set_title ("Documentation")
+				r.set_title (Void) --"Documentation")
 				b := ""
 			end
 			r.set_main_content (b)

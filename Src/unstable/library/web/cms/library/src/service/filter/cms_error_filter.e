@@ -32,7 +32,7 @@ feature -- Basic operations
 				execute_next (req, res)
 			else
 				log.write_critical (generator + ".execute" + api.as_string_representation )
-				(create {ERROR_500_CMS_RESPONSE}.make (req, res, api)).execute
+				(create {INTERNAL_SERVER_ERROR_CMS_RESPONSE}.make (req, res, api)).execute
 				api.reset
 			end
 		end

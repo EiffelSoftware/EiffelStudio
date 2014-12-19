@@ -370,24 +370,61 @@ table {
   display: inline-block;
   width: 85%;
 }
-#wdocs-tree.menu > ul > li > .treeitemcontrol {
-  border: solid 1px #ccc;
-  background-color: #d4ebb0;
-  color: #5082D9;
-}
-#wdocs-tree.menu > ul > li > .treeitemcontrol:hover {
-  background-color: #5082D9;
-  color: #fff;
-}
-#wdocs-tree.menu .treeitemcontrol {
+#wdocs-tree.menu .arrow {
   font-family: "Lucida Console", "Courier New", "serif";
-  padding-left: 2px;
-  padding-right: 2px;
-  margin-left: 2px;
+  color: #5082D9;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 6px;
+  display: -moz-inline-box;
+  display: inline-block;
+  /* Use font-size to control the size of the arrow. */
+  font-size: 10px;
+  height: 0;
+  line-height: 0;
+  position: relative;
+  vertical-align: middle;
+  width: 0;
+  left: -10px;
 }
-#wdocs-tree.menu .treeitemcontrol:hover {
-  background-color: #5082D9;
-  color: #fff;
+#wdocs-tree.menu li > a {
+  padding-left: 12px;
+}
+#wdocs-tree.menu li.arrowed > a {
+  padding-left: 0;
+  background-color: transparent;
+}
+#wdocs-tree.menu li.arrowed:not(.expandable) > .arrow {
+  left: -4px;
+  border-width: 3px;
+  border-color: #ccc;
+  top: 0;
+}
+#wdocs-tree.menu li.arrowed:not(.expandable) > a {
+  padding-left: 6px;
+}
+#wdocs-tree.menu > ul > li.arrowed:not(.expandable) > .arrow {
+  border-color: #777;
+}
+#wdocs-tree.menu li.expandable > .arrow {
+  left: -4px;
+  border-color: transparent;
+  border-left-color: #777;
+  top: 0;
+}
+#wdocs-tree.menu li.expandable > .arrow:hover {
+  border-color: transparent;
+  border-left-color: #5082D9;
+}
+#wdocs-tree.menu li.expanded > .arrow {
+  left: -6px;
+  border-color: transparent;
+  border-top-color: #777;
+  top: 2px;
+}
+#wdocs-tree.menu li.expanded > .arrow:hover {
+  border-color: transparent;
+  border-top-color: #5082D9;
 }
 #wdocs-tree.menu > ul > li > ul > * {
   font-size: smaller;

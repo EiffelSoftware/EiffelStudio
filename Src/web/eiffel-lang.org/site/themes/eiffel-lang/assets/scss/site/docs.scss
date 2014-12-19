@@ -26,28 +26,67 @@
 			width: 85%;
 		}
 	}
-	>ul>li>.treeitemcontrol {
-		border: solid 1px $wdocs-border-color;
-		background-color: $green-light-bg;
+	.arrow {
+		font-family: "Lucida Console", "Courier New", "serif";
 		color: $wdocs-link-color;
-		&:hover {
-			background-color: $wdocs-link-color;
-			color: $wdocs-bg-color;
-		}
-	}
-	>ul>li>ul>li>ul>li {
+
+		border-style: solid;
+		border-color: transparent;
+		border-width: 6px;
+		display: -moz-inline-box;
+		display: inline-block;
+		/* Use font-size to control the size of the arrow. */
+		font-size: 10px;
+		height: 0;
+		line-height: 0;
+		position: relative;
+		vertical-align: middle;
+		width: 0;		
+		left: -10px;
 	}
 
-	.treeitemcontrol {
-		font-family: "Lucida Console", "Courier New", "serif";
-		padding-left: 2px;
-		padding-right: 2px;
-		margin-left: 2px;
-		&:hover {
-			background-color: $wdocs-link-color;
-			color: $wdocs-bg-color;
+	li>a {
+		padding-left: 12px;
+	}
+	li.arrowed>a {
+		padding-left: 0;
+		background-color: transparent;
+	}
+	li.arrowed:not(.expandable) {
+		>.arrow {
+			left: -4px;
+			border-width: 3px;
+			border-color: $wdocs-tree-arrow-light;
+			top: 0;
+		}
+		>a {
+			padding-left: 6px;
 		}
 	}
+	>ul>li.arrowed:not(.expandable)>.arrow {
+			border-color: $wdocs-tree-arrow;
+	}
+	li.expandable>.arrow {
+		left: -4px;
+		border-color: transparent;
+		border-left-color: $wdocs-tree-arrow;
+		top: 0;
+		&:hover {
+			border-color: transparent;
+			border-left-color: $wdocs-link-color;
+		}
+	}
+	li.expanded>.arrow {
+		left: -6px;
+		border-color: transparent;
+		border-top-color: $wdocs-tree-arrow;
+		top: 2px;
+		&:hover {
+			border-color: transparent;
+			border-top-color: $wdocs-link-color;
+		}
+	}
+
 	>ul>li>ul>* {
 		font-size: smaller;
 		background-color: $wdocs-bg-color;

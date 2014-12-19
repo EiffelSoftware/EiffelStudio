@@ -1,4 +1,4 @@
-								<h2>Welcome to the community portal for Eiffel,<br>the programming language <br> for tackling tomorrow’s problems today.</h2>
+								<h2 style="margin-left:580px; font-size:larger">Welcome to the community portal for Eiffel,<br>the programming language <br> for tackling tomorrow’s problems today.</h2>
 										
 								<div class="holder">
 										<div class="btn-holder">
@@ -29,5 +29,5 @@ feature {NONE} -- Initialization
      end
 end
 </pre>
-								</div>		
+</div>		
 							

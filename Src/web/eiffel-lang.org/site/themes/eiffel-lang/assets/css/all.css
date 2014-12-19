@@ -1270,6 +1270,7 @@ input.placeholder-text, textarea.placeholder-text {
   width: 400px;
   overflow: hidden;
   padding: 0 0 0 9px;
+  margin-left: 600px;
 }
 .promo-area .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
@@ -1343,7 +1344,6 @@ input.placeholder-text, textarea.placeholder-text {
 }
 .promo-area .holder2 {
   width: 400px;
-  margin-left: 600px;
   position: absolute;
   top: 55px;
 }

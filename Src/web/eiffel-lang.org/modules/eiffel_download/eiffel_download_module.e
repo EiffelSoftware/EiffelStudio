@@ -278,7 +278,7 @@ feature -- Handler
 			if req.is_get_request_method then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else
-				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 			r.values.force ("download_options", "download_options")
 			r.execute

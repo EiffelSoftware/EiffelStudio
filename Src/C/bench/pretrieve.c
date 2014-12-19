@@ -160,7 +160,7 @@ rt_private size_t parsing_retrieve_read_with_compression (void)
 	int part_read = 0;
 	int l_bytes_read;
 
-	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
+	REQUIRE("cmp_buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
 
 	ptr = cmps_general_buffer;
 	l_bytes_read = char_read_func ((char *) &read_size, sizeof(int));

@@ -467,6 +467,7 @@ feature -- Operation
 			loop
 				if a_date = Void or else ic.item.date <= a_date then
 					if attached {WDOCS_TIMELINE_PATH_EVENT} ic.item as p_event then
+						lst.wipe_out
 						i := i + 1
 						print ("%N--<" + i.out + ">--%N")
 						rev := p_event.revision
@@ -485,11 +486,10 @@ feature -- Operation
 								lst.force (l_md_path)
 								l_added_paths.put (l_md_path, l_md_path)
 							end
-
 						end
 
 							-- Subversion: add new files.
-						lst.wipe_out
+
 						if not l_added_paths.has (p) then
 							lst.force (p)
 							l_added_paths.put (p, p)

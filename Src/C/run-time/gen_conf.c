@@ -2283,8 +2283,6 @@ rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype)
 			CHECK("Same as dtype", eif_cid_map[dftype] == dftype);
 			return EIF_TEST(EIF_IS_EXPANDED_TYPE(System(dftype)));
 		}
-
-		return EIF_TEST(gdp && gdp->is_expanded); 
 	}
 }
 

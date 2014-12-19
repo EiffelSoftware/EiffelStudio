@@ -41,7 +41,6 @@
 
 #if EIF_OS == EIF_OS_SUNOS
 #	include <sys/atomic.h>
-#	define __EIF_SUNPRO_C_ATOMOPS__
 #endif
 
 #ifdef __cplusplus
@@ -63,7 +62,7 @@ extern "C" {
 # endif
 
 #if (__EIF_GNUC_VERSION__ >= 40102)
-	#define __EIF_GNUC_ATOMOPS__
+#	define __EIF_GNUC_ATOMOPS__
 #endif
 
 #endif
@@ -88,7 +87,15 @@ extern "C" {
 #	define RTS_AS_I32(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
 #	define RTS_AA_I32(dest, val)             __sync_add_and_fetch (dest, val)
 #	define RTS_AS_PTR(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
-#elif defined (__EIF_SUNPRO_C_ATOMOPS__)
+#elif EIF_OS == EIF_OS_SUNOS && ((EIF_ARCH == EIF_ARCH_SPARC) || (EIF_ARCH == EIF_ARCH_SPARC_64))
+	extern uint32_t atomic_add_32_nv(uint32_t *target, int32_t delta);
+	extern uint32_t cas32(uint32_t *target, uint32_t cmp, uint32_t newval);
+	extern void *casptr(void *target, void *cmp, void *newval);
+#	define RTS_ACAS_I32(dest,setter,compare) cas32 ((uint32_t *) dest, compare, setter)
+#	define RTS_AS_I32(dest, setter)          cas32 ((uint32_t *) dest, *dest, setter)
+#	define RTS_AA_I32(dest, val)             atomic_add_32_nv ((uint32_t *) dest, val)
+#	define RTS_AS_PTR(dest, setter)          casptr ((void *) dest, *dest, setter)
+#elif EIF_OS == EIF_OS_SUNOS
 #	define RTS_ACAS_I32(dest,setter,compare) atomic_cas_32 ((volatile uint32_t *) dest, compare, setter)
 #	define RTS_AS_I32(dest, setter)          atomic_swap_32 ((volatile uint32_t*) dest, setter)
 #	define RTS_AA_I32(dest, val)             atomic_add_32_nv ((volatile uint32_t*) dest, val)

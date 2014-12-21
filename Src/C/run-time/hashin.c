@@ -102,6 +102,36 @@ rt_public void ht_zero(struct htable *ht)
 	memset (ht->h_values, 0, hsize * ht->h_sval);
 }
  
+rt_public size_t ht_find (const struct htable *ht, rt_uint_ptr key)
+{
+	/* Look for item associated with given key and returns its position.
+	 * Return a table size if item is not found.
+	 */
+	
+	size_t pos;		/* Position in H table */
+	size_t hsize;		/* Size of H table */
+	rt_uint_ptr *hkeys;		/* Array of keys */
+	size_t tmp_try = 0;	/* Count number of attempts */
+	size_t inc;		/* Loop increment */
+
+	/* Initializations */
+	hsize = ht->h_size;
+	hkeys = ht->h_keys;
+
+	/* Jump from one hashed position to another until we find the value or
+	 * go to an empty entry or reached the end of the table.
+	 */
+	inc = 1 + (key % (hsize - 1));
+	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
+		if (hkeys[pos] == key)
+			return pos;
+		else if (hkeys[pos] == 0L)
+			break;
+	}
+
+	return hsize;			/* Item was not found */
+}
+
 rt_public EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key)
 {
 	/* Look for item associated with given key and returns a pointer to its

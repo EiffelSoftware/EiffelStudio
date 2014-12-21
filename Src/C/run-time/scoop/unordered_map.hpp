@@ -8,60 +8,55 @@ namespace eiffel_run_time
 template <class Value> class unordered_map_const_iterator
 {	
 public:
-	unordered_map_const_iterator ()
+	unordered_map_const_iterator (struct htable t, size_t position)
 		{
-			// TODO
+			table = t;
+			pos = position;
 		}
 
 	const Value & operator*() const
 		{	
-			// TODO
-			return value; // (*this->_Ptr);
+			return *(const Value *) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	Value & operator*()
 		{	
-			// TODO
-			return value; // (*this->_Ptr);
+			return *(Value *) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	Value * operator->()
 		{
-			// TODO
-			return & value;
-			// return (&**this);
+			return (Value *) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	Value * operator->() const
 		{
-			// TODO
-			return (Value *) & value;
-			// return (&**this);
+			return (Value *) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	unordered_map_const_iterator& operator++()
-		{	
-			// TODO
-/*
-		++this->_Ptr;
-*/
-			return (*this);
+		{
+			size_t hsize = table.h_size;
+			rt_uint_ptr * hkeys = table.h_keys;
+
+				// Skip items with zero keys.
+			do {
+				++pos;
+			}
+			while (hkeys [pos] == 0 || pos < hsize);
+			return *this;
 		}
 
 	unordered_map_const_iterator operator++(int)
 		{
-			// TODO
-		/*
-		_Myiter _Tmp = *this;
-		++*this;
-		return (_Tmp); */
+			unordered_map_const_iterator result = *this;
+			++ *this;
+			return result;
 		}
 
 	bool operator==(const unordered_map_const_iterator & other) const
-		{	
-			// TODO
-			return false;	
-/*		return (this->_Ptr == _Right._Ptr); */
+		{
+			return pos == other.pos;
 		}
 
 	bool operator!=(const unordered_map_const_iterator & other) const
@@ -69,9 +64,10 @@ public:
 			return !(*this == other);
 		}
 
-private:
-			// TODO
-	Value value;
+private: // Storage
+
+	struct htable table;
+	size_t pos;
 };
 
 template<class Key, class Value> class unordered_map
@@ -81,7 +77,6 @@ public: // Creation/destruction
 
 	unordered_map ()
 	{
-			// TODO
 		ht_create (&table, 10, sizeof (Value));
 		ht_zero (&table);
 	}
@@ -130,25 +125,23 @@ public: // Iteration
 	iterator find (const Key & key)
 	{
 			// TODO
-		return const_iterator ();
+		return const_iterator (table, 0);
 	}
 
 	const_iterator find (const Key & key) const
 	{
 			// TODO
-		return const_iterator ();
+		return const_iterator (table, 0);
 	}
 
 	const_iterator begin () const
 	{
-			// TODO
-		return const_iterator ();
+		return const_iterator (table, 0);
 	}
 
 	const_iterator end () const
 	{
-			// TODO
-		return const_iterator ();
+		return const_iterator (table, table.h_size);
 	}
 
 public: // Modification
@@ -156,7 +149,7 @@ public: // Modification
 	std::pair<iterator, bool> insert (const std::pair <Key, Value> & val)
 	{
 			// TODO
-		return std::pair<iterator, bool> ();
+		return std::pair<iterator, bool> (const_iterator (table, 0), false);
 	}
 
 private: // Storage

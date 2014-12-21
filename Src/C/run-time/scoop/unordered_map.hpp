@@ -124,14 +124,12 @@ public: // Iteration
 
 	iterator find (const Key & key)
 	{
-			// TODO
-		return const_iterator (table, 0);
+		return iterator (table, ht_find (&table, (rt_uint_ptr) key));
 	}
 
 	const_iterator find (const Key & key) const
 	{
-			// TODO
-		return const_iterator (table, 0);
+		return const_iterator (table, ht_find (&table, (rt_uint_ptr) key));
 	}
 
 	const_iterator begin () const

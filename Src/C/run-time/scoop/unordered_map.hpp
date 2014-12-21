@@ -146,8 +146,18 @@ public: // Modification
 
 	std::pair<iterator, bool> insert (const std::pair <Key, Value> & val)
 	{
-			// TODO
-		return std::pair<iterator, bool> (const_iterator (table, 0), false);
+		bool is_inserted = false;
+		iterator it = find (val.first);
+		if (it == end ())
+		{
+				// There is no element with the given key.
+				// Insert it.
+			(*this) [val.first] = val.second;
+				// Recompute iterator.
+			iterator it = find (val.first);
+			is_inserted = true;
+		}
+		return std::pair<iterator, bool> (it, is_inserted);
 	}
 
 private: // Storage

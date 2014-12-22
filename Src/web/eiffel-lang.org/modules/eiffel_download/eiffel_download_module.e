@@ -74,18 +74,21 @@ feature -- Access: config
 	get_download_configuration (api: CMS_API)
 			-- Get `download_configuration' value.
 		do
+			log.write_debug (generator + ".get_download_configuration")
 			if download_configuration = Void then
 				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.layout.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
 			end
 		end
 
 	gpl_version (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_OPTIONS
+			-- Get eiffel studio version.
 		do
 			create Result
 			Result.set_product (retrieve_product_gpl (cfg))
 		end
 
 	retrieve_mirror_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_32
+			-- Get mirror.
 		do
 			if attached cfg.mirror as l_mirror then
 				Result := l_mirror
@@ -93,6 +96,7 @@ feature -- Access: config
 		end
 
 	retrieve_product_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
+			-- Get product.
 		do
 			if attached cfg.products as l_products then
 				Result := l_products.at (1)
@@ -275,11 +279,7 @@ feature -- Handler
 			r: CMS_RESPONSE
 		do
 			log.write_debug (generator + ".handle_download_options")
-			if req.is_get_request_method then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("download_options", "download_options")
 			r.execute
 		end
@@ -288,12 +288,14 @@ feature -- Handler
 		local
 			l_link: STRING
 			l_ua: CMS_USER_AGENT
-			err: NOT_FOUND_ERROR_CMS_RESPONSE
+			err: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			done: BOOLEAN
 		do
+			log.write_debug (generator + ".handle_download")
 			get_download_configuration (api)
 			if attached download_configuration as cfg then
 				create l_ua.make_from_string (req.http_user_agent)
+				log.write_debug (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
 
 				if attached retrieve_product_gpl (cfg) as l_product and then
 				   attached l_product.build as l_build and then
@@ -308,8 +310,10 @@ feature -- Handler
 				    l_link.append_character ('/')
 				    l_link.append (l_build)
 				    l_link.append_character ('/')
+				    log.write_debug (generator + ".handle_download [ Link: " + l_link  + " ]")
 					if attached selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then
 						if attached l_selected.filename as l_filename then
+							log.write_debug (generator + ".handle_download [ Filename: " + l_filename  + " ]")
 							l_link.append (l_filename)
 							file_download (req, res, l_link)
 							done := True
@@ -318,7 +322,7 @@ feature -- Handler
 				end
 			end
 			if not done then
-					-- If not answer was done, return not found.
+					-- If not answer was done, return internal server error.
 				create err.make (req, res, api)
 				err.execute
 			end
@@ -386,6 +390,7 @@ feature {NONE}  -- Helper
 				--	<option value="win64" selected="">Windows 64-bit</option>
 				--	<option value="windows">Windows 32-bit</option>		
 		do
+			log.write_debug (generator + ".get_platform [ from " + a_user_agent.user_agent  + " ]")
 			Result := "win64"
 			if a_user_agent.is_windows_os then
 				if a_user_agent.is_64bits then
@@ -402,6 +407,7 @@ feature {NONE}  -- Helper
 			elseif a_user_agent.is_mac_os then
 				Result := "macosx-x86-64"
 			end
+			log.write_debug (generator + ".get_platform [ platform inferred "+  Result  + " ]")
 		end
 
 note

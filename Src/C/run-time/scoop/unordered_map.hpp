@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <utility>
 #include "rt_hashin.h"
+#include "eif_except.h"
 
 namespace eiffel_run_time
 {
@@ -43,7 +44,7 @@ public:
 			do {
 				++pos;
 			}
-			while (hkeys [pos] == 0 || pos < hsize);
+			while (hkeys [pos] == 0 && pos < hsize);
 			return *this;
 		}
 
@@ -93,16 +94,17 @@ public: // Access
 
   	Value & operator [] (const Key & key)
   	{
-  			// A pointer to a value should be returned even if it is not present
-  			// to allow insertion of new elements.
-  		EIF_POINTER p = ht_first (&table, (rt_uint_ptr) key);
-		if (p == 0) {
-			if (ht_xtend (&table)) {
-				eraise("Hashtable extension failure", EN_FATAL);
-			}
-			p = ht_first (&table, (rt_uint_ptr) key);
+  			// A pointer to a value should be returned in any case.
+  			// If there was no element, a new one is returned created with a default constructor.
+		size_t pos = ht_find (&table, (rt_uint_ptr) key);
+		if (pos >= table.h_size)
+		{
+				// No element is found. Insert a new one.
+			Value v;
+			ht_force (&table, (rt_uint_ptr) key, (EIF_POINTER) &v);
+			pos = ht_find (&table, (rt_uint_ptr) key);
 		}
-		return *(Value *) p;
+		return *(Value *) (((char *) table.h_values) + pos * table.h_sval);
   	}
 
 public: // Removal
@@ -134,7 +136,10 @@ public: // Iteration
 
 	const_iterator begin () const
 	{
-		return const_iterator (table, 0);
+			// Go to a position -1 and look for the one that has a key.
+		const_iterator result = const_iterator (table, ~ (size_t) 0);
+		++ result;
+		return result;
 	}
 
 	const_iterator end () const
@@ -152,9 +157,9 @@ public: // Modification
 		{
 				// There is no element with the given key.
 				// Insert it.
-			(*this) [val.first] = val.second;
+			ht_force (&table, (rt_uint_ptr) val.first, (EIF_POINTER) &val.second);
 				// Recompute iterator.
-			iterator it = find (val.first);
+			it = find (val.first);
 			is_inserted = true;
 		}
 		return std::pair<iterator, bool> (it, is_inserted);

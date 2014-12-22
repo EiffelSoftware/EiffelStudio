@@ -115,6 +115,7 @@ feature -- Hooks
 				then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -124,6 +125,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("popular_nodes") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "sidebar_second")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -134,6 +136,7 @@ feature -- Hooks
 					l_tpl_block.set_is_raw (True)
 					-- TODO: double check: Social Header is only included in the home page.
 					a_response.add_block (l_tpl_block, "header")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -143,6 +146,7 @@ feature -- Hooks
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					l_tpl_block.set_is_raw (True)
 					a_response.add_block (l_tpl_block, "footer")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				end
@@ -150,6 +154,7 @@ feature -- Hooks
 				if a_response.is_front then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -160,6 +165,7 @@ feature -- Hooks
 				if a_response.is_front then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -179,6 +185,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info ~ "/launch_codeboard" then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")

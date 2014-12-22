@@ -121,6 +121,7 @@ feature -- Hooks
 			if a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -129,6 +130,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then l_path_info.starts_with ("/purpose") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -137,6 +139,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("news") and then l_path_info.starts_with ("/news") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -145,6 +148,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("articles") and then l_path_info.starts_with ("/articles") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -153,6 +157,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("blogs") and then l_path_info.starts_with ("/blogs") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -161,6 +166,7 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("contact") and then l_path_info.starts_with ("/contact") then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -170,6 +176,7 @@ feature -- Hooks
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
 					a_response.add_block (l_tpl_block, "content")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -217,6 +224,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
+			log.write_debug (generator + ".handle_articles")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("articles", "articles")
 			r.execute
@@ -226,6 +234,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
+			log.write_debug (generator + ".handle_blogs")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("blogs", "blogs")
 			r.execute
@@ -235,6 +244,7 @@ feature -- Hooks
 		local
 			r: CMS_RESPONSE
 		do
+			log.write_debug (generator + ".handle_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("contact", "contact")
 			r.execute
@@ -368,17 +378,21 @@ feature {NONE} -- Contact Message
 			p: detachable PATH
 			l_block: CMS_SMARTY_TEMPLATE_BLOCK
 		do
+			log.write_debug (generator + ".email_template with template [" + a_template + " ]")
 			create p.make_from_string ("templates")
 			p := p.extended ("block_").appended (a_template).appended_with_extension ("tpl")
 			p := a_response.module_resource_path (Current, p)
 			if p /= Void then
 				if attached p.entry as e then
 					create l_block.make (a_template, Void, p.parent, e)
+					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
 				else
 					create l_block.make (a_template, Void, p.parent, p)
+					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
 				end
 				Result := l_block.to_html (a_response.theme)
 			else
+				log.write_debug (generator + ".email_template without template_block:" + contact_message)
 				Result := contact_message
 			end
 		end

@@ -17,16 +17,28 @@ form below.</p>
     <p id="success">Thanks for your message! We will get back to you ASAP!</p>
     <form method="post" action="{$site_url/}/post_contact">
         <label for="name">Name: <span class="required">*</span></label>
-        <input type="text" id="name" name="name" value="" placeholder="John Doe" required="required" autofocus="autofocus" />
+        <input type="text" id="name" name="name" value="{$name/}" placeholder="John Doe" required="required" autofocus="autofocus" />
          
         <label for="email">Email Address: <span class="required">*</span></label>
-        <input type="email" id="email" name="email" value="" placeholder="johndoe@example.com" required="required" />
+        <input type="email" id="email" name="email" value="{$email/}" placeholder="johndoe@example.com" required="required" />
          
         <label for="message">Message: <span class="required">*</span></label>
-        <textarea id="message" name="message" placeholder="Your message" required="required" data-minlength="20" minlength="20" ></textarea>
-         
-        <span id="loading"></span>
+        <textarea id="message" name="message" placeholder="Your message" required="required" data-minlength="20" minlength="20" >{$message/}</textarea>
+        <div class="g-recaptcha" data-sitekey="6LdJef8SAAAAAHzWyhy6Y838EVCTS8XrKC7mLIjT"></div>
+        <br/>
         <input type="submit" value="Send" id="submit-button" />
         <p id="req-field-desc"><span class="required">*</span> indicates a required field</p>
     </form>
+    {if isset="$error_response"}
+        <div class="errors">
+            <ul>
+                {foreach item="item" from="$error_response"}
+                <li class="info">
+                    {$item/}
+                </li>    
+                {/foreach}
+            </ul>
+        </div>
+        <div class="Info"> Try again later </div>
+    {/if}        
 </div>

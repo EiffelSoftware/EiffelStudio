@@ -1,6 +1,6 @@
 <div id="breadcumb">
 	<span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>
-			  		<a href="{$site_url/}/about">About</a>::<a href="{$site_url/}/about/contact">Contact</a>::Post-Contact
+			  		<a href="{$site_url/}/about">About</a>::<a href="{$site_url/}/contact">Contact</a>::Post-Contact
 </div>
 
 {if condition="$has_error"}

@@ -64,6 +64,7 @@
 #include "rt_gen_types.h"
 #include "rt_struct.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_main.h" 	/* For debug_mode. */
 #include "eif_local.h"	/* For epop() */
 #include "eif_debug.h"	/* For rt addons */

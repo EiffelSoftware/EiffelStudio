@@ -44,6 +44,7 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 #include "rt_types.h"
 #include "rt_macros.h"
 #include "rt_malloc.h"
+#include "rt_globals_access.h"
 
 rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type) 
 	/* All once objects held by the system */

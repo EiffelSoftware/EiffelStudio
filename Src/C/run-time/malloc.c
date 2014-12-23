@@ -63,6 +63,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_sig.h"
 #include "rt_err_msg.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_struct.h"
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "rt_object_id.h"	/* For the object id and separate stacks */

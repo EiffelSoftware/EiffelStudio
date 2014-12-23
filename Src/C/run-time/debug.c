@@ -82,6 +82,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 
 #include <stdlib.h>				/* For exit(), abort() */
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 
 
 #define ITEM_SZ			sizeof(EIF_TYPED_ADDRESS)

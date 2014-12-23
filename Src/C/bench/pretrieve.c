@@ -48,6 +48,7 @@
 #include "rt_retrieve.h"
 #include "rt_hashin.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_assert.h"
 #include "minilzo.h"
 #include <string.h>

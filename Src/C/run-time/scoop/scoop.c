@@ -41,6 +41,7 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #include "eif_portable.h"
 #include "rt_assert.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_struct.h"
 #include "rt_wbench.h"
 #include "rt_malloc.h"

@@ -55,6 +55,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "rt_macros.h"
 #include "rt_gen_types.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include <string.h>
 #include "rt_assert.h"
 #include "rt_interp.h"		/* For routine call_copy */

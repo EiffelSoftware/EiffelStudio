@@ -74,6 +74,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #endif /* WORKBENCH */
 
 #include <stdlib.h>				/* For exit(), abort() */
+#include "rt_globals_access.h"
 
 /* Comment out the line below to step through the Eiffel code in EiffelStudio */
 /* #define ENABLE_STEP_THROUGH */

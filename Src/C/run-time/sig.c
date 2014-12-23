@@ -53,6 +53,7 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
 #include <string.h>
+#include "rt_globals_access.h"
 
 #if !defined sigmask
 #define sigmask(m)	(1<<((m)-1))

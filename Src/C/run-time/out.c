@@ -58,6 +58,7 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include "rt_assert.h"
 #include <string.h>
 #include <stdio.h>
+#include "rt_globals_access.h"
 
 /*
  * Private declarations

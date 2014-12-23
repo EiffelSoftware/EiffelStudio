@@ -48,6 +48,7 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include "rt_threads.h"
 #include <ctype.h>
 #include <string.h>
+#include "rt_globals_access.h"
 
 /*
 doc:	<struct name="rt_type">

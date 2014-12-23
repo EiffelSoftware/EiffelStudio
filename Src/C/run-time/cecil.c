@@ -61,6 +61,7 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 #include <varargs.h>
 #endif
 #endif
+#include "rt_globals_access.h"
 
 /*
 doc:	<attribute name="eif_visible_is_off" return_type="char" export="public">

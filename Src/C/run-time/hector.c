@@ -46,6 +46,7 @@ doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling
 #include "eif_cecil.h"
 #include "rt_hector.h"
 #include "rt_assert.h"
+#include "rt_globals_access.h"
 
 #ifdef ISE_GC
 #ifndef EIF_THREADS

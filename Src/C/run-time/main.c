@@ -81,6 +81,8 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_boehm.h"
 #endif
 
+#include "rt_globals_access.h"
+
 /*
 doc:	<attribute name="eif_real_32_nan" return_type="EIF_REAL_32" export="public">
 doc:		<summary>Eiffel representation of NaN</summary>

@@ -72,6 +72,8 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 
 #include <string.h>
 
+#include "rt_globals_access.h"
+
 
 #ifdef EIF_THREADS
 

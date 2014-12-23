@@ -93,7 +93,7 @@ extern const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes, i
 #ifndef EIF_THREADS
 extern char * general_buffer;
 extern size_t current_position;
-extern size_t store_buffer_size;
+extern size_t buffer_size;
 extern size_t cmp_buffer_size;
 
 /* compression */

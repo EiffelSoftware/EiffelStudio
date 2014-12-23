@@ -48,6 +48,7 @@ doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Ob
 #include "rt_assert.h"
 #include "rt_globals.h"
 #include "rt_malloc.h"
+#include "rt_globals_access.h"
 
 
 /*#define DEBUG 2 */		/* Debug level */

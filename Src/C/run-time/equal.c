@@ -54,6 +54,7 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "rt_macros.h"
 #include "rt_assert.h"
 #include <string.h>
+#include "rt_globals_access.h"
 
 #define dprintf(n) if (DEBUG & n) printf
 

@@ -54,6 +54,7 @@
 #include "rt_compress.h"
 #include "rt_gen_types.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_assert.h"
 
 #ifdef EIF_WINDOWS
@@ -91,9 +92,9 @@ rt_public void parsing_store_initialize (void) {
 	parsing_context.write_buffer_function = parsing_store_write;
 
 	if (parsing_buffer == (char *) 0) {
-			/* We need to initialize `store_buffer_size' now as otherwise `allocate_gen_buffer'
+			/* We need to initialize `buffer_size' now as otherwise `allocate_gen_buffer'
 			 * will initialize a zero-sized buffer. */
-		store_buffer_size = EIF_BUFFER_SIZE;
+		buffer_size = EIF_BUFFER_SIZE;
 		allocate_gen_buffer ();
 		parsing_buffer = (char *) malloc (sizeof (char) * EIF_BUFFER_SIZE);
 	}

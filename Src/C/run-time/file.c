@@ -128,6 +128,7 @@ struct utimbuf {
 #include "rt_lmalloc.h"
 #include "rt_constants.h"
 #include "rt_assert.h"
+#include "rt_globals_access.h"
 
 #ifdef EIF_WINDOWS
 /* Unfortunately Windows does not provide exactly the same type between utime and _wutime. */

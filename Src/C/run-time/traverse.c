@@ -61,6 +61,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_interp.h"
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
+#include "rt_globals_access.h"
 
 #define ACCOUNT_TYPE        0x01	/* accounted for type as seen */
 #define ACCOUNT_ATTRIBUTES  0x04	/* accounted for types of attributes */

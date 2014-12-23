@@ -71,6 +71,7 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #include "rt_malloc.h"
 #include "rt_assert.h"
 #include "rt_hashin.h"
+#include "rt_globals_access.h"
 
 #ifndef EIF_THREADS
 /*

@@ -43,6 +43,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_struct.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "eif_misc.h"
 #include "eif_size.h"
 #include "rt_malloc.h"

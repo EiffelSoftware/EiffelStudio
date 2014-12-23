@@ -57,6 +57,8 @@ extern "C" {
 #include "rt_boehm.h"
 #endif
 
+#include "rt_globals_access.h"
+
 /*
 doc:	<attribute name="eif_is_in_final_collect" return_type="EIF_BOOLEAN" export="public">
 doc:		<summary>Global variable to find out if we are performing the final collect</summary>

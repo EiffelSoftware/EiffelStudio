@@ -78,6 +78,8 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include <stdio.h>
 #endif
 
+#include "rt_globals_access.h"
+
 #define dprintf(n) if (DEBUG & n) printf
 
 #define ASSERT_MAX		10			/* Automatically generated assert tags */

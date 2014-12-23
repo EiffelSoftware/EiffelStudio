@@ -58,6 +58,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_struct.h"
 #include "rt_compress.h"
 #ifdef VXWORKS
@@ -480,14 +481,14 @@ rt_public void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_r
 	RT_GET_CONTEXT
 	old_retrieve_read_func = retrieve_read_func;
 	old_char_read_func = char_read_func;
-	old_buffer_size = store_buffer_size;
+	old_buffer_size = buffer_size;
 
 		/* Set the retrieving functions which are going to be used for the current retrieving
 		 * operation */
 	retrieve_read_func = retrieve_function;
 	char_read_func = char_read_function;
 	if (buf_size)
-		store_buffer_size = buf_size;
+		buffer_size = buf_size;
 }
 
 /* Reset retrieve function pointers and globals to their default values */
@@ -496,7 +497,7 @@ rt_public void rt_reset_retrieve(void) {
 	RT_GET_CONTEXT
 	retrieve_read_func = old_retrieve_read_func;
 	char_read_func = old_char_read_func;
-	store_buffer_size = old_buffer_size;
+	buffer_size = old_buffer_size;
 }
 
 rt_private type_table *new_type_conversion_table (EIF_TYPE_INDEX max_types, EIF_TYPE_INDEX num_types)
@@ -4854,7 +4855,7 @@ rt_private int stream_read(char *pointer, int size)
 {
 	RT_GET_CONTEXT
 	if (stream_buffer_size - stream_buffer_position < (size_t) size) {
-		stream_buffer_size += store_buffer_size;
+		stream_buffer_size += buffer_size;
 		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
 		if (!stream_buffer) {
 			xraise(EN_MEM);

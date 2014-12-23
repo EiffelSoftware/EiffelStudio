@@ -50,6 +50,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include "rt_debug.h"
 #endif
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_assert.h"
 
 #include <string.h>

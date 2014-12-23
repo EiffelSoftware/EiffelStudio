@@ -73,6 +73,8 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #endif
 #endif
 
+#include "rt_globals_access.h"
+
 struct prof_info {
 	char			*featurename;		/* Name of feature */
 	EIF_TYPE_INDEX	dtype;				/* DTYPE of feature */

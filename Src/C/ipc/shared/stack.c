@@ -53,6 +53,7 @@
 #include "request.h"
 #include "eif_macros.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "rt_assert.h"
 #include <string.h>
 

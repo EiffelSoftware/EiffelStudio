@@ -60,6 +60,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "rt_gen_types.h"
 #include "rt_garcol.h"
 #include "rt_globals.h"
+#include "rt_globals_access.h"
 #include "eif_argv.h"
 #include "rt_macros.h"
 

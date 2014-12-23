@@ -54,6 +54,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #ifdef WORKBENCH
 #include "rt_interp.h"
 #endif
+#include "rt_globals_access.h"
 
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */

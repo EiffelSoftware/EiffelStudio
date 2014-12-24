@@ -78,6 +78,34 @@ feature -- Basic operation
 			parse (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_ignore_errors, a_context_class)
 		end
 
+	partial_parse (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_GENERAL; a_ignore_errors: BOOLEAN; a_formals: detachable ARRAYED_LIST [FORMAL_DEC_AS]; a_context_class: ABSTRACT_CLASS_C)
+			-- Performs a parse using an Eiffel parser.
+			--
+			-- `a_parser'       : The Eiffel parser to perform a parse with.
+			-- `a_text'         : The Eiffel text to parse using the supplied parser. In UTF-32.
+			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
+			--                    parse has been completed; False to retain them.
+			-- `a_formals'      : List of formal generic parameters if any to resolve types involving them.
+		require
+			a_parser_attached: a_parser /= Void
+			a_text_attached: a_text /= Void
+		local
+			u: UTF_CONVERTER
+		do
+			a_parser.formal_parameters.wipe_out
+			if a_formals /= Void then
+				from
+					a_formals.start
+				until
+					a_formals.after
+				loop
+					a_parser.formal_parameters.extend (a_formals.item.formal)
+					a_formals.forth
+				end
+			end
+			parse (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_ignore_errors, a_context_class)
+		end
+
 	parse_with_option_32 (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_GENERAL; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
@@ -103,6 +131,7 @@ feature -- Basic operation
 			-- `a_options'      : The configuration options to apply to the parser before parsing.
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
+			-- `a_formals'      : List of formal generic parameters if any to resolve types involving them.
 		require
 			a_parser_attached: a_parser /= Void
 			a_text_attached: a_text /= Void

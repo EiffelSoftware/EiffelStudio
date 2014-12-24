@@ -1521,7 +1521,7 @@ feature {NONE}-- Implementation
 						-- Prepend "type" for the type parser.
 					l_type_text.prepend ({STRING_32} "type ")
 					create l_wrapper
-					l_wrapper.parse_32 (type_parser, l_type_text, True, current_class_c)
+					l_wrapper.partial_parse (type_parser, l_type_text, True, current_class_c.generics, current_class_c)
 					if not l_wrapper.has_error and attached {TYPE_AS} l_wrapper.ast_node as l_node then
 						Result := type_a_generator.evaluate_type (l_node, current_class_c)
 						if attached {UNEVALUATED_LIKE_TYPE} Result and not Result.is_valid then
@@ -2219,7 +2219,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

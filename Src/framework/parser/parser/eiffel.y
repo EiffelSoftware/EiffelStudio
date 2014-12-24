@@ -237,6 +237,7 @@ Eiffel_parser:
 				if type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
+				formal_parameters.wipe_out
 			}
 	|	Identifier_as_lower Type
 			{
@@ -244,6 +245,7 @@ Eiffel_parser:
 					raise_error
 				end
 				type_node := $2
+				formal_parameters.wipe_out
 			}
 	|	TE_FEATURE Feature_declaration
 			{
@@ -251,6 +253,7 @@ Eiffel_parser:
 					raise_error
 				end
 				feature_node := $2
+				formal_parameters.wipe_out
 			}
 	|	TE_CHECK Expression
 			{
@@ -258,6 +261,7 @@ Eiffel_parser:
 					raise_error
 				end
 				expression_node := $2
+				formal_parameters.wipe_out
 			}
 	|	Indexing
 			{
@@ -265,6 +269,7 @@ Eiffel_parser:
 					raise_error
 				end
 				indexing_node := $1
+				formal_parameters.wipe_out
 			}
 	|	TE_INVARIANT Class_invariant
 			{
@@ -272,6 +277,7 @@ Eiffel_parser:
 					raise_error
 				end
 				invariant_node := $2
+				formal_parameters.wipe_out
 			}
 	|	TE_LOCAL
 			{
@@ -279,6 +285,7 @@ Eiffel_parser:
 					raise_error
 				end
 				entity_declaration_node := Void
+				formal_parameters.wipe_out
 			}
 	|	TE_LOCAL Add_counter Local_declaration_list Remove_counter
 			{
@@ -286,6 +293,7 @@ Eiffel_parser:
 					raise_error
 				end
 				entity_declaration_node := $3
+				formal_parameters.wipe_out
 			}
 	;
 
@@ -586,14 +594,16 @@ External_mark: -- Empty
 	;
 	
 Class_mark: TE_CLASS
-			{
-				$$ := $1;
-				is_partial_class := false;
-			}
+		{
+			$$ := $1;
+			is_partial_class := false;
+			formal_parameters.wipe_out
+		}
 	| TE_PARTIAL_CLASS
 		{
 			$$ := $1;
 			is_partial_class := true;
+			formal_parameters.wipe_out
 		}
 	;
 

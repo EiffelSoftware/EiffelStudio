@@ -161,7 +161,6 @@ feature -- Initialization
 		do
 			Precursor
 			create suppliers
-			formal_parameters.wipe_out
 			feature_stack.wipe_out
 			add_feature_frame
 			is_supplier_recorded := True

@@ -55,6 +55,8 @@
 #include "rt_main.h"	/* For `debug_mode' */
 #endif
 
+#include "rt_globals_access.h"
+
 static BOOL eif_console_allocated = FALSE;
 
 #ifdef EIF_THREADS

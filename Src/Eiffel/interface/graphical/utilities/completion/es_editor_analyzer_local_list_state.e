@@ -147,7 +147,7 @@ feature {NONE} -- Basic operation
 					l_result.prepend_character ({CHARACTER_32} ' ')
 					l_result.prepend ({EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
 					l_wrapper := eiffel_parser_wrapper
-					l_wrapper.parse_with_option_32 (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class)
+					l_wrapper.partial_parse_with_option (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class.generics, a_info.context_class)
 					if attached {EIFFEL_LIST [LIST_DEC_AS]} l_wrapper.ast_node as l_declarations then
 						l_current_frame := a_info.current_frame
 						from l_declarations.start until l_declarations.after loop
@@ -165,7 +165,7 @@ feature {NONE} -- Basic operation
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

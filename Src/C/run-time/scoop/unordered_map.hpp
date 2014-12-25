@@ -15,24 +15,24 @@ public:
 			pos = position;
 		}
 
-	const Value & operator*() const
+	Value & operator*() const
 		{	
-			return *(const Value *) (((char *) table.h_values) + pos * table.h_sval);
+			return **(Value **) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	Value & operator*()
 		{	
-			return *(Value *) (((char *) table.h_values) + pos * table.h_sval);
+			return **(Value **) (((char *) table.h_values) + pos * table.h_sval);
 		}
 
 	Value * operator->()
 		{
-			return (Value *) (((char *) table.h_values) + pos * table.h_sval);
+			return &(operator*());
 		}
 
 	Value * operator->() const
 		{
-			return (Value *) (((char *) table.h_values) + pos * table.h_sval);
+			return &(operator*());
 		}
 
 	unordered_map_const_iterator& operator++()
@@ -74,18 +74,45 @@ private: // Storage
 template<class Key, class Value> class unordered_map
 {
 
+	typedef std::pair <Key, Value> record_type;
+
 public: // Creation/destruction
 
 	unordered_map ()
 	{
-		ht_create (&table, 10, sizeof (Value));
-		ht_zero (&table);
+		table = new struct htable ();
+		ht_create (table, 10, sizeof (record_type *));
+		ref_count = new size_t (1);
+	}
+
+	unordered_map (const unordered_map <Key, Value> & other)
+		// Copy constructor.
+	{
+		table = other.table;
+		ref_count = other.ref_count;
+		++ *ref_count;
 	}
 
 	~ unordered_map ()
 	{
-			// TODO: call destructors for all keys and values.
-		ht_free (&table);
+		-- *ref_count;
+
+		if (*ref_count == 0)
+		{
+			size_t hsize = table -> h_size;
+			rt_uint_ptr * hkeys = table -> h_keys;
+
+				// Delete all values.
+			for (size_t pos = 0; pos < hsize; ++ pos)
+			{
+					// Skip items with zero keys.
+				if (hkeys [pos] != 0)
+					delete *(record_type **) (((char *) table -> h_values) + pos * table -> h_sval);
+			}
+			ht_release (table);
+			delete table;
+			delete ref_count;
+		}
 	}
 
 public: // Access
@@ -96,15 +123,15 @@ public: // Access
   	{
   			// A pointer to a value should be returned in any case.
   			// If there was no element, a new one is returned created with a default constructor.
-		size_t pos = ht_find (&table, (rt_uint_ptr) key);
-		if (pos >= table.h_size)
+		size_t pos = ht_find (table, (rt_uint_ptr) key);
+		if (pos >= table -> h_size)
 		{
 				// No element is found. Insert a new one.
-			Value v;
-			ht_force (&table, (rt_uint_ptr) key, (EIF_POINTER) &v);
-			pos = ht_find (&table, (rt_uint_ptr) key);
+			record_type * v = new record_type (key, Value ());
+			ht_force (table, (rt_uint_ptr) key, (EIF_POINTER) &v);
+			pos = ht_find (table, (rt_uint_ptr) key);
 		}
-		return *(Value *) (((char *) table.h_values) + pos * table.h_sval);
+		return (*(record_type **) (((char *) table -> h_values) + pos * table -> h_sval)) -> second;
   	}
 
 public: // Removal
@@ -115,8 +142,13 @@ public: // Removal
                  */
 	void erase (const Key& key)
 	{
-			// TODO: call destructor for key and value.
-		ht_remove (&table, (rt_uint_ptr) key);
+			// Delete value.
+		size_t pos = ht_find (table, (rt_uint_ptr) key);
+		if (pos < table -> h_size)
+		{
+			delete *(record_type **) (((char *) table -> h_values) + pos * table -> h_sval);
+		}
+		ht_remove (table, (rt_uint_ptr) key);
 	}
 
 public: // Iteration
@@ -126,25 +158,25 @@ public: // Iteration
 
 	iterator find (const Key & key)
 	{
-		return iterator (table, ht_find (&table, (rt_uint_ptr) key));
+		return iterator (*table, ht_find (table, (rt_uint_ptr) key));
 	}
 
 	const_iterator find (const Key & key) const
 	{
-		return const_iterator (table, ht_find (&table, (rt_uint_ptr) key));
+		return const_iterator (*table, ht_find (table, (rt_uint_ptr) key));
 	}
 
 	const_iterator begin () const
 	{
 			// Go to a position -1 and look for the one that has a key.
-		const_iterator result = const_iterator (table, ~ (size_t) 0);
+		const_iterator result = const_iterator (*table, ~ (size_t) 0);
 		++ result;
 		return result;
 	}
 
 	const_iterator end () const
 	{
-		return const_iterator (table, table.h_size);
+		return const_iterator (*table, table -> h_size);
 	}
 
 public: // Modification
@@ -157,7 +189,8 @@ public: // Modification
 		{
 				// There is no element with the given key.
 				// Insert it.
-			ht_force (&table, (rt_uint_ptr) val.first, (EIF_POINTER) &val.second);
+			record_type * v = new record_type (val);
+			ht_force (table, (rt_uint_ptr) val.first, (EIF_POINTER) &v);
 				// Recompute iterator.
 			it = find (val.first);
 			is_inserted = true;
@@ -167,7 +200,8 @@ public: // Modification
 
 private: // Storage
 
-	struct htable table;
+	struct htable * table;
+	size_t *ref_count;
 
 }; // class unordered_map
 

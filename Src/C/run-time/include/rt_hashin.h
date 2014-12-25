@@ -58,6 +58,7 @@ struct htable {
 
 /* Function declaration */
 extern int ht_create(struct htable *ht, size_t n, size_t sval);				/* Create H table */
+extern void ht_release (struct htable *ht);						/* Release memory allocated by `ht_create'. */
 extern size_t ht_find (const struct htable *ht, rt_uint_ptr key);			/* Position of a key or table size if there is no such a key. */
 extern EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key);			/* Get value given some key */
 extern EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key);			/* Get item address */

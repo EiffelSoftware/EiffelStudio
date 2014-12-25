@@ -44,6 +44,7 @@ doc:<file name="hashin.c" header="rt_hashin.h" version="$Id$" summary="Hash tabl
 #include "rt_malloc.h"
 #include "rt_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
 #include "eif_except.h"	/* for eif_panic() */
+#include "rt_assert.h" /* for ENSURE */
 
 #include <string.h>		/* For memset(), bzero() */
 
@@ -340,14 +341,21 @@ rt_public int ht_xtend(struct htable *ht)
 	return 0;		/* Extension was ok */
 }
 
-rt_public void ht_free(struct htable *ht)
+rt_public void ht_release (struct htable *ht)
 {
-	/* Free hash table arrays and descriptor */
+	/* Free hash table arrays. */
 
 	eif_free(ht->h_values);
 	eif_free(ht->h_keys);
 	ht->h_values = NULL;
 	ht->h_keys = NULL;
+}
+
+rt_public void ht_free(struct htable *ht)
+{
+	/* Free hash table arrays and descriptor */
+
+	ht_release (ht);
 	eif_rt_xfree((char *) ht);
 }
 

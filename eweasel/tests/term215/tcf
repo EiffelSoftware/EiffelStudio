@@ -1,0 +1,13 @@
+test_name 	 large-integer-64-crash
+test_description A system with an integer constant too large to fit in an INTEGER_64 causes the compiler to crash instead of reporting an error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 10
+
+resume_compile
+compile_result	syntax_error TEST 10
+
+test_end

@@ -1993,6 +1993,7 @@ test	root-class-none				term211 tcf fail termination
 test	bad-library-class			term212 tcf fail termination
 test	across-on-tuple				term213 tcf pass termination across iteration
 test	qat-greater-number-of-formal	term214 tcf pass validity anchored_type system-validity
+test	large-integer-64-crash			term215 tcf pass syntax
 
 -- Config
 

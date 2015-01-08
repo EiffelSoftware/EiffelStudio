@@ -509,88 +509,111 @@ feature {NONE} -- Implementation
 				if c = token_minus then
 					s.extend (c)
 					i := i + 1
-					c := a_number [i]
+					if i > n then
+						Result := False
+					else
+						c := a_number [i]
+					end
 				end
 					--| "0|[1-9]\d*
-				if c.is_digit then
+				if Result and c.is_digit then
 					if c = '0' then
 							--| "0"
 						s.extend (c)
 						i := i + 1
-						c := a_number [i]
+						if i <= n then
+							c := a_number [i]
+						end
 					else
 							--| "[1-9]"
 						s.extend (c)
-						i := i + 1
-						c := a_number [i]
+
 							--| "\d*"
-						from
-						until
-							i > n or not c.is_digit
-						loop
-							s.extend (c)
-							i := i + 1
+						i := i + 1
+						if i <= n then
 							c := a_number [i]
+							from
+							until
+								i > n or not c.is_digit
+							loop
+								s.extend (c)
+								i := i + 1
+								if i <= n then
+									c := a_number [i]
+								end
+							end
 						end
 					end
 				end
 			end
-			if Result then
-					--| "(\.\d+)?"
-				if c = token_dot then
-						--| "\.\d+"  =  "\.\d\d*"
-					s.extend (c)
-					i := i + 1
-					c := a_number [i]
-					if c.is_digit then
-						from
-						until
-							i > n or not c.is_digit
-						loop
-							s.extend (c)
-							i := i + 1
-							c := a_number [i]
-						end
-					else
-						Result := False --| expecting digit
-					end
-				end
-			end
-			if Result then --| "(?:[eE][+-]?\d+)?\b"
-				if is_exp_token (c) then
-						--| "[eE][+-]?\d+"
-					s.extend (c)
-					i := i + 1
-					c := a_number [i]
-					if c = token_plus or c = token_minus then
+			if i > n then
+					-- Exit
+			else
+				if Result then
+						--| "(\.\d+)?"
+					if c = token_dot then
+							--| "\.\d+"  =  "\.\d\d*"
 						s.extend (c)
 						i := i + 1
 						c := a_number [i]
+						if c.is_digit then
+							from
+							until
+								i > n or not c.is_digit
+							loop
+								s.extend (c)
+								i := i + 1
+								if i <= n then
+									c := a_number [i]
+								end
+							end
+						else
+							Result := False --| expecting digit
+						end
 					end
-					if c.is_digit then
-						from
-						until
-							i > n or not c.is_digit
-						loop
+				end
+				if Result then --| "(?:[eE][+-]?\d+)?\b"
+					if is_exp_token (c) then
+							--| "[eE][+-]?\d+"
+						s.extend (c)
+						i := i + 1
+						c := a_number [i]
+						if c = token_plus or c = token_minus then
 							s.extend (c)
 							i := i + 1
-							c := a_number [i]
+							if i <= n then
+								c := a_number [i]
+							end
 						end
-					else
-						Result := False --| expecting digit
+						if c.is_digit then
+							from
+							until
+								i > n or not c.is_digit
+							loop
+								s.extend (c)
+								i := i + 1
+								if i <= n then
+									c := a_number [i]
+								end
+							end
+						else
+							Result := False --| expecting digit
+						end
 					end
 				end
-			end
-			if Result then --| "\b"
-				from
-				until
-					i > n or not c.is_space
-				loop
-					s.extend (c)
-					i := i + 1
-					c := a_number [i]
+				if Result then --| "\b"
+					from
+					until
+						i > n or not c.is_space
+					loop
+						s.extend (c)
+						i := i + 1
+						if i <= n then
+							c := a_number [i]
+						end
+					end
+					Result := i > n and then s.same_string (a_number)
 				end
-				Result := i > n and then s.same_string (a_number)
 			end
 		end
 
@@ -651,6 +674,6 @@ feature {NONE} -- Constants
 	null_id: STRING = "null"
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2015, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

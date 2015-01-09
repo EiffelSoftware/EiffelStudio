@@ -66,7 +66,9 @@ feature -- Intialization
 				parameters := a_parameters
 				create proc.make (stored_procedure)
 				proc.load
-				proc.set_arguments_32 (a_parameters.current_keys, a_parameters.linear_representation.to_array)
+				if not a_parameters.is_empty then
+					proc.set_arguments_32 (a_parameters.current_keys, a_parameters.linear_representation.to_array)
+				end
 				if proc.exists then
 					if proc.text_32 /= Void then
 						debug
@@ -102,6 +104,7 @@ feature -- Intialization
 			a_base_selection.load_result
 			Result := a_base_selection.container
 			unset_map_name (a_base_selection)
+			a_base_selection.terminate
 		end
 
 	execute_writer (a_base_change: DB_CHANGE)

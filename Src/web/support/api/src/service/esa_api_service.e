@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			create login_provider.make (a_connection)
 			post_data_provider_execution
 			post_login_provider_execution
+			set_successful
 		end
 
 feature -- Access
@@ -58,14 +59,13 @@ feature -- Access
 			l_list: LIST[REPORT]
 		do
 			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
-			data_provider.connect
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			Result := l_list
 			post_data_provider_execution
 		end
@@ -80,14 +80,13 @@ feature -- Access
 		do
 			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
 
-			data_provider.connect
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			Result := l_list
 			post_data_provider_execution
 		end
@@ -103,12 +102,12 @@ feature -- Access
 			log.write_debug (generator + ".problem_reports Problem reports for username:" + a_username + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out )
 
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			Result := l_list
 			post_data_provider_execution
 		end
@@ -121,12 +120,12 @@ feature -- Access
 			l_list: LIST[REPORT]
 		do
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
 				l_report := c.item
 				l_list.force (l_report)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			Result := l_list
 			post_data_provider_execution
 		end
@@ -137,11 +136,11 @@ feature -- Access
 		do
 			log.write_debug (generator+".status" )
 			create {ARRAYED_LIST[STRING]} Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.problem_report_category_subscribers (a_category) as c loop
 				Result.force (c.item)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -150,11 +149,11 @@ feature -- Access
 		do
 			log.write_debug (generator+".status" )
 			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.status as c  loop
 				Result.force (c.item)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -163,9 +162,9 @@ feature -- Access
 		do
 			log.write_debug (generator+".all_categories" )
 			create {ARRAYED_LIST[REPORT_CATEGORY]} Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -232,9 +231,9 @@ feature -- Access
 		do
 			log.write_debug (generator + ".severities")
 			create {ARRAYED_LIST[REPORT_SEVERITY]}Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.severities as c  loop Result.force (c.item)  end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -244,9 +243,9 @@ feature -- Access
 		do
 			log.write_debug (generator + ".classes")
 			create {ARRAYED_LIST[REPORT_CLASS]}Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.classes as c  loop Result.force (c.item)  end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -255,9 +254,9 @@ feature -- Access
 		do
 			log.write_information (generator +".priorities")
 			create {ARRAYED_LIST[REPORT_PRIORITY]}Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.priorities as c  loop Result.force (c.item)  end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -266,9 +265,9 @@ feature -- Access
 		do
 			log.write_information (generator +".countries")
 			create {ARRAYED_LIST[COUNTRY]}Result.make (0)
-			login_provider.connect
+--			login_provider.connect
 			across login_provider.countries as c loop Result.force (c.item)  end
-			login_provider.disconnect
+--			login_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -312,9 +311,9 @@ feature -- Access
 		do
 			log.write_debug (generator + ".responsibles")
 			create {ARRAYED_LIST[USER]}Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.responsibles as c loop Result.force (c.item)   end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -323,9 +322,9 @@ feature -- Access
 		do
 			log.write_debug (generator+".security_questions")
 			create {ARRAYED_LIST[SECURITY_QUESTION]}Result.make (0)
-			login_provider.connect
+--			login_provider.connect
 			across login_provider.security_questions as c loop Result.force (c.item)  end
-			login_provider.disconnect
+--			login_provider.disconnect
 			post_login_provider_execution
 		end
 
@@ -482,7 +481,7 @@ feature -- Access
 			l_item: ESA_CATEGORY_SUBSCRIBER_VIEW
 		do
 			create  {ARRAYED_LIST[ESA_CATEGORY_SUBSCRIBER_VIEW]} Result.make (0)
-			data_provider.connect
+			-- data_provider.connect
 			across data_provider.subscribed_categories (a_username) as c loop
 					create l_item
 					l_item.set_id (c.item.categoryId)
@@ -490,7 +489,7 @@ feature -- Access
 					l_item.set_subscribed (c.item.subscribed)
 					Result.force (l_item)
 			end
-			data_provider.disconnect
+			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -859,9 +858,9 @@ feature -- Status Report
 		do
 			l_categories := subscribed_categories (a_user)
 			across a_categories as c  loop
-				data_provider.connect
+				-- data_provider.connect
 				data_provider.register_subscriber (a_user, c.item, True)
-				data_provider.disconnect
+				-- data_provider.disconnect
 			end
 
 			across l_categories as nc loop
@@ -872,9 +871,9 @@ feature -- Status Report
 						end
 					end
 					if not l_exist then
-						data_provider.connect
+						-- data_provider.connect
 						data_provider.register_subscriber (a_user, nc.item.id, False)
-						data_provider.disconnect
+						-- data_provider.disconnect
 					end
 					l_exist := False
 				end

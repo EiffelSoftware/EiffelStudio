@@ -139,7 +139,7 @@ feature -- Leaf Nodes
 			-- New INTEGER_AS node
 		do
 			Result := Precursor (t, s, v, buf, s_as, l, c, p, n, cc, cp, cn)
-			if Result /= Void then
+			if Result /= Void and buf /= Void then
 				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cn))
 			end
 		end

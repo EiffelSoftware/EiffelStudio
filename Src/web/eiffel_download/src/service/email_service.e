@@ -104,7 +104,7 @@ feature -- Basic Operations
 				log.write_information (generator + ".send_email Email sent.")
 				set_successful
 			else
-				log.write_error (generator + ".send_email Email not send" + last_error_message )
+				log.write_error (generator + ".send_email Email not send: " + last_error_message )
 			end
 		rescue
 			set_last_error_from_exception (generator + ".send_email")

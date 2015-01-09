@@ -60,7 +60,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".token_from_email")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.email_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationToken", l_parameters))
@@ -69,7 +68,6 @@ feature -- Access
 				db_handler.start
 				Result := db_handler.read_string (1)
 			end
-			disconnect
 			post_execution
 		end
 
@@ -81,7 +79,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".token_from_username")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.email_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationTokenFromUsername", l_parameters))
@@ -90,7 +87,7 @@ feature -- Access
 				db_handler.start
 				Result := db_handler.read_string (1)
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -102,7 +99,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".membership_creation_date")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetMembershipCreationDate", l_parameters))
@@ -111,7 +107,6 @@ feature -- Access
 				db_handler.start
 				Result := db_handler.read_date_time (1)
 			end
-			disconnect
 			post_execution
 		end
 
@@ -123,7 +118,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".role")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRole", l_parameters))
@@ -133,7 +127,6 @@ feature -- Access
 				Result := db_handler.read_string (1)
 				to_implement ("handle error: User not found - Retrieval of user role")
 			end
-			disconnect
 			post_execution
 		end
 
@@ -145,7 +138,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".role_description")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_synopsis, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRoleDescription", l_parameters))
@@ -155,7 +147,6 @@ feature -- Access
 				Result := db_handler.read_string (1)
 				to_implement ("handle error: Role not found -  Retrieval of role description")
 			end
-			disconnect
 			post_execution
 		end
 
@@ -180,7 +171,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".question_from_email")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetQuestionFromEmail", l_parameters))
@@ -189,7 +179,6 @@ feature -- Access
 				db_handler.start
 				Result := db_handler.read_string (1)
 			end
-			disconnect
 			post_execution
 		end
 
@@ -199,7 +188,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".user_creation_date")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserCreationDate", l_parameters))
@@ -208,7 +196,6 @@ feature -- Access
 				db_handler.start
 				Result := db_handler.read_date_time (1)
 			end
-			disconnect
 			post_execution
 		end
 
@@ -220,7 +207,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".contact_from_email")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetContactFromEmail", l_parameters))
@@ -229,7 +215,6 @@ feature -- Access
 				db_handler.start
 				Result := new_contact
 			end
-			disconnect
 			post_execution
 		end
 
@@ -241,7 +226,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".user_from_email")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserFromEmail", l_parameters))
@@ -250,7 +234,6 @@ feature -- Access
 				db_handler.start
 				Result := new_user
 			end
-			disconnect
 			post_execution
 		end
 
@@ -262,7 +245,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".user_from_username")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUser", l_parameters))
@@ -271,7 +253,6 @@ feature -- Access
 				db_handler.start
 				Result := new_user_username
 			end
-			disconnect
 			post_execution
 		end
 
@@ -283,7 +264,6 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".user_information")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserInformation", l_parameters))
@@ -294,7 +274,6 @@ feature -- Access
 			else
 				create Result.make (a_username)
 			end
-			disconnect
 			post_execution
 		end
 
@@ -308,12 +287,10 @@ feature -- Element Settings
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_user")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveUser", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -326,12 +303,10 @@ feature -- Element Settings
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_token")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_token, 7), {DATA_PARAMETERS_NAMES}.registrationtoken_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveRegistrationToken", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -350,14 +325,12 @@ feature -- Element Settings
 			l_password_salt := l_security.salt
 			l_password_hash := l_security.password_hash (a_password, l_password_salt)
 
-			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.email_param)
 			l_parameters.put (string_parameter (l_password_hash, 40), {DATA_PARAMETERS_NAMES}.passwordhash_param)
 			l_parameters.put (string_parameter (l_password_salt, 24), {DATA_PARAMETERS_NAMES}.passwordsalt_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePasswordFromEmail", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -367,13 +340,11 @@ feature -- Element Settings
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".update_email_from_user_and_token")
-			connect
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_token, 50), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdateEmailFromUserAndToken", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -384,7 +355,6 @@ feature -- Element Settings
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".update_personal_information")
-			connect
 			create l_parameters.make (11)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			if attached a_first_name then
@@ -420,7 +390,6 @@ feature -- Element Settings
 
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdatePersonalInformation2", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -430,14 +399,12 @@ feature -- Element Settings
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".change_user_email")
-			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_new_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (string_parameter (a_token, 24), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("ChangeUserEmail", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -592,7 +559,6 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".is_active")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("IsMemberhipActive", l_parameters))
@@ -601,7 +567,7 @@ feature -- Status Report
 				db_handler.start
 				Result := db_handler.read_boolean (1)
 			end
-			disconnect
+			post_execution
 		end
 
 	validate_login (a_username: READABLE_STRING_32; a_password_salt: READABLE_STRING_32): BOOLEAN
@@ -610,7 +576,7 @@ feature -- Status Report
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
 			log.write_information (generator + ".validate_login")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.username_param)
 			l_parameters.put (a_password_salt, {DATA_PARAMETERS_NAMES}.passwordhash_param)
@@ -623,7 +589,7 @@ feature -- Status Report
 					Result := l_item_1.item
 				end
 			end
-			disconnect
+			post_execution
 		end
 
 
@@ -665,7 +631,6 @@ feature -- Status Report
 		do
 			log.write_information (generator + ".email_token_age")
 			create Result.default_create
-			connect
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
@@ -680,7 +645,7 @@ feature -- Status Report
 					Result.age := -1
 				end
 			end
-			disconnect
+			post_execution
 		end
 
 feature -- Connection
@@ -693,8 +658,9 @@ feature -- Connection
 			end
 		end
 
+
 	disconnect
-			-- Disconnect to the database.
+			--  Disconnect to the database.
 		do
 			if db_handler.is_connected then
 				db_handler.disconnect

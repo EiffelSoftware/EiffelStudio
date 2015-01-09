@@ -250,7 +250,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".problem_report")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.number_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReport2", l_parameters))
@@ -262,7 +262,7 @@ feature -- Access
 					Result.set_number (a_number)
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -287,7 +287,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".interaction")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -300,7 +300,7 @@ feature -- Access
 					Result.set_id (a_interaction_id)
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -314,7 +314,7 @@ feature -- Access
 			log.write_information (generator + ".interactions")
 			create {ARRAYED_LIST [REPORT_INTERACTION]} Result.make (0)
 			create {ARRAYED_LIST [INTEGER]} l_list.make (0)
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_report_number, {DATA_PARAMETERS_NAMES}.Number_param)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -339,7 +339,7 @@ feature -- Access
 					Result.force (l_interaction)
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -351,7 +351,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".interactions_guest")
 			create {ARRAYED_LIST [REPORT_INTERACTION]} Result.make (0)
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_report_number, {DATA_PARAMETERS_NAMES}.number_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetReportProblemInteractionsGuest", l_parameters))
@@ -368,7 +368,7 @@ feature -- Access
 				end
 				db_handler.forth
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -379,7 +379,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".attachment_headers")
 			create {ARRAYED_LIST [REPORT_ATTACHMENT]} Result.make (0)
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction.id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportInteractionAttachmentsHeaders", l_parameters))
@@ -395,7 +395,7 @@ feature -- Access
 				end
 				db_handler.forth
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -406,7 +406,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".attachment_headers_guest")
 			create {ARRAYED_LIST [REPORT_ATTACHMENT]} Result.make (0)
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction.id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportInteractionAttachmentsHeadersGuest", l_parameters))
@@ -422,7 +422,7 @@ feature -- Access
 				end
 				db_handler.forth
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -433,7 +433,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".attachment_content")
 			create Result.make_empty
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_attachment_id, {DATA_PARAMETERS_NAMES}.attachmentid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportInteractionAttachmentContent", l_parameters))
@@ -444,7 +444,7 @@ feature -- Access
 					Result := l_item_1
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -456,7 +456,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".registration_token_from_username")
 			create Result.make_empty
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationTokenFromUsername", l_parameters))
@@ -467,7 +467,7 @@ feature -- Access
 					Result := l_item_1
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -477,7 +477,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".user_password_salt")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserPasswordSalt", l_parameters))
@@ -488,7 +488,7 @@ feature -- Access
 					Result := l_item_1
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -509,7 +509,7 @@ feature -- Access
 			l_answer_hash := l_security.password_hash (a_answer, l_answer_salt)
 			l_password_salt := l_security.salt
 			l_password_hash := l_security.password_hash (a_password, l_password_salt)
-			connect
+
 			create l_parameters.make (10)
 			l_parameters.put (string_parameter (a_first_name, 50), {DATA_PARAMETERS_NAMES}.Firstname_param)
 			l_parameters.put (string_parameter (a_last_name, 50), {DATA_PARAMETERS_NAMES}.Lastname_param)
@@ -523,7 +523,7 @@ feature -- Access
 			l_parameters.put (a_question_id, {DATA_PARAMETERS_NAMES}.Questionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddUser2", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -653,7 +653,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_problem_report")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporary2", l_parameters))
@@ -667,7 +667,7 @@ feature -- Access
 					Result [i.item] := db_handler.read_string (i.item)
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -720,7 +720,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_interaction")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction", l_parameters))
@@ -736,7 +736,7 @@ feature -- Access
 					end
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -751,7 +751,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_interaction_2")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction2", l_parameters))
@@ -767,7 +767,7 @@ feature -- Access
 					end
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -782,7 +782,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_interaction_3")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction3", l_parameters))
@@ -798,7 +798,7 @@ feature -- Access
 					end
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -808,7 +808,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_problem_report_attachments")
-			connect
+
 			create {ARRAYED_LIST [TUPLE [id: INTEGER_32; length: INTEGER_32; filename: READABLE_STRING_32]]} Result.make (0)
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -826,7 +826,7 @@ feature -- Access
 					db_handler.forth
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -836,7 +836,7 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".temporary_interation_attachments")
-			connect
+
 			create {ARRAYED_LIST [TUPLE [id: INTEGER_32; length: INTEGER_32; filename: READABLE_STRING_32]]} Result.make (0)
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -854,7 +854,7 @@ feature -- Access
 					db_handler.forth
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -882,7 +882,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".new_problem_report_id")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.Username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("AddTemporaryProblemReport", l_parameters))
@@ -893,7 +893,7 @@ feature -- Basic Operations
 					Result := l_item_1.item
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -904,7 +904,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".row_count_problem_report_guest")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_status, {DATA_PARAMETERS_NAMES}.Statusid_param)
@@ -917,7 +917,7 @@ feature -- Basic Operations
 					Result := l_item_1.item
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -930,7 +930,7 @@ feature -- Basic Operations
 			l_query: STRING
 		do
 			log.write_information (generator + ".row_count_problem_report_guest")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
@@ -966,7 +966,7 @@ feature -- Basic Operations
 					Result := l_count
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -979,7 +979,7 @@ feature -- Basic Operations
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			log.write_information (generator + ".row_count_problem_report_responsible")
-			connect
+
 			create l_parameters.make (6)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			l_parameters.put (a_severity, {DATA_PARAMETERS_NAMES}.Severityid_param)
@@ -1021,7 +1021,7 @@ feature -- Basic Operations
 					Result := l_count
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -1034,7 +1034,7 @@ feature -- Basic Operations
 			l_query: STRING
 		do
 			log.write_information (generator + ".row_count_problem_report_user")
-			connect
+
 			create l_parameters.make (4)
 			l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
@@ -1070,7 +1070,7 @@ feature -- Basic Operations
 					Result := l_count
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -1082,7 +1082,7 @@ feature -- Basic Operations
 		do
 			log.write_information (generator + ".commit_problem_report")
 			set_last_problem_report_number (l_int)
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("CommitProblemReport", l_parameters))
@@ -1093,7 +1093,7 @@ feature -- Basic Operations
 					l_int := l_item
 				end
 			end
-			disconnect
+
 			if l_int > 0 then
 				set_last_problem_report_number (l_int)
 			end
@@ -1106,12 +1106,12 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_temporary_problem_report")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("RemoveTemporaryProblemReport", l_parameters))
 			db_handler.execute_reader
-			disconnect
+
 			post_execution
 		end
 
@@ -1137,7 +1137,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".initialize_problem_report")
-			connect
+
 			create l_parameters.make (11)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			l_parameters.put (a_priority_id.to_integer, {DATA_PARAMETERS_NAMES}.Priorityid_param)
@@ -1152,7 +1152,7 @@ feature -- Basic Operations
 			l_parameters.put (a_to_reproduce, {DATA_PARAMETERS_NAMES}.Toreproduce_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("InitializeProblemReport", l_parameters))
 			db_handler.execute_reader
-			disconnect
+
 			post_execution
 		end
 
@@ -1179,7 +1179,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".update_problem_report")
-			connect
+
 			create l_parameters.make (11)
 			l_parameters.put (a_pr, {DATA_PARAMETERS_NAMES}.Number_param)
 			l_parameters.put (a_priority_id.to_integer, {DATA_PARAMETERS_NAMES}.Priorityid_param)
@@ -1194,7 +1194,7 @@ feature -- Basic Operations
 			l_parameters.put (a_to_reproduce, {DATA_PARAMETERS_NAMES}.Toreproduce_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdateTemporaryProblemReport", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1204,13 +1204,13 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".set_problem_report_responsible")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
 			l_parameters.put (a_contact_id, {DATA_PARAMETERS_NAMES}.Contactid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("SetProblemReportResponsible", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1223,7 +1223,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".new_interaction_id")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_pr_number, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1235,7 +1235,7 @@ feature -- Basic Operations
 					Result := l_item
 				end
 			end
-			disconnect
+
 			post_execution
 		end
 
@@ -1247,7 +1247,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".initialize_interaction")
-			connect
+
 			create l_parameters.make (4)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			l_parameters.put (a_content, {DATA_PARAMETERS_NAMES}.Content_param)
@@ -1255,7 +1255,7 @@ feature -- Basic Operations
 			l_parameters.put (a_private, {DATA_PARAMETERS_NAMES}.Private_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeInteraction2", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1267,7 +1267,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".initialize_interaction_2")
-			connect
+
 			create l_parameters.make (5)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			l_parameters.put (a_content, {DATA_PARAMETERS_NAMES}.Content_param)
@@ -1276,7 +1276,7 @@ feature -- Basic Operations
 			l_parameters.put (a_category_id, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeInteraction3", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1288,7 +1288,7 @@ feature -- Basic Operations
 		do
 			log.write_information (generator + ".commit_interaction")
 			set_last_interaction_id (l_int)
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("CommitInteraction2", l_parameters))
@@ -1301,7 +1301,7 @@ feature -- Basic Operations
 					l_int := l_item
 				end
 			end
-			disconnect
+
 			if l_int > 0 then
 				set_last_interaction_id (l_int)
 			end
@@ -1315,7 +1315,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".upload_temporary_report_attachment")
-			connect
+
 			create l_parameters.make (4)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			l_parameters.put (a_length, {DATA_PARAMETERS_NAMES}.Length_param)
@@ -1323,7 +1323,7 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_name, 260), {DATA_PARAMETERS_NAMES}.Filename_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("AddTemporaryProblemReportAttachment", l_parameters))
 			db_handler.execute_reader
-			disconnect
+
 			post_execution
 		end
 
@@ -1333,7 +1333,7 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".upload_temporary_interaction_attachment")
-			connect
+
 			create l_parameters.make (4)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			l_parameters.put (a_length, {DATA_PARAMETERS_NAMES}.Length_param)
@@ -1341,7 +1341,7 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_name, 260), {DATA_PARAMETERS_NAMES}.Filename_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddTemporaryProblemReportInteractionAttachment", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1353,13 +1353,13 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_temporary_report_attachment")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			l_parameters.put (string_parameter (a_filename, 260), {DATA_PARAMETERS_NAMES}.Filename_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportAttachment", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1371,13 +1371,13 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_temporary_interaction_attachment")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			l_parameters.put (string_parameter (a_filename, 260), {DATA_PARAMETERS_NAMES}.Filename_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportInteractionAttachment", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1387,12 +1387,12 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_all_temporary_report_attachments")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportTemporaryReportAttachments", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1402,12 +1402,12 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".remove_all_temporary_interaction_attachments")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportTemporaryInteractionAttachments", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1420,13 +1420,13 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".set_problem_report_status")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
 			l_parameters.put (a_status_id, {DATA_PARAMETERS_NAMES}.Statusid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdateProblemReportStatus", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1439,13 +1439,13 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".set_problem_report_category")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
 			l_parameters.put (a_category_id, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("UpdateProblemReportCategory", l_parameters))
 			db_handler.execute_writer
-			disconnect
+
 			post_execution
 		end
 
@@ -1470,14 +1470,12 @@ feature -- Basic Operations
 			l_notes.append ("File downloaded: ")
 			l_notes.append (a_file_name)
 
-			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (l_subject, {DATA_PARAMETERS_NAMES}.Subject_param)
 			l_parameters.put (l_notes, {DATA_PARAMETERS_NAMES}.Notes_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddDownloadInteraction", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1489,7 +1487,7 @@ feature -- Basic Operations
 				l_subject: STRING
 				l_notes: STRING
 		do
-			log.write_information (generator + ".add_download_interaction")
+			log.write_information (generator + ".add_download_interaction_contact")
 
 			create l_subject.make (a_product.count + a_platform.count + 40)
 			l_subject.append ("Downloaded ")
@@ -1502,14 +1500,12 @@ feature -- Basic Operations
 			l_notes.append ("File downloaded: ")
 			l_notes.append (a_file_name)
 
-			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (l_subject, {DATA_PARAMETERS_NAMES}.Subject_param)
 			l_parameters.put (l_notes, {DATA_PARAMETERS_NAMES}.Notes_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddDownloadInteractionContact", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1520,7 +1516,6 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".initialize_download")
-			connect
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
@@ -1530,7 +1525,6 @@ feature -- Basic Operations
 			l_parameters.put (a_last_name, {DATA_PARAMETERS_NAMES}.lastname_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeDownload", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1541,7 +1535,6 @@ feature -- Basic Operations
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			log.write_information (generator + ".retrieve_download_details")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))
@@ -1583,7 +1576,6 @@ feature -- Basic Operations
 					Result.last_name := l_last_name
 				end
 			end
-			disconnect
 			post_execution
 		end
 
@@ -1594,7 +1586,6 @@ feature -- Basic Operations
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			log.write_information (generator + ".retrieve_download_details")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_temporary_download_details, l_parameters))
@@ -1624,7 +1615,6 @@ feature -- Basic Operations
 					Result.last_name := l_last_name
 				end
 			end
-			disconnect
 			post_execution
 		end
 
@@ -1635,7 +1625,6 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".add_contacts_temporary")
-			connect
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_first_name, 50), {DATA_PARAMETERS_NAMES}.Firstname_param)
 			l_parameters.put (string_parameter (a_last_name, 50), {DATA_PARAMETERS_NAMES}.Lastname_param)
@@ -1644,7 +1633,6 @@ feature -- Basic Operations
 
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddContactsTemporary", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1654,13 +1642,10 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".add_temporary_contacts_to_contacts")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
-
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("CommitContact", l_parameters))
+			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("CommitContact2", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1670,13 +1655,11 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			log.write_information (generator + ".register_newsletter")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RegisterNewsletter", l_parameters))
 			db_handler.execute_writer
-			disconnect
 			post_execution
 		end
 
@@ -1689,7 +1672,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".is_report_visible_guest")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.number_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("IsProblemReportVisibleGuest", l_parameters))
@@ -1701,7 +1684,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1712,7 +1695,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".is_report_visible")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1725,7 +1708,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1738,7 +1721,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".interaction_visible")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1751,7 +1734,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1762,7 +1745,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".interaction_visible_guest")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("IsProblemReportInteractionVisibleGuest", l_parameters))
@@ -1774,7 +1757,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1787,7 +1770,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".attachment_visible")
-			connect
+
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_attachment_id, {DATA_PARAMETERS_NAMES}.Attachmentid_param)
@@ -1800,7 +1783,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1811,7 +1794,7 @@ feature -- Status Report
 			l_res: INTEGER
 		do
 			log.write_information (generator + ".attachment_visible_guest")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_attachment_id, {DATA_PARAMETERS_NAMES}.Attachmentid_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("IsProblemReportInteractionAttachmentVisibleGuest", l_parameters))
@@ -1823,7 +1806,7 @@ feature -- Status Report
 				end
 			end
 			Result := l_res > 0
-			disconnect
+
 			post_execution
 		end
 
@@ -1835,22 +1818,22 @@ feature -- Status Report
 		do
 			log.write_information (generator + ".register_subscriber")
 			if a_subscribe then
-				connect
+
 				create l_parameters.make (2)
 				l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 				l_parameters.put (a_catid, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 				db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("AddProblemReportCategorySubscriber", l_parameters))
 				db_handler.execute_writer
-				disconnect
+
 				post_execution
 			else
-				connect
+
 				create l_parameters.make (2)
 				l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 				l_parameters.put (a_catid, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 				db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveProblemReportCategorySubscriber", l_parameters))
 				db_handler.execute_writer
-				disconnect
+
 				post_execution
 			end
 		end
@@ -1860,7 +1843,6 @@ feature -- Status Report
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
 			log.write_information (generator + ".download_expiration_token_age")
-			connect
 			create l_parameters.make (1)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetDownloadExpirationTokenAge", l_parameters))
@@ -1869,7 +1851,7 @@ feature -- Status Report
 				db_handler.start
 				Result := db_handler.read_integer_32 (1)
 			end
-			disconnect
+			post_execution
 		end
 
 
@@ -2258,6 +2240,7 @@ feature -- Status Report
 
 feature -- Connection
 
+
 	connect
 			-- Connect to the database.
 		do
@@ -2265,6 +2248,7 @@ feature -- Connection
 				db_handler.connect
 			end
 		end
+
 
 	disconnect
 			-- Disconnect from the database.
@@ -2282,12 +2266,12 @@ feature -- {NONE} Implementation
 			l_parameters: STRING_TABLE [ANY]
 		do
 			log.write_information (generator + ".delete_problem_report_temporary_interactions")
-			connect
+
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction, {DATA_PARAMETERS_NAMES}.interactionid_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (delete_ProblemReportTemporaryInteractions, l_parameters))
 			db_handler.execute_query
-			disconnect
+
 			post_execution
 		end
 

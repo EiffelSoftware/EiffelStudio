@@ -52,8 +52,10 @@ feature -- Intialization
 			-- Execute the Current sql query .
 		do
 			to_implement ("Check test dynamic sequel. to redesign.")
+			set_map_name (a_base_change)
 			a_base_change.set_query (query)
 			a_base_change.execute_query
+			unset_map_name (a_base_change)
 		end
 
 feature --  Access

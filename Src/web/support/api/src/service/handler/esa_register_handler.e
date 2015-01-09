@@ -125,6 +125,8 @@ feature -- HTTP Methods
 				-- but the user will need to use an unencoded token if activation has to be done manually.
 				l_token := l_security.token
 			end
+				-- Database length 7 characters.
+			l_token := l_token.substring (1, 7)
 			if attached a_register.answer as l_answer and then
 			   attached a_register.password as l_password and then
 			   attached a_register.email as l_email and then

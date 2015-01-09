@@ -75,7 +75,7 @@ feature -- Basic Operations
 	retrieve_download_details (a_token: READABLE_STRING_32): detachable DOWNLOAD_INFORMATION
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		do
-			log.write_debug (generator + "retrieve_download_details with token:" + a_token  )
+			log.write_debug (generator + ".retrieve_download_details with token:" + a_token  )
 				-- TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32]
 			if
 				attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_download_details (a_token) as l_tuple then
@@ -91,7 +91,9 @@ feature -- Basic Operations
 				Result.set_first_name (l_tuple.first_name)
 				Result.set_last_name (l_tuple.last_name)
 			elseif attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple then
-				create Result
+				create Result	-- Add download interaction to contact with email `a_email', product `a_product', platform `a_platform'
+				-- file `a_file_name', token `a_token'.
+
 				Result.set_email (l_tuple.email)
 				Result.set_platform (l_tuple.platform)
 				Result.set_user (l_tuple.username)
@@ -103,6 +105,8 @@ feature -- Basic Operations
 		end
 
 	add_download_interaction_membership (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)
+				-- Add download interaction to membership with email `a_email', product `a_product', platform `a_platform'
+				-- file `a_file_name', token `a_token'.
 		do
 			if attached login_provider.user_from_email (a_email) as l_data then
 				 data_provider.add_download_interaction (l_data.user_name, a_product, a_platform, a_file_name)
@@ -110,7 +114,9 @@ feature -- Basic Operations
 		end
 
 	add_download_interaction_contact (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)
-		do
+				-- Add download interaction to contact with email `a_email', product `a_product', platform `a_platform'
+				-- file `a_file_name', token `a_token'.
+ 		do
 			if attached login_provider.contact_from_email (a_email) then
 				 data_provider.add_download_interaction_contact (a_email, a_product, a_platform, a_file_name)
 			end
@@ -149,4 +155,5 @@ feature {NONE} -- Database Providers
 			-- Login data provider.
 
 	connection: DATABASE_CONNECTION
+			-- Current database connection.
 end

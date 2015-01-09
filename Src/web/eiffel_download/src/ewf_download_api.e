@@ -118,7 +118,6 @@ feature -- Workflow
 				l_token := l_security.token
 			end
 
-
 			if
 				attached database_service as l_service
 			then
@@ -138,7 +137,14 @@ feature -- Workflow
 							l_service.initialize_download (l_token, l_form)
 					end
 					send_email (req, l_form, l_token, req.absolute_script_url (""))
-					compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
+					if
+						attached email_service as l_email_service and then
+						attached l_email_service.last_error as l_error
+					then
+						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+					else
+						compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
+					end
 				else
 					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
@@ -172,7 +178,7 @@ feature -- Workflow
 						log.write_debug (generator + "process_workflow:" + email +  " Membership")
 						if 	l_service.is_download_active (l_token.value) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
-							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
@@ -188,7 +194,7 @@ feature -- Workflow
 						log.write_debug (generator + "process_workflow:" + email +  " Contact")
 						if 	l_service.is_download_active (l_token.value) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
-							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
@@ -196,7 +202,7 @@ feature -- Workflow
 								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
-								log.write_debug (generator + ".process_workflow The service unavailable")
+								log.write_debug (generator + ".process_workflow The database service is unavailable")
 								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 							end
 						end
@@ -208,7 +214,7 @@ feature -- Workflow
 						if 	l_service.is_download_active (l_token.value ) then
 							log.write_debug (generator + "process_workflow:" + email +  " Download active")
 							l_service.validate_contact (email) --(add a new contact, remove temporary contact)
-							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, "", l_token.value)
+							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
@@ -216,22 +222,22 @@ feature -- Workflow
 								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
-								log.write_debug (generator + ".process_workflow The service unavailable")
+								log.write_debug (generator + ".process_workflow: The database service is unavailable")
 								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 							end
 						end
 					end
 				else
 					if l_service.is_available then
-						log.write_debug (generator + ".process_workflow The request was invalid " + req.path_info)
+						log.write_debug (generator + ".process_workflow: The request was invalid " + req.path_info)
 						bad_request (req, res, "")
 					else
-						log.write_debug (generator + ".process_workflow The service unavailable")
+						log.write_debug (generator + ".process_workflow The database service is unavailable")
 						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 					end
 				end
 			else
-				log.write_debug (generator + ".process_workflow The service unavailable")
+				log.write_debug (generator + ".process_workflow: The database service is unavailable")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -413,15 +419,16 @@ feature -- Send Email
 			l_hp: EMAIL_DOWNLOAD_OPTIONS
 		do
 
-			if attached email_service as l_email_service and then
-				attached download_service as l_service then
-					create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service)
-					if attached l_hp.representation as l_html_download_options then
-						l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
-					else
-						l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host)
-					end
-
+			if
+				attached email_service as l_email_service and then
+				attached download_service as l_service
+			then
+				create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service)
+				if attached l_hp.representation as l_html_download_options then
+					l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
+				else
+					l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host)
+				end
 			end
 		end
 
@@ -429,15 +436,16 @@ feature -- Send Email
 		local
 			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do
-			if attached email_service as l_email_service and then
-					attached download_service as l_service then
-						create l_hp.make (layout.html_template_path, a_download_information)
-						if attached l_hp.representation as l_html_download_info then
-							l_email_service.send_email_download_notification (l_html_download_info)
-						else
-							l_email_service.send_email_download_notification ("Internal Server Error")
-						end
-
+			if
+				attached email_service as l_email_service and then
+				attached download_service as l_service
+			then
+				create l_hp.make (layout.html_template_path, a_download_information)
+				if attached l_hp.representation as l_html_download_info then
+					l_email_service.send_email_download_notification (l_html_download_info)
+				else
+					l_email_service.send_email_download_notification ("Internal Server Error")
+				end
 			end
 		end
 

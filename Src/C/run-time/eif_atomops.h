@@ -87,7 +87,7 @@ extern "C" {
 #	define RTS_AS_I32(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
 #	define RTS_AA_I32(dest, val)             __sync_add_and_fetch (dest, val)
 #	define RTS_AS_PTR(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
-#elif EIF_OS == EIF_OS_SUNOS && ((EIF_ARCH == EIF_ARCH_SPARC) || (EIF_ARCH == EIF_ARCH_SPARC_64))
+#elif (EIF_OS == EIF_OS_SUNOS && ((EIF_ARCH == EIF_ARCH_SPARC) || (EIF_ARCH == EIF_ARCH_SPARC_64))) || (EIF_OS == EIF_OS_LINUX && (defined (__SUNPRO_C) || defined (__SUNPRO_CC)))
 	/**
 	 * There are no C equivalents to the atomic operatons.
 	 * The following replacements should be synchronized by mutexes

@@ -213,7 +213,7 @@ else
 fi
 lintflags='-m -x -errsecurity=extended -Ncheck=%all -Nlevel=4 -errfmt=tab -errchk=locfmtchk,parentheses,no%signext,no%sizematch,structarg'
 ldflags='-64'
-ldsharedflags="$ldflags -G -o"
+ldsharedflags="$ccldflags -G -o"
 libs='-lsocket -lnsl -lm -lrt'
 ln='/bin/ln'
 if [ -n "$MAKE" ]; then

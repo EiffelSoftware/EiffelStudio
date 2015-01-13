@@ -102,7 +102,11 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #	define memory_order_relaxed_const eiffel_run_time::memory_order_relaxed
 #	define memory_order_acquire_const eiffel_run_time::memory_order_acquire
 #	define memory_order_seq_cst_const eiffel_run_time::memory_order_seq_cst
-#	define memory_barrier() EIF_MEMORY_BARRIER
+#	if defined (EIF_HAS_MEMORY_BARRIER)
+#		define memory_barrier() EIF_MEMORY_BARRIER
+#	else
+#		define memory_barrier() /* TODO: use a mutex to emulate a memory barrier. */
+#	endif
 #endif
 
 /* #define EIF_USE_STD_SHARED_PTR */

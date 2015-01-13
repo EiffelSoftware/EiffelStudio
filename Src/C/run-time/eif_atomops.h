@@ -88,13 +88,15 @@ extern "C" {
 #	define RTS_AA_I32(dest, val)             __sync_add_and_fetch (dest, val)
 #	define RTS_AS_PTR(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
 #elif EIF_OS == EIF_OS_SUNOS && ((EIF_ARCH == EIF_ARCH_SPARC) || (EIF_ARCH == EIF_ARCH_SPARC_64))
-	extern uint32_t atomic_add_32_nv(uint32_t *target, int32_t delta);
-	extern uint32_t cas32(uint32_t *target, uint32_t cmp, uint32_t newval);
-	extern void *casptr(void *target, void *cmp, void *newval);
-#	define RTS_ACAS_I32(dest,setter,compare) cas32 ((uint32_t *) dest, compare, setter)
-#	define RTS_AS_I32(dest, setter)          cas32 ((uint32_t *) dest, *dest, setter)
-#	define RTS_AA_I32(dest, val)             atomic_add_32_nv ((uint32_t *) dest, val)
-#	define RTS_AS_PTR(dest, setter)          casptr ((void *) dest, *dest, setter)
+	/**
+	 * There are no C equivalents to the atomic operatons.
+	 * The following replacements should be synchronized by mutexes
+	 * and are provided here only as a reference for future implementation.
+	 */
+#	define RTS_ACAS_I32(dest,setter,compare) (* (int32_t *) dest == (int32_t) compare ? (* (int32_t *) dest = (int32_t) setter), (int32_t) compare : * (int32_t *) dest)
+#	define RTS_AS_I32(dest, setter)          (* (int32_t *) dest = (int32_t) setter)
+#	define RTS_AA_I32(dest, val)             (* (int32_t *) dest += (int32_t) val)
+#	define RTS_AS_PTR(dest, setter)          (* (void **) dest = (void *) setter)
 #elif EIF_OS == EIF_OS_SUNOS
 #	define RTS_ACAS_I32(dest,setter,compare) atomic_cas_32 ((volatile uint32_t *) dest, compare, setter)
 #	define RTS_AS_I32(dest, setter)          atomic_swap_32 ((volatile uint32_t*) dest, setter)

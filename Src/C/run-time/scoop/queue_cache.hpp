@@ -49,7 +49,7 @@
 #if defined (__GNUC__) && (__cplusplus < 201103L)
 #	include <tr1/unordered_map>
 #	define RT_UNORDERED_MAP std::tr1::unordered_map
-#elif !defined (__sun)
+#elif EIF_OS != EIF_OS_SUNOS && !defined (__SUNPRO_CC)
 #	include <unordered_map>
 #	define RT_UNORDERED_MAP std::unordered_map
 #else

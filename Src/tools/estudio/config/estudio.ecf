@@ -18,6 +18,7 @@
 		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf">
 			<condition>
 				<platform value="macintosh"/>
+				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</library>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf"/>
@@ -30,7 +31,8 @@
 		<cluster name="src" location="..\src\">
 			<cluster name="unix" location="$|spec\unix\">
 				<condition>
-					<platform excluded_value="windows macintosh"/>
+					<platform excluded_value="windows"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</cluster>
 			<cluster name="windows" location="$|spec\windows\">
@@ -41,6 +43,7 @@
 			<cluster name="macosx" location="$|spec\macosx\">
 				<condition>
 					<platform value="macintosh"/>
+					<custom name="vision_implementation" value="cocoa"/>
 				</condition>
 			</cluster>
 		</cluster>

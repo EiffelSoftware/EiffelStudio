@@ -225,28 +225,22 @@ if [ ! "$NO_COMPILE" ]; then
 		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing 
 	fi
 
-	remtrace ISE specific files
-	cd $EIFFEL_SRC
-	exprt $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
-	cd tools
-	exprt $DEFAULT_ISE_SVN/Src/tools/activation activation
-	exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+	remtrace ISE specific files for enterprise edition
+	if [ "$MULTIPLE_EDITIONS" ]; then
+		cd $EIFFEL_SRC
+		exprt $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
+		cd tools
+		exprt $DEFAULT_ISE_SVN/Src/tools/activation activation
+		exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+	fi
 
 	remtrace Install iron files
 	safe_md $INSTALL_DIR/tools
 	cd $INSTALL_DIR/tools
 	exprt $DEFAULT_ORIGO_SVN/Src/tools/iron/delivery/iron iron
 
-	remtrace Update all libraries
-	cd $INIT_DIR
-	set -- library $GTK_DIR
-	. ./update_libraries
-	cd $INIT_DIR
-	set -- compatible/library $GTK_DIR
-	. ./update_libraries
-	cd $INIT_DIR
-
 	remtrace Generate needed executables of the bin directory
+	cd $INIT_DIR
 	. ./make_exes
 	cd $INIT_DIR
 

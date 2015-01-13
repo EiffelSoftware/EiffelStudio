@@ -63,7 +63,7 @@
  * 'vector::emplace_back' is not available on all platforms.
  * It is replaced conditionally by 'push_back' that might be less efficient.
  */
-#if (defined (__GNUC__) && (__cplusplus < 201103L)) || defined (__sun)
+#if (defined (__GNUC__) && (__cplusplus < 201103L)) || EIF_OS == EIF_OS_SUNOS || defined (__SUNPRO_CC)
 #	define EMPLACE      insert
 #	define EMPLACE_BACK push_back
 #else

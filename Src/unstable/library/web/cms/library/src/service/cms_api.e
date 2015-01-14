@@ -38,7 +38,7 @@ feature -- Initialize
 		do
 			if not retried then
 				to_implement ("Refactor database setup")
-				if attached (create {JSON_CONFIGURATION}).new_database_configuration (setup.layout.application_config_path) as l_database_config then
+				if attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (setup.layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_MYSQL} l_database.login_with_connection_string (l_database_config.connection_string)
 					create {CMS_STORAGE_MYSQL} storage.make (l_database)
 				else
@@ -207,12 +207,43 @@ feature -- Change User
 			end
 		end
 
+feature -- Layout
+
+	module_configuration (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
+			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
+		local
+			p, l_path: PATH
+			ut: FILE_UTILITIES
+		do
+			p := setup.layout.config_path.extended ("modules").extended (a_module_name)
+			if a_name = Void then
+				p := p.extended (a_module_name)
+			else
+				p := p.extended (a_name)
+			end
+			l_path := p.appended_with_extension ("json")
+			if ut.file_path_exists (l_path) then
+				create {JSON_CONFIG} Result.make_from_file (l_path)
+			else
+				l_path := p.appended_with_extension ("ini")
+				if ut.file_path_exists (l_path) then
+					create {INI_CONFIG} Result.make_from_file (l_path)
+				end
+			end
+			if Result = Void and a_name /= Void then
+					-- Use sub config from default?
+				if attached {CONFIG_READER} module_configuration (a_module_name, Void) as cfg then
+					Result := cfg.sub_config (a_name)
+				else
+					-- Maybe try to use the global cms.ini ?	
+				end
+			end
+		end
 
 feature {NONE} -- Implemenataion
 
-
 	storage: CMS_STORAGE
-		-- Persistence storage.
+			-- Persistence storage.
 
 end
 

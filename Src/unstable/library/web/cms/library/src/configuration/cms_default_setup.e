@@ -37,24 +37,32 @@ feature {NONE} -- Initialization
 
 	configure
 		do
+				--| Site id, used to identified a site, this could be set to a uuid, or else
 			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
+
+				-- Site url: optional, but ending with a slash
 			site_url := string_8_item ("site_url")
 			if attached site_url as l_url and then not l_url.is_empty then
 				if l_url[l_url.count] /= '/' then
 					site_url := l_url + "/"
 				end
 			end
+				-- Site name
 			site_name := text_item_or_default ("site.name", "EWF::CMS")
+
+				-- Site email for any internal notification
+				-- Can be also used to precise the "From:" value for email.
 			site_email := text_item_or_default ("site.email", "webmaster")
 
+				-- Location for theme folders.
 			if attached text_item ("themes-dir") as s then
 				create themes_location.make_from_string (s)
 			else
 				themes_location := layout.www_path.extended ("themes")
 			end
 
+				-- Selected theme's name
 			theme_name := text_item_or_default ("theme", "default")
-			smtp := string_8_item ("smtp")
 
 			debug ("refactor_fixme")
 				fixme ("Review export clause for configuration and layout")

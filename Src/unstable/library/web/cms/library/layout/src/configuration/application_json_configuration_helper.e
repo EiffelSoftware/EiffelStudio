@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	JSON_CONFIGURATION
+	APPLICATION_JSON_CONFIGURATION_HELPER
 
 feature -- Application Configuration
 
@@ -113,7 +113,7 @@ feature {NONE} -- JSON
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 
 end

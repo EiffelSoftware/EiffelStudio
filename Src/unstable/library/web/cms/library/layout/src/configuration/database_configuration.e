@@ -25,10 +25,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	driver: READABLE_STRING_32
-		--Database driver.
+			--Database driver.
 
 	database_string: READABLE_STRING_32
-		-- Database connection.	
+			-- Database connection.	
 
 	connection_string: READABLE_STRING_32
 			-- Connection string

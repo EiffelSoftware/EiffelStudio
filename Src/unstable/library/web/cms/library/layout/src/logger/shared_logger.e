@@ -29,7 +29,7 @@ feature -- Logger
 			create l_environment
 			if attached separate_character_option_value ('d') as l_dir then
 				l_path := create {PATH}.make_from_string (l_dir)
-				create l_log_writer.make_at_location (l_path.extended ("..").appended ("\api.log"))
+				create l_log_writer.make_at_location (l_path.extended ("logs").appended ("\api.log"))
 			else
 				l_path := create {PATH}.make_current
 				create l_log_writer.make_at_location (l_path.extended("api.log"))
@@ -107,6 +107,6 @@ feature {NONE} -- JSON
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -158,6 +158,7 @@ feature -- Execute Filter
 			-- Execute the filter.
 		do
 			res.put_header_line ("Date: " + (create {HTTP_DATE}.make_now_utc).string)
+			res.put_header_line ("X-EWF-Server: CMS_v1.0")
 			execute_service (req, res)
 		end
 

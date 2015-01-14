@@ -66,9 +66,6 @@ feature -- Access: Site
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 
-	smtp: detachable READABLE_STRING_8
-			-- Smtp server
-
 feature -- Query
 
 	text_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32

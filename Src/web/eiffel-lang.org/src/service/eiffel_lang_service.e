@@ -78,6 +78,10 @@ feature -- Implementation: CMS
 		local
 			m: CMS_MODULE
 		do
+			create {CONTACT_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 			create {WDOCS_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)

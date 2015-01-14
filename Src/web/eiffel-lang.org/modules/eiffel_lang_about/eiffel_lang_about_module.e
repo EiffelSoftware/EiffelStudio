@@ -17,6 +17,8 @@ inherit
 
 	CMS_HOOK_BLOCK
 
+	CMS_HOOK_BLOCK_HELPER
+
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -72,16 +74,6 @@ feature -- Router
 			Result.handle_with_request_methods ("/news", create {WSF_URI_AGENT_HANDLER}.make (agent handle_news (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/articles", create {WSF_URI_AGENT_HANDLER}.make (agent handle_articles (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/blogs", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/post_contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), Result.methods_put_post)
-		end
-
-feature -- Recaptcha
-
-	recaptcha_key (api: CMS_API): READABLE_STRING_8
-			-- Get recaptcha security key.
-		do
-			Result := (create {EIFFEL_LANG_ABOUT_JSON_CONFIGURATION}).new_recaptcha_key (api.setup.layout.config_path.extended ("modules").extended (name).extended ("about_configuration.json"))
 		end
 
 feature -- Hooks configuration
@@ -108,7 +100,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"about_main", "purpose", "news", "articles", "blogs", "contact", "post_contact">>
+			Result := <<"about_main", "purpose", "news", "articles", "blogs">>
 			create l_string.make_empty
 			across
 				Result as ic
@@ -125,9 +117,9 @@ feature -- Hooks
 		do
 			l_path_info := a_response.request.percent_encoded_path_info
 
-				--"purpose","news","articles","blogs","contact"
+				--"purpose","news","articles","blogs"
 			if a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
@@ -136,7 +128,7 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then l_path_info.starts_with ("/purpose") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
@@ -145,7 +137,7 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("news") and then l_path_info.starts_with ("/news") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
@@ -154,7 +146,7 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("articles") and then l_path_info.starts_with ("/articles") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
@@ -163,28 +155,9 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("blogs") and then l_path_info.starts_with ("/blogs") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif a_block_id.is_case_insensitive_equal_general ("contact") and then l_path_info.starts_with ("/contact") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "content")
-					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif a_block_id.is_case_insensitive_equal_general ("post_contact") and then l_path_info.starts_with ("/post_contact") then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
---					l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
---					a_response.add_block (l_tpl_block, "content")
---					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -248,156 +221,6 @@ feature -- Hooks
 			r.execute
 		end
 
-	handle_contact (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			log.write_debug (generator + ".handle_contact")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force ("contact", "contact")
-			r.execute
-		end
-
-	handle_post_contact (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			es: EIFFEL_LANG_EMAIL_SERVICE
-			m: STRING
-			um: STRING
-		do
-			log.write_information (generator + ".handle_post_contact")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force (False, "has_error")
-
-			log.write_debug (generator + ".handle_post_contact {Form Parameters:" + print_form_parameters (req) +"}")
-			if
-				attached {WSF_STRING} req.form_parameter ("name") as l_name and then
-				attached {WSF_STRING} req.form_parameter ("email") as l_email and then
-				attached {WSF_STRING} req.form_parameter ("message") as l_message and then
-				attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response
-			then
-				if is_captcha_verified (recaptcha_key (api), l_recaptcha_response.value)  then
-					create m.make_from_string (email_template ("email", r))
-					log.write_information (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message))
-					create es.make (create {EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS}.make (api))
-					log.write_debug (generator + ".handle_post_contact: send_contact_email")
-					es.send_contact_email (l_email.value, m)
-					create um.make_from_string (user_contact)
-					um.replace_substring_all ("$name", l_name.value)
-					um.replace_substring_all ("$email", l_email.value)
-					um.replace_substring_all ("$message", l_message.value)
-					log.write_debug (generator + ".handle_post_contact: send_internal_email")
-					es.send_internal_email (um)
-					if attached es.last_error then
-						log.write_error (generator + ".handle_post_contact:  error message:["+ es.last_error_message +"]")
-						r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
-						r.values.force (True, "has_error")
-						if attached template_block ("post_contact", r) as l_tpl_block then
-							l_tpl_block.set_value (r.values.item ("has_error"), "has_error")
-							r.set_main_content (l_tpl_block.to_html(r.theme))
-						end
-					else
-						if attached template_block ("post_contact", r) as l_tpl_block then
-							r.set_main_content (l_tpl_block.to_html(r.theme))
-						end
-					end
-					r.execute
-				else
-						-- send a bad request status code and redisplay the form with the previous data loaded.	
-					r.set_value (False, "error")
-					r.set_status_code ({HTTP_STATUS_CODE}.bad_request)
-					if attached template_block ("contact", r) as l_tpl_block then
-						l_tpl_block.set_value (l_name.value, "name")
-						l_tpl_block.set_value (l_email.value, "email")
-						l_tpl_block.set_value (l_message.value, "message")
-						l_tpl_block.set_value (<<"Missing Captcha","Internal Server Error">>,"error_response" )
-						r.set_main_content (l_tpl_block.to_html(r.theme))
-					else
-						debug ("cms")
-							r.add_warning_message ("Error with block [contribute_page]")
-						end
-					end
-					r.execute
-				end
-			else
-					-- Internal server error
-				log.write_error (generator + ".handle_post_contact:  Internal Server error")
-				r.values.force (True, "has_error")
-				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
-				if attached template_block ("post_contact", r) as l_tpl_block then
-					l_tpl_block.set_value (r.values.item ("has_error"), "has_error")
-					r.set_main_content (l_tpl_block.to_html(r.theme))
-				end
-				r.execute
-			end
-		end
-
-feature {NONE} -- Helpers
-
-	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
-		local
-			p: detachable PATH
-		do
-			create p.make_from_string ("templates")
-			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
-			if p /= Void then
-				if attached p.entry as e then
-					create Result.make (a_block_id, Void, p.parent, e)
-				else
-					create Result.make (a_block_id, Void, p.parent, p)
-				end
-			end
-		end
-
-	print_form_parameters (req: WSF_REQUEST): STRING
-		do
-			create Result.make_empty
-			across req.form_parameters as ic loop
-					 Result.append (ic.item.key)
-					Result.append_character ('=')
-					 if attached {WSF_STRING} req.form_parameter (ic.item.key) as l_value then
-					 	Result.append_string (l_value.value)
-					 elseif attached {WSF_MULTIPLE_STRING} req.form_parameter (ic.item.key) as l_value  then
-					 	Result.append_character ('[')
-					 	Result.append_string (l_value.string_representation)
-					 	Result.append_character (']')
-					 end
-					 Result.append_character ('%N')
-				end
-		end
-
-feature {NONE} -- Implementation: date and time
-
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_string (s)
-			if not d.has_error then
-				Result := d.date_time
-			end
-		end
-
-	file_date (p: PATH): DATE_TIME
-		require
-			path_exists: (create {FILE_UTILITIES}).file_path_exists (p)
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (p)
-			Result := timestamp_to_date (f.date)
-		end
-
-	timestamp_to_date (n: INTEGER): DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_timestamp (n)
-			Result := d.date_time
-		end
-
 feature {NONE} -- HTML ENCODING.
 
 	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
@@ -409,78 +232,6 @@ feature {NONE} -- HTML ENCODING.
 			end
 		end
 
-feature {NONE} -- Contact Message
-
-	email_template (a_template: READABLE_STRING_8; a_response: CMS_RESPONSE): STRING
-			-- Smarty email template.
-		local
-			p: detachable PATH
-			l_block: CMS_SMARTY_TEMPLATE_BLOCK
-		do
-			log.write_debug (generator + ".email_template with template [" + a_template + " ]")
-			create p.make_from_string ("templates")
-			p := p.extended ("block_").appended (a_template).appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
-			if p /= Void then
-				if attached p.entry as e then
-					create l_block.make (a_template, Void, p.parent, e)
-					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
-				else
-					create l_block.make (a_template, Void, p.parent, p)
-					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
-				end
-				Result := l_block.to_html (a_response.theme)
-			else
-				log.write_debug (generator + ".email_template without template_block:" + contact_message)
-				Result := contact_message
-			end
-		end
-
-	contact_message: STRING = "[
-			<p>
-				Thank you for contacting the Eiffel Programming Language community.<br/>
-				We will get back to you promptly on your contact request.
-			</p>
-		]"
-
-	user_contact: STRING = "[
-			                        <h2> Notification contact form</h2>  
-									<div>
-										<strong>Name<strong>: $name <br/>
-										<strong>Email<strong>: $email <br/>
-										<strong>Message<strong>: $message <br/>
-									</div> <br/>
-		]"
-
-
-feature {NONE} -- Google recaptcha uri template
-
-	uri_recaptcha_template: STRING_8 = "https://www.google.com/recaptcha/api/siteverify?secret=$secret_key&response=$g-recaptcha-response"
-			-- Url to check if google has verified the user.
-			-- GET request to URI https://www.google.com/recaptcha/api/siteverify
-			-- secret(required) : Secret key for the site
-			-- response(required) The value of 'g-recaptcha-response'.
-			-- remoteip: The end user's ip address.
-
-
-	is_captcha_verified (a_secret, a_response: READABLE_STRING_8): BOOLEAN
-		local
-			api: RECAPTCHA_API
-			l_errors: STRING
-		do
-			log.write_debug (generator + ".is_captcha_verified with response: [" + a_response + "]")
-			create api.make (a_secret, a_response)
-			Result := api.verify
-			if not Result and then attached api.errors as l_api_errors then
-				create l_errors.make_empty
-				l_errors.append_character ('%N')
-				across l_api_errors as ic loop
-					l_errors.append ( ic.item )
-					l_errors.append_character ('%N')
-				end
-				log.write_error (generator + ".is_captcha_verified api_errors [" + l_errors + "]")
-			end
-		end
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {EIFFEL_LANG_EMAIL_SERVICE}."
+	description: "Summary description for {CONTACT_EMAIL_SERVICE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EIFFEL_LANG_EMAIL_SERVICE
+	CONTACT_EMAIL_SERVICE
 
 inherit
 	EMAIL_SERVICE
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			contact_email := parameters.contact_email
 		end
 
-	parameters: EIFFEL_LANG_EMAIL_SERVICE_PARAMETERS
+	parameters: CONTACT_EMAIL_SERVICE_PARAMETERS
 			-- Associated parameters.		
 
 feature -- Access		

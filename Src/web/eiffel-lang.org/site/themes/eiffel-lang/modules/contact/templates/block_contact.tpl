@@ -15,17 +15,19 @@ form below.</p>
         <li id="info">There were some problems with your form submission:</li>
     </ul>
     <p id="success">Thanks for your message! We will get back to you ASAP!</p>
-    <form method="post" action="{$site_url/}/post_contact">
+    <form method="post" action="{$site_url/}/contact">
         <label for="name">Name: <span class="required">*</span></label>
-        <input type="text" id="name" name="name" value="{$name/}" placeholder="John Doe" required="required" autofocus="autofocus" />
+        <input type="text" id="name" name="name" value="{$name/}" required="required" autofocus="autofocus" />
          
         <label for="email">Email Address: <span class="required">*</span></label>
-        <input type="email" id="email" name="email" value="{$email/}" placeholder="johndoe@example.com" required="required" />
+        <input type="email" id="email" name="email" value="{$email/}" required="required" />
          
         <label for="message">Message: <span class="required">*</span></label>
-        <textarea id="message" name="message" placeholder="Your message" required="required" data-minlength="20" minlength="20" >{$message/}</textarea>
-        <div class="g-recaptcha" data-sitekey="6LdJef8SAAAAAHzWyhy6Y838EVCTS8XrKC7mLIjT"></div>
+        <textarea id="message" name="message" required="required" data-minlength="20" minlength="20" >{$message/}</textarea>
+		{unless isempty="$recaptcha_site_key"}
+        <div class="g-recaptcha" data-sitekey="{$recaptcha_site_key/}"></div>
         <br/>
+		{/unless}
         <input type="submit" value="Send" id="submit-button" />
         <p id="req-field-desc"><span class="required">*</span> indicates a required field</p>
     </form>

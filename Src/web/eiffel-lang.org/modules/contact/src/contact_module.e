@@ -123,7 +123,11 @@ feature -- Hooks
 			l_path_info := a_response.request.percent_encoded_path_info
 
 				-- "contact", "post_contact"
-			if a_block_id.is_case_insensitive_equal_general ("contact") and then l_path_info.starts_with ("/contact") then
+			if 
+				a_block_id.is_case_insensitive_equal_general ("contact") and then 
+				l_path_info.starts_with ("/contact") and then
+				a_response.request.is_get_request_method
+			then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
 						l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
@@ -136,7 +140,10 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("post_contact") and then l_path_info.starts_with ("/contact") then
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("post_contact") and then
+				l_path_info.starts_with ("/contact")
+			then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 --					l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
 --					a_response.add_block (l_tpl_block, "content")

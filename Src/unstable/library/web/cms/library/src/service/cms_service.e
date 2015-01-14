@@ -57,8 +57,11 @@ feature {NONE} -- Initialization
 			initialize_users
 			initialize_auth_engine
 			initialize_mailer
+				-- initialize_router
+				-- initialize_filter: expanded here, for void-safety concern.
+			create_filter
 			initialize_router
-			initialize_filter
+			setup_filter
 		end
 
 	initialize_modules

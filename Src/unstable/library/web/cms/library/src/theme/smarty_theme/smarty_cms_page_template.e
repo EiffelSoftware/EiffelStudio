@@ -68,7 +68,6 @@ feature -- Access
 			ut: FILE_UTILITIES
 			p: detachable PATH
 			n: STRING_32
-			fn: STRING_32
 		do
 				-- Process html generation
 			template_context.set_template_folder (theme.templates_directory)

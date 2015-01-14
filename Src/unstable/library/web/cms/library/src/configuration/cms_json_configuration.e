@@ -8,8 +8,8 @@ class
 
 inherit
 
-	JSON_CONFIGURATION
-
+	APPLICATION_JSON_CONFIGURATION_HELPER
+	
 feature -- Access
 
 	is_html_mode (a_path: PATH): BOOLEAN

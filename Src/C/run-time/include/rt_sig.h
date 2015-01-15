@@ -49,6 +49,9 @@ extern "C" {
 #ifndef EIF_THREADS
 extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
+#ifdef EIF_WINDOWS
+extern DWORD rt_root_thread_id;	/* Thread ID of the main thread in non-multithreaded mode. */
+#endif
 #endif
 
 /* Testing for pending signals -- if signals are pending, the signal dispatch

@@ -42,7 +42,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
+#include "rt_sig.h"
 #include "rt_assert.h"
 
 #include "eif_project.h"
@@ -870,6 +870,10 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 	eif_retrieve_root(&argc, argv);
 
 #ifdef EIF_WINDOWS
+#ifndef EIF_THREADS
+	rt_root_thread_id = GetCurrentThreadId();
+#endif
+
 	set_windows_exception_filter();
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 /* version 14.0+ (MSVC 8.0+)  */

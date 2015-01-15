@@ -53,6 +53,7 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
 #include "eif_plug.h"
 #include "rt_gen_conf.h"
 #include "rt_assert.h"
+#include "rt_globals_access.h"
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode. */

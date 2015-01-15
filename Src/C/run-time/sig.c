@@ -216,6 +216,31 @@ rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe)
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 	char *signal_name = NULL;
 
+		/* Check if signal was caught in a non-Eiffel thread. In which case we wimply
+		 * print out the signal number except if this is SIGINT or SIGBREAK which are
+		 * usually the result of a user action to stop the process.
+		 * This partially address bug#19000. */
+#if defined(EIF_THREADS) || defined(EIF_WINDOWS)
+#ifdef EIF_THREADS
+	if (rt_globals == NULL)
+#elif defined(EIF_WINDOWS)
+		/* On Windows for a non-multithreaded program, if we are called from a different
+		 * thread than the root one, we clearly cannot continue. */
+	if (rt_root_thread_id != GetCurrentThreadId())
+#endif
+	{
+#ifdef SIGBREAK
+		if (sig != SIGINT && sig != SIGBREAK)
+#else
+		if (sig != SIGINT)
+#endif
+		{
+			fprintf(stderr, "\nSignal caught %d while in a non-Eiffel thread.\n", sig);
+		}
+		exit(EXIT_FAILURE);
+	}
+#endif
+
 	if (esigdefined(sig)) {
 		signal_name = signame(sig);
 	}

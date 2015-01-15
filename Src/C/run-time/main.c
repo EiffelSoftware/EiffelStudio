@@ -505,6 +505,18 @@ doc:	</attribute>
 */
 rt_shared int catcall_detection_mode = default_catcall_detection_mode;	/* Assume we detect catcall at runtime */
 
+#if defined(EIF_WINDOWS) && !defined(EIF_THREADS)
+/*
+doc:	<attribute name="rt_root_thread_id" return_type="DWORD" export="shared">
+doc:		<summary>Thread ID of the root thread in a monothreaded environment. It is used in the signal handler to see if the signal handler is called in a different thread in which case it will not execute and exit the whole program.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared DWORD rt_root_thread_id;
+#endif
+
 /*
 doc:	<routine name="ieee_init" return_type="void" export="private">
 doc:		<summary>Initialized the various IEEE values.</summary>

@@ -34,7 +34,7 @@
 		<?define RegistriesGuid = "05EBC675-7F22-48A6-ADAD-B6B7EF138B8E" ?>
 		<?define ShortcutsGuid = "36F7601A-E935-44B7-B138-E7BE35383353" ?>
       <?else?>
-        <?define ProductGuid = "BA510D8E-C012-4AFC-8ED0-A01B4E165C06}" ?>
+        <?define ProductGuid = "BA510D8E-C012-4AFC-8ED0-A01B4E165C06" ?>
 		<?define RegistriesGuid = "87C8E837-F4D7-4F4B-B164-8DB2B8279658" ?>
 		<?define ShortcutsGuid = "3ED38B45-D513-4E7D-82D1-1F6B2D242A44" ?>
       <?endif?>

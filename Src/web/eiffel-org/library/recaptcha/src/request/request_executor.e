@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_url: like base_url; a_method: READABLE_STRING_GENERAL)
+	make (a_url: READABLE_STRING_8; a_method: READABLE_STRING_8)
 		do
 			set_base_url (a_url)
 			verb := a_method
@@ -27,17 +27,22 @@ feature {NONE} -- Initialization
 			method_set: verb = a_method
 		end
 
-	set_base_url (a_url: like base_url)
+	set_base_url (a_url: READABLE_STRING_8)
 			-- Set base_url with `a_url'
+		local
+			s: STRING
 		do
-			base_url := a_url
+			create s.make_from_string (a_url)
+			s.left_adjust
+			s.right_adjust
+			base_url := s
 		ensure
 			base_url_set: base_url = a_url
 		end
 
 feature -- Access
 
-	verb: READABLE_STRING_GENERAL
+	verb: READABLE_STRING_8
 			-- HTTP METHOD (Get, Post, ...)
 
 	body: detachable READABLE_STRING_8
@@ -80,7 +85,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "2011-2013 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

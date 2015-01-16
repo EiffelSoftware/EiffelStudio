@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="recaptcha" location="..\recaptcha.ecf" readonly="false"/>
+		<library name="recaptcha" location="..\recaptcha-safe.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<cluster name="test" location=".\" recursive="true">
 			<file_rule>

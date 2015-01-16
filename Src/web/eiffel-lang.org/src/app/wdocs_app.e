@@ -19,10 +19,6 @@ create
 
 feature {NONE} -- Initialization
 
-set_foo (n: NATURAL)
-	do
-	end
-
 	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.

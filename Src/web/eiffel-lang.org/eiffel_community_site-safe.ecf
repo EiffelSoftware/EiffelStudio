@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_lang" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
-	<target name="eiffel_lang_common">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+	<target name="eiffel_community_site_common">
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -25,13 +25,12 @@
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="module_contact" location="modules\contact\contact-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules/eiffel_download/eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_eiffel_lang_misc" location="modules/eiffel_lang_misc/eiffel_lang_misc-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_eiffel_lang_about" location="modules/eiffel_lang_about/eiffel_lang_about-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_eiffel_lang_misc" location="modules/eiffel_lang_misc/eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules/wiki_docs/wiki_docs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_codeboard" location="modules/codeboard/codeboard-safe.ecf" readonly="false" use_application_options="true"/>
 	</target>
-	<target name="eiffel_lang_any" extends="eiffel_lang_common">
-		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
+	<target name="eiffel_community_site_any" extends="eiffel_community_site_common">
+		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
@@ -39,39 +38,43 @@
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/web/launcher$</exclude>
+				<exclude>/app$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_lang_nino" extends="eiffel_lang_common">
-		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
+	<target name="eiffel_community_site_nino" extends="eiffel_community_site_common">
+		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/web/launcher$</exclude>
+				<exclude>/app$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_lang_cgi" extends="eiffel_lang_common">
-		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
+	<target name="eiffel_community_site_cgi" extends="eiffel_community_site_common">
+		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/web/launcher$</exclude>
+				<exclude>/app$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_lang_libfcgi" extends="eiffel_lang_common">
-		<root class="EIFFEL_LANG_WEB" feature="make_and_launch"/>
+	<target name="eiffel_community_site_libfcgi" extends="eiffel_community_site_common">
+		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/web/launcher$</exclude>
+				<exclude>/app$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_lang" extends="eiffel_lang_nino">
+	<target name="eiffel_community_site" extends="eiffel_community_site_nino">
 	</target>
 </system>

@@ -118,7 +118,7 @@ feature -- Access
 --		local
 --			cfg: WDOCS_INI_CONFIG
 --		do
---			create cfg.make (create {PATH}.make_from_string ("eiffel-lang-app.ini"))
+--			create cfg.make (create {PATH}.make_from_string ("wdocs.ini"))
 --			create Result.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
 --			Result.set_server_url ("http://localhost:" + port_number.out)
 --		end

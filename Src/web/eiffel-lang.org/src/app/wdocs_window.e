@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			lay: CMS_LAYOUT
 		do
 			create lay.make_default
-			create cfg.make (lay.config_path.extended ("eiffel-lang.ini"))
+			create cfg.make (lay.config_path.extended ("wdocs.ini"))
 			create wdocs.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
 			wdocs.set_server_url ("http://localhost:" + port_number.out)
 			wdocs_manager := wdocs

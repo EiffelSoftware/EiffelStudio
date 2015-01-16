@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {WDOCS_SERVICE}."
+	description: "Summary description for {EIFFEL_COMMUNITY_SITE_SERVICE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	EIFFEL_LANG_SERVICE
+	EIFFEL_COMMUNITY_SITE_SERVICE
 
 inherit
 	WSF_SERVICE
@@ -68,7 +68,7 @@ feature -- Implementation: CMS
 			cms_service := cms
 		end
 
-	cms_setup (a_layout: CMS_LAYOUT): EIFFEL_LANG_CMS_SETUP
+	cms_setup (a_layout: CMS_LAYOUT): EIFFEL_COMMUNITY_SITE_CMS_SETUP
 		do
 			create Result.make (a_layout)
 			setup_storage (Result)
@@ -86,15 +86,11 @@ feature -- Implementation: CMS
 			m.enable
 			a_setup.register_module (m)
 
-			create {EIFFEL_LANG_MISC_MODULE} m.make
+			create {EIFFEL_COMMUNITY_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
 			create {EIFFEL_DOWNLOAD_MODULE} m.make
-			m.enable
-			a_setup.register_module (m)
-
-			create {EIFFEL_LANG_ABOUT_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 

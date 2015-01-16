@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {EIFFEL_LANG_CMS_SETUP}."
+	description: "Summary description for {EIFFEL_COMMUNITY_SITE_CMS_SETUP}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EIFFEL_LANG_CMS_SETUP
+	EIFFEL_COMMUNITY_SITE_CMS_SETUP
 
 inherit
 	CMS_DEFAULT_SETUP

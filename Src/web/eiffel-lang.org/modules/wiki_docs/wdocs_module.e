@@ -134,11 +134,11 @@ feature -- Access: config
 					create {WDOCS_INI_CONFIG} Result.make (p)
 				end
 			else
-				p := a_dir.extended ("eiffel-lang.ini")
+				p := a_dir.extended ("wdocs.ini")
 				if ut.file_path_exists (p) then
 					create {WDOCS_INI_CONFIG} cfg.make (p)
 				else
-					p := a_dir.extended ("eiffel-lang.json")
+					p := a_dir.extended ("wdocs.json")
 					if ut.file_path_exists (p) then
 						create {WDOCS_JSON_CONFIG} cfg.make (p)
 					end

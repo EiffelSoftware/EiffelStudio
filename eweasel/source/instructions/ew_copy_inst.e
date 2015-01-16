@@ -162,7 +162,7 @@ feature -- Properties
 	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
 		do
-			Result := get (Eweasel_fast_name) /= Void
+			Result := item (Eweasel_fast_name) /= Void
 		end;
 
 feature {NONE}  -- Implementation

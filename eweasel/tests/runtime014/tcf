@@ -229,7 +229,6 @@ compare		exec_output13 output
 define BEFORE_DLL_CALL "io.put_string ("Before call"); io.put_new_line"
 
 copy_sub	test.e $CLUSTER test.e
-16
 compile_frozen
 compile_result	ok
 c_compile_work

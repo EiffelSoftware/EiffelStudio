@@ -80,13 +80,6 @@ feature -- Access: config
 			end
 		end
 
-	gpl_version (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_OPTIONS
-			-- Get eiffel studio version.
-		do
-			create Result
-			Result.set_product (retrieve_product_gpl (cfg))
-		end
-
 	retrieve_mirror_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_32
 			-- Get mirror.
 		do
@@ -341,15 +334,6 @@ feature -- Handler
 			h.put_location (a_link)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
-		end
-
-	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
-		do
-			if s /= Void then
-				Result := html_encoder.general_encoded_string (s)
-			else
-				create Result.make_empty
-			end
 		end
 
 feature {NONE}  -- Helper

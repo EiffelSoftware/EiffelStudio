@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	EIFFEL_LANG_WEB
+	EIFFEL_COMMUNITY_WEB
 
 inherit
 	WSF_LAUNCHABLE_SERVICE
@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	EIFFEL_LANG_SERVICE
+	EIFFEL_COMMUNITY_SITE_SERVICE
 
 	APPLICATION_LAUNCHER
 

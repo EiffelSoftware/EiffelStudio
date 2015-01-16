@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_lang_about" uuid="4B296CB4-A2C5-4FE0-8F7E-BF355933E8B6" library_target="eiffel_lang_about">
-	<target name="eiffel_lang_about">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_community_module" uuid="5AF34A7F-2A43-42F6-9CF1-9E6EB727F94E" library_target="eiffel_community_module">
+	<target name="eiffel_community_module">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -11,14 +11,11 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms-safe.ecf" readonly="false"/>
-		<library name="cms_layout" location="$ISE_LIBRARY\unstable\library\web\cms\library\layout\layout-safe.ecf" readonly="false"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
-		<library name="recaptcha" location="..\..\library\recaptcha\recaptcha.ecf"/>
+		<library name="cms_layout" location="$ISE_LIBRARY\unstable\library\web\cms\library\layout\layout-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

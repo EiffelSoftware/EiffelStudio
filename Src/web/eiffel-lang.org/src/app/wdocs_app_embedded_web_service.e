@@ -15,7 +15,7 @@ inherit
 			initialize_options
 		end
 
-	EIFFEL_LANG_SERVICE
+	EIFFEL_COMMUNITY_SITE_SERVICE
 		redefine
 			initialize_cms
 		select
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			p: PATH
 			ut: FILE_UTILITIES
 		do
-			create p.make_from_string ("eiffel-lang.ini")
+			create p.make_from_string ("wdocs.ini")
 			if ut.file_path_exists (p) then
 				create {WDOCS_INI_CONFIG} cfg.make (p)
 			elseif attached execution_environment.item ("WDOCS_CONFIG") as s then

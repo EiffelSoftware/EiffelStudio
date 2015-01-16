@@ -1,5 +1,5 @@
 note
-	description: "Basic Email Service customized for eiffel-lang"
+	description: "Basic Email Service customized for cms site"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

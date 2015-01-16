@@ -66,7 +66,6 @@ feature -- Properties
 			-- Is the status of compilation and analysis known?
 		local
 			l_count: INTEGER
-			l_exactly_one_analysis_status: BOOLEAN
 		do
 			if Precursor and not eweasel_parse_error then
 					-- Check that we have exactly one analysis status.

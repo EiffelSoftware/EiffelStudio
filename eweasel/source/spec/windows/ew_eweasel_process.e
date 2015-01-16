@@ -92,7 +92,7 @@ feature -- Creation
 			input_pipe_needed := inf = Void
 			output_pipe_needed := outf = Void
 			run_hidden
-			spawn_with_console (cmd_line, current_working_directory)
+			spawn_with_console (cmd_line, current_working_path.name)
 			l_success := file_handle.close (child_input)
 			l_success := file_handle.close (child_output)
 

@@ -21,8 +21,6 @@ feature -- Access
 			if b = Void then
 				b := ""
 			end
-			base_url.left_adjust
-			base_url.right_justify
 			if attached {HTTP_CLIENT_SESSION} h.new_session (base_url) as sess then
 				http_session := sess
 				sess.set_timeout (-1)
@@ -40,7 +38,7 @@ feature -- Access
 
 feature -- HTTP client helpers
 
-	execute_get (command_name: STRING_32): detachable HTTP_CLIENT_RESPONSE
+	execute_get (command_name: READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -48,7 +46,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_post (command_name: STRING_32; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
+	execute_post (command_name: READABLE_STRING_8; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -56,7 +54,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_delete (command_name: STRING_32): detachable HTTP_CLIENT_RESPONSE
+	execute_delete (command_name: READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -64,7 +62,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_put (command_name: STRING_32; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
+	execute_put (command_name: READABLE_STRING_8; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -72,7 +70,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_patch (command_name: STRING_32; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
+	execute_patch (command_name: READABLE_STRING_8; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -89,7 +87,7 @@ feature -- HTTP client helpers
 	base_url: STRING
 
 ;note
-	copyright: "2011-2013 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

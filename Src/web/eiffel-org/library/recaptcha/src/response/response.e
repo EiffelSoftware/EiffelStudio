@@ -7,31 +7,28 @@ note
 class
 	RESPONSE
 
-
 create
 	make
 
 feature {NONE}--Initialization
 
-	make (response: HTTP_CLIENT_RESPONSE)
+	make (a_response: HTTP_CLIENT_RESPONSE)
 		do
-			http_response := response
-			body := response.body
-			status := response.status
-			headers := response.headers
-			status_message := response.status_line
-			error_message := response.error_message
+			http_response := a_response
+			body := a_response.body
+			status := a_response.status
+			headers := a_response.headers
+			status_message := a_response.status_line
+			error_message := a_response.error_message
 		ensure
-			http_reponse_set: http_response = response
-			headers_set: headers = response.headers
-			status_set: status = response.status
-			status_message_set: status_message = response.status_line
-			error_message_set: error_message = response.error_message
+			http_reponse_set: http_response = a_response
+			headers_set: headers = a_response.headers
+			status_set: status = a_response.status
+			status_message_set: status_message = a_response.status_line
+			error_message_set: error_message = a_response.error_message
 		end
 
 feature -- Access
-
-	EMPTY: STRING = "";
 
 	status: INTEGER
 
@@ -41,15 +38,14 @@ feature -- Access
 
 	body: detachable READABLE_STRING_8
 
-	headers: LIST [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]
+	headers: LIST [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]
 
 feature {NONE} -- Implementation
 
 	http_response: HTTP_CLIENT_RESPONSE
 
-
 ;note
-	copyright: "2011-2013 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_method: READABLE_STRING_GENERAL; a_uri: READABLE_STRING_GENERAL)
+	make (a_method: READABLE_STRING_8; a_uri: READABLE_STRING_8)
 		require
 			valid_http_method: is_http_method (a_method)
 			valid_uri: is_valid_uri (a_uri)
@@ -31,30 +31,30 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_valid_uri (a_uri: READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_uri (a_uri: READABLE_STRING_8): BOOLEAN
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (a_uri.as_string_8)
+			create l_uri.make_from_string (a_uri)
 			Result := l_uri.is_valid
 		end
 
-	query_string: detachable READABLE_STRING_GENERAL
+	query_string: detachable READABLE_STRING_8
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (uri.as_string_8)
+			create l_uri.make_from_string (uri)
 			Result := l_uri.query
 		end
 
-	sanitized_url: STRING_32
+	sanitized_url: READABLE_STRING_8
 			-- Returns the URL without the query string part	
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (uri.as_string_8)
+			create l_uri.make_from_string (uri)
 			l_uri.remove_query
-			Result := l_uri.debug_output
+			Result := l_uri.string
 		ensure
 			sanitized: not as_uri (Result).has_query
 		end
@@ -84,7 +84,7 @@ feature -- Status Report
 
 feature -- Constants
 
-	content_type_header_name: STRING_32 = "Content-Type";
+	content_type_header_name: STRING_8 = "Content-Type";
 
 	default_content_type: STRING
 		once
@@ -93,18 +93,17 @@ feature -- Constants
 
 feature -- Access
 
-	uri: READABLE_STRING_GENERAL
+	uri: READABLE_STRING_8
 
-	verb: READABLE_STRING_GENERAL
+	verb: READABLE_STRING_8
 
-	headers: STRING_TABLE [STRING]
+	headers: STRING_TABLE [READABLE_STRING_8]
 
-	payload: detachable STRING
+	payload: detachable READABLE_STRING_8
 
 	executor: detachable REQUEST_EXECUTOR
 
 feature -- Change Element
-
 
 	add_payload (a_payload: like payload)
 		do
@@ -113,10 +112,9 @@ feature -- Change Element
 			payload_set: attached payload as l_payload implies l_payload = a_payload
 		end
 
-
-	add_header (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
+	add_header (key: READABLE_STRING_8; value: READABLE_STRING_8)
 		do
-			headers.force (value.as_string_32, key)
+			headers.force (value, key)
 		end
 
 feature -- Execute
@@ -129,7 +127,7 @@ feature -- Execute
 
 	initialize_executor
 		do
-			create executor.make (uri.as_string_32, verb)
+			create executor.make (uri, verb)
 		end
 
 feature {NONE} -- Implementation
@@ -139,8 +137,12 @@ feature {NONE} -- Implementation
 			if attached executor as l_executor then
 					-- add headers
 				add_headers (l_executor)
-				if verb.same_string (method_put) or else verb.same_string (method_post) or else verb.same_string (method_patch) then
-					l_executor.set_body (body_contents.as_string_8)
+				if
+					verb.same_string (method_put)
+					or else verb.same_string (method_post)
+					or else verb.same_string (method_patch)
+				then
+					l_executor.set_body (body_contents)
 				end
 				if not l_executor.context_executor.headers.has (content_type_header_name) then
 					l_executor.context_executor.add_header (content_type_header_name, default_content_type)
@@ -154,18 +156,25 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	add_headers (a_executor: REQUEST_EXECUTOR)
+		local
+			l_context_executor: HTTP_CLIENT_REQUEST_CONTEXT
+			s: READABLE_STRING_GENERAL
+			utf: UTF_CONVERTER
 		do
-			from
-				headers.start
-			until
-				headers.after
+			l_context_executor := a_executor.context_executor
+			across
+				headers as ic
 			loop
-				a_executor.context_executor.add_header (headers.key_for_iteration.as_string_32, headers.item_for_iteration.as_string_32)
-				headers.forth
+				s := ic.key
+				if s.is_valid_as_string_8 then
+					l_context_executor.add_header (s.as_string_8, ic.item)
+				else
+					l_context_executor.add_header (utf.utf_32_string_to_utf_8_string_8 (s), ic.item)
+				end
 			end
 		end
 
-	body_contents: READABLE_STRING_GENERAL
+	body_contents: READABLE_STRING_8
 		do
 			if attached payload as l_payload then
 				Result := l_payload
@@ -174,15 +183,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	as_uri (a_string: READABLE_STRING_GENERAL) : URI
+	as_uri (a_string: READABLE_STRING_8) : URI
 		require
 			is_valid_uri : is_valid_uri (a_string)
 		do
-			create Result.make_from_string (a_string.as_string_8)
+			create Result.make_from_string (a_string)
 		end
 
 note
-	copyright: "2011-2013 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

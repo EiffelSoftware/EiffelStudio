@@ -168,8 +168,8 @@ feature -- Query
 			l_eweasel_set: BOOLEAN
 		do
 			create l_env
-			l_ise_eiffel_set := l_env.get ("ISE_EIFFEL") /= Void
-			l_eweasel_set := l_env.get ("EWEASEL") /= Void
+			l_ise_eiffel_set := l_env.item ("ISE_EIFFEL") /= Void
+			l_eweasel_set := l_env.item ("EWEASEL") /= Void
 			Result := l_ise_eiffel_set and l_eweasel_set
 		end
 

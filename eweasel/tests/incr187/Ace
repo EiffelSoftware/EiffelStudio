@@ -25,7 +25,7 @@
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
 		<cluster name="access" location="$ACCESS\"/>
-		<cluster name="base" location="${ISE_EIFFEL}\library\base\">
+		<cluster name="base" location="${ISE_LIBRARY}\library\base\">
 			$KERNEL_CLASSIC
 		</cluster>
 		$KERNEL_DOTNET

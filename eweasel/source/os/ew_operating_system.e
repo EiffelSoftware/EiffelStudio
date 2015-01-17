@@ -65,16 +65,24 @@ feature -- File operations
 			directory_not_void: dir_name /= Void;
 		local
 			l_dir: DIRECTORY
-			retried: BOOLEAN
+			retried: INTEGER
 		do
-			if not retried then
+			if retried <= 1 then
+				if retried = 1 and {PLATFORM}.is_windows then
+						-- FIXME: On some Windows machines, when launching short lived process,
+						-- the process even though it has exited, is still referenced somehow.
+						-- Empirically waiting 150ms seems to be enough to free the reference
+						-- and delete the directory.
+					sleep (150_000_000)
+				end
+					-- Let's delete the directory now.
 				create l_dir.make (dir_name)
 				if l_dir.exists then
 					l_dir.recursive_delete
 				end
 			end
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end;
 

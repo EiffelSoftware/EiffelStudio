@@ -39,6 +39,7 @@
 doc:<file name="notify_token.cpp" header="notify_token.hpp" version="$Id$" summary="SCOOP support.">
 */
 
+#include "rt_msc_ver_mismatch.h"
 #include "notify_token.hpp"
 #include "processor.hpp"
 

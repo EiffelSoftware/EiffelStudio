@@ -39,6 +39,7 @@
 doc:<file name="req_grp.cpp" header="req_grp.hpp" version="$Id$" summary="SCOOP support.">
 */
 
+#include "rt_msc_ver_mismatch.h"
 #include <algorithm>
 #include "req_grp.hpp"
 #include "processor.hpp"

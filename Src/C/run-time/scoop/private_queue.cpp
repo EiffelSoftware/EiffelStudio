@@ -39,6 +39,7 @@
 doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" summary="SCOOP support.">
 */
 
+#include "rt_msc_ver_mismatch.h"
 #include "internal.hpp"
 #include "processor.hpp"
 #include "processor_registry.hpp"

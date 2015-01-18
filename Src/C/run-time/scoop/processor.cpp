@@ -39,6 +39,7 @@
 doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SCOOP support.">
 */
 
+#include "rt_msc_ver_mismatch.h"
 #include "eif_utils.hpp"
 #include "processor_registry.hpp"
 #include "internal.hpp"

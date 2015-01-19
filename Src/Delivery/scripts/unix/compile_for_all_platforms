@@ -25,7 +25,7 @@ sh ./make_for_platform sparc9.ise manus solaris-sparc 22 ;
 (sh ./make_for_platform ubuntu804-x64.ise manus linux-x86-64 22 ; sh ./make_for_platform freebsd_64.ise manus freebsd-x86-64 22 ; sh ./make_for_platform openbsd_64 manus openbsd-x86-64 22) &
 
 #Let's compile for Raspberry PI in background
-#(sh ./make_for_platform raspberry.ise pi linux-armv6 22) &
+(sh ./make_for_platform raspberry.ise pi linux-armv6 22) &
 
 #Let's compile for MacOS X 64 bits in background
 (sh ./make_for_platform macmini.ise manus macosx-x86-64 22) &

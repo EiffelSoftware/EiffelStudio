@@ -309,7 +309,7 @@ feature -- Conversion
 		end
 
 	linear_representation: ARRAYED_LIST [STRING_8]
-			-- The entries, in sequential format. 
+			-- The entries, in sequential format.
 			-- Use `entries' or `linear_representation_32' to get a readable version
 			-- of the Unicode entries.
 		obsolete
@@ -494,7 +494,7 @@ feature -- Removal
 			file: detachable RAW_FILE
 			l_info: like file_info
 			dir: detachable DIRECTORY
-			dir_temp: DIRECTORY
+			dir_temp: detachable DIRECTORY
 			l_last_entry_pointer: like last_entry_pointer
 			l_name: detachable STRING_8
 			file_count: INTEGER
@@ -569,6 +569,10 @@ feature -- Removal
 				-- agent has been called, call one now.
 			if file_count > 1 and action /= Void then
 				action.call ([deleted_files])
+			end
+		rescue
+			if dir_temp /= Void and then not dir_temp.is_closed then
+				dir_temp.close
 			end
 		end
 
@@ -752,7 +756,7 @@ invariant
 	name_attached: attached internal_name
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

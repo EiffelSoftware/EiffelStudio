@@ -158,27 +158,26 @@ else
 	x2c=$ISE_PREFIX/$ISE_LIB_NAME/eiffelstudio-$rt_version/studio/x2c
 fi
 add_log='undef'
-binary_format=''
 if [ -n "$CC" ]; then
-	cc='$CC'
+	cc=$CC
 else
 	cc='gcc'
 fi
 if [ -n "$CFLAGS" ]; then
-	ccflags='$CFLAGS'
+	ccflags=$CFLAGS
 else
 	ccflags='-pipe -D_GNU_SOURCE'
 fi
 if [ -n "$CPP" ]; then
-	cpp='$CPP'
+	cpp=$CPP
 else
 	cpp='g++'
 fi
 ccldflags=''
 if [ -n "$CPPFLAGS" ]; then
-	cppflags='$CPPFLAGS'
+	cppflags=$CPPFLAGS
 else
-	cppflags='$ccflags'
+	cppflags="$ccflags"
 fi
 cpp_stuff='42'
 defvoidused='15'
@@ -195,12 +194,11 @@ d_tls='undef'
 objcflags='-ObjC'
 mtccflags="$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
-optimize="-O3 $binary_format $platform_arch"
-platform_arch=''
+optimize="-O3"
 voidflags='15'
 #Check value for next 1
 warning_level='-Wall'
-wkoptimize="-O0 $binary_format $platform_arch"
+wkoptimize="-O0"
 
 #Makefiles
 ar='ar'
@@ -215,12 +213,12 @@ else
 	ld='ld'
 fi
 lintflags=''
-ldflags=" $binary_format $platform_arch"
+ldflags=""
 ldsharedflags="$ccldflags -shared -o"
 libs='-lm'
 ln='/bin/ln'
 if [ -n "$MAKE" ]; then
-	make='$MAKE'
+	make=$MAKE
 else
 	make='make'
 fi

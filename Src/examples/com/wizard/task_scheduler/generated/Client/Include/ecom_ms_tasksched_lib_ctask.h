@@ -349,7 +349,7 @@ private:
 	/*-----------------------------------------------------------
 	Interface pointer
 	-----------------------------------------------------------*/
-	ecom_MS_TaskSched_lib::IPersistFile_2 * p_IPersistFile_2;
+	ecom_MS_TaskSched_lib::IPersistFile_2 * p_IPersistFile;
 
 
 	/*-----------------------------------------------------------

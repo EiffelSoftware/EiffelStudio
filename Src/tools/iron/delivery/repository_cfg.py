@@ -1,9 +1,8 @@
 #!/usr/local/bin/python
 
 def version():
-	return "trunk"
-	return "14.11"
+	return "15.01"
 
 def repository():
-	return "https://ironold.eiffel.com"
+	return "https://iron.eiffel.com"
 

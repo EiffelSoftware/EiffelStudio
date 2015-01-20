@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="string_manipulator_idl_client" uuid="AA1B5239-EF2B-4A36-B58B-1D7F049F2C3D" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="string_manipulator_idl" uuid="AA1B5239-EF2B-4A36-B58B-1D7F049F2C3D" library_target="default">
 	<target name="default">
 		<root class="ANY"/>
 		<option void_safety="none">
@@ -9,25 +9,25 @@
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Common\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Server\Include;"/>
-		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\ecom.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\wecom.lib;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\wecom.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\ecom-mt.lib;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\ecom-mt.lib">
 			<condition>
 				<build value="finalize"/>
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\wecom-mt.lib;">
+		<external_object location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Clib\$(ISE_C_COMPILER)\wecom-mt.lib">
 			<condition>
 				<build value="workbench"/>
 				<concurrency excluded_value="none"/>

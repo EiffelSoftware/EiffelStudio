@@ -7,7 +7,7 @@
 			<assertions precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
-		<library name="string_manipulator" location="..\generated\Client\string_manipulator_idl_client.ecf" readonly="false"/>
+		<library name="string_manipulator" location="..\generated\Client\string_manipulator_idl.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>

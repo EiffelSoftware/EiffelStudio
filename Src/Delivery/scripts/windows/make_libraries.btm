@@ -116,6 +116,8 @@ iff not defined NO_COMPILE then
 	remtrace store
 	cd %1\library\store\dbms\rdbms\odbc\clib
 	all_makes
+	cd %1\library\store\dbms\rdbms\mysql\clib
+	all_makes
 	cd %1\library\store\dbms\rdbms\oracle\clib
 	all_makes
 	remtrace vision2

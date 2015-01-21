@@ -210,16 +210,16 @@ feature -- Workflow
 						check
 							l_service.is_new_contact (email)
 						end
-						log.write_debug (generator + "process_workflow:" + email +  " New Contact")
+						log.write_debug (generator + ".process_workflow:" + email +  " New Contact")
 						if 	l_service.is_download_active (l_token.value ) then
-							log.write_debug (generator + "process_workflow:" + email +  " Download active")
+							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.validate_contact (email) --(add a new contact, remove temporary contact)
 							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
 						    if l_service.is_available then
-								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow: The database service is unavailable")

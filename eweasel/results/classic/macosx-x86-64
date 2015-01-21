@@ -1,6 +1,340 @@
 
 EiffelWeasel test execution manager
   (version 1.0.001)
+Test ca-simple-violation (codeanalysis001): failed
+	Description: Testing a simple violation, in this case using rule CA080 (TODO in code_
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis001/tcf at line 14
+	Original text:    analyze_code_result violation "TEST CA080:20"
+	Substituted text: analyze_code_result violation "TEST CA080:20"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found; unrecognized argument warning
+		Suggestion in class TEST at line 20. CA080: TODO: this should trigger a violation for a TODO.
+		
+	
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 20. CA080
+		
+	
+
+Test ca-load-preferences (codeanalysis002): failed
+	Description: Test preference loading from file.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis002/tcf at line 18
+	Original text:    analyze_code_result violation "TEST CA080:20"
+	Substituted text: analyze_code_result violation "TEST CA080:20"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 20. CA080
+		
+	
+
+Test ca-forced-rules-preferences (codeanalysis003): failed
+	Description: Test forcing rules and preferences from the command line.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis003/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA043 CA080:20"
+	Substituted text: analyze_code_result violation "TEST CA043 CA080:20"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST. CA043
+		Violation in class TEST at line 20. CA080
+		
+	
+
+Test ca-various-warnings (codeanalysis004): failed
+	Description: Test various different command line arguments and syntax variants and check the output warnings.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis004/tcf at line 15
+	Original text:    analyze_code_result ok
+	Substituted text: analyze_code_result ok
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: No violations
+		
+
+Test ca-024-bug-001 (codeanalysis005): failed
+	Description: CA024 incorrectly triggered even if loop initialization calls 'forth'.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis005/tcf at line 15
+	Original text:    analyze_code_result ok
+	Substituted text: analyze_code_result ok
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: No violations
+		
+
+Test ca-071-bug-001 (codeanalysis006): failed
+	Description: CA071 incorrectly triggered when comparing the result of two functions.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis006/tcf at line 15
+	Original text:    analyze_code_result ok
+	Substituted text: analyze_code_result ok
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: No violations
+		
+
+Test ca-080-bug-001 (codeanalysis007): failed
+	Description: CA080 (TODO) analysis crashes (contract violation) on empty TODO clauses. Fixed in revision 95281.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis007/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA080:21 CA080:22 CA080:23 CA080:24 CA080:25 CA080:26"
+	Substituted text: analyze_code_result violation "TEST CA080:21 CA080:22 CA080:23 CA080:24 CA080:25 CA080:26"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 21. CA080
+		Violation in class TEST at line 22. CA080
+		Violation in class TEST at line 23. CA080
+		Violation in class TEST at line 24. CA080
+		Violation in class TEST at line 25. CA080
+		Violation in class TEST at line 26. CA080
+		
+	
+
+Test ca-030-001 (codeanalysis008): failed
+	Description: Test rule CA030 - Unnecessary sign operator
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis008/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA030:24 CA030:25 CA030:25 CA030:26 CA030:27 CA030:28 CA030:29 CA030:30 CA030:35 CA030:36 CA030:38 CA030:39"
+	Substituted text: analyze_code_result violation "TEST CA030:24 CA030:25 CA030:25 CA030:26 CA030:27 CA030:28 CA030:29 CA030:30 CA030:35 CA030:36 CA030:38 CA030:39"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 24. CA030
+		Violation in class TEST at line 25. CA030
+		Violation in class TEST at line 25. CA030
+		Violation in class TEST at line 26. CA030
+		Violation in class TEST at line 27. CA030
+		Violation in class TEST at line 28. CA030
+		Violation in class TEST at line 29. CA030
+		Violation in class TEST at line 30. CA030
+		Violation in class TEST at line 35. CA030
+		Violation in class TEST at line 36. CA030
+		Violation in class TEST at line 38. CA030
+		Violation in class TEST at line 39. CA030
+		
+	
+
+Test ca-051-001 (codeanalysis009): failed
+	Description: Test rule CA051 - Empty and uncommented routine
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis009/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA051:44"
+	Substituted text: analyze_code_result violation "TEST CA051:44"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 44. CA051
+		
+	
+
+Test ca-059-001 (codeanalysis010): failed
+	Description: Test rule CA059 - Empty rescue clause
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis010/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA059:38"
+	Substituted text: analyze_code_result violation "TEST CA059:38"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 38. CA059
+		
+	
+
+Test ca-060-001 (codeanalysis011): failed
+	Description: Test rule CA060 - Inspect instruction has no 'when' branch
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis011/tcf at line 17
+	Original text:    analyze_code_result violation "TEST CA060:39 CA060:42"
+	Substituted text: analyze_code_result violation "TEST CA060:39 CA060:42"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 39. CA060
+		Violation in class TEST at line 42. CA060
+		
+	
+
+Test ca-063-001 (codeanalysis012): failed
+	Description: Test rule CA063 - Class naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis012/tcf at line 18
+	Original text:    analyze_code_result violation "TEST__BAD_1 CA063:7; TEST_BAD_2 CA063:7"
+	Substituted text: analyze_code_result violation "TEST__BAD_1 CA063:7; TEST_BAD_2 CA063:7"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST_BAD_2 at line 7. CA063
+		Violation in class TEST__BAD_1 at line 7. CA063
+		
+	
+
+Test ca-064-001 (codeanalysis013): failed
+	Description: Test rule CA064 - Feature naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis013/tcf at line 17
+	Original text:    analyze_code_result violation "TEST CA064:24 CA064:29 CA064:34"
+	Substituted text: analyze_code_result violation "TEST CA064:24 CA064:29 CA064:34"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 24. CA064
+		Violation in class TEST at line 29. CA064
+		Violation in class TEST at line 34. CA064
+		
+	
+
+Test ca-065-001 (codeanalysis014): failed
+	Description: Test rule CA065 - Local variable naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis014/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA065:22 CA065:23 CA065:24 CA065:25"
+	Substituted text: analyze_code_result violation "TEST CA065:22 CA065:23 CA065:24 CA065:25"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 22. CA065
+		Violation in class TEST at line 23. CA065
+		Violation in class TEST at line 24. CA065
+		Violation in class TEST at line 25. CA065
+		
+	
+
+Test ca-066-001 (codeanalysis015): failed
+	Description: Test rule CA066 - Argument naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis015/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA066:28 CA066:29 CA066:30 CA066:31"
+	Substituted text: analyze_code_result violation "TEST CA066:28 CA066:29 CA066:30 CA066:31"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 28. CA066
+		Violation in class TEST at line 29. CA066
+		Violation in class TEST at line 30. CA066
+		Violation in class TEST at line 31. CA066
+		
+	
+
+Test ca-079-001 (codeanalysis016): failed
+	Description: Test rule CA079 - Argument naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis016/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA079:28"
+	Substituted text: analyze_code_result violation "TEST CA079:28"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 28. CA079
+		
+	
+
+Test ca-088-001 (codeanalysis017): failed
+	Description: Test rule CA889 - Argument naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis017/tcf at line 15
+	Original text:    analyze_code_result violation "TEST CA088:33 CA088:37 CA088:45 CA088:49"
+	Substituted text: analyze_code_result violation "TEST CA088:33 CA088:37 CA088:45 CA088:49"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 33. CA088
+		Violation in class TEST at line 37. CA088
+		Violation in class TEST at line 45. CA088
+		Violation in class TEST at line 49. CA088
+		
+	
+
+Test ca-089-001 (codeanalysis018): failed
+	Description: Test rule CA889 - Argument naming convention violated
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/codeanalysis018/tcf at line 17
+	Original text:    analyze_code_result violation "TEST CA089:22 CA089:34 CA089:43"
+	Substituted text: analyze_code_result violation "TEST CA089:22 CA089:34 CA089:43"
+	Reason: actual code analysis result does not match expected result
+	Actual result:
+		Final status:  completed 
+		Code analysis summary: No violations; unrecognized argument warning
+		
+	Expected result:
+		Final status:  completed 
+		Code analysis summary: One or more violations found
+		Violation in class TEST at line 22. CA089
+		Violation in class TEST at line 34. CA089
+		Violation in class TEST at line 43. CA089
+		
+	
+
 Test make-from-string (datetimestring001): passed
 Test time-duration (duration001): passed
 Test date-duration (duration002): passed
@@ -1718,6 +2052,22 @@ Test wrong-tuple-type-in-descendants (valid279): failed
 	Reason: files being compared do not have identical contents
 
 Test bogus-vjar-error (valid280): passed
+Test bogus-vdrd6-error (valid281): failed
+	Description: If you have an attribute that is redefined into a formal we generate a VDRD errors instead of accepting the code. Changing the attribute to a function is a current workaround for this error.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/valid281/tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class CHILD code VDRD(6)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test missing-vuar2-error (valid282): passed
+Test missing-vuar2-error-2 (valid283): passed
+Test missing-vjar-error (valid284): passed
+Test missing-vjar-error-2 (valid285): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -2511,7 +2861,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	Version 14.05.0.0 GPL Edition - macosx-x86-64
+	Version 15.01.9.6506 Enterprise Edition - macosx-x86-64
 	
 	There is already a project compiled in "/Users/manus/local/eweasel/test_dir/incr226"
 	It needs to be deleted before a precompilation.
@@ -3057,21 +3407,12 @@ Test qat-precursor-anchored-to-caller (incr418): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (is_feature_found) 
+		Validity error in class TEST3 code VJAR
+		Final status:  paused 
 	Expected result:
 		Final status:  completed 
 
-Test static-type-id-crash-3 (incr419): failed
-	Description: Changing generic classes to non-generic in a system that uses qualified anchored types crashes the compiler
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/incr419/tcf at line 26
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
-	Expected result:
-		Final status:  completed 
-
+Test static-type-id-crash-3 (incr419): passed
 Test internal-search-crash (incr420): skipped
 Test change-application-options (incr421): passed
 Test fix-vlec-infinite-recursion (incr422): passed
@@ -3163,6 +3504,7 @@ Test qat-vwce-sneak (incr430): failed
 		Validity error in class TEST code VWCE
 		Final status:  paused 
 
+Test unique-recompile-crash (incr431): passed
 Test divide-melt-panic (melt001): passed
 Test manifest-array-with-old (melt003): passed
 Test ref-actual-expanded-formal (melt004): passed
@@ -3312,17 +3654,7 @@ Test redefined-once-with-alt-precondition (melt087): failed
 
 Test character_32-constant (melt088): passed
 Test alt-precondition-call-on-void-target (melt089): passed
-Test melted-object-test-with-anchored-none (melt090): failed
-	Description: An object test involving an anchored type that is anchored to an attribute of type NONE causes system execution to end with an illegal opcode panic if code is melted.  Frozen code works fine.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/melt090/tcf at line 12
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed had_panic 
-	Expected result:
-		Final status:  completed 
-
+Test melted-object-test-with-anchored-none (melt090): passed
 Test melted-creation-crash (melt091): passed
 Test melted-agent-exception-crash (melt092): passed
 Test raise-exception-inspect-branch (melt093): passed
@@ -3370,6 +3702,18 @@ Test melted-on-character-32 (melt103): failed
 
 Test melted-address-expression (melt104): passed
 Test melted-address-current (melt105): passed
+Test object-test-on-expanded-crash (melt106): failed
+	Description: An object test done using an expanded type as target causes a crash at runtime in melted mode but only when used in a contract.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/melt106/tcf at line 12
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed 
+	Expected result:
+		Final status:  completed 
+
+Test type-invalid-in-melted-mode (melt107): passed
 Test frozen-xor-precedence-error (freez002): passed
 Test frozen-high-bit-characters (freez004): passed
 Test who-gets-old-exception (freez005): passed
@@ -3722,7 +4066,7 @@ Test gc-expanded-allocating-memory-in-special-2 (runtime006): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  system_failed 
 	Expected result:
 		Final status:  completed 
 
@@ -3745,14 +4089,10 @@ Test weak-reference (runtime017): passed
 Test memory-leak-with-dynamic-dispatch (runtime018): passed
 Test special-expanded-referring-new-object (runtime019): failed
 	Description: When a SPECIAL of expanded type is old and refers to a new object, the runtime crashes during a GC cycle when updating the remember set.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/runtime019/tcf at line 15
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/runtime019/tcf at line 16
+	Original text:    compare exec_output_w output
+	Substituted text: compare exec_output_w output
+	Reason: files being compared do not have identical contents
 
 Test cond-timedwait-failure (thread001): passed
 Test nested-thread-exit-failure (thread002): passed
@@ -3778,6 +4118,86 @@ Test thread-crashes-on-die (thread021): passed
 Test thread-hangs-on-fork (thread022): passed
 Test root-thread-exit-continues (thread023): passed
 Test multiple-thread-gc-crash (thread024): passed
+Test scoop-access-smoke (scoop001): passed
+Test scoop-argument-validity (scoop002): passed
+Test scoop-hanging-1 (scoop003): passed
+Test scoop-basic-argument-formal-nested (scoop004): passed
+Test scoop-separate-like-current (scoop005): passed
+Test scoop-result-validity (scoop006): passed
+Test scoop-external-call (scoop007): passed
+Test scoop-freeze-condition (scoop008): passed
+Test scoop-wait-condition (scoop009): passed
+Test scoop-request-chain-exception (scoop011): passed
+Test scoop-false-wait-condition (scoop012): manual
+Test scoop-inline-separate-call (scoop013): passed
+Test scoop-separate-expanded (scoop014): passed
+Test scoop-separate-patterns-crash (scoop015): passed
+Test scoop-finalize-c-failure (scoop016): passed
+Test scoop-separate-call-to-constant (scoop017): passed
+Test scoop-once-per-object (scoop018): passed
+Test scoop-top-exception (scoop019): passed
+Test scoop-separate-formal (scoop020): passed
+Test scoop-object-test (scoop021): failed
+	Description: Object test takes into account processor of the source object and target type.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop021/tcf at line 18
+	Original text:    compare exec_output_m output
+	Substituted text: compare exec_output_m output
+	Reason: files being compared do not have identical contents
+
+Test scoop-undetected-vuer (scoop022): failed
+	Description: After initial compilation, a separate attribute in an expanded class is changed to be non-separate.  The compiler does not detect the VUER error
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop022/tcf at line 18
+	Original text:    compile_result validity_error TEST VUER
+	Substituted text: compile_result validity_error TEST VUER
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code VUER
+		Final status:  paused 
+
+Test scoop-expanded-class-constrained-generic (scoop023): failed
+	Description: A SCOOP system that has an attribute of an expanded type, where the expanded type has a constrained generic and a detachable attribute of the formal generic type, crashes the compiler
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop023/tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (Segmentation fault) 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-multi-dot-call-chain (scoop024): passed
+Test scoop-expanded-separate (scoop025): failed
+	Description: A "separate" call on an expanded object should be performed on the current processor, because the object should be imported to the current processor.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop025/tcf at line 8
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VUTA(3)
+		Validity error in class TEST code VUTA(3)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-unnested-logging (scoop026): passed
+Test scoop-lock-passing-on-separate-creation (scoop027): passed
+Test scoop-sequential-processor-creation (scoop028): passed
+Test scoop-recursive-processor-creation (scoop029): passed
+Test scoop-agent-validity (scoop030): passed
+Test scoop-agent-call (scoop031): passed
+Test scoop-corrupted-string (scoop032): passed
+Test scoop-lock-passing-same-target (scoop033): passed
+Test scoop-corrupted-polymorphic-call (scoop034): passed
+Test scoop-null-reference-call (scoop035): passed
+Test scoop-nested-chain-uncontrolled-check (scoop036): passed
+Test scoop-run-time-crash (scoop037): passed
+Test deadlock-simple-symmetric-cycle (deadlock001): manual
+Test deadlock-simple-asymmetric-cycle (deadlock002): manual
+Test deadlock-synchronous-2-cycle (deadlock003): manual
+Test deadlock-synchronous-3-cycle (deadlock004): manual
+Test deadlock-synchronous-n-cycle (deadlock005): manual
 Test print-double (exec001): passed
 Test real-conform-double (exec003): passed
 Test power-operator (exec004): passed
@@ -4533,6 +4953,7 @@ Test parenthesis-alias-smoke-test (exec356): passed
 Test parenthesis-alias-tuple-convention (exec357): passed
 Test conditional-expression-constant (exec358): passed
 Test invalid-conversion-to-tuple (exec359): passed
+Test expanded-hash-table (exec360): passed
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -5117,6 +5538,8 @@ Test bad-library-class (term212): failed
 		Final status:  completed 
 
 Test across-on-tuple (term213): passed
+Test qat-greater-number-of-formal (term214): passed
+Test large-integer-64-crash (term215): passed
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -5463,17 +5886,7 @@ Test storable-formats-63 (store026): passed
 Test storable-with-special-type (store027): passed
 Test storable-with-tuple-type (store028): passed
 Test storable-formats-63-2 (store029): passed
-Test store-retrieve-transient-attributes (store030): failed
-	Description: Test that storing/retrieving transient attributes work properly.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/store030/tcf at line 23
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test store-retrieve-transient-attributes (store030): passed
 Test store-retrieve-with-version (store031): passed
 Test store-in-different-thread (store032): passed
 Test store-bounded-queues-stacks (store033): passed
@@ -5482,6 +5895,9 @@ Test store-retrieve-bogus-version-mismatch (store035): passed
 Test correct-mismatch-memory-corruption (store036): passed
 Test store-retrieve-non-void-safe (store037): passed
 Test storable-performance-testing (store038): passed
+Test storable-with-long-nested-generics (store039): passed
+Test storable-with-qualified-anchors (store040): passed
+Test storable-with-qualified-anchors-reject (store041): passed
 Test basic-unix-path-operations (path001): passed
 Test unix-file-start-precond-error (lib001): passed
 Test string-copy-valid-count (lib002): passed
@@ -5534,6 +5950,13 @@ Test format-double-crash (lib036): passed
 Test ptf-file-read-to-string (lib037): passed
 Test managed-pointer-invariant (lib038): passed
 Test file-info-not-duplicated (lib039): passed
+Test argument_parser-missing-non-switched-argument (lib040): failed
+	Description: Missing required non-switched argument should be reported as an error.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/lib040/tcf at line 13
+	Original text:    compare exec_output_w output
+	Substituted text: compare exec_output_w output
+	Reason: files being compared do not have identical contents
+
 Test utf-16-basics (utf001): passed
 Test utf-8-basics (utf002): passed
 Test tuple-manipulation (tuple001): passed
@@ -6217,13 +6640,7 @@ Test qat-with-renamed-features (anchor021): passed
 Test qat-with-redefined-features (anchor022): passed
 Test qat-with-non-formal-generic (anchor023): passed
 Test qat-in-generic-constraint (anchor024): passed
-Test qat-renamed-constraint (anchor025): failed
-	Description: Qualified anchored types can refer to the features renamed in the constraint of a formal generic.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/anchor025/tcf at line 14
-	Original text:    compare exec_output_m output
-	Substituted text: compare exec_output_m output
-	Reason: files being compared do not have identical contents
-
+Test qat-renamed-constraint (anchor025): passed
 Test qat-with-missing-actual-generic (anchor026): passed
 Test qat-with-expanded-type (anchor027): passed
 Test qat-actual-generic-anchored-to-generic (anchor028): passed
@@ -6340,6 +6757,15 @@ Test qat-on-dotnet-external-failure (anchor075): passed
 Test anchor-to-anchor-lose-named-tuple (anchor076): passed
 Test qualified-anchor-expansion (anchor077): passed
 Test qualified-anchor-expansion-2 (anchor078): passed
+Test qualified-anchor-expansion-3 (anchor079): passed
+Test qualified-anchor-expansion-4 (anchor080): passed
+Test qualified-anchor-expansion-5 (anchor081): passed
+Test qualified-anchor-expansion-6 (anchor082): passed
+Test qualified-anchor-expansion-7 (anchor083): passed
+Test qualified-anchor-expansion-8 (anchor084): passed
+Test qualified-anchor-expansion-9 (anchor085): passed
+Test qat-inference-crash (anchor086): passed
+Test qat-cycle-in-generic (anchor087): manual
 Test inference-single-lower-bound (inference001): passed
 Test inference-multiple-lower-bound (inference002): passed
 Test inference-untyped-call-target (inference003): passed
@@ -6406,303 +6832,8 @@ Test inference-agent-expression (inference011): failed
 		Final status:  paused 
 
 Test inference-untyped-agent-target (inference012): passed
-Test inference-inspect-instruction (inference013): failed
-	Description: A type of an expression in multibranch instruction should match the type of the constants.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/inference013/tcf at line 8
-	Original text:    compile_result validity_error TEST Syntax
-	Substituted text: compile_result validity_error TEST Syntax
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code Syntax
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Validity error in class TEST code VOMB(2)
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code Syntax
-		Final status:  paused 
-
-Test scoop-access-smoke (scoop001): passed
-Test scoop-argument-validity (scoop002): passed
-Test scoop-hanging-1 (scoop003): passed
-Test scoop-basic-argument-formal-nested (scoop004): passed
-Test scoop-separate-like-current (scoop005): passed
-Test scoop-result-validity (scoop006): passed
-Test scoop-external-call (scoop007): passed
-Test scoop-freeze-condition (scoop008): passed
-Test scoop-wait-condition (scoop009): passed
-Test scoop-request-chain-exception (scoop011): passed
-Test scoop-false-wait-condition (scoop012): passed
-Test scoop-inline-separate-call (scoop013): passed
-Test scoop-separate-expanded (scoop014): passed
-Test scoop-separate-patterns-crash (scoop015): passed
-Test scoop-finalize-c-failure (scoop016): passed
-Test scoop-separate-call-to-constant (scoop017): passed
-Test scoop-once-per-object (scoop018): passed
-Test scoop-top-exception (scoop019): passed
-Test scoop-separate-formal (scoop020): passed
-Test scoop-object-test (scoop021): failed
-	Description: Object test takes into account processor of the source object and target type.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop021/tcf at line 18
-	Original text:    compare exec_output_m output
-	Substituted text: compare exec_output_m output
-	Reason: files being compared do not have identical contents
-
-Test scoop-undetected-vuer (scoop022): failed
-	Description: After initial compilation, a separate attribute in an expanded class is changed to be non-separate.  The compiler does not detect the VUER error
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop022/tcf at line 18
-	Original text:    compile_result validity_error TEST VUER
-	Substituted text: compile_result validity_error TEST VUER
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error in class TEST code VUER
-		Final status:  paused 
-
-Test scoop-expanded-class-constrained-generic (scoop023): failed
-	Description: A SCOOP system that has an attribute of an expanded type, where the expanded type has a constrained generic and a detachable attribute of the formal generic type, crashes the compiler
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop023/tcf at line 11
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
-	Expected result:
-		Final status:  completed 
-
-Test scoop-multi-dot-call-chain (scoop024): passed
-Test scoop-expanded-separate (scoop025): failed
-	Description: A "separate" call on an expanded object should be performed on the current processor, because the object should be imported to the current processor.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop025/tcf at line 8
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VUTA(3)
-		Validity error in class TEST code VUTA(3)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test scoop-unnested-logging (scoop026): passed
-Test scoop-lock-passing-on-separate-creation (scoop027): passed
-Test scoop-sequential-processor-creation (scoop028): passed
-Test scoop-recursive-processor-creation (scoop029): passed
-Test scoop-agent-validity (scoop030): passed
-Test scoop-agent-call (scoop031): passed
-Test scoop-corrupted-string (scoop032): passed
-Test scoop-lock-passing-same-target (scoop033): passed
-Test scoop-corrupted-polymorphic-call (scoop034): failed
-	Description: Show a bug where a polymorphic call in a generic class that have both a reference and expanded derivation is wrong.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop034/tcf at line 16
-	Original text:    compare exec_output_f output
-	Substituted text: compare exec_output_f output
-	Reason: files being compared do not have identical contents
-
-Test scoop-null-reference-call (scoop035): passed
-Test scoop-nested-chain-uncontrolled-check (scoop036): passed
-Test deadlock-simple-symmetric-cycle (deadlock001): manual
-Test deadlock-simple-asymmetric-cycle (deadlock002): manual
-Test deadlock-synchronous-2-cycle (deadlock003): manual
-Test deadlock-synchronous-3-cycle (deadlock004): manual
+Test inference-inspect-instruction (inference013): passed
+Test inference-integer-plus-untyped (inference014): passed
 Test pretty-smoke-test (pretty001): passed
 Test pretty-explicit-creation-space (pretty002): passed
 Test pretty-argument-list-separators (pretty003): passed
@@ -6765,8 +6896,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2335 / 2705  (87%)
-Failed:  348 / 2705  (13%)
-Manual:  16 / 2705  (1%)
-Skipped:  6 / 2705  (1%)
+Passed:  2362 / 2750  (86%)
+Failed:  363 / 2750  (14%)
+Manual:  19 / 2750  (1%)
+Skipped:  6 / 2750  (1%)
 

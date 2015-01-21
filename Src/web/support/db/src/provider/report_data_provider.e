@@ -1644,7 +1644,7 @@ feature -- Basic Operations
 			log.write_information (generator + ".add_temporary_contacts_to_contacts")
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("CommitContact2", l_parameters))
+			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("CommitContact", l_parameters))
 			db_handler.execute_writer
 			post_execution
 		end

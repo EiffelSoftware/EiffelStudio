@@ -2352,7 +2352,8 @@ feature -- Queries
 										    from ProblemReportResponsibles prr, ProblemReports pr
 										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)
 						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
-						WHERE ProblemReports.StatusID in $StatusSet
+						WHERE $Submitter 
+						ProblemReports.StatusID in $StatusSet
 						$queryFilter
 						$SearchBySynopsisAndOrDescription
 						ORDER BY $Column $ORD1

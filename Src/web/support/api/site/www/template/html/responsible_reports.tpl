@@ -194,7 +194,7 @@
 					<input type="hidden" name="severity" id="severity_pe" value="{$view.selected_severity/}"/>
 					<input type="hidden" name="priority" id="priority_pe" value="{$view.selected_priority/}"/>
 					<input type="hidden" name="responsible" id="responsible_pe" value="{$view.selected_responsible/}"/>
-					<input type="hidden" name="orderBy" id="orderBy_pe" value="{$view.orderBy/}"/>
+					<input type="hidden" name="orderBy" id="orderBy_pe" value="{$view.order_by/}"/>
 					<input type="hidden" name="dir"  id="dir_pe" value="{$view.dir/}"/>
 					<input type="hidden" name="status" id="status_pe" value="{$status_query/}"/>
 					<input type="hidden" name="filter" id="filter_pe" value="{$view.filter/}"/>
@@ -221,14 +221,14 @@
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="pager">
-			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
+			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
 			{if isset="$prev"}
-				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
+				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
 			{/if}
 			{if isset="$next"}
-				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
+				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
 			{/if}
-				<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
+				<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
 		</ul>
 	</div>
 </div>
@@ -402,7 +402,7 @@
 					<input type="hidden" name="priority" value="{$view.selected_priority/}"/>
 					<input type="hidden" name="responsible" value="{$view.selected_responsible/}"/>
 					<input type="hidden" name="status" value="status={$status_query/}"/>
-					<input type="hidden" name="orderBy" value="{$view.orderBy/}"/>
+					<input type="hidden" name="orderBy" value="{$view.order_by/}"/>
 					<input type="hidden" name="dir" value="{$view.dir/}"/>
 					<input type="hidden" name="submitter" value="{$view.submitter/}"/>
 					<input type="hidden" name="filter" value="{$view.filter/}"/>
@@ -442,14 +442,14 @@
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="pager">
-			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
+			<li><a href="{$host/}/reports?page=1&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="first" rel="first">First</a></li>
 			{if isset="$prev"}
-				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
+				<li><a href="{$host/}/reports?page={$prev/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="previous" rel="previous">Previous</a></li>
 			{/if}
 			{if isset="$next"}
-				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
+				<li><a href="{$host/}/reports?page={$next/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="next" rel="next">Next</a></li>
 			{/if}
-			<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.orderBy/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
+			<li><a href="{$host/}/reports?page={$last/}&size={$size/}&category={$view.selected_category/}&submitter={$view.submitter/}&severity={$view.selected_severity/}&priority={$view.selected_priority/}&responsible={$view.selected_responsible/}&status={$status_query/}&orderBy={$view.order_by/}&dir={$view.dir/}&filter={$view.filter/}&filter_content={$view.filter_content/}" itemprop="last" rel="last">Last</a></li>
 		</ul>
 	</div>
 </div>

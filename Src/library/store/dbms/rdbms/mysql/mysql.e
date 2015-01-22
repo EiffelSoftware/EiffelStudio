@@ -1269,8 +1269,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- C Externals	
 
-	eif_mysql_column_data (row_ptr: POINTER; ind: INTEGER; ar: POINTER
-			len: INTEGER): INTEGER
+	eif_mysql_column_data (row_ptr: POINTER; ind: INTEGER; ar: POINTER len: INTEGER): INTEGER
 		external
 			"C | %"eif_mysql.h%""
 		end

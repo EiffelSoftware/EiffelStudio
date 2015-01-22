@@ -134,7 +134,7 @@ feature {NONE} -- Initialization
 			-- Show the Response body
 			if attached Result.body as m then
 				create j.make_parser (m)
-				if j.is_parsed and attached j.parse_object as j_o then
+				if attached j.parse_object as j_o and then j.is_parsed then
 					if attached {JSON_STRING} j_o.item ("id") as l_id then
 						id := l_id.item
 					end

@@ -19,7 +19,8 @@ feature -- Access
 		do
 			create Result.make (0)
 			create j.make_parser (a_json_string)
-			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
+			j.parse_content
+			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
 					l_version := j_version.item
 				end
@@ -46,7 +47,8 @@ feature -- Access
 			fac: IRON_REPOSITORY_FACTORY
 		do
 			create j.make_parser (a_json_string)
-			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
+			j.parse_content
+			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
 					l_version := j_version.item
 				end
@@ -80,7 +82,8 @@ feature -- Access
 			j: JSON_PARSER
 		do
 			create j.make_parser (a_json_string)
-			if j.is_parsed and then attached {JSON_OBJECT} j.parse as jo then
+			j.parse_content
+			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if attached {JSON_STRING} jo.item ("package-name") as j_package_name then
 					Result := j_package_name.item
 				elseif
@@ -162,7 +165,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

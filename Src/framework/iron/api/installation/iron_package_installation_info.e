@@ -64,7 +64,7 @@ feature -- Storage
 		do
 			create installation_path.make_empty
 			if attached file_content (path) as s then
-				create jp.make_parser (s)
+				create jp.make_with_string (s)
 				jp.parse_content
 				if jp.is_valid and then attached {JSON_OBJECT} jp.parsed_json_object as jo then
 					if

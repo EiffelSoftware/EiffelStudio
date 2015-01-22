@@ -18,7 +18,7 @@ feature -- Access
 			l_version: detachable READABLE_STRING_8
 		do
 			create Result.make (0)
-			create j.make_parser (a_json_string)
+			create j.make_with_string (a_json_string)
 			j.parse_content
 			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
@@ -46,7 +46,7 @@ feature -- Access
 			l_version: detachable READABLE_STRING_8
 			fac: IRON_REPOSITORY_FACTORY
 		do
-			create j.make_parser (a_json_string)
+			create j.make_with_string (a_json_string)
 			j.parse_content
 			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
@@ -77,11 +77,36 @@ feature -- Access
 			end
 		end
 
+	json_to_package_within_repository (a_json_string: READABLE_STRING_8; a_repo: IRON_REPOSITORY): detachable IRON_PACKAGE
+		local
+			j: JSON_PARSER
+			l_version: detachable READABLE_STRING_8
+		do
+			create j.make_with_string (a_json_string)
+			j.parse_content
+			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
+				if jo.has_key ("_version") and then attached {JSON_STRING} jo.item ("_version") as j_version then
+					l_version := j_version.item
+				end
+					-- FIXME: any need to support local repository here?
+
+				if
+					attached {JSON_OBJECT} jo.item ("package") as j_package
+				then
+					if
+						attached json_object_to_package (j_package, a_repo, l_version) as p
+					then
+						Result := p
+					end
+				end
+			end
+		end
+
 	json_to_package_identifier (a_json_string: READABLE_STRING_8): detachable READABLE_STRING_GENERAL
 		local
 			j: JSON_PARSER
 		do
-			create j.make_parser (a_json_string)
+			create j.make_with_string (a_json_string)
 			j.parse_content
 			if j.is_valid and then attached {JSON_OBJECT} j.parsed_json_object as jo then
 				if attached {JSON_STRING} jo.item ("package-name") as j_package_name then
@@ -110,7 +135,7 @@ feature {NONE} -- Implementation
 			then
 				create Result.make (j_id.item, repo)
 				if a_version /= Void then
-					j_package.put (create {JSON_STRING}.make_json (a_version), "_version")
+					j_package.put (create {JSON_STRING}.make_from_string (a_version), "_version")
 				end
 				Result.put_json_item (j_package.representation)
 				Result.set_name (j_name.item)

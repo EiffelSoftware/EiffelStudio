@@ -78,22 +78,32 @@ feature -- Access
 	has_permission_to_modify_package (req: WSF_REQUEST; a_package: IRON_NODE_PACKAGE): BOOLEAN
 		do
 			if attached current_user (req) as u then
-				if attached a_package.owner as o then
-					Result := u.same_user (o) or else u.is_administrator
-				else
-					Result := u.is_administrator
-				end
+				Result := user_has_permission_to_modify_package (u, a_package)
 			end
 		end
 
 	has_permission_to_modify_package_version (req: WSF_REQUEST; a_package: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
 			if attached current_user (req) as u then
-				if attached a_package.owner as o then
-					Result := u.same_user (o) or else u.is_administrator
-				else
-					Result := u.is_administrator
-				end
+				Result := user_has_permission_to_modify_package_version (u, a_package)
+			end
+		end
+
+	user_has_permission_to_modify_package (a_user: IRON_NODE_USER; a_package: IRON_NODE_PACKAGE): BOOLEAN
+		do
+			if attached a_package.owner as o then
+				Result := a_user.same_user (o) or else a_user.is_administrator
+			else
+				Result := a_user.is_administrator
+			end
+		end
+
+	user_has_permission_to_modify_package_version (a_user: IRON_NODE_USER; a_package: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			if attached a_package.owner as o then
+				Result := a_user.same_user (o) or else a_user.is_administrator
+			else
+				Result := a_user.is_administrator
 			end
 		end
 
@@ -419,10 +429,10 @@ feature -- Package form
 				end
 
 				if attached current_user (req) as l_user then
-					if attached p.owner as o and then not o.name.is_case_insensitive_equal (l_user.name) then
-						fd.report_error ("Only owner can modify current package.")
-					else
+					if p.owner = Void then
 						p.set_owner (l_user)
+					elseif not user_has_permission_to_modify_package (l_user, p) then
+						fd.report_error ("Only owner and administrator can modify current package.")
 					end
 				else
 					fd.report_error ("Operation restricted to allowed user.")

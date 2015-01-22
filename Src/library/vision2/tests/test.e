@@ -12,7 +12,11 @@ create
 feature {NONE} -- Initialization
 
 	make
+		local
+			t: TEST_EV_MODEL
 		do
+			create t
+			t.pixmap_with_clip_area
 		end
 
 feature {NONE} -- Convenience
@@ -36,7 +40,7 @@ feature {NONE} -- Convenience
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

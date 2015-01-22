@@ -53,7 +53,7 @@ feature {NONE} -- Launch operation
 			launcher.launch (a_service, opts)
 		end
 
-feature {IRON_NODE_SERVICE_I} -- Services		
+feature {IRON_NODE_SERVICE_I} -- Services
 
 	api_service: IRON_NODE_API_SERVICE
 		local
@@ -170,8 +170,6 @@ feature -- Router and Filter
 			end
 			f.set_next (Current)
 		end
-
-
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

@@ -38,22 +38,36 @@ feature -- Execution
 			r: IRON_NODE_API_RESPONSE
 			it: JSON_V1_IRON_NODE_ITERATOR
 			s: STRING_8
-			l_package: detachable IRON_NODE_VERSION_PACKAGE
 		do
-			l_package := package_version_from_id_path_parameter (req, "id")
-			if l_package /= Void then
-				create s.make (1024)
-				create it.make (req, iron, iron_version (req))
-				it.set_is_long_version (True)
-				it.set_user (current_user (req))
---				it.visit_package_version (l_package)
-				s.append (it.package_version_to_json (l_package))
-				s.append ("</ul>")
-				r := new_response_message (req)
-				r.set_body (s)
-				res.send (r)
+			if req.path_parameter ("version") = Void then
+					-- /package/{id}
+				if attached package_from_id_path_parameter (req, "id") as l_package then
+					create s.make (1024)
+					create it.make (req, iron, Void)
+					it.set_is_long_version (True)
+					it.set_user (current_user (req))
+					s.append (it.package_to_json (l_package))
+					r := new_response_message (req)
+					r.set_body (s)
+					res.send (r)
+				else
+					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+				end
 			else
-				res.send (create {WSF_NOT_IMPLEMENTED_RESPONSE}.make (req))
+					-- /{version}/package/{id}
+
+				if attached package_version_from_id_path_parameter (req, "id") as l_version_package then
+					create s.make (1024)
+					create it.make (req, iron, iron_version (req))
+					it.set_is_long_version (True)
+					it.set_user (current_user (req))
+					s.append (it.package_version_to_json (l_version_package))
+					r := new_response_message (req)
+					r.set_body (s)
+					res.send (r)
+				else
+					res.send (create {WSF_NOT_FOUND_RESPONSE}.make (req))
+				end
 			end
 		end
 
@@ -100,7 +114,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

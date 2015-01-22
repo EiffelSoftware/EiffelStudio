@@ -221,11 +221,26 @@ feature -- Download
 
 feature -- Package
 
-	package_version_from_id_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL): detachable IRON_NODE_VERSION_PACKAGE
+	package_version_from_id_path_parameter (req: WSF_REQUEST; a_id_name: READABLE_STRING_GENERAL): detachable IRON_NODE_VERSION_PACKAGE
+		require
+--			request_has_id_name_path_param: req.path_parameter (a_id_name) /= Void
+			request_has_version_path_param: req.path_parameter ("version") /= Void
 		do
 			if
-				attached {WSF_STRING} req.path_parameter (a_name) as s_id and then
-				attached iron.database.version_package (iron_version (req), s_id.value) as l_package
+				attached {WSF_STRING} req.path_parameter (a_id_name) as s_id and then
+				attached iron.database.version_package (iron_version (req), s_id.value) as l_version_package
+			then
+				Result := l_version_package
+			end
+		end
+
+	package_from_id_path_parameter (req: WSF_REQUEST; a_id_name: READABLE_STRING_GENERAL): detachable IRON_NODE_PACKAGE
+		require
+			request_has_id_name_path_param: req.path_parameter (a_id_name) /= Void
+		do
+			if
+				attached {WSF_STRING} req.path_parameter (a_id_name) as s_id and then
+				attached iron.database.package (s_id.value) as l_package
 			then
 				Result := l_package
 			end
@@ -504,7 +519,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

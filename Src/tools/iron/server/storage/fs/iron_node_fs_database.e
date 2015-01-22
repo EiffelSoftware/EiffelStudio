@@ -94,10 +94,10 @@ feature -- Logs
 
 			p := p.extended (dt_text).appended_with_extension ("log")
 			create j.make
-			j.put (create {JSON_STRING}.make_json ((create {HTTP_DATE}.make_from_date_time (dt)).string), "date")
-			j.put (create {JSON_STRING}.make_json_from_string_32 (a_log.title), "title")
+			j.put (create {JSON_STRING}.make_from_string ((create {HTTP_DATE}.make_from_date_time (dt)).string), "date")
+			j.put (create {JSON_STRING}.make_from_string_32 (a_log.title), "title")
 			if attached a_log.content as l_content then
-				j.put (create {JSON_STRING}.make_json_from_string_32 (l_content), "message")
+				j.put (create {JSON_STRING}.make_from_string_32 (l_content), "message")
 			end
 			create f.make_with_path (p)
 			f.create_read_write
@@ -1441,7 +1441,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

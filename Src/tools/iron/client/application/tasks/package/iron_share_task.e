@@ -171,10 +171,10 @@ feature -- Execute
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, Void, u, p)
 							else
 								print ({STRING_32} "Update package " + l_package.human_identifier + {STRING_32} " %N")
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, u, p)
+								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, Void, u, p)
 							end
 							if remote_node.last_operation_succeed then
 								if l_package /= Void then
@@ -467,7 +467,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

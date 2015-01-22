@@ -110,7 +110,7 @@ feature -- Access
 				visit_package_iterable (it)
 				j := last_json_value
 			else
-				create {JSON_ARRAY} j.make_array
+				create {JSON_ARRAY} j.make_empty
 			end
 			create jo.make
 			js := content_type_version
@@ -132,7 +132,7 @@ feature -- Access
 				visit_package_version_iterable (it)
 				j := last_json_value
 			else
-				create {JSON_ARRAY} j.make_array
+				create {JSON_ARRAY} j.make_empty
 			end
 			create jo.make
 			js := content_type_version
@@ -181,11 +181,11 @@ feature -- Visit
 				j_object.put (js, "description")
 			end
 			if attached p.tags as l_tags and then not l_tags.is_empty then
-				create j_array.make_array
+				create j_array.make_empty
 				across
 					l_tags as ic_tags
 				loop
-					j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
+					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags.item))
 				end
 				j_object.put (j_array, "tags")
 			end
@@ -240,16 +240,16 @@ feature -- Visit
 				j_object.put (js, "description")
 			end
 			if attached p.tags as l_tags and then not l_tags.is_empty then
-				create j_array.make_array
+				create j_array.make_empty
 				across
 					l_tags as ic_tags
 				loop
-					j_array.extend (create {JSON_STRING}.make_json_from_string_32 (ic_tags.item))
+					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags.item))
 				end
 				j_object.put (j_array, "tags")
 			end
 			if attached iron.database.path_associated_with_package (p) as l_paths then
-				create j_array.make_array
+				create j_array.make_empty
 				across
 					l_paths as c
 				loop
@@ -265,7 +265,7 @@ feature -- Visit
 		local
 			j_array: JSON_ARRAY
 		do
-			create j_array.make_array
+			create j_array.make_empty
 			across
 				it as c
 			loop
@@ -282,7 +282,7 @@ feature -- Visit
 		local
 			j_array: JSON_ARRAY
 		do
-			create j_array.make_array
+			create j_array.make_empty
 			across
 				it as c
 			loop

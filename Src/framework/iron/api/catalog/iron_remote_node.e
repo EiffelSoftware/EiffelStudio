@@ -134,7 +134,7 @@ feature -- Operation
 	last_operation_error_message: detachable READABLE_STRING_8
 
 	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32;
-				a_package: detachable IRON_PACKAGE;
+				a_package: detachable IRON_PACKAGE; a_published_package_cell: detachable CELL [detachable IRON_PACKAGE];
 				a_user, a_password: READABLE_STRING_32)
 		require
 			same_repository: a_package /= Void implies repository.is_same_repository (a_package.repository)
@@ -142,6 +142,7 @@ feature -- Operation
 			sess: like new_auth_session
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			res: HTTP_CLIENT_RESPONSE
+			f: JSON_TO_IRON_FACTORY
 		do
 			last_operation_succeed := False
 			last_operation_error_message := Void
@@ -189,6 +190,15 @@ feature -- Operation
 				last_operation_error_message := "[Error] Server reported internal error!"
 			else
 				last_operation_succeed := True
+				if
+					a_published_package_cell /= Void and then
+					attached res.body as l_body
+				then
+					create f
+					if attached f.json_to_package_within_repository (l_body, repository) as l_package then
+						a_published_package_cell.replace (l_package)
+					end
+				end
 			end
 			debug
 				if attached res.body as l_body then
@@ -265,6 +275,9 @@ feature -- Operation
 			elseif res.status = 401 then
 				last_operation_succeed := False
 				last_operation_error_message := "[Error] archive uploading not authorized!"
+			elseif res.status = 404 then
+				last_operation_succeed := False
+				last_operation_error_message := "[Error] package not found!"
 			else
 					--| TODO: check conherence of size and hash value.
 				last_operation_succeed := True
@@ -394,7 +407,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

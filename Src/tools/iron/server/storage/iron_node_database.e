@@ -241,6 +241,16 @@ feature -- Version Package: Criteria
 								end(?, v)
 							)
 					end)
+			Result.register_builder ("owner", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								do
+									Result := attached obj.owner as l_owner and then
+										l_owner.name.is_case_insensitive_equal_general (s)
+								end(?, v)
+							)
+					end)
 			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						i: INTEGER
@@ -258,6 +268,7 @@ feature -- Version Package: Criteria
 			Result.register_default_builder ("name")
 			Result.set_builder_description ("name", "has package name (support wildcard)")
 			Result.set_builder_description ("tag", "has tag")
+			Result.set_builder_description ("owner", "is published by username")
 			Result.set_builder_description ("downloads", "has at least N downloads")
 		end
 

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 	request: WSF_REQUEST
 
-	version: IRON_NODE_VERSION
+	version: detachable IRON_NODE_VERSION
 
 	content_type_version: IMMUTABLE_STRING_8
 		do
@@ -199,7 +199,7 @@ feature -- Visit
 			j_object: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
-			check same_version: version ~ p.version end
+			check same_version: attached version as v implies v ~ p.version end
 			create j_object.make
 			js := p.id
 			j_object.put (js, "id")
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

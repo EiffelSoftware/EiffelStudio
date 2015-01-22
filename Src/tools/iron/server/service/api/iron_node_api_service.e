@@ -44,6 +44,9 @@ feature -- Initialization
 			create h_package_map.make (l_iron)
 
 				-- REST: access
+			map_uri_template_with_request_methods (l_iron.api_resource ("/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
+
+				-- REST: access by version
 			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
 			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/archive"), h_archive_package, router.methods_get) --  Get archive package data i.e download archive...
 
@@ -104,7 +107,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

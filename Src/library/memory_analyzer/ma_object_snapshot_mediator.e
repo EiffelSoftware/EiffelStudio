@@ -393,7 +393,11 @@ feature {NONE} -- Implementation
 							l_item.set_data (l_any)
 							l_item.pointer_button_press_actions.extend (agent (a1, a2, a3: INTEGER_32; a4, a5, a6: REAL_64; a7, a8: INTEGER_32; a_item: EV_GRID_LABEL_ITEM)
 								do
-									a_item.set_text (formatted_size (internal.deep_physical_size_64 (a_item.data)))
+									if attached a_item.data as l_data then
+										a_item.set_text (formatted_size (internal.deep_physical_size_64 (l_data)))
+									else
+										a_item.set_text ("0 B")
+									end
 									a_item.pointer_button_press_actions.wipe_out
 								end (?, ?, ?, ?, ?, ?, ?, ?, l_item))
 							object_grid.set_item (5, j, l_item)

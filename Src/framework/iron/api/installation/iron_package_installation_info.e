@@ -65,7 +65,8 @@ feature -- Storage
 			create installation_path.make_empty
 			if attached file_content (path) as s then
 				create jp.make_parser (s)
-				if jp.is_parsed and then attached {JSON_OBJECT} jp.parse_object as jo then
+				jp.parse_content
+				if jp.is_valid and then attached {JSON_OBJECT} jp.parsed_json_object as jo then
 					if
 						attached {JSON_OBJECT} jo.item ("repository") as j_repo and then
 						attached {JSON_STRING} j_repo.item ("uri") as j_repo_uri
@@ -286,7 +287,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -168,6 +168,13 @@ feature -- Implementation
 					l_severities := api_service.severities
 
 					l_pages := api_service.row_count_problem_report_responsible (l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
+
+						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
+					if l_input_validator.page > (l_pages // l_input_validator.size) then
+						l_input_validator.set_page (1)
+					end
+
+
 					l_row :=  api_service.problem_reports_responsibles (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
 
 					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
@@ -247,6 +254,12 @@ feature -- Implementation
 					list_status := api_service.status
 
 					l_pages := api_service.row_count_problem_reports (l_input_validator.category, l_input_validator.status_selected, a_user, l_input_validator.filter, l_input_validator.filter_content)
+
+						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
+					if l_input_validator.page > (l_pages // l_input_validator.size) then
+						l_input_validator.set_page (1)
+					end
+
 					l_row := api_service.problem_reports_guest_2 (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter, l_input_validator.filter_content )
 					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
 					l_report_view.set_size (l_input_validator.size)

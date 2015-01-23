@@ -35,7 +35,7 @@ feature {NONE} --Initialization
 			if a_view.index > 1 then
 				template.add_value (a_view.index - 1 , "prev")
 			end
-			if a_view.index < a_view.pages then
+			if a_view.index <= a_view.pages then
 				template.add_value (a_view.index + 1, "next")
 			end
 			template.add_value (a_view.pages + 1 , "last")

@@ -170,7 +170,7 @@ feature -- Implementation
 					l_pages := api_service.row_count_problem_report_responsible (l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
 
 						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
-					if l_input_validator.page > (l_pages // l_input_validator.size) then
+					if l_input_validator.page > (l_pages // l_input_validator.size) + 1 then
 						l_input_validator.set_page (1)
 					end
 
@@ -256,7 +256,7 @@ feature -- Implementation
 					l_pages := api_service.row_count_problem_reports (l_input_validator.category, l_input_validator.status_selected, a_user, l_input_validator.filter, l_input_validator.filter_content)
 
 						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
-					if l_input_validator.page > (l_pages // l_input_validator.size) then
+					if l_input_validator.page > (l_pages // l_input_validator.size) + 1 then
 						l_input_validator.set_page (1)
 					end
 

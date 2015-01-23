@@ -82,7 +82,9 @@
 #endif
 
 #ifndef EIF_ASSERTIONS
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 #endif	/* EIF_ASSERTIONS */
 
 #endif	/* _confmagic_h_ */

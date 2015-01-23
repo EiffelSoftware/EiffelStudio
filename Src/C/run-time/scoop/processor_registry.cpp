@@ -44,10 +44,9 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 #include "processor_registry.hpp"
 #include "internal.hpp"
 #include "processor.hpp"
-#include <cassert>
-#include <eif_macros.h>
+#include "rt_assert.h"
+#include "eif_macros.h"
 #include "eif_scoop.h"
-#include <stdlib.h>
 
 processor_registry registry;
 
@@ -108,9 +107,9 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 
 processor* processor_registry::operator[] (EIF_SCP_PID pid)
 {
-	assert (used_pids.has (pid));
+	REQUIRE("Has PID", used_pids.has (pid));
 	processor *proc = procs[pid];
-	assert (proc && "processor_registry: retrieved processor was NULL");
+	ENSURE("processor_registry: retrieved processor not NULL", proc);
 	return proc;
 }
 
@@ -134,7 +133,7 @@ void processor_registry::return_processor (processor *proc)
 			need_pid_cv.notify_all();
 		}
 	} else {
-		assert (0 && "return_pid: shouldn't be here");
+		CHECK ("return_pid: shouldn't be there", 0);
 	}
 }
 

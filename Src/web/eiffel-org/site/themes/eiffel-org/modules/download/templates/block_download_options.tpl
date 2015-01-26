@@ -36,7 +36,7 @@
 					  <th>File name</th>
 					  <th>Platform</th>
 					  <th>Size</th>
-					  <th>Md5</th>
+					  <th>SHA-256</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -45,7 +45,7 @@
 					  <td class="filename"><a id="link" class="download_link" href="{$mirror/}{$ic.name/} {$ic.number/}/{$ic.build/}/{$item.filename/}/download" target="_blank">{$item.filename/}</a></td>
 					  <td>{$item.platform/}</td>
 					  <td>{$item.size/}</td>
-					  <td><tt>{$item.md5/}</tt></td>
+					  <td><tt>{$item.hash/}</tt></td>
 					</tr>
 					{/foreach}
 				</tbody>	

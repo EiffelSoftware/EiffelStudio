@@ -11,8 +11,8 @@ feature -- Access
 	key: detachable READABLE_STRING_32
 			-- Associated key
 
-	md5: detachable READABLE_STRING_32
-			-- Associated md5.
+	hash: detachable READABLE_STRING_32
+			-- Associated hash.
 
 	size: INTEGER_64
 			-- Product size.
@@ -33,12 +33,12 @@ feature -- Element change
 			key_assigned: key = a_key
 		end
 
-	set_md5 (a_md5: like md5)
-			-- Assign `md5' with `a_md5'.
+	set_hash (a_hash: like hash)
+			-- Assign `hash' with `a_hash'.
 		do
-			md5 := a_md5
+			hash := a_hash
 		ensure
-			md5_assigned: md5 = a_md5
+			hash_assigned: hash = a_hash
 		end
 
 	set_size (a_size: like size)

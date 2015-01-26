@@ -1,6 +1,93 @@
 {
     "mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
     "products": [
+     {
+            "id": "eiffelstudio",
+            "name": "EiffelStudio",
+            "version": "15.01 GPL",
+            "number": "15.01",
+            "build": "Build_96535",
+            "download": [
+                {
+                    "platform": "freebsd-x86-64",
+                    "filename": "Eiffel_15.01_gpl_96535-freebsd-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "4a7554a5e39392ab359fbd1c74e22a2720c2510e28de3ba4feb830ad49e1e3d6"
+                },
+                {
+                    "platform": "freebsd-x86",
+                    "filename": "Eiffel_15.01_gpl_96535-freebsd-x86.tar.bz2",
+                    "size": "",
+                    "hash": "8499432c4fbe92b47875520f12f3d88c9499246e2c30a22758894541a2a620e5"
+                },
+                {
+                    "platform": "linux-armv6",
+                    "filename": "Eiffel_15.01_gpl_96535-linux-armv6.tar.bz2",
+                    "size": "",
+                    "hash": "a148348294d94049b335172e851b14509fe0912e1de5d67d7b64b3158f7411e2"
+                },
+                {
+                    "platform": "linux-x86-64",
+                    "filename": "Eiffel_15.01_gpl_96535-linux-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "d4ce5e6c653f55717ad219953eeaab17b027dbcad14b9451ca3e7dd36e7d9580"
+                },
+                {
+                    "platform": "linux-x86",
+                    "filename": "Eiffel_15.01_gpl_96535-linux-x86.tar.bz2",
+                    "size": "",
+                    "hash": "119efb6ec02c801de045988b430cce1a2126366d55a5e91252f99b9c2dac67de"
+                },
+                {
+                    "platform": "macosx-x86-64",
+                    "filename": "Eiffel_15.01_gpl_96535-macosx-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "6e79d58466e11d6b77c62fcf4e521d46fc4311970fa4da6a9427411a45bd9685"
+                },
+                {
+                    "platform": "openbsd-x86-64",
+                    "filename": "Eiffel_15.01_gpl_96535-openbsd-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "10d8e82f2b3f19d69f52c88c1ad269254e4012b286c60c6c044ea8a599427484"
+                },
+                {
+                    "platform": "solaris-sparc-64",
+                    "filename": "Eiffel_15.01_gpl_96535-solaris-sparc-64.tar.bz2",
+                    "size": "",
+                    "hash": "5805182a5eadcc3b91049a3ddbe13937bb3ac25991ce9619c76ac0a3e94c3f1a"
+                },
+                {
+                    "platform": "solaris-sparc",
+                    "filename": "Eiffel_15.01_gpl_96535-solaris-sparc.tar.bz2",
+                    "size": "",
+                    "hash": "57a3ed39248c90cef5a7c6350c0c21599c21224cce9a1f91d478383f83bf6f6a"
+                },
+                {
+                    "platform": "solaris-x86-64",
+                    "filename": "Eiffel_15.01_gpl_96535-solaris-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "8ffac7605f470eb7abfbb7705134c888c6ae65bedf3d17f46e5f0ce72e8168a6"
+                },
+                {
+                    "platform": "solaris-x86",
+                    "filename": "Eiffel_15.01_gpl_96535-solaris-x86.tar.bz2",
+                    "size": "",
+                    "hash": "556b55f3e16688c457b0361c55e253e1cd78eaf65d1d89a8d0fa22bce305f33c"
+                },
+                {
+                    "platform": "win64",
+                    "filename": "Eiffel_15.01_gpl_96535-win64.7z",
+                    "size": "",
+                    "hash": "f7de081997ee861923e8c6738e89963e2aab21c3d9ef785c8de97045c4d71b46"
+                },
+                {
+                    "platform": "windows",
+                    "filename": "Eiffel_15.01_gpl_96535-win64.msi",
+                    "size": "",
+                    "hash": "e758f156585d1bac6094d4cb48780556ac17943fa55d70577cbccb2c860d159e"
+                }
+            ]
+        },
         {
             "id": "eiffelstudio",
             "name": "EiffelStudio",
@@ -12,79 +99,79 @@
                     "platform": "freebsd-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-freebsd-x86-64.tar.bz2",
                     "size": "90619363",
-                    "md5": "f76c769598fca08da5d26d82f3330e5f"
+                    "hash": "f76c769598fca08da5d26d82f3330e5f"
                 },
                 {
                     "platform": "freebsd-x86",
                     "filename": "Eiffel_14.05_gpl_95417-freebsd-x86.tar.bz2",
                     "size": "82175344",
-                    "md5": "2b640649619e448e6bf953f9b7dea510"
+                    "hash": "2b640649619e448e6bf953f9b7dea510"
                 },
                 {
                     "platform": "linux-armv6",
                     "filename": "Eiffel_14.05_gpl_95417-linux-armv6.tar.bz2",
                     "size": "89655085",
-                    "md5": "e58c5d0f4eb717bceeb10bd3e61ea294"
+                    "hash": "e58c5d0f4eb717bceeb10bd3e61ea294"
                 },
                 {
                     "platform": "linux-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-linux-x86-64.tar.bz2",
                     "size": "97591693",
-                    "md5": "c5606eae9aab4da45a52c4bea9c83f2b"
+                    "hash": "c5606eae9aab4da45a52c4bea9c83f2b"
                 },
                 {
                     "platform": "linux-x86",
                     "filename": "Eiffel_14.05_gpl_95417-linux-x86.tar.bz2",
                     "size": "85406431",
-                    "md5": "b0ac67ae856b70d01ebdd771c03d5484"
+                    "hash": "b0ac67ae856b70d01ebdd771c03d5484"
                 },
                 {
                     "platform": "macosx-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-macosx-x86-64.tar.bz2",
                     "size": "86945851",
-                    "md5": "3e16382ab0d93d0d049dcc851e35b2ae"
+                    "hash": "3e16382ab0d93d0d049dcc851e35b2ae"
                 },
                 {
                     "platform": "openbsd-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-openbsd-x86-64.tar.bz2",
                     "size": "94714294",
-                    "md5": "61064a8280a7dfaae5deb58abf16147a"
+                    "hash": "61064a8280a7dfaae5deb58abf16147a"
                 },
                 {
                     "platform": "solaris-sparc-64",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-sparc-64.tar.bz2",
                     "size": "104469504",
-                    "md5": "d3491943838d390b4bcd814b63c00a04"
+                    "hash": "d3491943838d390b4bcd814b63c00a04"
                 },
                 {
                     "platform": "solaris-sparc",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-sparc.tar.bz2",
                     "size": "104133992",
-                    "md5": "dcf06628b6f9333ace92fb8a1cae09ae"
+                    "hash": "dcf06628b6f9333ace92fb8a1cae09ae"
                 },
                 {
                     "platform": "solaris-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-x86-64.tar.bz2",
                     "size": "90399286",
-                    "md5": "e3a53a7243aa09a671d097af91f46e6a"
+                    "hash": "e3a53a7243aa09a671d097af91f46e6a"
                 },
                 {
                     "platform": "solaris-x86",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-x86.tar.bz2",
                     "size": "81207449",
-                    "md5": "e911dd16f44282d905496c04ba68fc15"
+                    "hash": "e911dd16f44282d905496c04ba68fc15"
                 },
                 {
                     "platform": "win64",
                     "filename": "Eiffel_14.05_gpl_95417-win64.msi",
                     "size": "139174473",
-                    "md5": "56c8e06ec3294bd438b3cceec81837f8"
+                    "hash": "56c8e06ec3294bd438b3cceec81837f8"
                 },
                 {
                     "platform": "windows",
                     "filename": "Eiffel_14.05_gpl_95417-windows.msi",
                     "size": "127085528",
-                    "md5": "0564d3079db5b218de59fc0714a1b87c"
+                    "hash": "0564d3079db5b218de59fc0714a1b87c"
                 }
             ]
         },
@@ -99,73 +186,73 @@
                     "platform": "freebsd-x86-64",
                     "filename": "Eiffel_13.11_gpl_93542-freebsd-x86-64.tar.bz2",
                     "size": "75453089",
-                    "md5": "f86d73594e7c3c83e05c0de454e08196"
+                    "hash": "f86d73594e7c3c83e05c0de454e08196"
                 },
                 {
                     "platform": "freebsd-x86",
                     "filename": "Eiffel_13.11_gpl_93542-freebsd-x86.tar.bz2",
                     "size": "67383398",
-                    "md5": "73730a28bf9b925709219524c113add3"
+                    "hash": "73730a28bf9b925709219524c113add3"
                 },
                 {
                     "platform": "linux-x86-64",
                     "filename": "Eiffel_13.11_gpl_93542-linux-x86-64.tar.bz2",
                     "size": "82061433",
-                    "md5": "5aa3df41c151d445f9033ec5827bc0d0"
+                    "hash": "5aa3df41c151d445f9033ec5827bc0d0"
                 },
                 {
                     "platform": "linux-x86",
                     "filename": "Eiffel_13.11_gpl_93542-linux-x86.tar.bz2",
                     "size": "70506682",
-                    "md5": "e88a7a706bc0c7b0a97c5a2f8533a164"
+                    "hash": "e88a7a706bc0c7b0a97c5a2f8533a164"
                 },
                 {
                     "platform": "macosx-x86-64",
                     "filename": "Eiffel_13.11_gpl_93542-macosx-x86-64.tar.bz2",
                     "size": "67432962",
-                    "md5": "3df1daeba6b91a44567392c8287d4121"
+                    "hash": "3df1daeba6b91a44567392c8287d4121"
                 },
                 {
                     "platform": "openbsd-x86-64",
                     "filename": "Eiffel_13.11_gpl_93542-openbsd-x86-64.tar.bz2",
                     "size": "79269275",
-                    "md5": "0e2a04ceeefc29736c41a72fb106c110"
+                    "hash": "0e2a04ceeefc29736c41a72fb106c110"
                 },
                 {
                     "platform": "solaris-sparc-64",
                     "filename": "Eiffel_13.11_gpl_93542-solaris-sparc-64.tar.bz2",
                     "size": "88615557",
-                    "md5": "42dad679eb806003a54c67bec0cb3b4e"
+                    "hash": "42dad679eb806003a54c67bec0cb3b4e"
                 },
                 {
                     "platform": "solaris-sparc",
                     "filename": "Eiffel_13.11_gpl_93542-solaris-sparc.tar.bz2",
                     "size": "88496462",
-                    "md5": "66f8ca0deabf449d8f51b7fb2f9e9397"
+                    "hash": "66f8ca0deabf449d8f51b7fb2f9e9397"
                 },
                 {
                     "platform": "solaris-x86-64",
                     "filename": "Eiffel_13.11_gpl_93542-solaris-x86-64.tar.bz2",
                     "size": "75814649",
-                    "md5": "87b26b706b1eddf8fdfb439d43b5ce19"
+                    "hash": "87b26b706b1eddf8fdfb439d43b5ce19"
                 },
                 {
                     "platform": "solaris-x86",
                     "filename": "Eiffel_13.11_gpl_93542-solaris-x86.tar.bz2",
                     "size": "66950645",
-                    "md5": "30d1f55148691a14f39471d1478f3936"
+                    "hash": "30d1f55148691a14f39471d1478f3936"
                 },
                 {
                     "platform": "win64",
                     "filename": "Eiffel_13.11_gpl_93542-win64.msi",
                     "size": "135350437",
-                    "md5": "caef4e370cf216430b5471ec3c436344"
+                    "hash": "caef4e370cf216430b5471ec3c436344"
                 },
                 {
                     "platform": "windows",
                     "filename": "Eiffel_13.11_gpl_93542-windows.msi",
                     "size": "123575656",
-                    "md5": "c08af33d55cd30d84cbc9e01edd48594"
+                    "hash": "c08af33d55cd30d84cbc9e01edd48594"
                 }
             ]
         }

@@ -195,8 +195,8 @@ feature {NONE} -- Implemenation: Products
 					if attached {JSON_STRING} ji.item ("size") as l_size and then l_size.item.is_integer then
 						l_item.set_size (l_size.item.to_integer)
 					end
-					if attached {JSON_STRING} ji.item ("md5") as l_md5 then
-						l_item.set_md5 (l_md5.item)
+					if attached {JSON_STRING} ji.item ("hash") as l_hash then
+						l_item.set_hash (l_hash.item)
 					end
 					if attached {JSON_STRING} ji.item ("cdkey") as l_key then
 						l_item.set_key (l_key.item)

@@ -5,12 +5,12 @@
         {
             "id": "eiffelstudio_ent",
             "name": "EiffelStudio",
-            "version": "14.05 Enterprise Evaluation Edition",
+            "version": "15.01 Enterprise Evaluation Edition",
             "release": "Official Release",
             "date": "Winter 2013",
-            "sub_directory": "14.05",
-            "number": "14.05",
-            "build" : "Build_95417",
+            "sub_directory": "15.01",
+            "number": "15.01",
+            "build" : "Build_96535",
             "icon": "eiffelstudio_ent.png",
             "public": "true",
             "for_evaluation": "true",
@@ -23,87 +23,95 @@
             "download": [
                 {
                     "platform": "freebsd-x86-64",
-                    "filename": "Eiffel_14.05_ent_95417-freebsd-x86-64.tar.bz2",
-                    "size": "76750761",
-                    "md5": "fd607c32553225f3608d286704690389",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-freebsd-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "c66c2c399bcfd14597b09c9620a2ac654c57dcb134eb96dc24e53187d05294be",
+                    "cdkey": ""
                 },
                 {
                     "platform": "freebsd-x86",
-                    "filename": "Eiffel_14.05_ent_95417-freebsd-x86.tar.bz2",
-                    "size": "68653653",
-                    "md5": "e33e8ebf0ddac5e0a873ff75dcd85c18",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-freebsd-x86.tar.bz2",
+                    "size": "",
+                    "hash": "2b07af62f1c3749fae44e96431abf2a4e1501c5d84fd78f3bce95e4fea97516d",
+                    "cdkey": ""
                 },
                 {
+                    "platform": "linux-armv6",
+                    "filename": "Eiffel_15.01_ent_96535-linux-armv6.tar.bz2",
+                    "size": "",
+                    "hash": "9becf1813c341a95e8409adf110231f0d13d27fcf80d589a6ea39e9884718c80",
+                    "cdkey": ""
+                },
+
+                {
                     "platform": "linux-x86-64",
-                    "filename": "Eiffel_14.05_ent_95417-linux-x86-64.tar.bz2",
-                    "size": "83356218",
-                    "md5": "df489be7c7b598c7d85e350cd474e638",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-linux-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "d60244820cba7180a5e9c2c90f78847848fbb65a1459c5dab733d2b185c5ab17",
+                    "cdkey": ""
                 },
                 {
                     "platform": "linux-x86",
-                    "filename": "Eiffel_14.05_ent_95417-linux-x86.tar.bz2",
-                    "size": "71732826",
-                    "md5": "f3bbb6348369ac6dc866e0cf4afb98cf",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-linux-x86.tar.bz2",
+                    "size": "",
+                    "hash": "7c9e8f5b46a1b058bf9f9649b178b4cd823c624e09c8fc0c9f905a9b6e50e4c1",
+                    "cdkey": ""
                 },
                 {
                     "platform": "macosx-x86-64",
-                    "filename": "Eiffel_14.05_ent_95417-macosx-x86-64.tar.bz2",
-                    "size": "68421986",
-                    "md5": "c6c794bbf7615ad9296ec32481000a27",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-macosx-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "50ac885816a5d1c277ef4e7648bdaecf519e5e493b2f61b51b6160afd40e5503",
+                    "cdkey": ""
                 },
                 {
                     "platform": "openbsd-x86-64",
-                    "filename": "Eiffel_14.05_ent_95417-openbsd-x86-64.tar.bz2",
-                    "size": "80664195",
-                    "md5": "0df9ed3e3f30dff5b0b5e8ea1709d786",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-openbsd-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "c31c45a2958fbac9ffbe7e87f4c6e19da4caa11316616697d37e04a3a8038258",
+                    "cdkey": ""
                 },
                 {
                     "platform": "solaris-sparc-64",
-                    "filename": "Eiffel_14.05_ent_95417-solaris-sparc-64.tar.bz2",
-                    "size": "90095988",
-                    "md5": "4bec368b06877ebd0a88bf89f65252d2",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-solaris-sparc-64.tar.bz2",
+                    "size": "",
+                    "hash": "a9f574f043b59f40cf5600a01fd8cff0ca7b9955390c3f61bd767f3854c96ad2",
+                    "cdkey": ""
                 },
                 {
                     "platform": "solaris-sparc",
-                    "filename": "Eiffel_14.05_ent_95417-solaris-sparc.tar.bz2",
-                    "size": "90069905",
-                    "md5": "9b948692defdb5ae974f89c6e9851e4b",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-solaris-sparc.tar.bz2",
+                    "size": "",
+                    "hash": "ec516ca23d94ec679228e6f610440ce26767ccf481b33dd68acb3c1c0fe7bdda",
+                    "cdkey": ""
                 },
                 {
                     "platform": "solaris-x86-64",
-                    "filename": "Eiffel_14.05_ent_95417-solaris-x86-64.tar.bz2",
-                    "size": "77139132",
-                    "md5": "e3c0427bcd5a1fc63379cdfa14c112f9",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-solaris-x86-64.tar.bz2",
+                    "size": "",
+                    "hash": "ad97e3ee98f852713b7a8951710d726d9d5caca37fd33f683bb14484cf218a8c",
+                    "cdkey": ""
                 },
                 {
                     "platform": "solaris-x86",
-                    "filename": "Eiffel_14.05_ent_95417-solaris-x86.tar.bz2",
-                    "size": "68007866",
-                    "md5": "33b62bfdaf425b2b5ce359107f827a2c",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-solaris-x86.tar.bz2",
+                    "size": "",
+                    "hash": "1e61fff667b42785de2a09947fd1d89eceb9f297b0d0dea280a332ac042313af",
+                    "cdkey": ""
                 },
                 {
                     "platform": "win64",
-                    "filename": "Eiffel_14.05_ent_95417-win64.msi",
-                    "size": "135389212",
-                    "md5": "58b7e24162eb4abc22a85b3712a36e21",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-win64.msi",
+                    "size": "",
+                    "hash": "eac30fef3496ea229335e57b779bb24118d11faa77e4e58703563dec001e7bc1",
+                    "cdkey": ""
                 },
                 {
                     "platform": "windows",
-                    "filename": "Eiffel_14.05_ent_95417-windows.msi",
-                    "size": "123618308",
-                    "md5": "9aeb6f639fea369b0eee811b2045a63b",
-                    "cdkey": "95568-38287-27185-06220-19513-63384"
+                    "filename": "Eiffel_15.01_ent_96535-windows.msi",
+                    "size": "",
+                    "hash": "681a98e84fb584b86af256298ba10182c6633b44a3d7de8d20b3c295da4e1fc6",
+                    "cdkey": ""
                 }
             ]
         },
@@ -128,91 +136,91 @@
                     "platform": "freebsd-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-freebsd-x86-64.tar.bz2",
                     "size": "90619363",
-                    "md5": "f76c769598fca08da5d26d82f3330e5f",
+                    "hash": "f76c769598fca08da5d26d82f3330e5f",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "freebsd-x86",
                     "filename": "Eiffel_14.05_gpl_95417-freebsd-x86.tar.bz2",
                     "size": "82175344",
-                    "md5": "2b640649619e448e6bf953f9b7dea510",
+                    "hash": "2b640649619e448e6bf953f9b7dea510",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "linux-armv6",
                     "filename": "Eiffel_14.05_gpl_95417-linux-armv6.tar.bz2",
                     "size": "89655085",
-                    "md5": "e58c5d0f4eb717bceeb10bd3e61ea294",
+                    "hash": "e58c5d0f4eb717bceeb10bd3e61ea294",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "linux-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-linux-x86-64.tar.bz2",
                     "size": "97591693",
-                    "md5": "c5606eae9aab4da45a52c4bea9c83f2b",
+                    "hash": "c5606eae9aab4da45a52c4bea9c83f2b",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "linux-x86",
                     "filename": "Eiffel_14.05_gpl_95417-linux-x86.tar.bz2",
                     "size": "85406431",
-                    "md5": "b0ac67ae856b70d01ebdd771c03d5484",
+                    "hash": "b0ac67ae856b70d01ebdd771c03d5484",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "macosx-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-macosx-x86-64.tar.bz2",
                     "size": "86945851",
-                    "md5": "3e16382ab0d93d0d049dcc851e35b2ae",
+                    "hash": "3e16382ab0d93d0d049dcc851e35b2ae",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "openbsd-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-openbsd-x86-64.tar.bz2",
                     "size": "94714294",
-                    "md5": "61064a8280a7dfaae5deb58abf16147a",
+                    "hash": "61064a8280a7dfaae5deb58abf16147a",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "solaris-sparc-64",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-sparc-64.tar.bz2",
                     "size": "104469504",
-                    "md5": "d3491943838d390b4bcd814b63c00a04",
+                    "hash": "d3491943838d390b4bcd814b63c00a04",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "solaris-sparc",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-sparc.tar.bz2",
                     "size": "104133992",
-                    "md5": "dcf06628b6f9333ace92fb8a1cae09ae",
+                    "hash": "dcf06628b6f9333ace92fb8a1cae09ae",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "solaris-x86-64",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-x86-64.tar.bz2",
                     "size": "90399286",
-                    "md5": "e3a53a7243aa09a671d097af91f46e6a",
+                    "hash": "e3a53a7243aa09a671d097af91f46e6a",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "solaris-x86",
                     "filename": "Eiffel_14.05_gpl_95417-solaris-x86.tar.bz2",
                     "size": "81207449",
-                    "md5": "e911dd16f44282d905496c04ba68fc15",
+                    "hash": "e911dd16f44282d905496c04ba68fc15",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "win64",
                     "filename": "Eiffel_14.05_gpl_95417-win64.msi",
                     "size": "139174473",
-                    "md5": "56c8e06ec3294bd438b3cceec81837f8",
+                    "hash": "56c8e06ec3294bd438b3cceec81837f8",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 },
                 {
                     "platform": "windows",
                     "filename": "Eiffel_14.05_gpl_95417-windows.msi",
                     "size": "127085528",
-                    "md5": "0564d3079db5b218de59fc0714a1b87c",
+                    "hash": "0564d3079db5b218de59fc0714a1b87c",
 					"cdkey": "95568-38287-27185-06220-19513-63384"
                 }
             ]

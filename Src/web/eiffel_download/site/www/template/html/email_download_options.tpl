@@ -23,7 +23,7 @@
 				<li><strong>CD key</strong>: {$selected_platform.key/}</li>
 				<li><strong>Platform</strong>: {$selected_platform.platform/}</li>
 				<li><strong>Size</strong>: {$selected_platform.size/}</li> 
-				<li><strong>MD5</strong>: {$selected_platform.md5/}</li>
+				<li><strong>SHA-256</strong>: {$selected_platform.hash/}</li>
 			</ul>
 
 			<p>

@@ -267,7 +267,7 @@ feature -- Execute
 											if
 												l_package.has_archive_uri and then
 												l_package.archive_size = l_iron_archive.file_size and then
-												(attached l_package.archive_hash as l_package_archive_hash and
+												(attached l_package.archive_hash_string as l_package_archive_hash and
 												 attached l_iron_archive.hash as l_iron_hash) and then l_package_archive_hash.is_case_insensitive_equal_general (l_iron_hash)
 											then
 													-- Same archive .. no need to upload
@@ -284,7 +284,7 @@ feature -- Execute
 												print ("...%N")
 												if l_package.has_archive_uri then
 													print (" -> replacing previous archive [size=" + l_package.archive_size.out)
-													if attached l_package.archive_hash as l_hash then
+													if attached l_package.archive_hash_string as l_hash then
 														print (" hash=" + l_hash)
 													end
 													print (" ].")

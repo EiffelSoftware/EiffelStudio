@@ -7,6 +7,7 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\..\..\..\..\cms-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="model" location="..\..\..\..\model\cms_model-safe.ecf"/>
 		<library name="persitence_sqlite" location="..\persistence_sqlite-safe.ecf" readonly="false"/>

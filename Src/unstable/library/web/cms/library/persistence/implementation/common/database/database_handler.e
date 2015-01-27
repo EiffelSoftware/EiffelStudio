@@ -45,14 +45,14 @@ feature -- Functionality Store Procedures
 	execute_store_reader
 			-- Execute a `store' to read data.
 		require
-			store_not_void: store /= void
+			store_not_void: store /= Void
 		deferred
 		end
 
 	execute_store_writer
 			-- Execute a `store' to write data.
 		require
-			store_not_void: store /= void
+			store_not_void: store /= Void
 		deferred
 		end
 
@@ -61,14 +61,14 @@ feature -- SQL Queries
 	execute_query
 			-- Execute sql query, the read data from the database.
 		require
-			query_not_void: query /= void
+			query_not_void: query /= Void
 		deferred
 		end
 
 	execute_change
 			-- Execute sql query that update/add data.
 		require
-			query_not_void: query /= void
+			query_not_void: query /= Void
 		deferred
 		end
 
@@ -153,22 +153,22 @@ feature -- Status Report
 		end
 
 	connection: DATABASE_CONNECTION
-		-- Database connection.
+			-- Database connection.
 
 	db_control: DB_CONTROL
-		-- Database control.
+			-- Database control.
 		do
 			Result := connection.db_control
 		end
 
 	db_result: detachable DB_RESULT
-		-- Database query result.
+			-- Database query result.
 
 	db_selection: detachable DB_SELECTION
-		-- Database selection.
+			-- Database selection.
 
 	db_change: detachable DB_CHANGE
-		-- Database modification.	
+			-- Database modification.	
 
 feature -- Error handling
 

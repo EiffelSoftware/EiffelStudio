@@ -32,7 +32,9 @@ feature -- Execution
 		do
 			set_title ("Not Implemented")
 			set_page_title (Void)
-			set_main_content (request.percent_encoded_path_info + " is not implemented!")
+			if main_content = Void then
+				set_main_content (request.percent_encoded_path_info + " is not implemented!")
+			end
 		end
 end
 

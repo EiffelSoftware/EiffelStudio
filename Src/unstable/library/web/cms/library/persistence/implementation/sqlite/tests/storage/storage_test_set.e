@@ -177,7 +177,7 @@ feature -- Test routines
 			l_nodes: LIST[CMS_NODE]
 		do
 			across 1 |..| 10 as c loop
-				storage.save_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
+				storage.new_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
 			end
 			l_nodes := storage.recent_nodes (0, 10)
 			assert ("10 recent nodes", l_nodes.count = 10)
@@ -200,124 +200,74 @@ feature -- Test routines
 		end
 
 	test_node_does_not_exist
-		local
-			l_nodes: LIST[CMS_NODE]
 		do
 			across 1 |..| 10 as c loop
-				storage.save_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
+				storage.new_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
 			end
-			assert ("Not exist node id: 12", storage.node (12) = Void)
+			assert ("Not exist node id: 12", storage.node_by_id (12) = Void)
 		end
 
 	test_node
-		local
-			l_nodes: LIST[CMS_NODE]
 		do
 			across 1 |..| 10 as c loop
-				storage.save_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
+				storage.new_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
 			end
-			assert ("Node id: 10", attached storage.node (10) as l_node and then l_node.title ~ "Title_10" )
+			assert ("has nodes", storage.nodes.count > 5)
+			assert ("Node id: 10", attached storage.node_by_id (10) as l_node and then l_node.title ~ "Title_10" )
 		end
 
 	test_update_node
 		local
-			l_nodes: LIST[CMS_NODE]
 			l_node: CMS_NODE
 		do
-			storage.save_node (custom_node ("Content", "Summary", "Title"))
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (custom_node ("Content", "Summary", "Title"))
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				l_node := ll_node.twin
 				l_node.set_content ("New Content")
 				l_node.set_summary ("New Summary")
 				l_node.set_title("New Title")
 
 --				storage.update_node (l_node)
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then not (u_node.title ~ ll_node.title) and then not (u_node.content ~ ll_node.content) and then not (u_node.summary ~ ll_node.summary))
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then not (u_node.content ~ ll_node.content) and then not (u_node.summary ~ ll_node.summary))
 			end
 		end
 
 	test_update_node_title
-		local
-			l_nodes: LIST[CMS_NODE]
-			l_node: CMS_NODE
 		do
-			storage.save_node (custom_node ("Content", "Summary", "Title"))
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (custom_node ("Content", "Summary", "Title"))
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 --				storage.update_node_title (ll_node.id, "New Title")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
 	test_update_node_summary
-		local
-			l_nodes: LIST[CMS_NODE]
-			l_node: CMS_NODE
 		do
-			storage.save_node (custom_node ("Content", "Summary", "Title"))
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (custom_node ("Content", "Summary", "Title"))
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 --				storage.update_node_summary (ll_node.id, "New Summary")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
 			end
 		end
 
 	test_update_node_content
-		local
-			l_nodes: LIST[CMS_NODE]
-			l_node: CMS_NODE
 		do
-			storage.save_node (custom_node ("Content", "Summary", "Title"))
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (custom_node ("Content", "Summary", "Title"))
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 --				storage.update_node_content (ll_node.id, "New Content")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
 	test_delete_node
-		local
-			l_nodes: LIST[CMS_NODE]
 		do
 			across 1 |..| 10 as c loop
-				storage.save_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
+				storage.new_node (custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out))
 			end
-			assert ("Exist node id: 10", attached storage.node (10) as l_node and then l_node.title ~ "Title_10" )
-			storage.delete_node (10)
-			assert ("Not exist node id: 10", storage.node (10) = Void)
+			assert ("Exist node id: 10", attached storage.node_by_id (10) as l_node and then l_node.title ~ "Title_10" )
+			storage.delete_node_by_id (10)
+			assert ("Not exist node id: 10", storage.node_by_id (10) = Void)
 		end
 
-
-
-feature {NONE} -- Implementation
-
-	storage: CMS_STORAGE
-			-- Storage
-		once
-			create {CMS_STORAGE_SQLITE}Result.make (connection)
-		end
-
-feature {NONE} -- Fixture Factory: Users
-
-	default_user: CMS_USER
-		do
-			Result := custom_user ("test", "password", "test@test.com")
-		end
-
-	custom_user (a_name, a_password, a_email: READABLE_STRING_32): CMS_USER
-		do
-			create Result.make (a_name)
-			Result.set_password (a_password)
-			Result.set_email (a_email)
-		end
-
-feature {NONE} -- Fixture Factories: Nodes
-
-	default_node: CMS_NODE
-		do
-			Result := custom_node ("Default content", "default summary", "Default")
-		end
-
-	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_NODE
-		do
-			create Result.make (a_content, a_summary, a_title)
-		end
 
 end

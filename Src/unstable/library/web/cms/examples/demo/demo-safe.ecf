@@ -9,10 +9,13 @@
 		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 		<library name="layout" location="..\..\library\layout\layout-safe.ecf" readonly="false"/>
+		<library name="persistence_mysql" location="..\..\library\persistence\implementation\mysql\persistence_mysql-safe.ecf" readonly="false"/>
+		<library name="persistence_sqlite" location="..\..\library\persistence\implementation\sqlite\persistence_sqlite-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 	</target>
@@ -26,6 +29,7 @@
 	</target>
 	<target name="demo_nino" extends="common">
 		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="none"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>

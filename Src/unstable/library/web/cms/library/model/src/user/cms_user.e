@@ -13,17 +13,36 @@ inherit
 	DEBUG_OUTPUT
 
 create
-	make
+	make,
+	make_with_id -- MAYBE: export to CMS_STORAGE
 
 feature {NONE} -- Initialization
 
 	make (a_name: READABLE_STRING_32)
 			-- Create an object with name `a_name'.
+		require
+			a_name_not_empty: not a_name.is_whitespace
 		do
 			name := a_name
-			create creation_date.make_now_utc
+			initialize
 		ensure
 			name_set: name = a_name
+		end
+
+	make_with_id (a_id: INTEGER_64)
+		require
+			a_id_valid: a_id > 0
+		do
+			id := a_id
+			name := {STRING_32} ""
+			initialize
+		ensure
+			id_set: id = a_id
+		end
+
+	initialize
+		do
+			create creation_date.make_now_utc
 		end
 
 feature -- Access
@@ -35,7 +54,10 @@ feature -- Access
 			-- User name.
 
 	password: detachable READABLE_STRING_32
-			-- User password.
+			-- User password (plain text password).
+
+	hashed_password: detachable READABLE_STRING_8
+			-- Hashed user password.
 
 	email: detachable READABLE_STRING_32
 			-- User email.
@@ -113,8 +135,20 @@ feature -- Change element
 			-- Set `password' with `a_password'.
 		do
 			password := a_password
+			hashed_password := Void
 		ensure
 			password_set: password = a_password
+			hashed_password_void: hashed_password = Void
+		end
+
+	set_hashed_password (a_hashed_password: like hashed_password)
+			-- Set `hashed_password' with `a_hashed_password'.
+		do
+			hashed_password := a_hashed_password
+			password := Void
+		ensure
+			password_void: password = Void
+			hashed_password_set: hashed_password = a_hashed_password
 		end
 
 	set_email (a_email: like email)
@@ -177,6 +211,10 @@ feature -- Change element: data
 				l_data.remove (k)
 			end
 		end
+
+invariant
+
+	id_or_name_set: id > 0 or else not name.is_whitespace
 
 note
 	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

@@ -7,8 +7,19 @@ class
 	CMS_API
 
 inherit
+	ANY
 
 	REFACTORING_HELPER
+
+	SHARED_HTML_ENCODER
+		export
+			{NONE} all
+		end
+
+	SHARED_WSF_PERCENT_ENCODER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -31,46 +42,13 @@ feature -- Initialize
 
 	initialize
 				-- Initialize the persitent layer.
-		local
-			l_database: DATABASE_CONNECTION
-			retried: BOOLEAN
-			l_message: STRING
 		do
-			if not retried then
-				to_implement ("Refactor database setup")
-				if attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (setup.layout.application_config_path) as l_database_config then
-					create {DATABASE_CONNECTION_MYSQL} l_database.login_with_connection_string (l_database_config.connection_string)
-					create {CMS_STORAGE_MYSQL} storage.make (l_database)
-				else
-					create {DATABASE_CONNECTION_NULL} l_database.make_common
-					create {CMS_STORAGE_NULL} storage
-				end
+			to_implement ("Refactor database setup")
+			if attached setup.storage (error_handler) as l_storage then
+				storage := l_storage
 			else
-				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
-					-- error hanling.
-				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create {CMS_STORAGE_NULL} storage
-				create l_message.make (1024)
-				if attached ((create {EXCEPTION_MANAGER}).last_exception) as l_exception then
-					if attached l_exception.description as l_description then
-						l_message.append (l_description.as_string_32)
-						l_message.append ("%N%N")
-					elseif attached l_exception.trace as l_trace then
-						l_message.append (l_trace)
-						l_message.append ("%N%N")
-					else
-						l_message.append (l_exception.out)
-						l_message.append ("%N%N")
-					end
-				else
-					l_message.append ("The application crash without available information")
-					l_message.append ("%N%N")
-				end
-				error_handler.add_custom_error (0, " Database Connection ", l_message)
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature -- Access: Error
@@ -110,16 +88,18 @@ feature -- Status Report
 
 feature -- Access: Node
 
-	nodes: LIST[CMS_NODE]
-			-- List of nodes.
+	nodes_count: INTEGER_64
 		do
-			debug ("refactor_fixme")
-				fixme ("Implementation")
-			end
-			Result := storage.recent_nodes (0, 10)
+			Result := storage.nodes_count
 		end
 
-	recent_nodes (a_offset, a_rows: INTEGER): LIST[CMS_NODE]
+	nodes: LIST [CMS_NODE]
+			-- List of nodes.
+		do
+			Result := storage.nodes
+		end
+
+	recent_nodes (a_offset, a_rows: INTEGER): LIST [CMS_NODE]
 			-- List of the `a_rows' most recent nodes starting from  `a_offset'.
 		do
 			Result := storage.recent_nodes (a_offset, a_rows)
@@ -131,54 +111,58 @@ feature -- Access: Node
 			debug ("refactor_fixme")
 				fixme ("Check preconditions")
 			end
-			Result := storage.node (a_id)
+			Result := storage.node_by_id (a_id)
 		end
 
 feature -- Change: Node
 
 	new_node (a_node: CMS_NODE)
 			-- Add a new node `a_node'
+		require
+			no_id: not a_node.has_id
 		do
-			storage.save_node (a_node)
+			storage.new_node (a_node)
 		end
 
-	delete_node (a_id: INTEGER_64)
-			-- Delete a node identified by `a_id', if any.
+	delete_node (a_node: CMS_NODE)
+			-- Delete `a_node'.
 		do
-			storage.delete_node (a_id)
+			if a_node.has_id then
+				storage.delete_node (a_node)
+			end
 		end
 
-	update_node (a_id: like {CMS_USER}.id; a_node: CMS_NODE)
-			-- Update node by id `a_id' with `a_node' data.
+	update_node (a_node: CMS_NODE)
+			-- Update node `a_node' data.
 		do
-			storage.update_node (a_id,a_node)
+			storage.update_node (a_node)
 		end
 
-	update_node_title (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
+	update_node_title (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
 			-- Update node title, with user identified by `a_id', with node id `a_node_id' and a new title `a_title'.
 		do
 			debug ("refactor_fixme")
 				fixme ("Check preconditions")
 			end
-			storage.update_node_title (a_id,a_node_id,a_title)
+			storage.update_node_title (a_user_id, a_node_id, a_title)
 		end
 
-	update_node_summary (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
-			-- Update node summary, with user identified by `a_id', with node id `a_node_id' and a new summary `a_summary'.
+	update_node_summary (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
+			-- Update node summary, with user identified by `a_user_id', with node id `a_node_id' and a new summary `a_summary'.
 		do
 			debug ("refactor_fixme")
 				fixme ("Check preconditions")
 			end
-			storage.update_node_summary (a_id,a_node_id, a_summary)
+			storage.update_node_summary (a_user_id, a_node_id, a_summary)
 		end
 
-	update_node_content (a_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
-			-- Update node content, with user identified by `a_id', with node id `a_node_id' and a new content `a_content'.
+	update_node_content (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
+			-- Update node content, with user identified by `a_user_id', with node id `a_node_id' and a new content `a_content'.
 		do
 			debug ("refactor_fixme")
 				fixme ("Check preconditions")
 			end
-			storage.update_node_content (a_id,a_node_id, a_content)
+			storage.update_node_content (a_user_id, a_node_id, a_content)
 		end
 
 
@@ -194,17 +178,42 @@ feature -- Change User
 
 	new_user (a_user: CMS_USER)
 			-- Add a new user `a_user'.
+		require
+			no_id: not a_user.has_id
+			no_hashed_password: a_user.hashed_password = Void
 		do
 			if
 				attached a_user.password as l_password and then
 				attached a_user.email as l_email
 			then
-				storage.save_user (a_user)
+				storage.new_user (a_user)
 			else
 				debug ("refactor_fixme")
 					fixme ("Add error")
 				end
 			end
+		end
+
+	update_user (a_user: CMS_USER)
+			-- Update user `a_user'.
+		require
+			has_id: a_user.has_id
+		do
+			storage.update_user (a_user)
+		end
+
+feature -- Helpers
+
+	html_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded for html output.
+		do
+			Result := html_encoder.general_encoded_string (a_string)
+		end
+
+	percent_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded with percent encoding, mainly used for url.
+		do
+			Result := percent_encoder.percent_encoded_string (a_string)
 		end
 
 feature -- Layout

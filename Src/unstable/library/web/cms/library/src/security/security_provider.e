@@ -34,10 +34,16 @@ feature -- Access
 			Result.keep_head (Result.count - 2)
 		end
 
-	password_hash (a_password, a_salt: STRING): STRING
+	password_hash (a_password: READABLE_STRING_GENERAL; a_salt: STRING): STRING
 			-- Password hash based on password `a_password' and salt value `a_salt'.
+		local
+			utf: UTF_CONVERTER
+			s: STRING
 		do
-			Result := sha1_string (a_password + a_salt )
+			create s.make (a_password.count + a_salt.count)
+			utf.utf_32_string_into_utf_8_string_8 (a_password, s)
+			s.append (a_salt)
+			Result := sha1_string (s)
 		end
 
 feature {NONE} -- Implementation

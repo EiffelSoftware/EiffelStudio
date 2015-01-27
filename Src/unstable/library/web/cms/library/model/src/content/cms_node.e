@@ -83,8 +83,8 @@ feature -- Access
 	author: detachable CMS_USER
 			-- Author of current node.
 
-	collaborators: detachable LIST[CMS_USER]
-			-- Users contributed to current Node.
+--	collaborators: detachable LIST[CMS_USER]
+--			-- Users contributed to current Node.
 
 feature -- status report
 
@@ -177,18 +177,18 @@ feature -- Element change
 			auther_set: author = u
 		end
 
-	add_collaborator (a_user: CMS_USER)
-			-- Add collaborator `a_user' to the collaborators list.
-		local
-			lst: like collaborators
-		do
-			lst := collaborators
-			if lst = Void then
-				create {ARRAYED_SET [CMS_USER]} lst.make (1)
-				collaborators := lst
-			end
-			lst.force (a_user)
-		end
+--	add_collaborator (a_user: CMS_USER)
+--			-- Add collaborator `a_user' to the collaborators list.
+--		local
+--			lst: like collaborators
+--		do
+--			lst := collaborators
+--			if lst = Void then
+--				create {ARRAYED_SET [CMS_USER]} lst.make (1)
+--				collaborators := lst
+--			end
+--			lst.force (a_user)
+--		end
 
 note
 	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

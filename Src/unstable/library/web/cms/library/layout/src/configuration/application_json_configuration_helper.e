@@ -47,7 +47,7 @@ feature -- Application Configuration
 					attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
 					attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string
 				then
-					create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
+					create Result.make (l_driver.item, l_connection_string.unescaped_string_32)
 				end
 			end
 		end

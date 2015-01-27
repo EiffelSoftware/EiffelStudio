@@ -6,6 +6,9 @@ note
 deferred class
 	CMS_SETUP
 
+inherit
+	REFACTORING_HELPER
+
 feature -- Access
 
 	layout: CMS_LAYOUT
@@ -88,7 +91,6 @@ feature -- Query
 		deferred
 		end
 
-
 feature -- Access: Theme	
 
 	themes_location: PATH
@@ -108,6 +110,54 @@ feature -- Access: Theme
 
 	theme_name: READABLE_STRING_32
 			-- theme name.
+
+feature -- Access: storage
+
+	storage_drivers: STRING_TABLE [CMS_STORAGE_BUILDER]
+		deferred
+		end
+
+	storage (a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE
+		local
+			retried: BOOLEAN
+			l_message: STRING
+		do
+			if not retried then
+				to_implement ("Refactor database setup")
+				if
+					attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (layout.application_config_path) as l_database_config and then
+					attached storage_drivers.item (l_database_config.driver) as l_builder
+				then
+					Result := l_builder.storage (Current)
+				else
+					create {CMS_STORAGE_NULL} Result
+				end
+			else
+				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
+					-- error hanling.
+				create {CMS_STORAGE_NULL} Result
+				create l_message.make (1024)
+				if attached ((create {EXCEPTION_MANAGER}).last_exception) as l_exception then
+					if attached l_exception.description as l_description then
+						l_message.append (l_description.as_string_32)
+						l_message.append ("%N%N")
+					elseif attached l_exception.trace as l_trace then
+						l_message.append (l_trace)
+						l_message.append ("%N%N")
+					else
+						l_message.append (l_exception.out)
+						l_message.append ("%N%N")
+					end
+				else
+					l_message.append ("The application crash without available information")
+					l_message.append ("%N%N")
+				end
+				a_error_handler.add_custom_error (0, " Database Connection ", l_message)
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 feature -- Element change
 

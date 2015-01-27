@@ -249,7 +249,7 @@
 <div class="copyright">
 	<div class="footer_copyright">
 					<div class="execphpwidget"><br/>
-<p style="text-align: center;line-height:50px;">Copyright © 2014 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
+<p style="text-align: center;line-height:50px;">Copyright © 2015 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
 </div>
 			</div>
 </div>

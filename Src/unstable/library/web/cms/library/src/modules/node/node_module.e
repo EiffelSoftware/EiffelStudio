@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			config := a_setup
 		end
 
-
 	config: CMS_SETUP
 			-- Node configuration.
 
@@ -159,10 +158,42 @@ feature -- Handler
 	do_get_nodes (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: CMS_API)
 		local
 			r: CMS_RESPONSE
+			s: STRING
+			l_user: CMS_USER
+			l_node: CMS_NODE
 		do
-			create {NOT_IMPLEMENTED_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
-			r.set_main_content ("Sorry: listing the CMS nodes is not yet implemented.")
-			r.add_block (create {CMS_CONTENT_BLOCK}.make ("nodes_warning", Void, "/nodes/ is not yet implemented", Void), "highlighted")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+
+			if attached a_api.user_by_name ("foo") as u then
+				l_user := u
+			else
+				create l_user.make ("foo")
+				l_user.set_password ("foobar#")
+				l_user.set_email ("test@example.com")
+				a_api.new_user (l_user)
+			end
+			if a_api.nodes_count = 0 then
+				create l_node.make ({STRING_32} "This is a content", {STRING_32} "And a summary", {STRING_32} "Nice title")
+				l_node.set_author (l_user)
+				a_api.new_node (l_node)
+			end
+
+			create s.make_from_string ("<p>Nodes:</p>")
+			if attached a_api.nodes as lst then
+				across
+					lst as ic
+				loop
+					s.append ("<li>")
+					s.append (a_api.html_encoded (ic.item.title))
+					s.append (" (")
+					s.append (ic.item.id.out)
+					s.append (")")
+					s.append ("</li>%N")
+				end
+			end
+
+			r.set_main_content (s)
+			r.add_block (create {CMS_CONTENT_BLOCK}.make ("nodes_warning", Void, "/nodes/ is not yet fully implemented<br/>", Void), "highlighted")
 			r.execute
 		end
 

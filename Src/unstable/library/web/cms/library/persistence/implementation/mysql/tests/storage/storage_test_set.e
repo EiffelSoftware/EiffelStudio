@@ -109,15 +109,15 @@ feature -- Test routines
 			retry
 		end
 
-	test_save_user
+	test_new_user
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user", storage.has_user)
 		end
 
 	test_user_by_id
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user", storage.has_user)
 			if attached {CMS_USER} storage.user_by_id (1) as l_user then
 				assert ("Exist", True)
@@ -130,7 +130,7 @@ feature -- Test routines
 
 	test_user_by_name
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user", storage.has_user)
 			if attached {CMS_USER} storage.user_by_name ("test") as l_user then
 				assert ("Exist", True)
@@ -142,7 +142,7 @@ feature -- Test routines
 
 	test_user_by_email
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user", storage.has_user)
 			if attached {CMS_USER} storage.user_by_email ("test@test.com") as l_user then
 				assert ("Exist", True)
@@ -154,7 +154,7 @@ feature -- Test routines
 
 	test_invalid_credential
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user test", attached storage.user_by_name ("test"))
 			assert ("Wrong password", not storage.is_valid_credential ("test", "test"))
 			assert ("Wrong user", not storage.is_valid_credential ("test1", "test"))
@@ -162,7 +162,7 @@ feature -- Test routines
 
 	test_valid_credential
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			assert ("Has user test", attached storage.user_by_name ("test"))
 			assert ("Valid password", storage.is_valid_credential ("test", "password"))
 		end
@@ -177,11 +177,11 @@ feature -- Test routines
 			l_nodes: LIST[CMS_NODE]
 			l_node: CMS_NODE
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			across 1 |..| 10 as c loop
 				l_node := custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out)
 				l_node.set_author (storage.user_by_email (default_user.email))
-				storage.save_node (l_node)
+				storage.new_node (l_node)
 			end
 			l_nodes := storage.recent_nodes (0, 10)
 			assert ("10 recent nodes", l_nodes.count = 10)
@@ -207,26 +207,26 @@ feature -- Test routines
 		local
 			l_node: CMS_NODE
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			across 1 |..| 10 as c loop
 				l_node := custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out)
 				l_node.set_author (storage.user_by_email (default_user.email))
-				storage.save_node (l_node)
+				storage.new_node (l_node)
 			end
-			assert ("Not exist node id: 12", storage.node (12) = Void)
+			assert ("Not exist node id: 12", storage.node_by_id (12) = Void)
 		end
 
 	test_node
 		local
 			l_node: CMS_NODE
 		do
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			across 1 |..| 10 as c loop
 				l_node := custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out)
 				l_node.set_author (storage.user_by_email (default_user.email))
-				storage.save_node (l_node)
+				storage.new_node (l_node)
 			end
-			assert ("Node id: 10", attached storage.node (10) as ll_node and then ll_node.title ~ "Title_10" )
+			assert ("Node id: 10", attached storage.node_by_id (10) as ll_node and then ll_node.title ~ "Title_10" )
 		end
 
 	test_update_node
@@ -234,17 +234,18 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				l_node := ll_node.twin
 				l_node.set_content ("New Content")
 				l_node.set_summary ("New Summary")
 				l_node.set_title("New Title")
 				if	attached storage.user_by_email (default_user.email) as l_user then
-					storage.update_node (l_user.id,l_node)
-					assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then not (u_node.title ~ ll_node.title) and then not (u_node.content ~ ll_node.content) and then not (u_node.summary ~ ll_node.summary))
+					l_node.set_author (l_user)
+					storage.update_node (l_node)
+					assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then not (u_node.content ~ ll_node.content) and then not (u_node.summary ~ ll_node.summary))
 				end
 			end
 		end
@@ -254,13 +255,13 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
-			storage.save_user (custom_user ("u2", "p2", "e2"))
+			storage.new_user (default_user)
+			storage.new_user (custom_user ("u2", "p2", "e2"))
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_title (2,ll_node.id, "New Title")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
@@ -269,13 +270,13 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
-			storage.save_user (custom_user ("u2", "p2", "e2"))
+			storage.new_user (default_user)
+			storage.new_user (custom_user ("u2", "p2", "e2"))
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_summary (2,ll_node.id, "New Summary")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
 			end
 		end
 
@@ -284,13 +285,13 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
-			storage.save_user (custom_user ("u2", "p2", "e2"))
+			storage.new_user (default_user)
+			storage.new_user (custom_user ("u2", "p2", "e2"))
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_content (2,ll_node.id, "New Content")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
@@ -300,12 +301,12 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_title (1,ll_node.id, "New Title")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
@@ -314,12 +315,12 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_summary (1,ll_node.id, "New Summary")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then u_node.content ~ ll_node.content and then not (u_node.summary ~ ll_node.summary))
 			end
 		end
 
@@ -328,12 +329,12 @@ feature -- Test routines
 			l_node: CMS_NODE
 		do
 			l_node := custom_node ("Content", "Summary", "Title")
-			storage.save_user (default_user)
+			storage.new_user (default_user)
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.save_node (l_node)
-			if attached {CMS_NODE} storage.node (1) as ll_node then
+			storage.new_node (l_node)
+			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 				storage.update_node_content (1,ll_node.id, "New Content")
-				assert ("Updated", attached {CMS_NODE} storage.node (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
+				assert ("Updated", attached {CMS_NODE} storage.node_by_id (1) as u_node and then u_node.title ~ ll_node.title and then not (u_node.content ~ ll_node.content) and then u_node.summary ~ ll_node.summary)
 			end
 		end
 
@@ -342,52 +343,16 @@ feature -- Test routines
 			l_node: CMS_NODE
 			l_user: like {CMS_NODE}.author
 		do
-			storage.save_user (custom_user ("test_delete", "testu", "email"))
+			storage.new_user (custom_user ("test_delete", "testu", "email"))
 			l_user := storage.user_by_name ("test_delete")
 			across 1 |..| 10 as c loop
 				l_node := custom_node ("Content_" + c.item.out, "Summary_" + c.item.out, "Title_" + c.item.out)
 				l_node.set_author (l_user)
-				storage.save_node (l_node)
+				storage.new_node (l_node)
 			end
-			assert ("Exist node id: 10", attached storage.node (10) as ll_node and then ll_node.title ~ "Title_10" )
-			storage.delete_node (10)
-			assert ("Not exist node id: 10", storage.node (10) = Void)
-		end
-
-
-
-feature {NONE} -- Implementation
-
-	storage: CMS_STORAGE
-			-- Storage
-		once
-			create {CMS_STORAGE_MYSQL}Result.make (connection)
-		end
-
-feature {NONE} -- Fixture Factory: Users
-
-	default_user: CMS_USER
-		do
-			Result := custom_user ("test", "password", "test@test.com")
-		end
-
-	custom_user (a_name, a_password, a_email: READABLE_STRING_32): CMS_USER
-		do
-			create Result.make (a_name)
-			Result.set_password (a_password)
-			Result.set_email (a_email)
-		end
-
-feature {NONE} -- Fixture Factories: Nodes
-
-	default_node: CMS_NODE
-		do
-			Result := custom_node ("Default content", "default summary", "Default")
-		end
-
-	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_NODE
-		do
-			create Result.make (a_content, a_summary, a_title)
+			assert ("Exist node id: 10", attached storage.node_by_id (10) as ll_node and then ll_node.title ~ "Title_10" )
+			storage.delete_node_by_id (10)
+			assert ("Not exist node id: 10", storage.node_by_id (10) = Void)
 		end
 
 end

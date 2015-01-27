@@ -3,6 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "SQL server injection", "src=http://blogs.msdn.com/b/raulga/archive/2007/01/04/dynamic-sql-sql-injection.aspx", "protocol=url"
+
 expanded class
 	DATABASE_SQL_SERVER_ENCODER
 
@@ -12,7 +13,7 @@ inherit
 
 feature -- Escape SQL input
 
-	encode (a_string:READABLE_STRING_32): READABLE_STRING_32
+	encode (a_string: READABLE_STRING_32): READABLE_STRING_32
 			-- Escape single quote (') and braces ([,]).
 		local
 			l_string: STRING

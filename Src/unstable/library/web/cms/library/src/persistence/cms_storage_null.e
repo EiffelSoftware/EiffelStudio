@@ -7,13 +7,13 @@ class
 	CMS_STORAGE_NULL
 
 inherit
-
 	CMS_STORAGE
 		redefine
 			default_create
 		select
 			default_create
 		end
+
 	REFACTORING_HELPER
 		rename
 			default_create as default_create_rh
@@ -33,7 +33,7 @@ feature -- Access: user
 		do
 		end
 
-	all_users: LIST [CMS_USER]
+	users: LIST [CMS_USER]
 		do
 			create {ARRAYED_LIST[CMS_USER]} Result.make (0)
 		end
@@ -70,8 +70,13 @@ feature -- User Nodes
 
 feature -- Change: user
 
-	save_user (a_user: CMS_USER)
+	new_user (a_user: CMS_USER)
 			-- Add a new user `a_user'.
+		do
+		end
+
+	update_user (a_user: CMS_USER)
+			-- Update user `a_user'.
 		do
 		end
 
@@ -93,8 +98,12 @@ feature -- Change: roles and permissions
 		do
 		end
 
-
 feature -- Access: node
+
+	nodes_count: INTEGER_64
+			-- Count of nodes.
+		do
+		end
 
 	nodes: LIST[CMS_NODE]
 			-- List of nodes.
@@ -108,7 +117,7 @@ feature -- Access: node
 			create {ARRAYED_LIST[CMS_NODE]} Result.make (0)
 		end
 
-	node (a_id: INTEGER_64): detachable CMS_NODE
+	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
 			-- <Precursor>
 		do
 		end
@@ -126,40 +135,33 @@ feature -- Access: node
 
 feature -- Node
 
-	save_node (a_node: CMS_NODE)
+	new_node (a_node: CMS_NODE)
 			-- Add a new node
 		do
 		end
 
-	delete_node (a_id: INTEGER_64)
+	delete_node_by_id (a_id: INTEGER_64)
 			-- <Precursor>
 		do
 		end
 
-	update_node (a_id: like {CMS_NODE}.id; a_node: CMS_NODE)
+	update_node (a_node: CMS_NODE)
 			-- <Precursor>
 		do
 		end
 
-	update_node_title (a_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
+	update_node_title (a_user_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
 			-- <Precursor>
 		do
 		end
 
-	update_node_summary (a_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
+	update_node_summary (a_user_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
 			-- <Precursor>
 		do
 		end
 
-	update_node_content (a_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
+	update_node_content (a_user_id: like {CMS_NODE}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
 			-- <Precursor>
-		do
-		end
-
-feature -- User
-
-	new_user (a_user: CMS_USER)
-			-- Add a new user `a_user'.
 		do
 		end
 

@@ -7,7 +7,6 @@ class
 	DATABASE_QUERY
 
 inherit
-
 	REFACTORING_HELPER
 
 	SHARED_LOGGER
@@ -17,7 +16,7 @@ create
 
 feature {NONE} -- Intialization
 
-	data_reader (a_query: STRING; a_parameters: STRING_TABLE [detachable ANY])
+	data_reader (a_query: STRING; a_parameters: like parameters)
 			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
 			log.write_information (generator + ".data_reader" + " execute query: " + a_query)
@@ -65,7 +64,7 @@ feature --  Access
 	query: STRING
 			-- SQL query to execute.
 
-	parameters: STRING_TABLE [detachable ANY]
+	parameters: detachable STRING_TABLE [detachable ANY]
 			-- query parameters.
 
 feature {NONE} -- Implementation
@@ -73,26 +72,24 @@ feature {NONE} -- Implementation
 	set_map_name (a_base_selection: DB_EXPRESSION)
 			-- Store parameters `item' and their `key'.
 		do
-			from
-				parameters.start
-			until
-				parameters.after
-			loop
-				a_base_selection.set_map_name (parameters.item_for_iteration, parameters.key_for_iteration)
-				parameters.forth
+			if attached parameters as l_parameters then
+				across
+					l_parameters as ic
+				loop
+					a_base_selection.set_map_name (ic.item, ic.key)
+				end
 			end
 		end
 
 	unset_map_name (a_base_selection: DB_EXPRESSION)
 			-- Remove parameters item associated with key `key'.
 		do
-			from
-				parameters.start
-			until
-				parameters.after
-			loop
-				a_base_selection.unset_map_name (parameters.key_for_iteration)
-				parameters.forth
+			if attached parameters as l_parameters then
+				across
+					l_parameters as ic
+				loop
+					a_base_selection.unset_map_name (ic.key)
+				end
 			end
 		end
 
@@ -101,26 +98,25 @@ feature {NONE} -- Implementation
 			-- exclude sensitive information.
 		do
 			create Result.make_empty
-			from
-				a_parameters.start
-			until
-				a_parameters.after
-			loop
-				Result.append ("name:")
-				Result.append (a_parameters.key_for_iteration.as_string_32)
-				Result.append (", value:")
-				if
-					a_parameters.key_for_iteration.has_substring ("Password") or else
-					a_parameters.key_for_iteration.has_substring ("password")
-				then
-					-- Data to exclude
-				else
-					if attached a_parameters.item_for_iteration as l_item  then
-						Result.append (l_item.out)
+			if a_parameters /= Void then
+				across
+					a_parameters as ic
+				loop
+					Result.append ("name:")
+					Result.append (ic.key.as_string_32)
+					Result.append (", value:")
+					if
+						ic.key.has_substring ("Password") or else
+						ic.key.has_substring ("password")
+					then
+						-- Data to exclude
+					else
+						if attached ic.item as l_item  then
+							Result.append (l_item.out)
+						end
 					end
+					Result.append ("%N")
 				end
-				Result.append ("%N")
-				a_parameters.forth
 			end
 		end
 

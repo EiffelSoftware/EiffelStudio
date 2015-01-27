@@ -7,6 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\..\..\..\cms-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
@@ -23,7 +24,6 @@
 				<exclude>/database/database_connection_odbc.e</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="interface" location="..\..\interface\" recursive="true"/>
 		<cluster name="persistence_mysql" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

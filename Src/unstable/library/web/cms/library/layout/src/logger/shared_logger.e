@@ -82,23 +82,26 @@ feature {NONE} -- JSON
 		do
 			create Result
 			if attached json_file_from (a_path) as json_file then
-			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
-			     attached {JSON_STRING} l_logger.item ("backup_count") as l_count and then
-			     attached {JSON_STRING} l_logger.item ("level") as l_level then
-			     Result.set_level (l_level.item)
-			     if l_count.item.is_natural then
-			     	Result.set_backup_count (l_count.item.to_natural)
-			     end
-			 end
+				l_parser := new_json_parser (json_file)
+				if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+					attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
+					attached {JSON_STRING} l_logger.item ("backup_count") as l_count and then
+					attached {JSON_STRING} l_logger.item ("level") as l_level then
+					Result.set_level (l_level.item)
+					if l_count.item.is_natural then
+						Result.set_backup_count (l_count.item.to_natural)
+					end
+				end
 			end
 		end
 
-
 	json_file_from (a_fn: PATH): detachable STRING
+		local
+			ut: FILE_UTILITIES
 		do
-			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name.out)
+			if ut.file_path_exists (a_fn) then
+				Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name)
+			end
 		end
 
 	new_json_parser (a_string: STRING): JSON_PARSER

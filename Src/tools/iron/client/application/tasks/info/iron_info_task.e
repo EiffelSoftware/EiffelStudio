@@ -92,7 +92,7 @@ feature -- Execute
 					print (" size=")
 					print (l_size.out)
 				end
-				if attached a_package.archive_hash as l_hash then
+				if attached a_package.archive_hash_string as l_hash then
 					print (" hash=")
 					print (l_hash)
 				end
@@ -143,7 +143,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -159,10 +159,6 @@ feature {NONE} -- Initialization
 
 			Result.force ([agent (args: like task_arguments): IRON_COMMAND_TASK  do create Result.make (args) end, "extension command for iron"], "command")
 
-				-- Specific commands.
-			Result.force ([agent (args: like task_arguments): IRON_UPDATE_PACKAGE_FILE_TASK  do create Result.make (args) end, "create or update package.iron file for a folder."], {IRON_UPDATE_PACKAGE_FILE_TASK}.name)
-			Result.force ([agent (args: like task_arguments): IRON_UPDATE_ECF_TASK  do create Result.make (args) end, "Update the given Eiffel Configuration File (.ecf) to use IRON references."], {IRON_UPDATE_ECF_TASK}.name)
-
 
 			debug ("iron")
 				Result.force ([agent (args: like task_arguments): IRON_TESTING_TASK    do create Result.make (args) end, "Testing.."], "testing")
@@ -197,7 +193,7 @@ feature -- Constants access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

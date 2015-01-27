@@ -228,31 +228,43 @@ feature -- Access: archive
 			-- Associated archive revision.
 			--| for now, only apply to remote web iron server.
 
-	archive_hash: detachable READABLE_STRING_8
+	archive_hash_string: detachable READABLE_STRING_8
 			-- Hash of the archive file.
+		local
+			f: RAW_FILE
+			sha1: SHA1
+		do
+			if archive_hash_set then
+				Result := archive_hash
+			else
+				reset_archive_hash
+				if attached archive_path as p then
+					create f.make_with_path (p)
+					if f.exists and then f.is_readable then
+						f.open_read
+						create sha1.make
+						sha1.update_from_io_medium (f)
+						f.close
+						Result := "SHA1:" + sha1.digest_as_string
+						archive_hash := Result
+					end
+				end
+			end
+		ensure
+			archive_hash_computed: archive_hash_set
+		end
 
 	archive_size: INTEGER
 			-- Size of the archive file in octects.			
 
 feature {NONE} -- Basic operation: archive
 
-	get_archive_hash
-			-- Get `archive_hash' from `archive_path'.
-		local
-			sha1: SHA1
-			f: RAW_FILE
+	archive_hash: detachable READABLE_STRING_8
+			-- Hash of the archive file.
+
+	archive_hash_set: BOOLEAN
 		do
-			archive_hash := Void
-			if attached archive_path as p then
-				create f.make_with_path (p)
-				if f.exists and then f.is_readable then
-					f.open_read
-					create sha1.make
-					sha1.update_from_io_medium (f)
-					f.close
-					archive_hash := "SHA1:" + sha1.digest_as_string
-				end
-			end
+			Result := archive_hash /= Void
 		end
 
 feature -- Access: items	
@@ -364,11 +376,10 @@ feature -- Change
 			if v /= Void then
 				create iri.make_from_string (v)
 				archive_uri := iri.to_uri
-				get_archive_hash
 			else
 				archive_uri := Void
-				archive_hash := Void
 			end
+			reset_archive_hash
 		end
 
 	set_archive_path (p: detachable PATH)
@@ -394,6 +405,11 @@ feature -- Change
 			else
 				archive_hash := Void
 			end
+		end
+
+	reset_archive_hash
+		do
+			archive_hash := Void
 		end
 
 feature {NONE} -- Implementation
@@ -424,7 +440,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

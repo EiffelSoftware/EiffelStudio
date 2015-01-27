@@ -75,7 +75,7 @@
 		</section>
 		<footer>
 			<br/>
-			<p style="text-align: center;margin-top:50px;">Copyright &copy; 2014 Eiffel Software - 
+			<p style="text-align: center;margin-top:50px;">Copyright &copy; 2015 Eiffel Software - 
 				<a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a>
 			</p>
 			<p style="text-align: center; font-size: x-small">

@@ -113,14 +113,14 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (base_uri)
 			Result.append ("?secret=")
 			Result.append (secret)
-			Result.append ("?response=")
+			Result.append ("&response=")
 			Result.append (response)
 			if attached remoteip as l_remoteip then
 				Result.append ("&remoteip=" + l_remoteip)
 			end
 		end
 
-	put_error (a_code: READABLE_STRING_32)
+	put_error (a_code: READABLE_STRING_GENERAL)
 		local
 			l_errors: like errors
 			utf: UTF_CONVERTER

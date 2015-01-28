@@ -141,14 +141,17 @@ feature -- Workflow
 						attached email_service as l_email_service and then
 						attached l_email_service.last_error as l_error
 					then
+						send_internal_server_error ("Database service unavailable")
 						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 					else
 						compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
 					end
 				else
+					send_internal_server_error ("Database service unavailable")
 					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
 			else
+				send_internal_server_error ("Uknown error")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -184,9 +187,11 @@ feature -- Workflow
 						else
 							if l_service.is_available then
 								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow The service unavailable")
+								send_internal_server_error ("Database service unavailable")
 								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 							end
 						end
@@ -200,9 +205,11 @@ feature -- Workflow
 						else
 							if l_service.is_available then
 								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow The database service is unavailable")
+								send_internal_server_error ("Database service unavailable")
 								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 							end
 						end
@@ -220,9 +227,11 @@ feature -- Workflow
 						else
 						    if l_service.is_available then
 								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow: The database service is unavailable")
+								send_internal_server_error ("Database service unavailable")
 								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 							end
 						end
@@ -230,14 +239,17 @@ feature -- Workflow
 				else
 					if l_service.is_available then
 						log.write_debug (generator + ".process_workflow: The request was invalid " + req.path_info)
+						send_bad_request (generator + ".process_workflow: The request was invalid " + req.path_info)
 						bad_request (req, res, "")
 					else
 						log.write_debug (generator + ".process_workflow The database service is unavailable")
+						send_internal_server_error ("Database service unavailable")
 						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 					end
 				end
 			else
 				log.write_debug (generator + ".process_workflow: The database service is unavailable")
+				send_internal_server_error ("Database service unavailable")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -451,6 +463,15 @@ feature -- Send Email
 
 
 	send_internal_server_error (a_description: READABLE_STRING_32)
+		local
+			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
+		do
+			if attached email_service as l_email_service then
+				l_email_service.send_email_internal_server_error (a_description)
+			end
+		end
+
+	send_bad_request (a_description: READABLE_STRING_32)
 		local
 			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do

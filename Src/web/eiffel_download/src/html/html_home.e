@@ -21,7 +21,7 @@ feature {NONE} --Initialization
 			-- Initialize `Current'.
 		do
 			set_template_folder (a_path)
-			set_template_file_name ("home.tpl")
+			set_template_file_name ("test/home.tpl")
 			template.add_value (a_host, "host")
 			process
 		end

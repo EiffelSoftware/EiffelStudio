@@ -104,21 +104,7 @@
 						</div>	
 				<!--/div-->
 			</div>
-				<div class="widget-area widget-sidebar"><div class="execphpwidget"><section class="news_sec">
-<h3><a href="https://www.eiffel.com/posts/news/">News &amp; Events</a></h3>			<div class="news ">
-				
-<a href="https://www.eiffel.com/2014/eiffelstudio-14-05/">EiffelStudio 14.05 released: Automatic Fixing and Eiffel Inspector</a><p>Eiffel Inspector and Automatic fixing, two new gems to make your Eiffel systems even better.</p>
-			</div>
-			<div class="news ">
-				
-<a href="https://www.eiffel.com/2014/iron-facility-easily-share-eiffel-libraries/">With the IRON facility, easily use and share Eiffel Libraries</a><p>Empowering teams of developers.</p>
-			</div>
-			<div class="news last">
-				
-<a href="https://www.eiffel.com/2014/zero-install-eiffelstudio/">Zero-Install Version available: evaluating EiffelStudio quickly</a><p>Skip the downloading and installation part and get going in a matter of minutes.</p>
-			</div>
-</section></div>
-		</div>		</section><!-- body_container -->
+		</section><!-- body_container -->
 	</div><!-- wrapper -->
 </section><!-- body_outer -->
 

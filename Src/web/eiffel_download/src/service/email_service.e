@@ -91,6 +91,17 @@ feature -- Basic Operations
 			send_email (l_email)
 		end
 
+	send_email_bad_request_error (a_content: READABLE_STRING_32)
+		local
+				l_email: EMAIL
+		do
+				-- Create our message.
+			create l_email.make_with_entry (download_email, webmaster_email)
+			l_email.set_message (a_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Bad request")
+			send_email (l_email)
+		end
+
 	send_email (a_email: EMAIL)
 			-- Send the email represented by `a_email'.
 		local

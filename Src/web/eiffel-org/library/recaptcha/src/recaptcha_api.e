@@ -128,9 +128,9 @@ feature {NONE} -- Implementation
 			l_errors := errors
 			if l_errors = Void then
 				create {ARRAYED_LIST [STRING]} l_errors.make (1)
-				l_errors.force (utf.utf_32_string_to_utf_8_string_8 (a_code))
+				errors := l_errors
 			end
-			errors := l_errors
+			l_errors.force (utf.utf_32_string_to_utf_8_string_8 (a_code))
 		end
 
 note

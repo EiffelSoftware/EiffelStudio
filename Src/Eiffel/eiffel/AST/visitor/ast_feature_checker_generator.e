@@ -4315,9 +4315,10 @@ feature {NONE} -- Visitor
 	  						l_target_node := e
 						end
   					end
-						-- Check the target of a separate feature call.
-					if l_target_type.is_separate then
-						validate_separate_target (l_as.target)
+						-- Insert an error if the target type is separate and open.
+					if l_target_type.is_separate and then l_as.target.is_open then
+							-- TODO: It might be a better idea to create a new error class.
+						Error_handler.insert_error (create {VUTA3}.make (context, last_type, l_as.target.start_location))
 					end
   				end
 			end
@@ -10207,7 +10208,7 @@ feature {NONE} -- Agents
 			l_result_type := l_result_type.as_attached_in (context.current_class)
 
 				-- If a target type is separate, a type of the agent is separate.
-			adapt_type_to_target (l_result_type, a_target_type, True, an_agent)
+			adapt_type_to_target (l_result_type, a_target_type, is_controlled, an_agent)
 			l_result_type := last_type
 
 			if is_byte_node_enabled then
@@ -11614,7 +11615,7 @@ feature {NONE} -- Type recording
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

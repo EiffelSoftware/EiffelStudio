@@ -76,6 +76,8 @@ feature -- Router
 			Result.handle_with_request_methods ("/news", create {WSF_URI_AGENT_HANDLER}.make (agent handle_news (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/articles", create {WSF_URI_AGENT_HANDLER}.make (agent handle_articles (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/blogs", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), Result.methods_head_get)
 
 			Result.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), Result.methods_head_get)
@@ -105,7 +107,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "codeboard", "updates", "popular_nodes", "libraries">>
+			Result := <<"social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -118,6 +120,7 @@ feature -- Hooks
 		local
 			l_path_info: READABLE_STRING_8
 		do
+			fixme ("Feature too long!!!")
 			l_path_info := a_response.request.percent_encoded_path_info
 
 				--"purpose","news","articles","blogs"
@@ -251,7 +254,26 @@ feature -- Hooks
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
+			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then  a_response.request.path_info ~ "/privacy_policy" then
+						if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+							a_response.add_block (l_tpl_block, "content")
+							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						else
+							debug ("cms")
+								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+							end
+						end
+			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then  a_response.request.path_info ~ "/terms_of_use" then
+					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+							a_response.add_block (l_tpl_block, "content")
+							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
 			end
+
 		end
 
 feature -- Request handling: About	
@@ -310,6 +332,27 @@ feature -- Request handling: About
 			r.values.force ("blogs", "blogs")
 			r.execute
 		end
+
+	handle_privacy_policy (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			log.write_debug (generator + ".handle_privacy_policy")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.values.force ("privacy_policy", "privacy_policy")
+			r.execute
+		end
+
+	handle_terms_of_use (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			log.write_debug (generator + ".handle_terms_of_use")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.values.force ("terms_of_use", "terms_of_use")
+			r.execute
+		end
+
 
 feature -- Request handling: Contribute
 

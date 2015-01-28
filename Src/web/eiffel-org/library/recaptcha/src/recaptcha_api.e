@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			secret := a_secret_key
 			response := a_response
 		ensure
-			secret_set: secret = a_secret_key
-			response_set: response = a_response
+			secret_set: secret.same_string (a_secret_key)
+			response_set: response.same_string (a_response)
 		end
 
 feature -- Access
@@ -32,10 +32,10 @@ feature -- Access
 	base_uri: STRING_8 = "https://www.google.com/recaptcha/api/siteverify"
 			-- Recaptcha base URI
 
-	secret: READABLE_STRING_32
+	secret: READABLE_STRING_8
 			-- Required. The shared key between your site and ReCAPTCHA.
 
-	response: READABLE_STRING_32
+	response: READABLE_STRING_8
 			-- Required. The user response token provided by the reCAPTCHA to the user and provided to your site on.
 
 	remoteip: detachable READABLE_STRING_8

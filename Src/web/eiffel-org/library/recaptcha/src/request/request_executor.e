@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			set_base_url (a_url)
 			verb := a_method
 		ensure
-			base_url_set: base_url = a_url
-			method_set: verb = a_method
+			base_url_set: base_url.same_string (a_url)
+			method_set: verb.same_string (a_method)
 		end
 
 	set_base_url (a_url: READABLE_STRING_8)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			s.right_adjust
 			base_url := s
 		ensure
-			base_url_set: base_url = a_url
+			base_url_set: a_url.has_substring (base_url)
 		end
 
 feature -- Access

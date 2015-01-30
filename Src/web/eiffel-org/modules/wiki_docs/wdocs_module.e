@@ -594,10 +594,14 @@ feature -- Handler
 					b.append ("</ul>")
 				end
 			else
---				r.set_optional_content_type ("doc")
+				create b.make_empty
+				mnger := manager (l_version_id)
+				if attached mnger.index_page as wp then
+					append_wiki_page_xhtml_to (wp, Void, Void, mnger, b, req)
+				end
+
 				r.set_value ("doc", "optional_content_type")
 				r.set_title (Void) --"Documentation")
-				b := ""
 			end
 			r.set_main_content (b)
 			r.execute

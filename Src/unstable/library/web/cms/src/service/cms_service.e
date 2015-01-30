@@ -119,7 +119,6 @@ feature -- Settings: router
 		local
 			l_root_handler: CMS_ROOT_HANDLER
 			l_methods: WSF_REQUEST_METHODS
-			h: WSF_URI_HANDLER
 		do
 			log.write_debug (generator + ".configure_api_root")
 			create l_root_handler.make (api)

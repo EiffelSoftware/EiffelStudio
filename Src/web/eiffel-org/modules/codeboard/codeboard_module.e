@@ -105,7 +105,10 @@ feature -- Hooks
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 
-			if a_block_id.is_case_insensitive_equal_general ("try_eiffel") and then a_response.request.path_info.starts_with ("/try_eiffel") then
+			if
+				a_block_id.is_case_insensitive_equal_general ("try_eiffel") and then
+				a_response.request.path_info.starts_with ("/try_eiffel")
+			then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 				else
@@ -113,7 +116,10 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info ~ "/launch_codeboard" then
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then
+				a_response.request.path_info.same_string_general ("/launch_codeboard")
+			then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 				else
@@ -121,16 +127,18 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("play_eiffel") and then  a_response.request.path_info ~ "/" then
-					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "header")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("play_eiffel") and then
+				a_response.request.path_info.same_string_general ("/")
+			then
+				if attached template_block (a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "header")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
+				end
 			end
-
 		end
 
 	handle_try_eiffel (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)

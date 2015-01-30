@@ -93,7 +93,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"try_eiffel","launch_codeboard">>
+			Result := <<"try_eiffel","launch_codeboard","play_eiffel">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -121,7 +121,16 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
+			elseif a_block_id.is_case_insensitive_equal_general ("play_eiffel") and then  a_response.request.path_info ~ "/" then
+					if attached template_block (a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "header")
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
 			end
+
 		end
 
 	handle_try_eiffel (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)

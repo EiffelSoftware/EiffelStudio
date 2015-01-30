@@ -107,6 +107,20 @@ feature -- Access
 			Result := storage.book (a_bookid)
 		end
 
+	index_page: detachable like new_wiki_page
+			-- Main documentation index page.
+		local
+			p: PATH
+			ut: FILE_UTILITIES
+			wp: WIKI_PAGE
+		do
+			p := wiki_database_path.extended ("index.wiki")
+			if ut.file_path_exists (p) then
+				Result := new_wiki_page ("Documentation", "")
+				Result.set_path (p)
+			end
+		end
+
 	page (a_bookpage: detachable READABLE_STRING_GENERAL; a_bookid: READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		local

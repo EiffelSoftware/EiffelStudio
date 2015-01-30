@@ -374,6 +374,7 @@ feature -- Basic operations
 
 	refresh
 		do
+			reset_book_names
 			reset_books_data
 			reset_images_data
 			reset_pages_data
@@ -536,6 +537,12 @@ feature {NONE} -- Storage: books
 			-- Reset book in cache, if any
 		do
 			book_cache (a_book_id).delete
+		end
+
+	reset_book_names
+			-- Reset `book_names'.
+		do
+			internal_book_names := Void
 		end
 
 	reset_books_data

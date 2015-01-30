@@ -62,7 +62,7 @@ feature -- Conversion
 			debug ("refactor_fixme")
 				fixme ("Refactor HTML code to use the new Bootstrap theme template")
 			end
-			if attached a_block.is_raw then
+			if a_block.is_raw then
 				create s.make_empty
 				if attached a_block.title as l_title then
 					s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")

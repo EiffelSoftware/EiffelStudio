@@ -119,6 +119,7 @@ feature -- Settings: router
 		local
 			l_root_handler: CMS_ROOT_HANDLER
 			l_methods: WSF_REQUEST_METHODS
+			h: WSF_URI_HANDLER
 		do
 			log.write_debug (generator + ".configure_api_root")
 			create l_root_handler.make (api)
@@ -126,6 +127,7 @@ feature -- Settings: router
 			l_methods.enable_get
 			a_router.handle_with_request_methods ("/", l_root_handler, l_methods)
 			a_router.handle_with_request_methods ("", l_root_handler, l_methods)
+			map_uri_agent_with_request_methods ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
 		end
 
 	configure_api_file_handler (a_router: WSF_ROUTER)
@@ -237,6 +239,23 @@ feature -- Access
 			-- Configurator of possible modules.
 
 feature -- Execution
+
+	handle_favicon (req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			ut: FILE_UTILITIES
+			p: PATH
+			r: NOT_FOUND_ERROR_CMS_RESPONSE
+			f: WSF_FILE_RESPONSE
+		do
+			p := api.setup.theme_assets_location.extended ("favicon.ico")
+			if ut.file_path_exists (p) then
+				create f.make_with_path (p)
+				res.send (f)
+			else
+				create r.make (req, res, api)
+				r.execute
+			end
+		end
 
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Default request handler if no other are relevant

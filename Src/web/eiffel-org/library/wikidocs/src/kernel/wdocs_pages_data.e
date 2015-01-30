@@ -68,13 +68,17 @@ feature {WDOCS_DATA_ACCESS} -- Element change
 	record_page_path (a_path: PATH; a_page_name: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL)
 		local
 			ht: detachable STRING_TABLE [PATH]
+			pn, bn: like normalized_fs_text
 		do
-			ht := pages_path_by_title_and_book.item (a_book_name)
+			bn := normalized_fs_text (a_book_name)
+			pn := normalized_fs_text (a_page_name)
+
+			ht := pages_path_by_title_and_book.item (bn)
 			if ht = Void then
 				create ht.make (1)
-				pages_path_by_title_and_book.force (ht, a_book_name)
+				pages_path_by_title_and_book.force (ht, bn)
 			end
-			ht.force (a_path, a_page_name)
+			ht.force (a_path, pn)
 		end
 
 	record_template_path (a_path: PATH; a_template_name: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL)

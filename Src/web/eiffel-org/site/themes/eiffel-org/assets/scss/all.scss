@@ -317,7 +317,7 @@
 	.holder{
 		width: 400px;
 		overflow: hidden;
-		padding: 0 0 0 9px;
+		padding: 10px 0 0 9px;
 		margin-left: 600px;
 		h1{
 			font: 36px/36px $museo-sans500;
@@ -363,7 +363,7 @@
 				letter-spacing: 1px;
 				text-align: center;
 				position: relative;
-				padding: 0 57px 0 0;
+				padding: 0 57px 6px 0;
 				&:after{
 					background: url(../images/ico-download.png) no-repeat;
 					width: 37px;
@@ -381,9 +381,8 @@
 	}
 	.holder2{
 		width: 400px;
-		//margin-left: 600px;
 		position:absolute;
-		top: 55px;
+		top: 71px;
 		h1{
 			font: 36px/36px $museo-sans500;
 			color: #112935;

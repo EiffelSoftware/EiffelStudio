@@ -107,7 +107,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use">>
+			Result := <<"social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -272,6 +272,15 @@ feature -- Hooks
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
+			elseif a_block_id.is_case_insensitive_equal_general ("main") and then  a_response.request.path_info ~ "/" then
+					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
+						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					else
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						end
+					end
 			end
 
 		end
@@ -350,6 +359,16 @@ feature -- Request handling: About
 			log.write_debug (generator + ".handle_terms_of_use")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("terms_of_use", "terms_of_use")
+			r.execute
+		end
+
+	handle_main (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			log.write_debug (generator + ".handle_main")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.values.force ("main", "main")
 			r.execute
 		end
 

@@ -112,7 +112,6 @@ feature -- Access
 		local
 			p: PATH
 			ut: FILE_UTILITIES
-			wp: WIKI_PAGE
 		do
 			p := wiki_database_path.extended ("index.wiki")
 			if ut.file_path_exists (p) then

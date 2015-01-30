@@ -262,7 +262,13 @@ feature -- Processing
 				l_level := a_section.level
 				set_level (l_level)
 				unset_next_output_require_newline
-				output ("%N<h" + l_level.out + ">")
+				output ("%N")
+				if attached a_section.text as l_text then
+					output ("<a name=%"")
+					output (l_text.text)
+					output ("%"></a>")
+				end
+				output ("<h" + l_level.out + ">")
 				t.process (Current)
 				output ("</h" + l_level.out + ">%N")
 				unset_next_output_require_newline
@@ -872,7 +878,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

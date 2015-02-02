@@ -1504,6 +1504,10 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #12273A, #12273A);
 }
 
+.holder2 .prettyprint .lang-eiffel .prettyprinted pre {
+  padding-left: 18px;
+}
+
 .promo-area .holder .btn-holder {
   padding: 0 0 0px;
 }

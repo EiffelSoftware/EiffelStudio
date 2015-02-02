@@ -76,15 +76,15 @@
                 },
                 {
                     "platform": "win64",
-                    "filename": "Eiffel_15.01_gpl_96535-win64.7z",
-                    "size": "82600784",
-                    "hash": "f7de081997ee861923e8c6738e89963e2aab21c3d9ef785c8de97045c4d71b46"
+                    "filename": "Eiffel_15.01_gpl_96535-win64.msi",
+                    "size": "143766136",
+                    "hash": "e758f156585d1bac6094d4cb48780556ac17943fa55d70577cbccb2c860d159e"
                 },
                 {
                     "platform": "windows",
                     "filename": "Eiffel_15.01_gpl_96535-windows.msi",
                     "size": "131507792",
-                    "hash": "e758f156585d1bac6094d4cb48780556ac17943fa55d70577cbccb2c860d159e"
+                    "hash": "d63fd273ba28eb2db8dea5649c2450c3b872e8a280adf8bd5172f33520e85261"
                 }
             ]
         },

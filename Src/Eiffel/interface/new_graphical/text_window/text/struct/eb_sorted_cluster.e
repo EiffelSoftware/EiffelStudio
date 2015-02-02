@@ -156,7 +156,7 @@ feature -- Statusupdate
 				if renaming = Void then
 					create renaming.make (0)
 				end
-			elseif is_physial_assembly then
+			elseif is_physical_assembly then
 				l_phys_as ?= actual_group
 				l_ass_dep := l_phys_as.dependencies
 				if l_ass_dep /= Void then
@@ -320,7 +320,7 @@ feature -- Access
 			Result := actual_group.is_assembly
 		end
 
-	is_physial_assembly: BOOLEAN
+	is_physical_assembly: BOOLEAN
 			-- Does `Current' represent a physical assembly?
 		require
 			actual_group_not_void: actual_group /= Void
@@ -411,35 +411,36 @@ feature {NONE} -- Implementation
 				end
 
 					-- add the class to the classes mapping
-				l_lst := sub_classes.item (l_path+"/")
+				l_lst := sub_classes.item (l_path)
 				if l_lst = Void then
 					create l_lst.make (5)
-					sub_classes.force (l_lst, l_path+"/")
+					sub_classes.force (l_lst, l_path)
 				end
 				l_lst.force_last (l_cl)
 
 					-- for assembly namespaces add the path to the folders mapping
-				if is_assembly or is_physial_assembly then
+				if is_assembly or is_physical_assembly then
 					l_path_comp := l_path.split ('/')
-					check
-						at_least_one_element: l_path_comp.count >= 1
-					end
 					from
 						l_path_comp.start
-							-- ignore first element
-						l_path_comp.forth
 						create l_part_path.make_empty
 					until
 						l_path_comp.after
 					loop
-						l_folders := sub_folders.item (l_part_path+"/")
-						if l_folders = Void then
-							create l_folders.make_equal (1)
-							sub_folders.force (l_folders, l_part_path+"/")
+							-- Ignore the trailing and ending / in the original path `l_path' if any.
+						if not l_path_comp.is_empty then
+							l_folders := sub_folders.item (l_part_path)
+							if l_folders = Void then
+								create l_folders.make_equal (1)
+								sub_folders.force (l_folders, l_part_path)
+							end
+							l_folders.force (l_path_comp.item)
+							l_part_path := l_part_path.twin
+							if not l_part_path.is_empty then
+								l_part_path.append_character ('/')
+							end
+							l_part_path.append (l_path_comp.item)
 						end
-						l_folders.force (l_path_comp.item)
-						l_part_path := l_part_path.twin
-						l_part_path.append ("/"+l_path_comp.item)
 						l_path_comp.forth
 					end
 				end
@@ -462,7 +463,7 @@ invariant
 	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -57,7 +57,7 @@ feature -- Initialization
 			sub_elements_imply_initialized: not a_path.is_empty implies a_cluster.is_initialized
 		do
 			default_create
-			path := a_path
+			create path.make_from_string (a_path)
 			if path = Void then
 				create path.make_empty
 			end
@@ -297,7 +297,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 				-- if we are an assembly show subfolders
 			elseif group.is_assembly or group.is_physical_assembly then
-				l_hash_set := data.sub_folders.item (path + cluster_separator)
+				l_hash_set := data.sub_folders.item (path)
 				if l_hash_set /= Void then
 					create subfolders.make (1, l_hash_set.count)
 					from
@@ -317,7 +317,12 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						i > up
 					loop
-						l_subfolder := create_folder_item_with_options (data, path+ cluster_separator +subfolders[i])
+						if not path.is_empty then
+							l_sub_path := path + cluster_separator + subfolders.item (i)
+						else
+							l_sub_path := subfolders.item (i)
+						end
+						l_subfolder := create_folder_item_with_options (data, l_sub_path)
 						l_subfolder.associate_with_window (associated_window)
 						if associated_textable /= Void then
 							l_subfolder.associate_textable_with_classes (associated_textable)
@@ -343,14 +348,14 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 				-- show assembly dependencies for assemblies if we are on not a subfolder
-			if path.is_empty and (data.is_assembly or data.is_physial_assembly) then
+			if path.is_empty and (data.is_assembly or data.is_physical_assembly) then
 				show_groups (data.assemblies)
 			end
 
 				-- show classes for clusters and assemblies
-			if data.is_cluster or (data.is_assembly or data.is_physial_assembly) then
+			if data.is_cluster or (data.is_assembly or data.is_physical_assembly) then
 				if is_show_classes then
-					classes := data.sub_classes.item (path + cluster_separator)
+					classes := data.sub_classes.item (path)
 					if classes /= Void then
 						from
 							classes.start
@@ -701,12 +706,12 @@ feature {EB_CLASSES_TREE} -- Implementation
 				-- sub elements
 			else
 					-- check classes
-				l_has_children := data.sub_classes.has (path + cluster_separator)
+				l_has_children := data.sub_classes.has (path)
 
 					-- check folders
 				if not l_has_children then
-					if data.is_assembly then
-						l_has_children := data.sub_folders.has (path + cluster_separator)
+					if data.is_assembly or data.is_physical_assembly then
+						l_has_children := data.sub_folders.has (path)
 					elseif data.is_cluster then
 						l_sub_dirs := u.directory_names (data.actual_group.location.build_path (path, "").name)
 						if l_sub_dirs /= Void then
@@ -746,6 +751,7 @@ feature {NONE} -- Implementation
 			if a_assembly /= Void then
 				Result.append (a_assembly.assembly_name)
 				if not path.is_empty then
+					Result.append_string_general (": ")
 					create l_tmp.make_from_string_general (path)
 					l_tmp.replace_substring_all (cluster_separator, {STRING_32} ".")
 					Result.append (l_tmp)
@@ -783,8 +789,8 @@ feature {NONE} -- Implementation
 					Result.append (physical_assembly_tooltip_text (l_phys_as))
 				end
 				Result.append (data.actual_group.location.evaluated_path.name)
-			elseif data.is_physial_assembly then
-				l_phys_as ?= data
+			elseif data.is_physical_assembly then
+				l_phys_as ?= data.actual_group
 				Result.append (physical_assembly_tooltip_text (l_phys_as))
 				Result.append (data.actual_group.location.evaluated_path.name)
 			elseif data.is_library then
@@ -884,7 +890,7 @@ feature {NONE} -- Implementation
 			l_tmp := path
 			if associated_textable /= Void then
 				if l_tmp /= Void and not l_tmp.is_empty then
-					check noly_one: cluster_separator.count = 1 end
+					check only_one: cluster_separator.count = 1 end
 					l_current_cluster := data.actual_cluster.cluster_name + l_tmp
 				elseif data.is_cluster then
 					l_current_cluster := data.actual_cluster.cluster_name
@@ -932,7 +938,7 @@ invariant
 	sub_elements_imply_initialized: not path.is_empty implies data.is_initialized
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

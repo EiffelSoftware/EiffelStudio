@@ -28,18 +28,19 @@ feature -- Logger
 			create Result.make
 			create l_environment
 			if attached separate_character_option_value ('d') as l_dir then
-				l_path := create {PATH}.make_from_string (l_dir)
-				create l_log_writer.make_at_location (l_path.extended ("logs").appended ("\api.log"))
+				create l_path.make_from_string (l_dir)
 			else
-				l_path := create {PATH}.make_current
-				create l_log_writer.make_at_location (l_path.extended("api.log"))
+				create l_path.make_current
+				l_path := l_path.extended ("site")
 			end
-			l_log_writer.set_max_file_size ({NATURAL_64}1024*1204)
-			if attached separate_character_option_value ('d') as l_dir then
-				l_logger_config := new_logger_level_configuration (l_path.extended("config").extended ("application_configuration.json"))
+			l_logger_config := new_logger_level_configuration (l_path.extended ("site").extended("config").extended ("application_configuration.json"))
+			if attached l_logger_config.location as p then
+				create l_log_writer.make_at_location (p.appended ("api.log"))
 			else
-				l_logger_config := new_logger_level_configuration (l_path.extended ("site").extended("config").extended ("application_configuration.json"))
+				create l_log_writer.make_at_location (l_path.extended ("logs").appended ("api.log"))
 			end
+
+			l_log_writer.set_max_file_size ({NATURAL_64} 1024*1204)
 			l_log_writer.set_max_backup_count (l_logger_config.backup_count)
 			set_logger_level (l_log_writer, l_logger_config.level)
 			log.register_log_writer (l_log_writer)
@@ -87,12 +88,18 @@ feature {NONE} -- JSON
 				if
 					l_parser.is_valid and then
 					attached l_parser.parsed_json_object as jv and then
-					attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
-					attached {JSON_STRING} l_logger.item ("backup_count") as l_count and then
-					attached {JSON_STRING} l_logger.item ("level") as l_level then
-					Result.set_level (l_level.item)
-					if l_count.item.is_natural then
-						Result.set_backup_count (l_count.item.to_natural)
+					attached {JSON_OBJECT} jv.item ("logger") as l_logger
+				then
+					if attached {JSON_STRING} l_logger.item ("location") as l_location then
+						Result.set_location_with_string (l_location.item)
+					end
+					if attached {JSON_STRING} l_logger.item ("backup_count") as l_count then
+						if l_count.item.is_natural then
+							Result.set_backup_count (l_count.item.to_natural)
+						end
+					end
+					if attached {JSON_STRING} l_logger.item ("level") as l_level then
+						Result.set_level (l_level.item)
 					end
 				end
 			end

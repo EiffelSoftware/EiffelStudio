@@ -33,11 +33,11 @@ feature -- Logger
 				create l_path.make_current
 				l_path := l_path.extended ("site")
 			end
-			l_logger_config := new_logger_level_configuration (l_path.extended ("site").extended("config").extended ("application_configuration.json"))
+			l_logger_config := new_logger_level_configuration (l_path.extended("config").extended ("application_configuration.json"))
 			if attached l_logger_config.location as p then
-				create l_log_writer.make_at_location (p.appended ("api.log"))
+				create l_log_writer.make_at_location (p.extended ("api.log"))
 			else
-				create l_log_writer.make_at_location (l_path.extended ("logs").appended ("api.log"))
+				create l_log_writer.make_at_location (l_path.extended ("logs").extended ("api.log"))
 			end
 
 			l_log_writer.set_max_file_size ({NATURAL_64} 1024*1204)

@@ -124,7 +124,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
 		local
-			tmp_c, tmp_c2: SQL_STRING
+			tmp_c, tmp_c2: ORACLE_SQL_STRING
 		do
 			if attached uht as l_u then
 				from
@@ -337,7 +337,7 @@ feature -- External features
 			-- action.
 			-- This feature also sets is_error_updated to True
 		local
-			l_s: SQL_STRING
+			l_s: ORACLE_SQL_STRING
 		do
 			create l_s.make_by_pointer (get_error_message)
 			Result := l_s.string
@@ -360,7 +360,7 @@ feature -- External features
 			-- action.
 			-- This feature also sets is_error_updated to True
 		local
-			l_s: SQL_STRING
+			l_s: ORACLE_SQL_STRING
 		do
 			create l_s.make_by_pointer (get_warn_message)
 			Result := l_s.string
@@ -374,7 +374,7 @@ feature -- External features
 
 	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: SQL_STRING
+			c_temp: ORACLE_SQL_STRING
 		do
 			create c_temp.make (database_format (command.as_string_32))
 			ora_init_order (c_temp.item, no_descriptor)
@@ -406,7 +406,7 @@ feature -- External features
 
 	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: SQL_STRING
+			c_temp: ORACLE_SQL_STRING
 		do
 			create c_temp.make (database_format (command.as_string_32))
 			ora_exec_immediate (no_descriptor, c_temp.item)

@@ -182,7 +182,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Parse and prepare a dynamic statement.
 		local
 			l_stmt: POINTER
-			l_c_string: SQL_STRING
+			l_c_string: MYSQL_SQL_STRING
 		do
 			if dynamic then
 				l_stmt := mysql_stmt_init (mysql_pointer)
@@ -462,7 +462,7 @@ feature -- External features
 			-- action.
 			-- This feature also sets is_error_updated to True
 		local
-			l_s: SQL_STRING
+			l_s: MYSQL_SQL_STRING
 		do
 			create l_s.make_by_pointer (get_error_message)
 			Result := l_s.string
@@ -490,7 +490,7 @@ feature -- External features
 			-- action.
 			-- This feature also sets is_warning_updated to True
 		local
-			l_s: SQL_STRING
+			l_s: MYSQL_SQL_STRING
 		do
 			create l_s.make_by_pointer (get_warn_message)
 			Result := l_s.string
@@ -525,7 +525,7 @@ feature -- External features
 
 	start_order (no_descriptor: INTEGER)
 		local
-			l_c_string: SQL_STRING
+			l_c_string: MYSQL_SQL_STRING
 			l_p, l_db_result, l_meta: POINTER
 			l_result_bind: DB_PARA_MYSQL
 			l_num_field: INTEGER

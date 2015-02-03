@@ -1,14 +1,11 @@
 note
-	description: "[
-					String used to read 2 byte Unicode strings from database.
-					Note that we use UTF-8 in the client to send Unicode to the database.
-					So we don't use this to send string, we use C_STRING instead.
-					]"
+	description: "Summary description for {ODBC_SQL_STRING}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SQL_STRING
+	ODBC_SQL_STRING
 
 inherit
 	SQL_ABSTRACT_STRING
@@ -31,11 +28,11 @@ feature -- Measurement
 feature {NONE} -- Implementation
 
 	c_strlen (ptr: POINTER): INTEGER
-			-- Number of characters.
+			-- | FIXME: This should be refactored into odbc implementation.
 		external
-			"C inline use %"sybase.h%""
+			"C macro use %"odbc.h%""
 		alias
-			"return TXTLEN($ptr);"
+			"TXTLEN"
 		end
 
 end

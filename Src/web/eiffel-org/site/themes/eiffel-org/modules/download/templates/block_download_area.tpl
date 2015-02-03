@@ -1,4 +1,4 @@
-								<div class="holder" style="border:0px solid #888;border-radius: 10px; background-color: rgba(60, 100, 230, 0.5);; width:430px;">
+								<div class="holder" style="border:0px solid #888;border-radius: 10px; background-color: rgba(60, 160, 170, 0.5); width:430px;">
 								<!--<h2 style="margin-left:580px; font-size:larger">Welcome to the community portal for Eiffel,<br>the programming language <br> for tackling tomorrow’s problems today.</h2>-->
 								<h3>Welcome to the community portal for Eiffel,<br>the programming language <br> for tackling tomorrow’s problems today.</h3><br>
 										

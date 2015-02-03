@@ -29,12 +29,16 @@ feature -- Initialization
 		do
 			backup_count := 4
 			level := Log_debug
+			location := Void
 		ensure then
 			backup_count_set: backup_count = 4
 			level_set: level = Log_debug
 		end
 
 feature -- Access
+
+	location: detachable PATH
+			-- Location for logs files, if none use default logs location.
 
 	backup_count: NATURAL
 			-- Max number of backup files.
@@ -45,6 +49,21 @@ feature -- Access
 			-- Logger level.
 
 feature -- Element Change
+
+	set_location (a_location: detachable PATH)
+			-- Set `location' to `a_location'.
+		do
+			location := a_location
+		ensure
+			location_set: a_location ~ location
+		end
+
+	set_location_with_string (a_location: READABLE_STRING_GENERAL)
+		require
+			a_location /= Void and then not a_location.is_whitespace
+		do
+			set_location (create {PATH}.make_from_string (a_location))
+		end
 
 	set_backup_count (a_backup: NATURAL)
 			-- Set backup_count to `a_backup'.
@@ -78,6 +97,6 @@ feature -- Element Change
 			end
 		end
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -1,0 +1,10 @@
+In {LOGGER}.log: Using first solution.
+OK: At end of {CONTROLLER}.test_no_propagation.
+In {LOGGER}.log: Using first solution.
+OK: In body of {CONTROLLER}.test_late_propagation.
+OK: In rescue of {CONTROLLER}.test_late_propagation.
+In {LOGGER}.log: Using second solution.
+In rescue of {LOGGER}.log.
+OK: At end of {CONTROLLER}.test_accountability_transfer.
+OK: At end of {CONTROLLER}.make.
+Execution completed

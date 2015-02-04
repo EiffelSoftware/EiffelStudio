@@ -1,0 +1,8 @@
+OK: In execute_without_sync, after callling {FAILER}.fail.
+OK: In make, after execute_without_sync.
+OK: In sync, after calling {FAILER}.counter.
+OK: In make, after sync.
+OK: In execute_with_sync, after callling {FAILER}.fail.
+OK: In rescue of execute_with_sync.
+OK: In rescue of make.
+Execution completed

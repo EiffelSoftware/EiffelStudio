@@ -1,0 +1,17 @@
+test_name	scoop-exceptions-small-tests
+test_description Several small tests for exception handling in SCOOP.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e			$CLUSTER test.e
+copy_raw	house.e			$CLUSTER house.e
+copy_raw	worker.e		$CLUSTER worker.e
+copy_raw	aggregator.e	$CLUSTER aggregator.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare exec_output_m output
+
+test_end

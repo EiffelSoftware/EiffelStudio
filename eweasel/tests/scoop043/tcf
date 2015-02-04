@@ -1,0 +1,15 @@
+test_name	scoop-exceptions-control-flow
+test_description Test basic control flow correctness for SCOOP exceptions.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	failer.e	$CLUSTER failer.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare exec_output_m output
+
+test_end

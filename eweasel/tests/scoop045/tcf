@@ -1,0 +1,16 @@
+test_name	scoop-exceptions-accountability-handover
+test_description Test if accountability is correctly handed over during lock passing.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	controller.e	$CLUSTER controller.e
+copy_raw	searcher.e	$CLUSTER searcher.e
+copy_raw	logger.e		$CLUSTER logger.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare exec_output_m output
+
+test_end

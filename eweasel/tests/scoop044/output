@@ -1,0 +1,27 @@
+OK: Start of {SUPPLIER}.execute_callback.
+OK: At start of {CLIENT}.fail.
+OK: In rescue of {CLIENT}.fail.
+OK: In rescue of {SUPPLIER}.execute_callback.
+OK: Retry of {SUPPLIER}.execute_callback.
+OK: In body of {CLIENT}.succeed.
+OK: In {SUPPLIER}.execute_callback, after separate callback succeeded.
+OK: In {CLIENT}.make, Step 1.
+
+OK: Start of {SUPPLIER}.execute_callback_sync.
+OK: At start of {CLIENT}.fail.
+OK: In rescue of {CLIENT}.fail.
+OK: In rescue of {SUPPLIER}.execute_callback_sync.
+OK: Retry of {SUPPLIER}.execute_callback_sync.
+OK: In body of {CLIENT}.succeed.
+OK: In body of {CLIENT}.sync.
+OK: In {SUPPLIER}.execute_callback_sync, after separate callback succeeded.
+OK: In {CLIENT}.make, Step 2.
+
+OK: Start of {SUPPLIER}.execute_callback_fail.
+OK: At start of {CLIENT}.fail.
+OK: In rescue of {CLIENT}.fail.
+OK: In rescue of {SUPPLIER}.execute_callback_fail.
+OK: In rescue of {CLIENT}.do_fail.
+OK: In {CLIENT}.make, Step 3.
+
+Execution completed

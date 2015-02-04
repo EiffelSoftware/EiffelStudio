@@ -1,0 +1,6 @@
+Simulated request: no exception.
+Simulated request: NOT_FOUND_EXCEPTION - description ok.
+Simulated request: TIMEOUT_EXCEPTIION - description ok.
+Simulated request: NOT_FOUND_EXCEPTION - description ok.
+Simulated request: TIMEOUT_EXCEPTIION - description ok.
+Execution completed

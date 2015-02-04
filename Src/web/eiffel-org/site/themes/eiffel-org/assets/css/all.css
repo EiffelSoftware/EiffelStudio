@@ -507,6 +507,11 @@ table {
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
 }
+.wikipage .cache-info, .wikipage .uuid {
+  color: #999;
+  font-size: smaller;
+  text-align: right;
+}
 
 #content .bookcards {
   padding: 0;

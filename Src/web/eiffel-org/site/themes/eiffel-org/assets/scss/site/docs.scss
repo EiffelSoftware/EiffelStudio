@@ -171,6 +171,12 @@
 			content: " ...";
 		}
 	}
+
+	.cache-info, .uuid {
+		color: $wdocs-fade;
+		font-size: smaller;
+		text-align: right;
+	}
 }
 
 #content {

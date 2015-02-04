@@ -75,11 +75,17 @@ feature -- Router
 			create h.make (agent handle_learn (a_api, ?, ?))
 			Result.handle_with_request_methods ("/learn", h, Result.methods_get)
 
+			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
+			Result.handle_with_request_methods ("/doc/uuid/{wikipage_uuid}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}", h, Result.methods_get)
+--			Result.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}/book/{bookid}", h, Result.methods_get)
+
 			create h.make (agent handle_book (a_api, ?, ?))
 			Result.handle_with_request_methods ("/book/", h, Result.methods_get)
 			Result.handle_with_request_methods ("/book/{bookid}", h, Result.methods_get)
 			Result.handle_with_request_methods ("/version/{version_id}/book/", h, Result.methods_get)
 			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}", h, Result.methods_get)
+
 
 			create h.make (agent handle_wikipage (a_api, ?, ?))
 			Result.handle_with_request_methods ("/book/{bookid}/{wikipageid}", h, Result.methods_get)
@@ -558,15 +564,14 @@ feature -- Handler
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
 			end
 
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+
 			if req.is_get_request_method then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
-
-			l_version_id := version_id (req, Void)
-			l_bookid := book_id (req, Void)
-
 			r.values.force (l_version_id, "wiki_version_id")
 
 			if l_bookid /= Void then
@@ -607,11 +612,11 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_wikipage (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	send_wikipage (pg: detachable like {WDOCS_MANAGER}.page;
+					a_manager: WDOCS_MANAGER;
+					a_bookid: detachable READABLE_STRING_32;
+					api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			l_version_id, l_bookid, l_wiki_id: detachable READABLE_STRING_32
-			mnger: WDOCS_MANAGER
-			pg: detachable like {WDOCS_MANAGER}.page
 			r: CMS_RESPONSE
 			s: STRING
 			l_title: detachable READABLE_STRING_8
@@ -628,37 +633,16 @@ feature -- Handler
 
 --			r.set_optional_content_type ("doc")
 			r.set_value ("doc", "optional_content_type")
-
-			l_version_id := version_id (req, Void)
-			l_bookid := book_id (req, Void)
-			l_wiki_id := wikipage_id (req, Void)
-			mnger := manager (l_version_id)
-
-			r.values.force (l_version_id, "wiki_version_id")
-
-			if l_bookid /= Void then
-				r.values.force (l_bookid, "wiki_book_name")
-				pg := mnger.page (l_wiki_id, l_bookid)
-				if pg = Void and l_wiki_id /= Void then
-					if l_wiki_id.is_case_insensitive_equal_general ("index") then
-						pg := mnger.page (l_bookid, l_bookid)
-					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
-						pg := mnger.page ("index", l_bookid)
-					end
-					if pg = Void then
-						pg := mnger.page_by_title (l_wiki_id, l_bookid)
-					end
-					if pg = Void then
-						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
-					end
-				end
+			r.values.force (a_manager.version_id, "wiki_version_id")
+			if a_bookid /= Void then
+				r.values.force (a_bookid, "wiki_book_name")
 			end
 
 			if pg /= Void then
 				create s.make_empty
 
 				if
-					attached mnger.page_metadata (pg, <<"title", "uuid">>) as md and then
+					attached a_manager.page_metadata (pg, <<"title", "uuid">>) as md and then
 					attached md.item ("title") as l_md_title and then
 					not l_md_title.is_whitespace
 				then
@@ -671,7 +655,7 @@ feature -- Handler
 				end
 				r.set_title (l_title)
 				r.values.force (l_title, "wiki_page_name")
-				append_wiki_page_xhtml_to (pg, l_title, l_bookid, mnger, s, req)
+				append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
 
 
 				if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
@@ -701,6 +685,63 @@ feature -- Handler
 
 			r.set_main_content (s)
 			r.execute
+		end
+
+	handle_wikipage_by_uuid	(api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_version_id, l_bookid, l_wiki_uuid: detachable READABLE_STRING_32
+			mnger: WDOCS_MANAGER
+			pg: detachable like {WDOCS_MANAGER}.page
+			r: CMS_RESPONSE
+			s: STRING
+			l_title: detachable READABLE_STRING_8
+		do
+
+			l_wiki_uuid := wikipage_uuid (req, Void)
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+			mnger := manager (l_version_id)
+
+			if l_wiki_uuid /= Void then
+				pg := mnger.page_by_uuid (l_wiki_uuid, l_bookid)
+			end
+
+			send_wikipage (pg, mnger, l_bookid, api, req, res)
+		end
+
+	handle_wikipage (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_version_id, l_bookid, l_wiki_id: detachable READABLE_STRING_32
+			mnger: WDOCS_MANAGER
+			pg: detachable like {WDOCS_MANAGER}.page
+		do
+			l_wiki_id := wikipage_id (req, Void)
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+			mnger := manager (l_version_id)
+
+			if l_bookid /= Void then
+				pg := mnger.page (l_wiki_id, l_bookid)
+				if pg = Void and l_wiki_id /= Void then
+					if l_wiki_id.is_case_insensitive_equal_general ("index") then
+						pg := mnger.page (l_bookid, l_bookid)
+					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
+						pg := mnger.page ("index", l_bookid)
+					end
+					if pg = Void then
+						pg := mnger.page_by_title (l_wiki_id, l_bookid)
+					end
+					if pg = Void then
+						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
+					end
+					if pg = Void then
+						pg := mnger.page_by_uuid (l_wiki_id , l_bookid)
+					end
+
+				end
+			end
+
+			send_wikipage (pg, mnger, l_bookid, api, req, res)
 		end
 
 	handle_wiki_image (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -803,6 +844,11 @@ feature {NONE} -- Implementation: wiki render
 	wikipage_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 		do
 			Result := text_path_parameter (req, "wikipageid", a_default)
+		end
+
+	wikipage_uuid (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+		do
+			Result := text_path_parameter (req, "wikipage_uuid", a_default)
 		end
 
 	append_navigation_to (req: WSF_REQUEST; s: STRING)

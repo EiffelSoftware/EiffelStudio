@@ -186,7 +186,7 @@ feature -- Access
 	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page associated to UUID `a_page_uuid'.
 		do
-			Result := storage.page_by_uuid (a_page_uuid, Void)
+			Result := storage.page_by_uuid (a_page_uuid, a_bookid)
 		end
 
 	wiki_text (p: WIKI_PAGE): detachable READABLE_STRING_8

@@ -1429,6 +1429,7 @@ test	scoop-exceptions-accountability-handover	scoop045 tcf fail scoop multithrea
 test	scoop-exceptions-small-tests				scoop046 tcf fail scoop multithreaded exception
 test	scoop-exceptions-import						scoop047 tcf fail scoop multithreaded exception
 test	scoop-exceptions-combinations				scoop048 tcf manual scoop multithreaded exception
+test	scoop-impersonation-lockpassing				scoop049 tcf manual scoop multithreaded deadlock lock_passing
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

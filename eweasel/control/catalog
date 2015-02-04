@@ -1421,6 +1421,14 @@ test	scoop-run-time-crash				scoop037 tcf fail scoop multithreaded execution
 test	scoop-agent-creation-rule			scoop038 tcf pass scoop multithreaded agents
 test	scoop-agent-expression-uncontrolled		scoop039 tcf pass scoop multithreaded agents
 test	scoop-agent-expression-controlled	scoop040 tcf pass scoop multithreaded agents
+test	scoop-wait-condition-controlled				scoop041 tcf manual scoop multithreaded
+test	scoop-exceptions-precondition				scoop042 tcf fail scoop multithreaded exception
+test	scoop-exceptions-control-flow				scoop043 tcf fail scoop multithreaded exception
+test	scoop-exceptions-separate-callback			scoop044 tcf manual scoop multithreaded exception
+test	scoop-exceptions-accountability-handover	scoop045 tcf fail scoop multithreaded exception
+test	scoop-exceptions-small-tests				scoop046 tcf fail scoop multithreaded exception
+test	scoop-exceptions-import						scoop047 tcf fail scoop multithreaded exception
+test	scoop-exceptions-combinations				scoop048 tcf manual scoop multithreaded exception
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

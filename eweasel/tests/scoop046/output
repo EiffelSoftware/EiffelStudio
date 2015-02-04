@@ -1,0 +1,13 @@
+OK: Exception not yet propagated.
+OK: Failed to build house.
+
+OK: test_call_api has failed as it should.
+
+OK: No calls were thrown away.
+
+OK: Propagating exception in {WORKER}read_file.
+OK: Exception successfully propagated.
+
+OK: test_worker_aggregator successfully terminated.
+
+Execution completed

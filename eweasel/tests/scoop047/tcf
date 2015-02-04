@@ -1,0 +1,17 @@
+test_name	scoop-exceptions-import
+test_description Test if exception objects are correctly imported.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e					$CLUSTER test.e
+copy_raw	webserver.e				$CLUSTER webserver.e
+copy_raw	timeout_exception.e		$CLUSTER timeout_exception.e
+copy_raw	not_found_exception.e	$CLUSTER not_found_exception.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare exec_output_m output
+
+test_end

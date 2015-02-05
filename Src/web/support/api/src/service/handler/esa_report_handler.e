@@ -2,7 +2,7 @@ note
 	description: "[
 				{REPORT_HANDLER} it's in charge to retrieve reports for Guests and logged in users. 
 				Logged-in Users ::= {USER, INTERNAL, RESPONSIBLE, ADMIN }
-				Responsible userS will be able to update reports assigning a responsible to it.
+				Responsible users will be able to update reports assigning a responsible to it.
 				Logged-in User whose role is `User', will be able to read visible reports and his own reports
 				Guest User will only see visible reports.
 				Other features

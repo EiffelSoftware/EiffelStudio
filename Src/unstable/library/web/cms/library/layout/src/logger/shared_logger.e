@@ -9,49 +9,47 @@ class
 inherit
 	LOG_PRIORITY_CONSTANTS
 
-	ARGUMENTS
+	SHARED_EXECUTION_ENVIRONMENT
 
 feature -- Logger
 
-
 	log: LOGGING_FACILITY
-			-- New `log' (once per process)
+			-- `log' facility (once per process)
             -- that could be shared between threads
             -- without reinitializing it.
-		local
-			l_log_writer: LOG_ROLLING_WRITER_FILE
-			l_environment: EXECUTION_ENVIRONMENT
-			l_path: PATH
-			l_logger_config: LOGGER_CONFIGURATION
 		once ("PROCESS")
-					--| Initialize the logging facility
 			create Result.make
-			create l_environment
-			if attached separate_character_option_value ('d') as l_dir then
-				create l_path.make_from_string (l_dir)
-			else
-				create l_path.make_current
-				l_path := l_path.extended ("site")
-			end
-			l_logger_config := new_logger_level_configuration (l_path.extended("config").extended ("application_configuration.json"))
-			if attached l_logger_config.location as p then
-				create l_log_writer.make_at_location (p.extended ("api.log"))
-			else
-				create l_log_writer.make_at_location (l_path.extended ("logs").extended ("api.log"))
-			end
-
-			l_log_writer.set_max_file_size ({NATURAL_64} 1024*1204)
-			l_log_writer.set_max_backup_count (l_logger_config.backup_count)
-			set_logger_level (l_log_writer, l_logger_config.level)
-			log.register_log_writer (l_log_writer)
-
-					--| Write an informational message
-			Result.write_information ("The application is starting up...")
 		end
 
-feature {NONE} -- JSON
+feature {NONE} -- Implementation
 
-	set_logger_level (a_log_writer: LOG_ROLLING_WRITER_FILE; a_priority: INTEGER)
+	initialize_logger (app: APPLICATION_LAYOUT)
+		local
+			l_log_writer_file: LOG_ROLLING_WRITER_FILE
+			l_log_writer: LOG_WRITER
+			l_logs_path: detachable PATH
+			l_logger_config: LOGGER_CONFIGURATION
+			ut: FILE_UTILITIES
+		do
+			l_logger_config := new_logger_level_configuration (app.application_config_path)
+			l_logs_path := l_logger_config.location
+			if l_logs_path = Void then
+				l_logs_path := app.logs_path
+			end
+			if ut.directory_path_exists (l_logs_path) then
+				create l_log_writer_file.make_at_location (l_logs_path.extended (app.name).appended_with_extension ("log"))
+				l_log_writer_file.set_max_file_size ({NATURAL_64} 1024 * 1204)
+				l_log_writer_file.set_max_backup_count (l_logger_config.backup_count)
+				l_log_writer := l_log_writer_file
+			else
+					-- Should we create the directory anyway ?
+				create {LOG_WRITER_NULL} l_log_writer
+			end
+			set_logger_level (l_log_writer, l_logger_config.level)
+			log.register_log_writer (l_log_writer)
+		end
+
+	set_logger_level (a_log_writer: LOG_WRITER; a_priority: INTEGER)
 			-- Setup the logger level based on `a_priority'
 		do
 			if a_priority = log_debug then
@@ -80,10 +78,14 @@ feature {NONE} -- JSON
 			-- By default, level is set to `DEBUG'.
 		local
 			l_parser: JSON_PARSER
+			ut: FILE_UTILITIES
 		do
 			create Result
-			if attached json_file_from (a_path) as json_file then
-				l_parser := new_json_parser (json_file)
+			if
+				ut.file_path_exists (a_path) and then
+				attached (create {JSON_FILE_READER}).read_json_from (a_path.name) as json_file
+			then
+				create l_parser.make_with_string (json_file)
 				l_parser.parse_content
 				if
 					l_parser.is_valid and then
@@ -103,20 +105,6 @@ feature {NONE} -- JSON
 					end
 				end
 			end
-		end
-
-	json_file_from (a_fn: PATH): detachable STRING
-		local
-			ut: FILE_UTILITIES
-		do
-			if ut.file_path_exists (a_fn) then
-				Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name)
-			end
-		end
-
-	new_json_parser (a_string: STRING): JSON_PARSER
-		do
-			create Result.make_with_string (a_string)
 		end
 
 note

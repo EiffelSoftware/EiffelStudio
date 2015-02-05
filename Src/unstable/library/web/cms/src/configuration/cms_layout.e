@@ -19,8 +19,8 @@ inherit
 
 create
 	make_default,
-	make_with_path
-
+	make_with_path,
+	make_with_directory_name
 
 feature -- Access
 

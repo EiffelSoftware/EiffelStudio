@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			end
 				--Description
 			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				Result.set_description (l_description.value)
+				Result.set_description (l_description.url_encoded_value)
 			end
 			if req.has_uploaded_file then
 				create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)

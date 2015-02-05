@@ -17,9 +17,13 @@ note
 class
 	APPLICATION_LAYOUT
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make_default,
-	make_with_path
+	make_with_path,
+	make_with_directory_name
 
 feature {NONE} -- Initialization
 
@@ -37,12 +41,51 @@ feature {NONE} -- Initialization
 			-- Create a layour based on a path `p'.
 		do
 			path := p.absolute_path.canonical_path
+			initialize_name
+		end
+
+	make_with_directory_name (a_dirname: READABLE_STRING_GENERAL)
+			-- Create a layour based on a path `p'.
+		do
+			make_with_path (create {PATH}.make_from_string (a_dirname))
+		end
+
+	initialize_name
+			-- Initialize `name'.
+		local
+			p: PATH
+			s: STRING_32
+		do
+			create p.make_from_string (execution_environment.arguments.command_name)
+			if attached p.entry as e then
+				p := e
+			end
+			create s.make_from_string (p.name)
+			if attached p.extension as l_extension then
+				s.remove_tail (l_extension.count + 1)
+			end
+			if s.is_whitespace then
+				set_name ({STRING_8} "app")
+			else
+				set_name (s)
+			end
 		end
 
 feature -- Access
 
 	path: PATH
 			-- Root location.
+
+	name: IMMUTABLE_STRING_32
+			-- Application name, default is "app"
+
+feature -- Change
+
+	set_name (a_name: READABLE_STRING_GENERAL)
+			-- Set `name' from `a_name'.
+		do
+			create name.make_from_string_general (a_name)
+		end
 
 feature -- Access: internal
 
@@ -163,6 +206,6 @@ feature {NONE} -- Implementation
 			-- Directory for templates (HTML, etc).
 
 ;note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

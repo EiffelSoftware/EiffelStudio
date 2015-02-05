@@ -371,8 +371,10 @@ feature {NONE} -- Events
 					if b = move_button and is_moving then
 						-- move
 						enable_capture
-						delta_center_x := ax - point_x
-						delta_center_y := ay - point_y
+						center_x := x
+						center_y := y
+						delta_center_x := ax - center_x
+						delta_center_y := ay - center_y
 						is_move := True
 						is_scale := False
 						is_rotate := False
@@ -430,9 +432,9 @@ feature {NONE} -- Events
 						end
 					end
 					if x /= new_x or y /= new_y then
-						a_delta_x := new_x - point_x
-						a_delta_y := new_y - point_y
-						set_point_position (new_x, new_y)
+						a_delta_x := new_x - x
+						a_delta_y := new_y - y
+						set_x_y (new_x, new_y)
 						move_actions.call ([a_delta_x, a_delta_y, 0.0, 0.0, 0.0, ax, ay])
 					end
 				elseif is_scale then
@@ -451,16 +453,16 @@ feature {NONE} -- Events
 					l_bounding_box := bounding_box
 
 					if new_scale_x /= 1 and then new_scale_x > 0 and then
-						l_bounding_box.left * new_scale_x > minimum_x and then
-						l_bounding_box.right * new_scale_x < maximum_x
+						x * new_scale_x > minimum_x and then
+						x * new_scale_x < maximum_x
 					then
 						scale_x (new_scale_x)
 						center_x := ax
 						scale_x_actions.call ([new_scale_x])
 					end
 					if new_scale_y /= 1 and then new_scale_y > 0 and then
-						l_bounding_box.top * new_scale_y > minimum_y and then
-						l_bounding_box.bottom * new_scale_y < maximum_y
+						y * new_scale_y > minimum_y and then
+						y * new_scale_y < maximum_y
 					then
 						scale_y (new_scale_y)
 						center_y := ay

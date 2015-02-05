@@ -56,6 +56,44 @@ feature -- Testing
 			)
 		end
 
+	test_move_handle_constraint
+			-- When setting `minimum_x|y' or `maximum_x|y' on a move handle, it messes up the moving.
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					l_world: EV_MODEL_WORLD
+					l_world_cell: EV_MODEL_WORLD_CELL
+					l_scrollbar, l_slider: EV_MODEL_RECTANGLE
+					l_move_handle: EV_MODEL_MOVE_HANDLE
+					window: EV_TITLED_WINDOW
+				do
+					create l_world
+
+					create l_scrollbar.make_rectangle (20, 20, 40, 10)
+					create l_slider.make_rectangle (20, 20, 10, 10)
+					create l_move_handle
+					l_move_handle.disable_snapping
+					l_move_handle.extend (l_slider)
+					l_move_handle.set_minimum_y (l_scrollbar.bounding_box.y + l_slider.bounding_box.height // 2 + 1)
+					l_move_handle.set_maximum_y (l_scrollbar.bounding_box.y + l_slider.bounding_box.height // 2 + 1)
+					l_move_handle.set_minimum_x (l_scrollbar.bounding_box.x + l_slider.bounding_box.width // 2 + 1)
+					l_move_handle.set_maximum_x (l_scrollbar.bounding_box.right - l_slider.bounding_box.width // 2)
+					l_world.extend (l_scrollbar)
+					l_world.extend (l_move_handle)
+
+					create l_world_cell.make_with_world (l_world)
+
+					create window
+					window.extend (l_world_cell)
+					window.set_size (600, 600)
+					window.show
+					process_events
+				end
+			)
+		end
+
 feature {NONE} -- Helpers
 
 note

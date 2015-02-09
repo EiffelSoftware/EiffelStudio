@@ -86,6 +86,19 @@ feature -- Status Report
 			Result := storage.is_valid_credential (a_auth_login, a_auth_password)
 		end
 
+feature -- Access: persistency
+
+	storage: CMS_STORAGE
+			-- Persistence storage.
+
+	sql_storage: detachable CMS_STORAGE_SQL
+			-- Storage based on EiffelStore SQL interface if selected.
+		do
+			if attached {CMS_STORAGE_SQL} storage as st then
+				Result := st
+			end
+		end
+
 feature -- Access: Node
 
 	nodes_count: INTEGER_64
@@ -164,7 +177,6 @@ feature -- Change: Node
 			end
 			storage.update_node_content (a_user_id, a_node_id, a_content)
 		end
-
 
 feature -- Access: User
 
@@ -248,11 +260,6 @@ feature -- Layout
 				end
 			end
 		end
-
-feature {NONE} -- Implemenataion
-
-	storage: CMS_STORAGE
-			-- Persistence storage.
 
 end
 

@@ -129,13 +129,10 @@ feature -- Access: storage
 					attached storage_drivers.item (l_database_config.driver) as l_builder
 				then
 					Result := l_builder.storage (Current)
-				else
-					create {CMS_STORAGE_NULL} Result
 				end
 			else
 				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
 					-- error hanling.
-				create {CMS_STORAGE_NULL} Result
 				create l_message.make (1024)
 				if attached ((create {EXCEPTION_MANAGER}).last_exception) as l_exception then
 					if attached l_exception.description as l_description then
@@ -161,11 +158,24 @@ feature -- Access: storage
 
 feature -- Element change
 
+	module_registered (m: CMS_MODULE): BOOLEAN
+		do
+			Result := modules.has (m)
+		end
+
+	module_with_same_type_registered (m: CMS_MODULE): BOOLEAN
+		do
+			Result := modules.has_module_with_same_type (m)
+		end
+
 	register_module (m: CMS_MODULE)
 			-- Add module `m' to `modules'
+		require
+			module_not_registered: not module_registered (m)
+			no_module_with_same_type_registered: not module_with_same_type_registered (m)
 		deferred
 		ensure
-			module_added: modules.has (m)
+			module_registered: module_registered (m)
 		end
 
 end

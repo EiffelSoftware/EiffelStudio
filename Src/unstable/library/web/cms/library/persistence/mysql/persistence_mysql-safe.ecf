@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="persistence_sqlite" uuid="8FD9D3B3-5FC1-495F-A05D-0205EC966841" library_target="persistence_sqlite">
-	<target name="persistence_sqlite">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="persistence_mysql" uuid="DC757CBD-D8C4-44D6-A07F-C1148D8D233E" library_target="persistence_mysql">
+	<target name="persistence_mysql">
 		<root all_classes="true"/>
 		<option warning="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="cms" location="..\..\..\..\cms-safe.ecf"/>
+		<library name="cms" location="..\..\..\cms-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
-		<library name="layout" location="..\..\..\layout\layout-safe.ecf"/>
+		<library name="layout" location="..\..\layout\layout-safe.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
-		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
-		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
+		<library name="model" location="..\..\model\cms_model-safe.ecf"/>
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<cluster name="common" location="..\common\" recursive="true"/>
-		<cluster name="persistence_sqlite" location=".\src\" recursive="true">
+		<cluster name="common" location="..\implementation\store\" recursive="true">
+			<file_rule>
+				<exclude>/database/database_connection_odbc.e</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="persistence_mysql" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>

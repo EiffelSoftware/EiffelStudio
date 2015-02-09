@@ -36,6 +36,21 @@ feature -- Status report
 			Result := modules.has (a_module)
 		end
 
+	has_module_with_same_type (a_module: CMS_MODULE): BOOLEAN
+			-- Has module of type `a_type' already inserted?
+		local
+			l_type: TYPE [detachable CMS_MODULE]
+		do
+			l_type := a_module.generating_type
+			across
+				modules as ic
+			until
+				Result
+			loop
+				Result := ic.item = a_module or else ic.item.generating_type = l_type
+			end
+		end
+
 	count: INTEGER
 			-- Number of modules.
 		do
@@ -47,7 +62,9 @@ feature -- Element change
 	extend (a_module: CMS_MODULE)
 			-- Add module
 		do
-			modules.force (a_module)
+			if not has (a_module) then
+				modules.force (a_module)
+			end
 		end
 
 	remove (a_module: CMS_MODULE)

@@ -26,6 +26,20 @@ feature -- Initialization
 			create error_handler.make
 		end
 
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is storage available?
+		do
+			Result := True
+		end
+
+	is_initialized: BOOLEAN
+			-- Is storage initialized?
+		do
+			Result := True
+		end
+
 feature -- Access: user
 
 	has_user: BOOLEAN

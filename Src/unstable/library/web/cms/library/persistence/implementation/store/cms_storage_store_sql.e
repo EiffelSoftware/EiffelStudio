@@ -28,6 +28,14 @@ feature {NONE} -- Initialization
 --			error_handler.add_synchronization (db_handler.database_error_handler)
 		end
 
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is storage available?
+		do
+			Result := connection.is_connected
+		end
+
 feature {NONE} -- Implementation	
 
 	db_handler: DATABASE_HANDLER

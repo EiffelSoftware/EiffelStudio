@@ -16,6 +16,8 @@ inherit
 			items as children,
 			extend as add_link,
 			remove as remove_link
+		undefine
+			is_equal
 		end
 
 create
@@ -168,6 +170,6 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

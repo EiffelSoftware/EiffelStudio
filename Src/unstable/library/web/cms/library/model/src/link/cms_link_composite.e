@@ -30,6 +30,27 @@ feature -- Element change
 		deferred
 		end
 
+	sort
+			-- Sort `items' and also recursively in sub items.
+		local
+			l_sorter: QUICK_SORTER [CMS_LINK]
+		do
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [CMS_LINK]})
+			if attached items as lst then
+				l_sorter.sort (lst)
+				across
+					lst as ic
+				loop
+					if
+						attached {CMS_LINK_COMPOSITE} ic.item as l_composite and then
+						not l_composite.is_empty
+					then
+						l_composite.sort
+					end
+				end
+			end
+		end
+
 feature -- status report
 
 	is_empty: BOOLEAN
@@ -47,6 +68,6 @@ feature -- status report
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

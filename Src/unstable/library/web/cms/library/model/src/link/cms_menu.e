@@ -61,6 +61,17 @@ feature -- Status report
 			Result := items.is_empty
 		end
 
+	has (lnk: CMS_LINK): BOOLEAN
+		do
+			across
+				items as ic
+			until
+				Result
+			loop
+				Result := ic.item.location.same_string (lnk.location)
+			end
+		end
+
 feature -- Element change			
 
 	extend (lnk: CMS_LINK)
@@ -91,6 +102,6 @@ feature -- Access
 invariant
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

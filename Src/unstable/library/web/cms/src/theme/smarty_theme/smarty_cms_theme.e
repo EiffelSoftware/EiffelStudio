@@ -56,7 +56,7 @@ feature -- Access
 				else
 					l_regions := <<"top","header", "highlighted","help", "content", "footer", "first_sidebar", "second_sidebar", "bottom">>
 				end
-				internaL_regions := l_regions
+				internal_regions := l_regions
 			end
 			Result := l_regions
 		end

@@ -10,10 +10,21 @@ deferred class
 
 inherit
 	REFACTORING_HELPER
+		undefine
+			is_equal
+		end
 
 	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
 
 	ITERABLE [CMS_LINK]
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 feature -- Access	
 
@@ -22,6 +33,21 @@ feature -- Access
 
 	location: READABLE_STRING_8
 			-- Associated url location.
+
+	weight: INTEGER
+			-- Optional weight used for order.
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			if weight = other.weight then
+				Result := title < other.title
+			else
+				Result := weight < other.weight
+			end
+		end
 
 feature -- status report	
 
@@ -51,6 +77,16 @@ feature -- status report
 	has_children: BOOLEAN
 			-- Has sub link?
 		deferred
+		end
+
+feature -- Element change
+
+	set_weight (a_weight: INTEGER)
+			-- Set `weight' to `a_weight'.
+		do
+			weight := a_weight
+		ensure
+			weight_set: weight = a_weight
 		end
 
 feature -- Query
@@ -84,9 +120,12 @@ feature -- Status report
 			create Result.make_from_string (title)
 			Result.append_string_general (" -> ")
 			Result.append_string_general (location)
+			Result.append_string_general (" [")
+			Result.append_integer (weight)
+			Result.append_string_general ("]")
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

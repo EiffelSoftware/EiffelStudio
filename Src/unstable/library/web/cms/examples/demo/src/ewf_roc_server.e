@@ -136,8 +136,10 @@ feature -- CMS setup
 			m: CMS_MODULE
 		do
 			create {BASIC_AUTH_MODULE} m.make
-			m.enable
-			a_setup.register_module (m)
+			if not a_setup.module_with_same_type_registered (m) then
+				m.enable
+				a_setup.register_module (m)
+			end
 
 			create {CMS_DEMO_MODULE} m.make
 			m.enable

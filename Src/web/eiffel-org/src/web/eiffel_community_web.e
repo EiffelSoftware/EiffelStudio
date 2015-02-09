@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 				-- Options can be set in ewf.ini config file
 			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} service_options.make_from_file ("ewf.ini")
 
-			initialize_wdocs
+			initialize_application
 		end
 
 end

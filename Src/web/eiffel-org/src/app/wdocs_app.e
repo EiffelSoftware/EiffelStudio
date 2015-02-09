@@ -26,12 +26,13 @@ feature {NONE} -- Initialization
 			l_win: like main_window
 			l_embeded_services: WDOCS_APP_EMBEDDED_WEB_SERVICE
 		do
+			create l_embeded_services.make
+
 			default_create
-			create l_win.make
+			create l_win.make (l_embeded_services.layout)
 			main_window := l_win
 			l_win.show
 
-			create l_embeded_services.make
 			l_embeded_services.set_port_number (0) -- Use first available port number
 
 			l_embeded_services.on_launched_actions.force (agent on_web_service_launched (l_win))

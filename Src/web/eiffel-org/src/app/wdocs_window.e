@@ -31,9 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_layout: CMS_LAYOUT)
 			-- Creation method
 		do
+			layout := a_layout
 			default_create
 		end
 
@@ -139,7 +140,10 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-feature -- Access: docking		
+feature -- Access: docking	
+
+	layout: CMS_LAYOUT
+			-- Application environment layout.
 
 	sd_manager: detachable SD_DOCKING_MANAGER
 
@@ -210,10 +214,8 @@ feature {NONE} -- Implementation
 		local
 			cfg: WDOCS_INI_CONFIG
 			wdocs: like wdocs_manager
-			lay: CMS_LAYOUT
 		do
-			create lay.make_default
-			create cfg.make (lay.config_path.extended ("wdocs.ini"))
+			create cfg.make (layout.config_path.extended ("wdocs.ini"))
 			create wdocs.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
 			wdocs.set_server_url ("http://localhost:" + port_number.out)
 			wdocs_manager := wdocs

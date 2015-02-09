@@ -15,7 +15,7 @@ inherit
 
 feature	-- Initialization
 
-	initialize_wdocs
+	initialize_application
 		local
 			args: ARGUMENTS_32
 			l_dir: detachable READABLE_STRING_32
@@ -23,7 +23,7 @@ feature	-- Initialization
 			l_layout: CMS_LAYOUT
 		do
 				--| Arguments
-			create args
+			args := execution_environment.arguments
 			from
 				i := 1
 				n := args.argument_count
@@ -44,6 +44,8 @@ feature	-- Initialization
 			else
 				create l_layout.make_with_path (create {PATH}.make_from_string (l_dir))
 			end
+				-- Initialize logging facility
+			initialize_logger (l_layout)
 			layout := l_layout
 			initialize_cms (cms_setup (l_layout))
 		end

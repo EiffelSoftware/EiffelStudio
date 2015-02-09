@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_service
-			initialize_wdocs
+			initialize_application
 			create request_exit_operation_actions
 			local_connection_restriction_enabled := True
 

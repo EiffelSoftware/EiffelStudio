@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Eiffel GPL Download"
 			package := "download"
-			enable
 		end
 
 feature -- Router

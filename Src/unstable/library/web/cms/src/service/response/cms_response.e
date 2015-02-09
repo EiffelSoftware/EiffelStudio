@@ -357,7 +357,6 @@ feature -- Blocks regions
 			end
 		end
 
-
 feature -- Blocks 		
 
 	add_block (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8)
@@ -368,7 +367,6 @@ feature -- Blocks
 			l_region := block_region (b, a_default_region)
 			l_region.extend (b)
 		end
-
 
 	get_blocks
 		do
@@ -754,9 +752,13 @@ feature -- Element Change
 feature -- Generation
 
 	prepare (page: CMS_HTML_PAGE)
+		local
+			lnk: CMS_LINK
 		do
 				-- Menu
-			add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Home", "/"))
+			create {CMS_LOCAL_LINK} lnk.make ("Home", "/")
+			lnk.set_weight (-10)
+			add_to_primary_menu (lnk)
 			invoke_menu_system_alter (menu_system)
 			prepare_menu_system (menu_system)
 
@@ -772,6 +774,11 @@ feature -- Generation
 						recursive_get_active (l_menu_block.menu, request)
 					end
 				end
+			end
+
+				-- Sort items
+			across menu_system as ic loop
+				ic.item.sort
 			end
 
 				-- Values

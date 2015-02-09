@@ -7,19 +7,19 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="cms" location="..\..\..\..\cms.ecf"/>
+		<library name="cms" location="..\..\..\cms.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
-		<library name="layout" location="..\..\..\layout\layout.ecf"/>
+		<library name="layout" location="..\..\layout\layout.ecf"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
-		<library name="model" location="..\..\..\model\cms_model.ecf"/>
+		<library name="model" location="..\..\model\cms_model.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="common" location="..\common\" recursive="true"/>
+		<cluster name="common" location="..\implementation\store\" recursive="true"/>
 		<cluster name="persistence_sqlite" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

@@ -13,9 +13,10 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
+		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
 		<library name="layout" location="..\..\library\layout\layout-safe.ecf" readonly="false"/>
-		<library name="persistence_mysql" location="..\..\library\persistence\implementation\mysql\persistence_mysql-safe.ecf" readonly="false"/>
-		<library name="persistence_sqlite" location="..\..\library\persistence\implementation\sqlite\persistence_sqlite-safe.ecf" readonly="false"/>
+		<library name="persistence_mysql" location="..\..\library\persistence\mysql\persistence_mysql-safe.ecf" readonly="false"/>
+		<library name="persistence_sqlite" location="..\..\library\persistence\sqlite\persistence_sqlite-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 	</target>

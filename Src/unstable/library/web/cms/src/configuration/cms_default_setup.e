@@ -86,7 +86,11 @@ feature {NONE} -- Initialization
 		local
 			m: CMS_MODULE
 		do
---			-- Core
+			-- Core
+--			create {BASIC_AUTH_MODULE} m.make
+--			m.enable
+--			register_module (m)
+
 --			create {USER_MODULE} m.make (Current)
 --			m.enable
 --			register_module (m)

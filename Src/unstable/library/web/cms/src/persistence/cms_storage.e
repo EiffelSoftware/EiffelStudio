@@ -22,6 +22,18 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is storage available?
+		deferred
+		end
+
+	is_initialized: BOOLEAN
+			-- Is storage initialized?
+		deferred
+		end
+
 feature -- Error Handling
 
 	error_handler: ERROR_HANDLER

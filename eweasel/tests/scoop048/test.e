@@ -18,7 +18,7 @@ feature -- Test control constants
 
 	test_run_count: INTEGER = 2
 
-	call_count: INTEGER = 10000
+	call_count: INTEGER = 1000
 
 	job_count: INTEGER = 14
 
@@ -68,6 +68,7 @@ feature -- Test execution
 				create q
 				is_p_dirty := False
 				is_q_dirty := False
+				is_test_failed := False
 				run_test (p, q)
 			end
 		rescue
@@ -106,7 +107,7 @@ feature -- Test execution
 				next_job := next_job + 1
 				execute_job (next_job, p, q)
 				if is_test_failed then
-					print ("ERROR: A test failed. Job number: " + next_job.out + " / is_p_dirty: " + is_p_dirty.out + " / is_q_dirty: " + is_q_dirty.out + "%N")
+					print ("ERROR: A test failed. Job number: " + next_job.out + " / is_p_dirty: " + saved_is_p_dirty.out + " / is_q_dirty: " + saved_is_q_dirty.out + "%N")
 				end
 				i := i + 1
 			end
@@ -143,6 +144,9 @@ feature -- Test execution
 					if not is_error_expected then
 						is_q_dirty := True
 					end
+						-- Update state: Exception in P (if any) has propagated now.
+					is_p_dirty := False
+
 					if not is_p_dirty then
 						print_debug ("Debug: Executing job 2: Send async call p -> q and FAIL. Setting Q dirty.%N")
 					else

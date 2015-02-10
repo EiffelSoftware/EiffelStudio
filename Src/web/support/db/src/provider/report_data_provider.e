@@ -1855,6 +1855,26 @@ feature -- Status Report
 		end
 
 
+	download_expiration_token_age_2 (a_token: STRING ): INTEGER
+		local
+			l_parameters: STRING_TABLE[STRING_32]
+			l_encoder: DATABASE_SQL_SERVER_ENCODER
+		do
+			create l_encoder
+			Result := -1
+			log.write_information (generator + ".download_expiration_token_age_2")
+			create l_parameters.make (1)
+			l_parameters.put (l_encoder.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (select_download_expiration, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				Result := db_handler.read_integer_32 (1)
+			end
+			post_execution
+		end
+
+
 feature {NONE} -- Implementation
 
 	set_last_problem_report_number (a_number: INTEGER)
@@ -2450,6 +2470,11 @@ feature -- Queries
 				INNER JOIN ContactsTemporary as c ON c.Email = d.Email
 				where Token = :Token;
 	]"
+
+	select_download_expiration: STRING = "[
+		select DATEDIFF(day,CreatedDate,getdate()) from DownloadExpiration where Token = :Token
+		]"
+
 
 feature {NONE} -- Implementation
 

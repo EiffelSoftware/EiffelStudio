@@ -178,16 +178,16 @@ feature -- Workflow
 					l_info.set_filename (downloaded_file (platform))
 					l_info.set_download_date (create {DATE_TIME}.make_now_utc)
 					if l_service.is_membership (email) then
-						log.write_debug (generator + "process_workflow:" + email +  " Membership")
+						log.write_debug (generator + ".process_workflow:" + email +  " Membership")
 						if 	l_service.is_download_active (l_token.value) then
-							log.write_debug (generator + "process_workflow:" + email +  " Download active")
+							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
 							if l_service.is_available then
-								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow The service unavailable")
@@ -196,16 +196,16 @@ feature -- Workflow
 							end
 						end
 					elseif l_service.is_contact (email) then
-						log.write_debug (generator + "process_workflow:" + email +  " Contact")
+						log.write_debug (generator + ".process_workflow:" + email +  " Contact")
 						if 	l_service.is_download_active (l_token.value) then
-							log.write_debug (generator + "process_workflow:" + email +  " Download active")
+							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
 							if l_service.is_available then
-								log.write_debug (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow The database service is unavailable")
@@ -227,7 +227,7 @@ feature -- Workflow
 						else
 						    if l_service.is_available then
 								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + "process_workflow:" + email +  " Download not active using token:" + l_token.value )
+								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
 								bad_request (req, res, "")
 							else
 								log.write_debug (generator + ".process_workflow: The database service is unavailable")
@@ -476,7 +476,7 @@ feature -- Send Email
 			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do
 			if attached email_service as l_email_service then
-				l_email_service.send_email_internal_server_error (a_description)
+				l_email_service.send_email_bad_request_error (a_description)
 			end
 		end
 

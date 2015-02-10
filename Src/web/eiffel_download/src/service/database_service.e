@@ -53,12 +53,23 @@ feature -- Access
 			l_result: INTEGER
 		do
 			l_result := data_provider.download_expiration_token_age (a_token)
+			log.write_information (generator + ".is_download_active with token: " + a_token + " with result : " + l_result.out )
+
+			if attached data_provider.last_error as l_error then
+				log.write_critical (generator + ".is_download_active: Error message" + l_error.error_message)
+			end
+
 			if
 				l_result >= 0 and then
 		        l_result <= 10
 		    then
 		    	Result := True
 		    end
+
+		    -- Same code using SQL Queries instead of SP
+		    l_result := data_provider.download_expiration_token_age_2 (a_token)
+			log.write_information (generator + ".is_download_active with token using the SQL version: " + a_token + " with result : " + l_result.out )
+
 		end
 
 feature -- Status Report

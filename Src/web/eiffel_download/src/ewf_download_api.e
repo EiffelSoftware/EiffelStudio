@@ -463,8 +463,6 @@ feature -- Send Email
 
 
 	send_internal_server_error (a_description: READABLE_STRING_32)
-		local
-			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do
 			if attached email_service as l_email_service then
 				l_email_service.send_email_internal_server_error (a_description)
@@ -472,8 +470,6 @@ feature -- Send Email
 		end
 
 	send_bad_request (a_description: READABLE_STRING_32)
-		local
-			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do
 			if attached email_service as l_email_service then
 				l_email_service.send_email_bad_request_error (a_description)

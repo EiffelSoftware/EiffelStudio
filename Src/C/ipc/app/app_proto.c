@@ -322,7 +322,9 @@ static int curr_modify = NO_CURRMODIF;
 				dbg_dump_rt_object(sp, rt_extension_obj);
 				break;
 			case RQST_RTOP_DUMP_SCOOP_MANAGER:
-				dbg_dump_rt_object(sp, scp_mnger);
+				/* TODO: deal with the request to obtain SCOOP manager that is no longer available at run-time. */
+				/* dbg_dump_rt_object(sp, scp_mnger); */
+				dbg_dump_rt_object(sp, 0);
 				break;
 			case RQST_RTOP_EXEC_REPLAY:
 				/*    arg_2: record; arg_3: value (0 or 1) */

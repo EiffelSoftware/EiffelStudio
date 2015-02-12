@@ -5218,7 +5218,7 @@ feature -- Pattern table generation
 				)
 			end
 
-			if attached ise_scoop_manager_class then
+			if is_scoop then
 					-- Wait for SCOOP Processor redundancy.
 				buffer.put_new_line
 				buffer.put_string ("RTS_WPR")
@@ -6172,7 +6172,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

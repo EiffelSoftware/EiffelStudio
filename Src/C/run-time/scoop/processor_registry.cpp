@@ -116,6 +116,10 @@ processor* processor_registry::operator[] (EIF_SCP_PID pid)
 void processor_registry::return_processor (processor *proc)
 {
 	EIF_SCP_PID pid = proc->pid;
+
+		/* Decouple processor ID from the current thread. */
+	eif_unset_processor_id ();
+
 	if (used_pids.erase (pid)) {
 		delete proc;
 		procs [pid] = NULL;
@@ -199,6 +203,7 @@ void processor_registry::wait_for_all()
 
 	root_proc->has_client = false;
 	root_proc->application_loop();
+
 	return_processor (root_proc);
 
 	while(!all_done) {

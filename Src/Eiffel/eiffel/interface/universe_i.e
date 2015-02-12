@@ -703,11 +703,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_exceptions.put ("RT_EXTENSION")
 			l_actions.put (agent l_system.set_rt_extension_class, "RT_EXTENSION")
 
-				-- SCOOP Manager
-			if l_system.is_scoop then
-				l_actions.put (agent l_system.set_scoop_manager_class, "ISE_SCOOP_MANAGER")
-			end
-
 				-- Exception manager
 			l_actions.put (agent l_system.set_exception_manager_class, "ISE_EXCEPTION_MANAGER")
 			l_exceptions.put ("EXCEPTION")
@@ -927,7 +922,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -171,8 +171,12 @@ void spawn_main(char* data, EIF_SCP_PID pid)
 	processor *proc = registry [pid];
 	(void)data;
 
+		/* Record that the current thread is associated with a processor of a given ID. */
+	eif_set_processor_id (pid);
+
 	proc->startup_notify.result_awake();
 	proc->application_loop();
+
 	registry.return_processor (proc);
 }
 

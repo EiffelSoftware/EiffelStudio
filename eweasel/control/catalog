@@ -1392,7 +1392,7 @@ test	scoop-external-call				scoop007 tcf pass scoop multithreaded execution
 test	scoop-freeze-condition				scoop008 tcf pass scoop multithreaded execution incrementality
 test	scoop-wait-condition				scoop009 tcf pass scoop multithreaded execution assertion
 test	scoop-request-chain-exception			scoop011 tcf pass scoop multithreaded execution exception
-test	scoop-false-wait-condition			scoop012 tcf pass scoop multithreaded execution assertion exception manual
+test	scoop-false-wait-condition			scoop012 tcf manual scoop multithreaded execution assertion exception
 test	scoop-inline-separate-call			scoop013 tcf pass scoop multithreaded finalizing inlining
 test	scoop-separate-expanded				scoop014 tcf pass scoop multithreaded expanded
 test	scoop-separate-patterns-crash			scoop015 tcf pass scoop multithreaded finalizing stable attribute
@@ -1420,16 +1420,16 @@ test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreade
 test	scoop-run-time-crash				scoop037 tcf fail scoop multithreaded execution
 test	scoop-agent-creation-rule			scoop038 tcf pass scoop multithreaded agents
 test	scoop-agent-expression-uncontrolled		scoop039 tcf pass scoop multithreaded agents
-test	scoop-agent-expression-controlled	scoop040 tcf pass scoop multithreaded agents
-test	scoop-wait-condition-controlled				scoop041 tcf manual scoop multithreaded
-test	scoop-exceptions-precondition				scoop042 tcf fail scoop multithreaded exception
-test	scoop-exceptions-control-flow				scoop043 tcf fail scoop multithreaded exception
-test	scoop-exceptions-separate-callback			scoop044 tcf manual scoop multithreaded exception
+test	scoop-agent-expression-controlled		scoop040 tcf pass scoop multithreaded agents
+test	scoop-wait-condition-controlled			scoop041 tcf manual scoop multithreaded execution lock_passing assertion
+test	scoop-exceptions-precondition			scoop042 tcf fail scoop multithreaded exception
+test	scoop-exceptions-control-flow			scoop043 tcf fail scoop multithreaded exception
+test	scoop-exceptions-separate-callback		scoop044 tcf manual scoop multithreaded exception
 test	scoop-exceptions-accountability-handover	scoop045 tcf fail scoop multithreaded exception
-test	scoop-exceptions-small-tests				scoop046 tcf fail scoop multithreaded exception
-test	scoop-exceptions-import						scoop047 tcf fail scoop multithreaded exception
-test	scoop-exceptions-combinations				scoop048 tcf manual scoop multithreaded exception
-test	scoop-impersonation-lockpassing				scoop049 tcf manual scoop multithreaded deadlock lock_passing
+test	scoop-exceptions-small-tests			scoop046 tcf fail scoop multithreaded exception
+test	scoop-exceptions-import				scoop047 tcf fail scoop multithreaded exception
+test	scoop-exceptions-combinations			scoop048 tcf manual scoop multithreaded exception
+test	scoop-impersonation-lockpassing			scoop049 tcf manual scoop multithreaded deadlock lock_passing
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

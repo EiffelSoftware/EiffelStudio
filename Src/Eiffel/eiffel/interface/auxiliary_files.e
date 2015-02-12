@@ -382,8 +382,7 @@ feature -- Plug and Makefile file
 	generate_plug
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl, scoop_manager_cl: CLASS_C
-			scoop_manager_ct: CLASS_TYPE
+			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
 			arr_type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
@@ -398,7 +397,6 @@ feature -- Plug and Makefile file
 			set_exception_data_name, is_code_ignored_name: STRING
 			last_exception_name, set_last_exception_name: STRING
 			init_exception_manager_name, free_preallocated_trace_name: STRING
-			init_scoop_manager_name, scoop_manager_task_callback_name: STRING
 			once_raise_name: STRING
 			correct_mismatch_name: STRING
 			is_equal_name: STRING
@@ -423,8 +421,6 @@ feature -- Plug and Makefile file
 			l_rcrid: INTEGER
 			cs: CURSOR
 			i: INTEGER
-			arg_types: ARRAY [STRING]
-			l_is_scoop_capable: BOOLEAN
 			u: UTF_CONVERTER
 		do
 				-- Clear buffer for current generation
@@ -557,48 +553,6 @@ feature -- Plug and Makefile file
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string ("();%N")
-			end
-
-				-- Generate SCOOP Manager declarations if available
-
-			if attached system.ise_scoop_manager_class then
-				l_is_scoop_capable := True
-				scoop_manager_cl := system.ise_scoop_manager_class.compiled_class
-				id := scoop_manager_cl.types.first.type_id
-				feat := scoop_manager_cl.feature_table.item_id (Names_heap.init_scoop_manager_name_id)
-
-				init_scoop_manager_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (init_scoop_manager_name)
-				buffer.put_string ("();%N")
-
-				feat := scoop_manager_cl.feature_table.item_id (Names_heap.scoop_manager_task_callback_name_id)
-				scoop_manager_ct := scoop_manager_cl.actual_type.associated_class_type (Void)
-				scoop_manager_task_callback_name := Encoder.feature_name (id, feat.body_index).string
-				i := feat.argument_count
-				if final_mode then
-						-- Allocate space for all arguments and fill with "EIF_REFERENCE"
-						-- so that there is no need to resize array and set type of "Current".
-					create arg_types.make_filled ({C_CONST}.eif_reference, 1, i + 1)
-						-- Compute argument types.
-					if attached feat.arguments as feat_args then
-						from
-						until
-							i <= 0
-						loop
-								-- Record argument type reserving the first element for "Current".
-							arg_types [i + 1] := feat_args.i_th (i).adapted_in (scoop_manager_ct).c_type.c_string
-							i := i - 1
-						end
-					end
-				else
-						-- Fill all argument types with "EIF_TYPED_VALUE"...
-					create arg_types.make_filled ({C_CONST}.eif_typed_value, 1, i + 1)
-						-- ...except for the first one occupied by "Current".
-					arg_types [1] := {C_CONST}.eif_reference
-				end
-				buffer.generate_extern_declaration ("void", scoop_manager_task_callback_name, arg_types)
-				buffer.put_new_line
 			end
 
 				-- Make exception manager declaration
@@ -842,20 +796,22 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Initialize SCOOP Callbacks.
-			buffer.put_string ("#ifdef RTS_SCP_CAPABLE%N")
-			buffer.put_string ("%Tegc_is_scoop_capable = " + l_is_scoop_capable.to_integer.out + ";%N")
-			if init_scoop_manager_name /= Void then
-				buffer.put_string ("%Tegc_init_scoop_manager = (void (*)(EIF_REFERENCE)) ")
-				buffer.put_string (init_scoop_manager_name)
-				buffer.put_string (";%N")
+				-- Record whether the system is SCOOP-aware.
+			if system.is_scoop then
+				buffer.put_string ("[
+					#ifdef RTS_SCP_CAPABLE
+						egc_is_scoop_capable = 1;
+					#endif
+
+				]")
+			else
+				buffer.put_string ("[
+					#ifdef RTS_SCP_CAPABLE
+						egc_is_scoop_capable = 0;
+					#endif
+
+				]")
 			end
-			if scoop_manager_task_callback_name /= Void then
-				buffer.put_string ("%Tegc_scoop_manager_task_callback = ")
-				buffer.put_string (scoop_manager_task_callback_name)
-				buffer.put_string (";%N")
-			end
-			buffer.put_string ("#endif%N")
 
 				-- Pointer on `set_exception_data' of class ISE_EXCEPTION_MANAGER.
 			if set_exception_data_name /= Void then
@@ -1318,26 +1274,6 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (pointer_type.type_id (Void))
 			buffer.put_string (";%N")
 
-				-- ISE_SCOOP_MANAGER
-
-			-- Handle initialization for all cases
-			buffer.put_string ("#ifdef RTS_SCP_CAPABLE%N")
-			buffer.put_string ("#if RTS_SCP_CAPABLE == 1%N")
-			buffer.put_string ("%Tegc_scp_mngr_dtype = ")
-			if
-				system.ise_scoop_manager_class /= Void and then
-				system.ise_scoop_manager_class.is_compiled
-			then
-				buffer.put_type_id (system.scoop_manager_type_id)
-			else
-				buffer.put_string ("(EIF_TYPE_INDEX)0 - 1")
-			end
-			buffer.put_string (";%N#else%N")
-			buffer.put_string ("%Tegc_scp_mngr_dtype = (EIF_TYPE_INDEX)0 - 1")
-			buffer.put_string (";%N#endif")
-			buffer.put_string ("%N#endif%N")
-
-
 				-- Exceptions
 			if system.exception_class /= Void and then system.exception_class.is_compiled then
 				buffer.put_string ("%N%Tegc_exception_dtype = ")
@@ -1357,7 +1293,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1388,4 +1324,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class AUXILIARY_FILES
+end

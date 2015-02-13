@@ -1,4 +1,3 @@
-
 /*
 	description: "[
 			Dummy declarations for variables and routines called in the run-time but
@@ -6,7 +5,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -330,20 +329,6 @@ doc:	</attribute>
 rt_public void (*egc_init_scoop_manager)(EIF_REFERENCE) = NULL; /* {SCOOP_MANAGER}.init_scoop_manager feature */
 
 /*
-doc:	<attribute name="egc_scoop_manager_task_callback" return_type="fnptr" export="public">
-doc:		<summary>Address of Eiffel routine {ISE_SCOOP_MANAGER}.scoop_manager_task_callback.</summary>
-doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>ISE_SCOOP_MANAGER</eiffel_classes>
-doc:	</attribute>
-*/
-
-#ifdef WORKBENCH
-rt_public void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* {ISE_SCOOP_MANAGER}.scoop_manager_task_callback feature */
-#else
-rt_public void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_POINTER); /* {ISE_SCOOP_MANAGER}.scoop_manager_task_callback feature */
-#endif
-/*
 doc:	<attribute name="egc_init_exception_manager" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.init_exception_manager which is called by generated code to initialize objects beforehand.</summary>
 doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
@@ -436,9 +421,6 @@ rt_public EIF_TYPE_INDEX egc_wchar_dtype;
 rt_public EIF_TYPE_INDEX egc_point_dtype;
 rt_public EIF_TYPE_INDEX egc_except_emnger_dtype;
 rt_public EIF_TYPE_INDEX egc_exception_dtype;
-
-// By default egc_scp_mngr_dtype is left uninitialized and set via plug.
-rt_public EIF_TYPE_INDEX egc_scp_mngr_dtype;
 
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;

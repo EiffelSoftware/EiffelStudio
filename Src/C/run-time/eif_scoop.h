@@ -2,7 +2,7 @@
 	description:	"SCOOP support."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software."
+	copyright:	"Copyright (c) 2010-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -77,9 +77,10 @@ RT_LNK void eif_apply_wcall (call_data *data);
 #endif
 RT_LNK void eif_call_const (call_data * a);
 
-/* Used only by ISE_SCOOP_MANAGER. */
-RT_LNK void eif_free_call (call_data * a);
+/* Not used. TODO: remove after removing ISE_SCOOP_MANAGER. */
+#define eif_free_call(a)
 #define eif_try_call(a)
+#define eif_mark_live_pid(x)
 
 /* Request chain stack */
 
@@ -101,13 +102,9 @@ RT_LNK int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 RT_LNK int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_wait_for_all_processors(void);
 
-/* Only used by ISE_SCOOP_MANAGER. */
+/* Garbage collection */
 RT_LNK void eif_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
 RT_LNK void eif_unset_processor_id (void);	/* Dissociate processor from the current thread. */
-
-/* Garbage collection */
-/* Used by ISE_SCOOP_MANAGER and privately. */
-#define eif_mark_live_pid(x)
 
 /* Request chain operations */
 RT_LNK void eif_new_scoop_request_group (EIF_SCP_PID client_pid);

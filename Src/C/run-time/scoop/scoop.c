@@ -2,7 +2,7 @@
 	description:	"SCOOP support."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software."
+	copyright:	"Copyright (c) 2010-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -57,22 +57,6 @@ rt_public void eif_call_const (call_data * a)
 	/* Constant value is hard-coded in the generated code: nothing to do here. */
 	/* Avoid C compiler error about unreferenced parameter. */
 	(void) a;
-}
-
-rt_public void eif_free_call (call_data * a)
-{
-	EIF_NATURAL_32    i;
-	EIF_TYPED_VALUE * v;
-
-		/* Unprotect arguments from being garbage-collected. */
-	for (i = a -> count; i > 0;) {
-		v = &(a -> argument [--i]);
-		if ((v -> it_r) && (v -> type & SK_HEAD) == SK_REF) {
-			eif_unsafe_wean ((EIF_OBJECT) v -> it_r);
-		}
-	}
-		/* Free memory, allocated for `a'. */
-	eif_rt_xfree (a);
 }
 
 /* Request chain stack */

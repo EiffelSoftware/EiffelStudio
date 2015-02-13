@@ -40,13 +40,20 @@
 #pragma once
 #endif
 
+#include "eif_threads.h"
+
+#if defined(EIF_HAS_MEMORY_BARRIER) && (EIF_OS != EIF_OS_SUNOS) && !defined (__SUNPRO_CC)
+#	define EIF_IS_SCOOP_CAPABLE 1
+#else
+#	define EIF_IS_SCOOP_CAPABLE 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define RT_MAX_SCOOP_PROCESSOR_COUNT 1024 /* Maximum number of SCOOP processors, including root. */
 
-#
 
 /* Separate calls */
 

@@ -350,20 +350,6 @@ rt_private EIF_REFERENCE rt_wean(EIF_OBJECT object, struct stack *stack, struct 
 }
 
 /*
-doc:	<routine name="eif_unsafe_wean" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from hector table. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
-doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
-doc:		<return>Unprotected object.</return>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
-doc:	</routine>
-*/
-rt_public EIF_REFERENCE eif_unsafe_wean(EIF_OBJECT object)
-{
-	return rt_unsafe_wean (object, &eif_hec_saved, &eif_free_hec_stack);
-}
-
-/*
 doc:	<routine name="eif_wean" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from hector table. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
 doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>

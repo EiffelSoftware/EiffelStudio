@@ -249,7 +249,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #else
 #define eif_builtin_PLATFORM_is_thread_capable 			EIF_THREADS_SUPPORTED
 #endif
-#define eif_builtin_PLATFORM_is_scoop_capable 			EIF_TEST(egc_is_scoop_capable==1)
+#define eif_builtin_PLATFORM_is_scoop_capable 			EIF_TEST((egc_is_scoop_capable==1) && EIF_IS_SCOOP_CAPABLE)
 #define eif_builtin_PLATFORM_is_windows 				EIF_IS_WINDOWS
 #define eif_builtin_PLATFORM_is_unix 					EIF_TEST(!(EIF_IS_VMS || EIF_IS_WINDOWS))
 #define eif_builtin_PLATFORM_is_mac						EIF_TEST(EIF_OS==EIF_OS_DARWIN)

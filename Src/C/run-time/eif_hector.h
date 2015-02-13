@@ -75,7 +75,6 @@ extern int stck_nb_items_free_stack (void);
 #if defined(ISE_GC) && !defined(EIF_IL_DLL)
 RT_LNK EIF_REFERENCE eif_freeze(EIF_OBJECT object);	/* Freeze object's address (no more move) */
 RT_LNK EIF_OBJECT eif_adopt(EIF_OBJECT object);		/* The C wants to keep the reference */
-RT_LNK EIF_REFERENCE eif_unsafe_wean(EIF_OBJECT object);	/* Weans a previously adopted reference without any checks on `object' being freed already. */
 RT_LNK EIF_REFERENCE eif_wean(EIF_OBJECT object);		/* Weans a previously adopted reference */
 extern void eif_unfreeze(EIF_REFERENCE object);			/* Forget a frozen memory address */
 RT_LNK EIF_OBJECT eif_protect (EIF_REFERENCE object);		/* Low-level entry in hector table */
@@ -85,7 +84,6 @@ RT_LNK EIF_REFERENCE eif_free_weak_reference (EIF_OBJECT object);
 #else
 #define eif_freeze(object)	(object)
 #define eif_adopt(object)	(object)
-#define eif_unsafe_wean(object)	(object)
 #define eif_wean(object)	(object)
 #define eif_unfreeze(object)
 #define eif_protect(object)	(object)

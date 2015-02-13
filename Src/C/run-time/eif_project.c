@@ -319,16 +319,6 @@ doc:	</attribute>
 	rt_public int egc_is_scoop_capable = 0;
 
 /*
-doc:	<attribute name="egc_init_scoop_manager" return_type="fnptr" export="public">
-doc:		<summary>Address of Eiffel routine {SCOOP_MANAGER}.init_scoop_manager which is called by generated code to initialize objects beforehand.</summary>
-doc:		<thread_safety>Unsafe, it can only be called once during setup</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>ISE_SCOOP_MANAGER</eiffel_classes>
-doc:	</attribute>
-*/
-rt_public void (*egc_init_scoop_manager)(EIF_REFERENCE) = NULL; /* {SCOOP_MANAGER}.init_scoop_manager feature */
-
-/*
 doc:	<attribute name="egc_init_exception_manager" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.init_exception_manager which is called by generated code to initialize objects beforehand.</summary>
 doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>

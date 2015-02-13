@@ -103,7 +103,6 @@ extern "C" {
 	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
 	RT_LNK int egc_is_scoop_capable; /* PLATFORM `is_scoop_capable' feature */
-	RT_LNK void (*egc_init_scoop_manager)(EIF_REFERENCE); /* SCOOP_MANAGER `init_scoop_manager' feature */
 
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
 

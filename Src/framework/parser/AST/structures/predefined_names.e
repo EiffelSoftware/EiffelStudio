@@ -223,13 +223,11 @@ feature -- Constants
 	positive_infinity_name_id: INTEGER = 210
 	force_name_id: INTEGER = 211
 	fill_with_name_id: INTEGER = 212
-	init_scoop_manager_name_id: INTEGER = 213
-	scoop_manager_task_callback_name_id: INTEGER = 214
-	start_name_id: INTEGER = 215
-	is_default_pointer_name_id: INTEGER = 216
-	is_character_8_name_id: INTEGER = 217
-	parentheses_symbol_id: INTEGER = 218
-	new_cursor_name_id: INTEGER = 219
+	start_name_id: INTEGER = 213
+	is_default_pointer_name_id: INTEGER = 214
+	is_character_8_name_id: INTEGER = 215
+	parentheses_symbol_id: INTEGER = 216
+	new_cursor_name_id: INTEGER = 217
 
 feature -- Classification
 
@@ -251,7 +249,7 @@ feature -- Classification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

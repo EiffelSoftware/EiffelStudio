@@ -403,8 +403,6 @@ feature {NONE} -- Implementation: access
 			put ("positive_infinity") check found_item = positive_infinity_name_id end
 			put ("force") check found_item = force_name_id end
 			put ("fill_with") check found_item = fill_with_name_id end
-			put ("init_scoop_manager") check found_item = init_scoop_manager_name_id end
-			put ("scoop_manager_task_callback") check found_item = scoop_manager_task_callback_name_id end
 			put ("start") check found_item = start_name_id end
 			put ("is_default_pointer") check found_item = is_default_pointer_name_id end
 			put ("is_character_8") check found_item = is_character_8_name_id end
@@ -418,7 +416,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

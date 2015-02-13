@@ -100,6 +100,7 @@ rt_public EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 	return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
+#ifdef EIF_THREADS
 /*
 doc:	<routine name="init_scoop_root_thread" export="public">
 doc:		<summary>Initialize SCOOP-specific data if required.</summary>
@@ -116,6 +117,7 @@ rt_public void init_scoop_root_thread (void)
 		eif_set_processor_id (0);
 	}
 }
+#endif /* EIF_THREADS */
 
 /*
 doc:	<routine name="eif_sleep" export="public">

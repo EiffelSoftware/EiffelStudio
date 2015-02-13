@@ -97,8 +97,6 @@ RT_LNK EIF_REFERENCE rt_extension_obj;	/* Address of `rt_extension' object */
 
 RT_LNK EIF_REFERENCE except_mnger;	/* Address of EXCEPTION_MANAGER object */
 
-RT_LNK EIF_REFERENCE scp_mnger;
-
 /* General-purpose exported functions */
 RT_LNK void plsc(void);					/* Partial scavenging */
 RT_LNK void reclaim(void);				/* Reclaim all the objects */

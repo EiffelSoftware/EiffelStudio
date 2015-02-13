@@ -10,7 +10,20 @@ deferred class
 feature -- Error handler
 
 	error_handler: ERROR_HANDLER
+			-- Error handler.
 		deferred
+		end
+
+	has_error: BOOLEAN
+			-- Last operation reported error.
+		do
+			Result := error_handler.has_error
+		end
+
+	reset_error
+			-- Reset errors.
+		do
+			error_handler.reset
 		end
 
 feature -- Execution
@@ -29,6 +42,7 @@ feature -- Execution
 
 	sql_post_execution
 			-- Post database execution.
+			-- note: execute after each `sql_query' and `sql_change'.
 		deferred
 		end
 

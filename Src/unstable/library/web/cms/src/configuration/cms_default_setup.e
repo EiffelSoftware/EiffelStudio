@@ -134,19 +134,6 @@ feature -- Access
 			end
 		end
 
-	is_html: BOOLEAN
-			-- <Precursor>
-		do
-				-- Enable change the mode
-			Result := (create {CMS_JSON_CONFIGURATION}).is_html_mode (layout.application_config_path)
-		end
-
-	is_web: BOOLEAN
-			-- <Precursor>
-		do
-			Result := (create {CMS_JSON_CONFIGURATION}).is_web_mode (layout.application_config_path)
-		end
-
 	build_auth_engine
 		do
 			to_implement ("Not implemented authentication")

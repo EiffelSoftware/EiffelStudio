@@ -8,7 +8,6 @@ deferred class
 	CMS_REQUEST_UTIL
 
 inherit
-
 	CMS_ENCODERS
 
 	REFACTORING_HELPER
@@ -30,9 +29,23 @@ feature -- User
 		note
 			EIS: "eiffel:?class=AUTHENTICATION_FILTER&feature=execute"
 		do
-			if attached {CMS_USER} req.execution_variable ("user") as l_user then
+			if attached {CMS_USER} req.execution_variable ("_cms_active_user_") as l_user then
 				Result := l_user
 			end
+		end
+
+feature -- Change
+
+	set_current_user (req: WSF_REQUEST; a_user: detachable CMS_USER)
+			-- Set `a_user' as `current_user'.
+		do
+			if a_user = Void then
+				req.unset_execution_variable ("_cms_active_user_")
+			else
+				req.set_execution_variable ("_cms_active_user_", a_user)
+			end
+		ensure
+			user_set: current_user (req) ~ a_user
 		end
 
 feature -- Media Type

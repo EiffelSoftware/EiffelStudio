@@ -36,7 +36,6 @@ feature -- Access: router
 			-- Node router.
 		do
 			create Result.make (2)
-
 			map_uri_template_agent (Result, "/demo/", agent handle_demo (?,?,a_api))
 			map_uri_template_agent (Result, "/demo/{id}", agent handle_demo_entry (?,?,a_api))
 		end
@@ -85,11 +84,37 @@ feature -- Hooks
 
 feature -- Handler
 
+	initialize_module (a_api: CMS_API)
+		local
+			sql: STRING
+		do
+			if attached {CMS_STORAGE_SQL} a_api.storage as sql_db then
+				sql_db.sql_query ("select count(*) from tb_demo;", Void)
+				if sql_db.has_error then
+						-- Initialize db for demo module
+					sql := "[
+CREATE TABLE "tb_demo"(
+  "did" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("did">=0),
+  "name" VARCHAR(100) NOT NULL,
+  "value" TEXT
+);
+					]"
+					sql_db.reset_error
+					sql_db.sql_change (sql, Void)
+					if sql_db.has_error then
+						a_api.logger.put_error ("Could not initialize database for demo module", generating_type)
+					end
+				end
+			end
+		end
+
 	handle_demo,
 	handle_demo_entry (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: CMS_API)
 		local
 			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
 		do
+			initialize_module (a_api)
+
 			create r.make (req, res, a_api)
 			r.set_main_content ("NODE module does not yet implement %"" + req.path_info + "%" ...")
 			r.add_error_message ("NODE Module: not yet implemented")

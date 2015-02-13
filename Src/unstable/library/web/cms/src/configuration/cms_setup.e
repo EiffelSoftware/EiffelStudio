@@ -14,16 +14,6 @@ feature -- Access
 	layout: CMS_LAYOUT
 			-- CMS layout.
 
-	is_html: BOOLEAN
-			--  api with progressive enhancements css and js, server side rendering.
-		deferred
-		end
-
-	is_web: BOOLEAN
-			-- web: Web Site with progressive enhancements css and js and Ajax calls.
-		deferred
-		end
-
 	enabled_modules: CMS_MODULE_COLLECTION
 			-- List of enabled modules.
 		local
@@ -42,7 +32,7 @@ feature -- Access
 			only_enabled_modules: across Result as ic all ic.item.is_enabled end
 		end
 
-feature {CMS_MODULE} -- Restricted access
+feature {CMS_MODULE, CMS_API} -- Restricted access
 
 	modules: CMS_MODULE_COLLECTION
 			-- List of available modules.

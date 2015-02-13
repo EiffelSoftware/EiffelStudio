@@ -2,7 +2,7 @@
 	description: "Initialization of the runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1009,7 +1009,7 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 #endif
 	initprf();						/* Initialize profiler. */
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
-	init_scp_manager();				/* Initialize ISE_SCOOP_MANAGER */
+	init_scoop_root_thread ();			/* Initialize SCOOP-specific data on the root thread. */
 
 		/* Initialize our root class. */
 	eif_init_root();

@@ -69,7 +69,7 @@ RT_LNK size_t EIF_process_once_count;		/* Nr. of process-relative once routines 
 RT_LNK EIF_TYPE_INDEX scount;					/* Maximum dtype */
 RT_LNK void eif_alloc_init(void);
 
-RT_LNK void init_scp_manager(void);
+RT_LNK void init_scoop_root_thread (void);
 
 #ifdef EIF_WINDOWS
 RT_LNK void get_argcargv (int *argc, EIF_NATIVE_CHAR ***argv);

@@ -850,10 +850,6 @@ feature -- Generation
 			page.register_variable (title, "site_title")
 			page.set_is_front (is_front)
 
-				-- Variables/Setup
-			page.register_variable (setup.is_web, "web")
-			page.register_variable (setup.is_html, "html")
-
 				-- Variables/Misc
 
 -- FIXME: logo .. could be a settings of theme, managed by admin front-end/database.

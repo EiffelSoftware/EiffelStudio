@@ -46,7 +46,7 @@ feature -- HTTP Methods
 		local
 			l_page: CMS_RESPONSE
 		do
-			log.write_information(generator + ".do_get Processing basic auth logoff")
+			api.logger.put_information (generator + ".do_get Processing basic auth logoff", Void)
 			if attached req.query_parameter ("prompt") as l_prompt then
 				(create {CMS_GENERIC_RESPONSE}).new_response_unauthorized (req, res)
 			else

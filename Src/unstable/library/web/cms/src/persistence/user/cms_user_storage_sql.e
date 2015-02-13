@@ -34,7 +34,6 @@ feature -- Access: user
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_32 (1)
 			end
-			sql_post_execution
 		end
 
 	users: LIST [CMS_USER]
@@ -46,7 +45,6 @@ feature -- Access: user
 
 			from
 				sql_query (select_users, Void)
-				sql_post_execution
 				sql_start
 			until
 				sql_after
@@ -56,7 +54,6 @@ feature -- Access: user
 				end
 				sql_forth
 			end
-			sql_post_execution
 		end
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
@@ -74,7 +71,6 @@ feature -- Access: user
 			else
 				check no_more_than_one: sql_rows_count = 0 end
 			end
-			sql_post_execution
 		end
 
 	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
@@ -92,7 +88,6 @@ feature -- Access: user
 			else
 				check no_more_than_one: sql_rows_count = 0 end
 			end
-			sql_post_execution
 		end
 
 	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
@@ -110,7 +105,6 @@ feature -- Access: user
 			else
 				check no_more_than_one: sql_rows_count = 0 end
 			end
-			sql_post_execution
 		end
 
 	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
@@ -163,10 +157,8 @@ feature -- Change: user
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
 
 				sql_change (sql_insert_user, l_parameters)
-				sql_post_execution
 				if not error_handler.has_error then
 					a_user.set_id (last_inserted_user_id)
-					sql_post_execution
 				end
 				sql_commit_transaction
 			else
@@ -207,7 +199,6 @@ feature -- Change: user
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 
 				sql_change (sql_update_user, l_parameters)
-				sql_post_execution
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -251,7 +242,6 @@ feature {NONE} -- Implementation
 					Result := l_salt
 				end
 			end
-			sql_post_execution
 		end
 
 	fetch_user: detachable CMS_USER
@@ -297,7 +287,6 @@ feature {NONE} -- Implementation
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_post_execution
 		end
 
 feature {NONE} -- Sql Queries: USER

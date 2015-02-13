@@ -74,7 +74,6 @@ feature -- Factory
 --				a_storage.sql_begin_transaction
 				a_storage.sql_change (sql, Void)
 --				a_storage.sql_commit_transaction
-				a_storage.sql_post_execution
 			end
 		end
 

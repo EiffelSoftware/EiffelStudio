@@ -74,6 +74,7 @@ feature -- Query
 			check_sql_query_validity (a_sql_statement, a_params)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
 			db_handler.execute_query
+			sql_post_execution
 		end
 
 	sql_change (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
@@ -81,6 +82,7 @@ feature -- Query
 			check_sql_query_validity (a_sql_statement, a_params)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
 			db_handler.execute_change
+			sql_post_execution
 		end
 
 	sql_rows_count: INTEGER

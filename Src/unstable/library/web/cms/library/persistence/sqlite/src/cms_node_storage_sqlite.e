@@ -50,7 +50,6 @@ feature -- Access: iterator
 			log.write_information (generator + ".nodes_iterator")
 			create l_parameters.make (0)
 			sql_query (select_nodes, l_parameters)
-			sql_post_execution
 			create Result.make (db_handler, agent fetch_node)
 		end
 
@@ -69,7 +68,6 @@ feature -- Access: iterator
 			create l_query.make_from_string (select_recent_nodes)
 			sql_query (l_query, l_parameters)
 			create Result.make (db_handler, agent fetch_node)
-			sql_post_execution
 		end
 
 end

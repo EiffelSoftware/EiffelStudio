@@ -27,7 +27,6 @@ feature -- Access
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_post_execution
 		end
 
 	nodes: LIST [CMS_NODE]
@@ -40,7 +39,6 @@ feature -- Access
 
 			from
 				sql_query (select_nodes, Void)
-				sql_post_execution
 				sql_start
 			until
 				sql_after
@@ -50,7 +48,6 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_post_execution
 		end
 
 	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -68,7 +65,6 @@ feature -- Access
 				l_parameters.put (a_count, "rows")
 				l_parameters.put (a_lower, "offset")
 				sql_query (select_recent_nodes, l_parameters)
-				sql_post_execution
 				sql_start
 			until
 				sql_after
@@ -78,7 +74,6 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_post_execution
 		end
 
 	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
@@ -94,7 +89,6 @@ feature -- Access
 			if sql_rows_count = 1 then
 				Result := fetch_node
 			end
-			sql_post_execution
 		end
 
 	node_author (a_id: like {CMS_NODE}.id): detachable CMS_USER
@@ -110,7 +104,6 @@ feature -- Access
 			if sql_rows_count >= 1 then
 				Result := fetch_author
 			end
-			sql_post_execution
 		end
 
 	last_inserted_node_id: INTEGER_64
@@ -122,7 +115,6 @@ feature -- Access
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_post_execution
 		end
 
 feature -- Change: Node
@@ -151,10 +143,8 @@ feature -- Change: Node
 				l_parameters.put (0, "author")
 			end
 			sql_change (sql_insert_node, l_parameters)
-			sql_post_execution
 			if not error_handler.has_error then
 				a_node.set_id (last_inserted_node_id)
-				sql_post_execution
 			end
 		end
 
@@ -169,7 +159,6 @@ feature -- Change: Node
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "id")
 			sql_change (sql_delete_node, l_parameters)
-			sql_post_execution
 		end
 
 	update_node (a_node: CMS_NODE)
@@ -194,7 +183,6 @@ feature -- Change: Node
 				l_parameters.put (0, "author")
 			end
 			sql_change (sql_update_node, l_parameters)
-			sql_post_execution
 			if not error_handler.has_error then
 				a_node.set_modification_date (now)
 			end
@@ -213,7 +201,6 @@ feature -- Change: Node
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 			l_parameters.put (a_node_id, "nid")
 			sql_change (sql_update_node_title, l_parameters)
-			sql_post_execution
 		end
 
 	update_node_summary (a_user_id: Like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
@@ -229,7 +216,6 @@ feature -- Change: Node
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 			l_parameters.put (a_node_id, "nid")
 			sql_change (sql_update_node_summary, l_parameters)
-			sql_post_execution
 		end
 
 	update_node_content (a_user_id: Like {CMS_USER}.id;a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
@@ -245,7 +231,6 @@ feature -- Change: Node
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 			l_parameters.put (a_node_id, "nid")
 			sql_change (sql_update_node_content, l_parameters)
-			sql_post_execution
 		end
 
 feature {NONE} -- Queries

@@ -7,9 +7,7 @@ class
 	NODE_HANDLER
 
 inherit
-	CMS_HANDLER
-
-	WSF_FILTER
+	CMS_NODE_HANDLER
 
 	WSF_URI_HANDLER
 		rename
@@ -44,19 +42,18 @@ feature -- execute
 			-- Execute request handler
 		do
 			execute_methods (req, res)
-			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute request handler
 		do
-			execute_methods (req, res)
+			execute (req, res)
 		end
 
 	uri_template_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute request handler
 		do
-			execute_methods (req, res)
+			execute (req, res)
 		end
 
 feature -- HTTP Methods
@@ -70,7 +67,7 @@ feature -- HTTP Methods
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 				if
 					l_id.is_integer and then
-					attached api.node (l_id.value.to_integer_64) as l_node
+					attached node_api.node (l_id.value.to_integer_64) as l_node
 				then
 					create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
 					l_page.add_variable (l_node, "node")
@@ -94,7 +91,7 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
-						attached {CMS_NODE} api.node (l_id.value.to_integer_64) as l_node
+						attached node_api.node (l_id.value.to_integer_64) as l_node
 					then
 						if attached {WSF_STRING} req.form_parameter ("method") as l_method then
 							if l_method.is_case_insensitive_equal ("DELETE") then
@@ -113,7 +110,7 @@ feature -- HTTP Methods
 					create u_node.make ("", "", "")
 					update_node_from_data_form (req, u_node)
 					u_node.set_author (l_user)
-					api.new_node (u_node)
+					node_api.new_node (u_node)
 					(create {CMS_GENERIC_RESPONSE}).new_response_redirect (req, res, req.absolute_script_url (""))
 				end
 			else
@@ -129,11 +126,11 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
-						attached api.node (l_id.value.to_integer_64) as l_node
+						attached node_api.node (l_id.value.to_integer_64) as l_node
 					then
 						update_node_from_data_form (req, l_node)
 						l_node.set_author (l_user)
-						api.update_node (l_node)
+						node_api.update_node (l_node)
 						(create {CMS_GENERIC_RESPONSE}).new_response_redirect (req, res, req.absolute_script_url (""))
 					else
 						do_error (req, res, l_id)
@@ -153,9 +150,9 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
-						attached api.node (l_id.integer_value) as l_node
+						attached node_api.node (l_id.integer_value) as l_node
 					then
-						api.delete_node (l_node)
+						node_api.delete_node (l_node)
 						(create {CMS_GENERIC_RESPONSE}).new_response_redirect (req, res, req.absolute_script_url (""))
 					else
 						do_error (req, res, l_id)
@@ -197,10 +194,7 @@ feature {NONE} -- Node
 		do
 			if attached current_user_name (req) then
 				create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-				l_page.add_variable (setup.is_html, "html")
-				l_page.add_variable (setup.is_web, "web")
 				l_page.execute
-
 			else
 				(create {CMS_GENERIC_RESPONSE}).new_response_unauthorized (req, res)
 			end

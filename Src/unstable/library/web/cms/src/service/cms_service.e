@@ -97,7 +97,7 @@ feature -- Settings: router
 			l_api: like api
 			l_router: like router
 		do
-			log.write_debug (generator + ".setup_router")
+			api.logger.put_debug (generator + ".setup_router", Void)
 				-- Configure root of api handler.
 
 			l_router := router
@@ -120,7 +120,7 @@ feature -- Settings: router
 			l_root_handler: CMS_ROOT_HANDLER
 			l_methods: WSF_REQUEST_METHODS
 		do
-			log.write_debug (generator + ".configure_api_root")
+			api.logger.put_debug (generator + ".configure_api_root", Void)
 			create l_root_handler.make (api)
 			create l_methods
 			l_methods.enable_get
@@ -133,7 +133,7 @@ feature -- Settings: router
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
 		do
-			log.write_debug (generator + ".configure_api_file_handler")
+			api.logger.put_information (generator + ".configure_api_file_handler", Void)
 
 			create fhdl.make_hidden_with_path (setup.theme_assets_location)
 			fhdl.disable_index
@@ -172,7 +172,7 @@ feature -- Filters
 			l_module: CMS_MODULE
 			l_api: like api
 		do
-			log.write_debug (generator + ".create_filter")
+			api.logger.put_debug (generator + ".create_filter", Void)
 			l_filter := Void
 
 				-- Maintenance
@@ -211,7 +211,7 @@ feature -- Filters
 		local
 			f: WSF_FILTER
 		do
-			log.write_debug (generator + ".setup_filter")
+			api.logger.put_debug (generator + ".setup_filter", Void)
 
 			from
 				f := filter

@@ -125,6 +125,11 @@
 
 .wikipage {
 	line-height: 1.8;
+	a.wiki_link {
+		&.wiki_notfound {
+			color: red;
+		}
+	}
 	table {
 		border: solid 1px #666;
 		margin-bottom: 5px;

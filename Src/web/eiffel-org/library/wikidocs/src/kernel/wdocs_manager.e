@@ -178,6 +178,12 @@ feature -- Access
 			Result := storage.page_by_title (a_page_title, a_bookid)
 		end
 
+	page_by_link_title (a_page_link_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
+			-- Wiki page with link_title `a_page_link_title', and in book related to `a_bookid' if provided.
+		do
+			Result := page_by_metadata ("link_title", a_page_link_title, a_bookid, True)
+		end
+
 	page_by_metadata (a_metadataname, a_metadata_value: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like new_wiki_page
 		do
 			Result := storage.page_by_metadata (a_metadataname, a_metadata_value, a_bookid, is_caseless)
@@ -207,6 +213,10 @@ feature -- Access: link
 				l_book_name := book_name (a_page)
 			end
 			if attached page_by_title (a_link.name, l_book_name) as pg then
+				Result := wiki_page_uri_path (pg)
+			end
+			if Result = Void and then attached page_by_link_title (a_link.name, l_book_name) as pg then
+					-- Try to find using the `link_title' prop
 				Result := wiki_page_uri_path (pg)
 			end
 

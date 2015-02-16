@@ -38,6 +38,8 @@ feature {TEMPLATE_ROUTINES}
 					end
 				elseif l_fn.is_case_insensitive_equal ("is_front") then
 					Result := cell_of (l_page.is_front)
+				elseif l_fn.is_case_insensitive_equal ("is_https") then
+					Result := cell_of (l_page.is_https)
 				elseif l_fn.starts_with_general ("region_") then
 					l_fn.remove_head (7) -- remove "region_"
 					Result := cell_of (l_page.region (l_fn))

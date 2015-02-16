@@ -32,8 +32,8 @@
 								</ul>
 							</nav>
 							<div class="btn-holder">
-								<a class="btn-download" href="{$site_url/}/download_options">Download Now</a>
-								<a class="btn-tryonline" href="{$site_url/}/try_eiffel">Try Eiffel Online</a>
+								<a class="btn btn-download" href="{$site_url/}/download_options">Download Now</a>
+								<a class="btn btn-tryonline" href="{$site_url/}/try_eiffel">Try Eiffel Online</a>
 							</div>
 							<div class="social-holder">
 								<ul class="social-networks">

@@ -5,8 +5,42 @@
 
 /* Codeboard */
 
-.codeboard {
-  float: right;
+#block-play_eiffel {
+	position:absolute;
+	top: 48px;
+
+	pre.prettyprint {
+		@include grid-width(6);
+		padding-left:18px;
+		border: solid 1px #fff;
+		@include border-radius($front-box-radius);
+		background-color: $front-box-bg-color;
+	}
+	.holder-play{
+		width: 100%;
+		.btn-holder{
+			width: 300px;
+			padding: 0 0 16px;
+			margin: 0 0 0 2px;
+			.btn-play{
+				position: absolute;
+				top: 40px;
+				right: 10px;
+				@include linear-gradient(#2B4054, #12273A);
+				@include border-radius(4px);
+				width: 143px;
+				height: 43px;
+				display: block;
+				font: 15px/43px $museo-sans500;
+				color: $white;
+				letter-spacing: 1px;
+				text-align: center;
+				&:hover{
+					@include linear-gradient(#12273A, #0C1A26);
+				}
+			}
+		}
+	}
 }
 
 .container-codeboard {

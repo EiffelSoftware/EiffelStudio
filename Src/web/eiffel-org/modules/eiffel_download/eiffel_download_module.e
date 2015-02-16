@@ -139,7 +139,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"download_area","download_options">>
+			Result := <<"download_area", "download_options">>
 			create l_string.make_empty
 			across Result as ic loop
 				l_string.append (ic.item)
@@ -184,9 +184,9 @@ feature {NONE} -- Block view implementation
 				log.write_debug (generator + ".get_block_view with template_path:" + p.out)
 
 				if attached p.entry as e then
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
+					create l_tpl_block.make (a_block_id, Void, p.parent, e)
 				else
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
+					create l_tpl_block.make (a_block_id, Void, p.parent, p)
 				end
 
 				create vals.make (5)

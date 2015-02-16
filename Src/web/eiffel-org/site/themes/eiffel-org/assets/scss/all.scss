@@ -50,7 +50,7 @@
 }
 
 #header{
-	background: url(../images/bg-head.jpg);
+	background: #0AA694 url(../images/bg-head.jpg);
 	position: relative;
 	&:after{
 		background: url(../images/bg-head2.jpg);
@@ -82,6 +82,8 @@
 		display: inline-block;
 		vertical-align: top;
 		img{
+			color: #fff;
+			font-size: 48px;
 			vertical-align: top;
 			margin: 0 0 0 -7px;
 		}
@@ -105,8 +107,16 @@
 			vertical-align: top;
 			margin: 0 7px 0 5px;
 			position: relative;
-			&:hover > a{
+			a { 
 				color: $white;
+				padding: 2px;
+			}
+			&:hover > a{
+				color: black;
+				@include border-radius(3px);
+				padding: 2px;
+				background-color: rgba(255,255,255,0.6);
+				@include box-shadow(0 0 10px 0 rgba(17,41,53,0.25));
 			}
 		}
 		.active{
@@ -306,19 +316,22 @@
 
 
 .promo-area{
-	padding: 103px 0 20px;
-	min-height: 370px;
+	padding: 80px 0 20px;
+	min-height: 300px;
 	position: relative;
 	.social-networks{
 		position: absolute;
-		top: 14px;
+		top: 0;
 		right: 15px;
 	}
 	.holder{
-		width: 400px;
+		@include grid-width(7);
 		overflow: hidden;
 		padding: 10px 0 0 9px;
-		margin-left: 600px;
+		float: right;
+		display: inline-block;
+		clear: both;
+		margin-bottom: 15px;
 		h1{
 			font: 36px/36px $museo-sans500;
 			color: #112935;
@@ -379,73 +392,6 @@
 			}
 		}
 	}
-	.holder2{
-		width: 400px;
-		position:absolute;
-		top: 71px;
-		h1{
-			font: 36px/36px $museo-sans500;
-			color: #112935;
-			margin: 0 0 35px;
-			letter-spacing: 2px;
-		}
-		.btn-holder2{
-			width:40,347px, 0, 260px;
-			padding: 0 0 16px;
-			margin: 0 0 0 2px;
-			.row{
-				overflow: hidden;
-				color: #112935;
-				margin: 0 0 14px;
-				font: 14px/19px $museo-sans500;
-				letter-spacing: 1px;
-				text-transform: uppercase;
-				border-bottom: 1px solid #98dcd4;
-				.release{
-					float: left;
-					padding: 0 8px;
-				}
-				.date{
-					width: 96px;
-					float: right;
-					text-align: center;
-					font-style: normal;
-					border-left: 1px solid #98dcd4;
-				}
-			}
-			.btn-download2{
-				@include linear-gradient(#2B4054, #12273A);
-				@include border-radius(10px);
-				width: 143px;
-				height: 43px;
-				display: block;
-				margin: 40px 0 0 260px;
-				font: 15px/43px $museo-sans500;
-				color: $white;
-				letter-spacing: 1px;
-				text-align: center;
-				position: absolute;
-				padding: 0 7px 0 0;
-				&:after{
-					background_color:#2B4054 ;
-					width: 37px;
-					height: 37px;
-					position: absolute;
-					right: 16px;
-					top: 13px;
-				}
-				&:hover{
-					@include linear-gradient(#12273A, #12273A);
-				}
-			}
-		}
-	}
-}
-
-.holder2 .prettyprint .lang-eiffel .prettyprinted{
-			pre {
-				padding-left:18px;
-			 }
 }
 
 .promo-area .holder .btn-holder {
@@ -630,20 +576,19 @@
 	min-height: 150px;
 	.btn-holder{
 		@include grid(3);
-		.btn-download{
+		.btn {
 			@include linear-gradient(#99cc33, #769830);
 			@include border-radius(4px);
 			width: 100px;
 			height: 32px;
 			display: block;
-			margin: 0 0 0 -31px;
+			margin: 0 0 5px -31px;
 			color: $white;
 			letter-spacing: 1px;
 			position: relative;
 			padding: 7px 42px 7px 14px;
 			font: #{$base-font-size}/16px $museo-sans500;
 			&:after{
-				background: url(../images/ico-download2.png) no-repeat;
 				width: 30px;
 				height: 30px;
 				position: absolute;
@@ -651,34 +596,24 @@
 				top: 8px;
 				content: '';
 			}
-			&:hover{
-				@include linear-gradient(#89bc2b, #6a8c28);
+
+			&.btn-download{
+				@include linear-gradient(#99cc33, #769830);
+				color: $white;
+				&:after{
+					background: url(../images/ico-download2.png) no-repeat;
+				}
+				&:hover{
+					@include linear-gradient(#89bc2b, #6a8c28);
+				}
 			}
-		}
-		.btn-tryonline{
-			@include linear-gradient(#2B4054, #12273A);
-			@include border-radius(4px);
-			width: 100px;
-			height: 32px;
-			display: block;
-			margin: 5px 0 0 -31px;
-			color: $white;
-			letter-spacing: 1px;
-			position: relative;
-			padding: 7px 42px 7px 14px;
-			font: #{$base-font-size}/16px $museo-sans500;
-			&:after{
-				background: #2B4054 no-repeat;
-				background-color: #2B4054;
-				width: 30px;
-				height: 30px;
-				position: absolute;
-				right: 10px;
-				top: 8px;
-			}
-			&:hover{
-				 background-color: #12273A;
-			  	 @include linear-gradient(#12273A, #12273A);
+			&.btn-tryonline{
+				@include linear-gradient(#2B4054, #12273A);
+				color: $white;
+				&:hover{
+					 background-color: #12273A;
+					 @include linear-gradient(#12273A, #12273A);
+				}
 			}
 		}
 	}

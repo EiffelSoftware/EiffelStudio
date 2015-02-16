@@ -1,8 +1,8 @@
 {if isset="$page.region_content"}
 			  <header class="head">
-			  <div id="breadcumb">
+			  <div id="breadcrumb">
 			  		{if isset="$wiki_book_name"}
-						<span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>
+						<span class="ico"><img src="/theme/images/ico-document.png" width="21" height="21" alt="Image Description"></span>
 						<a href="{$site_url/}/book/{$wiki_book_name/}">{$wiki_book_name/}</a>
 						{if isset="$wiki_page_name"}:: {$wiki_page_name/}{/if}
 					{/if}
@@ -14,7 +14,7 @@
 {/if}
 {unless isset="$page.region_content"}
 				<header class="head">
-					<h1><span class="ico"><img src="/theme/images/ico-documnet.png" width="21" height="21" alt="Image Description"></span>Document Name</h1>
+					<h1><span class="ico"><img src="/theme/images/ico-document.png" width="21" height="21" alt="Image Description"></span>Document Name</h1>
 					<p>Detailed definitions behind all aspects of the Eiffel Language and Development Environment.</p>
 				</header>
 {/unless}

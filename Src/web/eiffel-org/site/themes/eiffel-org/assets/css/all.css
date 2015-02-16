@@ -1517,16 +1517,21 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 0 0 0px;
 }
 
+#breadcrumb {
+  margin-bottom: 10px;
+  font-size: smaller;
+}
+
 #main {
   width: 100%;
   overflow: hidden;
   position: relative;
-  padding: 58px 0;
+  padding: 48px 0;
 }
 #main:after, #main:before {
   position: absolute;
   width: 100%;
-  height: 42px;
+  height: 32px;
   content: '';
 }
 #main:after {
@@ -2186,5 +2191,3 @@ code.inline {
 .popular li:first-child img {
   top: -5px;
 }
-
-/*# sourceMappingURL=all.css.map */

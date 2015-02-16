@@ -194,7 +194,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  a_response.request.path_info ~ "/" then
+			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  a_response.request.path_info.same_string_general ("/") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					l_tpl_block.set_is_raw (True)
 					-- TODO: double check: Social Header is only included in the home page.
@@ -235,7 +235,7 @@ feature -- Hooks
 						end
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("codeboard") and then  a_response.request.path_info ~ "/" then
+			elseif a_block_id.is_case_insensitive_equal_general ("codeboard") and then  a_response.request.path_info.same_string_general ("/") then
 				if a_response.is_front then
 					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 --						a_response.add_block (l_tpl_block, "header")
@@ -245,7 +245,7 @@ feature -- Hooks
 						end
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info ~ "/launch_codeboard" then
+			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info.same_string_general ("/launch_codeboard") then
 					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -254,7 +254,7 @@ feature -- Hooks
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then  a_response.request.path_info ~ "/privacy_policy" then
+			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then  a_response.request.path_info.same_string_general ("/privacy_policy") then
 						if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 							a_response.add_block (l_tpl_block, "content")
 							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -263,7 +263,7 @@ feature -- Hooks
 								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 							end
 						end
-			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then  a_response.request.path_info ~ "/terms_of_use" then
+			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then  a_response.request.path_info.same_string_general ("/terms_of_use") then
 					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 							a_response.add_block (l_tpl_block, "content")
 							log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -272,7 +272,7 @@ feature -- Hooks
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("main") and then  a_response.request.path_info ~ "/" then
+			elseif a_block_id.is_case_insensitive_equal_general ("main") and then  a_response.request.path_info.same_string_general ("/") then
 					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)

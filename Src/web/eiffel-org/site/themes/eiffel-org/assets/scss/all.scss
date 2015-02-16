@@ -452,14 +452,19 @@
 	padding: 0 0 0px;
 }
 
+#breadcrumb {
+	margin-bottom: 10px;
+	font-size: smaller;
+}
+
 #main{
 	@include mask;
-	padding: 58px 0;
+	padding: 48px 0;
 	&:after,
 	&:before{
 		position: absolute;
 		width: 100%;
-		height: 42px;
+		height: 32px;
 		content: '';
 	}
 	&:after{

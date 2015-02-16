@@ -1,5 +1,11 @@
 Ubuntu Server 13.10 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
 
+15.01
+=====
+gcc (Ubuntu 4.9.1-16ubuntu6) 4.9.1
+15.01.9.6506 non-RA, non-MT, inlining_size = 8, full class checking (exe size = 21278448 (stripped: 17365576)):
+132.208u 5.451s 2:18.18 99.6%   0+0k 0+923696io 0pf+0w
+
 14.05
 =====
 gcc (Ubuntu/Linaro 4.8.1-10ubuntu8) 4.8.1

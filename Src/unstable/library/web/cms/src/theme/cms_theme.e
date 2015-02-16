@@ -69,7 +69,7 @@ feature -- Conversion
 				end
 				s.append (a_block.to_html (Current))
 			else
-				create s.make_from_string ("<div class=%"block%" id=%"" + a_block.name + "%">")
+				create s.make_from_string ("<div class=%"block%" id=%"block-" + a_block.name + "%">")
 				if attached a_block.title as l_title then
 					s.append ("<div class=%"title%">" + html_encoded (l_title) + "</div>")
 				end

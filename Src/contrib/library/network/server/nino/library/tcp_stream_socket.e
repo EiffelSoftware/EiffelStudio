@@ -14,7 +14,8 @@ inherit
 
 create
 	make_server_by_address_and_port,
-	make_server_by_port
+	make_server_by_port,
+	make_empty
 
 create {NETWORK_STREAM_SOCKET}
 	make_from_descriptor_and_address

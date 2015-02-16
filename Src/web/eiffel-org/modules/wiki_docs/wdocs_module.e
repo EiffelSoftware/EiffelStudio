@@ -224,22 +224,14 @@ feature -- Hooks
 						l_version_id := t
 					end
 					mng := manager (l_version_id)
-					if a_block_id.same_string_general ("wdocs-cards") then
-						if
-							a_response.request.percent_encoded_path_info.starts_with ("/learn")
-							or a_response.request.percent_encoded_path_info.same_string ("/book/")
-						then
-							a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
-						end
-					else
-						if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
-							l_book_name := t
-						end
-						if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
-							l_page_name := t
-						end
+					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
+						l_book_name := t
+					end
+					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
+						l_page_name := t
+					end
 
-						if a_block_id.same_string_general ("wdocs-tree") then
+					if a_block_id.same_string_general ("wdocs-tree") then
 -- Uncomment to avoid displaying the tree menu for /learn
 --							if
 --								a_response.request.percent_encoded_path_info.starts_with ("/learn")
@@ -247,56 +239,54 @@ feature -- Hooks
 --							then
 --									-- Do not display the tree view.
 --							else
-								m := cached_wdocs_cms_menu (l_version_id, l_book_name, mng)
-								create l_menublock.make (m)
-								a_response.add_block (l_menublock, "sidebar_first")
+							m := cached_wdocs_cms_menu (l_version_id, l_book_name, mng)
+							create l_menublock.make (m)
+							a_response.add_block (l_menublock, "sidebar_first")
 --							end
-						elseif a_block_id.same_string_general ("wdocs-cards") then
-							if
-								a_response.request.percent_encoded_path_info.same_string ("/book/")
-							then
-								a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
+					elseif a_block_id.same_string_general ("wdocs-cards") then
+						if
+							a_response.request.percent_encoded_path_info.same_string ("/book/")
+						then
+							a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
+						end
+					elseif a_block_id.same_string_general ("wdocs-page-info") then
+						if
+							l_book_name /= Void and then l_page_name /= Void and then
+							attached mng.page (l_page_name, l_book_name) as wp
+						then
+							create s.make_empty
+							s.append ("<strong>title:</strong>")
+							s.append (wp.title)
+							s.append ("%N")
+
+							s.append ("<strong>key:</strong>")
+							s.append (wp.key)
+							s.append ("%N")
+
+							s.append ("<strong>src:</strong>")
+							s.append (wp.src)
+							s.append ("%N")
+
+							if attached wp.path as l_path then
+								s.append ("<strong>path:</strong>")
+								s.append (l_path.name.as_string_8)
+								s.append ("%N")
 							end
-						elseif a_block_id.same_string_general ("wdocs-page-info") then
-							if
-								l_book_name /= Void and then l_page_name /= Void and then
-								attached mng.page (l_page_name, l_book_name) as wp
-							then
-								create s.make_empty
-								s.append ("<strong>title:</strong>")
-								s.append (wp.title)
-								s.append ("%N")
 
-								s.append ("<strong>key:</strong>")
-								s.append (wp.key)
-								s.append ("%N")
-
-								s.append ("<strong>src:</strong>")
-								s.append (wp.src)
-								s.append ("%N")
-
-								if attached wp.path as l_path then
-									s.append ("<strong>path:</strong>")
-									s.append (l_path.name.as_string_8)
-									s.append ("%N")
+							if attached mng.page_metadata (wp, Void) as l_metadata then
+								across
+									l_metadata as ic
+								loop
+									s.append_string (ic.key.as_string_8)
+									s.append_character ('=')
+									s.append_string (ic.item.as_string_8)
+									s.append_character ('%N')
 								end
-
-								if attached mng.page_metadata (wp, Void) as l_metadata then
-									across
-										l_metadata as ic
-									loop
-										s.append_string (ic.key.as_string_8)
-										s.append_character ('=')
-										s.append_string (ic.item.as_string_8)
-										s.append_character ('%N')
-									end
-								end
-								create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
-								a_response.add_block (l_content_block, "sidebar_second")
 							end
+							create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
+							a_response.add_block (l_content_block, "sidebar_second")
 						end
 					end
-				else
 				end
 			end
 		end

@@ -107,7 +107,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "codeboard", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
+			Result := <<"front_header_welcome", "social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -124,7 +124,16 @@ feature -- Hooks
 			l_path_info := a_response.request.percent_encoded_path_info
 
 				--"purpose","news","articles","blogs"
-			if a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
+			if a_block_id.is_case_insensitive_equal_general ("front_header_welcome") and then l_path_info.same_string_general ("/") then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "header")
+					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -196,7 +205,6 @@ feature -- Hooks
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  a_response.request.path_info.same_string_general ("/") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
-					l_tpl_block.set_is_raw (True)
 					-- TODO: double check: Social Header is only included in the home page.
 					a_response.add_block (l_tpl_block, "header")
 					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -235,25 +243,6 @@ feature -- Hooks
 						end
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("codeboard") and then  a_response.request.path_info.same_string_general ("/") then
-				if a_response.is_front then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
---						a_response.add_block (l_tpl_block, "header")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
-					end
-				end
-			elseif a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then  a_response.request.path_info.same_string_general ("/launch_codeboard") then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
-						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
-					end
 			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then  a_response.request.path_info.same_string_general ("/privacy_policy") then
 						if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 							a_response.add_block (l_tpl_block, "content")

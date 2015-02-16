@@ -740,8 +740,53 @@ table {
 }
 
 /* Codeboard */
-.codeboard {
-  float: right;
+#block-play_eiffel {
+  position: absolute;
+  top: 48px;
+}
+#block-play_eiffel pre.prettyprint {
+  width: 490px;
+  padding-left: 18px;
+  border: solid 1px #fff;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+#block-play_eiffel .holder-play {
+  width: 100%;
+}
+#block-play_eiffel .holder-play .btn-holder {
+  width: 300px;
+  padding: 0 0 16px;
+  margin: 0 0 0 2px;
+}
+#block-play_eiffel .holder-play .btn-holder .btn-play {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  background-color: #12273A;
+  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
+  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
+  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
+  background-image: -o-linear-gradient(top, #2B4054, #12273A);
+  background-image: linear-gradient(top, #2B4054, #12273A);
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  width: 143px;
+  height: 43px;
+  display: block;
+  font: 15px/43px "museo_sans500", Arial, Helvetica, sans-serif;
+  color: white;
+  letter-spacing: 1px;
+  text-align: center;
+}
+#block-play_eiffel .holder-play .btn-holder .btn-play:hover {
+  background-color: #0C1A26;
+  background-image: -webkit-linear-gradient(top, #12273A, #0C1A26);
+  background-image: -moz-linear-gradient(top, #12273A, #0C1A26);
+  background-image: -ms-linear-gradient(top, #12273A, #0C1A26);
+  background-image: -o-linear-gradient(top, #12273A, #0C1A26);
+  background-image: linear-gradient(top, #12273A, #0C1A26);
 }
 
 .container-codeboard {
@@ -842,6 +887,28 @@ table.download_decorator tr.highlight td {
   font-weight: bold;
 }
 
+#block-download_area .holder {
+  border: none;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  width: 490px;
+  padding: 0;
+  margin-bottom: 7px;
+}
+#block-download_area .holder .row {
+  border-bottom: 1px solid #fff;
+}
+#block-download_area .holder .btn-holder {
+  padding: 0;
+  margin-left: 0;
+  width: 100%;
+  margin-bottom: 2px;
+  border: 1px solid #fff;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
 /* Custom */
 .less.active .button-read-more {
   display: none;
@@ -875,6 +942,20 @@ a.link-platforms {
 }
 a.link-platforms:hover {
   color: black;
+}
+
+/* Welcome message */
+#block-front_header_welcome .holder {
+  width: 490px;
+  padding: 0;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+#block-front_header_welcome .holder h3 {
+  padding: 10px;
+  text-align: center;
 }
 
 #contact-form {
@@ -1090,7 +1171,7 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 #header {
-  background: url(../images/bg-head.jpg);
+  background: #0AA694 url(../images/bg-head.jpg);
   position: relative;
 }
 #header:after {
@@ -1128,6 +1209,8 @@ input.placeholder-text, textarea.placeholder-text {
   vertical-align: top;
 }
 .logo a img {
+  color: #fff;
+  font-size: 48px;
   vertical-align: top;
   margin: 0 0 0 -7px;
 }
@@ -1154,8 +1237,18 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 7px 0 5px;
   position: relative;
 }
-#nav ul li:hover > a {
+#nav ul li a {
   color: white;
+  padding: 2px;
+}
+#nav ul li:hover > a {
+  color: black;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  padding: 2px;
+  background-color: rgba(255, 255, 255, 0.6);
+  -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
+  box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
 }
 #nav ul .active a {
   color: white;
@@ -1354,20 +1447,23 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 .promo-area {
-  padding: 103px 0 20px;
-  min-height: 370px;
+  padding: 80px 0 20px;
+  min-height: 300px;
   position: relative;
 }
 .promo-area .social-networks {
   position: absolute;
-  top: 14px;
+  top: 0;
   right: 15px;
 }
 .promo-area .holder {
-  width: 400px;
+  width: 575px;
   overflow: hidden;
   padding: 10px 0 0 9px;
-  margin-left: 600px;
+  float: right;
+  display: inline-block;
+  clear: both;
+  margin-bottom: 15px;
 }
 .promo-area .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
@@ -1438,82 +1534,6 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -ms-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
-}
-.promo-area .holder2 {
-  width: 400px;
-  position: absolute;
-  top: 71px;
-}
-.promo-area .holder2 h1 {
-  font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
-  color: #112935;
-  margin: 0 0 35px;
-  letter-spacing: 2px;
-}
-.promo-area .holder2 .btn-holder2 {
-  width: 40,347px, 0, 260px;
-  padding: 0 0 16px;
-  margin: 0 0 0 2px;
-}
-.promo-area .holder2 .btn-holder2 .row {
-  overflow: hidden;
-  color: #112935;
-  margin: 0 0 14px;
-  font: 14px/19px "museo_sans500", Arial, Helvetica, sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-bottom: 1px solid #98dcd4;
-}
-.promo-area .holder2 .btn-holder2 .row .release {
-  float: left;
-  padding: 0 8px;
-}
-.promo-area .holder2 .btn-holder2 .row .date {
-  width: 96px;
-  float: right;
-  text-align: center;
-  font-style: normal;
-  border-left: 1px solid #98dcd4;
-}
-.promo-area .holder2 .btn-holder2 .btn-download2 {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
-  background-image: -moz-linear-gradient(top, #2B4054, #12273A);
-  background-image: -ms-linear-gradient(top, #2B4054, #12273A);
-  background-image: -o-linear-gradient(top, #2B4054, #12273A);
-  background-image: linear-gradient(top, #2B4054, #12273A);
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  width: 143px;
-  height: 43px;
-  display: block;
-  margin: 40px 0 0 260px;
-  font: 15px/43px "museo_sans500", Arial, Helvetica, sans-serif;
-  color: white;
-  letter-spacing: 1px;
-  text-align: center;
-  position: absolute;
-  padding: 0 7px 0 0;
-}
-.promo-area .holder2 .btn-holder2 .btn-download2:after {
-  background_color: #2B4054;
-  width: 37px;
-  height: 37px;
-  position: absolute;
-  right: 16px;
-  top: 13px;
-}
-.promo-area .holder2 .btn-holder2 .btn-download2:hover {
-  background-color: #12273A;
-  background-image: -webkit-linear-gradient(top, #12273A, #12273A);
-  background-image: -moz-linear-gradient(top, #12273A, #12273A);
-  background-image: -ms-linear-gradient(top, #12273A, #12273A);
-  background-image: -o-linear-gradient(top, #12273A, #12273A);
-  background-image: linear-gradient(top, #12273A, #12273A);
-}
-
-.holder2 .prettyprint .lang-eiffel .prettyprinted pre {
-  padding-left: 18px;
 }
 
 .promo-area .holder .btn-holder {
@@ -1730,7 +1750,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 235px;
 }
-.footer-holder .btn-holder .btn-download {
+.footer-holder .btn-holder .btn {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
   background-image: -moz-linear-gradient(top, #99cc33, #769830);
@@ -1742,15 +1762,14 @@ input.placeholder-text, textarea.placeholder-text {
   width: 100px;
   height: 32px;
   display: block;
-  margin: 0 0 0 -31px;
+  margin: 0 0 5px -31px;
   color: white;
   letter-spacing: 1px;
   position: relative;
   padding: 7px 42px 7px 14px;
   font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-.footer-holder .btn-holder .btn-download:after {
-  background: url(../images/ico-download2.png) no-repeat;
+.footer-holder .btn-holder .btn:after {
   width: 30px;
   height: 30px;
   position: absolute;
@@ -1758,7 +1777,19 @@ input.placeholder-text, textarea.placeholder-text {
   top: 8px;
   content: '';
 }
-.footer-holder .btn-holder .btn-download:hover {
+.footer-holder .btn-holder .btn.btn-download {
+  background-color: #769830;
+  background-image: -webkit-linear-gradient(top, #99cc33, #769830);
+  background-image: -moz-linear-gradient(top, #99cc33, #769830);
+  background-image: -ms-linear-gradient(top, #99cc33, #769830);
+  background-image: -o-linear-gradient(top, #99cc33, #769830);
+  background-image: linear-gradient(top, #99cc33, #769830);
+  color: white;
+}
+.footer-holder .btn-holder .btn.btn-download:after {
+  background: url(../images/ico-download2.png) no-repeat;
+}
+.footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: -moz-linear-gradient(top, #89bc2b, #6a8c28);
@@ -1766,35 +1797,16 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
-.footer-holder .btn-holder .btn-tryonline {
+.footer-holder .btn-holder .btn.btn-tryonline {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
   background-image: -moz-linear-gradient(top, #2B4054, #12273A);
   background-image: -ms-linear-gradient(top, #2B4054, #12273A);
   background-image: -o-linear-gradient(top, #2B4054, #12273A);
   background-image: linear-gradient(top, #2B4054, #12273A);
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  width: 100px;
-  height: 32px;
-  display: block;
-  margin: 5px 0 0 -31px;
   color: white;
-  letter-spacing: 1px;
-  position: relative;
-  padding: 7px 42px 7px 14px;
-  font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-.footer-holder .btn-holder .btn-tryonline:after {
-  background: #2B4054 no-repeat;
-  background-color: #2B4054;
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  right: 10px;
-  top: 8px;
-}
-.footer-holder .btn-holder .btn-tryonline:hover {
+.footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #12273A, #12273A);

@@ -46,3 +46,25 @@ table.download_decorator {
 	}
 }
 
+#block-download_area {
+	.holder {
+		border: none;
+		@include border-radius($front-box-radius);
+		@include grid-width(6);
+		padding: 0;
+		margin-bottom: 7px;
+		.row {
+			border-bottom: 1px solid #fff;
+		}
+		.btn-holder {
+			padding: 0;
+			margin-left: 0;
+			width: 100%;
+			margin-bottom: 2px;
+			border: 1px solid #fff;
+			@include border-radius($front-box-radius);
+			background-color: $front-box-bg-color;
+		}
+	}
+}
+

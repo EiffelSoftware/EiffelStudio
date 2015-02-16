@@ -36,3 +36,18 @@ a.link-platforms {
 	  color: black;
   }
 }  
+
+/* Welcome message */
+#block-front_header_welcome {
+	.holder {
+		@include grid-width(6);
+		padding: 0;
+		@include border-radius($front-box-radius);
+		border: 1px solid #fff;
+		background-color: $front-box-bg-color;
+		h3 {
+			padding: 10px;
+			text-align: center;
+		}
+	}
+}

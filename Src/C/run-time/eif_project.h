@@ -153,6 +153,9 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
 	RT_LNK EIF_TYPE_INDEX egc_exception_dtype; /* Dynamic type of EXCEPTION. Could not be initialized if not exist. */
 
+/* To remove when 15.05 is about to be released. */
+	RT_LNK EIF_TYPE_INDEX egc_scp_mngr_dtype; /* Dynamic type of SCOOP_MANAGER */
+
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */
 	RT_LNK const struct cnode *egc_fsystem;		/* Describes the full frozen Eiffel system */

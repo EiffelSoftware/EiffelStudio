@@ -844,11 +844,13 @@ feature -- Generation
 				-- Variables
 			page.register_variable (request.absolute_script_url (""), "site_url")
 			page.register_variable (request.absolute_script_url (""), "host") -- Same as `site_url'.
+			page.register_variable (request.is_https, "is_https")
 			if attached current_user_name (request) as l_user then
 				page.register_variable (l_user, "user")
 			end
 			page.register_variable (title, "site_title")
 			page.set_is_front (is_front)
+			page.set_is_https (request.is_https)
 
 				-- Variables/Misc
 

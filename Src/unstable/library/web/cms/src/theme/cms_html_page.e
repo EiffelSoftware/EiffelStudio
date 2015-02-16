@@ -40,6 +40,8 @@ feature -- Access
 
 	is_front: BOOLEAN
 
+	is_https: BOOLEAN
+
 	title: detachable READABLE_STRING_32
 
 	language: STRING
@@ -94,6 +96,12 @@ feature -- Element change
 			-- Set `is_front' to `b'.
 		do
 			is_front := b
+		end
+
+	set_is_https (b: BOOLEAN)
+			-- Set `is_https' to `b'.
+		do
+			is_https := b
 		end
 
 	register_variable (a_value: detachable ANY; k: READABLE_STRING_GENERAL)

@@ -34,17 +34,12 @@ feature
 		end
 
 	close_socket
-			--
+			-- Close the underlying C socket.
 		do
-			if not is_closed then
-				if is_created then
-					c_close (fd, fd1)
-				end
-				is_closed := True
+			if not is_closed and then is_created then
+				c_close (fd, fd1)
 			end
-			descriptor_available := False
-			is_open_read := False
-			is_open_write := False
+			set_closed
 		end
 
 	descriptor: INTEGER
@@ -239,6 +234,15 @@ feature {NONE} -- Implementation
 				descriptor_available := True
 				set_blocking
 			end
+		end
+
+	set_closed
+			-- Update all internal state to indicate that the C socket is closed.
+		do
+			is_closed := True
+			descriptor_available := False
+			is_open_read := False
+			is_open_write := False
 		end
 
 	shutdown

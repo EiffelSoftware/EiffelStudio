@@ -653,7 +653,7 @@ feature -- Handler
 				else
 					l_title := pg.title
 				end
-				r.set_title (l_title)
+				r.set_title (Void)
 				r.values.force (l_title, "wiki_page_name")
 				append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
 

@@ -463,6 +463,9 @@ table {
 .wikipage {
   line-height: 1.8;
 }
+.wikipage a.wiki_link.wiki_notfound {
+  color: red;
+}
 .wikipage table {
   border: solid 1px #666;
   margin-bottom: 5px;

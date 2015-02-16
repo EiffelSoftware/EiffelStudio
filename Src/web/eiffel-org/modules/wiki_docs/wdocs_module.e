@@ -202,7 +202,7 @@ feature -- Hooks
 		do
 			Result := <<"wdocs-tree", "wdocs-cards">>
 			debug ("wdocs")
-				Result := <<"wdocs-tree", "wdocs-cards", "wdocs-page-info">>
+				Result := <<"wdocs-tree", "wdocs-page-info", "wdocs-cards">>
 			end
 		end
 
@@ -253,8 +253,7 @@ feature -- Hooks
 --							end
 						elseif a_block_id.same_string_general ("wdocs-cards") then
 							if
-								a_response.request.percent_encoded_path_info.starts_with ("/learn")
-								or a_response.request.percent_encoded_path_info.same_string ("/book/")
+								a_response.request.percent_encoded_path_info.same_string ("/book/")
 							then
 								a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
 							end

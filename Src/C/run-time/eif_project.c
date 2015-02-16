@@ -412,6 +412,9 @@ rt_public EIF_TYPE_INDEX egc_point_dtype;
 rt_public EIF_TYPE_INDEX egc_except_emnger_dtype;
 rt_public EIF_TYPE_INDEX egc_exception_dtype;
 
+/* To remove when 15.05 is about to be released. */
+rt_public EIF_TYPE_INDEX egc_scp_mngr_dtype;
+
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;
 rt_public const struct cnode *egc_fsystem;	

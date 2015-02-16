@@ -87,7 +87,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_peer_address (addr: attached like address): BOOLEAN
+	is_valid_peer_address (addr: attached separate like address): BOOLEAN
 			-- Is `addr' a valid peer address?
 		require
 			address_exists: addr /= Void
@@ -224,15 +224,30 @@ feature -- Basic commands
 			for_typing_only: False
 		end
 
-	set_peer_address (addr: like address)
+	set_peer_address (addr: separate like address)
 			-- Set peer address to `addr'.
 		require
 			address_exists: addr /= Void
 			address_valid: is_valid_peer_address (addr)
 		do
-			peer_address := addr
+				-- We may have to import a separate object, as we can't handle them.
+			if attached {like address} addr as l_addr then
+
+					-- Address is non-separate, no need to import it.
+				peer_address := l_addr
+
+			elseif attached addr then
+
+					-- Address is a separate object. Create a local copy.
+				create peer_address.make_from_separate (addr)
+
+			else
+					-- `addr' is Void. This should not happen according to the precondition.
+				peer_address := Void
+			end
 		ensure
-			address_set: peer_address = addr
+			separate_address_object_equal: not attached {like address} addr implies peer_address ~ addr
+			nonseparate_address_reference_equal: attached {like address} addr implies peer_address = addr
 		end
 
 	set_address (addr: like address)
@@ -1104,7 +1119,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -128,7 +128,7 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: attached like address): BOOLEAN
+	is_valid_peer_address (addr: attached separate like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
@@ -307,16 +307,17 @@ feature {NONE} -- Externals
 invariant
 
 	timeout_set: timeout > 0
+	correct_exist: not is_created implies is_closed and not exists
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

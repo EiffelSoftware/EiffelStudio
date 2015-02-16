@@ -33,25 +33,38 @@ inherit
 		end
 
 create
-	make, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_loopback_server_by_port
+	make, make_empty, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_loopback_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
 	make_from_descriptor_and_address, create_from_descriptor
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make
-			-- Create a network stream socket.
+	make_empty
+			-- Initialize an empty {NETWORK_STREAM_SOCKET}.
+			-- The object does not have a C socket.
 		do
 			is_closed := True
 			c_reset_error
 			family := af_inet
 			type := sock_stream;
 			create last_string.make_empty
-			make_socket
 			timeout := default_timeout
 		ensure
 			timeout_set_to_default: timeout = default_timeout
+			no_socket_created: not is_created
+		end
+
+feature -- Initialization
+
+	make
+			-- Create a network stream socket.
+		do
+			make_empty
+			make_socket
+		ensure
+			timeout_set_to_default: timeout = default_timeout
+			socket_created: is_created
 		end
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING)
@@ -106,14 +119,22 @@ feature -- Initialization
 
 feature {NETWORK_STREAM_SOCKET} -- Initialization
 
-	make_from_descriptor_and_address (a_fd: INTEGER; a_address: attached like address)
+	make_from_descriptor_and_address (a_fd: INTEGER; a_address: attached separate like address)
 		require
 			a_fd_positive: a_fd > 0
 			a_address_positive: a_address /= Void
+		local
+			l_address: attached like address
 		do
+			if attached {like address} a_address as non_separate_address then
+				l_address := non_separate_address
+			else
+				create l_address.make_from_separate (a_address)
+			end
+
 			fd := a_fd
-			address := a_address
-			family := a_address.family
+			address := l_address
+			family := l_address.family
 			descriptor_available := True
 			is_closed := False
 			is_created := True
@@ -122,7 +143,8 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			timeout := default_timeout
 			create last_string.make_empty
 		ensure
-			address_set: address = a_address
+			address_set: address ~ a_address
+			address_equal: attached {like address} a_address implies address = a_address
 			family_valid: family = a_address.family;
 			opened_all: is_open_write and is_open_read
 		end
@@ -173,41 +195,37 @@ feature
 			end
 		end
 
+	accept_to (other: separate NETWORK_STREAM_SOCKET)
+			-- Accept a new connection on listen socket.
+			-- Socket of accepted connection is available in `other'.
+		require
+			not_created: not other.is_created
+		do
+			if attached address as l_address then
+				do_accept (other, l_address)
+			else
+					-- Per inherited assertion
+				check address_attached: False end
+			end
+		end
+
 	accept
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		local
-			retried: BOOLEAN
-			pass_address: like address
-			return: INTEGER;
-			l_last_fd: like fd
 			l_accepted: like accepted
 		do
-			if not retried then
+			if attached address as l_address then
 				accepted := Void
-					-- Per inherited assertion
-				check address_attached: attached address as l_address then
-					pass_address := l_address.twin
-					l_last_fd := last_fd
-					return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
-					last_fd := l_last_fd
-					if return > 0 then
-						create l_accepted.make_from_descriptor_and_address (return, l_address.twin);
-						l_accepted.set_peer_address (pass_address)
-							-- We preserve the blocking state specified on Current.
-						if is_blocking then
-							l_accepted.set_blocking
-						else
-							l_accepted.set_non_blocking
-						end
-						accepted := l_accepted
-					end
+				create l_accepted.make_empty
+				do_accept (l_accepted, l_address.twin)
+
+				if l_accepted.is_created then
+					accepted := l_accepted
 				end
-			end
-		rescue
-			if not assertion_violation then
-				retried := True
-				retry
+			else
+					-- Per inherited assertion
+				check address_attached: False end
 			end
 		end
 
@@ -375,6 +393,41 @@ feature {NONE} -- Implementation
 			is_created := True
 		end
 
+	do_accept (other: separate NETWORK_STREAM_SOCKET; l_address: attached like address)
+			-- Accept a new connection.
+			-- The new socket is stored in `other'.
+			-- If the accept fails, `other.is_created' is still False.
+		require
+			not_created: not other.is_created
+		local
+			retried: BOOLEAN
+			pass_address: like address
+			return: INTEGER;
+			l_last_fd: like fd
+		do
+			if not retried then
+				pass_address := l_address.twin
+				l_last_fd := last_fd
+				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
+				last_fd := l_last_fd
+				if return > 0 then
+					other.make_from_descriptor_and_address (return, l_address);
+					other.set_peer_address (pass_address)
+						-- We preserve the blocking state specified on Current.
+					if is_blocking then
+						other.set_blocking
+					else
+						other.set_non_blocking
+					end
+				end
+			end
+		rescue
+			if not assertion_violation then
+				retried := True
+				retry
+			end
+		end
+
 feature {NONE} -- Externals
 
 	c_create (a_fd, a_fd1: TYPED_POINTER [INTEGER])
@@ -434,7 +487,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

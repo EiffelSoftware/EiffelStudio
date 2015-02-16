@@ -691,11 +691,7 @@ feature -- Handler
 			l_version_id, l_bookid, l_wiki_uuid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
 			pg: detachable like {WDOCS_MANAGER}.page
-			r: CMS_RESPONSE
-			s: STRING
-			l_title: detachable READABLE_STRING_8
 		do
-
 			l_wiki_uuid := wikipage_uuid (req, Void)
 			l_version_id := version_id (req, Void)
 			l_bookid := book_id (req, Void)

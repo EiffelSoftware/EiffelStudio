@@ -145,6 +145,13 @@ feature -- Access
 			end
 		end
 
+feature -- Visitor
+
+	project (a_projector: EV_MODEL_DRAWING_ROUTINES)
+			-- Project `Current' onto `a_projector'.
+		deferred
+		end
+
 feature -- Element change
 
 	set_x (a_x: INTEGER)
@@ -1050,7 +1057,7 @@ invariant
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

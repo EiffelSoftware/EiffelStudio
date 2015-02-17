@@ -134,6 +134,14 @@ feature -- Element Change
 			invalidate
 		end
 
+feature -- Visitor
+
+	project (a_projector: EV_MODEL_DRAWING_ROUTINES)
+			-- <Precursor>
+		do
+			a_projector.draw_figure_line (Current)
+		end
+
 feature -- Events
 
 	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
@@ -233,14 +241,14 @@ invariant
 	thrid_point_is_point_b: point_array.item (1).x = point_b_x and point_array.item (1).y = point_b_y
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

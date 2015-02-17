@@ -1549,12 +1549,12 @@ input.placeholder-text, textarea.placeholder-text {
   width: 100%;
   overflow: hidden;
   position: relative;
-  padding: 48px 0;
+  padding: 28px 0;
 }
 #main:after, #main:before {
   position: absolute;
   width: 100%;
-  height: 32px;
+  height: 22px;
   content: '';
 }
 #main:after {
@@ -1898,7 +1898,7 @@ input.placeholder-text, textarea.placeholder-text {
   overflow: hidden;
   color: #13a69a;
   padding: 0 50px 0 0;
-  margin: 0 0 28px;
+  margin: 0 0 5px;
 }
 #content .head h1 {
   margin: 0 0 -1px;
@@ -2062,7 +2062,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 235px;
   padding: 0;
-  margin: 0 2px 0 2px;
+  margin: 0px 2px 0 2px;
 }
 #sidebar .holder {
   padding: 5px;

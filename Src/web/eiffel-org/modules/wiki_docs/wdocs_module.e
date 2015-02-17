@@ -239,8 +239,9 @@ feature -- Hooks
 --							then
 --									-- Do not display the tree view.
 --							else
-							m := cached_wdocs_cms_menu (l_version_id, l_book_name, mng)
+							m := cached_wdocs_cms_menu ("Documentation", l_version_id, l_book_name, mng)
 							create l_menublock.make (m)
+							l_menublock.set_title (Void)
 							a_response.add_block (l_menublock, "sidebar_first")
 --							end
 					elseif a_block_id.same_string_general ("wdocs-cards") then
@@ -348,7 +349,7 @@ feature -- Hooks
 			end
 		end
 
-	cached_wdocs_cms_menu (a_version_id, a_book_name: detachable READABLE_STRING_GENERAL; mng: WDOCS_MANAGER): CMS_MENU
+	cached_wdocs_cms_menu (a_menu_title: detachable READABLE_STRING_32; a_version_id, a_book_name: detachable READABLE_STRING_GENERAL; mng: WDOCS_MANAGER): CMS_MENU
 		local
 			c: WDOCS_FILE_OBJECT_CACHE [CMS_MENU]
 			p: PATH
@@ -368,12 +369,12 @@ feature -- Hooks
 			if attached c.item as l_menu then
 				Result := l_menu
 			else
-				Result := wdocs_cms_menu (a_version_id, a_book_name, Void, True, mng)
+				Result := wdocs_cms_menu (a_menu_title, a_version_id, a_book_name, Void, True, mng)
 				c.put (Result)
 			end
 		end
 
-	wdocs_cms_menu (a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_MENU
+	wdocs_cms_menu (a_menu_title: detachable READABLE_STRING_32; a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_MENU
 			-- CMS Menu for wdocs books (version `a_version_id', with `a_book_name':`a_page_name' optionally selected.
 		local
 			ln: CMS_LOCAL_LINK
@@ -381,7 +382,11 @@ feature -- Hooks
 			wb: detachable WIKI_BOOK
 			l_parent: detachable WIKI_PAGE
 		do
-			create Result.make_with_title ("wdocs-tree", "Documentation", 3)
+			if a_menu_title /= Void then
+				create Result.make_with_title ("wdocs-tree", a_menu_title, 3)
+			else
+				create Result.make ("wdocs-tree", 3)
+			end
 			if is_full then
 				across
 					mng.book_names as ic

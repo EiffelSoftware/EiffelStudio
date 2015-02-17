@@ -351,6 +351,7 @@ table {
 /* WDOCS nav tree */
 #wdocs-tree.menu {
   border: solid 1px #ccc;
+  border-top: none;
   background-color: #fff;
   color: #112935;
   padding: 0;
@@ -442,13 +443,9 @@ table {
   color: #3498db;
 }
 #wdocs-tree.menu li.active {
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
   font-weight: bold;
-  border-left: dotted 1px #ccc;
-  border-top: dotted 1px #ccc;
-  border-bottom: dotted 1px #ccc;
-  border-right: solid 4px #ccc;
+  border-right: solid 2px #3498db;
+  background-color: rgba(240, 240, 255, 0.6);
 }
 #wdocs-tree.menu li.active li {
   font-weight: normal;
@@ -505,7 +502,7 @@ table {
 .wikipage .wdocs-nav {
   border-top: solid 1px #999;
   color: #5082D9;
-  background-color: #ddd;
+  background-color: rgba(220, 220, 220, 0.7);
 }
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
@@ -751,6 +748,7 @@ table {
   -webkit-border-radius: 6px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.75);
+  height: 266px;
 }
 #block-play_eiffel .holder-play {
   width: 100%;
@@ -889,11 +887,11 @@ table.download_decorator tr.highlight td {
 
 #block-download_area .holder {
   border: none;
+  height: 150px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
   width: 490px;
   padding: 0;
-  margin-bottom: 7px;
 }
 #block-download_area .holder .row {
   border-bottom: 1px solid #fff;
@@ -952,6 +950,7 @@ a.link-platforms:hover {
   border-radius: 6px;
   border: 1px solid #fff;
   background-color: rgba(255, 255, 255, 0.75);
+  height: 115px;
 }
 #block-front_header_welcome .holder h3 {
   padding: 10px;
@@ -2056,16 +2055,19 @@ input.placeholder-text, textarea.placeholder-text {
 
 /* #content */
 #sidebar {
+  border: none;
   display: inline;
   float: left;
   margin-left: 10px;
   margin-right: 10px;
   width: 235px;
   padding: 0;
+  position: relative;
+  top: -12px;
   margin: 0px 2px 0 2px;
 }
 #sidebar .holder {
-  padding: 5px;
+  padding: 0 5px 5px 5px;
 }
 #sidebar div.title, #sidebar h2 {
   color: #99cc33;

@@ -852,11 +852,14 @@
 } /* #content */
 
 #sidebar{
+	border: none;
 	@include grid(3);
 	padding: 0;
+	position: relative;
+	top: -12px;
 	margin: 0px 2px 0 2px;
 	.holder{
-		padding: 5px;
+		padding: 0 5px 5px 5px;
 	}
 	div.title, h2{
 		color: $green-light;

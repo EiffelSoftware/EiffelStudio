@@ -45,6 +45,7 @@ a.link-platforms {
 		@include border-radius($front-box-radius);
 		border: 1px solid #fff;
 		background-color: $front-box-bg-color;
+		height: 115px;
 		h3 {
 			padding: 10px;
 			text-align: center;

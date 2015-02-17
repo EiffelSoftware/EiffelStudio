@@ -8,6 +8,7 @@
 
 #wdocs-tree.menu {
 	border: solid 1px $wdocs-border-color;
+	border-top: none;
 	background-color: $wdocs-bg-color;
 	color: $wdocs-color;
 	padding: 0;
@@ -104,12 +105,10 @@
 	}
 
 	li.active {
-		@include border-radius(5px);
 		font-weight: bold;
-		border-left: dotted 1px $wdocs-border-color;
-		border-top: dotted 1px $wdocs-border-color;
-		border-bottom: dotted 1px $wdocs-border-color;
-		border-right: solid 4px $wdocs-border-color;
+		//border-left: dotted 1px $wdocs-link-h-color;
+		border-right: solid 2px $wdocs-link-h-color;
+		background-color: $wdocs-link-active-bg-color;
 	}
 	li.active li {
 		font-weight: normal;

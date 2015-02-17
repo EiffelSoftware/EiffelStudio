@@ -49,10 +49,10 @@ table.download_decorator {
 #block-download_area {
 	.holder {
 		border: none;
+		height: 150px;
 		@include border-radius($front-box-radius);
 		@include grid-width(6);
 		padding: 0;
-		margin-bottom: 7px;
 		.row {
 			border-bottom: 1px solid #fff;
 		}

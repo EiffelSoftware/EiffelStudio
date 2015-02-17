@@ -32,7 +32,7 @@
 					{if condition="False"}	
 						{unless isempty="$page.region_sidebar_second"}{assign name="has_second_sidebar" expression="$true_value"/}{/unless}
 					{/if}
-					<div id="content" class="{$l_css_classes/}{if condition="$has_first_sidebar ~ $true_value"} with-first-sidebar{/if}{if condition="$has_second_sidebar ~ $true_value"} with-second-sidebar{/if}">
+					<div id="content" class="{$l_css_classes/}{if condition="$has_first_sidebar ~ $true_value"} with-first-sidebar{/if}{if condition="$has_second_sidebar ~ $true_value"} with-second-sidebar{/if}" itemtype="http://schema.org/Article" itemscope="">
 						<a name="main-content"><!-- Internal anchor to top content --></a>
 						<div class="holder">
 						{unless isempty="$page_title"}<h1 id="page-title" class="title">{$page_title/}</h1>{/unless}

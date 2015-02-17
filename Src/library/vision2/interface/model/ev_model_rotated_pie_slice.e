@@ -13,7 +13,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	EV_MODEL_CLOSED
 		undefine
 			point_count,
@@ -43,7 +43,15 @@ feature -- Access
 
 	aperture: DOUBLE
 			-- Angle that defines percentage of arc.
-			
+
+feature -- Visitor
+
+	project (a_projector: EV_MODEL_DRAWING_ROUTINES)
+			-- <Precursor>
+		do
+			a_projector.draw_figure_rotated_pie_slice (Current)
+		end
+
 feature -- Element change
 
 	set_start_angle (a_start_angle: DOUBLE)
@@ -84,25 +92,25 @@ feature -- Events
 			l_angle: like angle
 		do
 			if aperture /= 0.0 then
-				
+
 				l_point_array := point_array
-				
+
 				p0 := l_point_array.item (0)
 				p1 := l_point_array.item (1)
 				p2 := l_point_array.item (2)
 				p3 := l_point_array.item (3)
-			
+
 				p0x := p0.x_precise
 				p0y := p0.y_precise
-			
+
 				cx := (p0x + p2.x_precise) / 2
 				cy := (p0y + p2.y_precise) / 2
-				
+
 				r1 := distance (p0x, p0y, p1.x_precise, p1.y_precise) / 2
 				r2 := distance (p0x, p0y, p3.x_precise, p3.y_precise) / 2
-				
+
 				l_angle := angle
-				
+
 				an_angle := pi_times_two - line_angle (cx, cy, a_x * cosine (l_angle) - a_y * sine (l_angle), a_x * sine (l_angle) + a_y * cosine (l_angle))
 				end_angle := modulo (start_angle + aperture, pi_times_two)
 				if start_angle < end_angle then
@@ -113,7 +121,7 @@ feature -- Events
 				Result := point_on_rotated_ellipse (a_x, a_y, cx, cy, r1, r2, l_angle) --and angle_inside
 			else
 				Result := False
-			end	
+			end
 		end
 
 invariant
@@ -121,14 +129,14 @@ invariant
 	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

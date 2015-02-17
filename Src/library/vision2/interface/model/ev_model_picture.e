@@ -130,6 +130,14 @@ feature -- Status report
 	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 
+feature -- Visitor
+
+	project (a_projector: EV_MODEL_DRAWING_ROUTINES)
+			-- <Precursor>
+		do
+			a_projector.draw_figure_picture (Current)
+		end
+
 feature -- Status setting
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
@@ -252,14 +260,14 @@ invariant
 	pixmap_exists: pixmap /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

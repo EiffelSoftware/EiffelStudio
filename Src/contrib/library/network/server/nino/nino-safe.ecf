@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="nino" uuid="32C1D67D-33DE-4F1E-864B-D45388F2E3E6" library_target="nino">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="nino" uuid="32C1D67D-33DE-4F1E-864B-D45388F2E3E6" library_target="nino">
 	<target name="nino">
 		<root all_classes="true"/>
 		<file_rule>
@@ -15,6 +15,21 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<cluster name="nino" location=".\library\" recursive="true"/>
+		<cluster name="nino" location=".\library\" recursive="true">
+			<file_rule>
+				<exclude>spec</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>tcp_stream_socket.e</exclude>
+				<condition>
+					<version type="compiler" max="15.02"/>
+				</condition>
+			</file_rule>
+		</cluster>
+		<cluster name="spec_before_15_01" location=".\library\spec\before_15_01\" recursive="true">
+			<condition>
+				<version type="compiler" max="15.02"/>
+			</condition>
+		</cluster>
 	</target>
 </system>

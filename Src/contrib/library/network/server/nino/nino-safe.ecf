@@ -20,7 +20,7 @@
 				<exclude>spec</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>tcp_stream_socket.e</exclude>
+				<exclude>/tcp_stream_socket.e$</exclude>
 				<condition>
 					<version type="compiler" max="15.02"/>
 				</condition>

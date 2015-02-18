@@ -15,6 +15,21 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<cluster name="nino" location=".\library\" recursive="true"/>
+		<cluster name="nino" location=".\library\" recursive="true">
+			<file_rule>
+				<exclude>spec</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>tcp_stream_socket.e</exclude>
+				<condition>
+					<version type="compiler" max="15.02"/>
+				</condition>
+			</file_rule>
+		</cluster>
+		<cluster name="spec_before_15_01" location=".\library\spec\before_15_01\" recursive="true">
+			<condition>
+				<version type="compiler" max="15.02"/>
+			</condition>
+		</cluster>
 	</target>
 </system>

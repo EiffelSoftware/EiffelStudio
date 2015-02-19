@@ -266,7 +266,9 @@ feature -- Basic operation
 		ensure
 			selection_set: a_start_pos /= a_end_pos = has_selection
 			caret_set: (a_start_pos = a_end_pos) implies caret_position = a_start_pos
-			selection_bounds_set: start_selection = a_start_pos and end_selection = a_end_pos
+			selection_bounds_set: (a_start_pos <= a_end_pos implies
+				(start_selection = a_start_pos and end_selection = a_end_pos)) or
+				(start_selection = a_end_pos and end_selection = a_start_pos)
 		end
 
 	select_all
@@ -396,9 +398,9 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
-	
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -190,6 +190,25 @@ feature -- Test routines
 				end)
 		end
 
+	test_text_invert_selection
+			-- Test showing that performing a reverse selection works.
+		note
+			testing: "execution/isolated"
+		local
+			txt: EV_TEXT
+			rtxt: EV_RICH_TEXT
+		do
+			create txt
+			txt.set_text ("12345")
+			txt.set_selection (4, 2)
+			assert ("Good selection", txt.selected_text.same_string_general ("23"))
+
+			create rtxt
+			rtxt.set_text ("12345")
+			rtxt.set_selection (4, 2)
+			assert ("Good selection", rtxt.selected_text.same_string_general ("23"))
+		end
+
 feature -- Unicode selection
 
 	test_unicode_selection_ev_text
@@ -543,7 +562,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

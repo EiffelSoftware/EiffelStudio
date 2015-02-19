@@ -202,11 +202,15 @@ feature -- Test routines
 			txt.set_text ("12345")
 			txt.set_selection (4, 2)
 			assert ("Good selection", txt.selected_text.same_string_general ("23"))
+			txt.select_region (4, 2)
+			assert ("Good selection", txt.selected_text.same_string_general ("3"))
 
 			create rtxt
 			rtxt.set_text ("12345")
 			rtxt.set_selection (4, 2)
 			assert ("Good selection", rtxt.selected_text.same_string_general ("23"))
+			rtxt.select_region (4, 2)
+			assert ("Good selection", rtxt.selected_text.same_string_general ("3"))
 		end
 
 feature -- Unicode selection

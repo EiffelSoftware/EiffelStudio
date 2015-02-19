@@ -199,18 +199,18 @@ feature -- Test routines
 			rtxt: EV_RICH_TEXT
 		do
 			create txt
-			txt.set_text ("12345")
+			txt.set_text ("1234567890")
 			txt.set_selection (4, 2)
 			assert ("Good selection", txt.selected_text.same_string_general ("23"))
-			txt.select_region (4, 2)
-			assert ("Good selection", txt.selected_text.same_string_general ("3"))
+			txt.select_region (6, 2)
+			assert ("Good selection", txt.selected_text.same_string_general ("345"))
 
 			create rtxt
-			rtxt.set_text ("12345")
+			rtxt.set_text ("1234567890")
 			rtxt.set_selection (4, 2)
 			assert ("Good selection", rtxt.selected_text.same_string_general ("23"))
-			rtxt.select_region (4, 2)
-			assert ("Good selection", rtxt.selected_text.same_string_general ("3"))
+			rtxt.select_region (6, 2)
+			assert ("Good selection", rtxt.selected_text.same_string_general ("345"))
 		end
 
 feature -- Unicode selection

@@ -2,8 +2,8 @@
 	description:	"SCOOP support."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
-				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+	copyright:	"Copyright (c) 2014-2015, Eiffel Software.",
+			"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -41,15 +41,13 @@
 #include "mpmc.hpp"
 #include "processor.hpp"
 
-#define MAX_PROCS 1024
-
 class pid_set
 {
 public:
   pid_set()
   {
     size_ = 0;
-    for (int i = 0; i < MAX_PROCS; i++)
+    for (int i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++)
       {
 	proc_set [i] = false;
       }
@@ -86,7 +84,7 @@ public:
 
 private:
   atomic_size_t_type size_;
-  atomic_bool_type proc_set [MAX_PROCS];
+  atomic_bool_type proc_set [RT_MAX_SCOOP_PROCESSOR_COUNT];
 };
 
 
@@ -112,7 +110,7 @@ public:
   void wait_for_all();
 
 private:
-  processor* procs[MAX_PROCS];
+  processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
   pid_set used_pids;
   mpmc_bounded_queue<EIF_SCP_PID> free_pids;
 

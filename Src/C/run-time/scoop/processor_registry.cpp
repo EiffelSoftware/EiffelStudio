@@ -51,13 +51,13 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 processor_registry registry;
 
 processor_registry::processor_registry () :
-	free_pids (MAX_PROCS)
+	free_pids (RT_MAX_SCOOP_PROCESSOR_COUNT)
 {
-	for (EIF_SCP_PID i = 1; i < MAX_PROCS; i++) {
+	for (EIF_SCP_PID i = 1; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		free_pids.enqueue (i);
 	}
 
-	for (EIF_SCP_PID i = 0; i < MAX_PROCS; i++) {
+	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		procs [i] = NULL;
 	}
 
@@ -144,7 +144,7 @@ void processor_registry::return_processor (processor *proc)
 /* GC activities */
 void processor_registry::enumerate_live ()
 {
-	for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
+	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		if (used_pids.has (i)) {
 			processor* proc = (*this) [i];
 		
@@ -161,7 +161,7 @@ void processor_registry::mark_all (MARKER marking)
 	bool f = false;
 
 	if (is_marking.compare_exchange_strong(f, true)) {
-		for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
+		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 			if (used_pids.has (i)) {
 				processor *proc = (*this) [i];
 				proc->mark (marking);
@@ -189,7 +189,7 @@ void processor_registry::unmark (EIF_SCP_PID pid)
 
 void processor_registry::clear_from_caches (processor *proc)
 {
-	for (EIF_SCP_PID i = 0; i < MAX_PROCS ; i++) {
+	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		if (used_pids.has (i)) {
 			procs[i]->cache.clear (proc);
 		}

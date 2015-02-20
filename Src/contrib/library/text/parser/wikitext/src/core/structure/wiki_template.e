@@ -48,7 +48,6 @@ feature -- Access
 			c: CHARACTER
 			l_stack: ARRAYED_STACK [READABLE_STRING_8]
 			l_split_positions: ARRAYED_LIST [INTEGER]
-			s: READABLE_STRING_8
 		do
 			if attached parameters_text as l_params then
 				create Result.make (0)
@@ -108,19 +107,17 @@ feature -- Access
 						i := i + 1
 					end
 					if l_split_positions.is_empty then
-						s := l_params
-						Result.force (s, "1")
+						record_parameter_text_into (l_params, Result)
 					else
 						from
 							i := 1
-							l_split_positions.force (n) -- so that last parameter is included.
+							l_split_positions.force (n + 1) -- so that last parameter is included.
 							l_split_positions.start
 						until
 							i > n or l_split_positions.after
 						loop
 							j := l_split_positions.item
-							s := l_params.substring (i, j - 1)
-							Result.force (s, (Result.count + 1).out)
+							record_parameter_text_into (l_params.substring (i, j - 1), Result)
 							l_split_positions.forth
 							i := j + 1
 						end
@@ -198,6 +195,28 @@ feature -- Element change
 			expression := a_exp
 		end
 
+feature {NONE} -- Implementation
+
+	record_parameter_text_into (a_param_text: READABLE_STRING_8; a_table: STRING_TABLE [READABLE_STRING_8])
+		local
+			k,v: STRING
+			pos: INTEGER
+		do
+			pos := a_param_text.index_of ('=', 1)
+			if pos > 0 then
+				k := a_param_text.substring (1, pos - 1)
+				k.left_adjust
+				k.right_adjust
+				v := a_param_text.substring (pos + 1, a_param_text.count)
+				v.left_adjust
+				v.right_adjust
+			else
+				k := (a_table.count + 1).out
+				v := a_param_text
+			end
+			a_table.force (v, k)
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -214,7 +233,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

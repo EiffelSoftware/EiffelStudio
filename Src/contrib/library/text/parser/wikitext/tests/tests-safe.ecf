@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="tests" uuid="194F452E-9FE8-4E59-8C91-B1BE4BBC3113">
+	<target name="tests">
+		<root class="ANY" feature="default_create"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="wikitext" location="..\wikitext-safe.ecf" readonly="false"/>
+		<tests name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

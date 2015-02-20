@@ -591,20 +591,30 @@ feature -- Links
 
 	visit_link (a_link: WIKI_LINK)
 		local
-			l_url: detachable READABLE_STRING_8
+			l_css_class: STRING
 		do
+			create l_css_class.make_from_string ("wiki_link")
 			if
 				attached link_resolver as r and then
-				attached r.wiki_url (a_link, current_page) as u
+				attached r.wiki_url (a_link, current_page) as l_url
 			then
-				l_url := u
+				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
+				a_link.text.process (Current)
+				output ("</a>")
 			else
-				l_url := a_link.name
+				visit_missing_link (a_link)
 			end
-			debug
---				output ("#" + l_url + "#")
-			end
-			output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
+		end
+
+	visit_missing_link (a_link: WIKI_LINK)
+		local
+			l_url: detachable READABLE_STRING_8
+			l_css_class: STRING
+		do
+			create l_css_class.make_from_string ("wiki_link")
+			l_url := a_link.name
+			l_css_class.append (" wiki_notfound")
+			output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
 			a_link.text.process (Current)
 			output ("</a>")
 		end

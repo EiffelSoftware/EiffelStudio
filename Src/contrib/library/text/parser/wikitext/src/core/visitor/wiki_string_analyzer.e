@@ -69,22 +69,28 @@ feature -- Processing
 				inspect c
 				when '{' then
 					if safe_character (a_text, i + 1) = '{' then
-							-- Wiki Template
-						p := next_closing_template (a_text, i + 2)
-						if p > i then
-							if in_items.is_empty then
-								flush_buffer (a_parts, s)
-								create {WIKI_TEMPLATE} w_item.make (a_text.substring (i, p + 2))
-								a_parts.add_element (w_item)
-								w_item.process (Current) -- Check recursion...							
-								w_item := Void
+						if safe_character (a_text, i + 2).is_alpha_numeric then
+								-- Wiki Template
+							p := next_closing_template (a_text, i + 2)
+							if p > i then
+								if in_items.is_empty then
+									flush_buffer (a_parts, s)
+									create {WIKI_TEMPLATE} w_item.make (a_text.substring (i, p + 2))
+									a_parts.add_element (w_item)
+									w_item.process (Current) -- Check recursion...							
+									w_item := Void
+								else
+									s.append (a_text.substring (i, p + 2))
+								end
+								i := p + 2
 							else
-								s.append (a_text.substring (i, p + 2))
+								--| Ignore this one ..
+								s.extend (c)
 							end
-							i := p + 2
 						else
-							--| Ignore this one ..
 							s.extend (c)
+							i := i + 1
+							s.extend ('{')
 						end
 					elseif safe_character (a_text, i + 1) = '|' then
 							-- Wiki Table
@@ -377,7 +383,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

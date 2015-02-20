@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			is_created := True
 		end
 
-	do_accept (other: separate NETWORK_STREAM_SOCKET; l_address: attached like address)
+	do_accept (other: separate NETWORK_STREAM_SOCKET; a_address: attached like address)
 			-- Accept a new connection.
 			-- The new socket is stored in `other'.
 			-- If the accept fails, `other.is_created' is still False.
@@ -406,12 +406,12 @@ feature {NONE} -- Implementation
 			l_last_fd: like fd
 		do
 			if not retried then
-				pass_address := l_address.twin
+				pass_address := a_address.twin
 				l_last_fd := last_fd
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
 				last_fd := l_last_fd
 				if return > 0 then
-					other.make_from_descriptor_and_address (return, l_address);
+					other.make_from_descriptor_and_address (return, a_address);
 					other.set_peer_address (pass_address)
 						-- We preserve the blocking state specified on Current.
 					if is_blocking then

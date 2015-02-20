@@ -847,6 +847,9 @@ feature {EV_MODEL, EV_MODEL_PROJECTOR, EV_MODEL_PROJECTION_ROUTINES} -- Access
 
 	draw_id: INTEGER
 			-- Used to look up drawing routine.
+			-- Obsolete. This is nor marked obsolete because this would cause some warnings
+			-- during the compilation of Vision.
+			-- This is not used anymore. Redefine `project' to perform projections.
 
 	last_update_rectangle: detachable EV_RECTANGLE note option: stable attribute end
 			-- Last calculated bounding box when validate was called.
@@ -1009,6 +1012,9 @@ feature {NONE} -- Implementation
 
 	draw_id_counter: CELL [INTEGER]
 			-- Last assigned `draw_id'.
+			-- Obsolete. This is nor marked obsolete because this would cause some warnings
+			-- during the compilation of Vision.
+			-- This is not used anymore. Redefine `project' to perform projections.
 		once
 			create Result.put (1)
 		ensure
@@ -1018,11 +1024,17 @@ feature {NONE} -- Implementation
 	known_draw_ids: HASH_TABLE [INTEGER, STRING]
 			-- Table of assigned `draw_id's, hashed by the
 			-- generated types of EV_FIGURE descendants.
+			-- Obsolete. This is nor marked obsolete because this would cause some warnings
+			-- during the compilation of Vision.
+			-- This is not used anymore. Redefine `project' to perform projections.
 		once
 			create Result.make (20)
 		end
 
 	assign_draw_id
+			-- Obsolete. This is nor marked obsolete because this would cause some warnings
+			-- during the compilation of Vision.
+			-- This is not used anymore. Redefine `project' to perform projections.
 		do
 			known_draw_ids.search (generator)
 			draw_id := known_draw_ids.found_item

@@ -29,11 +29,12 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 		do
 			make_with_drawable (a_drawable)
+				-- This is only for letting users who have defined their own figure to still be 
+				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			widget := a_widget
 			project_agent := agent project
-			register_basic_figures
 			area_x := 0
 			area_y := 0
 
@@ -659,7 +660,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

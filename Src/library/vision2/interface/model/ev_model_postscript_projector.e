@@ -48,11 +48,12 @@ feature {NONE} -- Initialization
 			a_world_not_void: a_world /= Void
 			a_path_not_void: a_path /= Void
 		do
+				-- This is only for letting users who have defined their own figure to still be 
+				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			create drawable
 			filename := a_path
-			register_basic_figures
 			drawable.set_margins (default_left_margin, default_bottom_margin)
 			drawable.set_page_size (Letter, False)
 		end
@@ -131,7 +132,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

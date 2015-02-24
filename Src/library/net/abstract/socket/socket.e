@@ -290,7 +290,19 @@ feature -- Output
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		do
-			c_put_stream (descriptor, p.item + start_pos, nb_bytes)
+			put_pointer_content (p.item, start_pos, nb_bytes)
+		end
+
+	put_separate_managed_pointer (a_pointer: separate MANAGED_POINTER; start_pos, a_byte_count: INTEGER)
+			-- Put data of length `a_byte_count' pointed by `start_pos' index in `a_pointer' at
+			-- current position.
+		require
+			pointer_not_void: a_pointer /= Void
+			large_enough: a_pointer.count >= a_byte_count + start_pos
+			byte_count_non_negative: a_byte_count >= 0
+			extendible: extendible
+		do
+			put_pointer_content (a_pointer.item, start_pos, a_byte_count)
 		end
 
 	put_character, putchar (c: CHARACTER)
@@ -657,23 +669,24 @@ feature -- Input
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
-		local
-			l_read: INTEGER
-			l_last_read: INTEGER
 		do
-			from
-				l_last_read := 1
-			until
-				l_read = nb_bytes or l_last_read <= 0
-			loop
-				l_last_read := c_read_stream (descriptor, nb_bytes - l_read,
-					p.item + start_pos + l_read)
-				if l_last_read >= 0 then
-					l_read := l_read + l_last_read
-				end
-			end
-			bytes_read := l_read
+			read_into_pointer (p.item, start_pos, nb_bytes)
 		end
+
+	read_to_separate_managed_pointer (a_pointer: separate MANAGED_POINTER; start_pos, a_byte_count: INTEGER)
+			-- Read at most `a_byte_count' bound bytes and make result
+			-- available in `a_pointer' at position `start_pos'.
+		require
+			pointer_not_void: a_pointer /= Void
+			large_enough: a_pointer.count >= a_byte_count + start_pos
+			byte_count_non_negative: a_byte_count >= 0
+			is_readable: readable
+		do
+			read_into_pointer (a_pointer.item, start_pos, a_byte_count)
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= a_byte_count
+		end
+
 
 	read_line, readline
 			-- Read a line of characters (ended by a new_line).
@@ -986,6 +999,44 @@ feature {NONE} -- Implementation
 
 	socket_error: detachable STRING
 			-- Error description in case of an error.
+
+	read_into_pointer (p: POINTER; start_pos, nb_bytes: INTEGER_32)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+		require
+			p_not_void: p /= default_pointer
+			nb_bytes_non_negative: nb_bytes >= 0
+			is_readable: readable
+		local
+			l_read: INTEGER_32
+			l_last_read: INTEGER_32
+		do
+			from
+				l_last_read := 1
+			until
+				l_read = nb_bytes or l_last_read <= 0
+			loop
+				l_last_read := c_read_stream (descriptor, nb_bytes - l_read, p + start_pos + l_read)
+				if l_last_read >= 0 then
+					l_read := l_read + l_last_read
+				end
+			end
+			bytes_read := l_read
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= nb_bytes
+		end
+
+	put_pointer_content (a_pointer: POINTER; a_offset, a_byte_count: INTEGER)
+			-- Write `a_byte_count' bytes to the socket.
+			-- The data is taken from the memory area pointed to by `a_pointer', at offset `a_offset'.
+		require
+			pointer_not_void: a_pointer /= default_pointer
+			byte_count_non_negative: a_byte_count >= 0
+			extendible: extendible
+		do
+			c_put_stream (descriptor, a_pointer + a_offset, a_byte_count)
+		end
+
 
 	shutdown
 		deferred

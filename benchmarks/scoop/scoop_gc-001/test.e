@@ -55,11 +55,11 @@ feature {NONE} -- GC data
 			i: like data.count
 		do
 			from
-				i := 100_000
+				i := 1_000_000
 			until
 				i <= 0
 			loop
-				d.extend (Void)
+				d.put_front (Void)
 				i := i - 1
 			end
 		end

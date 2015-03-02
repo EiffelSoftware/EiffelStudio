@@ -58,15 +58,15 @@ rt_public void evpush(va_alist)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 int n;				/* Number of elements to be pushed */
-	register2 char **top;			/* The current top of the stack */
+	int n;				/* Number of elements to be pushed */
+	char **top;			/* The current top of the stack */
 #ifdef EIF_WINDOWS
 	va_list ap;			/* The variable argument list */
 #else
-	register3 va_list ap;			/* The variable argument list */
+	va_list ap;			/* The variable argument list */
 #endif
-	register4 int i;				/* Number of slots until end of chunk */
-	register5 struct stack *stk;	/* The local stack pointer */
+	int i;				/* Number of slots until end of chunk */
+	struct stack *stk;	/* The local stack pointer */
 
 #ifndef I_STDARG
 	va_start(ap);
@@ -128,7 +128,7 @@ rt_public void evpush(va_alist)
 				}
 				top = stk->st_top;				/* Update new top */
 			} else {							/* Go to next chunk */
-				register5 struct stchunk *c;	/* New current chunk */
+				struct stchunk *c;	/* New current chunk */
 				c = stk->st_cur = stk->st_cur->sk_next;
 				top = stk->st_top = c->sk_arena;
 				stk->st_end = c->sk_end;

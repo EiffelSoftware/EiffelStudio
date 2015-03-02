@@ -65,21 +65,21 @@ rt_private int c_size;				/* Amount of memory used by C objects */
 rt_private int mefree;				/* Memory listed in Eiffel free list */
 rt_private int mcfree;				/* Memory listed in C free list */
 
-rt_private void check_chunk(register5 char *, register6 char *, int);
-rt_private void check_free_list(register1 union overhead *);
+rt_private void check_chunk(char *, char *, int);
+rt_private void check_free_list(union overhead *);
 rt_private void check_flags(char *, char *);
 rt_private void check_ref(char *);
 
-rt_private void check_free_list(register1 union overhead *next)
+rt_private void check_free_list(union overhead *next)
 {
 	/* Make sure free block is in the free list */
 	EIF_GET_CONTEXT
 			
-	register2 uint32 i;					/* Hashing list */
-	register3 union overhead *p;		/* To walk along free list */
-	register4 union overhead **hlist;	/* The free list */
-	register5 union overhead **blist;	/* Associated buffer cache */
-	register6 uint32 r;					/* For size hashing */
+	uint32 i;					/* Hashing list */
+	union overhead *p;		/* To walk along free list */
+	union overhead **hlist;	/* The free list */
+	union overhead **blist;	/* Associated buffer cache */
+	uint32 r;					/* For size hashing */
 	int notfound = 0;					/* Assume block found */
 
 	/* First compute the hashing list from the size information */
@@ -339,17 +339,17 @@ rt_public void memck(unsigned int max_dt)
 	fflush(stdout);				/* Make sure we always see messages */
 }
 
-rt_private void check_chunk(register5 char *chunk, register6 char *arena, int type)
+rt_private void check_chunk(char *chunk, char *arena, int type)
 		/* A struct chunk or struct sc_zone */
 		/* Arena were objects are stored */
 		/* Type is either CHUNK_T or ZONE_T */
 {
 	/* Consistency checks on the chunk's contents */
 	EIF_GET_CONTEXT
-	register1 union overhead *zone;		/* Malloc info zone */
-	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end;				/* First address beyond chunk */
-	register4 uint32 flags;				/* Eiffel flags */
+	union overhead *zone;		/* Malloc info zone */
+	uint32 size;				/* Object's size in bytes */
+	char *end;				/* First address beyond chunk */
+	uint32 flags;				/* Eiffel flags */
 
 	switch (type) {
 	case CHUNK_T:
@@ -594,16 +594,16 @@ rt_private void check_obj(char *object)
 }
 
 
-rt_private void inspect_chunk(register char *chunk, register char *arena, int type)
+rt_private void inspect_chunk(char *chunk, char *arena, int type)
 					  		/* A struct chunk or struct sc_zone */
 					  		/* Arena were objects are stored */
 		 					/* Type is either CHUNK_T or ZONE_T */
 {
 	/* Consistency checks on the chunk's contents */
 
-	register1 union overhead *zone;		/* Malloc info zone */
-	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end = (char *) 0;				/* First address beyond chunk */
+	union overhead *zone;		/* Malloc info zone */
+	uint32 size;				/* Object's size in bytes */
+	char *end = (char *) 0;				/* First address beyond chunk */
 
 	switch (type) {
 	case CHUNK_T:

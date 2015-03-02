@@ -1311,7 +1311,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * Macros for SCOOP 
  */
 
-// Define RTS_SCP_CAPABLE for use by eplug to determine whether SCOOP can be initialized.
+/* Define RTS_SCP_CAPABLE for use by eplug to determine whether SCOOP can be initialized. */
 #ifndef RTS_SCP_CAPABLE
 #ifdef EIF_THREADS
 #define RTS_SCP_CAPABLE 1 
@@ -1376,9 +1376,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTS_OU(c,o) ((o) && eif_is_uncontrolled (RTS_PID (c), RTS_PID (o)))
 
-#define EIF_SET_ACTIVE(o) ; //  "SCOOP/Qs: set_active not implemented" o;
-#define EIF_SET_PASSIVE(o) ; //  "SCOOP/Qs: set_passive not implemented" o;
-#define EIF_IS_PASSIVE(o) 0 // "SCOOP/Qs: is_passive not implemented" o;
+#define EIF_SET_ACTIVE(o) ; /*  "SCOOP/Qs: set_active not implemented" o; */
+#define EIF_SET_PASSIVE(o) ; /*  "SCOOP/Qs: set_passive not implemented" o; */
+#define EIF_IS_PASSIVE(o) 0 /* "SCOOP/Qs: is_passive not implemented" o; */
 
 /*
  * Processor:

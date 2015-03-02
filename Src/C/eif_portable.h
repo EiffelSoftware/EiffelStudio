@@ -46,14 +46,14 @@
 #define __NEW_STARLET 1		/* define prototypes for VMS system (sys$) and library (lib$) functions */
 #define _POSIX_EXIT 1		/* use POSIX-1 semantics for exit() */
 #define _SOCKADDR_LEN 1		/* enables 4.4BSD- and and XPG4 V2-compatible socket interfaces */
-//#define _POSIX_C_SOURCE 2 
-//#define _XOPEN_SOURCE 
-//#define _XOPEN_SOURCE_EXTENDED 
-//#define _LARGEFILE		/* enable use of 64-bit file offsets */
+/* #define _POSIX_C_SOURCE 2 */
+/* #define _XOPEN_SOURCE */
+/* #define _XOPEN_SOURCE_EXTENDED */
+/* #define _LARGEFILE */		/* enable use of 64-bit file offsets */
 #define USE_VMS_JACKETS 1	/* force use of VMS Porting Library, aka "The Jackets" */
 #ifdef USE_VMS_JACKETS  	/* if using VMS Porting Library ("The Jackets") */
 #define GENERIC_MOTIF_REDEFINES
-//#define GENERIC_PTHREAD_REDEFINES
+/* #define GENERIC_PTHREAD_REDEFINES */
 #include <vms_jackets.h>	/* VMS Porting Library jackets */
 #undef fork /* remove VMS_JACKETS #define fork vfork */
 #endif /* USE_VMS_JACKETS */

@@ -90,17 +90,16 @@ feature -- Handle HTML pages
 			end
 		end
 
-
-
 feature -- Workflow
 
 	start_workflow (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- /download
-			--In our database (or somewhere else), we have a few things to check:
-			--email is already associated to a membership user, we simply add a new interaction stating he downloaded EiffelStudio
-			--email is not already associated to a membership user, but there is a Contact entry, we do like the above and add a new interaction
-			--email is not in our database, we create a Contact user and add the interaction
-			--Once this is done, we associated a unique URL to the Contact and send that link to the user. In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
+			-- In our database (or somewhere else), we have a few things to check:
+			-- email is already associated to a membership user, we simply add a new interaction stating he downloaded EiffelStudio
+			-- email is not already associated to a membership user, but there is a Contact entry, we do like the above and add a new interaction
+			-- email is not in our database, we create a Contact user and add the interaction
+			-- Once this is done, we associated a unique URL to the Contact and send that link to the user.
+			-- In this Eiffel, we will also have links to Eiffel resources such as videos, documentation, etc (ex: How to install video, How to create your first Eiffel application ….)
 		local
 			l_form: DOWNLOAD_FORM
 			l_token: STRING
@@ -185,15 +184,8 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							if l_service.is_available then
-								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								bad_request (req, res, "")
-							else
-								log.write_debug (generator + ".process_workflow The service unavailable")
-								send_internal_server_error ("Database service unavailable")
-								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
-							end
+							log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
+							generate_new_token (req, res, l_info)
 						end
 					elseif l_service.is_contact (email) then
 						log.write_debug (generator + ".process_workflow:" + email +  " Contact")
@@ -203,15 +195,8 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-							if l_service.is_available then
-								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								bad_request (req, res, "")
-							else
-								log.write_debug (generator + ".process_workflow The database service is unavailable")
-								send_internal_server_error ("Database service unavailable")
-								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
-							end
+							log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
+							generate_new_token (req, res, l_info)
 						end
 					else
 						check
@@ -225,15 +210,8 @@ feature -- Workflow
 							enterprise_download_options (req, res, link (platform))
 							send_email_download_notification (l_info)
 						else
-						    if l_service.is_available then
-								log.write_debug (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								send_bad_request (generator + ".process_workflow:" + email +  " Download not active using token:" + l_token.value )
-								bad_request (req, res, "")
-							else
-								log.write_debug (generator + ".process_workflow: The database service is unavailable")
-								send_internal_server_error ("Database service unavailable")
-								internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
-							end
+						  	log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
+							generate_new_token (req, res, l_info)
 						end
 					end
 				else
@@ -255,6 +233,54 @@ feature -- Workflow
 		end
 
 
+feature -- {none}
+
+	generate_new_token (req: WSF_REQUEST; res: WSF_RESPONSE; a_info: DOWNLOAD_INFORMATION)
+			-- Generate a new token and send an email.
+		local
+			l_form: DOWNLOAD_FORM
+			l_token: STRING
+			l_security: SECURITY_PROVIDER
+			l_encode: URL_ENCODER
+		do
+			if
+				attached database_service as l_service and then
+				l_service.is_available  and then
+				attached a_info.first_name as l_fn and then
+				attached a_info.last_name as l_ln and then
+				attached a_info.email as l_email and then
+				attached a_info.platform as l_platform
+			then
+
+				create l_security
+				l_token := l_security.token
+				create l_encode
+				from until l_token.same_string (l_encode.encoded_string (l_token)) loop
+					-- Loop ensure that we have a security token that does not contain characters that need encoding.
+				    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
+					-- but the user will need to use an unencoded token if activation has to be done manually.
+					l_token := l_security.token
+				end
+
+				log.write_debug (generator + ".generate_new_token:" + l_email +  " using token:" + l_token )
+
+					-- Fill form
+				create l_form
+				l_form.set_first_name (l_fn)
+				l_form.set_last_name (l_ln)
+				l_form.set_email (l_email)
+				l_form.set_platform (l_platform)
+
+				l_service.initialize_download (l_token, l_form)
+				send_email (req, l_form, l_token, req.absolute_script_url (""))
+				not_active_request (req, res, "")
+			else
+				log.write_debug (generator + ".process_workflow The service unavailable")
+				send_internal_server_error ("Database service unavailable")
+				internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+			end
+		end
+
 feature -- Response
 
 	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
@@ -266,6 +292,19 @@ feature -- Response
 	bad_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
 		local
 			l_hp: HTML_400
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (layout.html_template_path, req.absolute_script_url (""))
+				if attached l_hp.representation as l_html_400 then
+					compute_response_400 (req, res, l_html_400)
+				end
+			end
+		end
+
+
+	not_active_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
+		local
+			l_hp: HTML_NOT_ACTIVE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (layout.html_template_path, req.absolute_script_url (""))

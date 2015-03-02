@@ -30,6 +30,47 @@
 				<a href="https://twitter.com/intent/tweet?button_hashtag=eiffel&hashtags=eiffel,programming,ide,programming,softwaredevelopment,softwareengineering&text=Just%20downloaded%20EiffelStudio.%20You%20should%20too.&url=http%3A%2F%2Fwww.eiffel.com%2Fdownload" target="_blank">Tweet to let your friends know!</a>
 			</p>
 
+			{assign name="win" value="windows"/}
+			{assign name="linux" value="linux"/}
+			{assign name="mac" value="mac"/}
+			{if condition="$selected_platform.os_family ~ $win"}
+				To following videos will help guide you through the installation process and beyond:
+              <ol>
+				<li><a href="https://www.youtube.com/watch?v=18Xo5pMo-A4">Downloading and installing EiffelStudio on Windows</a></li>
+				<li><a href="https://www.youtube.com/watch?v=UL8O6DNkvu0">Activating EiffelStudio on Windows</a></li>
+				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+			  </ol>	
+			{/if}
+
+
+			{if condition="$selected_platform.os_family ~ $linux"}
+				To following videos will help guide you through the installation process and beyond:
+              <ol>
+				<li><a href="https://www.youtube.com/watch?v=KQGCy1edArI">Downloading and installing EiffelStudio on Linux</a></li>
+				<li><a href="https://www.youtube.com/watch?v=OG2D3F69pbk">Activating EiffelStudio on Linux</a></li>
+				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+			  </ol>	
+			{/if}		
+
+
+			{if condition="$selected_platform.os_family ~ $mac"}
+				Before you start, you will need to already have installed:
+
+                <ol>
+				 <li><a href="http://brew.sh/">Homebrew Package Manager</a></li>
+				 <li><a href="https://developer.apple.com/xcode/downloads/">Xcode</a></li>
+				 <li><a href="http://xquartz.macosforge.org/landing/">Installed Xquartz</a></li>
+				</ol> 
+				
+				To following videos will help guide you through the installation process and beyond:
+              <ol>
+				<li><a href="https://www.youtube.com/watch?v=fiG74NyPs4s">Downloading and installing EiffelStudio on Mac OS X</a></li>
+				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+			  </ol>	
+			{/if}		
+		
+
+
 			<p>
 				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you wish to purchase, need a trial extension, or have any questions, do not hesitate to <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
 			</p>

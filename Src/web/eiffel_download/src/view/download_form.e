@@ -42,7 +42,7 @@ feature -- Access
 		-- User's organization.	
 
 	newsletter: BOOLEAN
-		-- Newsletter subscription ?			
+		-- Newsletter subscription ?
 
 feature -- Change elements
 

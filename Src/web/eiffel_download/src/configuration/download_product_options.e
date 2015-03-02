@@ -23,6 +23,9 @@ feature -- Access
 	platform: detachable READABLE_STRING_32
 			-- Product platform.
 
+	os_family: detachable READABLE_STRING_32
+			-- Os Family		
+
 feature -- Element change
 
 	set_key (a_key: like key)
@@ -61,6 +64,23 @@ feature -- Element change
 			-- Assign `platform' with `a_platform'.
 		do
 			platform := a_platform
+			if attached platform as l_platform then
+				if l_platform.starts_with ("win") then
+					os_family := "windows"
+				elseif l_platform.starts_with ("solaris") then
+					os_family := "solaris"
+				elseif l_platform.starts_with ("openbsd")	then
+					os_family := "openbsd"
+				elseif l_platform.starts_with ("macos")	then
+					os_family := "mac"
+				elseif l_platform.starts_with ("linux")	then
+					os_family := "linux"
+				elseif l_platform.starts_with ("freebsd")	then
+					os_family := "freebsd"
+				else
+					os_family := "unknow"
+				end
+			end
 		ensure
 			platform_assigned: platform = a_platform
 		end

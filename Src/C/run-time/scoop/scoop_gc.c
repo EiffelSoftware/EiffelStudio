@@ -179,7 +179,7 @@ doc:                     Add all remaining indexes to the end if no new live ind
 doc:                     leaving `live_index_count' without a change.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
-doc:	</function>
+doc:	</routine>
 */
 rt_shared void rt_update_live_index (void)
 {
@@ -222,7 +222,7 @@ doc:	<routine name="rt_complement_live_index" export="shared">
 doc:		<summary>Add indexes of dead processors at the end of the list leaving `live_index_count' without a change.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
-doc:	</function>
+doc:	</routine>
 */
 rt_shared void rt_complement_live_index (void)
 {
@@ -257,7 +257,7 @@ doc:	<routine name="rt_report_live_index" export="shared">
 doc:		<summary>Notify SCOOP manager about live indexes.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
-doc:	</function>
+doc:	</routine>
 */
 rt_shared void rt_report_live_index (void)
 {

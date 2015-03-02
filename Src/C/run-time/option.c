@@ -235,7 +235,7 @@ doc:	<routine name="process_time" return_type="rt_uint64" export="private">
 doc:		<summary>Get the current process time usage in nanoseconds.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
-doc:	</attribute>
+doc:	</routine>
 */
 rt_private rt_uint64 process_time (void)
 {

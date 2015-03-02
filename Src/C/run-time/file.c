@@ -457,7 +457,7 @@ doc:		<summary>Opens the file whose name is `name' and associates the stream poi
 doc:		<return>Descriptor of the open file (FILE *).</return>
 doc:		<param name="name" type="EIF_FILENAME">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
 doc:		<param name="type" type="EIF_FILENAME">Open mode. See man page for `fopen'. Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
-doc:		<param name="stream" type="FILE *">Stream being reused to open file `name'.<param>
+doc:		<param name="stream" type="FILE *">Stream being reused to open file `name'.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
 doc:	</routine>
@@ -1055,7 +1055,7 @@ rt_public void eif_file_chgrp(EIF_FILENAME name, int gid)
 
 /*
 doc:	<routine name="eif_file_stat" return_type="int" export="public">
-doc:		<summary>Query information about a file. If `follow' is non-zero then it tries to follow the symbolic link, otherwise it doesn't.</>
+doc:		<summary>Query information about a file. If `follow' is non-zero then it tries to follow the symbolic link, otherwise it doesn't.</summary>
 doc:		<param name="path" type="EIF_FILENAME">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
 doc:		<param name="buf" type="rt_stat_buf *">Buffer collecting the info about the file.</param>
 doc:		<param name="follow" type="int">Should we follow symbolic links?</param>

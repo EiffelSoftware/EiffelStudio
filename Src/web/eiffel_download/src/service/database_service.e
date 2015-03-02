@@ -61,14 +61,14 @@ feature -- Access
 
 			if
 				l_result >= 0 and then
-		        l_result <= 10
+		        l_result <= 30
 		    then
 		    	Result := True
 		    end
 
 		    -- Same code using SQL Queries instead of SP
-		    l_result := data_provider.download_expiration_token_age_2 (a_token)
-			log.write_information (generator + ".is_download_active with token using the SQL version: " + a_token + " with result : " + l_result.out )
+		    -- l_result := data_provider.download_expiration_token_age_2 (a_token)
+			-- log.write_information (generator + ".is_download_active with token using the SQL version: " + a_token + " with result : " + l_result.out )
 
 		end
 

@@ -1091,7 +1091,7 @@ doc:		<summary>Given a types array `gtypes' filter it to compute how many entrie
 doc:		<param name="gtypes" type="const EIF_TYPE_INDEX *">Types array containing the type description.</param>
 doc:		<param name="is_discarding_attachment_marks" type="int">Are we ignoring attachment marks?</param>
 doc:		<param name="num_gtypes" type="int16 *">Number of entries that will be effectively in use in the returned types array.</param>
-doc:		<return>NULL if it cannot produce a types array (case where it involves some formal generic parameter), otherwise a types array that is either `gtypes' or a new one (case where it involved some qualified anchored type).</param>
+doc:		<return>NULL if it cannot produce a types array (case where it involves some formal generic parameter), otherwise a types array that is either `gtypes' or a new one (case where it involved some qualified anchored type).</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */

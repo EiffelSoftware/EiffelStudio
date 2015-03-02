@@ -40,6 +40,10 @@
 		]"
 */
 
+/*
+doc:<file name="econsole.c" version="$Id$" summary="A console implementation for Win32">
+*/
+
 #include <stdio.h>
 #include <windows.h>
 #include "eif_argcargv.h"
@@ -272,3 +276,8 @@ rt_public void eif_show_console(void)
 		EIF_CONSOLE_UNLOCK;
 	}
 }
+
+
+/*
+doc:</file>
+*/

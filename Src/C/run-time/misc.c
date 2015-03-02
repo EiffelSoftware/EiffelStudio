@@ -199,7 +199,7 @@ rt_public void eif_sleep(EIF_INTEGER_64 nanoseconds)
 
 /*
 doc:	<routine name="eif_system" return_type="EIF_INTEGER" export="public">
-doc:		<summary>Execute a command using system shell.</>
+doc:		<summary>Execute a command using system shell.</summary>
 doc:		<param name="s" type="EIF_NATIVE_CHAR *">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
 doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
 doc:		<thread_safety>Re-entrant</thread_safety>
@@ -240,7 +240,7 @@ rt_public EIF_INTEGER eif_system (EIF_NATIVE_CHAR *s)
 
 /*
 doc:	<routine name="eif_system_asynchronous" return_type="void" export="public">
-doc:		<summary>Execute a command using system shell.</>
+doc:		<summary>Execute a command using system shell.</summary>
 doc:		<param name="cmd" type="EIF_NATIVE_CHAR *">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>

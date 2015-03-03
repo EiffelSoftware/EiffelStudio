@@ -2936,6 +2936,7 @@ test	pretty-loop-invariant			pretty029 tcf pass pretty
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc
 test	benchmark-scoop-gc-recursive-processor-creation		bench002 tcf pass benchmark scoop scoop_gc gc
+test	benchmark-scoop-gc-tree-processor-creation		bench003 tcf pass benchmark scoop scoop_gc gc
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

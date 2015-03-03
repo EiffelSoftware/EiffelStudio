@@ -1,0 +1,17 @@
+test_name	 benchmark-scoop-synthetic-chameneos
+test_description A synthetic SCOOP benchmark: chameneos.
+
+copy_sub	Ace            $TEST    Ace
+copy_raw	application.e  $CLUSTER application.e
+copy_raw	broker.e       $CLUSTER broker.e
+copy_raw	chameneos.e    $CLUSTER chameneos.e
+copy_raw	signal.e       $CLUSTER signal.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 300000
+execute_result	ok
+
+test_end

@@ -86,10 +86,26 @@ void priv_queue::log_call(processor *client, call_data *call)
 	EIF_SCP_PID l_sync_pid = call_data_sync_pid(call);
 	bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
-		/* NOTE: After this push(), call might be free'd, */
-		/* therefore processor ID should be stored before it. */
-	push (pq_message (pq_message::e_normal, client, call));
 
+	if (client->cache.has_subordinate (supplier)) {
+		/* 
+		 * We need to log a call which is a separate callback, 
+		 * meaning that the supplier has previously logged a 
+		 * synchronous call on the client and is now waiting for a result.
+		 * 
+		 * The supplier might perform (nested) callbacks or dirty wakeups,
+		 * and we have to be ready to receive them afterwards.
+		 * 
+		 * See also test#scoop044, test#scoop051 and review#6008977502502912.
+		 */
+		supplier->result_notify.callback_awake(client, call);
+		
+	} else {
+			/* NOTE: After this push(), call might be free'd, */
+			/* therefore processor ID should be stored before it. */
+		push (pq_message (pq_message::e_normal, client, call));
+	}
+	
 	if (will_sync) {
 		processor *client = registry[l_sync_pid];
 

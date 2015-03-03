@@ -74,7 +74,6 @@ typedef struct call_data {
 #endif /* WORKBENCH */
 	EIF_NATURAL_32 count;			/* Number of arguments excluding target object */
 	EIF_SCP_PID sync_pid;			/* Indicator of a synchronous call */
-	EIF_BOOLEAN is_lock_passing;	/* Indicator of a lock passing call */
 	EIF_TYPED_VALUE argument [1];	/* Arguments excluding target object */
 } call_data;
 
@@ -101,7 +100,8 @@ RT_LNK void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /
 #define set_integer_32_return_value(a_integer_32_typed_value,a_integer) ((EIF_TYPED_VALUE *) a_integer_32_typed_value)->item.i4 = a_integer;
 
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
-#define call_data_is_lock_passing(a_call_data) ((call_data*) a_call_data)->is_lock_passing
+/* TODO: This macro can be removed when ISE_SCOOP_MANAGER is not included any more. */
+#define call_data_is_lock_passing(a_call_data) (((call_data*) a_call_data)->sync_pid != ((EIF_SCP_PID) -1))
 
 /* Processor properties */
 RT_LNK void eif_new_processor(EIF_REFERENCE obj);

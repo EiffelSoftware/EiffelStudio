@@ -1,0 +1,19 @@
+test_name	 benchmark-scoop-synthetic-chain
+test_description A synthetic SCOOP benchmark: chain.
+
+copy_sub	Ace                $TEST    Ace
+copy_raw	histogram_max.e    $CLUSTER histogram_max.e
+copy_raw	main.e             $CLUSTER main.e
+copy_raw	tuple_comparator.e $CLUSTER tuple_comparator.e
+copy_raw	tuple_sorter.e     $CLUSTER tuple_sorter.e
+copy_raw	worker.e           $CLUSTER worker.e
+copy_raw	test.in	           $TEST    test.in
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f -i "$TEST/test.in" -bench
+execute_result	ok
+
+test_end

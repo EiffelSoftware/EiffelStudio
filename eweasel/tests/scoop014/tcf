@@ -1,6 +1,5 @@
-
 test_name	 scoop-separate-expanded
-test_description Freezing a SCOOP system with a separate entity whose type is expanded crashes an assertion-enabled compiler with violation of precondition `compatible_type'
+test_description Freezing a SCOOP system with a separate entity whose type is expanded crashes an assertion-enabled compiler with violation of precondition `compatible_type'.
 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e	$CLUSTER test.e
@@ -9,6 +8,11 @@ copy_raw	test2.e	$CLUSTER test2.e
 compile_frozen
 compile_result ok
 c_compile_work
+c_compile_result	ok
+
+compile_final
+compile_result ok
+c_compile_final
 c_compile_result	ok
 
 test_end

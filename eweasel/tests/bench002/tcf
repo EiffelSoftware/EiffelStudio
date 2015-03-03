@@ -1,0 +1,14 @@
+test_name	 benchmark-scoop-gc-recursive-processor-creation
+test_description Benchmark for recursive creation of processors. Same as test#scoop029, except that the number of processors is not fixed and is obtained as a command-line argument, and the execution time in seconds is printed on completion.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 10000
+execute_result	ok
+
+test_end

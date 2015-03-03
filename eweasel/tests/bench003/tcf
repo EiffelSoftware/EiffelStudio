@@ -1,0 +1,20 @@
+test_name	 benchmark-scoop-gc-tree-processor-creation
+test_description Benchmark for tree-like creation of processors. The test is controlled by command-line arguments, and the execution time in seconds is printed on completion. It is not safe to start more than the maximum number of processors if the arity is greater than 1 because existing processors may be waiting for creation of new ones and cannot be freed.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 10000 1
+execute_result	ok
+
+execute_final	NONE exec_output_f 1022 2
+execute_result	ok
+
+execute_final	NONE exec_output_f 1022 100
+execute_result	ok
+
+test_end

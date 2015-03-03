@@ -1,0 +1,15 @@
+test_name	scoop-nested-separate-callback
+test_description Test if nested separate callbacks are handled correctly.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	client.e	$CLUSTER client.e
+copy_raw	supplier.e	$CLUSTER supplier.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare exec_output_m output
+
+test_end

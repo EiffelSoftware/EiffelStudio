@@ -2938,6 +2938,7 @@ test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmar
 test	benchmark-scoop-gc-recursive-processor-creation		bench002 tcf pass benchmark scoop scoop_gc gc
 test	benchmark-scoop-gc-tree-processor-creation		bench003 tcf pass benchmark scoop scoop_gc gc
 test	benchmark-scoop-synthetic-chain				bench004 tcf pass benchmark scoop synthetic_benchmark
+test	benchmark-scoop-synthetic-chameneos			bench005 tcf pass benchmark scoop synthetic_benchmark
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

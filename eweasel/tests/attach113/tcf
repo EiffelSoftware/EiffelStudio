@@ -1,0 +1,33 @@
+test_name 	 conversion-with-wrong-target-type
+test_description In a void-safe system, the type of objects created from a `from' conversion includes the attachement marks when it shouldn't.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output_f
+execute_result 	ok
+compare		exec_output_f output
+
+test_end

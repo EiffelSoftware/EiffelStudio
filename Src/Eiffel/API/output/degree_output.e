@@ -226,7 +226,7 @@ feature {NONE} -- Query
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 		local
 			i, nb: INTEGER
-			l_arg: detachable ANY
+			l_arg: detachable separate ANY
 			l_result: STRING_32
 		do
 			if a_args = Void then
@@ -242,8 +242,10 @@ feature {NONE} -- Query
 					l_arg := a_args.item (i)
 					if attached {READABLE_STRING_32} l_arg as l_str then
 						l_result.replace_substring_all ({STRING_32} "$" + i.out, l_str)
-					elseif l_arg /= Void then
-						l_result.replace_substring_all ({STRING_32} "$" + i.out, l_arg.out.as_string_32)
+					elseif attached {ANY} l_arg as l_arg_any then
+						l_result.replace_substring_all ({STRING_32} "$" + i.out, l_arg_any.out.as_string_32)
+					else
+						check not_separate_argument: not attached {separate ANY} l_arg end
 					end
 					i := i + 1
 				end

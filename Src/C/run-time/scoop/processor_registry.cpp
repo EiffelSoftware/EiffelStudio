@@ -214,6 +214,11 @@ void processor_registry::wait_for_all()
 	}
 }
 
+void processor_registry::run_gc()
+{
+	plsc();
+}
+
 /*
 doc:</file>
 */

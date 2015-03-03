@@ -109,6 +109,8 @@ public:
 
   void wait_for_all();
 
+  void run_gc ();
+
 private:
   processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
   pid_set used_pids;

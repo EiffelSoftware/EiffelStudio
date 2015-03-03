@@ -13,9 +13,11 @@ feature {NONE} -- Creation
 			g (a)
 		end
 
+feature {NONE} -- Test
+
 	g (a: separate A)
 		do
 			a.f (1, create {A})
 		end
 
-	end
+end

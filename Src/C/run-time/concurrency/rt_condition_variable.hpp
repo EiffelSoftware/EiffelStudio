@@ -87,6 +87,12 @@ public:
 		eif_pthread_cond_wait (variable_pointer, lock.mutex () -> mutex_pointer);
 	}
 
+	void wait_with_timeout (unique_lock<mutex>& lock, rt_uint_ptr timeout)
+	{
+			/* Wait for a signal with timeout. */
+		eif_pthread_cond_wait_with_timeout (variable_pointer, lock.mutex () -> mutex_pointer, timeout);
+	}
+
 private:
 	EIF_COND_TYPE * variable_pointer;
 

@@ -2772,6 +2772,7 @@ test	object-test-local-in-conditional        attach109 tcf pass void_safe object
 test	initialization-in-conditional		attach110 tcf pass void_safe attached_types attribute scope validity conditional expression
 test	targeted-in-structure-classes		attach111 tcf pass void_safe targeted validity
 test	iteration-loop-target-attachment	attach112 tcf pass void_safe validity across iteration loop
+test	conversion-with-wrong-target-type	attach113 tcf pass void_safe conversion
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

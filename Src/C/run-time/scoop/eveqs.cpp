@@ -155,11 +155,6 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 		pq->lock(client);
 		pq->log_call(client, data);
 		pq->unlock();
-	} else if (client->cache.has_subordinate(supplier)) {
-		supplier->result_notify.callback_awake(client, data);
-		if (call_data_sync_pid(data) != NULL_PROCESSOR_ID) {
-			client->result_notify.wait();
-		}
 	} else {
 		pq->log_call(client, data);
 	}

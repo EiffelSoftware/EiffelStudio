@@ -1505,6 +1505,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
  * RTS_AA(v,f,t,n,a) - register argument v corresponding to field f of type t at position n in a
  * RTS_AS(v,f,t,n,a) - same as RTS_AA except that that argument is checked if it is controlled or not that is recorded to make synchronous call if required
+ * 
+ * TODO: Change the compiler to always emit RTS_AA for queries, because they're synchronous anyway.
  */
 #define RTS_AC(n,t,a) \
 	{ \
@@ -1513,7 +1515,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> count = (n); \
 		((call_data*)(a)) -> result = NULL; \
 		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1; \
-		((call_data*)(a)) -> is_lock_passing = EIF_FALSE; \
 	}
 #ifdef WORKBENCH
 #define RTS_AA(v,f,t,n,a) ((call_data*)(a)) -> argument [(n) - 1] = (v);
@@ -1532,7 +1533,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 			if (val) { \
 				if (!RTS_OU(Current, val)) { \
 					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, val)) { \
-						((call_data*)(a)) -> is_lock_passing = EIF_TRUE; \
 						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 					} \
 				} \

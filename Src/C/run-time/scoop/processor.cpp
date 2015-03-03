@@ -121,22 +121,26 @@ bool processor::try_call (call_data *call)
 
 void processor::operator()(processor *client, call_data* call)
 {
-	EIF_SCP_PID sync_pid = call_data_sync_pid (call);
+	bool is_synchronous = (call_data_sync_pid (call) != NULL_PROCESSOR_ID);
 
-	if (call_data_is_lock_passing (call)) {
+	if (is_synchronous) {
+			/* Grab all locks held by the client. */
 		cache.push (&client->cache);
 	}
 
+		/* Execute the call. */
 	bool successful_call = try_call (call);
 	if (!successful_call) {
 		dirty_for_set.insert (client);
 	}
 
-	if (call_data_is_lock_passing (call)) {
-		cache.pop ();
-	}
+	if (is_synchronous) {
 
-	if (sync_pid != NULL_PROCESSOR_ID) {
+			/* Return the previously acquired locks. */
+		cache.pop ();
+		
+			/* Inform the client that the call has finished. */
+
 		std::set<processor*>::iterator it = dirty_for_set.find (client);
 
 		if (it != dirty_for_set.end()) {

@@ -11,6 +11,10 @@
  * the following macro to prevent the linker for raising a version mismatch.
  */
 #define _ALLOW_MSC_VER_MISMATCH
+
+/* We also disable the unreferenced local function warnings. */
+#pragma warning (disable:4505)
+
 #endif
 
 #endif

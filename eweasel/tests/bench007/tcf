@@ -1,0 +1,16 @@
+test_name	 benchmark-scoop-synthetic-mutex
+test_description A synthetic SCOOP benchmark: mutex.
+
+copy_sub	Ace $TEST Ace
+copy_raw	application.e  $CLUSTER application.e
+copy_raw	mutex_worker.e $CLUSTER mutex_worker.e
+copy_raw	var.e          $CLUSTER var.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 500000 64
+execute_result	ok
+
+test_end

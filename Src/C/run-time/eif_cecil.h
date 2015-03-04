@@ -176,7 +176,7 @@ typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an E
 #define eif_field(object,name,type) *(type *)(eifaddr(object,name, NULL))	/* Obsolete. Use "eif_attribute" instead. */
 #define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
 
-#define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)	/* For debugging: check type. Must be preceded by *(EIF_TYPE*) */
+#define eif_attribute_safe(object,name,type_int,ret) eif_field_safe(object, name, type_int, ret)	/* For debugging: check type. Must be preceded by a cast to the proper type, e.g. *(EIF_INTEGER_32 *) when type of attribute is an INTEGER_32. */
 
 /* Miscellaneous useful functions. */
 
@@ -294,7 +294,8 @@ RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);			/* Give dynamic type of EIF_OBJ
 RT_LNK EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object);
 #define eif_type_by_object(obj)	eiftype(obj)			/* Give dynamic type of EIF_OBJECT */
 RT_LNK const char *eifname(EIF_TYPE_ID cid);			/* Give class name from class ID */
-RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
+RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by a cast to the proper type, e.g. *(EIF_INTEGER_32 *) when type of attribute is an INTEGER_32. */
+
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK EIF_INTEGER eifaddr_offset(EIF_REFERENCE, char *name, int * const ret);	/* Compute offset to `object' of attribute `name' */
 

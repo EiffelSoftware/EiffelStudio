@@ -1,0 +1,17 @@
+test_name	 benchmark-scoop-synthetic-outer
+test_description A synthetic SCOOP benchmark: outer.
+
+copy_sub	Ace             $TEST    Ace
+copy_raw	comparator.e    $CLUSTER comparator.e
+copy_raw	main.e          $CLUSTER main.e
+copy_raw	parfor_worker.e $CLUSTER parfor_worker.e
+copy_raw	test.in	        $TEST    test.in
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f -i "$TEST/test.in" -bench
+execute_result	ok
+
+test_end

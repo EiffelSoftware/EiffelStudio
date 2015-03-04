@@ -59,8 +59,8 @@
 					<li><a href="https://developer.apple.com/xcode/downloads/">Xcode</a></li>
 					<li><a href="http://xquartz.macosforge.org/landing/">Installed Xquartz</a></li>
 				</ol> 
-				In addition you will need to install <a href="https://www.macports.org/install.php">MacPorts</a> and follow the
-				<a href="https://dev.eiffel.com/EiffelOnMac">following instructions</a>.
+				In addition you will need to install <a href="https://www.macports.org/install.php">MacPorts</a> and an existing version of EiffelStudio by
+				<a href="https://dev.eiffel.com/EiffelOnMac#Using_MacPorts">following those instructions</a>.
 				
 				The following videos will help guide you through the installation process and beyond:
 				<ol>

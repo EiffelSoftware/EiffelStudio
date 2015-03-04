@@ -216,8 +216,8 @@ feature -- Workflow
 					end
 				else
 					if l_service.is_available then
-						log.write_debug (generator + ".process_workflow: The request was invalid " + req.path_info)
-						send_bad_request (generator + ".process_workflow: The request was invalid " + req.path_info)
+						log.write_debug (generator + ".process_workflow: The request was invalid " + req.request_uri)
+						send_bad_request (generator + ".process_workflow: The request was invalid " + req.request_uri)
 						bad_request (req, res, "")
 					else
 						log.write_debug (generator + ".process_workflow The database service is unavailable")

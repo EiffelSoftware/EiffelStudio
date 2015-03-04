@@ -1,0 +1,16 @@
+test_name	 benchmark-scoop-synthetic-condition
+test_description A synthetic SCOOP benchmark: condition.
+
+copy_sub	Ace $TEST Ace
+copy_raw	application.e $CLUSTER application.e
+copy_raw	cond_worker.e $CLUSTER cond_worker.e
+copy_raw	var.e         $CLUSTER var.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 18000 32
+execute_result	ok
+
+test_end

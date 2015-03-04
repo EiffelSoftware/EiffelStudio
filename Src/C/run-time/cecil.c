@@ -386,7 +386,8 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	/* Like eif_attribute, but perform a type checking between the type
 	 * given by "type_int" and the actual type of the attribute.
 	 * Return EIF_WRONG_TYPE, if this fails.
-	 * Should be preceded by *(EIF_TYPE*).
+	 * Should be preceded by a cast to the proper type, e.g. *(EIF_INTEGER_32 *) when
+	 * type of attribute is an INTEGER_32.
 	 */
 
 	void *addr;

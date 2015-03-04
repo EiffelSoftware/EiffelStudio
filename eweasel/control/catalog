@@ -2941,6 +2941,7 @@ test	benchmark-scoop-synthetic-chain				bench004 tcf pass benchmark scoop synthe
 test	benchmark-scoop-synthetic-chameneos			bench005 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-condition			bench006 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-mutex				bench007 tcf pass benchmark scoop synthetic_benchmark
+test	benchmark-scoop-synthetic-outer				bench008 tcf pass benchmark scoop synthetic_benchmark
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

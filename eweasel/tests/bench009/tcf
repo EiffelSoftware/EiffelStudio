@@ -1,0 +1,18 @@
+test_name	 benchmark-scoop-synthetic-prodcons
+test_description A synthetic SCOOP benchmark: prodcons.
+
+copy_sub	Ace $TEST Ace
+copy_raw	application.e  $CLUSTER application.e
+copy_raw	consumer.e     $CLUSTER consumer.e
+copy_raw	producer.e     $CLUSTER producer.e
+copy_raw	shared_queue.e $CLUSTER shared_queue.e
+copy_raw	var.e          $CLUSTER var.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 33000 32
+execute_result	ok
+
+test_end

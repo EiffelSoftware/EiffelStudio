@@ -1,0 +1,15 @@
+test_name	 benchmark-scoop-synthetic-threadring
+test_description A synthetic SCOOP benchmark: threadring.
+
+copy_sub	Ace                 $TEST Ace
+copy_raw	application.e       $CLUSTER application.e
+copy_raw	threadring_worker.e $CLUSTER threadring_worker.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 2100000 64
+execute_result	ok
+
+test_end

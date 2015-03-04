@@ -2946,6 +2946,7 @@ test	benchmark-scoop-synthetic-prodcons			bench009 tcf pass benchmark scoop synt
 test	benchmark-scoop-synthetic-product			bench010 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-randmat			bench011 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-threadring			bench012 tcf pass benchmark scoop synthetic_benchmark
+test	benchmark-scoop-synthetic-thresh			bench013 tcf pass benchmark scoop synthetic_benchmark
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

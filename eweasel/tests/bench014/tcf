@@ -1,0 +1,20 @@
+test_name	 benchmark-scoop-synthetic-winnow
+test_description A synthetic SCOOP benchmark: winnow.
+
+copy_sub	Ace                 $TEST    Ace
+copy_raw	main.e              $CLUSTER main.e
+copy_raw	parfor_worker.e     $CLUSTER parfor_worker.e
+copy_raw	tuple_sorter.e      $CLUSTER tuple_sorter.e
+copy_raw	value3.e            $CLUSTER value3.e
+copy_raw	value3_comparator.e $CLUSTER value3_comparator.e
+copy_raw	test.in	            $TEST    test.in
+
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f -i "$TEST/test.in" -bench
+execute_result	ok
+
+test_end

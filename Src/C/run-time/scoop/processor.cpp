@@ -96,7 +96,15 @@ bool processor::try_call (call_data *call)
 	}
 	excatch(&exenv);	/* Record pseudo execution vector */
 
+#ifdef _MSC_VER
+/* Disable warning about C++ destructor not compatible with setjmp. It does not matter since
+ * we call C code. */
+#pragma warning (disable:4611)
+#endif
 	if (!setjmp(exenv)) {
+#ifdef _MSC_VER
+#pragma warning (default:4611)
+#endif
 #ifdef WORKBENCH
 		eif_apply_wcall (call);
 #else

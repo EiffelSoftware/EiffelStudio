@@ -34,39 +34,39 @@
 			{assign name="linux" value="linux"/}
 			{assign name="mac" value="mac"/}
 			{if condition="$selected_platform.os_family ~ $win"}
-				To following videos will help guide you through the installation process and beyond:
-              <ol>
-				<li><a href="https://www.youtube.com/watch?v=18Xo5pMo-A4">Downloading and installing EiffelStudio on Windows</a></li>
-				<li><a href="https://www.youtube.com/watch?v=UL8O6DNkvu0">Activating EiffelStudio on Windows</a></li>
-				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
-			  </ol>	
+				The following videos will help guide you through the installation process and beyond:
+				<ol>
+					<li><a href="https://www.youtube.com/watch?v=18Xo5pMo-A4">Downloading and installing EiffelStudio on Windows</a></li>
+					<li><a href="https://www.youtube.com/watch?v=UL8O6DNkvu0">Activating EiffelStudio on Windows</a></li>
+					<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+				</ol>	
 			{/if}
 
 
 			{if condition="$selected_platform.os_family ~ $linux"}
-				To following videos will help guide you through the installation process and beyond:
-              <ol>
-				<li><a href="https://www.youtube.com/watch?v=KQGCy1edArI">Downloading and installing EiffelStudio on Linux</a></li>
-				<li><a href="https://www.youtube.com/watch?v=OG2D3F69pbk">Activating EiffelStudio on Linux</a></li>
-				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
-			  </ol>	
+				The following videos will help guide you through the installation process and beyond:
+				<ol>
+					<li><a href="https://www.youtube.com/watch?v=KQGCy1edArI">Downloading and installing EiffelStudio on Linux</a></li>
+					<li><a href="https://www.youtube.com/watch?v=OG2D3F69pbk">Activating EiffelStudio on Linux</a></li>
+					<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+				</ol>	
 			{/if}		
 
 
 			{if condition="$selected_platform.os_family ~ $mac"}
 				Before you start, you will need to already have installed:
-
-                <ol>
-				 <li><a href="http://brew.sh/">Homebrew Package Manager</a></li>
-				 <li><a href="https://developer.apple.com/xcode/downloads/">Xcode</a></li>
-				 <li><a href="http://xquartz.macosforge.org/landing/">Installed Xquartz</a></li>
+				<ol>
+					<li><a href="https://developer.apple.com/xcode/downloads/">Xcode</a></li>
+					<li><a href="http://xquartz.macosforge.org/landing/">Installed Xquartz</a></li>
 				</ol> 
+				In addition you will need to install <a href="https://www.macports.org/install.php">MacPorts</a> and follow the
+				<a href="https://dev.eiffel.com/EiffelOnMac">following instructions</a>.
 				
-				To following videos will help guide you through the installation process and beyond:
-              <ol>
-				<li><a href="https://www.youtube.com/watch?v=fiG74NyPs4s">Downloading and installing EiffelStudio on Mac OS X</a></li>
-				<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
-			  </ol>	
+				The following videos will help guide you through the installation process and beyond:
+				<ol>
+					<li><a href="https://www.youtube.com/watch?v=fiG74NyPs4s">Downloading and installing EiffelStudio on Mac OS X</a></li>
+					<li><a href="https://www.youtube.com/watch?v=jBMOSSnCMCk">Your first Eiffel Program</a></li>
+				</ol>	
 			{/if}		
 		
 

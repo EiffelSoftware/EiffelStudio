@@ -11,6 +11,7 @@
 			  <div class="wikipage">{$page.region_content/}
 				{if isset="$wiki_uuid"}<div class="uuid">{$wiki_uuid/}</div>{/if}
 			  </div>
+{include file="doc/disqus.tpl"/}			  
 {/if}
 {unless isset="$page.region_content"}
 				<header class="head">

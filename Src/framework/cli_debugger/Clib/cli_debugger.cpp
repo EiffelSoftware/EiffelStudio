@@ -462,7 +462,7 @@ rt_public EIF_INTEGER dbg_continue (void* icdc, BOOL a_f_is_out_of_band) {
 }
 
 rt_private EIF_INTEGER dbg_icdc_continue (void* icdc, BOOL a_f_is_out_of_band) {
-	HRESULT hr, thr;
+	HRESULT hr;
 	hr = ((ICorDebugController*)icdc)->Continue (a_f_is_out_of_band);
 	DBGTRACE_HR("[???] ICorDebugController->Continue(..) = ", (HRESULT)hr);
 	return hr;
@@ -597,7 +597,7 @@ rt_private void dbg_set_eval_start_time () {
 	DBGTRACE_HR("[ES::Eval] start timeout =", dbgEval_start_time_t);
 }
 rt_private BOOL dbg_check_eval_timeout (EIF_INTEGER timeout) {
-	int delay;
+	time_t delay;
 	time_t t;
 	t=time(NULL);
 	delay = t - dbgEval_start_time_t;
@@ -613,7 +613,6 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 	Callback_ids cb_id, old_cb_id;
     HRESULT hr = S_OK;
 	BOOL eval_callback_proceed;
-	BOOL has_queued_callbacks;
 #ifdef DBGTRACE_ENABLED
 	UINT once_enter;
 #endif

@@ -203,17 +203,21 @@ feature {NONE} -- Implementation: Byte node
 			l_access: CALL_ACCESS_B
 			l_params: BYTE_LIST [PARAMETER_B]
 			l_param: PARAMETER_B
+			l_target_type: TYPE_A
 		do
 				-- Initialize creation expression `(create {a_target_type}.a_feat (a_expr))'.
 			create Result
 				-- CREATE_TYPE cannot handle anchors.
 			if a_target_type.is_like_current then
 					-- Use conformance type instead.
-				create l_create_type.make (a_target_type.conformance_type)
+				l_target_type := a_target_type.conformance_type
 			else
 					-- Use actual type to remove the anchor.
-				create l_create_type.make (a_target_type.actual_type)
+				l_target_type := a_target_type.actual_type
 			end
+				-- Type used for creating an object should not contain any attachment marks.
+				-- See the implementation {CL_TYPE_A}.create_info.
+			create l_create_type.make (l_target_type.as_attachment_mark_free)
 			Result.set_info (l_create_type)
 			Result.set_type (a_target_type)
 
@@ -259,7 +263,7 @@ feature {NONE} -- Implementation: Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -121,6 +121,7 @@ feature {NONE} -- Initialization
 			test_to_lower
 			test_to_real
 			test_to_upper
+			test_trim
 			test_twin
 			test_valid_index
 			test_wipe_out
@@ -2551,6 +2552,54 @@ feature {NONE} -- Implementation
 			check_equality ("to_upper", s, "ABC %T%U %F DEF")
 			s.to_upper
 			check_equality ("to_upper", s, "ABC %T%U %F DEF")
+		end
+
+	test_trim
+		local
+			s: STRING_8
+			count: like {STRING_8}.count
+			capacity: like {STRING_8}.count
+		do
+			s := ""
+			s.trim
+			check_equality ("resize", s, "")
+			create s.make (5)
+			capacity := 5
+			count := 0
+			check_equality ("resize", s, "")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
+			s.trim
+			capacity := count
+			check_equality ("resize", s, "")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
+			create s.make (5)
+			capacity := 5
+			s.extend ('1')
+			s.extend ('2')
+			count := 2
+			check_equality ("resize", s, "12")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
+			s.trim
+			capacity := count
+			check_equality ("resize", s, "12")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
+			create s.make (3)
+			capacity := 3
+			s.extend ('1')
+			s.extend ('2')
+			s.extend ('3')
+			count := 3
+			check_equality ("resize", s, "123")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
+			s.trim
+			check_equality ("resize", s, "123")
+			check_equality ("resize", s.count, count)
+			check_equality ("resize", s.capacity, capacity)
 		end
 
 	test_twin is

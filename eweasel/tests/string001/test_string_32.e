@@ -2476,18 +2476,18 @@ feature {NONE} -- Implementation
 			count: like {STRING_32}.count
 			capacity: like {STRING_32}.count
 		do
-			s := ""
+			s := {STRING_32} ""
 			s.trim
-			check_equality ("resize", s, "")
+			check_equality ("resize", s, {STRING_32} "")
 			create s.make (5)
 			capacity := 5
 			count := 0
-			check_equality ("resize", s, "")
+			check_equality ("resize", s, {STRING_32} "")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 			s.trim
 			capacity := count
-			check_equality ("resize", s, "")
+			check_equality ("resize", s, {STRING_32} "")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 			create s.make (5)
@@ -2495,12 +2495,12 @@ feature {NONE} -- Implementation
 			s.extend ('1')
 			s.extend ('2')
 			count := 2
-			check_equality ("resize", s, "12")
+			check_equality ("resize", s, {STRING_32} "12")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 			s.trim
 			capacity := count
-			check_equality ("resize", s, "12")
+			check_equality ("resize", s, {STRING_32} "12")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 			create s.make (3)
@@ -2509,11 +2509,11 @@ feature {NONE} -- Implementation
 			s.extend ('2')
 			s.extend ('3')
 			count := 3
-			check_equality ("resize", s, "123")
+			check_equality ("resize", s, {STRING_32} "123")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 			s.trim
-			check_equality ("resize", s, "123")
+			check_equality ("resize", s, {STRING_32} "123")
 			check_equality ("resize", s.count, count)
 			check_equality ("resize", s.capacity, capacity)
 		end

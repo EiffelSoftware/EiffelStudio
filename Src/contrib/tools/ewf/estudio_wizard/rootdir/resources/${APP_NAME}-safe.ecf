@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="{$WIZ.project.name/}" uuid="{$UUID/}" library_target="{$WIZ.project.name/}">
+	<target name="common" abstract="true">
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+	</target>
+	<target name="{$WIZ.project.name/}_any" extends="common">
+		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
+		{if condition="$WIZ.connectors.use_cgi ~ $WIZ_YES"}<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>{/if}
+		{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>{/if}
+		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>{/if}
+		<cluster name="launcher" location=".\launcher\" recursive="true">
+			<file_rule>
+				<exclude>/default$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}
+	<target name="{$WIZ.project.name/}_nino" extends="common">
+		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
+		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\" recursive="true">
+			<file_rule>
+				<exclude>/any$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>{/if}
+{if condition="$WIZ.connectors.use_cgi ~ $WIZ_YES"}
+	<target name="{$WIZ.project.name/}_cgi" extends="common">
+		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\" recursive="true">
+			<file_rule>
+				<exclude>/any$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>{/if}
+{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}
+	<target name="{$WIZ.project.name/}_libfcgi" extends="common">
+		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\" recursive="true">
+			<file_rule>
+				<exclude>/any$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>{/if}
+
+	<target name="{$WIZ.project.name/}" extends="{$WIZ.project.name/}_any"/>
+</system>

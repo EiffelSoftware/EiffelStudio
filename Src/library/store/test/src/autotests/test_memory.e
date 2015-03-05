@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			Result.force (create {BOOK2}.make, memory_trim_table_name)
 		end
 
-feature {NONE} -- meory trim
+feature {NONE} -- Memory trim
 
 	memory_trim_create_data: BOOK2
 			-- Filled book to put into database

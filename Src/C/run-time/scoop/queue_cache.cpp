@@ -37,7 +37,7 @@
 
 /*
 doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary="SCOOP support.">
-*/
+ */
 
 #include "rt_msc_ver_mismatch.h"
 #include "queue_cache.hpp"
@@ -55,7 +55,7 @@ priv_queue* queue_cache::operator[] (processor * const supplier)
 		pq = stack.back();
 	} else {
 		const std::pair <RT_UNORDERED_MAP <processor*, queue_stack>::iterator, bool> &res =
-			queue_map.EMPLACE (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
+				queue_map.EMPLACE (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
 		queue_stack &stack = res.first->second;
 		stack.EMPLACE_BACK (supplier->new_priv_queue());
 		pq = stack.back();

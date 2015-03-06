@@ -476,8 +476,9 @@ feature -- Remote: execution recorder on RT_
 
 							--| Don't forget to withdraw "-1" to convert compiler id to runtime id !
 						cid := ct.type_id - 1
-						if fi.valid_body_id then
-							fid := fi.real_body_index (ct) - 1
+						fid := fi.real_body_index (ct)
+						if fid /= 0 then
+							fid := fid - 1
 						else
 							fid := fi.body_index - 1
 						end
@@ -1353,7 +1354,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

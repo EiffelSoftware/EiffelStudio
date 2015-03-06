@@ -131,6 +131,7 @@ feature {NONE} -- Initialization
 			dynamic_class_type_id: INTEGER -- dynamic class type id
 			class_type_id: INTEGER -- class type id
 			feature_body_id: INTEGER -- Real body id or body index
+			l_body_id: INTEGER
 			ct: CLASS_TYPE
 			cl: CLASS_C
 			fi: FEATURE_I
@@ -177,7 +178,8 @@ feature {NONE} -- Initialization
 						ft.after or fi /= Void
 					loop
 						fi := ft.item_for_iteration
-						if not fi.valid_body_id or else fi.real_body_index (ct) /= feature_body_id then
+						l_body_id := fi.real_body_index (ct)
+						if l_body_id = 0 or else l_body_id /= feature_body_id then
 							fi := Void
 						end
 						ft.forth
@@ -196,6 +198,8 @@ feature -- Properties
 
 	remote_id: STRING
 			-- Remote id
+		local
+			l_bid: INTEGER
 		do
 			create Result.make_empty
 			Result.append_integer (depth)
@@ -213,8 +217,9 @@ feature -- Properties
 			end
 			Result.append_character ('.')
 			if attached feature_i as fi then
-				if fi.valid_body_id then
-					Result.append_integer (fi.real_body_index (class_type))
+				l_bid := fi.real_body_index (class_type)
+				if l_bid /= 0 then
+					Result.append_integer (l_bid)
 				else
 					Result.append_integer (fi.body_index)
 				end
@@ -366,7 +371,7 @@ feature -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

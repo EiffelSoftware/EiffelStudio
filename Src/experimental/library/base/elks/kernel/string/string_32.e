@@ -1455,7 +1455,7 @@ feature -- Resizing
 		do
 			n := count
 			if n < capacity then
-				area := area.aliased_resized_area (n)
+				area := area.aliased_resized_area (n + 1)
 			end
 		ensure then
 			same_string: same_string (old twin)

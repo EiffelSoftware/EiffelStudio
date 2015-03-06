@@ -14,7 +14,7 @@ inherit
 create
 	make_with_grid
 
-feature -- Initlization
+feature {NONE} -- Initialization
 
 	make_with_grid (a_grid: EV_GRID)
 			-- Creation method
@@ -29,16 +29,24 @@ feature -- Initlization
 			object_grid.insert_new_column (1)
 			object_grid.insert_new_column (2)
 			object_grid.insert_new_column (3)
-			object_grid.column (1).set_title ("Object type")
+			object_grid.insert_new_column (4)
+			object_grid.insert_new_column (5)
+			object_grid.column (1).set_title ("Object Type")
 			object_grid.column (2).set_title ("Count/Address")
 			object_grid.column (3).set_title ("Delta/Start Object")
+			object_grid.column (4).set_title ("Phyiscal Size")
+			object_grid.column (5).set_title ("Average/Deep Physical Size")
 			object_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
 			object_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
 			object_grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (3))
+			object_grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (4))
+			object_grid.column (5).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (5))
 
 			object_grid.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1))
 			object_grid.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2))
 			object_grid.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3))
+			object_grid.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4))
+			object_grid.column (5).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (5))
 
 			object_grid.set_pick_and_drop_mode
 			object_grid.set_item_pebble_function (agent pick_item)
@@ -46,11 +54,12 @@ feature -- Initlization
 			object_grid.column (1).set_width (500)
 			object_grid.column (2).set_width (100)
 			object_grid.column (3).set_width (100)
+			object_grid.column (4).set_width (100)
+			object_grid.column (5).set_width (100)
 
---			object_grid.set_item_pebble_function (agent pick_item_for_filter)
 			show_memory_map
 		ensure
-			object_grid_column_added: object_grid.column_count = 3
+			object_grid_column_added: object_grid.column_count = 5
 			object_grid_accept_cursor_set: object_grid.accept_cursor /= Void
 			object_grid_deny_curosor_set: object_grid.deny_cursor /= Void
 		end
@@ -75,7 +84,8 @@ feature -- Command
 			i: INTEGER
 			l_int: INTERNAL
 			l_name: STRING
-			l_count, l_delta: INTEGER
+			l_delta: INTEGER
+			l_count: NATURAL_64
 			l_data: like grid_data
 			l_map: detachable HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]
 		do
@@ -112,7 +122,7 @@ feature -- Command
 			loop
 				l_name := l_int.type_name_of_type (l_new_table.key_for_iteration)
 
-				l_count := l_new_table.item_for_iteration
+				l_count := l_new_table.item_for_iteration.as_natural_64
 
 				if finding_route_to_once then
 					check attached l_map end -- Implied by `finding_route_to_once'
@@ -213,19 +223,19 @@ feature {NONE} -- Implementation
 					sorting_order := False
 				end
 				if grid_data /= Void then
-					sort_data
-					update_grid_content
+					sort_data (agent update_grid_content)
 				end
 			end
 		end
 
-	sort_data
+	sort_data (a_update_action: PROCEDURE [ANY, TUPLE])
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
+			-- If sorting occurs, call `a_update_action'.
 		require
 			grid_data_not_void: grid_data /= Void
 		local
 			l_sorter: QUICK_SORTER [like row_data]
-			l_agent_sorter: AGENT_EQUALITY_TESTER [like row_data]
+			l_agent_sorter: detachable AGENT_EQUALITY_TESTER [like row_data]
 			l_grid_data: like grid_data
 		do
 			inspect
@@ -233,11 +243,17 @@ feature {NONE} -- Implementation
 				when 1 then create l_agent_sorter.make (agent sort_on_type_name)
 				when 2 then create l_agent_sorter.make (agent sort_on_count)
 				when 3 then create l_agent_sorter.make (agent sort_on_delta)
+				when 4, 5 then
+					-- No sorting can be performed on sizes as it will slow down the grid usage.
 			end
-			create l_sorter.make (l_agent_sorter)
-			l_grid_data := grid_data
-			check attached l_grid_data end -- Implied by precondition
-			l_sorter.sort (l_grid_data)
+			if l_agent_sorter /= Void then
+				create l_sorter.make (l_agent_sorter)
+				l_grid_data := grid_data
+				check attached l_grid_data end -- Implied by precondition
+				l_sorter.sort (l_grid_data)
+					-- Perform update action.
+				a_update_action.call (Void)
+			end
 		end
 
 	update_grid_content
@@ -247,8 +263,9 @@ feature {NONE} -- Implementation
 		local
 			l_data: like grid_data
 			l_row_data: like row_data
-			l_item: MA_GRID_LABEL_ITEM
-			i, l_count, l_delta: INTEGER
+			l_item, l_other_item: MA_GRID_LABEL_ITEM
+			i, l_delta: INTEGER
+			l_count: NATURAL_64
 			l_str: STRING
 			l_row: EV_GRID_ROW
 			l_grid: like object_grid
@@ -296,6 +313,18 @@ feature {NONE} -- Implementation
 						end
 						l_grid.set_item (3, i, l_item)
 					end
+
+						-- Physical size
+					create l_item.make_with_text ("Click to compute")
+					l_grid.set_item (4, i, l_item)
+						-- Average size
+					create l_other_item.make_with_text ("Click to compute")
+					l_grid.set_item (5, i, l_other_item)
+
+						-- Action to compute the sizes.
+					l_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+					l_other_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+
 					i := i + 1
 				end
 				l_data.forth
@@ -352,6 +381,26 @@ feature {NONE} -- Implementation
 							create l_check_item.make_with_boolean (False)
 							l_check_item.selected_changed_actions.extend (agent on_check_box_selected (?, l_any))
 							object_grid.set_item (3, j, l_check_item)
+
+								-- Compute physical size of objects and display it.
+							create l_item.make_with_text (formatted_size (internal.physical_size_64 (l_any)))
+							l_item.set_data (l_any)
+							object_grid.set_item (4, j, l_item)
+
+								-- Since computing the deep physical size of objects is time consuming
+								-- we are only computing it if user requests it by a click.
+							create l_item.make_with_text ("Click to compute deep physical size")
+							l_item.set_data (l_any)
+							l_item.pointer_button_press_actions.extend (agent (a1, a2, a3: INTEGER_32; a4, a5, a6: REAL_64; a7, a8: INTEGER_32; a_item: EV_GRID_LABEL_ITEM)
+								do
+									if attached a_item.data as l_data then
+										a_item.set_text (formatted_size (internal.deep_physical_size_64 (l_data)))
+									else
+										a_item.set_text ("0 B")
+									end
+									a_item.pointer_button_press_actions.wipe_out
+								end (?, ?, ?, ?, ?, ?, ?, ?, l_item))
+							object_grid.set_item (5, j, l_item)
 
 							l_row := object_grid.row (j)
 							l_row.ensure_expandable
@@ -572,6 +621,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	formatted_size (a_size: NATURAL_64): STRING_32
+			-- New item that displays `a_size' using the more meaningful unit.
+		local
+			l_size: NATURAL_64
+			l_unit: STRING
+		do
+			create Result.make (10)
+			l_size := a_size
+			if l_size < 1024 then
+				l_unit := "B"
+			else
+				l_size := l_size // 1024
+				if l_size < 1024 then
+					l_unit := "KiB"
+				else
+					l_size := l_size // 1024
+					if l_size < 1024 then
+						l_unit := "MiB"
+					else
+						l_size := l_size // 1024
+						l_unit := "GiB"
+					end
+				end
+			end
+			Result.append_natural_64 (l_size)
+			Result.append_character (' ')
+			Result.append_string_general (l_unit)
+		end
+
 feature -- Status report
 
 	is_object_from_ma (a_str: STRING): BOOLEAN
@@ -596,7 +674,7 @@ feature -- Status report
 
 feature {NONE} -- Fields
 
-	row_data: TUPLE [type_name: STRING; number_of_objects: INTEGER; variation_since_last_time: INTEGER; type_id: INTEGER]
+	row_data: TUPLE [type_name: STRING; number_of_objects: NATURAL_64; variation_since_last_time: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		local
@@ -648,6 +726,26 @@ feature {NONE} -- Route building.
 			-- All selected items.		
 
 feature {NONE} -- Sorting Implemention
+
+	compute_size_action (a1, a2, a3: INTEGER_32; a4, a5, a6: REAL_64; a7, a8: INTEGER_32; a_item, a_average_item: EV_GRID_LABEL_ITEM; a_type: INTEGER)
+			-- Lazy computation of the size of objects on `a_item' and `a_average_item' when clicking
+			-- on either of those items.
+		local
+			l_physical_size: NATURAL_64
+			l_spec: SPECIAL [ANY]
+		do
+			l_physical_size := 0
+			l_spec := memory.objects_instance_of_type (a_type)
+			across l_spec as l_items loop
+				l_physical_size := l_physical_size + internal.physical_size_64 (l_items.item)
+			end
+			a_item.set_text (formatted_size (l_physical_size))
+			a_average_item.set_text (formatted_size (l_physical_size // l_spec.count.as_natural_64))
+
+				-- Prevents recomputation
+			a_item.pointer_button_press_actions.wipe_out
+			a_average_item.pointer_button_press_actions.wipe_out
+		end
 
 	sort_on_type_name (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
@@ -720,7 +818,7 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

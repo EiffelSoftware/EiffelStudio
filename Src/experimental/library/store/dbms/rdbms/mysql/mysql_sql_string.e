@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {SQL_STRING}."
+	description: "Summary description for {MYSQL_SQL_STRING}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SQL_STRING
+	MYSQL_SQL_STRING
 
 inherit
 	SQL_ABSTRACT_STRING

@@ -34,7 +34,12 @@ inherit
 		end
 
 create
-	make_from_hostname_and_port, make_from_address_and_port, make_any_local, make_localhost, make_loopback
+	make_from_hostname_and_port,
+	make_from_address_and_port,
+	make_any_local,
+	make_localhost,
+	make_loopback,
+	make_from_separate
 
 feature -- Initialization
 
@@ -201,7 +206,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

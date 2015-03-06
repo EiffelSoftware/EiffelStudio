@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_world: EV_MODEL_WORLD; a_pixmap: like pixmap)
+	make (a_world: like world; a_pixmap: like pixmap)
 			-- Create with `a_world' and `a_pixmap'.
 		require
 			a_world_not_void: a_world /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_buffer (
-		a_world: EV_MODEL_WORLD;
+		a_world: like world;
 		a_buffer: EV_PIXMAP; a_pixmap: like pixmap)
 			-- Create with `a_world', `a_pixmap' and `a_buffer'.
 		require

@@ -432,7 +432,7 @@ feature -- External	features
 
 	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len:INTEGER): INTEGER
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: SYBASE_SQL_STRING
 			l_area: MANAGED_POINTER
 		do
 			create l_area.make (max_len)
@@ -442,7 +442,7 @@ feature -- External	features
 				Result <= max_len
 			end
 
-			Result := Result // {SQL_STRING}.character_size
+			Result := Result // {SYBASE_SQL_STRING}.character_size
 
 			ar.grow (Result)
 			ar.set_count (Result)

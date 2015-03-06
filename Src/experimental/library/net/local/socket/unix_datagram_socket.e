@@ -21,14 +21,14 @@ inherit
 		undefine
 			send
 		redefine
-			put_managed_pointer
+			put_pointer_content
 		end
 
 	DATAGRAM_SOCKET
 		undefine
 			address_type, cleanup, name
 		redefine
-			put_managed_pointer
+			put_pointer_content
 		end
 
 create
@@ -119,16 +119,17 @@ feature -- Miscellaneous
 			peer_address_attached: peer_address /= Void
 		end
 
-	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
-			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
-			-- current position.
+feature {NONE} -- Implementation
+
+	put_pointer_content (a_pointer: POINTER; a_offset, a_byte_count: INTEGER)
+			-- <Precursor>
 		local
 			l_peer_address: like peer_address
 		do
 			l_peer_address := peer_address
 				-- If we haven't set a `peer_address' yet, we don't send anything.
 			if l_peer_address /= Void then
-				c_send_stream_to (descriptor, p.item + start_pos, nb_bytes, 0,
+				c_send_stream_to (descriptor, a_pointer + a_offset, a_byte_count, 0,
 					l_peer_address.socket_address.item, l_peer_address.count)
 			end
 		end
@@ -159,14 +160,14 @@ feature {NONE} -- Externals
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

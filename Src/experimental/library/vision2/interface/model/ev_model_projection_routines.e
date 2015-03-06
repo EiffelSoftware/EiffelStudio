@@ -15,9 +15,10 @@ inherit
 
 feature -- Basic operations
 
-	register_figure (a_figure: EV_MODEL;
-		a_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]])
+	register_figure (a_figure: EV_MODEL; a_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]])
 			-- Assign `a_routine' for drawing of `a_figure'.
+		obsolete
+			"Redefine `project' from your EV_MODEL descendant to perform the projection."
 		require
 			a_figure_exists: a_figure /= Void
 			a_routine_exists: a_routine /= Void
@@ -46,7 +47,6 @@ feature {NONE} -- Implementation
 			group_show_requested: group.is_show_requested
 		local
 			draw_item: EV_MODEL
-			dr: detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]
 			i, nb: INTEGER
 		do
 			from
@@ -57,62 +57,9 @@ feature {NONE} -- Implementation
 			loop
 				draw_item := group.i_th (i)
 				if draw_item.is_show_requested then
-					if draw_routines.valid_index (draw_item.draw_id) then
-						dr := draw_routines.item (draw_item.draw_id)
-					else
-						dr := Void
-					end
-					if dr = Void and attached {EV_MODEL_GROUP} draw_item as g then
-						project_figure_group (g, r)
-					else
-						project_figure (draw_item, r)
-					end
+					project_figure_in_rect (draw_item, r)
 				end
 				i := i + 1
-			end
-		end
-
-	project_figure (f: EV_MODEL; rect: EV_RECTANGLE)
-			-- Project `f' to device if `rect' intersects with `f'.
-			-- If you get a precondition violidation here you most
-			-- likely made a class that does inherit from EV_FIGURE
-			-- but not from EV_FIGURE_GROUP without register a drawer
-			-- for that class. Use `register_figure' to register a
-			-- drawer.
-		require
-			rect_not_void: rect /= Void
-			f_not_void: f /= Void
-			in_draw_routines: draw_routines.valid_index (f.draw_id)
-			draw_routines_has: draw_routines.item (f.draw_id) /= Void
-			f_show_requested: f.is_show_requested
-		local
-			bbox: detachable EV_RECTANGLE
-			l_tuple: TUPLE [EV_MODEL]
-		do
-			if f.valid or else f.last_update_rectangle = Void or else (attached f.last_update_rectangle as l_rect and then not l_rect.has_area) then
-				bbox := f.bounding_box
-			else
-				bbox := f.last_update_rectangle
-			end
-			check bbox /= Void then end
-			if bbox.has_area and then bbox.intersects (rect) then
-				-- If we paint f we have to add it
-				-- to the invalidate rectangle. That way
-				-- all figures on top of f are
-				-- drawn if they intersect with f.
-				--	This holds because:
-				--		1. If other figure is on top of f
-				--			it is not yet processed (see project_figure_group).
-				--		2. If other figure intersects with f
-				--			it will be drawn since bounding_box of
-				--			f is now element of rect.
-				if attached draw_routines.item (f.draw_id) as l_draw_routine then
-					l_tuple := l_draw_routine.empty_operands
-					check valid_entry: l_tuple.valid_type_for_index (f, 1) end
-					l_tuple.put (f, 1)
-					l_draw_routine.call (l_tuple)
-				end
-				rect.merge (bbox)
 			end
 		end
 
@@ -124,7 +71,6 @@ feature {NONE} -- Implementation
 		local
 			draw_item: EV_MODEL
 			i, nb: INTEGER
-			dr: detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
 			from
 				i := 1
@@ -134,18 +80,39 @@ feature {NONE} -- Implementation
 			loop
 				draw_item := group.i_th (i)
 				if draw_item.is_show_requested then
-					if draw_routines.valid_index (draw_item.draw_id) then
-						dr := draw_routines.item (draw_item.draw_id)
-					else
-						dr := Void
-					end
-					if dr = Void and attached {EV_MODEL_GROUP} draw_item as g then
-						project_figure_group_full (g)
-					else
-						project_figure_full (draw_item)
-					end
+					project_figure_full (draw_item)
 				end
 				i := i + 1
+			end
+		end
+
+	project_figure_in_rect (f: EV_MODEL; rect: EV_RECTANGLE)
+			-- Project `f' to device if `rect' intersects with `f'.
+		require
+			rect_not_void: rect /= Void
+			f_not_void: f /= Void
+		local
+			bbox: detachable EV_RECTANGLE
+		do
+			if f.valid or else f.last_update_rectangle = Void or else (attached f.last_update_rectangle as l_rect and then not l_rect.has_area) then
+				bbox := f.bounding_box
+			else
+				bbox := f.last_update_rectangle
+			end
+			check bbox /= Void then end
+			if bbox.has_area and then bbox.intersects (rect) then
+					-- If we paint f we have to add it
+					-- to the invalidate rectangle. That way
+					-- all figures on top of f are
+					-- drawn if they intersect with f.
+					--	This holds because:
+					--		1. If other figure is on top of f
+					--			it is not yet processed (see project_figure_group).
+					--		2. If other figure intersects with f
+					--			it will be drawn since bounding_box of
+					--			f is now element of rect.
+				project_figure_full (f)
+				rect.merge (bbox)
 			end
 		end
 
@@ -154,17 +121,19 @@ feature {NONE} -- Implementation
 			-- (See `project_figure')
 		require
 			f_not_void: f /= Void
-			in_draw_routines: draw_routines.valid_index (f.draw_id)
-			draw_routines_has: draw_routines.item (f.draw_id) /= Void
 			f_show_requested: f.is_show_requested
 		local
 			l_tuple: TUPLE [EV_MODEL]
 		do
-			if attached draw_routines.item (f.draw_id) as l_draw_routine then
+				-- If figures are registered via `register_figure' we proceed the old fashion way.
+			if draw_routines.valid_index (f.draw_id) and then attached draw_routines.item (f.draw_id) as l_draw_routine then
 				l_tuple := l_draw_routine.empty_operands
 				check valid_entry: l_tuple.valid_type_for_index (f, 1) end
 				l_tuple.put (f, 1)
 				l_draw_routine.call (l_tuple)
+			else
+					-- New way of projecting via double-dispatch.
+				f.project (Current)
 			end
 		end
 
@@ -175,29 +144,9 @@ feature {NONE} -- Implementation
 
 	register_basic_figures
 			-- Register EiffelVision figures.
+		obsolete
+			"Not needed anymore. Basic figures are now handled via {EV_MODEL}.project."
 		do
-			register_figure (create {EV_MODEL_ARC}, agent draw_figure_arc)
-			register_figure (create {EV_MODEL_DOT}, agent draw_figure_dot)
-			register_figure (create {EV_MODEL_ELLIPSE}, agent draw_figure_ellipse)
-			register_figure (create {EV_MODEL_EQUILATERAL},
-				agent draw_figure_equilateral)
-			register_figure (create {EV_MODEL_LINE}, agent draw_figure_line)
-			register_figure (create {EV_MODEL_PICTURE}, agent draw_figure_picture)
-			register_figure (create {EV_MODEL_PIE_SLICE},
-				agent draw_figure_pie_slice)
-			register_figure (create {EV_MODEL_POLYGON}, agent draw_figure_polygon)
-			register_figure (create {EV_MODEL_POLYLINE}, agent draw_figure_polyline)
-			register_figure (create {EV_MODEL_PARALLELOGRAM}, agent draw_figure_parallelogram )
-			register_figure (create {EV_MODEL_RECTANGLE}, agent draw_figure_rectangle )
-			register_figure (create {EV_MODEL_ROUNDED_RECTANGLE},
-				agent draw_figure_rounded_rectangle)
-			register_figure (create {EV_MODEL_ROUNDED_PARALLELOGRAM},
-				agent draw_figure_rounded_parallelogram)
-			register_figure (create {EV_MODEL_STAR}, agent draw_figure_star)
-			register_figure (create {EV_MODEL_TEXT}, agent draw_figure_text)
-			register_figure (create {EV_MODEL_ROTATED_ELLIPSE}, agent draw_figure_rotated_ellipse)
-			register_figure (create {EV_MODEL_ROTATED_ARC}, agent draw_figure_rotated_arc)
-			register_figure (create {EV_MODEL_ROTATED_PIE_SLICE}, agent draw_figure_rotated_pie_slice)
 		end
 
 	Default_colors: EV_STOCK_COLORS
@@ -213,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

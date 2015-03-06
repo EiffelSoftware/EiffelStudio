@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mkdir tmp
-ecb -config ewf_ise_wizard-safe.ecf -target gui_wizard -finalize -c_compile -project_path tmp
+ecb -config wizard.ecf -target wizard -finalize -c_compile -project_path tmp
 mkdir -p spec/$ISE_PLATFORM
 mv tmp/EIFGENs/wizard/F_code/wizard spec/$ISE_PLATFORM/wizard
 rm -rf tmp

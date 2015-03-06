@@ -37,5 +37,15 @@ if [ $rep = y ]; then
 	echo Precompilation wizard Built!
 fi
 
-
+echo Make the EWF wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the EWF wizard
+	# Launch the finalization.
+	ecb -finalize -c_compile -config ewf_wizard.ecf
+	# Copy the file.
+	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM/
+	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM/
+	echo Vision2 wizard Built!
+fi
 

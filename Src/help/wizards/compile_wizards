@@ -18,3 +18,10 @@ move wizard $INSTALL_DIR/studio/wizards/others/precompile/spec/$ISE_PLATFORM
 remtrace Precompilation wizard Built!
 
 remtrace Building the EiffelCocoa wizard
+
+remtrace Building the EWF wizard
+cd $EXPORT_DIR/ewf_wizard
+untgz_ccode wizard
+mkdir -p $INSTALL_DIR/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM
+move wizard $INSTALL_DIR/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM
+remtrace EWF wizard Built!

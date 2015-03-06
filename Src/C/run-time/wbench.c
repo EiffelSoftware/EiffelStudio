@@ -280,7 +280,7 @@ rt_public EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type)
 }
 
 /*
-doc:	<attribute name="desc_tab" return_type="struct desc_info ***" export="shared">
+doc:	<attribute name="desc_tab" return_type="const struct desc_info ***" export="shared">
 doc:		<summary>Global descriptor table. Initialization of the run-time feature call structures. The central call structure is called `desc_tab'. It contains one entry per class (NOT class type) and it is indexed by class id (not the toplogical id). The entry for a given class is a table of descriptor pointers, and is indexed by "dynamic" class type ids.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<indexing>[class_id, dtype, offset]</indexing>

@@ -68,7 +68,7 @@ clean_project
 finalize po_generation_tool.ecf po_generation_tool
 tgz_ccode po_generation_tool po_generation_tool.tar.bz2
 if [ ! -f po_generation_tool.tar.bz2 ]; then
-	echo Could not finalize a new Eiffel Echo
+	echo Could not finalize a new po_generation_tool
 	CANCEL
 fi
 clean_project
@@ -80,7 +80,7 @@ clean_project
 finalize ace2ecf.ecf ace2ecf
 tgz_ccode ace2ecf ace2ecf.tar.bz2
 if [ ! -f ace2ecf.tar.bz2 ]; then
-	echo Could not finalize a new Eiffel Echo
+	echo Could not finalize a new ace2ecf
 	CANCEL
 fi
 clean_project

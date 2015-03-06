@@ -732,6 +732,7 @@ static  void    analyze_desc (void)
 	long    count, tid, info, type, offset, i, j;
 	short   org_count, info_count, org_id;
 	short   *dinfo;
+	char	c;
 
 	printf ("Analyzing Desc\n");
 
@@ -764,20 +765,18 @@ static  void    analyze_desc (void)
 				j = info_count;
 
 				while (j--) {
+					c = rchar();
+					type = (long) rshort();
+					if (c && (type != -1)) {
+						while (rshort() != -1) {
+						}
+					}
 					info = (long) rbody_index ();
 					offset = (long) ruint32 ();
-					type = (long) rshort ();
 
-/*
-					fprintf (mfp,"  I/T : [%5d, %5d]\n", (int) info, (int) type);
-*/
 					dinfo [i++] = (short) info;
 					dinfo [i++] = (short) offset;
 					dinfo [i++] = (short) type;
-/* GENERIC CONFORMANCE */
-
-					while (rshort() != -1)
-						;
 				}
 
 				fprintf (mfp, "desc_tab [%d][%ld] = ", org_id, tid-1);

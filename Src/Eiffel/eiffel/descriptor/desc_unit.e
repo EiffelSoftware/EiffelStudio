@@ -83,7 +83,7 @@ feature -- Generation
 								-- As a result at runtime we can quickly check if
 								-- we have a type array or a single value.
 							l_type_id := entry_item.static_feature_type_id - 1
-							check l_type_id_positive: l_type_id > 0 end
+							check l_type_id_non_negative: l_type_id >= 0 end
 							buffer.put_string (non_generic_union)
 							buffer.put_hex_integer_32 (l_type_id |<< 1 | 1)
 							buffer.put_three_character (' ', '/', '*')

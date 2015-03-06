@@ -1117,7 +1117,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 
 		/* Send attribute value */
 		type = types[i];
-		CAttrOffs(offset,cn_attr[i],dtype);
+		offset = wattr(cn_attr[i],dtype);
 		o_ref = object + offset;
 		sk_type = type & SK_HEAD;
 		if (sk_type != SK_REF) {
@@ -1559,7 +1559,7 @@ rt_private void string_inspect(EIF_OBJECT object)
 	cn_attr = obj_desc->cn_attr;
 
 	for (i = 0; i < nb_attr; i++) {
-		CAttrOffs(offset,cn_attr[i],dtype);
+		offset = wattr(cn_attr[i],dtype);
 		o_ref = reference + offset;
 		if (strcmp(names[i], "count") == 0) {
 			string_count = *(EIF_INTEGER_32 *) o_ref;
@@ -1681,7 +1681,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 		if (attr_number > nb_attr)
 			return 1; /* error */
 
-		CAttrOffs(offset,cn_attr[attr_number],dtype);
+		offset = wattr(cn_attr[attr_number],dtype);
 		o_ref = object + offset;
 
 		switch(new_value->type & SK_HEAD) {

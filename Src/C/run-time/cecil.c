@@ -427,7 +427,6 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 #ifdef WORKBENCH
 	int32 rout_id;					/* Attribute routine id */
 	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
-	long offset;
 #endif
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
@@ -446,9 +445,7 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i];
-	CAttrOffs(offset,rout_id,dtype);
-
-	return offset;
+	return wattr(rout_id, dtype);
 #endif
 }
 

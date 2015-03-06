@@ -572,7 +572,7 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target)
 			/* Evaluation of the attribute key */
 		attr_key = cn_attr[index];
 			/* Evaluation of the target attribute offset */
-		CAttrOffs(offset,attr_key,dtype);
+		offset = wattr(attr_key, dtype);
 		t_ref = target + offset;
 			/* Evaluation of the source attribute offset */
 			/* It is the same as the target, since they have the same dynamic type */

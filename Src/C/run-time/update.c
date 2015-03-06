@@ -83,7 +83,7 @@ rt_private void wread(char *buffer, size_t nbytes);
 rt_private EIF_INTEGER_16 wshort(void);
 rt_private int32 wint32(void);
 rt_private uint32 wuint32(void);
-rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *);
+rt_private EIF_TYPE_INDEX *wtype_array(void);
 
 /* Writing constants (same as in interp.c!)*/
 rt_private void write_long(char *where, EIF_INTEGER value);				/* Write long constant */
@@ -459,7 +459,7 @@ rt_private void root_class_updt (void)
 			/* Create an instance of ANY, to give us a context. */
 		l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
 			/* compute the full dynamic type for `root_obj'. */
-		IC = (unsigned char *) wtype_array(NULL);
+		IC = (unsigned char *) wtype_array();
 		egc_rcdt[i] = get_compound_id (l_obj);
 		IC = old_IC;
 
@@ -535,7 +535,7 @@ rt_private void cnode_updt(struct cnode *a_esystem)
 			attr_flags[i] = (uint16) wshort();
 		}
 		for (i=0; i<nbattr; i++) {
-			gtypes[i] = wtype_array(NULL);
+			gtypes[i] = wtype_array();
 		}
 
 	} else {
@@ -644,7 +644,7 @@ rt_private void parents_updt(void)
 			/* We cannot have a Void parents lists in
 			 * melted mode since the code expect an
 			 * array with one element of value -1. */
-		parents_id = wtype_array (NULL);
+		parents_id = wtype_array ();
 		if (parents_id) {
 			pt->parents = parents_id;
 		} else {
@@ -854,6 +854,7 @@ rt_public void desc_updt(void)
 	short type_id, org_id;
 	struct desc_info *desc_ptr;
 	int i;
+	char c;
 
 	while ((count = wint32()) != -1L) {
 		while (count-- > 0) {
@@ -864,11 +865,15 @@ rt_public void desc_updt(void)
 				rout_count = wshort();
 				SAFE_ALLOC(desc_ptr, struct desc_info, rout_count);
 				for (i=0; i<rout_count;i++) {
+					wread(&c, 1);
+					if (c) {
+						desc_ptr[i].type.generic = wtype_array();
+					} else {
+							/* Special trick here (See DESC_UNIT for explanation). */
+						desc_ptr[i].type.non_generic = (rt_uint_ptr) ((wshort() << 1) | 1);
+					}
 					desc_ptr[i].body_index = wuint32();
 					desc_ptr[i].offset = wuint32();
-					desc_ptr[i].type = wshort();
-/* GENCONF */
-					desc_ptr[i].gen_type = wtype_array(NULL);
 				}
 #ifdef DEBUG
 	dprintf(4)("Melted descriptor\n\torigin = %d, dtype = %d, size = %d\n",
@@ -934,36 +939,25 @@ rt_private uint32 wuint32(void)
 	return result;
 }
 
-rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *target)
+rt_private EIF_TYPE_INDEX *wtype_array(void) 
 {
-	/* Next array of type id's */
-	/* If `target?is null, create new array */
+		/* Next array of type id's */
 	EIF_TYPE_INDEX *tp, cid [MAX_CID_SIZE+1], last;
 	int cnt;
 
-	if (target) {
-		tp = target;
-	} else {
-		tp = cid;
-	}
-
+	tp = cid;
 	cnt = 0;
 
-	/* Read entries upto and including the terminator */
-	do
-	{
+		/* Read entries upto and including the terminator */
+	do {
 		*(tp++) = last = (EIF_TYPE_INDEX) wshort ();
 		++cnt;
-		if (cnt > MAX_CID_SIZE)
+		if (cnt > MAX_CID_SIZE) {
 			eif_panic(MTC "too many parameters in compound type id");
-
+		}
 	} while (last != TERMINATOR);
 
-	if (target) {
-		return target;
-	}
-
-	/* Do not create an array if id list is actually empty */
+		/* Do not create an array if id list is actually empty */
 	if (cnt == 1) {
 		return NULL;
 	} else {

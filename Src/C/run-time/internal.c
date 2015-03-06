@@ -196,7 +196,7 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 #ifndef WORKBENCH
 	offset = obj_desc->cn_offsets[i];
 #else
-	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
+	offset = wattr(obj_desc->cn_attr[i], dtype);
 #endif
 
 	return ei_field_at (offset, field_type, object);
@@ -207,8 +207,8 @@ rt_public void * ei_oref(long i, EIF_REFERENCE object)
 	/* Returns the memory address of the i-th field of `object'. */
 {
 	EIF_TYPE_INDEX dtype = Dtype(object);
-	long offset;
-	CAttrOffs(offset,System(dtype).cn_attr[i],dtype);
+	uint32 offset;
+	offset = wattr(System(dtype).cn_attr[i], dtype);
 	return object + offset;
 }
 
@@ -216,8 +216,8 @@ rt_public long ei_offset_of_type(long i, EIF_TYPE_INDEX type_id)
 	/* Returns the memory address of the i-th field of objects of type `type_id'. */
 {
 	EIF_TYPE_INDEX dtype = To_dtype(type_id);
-	long offset;
-	CAttrOffs(offset,System(dtype).cn_attr[i - 1],dtype);
+	uint32 offset;
+	offset = wattr(System(dtype).cn_attr[i - 1], dtype);
 	return offset;
 }
 #endif

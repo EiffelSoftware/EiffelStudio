@@ -4075,7 +4075,7 @@ rt_private rt_uint_ptr get_alpha_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib
 	RT_GET_CONTEXT
 #ifdef WORKBENCH
 	int32 rout_id;				/* Attribute routine id */
-	BODY_INDEX offset;
+	uint32 offset;
 #endif
 	rt_uint_ptr alpha_attrib_num;
 
@@ -4090,7 +4090,7 @@ rt_private rt_uint_ptr get_alpha_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib
 	return (System(dtype).cn_offsets[alpha_attrib_num]);
 #else
 	rout_id = System(dtype).cn_attr[alpha_attrib_num];
-	CAttrOffs(offset,rout_id,dtype);
+	offset = wattr(rout_id,dtype);
 	return offset;
 #endif
 }

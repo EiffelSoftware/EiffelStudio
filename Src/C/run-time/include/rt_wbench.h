@@ -49,25 +49,15 @@ extern "C" {
 #endif
 
 /* Macros for call structure manipulation:
- *  CAttrOffs(attr_offset,routine_id,dtype)
  *  CBodyId(body_id,routine_id,dtype)
  *  MPatId(body_id)
  *  FPatId(body_id)
  */
 
-#define CAttrOffs(attr_offset,routine_id,dtype) \
-	{ \
-		struct rout_info info; \
-		struct desc_info *desc; \
-		info = eorg_table[(routine_id)]; \
-		desc = (desc_tab[info.origin])[(dtype)]; \
-		(attr_offset) = (desc[info.offset]).offset; \
-	}	
-
 #define CBodyId(body_id,routine_id,dtype)	\
 	{ \
 		struct rout_info info; \
-		struct desc_info *desc; \
+		const struct desc_info *desc; \
 		info = eorg_table[(routine_id)]; \
 		desc = (desc_tab[info.origin])[(dtype)]; \
 		(body_id) = (desc[info.offset]).body_index; \

@@ -849,10 +849,10 @@ rt_shared rt_uint_ptr get_offset(EIF_TYPE_INDEX dtype, rt_uint_ptr attrib_num)
 	return (System(dtype).cn_offsets[attrib_num]);
 #else
 	int32 rout_id;				/* Attribute routine id */
-	BODY_INDEX offset;
+	uint32 offset;
 
 	rout_id = System(dtype).cn_attr[attrib_num];
-	CAttrOffs(offset,rout_id,dtype);
+	offset = wattr(rout_id,dtype);
 	return offset;
 #endif
 }

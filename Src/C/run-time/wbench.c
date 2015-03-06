@@ -52,6 +52,7 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
 #include "eif_interp.h"
 #include "eif_plug.h"
 #include "rt_gen_conf.h"
+#include "rt_gen_types.h"
 #include "rt_assert.h"
 #include "rt_globals_access.h"
 
@@ -137,7 +138,7 @@ rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int routine_id, char *name, EIF_REFER
 }
 
 /*
-doc:	<routine name="wattr" return_type="long" export="public">
+doc:	<routine name="wattr" return_type="uint32" export="public">
 doc:		<summary>Attribute offset of attribute of routine ID `routine_id' applied to an object of dynamic type `dtype'.</summary>
 doc:		<param name="routine_id" type="int">Routine ID of attribute being accessed.</param>
 doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of object on which attribute will be accessed.</param>
@@ -146,18 +147,23 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Uses per thread data.</synchronization>
 doc:	</routine>
 */
-rt_public long wattr(int routine_id, EIF_TYPE_INDEX dtype)
+rt_public uint32 wattr(int routine_id, EIF_TYPE_INDEX dtype)
 {
 	long offset;
+	struct rout_info info;
+	const struct desc_info *desc;
 
 	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
-	CAttrOffs(offset,routine_id,dtype);
-	return (offset);
+	info = eorg_table[(routine_id)];
+	desc = (desc_tab[info.origin])[(dtype)];
+	offset = (desc[info.offset]).offset;
+
+	return offset;
 }
 
 /*
-doc:	<routine name="wattr_inv" return_type="long" export="public">
+doc:	<routine name="wattr_inv" return_type="uint32" export="public">
 doc:		<summary>Attribute offset of a qualified access to attribute of routine ID `routine_id' and name `name' applied to an object `object'. Note that invariants are not currently checked (code simply commented out for future reference).</summary>
 doc:		<param name="routine_id" type="int">Routine ID of attribute being accessed.</param>
 doc:		<param name="name" type="char *">Name of feature being called.</param>
@@ -167,7 +173,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Uses per thread data.</synchronization>
 doc:	</routine>
 */
-rt_public long wattr_inv (int routine_id, char *name, EIF_REFERENCE object)
+rt_public uint32 wattr_inv (int routine_id, char *name, EIF_REFERENCE object)
 {
 	if (object == NULL) {			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
@@ -201,18 +207,18 @@ doc:	</routine>
 rt_public EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
 {
 	struct rout_info info;
-	struct desc_info *desc;
-	EIF_TYPE_INDEX *gen_type;
+	const struct desc_info *desc;
 
 	CHECK("Not called by non-GC thread", rt_is_call_allowed());
-	info = eorg_table[routine_id];
-	desc = &(((desc_tab[info.origin])[dtype])[info.offset]);
-	gen_type = desc->gen_type;
-
-	if (gen_type) {
-		return eif_compound_id (dftype, gen_type);
+	info = eorg_table [routine_id];
+	desc = &(((desc_tab [info.origin]) [dtype]) [info.offset]);
+	if (desc->type.non_generic & 0x1) {
+			/* We have an encoded pointer that only stores the type. 
+			 * We shift the pointer value and get the actual type. */
+		return (EIF_TYPE_INDEX) ((desc->type.non_generic) >> 1);
 	} else {
-		return desc->type;
+			/* Case of a generic type. */
+		return eif_compound_id (dftype, desc->type.generic);
 	}
 }
 
@@ -251,68 +257,26 @@ rt_shared void rt_wexp(int routine_id, EIF_TYPE_INDEX dyn_type, EIF_REFERENCE ob
 
 rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)
 {
-	/* Function pointer associated to Eiffel feature of routine id
-	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
-	 * Return a function pointer.
-	 */
 	EIF_GET_CONTEXT
-	BODY_INDEX body_id;
-
-	CHECK("GC running", rt_is_call_allowed());
-
+	REQUIRE("GC running", rt_is_call_allowed());
 	nstcall = 0;								/* No invariant check */
-	CBodyId(body_id,egc_disp_rout_id,dyn_type);	/* Get the body index */
-
-	if (egc_frozen [body_id])
-		return egc_frozen[body_id];		 /* Frozen feature */
-	else {
-		IC = melt[body_id];	 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	}
+	return wfeat(egc_disp_rout_id, dyn_type);
 }
 
 rt_public EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type)
 {
-	/* Function pointer associated to Eiffel feature of routine id
-	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
-	 * Return a function pointer.
-	 */
 	EIF_GET_CONTEXT
-	BODY_INDEX body_id;
-
-	CHECK("Not called by non-GC thread", rt_is_call_allowed());
-
+	REQUIRE("GC running", rt_is_call_allowed());
 	nstcall = 0;								/* No invariant check */
-	CBodyId(body_id,egc_copy_rout_id,dyn_type);	/* Get the body index */
-
-	if (egc_frozen [body_id])
-		return egc_frozen[body_id];		 /* Frozen feature */
-	else {
-		IC = melt[body_id];	 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	}
+	return wfeat(egc_copy_rout_id, dyn_type);
 }
 
 rt_public EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type)
 {
-	/* Function pointer associated to Eiffel feature of routine id
-	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
-	 * Return a function pointer.
-	 */
 	EIF_GET_CONTEXT
-	BODY_INDEX body_id;
-
-	CHECK("Not called by non-GC thread", rt_is_call_allowed());
-
+	REQUIRE("GC running", rt_is_call_allowed());
 	nstcall = 0;								/* No invariant check */
-	CBodyId(body_id,egc_is_equal_rout_id,dyn_type);	/* Get the body index */
-
-	if (egc_frozen [body_id])
-		return egc_frozen[body_id];		 /* Frozen feature */
-	else {
-		IC = melt[body_id];	 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	}
+	return wfeat(egc_is_equal_rout_id, dyn_type);
 }
 
 /*
@@ -324,7 +288,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized once through `put_desc' called from InitXXX routines generated in *d.c files</synchronization>
 doc:	</attribute>
 */
-rt_shared struct desc_info ***desc_tab;
+rt_shared const struct desc_info ***desc_tab;
 
 
 struct bounds { 			/* Structure used to record min/max dtypes */
@@ -353,7 +317,7 @@ doc:	</attribute>
 rt_public char desc_fill;				/* Flag for descriptor table initialization */
 
 struct mdesc {				/* Structure used to record melted descriptor */
-	struct desc_info *desc_ptr;
+	const struct desc_info *desc_ptr;
 	EIF_TYPE_INDEX origin;
 	EIF_TYPE_INDEX type;
 };
@@ -421,7 +385,7 @@ rt_public void init_desc(void)
 	egc_tabinit();
 }
 
-rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
+rt_public void put_desc(const struct desc_info *desc_ptr, int org, int dtype)
 {
 	/* If the `desc_fill' flag is set to false, simply record
 	 * the value of the dynamic type (to compute the size
@@ -441,7 +405,7 @@ rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
 	}
 }
 
-rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
+rt_public void put_mdesc(const struct desc_info *desc_ptr, int org, int dtype)
 {
 	/* Record melted descriptor:
 	 * Record the value of the dynamic type (to compute the size
@@ -481,12 +445,12 @@ rt_public void create_desc(void)
 {
 	struct bounds *b;
 	int i;
-	struct desc_info **tab;
+	const struct desc_info **tab;
 	struct mdesc *mdesc_ptr;
 	int size;
 
 		/* Allocation of the global descriptor table. */
-	desc_tab = (struct desc_info ***) cmalloc (sizeof(struct desc_info **) * (ccount + 1));
+	desc_tab = (const struct desc_info ***) cmalloc (sizeof(const struct desc_info **) * (ccount + 1));
 	if (!desc_tab) {
 		enomem(MTC_NOARG);
 	}
@@ -499,7 +463,7 @@ rt_public void create_desc(void)
 		b = bounds_tab+i;
 		size = b->max - b->min + 1;
 		if (size > 0) {
-			tab = (struct desc_info **) cmalloc (size * sizeof(struct desc_info *));
+			tab = (const struct desc_info **) cmalloc (size * sizeof(const struct desc_info *));
 			if (!tab) {
 				enomem(MTC_NOARG);
 			}

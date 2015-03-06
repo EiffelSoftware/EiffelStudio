@@ -241,7 +241,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 #ifndef WORKBENCH
 		o_ref = object + offsets[i];
 #else
-		CAttrOffs(offset,cn_attr[i],dyn_type);
+		offset = wattr(cn_attr[i], dyn_type);
 		o_ref = object + offset;
 #endif
 		switch(type & SK_HEAD) {

@@ -155,6 +155,9 @@ remtrace wizards
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/wizards wizards
 fullrf %STUDIO_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir wizards/ewf
+move wizards\ewf\ewf.dsc wizards\ewf.dsc
+
 remtrace C_library
 safe_md %STUDIO_DIR\C_library
 cdd %STUDIO_DIR\C_library

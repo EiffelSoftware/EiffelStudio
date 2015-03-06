@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wizard" uuid="835D7132-1767-4462-AAE0-A27ECBD4E5AB" library_target="wizard">
+	<target name="wizard">
+		<root class="EWF_CONSOLE_WIZARD_APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="none"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="console_wizard" location="lib\wizard\estudio_console_wizard-safe.ecf" readonly="false"/>
+		<library name="template_smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/gui$</exclude>
+				<exclude>/lib$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

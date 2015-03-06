@@ -50,8 +50,8 @@ extern "C" {
 
 RT_LNK EIF_REFERENCE_FUNCTION wfeat(int routine_id, EIF_TYPE_INDEX dtype); /* Feature call */
 RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int routine_id, char *name, EIF_REFERENCE object); /* Nested feature call */
-RT_LNK long	wattr(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
-RT_LNK long wattr_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
+RT_LNK uint32 wattr(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
+RT_LNK uint32 wattr_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
 RT_LNK EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
 
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
@@ -59,8 +59,8 @@ RT_LNK EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type); /* Feature call fo
 RT_LNK EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type); /* Feature call for is_equal routine */ 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */
-RT_LNK void put_desc(struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */
-RT_LNK void put_mdesc(struct desc_info *desc_ptr, int org, int dtype);				/* Melted call structure insertion */
+RT_LNK void put_desc(const struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */
+RT_LNK void put_mdesc(const struct desc_info *desc_ptr, int org, int dtype);				/* Melted call structure insertion */
 RT_LNK void create_desc(void);				/* Call structure creation */
 RT_LNK char desc_fill;					/* Is it an actual insertion or do we 
 										 * wish to compute the size ? */

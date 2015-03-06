@@ -547,7 +547,7 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 		attr_key = cn_attr[index];
 
 		/* Evaluation of the target attribute offset */
-		CAttrOffs(offset,attr_key,dtype);
+		offset = wattr(attr_key, dtype);
 		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */
@@ -677,7 +677,7 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 		attr_key = cn_attr[index];
 
 		/* Evaluation of the target attribute offset */
-		CAttrOffs(offset,attr_key,dtype);
+		offset = wattr(attr_key, dtype);
 		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */

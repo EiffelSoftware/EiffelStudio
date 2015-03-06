@@ -48,7 +48,7 @@ extern "C" {
 
 #ifdef WORKBENCH
 extern struct rout_info *eorg_table;	/* Updated pointer */
-extern struct desc_info ***desc_tab;	/* Global descriptor table */
+extern const struct desc_info ***desc_tab;	/* Global descriptor table */
 
 /* Melting Ice technology */
 extern unsigned char **melt;				/* Byte code array of melted eiffel features */

@@ -141,12 +141,6 @@ feature -- from ENTRY
 			end
 		end
 
-	generated_static_feature_type_id (buffer: GENERATION_BUFFER)
-			-- Textual representation of type id of the Result type
-		do
-			buffer.put_static_type_id (static_feature_type_id)
-		end;
-
 	feature_type_id: INTEGER
 			-- Type id of the Result type
 		local
@@ -205,7 +199,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

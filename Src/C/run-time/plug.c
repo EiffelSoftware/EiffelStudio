@@ -220,7 +220,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	const long *offsets;
 #else
 	const int32 *rout_ids;
-	long offset;
+	uint32 offset;
 #endif
 	const char** attr_names;
 	int i;
@@ -286,7 +286,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 #ifndef WORKBENCH
 			o_ref = curr + (offsets[nbr_attr]);
 #else
-			CAttrOffs(offset,rout_ids[nbr_attr],curr_dtype);
+			offset = wattr(rout_ids[nbr_attr], curr_dtype);
 			o_ref = curr + offset;
 #endif
 			switch(type & SK_HEAD) {
@@ -800,7 +800,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				/* Current has some expanded objects, we need to make `obj' composite. */
 			has_expanded = 1;
 
-			CAttrOffs(exp_offset,cn_attr[i],dtype);
+			exp_offset = wattr(cn_attr[i], dtype);
 			orig_exp_dtype = exp_dtype = (EIF_TYPE_INDEX) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */

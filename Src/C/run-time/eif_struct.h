@@ -158,11 +158,13 @@ struct eif_par_types {
 RT_LNK EIF_TYPE_INDEX scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
-struct desc_info {						/* Descriptor information */
-	BODY_INDEX body_index;				/* Body index */
-	BODY_INDEX offset;					/* Attribute offset */
-	EIF_TYPE_INDEX type;				/* Feature type */
-	EIF_TYPE_INDEX *gen_type;			/* Generics, if any */
+struct desc_info {					/* Descriptor information */
+	union {
+		const EIF_TYPE_INDEX *generic;	/* Generic type description. */
+		rt_uint_ptr non_generic;		/* Non-generic type */
+	} type;
+	BODY_INDEX body_index;		/* Body index */
+	uint32 offset;				/* Attribute offset */
 };
 
 struct rout_info {						/* Routine information */

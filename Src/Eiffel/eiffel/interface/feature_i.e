@@ -3430,8 +3430,6 @@ feature -- Debugging
 			-- This id might be obsolete after supermelting this feature.
 			--| In latter case, new real body index is kept
 			--| in DEBUGGABLE objects.
-		require
-			valid_body_id: valid_body_id
 		do
 			Result := execution_table.real_body_index (body_index, class_type)
 		end
@@ -3441,22 +3439,8 @@ feature -- Debugging
 			-- This id might be obsolete after supermelting this feature.
 			--| In latter case, new real body id is kept
 			--| in DEBUGGABLE objects.
-		require
-			valid_body_id: valid_body_id
 		do
 			Result := execution_table.real_pattern_id (body_index, class_type)
-		end
-
-	valid_body_id: BOOLEAN
-			-- Use of this routine as precondition for real_body_id.
-		do
-			Result := ((not is_attribute or else attached {ATTRIBUTE_I} Current as a and then a.has_body)
-						and then (not is_constant)
-						and then (not is_deferred)
-						and then (not is_unique)
-						and then written_class.has_types)
-				or else
-					(is_constant and is_once)
 		end
 
 feature -- Api creation
@@ -3590,7 +3574,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

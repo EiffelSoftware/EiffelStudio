@@ -57,7 +57,7 @@ feature -- Query
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
 		do
-			Result := a_string.to_string_32.occurrences ('-') = 4
+			Result := a_string.to_string_32.occurrences ('-') >= 4
 		end
 
 feature {PREFERENCES} -- Access
@@ -80,38 +80,68 @@ feature {NONE} -- Implementation
 
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
+			--| `a_value' should be like "Fontname-r-regular-8-screen" ie "face-shape-weight-height-family" (shape is one letter: r or i )
 		local
 			s: STRING_32
 			i: INTEGER
-			l_value: like value
+			l_value: detachable like value
 		do
 			s := a_value.to_string_32
-			i := s.index_of('-', 1)
-			if i > 0 then
-				set_face (s.substring (1, i - 1))
-				s := s.substring (i + 1, s.count)
-				i := s.index_of ('-',1)
+			if s.occurrences ('-') >= 4 then
+					-- The face has dash in the name: such as "DigitalSerial-Xbold-r-regular-8-screen"
+				i := s.last_index_of ('-', s.count)
+				check has_family_value: i > 0 end
+				set_family (s.substring (i + 1, s.count))
+
+				s.keep_head (i - 1)
+				i := s.last_index_of ('-', s.count)
+				check has_height_value: i > 0 end
+				set_height (s.substring (i + 1, s.count))
+
+				s.keep_head (i - 1)
+				i := s.last_index_of ('-', s.count)
+				check has_weight_value: i > 0 end
+				set_weight (s.substring (i + 1, s.count))
+
+				s.keep_head (i - 1)
+				i := s.last_index_of ('-', s.count)
+				check has_shape_value: i > 0 end
+				set_shape (s.substring (i + 1, s.count))
+
+				s.keep_head (i - 1)
+				check is_valid_face: s.is_whitespace end
+				set_face (s)
+				create l_value.make_with_values (family, weight, shape, height)
+			else
+				i := s.index_of('-', 1)
 				if i > 0 then
-					set_shape (s.substring (1, i - 1))
+					set_face (s.substring (1, i - 1))
 					s := s.substring (i + 1, s.count)
 					i := s.index_of ('-',1)
 					if i > 0 then
-						set_weight (s.substring (1, i - 1))
+						set_shape (s.substring (1, i - 1))
 						s := s.substring (i + 1, s.count)
 						i := s.index_of ('-',1)
 						if i > 0 then
-							set_height (s.substring (1, i - 1))
-							set_family (s.substring (i + 1, s.count))
+							set_weight (s.substring (1, i - 1))
+							s := s.substring (i + 1, s.count)
+							i := s.index_of ('-',1)
+							if i > 0 then
+								set_height (s.substring (1, i - 1))
+								set_family (s.substring (i + 1, s.count))
+							end
 						end
 					end
+					create l_value.make_with_values (family, weight, shape, height)
 				end
-				create l_value.make_with_values (family, weight, shape, height)
-				internal_value := l_value
-				l_value.set_height_in_points (height)
-				if attached face as l_face then
-					l_value.preferred_families.extend (l_face)
-				end
-				set_value (l_value)
+			end
+			if l_value /= Void then
+					internal_value := l_value
+					l_value.set_height_in_points (height)
+					if attached face as l_face then
+						l_value.preferred_families.extend (l_face)
+					end
+					set_value (l_value)
 			else
 				create internal_value
 			end
@@ -141,7 +171,12 @@ feature {NONE} -- Implementation
 				v.append_character ('i')
 			when shape_regular then
 				v.append_character ('r')
+			else
+				check has_valid_shape: False end
+					-- Use default
+				v.append_character ('r')
 			end
+
 			v.append_character ('-')
 			inspect l_value.weight
 			when weight_black then
@@ -152,6 +187,10 @@ feature {NONE} -- Implementation
 				v.append ("regular")
 			when weight_bold then
 				v.append ("bold")
+			else
+				check has_valid_weight: False end
+					-- Use default
+				v.append ("regular")
 			end
 			v.append_character ('-')
 			v.append_integer (height)
@@ -168,6 +207,10 @@ feature {NONE} -- Implementation
 				v.append ("modern")
 			when family_typewriter then
 				v.append ("typewriter")
+			else
+				check has_valid_family: False end
+					-- Use default
+				v.append ("sans")
 			end
 			Result := v
 		end
@@ -243,7 +286,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

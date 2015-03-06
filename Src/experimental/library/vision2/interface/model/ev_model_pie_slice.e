@@ -16,7 +16,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	EV_MODEL_CLOSED
 		undefine
 			bounding_box,
@@ -46,6 +46,14 @@ feature -- Access
 
 	aperture: DOUBLE
 			-- Angle that defines percentage of arc.
+
+feature -- Visitor
+
+	project (a_projector: EV_MODEL_DRAWING_ROUTINES)
+			-- <Precursor>
+		do
+			a_projector.draw_figure_pie_slice (Current)
+		end
 
 feature -- Element change
 
@@ -88,16 +96,16 @@ feature -- Events
 				l_point_array := point_array
 				p0 := l_point_array.item (0)
 				p1 := l_point_array.item (1)
-				
+
 				p0x := p0.x_precise
 				p0y := p0.y_precise
-				
+
 				cx := (p0x + p1.x_precise) / 2
 				cy := (p0y + p1.y_precise) / 2
-				
+
 				r1 := (cx - p0x).abs
 				r2 := (cy - p0y).abs
-				
+
 				an_angle := pi_times_two - line_angle (cx, cy, a_x, a_y)
 				end_angle := modulo (start_angle + aperture, pi_times_two)
 				if start_angle < end_angle then
@@ -105,11 +113,11 @@ feature -- Events
 				else
 					angle_inside := an_angle >= start_angle or an_angle <= end_angle
 				end
-				
+
 				Result := angle_inside and then point_on_ellipse (a_x, a_y, cx, cy, r1, r2)
 			else
 				Result := False
-			end	
+			end
 		end
 
 invariant
@@ -117,14 +125,14 @@ invariant
 	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -148,7 +148,6 @@ feature -- Test routines
 					l_grid: EV_GRID
 					l_old_height: INTEGER
 					window: EV_TITLED_WINDOW
-					i: INTEGER
 				do
 					create window
 
@@ -185,7 +184,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

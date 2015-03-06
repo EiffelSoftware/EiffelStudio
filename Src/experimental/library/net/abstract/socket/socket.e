@@ -87,7 +87,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_peer_address (addr: attached like address): BOOLEAN
+	is_valid_peer_address (addr: attached separate like address): BOOLEAN
 			-- Is `addr' a valid peer address?
 		require
 			address_exists: addr /= Void
@@ -224,15 +224,30 @@ feature -- Basic commands
 			for_typing_only: False
 		end
 
-	set_peer_address (addr: like address)
+	set_peer_address (addr: separate like address)
 			-- Set peer address to `addr'.
 		require
 			address_exists: addr /= Void
 			address_valid: is_valid_peer_address (addr)
 		do
-			peer_address := addr
+				-- We may have to import a separate object, as we can't handle them.
+			if attached {like address} addr as l_addr then
+
+					-- Address is non-separate, no need to import it.
+				peer_address := l_addr
+
+			elseif attached addr then
+
+					-- Address is a separate object. Create a local copy.
+				create peer_address.make_from_separate (addr)
+
+			else
+					-- `addr' is Void. This should not happen according to the precondition.
+				peer_address := Void
+			end
 		ensure
-			address_set: peer_address = addr
+			separate_address_object_equal: not attached {like address} addr implies peer_address ~ addr
+			nonseparate_address_reference_equal: attached {like address} addr implies peer_address = addr
 		end
 
 	set_address (addr: like address)
@@ -275,7 +290,19 @@ feature -- Output
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		do
-			c_put_stream (descriptor, p.item + start_pos, nb_bytes)
+			put_pointer_content (p.item, start_pos, nb_bytes)
+		end
+
+	put_separate_managed_pointer (a_pointer: separate MANAGED_POINTER; start_pos, a_byte_count: INTEGER)
+			-- Put data of length `a_byte_count' pointed by `start_pos' index in `a_pointer' at
+			-- current position.
+		require
+			pointer_not_void: a_pointer /= Void
+			large_enough: a_pointer.count >= a_byte_count + start_pos
+			byte_count_non_negative: a_byte_count >= 0
+			extendible: extendible
+		do
+			put_pointer_content (a_pointer.item, start_pos, a_byte_count)
 		end
 
 	put_character, putchar (c: CHARACTER)
@@ -642,23 +669,24 @@ feature -- Input
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
-		local
-			l_read: INTEGER
-			l_last_read: INTEGER
 		do
-			from
-				l_last_read := 1
-			until
-				l_read = nb_bytes or l_last_read <= 0
-			loop
-				l_last_read := c_read_stream (descriptor, nb_bytes - l_read,
-					p.item + start_pos + l_read)
-				if l_last_read >= 0 then
-					l_read := l_read + l_last_read
-				end
-			end
-			bytes_read := l_read
+			read_into_pointer (p.item, start_pos, nb_bytes)
 		end
+
+	read_to_separate_managed_pointer (a_pointer: separate MANAGED_POINTER; start_pos, a_byte_count: INTEGER)
+			-- Read at most `a_byte_count' bound bytes and make result
+			-- available in `a_pointer' at position `start_pos'.
+		require
+			pointer_not_void: a_pointer /= Void
+			large_enough: a_pointer.count >= a_byte_count + start_pos
+			byte_count_non_negative: a_byte_count >= 0
+			is_readable: readable
+		do
+			read_into_pointer (a_pointer.item, start_pos, a_byte_count)
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= a_byte_count
+		end
+
 
 	read_line, readline
 			-- Read a line of characters (ended by a new_line).
@@ -972,6 +1000,44 @@ feature {NONE} -- Implementation
 	socket_error: detachable STRING
 			-- Error description in case of an error.
 
+	read_into_pointer (p: POINTER; start_pos, nb_bytes: INTEGER_32)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+		require
+			p_not_void: p /= default_pointer
+			nb_bytes_non_negative: nb_bytes >= 0
+			is_readable: readable
+		local
+			l_read: INTEGER_32
+			l_last_read: INTEGER_32
+		do
+			from
+				l_last_read := 1
+			until
+				l_read = nb_bytes or l_last_read <= 0
+			loop
+				l_last_read := c_read_stream (descriptor, nb_bytes - l_read, p + start_pos + l_read)
+				if l_last_read >= 0 then
+					l_read := l_read + l_last_read
+				end
+			end
+			bytes_read := l_read
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= nb_bytes
+		end
+
+	put_pointer_content (a_pointer: POINTER; a_offset, a_byte_count: INTEGER)
+			-- Write `a_byte_count' bytes to the socket.
+			-- The data is taken from the memory area pointed to by `a_pointer', at offset `a_offset'.
+		require
+			pointer_not_void: a_pointer /= default_pointer
+			byte_count_non_negative: a_byte_count >= 0
+			extendible: extendible
+		do
+			c_put_stream (descriptor, a_pointer + a_offset, a_byte_count)
+		end
+
+
 	shutdown
 		deferred
 		end
@@ -1104,7 +1170,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {SQL_STRING}."
+	description: "Summary description for {ORACLE_SQL_STRING}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SQL_STRING
+	ORACLE_SQL_STRING
 
 inherit
 	SQL_ABSTRACT_STRING
@@ -22,7 +22,7 @@ create
 
 feature -- Measurement
 
-	character_size: INTEGER = 2
+	character_size: INTEGER = 1
 			-- Size of a character
 
 feature {NONE} -- Implementation
@@ -30,9 +30,9 @@ feature {NONE} -- Implementation
 	c_strlen (ptr: POINTER): INTEGER
 			-- | FIXME: This should be refactored into odbc implementation.
 		external
-			"C macro use %"odbc.h%""
+			"C inline"
 		alias
-			"TXTLEN"
+			"return strlen($ptr);"
 		end
 
 end

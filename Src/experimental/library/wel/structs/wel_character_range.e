@@ -24,9 +24,6 @@ feature {NONE} -- Initialization
 	make (a_minimum, a_maximum: INTEGER)
 			-- Make a char range structure and set `maximum',
 			-- `minimum', with `a_maximum', `a_minimum'
-		require
-			positive_minimum: a_minimum >= 0
-			valid_bounds: a_minimum <= a_maximum + 1
 		do
 			structure_make
 			set_range (a_minimum, a_maximum)
@@ -44,6 +41,15 @@ feature {NONE} -- Initialization
 			maximum_set: maximum = 0
 		end
 
+	make_full
+			-- Make a range that selects all the characters.
+		do
+			make (0, -1)
+		ensure
+			minimum_set: minimum = 0
+			maximum_set: maximum = -1
+		end
+		
 feature -- Access
 
 	minimum: INTEGER
@@ -63,9 +69,6 @@ feature -- Element change
 	set_range (a_minimum, a_maximum: INTEGER)
 			-- Set `minimum' with `a_minimum' and
 			-- `maximum' with `a_maximum'
-		require
-			positive_minimum: a_minimum >= 0
-			valid_bounds: a_minimum <= a_maximum + 1
 		do
 			cwel_charrange_set_cpmin (item, a_minimum)
 			cwel_charrange_set_cpmax (item, a_maximum)
@@ -120,12 +123,8 @@ feature {NONE} -- Externals
 			"C [macro <chrrange.h>]"
 		end
 
-invariant
-	positive_minimum: minimum >= 0
-	valid_minumum_maximum: minimum <= maximum + 1
-
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -76,7 +76,7 @@ feature -- For DATABASE_CHANGE
 
 	hide_qualifier (tmp_strg: STRING): POINTER
 		local
-			c_temp: SQL_STRING
+			c_temp: ODBC_SQL_STRING
 		do
 			create c_temp.make (tmp_strg)
 			Result := odbc_hide_qualifier (c_temp.item, c_temp.count)
@@ -137,7 +137,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 	parse (descriptor: INTEGER; uht: detachable DB_STRING_HASH_TABLE [detachable ANY]; ht_order: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]; uhandle: HANDLE; sql: READABLE_STRING_GENERAL; dynamic: BOOLEAN): BOOLEAN
 		local
 			tmp_str: STRING_32
-			c_temp: SQL_STRING
+			c_temp: ODBC_SQL_STRING
 			l_ptr: POINTER
 		do
 			create c_temp.make (sql)
@@ -242,7 +242,7 @@ feature -- DATABASE_DATETIME
 
 	sql_name_datetime: STRING
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: ODBC_SQL_STRING
 			l_string: STRING_32
 		once
 			create l_sql_string.make_shared_from_pointer (odbc_driver_name)
@@ -343,7 +343,7 @@ feature -- For DATABASE_PROC
 
 	text_not_supported: STRING_32
 		local
-			driver_name: SQL_STRING
+			driver_name: ODBC_SQL_STRING
 		do
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			Result := driver_name.string
@@ -377,7 +377,7 @@ feature -- For DATABASE_PROC
 
 	store_proc_not_supported
 		local
-			driver_name: SQL_STRING
+			driver_name: ODBC_SQL_STRING
 		do
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
@@ -403,7 +403,7 @@ feature -- For DATABASE_PROC
 
 	exec_proc_not_supported
 		local
-			driver_name: SQL_STRING
+			driver_name: ODBC_SQL_STRING
 		do
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
@@ -415,7 +415,7 @@ feature -- For DATABASE_PROC
 
 	support_drop_proc: BOOLEAN
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: ODBC_SQL_STRING
 			l_string: STRING
 		do
 			create l_sql_string.make_by_pointer (odbc_procedure_term (con_context_pointer))
@@ -426,7 +426,7 @@ feature -- For DATABASE_PROC
 
 	drop_proc_not_supported
 		local
-			driver_name: SQL_STRING
+			driver_name: ODBC_SQL_STRING
 		do
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
@@ -490,7 +490,7 @@ feature -- For DATABASE_REPOSITORY
 
 	selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING
 		local
-			c_tmp: SQL_STRING
+			c_tmp: ODBC_SQL_STRING
 		do
 			create c_tmp.make (rep_qualifier)
 			odbc_set_qualifier (con_context_pointer, c_tmp.item, c_tmp.count)
@@ -513,11 +513,11 @@ feature -- External
 
 	get_error_message_string: STRING_32
 		local
-			l_s: SQL_STRING
+			l_s: ODBC_SQL_STRING
 		do
 			create l_s.make_by_pointer_and_count (
 				odbc_get_error_message (con_context_pointer),
-				odbc_get_error_message_count (con_context_pointer) * {SQL_STRING}.character_size
+				odbc_get_error_message_count (con_context_pointer) * {ODBC_SQL_STRING}.character_size
 				)
 			Result := l_s.string
 		end
@@ -535,11 +535,11 @@ feature -- External
 
 	get_warn_message_string: STRING_32
 		local
-			l_s: SQL_STRING
+			l_s: ODBC_SQL_STRING
 		do
 			create l_s.make_by_pointer_and_count (
 				odbc_get_warn_message (con_context_pointer),
-				odbc_get_warn_message_count (con_context_pointer) * {SQL_STRING}.character_size
+				odbc_get_warn_message_count (con_context_pointer) * {ODBC_SQL_STRING}.character_size
 				)
 			Result := l_s.string
 			is_warning_updated := True
@@ -552,7 +552,7 @@ feature -- External
 
 	init_order (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: SQL_STRING
+			c_temp: ODBC_SQL_STRING
 		do
 			create c_temp.make (command)
 			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
@@ -591,7 +591,7 @@ feature -- External
 
 	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
 		local
-			c_temp: SQL_STRING
+			c_temp: ODBC_SQL_STRING
 		do
 			create c_temp.make (command)
 			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item, c_temp.count)
@@ -601,12 +601,12 @@ feature -- External
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
 			-- <Precursor>
 		local
-			l_str: SQL_STRING
+			l_str: ODBC_SQL_STRING
 		do
 			Result := odbc_col_name_len (con_context_pointer, no_descriptor, index)
 
 			l_str := temporary_reusable_sql_string
-			l_str.set_shared_from_pointer_and_count (odbc_col_name (con_context_pointer, no_descriptor, index), Result * {SQL_STRING}.character_size)
+			l_str.set_shared_from_pointer_and_count (odbc_col_name (con_context_pointer, no_descriptor, index), Result * {ODBC_SQL_STRING}.character_size)
 
 			ar.grow (Result)
 			ar.set_count (Result)
@@ -648,15 +648,15 @@ feature -- External
 	put_data_32 (no_descriptor: INTEGER; index: INTEGER; ar: STRING_32; max_len: INTEGER): INTEGER
 			-- <Precursor>
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: ODBC_SQL_STRING
 			l_data, l_null: POINTER
 		do
-			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data) // {SQL_STRING}.character_size
+			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data) // {ODBC_SQL_STRING}.character_size
 			ar.grow (Result)
 			ar.set_count (Result)
 
 			l_sql_string := temporary_reusable_sql_string
-			l_sql_string.set_shared_from_pointer_and_count (l_data, Result * {SQL_STRING}.character_size)
+			l_sql_string.set_shared_from_pointer_and_count (l_data, Result * {ODBC_SQL_STRING}.character_size)
 
 			l_sql_string.read_substring_into (ar, 1, Result)
 			if l_data /= l_null then
@@ -673,7 +673,7 @@ feature -- External
 	identifier_quoter: STRING_32
 			-- Identifier quoter
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: ODBC_SQL_STRING
 		do
 			create l_sql_string.make_shared_from_pointer (odbc_identifier_quoter)
 			Result := l_sql_string.string
@@ -682,7 +682,7 @@ feature -- External
 	qualifier_separator: STRING_32
 			-- Qualifier separator
 		local
-			l_sql_string: SQL_STRING
+			l_sql_string: ODBC_SQL_STRING
 		do
 			create l_sql_string.make_shared_from_pointer (odbc_qualifier_separator)
 			Result := l_sql_string.string
@@ -805,7 +805,7 @@ feature -- External
 		require else
 			data_source_set: data_source /= Void
 		local
-			c_temp1, c_temp2, c_temp3: SQL_STRING
+			c_temp1, c_temp2, c_temp3: ODBC_SQL_STRING
 		do
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
@@ -818,7 +818,7 @@ feature -- External
 	connect_by_connection_string (a_connect_string: STRING)
 			-- Connect to database by connection string
 		local
-			l_string: SQL_STRING
+			l_string: ODBC_SQL_STRING
 		do
 			create l_string.make (a_connect_string)
 			odbc_connect_by_connection_string (con_context_pointer, l_string.item, l_string.count)
@@ -866,7 +866,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	temporary_reusable_sql_string: SQL_STRING
+	temporary_reusable_sql_string: ODBC_SQL_STRING
 			-- Reusable sql string for temporary data manipulation.
 		once
 			create Result.make_empty (0)
@@ -1204,7 +1204,7 @@ feature {NONE} -- External features
 			l_any: detachable ANY
 			tmp_date: DATE_TIME
 			l_managed_pointer: detachable MANAGED_POINTER
-			l_sql_string: SQL_STRING -- UCS-2, two byte
+			l_sql_string: ODBC_SQL_STRING -- UCS-2, two byte
 			l_c_string: C_STRING -- single byte
 			l_platform: PLATFORM
 			l_value_count: INTEGER

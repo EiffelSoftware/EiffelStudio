@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			l_any: ANY
 			l_managed_pointer: detachable MANAGED_POINTER
 			l_value_count: INTEGER
-			l_c_string: SQL_STRING
+			l_c_string: MYSQL_SQL_STRING
 			u: UTF_CONVERTER
 		do
 			l_any := a_obj

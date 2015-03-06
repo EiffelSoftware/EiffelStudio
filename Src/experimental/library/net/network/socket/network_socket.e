@@ -34,17 +34,12 @@ feature
 		end
 
 	close_socket
-			--
+			-- Close the underlying C socket.
 		do
-			if not is_closed then
-				if is_created then
-					c_close (fd, fd1)
-				end
-				is_closed := True
+			if not is_closed and then is_created then
+				c_close (fd, fd1)
 			end
-			descriptor_available := False
-			is_open_read := False
-			is_open_write := False
+			set_closed
 		end
 
 	descriptor: INTEGER
@@ -128,7 +123,7 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: attached like address): BOOLEAN
+	is_valid_peer_address (addr: attached separate like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
@@ -241,6 +236,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_closed
+			-- Update all internal state to indicate that the C socket is closed.
+		do
+			is_closed := True
+			descriptor_available := False
+			is_open_read := False
+			is_open_write := False
+		end
+
 	shutdown
 		do
 			c_shutdown (fd, fd1)
@@ -307,16 +311,17 @@ feature {NONE} -- Externals
 invariant
 
 	timeout_set: timeout > 0
+	correct_exist: not is_created implies is_closed and not exists
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -247,9 +247,9 @@ private:
   mutex_type cache_mutex;
 
 private:
-  /* Clients that we have to notify that we didn't do what they wanted.
-   */
-  std::set<processor*> dirty_for_set;
+
+  /* Stores whether the current processor / region is marked as dirty.*/
+  bool is_dirty;
 
   /* The current message we have.
    * 

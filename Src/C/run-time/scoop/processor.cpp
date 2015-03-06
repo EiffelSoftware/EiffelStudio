@@ -63,7 +63,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	pid(_pid),
 	private_queue_cache(),
 	cache_mutex(),
-	dirty_for_set(),
+	is_dirty (false),
 	current_msg (),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
@@ -94,7 +94,8 @@ bool processor::try_call (call_data *call)
 	if (saved_except) {
 		safe_saved_except = eif_protect(saved_except);
 	}
-	excatch(&exenv);	/* Record pseudo execution vector */
+		/* Record pseudo execution vector */
+	excatch(&exenv);
 
 #ifdef _MSC_VER
 /* Disable warning about C++ destructor not compatible with setjmp. It does not matter since
@@ -123,7 +124,11 @@ bool processor::try_call (call_data *call)
 	}
 
 	RTXE;
-	expop(&eif_stack);					/* Pop pseudo vector */
+		/* Only when no exception occurred do we need to pop the stack. */
+    if (success) {
+			/* Pop pseudo vector */
+		expop(&eif_stack);
+	}
 	return success;
 }
 
@@ -131,29 +136,35 @@ void processor::operator()(processor *client, call_data* call)
 {
 	bool is_synchronous = (call_data_sync_pid (call) != NULL_PROCESSOR_ID);
 
-	if (is_synchronous) {
-			/* Grab all locks held by the client. */
-		cache.push (&client->cache);
+		/* Only execute the call when the current processor region is clean. */
+	if (!is_dirty) {
+
+		if (is_synchronous) {
+				/* Grab all locks held by the client. */
+			cache.push (&client->cache);
+		}
+
+			/* Execute the call. */
+		bool successful_call = try_call (call);
+
+			/* Mark the current region as dirty if the call fails. */
+		if (!successful_call) {
+			is_dirty = true;
+		}
+
+		if (is_synchronous) {
+				/* Return the previously acquired locks. */
+			cache.pop ();
+		}
 	}
 
-		/* Execute the call. */
-	bool successful_call = try_call (call);
-	if (!successful_call) {
-		dirty_for_set.insert (client);
-	}
-
 	if (is_synchronous) {
 
-			/* Return the previously acquired locks. */
-		cache.pop ();
-		
-			/* Inform the client that the call has finished. */
+			/* Propagate exceptions on a synchronous call. */
+		if (is_dirty) {
+			is_dirty = false;
+			client -> result_notify.rude_awake();
 
-		std::set<processor*>::iterator it = dirty_for_set.find (client);
-
-		if (it != dirty_for_set.end()) {
-			client->result_notify.rude_awake();
-			dirty_for_set.erase (it);
 		} else {
 			client->result_notify.result_awake();
 		}
@@ -168,6 +179,8 @@ void processor::process_priv_queue(priv_queue *pq)
 		pq->pop_msg (current_msg);
 
 		if (current_msg.call == NULL) {
+			/* Forget dirtiness upon unlock */
+			is_dirty = false;
 			return;
 		}
 

@@ -44,10 +44,17 @@ feature -- Access
 		do
 			p := internal_cms_config_ini_path
 			if p = Void then
-				p := config_path.extended ("cms.ini")
+				p := config_path.extended (cms_config_ini_name)
 				internal_cms_config_ini_path := p
 			end
 			Result := p
+		end
+
+	cms_config_ini_name: STRING
+			-- CMS Configuration file name.
+			-- Redefine to easily change the name.
+		do
+			Result := "cms.ini"
 		end
 
 feature {NONE} -- Implementation

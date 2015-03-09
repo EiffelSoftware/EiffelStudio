@@ -314,10 +314,13 @@ feature {NONE} -- Implementation
 			f: PLAIN_TEXT_FILE
 			l_last_section_name: like last_section_name
 			retried: BOOLEAN
+			l_old_associated_path: like associated_path
 		do
+			l_old_associated_path := associated_path
 			if retried then
 				has_error := True
 			else
+				associated_path := p
 				l_last_section_name := last_section_name
 				last_section_name := Void
 				create f.make_with_path (p)
@@ -337,6 +340,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			last_section_name := l_last_section_name
+			associated_path := l_old_associated_path
 		rescue
 			retried := True
 			retry
@@ -351,6 +355,7 @@ feature {NONE} -- Implementation
 			lst: LIST [STRING_8]
 			tb: STRING_TABLE [STRING_8]
 			i,j: INTEGER
+			p: PATH
 			l_section_name: like last_section_name
 		do
 			obj := Void
@@ -384,7 +389,11 @@ feature {NONE} -- Implementation
 
 
 					if k.is_case_insensitive_equal_general ("@include") then
-						import_path (create {PATH}.make_from_string (v), last_section_name)
+						create p.make_from_string (v)
+						if not p.is_absolute and attached associated_path as l_path then
+							p := l_path.parent.extended_path (p)
+						end
+						import_path (p, last_section_name)
 					else
 						i := k.index_of ('[', 1)
 						if i > 0 then

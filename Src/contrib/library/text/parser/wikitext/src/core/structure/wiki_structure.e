@@ -312,6 +312,20 @@ feature -- Basic operation
 							check multiline_level = 0 end
 						end
 					end
+				when '`' then
+					if safe_character (a_text, i + 1) = '`' and then safe_character (a_text, i + 2) = '`' then
+							-- 3backtiks code
+						if multiline_level = 0 then
+							on_wiki_item_begin_token (l_items, i, "```")
+							multiline_level := multiline_level + 1
+						else
+							i := i + 2
+							on_wiki_item_end_token (l_items, i, "```")
+							multiline_level := multiline_level - 1
+						end
+					else
+
+					end
 				when '<' then
 						--| Builtin tags
 						-- nowiki, ref, blockquote, center, pre, ...
@@ -535,7 +549,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

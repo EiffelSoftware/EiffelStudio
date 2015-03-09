@@ -214,6 +214,46 @@ text=bar
 			assert ("o", not o.is_empty)
 		end
 
+	test_code
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+<code lang="eiffel">
+class FOO
+feature
+end
+</code>
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+		end
+
+	test_code_3backtiks
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+begin
+```eiffel
+class FOO
+feature
+end
+```
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+		end
+
 	test_br
 		local
 			t: WIKI_CONTENT_TEXT

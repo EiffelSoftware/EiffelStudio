@@ -94,8 +94,6 @@ RT_LNK void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /
 #define set_integer_32_return_value(a_integer_32_typed_value,a_integer) ((EIF_TYPED_VALUE *) a_integer_32_typed_value)->item.i4 = a_integer;
 
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
-/* TODO: This macro can be removed when ISE_SCOOP_MANAGER is not included any more. */
-#define call_data_is_lock_passing(a_call_data) (((call_data*) a_call_data)->sync_pid != ((EIF_SCP_PID) -1))
 
 /* Processor properties */
 RT_LNK void eif_new_processor(EIF_REFERENCE obj);

@@ -1432,6 +1432,7 @@ test	scoop-exceptions-combinations			scoop048 tcf manual scoop multithreaded exc
 test	scoop-impersonation-lockpassing			scoop049 tcf manual scoop multithreaded deadlock lock_passing
 test	scoop-lockpassing-query					scoop050 tcf pass scoop multithreaded deadlock lock_passing
 test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded deadlock lock_passing
+test 	scoop-exceptions-unlock					scoop052 tcf manual scoop multithreaded exception deadlock
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

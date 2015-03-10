@@ -98,6 +98,12 @@ void priv_queue::log_call(processor *client, call_data *call)
 		 * 
 		 * See also test#scoop044, test#scoop051 and review#6008977502502912.
 		 */
+		
+		/* A separate callback should always be synchronous. */
+		l_sync_pid = client-> pid;
+		call -> sync_pid = client -> pid;
+		will_sync = EIF_TRUE;
+
 		supplier->result_notify.callback_awake(client, call);
 		
 	} else {
@@ -107,6 +113,12 @@ void priv_queue::log_call(processor *client, call_data *call)
 	}
 	
 	if (will_sync) {
+			/* 
+			 * TODO: Figure out if it's really necessary to go to
+			 * the registry again to get the client to sync on.
+			 * In particular, would this invariant hold here?
+			 * client == (shadowed) client && (shadowed) client->pid == l_sync_pid
+			 */
 		processor *client = registry[l_sync_pid];
 
 		call_stack_msg = client->result_notify.wait();

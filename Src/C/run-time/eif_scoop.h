@@ -52,7 +52,7 @@
 extern "C" {
 #endif
 
-#define RT_MAX_SCOOP_PROCESSOR_COUNT 1024 /* Maximum number of SCOOP processors, including root. */
+#define RT_MAX_SCOOP_PROCESSOR_COUNT 1024 /* Maximum number of SCOOP processors, including root. It should be power of 2 to satisfy current implementation of mpmc_bounded_queue. */
 
 
 /* Separate calls */
@@ -61,7 +61,6 @@ typedef struct call_data {
 	EIF_REFERENCE target;			/* Target of a call */
 
 #ifdef WORKBENCH
-	BODY_INDEX body_index;	/* Used by ISE_SCOOP_MANAGER */
 	int routine_id;					/* Routine to be called */
 	EIF_TYPED_VALUE *result;		/* Address of a result for queries */
 #else
@@ -82,11 +81,6 @@ RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call
 RT_LNK void eif_apply_wcall (call_data *data);
 #endif
 RT_LNK void eif_call_const (call_data * a);
-
-/* Not used. TODO: remove after removing ISE_SCOOP_MANAGER. */
-#define eif_free_call(a)
-#define eif_try_call(a)
-#define eif_mark_live_pid(x)
 
 /* Request chain stack */
 

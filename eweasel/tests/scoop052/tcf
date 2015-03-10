@@ -1,0 +1,16 @@
+test_name	scoop-exceptions-unlock
+test_description Test if a processor is correctly unlocked when its client fails with an exception.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	supplier.e	$CLUSTER supplier.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+
+compare exec_output_m output
+
+test_end

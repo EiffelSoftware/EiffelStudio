@@ -1424,7 +1424,7 @@ test	scoop-agent-expression-controlled		scoop040 tcf pass scoop multithreaded ag
 test	scoop-wait-condition-controlled			scoop041 tcf manual scoop multithreaded execution lock_passing assertion
 test	scoop-exceptions-precondition			scoop042 tcf pass scoop multithreaded exception
 test	scoop-exceptions-control-flow			scoop043 tcf pass scoop multithreaded exception
-test	scoop-exceptions-separate-callback		scoop044 tcf manual scoop multithreaded exception
+test	scoop-exceptions-separate-callback		scoop044 tcf pass scoop multithreaded exception
 test	scoop-exceptions-accountability-handover	scoop045 tcf pass scoop multithreaded exception
 test	scoop-exceptions-small-tests			scoop046 tcf pass scoop multithreaded exception
 test	scoop-exceptions-import				scoop047 tcf fail scoop multithreaded exception

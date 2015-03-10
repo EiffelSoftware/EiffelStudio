@@ -7,6 +7,8 @@ feature
 
 	f (i: INTEGER; a: separate like Current)
 		do
+				-- When `a' resides on the root processor, we have
+				-- a separate callback and thus synchronization.
 			a.nested_call (i)
 			print (i.out)
 			print ("%N")

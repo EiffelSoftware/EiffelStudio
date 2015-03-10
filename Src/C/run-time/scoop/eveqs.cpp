@@ -173,8 +173,17 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
+	
+	/*
+	 * An object is only uncontrolled when all of the following apply:
+	 * - the handlers are different
+	 * - the client has no lock on the supplier yet
+	 * - the supplier has not passed its locks to the client in a previous call (separate callbacks).
+	 */
 
-	return client != supplier && !client->cache.has_locked(supplier);
+	return client != supplier 
+		&& !client->cache.has_locked(supplier)
+		&& !client->cache.has_subordinate(supplier);
 }
 
 /* Callback from garbage collector to indicate that the */

@@ -1,6 +1,11 @@
 DEFAULT_OUTPUT=scoop_benchmark.csv
+
 !IFNDEF OUTPUT
 OUTPUT=$(DEFAULT_OUTPUT)
+!ENDIF
+
+!IFNDEF EWEASEL_OUTPUT
+EWEASEL_OUTPUT=$(MAKEDIR)\..\output
 !ENDIF
 
 DO_MAKE=$(MAKE) -nologo -f Makefile.win
@@ -8,19 +13,22 @@ DO_MAKE=$(MAKE) -nologo -f Makefile.win
 EXE=.exe
 RM=del
 RD=rmdir /S/Q
+DIRSEP=\\
 
 .SILENT:
 
 all:
 	"echo" Available targets:
 	"echo".
-	"echo"	^ ^ ^ benchmark - run benchmarks and record measurements to '$(OUTPUT)'
+	"echo"	^ ^ ^ benchmark - run benchmarks (multiple runs) and record measurements to '$(OUTPUT)'
+	"echo"	^ ^ ^ benchmark_1 - run benchmarks (single run) and record measurements to '$(OUTPUT)'
 	"echo"	^ ^ ^ build^ ^ ^ ^ ^ - compile benchmarks
 	"echo"	^ ^ ^ clean^ ^ ^ ^ ^ - remove all generated files, including benchmark executables
 	"echo".
 	"echo" Available settings:
 	"echo".
 	"echo"	^ ^ ^ OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')
+	"echo"	^ ^ ^ EWEASEL_OUTPUT=dir_name - directory for benchmarks (default: '$(DEFAULT_EWEASEL_OUTPUT)')
 
 action.echo:
 	echo $(MESSAGE)> "$(OUTPUT)"

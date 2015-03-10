@@ -1,4 +1,5 @@
 EC="$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/ec"
+EWEASEL=..$(DIRSEP)..$(DIRSEP)..$(DIRSEP)eweasel
 TOP=..
 
 ELAPSED_TIME_DIR=$(TOP)/../tool/elapsed_time
@@ -22,52 +23,53 @@ benchmark benchmark_1 build clean::
 	$(DO_MAKE) ACTION=$@ winnow
 	
 chain:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench004 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench004/test.in -bench" "REPEAT=-c 22"
 
 chameneos:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="300000" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench005 ARGUMENT="300000" "REPEAT=-c 22"
 
 condition:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="18000 32" "REPEAT=-c 21"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench006 ARGUMENT="18000 32" "REPEAT=-c 21"
 
 mutex:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="500000 64" "REPEAT=-c 19"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench007 ARGUMENT="500000 64" "REPEAT=-c 19"
 
 outer:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench008 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench008/test.in -bench" "REPEAT=-c 22"
 
 prodcons:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="33000 32" "REPEAT=-c 18"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench009 ARGUMENT="33000 32" "REPEAT=-c 18"
 
 product:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 25"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench010 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench010/test.in -bench" "REPEAT=-c 25"
 
 randmat:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench011 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench011/test.in -bench" "REPEAT=-c 22"
 
 threadring:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="2100000 64" "REPEAT=-c 19"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench012 ARGUMENT="2100000 64" "REPEAT=-c 19"
 
 thresh:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 20"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench013 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench013/test.in -bench" "REPEAT=-c 20"
 
 winnow:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ ARGUMENT="-i $(TOP)/scoop_$@/test.in -bench" "REPEAT=-c 18"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench014 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench014/test.in -bench" "REPEAT=-c 18"
 
 action.benchmark: $(ELAPSED_TIME) action.build
-	$(MEASURE) -w "$(TOP)/scoop_$(TARGET)" -n $(TARGET) $(REPEAT) "$(TOP)/scoop_$(TARGET)/EIFGENs/main/F_code/main$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) $(REPEAT) "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
 
 action.benchmark_1: $(ELAPSED_TIME) action.build
-	$(MEASURE) -w "$(TOP)/scoop_$(TARGET)" -n $(TARGET) -c 1 "$(TOP)/scoop_$(TARGET)/EIFGENs/main/F_code/main$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) -c 1 "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
 
-action.build: $(TOP)/scoop_$(TARGET)/EIFGENs/main/F_code/main$(EXE)
+action.build: $(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE)
 
 action.clean:
-	-$(RD) "$(TOP)/scoop_$(TARGET)/EIFGENs"
-	-$(RM) "$(TOP)/scoop_$(TARGET)/main.rc"
+	-$(RD) "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs"
+	-$(RM) "$(EWEASEL_OUTPUT)/$(TEST)/test.rc"
 
-$(TOP)/scoop_$(TARGET)/EIFGENs/main/F_code/main$(EXE):
-	$(EC) -finalize -clean -c_compile -config $(TOP)/scoop_$(TARGET)/main.ecf -project_path $(TOP)/scoop_$(TARGET) -target main
+$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE):
+	set EWEASEL_OUTPUT=$(EWEASEL_OUTPUT)
+	"$(EWEASEL)$(DIRSEP)bin$(DIRSEP)run_eweasel_filter" $(TEST)
 
 "$(ELAPSED_TIME)": "$(ELAPSED_TIME_DIR)/elapsed_time.e" "$(ELAPSED_TIME_DIR)/elapsed_time.ecf"
 	$(EC) -finalize -clean -config "$(ELAPSED_TIME_DIR)/elapsed_time.ecf" -project_path "$(ELAPSED_TIME_DIR)" -c_compile

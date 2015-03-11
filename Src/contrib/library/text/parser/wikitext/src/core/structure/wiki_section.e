@@ -13,6 +13,8 @@ inherit
 			process
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -70,7 +72,7 @@ feature -- Access
 				l_level := a_section.level
 				p := Current
 			until
-				p = Void or else p.level < l_level - 1
+				p = Void or else p.level < l_level
 			loop
 				if attached {WIKI_SECTION} p.parent as l_parent_section then
 					p := l_parent_section
@@ -80,7 +82,7 @@ feature -- Access
 			end
 			Result := p
 		ensure
-			result_upper: Result /= Void implies Result.level < level
+			result_upper: Result /= Void implies Result.level < a_section.level
 		end
 
 feature -- Status report
@@ -98,22 +100,20 @@ feature -- Status report
 
 	debug_output: STRING
 		do
-			if attached text as t then
-				Result := t.debug_output
-				Result.prepend_character (' ')
-				Result.prepend_character ('#')
-				Result.prepend_integer (level)
-				Result.prepend_string (create {STRING}.make_filled (' ', level))
-			else
-				Result := ""
+			create Result.make_filled ('=', level)
+			if attached text as l_text then
+				Result.append_character (' ')
+				Result.append (l_text.debug_output)
 			end
+			Result.append_character (' ')
+			Result.append (create {STRING}.make_filled ('=', level))
 		end
 
 invariant
 	parent_upper: attached {WIKI_SECTION} parent as p implies p.level < level
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

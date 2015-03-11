@@ -406,7 +406,10 @@ feature -- Basic operation
 									elseif l_tag.is_case_insensitive_equal_general ("pre") then
 										keep_formatting := True
 										ignore_wiki := True
-									elseif l_tag.is_case_insensitive_equal_general ("code") then
+									elseif
+										l_tag.is_case_insensitive_equal_general ("code")
+										or else l_tag.is_case_insensitive_equal_general ("source")
+									then
 										keep_formatting := True
 										ignore_wiki := True
 									else

@@ -17,10 +17,21 @@ feature	-- Initialization
 
 	initialize_application
 		local
+			l_layout: like new_layout
+		do
+			l_layout := new_layout
+
+				-- Initialize logging facility
+			initialize_logger (l_layout)
+			layout := l_layout
+			initialize_cms (cms_setup (l_layout))
+		end
+
+	new_layout: like layout
+		local
 			args: ARGUMENTS_32
 			l_dir: detachable READABLE_STRING_32
 			i,n: INTEGER
-			l_layout: CMS_LAYOUT
 		do
 				--| Arguments
 			args := execution_environment.arguments
@@ -39,15 +50,12 @@ feature	-- Initialization
 				end
 				i := i + 1
 			end
+
 			if l_dir = Void then
-				create l_layout.make_default
+				create Result.make_default
 			else
-				create l_layout.make_with_path (create {PATH}.make_from_string (l_dir))
+				create Result.make_with_path (create {PATH}.make_from_string (l_dir))
 			end
-				-- Initialize logging facility
-			initialize_logger (l_layout)
-			layout := l_layout
-			initialize_cms (cms_setup (l_layout))
 		end
 
 feature -- Access: CMS

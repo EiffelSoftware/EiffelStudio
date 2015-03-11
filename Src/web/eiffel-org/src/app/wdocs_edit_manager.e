@@ -42,6 +42,27 @@ feature -- Error management
 
 feature -- Query
 
+	current_book_name_for (a_editor: WDOCS_EDITOR): like current_book_name
+		do
+				-- TODO: handle context by edit box!
+			Result := current_book_name
+		end
+
+	page_by_title_for (a_editor: WDOCS_EDITOR; a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
+			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
+			-- And for editor `a_editor'.
+		do
+			if a_bookid = Void and attached current_book_name_for (a_editor) as bn then
+				Result := page_by_title (a_page_title, bn)
+				if Result = Void then
+					Result := page_by_title (a_page_title, a_bookid)
+				end
+			end
+			if Result = Void then
+				Result := page_by_title (a_page_title, a_bookid)
+			end
+		end
+
 	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do
@@ -58,17 +79,15 @@ feature -- Query
 
 feature -- Element change
 
-	set_edited_page (wp: detachable WIKI_PAGE)
+	set_edited_page (wp: detachable WIKI_PAGE; a_editor: detachable WDOCS_EDITOR)
 		do
-			set_current_book_name (Void)
+			set_current_book_name (Void, Void)
 			if wp /= Void then
-				set_current_book_name (book_name (wp))
-			else
-				set_current_book_name (Void)
+				set_current_book_name (book_name (wp), a_editor)
 			end
 		end
 
-	set_current_book_name (n: like current_book_name)
+	set_current_book_name (n: like current_book_name; a_editor: detachable WDOCS_EDITOR)
 		do
 			current_book_name := n
 		end
@@ -145,11 +164,16 @@ feature -- Basic operation
 		require
 			parent_path_set: a_parent.path /= Void
 		local
-			wp: WIKI_PAGE
+			wp: like new_wiki_page
 			l_target_folder_path: PATH
 			d: DIRECTORY
 		do
-			create wp.make_with_title (a_title)
+			if attached {WIKI_BOOK_PAGE} a_parent as a_parent_wbp then
+				wp := new_wiki_page (a_title, a_parent_wbp.key)
+			else
+				check parent_is_book_page: False end
+				wp := new_wiki_page (a_title, a_title)
+			end
 			if attached a_parent.path as l_parent_path then
 				l_target_folder_path := wiki_folder_path (a_parent)
 				create d.make_with_path (l_target_folder_path)

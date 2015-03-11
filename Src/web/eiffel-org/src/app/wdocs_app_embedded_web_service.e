@@ -17,7 +17,8 @@ inherit
 
 	EIFFEL_COMMUNITY_SITE_SERVICE
 		redefine
-			initialize_cms
+			initialize_cms,
+			layout
 		select
 			execute
 		end
@@ -72,6 +73,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	request_exit_operation_actions: ACTION_SEQUENCE [TUPLE]
+
+	layout: APP_CMS_LAYOUT
 
 feature	-- Initialization
 

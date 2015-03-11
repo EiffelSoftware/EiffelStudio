@@ -1,0 +1,1 @@
+{if isset="$page.region_content"}{$page.region_content/}{/if}

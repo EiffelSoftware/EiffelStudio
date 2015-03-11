@@ -54,6 +54,17 @@ feature -- Access
 
 	tmp_dir: PATH
 
+	is_version_id (v: like version_id): BOOLEAN
+		do
+			if v = Void then
+				Result := version_id = Void
+			elseif not attached version_id as l_version_id then
+				Result := v = Void
+			else
+				Result := l_version_id.is_case_insensitive_equal (v)
+			end
+		end
+
 feature -- Persistency
 
 	storage: WDOCS_STORAGE

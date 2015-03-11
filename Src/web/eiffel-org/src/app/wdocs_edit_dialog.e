@@ -19,9 +19,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: WDOCS_EDIT_MANAGER)
+	make
 		do
-			manager := a_manager
 			make_with_title ("Wiki page editing")
 		end
 
@@ -30,7 +29,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create wiki_text_updated_actions
 			create wiki_page_saved_actions
-			create edit_box.make (manager)
+			create edit_box.make
 		end
 
 	initialize
@@ -52,31 +51,29 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	manager: WDOCS_EDIT_MANAGER
-
 	edit_box: WDOCS_EDIT_BOX
 
-	wiki_text_updated_actions: ACTION_SEQUENCE [TUPLE [page: detachable WIKI_PAGE; text: READABLE_STRING_8]]
+	wiki_text_updated_actions: ACTION_SEQUENCE [TUPLE [page: detachable WIKI_PAGE; editor: detachable WDOCS_EDITOR; text: READABLE_STRING_8]]
 
-	wiki_page_saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE; title_updated: BOOLEAN]]
+	wiki_page_saved_actions: ACTION_SEQUENCE [TUPLE [page: WIKI_PAGE; editor: detachable WDOCS_EDITOR; title_updated: BOOLEAN]]
 
 feature -- Events
 
 	on_updated
 		do
-			wiki_text_updated_actions.call ([edit_box.page, edit_box.wiki_text])
+			wiki_text_updated_actions.call ([edit_box.page, edit_box, edit_box.wiki_text])
 		end
 
 	on_saved (a_page: WIKI_PAGE; a_title_updated: BOOLEAN)
 		do
-			wiki_page_saved_actions.call ([a_page, a_title_updated])
+			wiki_page_saved_actions.call ([a_page, edit_box, a_title_updated])
 		end
 
 feature -- Element change
 
-	set_page (wp: WIKI_PAGE)
+	set_page (wp: WIKI_PAGE; m: WDOCS_EDIT_MANAGER)
 		do
-			edit_box.set_page (wp)
+			edit_box.set_page (wp, m)
 		end
 
 end

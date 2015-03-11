@@ -14,6 +14,11 @@ inherit
 			refresh_now
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -57,6 +62,7 @@ feature {NONE} -- Initialization
 			g: EV_GRID
 			but: EV_BUTTON
 			consts: EV_LAYOUT_CONSTANTS
+			s: STRING_32
 		do
 			create consts
 			create vb
@@ -64,8 +70,13 @@ feature {NONE} -- Initialization
 			vb.set_border_width (3)
 			vb.set_padding_width (3)
 
-			create lab.make_with_text ("Wiki docs")
+			create s.make_from_string_general ("Wiki #")
+			if attached wdocs_manager.version_id as vid then
+				s.append_string_general (vid)
+			end
+			create lab.make_with_text (s)
 			vb.extend (lab)
+			lab.pointer_button_press_actions.extend (agent on_wiki_version_clicked (lab, ?,?,?,?,?,?,?,?))
 			vb.disable_item_expand (lab)
 
 			g := grid
@@ -114,18 +125,6 @@ feature -- Access
 
 	wdocs_manager: WDOCS_EDIT_MANAGER
 
-	new_wdocs_manager: WDOCS_EDIT_MANAGER
---		local
---			cfg: WDOCS_INI_CONFIG
---		do
---			create cfg.make (create {PATH}.make_from_string ("wdocs.ini"))
---			create Result.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
---			Result.set_server_url ("http://localhost:" + port_number.out)
---		end
-		do
-			Result := wdocs_manager
-		end
-
 	grid: EV_GRID
 
 	wiki_page_select_actions: ACTION_SEQUENCE [TUPLE [WIKI_PAGE]]
@@ -139,6 +138,17 @@ feature -- Access: window
 	set_associated_window (w: like associated_window)
 		do
 			associated_window := w
+		end
+
+feature -- Element change		
+
+	set_wdocs_manager (a_wdocs: like wdocs_manager)
+		do
+			wdocs_manager := a_wdocs
+			if attached associated_window as w then
+				w.set_manager (a_wdocs)
+			end
+			on_refresh_requested
 		end
 
 feature -- Widgets
@@ -246,7 +256,7 @@ feature -- Basic operation
 			g.wipe_out
 			g.set_row_count_to (1)
 			g.set_column_count_to (1)
-			wdocs := new_wdocs_manager
+			wdocs := wdocs_manager
 			i := 0
 			across
 				wdocs.book_names as ic
@@ -260,6 +270,58 @@ feature -- Basic operation
 				g.set_item (1, i, glab)
 			end
 			g.column (1).resize_to_content
+		end
+
+	on_wiki_version_clicked (a_lab: EV_LABEL; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			d: DIRECTORY
+			ut: FILE_UTILITIES
+			v: READABLE_STRING_32
+			l_version_id: detachable READABLE_STRING_GENERAL
+		do
+			if attached wdocs_manager.version_id as vid then
+				l_version_id := vid
+			else
+				l_version_id := ""
+			end
+			create d.make_with_path (wdocs_manager.wiki_database_path.parent)
+			if d.exists then
+				create m.make_with_text ("Select Wiki version")
+				across
+					d.entries as ic
+				loop
+					v := ic.item.name
+					if
+						ic.item.is_current_symbol
+						or ic.item.is_parent_symbol
+						or v.starts_with (".")
+					then
+
+					elseif ut.directory_path_exists (d.path.extended (v)) then
+						create mi.make_with_text (v)
+						if wdocs_manager.is_version_id (v) then
+							mi.set_text (mi.text + " *")
+						end
+						m.extend (mi)
+						mi.select_actions.extend (agent (ia_lab: EV_TEXTABLE; ia_version: READABLE_STRING_32)
+							local
+								l_manager: WDOCS_EDIT_MANAGER
+							do
+								if not wdocs_manager.is_version_id (ia_version) then
+									create l_manager.make (wdocs_manager.wiki_database_path.parent.extended (ia_version), ia_version, wdocs_manager.tmp_dir)
+									ia_lab.set_text ({STRING_32} "Wiki #" + ia_version)
+									ev_application.add_idle_action_kamikaze (agent set_wdocs_manager (l_manager))
+								end
+							end(a_lab, v)
+							)
+					end
+				end
+				if not m.is_empty then
+					m.show_at (a_lab, a_x, a_y)
+				end
+			end
 		end
 
 	on_wiki_page_selected (wp: WIKI_PAGE)
@@ -318,8 +380,10 @@ feature -- Basic operation
 			glab: EV_GRID_LABEL_ITEM
 			i: INTEGER
 			j: INTEGER
+			man: like wdocs_manager
 		do
 			if attached wiki_page_from_row (r) as wp and then attached wp.pages as l_pages then
+				man := wdocs_manager
 				i := r.index
 				j := 0
 				across
@@ -327,7 +391,7 @@ feature -- Basic operation
 				loop
 					j := j + 1
 					r.insert_subrow (j)
-					create glab.make_with_text (ic.item.title)
+					create glab.make_with_text (man.wiki_page_link_title (ic.item))
 					r.subrow (j).set_item (1, glab)
 					r.subrow (j).set_data (ic.item)
 					if ic.item.has_page then
@@ -358,7 +422,7 @@ feature -- Basic operation
 
 	on_refresh_requested
 		do
-			new_wdocs_manager.refresh_data
+			wdocs_manager.refresh_data
 			refresh_now
 		end
 
@@ -387,7 +451,7 @@ feature -- Basic operation
 				create but.make_with_text_and_action ("Ok", agent (ia_wp: WIKI_PAGE; ia_tf: EV_TEXT_FIELD; ia_dlg: EV_DIALOG)
 						do
 							if attached ia_tf.text as l_title and then not l_title.is_whitespace then
-								new_wdocs_manager.create_page_under (ia_wp, l_title)
+								wdocs_manager.create_page_under (ia_wp, l_title)
 								refresh_now
 								ia_dlg.destroy_and_exit_if_last
 							else
@@ -441,14 +505,14 @@ feature -- Basic operation
 		require
 			path_set: wp.path /= Void
 		do
-			new_wdocs_manager.save_wiki_text (wp, a_text)
+			wdocs_manager.save_wiki_text (wp, a_text)
 		end
 
 	delete_page (wp: WIKI_PAGE)
 		require
 			path_set: wp.path /= Void
 		do
-			new_wdocs_manager.delete_page (wp)
+			wdocs_manager.delete_page (wp)
 			refresh_now
 		end
 
@@ -458,18 +522,18 @@ feature -- Basic operation
 		do
 			initialize_edit_tool
 			if attached edit_tool as l_edit_tool then
-				l_edit_tool.set_page (wp)
+				l_edit_tool.set_page (wp, wdocs_manager)
 				l_edit_tool.show
 			else
 				dlg := edit_dialog
 				if dlg = Void or else dlg.is_destroyed then
-					create dlg.make (new_wdocs_manager)
+					create dlg.make
 					edit_dialog := dlg
 					dlg.wiki_text_updated_actions.extend (agent on_page_edited)
 					dlg.wiki_page_saved_actions.extend (agent on_page_saved)
 					dlg.set_size (600, 500)
 				end
-				dlg.set_page (wp)
+				dlg.set_page (wp, wdocs_manager)
 
 				if attached associated_window as w then
 					dlg.show_modal_to_window (w)
@@ -479,22 +543,22 @@ feature -- Basic operation
 			end
 		end
 
-	on_page_edited (a_page: detachable WIKI_PAGE; a_text: READABLE_STRING_8)
+	on_page_edited (a_page: detachable WIKI_PAGE; a_editor: detachable WDOCS_EDITOR; a_text: READABLE_STRING_8)
 		do
-			on_preview_requested (a_page, a_text)
+			on_preview_requested (a_page, a_editor, a_text)
 		end
 
-	on_page_saved (a_page: WIKI_PAGE; a_title_updated: BOOLEAN)
+	on_page_saved (a_page: WIKI_PAGE; a_editor: detachable WDOCS_EDITOR; a_title_updated: BOOLEAN)
 		do
 			if a_title_updated then
 				on_refresh_requested
 			end
-			if attached new_wdocs_manager.page_url (a_page) as u then
+			if attached wdocs_manager.page_url (a_page) as u then
 				url_requested_actions.call ([u])
 			end
 		end
 
-	on_preview_requested (a_page: detachable WIKI_PAGE; a_text: READABLE_STRING_8)
+	on_preview_requested (a_page: detachable WIKI_PAGE; a_editor: detachable WDOCS_EDITOR; a_text: READABLE_STRING_8)
 		local
 			s: STRING
 			p, l_wiki_path, l_xhtml_path: PATH
@@ -502,10 +566,10 @@ feature -- Basic operation
 			f: PLAIN_TEXT_FILE
 			l_wiki_page: WIKI_BOOK_PAGE
 			url: PATH_URI
-			l_wdocs_manager: like new_wdocs_manager
+			l_wdocs_manager: like wdocs_manager
 		do
-			l_wdocs_manager := new_wdocs_manager
-			l_wdocs_manager.set_edited_page (a_page)
+			l_wdocs_manager := wdocs_manager
+			l_wdocs_manager.set_edited_page (a_page, a_editor)
 			p := l_wdocs_manager.tmp_dir.extended ("app-live-preview")
 			create d.make_with_path (p)
 			if not d.exists then
@@ -559,7 +623,7 @@ feature -- Basic operation
 			then
 				l_tool := edit_tool
 				if l_tool = Void then
-					create l_tool.make (new_wdocs_manager)
+					create l_tool.make (wdocs_manager)
 					l_tool.wiki_text_updated_actions.extend (agent on_page_edited)
 					l_tool.wiki_page_saved_actions.extend (agent on_page_saved)
 					if attached l_tool.sd_content as l_editor then
@@ -589,7 +653,7 @@ feature -- Helpers
 				if attached {WIKI_PAGE} r.data as l_wp then
 					Result := l_wp
 				elseif attached {READABLE_STRING_GENERAL} r.data as l_book_name then
-					if attached new_wdocs_manager.book (l_book_name) as wb then
+					if attached wdocs_manager.book (l_book_name) as wb then
 						Result := wb.root_page
 					end
 				end

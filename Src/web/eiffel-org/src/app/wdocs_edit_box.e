@@ -8,6 +8,8 @@ class
 	WDOCS_EDIT_BOX
 
 inherit
+	WDOCS_EDITOR
+
 	EV_SHARED_APPLICATION
 
 	WDOCS_DATA_ACCESS
@@ -18,9 +20,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: WDOCS_EDIT_MANAGER)
+	make
 		do
-			manager := a_manager
 			create close_actions
 			create updated_actions
 			create saved_actions
@@ -28,10 +29,10 @@ feature {NONE} -- Initialization
 			reset
 		end
 
-	make_embedded (a_manager: WDOCS_EDIT_MANAGER)
+	make_embedded
 		do
 			is_embedded := True
-			make (a_manager)
+			make
 		end
 
 	build_widget
@@ -130,15 +131,21 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_page (wp: like page)
+	set_page (wp: like page; m: WDOCS_EDIT_MANAGER)
 		do
-			manager.reload_data
-			manager.set_edited_page (wp)
+			manager := m
+			m.reload_data
+			m.set_edited_page (wp, Current)
 			page := wp
 			reset
 			if wp = Void or else wp.path = Void then
 				save_button.disable_sensitive
 			end
+		end
+
+	set_manager	(m: like manager)
+		do
+			manager := m
 		end
 
 feature -- Access
@@ -150,7 +157,7 @@ feature -- Access
 			Result := source_text.text
 		end
 
-	manager: WDOCS_EDIT_MANAGER
+	manager: detachable WDOCS_EDIT_MANAGER
 
 	page: detachable WIKI_PAGE
 
@@ -184,8 +191,12 @@ feature -- Basic operation
 			s: detachable READABLE_STRING_8
 		do
 			if attached page as wp then
-				s := manager.wiki_text (wp)
-				name_field.set_text (wp.title)
+				if attached manager as m then
+					s := m.wiki_text (wp)
+					name_field.set_text (wp.title)
+				else
+					name_field.remove_text
+				end
 			else
 				name_field.remove_text
 			end
@@ -368,33 +379,38 @@ feature -- Events
 			l_current_book_name: detachable READABLE_STRING_GENERAL
 		do
 			create m.make_with_text ("Insert Wiki link")
-			l_current_book_name := manager.current_book_name
+			if attached manager as l_manager then
+				l_current_book_name := l_manager.current_book_name_for (Current)
 
-			if
-				l_current_book_name /= Void and then
-				attached {WIKI_BOOK} manager.book (l_current_book_name) as l_book
-			then
-				create sm.make_with_text (l_current_book_name)
-				append_wiki_link_to_menu (l_book.pages, sm)
-				if not sm.is_empty then
-					m.extend (sm)
-				end
-			end
-			across
-				manager.book_names as ic
-			loop
 				if
-					l_current_book_name = Void
-					or else not l_current_book_name.is_case_insensitive_equal (ic.item)
+					l_current_book_name /= Void and then
+					attached {WIKI_BOOK} l_manager.book (l_current_book_name) as l_book
 				then
-					if attached manager.book (ic.item) as l_book then
-						create sm.make_with_text (ic.item)
-						append_wiki_link_to_menu (l_book.pages, sm)
-						if not sm.is_empty then
-							m.extend (sm)
+					create sm.make_with_text (l_current_book_name)
+					append_wiki_link_to_menu (l_book.pages, sm)
+					if not sm.is_empty then
+						m.extend (sm)
+					end
+				end
+				across
+					l_manager.book_names as ic
+				loop
+					if
+						l_current_book_name = Void
+						or else not l_current_book_name.is_case_insensitive_equal (ic.item)
+					then
+						if attached l_manager.book (ic.item) as l_book then
+							create sm.make_with_text (ic.item)
+							append_wiki_link_to_menu (l_book.pages, sm)
+							if not sm.is_empty then
+								m.extend (sm)
+							end
 						end
 					end
 				end
+			else
+				create sm.make_with_text ("INTERNAL_ERROR: missing manager!")
+				m.extend (sm)
 			end
 
 			popup_menu (m, source_text)
@@ -464,27 +480,32 @@ feature -- Events
 			utf: UTF_CONVERTER
 		do
 			create m.make_with_text ("Insert Wiki Image")
-			l_current_book_name := manager.current_book_name
-			across
-				manager.storage.images_path_by_title_and_book as ic
-			loop
-				if not ic.item.is_empty then
-					if ic.key.is_whitespace then
-						create sm.make_with_text ("Global")
-					else
-						create sm.make_with_text (ic.key)
-					end
-					across
-						ic.item as img_ic
-					loop
-						create lnk.make_with_text (img_ic.key)
-						lnk.select_actions.extend (agent insert_image_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (img_ic.key), Void)) --
-						sm.extend (lnk)
-					end
-					if not sm.is_empty then
-						m.extend (sm)
+			if attached manager as l_manager then
+				l_current_book_name := l_manager.current_book_name_for (Current)
+				across
+					l_manager.storage.images_path_by_title_and_book as ic
+				loop
+					if not ic.item.is_empty then
+						if ic.key.is_whitespace then
+							create sm.make_with_text ("Global")
+						else
+							create sm.make_with_text (ic.key)
+						end
+						across
+							ic.item as img_ic
+						loop
+							create lnk.make_with_text (img_ic.key)
+							lnk.select_actions.extend (agent insert_image_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (img_ic.key), Void)) --
+							sm.extend (lnk)
+						end
+						if not sm.is_empty then
+							m.extend (sm)
+						end
 					end
 				end
+			else
+				create sm.make_with_text ("INTERNAL_ERROR: Missing manager!")
+				m.extend (sm)
 			end
 --			m.show
 			popup_menu (m, source_text)
@@ -498,27 +519,32 @@ feature -- Events
 			utf: UTF_CONVERTER
 		do
 			create m.make_with_text ("Insert Wiki Template")
-			l_current_book_name := manager.current_book_name
-			across
-				manager.storage.templates_path_by_title_and_book as ic
-			loop
-				if not ic.item.is_empty then
-					if ic.key.is_whitespace then
-						create sm.make_with_text ("Global")
-					else
-						create sm.make_with_text (ic.key)
-					end
-					across
-						ic.item as tpl_ic
-					loop
-						create lnk.make_with_text (tpl_ic.key)
-						lnk.select_actions.extend (agent insert_template_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (tpl_ic.key), Void)) --
-						sm.extend (lnk)
-					end
-					if not sm.is_empty then
-						m.extend (sm)
+			if attached manager as l_manager then
+				l_current_book_name := l_manager.current_book_name_for (Current)
+				across
+					l_manager.storage.templates_path_by_title_and_book as ic
+				loop
+					if not ic.item.is_empty then
+						if ic.key.is_whitespace then
+							create sm.make_with_text ("Global")
+						else
+							create sm.make_with_text (ic.key)
+						end
+						across
+							ic.item as tpl_ic
+						loop
+							create lnk.make_with_text (tpl_ic.key)
+							lnk.select_actions.extend (agent insert_template_at_text_position (utf.escaped_utf_32_string_to_utf_8_string_8 (tpl_ic.key), Void)) --
+							sm.extend (lnk)
+						end
+						if not sm.is_empty then
+							m.extend (sm)
+						end
 					end
 				end
+			else
+				create sm.make_with_text ("INTERNAL_ERROR: Missing manager!")
+				m.extend (sm)
 			end
 --			m.show
 			popup_menu (m, source_text)
@@ -552,17 +578,19 @@ feature -- Events
 		do
 			on_apply_operation
 			if attached page as wp then
-				manager.save_wiki_text (wp, wiki_text)
-				if
-					attached name_field.text as l_name and then
-					not l_name.is_whitespace and then
-					not l_name.is_case_insensitive_equal_general (wp.title)
-				then
-						-- Title changed!
-					manager.change_page_title (wp, l_name)
-					saved_actions.call ([wp, True])
-				else
-					saved_actions.call ([wp, False])
+				if attached manager as l_manager then
+					l_manager.save_wiki_text (wp, wiki_text)
+					if
+						attached name_field.text as l_name and then
+						not l_name.is_whitespace and then
+						not l_name.is_case_insensitive_equal_general (wp.title)
+					then
+							-- Title changed!
+						l_manager.change_page_title (wp, l_name)
+						saved_actions.call ([wp, True])
+					else
+						saved_actions.call ([wp, False])
+					end
 				end
 			end
 			if not is_embedded then

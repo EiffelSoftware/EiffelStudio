@@ -217,7 +217,10 @@ feature -- Processing
 
 								flush_buffer (a_parts, s)
 								if in_items.is_empty then
-									if t.is_case_insensitive_equal_general ("code") then
+									if
+										t.is_case_insensitive_equal_general ("code")
+										or else t.is_case_insensitive_equal_general ("source")
+									then
 										create {WIKI_CODE} w_item.make (a_text.substring (i, p), "")
 									elseif t.is_case_insensitive_equal_general ("nowiki") then
 										create {WIKI_RAW_STRING} w_item.make ("")
@@ -239,7 +242,10 @@ feature -- Processing
 									if r > 0 then
 										flush_buffer (a_parts, s)
 										if in_items.is_empty then
-											if t.is_case_insensitive_equal_general ("code") then
+											if
+												t.is_case_insensitive_equal_general ("code")
+												or else t.is_case_insensitive_equal_general ("source")
+											then
 												create {WIKI_CODE} w_item.make_from_source (a_text.substring (i, r))
 											elseif t.is_case_insensitive_equal_general ("nowiki") then
 												create {WIKI_RAW_STRING} w_item.make (a_text.substring (p + 1, q - 1))

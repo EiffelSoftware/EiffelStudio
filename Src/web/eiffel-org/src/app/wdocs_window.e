@@ -179,7 +179,7 @@ feature -- Basic operation
 			l_url: READABLE_STRING_8
 		do
 			create lnk.make ("[[" + wp.title + "]]")
-			if attached wdocs_control.new_wdocs_manager.link_to_wiki_url (lnk, wp) as u then
+			if attached wdocs_control.wdocs_manager.link_to_wiki_url (lnk, wp) as u then
 				l_url := u
 			elseif attached {WIKI_BOOK_PAGE} wp as l_book_page then
 				l_url := "/book/" + l_book_page.parent_key + "/" + l_book_page.key
@@ -204,6 +204,13 @@ feature -- Basic operation
 			check wdocs_control.wdocs_manager.server_url ~ wdocs_manager.server_url end
 			wdocs_browser.set_home_url ("http://localhost:" + port_number.out)
 			wdocs_browser.open_home
+		end
+
+feature {WDOCS_CONTROL} -- Element change		
+
+	set_manager (man: like wdocs_manager)
+		do
+			wdocs_manager := man
 		end
 
 feature {NONE} -- Implementation

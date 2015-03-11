@@ -1,0 +1,233 @@
+@import "../variables";
+@import "../base/base-reset";
+@import "../markup-mixins";
+@import "../960";
+@import "variables";
+
+/* WDOCS nav tree */
+
+#wdocs-tree.menu {
+	border: solid 1px $wdocs-border-color;
+	border-top: none;
+	background-color: $wdocs-bg-color;
+	color: $wdocs-color;
+	padding: 0;
+	a {
+		color: $wdocs-color;
+	}
+	>ul>li {
+		cursor: pointer;
+		padding: 5px 0 3px 5px;
+		border-top: solid 1px $wdocs-border-color;
+		>a {
+			color: $wdocs-link-color;
+		}
+		&.expandable>*+a {
+			display: inline-block;
+			width: 85%;
+		}
+	}
+	.arrow {
+		font-family: "Lucida Console", "Courier New", "serif";
+		color: $wdocs-link-color;
+
+		border-style: solid;
+		border-color: transparent;
+		border-width: 6px;
+		display: -moz-inline-box;
+		display: inline-block;
+		/* Use font-size to control the size of the arrow. */
+		font-size: 10px;
+		height: 0;
+		line-height: 0;
+		position: relative;
+		vertical-align: middle;
+		width: 0;		
+		left: -10px;
+	}
+
+	li>a {
+		padding-left: 12px;
+	}
+	li.arrowed>a {
+		padding-left: 0;
+		background-color: transparent;
+	}
+	li.arrowed:not(.expandable) {
+		>.arrow {
+			left: -4px;
+			border-width: 3px;
+			border-color: $wdocs-tree-arrow-light;
+			top: 0;
+		}
+		>a {
+			padding-left: 6px;
+		}
+	}
+	>ul>li.arrowed:not(.expandable)>.arrow {
+			border-color: $wdocs-tree-arrow;
+	}
+	li.expandable>.arrow {
+		left: -4px;
+		border-color: transparent;
+		border-left-color: $wdocs-tree-arrow;
+		top: 0;
+		&:hover {
+			border-color: transparent;
+			border-left-color: $wdocs-link-color;
+		}
+	}
+	li.expanded>.arrow {
+		left: -6px;
+		border-color: transparent;
+		border-top-color: $wdocs-tree-arrow;
+		top: 2px;
+		&:hover {
+			border-color: transparent;
+			border-top-color: $wdocs-link-color;
+		}
+	}
+
+	>ul>li>ul>* {
+		font-size: smaller;
+		background-color: $wdocs-bg-color;
+		padding-left: 10px;
+	}
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+	ul li {
+		padding-left: 10px;
+		a:hover {
+			color: $wdocs-link-h-color;
+		}
+	}
+
+	li.active {
+		font-weight: bold;
+		//border-left: dotted 1px $wdocs-link-h-color;
+		border-right: solid 2px $wdocs-link-h-color;
+		background-color: $wdocs-link-active-bg-color;
+	}
+	li.active li {
+		font-weight: normal;
+	}
+
+	li.expandable:not(.expanded) li {
+		display: none;
+	}
+	li.expandable.expanded>a {
+		font-weight: bold;
+	}
+}
+
+.wikipage {
+	line-height: 1.8;
+	a.wiki_link {
+		&.wiki_notfound {
+			color: red;
+		}
+	}
+	table {
+		border: solid 1px #666;
+		margin-bottom: 5px;
+	}
+	td {
+		border: solid 1px #999;
+		padding: 2px 4px 2px 4px;
+	}
+	h1 {
+		font: #{$base-h1-size}/#{$base-h1-lineheight} $museo_slab500;
+		margin-top: 25px;
+		border-bottom: solid 2px $wdocs-border-color;
+	}
+	h2 {
+		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		margin-top: 20px;
+		border-bottom: solid 1px $wdocs-border-color;
+	}
+	h3 {
+		font: #{$base-h3-size}/#{$base-h3-lineheight} $museo_slab500;
+		margin-top: 10px;
+		border-bottom: dotted 1px $wdocs-border-color;
+	}
+	pre {
+		@include border-radius(4px);
+		display: block;
+		font-family: monospace;
+		white-space: pre-wrap;
+
+		border: solid 1px #ccc;
+		background-color: #FFFFD8;
+		line-height: 1.3;
+		padding: 10px;
+		margin: 2px 0 2px 0;
+		overflow: auto;
+
+	}
+
+	.wdocs-nav {
+		border-top: solid 1px #999;
+		color: $wdocs-nav-color;
+		background-color: $wdocs-nav-bg-color;
+		a.wdocs-folder:after {
+			content: " ...";
+		}
+	}
+
+	.cache-info, .uuid {
+		color: $wdocs-fade;
+		font-size: smaller;
+		text-align: right;
+	}
+}
+
+#content {
+	.bookcards {
+		padding: 0;
+		margin: 0;
+		ul{
+			@extend %listreset;
+			li{
+				display: inline-block;
+				@include grid(4);
+				height: 140px;
+				margin: 0 10px 5px 0px;
+				a{
+					border: solid 1px #ddd;
+					margin: 10px;
+					padding: 7px;
+					background: #e9eced;
+					display: block;
+					text-align: left;
+					@include border-radius(7px);
+					&:hover{
+						background: #e3e7e8;
+					}
+				}
+				img {
+					float: left;
+					opacity: 0.4;
+				}
+				h2{
+					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+					padding: 0;
+					margin-top: 5px;
+					margin-bottom: 10px;
+				}
+				p{
+					font-size: smaller;
+					line-height: 1.2em;
+					margin: 0;
+					padding: 0 0 0 10px ;
+					font-style: italic;
+					color: #666;
+					height: 60px;
+					overflow: auto;
+				}
+			}
+		}
+	}
+}
+

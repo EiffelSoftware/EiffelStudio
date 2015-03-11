@@ -1,0 +1,54 @@
+
+
+/* Custom */
+
+.less.active {
+	.button-read-more {
+    	display: none;
+	}
+	.button-read-less {
+		display: block;
+	}
+}
+.button-read-less {
+    display: none;
+}
+.more {
+    margin-top: 10px;
+	table {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+/* Link */
+
+a.link-options {
+  color: white;
+  &:hover {
+	  color: black;
+  }
+}  
+
+a.link-platforms {
+  color: #191922;
+  &:hover {
+	  color: black;
+  }
+}  
+
+/* Welcome message */
+#block-front_header_welcome {
+	.holder {
+		@include grid-width(6);
+		padding: 0;
+		@include border-radius($front-box-radius);
+		border: 1px solid #fff;
+		background-color: $front-box-bg-color;
+		height: 115px;
+		h3 {
+			padding: 10px;
+			text-align: center;
+		}
+	}
+}

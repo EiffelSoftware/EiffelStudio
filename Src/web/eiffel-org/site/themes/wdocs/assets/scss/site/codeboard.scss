@@ -1,0 +1,86 @@
+@import "../variables";
+@import "../base/base-reset";
+@import "../markup-mixins";
+@import "../960";
+
+/* Codeboard */
+
+#block-play_eiffel {
+	position:absolute;
+	top: 48px;
+
+	pre.prettyprint {
+		@include grid-width(6);
+		padding-left:18px;
+		border: solid 1px #fff;
+		@include border-radius($front-box-radius);
+		background-color: $front-box-bg-color;
+		height: 266px;
+	}
+	.holder-play{
+		width: 100%;
+		.btn-holder{
+			width: 300px;
+			padding: 0 0 16px;
+			margin: 0 0 0 2px;
+			.btn-play{
+				position: absolute;
+				top: 40px;
+				right: 10px;
+				@include linear-gradient(#2B4054, #12273A);
+				@include border-radius(4px);
+				width: 143px;
+				height: 43px;
+				display: block;
+				font: 15px/43px $museo-sans500;
+				color: $white;
+				letter-spacing: 1px;
+				text-align: center;
+				&:hover{
+					@include linear-gradient(#12273A, #0C1A26);
+				}
+			}
+		}
+	}
+}
+
+.container-codeboard {
+	@include grid-container;
+	@extend %clearfix;
+  width: 920px;
+  height: 800px;
+}
+
+.ideHeader {
+  width: 100%;
+  height: 54px;
+  border: 1px solid #a9a9a9;
+}
+
+.btn-codeboard {
+  @include linear-gradient(#2B4054, #12273A);
+  display: block;
+  margin: 0 auto;
+  font: 12px/35px "museo_sans500", Arial, Helvetica, sans-serif;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 25px;
+  right: 230px;
+  padding: 0 2px 0 2px;
+  &:after {
+    background: #2B4054 no-repeat;
+    background-color: #2B4054;
+	  width: 37px;
+	  height: 37px;
+	  position: absolute;
+	  right: 16px;
+	  top: 13px;
+  }
+  &:hover {
+    color: white;
+	  background-color: #12273A;
+    @include linear-gradient(#12273A, #12273A);
+  }
+}
+

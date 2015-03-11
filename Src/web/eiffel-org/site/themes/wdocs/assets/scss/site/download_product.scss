@@ -1,0 +1,70 @@
+/***********************/
+/*    Download         */   
+/***********************/
+
+.toggleDownload {
+  cursor: pointer;
+}
+
+table.download_decorator { 
+    margin-left:0px; 
+	margin-right: 20px;
+    border-collapse: collapse;
+	border-style: none; 
+	text-align: left;
+	a:link { 
+		color: #6600CC;
+	}
+	a:hover { 
+		color: #00001E;
+	}
+	a:visited { 
+		color: #6600CC;
+	}
+	a:active { 
+		color: #6600CC;
+	}
+	td { 
+		padding-right: 10px; 
+	}
+	tr {
+		background-color: #f0f0f0;
+		color: #000080;
+	}
+	tr:nth-child(0), tr.first {
+		background-color:#0E9A8F;
+	}
+	td,th {
+		white-space: nowrap;
+		padding: 6px 10px;
+	}
+	tt {
+		font-size: x-small;
+	}
+	tr.highlight td {
+		font-weight: bold;
+	}
+}
+
+#block-download_area {
+	.holder {
+		border: none;
+		height: 150px;
+		@include border-radius($front-box-radius);
+		@include grid-width(6);
+		padding: 0;
+		.row {
+			border-bottom: 1px solid #fff;
+		}
+		.btn-holder {
+			padding: 0;
+			margin-left: 0;
+			width: 100%;
+			margin-bottom: 2px;
+			border: 1px solid #fff;
+			@include border-radius($front-box-radius);
+			background-color: $front-box-bg-color;
+		}
+	}
+}
+

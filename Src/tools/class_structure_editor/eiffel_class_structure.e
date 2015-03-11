@@ -345,6 +345,22 @@ feature -- Basic operations
 							s := comments_to_string ("  %T--", f.comment (match_list))
 							Result.append_string (s)
 
+								-- Notes
+							if attached f.indexes as l_notes then
+								across
+									l_notes as ic
+								loop
+									if attached ic.item as l_note then
+										Result.append ("  %T @")
+										Result.append (ast_text (l_note.tag))
+										Result.append_character (':')
+										Result.append_character (' ')
+										Result.append (l_note.content_as_string)
+										Result.append_character ('%N')
+									end
+								end
+							end
+
 							Result.append_character ('%N')
 							feats.forth
 						end

@@ -15,7 +15,8 @@ inherit
 create
 	make,
 	make_with_string,
-	make_with_filename
+	make_with_filename,
+	make_with_path
 
 feature {NONE} -- Initialization
 
@@ -24,11 +25,16 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
-	make_with_filename (fn: STRING)
+	make_with_filename (fn: READABLE_STRING_GENERAL)
 			-- Make with filename `fn'
 		do
+			make_with_path (create {PATH}.make_from_string (fn))
+		end
+
+	make_with_path (p: PATH)
+		do
 			initialize
-			get_structure (fn)
+			get_structure (p)
 		end
 
 	make_with_string (txt: STRING)
@@ -172,7 +178,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	get_structure (file_name: READABLE_STRING_GENERAL)
+	get_structure (file_name: PATH)
 			-- Compute `structure' from file `file_name'
 		require
 			file_name_not_void: file_name /= Void
@@ -181,8 +187,12 @@ feature -- Basic operations
 			count, nb: INTEGER
 		do
 			class_as := Void
-			if file_name.substring (file_name.count - 1, file_name.count).is_case_insensitive_equal (".e") then
-				create file.make (file_name)
+			if
+				attached file_name as fn and then
+				attached fn.extension as ext and then
+				ext.is_case_insensitive_equal ("e")
+			then
+				create file.make_with_path (fn)
 				if file.exists then
 					count := file.count
 					file.open_read
@@ -197,11 +207,11 @@ feature -- Basic operations
 
 						get_structure_from_string (string_buffer)
 					else
-						io.error.put_string ("Couldn't open: " + file_name)
+						io.error.put_string ("Couldn't open: " + fn.utf_8_name)
 						io.error.put_new_line
 					end
 				else
-					io.error.put_string ("Couldn't find: " + file_name)
+					io.error.put_string ("Couldn't find: " + fn.utf_8_name)
 					io.error.put_new_line
 				end
 			end

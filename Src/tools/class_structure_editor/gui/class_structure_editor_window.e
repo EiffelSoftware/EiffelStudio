@@ -524,7 +524,7 @@ feature -- Callback
 		do
 			if lst.count = 1 then
 				if attached lst.first as s then
-					set_filename (s)
+					set_filename_from_string (s)
 				end
 			end
 		end
@@ -642,7 +642,7 @@ feature -- Access
 
 	copied_row: EV_GRID_ROW
 
-	filename: detachable STRING_8
+	filename: detachable PATH
 		note
 			option: stable
 		attribute
@@ -678,8 +678,8 @@ feature -- Basic operation
 					set_title (m + title)
 				end
 			else
-				if filename /= Void then
-					set_title (default_title + " (" + filename + ")" )
+				if attached filename as fn then
+					set_title (default_title + {STRING_32} " (" + fn.name + ")" )
 				else
 					set_title (default_title)
 				end
@@ -687,12 +687,15 @@ feature -- Basic operation
 			is_modified := b
 		end
 
-	set_filename (fn: STRING_8)
+	set_filename_from_string (fn: READABLE_STRING_GENERAL)
 		require
 			fn_attached: fn /= Void
+		local
+			p: PATH
 		do
-			filename := fn
-			scan_file (fn)
+			create p.make_from_string (fn)
+			filename := p
+			scan_file (p)
 		end
 
 	clean_text
@@ -723,8 +726,8 @@ feature -- Basic operation
 				s.prune_all ('%R')
 	--			s := clean_class_code (s)
 
-				create f.make_create_read_write (filename)
-				f.open_write
+				create f.make_with_path (filename)
+				f.create_read_write
 				f.put_string (s)
 				f.flush
 				f.close
@@ -762,7 +765,7 @@ feature -- Basic operation
 			end
 		end
 
-	scan_file (fn: STRING_8)
+	scan_file (fn: PATH)
 		require
 			fn_attached: fn /= Void
 		local
@@ -773,8 +776,8 @@ feature -- Basic operation
 			copied_row := Void
 			selected_row := Void
 			eiffel_class_structure := Void
-			show_text ("Scanning %"" + fn + "%" ...")
-			create ecs.make_with_filename (fn)
+			show_text ("Scanning %"" + fn.utf_8_name + "%" ...")
+			create ecs.make_with_path (fn)
 			if
 				ecs.has_structure and then
 				attached {STRING} ecs.structure_to_string as t
@@ -887,6 +890,9 @@ feature -- Constants
 	cst_positions: INTEGER = 4
 	cst_error: INTEGER = 5
 
-	default_title: STRING = "Eiffel Class Structure Editor"
+	default_title: STRING_32
+		once
+			Result := "Eiffel Class Structure Editor"
+		end
 
 end

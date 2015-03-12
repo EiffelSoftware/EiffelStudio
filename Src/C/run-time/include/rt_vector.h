@@ -62,7 +62,6 @@
  * The vector struct (struct _vector_name)
  * The constructor (_vector_name_init)
  * The deconstructor (_vector_name_deinit)
- * The reserve() function to increase the capacity (_vector_name_reserve)
  *
  * Note that _vector_name is replaced with the actual name given by the user.
  */
@@ -119,6 +118,30 @@ rt_private rt_inline void CAT2(_vector_name,_deinit) (struct _vector_name *self)
 	self->count = 0; \
 } \
 \
+
+
+/*
+ * This macro defines features to query and modify the size
+ * and capacity of a vector.
+ *
+ * _vector_name: This name will be used as the name of the struct
+ * and the prefix to all features.
+ *
+ * _vector_element_type: This is the static type of the elements of
+ * the vector. It is possible to use a pointer type or a user-defined struct.
+ *
+ * The _vector_name and _vector_element_type arguments have to be
+ * the same as in RT_DECLARE_VECTOR_BASE.
+ *
+ * The macro defines the following functions:
+ *
+ * The reserve() function to increase the capacity (_vector_name_reserve)
+ * A query for the number of elements ( _vector_name_count )
+ *
+ * Note that _vector_name is replaced with the actual name given by the user.
+ */
+
+#define RT_DECLARE_VECTOR_SIZE_FUNCTIONS(_vector_name,_vector_element_type) \
 \
 /* \
 doc:	<routine name="_vector_name_reserve" return_type="int" export="private"> \
@@ -149,31 +172,6 @@ rt_private rt_inline int CAT2(_vector_name,_reserve) (struct _vector_name* self,
 	return error; \
 } \
 \
-
-
-/*
- * This macro defines array access features for a vector.
- *
- * _vector_name: This name will be used as the name of the struct
- * and the prefix to all features.
- *
- * _vector_element_type: This is the static type of the elements of
- * the vector. It is possible to use a pointer type or a user-defined struct.
- *
- * The _vector_name and _vector_element_type arguments have to be
- * the same as in RT_DECLARE_VECTOR_BASE.
- *
- * The macro defines the following functions:
- *
- * A query for the number of elements ( _vector_name_count )
- * An array access function ( _vector_name_item )
- * An array modification function ( _vector_name_put )
- *
- * Note that _vector_name is replaced with the actual name given by the user.
- */
-
-#define RT_DECLARE_VECTOR_ARRAY_FUNCTIONS(_vector_name, _vector_element_type) \
-\
 /* \
 doc:	<routine name="_vector_name_count)" return_type="size_t" export="private"> \
 doc:		<summary> Return the number of elements in the vector. </summary> \
@@ -189,6 +187,28 @@ rt_private rt_inline size_t CAT2(_vector_name,_count) (struct _vector_name* self
 	return self->count; \
 } \
 \
+
+/*
+ * This macro defines array access features for a vector.
+ *
+ * _vector_name: This name will be used as the name of the struct
+ * and the prefix to all features.
+ *
+ * _vector_element_type: This is the static type of the elements of
+ * the vector. It is possible to use a pointer type or a user-defined struct.
+ *
+ * The _vector_name and _vector_element_type arguments have to be
+ * the same as in RT_DECLARE_VECTOR_BASE.
+ *
+ * The macro defines the following functions:
+ *
+ * An array access function ( _vector_name_item )
+ * An array modification function ( _vector_name_put )
+ *
+ * Note that _vector_name is replaced with the actual name given by the user.
+ */
+
+#define RT_DECLARE_VECTOR_ARRAY_FUNCTIONS(_vector_name, _vector_element_type) \
 \
 /* \
 doc:	<routine name="_vector_name_item" return_type="_vector_element_type" export="private"> \
@@ -375,6 +395,7 @@ rt_private rt_inline void CAT2(_struct_name,_destroy) (struct _struct_name* self
 
 #define RT_DECLARE_VECTOR(_vector_name,_vector_element_type) \
 RT_DECLARE_VECTOR_BASE (_vector_name, _vector_element_type) \
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (_vector_name, _vector_element_type) \
 RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (_vector_name, _vector_element_type) \
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (_vector_name, _vector_element_type) \
 RT_DECLARE_HEAP_ALLOCATION_FUNCTIONS (_vector_name)

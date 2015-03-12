@@ -37,45 +37,66 @@
 
 #ifndef _REQ_GRP_H
 #define _REQ_GRP_H
-#include <vector>
+
+#include "eif_portable.h"
 
 class processor;
 class priv_queue;
 
-/* A request group.
+struct rt_request_group;
+
+/* Forward declarations. */
+rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier);
+rt_shared void rt_request_group_wait (struct rt_request_group* self);
+rt_shared void rt_request_group_lock (struct rt_request_group* self);
+rt_shared void rt_request_group_unlock (struct rt_request_group* self);
+
+/*
+ * A request group.
  *
  * Request groups model the group of locks taken and released. This
  * generally occurs when a call has separate arguments.
  */
-class req_grp : public std::vector<priv_queue*>
+struct rt_request_group
 {
-public:
-  /* Construct a new group.
-   * @client the <processor> which will issue calls to the group.
-   */
-  req_grp(processor* client);
+	priv_queue** area;
+	size_t capacity;
+	size_t count;
+	processor* client;
+	EIF_BOOLEAN is_sorted;
 
-  /* Add a new processor to the group.
-   * @supplier the supplier to add
-   */
-  void add(processor* supplier);
-
-  /* Wait on all processors in the group.
-   *
-   * This call will only return when one of the group sends a notification.
-   */
-  void wait();
-
-  /* Lock all processors in the group.
-   */
-  void lock();
-
-  /* Unlock all processors in the group.
-   */
-  void unlock();
-private:
-  processor *client;
-  bool sorted;
+	/* C++ compatibility */
+	void add(processor* supplier) {
+		rt_request_group_add (this, supplier);
+	}
+	void wait() {
+		rt_request_group_wait(this);
+	}
+	void lock(){
+		rt_request_group_lock(this);
+	}
 };
+
+
+/* Construct a new group.
+* @client the <processor> which will issue calls to the group.
+*/
+rt_private rt_inline void rt_request_group_init (struct rt_request_group* self, processor* a_client)
+{
+	self->area = NULL;
+	self->capacity = 0;
+	self->count = 0;
+	self->is_sorted = 0;
+	self->client = a_client;
+}
+
+rt_private rt_inline void rt_request_group_deinit (struct rt_request_group* self)
+{
+	free (self->area);
+	rt_request_group_init (self, NULL);
+}
+
+/* C++ compatibility */
+typedef struct rt_request_group req_grp;
 
 #endif

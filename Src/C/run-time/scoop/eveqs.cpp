@@ -56,15 +56,25 @@ extern "C" {
 rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-	client->group_stack.push_back (req_grp(client));
+
+	/* Initialize the request group on the stack, then move it to the client processor. */
+	struct rt_request_group stack_allocated;
+	rt_request_group_init (&stack_allocated, client);
+	client->group_stack.push_back (stack_allocated);
 }
 
 /* RTS_RD (o) - delete chain (release locks?) */
 rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-	client->group_stack.back().unlock();
-	client->group_stack.pop_back();
+// 	client->group_stack.back().unlock();
+// 	client->group_stack.pop_back();
+	/* Move the request group back to the stack for deinitialization. */
+	struct rt_request_group stack_allocated = client -> group_stack.back();
+	client -> group_stack.pop_back();
+	rt_request_group_unlock (&stack_allocated);
+	rt_request_group_deinit (&stack_allocated);
+
 }
 
 /* RTS_RF (o) - wait condition fails */

@@ -171,6 +171,9 @@ RT_LNK EIF_TYPE_INDEX scount;				/* Numner of dynamic types */
 #		define EIF_GENERIC(v)		v
 #		define EIF_NON_GENERIC(v)	((const EIF_TYPE_INDEX *) (rt_uint_ptr) v)
 #	endif
+#else
+#	define EIF_GENERIC(v)			.type.generic = v
+#	define EIF_NON_GENERIC(v)		.type.non_generic = v
 #endif
 
 struct desc_info {					/* Descriptor information */

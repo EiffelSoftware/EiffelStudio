@@ -50,15 +50,23 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (rt_request_group, priv_queue*)
 RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (rt_request_group, priv_queue*)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (rt_request_group, priv_queue*)
 
-
-/* The sort function to be used within rt_request_group_lock */
-rt_private int sort_func (const void* first, const void* second)
+/* A simple bubblesort algorithm to sort an array of private queues. */
+rt_private rt_inline void bubble_sort (priv_queue** area, size_t count)
 {
-	const priv_queue* pq1 = *((const priv_queue**) first);
-	const priv_queue* pq2 = *((const priv_queue**) second);
-	int pid1 = pq1->supplier->pid;
-	int pid2 = pq2->supplier->pid;
-	return pid1 - pid2;
+	int right_boundary = ((int) count)-1;
+	int swapped = 1;
+	while (swapped == 1) {
+		swapped = 0;
+		for (int i=0; i < right_boundary; ++i) {
+			if (area [i]->supplier->pid > area [i+1]->supplier->pid) {
+				priv_queue* tmp = area [i];
+				area [i] = area [i+1];
+				area [i+1] = tmp;
+				swapped = 1;
+			}
+		}
+		--right_boundary;
+	}
 }
 
 /*
@@ -82,8 +90,10 @@ rt_shared void rt_request_group_add (struct rt_request_group* self, processor* s
 	pq = self->client->cache[supplier];
 	error = rt_request_group_extend (self, pq);
 
-		/* TODO: If memory allocation failed, we need to throw an exception */
-	CHECK ("no_allocation_failure", error == T_OK);
+		/* If memory allocation failed, we need to throw an exception */
+	if (error == T_NO_MORE_MEMORY) {
+		enomem();
+	}
 }
 
 /*
@@ -141,10 +151,9 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 		 * "atomic locking" guarantee of multiple arguments. */
 	if (!self->is_sorted) {
 
-			/* FIXME: The array is usually very small (1 to 5 items).
-			* It is probably more efficient to use a simple algorithm
-			* like bubble-sort */
-		qsort (self->area, self->count, sizeof(priv_queue*), sort_func);
+			/* The array is usually very small (1 to 5 items), so having
+			 * lightweight bubblesort algorithm is probably most efficient. */
+		bubble_sort (self->area, self->count);
 		self->is_sorted = 1;
 	}
 

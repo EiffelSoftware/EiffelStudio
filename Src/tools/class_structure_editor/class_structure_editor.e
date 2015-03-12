@@ -11,7 +11,8 @@ inherit
 
 create
 	make,
-	make_with_filename
+	make_with_filename,
+	make_with_path
 
 feature {NONE} -- Initialization
 
@@ -23,8 +24,13 @@ feature {NONE} -- Initialization
 
 	make_with_filename (fn: STRING)
 		do
+			make_with_path (create {PATH}.make_from_string (fn))
+		end
+
+	make_with_path (p: PATH)
+		do
 			initialize
-			class_structure.get_structure (fn)
+			class_structure.get_structure (p)
 			class_structure.display_structure
 		end
 
@@ -52,7 +58,7 @@ feature {NONE} -- File discovering and processing
 				l_filename := (create {ENV_INTERP}).interpreted_string_32 (argument (i))
 				create f.make_with_name (l_filename)
 				if f.exists then
-					class_structure.get_structure (l_filename)
+					class_structure.get_structure (f.path)
 					class_structure.display_structure
 				end
 			end

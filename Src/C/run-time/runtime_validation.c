@@ -113,27 +113,22 @@ rt_private rt_inline void double_alignment_speed_test (void) {
 }
 
 /* Test to ensure that union initialization works on all our supported platforms. */
-struct union_struct {
-	union {
-		const short *generic;
-		uintptr_t non_generic;
-	} type;
-	int body_index;
+#ifdef WORKBENCH
+static const EIF_TYPE_INDEX gen_type_1 [2] = {1, 0x0fff};
+static struct desc_info desc_35[] = {
+	{EIF_NON_GENERIC(40), 1},
+	{EIF_GENERIC(NULL), 2},
+	{EIF_GENERIC(gen_type_1), 3},
+	{EIF_NON_GENERIC(40), 4}
 };
-
-static const short gen_type_1 [2] = {1, 0x0fff};
-static struct union_struct desc_35[] = {
-	{.type.non_generic = 40, 1},
-	{.type.generic = NULL, 2},
-	{.type.generic = gen_type_1, 3},
-	{.type.non_generic = 40, 4}
-};
+#endif
 
 int main(int argc, char **argv)
 {
 	struct eif_ex_type t3;
 
 	print_info();
+
 
 	double_alignment_speed_test ();
 

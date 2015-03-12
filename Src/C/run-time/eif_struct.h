@@ -158,6 +158,21 @@ struct eif_par_types {
 RT_LNK EIF_TYPE_INDEX scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
+/* On old version of VC++, designated initializers are not supported, so we will use
+ * a nameless assignment instead.
+ * For nameless access, the C standard states that it will use the first field in the union
+ * to determine the type. This is why for EIF_NON_GENERIC we have to use some casts to avoid
+ * C warnings. */
+#if defined(EIF_WINDOWS) && defined(_MSC_VER)
+#	if _MSC_VER >= 1800 /* version 18.0+ (VS 2013)  */
+#		define EIF_GENERIC(v)		.type.generic = v
+#		define EIF_NON_GENERIC(v)	.type.non_generic = v
+#	else
+#		define EIF_GENERIC(v)		v
+#		define EIF_NON_GENERIC(v)	((const EIF_TYPE_INDEX *) (rt_uint_ptr) v)
+#	endif
+#endif
+
 struct desc_info {					/* Descriptor information */
 	union {
 		const EIF_TYPE_INDEX *generic;	/* Generic type description. */

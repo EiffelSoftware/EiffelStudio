@@ -328,13 +328,16 @@ $(OUTDIR)finalized.dll : $(OBJECTS)
 	cd ..$(DIR)run-time
 
 
-all:: x2c.exe runtime_validation.exe
+all:: x2c.exe runtime_validation.exe wruntime_validation.exe
 
 x2c.exe: x2c.c offset.$obj eif_size.h
 	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ x2c.c offset.$obj
 
 runtime_validation.exe: runtime_validation.c offset.$obj
 	$(CC) $ccflags $optimize  -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ runtime_validation.c offset.$obj
+
+wruntime_validation.exe: runtime_validation.c offset.$obj
+	$(CC) $ccflags $optimize -DWORKBENCH -I. -I./include -I$(TOP) -I$(TOP)/idrs $(OUTPUT_EXE_CMD)$@ runtime_validation.c offset.$obj
 
 
 $all_dependency

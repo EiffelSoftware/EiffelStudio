@@ -44,51 +44,6 @@
 
 class processor;
 
-struct notify_message
-{
-  typedef enum {
-    e_result_ready,
-    e_dirty,
-    e_callback
-  } e_type;
-
-  notify_message(e_type type = e_result_ready,
-		 processor* client = NULL,
-		 call_data* call = NULL) :
-    client (client),
-    call (call),
-    type (type)
-  {
-  }
-
-  processor* client;
-  call_data* call;
-  e_type type;
-};
-
-
-/*
-struct pq_message
-{
-  typedef enum {
-    e_normal,
-    e_unlock
-  } e_type;
-
-  pq_message(e_type type = e_normal,
-	     processor* client = NULL,
-	     call_data* call = NULL) :
-    client (client),
-    call (call),
-    type (type)
-  {
-  }
-
-  processor* client;
-  call_data* call;
-  e_type type;
-};
-*/
 
 /* The private queue class.
  *

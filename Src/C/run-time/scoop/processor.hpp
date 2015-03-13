@@ -164,14 +164,12 @@ public:
   recursive_mutex_type qoq_mutex;
 
 public:
-  /* A stack of <req_grp>s.
+  /* A stack of request groups.
    * 
    * The vector here is used as a stack, which mirrors the processors locked
    * in the real call stack.
    */
-  std::vector <req_grp> group_stack;
-
-  request_group_stack_t request_group_stack;
+  struct request_group_stack_t request_group_stack;
 
 public:
   /* Register another processors <notify_token>.

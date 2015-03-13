@@ -107,7 +107,7 @@ feature -- Generation
 			buffer.put_string (id_string)
 			buffer.put_string (once "[] = {%N");
 
-			buffer.put_string (once "%T{.type.generic = NULL, ")
+			buffer.put_string (once "%T{EIF_GENERIC(NULL), ")
 			if invariant_entry = Void then
 					-- No body.
 				buffer.put_hex_integer_32 (-1)

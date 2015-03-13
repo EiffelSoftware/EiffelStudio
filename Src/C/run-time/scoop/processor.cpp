@@ -184,7 +184,11 @@ void processor::process_priv_queue(priv_queue *pq)
 	for (;;) {
 		pq->pop_msg (current_msg);
 
-		if (current_msg.call == NULL) {
+		enum scoop_message_type type = current_msg.message_type;
+
+		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK);
+
+		if (type == SCOOP_MESSAGE_UNLOCK) {
 			/* Forget dirtiness upon unlock */
 			is_dirty = false;
 			return;
@@ -192,6 +196,7 @@ void processor::process_priv_queue(priv_queue *pq)
 
 		(*this)(current_msg.sender, current_msg.call);
 
+			/* Make sure the call doesn't get traversed again for GC */
 		current_msg.call = NULL; /* TODO: initialize to default state? */
 	}
 }

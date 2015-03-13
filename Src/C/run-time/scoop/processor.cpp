@@ -67,9 +67,9 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	private_queue_cache(),
 	cache_mutex(),
 	is_dirty (false),
-	current_msg (),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
+	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
 	request_group_stack_t_init (&this->request_group_stack);
 	active_count++;
 }
@@ -190,9 +190,9 @@ void processor::process_priv_queue(priv_queue *pq)
 			return;
 		}
 
-		(*this)(current_msg.client, current_msg.call);
+		(*this)(current_msg.sender, current_msg.call);
 
-		current_msg.call = NULL;
+		current_msg.call = NULL; /* TODO: initialize to default state? */
 	}
 }
 

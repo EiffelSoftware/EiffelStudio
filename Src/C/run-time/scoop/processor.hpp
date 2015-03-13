@@ -261,7 +261,7 @@ private:
    * 
    * This call in here will be traced during marking.
    */
-  pq_message current_msg;
+  rt_message current_msg;
 
 
   /* A vacuous pointer object to satisfy the Eiffel runtime's requirement

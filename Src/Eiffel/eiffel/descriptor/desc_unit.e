@@ -58,8 +58,8 @@ feature -- Generation
 		do
 			from
 				gen_type := once "egt_"
-				generic_union := once ".type.generic = "
-				non_generic_union := once ".type.non_generic = "
+				generic_union := once "EIF_GENERIC("
+				non_generic_union := once "EIF_NON_GENERIC("
 				l_count := count - 1
 				l_area := area
 			until
@@ -94,6 +94,7 @@ feature -- Generation
 						buffer.put_string (generic_union)
 						buffer.put_string ({C_CONST}.null)
 					end
+					buffer.put_character (')')
 
 					buffer.put_two_character (',', ' ')
 					if attached {ROUT_ENTRY} entry_item as re then
@@ -122,7 +123,7 @@ feature -- Generation
 						-- The entry corresponds to a routine that is not present anymore.
 					buffer.put_string (generic_union)
 					buffer.put_string ({C_CONST}.null)
-					buffer.put_two_character (',', ' ')
+					buffer.put_three_character (')', ',', ' ')
 					buffer.put_hex_integer_32 (-1)
 					buffer.put_two_character (',', ' ')
 					buffer.put_hex_integer_32 (-1)

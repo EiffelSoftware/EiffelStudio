@@ -48,6 +48,8 @@
 #include "notify_token.hpp"
 #include "queue_cache.hpp"
 
+#include "rt_vector.h"
+
 /* A specialized version of <spsc> that is for notification.
  *
  * The use of <spsc> allows notifications to not be lost, although
@@ -96,6 +98,10 @@ struct notifier : spsc <notify_message> {
   }
 
 };
+
+/* Define the struct to be used for the group stack. */
+RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
+
 
 /* The SCOOP logical unit of processing.
  *
@@ -164,6 +170,8 @@ public:
    * in the real call stack.
    */
   std::vector <req_grp> group_stack;
+
+  request_group_stack_t request_group_stack;
 
 public:
   /* Register another processors <notify_token>.
@@ -273,5 +281,9 @@ private:
 
 };
 
+/* TODO - we need to get the pointer to an item in rt_vector.h */
+rt_shared void rt_processor_request_group_stack_extend (processor* self);
+rt_shared struct rt_request_group* rt_processor_request_group_stack_last (processor* self);
+rt_shared void rt_processor_request_group_stack_remove_last (processor* self);
 
 #endif

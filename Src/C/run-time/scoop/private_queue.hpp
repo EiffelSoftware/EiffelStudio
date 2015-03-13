@@ -184,7 +184,7 @@ public:
   void mark (MARKER marking);
 
 private:
-  notify_message call_stack_msg;
+  rt_message call_stack_msg;
   bool synced;
   int lock_depth;
 };

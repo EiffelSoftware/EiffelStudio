@@ -55,47 +55,56 @@
  * The use of <spsc> allows notifications to not be lost, although
  * of course it can only be used between a single receiver and sender
  * at one time.
+ *
+ * TODO: this class can be eliminated: wait() should go
+ * into rt_message_channel (the C version of spsc), and the rest is simple
+ * enough to inline it at the call site.
  */
-struct notifier : spsc <notify_message> {
+struct notifier : spsc <rt_message> {
 
-  /* Wait for a new notification
-   */
-  notify_message wait ()
-  {
-    notify_message msg;
-    this->pop(msg, 64);
-    return msg;
-  }
+	/* Wait for a new notification */
+	struct rt_message wait ()
+	{
+		rt_message msg;
+		this->pop(msg, 64);
+		return msg;
+	}
 
-  /* Awaken the waiter rudely.
-   *
-   * Here, rudely means that the supplier of the current query is
-   * now dirty.
-   */
-  void rude_awake()
-  {
-    this->push(notify_message(notify_message::e_dirty));
-  }
+	/* Awaken the waiter rudely.
+	 *
+	 * Here, rudely means that the supplier of the current query is
+	 * now dirty.
+	 */
+	void rude_awake()
+	{
+		rt_message msg;
+		rt_message_init (&msg, SCOOP_MESSAGE_DIRTY, NULL, NULL);
+		this->push (msg);
+	}
 
-  /* Regular (non-callback, non-rude) wakeup.
-   *
-   * This wakeup is for results, for example.
-   */
-  void result_awake ()
-  {
-    this->push(notify_message());
-  }
+	/* Regular (non-callback, non-rude) wakeup.
+	 *
+	 * This wakeup is for results, for example.
+	 */
+	void result_awake ()
+	{
+		rt_message msg;
+		rt_message_init (&msg, SCOOP_MESSAGE_RESULT_READY, NULL, NULL);
+		this->push (msg);
+	}
 
-  /* A callback wakeup.
-   *
-   * This means that the waiting is due to lock passing, and this is
-   * actually a call from one of the suppliers that we passed our
-   * callstack to.
-   */
-  void callback_awake (processor* client, call_data *call)
-  {
-    this->push(notify_message(notify_message::e_callback, client, call));
-  }
+	/* A callback wakeup.
+	 *
+	 * This means that the waiting is due to lock passing, and this is
+	 * actually a call from one of the suppliers that we passed our
+	 * callstack to.
+	 */
+	void callback_awake (processor* client, call_data *call)
+	{
+		rt_message msg;
+		rt_message_init (&msg, SCOOP_MESSAGE_CALLBACK, client, call);
+		this->push(msg);
+	}
 
 };
 

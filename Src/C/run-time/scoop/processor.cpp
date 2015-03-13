@@ -52,6 +52,10 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 
 atomic_int_type active_count = atomic_var_init;
 
+/* We need the size() and all the stack functions. */
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group)
+RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_group)
+
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	cache (this),
 	group_stack (),
@@ -67,11 +71,14 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	current_msg (),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
+	request_group_stack_t_init (&this->request_group_stack);
 	active_count++;
 }
 
 processor::~processor()
 {
+	request_group_stack_t_deinit (&this->request_group_stack);
+
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
 		delete *pq;
 	}
@@ -291,6 +298,30 @@ priv_queue* processor::new_priv_queue()
 	unique_lock_type lk (cache_mutex);
 	private_queue_cache.push_back(new priv_queue(this));
 	return private_queue_cache.back();
+}
+
+
+rt_shared void rt_processor_request_group_stack_extend (processor* self)
+{
+	int error = T_OK;
+	struct rt_request_group l_group;
+	rt_request_group_init (&l_group, self);
+	error = request_group_stack_t_extend (&self->request_group_stack, l_group);
+	if (error == T_NO_MORE_MEMORY) {
+		enomem();
+	}
+}
+
+rt_shared struct rt_request_group* rt_processor_request_group_stack_last (processor* self)
+{
+	return request_group_stack_t_last_pointer (&self->request_group_stack);
+}
+
+rt_shared void rt_processor_request_group_stack_remove_last (processor* self)
+{
+	struct rt_request_group* l_last = rt_processor_request_group_stack_last (self);
+	rt_request_group_deinit (l_last);
+	request_group_stack_t_remove_last (&self->request_group_stack);
 }
 
 /*

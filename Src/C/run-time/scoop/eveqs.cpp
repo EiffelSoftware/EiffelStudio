@@ -59,16 +59,12 @@ rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 	rt_processor_request_group_stack_extend (client);
 }
 
-/* RTS_RD (o) - delete chain (release locks?) */
+/* RTS_RD (o) - delete request group of o and release any locks */
 rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
 
-		/* Release all locks. */
-	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_unlock (l_group);
-
-		/* Delete the request group and free any resources. */
+		/* Unlock, deallocate and remove the request group. */
 	rt_processor_request_group_stack_remove_last (client);
 }
 

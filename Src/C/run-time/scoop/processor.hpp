@@ -281,7 +281,7 @@ private:
 
 };
 
-/* TODO - we need to get the pointer to an item in rt_vector.h */
+/* Declarations for group stack manipulation. */
 rt_shared void rt_processor_request_group_stack_extend (processor* self);
 rt_shared struct rt_request_group* rt_processor_request_group_stack_last (processor* self);
 rt_shared void rt_processor_request_group_stack_remove_last (processor* self);

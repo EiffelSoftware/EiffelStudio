@@ -299,11 +299,21 @@ priv_queue* processor::new_priv_queue()
 	return private_queue_cache.back();
 }
 
-
+/*
+doc:	<routine name="rt_processor_request_group_stack_extend" return_type="void" export="shared">
+doc:		<summary> Create a new request group and put it at the end of the request group stack. </summary>
+doc:		<param name="self" type="processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_processor_request_group_stack_extend (processor* self)
 {
 	int error = T_OK;
-	struct rt_request_group l_group;
+	struct rt_request_group l_group; /* stack-allocated */
+
+	REQUIRE ("self_not_null", self);
+
 	rt_request_group_init (&l_group, self);
 	error = request_group_stack_t_extend (&self->request_group_stack, l_group);
 	if (error == T_NO_MORE_MEMORY) {
@@ -311,14 +321,39 @@ rt_shared void rt_processor_request_group_stack_extend (processor* self)
 	}
 }
 
+/*
+doc:	<routine name="rt_processor_request_group_stack_last" return_type="struct rt_request_group*" export="shared">
+doc:		<summary> Return a pointer to the last element in the group stack of 'self'. </summary>
+doc:		<param name="self" type="processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<return> A pointer to the last element of the group stack. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
 rt_shared struct rt_request_group* rt_processor_request_group_stack_last (processor* self)
 {
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("not_empty", request_group_stack_t_count (&self->request_group_stack) > 0);
 	return request_group_stack_t_last_pointer (&self->request_group_stack);
 }
 
+/*
+doc:	<routine name="rt_processor_request_group_stack_remove_last" return_type="void" export="shared">
+doc:		<summary> Remove the last element from the group stack and free any resources. Note: This feature also performs an unlock operation. </summary>
+doc:		<param name="self" type="processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_processor_request_group_stack_remove_last (processor* self)
 {
-	struct rt_request_group* l_last = rt_processor_request_group_stack_last (self);
+	struct rt_request_group* l_last = NULL;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("not_empty", request_group_stack_t_count (&self->request_group_stack) > 0);
+
+	l_last = rt_processor_request_group_stack_last (self);
+	rt_request_group_unlock (l_last);
 	rt_request_group_deinit (l_last);
 	request_group_stack_t_remove_last (&self->request_group_stack);
 }

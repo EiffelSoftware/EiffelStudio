@@ -146,7 +146,8 @@ static void test_cvec_many_push_pop (void)
 		mu_assert ("Size after push is wrong.", rt_vector_char_count (cvec) == (i+1));
 		mu_assert ("Value is wrong.", rt_vector_char_item (cvec, i) == c);
 		mu_assert ("Element pointer is wrong.",  *rt_vector_char_item_pointer (cvec, i) == c);
-		mu_assert ("Back is wrong.", rt_vector_char_last (cvec) == c);
+		mu_assert ("Last element is wrong.", rt_vector_char_last (cvec) == c);
+		mu_assert ("Last element pointer is wrong.", *rt_vector_char_last_pointer (cvec) == c);
 	}
 	
 	for (i=0; i<elements; i++) {

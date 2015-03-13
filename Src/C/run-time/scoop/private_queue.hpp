@@ -40,6 +40,8 @@
 #include "eif_utils.hpp"
 #include "spsc.hpp"
 
+#include "rt_message.h"
+
 class processor;
 
 struct notify_message
@@ -65,7 +67,7 @@ struct notify_message
 };
 
 
-
+/*
 struct pq_message
 {
   typedef enum {
@@ -86,7 +88,7 @@ struct pq_message
   call_data* call;
   e_type type;
 };
-
+*/
 
 /* The private queue class.
  *
@@ -94,7 +96,7 @@ struct pq_message
  * The client is the original client, as this queue may be passed to
  * other clients during lock-passing.
  */
-class priv_queue : spsc <pq_message>
+class priv_queue : spsc <rt_message>
 {
 public:
   /* Construct a private queue.
@@ -134,7 +136,7 @@ public:
    * (**or** some processor that the client has passed its locks to).
    * This is a blocking call if no call data is available.
    */
-  void pop_msg (pq_message &msg)
+  void pop_msg (rt_message &msg)
   {
     pop (msg);
   }

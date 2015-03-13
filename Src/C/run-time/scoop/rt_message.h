@@ -82,14 +82,14 @@ struct rt_message {
 doc:	<routine name="rt_message_init" return_type="void" export="private">
 doc:		<summary> Initialize the rt_message struct 'self' with the message in 'a_message'. </summary>
 doc:		<param name="self" type="struct rt_message*"> The message to be initialized. Must not be NULL. </param>
+doc:		<param name="a_message" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="a_sender" type="struct processor*"> The sender of the message. Must not be NULL for EXECUTE and CALLBACK messages. </param>
 doc:		<param name="a_call" type="struct call_data*"> The information needed to execute a call. Must not be NULL for EXECUTE and CALLBACK messages. </param>
-doc:		<param name="a_message" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_message_init (struct rt_message* self, struct processor* a_sender, struct call_data* a_call, enum scoop_message_type a_message)
+rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, struct processor* a_sender, struct call_data* a_call)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));

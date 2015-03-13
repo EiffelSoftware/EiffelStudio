@@ -145,6 +145,7 @@ static void test_cvec_many_push_pop (void)
 		mu_assert ("Vector is empty.", cvec->area != NULL && cvec->capacity > 0);
 		mu_assert ("Size after push is wrong.", rt_vector_char_count (cvec) == (i+1));
 		mu_assert ("Value is wrong.", rt_vector_char_item (cvec, i) == c);
+		mu_assert ("Element pointer is wrong.",  *rt_vector_char_item_pointer (cvec, i) == c);
 		mu_assert ("Back is wrong.", rt_vector_char_last (cvec) == c);
 	}
 	

@@ -203,6 +203,7 @@ rt_private rt_inline size_t CAT2(_vector_name,_count) (struct _vector_name* self
  * The macro defines the following functions:
  *
  * An array access function ( _vector_name_item )
+ * An access function returning a pointer to an element (_vector_name_item_pointer)
  * An array modification function ( _vector_name_put )
  *
  * Note that _vector_name is replaced with the actual name given by the user.
@@ -225,6 +226,24 @@ rt_private rt_inline _vector_element_type CAT2 (_vector_name, _item) (struct _ve
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("within_bounds", position < self->count); \
 	return (self->area)[position]; \
+} \
+\
+\
+/* \
+doc:	<routine name="_vector_name_item_pointer" return_type="_vector_element_type*" export="private"> \
+doc:		<summary> Return a pointer to the element at index 'position' in vector 'self'. </summary> \
+doc:		<param name="self" type="struct _vector_name*"> The vector struct. Must not be NULL. </param> \
+doc:		<param name="position" type="size_t"> The index of the requested element. Valid indices are in the range [0 <= position < _vector_name_count(self)]. </param> \
+doc:		<return> A pointer to the element at the specified index. </return> \
+doc:		<thread_safety> Not safe. </thread_safety> \
+doc:		<synchronization> None. </synchronization> \
+doc:	</routine> \
+*/ \
+rt_private rt_inline _vector_element_type* CAT2 (_vector_name, _item_pointer) (struct _vector_name* self, size_t position) \
+{ \
+	REQUIRE ("not_null", self != NULL); \
+	REQUIRE ("within_bounds", position < self->count); \
+	return (self->area) + position; \
 } \
 \
 \

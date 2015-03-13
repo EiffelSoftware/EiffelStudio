@@ -56,32 +56,28 @@ extern "C" {
 rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-
-	/* Initialize the request group on the stack, then move it to the client processor. */
-	struct rt_request_group stack_allocated;
-	rt_request_group_init (&stack_allocated, client);
-	client->group_stack.push_back (stack_allocated);
+	rt_processor_request_group_stack_extend (client);
 }
 
 /* RTS_RD (o) - delete chain (release locks?) */
 rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-// 	client->group_stack.back().unlock();
-// 	client->group_stack.pop_back();
-	/* Move the request group back to the stack for deinitialization. */
-	struct rt_request_group stack_allocated = client -> group_stack.back();
-	client -> group_stack.pop_back();
-	rt_request_group_unlock (&stack_allocated);
-	rt_request_group_deinit (&stack_allocated);
 
+		/* Release all locks. */
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_unlock (l_group);
+
+		/* Delete the request group and free any resources. */
+	rt_processor_request_group_stack_remove_last (client);
 }
 
 /* RTS_RF (o) - wait condition fails */
 rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-	client->group_stack.back().wait();
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_wait (l_group);
 }
 
 /* RTS_RS (c, s) - add supplier s to current group for c */
@@ -89,14 +85,17 @@ rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
-	client->group_stack.back().add (supplier);
+
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_add (l_group, supplier);
 }
 
 /* RTS_RW (o) - sort all suppliers in the group and get exclusive access */
 rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 {
 	processor *client = registry [client_pid];
-	client->group_stack.back().lock();
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_lock (l_group);
 }
 
 /* Processor creation */

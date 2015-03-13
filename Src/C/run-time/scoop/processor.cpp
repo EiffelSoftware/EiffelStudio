@@ -58,7 +58,6 @@ RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_grou
 
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	cache (this),
-	group_stack (),
 	my_token (this),
 	token_queue (),
 	token_queue_mutex(),

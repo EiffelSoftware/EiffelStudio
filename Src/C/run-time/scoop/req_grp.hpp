@@ -35,22 +35,16 @@
 		]"
 */
 
-#ifndef _REQ_GRP_H
-#define _REQ_GRP_H
+/* TODO: Rename this file to rt_request_group.h when the C conversion is completed. */
+
+#ifndef _rt_request_group_h_
+#define _rt_request_group_h_
 
 #include "eif_portable.h"
 #include "rt_assert.h"
 
 class processor;
 class priv_queue;
-
-struct rt_request_group;
-
-/* Forward declarations. */
-rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier);
-rt_shared void rt_request_group_wait (struct rt_request_group* self);
-rt_shared void rt_request_group_lock (struct rt_request_group* self);
-rt_shared void rt_request_group_unlock (struct rt_request_group* self);
 
 /*
 doc:	<struct name="rt_request_group", export="shared">
@@ -73,19 +67,7 @@ struct rt_request_group
 	size_t count;
 	processor* client;
 	EIF_BOOLEAN is_sorted;
-
-		/* C++ compatibility */
-	void add(processor* supplier) {
-		rt_request_group_add (this, supplier);
-	}
-	void wait() {
-		rt_request_group_wait(this);
-	}
-	void lock(){
-		rt_request_group_lock(this);
-	}
 };
-
 
 /*
 doc:	<routine name="rt_request_group_init" return_type="void" export="private">
@@ -105,6 +87,7 @@ rt_private rt_inline void rt_request_group_init (struct rt_request_group* self, 
 	self->is_sorted = 0;
 	self->client = a_client;
 }
+
 /*
 doc:	<routine name="rt_request_group_deinit" return_type="void" export="private">
 doc:		<summary> Deconstruct the request group and free any memory allocated within. </summary>
@@ -120,7 +103,11 @@ rt_private rt_inline void rt_request_group_deinit (struct rt_request_group* self
 	rt_request_group_init (self, NULL);
 }
 
-/* C++ compatibility */
-typedef struct rt_request_group req_grp;
+
+/* Declarations */
+rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier);
+rt_shared void rt_request_group_wait (struct rt_request_group* self);
+rt_shared void rt_request_group_lock (struct rt_request_group* self);
+rt_shared void rt_request_group_unlock (struct rt_request_group* self);
 
 #endif

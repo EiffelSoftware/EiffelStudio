@@ -306,6 +306,23 @@ rt_private rt_inline _vector_element_type CAT2(_vector_name,_last) (struct _vect
 \
 \
 /* \
+doc:	<routine name="_vector_name_last_pointer" return_type="_vector_element_type*" export="private"> \
+doc:		<summary> Return a pointer to the last element in vector 'self'. </summary> \
+doc:		<param name="self" type="struct _vector_name*"> The vector struct. Must not be NULL and must not be empty. </param> \
+doc:		<return> A pointer to the last element of the vector. </return> \
+doc:		<thread_safety> Not safe. </thread_safety> \
+doc:		<synchronization> None. </synchronization> \
+doc:	</routine> \
+*/ \
+rt_private rt_inline _vector_element_type* CAT2(_vector_name,_last_pointer) (struct _vector_name* self) \
+{ \
+	REQUIRE ("not_null", self != NULL); \
+	REQUIRE ("not_empty", self->count > 0); \
+	return (self->area) + (self->count - 1); \
+} \
+\
+\
+/* \
 doc:	<routine name="_vector_name_extend" return_type="int" export="private"> \
 doc:		<summary> Put 'element' at the end of the vector 'self', increasing the count by one. If the vector is full, its capacity will be automatically increased. </summary> \
 doc:		<param name="self" type="struct _vector_name*"> The vector struct. Must not be NULL. </param> \

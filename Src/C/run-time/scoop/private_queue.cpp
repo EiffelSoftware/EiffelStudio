@@ -50,10 +50,10 @@ priv_queue::priv_queue (processor *_supplier) :
 	spsc<rt_message>(),
 	supplier (_supplier),
 	dirty (false),
-	call_stack_msg(),
 	synced (false),
 	lock_depth(0)
 {
+	rt_message_init (&this->call_stack_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /* TODO: default state? */
 }
 
 void priv_queue::lock(processor *client)
@@ -126,14 +126,14 @@ void priv_queue::log_call(processor *client, call_data *call)
 		call_stack_msg = client->result_notify.wait();
 
 		for (;
-			call_stack_msg.type == notify_message::e_callback;
+			call_stack_msg.message_type == SCOOP_MESSAGE_CALLBACK;
 			call_stack_msg = client->result_notify.wait())
 		{
-			(*client)(call_stack_msg.client, call_stack_msg.call);
+			(*client)(call_stack_msg.sender, call_stack_msg.call);
 			call_stack_msg.call = NULL;
 		}
 
-		if (call_stack_msg.type == notify_message::e_dirty) {
+		if (call_stack_msg.message_type == SCOOP_MESSAGE_DIRTY) {
 			eraise ((const char *) "EVE/Qs dirty processor exception", 32);
 		}
 	}

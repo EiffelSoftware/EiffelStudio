@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 	<head>
-		<title>Eiffel Software - Downloading EiffelStudio</title>
+		<title>Video resources for a smooth EiffelStudio installation</title>
 		<script src="https://github.com/johndyer/mediaelement/blob/master/build/jquery.js"></script>
 		<script src="https://github.com/johndyer/mediaelement/blob/master/build/mediaelement.min.js"></script>
 		<link rel="stylesheet" href="https://github.com/johndyer/mediaelement/blob/master/build/mediaelementplayer.css" />
@@ -13,30 +13,61 @@
 				<img src="https://www.eiffel.com/wp-content/themes/eiffeldesign/images/logo.png" alt="Eiffel Software Logo"/></a>
 		</header>
 		<section>
-			<h2>Thank you for downloading EiffelStudio.</h2>
+			<h2>Click on the video that corresponds to your platform:</h2>
 
-			<p>
-				This is an evaluation version. It will expire 30 days after your first use. It requires a CD Key which is provided below.
+			<p> <a href="http://youtu.be/18Xo5pMo-A4"> EiffelStudio on Windows – Download and installation <br>
+				<img src="http://img.youtube.com/vi/18Xo5pMo-A4/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/18Xo5pMo-A4</small>
+			</p>		
+
+			<p> <a href="http://youtu.be/UL8O6DNkvu0"> EiffelStudio on Windows – Activation <br>
+				<img src="http://img.youtube.com/vi/UL8O6DNkvu0/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/UL8O6DNkvu0</small>
+			</p>	
+
+			<p> <a href="http://youtu.be/KQGCy1edArI"> EiffelStudio on Linux –  Download and Installation<br>
+				<img src="http://img.youtube.com/vi/KQGCy1edArI/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/KQGCy1edArI</small>
+			</p>	
+
+			<p> <a href="http://youtu.be/OG2D3F69pbk"> EiffelStudio on Linux – Activation<br>
+				<img src="http://img.youtube.com/vi/OG2D3F69pbk/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/OG2D3F69pbk</small>
+			</p>	
+
+			<p> <a href="http://youtu.be/fiG74NyPs4s"> Installing EiffelStudio on Mac OS X<br>
+				<img src="http://img.youtube.com/vi/fiG74NyPs4s/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/fiG74NyPs4s</small>
 			</p>
 
-			<p>
-				<a href="{$host/}/confirm_download?token={$token/}">Click here to download EiffelStudio.</a>
-			</p>
-			<p>	Details: </p>
-			<ul>	
-				<li><strong>CD key</strong>: {$selected_platform.key/}</li>
-				<li><strong>Platform</strong>: {$selected_platform.platform/}</li>
-				<li><strong>Size</strong>: {$selected_platform.size/}</li> 
-				<li><strong>SHA-256</strong>: {$selected_platform.hash/}</li>
-			</ul>
-
-			<p>
-				<a href="https://twitter.com/intent/tweet?button_hashtag=eiffel&hashtags=eiffel,programming,ide,programming,softwaredevelopment,softwareengineering&text=Just%20downloaded%20EiffelStudio.%20You%20should%20too.&url=http%3A%2F%2Fwww.eiffel.com%2Fdownload" target="_blank">Tweet to let your friends know!</a>
+			<p> <a href="http://youtu.be/jBMOSSnCMCk"> Your first Eiffel Program<br>
+				<img src="http://img.youtube.com/vi/jBMOSSnCMCk/0.jpg">	
+				</a>
+                <br> 
+				<small>Direct link: http://youtu.be/jBMOSSnCMCk</small>
 			</p>
 
 
+
+http://youtu.be/jBMOSSnCMCk
+
 			<p>
-				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you wish to purchase, need a trial extension, or have any questions, do not hesitate to <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
+				For more in-depth videos on Eiffel and EiffelStudio, make sure to visit and subscribe to our <a href="https://www.youtube.com/user/EiffelLanguage">Youtube channel</a>.
+
+				We wish you an excellent evaluation and hope that you will decide to use EiffelStudio for your upcoming projects. If you wish to purchase, need a trial extension, or have any questions, do not hesitate to  <a href="https://www.eiffel.com/company/get-in-touch">contact us</a>.
+
+				Best regards,
+				The Eiffel Software Team
 			</p>
 
 			<p style="margin: 0px">Best regards,</p>

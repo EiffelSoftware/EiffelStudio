@@ -13,7 +13,7 @@ inherit
 	SHARED_TEMPLATE_CONTEXT
 
 create
-	make
+	make, make_resources
 
 feature {NONE} --Initialization
 
@@ -34,6 +34,17 @@ feature {NONE} --Initialization
 				template.add_value (l_product.sub_directory, "directory")
 				template.add_value (selected_platform (l_product.downloads, a_form.platform), "selected_platform")
 			end
+			process
+		end
+
+
+	make_resources (a_path: PATH)
+			-- Initialize `Current'.
+		local
+			l_url: URL_ENCODER
+		do
+			set_template_folder (a_path)
+			set_template_file_name ("email_video_resources.tpl")
 			process
 		end
 

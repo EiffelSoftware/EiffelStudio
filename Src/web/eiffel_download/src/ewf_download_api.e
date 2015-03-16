@@ -468,6 +468,7 @@ feature -- Send Email
  			-- Send mail to start download with additional information.
 		local
 			l_hp: EMAIL_DOWNLOAD_OPTIONS
+			e: EXECUTION_ENVIRONMENT
 		do
 
 			if
@@ -477,6 +478,18 @@ feature -- Send Email
 				create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service)
 				if attached l_hp.representation as l_html_download_options then
 					l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
+
+
+						-- Wait 5 seconds before to send the video resource emails
+					create e
+					e.sleep (1_000_000_000 * 5)
+					create l_hp.make_resources (layout.html_template_path)
+					if attached l_hp.representation as l_html_resource then
+						l_email_service.send_email_resources (a_form.email, l_html_resource)
+					else
+						l_email_service.send_email_internal_server_error ("Internal server error sending video resource email")
+					end
+
 				else
 					l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host)
 				end

@@ -42,8 +42,8 @@
 #include "rt_assert.h"
 
 /* Forward declarations */
-struct processor;
-struct call_data;
+class processor;
+class call_data;
 
 /* The message types that can be sent between processors. */
 enum scoop_message_type {
@@ -73,8 +73,8 @@ doc:		<field name="message_type", type="enum scoop_message_type"> The type of th
 doc:	</struct>
  */
 struct rt_message {
-  struct processor* sender;
-  struct call_data* call;
+  processor* sender;
+  call_data* call;
   enum scoop_message_type message_type;
 };
 
@@ -89,7 +89,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, struct processor* a_sender, struct call_data* a_call)
+rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, processor* a_sender, call_data* a_call)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));

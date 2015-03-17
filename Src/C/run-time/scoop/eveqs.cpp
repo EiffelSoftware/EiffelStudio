@@ -187,8 +187,10 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 	 */
 
 	return client != supplier 
-		&& !client->cache.has_locked(supplier)
-		&& !client->cache.has_subordinate(supplier);
+		&& !rt_queue_cache_is_locked (&client->cache, supplier)
+		&& !rt_queue_cache_has_locks_of (&client->cache, supplier);
+// 		&& !client->cache.has_locked(supplier)
+// 		&& !client->cache.has_subordinate(supplier);
 }
 
 /* Callback from garbage collector to indicate that the */

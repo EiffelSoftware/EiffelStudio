@@ -87,7 +87,7 @@ void priv_queue::log_call(processor *client, call_data *call)
 	bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
 
-	if (client->cache.has_subordinate (supplier)) {
+	if (rt_queue_cache_has_locks_of (&client->cache, supplier)) {
 		/* 
 		 * We need to log a call which is a separate callback, 
 		 * meaning that the supplier has previously logged a 

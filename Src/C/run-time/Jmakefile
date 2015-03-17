@@ -49,6 +49,7 @@ MTADD_CPP = \
 	private_queue.cpp \
 	processor.cpp \
 	queue_cache.cpp \
+	message_channel.cpp \
 	req_grp.cpp
 
 MTADD = \

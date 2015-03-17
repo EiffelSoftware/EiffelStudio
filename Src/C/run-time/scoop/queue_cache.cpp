@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"A cache for private queues."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
@@ -36,7 +36,7 @@
 */
 
 /*
-doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary="SCOOP support.">
+doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary="A cache for private queues.">
  */
 
 #include "rt_msc_ver_mismatch.h"
@@ -304,7 +304,7 @@ doc:		<return> A private queue to the specified processor. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
- */
+*/
 rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier)
 {
 	priv_queue* l_result = NULL;
@@ -331,19 +331,27 @@ rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, process
 	return l_result;
 }
 
-
-/* GC marking.
-* @mark the marking function to use on each reference from the Eiffel
-* runtime.
-*
-* Marks the calls that may be in the queues and thus otherwise invisible,
-* to the Eiffel runtime.
+/*
+doc:	<routine name="rt_queue_cache_mark" return_type="void" export="shared">
+doc:		<summary> Garbage Collection: Mark the calls that may be in the private queues handled by this cache. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
 */
 rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
 {
-	rt_uint_ptr* l_keys = self->owned_queues.h_keys;
-	priv_queue** l_area = (priv_queue**) self->owned_queues.h_values;
-	size_t l_count = self->owned_queues.h_size;
+	size_t l_count = 0;
+	rt_uint_ptr* l_keys = NULL;
+	priv_queue** l_area = NULL;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("marking_not_null", marking);
+
+	l_count = self->owned_queues.h_size;
+	l_keys = self->owned_queues.h_keys;
+	l_area = (priv_queue**) self->owned_queues.h_values;
 
 		/* It is not necessary to mark queues which are borrowed from other queue_aches.
 		* The GC will traverse them later. */
@@ -354,9 +362,20 @@ rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
 	}
 }
 
-
+/*
+doc:	<routine name="rt_queue_cache_clear" return_type="void" export="shared">
+doc:		<summary> Garbage Collection: Remove the private queue of 'proc' from this cache, as it is not used any more. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="marking" type="MARKER"> The processor whose private queue shall be removed. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc)
 {
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("proc_not_null", proc);
+
 		/* It is not necessary to delete queues which are borrowed from other queue_aches.
 		* The algorithm in processor_registry will traverse them later. */
 	ht_remove (&self->owned_queues, proc->pid);

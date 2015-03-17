@@ -191,7 +191,7 @@ void processor_registry::clear_from_caches (processor *proc)
 {
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		if (used_pids.has (i)) {
-			procs[i]->cache.clear (proc);
+			rt_queue_cache_clear ( &(procs[i]->cache), proc);
 		}
 	}
 }

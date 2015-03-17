@@ -148,7 +148,7 @@ void processor::operator()(processor *client, call_data* call)
 
 		if (is_synchronous) {
 				/* Grab all locks held by the client. */
-			cache.push (&client->cache);
+			rt_queue_cache_push (&this->cache, &client->cache);
 		}
 
 			/* Execute the call. */
@@ -161,7 +161,7 @@ void processor::operator()(processor *client, call_data* call)
 
 		if (is_synchronous) {
 				/* Return the previously acquired locks. */
-			cache.pop ();
+			rt_queue_cache_pop (&this->cache);
 		}
 	}
 

@@ -106,41 +106,6 @@ public: /* C++ support */
 	{
 		return rt_queue_cache_retrieve (this, supplier);
 	}
-
-	/* See rt_queue_cache_is_locked (). */
-	EIF_BOOLEAN
-	has_locked (processor *proc)
-	{
-		return rt_queue_cache_is_locked (this, proc);
-	}
-
-	/* See rt_queue_cache_has_locks_of(). */
-	EIF_BOOLEAN
-	has_subordinate (processor *proc)
-	{
-		return rt_queue_cache_has_locks_of (this, proc);
-	}
-
-	/* See rt_queue_cache_push (). */
-	void
-	push (queue_cache* other)
-	{
-		rt_queue_cache_push (this, other);
-	}
-
-
-	/* See rt_queue_cache_pop (). */
-	void pop ()
-	{
-		rt_queue_cache_pop (this);
-	}
-
-	/* See rt_queue_cache_clear (). */
-	void clear (processor *proc)
-	{
-		rt_queue_cache_clear (this, proc);
-	}
-
 };
 
 /*

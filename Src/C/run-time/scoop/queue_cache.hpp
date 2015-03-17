@@ -137,14 +137,14 @@ public:
 	}
 
 	/* See rt_queue_cache_is_locked (). */
-	bool
+	EIF_BOOLEAN
 	has_locked (processor *proc)
 	{
 		return rt_queue_cache_is_locked (this, proc);
 	}
 
 	/* See rt_queue_cache_has_locks_of(). */
-	bool
+	EIF_BOOLEAN
 	has_subordinate (processor *proc)
 	{
 		return rt_queue_cache_has_locks_of (this, proc);

@@ -89,9 +89,6 @@ feature -- Access
 
 	rt_extension_class: CLASS_I
 
-	ise_scoop_manager_class: CLASS_I
-			-- Class ISE_SCOOP_MANAGER
-
 	ise_exception_manager_class: CLASS_I
 			-- Class ISE_EXCEPTION_MANAGER
 
@@ -336,17 +333,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	scoop_manager_type_id: INTEGER
-			-- Dynamic type_id of class ISE_SCOOP_MANAGER
-		require
-			scoop_manager_class_exist: ise_scoop_manager_class /= Void
-			compiled: ise_scoop_manager_class.is_compiled
-		do
-			Result := ise_scoop_manager_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
 
 	exception_manager_type_id: INTEGER
 			-- Dynamic type_id of class ISE_EXCEPTION_MANAGER
@@ -719,19 +705,6 @@ feature -- Settings
 			rt_extension_class_set: rt_extension_class = c
 		end
 
-feature -- Settings: SCOOP
-
-	set_scoop_manager_class (c: CLASS_I)
-			-- Assign `c' to `ise_scoop_manager_class'.
-		require
-			c_not_void: c /= Void
-		do
-			c.set_as_basic_class
-			ise_scoop_manager_class := c
-		ensure
-			ise_scoop_manager_class_set: ise_scoop_manager_class = c
-		end
-
 feature -- Settings: Exception
 
 	set_exception_manager_class (c: CLASS_I)
@@ -746,7 +719,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

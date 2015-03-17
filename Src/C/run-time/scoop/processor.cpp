@@ -57,7 +57,6 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_group)
 
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
-	cache (this),
 	my_token (this),
 	token_queue (),
 	token_queue_mutex(),
@@ -69,6 +68,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	is_dirty (false),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
+	rt_queue_cache_init (&this->cache, this);
 	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
 	request_group_stack_t_init (&this->request_group_stack);
 	active_count++;
@@ -76,11 +76,12 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 
 processor::~processor()
 {
-	request_group_stack_t_deinit (&this->request_group_stack);
-
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
 		delete *pq;
 	}
+
+	request_group_stack_t_deinit (&this->request_group_stack);
+	rt_queue_cache_deinit (&this->cache);
 }
 
 bool processor::try_call (call_data *call)

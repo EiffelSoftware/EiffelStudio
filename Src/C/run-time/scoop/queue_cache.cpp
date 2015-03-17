@@ -43,27 +43,290 @@ doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary
 #include "queue_cache.hpp"
 #include "processor.hpp"
 
-priv_queue* queue_cache::operator[] (processor * const supplier)
+/*
+doc:	<routine name="rt_queue_cache_find_from_owned return_type="struct priv_queue*" export="private">
+doc:		<summary> Find a priv_queue from the set of queues owned by 'self'. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
+doc:		<return> A private queue to the specified processor. The result may not be locked. If none can be found, the result is NULL. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private priv_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, processor* const supplier)
 {
-	RT_UNORDERED_MAP <processor*, queue_stack>::iterator found_it = queue_map.find (supplier);
-	priv_queue *pq;
-	if (found_it != queue_map.end()) {
-		queue_stack &stack = found_it->second;
-		if (stack.empty()) {
-			stack.EMPLACE_BACK (supplier->new_priv_queue());
-		}
-		pq = stack.back();
-	} else {
-		const std::pair <RT_UNORDERED_MAP <processor*, queue_stack>::iterator, bool> &res =
-				queue_map.EMPLACE (std::pair <processor*, queue_stack> (supplier, queue_stack ()));
-		queue_stack &stack = res.first->second;
-		stack.EMPLACE_BACK (supplier->new_priv_queue());
-		pq = stack.back();
-	}
+	priv_queue *l_result = NULL;
+	RT_UNORDERED_MAP <processor*, priv_queue*> *l_owned = NULL;
+	RT_UNORDERED_MAP <processor*, priv_queue*>::const_iterator found_it;
 
-	return pq;
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", supplier);
+
+	l_owned = &(self->owned_queues);
+
+	found_it = l_owned->find (supplier);
+	if (found_it != l_owned->end()) {
+		l_result = found_it->second;
+	}
+	return l_result;
 }
 
+
+/*
+doc:	<routine name="rt_queue_cache_find_from_borrowed" return_type="struct priv_queue*" export="private">
+doc:		<summary> Find a locked priv_queue in the stack of borrowed queue caches. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
+doc:		<return> A private queue to the specified processor. If none can be found, the result is NULL. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private priv_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, processor* const supplier)
+{
+	priv_queue* l_result = NULL;
+	struct rt_vector_queue_cache* l_borrowed = NULL;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", supplier);
+
+	l_borrowed = self->borrowed_queues;
+	if (l_borrowed) {
+
+			/*
+			* As we push/pop from the end of the stack, we do a forward
+			* search through the queue stack here.
+			* This ensures that "older" locks have priority over "newer" locks
+			* (i.e. if a lock has been pushed several times already it has priority
+			* over a lock that has been pushed only once).
+			*/
+
+		size_t l_size = rt_vector_queue_cache_count (l_borrowed);
+
+		for (size_t i=0; i < l_size && !l_result; ++i) {
+
+			queue_cache* l_item = rt_vector_queue_cache_item (l_borrowed, i);
+			priv_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
+
+				/* Only return locked queues, ignore all others. */
+			if (l_queue && l_queue->is_locked()) {
+				l_result = l_queue;
+			}
+		}
+	}
+
+	ENSURE ("is_locked", !l_result || l_result->is_locked());
+	return l_result;
+}
+
+
+/*
+doc:	<routine name="rt_queue_cache_is_locked" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Check if 'self' has the lock (i.e. an open request queue) to 'supplier'. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct processor*"> The processor to which 'client' might have a lock to. Must not be NULL. </param>
+doc:		<return> EIF_TRUE if 'self' currently holds a lock on 'supplier'. EIF_FALSE otherwise. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier)
+{
+	EIF_BOOLEAN l_result = EIF_FALSE;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", supplier);
+
+		/* First check the list of borrowed queues. */
+	if (rt_queue_cache_find_from_borrowed (self, supplier)) {
+			/* Borrowed queues are always locked. */
+		l_result = EIF_TRUE;
+
+	} else {
+			/* Next, try our own cache. */
+		priv_queue* owned = rt_queue_cache_find_from_owned (self, supplier);
+
+			/* Within our own cache a private queue might not necessarily be locked. */
+		if (owned && owned->is_locked ()) {
+			l_result = EIF_TRUE;
+		}
+	}
+	return l_result;
+}
+
+/*
+doc:	<routine name="rt_queue_cache_push" return_type="void" export="shared">
+doc:		<summary> Pass all locks from 'giver' to 'self'.
+doc: 			The locks (priv_queues) from the other processor will be added to this cache.
+doc: 			This should be called in pairs with rt_queue_cache_pop(). </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to receive the locks. Must not be NULL. </param>
+doc:		<param name="giver" type="struct queue_cache*"> The queue cache to give away the locks. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver)
+{
+	struct rt_vector_queue_cache *l_borrowed = NULL;
+	int error = T_OK;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("giver_not_null", giver);
+
+		/* Try to get any borrowed locks from 'giver'. */
+	l_borrowed = giver->borrowed_queues;
+
+		/* If 'giver' does not yet have such locks, create a new vector. */
+		/* FIXME: To save time doing memory allocations, these vectors could be embedded within the queue_cache struct. */
+	if (NULL == l_borrowed) {
+		l_borrowed = rt_vector_queue_cache_create ();
+
+			/* Report memory allocation failure. */
+		if (NULL == l_borrowed) {
+			enomem();
+		}
+	}
+
+		/* Add 'giver' at the end of the vector. */
+	error = rt_vector_queue_cache_extend (l_borrowed, giver);
+
+			/* Report memory allocation failure. */
+	if (error != T_OK) {
+		rt_vector_queue_cache_destroy (l_borrowed);
+		enomem();
+	}
+
+		/* Update the state in both queue caches. */
+	giver->borrowed_queues = NULL;
+	self->borrowed_queues = l_borrowed;
+
+	ENSURE ("locks_passed", !giver->borrowed_queues && self->borrowed_queues);
+}
+
+/*
+doc:	<routine name="rt_queue_cache_pop" return_type="void" export="shared">
+doc:		<summary> Return all locks that were received during the last rt_queue_cache_push() operation. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache that has the locks. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_queue_cache_pop (struct queue_cache* self)
+{
+	struct rt_vector_queue_cache *l_borrowed = NULL;
+	queue_cache* origin = NULL;
+
+	REQUIRE ("not_null", self);
+	REQUIRE ("has_lock_stack", self->borrowed_queues);
+	REQUIRE ("lock_stack_not_empty", rt_vector_queue_cache_count (self->borrowed_queues) > 0);
+
+	l_borrowed = self->borrowed_queues;
+
+		/* Remove the locks from the current processor. */
+	self->borrowed_queues = NULL;
+
+		/* Retrieve the queue cache that initially passed the locks.
+		 * Since the push/pop operations have to be balanced,
+		 * the owner is on top of the stack. */
+	origin = rt_vector_queue_cache_last (l_borrowed);
+	rt_vector_queue_cache_remove_last (l_borrowed);
+
+		/*
+		* If empty, free the vector struct, as it's not needed any more.
+		* FIXME: Avoid allocation in the first place by caching a vector
+		* struct in each queue_cache.
+		*/
+	if (rt_vector_queue_cache_count(l_borrowed) == 0) {
+		rt_vector_queue_cache_destroy (l_borrowed);
+
+	} else {
+			/* Return the locks to its original owner. */
+		origin->borrowed_queues = l_borrowed;
+	}
+
+	ENSURE ("locks_returned", !self->borrowed_queues);
+}
+
+
+/*
+doc:	<routine name="rt_queue_cache_has_locks_of" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Check if 'self' has all the locks of 'supplier'. This can only be true when 'supplier' has passed the locks to 'client' in a previous call.
+dic:		The result of this query is important to determine if we need to perform a separate callback instead of a regular call. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct processor*"> The processor that might have passed its locks to 'self'. Must not be NULL. </param>
+doc:		<return> EIF_TRUE if 'self' currently has the locks of 'supplier'. EIF_FALSE otherwise. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier)
+{
+	struct rt_vector_queue_cache* l_borrowed = NULL;
+	EIF_BOOLEAN l_result = EIF_FALSE;
+	size_t l_size = 0;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", supplier);
+
+		/* Get the borrowed queues in 'self'.
+		 * Note that this value could be NULL. */
+	l_borrowed = self->borrowed_queues;
+
+		/* TODO: In the C++ implementation, the owner is subordinate to itself.
+		 * This property is ensured by the next statement.
+		 * It does not seem to be necessary however, but we have to check it. */
+	l_result = (supplier == self->owner);
+
+	if (l_borrowed && !l_result) {
+			/* Search through all borrowed queue caches if one of their owner matches 'supplier' */
+		l_size =  rt_vector_queue_cache_count(l_borrowed);
+
+		for (size_t i=0; i < l_size && !l_result; ++i) {
+			l_result = (rt_vector_queue_cache_item (l_borrowed, i)->owner == supplier);
+		}
+	}
+	return l_result;
+}
+
+
+/*
+doc:	<routine name="rt_queue_cache_retrieve" return_type="struct priv_queue*" export="shared">
+doc:		<summary> Retrieve a private queue for processor 'supplier' from this queue cache.
+doc:			A new <priv_queue> will be constructed if none already exists.
+doc:			This will also look to see if there are any private queues that were passed to this queue_cache during lock-passing.
+doc:			These passed-queues will already be locked and have priority over non-passed, possibly unlocked queues. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
+doc:		<return> A private queue to the specified processor. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+ */
+rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier)
+{
+	priv_queue* l_result = NULL;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", supplier);
+
+		/* We first need to search any borrowed queues. */
+	l_result = rt_queue_cache_find_from_borrowed (self, supplier);
+
+		/* If no borrowed queue can be found, we try our own cache. */
+	if (NULL == l_result) {
+		l_result = rt_queue_cache_find_from_owned (self, supplier);
+	}
+
+		/* If we still don't have a queue, we need to create a new one. */
+	if (NULL == l_result) {
+		 l_result = supplier->new_priv_queue();
+		 self->owned_queues.EMPLACE (std::pair <processor*, priv_queue*>(supplier, l_result));
+	}
+
+	ENSURE ("result_available", l_result);
+
+	return l_result;
+}
 /*
 doc:</file>
 */

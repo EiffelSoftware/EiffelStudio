@@ -42,6 +42,11 @@
 #include <vector>
 #include "private_queue.hpp"
 
+#include "rt_vector.h"
+
+class queue_cache;
+RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
+
 /**
  * 'std::unordered_map' is not available on all platforms.
  * It is replaced conditionally by something else.
@@ -71,168 +76,95 @@
 #	define EMPLACE_BACK emplace_back
 #endif
 
-/* A cache of private queues.
- *
- * This cache of private queues creates new private queues on demand.
- * It also handles moving private queues from one processor to
- * another, which occurs during lock-passing.
- */
-class queue_cache {
+/* Forward declaration */
+struct queue_cache;
+
+rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
+rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
+rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
+rt_shared void rt_queue_cache_pop (struct queue_cache* self);
+rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
+
+
+/*
+doc:	<struct name="queue_cache", export="shared">
+doc:		<summary> A cache of private queues.
+doc:
+doc:			This cache of private queues creates new private queues on demand.
+doc: 			It also handles moving private queues from one processor to another during lock-passing.
+doc:
+doc:			The scheme for tracking locks is to use a single hash table for all
+doc: 			queues owned by the current processor.
+doc:
+doc: 			For lock passing, we use a stack of queue_caches that have been pushed
+doc: 			to us. They are called "borrowed_queues". The borrowed_queues stack
+doc: 			may be NULL in case no lock passing has happened, or if the locks have
+doc: 			been passed further.
+doc:
+doc: 			On a lock passing push(), the "giver" processor takes whatever borrowed
+doc: 			queues it already has, adds itself at the end of the stack, and gives
+doc: 			the whole borrowed_queues stack to the receiver. The reverse operation
+doc: 			happens on a lock passing pop().
+doc:		</summary>
+doc:		<field name="owner", type="processor*"> The owner of this queue_cache. </field>
+doc:		<field name="owned_queues", type="TODO"> A hash table of private queues owned by this queue cache. Indexed by the pointer of the supplier processor of this queue. </field>
+doc:		<field name="borrowed_queues", type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
+doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
+doc: 			In the future we may need to change the implementation e.g. by not extending the borrowed_queues stack if we detect that the queue_cache to be inserted
+doc:			is already in the stack. This probably needs some more data structures though to ensure correct behaviour on pop(). </fixme>
+doc:	</struct>
+*/
+struct queue_cache {
 public:
 	/* Construct a new queue_cache.
 	 * @o the owner of this queue cache
 	 */
 	queue_cache(processor* o) :
-	owner (o),
-	sub_map(),
-	sub_stack(),
-	queue_map(),
-	lock_stack()
+		owned_queues()
 	{
-		sub_map[o] = 1;
+		owner = o;
+		borrowed_queues = NULL;
 	}
-
-
-private:
-	typedef std::vector<priv_queue*> queue_stack;
 
 	processor *owner;
-
-	/* The scheme for tracking the locks is to now use maps to stacks (or counts */
-	/* for subordinates) to provide a mechanism that can have efficient */
-	/* lookup, and still be able to push/pop these values. */
-	/* */
-	/* The goal is to first have efficient priv_queue lookup, as that is a very */
-	/* common operation, while the push/pop operations are somewhat more expensive. */
-	RT_UNORDERED_MAP <processor*, uint32_t> sub_map;
-	std::stack<std::set<processor*> > sub_stack;
-
-	RT_UNORDERED_MAP <processor*, queue_stack> queue_map;
-	std::stack<std::set<processor*> > lock_stack;
+	RT_UNORDERED_MAP <processor*, priv_queue*> owned_queues;
+	struct rt_vector_queue_cache *borrowed_queues;
 
 public:
-	/* Fetches a new private queue.
-	 * @supplier the receiver of the returned private queue
-	 *
-	 * A new <priv_queue> will be constructed if none already exists
-	 * for the desire supplier <processor>. This will also look to see
-	 * if there are any private queues that were passed to this <queue_cache>
-	 * during lock-passing. These passed-queues will already be locked,
-	 * so they will be returned before returning a non-passed unlocked queue.
-	 *
-	 * @return the queue ending at the supplier
-	 */
-	priv_queue*
-	operator[] (processor * const supplier);
 
-	/* Locked status.
-	 * @proc the supplier <processor> to query for lock acquisition
-	 *
-	 * @return true if there is a queue which currently holds a lock on the
-	 *         desired processor, false otherwise.
-	 */
-	bool
-	has_locked (processor *proc) const
+	/* See rt_queue_cache_retrieve(). */
+	priv_queue* operator[] (processor * const supplier)
 	{
-		RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator found_it = queue_map.find (proc);
-		if (found_it != queue_map.end())
-		{
-			const queue_stack &stack = found_it->second;
-			return !stack.empty() && stack.back()->is_locked();
-		}
-
-		return false;
+		return rt_queue_cache_retrieve (this, supplier);
 	}
 
-	/* Subordinate status.
-	 * @proc the supplier <processor> of interest which may be a subordinate
-	 *       of the owner of this <queue_cache>.
-	 *
-	 * @return true if the proc is a subordinate, false otherwise.
-	 */
+	/* See rt_queue_cache_is_locked (). */
 	bool
-	has_subordinate (processor *proc) const
+	has_locked (processor *proc)
 	{
-		RT_UNORDERED_MAP <processor*, uint32_t>::const_iterator res = sub_map.find (proc);
-		return res != sub_map.end() && res->second > 0;
+		return rt_queue_cache_is_locked (this, proc);
+	}
+
+	/* See rt_queue_cache_has_locks_of(). */
+	bool
+	has_subordinate (processor *proc)
+	{
+		return rt_queue_cache_has_locks_of (this, proc);
 	}
 
 public:
-	/* Lock passing push.
-	 * @other the <queue_cache> to pass the locks from.
-	 *
-	 * The locks (<priv_queue>s) from the other processor will be added to
-	 * this cache, and the owner of the other cache will be added to the
-	 * subordinates along with any of its subordinates.
-	 * This should be called in pairs with <pop>.
-	 */
+	/* See rt_queue_cache_push (). */
 	void
-	push (const queue_cache* other)
+	push (queue_cache* other)
 	{
-		std::set <processor*> new_locks;
-		RT_UNORDERED_MAP <processor*, queue_stack> other_queue_map = other -> queue_map;
-		for (RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator pair = other_queue_map.begin (); pair != other_queue_map.end (); ++ pair)
-		{
-			processor* const supplier = (*pair).first;
-			const queue_stack &stack = (*pair).second;
-
-			if (!stack.empty() && stack.back()->is_locked())
-			{
-				priv_queue *pq = stack.back();
-				new_locks.insert (supplier);
-
-				if (queue_map.find (supplier) == queue_map.end())
-				{
-					queue_map [supplier] = queue_stack();
-				}
-				queue_map [supplier].EMPLACE_BACK (pq);
-			}
-		}
-		lock_stack.push (new_locks);
-
-		std::set <processor*> new_subs;
-		RT_UNORDERED_MAP <processor*, uint32_t> other_sub_map = other->sub_map;
-		for (RT_UNORDERED_MAP <processor*, uint32_t>::const_iterator pair = other_sub_map.begin (); pair != other_sub_map.end (); ++ pair )
-		{
-			processor* const supplier = (*pair).first;
-			const uint32_t count = (*pair).second;
-
-			if (count > 0)
-			{
-				new_subs.insert (supplier);
-
-				if (sub_map.find (supplier) == sub_map.end())
-				{
-					sub_map [supplier] = 0;
-				}
-				sub_map [supplier]++;
-			}
-		}
-		sub_stack.push (new_subs);
+		rt_queue_cache_push (this, other);
 	}
 
 
-	/* Remove last passed locks.
-	 *
-	 * The previously passed locks and subordinates will be removed. This
-	 * pairs naturally with the <push> that originally passed the locks.
-	 */
-	void
-	pop ()
+	/* See rt_queue_cache_pop (). */
+	void pop ()
 	{
-		const std::set<processor*> newest_locks = lock_stack.top();
-		for (std::set<processor*>::const_iterator supplier = newest_locks.begin (); supplier != newest_locks.end (); ++ supplier)
-		{
-			queue_map [*supplier].pop_back();
-		}
-		lock_stack.pop();
-
-		const std::set<processor*> newest_subs = sub_stack.top();
-		for (std::set<processor*>::const_iterator supplier = newest_subs.begin (); supplier != newest_subs.end (); ++ supplier)
-		{
-			sub_map [*supplier]--;
-		}
-		sub_stack.pop();
+		rt_queue_cache_pop (this);
 	}
 
 public:
@@ -245,20 +177,21 @@ public:
 	 */
 	void mark (MARKER marking)
 	{
-		for (RT_UNORDERED_MAP <processor*, queue_stack>::const_iterator pair = queue_map.begin (); pair != queue_map.end (); ++ pair)
-		{
-			const queue_stack &stack = (*pair).second;
-			for (queue_stack::const_iterator pq = stack.begin (); pq != stack.end (); ++ pq)
-			{
-				(* pq) -> mark (marking);
-			}
+		RT_UNORDERED_MAP <processor*, priv_queue*>::const_iterator pair;
+
+			/* It is not necessary to mark queues which are borrowed from other queue_aches.
+			* The GC will traverse them later. */
+		for (pair = owned_queues.begin (); pair != owned_queues.end (); ++pair) {
+			(pair->second) -> mark (marking);
 		}
 	}
 
 public:
 	void clear (processor *proc)
 	{
-		queue_map.erase (proc);
+			/* It is not necessary to delete queues which are borrowed from other queue_aches.
+			* The algorithm in processor_registry will traverse them later. */
+		owned_queues.erase(proc);
 	}
 
 };

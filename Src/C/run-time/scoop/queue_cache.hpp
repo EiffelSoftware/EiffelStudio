@@ -44,7 +44,7 @@
 
 #include "rt_vector.h"
 
-class queue_cache;
+struct queue_cache;
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
 
 /**
@@ -77,8 +77,6 @@ RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
 #endif
 
 /* Forward declaration */
-struct queue_cache;
-
 rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
 rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);

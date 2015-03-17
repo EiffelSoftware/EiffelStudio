@@ -186,6 +186,7 @@ MT_OBJECTS = \
 	$(INDIR)MTprocessor_registry.$obj \
 	$(INDIR)MTnotify_token.$obj \
 	$(INDIR)MTprivate_queue.$obj \
+	$(INDIR)MTmessage_channel.$obj \
 	$(INDIR)MTprocessor.$obj \
 	$(INDIR)MTqueue_cache.$obj \
 	$(INDIR)MTreq_grp.$obj \
@@ -248,6 +249,7 @@ MT_WOBJECTS = \
 	$(INDIR)MTwprocessor_registry.$obj \
 	$(INDIR)MTwnotify_token.$obj \
 	$(INDIR)MTwprivate_queue.$obj \
+	$(INDIR)MTwmessage_channel.$obj \
 	$(INDIR)MTwprocessor.$obj \
 	$(INDIR)MTwqueue_cache.$obj \
 	$(INDIR)MTwreq_grp.$obj \
@@ -701,6 +703,9 @@ $(INDIR)MTnotify_token.$obj: $(RTSRC)scoop$(DIR)notify_token.cpp
 $(INDIR)MTprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.cpp
 	$(CPP) $(JMTCPPFLAGS) $?
 
+$(INDIR)MTmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.cpp
+	$(CPP) $(JMTCPPFLAGS) $?
+
 $(INDIR)MTprocessor.$obj: $(RTSRC)scoop$(DIR)processor.cpp
 	$(CPP) $(JMTCPPFLAGS) $?
 
@@ -861,6 +866,9 @@ $(INDIR)MTwnotify_token.$obj: $(RTSRC)scoop$(DIR)notify_token.cpp
 	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
 
 $(INDIR)MTwprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.cpp
+	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+
+$(INDIR)MTwmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.cpp
 	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
 
 $(INDIR)MTwprocessor.$obj: $(RTSRC)scoop$(DIR)processor.cpp

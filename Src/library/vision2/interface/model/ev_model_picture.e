@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 	make_with_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Create with `an_id_pixmap'.
 		require
-			an_id_pixmap_not_Void: an_id_pixmap /= Void
+			an_id_pixmap_not_void: an_id_pixmap /= Void
 		do
 			default_create
 			set_identified_pixmap (an_id_pixmap)
@@ -153,7 +153,7 @@ feature -- Status setting
 	set_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Set `id_pixmap' to `an_id_pixmap' and initialize `scaled_pixmap'.
 		require
-			an_id_pixmap_not_Void: an_id_pixmap /= Void
+			an_id_pixmap_not_void: an_id_pixmap /= Void
 		do
 			id_pixmap := an_id_pixmap
 			pixmap_factory.register_pixmap (id_pixmap)

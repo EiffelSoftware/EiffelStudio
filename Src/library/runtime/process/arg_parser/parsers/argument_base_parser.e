@@ -520,7 +520,6 @@ feature {NONE} -- Query
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	options_values_of_name (a_name: READABLE_STRING_GENERAL): ARRAYED_LIST [IMMUTABLE_STRING_32]

@@ -89,7 +89,7 @@ rt_shared void rt_request_group_add (struct rt_request_group* self, processor* s
 	REQUIRE ("supplier_not_null", supplier);
 	REQUIRE ("lock_not_called", !self->is_sorted);
 
-	pq = self->client->cache[supplier];
+	pq = rt_queue_cache_retrieve (&(self->client->cache), supplier);
 	error = rt_request_group_extend (self, pq);
 
 		/* If memory allocation failed, we need to throw an exception */

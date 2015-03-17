@@ -42,7 +42,7 @@
 
 #include "rt_vector.h"
 #include "rt_hashin.h"
-/* #include "rt_garcol.h" */
+/* #include "rt_garcol.h" */ /* Needed only for GC marking */
 
 /* The initial size of the hash table. */
 #define HASH_TABLE_SIZE 10
@@ -54,16 +54,6 @@ class priv_queue;
 
 /* Declare an internal vector data structure. */
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
-
-
-/* Forward declaration */
-rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
-rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
-rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
-rt_shared void rt_queue_cache_pop (struct queue_cache* self);
-rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
-/* rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking); */
-rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
 /*
 doc:	<struct name="queue_cache", export="shared">
@@ -97,15 +87,6 @@ struct queue_cache {
 	processor *owner;
 	struct rt_vector_queue_cache *borrowed_queues;
 	struct htable owned_queues;
-
-
-public: /* C++ support */
-
-	/* See rt_queue_cache_retrieve(). */
-	priv_queue* operator[] (processor * const supplier)
-	{
-		return rt_queue_cache_retrieve (this, supplier);
-	}
 };
 
 /*
@@ -152,5 +133,15 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 		/* TODO: Figure out who is going to deallocate the private queues within this queue cache. */
 	ht_release (&self->owned_queues);
 }
+
+
+/* Declarations */
+rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
+rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
+rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
+rt_shared void rt_queue_cache_pop (struct queue_cache* self);
+rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
+/* rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking); */
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
 #endif /* _rt_queue_cache_h_ */

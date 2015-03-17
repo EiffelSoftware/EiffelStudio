@@ -151,7 +151,7 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
-	priv_queue *pq = client->cache [supplier];
+	priv_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
 	REQUIRE("has data", data);
 
@@ -169,8 +169,8 @@ rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 {
 	processor *client = registry [client_pid];
 	processor *supplier = registry [supplier_pid];
+	priv_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
-	priv_queue *pq = client->cache [supplier];
 	return pq->is_synced();
 }
 
@@ -189,8 +189,6 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 	return client != supplier 
 		&& !rt_queue_cache_is_locked (&client->cache, supplier)
 		&& !rt_queue_cache_has_locks_of (&client->cache, supplier);
-// 		&& !client->cache.has_locked(supplier)
-// 		&& !client->cache.has_subordinate(supplier);
 }
 
 /* Callback from garbage collector to indicate that the */

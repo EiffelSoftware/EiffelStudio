@@ -56,18 +56,21 @@ doc:	</routine>
 rt_private priv_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, processor* const supplier)
 {
 	priv_queue *l_result = NULL;
-	RT_UNORDERED_MAP <processor*, priv_queue*> *l_owned = NULL;
-	RT_UNORDERED_MAP <processor*, priv_queue*>::const_iterator found_it;
+	struct htable* l_owned = NULL;
+	priv_queue** l_position = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
 
-	l_owned = &(self->owned_queues);
+		/* Find the position in the owned_queues hash table. */
+	l_owned = &self->owned_queues;
+	l_position = (priv_queue**) ht_value (l_owned, supplier->pid);
 
-	found_it = l_owned->find (supplier);
-	if (found_it != l_owned->end()) {
-		l_result = found_it->second;
+		/* If found, return the priv_queue* pointer. */
+	if (l_position) {
+		l_result = *l_position;
 	}
+
 	return l_result;
 }
 
@@ -320,13 +323,45 @@ rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, process
 		/* If we still don't have a queue, we need to create a new one. */
 	if (NULL == l_result) {
 		 l_result = supplier->new_priv_queue();
-		 self->owned_queues.EMPLACE (std::pair <processor*, priv_queue*>(supplier, l_result));
+		 ht_force (&self->owned_queues, supplier->pid, &l_result);
 	}
 
 	ENSURE ("result_available", l_result);
 
 	return l_result;
 }
+
+
+/* GC marking.
+* @mark the marking function to use on each reference from the Eiffel
+* runtime.
+*
+* Marks the calls that may be in the queues and thus otherwise invisible,
+* to the Eiffel runtime.
+*/
+rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
+{
+	rt_uint_ptr* l_keys = self->owned_queues.h_keys;
+	priv_queue** l_area = (priv_queue**) self->owned_queues.h_values;
+	size_t l_count = self->owned_queues.h_size;
+
+		/* It is not necessary to mark queues which are borrowed from other queue_aches.
+		* The GC will traverse them later. */
+	for (size_t i = 0; i < l_count; ++i) {
+		if (l_keys [i] != 0) {
+			l_area [i] -> mark (marking);
+		}
+	}
+}
+
+
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc)
+{
+		/* It is not necessary to delete queues which are borrowed from other queue_aches.
+		* The algorithm in processor_registry will traverse them later. */
+	ht_remove (&self->owned_queues, proc->pid);
+}
+
 /*
 doc:</file>
 */

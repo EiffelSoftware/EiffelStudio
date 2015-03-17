@@ -43,6 +43,7 @@
 #include "private_queue.hpp"
 
 #include "rt_vector.h"
+#include "rt_hashin.h"
 
 struct queue_cache;
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
@@ -76,12 +77,17 @@ RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
 #	define EMPLACE_BACK emplace_back
 #endif
 
+#define HASH_TABLE_SIZE 10
+
 /* Forward declaration */
 rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
 rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);
 rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
+
+rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking);
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
 
 /*
@@ -105,7 +111,7 @@ doc: 			the whole borrowed_queues stack to the receiver. The reverse operation
 doc: 			happens on a lock passing pop().
 doc:		</summary>
 doc:		<field name="owner", type="processor*"> The owner of this queue_cache. </field>
-doc:		<field name="owned_queues", type="TODO"> A hash table of private queues owned by this queue cache. Indexed by the pointer of the supplier processor of this queue. </field>
+doc:		<field name="owned_queues", type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
 doc:		<field name="borrowed_queues", type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
 doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
 doc: 			In the future we may need to change the implementation e.g. by not extending the borrowed_queues stack if we detect that the queue_cache to be inserted
@@ -117,16 +123,27 @@ public:
 	/* Construct a new queue_cache.
 	 * @o the owner of this queue cache
 	 */
-	queue_cache(processor* o) :
-		owned_queues()
+	queue_cache(processor* o)
 	{
+		int error = 0;
 		owner = o;
 		borrowed_queues = NULL;
+
+		error = ht_create (&this->owned_queues, HASH_TABLE_SIZE, sizeof (priv_queue*));
+		if (error != 0) {
+			enomem();
+		}
 	}
 
+	~queue_cache (void)
+	{
+		ht_release (&this->owned_queues);
+	}
+
+
 	processor *owner;
-	RT_UNORDERED_MAP <processor*, priv_queue*> owned_queues;
 	struct rt_vector_queue_cache *borrowed_queues;
+	struct htable owned_queues;
 
 public:
 
@@ -166,30 +183,17 @@ public:
 	}
 
 public:
-	/* GC marking.
-	 * @mark the marking function to use on each reference from the Eiffel
-	 * runtime.
-	 *
-	 * Marks the calls that may be in the queues and thus otherwise invisible,
-	 * to the Eiffel runtime.
-	 */
+	/* See rt_queue_cache_mark (). */
 	void mark (MARKER marking)
 	{
-		RT_UNORDERED_MAP <processor*, priv_queue*>::const_iterator pair;
-
-			/* It is not necessary to mark queues which are borrowed from other queue_aches.
-			* The GC will traverse them later. */
-		for (pair = owned_queues.begin (); pair != owned_queues.end (); ++pair) {
-			(pair->second) -> mark (marking);
-		}
+		rt_queue_cache_mark (this, marking);
 	}
 
 public:
+	/* See rt_queue_cache_clear (). */
 	void clear (processor *proc)
 	{
-			/* It is not necessary to delete queues which are borrowed from other queue_aches.
-			* The algorithm in processor_registry will traverse them later. */
-		owned_queues.erase(proc);
+		rt_queue_cache_clear (this, proc);
 	}
 
 };

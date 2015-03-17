@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Component to launch the service using the default connector
 
@@ -13,7 +13,7 @@ note
 
 			check WSF_SERVICE_LAUNCHER for more documentation
 		]"
-	date: "$Date$"
+	date: "$Date: 2013-05-20 17:34:55 +0400$"
 	revision: "$Revision$"
 
 class
@@ -51,6 +51,12 @@ feature {NONE} -- Initialization
 					port_number := l_port
 				elseif
 					attached {READABLE_STRING_GENERAL} opts.option ("port") as l_port_str and then
+					l_port_str.is_integer
+				then
+					port_number := l_port_str.as_string_8.to_integer
+				elseif
+					attached opts.option ("port") as l_port_option and then
+					attached l_port_option.out as l_port_str and then
 					l_port_str.is_integer
 				then
 					port_number := l_port_str.as_string_8.to_integer
@@ -147,11 +153,11 @@ feature -- Status report
 
 	launchable: BOOLEAN
 		do
-			Result := Precursor and port_number >= 0
+			Result := Precursor and 0 <= port_number and port_number <= {NATURAL_16}.max_value
 		end
 
 ;note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

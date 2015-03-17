@@ -332,6 +332,7 @@ rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, process
 	return l_result;
 }
 
+#if 0 /* Apparently the rt_queue_cache_mark feature was never used. GC traversal happens through processor::private_queue_cache. */
 /*
 doc:	<routine name="rt_queue_cache_mark" return_type="void" export="shared">
 doc:		<summary> Garbage Collection: Mark the calls that may be in the private queues handled by this cache. </summary>
@@ -362,6 +363,7 @@ rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
 		}
 	}
 }
+#endif
 
 /*
 doc:	<routine name="rt_queue_cache_clear" return_type="void" export="shared">

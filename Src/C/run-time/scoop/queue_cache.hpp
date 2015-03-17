@@ -42,7 +42,7 @@
 
 #include "rt_vector.h"
 #include "rt_hashin.h"
-#include "rt_garcol.h"
+/* #include "rt_garcol.h" */
 
 /* The initial size of the hash table. */
 #define HASH_TABLE_SIZE 10
@@ -62,7 +62,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, proces
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);
 rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
-rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking);
+/* rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking); */
 rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
 /*
@@ -133,12 +133,6 @@ public: /* C++ support */
 	void pop ()
 	{
 		rt_queue_cache_pop (this);
-	}
-
-	/* See rt_queue_cache_mark (). */
-	void mark (MARKER marking)
-	{
-		rt_queue_cache_mark (this, marking);
 	}
 
 	/* See rt_queue_cache_clear (). */

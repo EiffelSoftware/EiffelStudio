@@ -35,49 +35,26 @@
 		]"
 */
 
-#ifndef _QUEUE_CACHE_H_
-#define _QUEUE_CACHE_H_
-#include <stack>
-#include <set>
-#include <vector>
-#include "private_queue.hpp"
+
+/* TODO: Rename the file to rt_queue_cache.h */
+#ifndef _rt_queue_cache_h_
+#define _rt_queue_cache_h_
 
 #include "rt_vector.h"
 #include "rt_hashin.h"
+#include "rt_garcol.h"
 
+/* The initial size of the hash table. */
+#define HASH_TABLE_SIZE 10
+
+/* Forward declarations. */
 struct queue_cache;
+class processor;
+class priv_queue;
+
+/* Declare an internal vector data structure. */
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
 
-/**
- * 'std::unordered_map' is not available on all platforms.
- * It is replaced conditionally by something else.
- */
-#if defined (__GNUC__) && (__cplusplus < 201103L)
-#	include <tr1/unordered_map>
-#	define RT_UNORDERED_MAP std::tr1::unordered_map
-#elif EIF_OS != EIF_OS_SUNOS && !defined (__SUNPRO_CC)
-#	include <unordered_map>
-#	define RT_UNORDERED_MAP std::unordered_map
-#else
-#	include "unordered_map.hpp"
-#	define RT_UNORDERED_MAP eiffel_run_time::unordered_map
-#endif
-
-/**
- * 'unordered_map::emplace' is not available on all platforms.
- * It is replaced conditionally by 'insert' that might be less efficient.
- * 'vector::emplace_back' is not available on all platforms.
- * It is replaced conditionally by 'push_back' that might be less efficient.
- */
-#if (defined (__GNUC__) && (__cplusplus < 201103L)) || EIF_OS == EIF_OS_SUNOS || defined (__SUNPRO_CC)
-#	define EMPLACE      insert
-#	define EMPLACE_BACK push_back
-#else
-#	define EMPLACE      emplace
-#	define EMPLACE_BACK emplace_back
-#endif
-
-#define HASH_TABLE_SIZE 10
 
 /* Forward declaration */
 rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
@@ -85,10 +62,12 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, proces
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);
 rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
-
 rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking);
 rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
+
+rt_private void rt_queue_cache_init (struct queue_cache* self, processor* owner);
+rt_private void rt_queue_cache_deinit (struct queue_cache* self);
 
 /*
 doc:	<struct name="queue_cache", export="shared">
@@ -125,19 +104,12 @@ public:
 	 */
 	queue_cache(processor* o)
 	{
-		int error = 0;
-		owner = o;
-		borrowed_queues = NULL;
-
-		error = ht_create (&this->owned_queues, HASH_TABLE_SIZE, sizeof (priv_queue*));
-		if (error != 0) {
-			enomem();
-		}
+		rt_queue_cache_init (this, o);
 	}
 
 	~queue_cache (void)
 	{
-		ht_release (&this->owned_queues);
+		rt_queue_cache_deinit (this);
 	}
 
 
@@ -198,4 +170,51 @@ public:
 
 };
 
-#endif
+
+
+/*
+doc:	<routine name="rt_queue_cache_init" return_type="void" export="private">
+doc:		<summary> Initialize the queue_cache struct 'self' with owner 'a_owner' and reserve some memory in the internal hash table. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to be initialized. Must not be NULL. </param>
+doc:		<param name="a_owner" type="struct processor*"> The owner of the queue_cache. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_queue_cache_init (struct queue_cache* self, processor* a_owner)
+{
+	int error = 0;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("owner_not_null", a_owner);
+
+	self -> owner = a_owner;
+	self -> borrowed_queues = NULL;
+
+	error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (priv_queue*));
+	if (error != 0) {
+		enomem();
+	}
+}
+
+/*
+doc:	<routine name="rt_queue_cache_deinit" return_type="void" export="private">
+doc:		<summary> Deconstruct the queue_cache 'self' and free any internal memory. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to be de-initialized. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_queue_cache_deinit (struct queue_cache* self)
+{
+	REQUIRE ("self_not_null", self);
+
+		/* When a queue cache gets deleted, it should not have any passed locks,
+		 * as the associated processor was idle and all its objects have been garbage collected. */
+	REQUIRE ("no_borrowed_queues", !self->borrowed_queues);
+
+		/* TODO: Figure out who is going to deallocate the private queues within this queue cache. */
+	ht_release (&self->owned_queues);
+}
+
+#endif /* _rt_queue_cache_h_ */

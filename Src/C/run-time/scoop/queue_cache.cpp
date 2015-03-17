@@ -41,6 +41,7 @@ doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary
 
 #include "rt_msc_ver_mismatch.h"
 #include "queue_cache.hpp"
+#include "private_queue.hpp"
 #include "processor.hpp"
 
 /*

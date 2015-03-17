@@ -71,8 +71,8 @@ SED = $sed
 
 USRINC = $usrinc
 LSCRIPTS =  eif_size.h
-OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -130,6 +130,7 @@ MTADD_CPP = \
 	private_queue.cpp \
 	processor.cpp \
 	queue_cache.cpp \
+	message_channel.cpp \
 	req_grp.cpp
 
 MTADD = \
@@ -254,6 +255,7 @@ MT_WOBJ = \
 	MTwprivate_queue.o \
 	MTwprocessor.o \
 	MTwqueue_cache.o \
+	MTwmessage_channel.o \
 	MTwreq_grp.o \
 	MTwmalloc.o \
 	MTwgarcol.o \
@@ -311,6 +313,7 @@ MT_LOBJ = \
 	MTprivate_queue.o \
 	MTprocessor.o \
 	MTqueue_cache.o \
+	MTmessage_channel.o \
 	MTreq_grp.o \
 	MTmalloc.o \
 	MTgarcol.o \
@@ -824,6 +827,9 @@ MTwprocessor.o: scoop/processor.cpp
 MTwqueue_cache.o: scoop/queue_cache.cpp
 	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
+MTwmessage_channel.o: scoop/message_channel.cpp
+	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+
 MTwreq_grp.o: scoop/req_grp.cpp
 	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
 
@@ -844,6 +850,9 @@ MTprocessor.o: scoop/processor.cpp
 	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTqueue_cache.o: scoop/queue_cache.cpp
+	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
+
+MTmessage_channel.o: scoop/message_channel.cpp
 	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
 
 MTreq_grp.o: scoop/req_grp.cpp

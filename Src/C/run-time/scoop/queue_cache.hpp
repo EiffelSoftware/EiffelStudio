@@ -65,10 +65,6 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, pro
 rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking);
 rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
 
-
-rt_private void rt_queue_cache_init (struct queue_cache* self, processor* owner);
-rt_private void rt_queue_cache_deinit (struct queue_cache* self);
-
 /*
 doc:	<struct name="queue_cache", export="shared">
 doc:		<summary> A cache of private queues.
@@ -98,26 +94,12 @@ doc:			is already in the stack. This probably needs some more data structures th
 doc:	</struct>
 */
 struct queue_cache {
-public:
-	/* Construct a new queue_cache.
-	 * @o the owner of this queue cache
-	 */
-	queue_cache(processor* o)
-	{
-		rt_queue_cache_init (this, o);
-	}
-
-	~queue_cache (void)
-	{
-		rt_queue_cache_deinit (this);
-	}
-
-
 	processor *owner;
 	struct rt_vector_queue_cache *borrowed_queues;
 	struct htable owned_queues;
 
-public:
+
+public: /* C++ support */
 
 	/* See rt_queue_cache_retrieve(). */
 	priv_queue* operator[] (processor * const supplier)
@@ -139,7 +121,6 @@ public:
 		return rt_queue_cache_has_locks_of (this, proc);
 	}
 
-public:
 	/* See rt_queue_cache_push (). */
 	void
 	push (queue_cache* other)
@@ -154,14 +135,12 @@ public:
 		rt_queue_cache_pop (this);
 	}
 
-public:
 	/* See rt_queue_cache_mark (). */
 	void mark (MARKER marking)
 	{
 		rt_queue_cache_mark (this, marking);
 	}
 
-public:
 	/* See rt_queue_cache_clear (). */
 	void clear (processor *proc)
 	{
@@ -169,8 +148,6 @@ public:
 	}
 
 };
-
-
 
 /*
 doc:	<routine name="rt_queue_cache_init" return_type="void" export="private">
@@ -181,7 +158,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_queue_cache_init (struct queue_cache* self, processor* a_owner)
+rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, processor* a_owner)
 {
 	int error = 0;
 
@@ -205,7 +182,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_queue_cache_deinit (struct queue_cache* self)
+rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 {
 	REQUIRE ("self_not_null", self);
 

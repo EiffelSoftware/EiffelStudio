@@ -35,26 +35,21 @@
 		]"
 */
 
+#include "rt_message_channel.hpp"
 #include "spsc.hpp"
 #include "rt_message.h"
 
-
-rt_shared void rt_message_channel_init (struct rt_message_channel* self)
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, struct rt_message* message)
 {
+	self->impl.push (*message);
 }
 
-rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
+rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)
 {
-}
-
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, struct rt_message message)
-{
-}
-
-rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message, int spin)
-{
+	self->impl.pop (*message, self->spin);
 }
 
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking)
 {
+	self->impl.mark (marking);
 }

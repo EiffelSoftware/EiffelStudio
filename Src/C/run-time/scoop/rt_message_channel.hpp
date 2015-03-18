@@ -41,18 +41,45 @@
 #include "spsc.hpp"
 #include "rt_message.h"
 
+/*
+doc:	<struct name="rt_message_channel", export="shared">
+doc:		<summary> Represents a message channel between two SCOOP processor. </summary>
+doc:		<field name="TODO", type="TODO"> TODO: convert spsc class. </field>
+doc:		<field name="spin", type="size_t"> The number of times a processor should try a non-blocking receive before waiting on a condition variable. </field>
+doc:	</struct>
+ */
 struct rt_message_channel {
 	spsc<rt_message> impl;
-	int spin;
+	int spin; /* TODO: Change to size_t when converting spsc class. */
 };
 
-rt_shared rt_inline void rt_message_channel_init (struct rt_message_channel* self, int default_spin)
+/*
+doc:	<routine name="rt_message_channel_init" return_type="void" export="private">
+doc:		<summary> Initialize the rt_message_channel struct 'self' and allocate some initial memory. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel to be initialized. Must not be NULL. </param>
+doc:		<param name="default_spin" type="size_t"> The number of times a thread should spin on receive before waiting on a condition variable. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin)
 {
-	self->spin = default_spin;
+	REQUIRE ("self_not_null", self);
+	self->spin = (int) default_spin;
 }
 
-rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
+/*
+doc:	<routine name="rt_message_channel_deinit" return_type="void" export="private">
+doc:		<summary> Deconstruct 'self' and free all internal memory. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel to be destroyed. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline void rt_message_channel_deinit (struct rt_message_channel* self)
 {
+	REQUIRE ("self_not_null", self);
+	/* Deallocation is implicit right now due to deconstructor. */
 }
 
 /* Declarations */

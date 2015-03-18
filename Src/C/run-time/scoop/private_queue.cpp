@@ -47,12 +47,12 @@ doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" sum
 #include "eif_utils.hpp"
 
 priv_queue::priv_queue (processor *_supplier) :
-	spsc<rt_message>(),
 	supplier (_supplier),
 	dirty (false),
 	synced (false),
 	lock_depth(0)
 {
+	rt_message_channel_init (&this->channel, 512);
 	rt_message_init (&this->call_stack_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /* TODO: default state? */
 }
 
@@ -111,7 +111,7 @@ void priv_queue::log_call(processor *client, call_data *call)
 			/* therefore processor ID should be stored before it. */
 		struct rt_message message;
 		rt_message_init (&message, SCOOP_MESSAGE_EXECUTE, client, call);
-		push (message);
+		rt_message_channel_send (&this->channel, &message);
 	}
 	
 	if (will_sync) {
@@ -148,14 +148,14 @@ void priv_queue::unlock()
 	if (lock_depth == 0) {
 		struct rt_message message;
 		rt_message_init (&message, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
-		push (message);
+		rt_message_channel_send (&this->channel, &message);
 		synced = false;
 	}
 }
 
 void priv_queue::mark(MARKER marking)
 {
-	spsc <rt_message>::mark (marking);
+	rt_message_channel_mark (&this->channel, marking);
 
 	if (call_stack_msg.call) {
 		rt_mark_call_data (marking, call_stack_msg.call);

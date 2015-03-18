@@ -50,6 +50,8 @@
 
 #include "rt_vector.h"
 
+#if 0
+
 /* A specialized version of <spsc> that is for notification.
  *
  * The use of <spsc> allows notifications to not be lost, although
@@ -107,6 +109,7 @@ struct notifier : spsc <rt_message> {
 	}
 
 };
+#endif 
 
 /* Define the struct to be used for the group stack. */
 RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
@@ -243,7 +246,7 @@ public:
    * It is important for GC that the thread that requested this processor
    * to spawn a thread doesn't proceed until it has been constructed.
    */
-  notifier startup_notify;
+  struct rt_message_channel startup_notify;
 
   /* The processor ID.
    */

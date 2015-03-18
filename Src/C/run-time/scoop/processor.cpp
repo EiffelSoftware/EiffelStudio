@@ -70,6 +70,8 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 {
 	rt_queue_cache_init (&this->cache, this);
 	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
+	rt_message_channel_init (&this->result_notify, 64);
+// 	rt_message_channel_init (&this->startup_notify, 64);
 	request_group_stack_t_init (&this->request_group_stack);
 	active_count++;
 }
@@ -79,7 +81,8 @@ processor::~processor()
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
 		delete *pq;
 	}
-
+//  	rt_message_channel_deinit (&this->startup_notify);
+	rt_message_channel_deinit (&this->result_notify);
 	request_group_stack_t_deinit (&this->request_group_stack);
 	rt_queue_cache_deinit (&this->cache);
 }
@@ -170,10 +173,10 @@ void processor::operator()(processor *client, call_data* call)
 			/* Propagate exceptions on a synchronous call. */
 		if (is_dirty) {
 			is_dirty = false;
-			client -> result_notify.rude_awake();
+			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL);
 
 		} else {
-			client->result_notify.result_awake();
+			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL);
 		}
 	}
 

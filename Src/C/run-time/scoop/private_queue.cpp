@@ -104,7 +104,7 @@ void priv_queue::log_call(processor *client, call_data *call)
 		call -> sync_pid = client -> pid;
 		will_sync = EIF_TRUE;
 
-		supplier->result_notify.callback_awake(client, call);
+		rt_message_channel_send (&supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call);
 		
 	} else {
 			/* NOTE: After this push(), call might be free'd, */
@@ -121,11 +121,12 @@ void priv_queue::log_call(processor *client, call_data *call)
 			 */
 		processor *client = registry[l_sync_pid];
 
-		call_stack_msg = client->result_notify.wait();
+			/* Wait on our own result notifier for a message by the other processor. */
+		rt_message_channel_receive (&client->result_notify, &call_stack_msg);
 
 		for (;
 			call_stack_msg.message_type == SCOOP_MESSAGE_CALLBACK;
-			call_stack_msg = client->result_notify.wait())
+			rt_message_channel_receive (&client->result_notify, &call_stack_msg))
 		{
 			(*client)(call_stack_msg.sender, call_stack_msg.call);
 			call_stack_msg.call = NULL;

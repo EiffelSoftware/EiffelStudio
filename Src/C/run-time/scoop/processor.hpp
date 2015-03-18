@@ -223,7 +223,7 @@ public:
    * This is the notifier that this processor will wait on when
    * it asks another processor for a result.
    */
-  notifier result_notify;
+  struct rt_message_channel result_notify;
 
 public:
   /* Ask the Eiffel runtime to make a new thread for this processor.

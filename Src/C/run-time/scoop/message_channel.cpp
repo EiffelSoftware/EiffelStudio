@@ -39,9 +39,11 @@
 #include "spsc.hpp"
 #include "rt_message.h"
 
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, struct rt_message* message)
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call)
 {
-	self->impl.push (*message);
+	struct rt_message message;
+	rt_message_init (&message, message_type, sender, call);
+	self->impl.push (message);
 }
 
 rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)

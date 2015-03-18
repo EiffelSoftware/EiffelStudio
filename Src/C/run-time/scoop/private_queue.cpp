@@ -109,9 +109,7 @@ void priv_queue::log_call(processor *client, call_data *call)
 	} else {
 			/* NOTE: After this push(), call might be free'd, */
 			/* therefore processor ID should be stored before it. */
-		struct rt_message message;
-		rt_message_init (&message, SCOOP_MESSAGE_EXECUTE, client, call);
-		rt_message_channel_send (&this->channel, &message);
+		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_EXECUTE, client, call);
 	}
 	
 	if (will_sync) {
@@ -146,9 +144,7 @@ void priv_queue::unlock()
 	lock_depth--;
 
 	if (lock_depth == 0) {
-		struct rt_message message;
-		rt_message_init (&message, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
-		rt_message_channel_send (&this->channel, &message);
+		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
 		synced = false;
 	}
 }

@@ -38,17 +38,26 @@
 #ifndef _rt_message_channel_h_
 #define _rt_message_channel_h_
 
+#include "spsc.hpp"
+#include "rt_message.h"
+
 struct rt_message_channel {
-	int stub;
+	spsc<rt_message> impl;
+	int spin;
 };
 
+rt_shared rt_inline void rt_message_channel_init (struct rt_message_channel* self, int default_spin)
+{
+	self->spin = default_spin;
+}
 
-rt_shared void rt_message_channel_init (struct rt_message_channel* self);
-rt_shared void rt_message_channel_deinit (struct rt_message_channel* self);
+rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
+{
+}
 
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, struct rt_message message);
-rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message, int spin);
-
+/* Declarations */
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, struct rt_message* message);
+rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message);
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking);
 
 

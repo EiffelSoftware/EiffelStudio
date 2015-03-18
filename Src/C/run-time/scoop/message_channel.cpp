@@ -63,7 +63,19 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 	REQUIRE ("call_not_null", a_call || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));
 
 	rt_message_init (&message, message_type, sender, call);
-	self->impl.push (message);
+
+		/* Perform the non-blocking enqueue operation. */
+	self -> impl.q.enqueue (message);
+
+		/* Lock the condition variable mutex. */
+	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+
+		/* Wake up the receiver. */
+	eif_pthread_cond_signal (self->has_elements_condition);
+
+		/* Release the condition variable mutex. */
+	eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+
 }
 
 /*
@@ -82,7 +94,34 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 
 		/* TODO: In theory we could allow 'message' to be NULL.
 		 * There's one use case in processor_registry that is not interested in the result. */
-	self->impl.pop (*message, self->spin);
+
+		/* First try to dequeue in a non-blocking fashion. */
+	for (size_t i=0; i < self->spin; ++i) {
+		if (self->impl.q.dequeue (*message)) {
+			return; /* TODO: Use a boolean. */
+		}
+	}
+
+		/* If we didn't get an item so far, we wait on the condition variable. */
+
+		/* Inform the GC that we're blocked. */
+	EIF_ENTER_C;
+
+		/* Lock the condition variable mutex. */
+	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+
+		/* Try to receive a message. */
+	while (!self->impl.q.dequeue (*message)) {
+			/* Wait on the condition variable for a producer to signal availability of new messages. */
+		eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+	}
+
+		/* Release the condition variable mutex. */
+	eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+
+		/* Inform the GC that we're no longer blocked. */
+	EIF_EXIT_C;
+	RTGC;
 }
 
 /*

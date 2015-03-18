@@ -38,8 +38,13 @@
 #ifndef _rt_message_channel_h_
 #define _rt_message_channel_h_
 
+#include "eif_error.h"
+#include "eif_posix_threads.h"
+
 #include "spsc.hpp"
 #include "rt_message.h"
+
+
 
 /*
 doc:	<struct name="rt_message_channel", export="shared">
@@ -50,7 +55,9 @@ doc:	</struct>
  */
 struct rt_message_channel {
 	spsc<rt_message> impl;
-	int spin; /* TODO: Change to size_t when converting spsc class. */
+	EIF_MUTEX_TYPE* has_elements_condition_mutex;
+	EIF_COND_TYPE* has_elements_condition;
+	size_t spin;
 };
 
 /*
@@ -64,8 +71,23 @@ doc:	</routine>
 */
 rt_private rt_inline void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin)
 {
+	int error = T_OK;
+
 	REQUIRE ("self_not_null", self);
-	self->spin = (int) default_spin;
+
+	error = eif_pthread_mutex_create (&self->has_elements_condition_mutex);
+	if (error != T_OK) {
+		esys();
+	}
+
+	error = eif_pthread_cond_create (&self->has_elements_condition);
+
+	if (error != T_OK) {
+		eif_pthread_mutex_destroy (self->has_elements_condition_mutex);
+		esys ();
+	}
+
+	self->spin = default_spin;
 }
 
 /*
@@ -79,7 +101,12 @@ doc:	</routine>
 rt_private rt_inline void rt_message_channel_deinit (struct rt_message_channel* self)
 {
 	REQUIRE ("self_not_null", self);
-	/* Deallocation is implicit right now due to deconstructor. */
+
+	eif_pthread_cond_destroy (self->has_elements_condition);
+	self->has_elements_condition = NULL;
+
+	eif_pthread_mutex_destroy (self->has_elements_condition_mutex);
+	self->has_elements_condition_mutex = NULL;
 }
 
 /* Declarations */

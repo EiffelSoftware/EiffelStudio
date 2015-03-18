@@ -38,9 +38,9 @@
 #ifndef _PRIV_QUEUE_H
 #define _PRIV_QUEUE_H
 #include "eif_utils.hpp"
-#include "spsc.hpp"
 
 #include "rt_message.h"
+#include "rt_message_channel.hpp"
 
 class processor;
 
@@ -51,7 +51,7 @@ class processor;
  * The client is the original client, as this queue may be passed to
  * other clients during lock-passing.
  */
-class priv_queue : spsc <rt_message>
+class priv_queue
 {
 public:
   /* Construct a private queue.
@@ -61,6 +61,12 @@ public:
    * the supplier through this queue.
    */
   priv_queue (processor *supplier);
+
+  /* Deconstructor for priv_queue. */
+  ~priv_queue ()
+  {
+	  rt_message_channel_deinit (&this->channel);
+  }
 
   /* The lifetime end-point of this queue. */
   processor *supplier;
@@ -93,7 +99,7 @@ public:
    */
   void pop_msg (rt_message &msg)
   {
-    pop (msg);
+    rt_message_channel_receive (&this->channel, &msg);
   }
 
   /* Register a wait operation with the <supplier>.
@@ -142,6 +148,9 @@ private:
   rt_message call_stack_msg;
   bool synced;
   int lock_depth;
+
+	/* The message channel of this queue. */
+  struct rt_message_channel channel;
 };
 
 

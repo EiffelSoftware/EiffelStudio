@@ -44,8 +44,6 @@
 #include "spsc.hpp"
 #include "rt_message.h"
 
-
-
 /*
 doc:	<struct name="rt_message_channel", export="shared">
 doc:		<summary> Represents a message channel between two SCOOP processor. </summary>

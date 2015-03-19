@@ -43,6 +43,77 @@ doc:<file name="message_channel.cpp" header="rt_message_channel.hpp" version="$I
 #include "spsc.hpp"
 #include "rt_message.h"
 
+struct mc_node {
+	struct mc_node* next;
+	struct rt_message value;
+};
+
+
+/*
+doc:	<routine name="load_consume" return_type="struct mc_node*" export="shared">
+doc:		<summary> Dereference 'node_address', followed by an acquire fence.
+doc:			The fence instruction ensures that any read or write operation after the fence is not reordered with any read operation before the fence. </summary>
+doc:		<param name="node_address" type="struct mc_node**"> The pointer-pointer to be dereferenced. Must not be NULL. </param>
+doc:		<return> The value at location 'node_address'. </return>
+doc:		<thread_safety> Safe </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:		<fixme> Currently this only works on x86, which has relatively strong ordering guarantees.
+doc:			Furthermore, we currently use a very strong fence internally.
+doc:			We may be able to tune performance a bit by just using an acquire fence. </fixme>
+doc:	</routine>
+*/
+rt_private rt_inline struct mc_node* load_consume (struct mc_node** const node_address)
+{
+
+		/* Note: We use volatile on the pointer, not the item pointed to. */
+		/* RS: Is this to ensure that the memory lookup actually happens and isn't optimized away, i.e. to reduce latency? */
+	struct mc_node** const volatile volatile_node_address = (struct mc_node** const volatile) node_address;
+	struct mc_node* result = *volatile_node_address;
+
+		/* This is the correct position of the fence.
+		 * The fence nesures that all the values written into the mc_node
+		 * struct by another thread are now visible by this thread. */
+
+		/* Compiler fence */
+	EIF_MEMORY_BARRIER;
+
+		/* Hardware fence is implicit on x86. */
+
+	return result;
+}
+
+/*
+doc:	<routine name="store_release" return_type="void" export="shared">
+doc:		<summary> Perform a release fence and write 'node' into memory pointed to by 'node_address'.
+doc:			The fence instruction ensures that any read or write operation prior to the fence is not reordered with any write operation after the fence. </summary>
+doc:		<param name="node_address" type="struct mc_node**"> The pointer-pointer that holds the address where 'node' should be stored. Must not be NULL. </param>
+doc:		<param name="node_address" type="struct mc_node**"> The pointer to a node that should be stored at 'node_address'. Must not be NULL. </param>
+doc:		<thread_safety> Safe </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:		<fixme> Currently this only works on x86, which has relatively strong ordering guarantees.
+doc:			Furthermore, we currently use a very strong fence internally.
+doc:			We may be able to tune performance a bit by just using a release fence. </fixme>
+doc:	</routine>
+*/
+rt_private rt_inline void store_release (struct mc_node** const node_address, struct mc_node* node)
+{
+		/* This is the correct position of the fence.
+		* The fence nesures that all the values written into the mc_node
+		* struct by this thread are visible by the other thread once it loads the pointer with load_consume. */
+
+		/* Compiler fence */
+	EIF_MEMORY_BARRIER;
+
+		/* Hardware fence is implicit on x86. */
+
+		/* Note: We use volatile on the pointer, not the item pointed to. */
+		/* RS: Is this to ensure that the memory lookup actually happens and isn't optimized away, i.e. to reduce latency? */
+	struct mc_node** const volatile volatile_node_address = (struct mc_node** const volatile) node_address;
+
+		/* Perform the store operation. */
+	*volatile_node_address = node;
+}
+
 /*
 doc:	<routine name="rt_message_channel_send" return_type="void" export="shared">
 doc:		<summary> Send the message 'message_type' over channel 'self'. </summary>

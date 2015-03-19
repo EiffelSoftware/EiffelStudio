@@ -38,11 +38,9 @@
 #ifndef _rt_message_channel_h_
 #define _rt_message_channel_h_
 
-#include "eif_error.h"
-#include "eif_posix_threads.h"
-
-#include "spsc.hpp"
 #include "rt_message.h"
+#include "eif_posix_threads.h"
+#include "rt_scoop_gc.h"
 
 /* Cache line size on most modern processors in bytes. */
 #define CACHE_LINE_SIZE 64
@@ -58,8 +56,6 @@ doc:		<field name="spin", type="size_t"> The number of times a processor should 
 doc:	</struct>
  */
 struct rt_message_channel {
-	spsc<rt_message> impl;
-
 		/* Shared part which is accessed by both. */
 	EIF_MUTEX_TYPE* has_elements_condition_mutex;
 	EIF_COND_TYPE* has_elements_condition;

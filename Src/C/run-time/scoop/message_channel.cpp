@@ -278,7 +278,7 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 /*
 doc:	<routine name="rt_message_channel_receive" return_type="void" export="shared">
 doc:		<summary> Receive a message on channel 'self' and store the result in 'message'. </summary>
-doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. Must not be NULL. </param>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. May be NULL. </param>
 doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. Must not be NULL. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
@@ -289,39 +289,34 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 	EIF_BOOLEAN success = EIF_FALSE;
 
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("message_not_null", message);
-
-		/* TODO: In theory we could allow 'message' to be NULL.
-		 * There's one use case in processor_registry that is not interested in the result. */
 
 		/* First try to dequeue in a non-blocking fashion. */
-	for (size_t i=0; i < self->spin; ++i) {
+	for (size_t i=0; i < self->spin && !success; ++i) {
 		success = dequeue (self, message);
-		if (success) {
-			return;/* TODO: Use proper flow control. */
-		}
 	}
 
 		/* If we didn't get an item so far, we wait on the condition variable. */
+	if (!success) {
 
-		/* Inform the GC that we're blocked. */
-	EIF_ENTER_C;
+			/* Inform the GC that we're blocked. */
+		EIF_ENTER_C;
 
-		/* Lock the condition variable mutex. */
-	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+			/* Lock the condition variable mutex. */
+		eif_pthread_mutex_lock (self->has_elements_condition_mutex);
 
-		/* Try to receive a message. */
-	while (!dequeue (self, message)) {
-			/* Wait on the condition variable for a producer to signal availability of new messages. */
-		eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+			/* Try to receive a message. */
+		while (!dequeue (self, message)) {
+				/* Wait on the condition variable for a producer to signal availability of new messages. */
+			eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+		}
+
+			/* Release the condition variable mutex. */
+		eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+
+			/* Inform the GC that we're no longer blocked. */
+		EIF_EXIT_C;
+		RTGC;
 	}
-
-		/* Release the condition variable mutex. */
-	eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
-
-		/* Inform the GC that we're no longer blocked. */
-	EIF_EXIT_C;
-	RTGC;
 }
 
 /*
@@ -373,16 +368,15 @@ rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t 
 	self->has_elements_condition_mutex = NULL;
 	self->spin = default_spin;
 
-		/* Allocate the first tail node (a guard node with no valid value). */
+		/* Allocate the guard node. */
 	l_node = (struct mc_node*) malloc (sizeof (struct mc_node));
 	if (!l_node) {
 			/* Report allocation failure. */
 		enomem();
 	}
 
-		/* TODO: Initialize the rt_message within to some default state ?*/
+		/* TODO: Add a default rt_message for initialization? */
 	l_node->next = NULL;
-
 
 		/* In the beginning, all pointers point to the guard node. */
 	self->head = l_node;
@@ -426,7 +420,7 @@ rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
 	self->first = NULL;
 
 		/* Free all nodes in the internal linked list. */
-		/* NOTE: If we're ever having more than just pointers in an
+		/* NOTE: If we're ever going to have more than just pointers in an
 		 * rt_message struct, we may need to free some more stuff here. */
 	while (item) {
 		next = item->next;

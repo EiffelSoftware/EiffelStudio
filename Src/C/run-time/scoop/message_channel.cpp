@@ -62,12 +62,12 @@ doc:			Furthermore, we currently use a very strong fence internally.
 doc:			We may be able to tune performance a bit by just using an acquire fence. </fixme>
 doc:	</routine>
 */
-rt_private rt_inline struct mc_node* load_consume (struct mc_node** const node_address)
+rt_private rt_inline struct mc_node* load_consume (struct mc_node*const* node_address)
 {
 
-		/* Note: We use volatile on the pointer, not the item pointed to. */
+		/* Read this as a "pointer to a constant volatile pointer to an mc_node" */
 		/* RS: Is this to ensure that the memory lookup actually happens and isn't optimized away, i.e. to reduce latency? */
-	struct mc_node** const volatile volatile_node_address = (struct mc_node** const volatile) node_address;
+	struct mc_node* const volatile* volatile_node_address = (struct mc_node* const volatile*) node_address;
 	struct mc_node* result = *volatile_node_address;
 
 		/* This is the correct position of the fence.
@@ -95,7 +95,7 @@ doc:			Furthermore, we currently use a very strong fence internally.
 doc:			We may be able to tune performance a bit by just using a release fence. </fixme>
 doc:	</routine>
 */
-rt_private rt_inline void store_release (struct mc_node** const node_address, struct mc_node* node)
+rt_private rt_inline void store_release (struct mc_node** node_address, struct mc_node* node)
 {
 		/* This is the correct position of the fence.
 		* The fence nesures that all the values written into the mc_node
@@ -106,9 +106,9 @@ rt_private rt_inline void store_release (struct mc_node** const node_address, st
 
 		/* Hardware fence is implicit on x86. */
 
-		/* Note: We use volatile on the pointer, not the item pointed to. */
+		/* Read this as a "pointer to a volatile pointer to an mc_node" */
 		/* RS: Is this to ensure that the memory lookup actually happens and isn't optimized away, i.e. to reduce latency? */
-	struct mc_node** const volatile volatile_node_address = (struct mc_node** const volatile) node_address;
+	struct mc_node* volatile* volatile_node_address = (struct mc_node* volatile*) node_address;
 
 		/* Perform the store operation. */
 	*volatile_node_address = node;
@@ -142,7 +142,7 @@ rt_private rt_inline struct mc_node* allocate_node (struct rt_message_channel* s
 		result = self->first;
 
 			/* Update the first pointer. */
-		self->first = result->next;
+		self->first = self->first->next;
 
 	} else {
 			/* We need to allocate a new node on the heap. */
@@ -154,7 +154,7 @@ rt_private rt_inline struct mc_node* allocate_node (struct rt_message_channel* s
 	}
 
 		/* Do some basic initialization. */
-	result -> next = NULL;
+	result->next = NULL;
 
 	ENSURE ("not_null", result);
 	ENSURE ("partially_initialized", !result->next);
@@ -227,10 +227,11 @@ rt_private rt_inline EIF_BOOLEAN dequeue (struct rt_message_channel* self, struc
 		}
 
 			/* Update the tail pointer.
-			 * This releases the node into the cache of unused nodes.
+			 * This releases the current guard node into the cache of unused nodes,
+			 * and makes 'node' the new guard node.
 			 * The store_release ensures that the producer will see all our writes.
 			 * This store_release pairs with the load_consume in allocate_node(). */
-		store_release (&self->tail, item->next);
+		store_release (&self->tail, self->tail->next);
 	}
 
 	return result;
@@ -251,16 +252,17 @@ doc:	</routine>
 */
 rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call)
 {
-	struct rt_message message;
+// 	struct rt_message message;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", sender || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 	REQUIRE ("call_not_null", call || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 
-	rt_message_init (&message, message_type, sender, call);
+// 	rt_message_init (&message, message_type, sender, call);
 
 		/* Perform the non-blocking enqueue operation. */
-	self -> impl.q.enqueue (message);
+// 	self -> impl.q.enqueue (message);
+	enqueue (self, message_type, sender, call);
 
 		/* Lock the condition variable mutex. */
 	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
@@ -284,6 +286,8 @@ doc:	</routine>
 */
 rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)
 {
+	EIF_BOOLEAN success = EIF_FALSE;
+
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("message_not_null", message);
 
@@ -292,8 +296,10 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 
 		/* First try to dequeue in a non-blocking fashion. */
 	for (size_t i=0; i < self->spin; ++i) {
-		if (self->impl.q.dequeue (*message)) {
-			return; /* TODO: Use a boolean. */
+// 		success = self->impl.q.dequeue (*message)
+		success = dequeue (self, message);
+		if (success) {
+			return;/* TODO: Use proper flow control. */
 		}
 	}
 
@@ -306,7 +312,8 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
 
 		/* Try to receive a message. */
-	while (!self->impl.q.dequeue (*message)) {
+// 	while (!self->impl.q.dequeue (*message)) {
+	while (!dequeue (self, message)) {
 			/* Wait on the condition variable for a producer to signal availability of new messages. */
 		eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
 	}
@@ -330,9 +337,21 @@ doc:	</routine>
 */
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking)
 {
+	struct mc_node* node = NULL;
+	struct call_data* call = NULL;
+
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
-	self->impl.mark (marking);
+
+	for (node = self->tail->next; node != NULL; node = node->next) {
+
+		call = node->value.call;
+		if (call) {
+			rt_mark_call_data (marking, call);
+		}
+	}
+
+// 	self->impl.mark (marking);
 }
 
 /*

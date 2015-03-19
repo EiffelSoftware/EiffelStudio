@@ -1,7 +1,7 @@
 /*
 	description:	"Declarations for the message channel struct."
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date:$"
+	revision:	"$Revision:$"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
@@ -66,7 +66,8 @@ struct rt_message_channel {
 	EIF_MUTEX_TYPE* has_elements_condition_mutex;
 	EIF_COND_TYPE* has_elements_condition;
 
-		/* TODO: Add another cache_line_pad ? */
+		/* TODO: Do we need to add another cache_line_pad?
+		 *And what happens when this structure is embedded in another one? */
 
 		/* Consumer part. Accessed mostly by the consumer, infrequently by the producer. */
 	size_t spin;
@@ -115,6 +116,9 @@ first, tail_copy and tail pointers all point to the guard node.
 The tail_copy is a small optimization technique which points
 somewhere between first and tail. It is used to avoid frequent
 synchronization. with the consumer.
+
+Note: The structure never releases any allocated memory unless
+it is destroyed completely.
 */
 
 

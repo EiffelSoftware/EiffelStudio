@@ -50,7 +50,7 @@ struct mc_node {
 
 
 /*
-doc:	<routine name="load_consume" return_type="struct mc_node*" export="shared">
+doc:	<routine name="load_consume" return_type="struct mc_node*" export="private">
 doc:		<summary> Dereference 'node_address', followed by an acquire fence.
 doc:			The fence instruction ensures that any read or write operation after the fence is not reordered with any read operation before the fence. </summary>
 doc:		<param name="node_address" type="struct mc_node**"> The pointer-pointer to be dereferenced. Must not be NULL. </param>
@@ -83,7 +83,7 @@ rt_private rt_inline struct mc_node* load_consume (struct mc_node** const node_a
 }
 
 /*
-doc:	<routine name="store_release" return_type="void" export="shared">
+doc:	<routine name="store_release" return_type="void" export="private">
 doc:		<summary> Perform a release fence and write 'node' into memory pointed to by 'node_address'.
 doc:			The fence instruction ensures that any read or write operation prior to the fence is not reordered with any write operation after the fence. </summary>
 doc:		<param name="node_address" type="struct mc_node**"> The pointer-pointer that holds the address where 'node' should be stored. Must not be NULL. </param>
@@ -113,6 +113,130 @@ rt_private rt_inline void store_release (struct mc_node** const node_address, st
 		/* Perform the store operation. */
 	*volatile_node_address = node;
 }
+
+/*
+doc:	<routine name="allocate_node" return_type="struct mc_node*" export="private">
+doc:		<summary> Allocate a new mc_node. First tries to reuse a node from the internal node cache, and if this fails, it allocates a new node via malloc(). </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>
+doc:		<return> A pointer to a fresh mc_node struct. </return>
+doc:		<thread_safety> Must only be called by the sender thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline struct mc_node* allocate_node (struct rt_message_channel* self)
+{
+	struct mc_node* result = NULL;
+	REQUIRE ("self_not_null", self);
+
+		/* First move the tail copy if necessary. */
+	if (self->first == self->tail_copy) {
+			/* The load_consume operation ensures that we can see
+			 * a consistent view if the consumer just moved the tail node.
+			 * (which does not necessarily mean that we see the update already).
+			 * This load_consume pairs with the store_release in dequeue(). */
+		self->tail_copy = load_consume (&self->tail);
+	}
+
+	if (self->first != self->tail_copy) {
+			/* We're lucky. There's an unused (i.e. already consumed) node at the beginning. */
+		result = self->first;
+
+			/* Update the first pointer. */
+		self->first = result->next;
+
+	} else {
+			/* We need to allocate a new node on the heap. */
+		 result = (struct mc_node*) malloc (sizeof (struct mc_node));
+		 if (!result) {
+				/* Report allocation failure. */
+			enomem();
+		 }
+	}
+
+		/* Do some basic initialization. */
+	result -> next = NULL;
+
+	ENSURE ("not_null", result);
+	ENSURE ("partially_initialized", !result->next);
+
+	return result;
+}
+
+
+/*
+doc:	<routine name="enqueue" return_type="void" export="private">
+doc:		<summary> Enqueue a message in rt_message_channel 'self'. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>
+doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
+doc:		<param name="sender" type="struct processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
+doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
+doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+ */
+rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call)
+{
+	struct mc_node* node = NULL;
+	REQUIRE ("self_not_null", self);
+
+		/* Allocate a new node. */
+	node = allocate_node (self);
+	CHECK ("next_is_null", !node->next);
+
+		/* Set up the rt_message value. */
+	rt_message_init (&node->value, message_type, sender, call);
+
+		/* Enqueue the message. The store_release guarantees that the receiver
+		 * will see a consistent view of the node (i.e. with all fields initialized
+		 * as in rt_message_init). This store_release pairs with the load_consume in enqueue().*/
+	store_release ( &(self->head->next), node);
+
+		/* Update the head pointer (note that this pointer is only accessed by the producer). */
+	self -> head = node;
+}
+
+/*
+doc:	<routine name="dequeue" return_type="EIF_BOOLEAN" export="private">
+doc:		<summary> Dequeue a message from rt_message_channel 'self'. This feature is non-blocking. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>
+doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. May be NULL. </param>
+doc:		<return> EIF_TRUE if the dequeue operation was successful. EIF_FALSE if no message is ready to be dequeued. </return>
+doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline EIF_BOOLEAN dequeue (struct rt_message_channel* self, struct rt_message* message)
+{
+	EIF_BOOLEAN result = EIF_FALSE;
+	struct mc_node* item = NULL;
+
+	REQUIRE ("self_not_null", self);
+
+		/* Check if there's a message to be dequeued.
+		 * The load_consume ensures that we get a consistent view
+		 * if the producer just enqueued a new item.
+		 * This load_consume pairs with the store_release in dequeue(). */
+	item = load_consume ( &(self->tail->next));
+
+	if (item) {
+		result = EIF_TRUE;
+
+			/* Copy the values of the received message. */
+		if (message) {
+			*message = item->value;
+		}
+
+			/* Update the tail pointer.
+			 * This releases the node into the cache of unused nodes.
+			 * The store_release ensures that the producer will see all our writes.
+			 * This store_release pairs with the load_consume in allocate_node(). */
+		store_release (&self->tail, item->next);
+	}
+
+	return result;
+}
+
+
 
 /*
 doc:	<routine name="rt_message_channel_send" return_type="void" export="shared">

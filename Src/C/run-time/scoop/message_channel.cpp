@@ -59,8 +59,8 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 	struct rt_message message;
 
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));
-	REQUIRE ("call_not_null", a_call || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));
+	REQUIRE ("sender_not_null", sender || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
+	REQUIRE ("call_not_null", call || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 
 	rt_message_init (&message, message_type, sender, call);
 

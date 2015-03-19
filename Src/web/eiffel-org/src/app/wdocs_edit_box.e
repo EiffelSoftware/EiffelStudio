@@ -628,6 +628,7 @@ feature -- Events
 			wvis.set_link_resolver (a_manager)
 			wvis.set_image_resolver (a_manager)
 			wvis.set_template_resolver (a_manager)
+			wvis.set_file_resolver (a_manager)
 			wvis.visit_page (a_wiki_page)
 
 			l_xhtml.append ("<ul class=%"wdocs-index%">")

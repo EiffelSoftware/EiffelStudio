@@ -7,7 +7,6 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	WDOCS_APP
 

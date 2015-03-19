@@ -12,13 +12,13 @@ inherit
 
 feature -- Access
 
-	file_url (a_file: WIKI_FILE_LINK): detachable STRING
-			-- URL accessing the file `a_file'.
+	file_to_url (a_file: WIKI_FILE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
+			-- URL accessing the file `a_file' in the context of `a_page'.
 		deferred
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -138,6 +138,7 @@ feature -- Helpers
 			-- [[Image:name|title]]
 			-- [[:image:name|title]]
 			-- [[Property:name|value]]
+			-- [[file:name|value]]
 			-- ..
 		require
 			s_not_empty: s.count > 0
@@ -175,6 +176,8 @@ feature -- Helpers
 				else
 					create {WIKI_IMAGE_LINK} Result.make_inlined (s)
 				end
+			elseif t.is_case_insensitive_equal ("file:") then
+				create {WIKI_FILE_LINK} Result.make (s)
 			elseif t.is_case_insensitive_equal (":category:") then
 				create {WIKI_CATEGORY_LINK} Result.make (s)
 			elseif t.is_case_insensitive_equal (":media:") then
@@ -224,7 +227,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

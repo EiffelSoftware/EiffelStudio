@@ -671,14 +671,11 @@ feature -- Links
 		do
 			if
 				attached file_resolver as r and then
-				attached r.file_url (a_link) as u
+				attached r.file_to_url (a_link, current_page) as u
 			then
 				l_url := u
 			else
 				l_url := a_link.name
-			end
-			debug
---				output ("#" + l_url + "#")
 			end
 			output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
 			a_link.text.process (Current)

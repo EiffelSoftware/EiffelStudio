@@ -286,10 +286,15 @@ feature {NONE} -- Redirection
 			a_redirections_attached: a_redirections /= Void
 		local
 			p: PATH
+			l_new_location: STRING_32
 		do
 				--| If a_new_location is an absolute path, use it
 				--| otherwise compute the absolute path with a_new_location as relative to parent folder of `a_file'
-			p := (create {PATH}.make_from_string (a_new_location)).absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
+
+				-- On linux, replace \ by /
+				-- (see `{CONF_LOCATION}.update_path_to_unix')
+			p := conf_location_value_to_path (a_new_location)
+			p := p.absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
 
 			if across a_redirections as c some p.is_same_file_as (c.item) end then
 					--| `a_new_location' already appears in the redirection chain
@@ -331,6 +336,22 @@ feature {NONE} -- Redirection
 		end
 
 feature {NONE} -- Implementation
+
+	conf_location_value_to_path (a_path: READABLE_STRING_GENERAL): PATH
+			-- Return path created updating `a_path' to Unix by changing all windows separator to Unix one.
+		require
+			a_path_not_void: a_path /= Void
+		local
+			s: STRING_32
+		do
+			if {PLATFORM}.is_windows then
+				create Result.make_from_string (a_path)
+			else
+				create s.make_from_string_general (a_path)
+				s.replace_substring_all ({STRING_32} "\", {STRING_32} "/")
+				create Result.make_from_string (s)
+			end
+		end
 
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create nodes.
@@ -409,7 +430,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -212,5 +212,101 @@ rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER 
 }
 
 /*
+doc:	<routine name="rt_message_channel_init" return_type="void" export="shared">
+doc:		<summary> Initialize the rt_message_channel struct 'self' and allocate some initial memory. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel to be initialized. Must not be NULL. </param>
+doc:		<param name="default_spin" type="size_t"> The number of times a thread should spin on receive before waiting on a condition variable. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin)
+{
+	int error = T_OK;
+	struct mc_node* l_node = NULL;
+
+	REQUIRE ("self_not_null", self);
+
+		/* Ensure that the struct is in a consistent state
+		 * for de-initialization if some allocation fails. */
+	self->first = NULL;
+	self->has_elements_condition = NULL;
+	self->has_elements_condition_mutex = NULL;
+	self->spin = default_spin;
+
+		/* Allocate the first tail node (a guard node with no valid value). */
+	l_node = (struct mc_node*) malloc (sizeof (struct mc_node));
+	if (!l_node) {
+			/* Report allocation failure. */
+		enomem();
+	}
+
+		/* TODO: Initialize the rt_message within to some default state ?*/
+	l_node->next = NULL;
+
+
+		/* In the beginning, all pointers point to the guard node. */
+	self->head = l_node;
+	self->tail = l_node;
+	self->first = l_node;
+	self->tail_copy = l_node;
+
+		/* Create the mutex for blocking wait. */
+	error = eif_pthread_mutex_create (&self->has_elements_condition_mutex);
+	if (error != T_OK) {
+			/* Free resources and report failure. */
+		rt_message_channel_deinit (self);
+		esys();
+	}
+
+		/* Create the condition variable for blocking wait. */
+	error = eif_pthread_cond_create (&self->has_elements_condition);
+	if (error != T_OK) {
+			/* Free resources and report failure. */
+		rt_message_channel_deinit (self);
+		esys ();
+	}
+}
+
+/*
+doc:	<routine name="rt_message_channel_deinit" return_type="void" export="shared">
+doc:		<summary> Deconstruct 'self' and free all internal memory. This feature can be called multiple times. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel to be destroyed. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
+{
+	struct mc_node* item = NULL;
+	struct mc_node* next = NULL;
+
+	REQUIRE ("self_not_null", self);
+
+	item = self->first;
+	self -> first = NULL;
+
+		/* Free all nodes in the internal linked list. */
+		/* NOTE: If we're ever having more than just pointers in an
+		 * rt_message struct, we may need to free some more stuff here. */
+	while (item) {
+		next = item -> next;
+		free (item);
+		item = next;
+	}
+
+		/* Free the mutex and condition variables. */
+	if (self -> has_elements_condition) {
+		eif_pthread_cond_destroy (self->has_elements_condition);
+		self->has_elements_condition = NULL;
+	}
+
+	if (self -> has_elements_condition_mutex) {
+		eif_pthread_mutex_destroy (self->has_elements_condition_mutex);
+		self->has_elements_condition_mutex = NULL;
+	}
+}
+
+/*
 doc:</file>
 */

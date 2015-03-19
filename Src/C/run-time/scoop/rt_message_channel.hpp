@@ -1,7 +1,7 @@
 /*
 	description:	"Declarations for the message channel struct."
-	date:		"$Date:$"
-	revision:	"$Revision:$"
+	date:		"$Date: 2015-03-19 18:13:44 +0100 (Thu, 19 Mar 2015) $"
+	revision:	"$Revision: 96880 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
@@ -50,7 +50,7 @@ struct mc_node;
 
 /*
 doc:	<struct name="rt_message_channel", export="shared">
-doc:		<summary> Represents a message channel between two SCOOP processor. </summary>
+doc:		<summary> Represents a message channel between two SCOOP processors. NOTE: The implementation relies on the fact that there's only one sender and one receiver thread! </summary>
 doc:		<field name="has_elements_condition_mutex", type="EIF_MUTEX_TYPE*"> A mutex which is needed for blocking receive. </field>
 doc:		<field name="has_elements_condition", type="EIF_COND_TYPE*"> A condition variable which is used for blocking receive. </field>
 doc:		<field name="spin", type="size_t"> The number of times a processor should try a non-blocking receive before waiting on the condition variable. </field>
@@ -62,7 +62,7 @@ doc:		<field name="tail_copy", type="struct mc_node*"> A helper pointer that poi
 doc:	</struct>
 */
 struct rt_message_channel {
-		/* Shared part which is accessed by both. */
+		/* Shared part, accessed both by consumer and producer. */
 	EIF_MUTEX_TYPE* has_elements_condition_mutex;
 	EIF_COND_TYPE* has_elements_condition;
 

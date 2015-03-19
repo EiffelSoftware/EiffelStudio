@@ -14,6 +14,7 @@ inherit
 			link_to_wiki_url,
 			image_to_url,
 			image_to_wiki_url,
+			file_to_url,
 			page_by_title
 		end
 
@@ -109,6 +110,19 @@ feature -- Access: link
 		end
 
 	link_to_wiki_url (a_link: WIKI_LINK; a_page: detachable WIKI_PAGE): detachable STRING
+		do
+			Result := Precursor (a_link, a_page)
+			if
+				Result /= Void and then
+				attached server_url as l_server_url
+			then
+				Result.prepend (l_server_url)
+			end
+		end
+
+feature -- Access: File		
+
+	file_to_url (a_link: WIKI_FILE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		do
 			Result := Precursor (a_link, a_page)
 			if

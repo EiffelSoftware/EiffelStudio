@@ -97,6 +97,13 @@ feature -- Router
 			Result.handle_with_request_methods ("/images/{image_id}", h, Result.methods_get)
 			Result.handle_with_request_methods ("/version/{version_id}/images/{image_id}", h, Result.methods_get)
 
+			create h.make (agent handle_wiki_file (a_api, ?, ?))
+			Result.handle_with_request_methods ("/book/{bookid}/file/{filename}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/file/{filename}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/file/{filename}", h, Result.methods_get)
+			Result.handle_with_request_methods ("/version/{version_id}/file/{filename}", h, Result.methods_get)
+
+
 --			create fs.make_with_path (a_api.setup.theme_location.extended ("assets").extended ("images"))
 --			fs.disable_index
 --			Result.handle_with_request_methods ("/theme/images", fs, Result.methods_get)
@@ -734,6 +741,66 @@ feature -- Handler
 			send_wikipage (pg, mnger, l_bookid, api, req, res)
 		end
 
+	handle_wiki_file (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+			--|	map: "/book/{bookid}/file/{filename}"
+		local
+			l_version_id,
+			l_bookid,
+			l_filename: detachable READABLE_STRING_32
+			l_not_found: WSF_NOT_FOUND_RESPONSE
+			l_file_response: WSF_FILE_RESPONSE
+			mnger: WDOCS_MANAGER
+			p: detachable PATH
+			h: HTTP_HEADER
+			dt: DATE_TIME
+			ut: FILE_UTILITIES
+		do
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+			l_filename := text_path_parameter (req, "filename", Void)
+			if l_filename /= Void then
+				mnger := manager (l_version_id)
+				if l_bookid /= Void then
+					p := mnger.wiki_database_path.extended (l_bookid).extended ("_files").extended (l_filename)
+				end
+				if p = Void or else not ut.file_path_exists (p) then
+					p := mnger.wiki_database_path.extended ("_files").extended (l_filename)
+				end
+				if ut.file_path_exists (p) then
+					if
+						attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
+						attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
+						attached file_date (p) as f_date and then
+						f_date <= l_if_modified_since_date
+					then
+						create dt.make_now_utc
+						create h.make
+						h.put_cache_control ("private, max-age=" + (cache_duration).out) -- 24 hours
+						h.put_utc_date (dt)
+						if cache_duration > 0 then
+							dt := dt.twin
+							dt.second_add (cache_duration)
+						end
+						h.put_expires_date (dt)
+						h.put_last_modified (f_date)
+						res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
+						res.put_header_lines (h)
+						res.flush
+					else
+						create l_file_response.make (p.name)
+		--				l_file_response.set_expires_in_seconds (24*60*60)
+						res.send (l_file_response)
+					end
+				else
+					create l_not_found.make (req)
+					res.send (l_not_found)
+				end
+			else
+				create l_not_found.make (req)
+				res.send (l_not_found)
+			end
+		end
+
 	handle_wiki_image (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 			--|	map: "/book/_images/{filename}"
 		local
@@ -911,6 +978,7 @@ feature {NONE} -- Implementation: wiki render
 				wvis.set_link_resolver (a_manager)
 				wvis.set_image_resolver (a_manager)
 				wvis.set_template_resolver (a_manager)
+				wvis.set_file_resolver (a_manager)
 
 				if a_page_title /= Void and then a_page_title.same_string_general (a_wiki_page.title) then
 					wvis.visit_page_with_title (a_wiki_page, html_encoded (a_page_title))

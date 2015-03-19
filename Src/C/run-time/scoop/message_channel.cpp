@@ -40,8 +40,7 @@ doc:<file name="message_channel.cpp" header="rt_message_channel.hpp" version="$I
 */
 
 #include "rt_message_channel.hpp"
-#include "spsc.hpp"
-#include "rt_message.h"
+#include "eif_error.h"
 
 struct mc_node {
 	struct mc_node* next;
@@ -192,7 +191,7 @@ rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_m
 	store_release ( &(self->head->next), node);
 
 		/* Update the head pointer (note that this pointer is only accessed by the producer). */
-	self -> head = node;
+	self->head = node;
 }
 
 /*
@@ -252,16 +251,11 @@ doc:	</routine>
 */
 rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call)
 {
-// 	struct rt_message message;
-
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", sender || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 	REQUIRE ("call_not_null", call || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 
-// 	rt_message_init (&message, message_type, sender, call);
-
 		/* Perform the non-blocking enqueue operation. */
-// 	self -> impl.q.enqueue (message);
 	enqueue (self, message_type, sender, call);
 
 		/* Lock the condition variable mutex. */
@@ -296,7 +290,6 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 
 		/* First try to dequeue in a non-blocking fashion. */
 	for (size_t i=0; i < self->spin; ++i) {
-// 		success = self->impl.q.dequeue (*message)
 		success = dequeue (self, message);
 		if (success) {
 			return;/* TODO: Use proper flow control. */
@@ -312,7 +305,6 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
 
 		/* Try to receive a message. */
-// 	while (!self->impl.q.dequeue (*message)) {
 	while (!dequeue (self, message)) {
 			/* Wait on the condition variable for a producer to signal availability of new messages. */
 		eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
@@ -350,8 +342,6 @@ rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER 
 			rt_mark_call_data (marking, call);
 		}
 	}
-
-// 	self->impl.mark (marking);
 }
 
 /*
@@ -427,24 +417,24 @@ rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
 	REQUIRE ("self_not_null", self);
 
 	item = self->first;
-	self -> first = NULL;
+	self->first = NULL;
 
 		/* Free all nodes in the internal linked list. */
 		/* NOTE: If we're ever having more than just pointers in an
 		 * rt_message struct, we may need to free some more stuff here. */
 	while (item) {
-		next = item -> next;
+		next = item->next;
 		free (item);
 		item = next;
 	}
 
 		/* Free the mutex and condition variables. */
-	if (self -> has_elements_condition) {
+	if (self->has_elements_condition) {
 		eif_pthread_cond_destroy (self->has_elements_condition);
 		self->has_elements_condition = NULL;
 	}
 
-	if (self -> has_elements_condition_mutex) {
+	if (self->has_elements_condition_mutex) {
 		eif_pthread_mutex_destroy (self->has_elements_condition_mutex);
 		self->has_elements_condition_mutex = NULL;
 	}

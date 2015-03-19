@@ -42,11 +42,6 @@ feature {NONE} -- Initialization
 				name := t.substring (("file:").count + 1, t.count)
 			end
 			set_inlined (False)
-
-			if attached {WIKI_STRING} text as ws and then not ws.is_empty then
-				add_parameter (ws.text)
-				create {WIKI_STRING} text.make ("")
-			end
 		end
 
 feature -- Visitor
@@ -57,7 +52,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

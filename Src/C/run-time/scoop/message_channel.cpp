@@ -42,11 +42,17 @@ doc:<file name="message_channel.cpp" header="rt_message_channel.hpp" version="$I
 #include "rt_message_channel.hpp"
 #include "eif_error.h"
 
+/*
+doc:	<struct name="mc_node", export="private">
+doc:		<summary> A message channel node which forms a linked list. </summary>
+doc:		<field name="next", type="struct mc_node*"> The next node within the list. </field>
+doc:		<field name="value", type="struct rt_message"> The message within the current node. </field>
+doc:	</struct>
+ */
 struct mc_node {
 	struct mc_node* next;
 	struct rt_message value;
 };
-
 
 /*
 doc:	<routine name="load_consume" return_type="struct mc_node*" export="private">

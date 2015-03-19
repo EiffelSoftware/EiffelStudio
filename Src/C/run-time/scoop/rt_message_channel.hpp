@@ -51,10 +51,16 @@ struct mc_node;
 /*
 doc:	<struct name="rt_message_channel", export="shared">
 doc:		<summary> Represents a message channel between two SCOOP processor. </summary>
-doc:		<field name="TODO", type="TODO"> TODO: convert spsc class. </field>
-doc:		<field name="spin", type="size_t"> The number of times a processor should try a non-blocking receive before waiting on a condition variable. </field>
+doc:		<field name="has_elements_condition_mutex", type="EIF_MUTEX_TYPE*"> A mutex which is needed for blocking receive. </field>
+doc:		<field name="has_elements_condition", type="EIF_COND_TYPE*"> A condition variable which is used for blocking receive. </field>
+doc:		<field name="spin", type="size_t"> The number of times a processor should try a non-blocking receive before waiting on the condition variable. </field>
+doc:		<field name="tail", type="struct mc_node*"> The tail of the internal message queue. Points to the guard node. </field>
+doc:		<field name="cache_line_pad", type="char[]"> Free space to ensure that no cache line ping-pong happens. </field>
+doc:		<field name="head", type="struct mc_node*"> The head of the internal message queue. This is where new messages get inserted. </field>
+doc:		<field name="first", type="struct mc_node*"> The last unused node. Points to a cache of free (reusable) nodes, or the guard node if none exist. </field>
+doc:		<field name="tail_copy", type="struct mc_node*"> A helper pointer that points somewhere between first and tail. </field>
 doc:	</struct>
- */
+*/
 struct rt_message_channel {
 		/* Shared part which is accessed by both. */
 	EIF_MUTEX_TYPE* has_elements_condition_mutex;
@@ -63,8 +69,8 @@ struct rt_message_channel {
 		/* TODO: Add another cache_line_pad ? */
 
 		/* Consumer part. Accessed mostly by the consumer, infrequently by the producer. */
-	struct mc_node* tail;
 	size_t spin;
+	struct mc_node* tail;
 
 		/* Boundary between consumer part and producer part,
 		* to ensure that they're located on different cache lines. */
@@ -75,6 +81,42 @@ struct rt_message_channel {
 	struct mc_node* first; /* last unused node (tail of node cache) */
 	struct mc_node* tail_copy; /* helper (points somewhere between first and tail) */
 };
+
+/*
+The internal message queue is a linked list of mc_node elements.
+
+--------    --------    --------    --------    --------
+| node | -> | node | -> | node | -> | node | -> | node | -> /
+--------    --------    --------    --------    --------
+   |           |                       |           |
+ first     tail_copy                  tail       head
+
+
+The most important node is the one pointed at by tail.
+It is a guard node and contains no element itself.
+Every node left from the guard node is a garbage
+node that may be reused later. The nodes at the right
+of the guard node contain the actual elements.
+
+The head node points to the end of the linked list, which contains
+the most recently added node. If the list is empty the head pointer
+points to the guard node. To enqueue a new element a producer thus
+has to extend the list at the head node.
+
+A dequeue operation is simply done by "moving" the head pointer
+one element to the right. This "thrashes" the current guard node,
+and the dequeue'd element is the new guard node.
+
+The nodes behind the guard node form a cache of reusable node
+objects. They are used by the producer thread to avoid constant
+memory allocation and freeing. When the cache is empty, the
+first, tail_copy and tail pointers all point to the guard node.
+
+The tail_copy is a small optimization technique which points
+somewhere between first and tail. It is used to avoid frequent
+synchronization. with the consumer.
+*/
+
 
 /* Declarations */
 rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call);

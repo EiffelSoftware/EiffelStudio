@@ -67,7 +67,7 @@ public:
 	 *
 	 * This token is added to the notification list of the supplier.
 	 */
-	void register_supplier (processor *supplier);
+     /*void register_supplier (processor *supplier);*/
 
 	/* Wait for a signal from any supplier.
 	 */

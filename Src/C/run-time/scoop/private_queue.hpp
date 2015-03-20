@@ -43,30 +43,34 @@
 #include "rt_message_channel.hpp"
 
 class processor;
+class priv_queue;
+
+/* Declarations. */
+rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
+rt_shared void rt_private_queue_deinit (priv_queue* self);
+
 
 
 /* The private queue class.
  *
  * This structure functions as a lock between the client and the supplier.
- * The client is the original client, as this queue may be passed to
- * other clients during lock-passing.
+ * The client is not always the original client that created the queue,
+ * as this queue may be passed to other clients during lock-passing.
  */
 class priv_queue
 {
 public:
-  /* Construct a private queue.
-   * @supplier is where all requests logged here will be sent to.
-   *
-   * Note that this is only private for the supplier, many clients may access
-   * the supplier through this queue.
-   */
-  priv_queue (processor *supplier);
+	/* See rt_private_queue_init. */
+	priv_queue (processor *supplier)
+	{
+		rt_private_queue_init (this, supplier);
+	}
 
-  /* Deconstructor for priv_queue. */
-  ~priv_queue ()
-  {
-	  rt_message_channel_deinit (&this->channel);
-  }
+	/* See rt_private_queue_deinit. */
+	~priv_queue ()
+	{
+		rt_private_queue_deinit (this);
+	}
 
   /* The lifetime end-point of this queue. */
   processor *supplier;
@@ -130,9 +134,6 @@ public:
    */
   bool is_synced();
 
-  /* Whether the <supplier> threw an exception. */
-  bool dirty;
-
   /* GC interaction */
 public:
   /* Mark the call data.
@@ -144,7 +145,7 @@ public:
    */
   void mark (MARKER marking);
 
-private:
+public:
   rt_message call_stack_msg;
   bool synced;
   int lock_depth;
@@ -152,6 +153,5 @@ private:
 	/* The message channel of this queue. */
   struct rt_message_channel channel;
 };
-
 
 #endif

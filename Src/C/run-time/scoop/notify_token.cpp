@@ -41,7 +41,6 @@ doc:<file name="notify_token.cpp" header="notify_token.hpp" version="$Id$" summa
 
 #include "rt_msc_ver_mismatch.h"
 #include "notify_token.hpp"
-#include "processor.hpp"
 
 notify_token::notify_token(processor *client) :
 	client_(client),
@@ -53,11 +52,6 @@ notify_token::notify_token(const notify_token& other) :
 	client_(other.client_),
 	token_queue_(other.token_queue_)
 {
-}
-
-void notify_token::register_supplier (processor *supplier)
-{ 
-	supplier->register_notify_token (*this);
 }
 
 processor* notify_token::client() const

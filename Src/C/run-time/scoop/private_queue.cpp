@@ -46,14 +46,39 @@ doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" sum
 #include "private_queue.hpp"
 #include "eif_utils.hpp"
 
-priv_queue::priv_queue (processor *_supplier) :
-	supplier (_supplier),
-	dirty (false),
-	synced (false),
-	lock_depth(0)
+/*
+doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">
+doc:		<summary> Initialize the private queue 'self' with supplier 'a_supplier'. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be initialized. Must not be NULL. </param>
+doc:		<param name="a_supplier" type="struct processor*"> The supplier processor. This is where all requests will be sent to. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier)
 {
-	rt_message_channel_init (&this->channel, 512);
-	rt_message_init (&this->call_stack_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /* TODO: default state? */
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("supplier_not_null", a_supplier);
+
+	self->supplier = a_supplier;
+	self->synced = false;
+	self->lock_depth = 0;
+
+	rt_message_channel_init (&self->channel, 512);
+	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /* TODO: default state? */
+}
+
+/*
+doc:	<routine name="rt_private_queue_deinit" return_type="void" export="shared">
+doc:		<summary> Destroy the private queue 'self' and free all internal memory. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be de-initialized. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_deinit (priv_queue* self)
+{
+	rt_message_channel_deinit (&self->channel);
 }
 
 void priv_queue::lock(processor *client)
@@ -77,7 +102,7 @@ bool priv_queue::is_synced()
 
 void priv_queue::register_wait(processor *client)
 {
-	client->my_token.register_supplier(supplier);
+	supplier->register_notify_token (client->my_token);
 	synced = false;
 }
 

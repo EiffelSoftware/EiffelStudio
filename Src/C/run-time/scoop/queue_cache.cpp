@@ -113,13 +113,13 @@ rt_private priv_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* se
 			priv_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
 
 				/* Only return locked queues, ignore all others. */
-			if (l_queue && l_queue->is_locked()) {
+			if (l_queue && rt_private_queue_is_locked (l_queue)) {
 				l_result = l_queue;
 			}
 		}
 	}
 
-	ENSURE ("is_locked", !l_result || l_result->is_locked());
+	ENSURE ("is_locked", !l_result || rt_private_queue_is_locked (l_result));
 	return l_result;
 }
 
@@ -151,7 +151,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, proces
 		priv_queue* owned = rt_queue_cache_find_from_owned (self, supplier);
 
 			/* Within our own cache a private queue might not necessarily be locked. */
-		if (owned && owned->is_locked ()) {
+		if (owned && rt_private_queue_is_locked (owned)) {
 			l_result = EIF_TRUE;
 		}
 	}
@@ -359,7 +359,7 @@ rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
 		* The GC will traverse them later. */
 	for (size_t i = 0; i < l_count; ++i) {
 		if (l_keys [i] != 0) {
-			l_area [i] -> mark (marking);
+			rt_private_queue_mark (l_area [i], marking);
 		}
 	}
 }

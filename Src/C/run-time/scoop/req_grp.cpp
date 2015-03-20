@@ -121,7 +121,8 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		/* Register the current client with the suppliers, such that we
 		 * can later get a notification if a wait condition may have changed. */
 	for (size_t i = 0; i < l_count; ++i) {
-		rt_request_group_item (self, i)->register_wait (l_client);
+		priv_queue* l_queue = rt_request_group_item (self, i);
+		rt_private_queue_register_wait (l_queue, l_client);
 	}
 
 		/* Release the locks on the suppliers. This allows other processors
@@ -166,7 +167,7 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 		/* Add all private queues to the queue-of-queues */
 	for (size_t i = 0; i < l_count; ++i) {
-		rt_request_group_item (self, i)->lock (self->client);
+		rt_private_queue_lock (rt_request_group_item (self, i), self->client);
 	}
 
 		/* Release the queue-of-queue locks. */
@@ -194,7 +195,7 @@ rt_shared void rt_request_group_unlock (struct rt_request_group* self)
 
 		/* Unlock in the opposite order that they were locked */
 	for (int i = l_count-1; i >= 0; --i) {
-		rt_request_group_item (self, i)->unlock ();
+		rt_private_queue_unlock (rt_request_group_item (self, i));
 	}
 }
 

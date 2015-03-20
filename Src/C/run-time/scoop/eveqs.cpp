@@ -157,9 +157,9 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 
 	if (!supplier->has_backing_thread) {
 		supplier->has_backing_thread = true;
-		pq->lock(client);
+		rt_private_queue_lock (pq, client);
 		pq->log_call(client, data);
-		pq->unlock();
+		rt_private_queue_unlock (pq);
 	} else {
 		pq->log_call(client, data);
 	}
@@ -171,7 +171,7 @@ rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 	processor *supplier = registry [supplier_pid];
 	priv_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
-	return pq->is_synced();
+	return rt_private_queue_is_synchronized (pq);
 }
 
 int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)

@@ -57,7 +57,7 @@ rt_shared void rt_private_queue_lock (priv_queue* self, processor* client);
 rt_shared void rt_private_queue_unlock (priv_queue* self);
 rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client);
 
-
+rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call);
 
 /* The private queue class.
  *
@@ -80,7 +80,10 @@ public:
    * concurrent queue, waking the supplier if it was waiting on this
    * queue for more calls.
    */
-  void log_call(processor *client, call_data *call);
+//   void log_call(processor *client, call_data *call)
+//   {
+// 	rt_private_queue_log_call (this, client, call);
+//   }
 
 public:
   rt_message call_stack_msg;

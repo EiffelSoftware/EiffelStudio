@@ -158,10 +158,10 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 	if (!supplier->has_backing_thread) {
 		supplier->has_backing_thread = true;
 		rt_private_queue_lock (pq, client);
-		pq->log_call(client, data);
+		rt_private_queue_log_call(pq, client, data);
 		rt_private_queue_unlock (pq);
 	} else {
-		pq->log_call(client, data);
+		rt_private_queue_log_call(pq, client, data);
 	}
 }
 

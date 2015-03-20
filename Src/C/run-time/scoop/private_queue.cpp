@@ -61,7 +61,7 @@ rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier)
 	REQUIRE ("supplier_not_null", a_supplier);
 
 	self->supplier = a_supplier;
-	self->synced = false;
+	self->synced = EIF_FALSE;
 	self->lock_depth = 0;
 
 	rt_message_channel_init (&self->channel, 512);
@@ -78,27 +78,103 @@ doc:	</routine>
 */
 rt_shared void rt_private_queue_deinit (priv_queue* self)
 {
+	REQUIRE ("self_not_null", self);
 	rt_message_channel_deinit (&self->channel);
 }
 
-void priv_queue::lock(processor *client)
+
+/*
+doc:	<routine name="rt_private_queue_is_synchronized" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Was the last call executed by 'supplier' a synchronous call?
+doc:			The queue is considered synchronized if the <supplier> is currently processing
+doc:			this queue but is not currently applying any call, and the queue itself is empty. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<return> EIF_TRUE, if the supplier is synchronized with 'self'. EIF_FALSE otherwise. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self)
 {
-	if (lock_depth == 0) {
-		supplier->qoq.push(qoq_item (client, this));
-		synced = false;
+	REQUIRE ("self_not_null", self);
+	return self->synced;
+}
+
+/*
+doc:	<routine name="rt_private_queue_is_locked" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Is 'self' currently locked, i.e. is there an open request queue in the supplier's queue-of-queues? </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<return> EIF_TRUE, if 'self' is locked. EIF_FALSE otherwise. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self)
+{
+	REQUIRE ("self_not_null", self);
+	return self->lock_depth > 0;
+}
+
+/*
+doc:	<routine name="rt_private_queue_lock" return_type="void" export="shared">
+doc:		<summary> Lock this private queue by placing the queue into the supplier's queue-of-queues.
+doc:			Locking can be recursive, both for the owner of this queue and any borrowers during lock passing. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be locked. Must not be NULL. </param>
+doc:		<param name="client" type="processor*"> The client that performs the lock operation. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_lock (priv_queue* self, processor* client)
+{
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("client_not_null", client);
+
+	if (self->lock_depth == 0) {
+		self->supplier->qoq.push (qoq_item (client, self));
+		self->synced = EIF_FALSE;
 	}
-	lock_depth++;
+	self->lock_depth++;
 }
 
-bool priv_queue::is_locked()
+// void priv_queue::lock(processor *client)
+// {
+// 	if (lock_depth == 0) {
+// 		supplier->qoq.push(qoq_item (client, this));
+// 		synced = false;
+// 	}
+// 	lock_depth++;
+// }
+
+/*
+doc:	<routine name="rt_private_queue_unlock" return_type="void" export="shared">
+doc:		<summary> Unlock this private queue by instructing the supplier to remove this queue from the queue-of-queues. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be unlocked. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_unlock (priv_queue* self)
 {
-	return lock_depth > 0;
+	REQUIRE ("self_not_null", self);
+
+	self->lock_depth--;
+
+	if (self->lock_depth == 0) {
+		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
+		self->synced = EIF_FALSE;
+	}
 }
 
-bool priv_queue::is_synced()
-{
-	return synced;
-}
+// void priv_queue::unlock()
+// {
+// 	lock_depth--;
+//
+// 	if (lock_depth == 0) {
+// 		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
+// 		synced = false;
+// 	}
+// }
 
 void priv_queue::register_wait(processor *client)
 {
@@ -165,15 +241,6 @@ void priv_queue::log_call(processor *client, call_data *call)
 	synced = will_sync;
 }
 
-void priv_queue::unlock()
-{
-	lock_depth--;
-
-	if (lock_depth == 0) {
-		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
-		synced = false;
-	}
-}
 
 void priv_queue::mark(MARKER marking)
 {

@@ -49,6 +49,10 @@ class priv_queue;
 rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
 rt_shared void rt_private_queue_deinit (priv_queue* self);
 
+rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self);
+rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self);
+rt_shared void rt_private_queue_lock (priv_queue* self, processor* client);
+rt_shared void rt_private_queue_unlock (priv_queue* self);
 
 
 /* The private queue class.
@@ -71,7 +75,10 @@ public:
    * Locking can be recursive, both for the owner and any recipients of
    * lock passing.
    */
-  void lock(processor *client);
+  void lock(processor *client)
+  {
+	  rt_private_queue_lock (this, client);
+  }
 
   /* Logs a new call to the supplier.
    * @client the client of the call
@@ -103,25 +110,23 @@ public:
    */
   void register_wait(processor* client);
 
-  /* Unlock this queue.
-   *
-   * Instructs the <supplier> to remove this queue from the <qoq>.
-   */
-  void unlock();
 
-  /* The locked status of this queue.
-   *
-   * Reports if this queue is currently locked.
-   */
-  bool is_locked();
+	/* see rt_private_queue_unlock */
+	void unlock()
+	{
+		rt_private_queue_unlock (this);
+	}
+	/* see rt_private_queue_is_locked */
+	EIF_BOOLEAN is_locked()
+	{
+		return rt_private_queue_is_locked (this);
+	}
 
-  /* The synchronization status of the queue with the <supplier>.
-   *
-   * The queue is considered synchronized if the <supplier> is currently processing
-   * this queue but is not currently applying any call, and the queue itself
-   * is empty.
-   */
-  bool is_synced();
+	/* see rt_private_queue_is_synchronized */
+	EIF_BOOLEAN is_synced()
+	{
+		return rt_private_queue_is_synchronized (this);
+	}
 
   /* GC interaction */
 public:
@@ -136,7 +141,7 @@ public:
 
 public:
   rt_message call_stack_msg;
-  bool synced;
+  EIF_BOOLEAN synced;
   int lock_depth;
 
 	/* The message channel of this queue. */

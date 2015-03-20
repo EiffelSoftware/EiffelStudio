@@ -189,7 +189,12 @@ void processor::operator()(processor *client, call_data* call)
 void processor::process_priv_queue(priv_queue *pq)
 {
 	for (;;) {
-		pq->pop_msg (current_msg);
+
+		/* Receive a new call and store it in current_msg.
+		 * This is a blocking call if no data is available.
+		 * The call might be logged by the original client of the queue
+		 * or some other processor that has acquired the locks during lock passing. */
+		rt_message_channel_receive (&pq->channel, &this->current_msg);
 
 		enum scoop_message_type type = current_msg.message_type;
 

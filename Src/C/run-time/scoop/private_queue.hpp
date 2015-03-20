@@ -82,25 +82,14 @@ public:
    */
   void log_call(processor *client, call_data *call);
 
-  /* Receive a new call.
-   * @call will contain the calla fter the return of the function.
-   *
-   * This will be called by the supplier to receive new calls from the client
-   * (**or** some processor that the client has passed its locks to).
-   * This is a blocking call if no call data is available.
-   */
-  void pop_msg (rt_message &msg)
-  {
-    rt_message_channel_receive (&this->channel, &msg);
-  }
-
 public:
   rt_message call_stack_msg;
-  EIF_BOOLEAN synced;
   int lock_depth;
 
 	/* The message channel of this queue. */
   struct rt_message_channel channel;
+
+  EIF_BOOLEAN synced;
 };
 
 #endif

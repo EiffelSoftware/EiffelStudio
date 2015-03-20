@@ -48,11 +48,15 @@ class priv_queue;
 /* Declarations. */
 rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
 rt_shared void rt_private_queue_deinit (priv_queue* self);
+rt_shared void rt_private_queue_mark (priv_queue* self, MARKER marking);
 
 rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self);
 rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self);
+
 rt_shared void rt_private_queue_lock (priv_queue* self, processor* client);
 rt_shared void rt_private_queue_unlock (priv_queue* self);
+rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client);
+
 
 
 /* The private queue class.
@@ -68,17 +72,11 @@ public:
   /* The lifetime end-point of this queue. */
   processor *supplier;
   
-  /* Locks this private queue.
-   * @client the client of this locking operation
-   *
-   * This places this queue in the <supplier>s queue of queues <qoq>.
-   * Locking can be recursive, both for the owner and any recipients of
-   * lock passing.
-   */
-  void lock(processor *client)
-  {
-	  rt_private_queue_lock (this, client);
-  }
+	/* see rt_private_queue_lock */
+	void lock(processor *client)
+	{
+		rt_private_queue_lock (this, client);
+	}
 
   /* Logs a new call to the supplier.
    * @client the client of the call
@@ -102,13 +100,11 @@ public:
     rt_message_channel_receive (&this->channel, &msg);
   }
 
-  /* Register a wait operation with the <supplier>.
-   * @client the client to call back
-   *
-   * The <supplier> will contact the client when it has executed some
-   * other calls, and thus may have changed a wait-condition.
-   */
-  void register_wait(processor* client);
+	/* See rt_private_queue_register_wait. */
+	void register_wait(processor* client)
+	{
+		rt_private_queue_register_wait (this, client);
+	}
 
 
 	/* see rt_private_queue_unlock */
@@ -128,16 +124,13 @@ public:
 		return rt_private_queue_is_synchronized (this);
 	}
 
-  /* GC interaction */
+	/* GC interaction */
 public:
-  /* Mark the call data.
-   * @mark the marking routine to use.
-   *
-   * This is for integration with the EiffelStudio garbage collector
-   * so that the target and arguments of the calls in the call data
-   * (which is here outside the view of the runtime) will not be collected.
-   */
-  void mark (MARKER marking);
+	/* see rt_private_queue_mark */
+	void mark (MARKER marking)
+	{
+		rt_private_queue_mark (this, marking);
+	}
 
 public:
   rt_message call_stack_msg;

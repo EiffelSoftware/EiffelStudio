@@ -137,15 +137,6 @@ rt_shared void rt_private_queue_lock (priv_queue* self, processor* client)
 	self->lock_depth++;
 }
 
-// void priv_queue::lock(processor *client)
-// {
-// 	if (lock_depth == 0) {
-// 		supplier->qoq.push(qoq_item (client, this));
-// 		synced = false;
-// 	}
-// 	lock_depth++;
-// }
-
 /*
 doc:	<routine name="rt_private_queue_unlock" return_type="void" export="shared">
 doc:		<summary> Unlock this private queue by instructing the supplier to remove this queue from the queue-of-queues. </summary>
@@ -166,20 +157,23 @@ rt_shared void rt_private_queue_unlock (priv_queue* self)
 	}
 }
 
-// void priv_queue::unlock()
-// {
-// 	lock_depth--;
-//
-// 	if (lock_depth == 0) {
-// 		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
-// 		synced = false;
-// 	}
-// }
-
-void priv_queue::register_wait(processor *client)
+/*
+doc:	<routine name="rt_private_queue_register_wait" return_type="void" export="shared">
+doc:		<summary> Register a wait operation at the supplier.
+doc:			The supplier will contact the client when it has executed some
+doc:			other calls, and thus may have changed a wait condition. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<param name="self" type="struct rt_private_queue*"> The client that wants to register for a wait condition change notification. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client)
 {
-	supplier->register_notify_token (client->my_token);
-	synced = false;
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("client_not_null", client);
+	self->supplier->register_notify_token (client->my_token);
+	self->synced = false;
 }
 
 void priv_queue::log_call(processor *client, call_data *call)
@@ -241,13 +235,30 @@ void priv_queue::log_call(processor *client, call_data *call)
 	synced = will_sync;
 }
 
-
-void priv_queue::mark(MARKER marking)
+/*
+doc:	<routine name="rt_private_queue_mark" return_type="void" export="shared">
+doc:		<summary> Mark the call_data structs within this private queue.
+doc:			This is for integration with the EiffelStudio garbage collector
+doc:			so that the target and arguments of the calls in the call data
+doc:			(which is here outside the view of the runtime) will not be collected. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_mark (priv_queue* self, MARKER marking)
 {
-	rt_message_channel_mark (&this->channel, marking);
+	struct call_data* call = NULL;
 
-	if (call_stack_msg.call) {
-		rt_mark_call_data (marking, call_stack_msg.call);
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("marking_not_null", marking);
+
+	rt_message_channel_mark (&self->channel, marking);
+
+	call = self->call_stack_msg.call;
+	if (call) {
+		rt_mark_call_data (marking, call);
 	}
 }
 

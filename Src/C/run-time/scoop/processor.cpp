@@ -79,7 +79,10 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 processor::~processor()
 {
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
-		delete *pq;
+
+		priv_queue* l_queue = *pq;
+		rt_private_queue_deinit (l_queue);
+		free (l_queue);
 	}
  	rt_message_channel_deinit (&this->startup_notify);
 	rt_message_channel_deinit (&this->result_notify);
@@ -306,7 +309,11 @@ void processor::mark(MARKER marking)
 priv_queue* processor::new_priv_queue()
 {
 	unique_lock_type lk (cache_mutex);
-	private_queue_cache.push_back(new priv_queue(this));
+
+	priv_queue* l_queue = (priv_queue*) malloc (sizeof (priv_queue));
+	rt_private_queue_init (l_queue, this);
+
+	private_queue_cache.push_back(l_queue);
 	return private_queue_cache.back();
 }
 

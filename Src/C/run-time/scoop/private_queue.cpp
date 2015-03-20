@@ -163,7 +163,7 @@ doc:		<summary> Register a wait operation at the supplier.
 doc:			The supplier will contact the client when it has executed some
 doc:			other calls, and thus may have changed a wait condition. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
-doc:		<param name="self" type="struct rt_private_queue*"> The client that wants to register for a wait condition change notification. </param>
+doc:		<param name="self" type="struct processor*"> The client that wants to register for a wait condition change notification. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
@@ -176,13 +176,25 @@ rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* clie
 	self->synced = false;
 }
 
-void priv_queue::log_call(processor *client, call_data *call)
+/*
+doc:	<routine name="rt_private_queue_log_call" return_type="void" export="shared">
+doc:		<summary> Log a new call to this queue.
+doc:			This is essentially an send operation on the underlying message channel,
+doc: 			which can wake up the supplier if it is waiting for more calls. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<param name="client" type="processor*"> The client that issues the call. </param>
+doc:		<param name="call" type="struct call_data*"> The call to be executed by the supplier. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call)
 {
-	EIF_SCP_PID l_sync_pid = call_data_sync_pid(call);
+	EIF_SCP_PID l_sync_pid = call_data_sync_pid (call);
 	bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
 
-	if (rt_queue_cache_has_locks_of (&client->cache, supplier)) {
+	if (rt_queue_cache_has_locks_of (&client->cache, self->supplier)) {
 		/* 
 		 * We need to log a call which is a separate callback, 
 		 * meaning that the supplier has previously logged a 
@@ -199,40 +211,42 @@ void priv_queue::log_call(processor *client, call_data *call)
 		call -> sync_pid = client -> pid;
 		will_sync = EIF_TRUE;
 
-		rt_message_channel_send (&supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call);
-		
+		rt_message_channel_send (&self->supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call);
+
 	} else {
-			/* NOTE: After this push(), call might be free'd, */
-			/* therefore processor ID should be stored before it. */
-		rt_message_channel_send (&this->channel, SCOOP_MESSAGE_EXECUTE, client, call);
+		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_EXECUTE, client, call);
 	}
+		/* NOTE: After the previous send operations, the call data struct might have been */
+		/* free()'d by the supplier. Therefore it must not be accessed any more here. */
+	call = NULL;
 	
 	if (will_sync) {
 			/* 
 			 * TODO: Figure out if it's really necessary to go to
 			 * the registry again to get the client to sync on.
 			 * In particular, would this invariant hold here?
-			 * client == (shadowed) client && (shadowed) client->pid == l_sync_pid
+			 * l_client == client && client->pid == l_sync_pid
 			 */
-		processor *client = registry[l_sync_pid];
+		processor *l_client = registry[l_sync_pid];
+		struct rt_message* l_message = &self->call_stack_msg;
 
 			/* Wait on our own result notifier for a message by the other processor. */
-		rt_message_channel_receive (&client->result_notify, &call_stack_msg);
+		rt_message_channel_receive (&l_client->result_notify, l_message);
 
 		for (;
-			call_stack_msg.message_type == SCOOP_MESSAGE_CALLBACK;
-			rt_message_channel_receive (&client->result_notify, &call_stack_msg))
+			l_message->message_type == SCOOP_MESSAGE_CALLBACK;
+			rt_message_channel_receive (&l_client->result_notify, l_message))
 		{
-			(*client)(call_stack_msg.sender, call_stack_msg.call);
-			call_stack_msg.call = NULL;
+			(*l_client) (l_message->sender, l_message->call);
+			l_message->call = NULL;
 		}
 
-		if (call_stack_msg.message_type == SCOOP_MESSAGE_DIRTY) {
+		if (l_message->message_type == SCOOP_MESSAGE_DIRTY) {
 			eraise ((const char *) "EVE/Qs dirty processor exception", 32);
 		}
 	}
 
-	synced = will_sync;
+	self->synced = will_sync;
 }
 
 /*

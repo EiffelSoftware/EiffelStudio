@@ -43,7 +43,45 @@
 #include "rt_message_channel.hpp"
 
 class processor;
-class priv_queue;
+
+/*
+doc:	<struct name="rt_private_queue", export="shared">
+doc:		<summary> The private queue struct.
+doc:
+doc:			This structure serves as a central part of communication between
+doc:			a client and a supplier. It contains an rt_message_channel for the
+doc:			client to send new call data structs.
+doc:
+doc:			The struct also serves as a lock for the client on the supplier:
+doc:			As long as a private queue is inside the queue-of-queues of  the supplier
+doc:			the client has exclusive access.
+doc:
+doc:			Note that the client processor may change during lock passing, i.e.
+doc:			it's not guaranteed to be always the client that created the queue.
+doc:		</summary>
+doc:		<field name="call_stack_msg", type="struct rt_message"> The call being executed right now. Accessed only by the supplier or by the GC. </field>
+doc:		<field name="channel", type="struct rt_message_channel"> The message channel used for communication. </field>
+doc:		<field name="supplier", type="processor*"> The supplier to whom messages will be sent. This field is constant. Accessed only by the client. </field>
+doc:		<field name="lock_depth", type="int"> The current lock depth (for recursive locking). Accessed only by the client. </field>
+doc:		<field name="synced", type="EIF_BOOLEAN"> Whether the supplier is synchronized with the client. Accessed only by the client. </field>
+doc:		<fixme> It may be possible to improve performance slightly with some careful alignment to cache lines (also within rt_message_channel) </fixme>
+doc:	</struct>
+*/
+class priv_queue /* TODO: Rename this to 'struct rt_private_queue' */
+{
+public:
+	/* Consumer/Supplier part. */
+  struct rt_message call_stack_msg;
+
+  /* Shared part. */
+  struct rt_message_channel channel;
+
+  /* Client / Producer part */
+  processor *supplier;
+  int lock_depth;
+  EIF_BOOLEAN synced;
+};
+
 
 /* Declarations. */
 rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
@@ -58,41 +96,5 @@ rt_shared void rt_private_queue_unlock (priv_queue* self);
 rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client);
 
 rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call);
-
-/* The private queue class.
- *
- * This structure functions as a lock between the client and the supplier.
- * The client is not always the original client that created the queue,
- * as this queue may be passed to other clients during lock-passing.
- */
-class priv_queue
-{
-public:
-
-  /* The lifetime end-point of this queue. */
-  processor *supplier;
-
-  /* Logs a new call to the supplier.
-   * @client the client of the call
-   * @call the call to go to the supplier.
-   *
-   * This is essentially an enqueue operation on the underlying 
-   * concurrent queue, waking the supplier if it was waiting on this
-   * queue for more calls.
-   */
-//   void log_call(processor *client, call_data *call)
-//   {
-// 	rt_private_queue_log_call (this, client, call);
-//   }
-
-public:
-  rt_message call_stack_msg;
-  int lock_depth;
-
-	/* The message channel of this queue. */
-  struct rt_message_channel channel;
-
-  EIF_BOOLEAN synced;
-};
 
 #endif

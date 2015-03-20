@@ -60,17 +60,6 @@ rt_shared void rt_private_queue_deinit (priv_queue* self);
 class priv_queue
 {
 public:
-	/* See rt_private_queue_init. */
-	priv_queue (processor *supplier)
-	{
-		rt_private_queue_init (this, supplier);
-	}
-
-	/* See rt_private_queue_deinit. */
-	~priv_queue ()
-	{
-		rt_private_queue_deinit (this);
-	}
 
   /* The lifetime end-point of this queue. */
   processor *supplier;

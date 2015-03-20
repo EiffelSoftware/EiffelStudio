@@ -301,7 +301,8 @@ void processor::mark(MARKER marking)
 	}
 
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
-		(* pq) -> mark (marking);
+		rt_private_queue_mark (*pq, marking);
+// 		(* pq) -> mark (marking);
 	}
 }
 

@@ -94,6 +94,43 @@ feature -- Testing
 			)
 		end
 
+	test_hidden_figure
+			-- Ensure that hidden figures are not drawn.
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent
+				local
+					l_world: EV_MODEL_WORLD
+					l_world_cell: EV_MODEL_WORLD_CELL
+					l_scrollbar, l_slider: EV_MODEL_RECTANGLE
+					l_group, l_group2: EV_MODEL_GROUP
+					window: EV_TITLED_WINDOW
+				do
+					create l_world
+
+					create l_group.make_with_position (10, 10)
+					create l_group2.make_with_position (10, 10)
+					l_group.extend (l_group2)
+					create l_scrollbar.make_rectangle (20, 20, 40, 10)
+					create l_slider.make_rectangle (50, 50, 100, 100)
+					l_slider.hide
+					l_group2.extend (l_scrollbar)
+					l_group2.extend (l_slider)
+
+					l_world.extend (l_group)
+
+					create l_world_cell.make_with_world (l_world)
+
+					create window
+					window.extend (l_world_cell)
+					window.set_size (600, 600)
+					window.show
+					process_events
+				end
+			)
+		end
+
 feature {NONE} -- Helpers
 
 note

@@ -1,4 +1,4 @@
-package base_extension
+package unstable_base_extension
 
 project
 	base_extension = "base_extension-safe.ecf"

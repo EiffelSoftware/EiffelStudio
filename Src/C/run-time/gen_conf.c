@@ -2,7 +2,7 @@
 	description: "Generic conformance routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -127,13 +127,12 @@ doc:	</attribute>
 rt_public EIF_TYPE_INDEX egc_any_dtype = INVALID_DTYPE; /* Precise value determined in init */
 rt_private EIF_TYPE_INDEX tuple_static_type = INVALID_DTYPE;
 
-/*------------------------------------------------------------------*/
-/* Structure representing a generic derivation. We also use this    */
-/* for BIT types to remember their sizes.                           */
-/*------------------------------------------------------------------*/
+/*----------------------------------------------*/
+/* Structure representing a generic derivation. */
+/*----------------------------------------------*/
 
 typedef struct eif_gen_der {
-	uint32              size;       /* Size of type array/ nr. of bits in BIT type */
+	uint32              size;       /* Size of type array */
 	EIF_TYPE_INDEX      hcode;      /* Hash code to speedup search */
 	EIF_TYPE_INDEX      *types;     /* Array of types (cid) */
 	EIF_TYPE_INDEX      *gen_seq;   /* Id sequence which generates this type */
@@ -1578,8 +1577,7 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 /* Create a new generic derivation. Actually we create one for every*/
 /* type, generic or not.                                            */
 /*                                                                  */
-/* size     : Nr. of bits in a bit type; nr. of generics in a ge-   */
-/*            neric type; 0 otherwise.                              */
+/* size     : Nr. of generics in a generic type; 0 otherwise.       */
 /* a_types  : Ids of generic paramenters; null pointer if not a     */
 /*            generic type                                          */
 /* base_id  : Base id of type                                       */
@@ -1601,7 +1599,7 @@ rt_private EIF_GEN_DER *rt_new_gen_der(uint32 size, EIF_TYPE_INDEX *a_types, EIF
 		enomem();
 
 	if (a_types == NULL) {
-		/* It's not a generic type. If size > 0 then it's a BIT type */
+		/* It's not a generic type. */
 
 		result->size = size;
 		result->hcode = hcode;
@@ -2153,7 +2151,7 @@ rt_private uint16 rt_gen_seq_len (EIF_TYPE_INDEX dftype)
 	if ((RT_IS_NONE_TYPE(dftype)) || (dftype < eif_first_gen_id)) {
 		len = 1;
 	} else {
-			/* It's a generic type or a BIT type */
+			/* It's a generic type */
 		gdp = eif_derivations[dftype];
 
 			/* If there is an annotation, then we should increase by one. */
@@ -2207,7 +2205,7 @@ rt_private void rt_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *a_types, 
 		(*idx)++;
 	} else {
 
-			/* It's a generic type or a BIT type */
+			/* It's a generic type */
 		gdp = eif_derivations[dftype];
 
 		if (gdp->annotation) {

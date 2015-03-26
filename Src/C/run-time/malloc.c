@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -651,7 +651,7 @@ rt_shared EIF_CS_TYPE *eif_type_set_mutex = NULL;
 
 /*
 doc:	<routine name="smart_emalloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL or BIT creation as a size is required for those. See `emalloc' comments for me details.</summary>
+doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL creation as a size is required for that. See `emalloc' comments for me details.</summary>
 doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -672,7 +672,7 @@ rt_public EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype)
 
 /*
 doc:	<routine name="emalloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Perform allocation of normal object (i.e. not a BIT, SPECIAL or TUPLE object) based on `ftype' full dynamic type which is used to find out object's size in bytes. Note that the size of all the Eiffel objects is correctly padded, but do not take into account the header's size.</summary>
+doc:		<summary>Perform allocation of normal object (i.e. not a SPECIAL or TUPLE object) based on `ftype' full dynamic type which is used to find out object's size in bytes. Note that the size of all the Eiffel objects is correctly padded, but do not take into account the header's size.</summary>
 doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -689,7 +689,7 @@ rt_public EIF_REFERENCE emalloc (EIF_TYPE_INDEX ftype)
 
 /*
 doc:	<routine name="emalloc_size" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not BIT, SPECIAL or TUPLE).</summary>
+doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not SPECIAL or TUPLE).</summary>
 doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
 doc:		<param name="type" type="EIF_TYPE_INDEX">Dynamic type used to initialize flags overhead part of Eiffel object, mostly used if type is a deferred one, or if it is an expanded one, or if it has a dispose routine.</param>
 doc:		<param name="nbytes" type="uint32">Number of bytes to allocate for this type.</param>
@@ -788,7 +788,7 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 
 /*
 doc:	<routine name="emalloc_as_old" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not BIT, SPECIAL or TUPLE) as an old object. Useful for once manifest strings for example which we know are going to stay alive for a while.</summary>
+doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not SPECIAL or TUPLE) as an old object. Useful for once manifest strings for example which we know are going to stay alive for a while.</summary>
 doc:		<param name="ftype" type="uint32">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>

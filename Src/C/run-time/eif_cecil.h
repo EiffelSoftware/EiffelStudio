@@ -2,7 +2,7 @@
 	description: "Definitions and macros for the C-Eiffel Call-In Library."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -164,8 +164,7 @@ typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an E
 
 /* Accessing an attribute in read/write mode (this is both an lvalue and
  * a rvalue). The 'type' is the C type of the attribute being accessed. It
- * must be correct or havoc will result. It can't be used to access bits
- * because of the lack of bit type in C. 
+ * must be correct or havoc will result.
  * Attention! It returns an EIF_REFERENCE, which might be obsolete after a
  * GC collection.
  */

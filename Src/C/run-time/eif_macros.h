@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -203,7 +203,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* Macro used for object cloning:
  *  RTCL(x) clones 'x' and return a pointer to the cloned object
- *  RTCB(x) clones bit `x'
  *  RTRCL(x) same as RTCL, but uses a user-defined version of `copy'
  *  RTCCL(c) same as RTRCL, but first checks if `x' is expanded
  */

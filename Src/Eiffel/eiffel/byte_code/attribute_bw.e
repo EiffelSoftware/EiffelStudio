@@ -1,7 +1,7 @@
 note
+	description: "Enlarged node for attribute access in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarge node for attribute access in workbench mode
 
 class ATTRIBUTE_BW
 
@@ -121,11 +121,11 @@ feature {NONE} -- Separate call
 			-- A register to hold return value from a separate call.
 
 	separate_attribute_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
-			-- Name of a macro to make a call to a function depending on the kind of a call:
+			-- Name of a macro to make a call to a function depending on the kind of a call.
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls as well as creation function calls.
-			Result := ["ERROR", "RTS_CF", "ERROR"]
+			Result := ["ERROR", {C_CONST}.rts_cf, "ERROR"]
 		end
 
 	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
@@ -150,7 +150,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -267,7 +267,8 @@ feature {NONE} -- Separate call
 					--   RTS_CS (t, s);
 					--   r = value;
 				b.put_new_line
-				b.put_string ("RTS_CS (")
+				b.put_string ({C_CONST}.rts_cs)
+				b.put_two_character (' ', '(')
 				t.print_register
 				b.put_two_character (',', ' ')
 				s.print_register
@@ -283,7 +284,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -231,7 +231,8 @@ feature {NONE} -- Separate call
 		do
 			buf := buffer
 			buf.put_new_line
-			buf.put_string ("RTS_CA (")
+			buf.put_string ({C_CONST}.rts_ca)
+			buf.put_two_character (' ', '(')
 			target_type := context_type
 			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
 			if array_index >= 0 then
@@ -276,7 +277,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

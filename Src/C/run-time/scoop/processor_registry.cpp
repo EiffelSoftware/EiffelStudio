@@ -2,7 +2,7 @@
 	description:	"SCOOP support."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+	copyright:	"Copyright (c) 2010-2015, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -79,6 +79,9 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 {
 	EIF_SCP_PID pid = 0;
 	processor *proc;
+		/* TODO: Return newly allocated PID instead of writing it to 'obj'
+		   so that the argument 'obj' can be removed. */
+	EIF_OBJECT object = eif_protect (obj);
 
 	if (!free_pids.dequeue (pid)) {
 		plsc();
@@ -95,6 +98,7 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 
 	proc = new processor(pid, false);
 	procs[pid] = proc;
+	obj = eif_access (object);
 	RTS_PID(obj) = pid;
 
 	used_pids.add (pid);
@@ -102,6 +106,8 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 	proc->spawn();
 	struct rt_message dummy;
 	rt_message_channel_receive (&proc->startup_notify, &dummy);
+
+	eif_wean (object);
 
 	return proc;
 }
@@ -215,9 +221,22 @@ void processor_registry::wait_for_all()
 	}
 }
 
-void processor_registry::run_gc()
+void processor_registry::request_gc(EIF_INTEGER_32 * fingerprint)
 {
-	plsc();
+	int previous_fingerprint = * fingerprint;
+	int current_fingerprint = RTS_ACAS_I32 (&gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
+	
+	if (current_fingerprint == previous_fingerprint) {
+			/* The fingerprint is unchanged since last call, no GC was run, do it now. */
+			/* Record newly written fingerprint for the next time. */
+		* fingerprint = previous_fingerprint + 1;
+			/* Run GC. */
+		plsc();
+	}
+	else {
+			/* Record current fingerprint for the next time. */
+		* fingerprint = current_fingerprint;
+	}
 }
 
 /*

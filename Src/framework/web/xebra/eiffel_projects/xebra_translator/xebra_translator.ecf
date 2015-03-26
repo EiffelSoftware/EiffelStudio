@@ -11,7 +11,7 @@
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
-		<library name="peg" location="$ISE_LIBRARY\unstable\library\text\parser\peg\peg.ecf" readonly="false"/>
+		<library name="peg" location="$ISE_LIBRARY\unstable\library\text\parser\peg\peg-safe.ecf" readonly="false"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf"/>
 		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements.ecf" readonly="false">
 			<option>

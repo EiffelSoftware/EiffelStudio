@@ -158,15 +158,11 @@ feature -- Macros
 	rtre: STRING = "RTRE"
 	rtrv: STRING = "RTRV"
 
-
 	rts_ca: STRING = "RTS_CA"
 	rts_cf: STRING = "RTS_CF"
-	rts_cfp: STRING = "RTS_CFP"
 	rts_cc: STRING = "RTS_CC"
-	rts_ccp: STRING = "RTS_CCP"
 	rts_cp: STRING = "RTS_CP"
-	rts_cpp: STRING = "RTS_CPP"
-
+	rts_cs: STRING = "RTS_CS"
 
 feature -- C constants
 
@@ -219,7 +215,7 @@ feature -- C language
 	volatile: STRING = "volatile"
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

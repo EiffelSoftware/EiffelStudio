@@ -135,6 +135,8 @@ feature -- Analyze
 				create separate_register.make (pointer_c_type)
 					-- The register is not used right after the call.
 				separate_register.free_register
+					-- Mark current because separate calls use Current to compute client processor ID.
+				context.mark_current_used
 			end
 		end
 
@@ -412,7 +414,7 @@ feature {NONE} -- Separate feature call
 			-- Register to store data to be passed to the scheduler
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

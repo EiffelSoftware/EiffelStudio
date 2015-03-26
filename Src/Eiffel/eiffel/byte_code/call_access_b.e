@@ -503,11 +503,11 @@ feature {NONE} -- C code generation
 feature {NONE} -- Separate call
 
 	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
-			-- Name of a macro to make a call to a function depending on the kind of a call:
+			-- Name of a macro to make a call to a function depending on the kind of a call.
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls as well as creation function calls.
-			Result := ["ERROR", "RTS_CF", "ERROR"]
+			Result := ["ERROR", {C_CONST}.rts_cf, "ERROR"]
 		end
 
 	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
@@ -515,7 +515,7 @@ feature {NONE} -- Separate call
 			-- See `routine_macro' for details.
 		once
 				-- There are no unqualified separate calls.
-			Result := ["ERROR", "RTS_CP", "RTS_CC"]
+			Result := ["ERROR", {C_CONST}.rts_cp, {C_CONST}.rts_cc]
 		end
 
 	generate_separate_call_for_workbench (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
@@ -556,12 +556,13 @@ feature {NONE} -- Separate call
 			buf := buffer
 			buf.put_new_line
 			if attached r then
-				buf.put_string ("RTS_CF (")
+				buf.put_string ({C_CONST}.rts_cf)
 			elseif call_kind = call_kind_creation then
-				buf.put_string ("RTS_CC (")
+				buf.put_string ({C_CONST}.rts_cc)
 			else
-				buf.put_string ("RTS_CP (")
+				buf.put_string ({C_CONST}.rts_cp)
 			end
+			buf.put_two_character (' ', '(')
 			target_type := context_type
 			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
 			if array_index = -2 then
@@ -657,7 +658,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

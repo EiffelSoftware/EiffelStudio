@@ -213,10 +213,10 @@ feature -- Basic operations
 
 feature -- Access
 
-	development_windows_with_class (cl_name: like {ERROR}.file_name): LIST [EB_DEVELOPMENT_WINDOW]
+	development_windows_with_class (a_class: CLASS_I): LIST [EB_DEVELOPMENT_WINDOW]
 			-- List of all windows with `cl_name' opened.
 		require
-			cl_name_not_void: cl_name /= Void
+			a_class_not_void: a_class /= Void
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
@@ -230,7 +230,7 @@ feature -- Access
 			loop
 				a_dev ?= managed_windows.item
 				if a_dev /= Void then
-					if a_dev.editors_manager.is_class_editing (cl_name) then
+					if a_dev.editors_manager.is_class_editing (a_class) then
 						Result.extend (a_dev)
 					end
 				end
@@ -1696,7 +1696,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

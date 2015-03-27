@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			class_i ?= a_item.data
 			if class_i /= Void then
-				Result := not (search_tool.develop_window.editors_manager.is_class_editing (class_i.file_name.name))
+				Result := not (search_tool.develop_window.editors_manager.is_class_editing (class_i))
 			end
 		end
 
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			l_editor: EB_SMART_EDITOR
 			l_app: like ev_application
 		do
-			l := window_manager.development_windows_with_class (a_class.name)
+			l := window_manager.development_windows_with_class (a_class)
 			if not l.is_empty then
 				from
 					l_app := ev_application
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			-- Search tool
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -297,9 +297,7 @@ feature -- Query (Pixmap)
 		require
 			a_stone_attached: a_stone /= Void
 		do
-			if attached {EXTERNAL_FILE_STONE} a_stone as l_file then
-				Result := pixmaps.icon_pixmaps.general_document_icon
-			elseif attached {ERROR_STONE} a_stone as l_error then
+			if attached {ERROR_STONE} a_stone as l_error then
 				if attached {WARNING} l_error.error_i then
 					Result := pixmaps.icon_pixmaps.general_warning_icon
 				else
@@ -566,9 +564,7 @@ feature -- Query (Pixel buffer)
 		require
 			a_stone_attached: a_stone /= Void
 		do
-			if attached {EXTERNAL_FILE_STONE} a_stone as l_file then
-				Result := pixmaps.icon_pixmaps.general_document_icon_buffer
-			elseif attached {ERROR_STONE} a_stone as l_error then
+			if attached {ERROR_STONE} a_stone as l_error then
 				if attached {WARNING} l_error.error_i then
 					Result := pixmaps.icon_pixmaps.general_warning_icon_buffer
 				else
@@ -692,7 +688,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -214,9 +214,13 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	value_mapping: detachable STRING_TABLE [STRING_32];
+	value_mapping: detachable STRING_TABLE [STRING_32]
 			-- Key: values
 			-- Item: strings displayed
+		note
+			option: stable
+		attribute
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"

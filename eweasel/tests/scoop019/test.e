@@ -10,6 +10,25 @@ feature {NONE} -- Creation
         		t: separate TEST
 		do
 			create t
+				-- The following calls always perform an unlock operation, so none of them should propagate an exception.
+			io.put_integer (1); p (t) -- Command without exception: OK
+			io.put_integer (2); r (t) -- Query: OK
+			io.put_integer (3); f (t) -- Command with exception: OK
+			io.put_integer (4); p (t) -- Command without exception: OK
+			io.put_integer (5); r (t) -- Query: OK
+			io.put_integer (6); p (t) -- Command without exception: OK
+			io.put_new_line
+
+				-- Re-execute the tests while holding a lock on t.
+			make_controlled (t)
+		rescue
+			io.put_integer (7) -- Should not get here.
+			io.put_new_line
+			;(create {EXCEPTIONS}).die (0)
+		end
+
+	make_controlled (t: separate TEST)
+		do
 			io.put_integer (1); p (t) -- Command without exception: OK
 			io.put_integer (2); r (t) -- Query: OK
 			io.put_integer (3); f (t) -- Command with exception: OK

@@ -737,18 +737,11 @@ feature -- Stone process
 			-- Change the currently focused stone.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
-			cv_cst: detachable CLASSI_STONE
-			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_filename: detachable like {ERROR}.file_name
+			l_window_list: LIST [EB_DEVELOPMENT_WINDOW]
 		do
-			cv_cst ?= a_stone
-			if cv_cst /= Void then
-				l_filename := cv_cst.file_name
-			end
-
-			if l_filename /= Void and cv_cst /= Void then
-				l := Window_manager.development_windows_with_class (l_filename)
-				if l.is_empty or else l.has (Current) then
+			if attached {CLASSI_STONE} a_stone as l_class_i_stone then
+				l_window_list := Window_manager.development_windows_with_class (l_class_i_stone.class_i)
+				if l_window_list.is_empty or else l_window_list.has (Current) then
 						-- We're not editing the class in another window.
 					set_stone_after_first_check (a_stone)
 				else

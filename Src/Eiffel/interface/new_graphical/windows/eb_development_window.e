@@ -738,21 +738,15 @@ feature -- Stone process
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 			cv_cst: detachable CLASSI_STONE
-			ef_stone: detachable EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			l_filename: detachable like {ERROR}.file_name
 		do
 			cv_cst ?= a_stone
 			if cv_cst /= Void then
 				l_filename := cv_cst.file_name
-			else
-				ef_stone ?= a_stone
-				if ef_stone /= Void then
-					l_filename := ef_stone.file_name
-				end
 			end
 
-			if l_filename /= Void and (cv_cst /= Void or ef_stone /= Void) then
+			if l_filename /= Void and cv_cst /= Void then
 				l := Window_manager.development_windows_with_class (l_filename)
 				if l.is_empty or else l.has (Current) then
 						-- We're not editing the class in another window.

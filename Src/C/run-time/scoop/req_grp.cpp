@@ -108,6 +108,8 @@ doc:			Note: The wait() operation is blocking! </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
+doc:		<fixme> Instead of unlocking normally after the wait condition, we could have a special 'unlock-after-wait-condition-failure'.
+doc:			That way we can avoid sending unnecessary notifications after the evaluation of a wait condition. </fixme>
 doc:	</routine>
 */
 rt_shared void rt_request_group_wait (struct rt_request_group* self)
@@ -122,16 +124,45 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		 * can later get a notification if a wait condition may have changed. */
 	for (size_t i = 0; i < l_count; ++i) {
 		priv_queue* l_queue = rt_request_group_item (self, i);
-		rt_private_queue_register_wait (l_queue, l_client);
+
+			/* We only register on queues which are currently synchronized.
+			 * Those are the ones that have executed a query during the wait
+			 * condition, and thus the only ones that matter.
+			 * Moreover, because the suppliers are currently synchronized, we
+			 * know that they cannot access their notification queue at the
+			 * moment, so we can safely modify the list from this thread. */
+		if (rt_private_queue_is_synchronized (l_queue)) {
+			rt_private_queue_register_wait (l_queue, l_client);
+		}
 	}
 
-		/* Release the locks on the suppliers. This allows other processors
-		 * to log calls on them, which in turn might make our wait condition
-		 * become true. */
+		/* Before we unlock the synchronized queues, we have to acquire the
+		 * lock to our condition variable mutex. This has to happen before
+		 * rt_request_group_unlock to avoid missed signals. */
+	eif_pthread_mutex_lock (l_client->wait_condition_mutex);
+
+		/* Release the locks on the suppliers. After this statement they can
+		 * execute calls from other processors and signal back a wait condition
+		 * change. If we wouldn't hold the lock acquired in the previous step,
+		 * we might miss those signals and thus remain stuck in a wait condition
+		 * forever. */
 	rt_request_group_unlock (self);
 
-		/* Wait for a notification from one of the suppliers. */
-	l_client->my_token.wait ();
+		/* Now we perform the blocking wait on our condition.
+		 * This also releases the mutex, such that our suppliers may send signals to it.
+		 * Note: Usually these wait operations are performed inside a loop that checks whether
+		 * the wait condition became true. Our loop is compiler-generated however,
+		 * that's why we don't see it here. */
+	eif_pthread_cond_wait (l_client->wait_condition, l_client->wait_condition_mutex);
+
+		/* After the wakeup signal, we can release the mutex.
+		 * We're not interested in any further signals, as we re-register anyway if the
+		 * wait condition fails again. */
+	eif_pthread_mutex_unlock (l_client->wait_condition_mutex);
+
+		 /* Note: We do not clean up the registrations here, because it would involve
+		 * unnecessary locking and a risk of deadlocks. Instead, the suppliers delete
+		 * our registration during notification, and the GC will clean up any leftover registrations. */
 }
 
 /*
@@ -140,7 +171,6 @@ doc:		<summary> Lock all processors in the request group. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
-doc:		<fixme> We could use a simpler algorithm for sorting, because a request group is typically very small. </fixme>
 doc:	</routine>
 */
 rt_shared void rt_request_group_lock (struct rt_request_group* self)
@@ -180,7 +210,8 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 /*
 doc:	<routine name="rt_request_group_unlock" return_type="void" export="shared">
-doc:		<summary> Unlock all processors in the request group. This feature can only be called when the request group is locked. </summary>
+doc:		<summary> Unlock all processors in the request group. This feature can only be called when the request group is locked.
+doc:			This feature doesn't block long. It may block for a short amount of time for memory allocation or to send a signal. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>

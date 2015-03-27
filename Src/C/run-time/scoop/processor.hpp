@@ -184,25 +184,27 @@ public:
   struct request_group_stack_t request_group_stack;
 
 public:
-  /* Register another processors <notify_token>.
-   * @token the token to add to this processor.
-   *
-   * These list of tokens will be notified in some way when this the heap
-   * protected by this processor may have changed. This is used to implement
-   * notification for things like wait conditions.
-   */
-  void register_notify_token(notify_token token);
 
-  /* Notify token for wait conditions.
-   * 
-   * This will be used as an argument to other <processor>'s
-   * <register_notify_token>.
-   */
-  notify_token my_token;
+	/* Register for a notification when the heap protected by this processor may have changed.
+	 * This is used to implement notifications for wait conditions.
+	 * Note: This feature is executed by the client processor, and can only be called when the supplier
+	 * is synchronized with the client. */
+	void register_wait_condition (processor* client)
+	{
+		this->to_be_notified.push_back (client);
+	}
+
+	/* The mutex and condition variable
+	* for wait conditions. Suppliers will signal on this
+	* CV when a wait condition may have changed, and the client
+	* (the current processor) will wait on this variable. */
+	EIF_MUTEX_TYPE* wait_condition_mutex;
+	EIF_COND_TYPE* wait_condition;
+
+		/* The processors that registered for a wait condition change. */
+	std::vector <processor*> to_be_notified;
 
 private:
-  std::queue <notify_token> token_queue;
-  mutex_type token_queue_mutex;
   void notify_next(processor *);
 
 
@@ -219,6 +221,18 @@ public:
    * @mark The specific marking routine.
    */
   void mark (MARKER marking);
+
+
+	/* Callback from the GC.
+	 * Remove the soon-to-be-collected processor 'dead_processor' from
+	 * our internal queue of processors to be notified when a wait condition changes. */
+	void clear_notification (processor* dead_processor) {
+		for (std::vector<processor*>::iterator i = to_be_notified.begin(); i!=to_be_notified.end(); ++i) {
+			if (*i == dead_processor) {
+				*i = NULL;
+			}
+		}
+	}
 
 public:
   /* A result notifier.

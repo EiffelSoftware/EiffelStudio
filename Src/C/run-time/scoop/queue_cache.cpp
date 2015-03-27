@@ -176,6 +176,7 @@ rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("giver_not_null", giver);
+	REQUIRE ("not_equal", self != giver);
 
 		/* Try to get any borrowed locks from 'giver'. */
 	l_borrowed = giver->borrowed_queues;

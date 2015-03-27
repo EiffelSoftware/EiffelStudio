@@ -496,31 +496,26 @@ feature{NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB
-			-- Tab at `a_x' which is relative position
+	tab_at (a_x: INTEGER): detachable SD_NOTEBOOK_TAB
+			-- Tab at `a_x' which is relative position if any.
 		require
 			valid: a_x >= 0 and a_x <= width
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
-			l_result: detachable like tab_at
 		do
 			from
 				l_snapshot := internal_tabs.twin
 				l_snapshot.start
 			until
-				l_snapshot.after or l_result /= Void
+				l_snapshot.after or Result /= Void
 			loop
 				l_item := l_snapshot.item
 				if item_x (l_item) <= a_x and a_x <= item_x (l_item) + l_item.width then
-					l_result := l_item
+					Result := l_item
 				end
 				l_snapshot.forth
 			end
-			check l_result /= Void end -- Implied by precondition `valid'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
 		end
 
 	tab_under_pointer: detachable SD_NOTEBOOK_TAB
@@ -560,7 +555,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

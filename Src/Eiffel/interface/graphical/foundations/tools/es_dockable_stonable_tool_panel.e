@@ -159,7 +159,7 @@ feature {NONE} -- Basic opertations
 						do
 							Result := ia_pebble = Void
 							if not Result and then attached {STONE} ia_pebble as l_stone then
-								Result := is_stone_usable (l_stone)
+								Result := is_interface_usable and then is_stone_usable (l_stone)
 							end
 						end)
 				end, Void)
@@ -274,7 +274,7 @@ invariant
 	tool_descriptor_is_stonable: is_interface_usable implies (({ES_STONABLE_I}) #? tool_descriptor) /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

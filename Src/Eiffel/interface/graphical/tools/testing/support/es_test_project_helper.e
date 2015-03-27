@@ -150,7 +150,7 @@ feature -- Element change
 					if attached {like last_added_class} manager.last_added_class as l_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)
-						window_manager.last_focused_development_window.advanced_set_stone (l_stone)
+						window_manager.last_focused_development_window.set_stone (l_stone)
 					end
 				end
 			end
@@ -221,7 +221,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

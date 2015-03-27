@@ -930,7 +930,7 @@ feature {NONE} -- Execution
 				end
 			else
 				remove_error_message
-				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_group))
+				parent.set_stone (create {CLUSTER_STONE}.make (current_group))
 			end
 		end
 
@@ -970,7 +970,7 @@ feature {NONE} -- Execution
 				if l_classc /= Void then
 					extract_feature_from_user_entry
 				else
-					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+					parent.set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			end
 		end
@@ -993,13 +993,13 @@ feature {NONE} -- Execution
 						display_error_message (
 							Warning_messages.w_not_a_compiled_class_line (class_i.name))
 					end
-					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+					parent.set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			else
 				if not feature_address.text.is_empty then
 					extract_feature_from_user_entry
 				else
-					parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
+					parent.set_stone (create {CLASSC_STONE}.make (current_class))
 				end
 			end
 		end
@@ -1022,14 +1022,14 @@ feature {NONE} -- Execution
 			else
 				remove_error_message
 				if mode then
-					parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+					parent.set_stone (create {FEATURE_STONE}.make (current_feature))
 				else
 					f := current_feature.written_feature
 					if f /= Void then
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (f))
+						parent.set_stone (create {FEATURE_STONE}.make (f))
 					else
 							-- Gasp, we are in the editor address and we can't find the origin feature...
-						parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+						parent.set_stone (create {FEATURE_STONE}.make (current_feature))
 					end
 				end
 			end
@@ -1049,9 +1049,9 @@ feature {NONE} -- Execution
 				current_feature.written_class /= l_class_c and
 				not mode
 			then
-				parent.advanced_set_stone (create {CLASSC_STONE}.make (l_class_c))
+				parent.set_stone (create {CLASSC_STONE}.make (l_class_c))
 			else
-				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
+				parent.set_stone (create {FEATURE_STONE}.make (current_feature))
 			end
 		end
 
@@ -1132,19 +1132,19 @@ feature {NONE} -- Implementation
 	drop_class (cst: CLASSI_STONE)
 			-- Attempt to drop a class into the address bar.
 		do
-			parent.advanced_set_stone (cst)
+			parent.set_stone (cst)
 		end
 
 	drop_feature (fst: FEATURE_STONE)
 			-- Attempt to drop a feature into the address bar.
 		do
-			parent.advanced_set_stone (fst)
+			parent.set_stone (fst)
 		end
 
 	drop_cluster (cst: CLUSTER_STONE)
 			-- Attempt to drop a class into the address bar.
 		do
-			parent.advanced_set_stone (cst)
+			parent.set_stone (cst)
 		end
 
 	display_cluster_choice
@@ -2160,7 +2160,7 @@ feature {NONE} -- open new class
 			cluster_selected: current_group /= Void
 		do
 			if current_group /= Void then
-				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_group))
+				parent.set_stone (create {CLUSTER_STONE}.make (current_group))
 			end
 		end
 
@@ -2170,9 +2170,9 @@ feature {NONE} -- open new class
 			class_selected: class_i /= Void
 		do
 			if current_class /= Void then
-				parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
+				parent.set_stone (create {CLASSC_STONE}.make (current_class))
 			else
-				parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+				parent.set_stone (create {CLASSI_STONE}.make (class_i))
 			end
 		end
 
@@ -2184,7 +2184,7 @@ feature {NONE} -- open new class
 			st: FEATURE_STONE
 		do
 			create st.make (current_feature)
-			parent.advanced_set_stone (st)
+			parent.set_stone (st)
 		end
 
 feature {NONE} -- Implementation of the clickable labels for `header_info'
@@ -2688,7 +2688,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

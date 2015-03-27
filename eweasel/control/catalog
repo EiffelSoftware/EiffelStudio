@@ -1399,7 +1399,7 @@ test	scoop-separate-patterns-crash			scoop015 tcf pass scoop multithreaded final
 test	scoop-finalize-c-failure			scoop016 tcf pass scoop multithreaded finalizing c_compilation
 test	scoop-separate-call-to-constant			scoop017 tcf pass scoop multithreaded execution
 test	scoop-once-per-object				scoop018 tcf pass scoop multithreaded execution incrementality once
-test	scoop-top-exception				scoop019 tcf fail used_to_pass scoop multithreaded
+test	scoop-top-exception				scoop019 tcf pass scoop multithreaded exception
 test	scoop-separate-formal				scoop020 tcf pass scoop multithreaded formal generic conformance validity
 test	scoop-object-test				scoop021 tcf fail used_to_pass scoop multithreaded formal generic conformance object_test execution
 test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity incrementality

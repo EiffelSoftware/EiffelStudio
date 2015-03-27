@@ -172,7 +172,8 @@ rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* clie
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
-	self->supplier->register_notify_token (client->my_token);
+	REQUIRE ("self_synchronized", self->synced);
+	self->supplier->register_wait_condition (client);
 	self->synced = false;
 }
 

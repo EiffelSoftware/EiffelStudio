@@ -57,9 +57,7 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_group)
 
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
-	my_token (this),
-	token_queue (),
-	token_queue_mutex(),
+	to_be_notified(),
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
@@ -68,16 +66,33 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	is_dirty (false),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
+	int error = T_OK;
+
 	rt_queue_cache_init (&this->cache, this);
 	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
 	rt_message_channel_init (&this->result_notify, 64);
 	rt_message_channel_init (&this->startup_notify, 64);
 	request_group_stack_t_init (&this->request_group_stack);
 	active_count++;
+
+		/* Create the CV and mutex for wait condition signalling. */
+	error = eif_pthread_mutex_create (&this->wait_condition_mutex); /* TODO: Error handling */
+	error = eif_pthread_cond_create (&this->wait_condition); /* TODO: Error handling */
 }
 
 processor::~processor()
 {
+		/* Destroy the mutex and condition variable.
+		 * This is safe: No other thread can hold the lock on the mutex,
+		 * because during garbage collection all references in the
+		 * 'to_be_notified' vector of other processors have been removed,
+		 * and the GC cannot run while other processors may hold a lock
+		 * during 'notify_next'. */
+	eif_pthread_cond_destroy (this->wait_condition);
+	this->wait_condition = NULL;
+	eif_pthread_mutex_destroy (this->wait_condition_mutex);
+	this->wait_condition = NULL;
+
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
 
 		priv_queue* l_queue = *pq;
@@ -241,25 +256,37 @@ void processor::spawn()
 		NULL); /* There are no attributes */
 }
 
-void processor::register_notify_token (notify_token token)
-{
-	unique_lock_type lock(token_queue_mutex);
-	token_queue.push (token);
-}
-
 void processor::notify_next(processor *client)
 {
-	unique_lock_type lock(token_queue_mutex);
-	std::queue <notify_token>::size_type n = token_queue.size();
-	for (std::queue <notify_token>::size_type i = 0U; i < n && !token_queue.empty(); i++) {
-		notify_token token = token_queue.front();
-		token_queue.pop();
+	bool found = false;
+	while (!to_be_notified.empty()) {
+		processor* item = to_be_notified.back();
+		to_be_notified.pop_back();
 
-		if (token.client() == client) {
-			token_queue.push(token);
+		if (item == client) {
+				/* The client might be the processor that has just unlocked us
+				 * after a wait condition has failed. We obviously don't want to
+				 * send it a notification back. */
+			found = true;
 		} else {
-			token.notify(client);
+
+				/* To avoid having to move around items within the vector,
+				 * the GC may set some references to NULL. */
+			if (item) {
+
+					/* Lock the registered processor's condition variable mutex. */
+				eif_pthread_mutex_lock (item->wait_condition_mutex);
+
+					/* Send a signal. */
+				eif_pthread_cond_signal (item->wait_condition);
+
+					/* Release the lock. */
+				eif_pthread_mutex_unlock (item->wait_condition_mutex);
+			}
 		}
+	}
+	if (found) {
+		to_be_notified.push_back (client);
 	}
 }
 

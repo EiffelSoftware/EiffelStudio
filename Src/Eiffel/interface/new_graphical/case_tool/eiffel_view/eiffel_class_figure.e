@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 					if l_editor = Void then
 						world.context_editor.develop_window.editors_manager.create_editor
 					end
-					world.context_editor.develop_window.advanced_set_stone (create {CLASSI_STONE}.make (model.class_i))
+					world.context_editor.develop_window.set_stone (create {CLASSI_STONE}.make (model.class_i))
 				end
 			end
 		end
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation (move)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

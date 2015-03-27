@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 							manager.add_class_to_cluster (base_name.name, cluster, path, class_name, manager.workbench.successful)
 							class_i := manager.last_added_class
 							if set_stone and class_i /= Void then
-								target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+								target.set_stone (create {CLASSI_STONE}.make (class_i))
 							end
 						end
 					end
@@ -914,7 +914,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

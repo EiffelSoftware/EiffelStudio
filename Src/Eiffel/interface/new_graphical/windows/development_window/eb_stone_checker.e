@@ -96,7 +96,6 @@ feature {NONE} -- Implementation functions
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
 
-			ef_stone ?= a_stone
 			target_stone ?= a_stone
 
 			cluster_st ?= a_stone
@@ -122,7 +121,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	handle_break_error_ace_external_file_stone (a_stone: STONE)
-			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if exist.
+			-- Handle `conv_brkstone', `conv_errst', and `target_stone' if exist.
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
@@ -134,17 +133,6 @@ feature {NONE} -- Implementation functions
 					bpm.set_user_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				bpm.notify_breakpoints_changes
-			elseif ef_stone /= Void then
-				if not text_loaded and then current_editor /= Void then
-					f := ef_stone.file
-					f.make_with_path (f.path)
-					f.open_read
-					f.read_stream (f.count)
-					f.close
-					prevent_duplicated_editor (a_stone)
-					current_editor.set_stone (a_stone)
-					current_editor.load_text (f.last_string)
-				end
 			elseif target_stone /= Void and then target_stone.is_valid then
 				handle_target_stone (target_stone)
 			else
@@ -1066,12 +1054,6 @@ feature {NONE} -- Implementation attributes
 
 	target_stone: TARGET_STONE
 			-- Target stone.
-
-	ef_stone: EXTERNAL_FILE_STONE
-			-- External file stone.
-
-	f: FILE
-			-- File associate with `ef_stone'.
 
 	conv_errst: ERROR_STONE
 			-- Error stone.

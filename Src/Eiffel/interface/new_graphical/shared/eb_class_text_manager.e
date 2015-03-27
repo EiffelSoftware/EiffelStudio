@@ -41,7 +41,7 @@ feature -- Access
 			editor: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_app: like ev_application
 		do
-			l := Window_manager.development_windows_with_class (a_class.file_name.name)
+			l := Window_manager.development_windows_with_class (a_class)
 			if not l.is_empty then
 				from
 					l_app := ev_application
@@ -100,7 +100,7 @@ feature -- Element change
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_encoding: ENCODING
 		do
-			l := Window_manager.development_windows_with_class (a_class.file_name.name)
+			l := Window_manager.development_windows_with_class (a_class)
 			from
 				l.start
 			until
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

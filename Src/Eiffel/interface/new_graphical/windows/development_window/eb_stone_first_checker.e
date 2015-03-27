@@ -38,7 +38,6 @@ feature -- Command
 		do
 			old_class_stone ?= develop_window.stone
 			feature_stone ?= a_stone
-			ef_stone ?= a_stone
 			new_class_stone ?= a_stone
 			cluster_st ?= a_stone
 			l_editors_manager := develop_window.editors_manager
@@ -69,18 +68,10 @@ feature -- Command
 				-- If it is not cancelled, we set it back in EB_STONE_CHECKER
 			develop_window.set_history_moving_cancelled (True)
 
-			if
-				conv_brkstone = Void and
-				conv_errst = Void and
-				ef_stone = Void
-			then
-				if
-					new_class_stone /= Void
-				then
+			if conv_brkstone = Void and conv_errst = Void then
+				if new_class_stone /= Void then
 					develop_window.history_manager.extend (new_class_stone)
-				elseif
-					cluster_st /= Void
-				then
+				elseif cluster_st /= Void then
 					develop_window.history_manager.extend (cluster_st)
 				end
 			end
@@ -125,7 +116,6 @@ feature -- Command
 						end
 					end
 				end
-			elseif ef_stone /= Void then
 			end
 
 				-- first, let's check if there is already something in this window
@@ -189,9 +179,6 @@ feature{NONE} -- Implementation
 	conv_ferrst: FEATURE_ERROR_STONE
 			-- Feature errror stone if exist.
 
-	ef_stone: EXTERNAL_FILE_STONE
-			-- External file stone if exist.
-
 	cluster_st: CLUSTER_STONE
 			-- Cluster stone if exist.
 
@@ -211,7 +198,7 @@ feature{NONE} -- Implementation
 			-- If save file needed?
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -235,11 +222,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

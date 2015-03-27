@@ -248,7 +248,7 @@ feature -- Button texts
 
 feature -- Choices
 
-	c_right_click_receiver: HASH_TABLE [STRING_32, STRING]
+	c_right_click_receiver: STRING_TABLE [STRING_32]
 			-- Choice names for the preference of right_click_receiver.
 		once
 			create Result.make (5)
@@ -265,9 +265,9 @@ feature -- Choices
 	c_editor: STRING_32 							do Result := locale.translation ("Current Editor") end
 	c_context: STRING_32 						do Result := locale.translation ("Context") end
 	c_external_editor: STRING_32 				do Result := locale.translation ("External Editor") end
-	c_new_tab_editor: STRING_32 					do Result := locale.translation ("New tab editor") end
+	c_new_tab_editor: STRING_32 					do Result := locale.translation ("New tab Editor") end
 
-	c_init_search_scope: HASH_TABLE [STRING_32, STRING]
+	c_init_search_scope: STRING_TABLE [STRING_32]
 			-- Choice names for the preference of tools.search_tool.init_scope.
 		once
 			create Result.make (3)
@@ -278,7 +278,7 @@ feature -- Choices
 			result_not_void: Result /= Void
 		end
 
-	c_report_c_compiler_errors: HASH_TABLE [STRING_32, STRING]
+	c_report_c_compiler_errors: STRING_TABLE [STRING_32]
 			-- Choice names for the preference of right_click_receiver.
 		once
 			create Result.make (3)
@@ -293,6 +293,19 @@ feature -- Choices
 	c_compiler_errors_errors: STRING_32 	do Result := locale.translation ("Errors Only") end
 	c_compiler_errors_none: STRING_32 		do Result := locale.translation ("None") end
 
+	c_override_tab_behavior: STRING_TABLE [STRING_32]
+			-- Choice names for the preference of override_tab_behavior.
+		once
+			create Result.make (3)
+			Result.put (c_editor, co_editor)
+			Result.put (c_new_tab_editor, co_new_tab_editor)
+			Result.put (c_new_tab_editor_if_edited, co_new_tab_editor_if_edited)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	c_new_tab_editor_if_edited: STRING_32 do Result := locale.translation ("New tab Editor if already edited") end
+
 feature -- Choice original (No translation)
 
 	co_new_window: STRING = "new_window"
@@ -305,6 +318,10 @@ feature -- Choice original (No translation)
 			-- Preference that indicates that stones should be launched to the external editor.
 	co_new_tab_editor: STRING = "new_tab_editor"
 			-- Preference that indicates that stones should be launched to a new tab editor.
+
+	co_new_tab_editor_if_edited: STRING = "new_tab_editor_if_edited"
+			-- Preference that indicates that stones should not replace the currently edited tab
+			-- if it has been edited.
 
 	co_current_editor: STRING = 		"Current Editor"
 	co_whole_project: STRING = 		"Whole Project"
@@ -1859,14 +1876,6 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("%NCONTEXT: $1%N"), [a_context])
 		end
 
-	l_not_eiffel_class_file (a_stone_signature, a_file_name: READABLE_STRING_GENERAL): STRING_32
-		require
-			a_stone_signature_not_void: a_stone_signature /= Void
-			a_file_name_not_void: a_file_name /= Void
-		do
-			Result := locale.formatted_string (locale.translation ("$1(not an Eiffel class file)   located in $2"), [a_stone_signature, a_file_name])
-		end
-
 	l_empty_development_window_header (a_system_name, a_target_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
@@ -2889,7 +2898,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

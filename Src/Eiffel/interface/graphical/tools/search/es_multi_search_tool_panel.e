@@ -1723,7 +1723,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			l_editor: EB_SMART_EDITOR
 		do
-			l := window_manager.development_windows_with_class (a_class.file_name.name)
+			l := window_manager.development_windows_with_class (a_class)
 			if not l.is_empty then
 				from
 					l.start
@@ -2101,7 +2101,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

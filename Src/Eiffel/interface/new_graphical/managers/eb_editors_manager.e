@@ -191,7 +191,6 @@ feature -- Access
 		local
 			l_editors: ARRAYED_LIST [like current_editor]
 			l_classi_stone: CLASSI_STONE
-			l_external_file_stone: EXTERNAL_FILE_STONE
 		do
 			l_editors := editors
 			from
@@ -200,13 +199,8 @@ feature -- Access
 				l_editors.after or Result /= Void
 			loop
 				l_classi_stone ?= l_editors.item.stone
-				l_external_file_stone ?= l_editors.item.stone
 				if l_classi_stone /= Void then
 					if l_classi_stone.file_name.is_equal (a_file_name.name) then
-						Result := l_editors.item
-					end
-				elseif l_external_file_stone /= Void then
-					if l_external_file_stone.file_name.is_equal (a_file_name.name) then
 						Result := l_editors.item
 					end
 				end
@@ -524,14 +518,12 @@ feature {NONE} -- Action handlers
 
 feature -- Status report
 
-	is_class_editing (a_file_name: like {ERROR}.file_name) : BOOLEAN
+	is_class_editing (a_class: CLASS_I) : BOOLEAN
 			-- Editor editing a class with `a_file_name'
 		require
-			a_file_name_attached: a_file_name /= Void
+			a_class_attached: a_class /= Void
 		local
 			l_editors: like editors_internal
-			l_classi_stone: CLASSI_STONE
-			l_external_file_stone: EXTERNAL_FILE_STONE
 		do
 			l_editors := editors
 			from
@@ -539,16 +531,7 @@ feature -- Status report
 			until
 				l_editors.after or Result
 			loop
-				l_classi_stone ?= l_editors.item.stone
-				l_external_file_stone ?= l_editors.item.stone
-				if l_classi_stone /= Void then
-					Result :=
-						attached l_classi_stone.file_name as l_fn and then
-						l_fn.same_string (a_file_name)
-				elseif l_external_file_stone /= Void then
-					Result := attached l_external_file_stone.file_name as l_fn and then
-						l_fn.same_string (a_file_name)
-				end
+				Result := attached {CLASSI_STONE} l_editors.item.stone as l_class_stone and then l_class_stone.class_i = a_class
 				l_editors.forth
 			end
 		end
@@ -1897,7 +1880,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

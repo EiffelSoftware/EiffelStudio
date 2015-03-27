@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	SYNTAX_STONE
 
 --| FIXME XR: The point of ERROR_STONE's is to have an explanatory message.
@@ -25,9 +25,6 @@ inherit
 			help_text,
 			is_storable
 		end
-
-create
-	make
 
 feature {NONE} -- Initialization
 
@@ -110,7 +107,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

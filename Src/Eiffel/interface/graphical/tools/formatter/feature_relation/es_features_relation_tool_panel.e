@@ -51,7 +51,7 @@ feature -- Access
 			-- Special handle to flat formatters of routine. Required to properly update
 			-- breakpoint positions during debugging.
 
-	stone: STONE
+	stone: detachable STONE
 			-- Currently managed stone.
 
 	predefined_formatters: like formatters
@@ -271,7 +271,6 @@ feature -- Status setting
 				if l_tool = Void then
 					if found then
 							-- Reset the stone on the tool with the found new feature stone.
-						check is_stone_valid (new_fs) end
 						set_stone (new_fs)
 					end
 				else
@@ -426,7 +425,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

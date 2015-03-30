@@ -24,10 +24,10 @@ inherit
 
 feature -- Access
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone for current.
 
-	file_name: like {FILED_STONE}.file_name
+	file_name: detachable like {FILED_STONE}.file_name
 			-- Name of the file being displayed.
 			-- This attribute is useful when `stone'
 			-- is Void (this case occurs after loading
@@ -88,7 +88,7 @@ feature -- Status Settings
 			internal_last_saving_date := a_timestamp
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Make `s' the new value of stone.
 			-- Change file name as a consequence, to keep invariant.
 		local
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			-- Date of last save
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

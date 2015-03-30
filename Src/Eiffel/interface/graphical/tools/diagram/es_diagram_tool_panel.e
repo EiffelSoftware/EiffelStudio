@@ -1396,7 +1396,7 @@ feature {NONE} -- Clean up
 
 feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions
 
-	launch_stone (a_stone: STONE)
+	launch_stone (a_stone: detachable STONE)
 			-- Launch stone.
 		local
 			l_tool: EB_STONABLE_TOOL

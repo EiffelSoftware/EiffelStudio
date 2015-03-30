@@ -57,7 +57,7 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_group)
 
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
-	to_be_notified(),
+// 	to_be_notified(),
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
@@ -68,11 +68,13 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 {
 	int error = T_OK;
 
+
 	rt_queue_cache_init (&this->cache, this);
 	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
 	rt_message_channel_init (&this->result_notify, 64);
 	rt_message_channel_init (&this->startup_notify, 64);
 	request_group_stack_t_init (&this->request_group_stack);
+	subscriber_list_t_init (&this->wait_condition_subscribers);
 	active_count++;
 
 		/* Create the CV and mutex for wait condition signalling. */
@@ -85,7 +87,7 @@ processor::~processor()
 		/* Destroy the mutex and condition variable.
 		 * This is safe: No other thread can hold the lock on the mutex,
 		 * because during garbage collection all references in the
-		 * 'to_be_notified' vector of other processors have been removed,
+		 * 'wait_condition_subscribers' vector of other processors have been removed,
 		 * and the GC cannot run while other processors may hold a lock
 		 * during 'notify_next'. */
 	eif_pthread_cond_destroy (this->wait_condition);
@@ -101,6 +103,7 @@ processor::~processor()
 	}
  	rt_message_channel_deinit (&this->startup_notify);
 	rt_message_channel_deinit (&this->result_notify);
+	subscriber_list_t_deinit (&this->wait_condition_subscribers);
 	request_group_stack_t_deinit (&this->request_group_stack);
 	rt_queue_cache_deinit (&this->cache);
 }
@@ -259,9 +262,11 @@ void processor::spawn()
 void processor::notify_next(processor *client)
 {
 	bool found = false;
-	while (!to_be_notified.empty()) {
-		processor* item = to_be_notified.back();
-		to_be_notified.pop_back();
+	struct subscriber_list_t* subscribers = &this->wait_condition_subscribers;
+
+	while ( !(0 == subscriber_list_t_count(subscribers))) {
+		processor* item = subscriber_list_t_last (subscribers);
+		subscriber_list_t_remove_last (subscribers);
 
 		if (item == client) {
 				/* The client might be the processor that has just unlocked us
@@ -286,7 +291,7 @@ void processor::notify_next(processor *client)
 		}
 	}
 	if (found) {
-		to_be_notified.push_back (client);
+		subscriber_list_t_extend (subscribers, client);
 	}
 }
 
@@ -334,7 +339,6 @@ void processor::mark(MARKER marking)
 
 	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
 		rt_private_queue_mark (*pq, marking);
-// 		(* pq) -> mark (marking);
 	}
 }
 

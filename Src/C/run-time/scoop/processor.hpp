@@ -192,15 +192,6 @@ public:
 
 public:
 
-	/* Register for a notification when the heap protected by this processor may have changed.
-	 * This is used to implement notifications for wait conditions.
-	 * Note: This feature is executed by the client processor, and can only be called when the supplier
-	 * is synchronized with the client. */
-	void register_wait_condition (processor* client) /* TODO: Rename as rt_subscribe_wait_condition */
-	{
-		subscriber_list_t_extend (&this->wait_condition_subscribers, client);
-	}
-
 	/* The mutex and condition variable
 	* for wait conditions. Suppliers will signal on this
 	* CV when a wait condition may have changed, and the client
@@ -228,21 +219,6 @@ public:
    * @mark The specific marking routine.
    */
   void mark (MARKER marking);
-
-
-	/* Callback from the GC.
-	 * Remove the soon-to-be-collected processor 'dead_processor' from
-	 * our internal queue of processors to be notified when a wait condition changes. */
-	void clear_notification (processor* dead_processor) { /* TODO: Rename as rt_clear_subscription */
-		size_t l_count = subscriber_list_t_count (&this->wait_condition_subscribers);
-
-		for (size_t i=0; i<l_count; ++i) {
-			processor** l_item = subscriber_list_t_item_pointer (&this->wait_condition_subscribers, i);
-			if (*l_item == dead_processor) {
-				*l_item = NULL;
-			}
-		}
-	}
 
 public:
   /* A result notifier.
@@ -314,6 +290,10 @@ private:
   void process_priv_queue(priv_queue*);
 
 };
+
+/* Wait condition subscription management. */
+rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client);
+rt_shared void rt_processor_unsubscribe_wait_condition (processor* self, processor* dead_processor);
 
 /* Declarations for group stack manipulation. */
 rt_shared void rt_processor_request_group_stack_extend (processor* self);

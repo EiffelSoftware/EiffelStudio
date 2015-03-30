@@ -78,7 +78,7 @@ feature -- Access
 			Result := interface_names.l_no_info_of_element
 		end
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone representing Current
 		do
 			Result := last_stone
@@ -372,7 +372,7 @@ invariant
 	id_attached: id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -326,16 +326,14 @@ feature -- Text Loading
 
 feature -- Stonable
 
-	stone : STONE
+	stone : detachable STONE
 			-- Stone representing Current
 
-	set_stone (a_stone: STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Make `s' the new value of stone.
 			-- Changes display as a consequence, to preserve the fact
 			-- that the tool displays the content of the stone
 			-- (when there is a stone).
-		require else
-			a_stone_attached: a_stone /= Void
 		do
 			stone := a_stone
 		ensure then
@@ -489,7 +487,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

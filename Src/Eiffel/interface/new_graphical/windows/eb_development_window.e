@@ -714,7 +714,7 @@ feature -- Update
 
 feature -- Stone process
 
-	stone: STONE
+	stone: detachable STONE
 			-- Current stone
 
 	toggle_unified_stone
@@ -731,7 +731,7 @@ feature -- Stone process
 			end
 		end
 
-	set_stone (a_stone: STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Change the currently focused stone.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT

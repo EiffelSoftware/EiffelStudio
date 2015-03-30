@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 	is_storing: BOOLEAN
 			-- Are we at the moment storing the information to disk.
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone we display properties for.
 
 	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL]
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

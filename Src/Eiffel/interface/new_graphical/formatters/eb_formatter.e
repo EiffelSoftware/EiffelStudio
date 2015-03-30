@@ -56,7 +56,7 @@ feature -- Properties
 		deferred
 		end
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone representing Current
 
 	viewpoints: CLASS_VIEWPOINTS
@@ -473,7 +473,7 @@ feature -- Stonable
 		do
 		end
 
-	force_stone (a_stone: STONE)
+	force_stone (a_stone: detachable STONE)
 			-- Directly set `stone' with `a_stone'
 		do
 			stone := a_stone
@@ -684,7 +684,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

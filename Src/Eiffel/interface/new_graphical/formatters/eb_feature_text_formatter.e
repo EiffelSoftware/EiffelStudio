@@ -53,7 +53,7 @@ feature -- Status setting
 			is_dotnet_mode_set: is_dotnet_mode = a_flag
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
 			force_stone (new_stone)
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Exception trace
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

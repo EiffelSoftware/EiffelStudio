@@ -230,7 +230,7 @@ feature -- Commands
 			end
 		end
 
-	set_stone (a_stone: STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Dispatch stone to tools for linking
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
@@ -348,7 +348,7 @@ feature -- Default tools
 
 feature -- Query
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone current related.
 			-- In the non-docking Eiffel Studio, it's context tool's stone.
 

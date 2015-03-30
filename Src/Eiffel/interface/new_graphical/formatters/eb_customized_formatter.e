@@ -308,7 +308,7 @@ feature -- Setting
 			pixmap.stretch (16, 16)
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Associate current formatter with stone contained in `new_stone'.
 		do
 			force_stone (new_stone)
@@ -598,7 +598,7 @@ invariant
 	menu_name_internal_attached: menu_name_internal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

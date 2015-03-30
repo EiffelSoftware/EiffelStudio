@@ -50,7 +50,25 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 #include <stdarg.h>
 #include "rt_except.h"
 
-atomic_int_type active_count = atomic_var_init;
+
+/* The number of active processors.
+ * Must only be accessed via increment / decrement operations.
+ * TODO: This is global state. Should it be moved to processor_registry? */
+rt_private EIF_INTEGER_32 active_processor_count = 0;
+
+/* Atomically increment active_processor_count. */
+rt_private void increment_active_processor_count (void)
+{
+	RTS_AI_I32 (&active_processor_count);
+}
+
+/* Atomically decrement active_processor_count and return the new value. */
+rt_private EIF_INTEGER_32 decrement_and_fetch_active_processor_count (void)
+{
+	return RTS_AD_I32 (&active_processor_count);
+}
+
+
 
 /* Declare the necessary features for the request group stack. We only need the size() and the stack functions. */
 RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group)
@@ -84,7 +102,8 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	request_group_stack_t_init (&this->request_group_stack);
 	subscriber_list_t_init (&this->wait_condition_subscribers);
 	private_queue_list_t_init (&this->generated_private_queues);
-	active_count++;
+
+	increment_active_processor_count();
 
 	error = eif_pthread_mutex_create (&this->generated_private_queues_mutex);
 
@@ -329,14 +348,14 @@ void processor::application_loop()
 			/* program termination, but not sufficient for */
 			/* freeing threads to let new ones take their */
 			/* place. */
-		if (--active_count == 0 && qoq.is_empty()) {
+		if (decrement_and_fetch_active_processor_count() == 0 && qoq.is_empty()) {
 			plsc();
 		}
 
 		qoq.pop(res);
 
 		if (!res.is_done) {
-			active_count++;
+			increment_active_processor_count();
 			has_client = true;
 
 			process_priv_queue (res.queue);

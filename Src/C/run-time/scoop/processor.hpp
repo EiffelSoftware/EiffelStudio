@@ -180,7 +180,7 @@ public:
    * to apply.
    */
   mpscq <qoq_item> qoq;
-  recursive_mutex_type qoq_mutex;
+  EIF_MUTEX_TYPE* queue_of_queues_mutex;
 
 public:
   /* A stack of request groups.

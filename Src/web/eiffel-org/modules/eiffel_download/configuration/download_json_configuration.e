@@ -17,7 +17,8 @@ feature -- Access
 			create Result
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed then
+				l_parser.parse_content
+				if attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then l_parser.is_parsed then
 					if attached {JSON_STRING} jv.item ("mirror") as l_mirror then
 						Result.set_mirror (l_mirror.unescaped_string_32)
 					end
@@ -216,7 +217,7 @@ feature {NONE} -- Implementation
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 end

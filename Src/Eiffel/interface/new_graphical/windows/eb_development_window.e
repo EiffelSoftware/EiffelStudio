@@ -736,32 +736,25 @@ feature -- Stone process
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 			l_window_list: LIST [EB_DEVELOPMENT_WINDOW]
-		do
-			if attached {CLASSI_STONE} a_stone as l_class_i_stone then
-				l_window_list := Window_manager.development_windows_with_class (l_class_i_stone.class_i)
-				if l_window_list.is_empty or else l_window_list.has (Current) then
-						-- We're not editing the class in another window.
-					set_stone_after_first_check (a_stone)
-				else
-					create l_warning.make_standard (warning_messages.w_class_already_edited, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.already_editing_class_preference, True))
-					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent set_stone_after_first_check (a_stone))
-					l_warning.show (window)
-				end
-			else
-				set_stone_after_first_check (a_stone)
-			end
-			update_save_symbol
-		end
-
-	set_stone_after_first_check (a_stone: STONE)
-			-- Display text associated with `a_stone', if any and if possible
-		local
 			l_checker: EB_STONE_FIRST_CHECKER
 		do
 			if a_stone /= Void then
 				create l_checker.make (Current)
-				l_checker.set_stone_after_first_check (a_stone)
+				if attached {CLASSI_STONE} a_stone as l_class_i_stone then
+					l_window_list := Window_manager.development_windows_with_class (l_class_i_stone.class_i)
+					if l_window_list.is_empty or else l_window_list.has (Current) then
+							-- We're not editing the class in another window.
+						l_checker.set_stone_after_first_check (a_stone)
+					else
+						create l_warning.make_standard (warning_messages.w_class_already_edited, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.already_editing_class_preference, True))
+						l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent l_checker.set_stone_after_first_check (a_stone))
+						l_warning.show (window)
+					end
+				else
+					l_checker.set_stone_after_first_check (a_stone)
+				end
 			end
+			update_save_symbol
 		end
 
 	force_stone (s: STONE)

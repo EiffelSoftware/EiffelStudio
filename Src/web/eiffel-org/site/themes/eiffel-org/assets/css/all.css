@@ -2312,7 +2312,7 @@ input.placeholder-text, textarea.placeholder-text {
 }
 /* line 776, all.scss */
 #content .rss-block ul li {
-  width: 482px;
+  width: 310px;
   float: left;
   margin: 0 0 54px 33px;
   /*a{
@@ -2342,7 +2342,7 @@ input.placeholder-text, textarea.placeholder-text {
 #content .rss-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
-  font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
+  font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
 /* line 805, all.scss */
 #content .rss-block ul li p {

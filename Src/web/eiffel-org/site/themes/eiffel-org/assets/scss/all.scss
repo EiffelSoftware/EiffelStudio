@@ -774,7 +774,7 @@
 			@extend %listreset;
 			margin: 0 0 0 -70px;
 			li{
-				width: 482px;
+				width: 310px;
 				float: left;
 				margin: 0 0 54px 33px;
 				/*a{
@@ -800,7 +800,7 @@
 				h2{
 					color: $green-light;
 					margin: 0 0 11px;
-					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+					font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;
 				}
 				p{
 					color: #0C0D0D;

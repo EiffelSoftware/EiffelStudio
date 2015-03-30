@@ -85,7 +85,6 @@ feature {NONE} -- Implementation
 			-- Process class stone.
 		local
 			req: COMMAND_EXECUTOR
-			conv_f: FEATURE_STONE
 		do
 			create req
 			if attached {FEATURE_STONE} cs as l_feature then

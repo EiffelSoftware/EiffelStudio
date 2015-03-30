@@ -152,7 +152,7 @@ feature {ES_FEATURE_RELATION_TOOL} -- Element change
 
 feature -- Status setting
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Send a stone to feature formatters.
 		local
 			l_last_stone, fst: FEATURE_STONE

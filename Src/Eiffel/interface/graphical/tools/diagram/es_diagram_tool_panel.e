@@ -1447,7 +1447,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 			end
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Simply change last stone.
 			-- If current widget is displayed, the stone is forced.
 			-- Choose default tool to load a feature stone.

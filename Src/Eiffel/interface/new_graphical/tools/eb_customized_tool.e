@@ -180,7 +180,7 @@ feature -- Setting
 			end
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Send a stone to class formatters.
 		local
 			l_stone: like stone

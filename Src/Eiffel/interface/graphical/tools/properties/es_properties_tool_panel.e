@@ -15,8 +15,7 @@ inherit
 		redefine
 			make,
 			show,
-			internal_recycle,
-			is_stone_valid
+			internal_recycle
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -91,14 +90,6 @@ feature -- Access
 	widget: EV_VERTICAL_BOX
 			-- Widget representing Current
 
-feature -- Status report
-
-	is_stone_valid (a_stone: like stone): BOOLEAN
-			-- Is stone valid to set?
-		do
-			Result := a_stone /= Void and then a_stone.is_valid
-		end
-
 feature -- Command
 
 	show
@@ -134,7 +125,7 @@ feature {NONE} -- External changes to classes/clusters
 
 feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 
-	set_stone (a_stone: STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Add `a_stone'.
 			--|FIXME: Unicode handling.
 		local

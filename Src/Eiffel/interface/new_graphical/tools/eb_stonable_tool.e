@@ -56,12 +56,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	stone: STONE
+	stone: detachable STONE
 			-- Stone representing Current
 		deferred
 		end
 
-	last_stone: STONE
+	last_stone: detachable STONE
 			-- Last stone set into Current view
 			-- This is used as optimization.
 			-- When a stone is set into current view through `set_stone', we store it here,
@@ -88,12 +88,6 @@ feature -- Status report
 			-- Is `last_stone' processed?
 			-- i.e., has `last_stone' been displayed in formatters of Current tool?
 
-	is_stone_valid (a_stone: STONE): BOOLEAN
-			-- Is `a_stone' valid to set?
-		do
-			Result := True
-		end
-
 feature -- Element change
 
 	force_last_stone
@@ -106,10 +100,8 @@ feature -- Element change
 			last_stone_processed: is_last_stone_processed
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Make `new_stone' the new value of stone.
-		require
-			is_stone_valid: is_stone_valid (new_stone)
 		deferred
 		end
 
@@ -175,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

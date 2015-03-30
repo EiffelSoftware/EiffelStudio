@@ -105,7 +105,9 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 
 	increment_active_processor_count();
 
-	error = eif_pthread_mutex_create (&this->generated_private_queues_mutex);
+		/* Create mutexes to protect the generated_private_queues and the queue_of_queues. */
+	error = eif_pthread_mutex_create (&this->generated_private_queues_mutex); /* TODO: Error handling */
+	error = eif_pthread_mutex_create (&this->queue_of_queues_mutex); /* TODO: Error handling */
 
 		/* Create the CV and mutex for wait condition signalling. */
 	error = eif_pthread_mutex_create (&this->wait_condition_mutex); /* TODO: Error handling */
@@ -128,8 +130,12 @@ processor::~processor()
 	error = eif_pthread_mutex_destroy (this->wait_condition_mutex);
 	this->wait_condition = NULL;
 
+
+		/* Destroy the other mutexes. */
 	error = eif_pthread_mutex_destroy (this->generated_private_queues_mutex);
 	this->generated_private_queues_mutex = NULL;
+	error = eif_pthread_mutex_destroy (this->queue_of_queues_mutex);
+	this->queue_of_queues_mutex = NULL;
 
 	l_count = private_queue_list_t_count (&this->generated_private_queues);
 

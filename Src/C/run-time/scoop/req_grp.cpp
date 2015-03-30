@@ -192,7 +192,8 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 		/* Temporarily lock the queue-of-queue of all suppliers. */
 	for (size_t i = 0; i < l_count; ++i) {
-		rt_request_group_item (self, i)->supplier->qoq_mutex.lock();
+		processor* l_supplier = rt_request_group_item (self, i)->supplier;
+		eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex);
 	}
 
 		/* Add all private queues to the queue-of-queues */
@@ -202,7 +203,8 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 		/* Release the queue-of-queue locks. */
 	for (size_t i = 0; i < l_count; ++i) {
-		rt_request_group_item (self, i)->supplier->qoq_mutex.unlock ();
+		processor* l_supplier = rt_request_group_item (self, i)->supplier;
+		eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex);
 	}
 
 	ENSURE ("sorted", self->is_sorted);

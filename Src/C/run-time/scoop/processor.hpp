@@ -114,6 +114,13 @@ struct notifier : spsc <rt_message> {
 /* Define the struct to be used for the group stack. */
 RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
 
+/* Define the vector to be used for wait condition subscribers. */
+RT_DECLARE_VECTOR (subscriber_list_t, processor*)
+
+/* Define the vector to be used for keeping track of private queues of this processor. */
+/* RT_DECLARE_VECTOR_BASE (private_queue_list_t, priv_queue*); */
+
+
 
 /* The SCOOP logical unit of processing.
  *
@@ -189,9 +196,9 @@ public:
 	 * This is used to implement notifications for wait conditions.
 	 * Note: This feature is executed by the client processor, and can only be called when the supplier
 	 * is synchronized with the client. */
-	void register_wait_condition (processor* client)
+	void register_wait_condition (processor* client) /* TODO: Rename as rt_subscribe_wait_condition */
 	{
-		this->to_be_notified.push_back (client);
+		subscriber_list_t_extend (&this->wait_condition_subscribers, client);
 	}
 
 	/* The mutex and condition variable
@@ -202,7 +209,7 @@ public:
 	EIF_COND_TYPE* wait_condition;
 
 		/* The processors that registered for a wait condition change. */
-	std::vector <processor*> to_be_notified;
+	subscriber_list_t wait_condition_subscribers;
 
 private:
   void notify_next(processor *);
@@ -226,10 +233,13 @@ public:
 	/* Callback from the GC.
 	 * Remove the soon-to-be-collected processor 'dead_processor' from
 	 * our internal queue of processors to be notified when a wait condition changes. */
-	void clear_notification (processor* dead_processor) {
-		for (std::vector<processor*>::iterator i = to_be_notified.begin(); i!=to_be_notified.end(); ++i) {
-			if (*i == dead_processor) {
-				*i = NULL;
+	void clear_notification (processor* dead_processor) { /* TODO: Rename as rt_clear_subscription */
+		size_t l_count = subscriber_list_t_count (&this->wait_condition_subscribers);
+
+		for (size_t i=0; i<l_count; ++i) {
+			processor** l_item = subscriber_list_t_item_pointer (&this->wait_condition_subscribers, i);
+			if (*l_item == dead_processor) {
+				*l_item = NULL;
 			}
 		}
 	}

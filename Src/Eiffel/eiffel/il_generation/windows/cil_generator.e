@@ -144,11 +144,9 @@ feature -- Generation
 					signing_exists: signing.exists
 				end
 
-					-- Sign assembly only if we are allowed to.
-				if {EIFFEL_ENV}.has_signable_generation then
-					if attached System.msil_key_file_name as l_system_msil_key_file_name then
-						l_key_file_name := l_system_msil_key_file_name
-					end
+					-- Sign assembly if a key was provided.
+				if attached System.msil_key_file_name as l_system_msil_key_file_name then
+					l_key_file_name := l_system_msil_key_file_name
 				end
 
 				if l_key_file_name /= Void then
@@ -1162,7 +1160,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

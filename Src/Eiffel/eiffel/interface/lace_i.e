@@ -1285,9 +1285,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_s := l_settings.item (s_shared_library_definition)
-				-- If the release doesn't generate DLL's,
-				-- we do not take the option into account in the Ace.
-			if l_s /= Void and then eiffel_layout.has_dll_generation then
+			if l_s /= Void then
 				l_p := l_factory.new_location_from_full_path (l_s, a_target).evaluated_path
 				if system.dynamic_def_file = Void or else not system.dynamic_def_file.same_as (l_p) or else
 					shared_library_definition_stamp /= file_path_modified_date (l_p)
@@ -1473,7 +1471,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

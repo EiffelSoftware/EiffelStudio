@@ -872,24 +872,18 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
-			if eiffel_layout.has_documentation_generation or eiffel_layout.has_xmi_generation then
-					-- Separator -------------------------------------------------
-				l_project_menu.extend (create {EV_MENU_SEPARATOR})
-			end
+				-- Separator -------------------------------------------------
+			l_project_menu.extend (create {EV_MENU_SEPARATOR})
 
-			if eiffel_layout.has_documentation_generation then
-					-- Generate Documentation
-				l_command_menu_item := develop_window.document_cmd.new_menu_item
-				auto_recycle (l_command_menu_item)
-				l_project_menu.extend (l_command_menu_item)
-			end
+				-- Generate Documentation
+			l_command_menu_item := develop_window.document_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
 
-			if eiffel_layout.has_xmi_generation then
-					-- Export XMI
-				l_command_menu_item := develop_window.export_cmd.new_menu_item
-				auto_recycle (l_command_menu_item)
-				l_project_menu.extend (l_command_menu_item)
-			end
+				-- Export XMI
+			l_command_menu_item := develop_window.export_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
 		end
 
 	build_tools_menu
@@ -924,24 +918,20 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Separator --------------------------------------
 			develop_window.menus.tools_menu.extend (create {EV_MENU_SEPARATOR})
 
-			if eiffel_layout.has_profiler then
-					-- Profiler Window
-				l_command_menu_item := develop_window.commands.show_profiler.new_menu_item
-				auto_recycle (l_command_menu_item)
-				develop_window.menus.tools_menu.extend (l_command_menu_item)
-			end
+				-- Profiler Window
+			l_command_menu_item := develop_window.commands.show_profiler.new_menu_item
+			auto_recycle (l_command_menu_item)
+			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 				-- Precompile Wizard
 			l_command_menu_item := develop_window.wizard_precompile_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
-			if eiffel_layout.has_dll_generation then
-					-- Dynamic Library Window
-				l_command_menu_item := develop_window.show_dynamic_lib_tool.new_menu_item
-				auto_recycle (l_command_menu_item)
-				l_tools_menu.extend (l_command_menu_item)
-			end
+				-- Dynamic Library Window
+			l_command_menu_item := develop_window.show_dynamic_lib_tool.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_tools_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
 			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
@@ -1587,7 +1577,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

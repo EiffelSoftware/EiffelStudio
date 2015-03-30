@@ -290,15 +290,13 @@ feature -- Commands
 							stone := stone.synchronized_stone
 						end
 						set_stone (stone)
-						if eiffel_layout.has_diagram then
-							diagram_tool.synchronize
-						end
+						diagram_tool.synchronize
 					else
 						l_stone := diagram_tool.last_stone
 						if l_stone = Void then
 							l_stone := diagram_tool.stone
 						end
-						if l_stone /= Void and eiffel_layout.has_diagram then
+						if l_stone /= Void then
 							l_stone := l_stone.synchronized_stone
 							diagram_tool.set_stone (l_stone)
 						end
@@ -317,16 +315,11 @@ feature -- Commands
 	refresh
 			-- Class has changed in `development_window'.
 		do
-			if eiffel_layout.has_diagram then
-				 diagram_tool.synchronize
-			end
+			diagram_tool.synchronize
 			class_tool.refresh
 			features_relation_tool.set_refresh_needed
 			dependency_tool.refresh
-			customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL)
-				do
-					a_tool.refresh
-				end)
+			customized_tools.do_all (agent {EB_CUSTOMIZED_TOOL}.refresh)
 		end
 
 	show_default_tool_of_feature
@@ -508,7 +501,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -528,9 +528,6 @@ feature -- EB_TOOL features
 	build_interface
 			-- Build interface
 		do
-			check
-				has_case: (create {EIFFEL_LAYOUT}).eiffel_layout.has_diagram
-			end
 			make_with_tool
 
 			create history_manager.make (Current)
@@ -2503,7 +2500,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

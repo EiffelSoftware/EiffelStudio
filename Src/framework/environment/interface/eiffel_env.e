@@ -1812,29 +1812,6 @@ feature -- Environment update
 			value_updated: attached get_environment_32 (a_var) as v implies v.same_string_general (a_value)
 		end
 
-feature -- Version limitation
-
-	has_diagram: BOOLEAN = True
-			-- Does this version have the diagram tool?
-
-	has_metrics: BOOLEAN = True
-			-- Does this version have the metrics?
-
-	has_profiler: BOOLEAN = True
-			-- Does this version have the profiler?
-
-	has_documentation_generation: BOOLEAN = True
-			-- Does this version have the documentation generation?
-
-	has_xmi_generation: BOOLEAN = True
-			-- Does this version have the XMI generation?
-
-	has_dll_generation: BOOLEAN = True
-			-- Does this version have the DLL generation?
-
-	has_signable_generation: BOOLEAN = True;
-			-- Does this version allow the signing of .NET assemblies
-
 feature {NONE} -- Basic operations
 
 	create_directories
@@ -2215,7 +2192,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

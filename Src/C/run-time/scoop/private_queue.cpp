@@ -173,7 +173,7 @@ rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* clie
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("self_synchronized", self->synced);
-	self->supplier->register_wait_condition (client);
+	rt_processor_subscribe_wait_condition (self->supplier, client);
 	self->synced = false;
 }
 

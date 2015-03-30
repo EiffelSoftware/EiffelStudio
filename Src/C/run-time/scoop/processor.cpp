@@ -262,6 +262,7 @@ void processor::spawn()
 void processor::notify_next(processor *client)
 {
 	bool found = false;
+	int error = T_OK;
 	struct subscriber_list_t* subscribers = &this->wait_condition_subscribers;
 
 	while ( !(0 == subscriber_list_t_count(subscribers))) {
@@ -280,18 +281,21 @@ void processor::notify_next(processor *client)
 			if (item) {
 
 					/* Lock the registered processor's condition variable mutex. */
-				eif_pthread_mutex_lock (item->wait_condition_mutex);
+				eif_pthread_mutex_lock (item->wait_condition_mutex); /* TODO: Error handling */
 
 					/* Send a signal. */
-				eif_pthread_cond_signal (item->wait_condition);
+				eif_pthread_cond_signal (item->wait_condition); /* TODO: Error handling */
 
 					/* Release the lock. */
-				eif_pthread_mutex_unlock (item->wait_condition_mutex);
+				eif_pthread_mutex_unlock (item->wait_condition_mutex); /* TODO: Error handling */
 			}
 		}
 	}
 	if (found) {
-		subscriber_list_t_extend (subscribers, client);
+		error = subscriber_list_t_extend (subscribers, client);
+			/* A possible error can only happen during reallocation. This is impossible here,
+			 * because we only push one item, and only if it was removed previously. */
+		CHECK ("no_error_possible", error == T_OK);
 	}
 }
 
@@ -352,6 +356,55 @@ priv_queue* processor::new_priv_queue()
 
 	private_queue_cache.push_back(l_queue);
 	return private_queue_cache.back();
+}
+
+/*
+doc:	<routine name="rt_processor_subscribe_wait_condition" return_type="void" export="shared">
+doc:		<summary> Register for a notification when the heap protected by processor 'self' may have changed.
+doc:			This is used to implement wait condition change signalling.
+doc:			The registration is only valid for a single notification and will be deleted by 'self' afterwards.
+doc:			Note: This feature is executed by the 'client' processor (i.e. thread), and can only be called when the
+doc:			supplier 'self' is synchronized with the client. </summary>
+doc:		<param name="self" type="processor*"> The processor that will send the notification in the future. Must not be NULL. </param>
+doc:		<param name="client" type="processor*"> The processor interested in wait condition changes. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call when 'self' is synchronized with 'client'. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client)
+{
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("client_not_null", client);
+	REQUIRE ("synchronized", rt_private_queue_is_synchronized (rt_queue_cache_retrieve (&client->cache, self)));
+	subscriber_list_t_extend (&self->wait_condition_subscribers, client);
+}
+
+
+
+/*
+doc:	<routine name="rt_processor_unsubscribe_wait_condition" return_type="void" export="shared">
+doc:		<summary> Remove the soon-to-be-collected processor 'dead_processor' from the internal list of clients
+doc:			registered for a wait condition change. This feature can only be executed by the garbage collector. </summary>
+doc:		<param name="self" type="processor*"> The processor that owns the registration list. Must not be NULL. </param>
+doc:		<param name="dead_processor" type="processor*"> The processor to be unsubscribed (which may be deleted soon). </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during garbage collection. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_unsubscribe_wait_condition (processor* self, processor* dead_processor)
+{
+	size_t l_count = 0;
+	REQUIRE ("self_not_null", self);
+
+	l_count =  subscriber_list_t_count (&self->wait_condition_subscribers);
+
+	for (size_t i=0; i<l_count; ++i) {
+		processor** l_item = subscriber_list_t_item_pointer (&self->wait_condition_subscribers, i);
+
+		if (*l_item == dead_processor) {
+			*l_item = NULL;
+		}
+	}
 }
 
 /*

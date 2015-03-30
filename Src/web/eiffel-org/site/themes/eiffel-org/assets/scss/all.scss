@@ -765,6 +765,51 @@
 		}
 	}
 
+
+	.rss-block {
+		overflow: hidden;
+		padding: 8px 0 0 40px;
+		margin: 0 0 -46px;
+		ul{
+			@extend %listreset;
+			margin: 0 0 0 -70px;
+			li{
+				width: 482px;
+				float: left;
+				margin: 0 0 54px 33px;
+				/*a{
+					background: #e9eced;
+					display: block;
+					text-align: center;
+					padding: 24px 20px 11px;
+					@include border-radius(7px);
+					&:hover{
+						background: #e3e7e8;
+					}
+				}*/
+				.ico{
+					width: 52px;
+					height: 52px;
+					padding: 10px;
+					display: inline-block;
+					vertical-align: top;
+					background: #1e3b4b;
+					margin: 0 0 30px;
+					@include border-radius(100%);
+				}
+				h2{
+					color: $green-light;
+					margin: 0 0 11px;
+					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+				}
+				p{
+					color: #0C0D0D;
+				}
+			}
+		}
+		
+	}
+
 	.about-block, .promo-block {
 		ul li {
 			height: 320px;

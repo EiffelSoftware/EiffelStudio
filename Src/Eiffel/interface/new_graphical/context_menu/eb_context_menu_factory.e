@@ -1785,10 +1785,7 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 			l_stone ?= a_pebble
 			if l_stone /= Void then
 				a_menu.extend (new_menu_item (names.m_synchronize_in_tools))
-				a_menu.last.select_actions.extend (agent (a_stone: STONE)
-					do
-						dev_window.tools.launch_stone (a_stone)
-					end (l_stone))
+				a_menu.last.select_actions.extend (agent (dev_window.tools).launch_stone (l_stone))
 			end
 		end
 
@@ -2131,7 +2128,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

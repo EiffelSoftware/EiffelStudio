@@ -235,18 +235,16 @@ feature -- Command
 			create l_c_finalized_compilation_cmd.make_finalized (develop_window)
 			auto_recycle (l_c_finalized_compilation_cmd)
 			l_dev_commands.set_c_finalized_compilation_cmd (l_c_finalized_compilation_cmd)
-			if eiffel_layout.has_dll_generation then
-				create l_show_dynamic_lib_tool.make
-				auto_recycle (l_show_dynamic_lib_tool)
-				develop_window.set_show_dynamic_lib_tool (l_show_dynamic_lib_tool)
-				develop_window.show_dynamic_lib_tool.set_menu_name (develop_window.Interface_names.m_new_dynamic_lib)
-				develop_window.show_dynamic_lib_tool.add_agent (agent develop_window.show_dynamic_library_dialog)
-			end
-			if eiffel_layout.has_profiler then
-				create l_show_profiler
-				auto_recycle (l_show_profiler)
-				l_dev_commands.set_show_profiler (l_show_profiler)
-			end
+
+			create l_show_dynamic_lib_tool.make
+			auto_recycle (l_show_dynamic_lib_tool)
+			develop_window.set_show_dynamic_lib_tool (l_show_dynamic_lib_tool)
+			develop_window.show_dynamic_lib_tool.set_menu_name (develop_window.Interface_names.m_new_dynamic_lib)
+			develop_window.show_dynamic_lib_tool.add_agent (agent develop_window.show_dynamic_library_dialog)
+
+			create l_show_profiler
+			auto_recycle (l_show_profiler)
+			l_dev_commands.set_show_profiler (l_show_profiler)
 
 				-- Undo/redo, cut, copy, paste.
 			create l_undo_cmd.make (develop_window)
@@ -1012,16 +1010,11 @@ feature{NONE} -- Implementation
 			l_shortcut := develop_window.preferences.misc_shortcut_data.undo_shortcut
 			create l_undo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			develop_window.set_undo_accelerator (l_undo_accelerator)
-
-			if eiffel_layout.has_diagram then
-				l_undo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.undo_cmd).on_ctrl_z)
-			end
+			l_undo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.undo_cmd).on_ctrl_z)
 
 			l_shortcut := develop_window.preferences.misc_shortcut_data.redo_shortcut
 			create l_redo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
-			if eiffel_layout.has_diagram then
-				l_redo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.redo_cmd).on_ctrl_y)
-			end
+			l_redo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.redo_cmd).on_ctrl_y)
 			develop_window.window.accelerators.extend (l_undo_accelerator)
 			develop_window.window.accelerators.extend (l_redo_accelerator)
 		end
@@ -1110,7 +1103,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

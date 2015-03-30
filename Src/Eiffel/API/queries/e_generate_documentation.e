@@ -105,7 +105,7 @@ feature -- Execution
 			doc: DOCUMENTATION
 			retried, l_dir_created: BOOLEAN
 		do
-			if eiffel_layout.has_documentation_generation and not retried then
+			if not retried then
 				create doc.make
 				doc.set_filter (filter_name)
 
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

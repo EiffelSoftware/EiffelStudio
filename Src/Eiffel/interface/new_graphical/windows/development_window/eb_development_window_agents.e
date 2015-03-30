@@ -259,12 +259,8 @@ feature -- Agents
 			enable_commands_on_project_created
 
 			develop_window.address_manager.on_project_created
-			if eiffel_layout.has_dll_generation then
-				develop_window.show_dynamic_lib_tool.enable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				develop_window.commands.show_profiler.enable_sensitive
-			end
+			develop_window.show_dynamic_lib_tool.enable_sensitive
+			develop_window.commands.show_profiler.enable_sensitive
 			develop_window.commands.customized_formatter_command.enable_sensitive
 --			develop_window.commands.customized_tool_command.enable_sensitive
 		end
@@ -289,12 +285,8 @@ feature -- Agents
 			create l_builder.make (develop_window)
 			l_builder.build_menu_bar
 
-			if eiffel_layout.has_dll_generation then
-				develop_window.show_dynamic_lib_tool.disable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				develop_window.commands.show_profiler.disable_sensitive
-			end
+			develop_window.show_dynamic_lib_tool.disable_sensitive
+			develop_window.commands.show_profiler.disable_sensitive
 			develop_window.commands.customized_formatter_command.enable_sensitive
 --			develop_window.commands.customized_tool_command.enable_sensitive
 		end
@@ -398,12 +390,8 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_loaded
 			-- Enable commands when a new project has been created and compiled
 		do
-			if eiffel_layout.has_profiler then
-				develop_window.commands.show_profiler.enable_sensitive
-			end
-			if eiffel_layout.has_dll_generation then
-				develop_window.show_dynamic_lib_tool.enable_sensitive
-			end
+			develop_window.commands.show_profiler.enable_sensitive
+			develop_window.show_dynamic_lib_tool.enable_sensitive
 			develop_window.system_information_cmd.enable_sensitive
 			if develop_window.unified_stone then
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
@@ -420,12 +408,8 @@ feature {NONE} -- Implementation
 	disable_commands_on_project_unloaded
 			-- Enable commands when a project has been closed.
 		do
-			if eiffel_layout.has_dll_generation then
-				develop_window.show_dynamic_lib_tool.disable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				develop_window.commands.show_profiler.disable_sensitive
-			end
+			develop_window.show_dynamic_lib_tool.disable_sensitive
+			develop_window.commands.show_profiler.disable_sensitive
 			develop_window.commands.new_class_cmd.disable_sensitive
 			develop_window.commands.new_library_cmd.disable_sensitive
 			develop_window.commands.new_assembly_cmd.disable_sensitive
@@ -451,7 +435,7 @@ invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

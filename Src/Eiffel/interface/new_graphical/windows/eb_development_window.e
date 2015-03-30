@@ -613,21 +613,19 @@ feature -- Update
 --			end
 --			tools.class_tool.invalidate
 --			tools.features_relation_tool.invalidate
-			if eiffel_layout.has_diagram then
-					-- Target diagram stone to root class or cluster if no stone is set.
-				if
-					tools.diagram_tool.last_stone = Void and then
-					l_system /= Void and then
-					eiffel_project.initialized and then
-					eiffel_system.workbench.is_already_compiled and then
-					not l_system.root_creators.is_empty
-				then
-					l_root := l_system.root_creators.first
-					if l_root.root_class /= Void and then l_root.root_class.compiled_class /= Void then
-						tools.diagram_tool.set_stone (create {CLASSC_STONE}.make (l_root.root_class.compiled_class))
-					else
-						tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
-					end
+				-- Target diagram stone to root class or cluster if no stone is set.
+			if
+				tools.diagram_tool.last_stone = Void and then
+				l_system /= Void and then
+				eiffel_project.initialized and then
+				eiffel_system.workbench.is_already_compiled and then
+				not l_system.root_creators.is_empty
+			then
+				l_root := l_system.root_creators.first
+				if l_root.root_class /= Void and then l_root.root_class.compiled_class /= Void then
+					tools.diagram_tool.set_stone (create {CLASSC_STONE}.make (l_root.root_class.compiled_class))
+				else
+					tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
 				end
 			end
 
@@ -2565,7 +2563,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

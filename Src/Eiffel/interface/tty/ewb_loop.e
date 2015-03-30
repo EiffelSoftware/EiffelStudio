@@ -49,47 +49,24 @@ feature -- Initialization
 		local
 			i: INTEGER
 		once
-			i := 2
-			if eiffel_layout.Has_profiler then
-				i := i + 1
-			end
-			if eiffel_layout.Has_documentation_generation then
-				i := i + 3
-			end
+			i := 6
 			if {EWB_TESTING}.is_available then
 				i := i + 1
 			end
 			create Result.make (1, i)
 			Result.set_is_main
 
-			if eiffel_layout.Has_documentation_generation then
-				Result.add_entry (
-					create {EWB_STRING}.make (class_cmd_name, class_help, class_abb, class_menu))
-			end
-
-			Result.add_entry (
-				create {EWB_STRING}.make (compile_cmd_name, compile_help, compile_abb, compile_menu))
-
-			if eiffel_layout.Has_documentation_generation then
-				Result.add_entry (
-					create {EWB_STRING}.make (feature_cmd_name, feature_help, feature_abb, feature_menu))
-			end
-
+			Result.add_entry (create {EWB_STRING}.make (class_cmd_name, class_help, class_abb, class_menu))
+			Result.add_entry (create {EWB_STRING}.make (compile_cmd_name, compile_help, compile_abb, compile_menu))
+			Result.add_entry (create {EWB_STRING}.make (feature_cmd_name, feature_help, feature_abb, feature_menu))
 			Result.add_entry (create {EWB_STRING}.make (system_cmd_name, system_help, system_abb, system_menu))
 
 			if {EWB_TESTING}.is_available then
 				Result.add_entry (create {EWB_TESTING}.make)
 			end
 
-			if eiffel_layout.has_profiler then
-				Result.add_entry (
-					create {EWB_STRING}.make (profile_cmd_name, profile_help, profile_abb, profile_menu))
-			end
-			if eiffel_layout.has_documentation_generation then
-				Result.add_entry (
-					create {EWB_STRING}.make (documentation_cmd_name, documentation_help,
-						documentation_abb, documentation_menu))
-			end
+			Result.add_entry (create {EWB_STRING}.make (profile_cmd_name, profile_help, profile_abb, profile_menu))
+			Result.add_entry (create {EWB_STRING}.make (documentation_cmd_name, documentation_help, documentation_abb, documentation_menu))
 		ensure
 			main_menu_not_void: Result /= Void
 		end
@@ -210,34 +187,16 @@ feature -- Initialization
 
 	menu_commands: ARRAY [EWB_MENU]
 			-- Menu commands
-		local
-			i: INTEGER
 		once
-			i := 5
-			if eiffel_layout.Has_profiler then
-				i := i + 2
-			end
-			if eiffel_layout.Has_documentation_generation then
-				i := i + 1
-			end
-			create Result.make (1, i)
+			create Result.make (1, 8)
 			Result.put (main_menu, 1)
 			Result.put (system_menu, 2)
 			Result.put (class_menu, 3)
 			Result.put (feature_menu, 4)
 			Result.put (compile_menu, 5)
-			i := 6
-			if eiffel_layout.Has_profiler then
-				Result.put (profile_menu, i)
-				i := i + 1
-			end
-			if eiffel_layout.Has_documentation_generation then
-				Result.put (documentation_menu, i)
-				i := i + 1
-			end
-			if eiffel_layout.Has_profiler then
-				Result.put (switches_menu, i)
-			end
+			Result.put (profile_menu, 6)
+			Result.put (documentation_menu, 7)
+			Result.put (switches_menu, 8)
 		ensure
 			menu_commands_not_void: menu_commands /= Void
 		end
@@ -494,7 +453,7 @@ feature -- Command loop
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

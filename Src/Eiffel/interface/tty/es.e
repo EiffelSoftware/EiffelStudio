@@ -467,23 +467,21 @@ feature -- Output
 			io.put_string ("-batch | -clean | -verbose | -use_settings |%N%T")
 			io.put_string ("-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
-			if eiffel_layout.Has_documentation_generation then
-				io.put_string ("-clients [-filter filtername] class |%N%
-					%%T-suppliers [-filter filtername] class |%N%
-					%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
-					%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
-					%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
-					%%T-pretty input_filename [output_filename] |%N%
-					%%T-filter filtername [-all | class] |%N%
-					%%T-descendants [-filter filtername] class |%N")
-				io.put_string ("%
-					%%T-ancestors [-filter filtername] class |%N%
-					%%T-aversions [-filter filtername] class feature |%N%
-					%%T-dversions [-filter filtername] class feature |%N%
-					%%T-implementers [-filter filtername] class feature |%N%
-					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%
-					%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
-			end
+			io.put_string ("-clients [-filter filtername] class |%N%
+				%%T-suppliers [-filter filtername] class |%N%
+				%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
+				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
+				%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
+				%%T-pretty input_filename [output_filename] |%N%
+				%%T-filter filtername [-all | class] |%N%
+				%%T-descendants [-filter filtername] class |%N")
+			io.put_string ("%
+				%%T-ancestors [-filter filtername] class |%N%
+				%%T-aversions [-filter filtername] class feature |%N%
+				%%T-dversions [-filter filtername] class feature |%N%
+				%%T-implementers [-filter filtername] class feature |%N%
+				%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%
+				%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
 			io.put_string ("%
 				%%T[[-config config.ecf] [-target target] |%N%
 				%%T%T-ace Ace (obsolete) | -project Project_file_name (obsolete)] |%N%
@@ -704,7 +702,6 @@ feature -- Update
 				end
 
 			elseif
-				eiffel_layout.has_documentation_generation and then
 				(option.same_string_general ("-dversions") or option.same_string_general ("-aversions") or
 				option.same_string_general ("-implementers"))
 			then
@@ -747,7 +744,7 @@ feature -- Update
 					option_error_message := locale.formatted_string ("Missing class and feature name for option $1.", option)
 				end
 
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-callers") then
+			elseif option.same_string_general ("-callers") then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				elseif current_option < argument_count then
@@ -818,7 +815,7 @@ feature -- Update
 					option_error_message := locale.translation ("Missing class and feature name for option -callers")
 				end
 
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-callees") then
+			elseif option.same_string_general ("-callees") then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				elseif current_option < argument_count then
@@ -906,7 +903,6 @@ feature -- Update
 				is_finish_freezing_called := True
 
 			elseif
-				eiffel_layout.has_documentation_generation and then
 				(option.same_string_general ("-flat") or option.same_string_general ("-short") or
 				option.same_string_general ("-flatshort"))
 			then
@@ -962,7 +958,7 @@ feature -- Update
 					option_error_message := locale.formatted_string ("Missing class name, -all or -all_and_parents for option $1.", [option])
 				end
 
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-pretty") then
+			elseif option.same_string_general ("-pretty") then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
@@ -991,7 +987,7 @@ feature -- Update
 					end
 				end
 
-			elseif eiffel_layout.has_documentation_generation and then option.same_string_general ("-filter") then
+			elseif option.same_string_general ("-filter") then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				elseif current_option < argument_count then
@@ -1013,7 +1009,6 @@ feature -- Update
 					option_error_message := locale.translation ("Missing filter name for option -filter.")
 				end
 			elseif
-				eiffel_layout.has_documentation_generation and then
 				(option.same_string_general ("-ancestors") or option.same_string_general ("-clients") or
 				option.same_string_general ("-suppliers") or option.same_string_general ("-descendants"))
 			then
@@ -1436,7 +1431,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

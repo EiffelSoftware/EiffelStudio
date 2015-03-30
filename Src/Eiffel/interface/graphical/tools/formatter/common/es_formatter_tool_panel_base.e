@@ -295,7 +295,7 @@ feature -- Setting
 			-- Force that `last_stone' is displayed in formatters in Current view
 		do
 			if not is_last_stone_processed then
-				do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_stone (stone) end)
+				do_all_in_list (formatters, agent {EB_FORMATTER}.set_stone (stone))
 				history_manager.extend (stone)
 				Precursor
 			end
@@ -964,7 +964,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

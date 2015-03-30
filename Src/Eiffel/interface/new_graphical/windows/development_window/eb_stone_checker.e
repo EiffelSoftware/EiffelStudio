@@ -145,9 +145,6 @@ feature {NONE} -- Implementation functions
 		local
 			s: STRING_32
 		do
-				-- Remember previous stone.
-			old_stone := develop_window.stone
-
 			develop_window.tools.properties_tool.set_stone (a_target_stone)
 
 				-- Update the title of the window
@@ -172,9 +169,6 @@ feature {NONE} -- Implementation functions
 			l_stonable: ES_STONABLE_I
 			s: STRING_32
 		do
-				-- Remember previous stone.
-			old_stone := develop_window.stone
-
 			develop_window.commands.new_feature_cmd.disable_sensitive
 
 				-- We update the state of the `Add to Favorites' command.
@@ -1027,9 +1021,6 @@ feature {NONE} -- Implementation attributes
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 			-- Development window associate with current.
-
-	old_stone: STONE
-			-- Old stone.
 
 	new_class_stone: CLASSI_STONE
 			-- New class stone.

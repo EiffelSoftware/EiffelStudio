@@ -52,16 +52,25 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 
 atomic_int_type active_count = atomic_var_init;
 
-/* We need the size() and all the stack functions. */
+/* Declare the necessary features for the request group stack. We only need the size() and the stack functions. */
 RT_DECLARE_VECTOR_SIZE_FUNCTIONS (request_group_stack_t, struct rt_request_group)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (request_group_stack_t, struct rt_request_group)
 
+/* Declare the necessary features for the subscriber list. */
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (subscriber_list_t, processor*)
+RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (subscriber_list_t, processor*)
+RT_DECLARE_VECTOR_STACK_FUNCTIONS (subscriber_list_t, processor*)
+
+/* Declare necessary features for the private queue list. */
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (private_queue_list_t, priv_queue*)
+RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, priv_queue*)
+RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, priv_queue*)
+
+
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
-// 	to_be_notified(),
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
-	private_queue_cache(),
 	cache_mutex(),
 	is_dirty (false),
 	parent_obj (make_shared_function <void *> ((void *) 0))
@@ -75,6 +84,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	rt_message_channel_init (&this->startup_notify, 64);
 	request_group_stack_t_init (&this->request_group_stack);
 	subscriber_list_t_init (&this->wait_condition_subscribers);
+	private_queue_list_t_init (&this->generated_private_queues);
 	active_count++;
 
 		/* Create the CV and mutex for wait condition signalling. */
@@ -84,6 +94,8 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 
 processor::~processor()
 {
+	size_t l_count = 0;
+
 		/* Destroy the mutex and condition variable.
 		 * This is safe: No other thread can hold the lock on the mutex,
 		 * because during garbage collection all references in the
@@ -95,14 +107,16 @@ processor::~processor()
 	eif_pthread_mutex_destroy (this->wait_condition_mutex);
 	this->wait_condition = NULL;
 
-	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
+	l_count = private_queue_list_t_count (&this->generated_private_queues);
 
-		priv_queue* l_queue = *pq;
+	for (size_t i = 0; i < l_count; ++i) {
+		priv_queue* l_queue = private_queue_list_t_item (&this->generated_private_queues, i);
 		rt_private_queue_deinit (l_queue);
 		free (l_queue);
 	}
  	rt_message_channel_deinit (&this->startup_notify);
 	rt_message_channel_deinit (&this->result_notify);
+	private_queue_list_t_deinit (&this->generated_private_queues);
 	subscriber_list_t_deinit (&this->wait_condition_subscribers);
 	request_group_stack_t_deinit (&this->request_group_stack);
 	rt_queue_cache_deinit (&this->cache);
@@ -337,12 +351,17 @@ void processor::shutdown()
 
 void processor::mark(MARKER marking)
 {
+	size_t l_count = 0;
+
 	if (current_msg.call) {
 		rt_mark_call_data (marking, current_msg.call);
 	}
 
-	for (std::vector<priv_queue*>::iterator pq = private_queue_cache.begin (); pq != private_queue_cache.end (); ++ pq) {
-		rt_private_queue_mark (*pq, marking);
+	l_count = private_queue_list_t_count (&this->generated_private_queues);
+
+	for (size_t i = 0; i < l_count; ++i) {
+		priv_queue* l_queue = private_queue_list_t_item (&this->generated_private_queues, i);
+		rt_private_queue_mark (l_queue, marking);
 	}
 }
 
@@ -351,11 +370,12 @@ priv_queue* processor::new_priv_queue()
 {
 	unique_lock_type lk (cache_mutex);
 
-	priv_queue* l_queue = (priv_queue*) malloc (sizeof (priv_queue));
+	int error = T_OK;
+	priv_queue* l_queue = (priv_queue*) malloc (sizeof (priv_queue)); /* TODO: Error handling */
 	rt_private_queue_init (l_queue, this);
 
-	private_queue_cache.push_back(l_queue);
-	return private_queue_cache.back();
+	error = private_queue_list_t_extend (&this->generated_private_queues, l_queue); /* TODO: Error handling */
+	return l_queue;
 }
 
 /*

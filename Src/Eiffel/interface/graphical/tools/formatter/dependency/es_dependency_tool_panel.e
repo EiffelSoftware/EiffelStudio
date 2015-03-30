@@ -77,7 +77,7 @@ feature -- Status setting
 			Precursor {ES_FORMATTER_TOOL_PANEL_BASE}
 		end
 
-	set_stone (new_stone: STONE)
+	set_stone (new_stone: detachable STONE)
 			-- Send a stone to formatters.
 		local
 			cst: CLASSC_STONE

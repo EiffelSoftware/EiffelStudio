@@ -71,7 +71,6 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
-	cache_mutex(),
 	is_dirty (false),
 	parent_obj (make_shared_function <void *> ((void *) 0))
 {
@@ -87,6 +86,8 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	private_queue_list_t_init (&this->generated_private_queues);
 	active_count++;
 
+	error = eif_pthread_mutex_create (&this->generated_private_queues_mutex);
+
 		/* Create the CV and mutex for wait condition signalling. */
 	error = eif_pthread_mutex_create (&this->wait_condition_mutex); /* TODO: Error handling */
 	error = eif_pthread_cond_create (&this->wait_condition); /* TODO: Error handling */
@@ -94,6 +95,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 
 processor::~processor()
 {
+	int error = T_OK;
 	size_t l_count = 0;
 
 		/* Destroy the mutex and condition variable.
@@ -102,10 +104,13 @@ processor::~processor()
 		 * 'wait_condition_subscribers' vector of other processors have been removed,
 		 * and the GC cannot run while other processors may hold a lock
 		 * during 'notify_next'. */
-	eif_pthread_cond_destroy (this->wait_condition);
+	error = eif_pthread_cond_destroy (this->wait_condition);
 	this->wait_condition = NULL;
-	eif_pthread_mutex_destroy (this->wait_condition_mutex);
+	error = eif_pthread_mutex_destroy (this->wait_condition_mutex);
 	this->wait_condition = NULL;
+
+	error = eif_pthread_mutex_destroy (this->generated_private_queues_mutex);
+	this->generated_private_queues_mutex = NULL;
 
 	l_count = private_queue_list_t_count (&this->generated_private_queues);
 
@@ -368,13 +373,16 @@ void processor::mark(MARKER marking)
 
 priv_queue* processor::new_priv_queue()
 {
-	unique_lock_type lk (cache_mutex);
-
 	int error = T_OK;
+
 	priv_queue* l_queue = (priv_queue*) malloc (sizeof (priv_queue)); /* TODO: Error handling */
 	rt_private_queue_init (l_queue, this);
 
-	error = private_queue_list_t_extend (&this->generated_private_queues, l_queue); /* TODO: Error handling */
+		/* TODO: Error handling */
+	error = eif_pthread_mutex_lock (this->generated_private_queues_mutex);
+	error = private_queue_list_t_extend (&this->generated_private_queues, l_queue);
+	error = eif_pthread_mutex_unlock (this->generated_private_queues_mutex);
+
 	return l_queue;
 }
 

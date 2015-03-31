@@ -173,9 +173,6 @@ feature -- Status report
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
 
-	is_stone_external: BOOLEAN
-			-- Does current stone repreasent a .NET class?
-
 feature -- Setting
 
 	pop_default_formatter

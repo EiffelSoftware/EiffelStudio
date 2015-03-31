@@ -107,50 +107,37 @@ feature {ES_CLASS_TOOL} -- Element change
 
 feature -- Status setting
 
-	set_stone (new_stone: detachable STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Send a stone to class formatters.
 		local
-			fst: FEATURE_STONE
-			cst: CLASSC_STONE
-			ist: CLASSI_STONE
-			type_changed: BOOLEAN
+			l_class_c_stone: CLASSC_STONE
+			l_is_external_class: BOOLEAN
 		do
-			fst ?= new_stone
-			if fst /= Void then
+			if attached {FEATURE_STONE} a_stone as fst then
 				check
 					feature_not_void: fst.e_feature /= Void
 					class_not_void: fst.e_feature.associated_class /= Void
 				end
-				create cst.make (fst.e_feature.associated_class)
-			else
-				cst ?= new_stone
-				ist ?= new_stone
+				create l_class_c_stone.make (fst.e_feature.associated_class)
+				l_is_external_class := l_class_c_stone.e_class.is_true_external
+			elseif attached {CLASSI_STONE} a_stone as ist then
+				if attached {CLASSC_STONE} a_stone as cst then
+					l_class_c_stone := cst
+					l_is_external_class := l_class_c_stone.e_class.is_true_external
+				else
+					l_is_external_class := ist.class_i.is_external_class
+				end
 			end
-			if cst /= Void then
-				type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-					(not cst.e_class.is_true_external and is_stone_external)
-			elseif ist /= Void then
-				type_changed := (ist.class_i.is_external_class and not is_stone_external) or
-					(not ist.class_i.is_external_class and is_stone_external)
-			end
-
-			if type_changed then
-				-- Toggle stone flag.
-            	is_stone_external := not is_stone_external
-            end
 
             	-- Update formatters.
-            if is_stone_external and cst /= Void then
-				enable_dotnet_formatters (True)
-			else
-				enable_dotnet_formatters (False)
+			enable_dotnet_formatters (l_is_external_class)
+
+			if l_class_c_stone /= Void then
+				update_viewpoints (l_class_c_stone.e_class)
 			end
-			if cst /= Void then
-				update_viewpoints (cst.e_class)
-			end
-			if cst = Void or else stone = Void or else not stone.same_as (cst) then
+			if l_class_c_stone = Void or else stone = Void or else not stone.same_as (l_class_c_stone) then
 					-- Set the stones.
-				set_last_stone (cst)
+				set_last_stone (l_class_c_stone)
 				develop_window.tools.set_last_stone (stone)
 			end
 

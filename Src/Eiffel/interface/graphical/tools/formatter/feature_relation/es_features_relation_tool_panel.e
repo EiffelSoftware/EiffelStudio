@@ -152,30 +152,17 @@ feature {ES_FEATURE_RELATION_TOOL} -- Element change
 
 feature -- Status setting
 
-	set_stone (new_stone: detachable STONE)
+	set_stone (a_stone: detachable STONE)
 			-- Send a stone to feature formatters.
 		local
-			l_last_stone, fst: FEATURE_STONE
-			type_changed: BOOLEAN
+			l_last_stone: FEATURE_STONE
 			l_feature_comparer: E_FEATURE_COMPARER
 		do
-			fst ?= new_stone
 				-- Avoid class stone from extending to the history.
-			if fst /= Void then
-				type_changed := (fst.e_class.is_true_external and not is_stone_external) or
-					(not fst.e_class.is_true_external and is_stone_external)
-
-					-- Toggle stone flag.
-				if type_changed then
-					is_stone_external := not is_stone_external
-				end
-
+			if attached {FEATURE_STONE} a_stone as fst then
 					-- Update formatters.
-	            if is_stone_external then
-					enable_dotnet_formatters (True)
-				else
-					enable_dotnet_formatters (False)
-				end
+				enable_dotnet_formatters (fst.e_class.is_true_external)
+
 				update_viewpoints (fst.e_class)
 				create l_feature_comparer
 				l_last_stone ?= stone
@@ -195,7 +182,7 @@ feature -- Status setting
 					end
 				end
 			else
-				if new_stone = Void or else (not new_stone.is_valid) then
+				if a_stone = Void or else (not a_stone.is_valid) then
 					do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.reset_display end)
 				end
 			end

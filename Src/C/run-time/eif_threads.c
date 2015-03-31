@@ -525,12 +525,14 @@ doc:	<routine name="eif_thr_root_object" return_type="EIF_REFERENCE" export="pub
 doc:		<summary>Return the root object associated with the Current thread. It can be Void in case the thread was not started by the Eiffel runtime.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None required</synchronization>
+doc:		<fixme>This feature is obsolete and may be removed one day. It is not safe for use in a SCOOP enabled project. </fixme>
 doc:	</routine>
 */
 rt_public EIF_REFERENCE eif_thr_root_object(void)
 {
 	RT_GET_CONTEXT
 	if (rt_globals && !(eif_thr_context->is_root)) {
+			/* Note: eif_thr_context->current may be NULL in a SCOOP environment. */
 		return eif_access(eif_thr_context->current);
 	} else {
 		return root_obj;
@@ -799,7 +801,13 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 		eif_thr_panic("No more memory to launch new thread\n");
 	} else {
 		memset(routine_ctxt, 0, sizeof(rt_thr_context));
-		routine_ctxt->current = eif_adopt (thr_root_obj);
+
+		if (thr_root_obj) {
+			routine_ctxt->current = eif_adopt (thr_root_obj);
+		} else {
+			routine_ctxt->current = NULL;
+		}
+
 		routine_ctxt->routine = init_func;
 		routine_ctxt->thread_id = (EIF_THR_TYPE) 0;
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
@@ -881,7 +889,7 @@ rt_private void eif_thr_entry (void *arg)
 
 		eif_thr_context = routine_ctxt;
 
-		if (eif_thr_context->logical_id >= 0) {
+		if (eif_thr_context->is_processor) {
 			global_ctxs[eif_thr_context->logical_id] = rt_globals;
 		}
 
@@ -912,10 +920,11 @@ rt_private void eif_thr_entry (void *arg)
 		}
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
-		if (eif_thr_context->logical_id != (EIF_SCP_PID) -1) {
-				// A logical ID has been set so pass to Eiffel thread init callback.
-			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_INTEGER_32)) eif_thr_context->routine)(eif_access(routine_ctxt->current), eif_thr_context->logical_id);
+		if (eif_thr_context->is_processor) {
+				/* New SCOOP threads have a special entry point defined in the SCOOP runtime. */
+			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_INTEGER_32)) eif_thr_context->routine) (NULL, eif_thr_context->logical_id);
 		} else {
+			CHECK ("has_root_object", routine_ctxt->current);
 			(FUNCTION_CAST(void,(EIF_REFERENCE)) eif_thr_context->routine)(eif_access(routine_ctxt->current));
 		}
 
@@ -1350,7 +1359,7 @@ doc:	</routine>
 
 rt_shared int eif_is_synchronized (void)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < rt_globals_list.count; i ++) {
 		if (((rt_global_context_t *) (rt_globals_list.threads.data [i]))->gc_thread_status_cx == EIF_THREAD_RUNNING) {

@@ -91,8 +91,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	has_client (true),
 	has_backing_thread (_has_backing_thread),
 	pid(_pid),
-	is_dirty (false),
-	parent_obj (make_shared_function <void *> ((void *) 0))
+	is_dirty (false)
 {
 	int error = T_OK;
 
@@ -277,11 +276,12 @@ void processor::process_priv_queue(priv_queue *pq)
 	}
 }
 
-
-void spawn_main(char* data, EIF_SCP_PID pid)
+/* The entry point for new SCOOP processors after the runtime has set up the context.
+ * Note: The feature has an unused EIF_REFERENCE as its first argument. This is necessary
+ * because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. */
+void spawn_main(EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
 	processor *proc = registry [pid];
-	(void)data;
 
 		/* Record that the current thread is associated with a processor of a given ID. */
 	eif_set_processor_id (pid);
@@ -297,9 +297,9 @@ void spawn_main(char* data, EIF_SCP_PID pid)
 
 void processor::spawn()
 {
-	eif_thr_create_with_attr_new ((char**)parent_obj.get(), /* No root object, if this is only */
-															/* passed to spawn_main this is OK */
-		(void (*)(char* data, ...)) spawn_main,
+	eif_thr_create_with_attr_new (
+		NULL,	/* No root object, if this is only passed to spawn_main this is OK */
+		(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
 		pid, /* Logical PID */
 		EIF_TRUE, /* We are a processor */
 		NULL); /* There are no attributes */

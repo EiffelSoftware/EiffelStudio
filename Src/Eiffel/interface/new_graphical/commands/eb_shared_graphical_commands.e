@@ -20,14 +20,7 @@ feature -- Commands
 	New_development_window_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND
 			-- Command to create a new development window.
 		once
-			create Result.make_with_style (0)
-			Result.enable_sensitive
-		end
-
-	New_editor_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND
-			-- Command used to create a new window where the editor is maximized.
-		once
-			create Result.make_with_style (1)
+			create Result.make
 			Result.enable_sensitive
 		end
 
@@ -157,7 +150,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -90,35 +90,6 @@ feature -- Command
 			end
 		end
 
-	construct_as_context_tool
-			-- Create a new development window and expand the context tool.
-		do
-			construct
-				-- Perform window setting from `show_actions', as the
-				-- resizing executed as a result only works correctly
-				-- while the window is displayed.
-			develop_window.window.show_actions.extend (agent set_context_mode)
-		end
-
-	set_context_mode
-			-- Set `current' into context mode, that is the context tool
-			-- maximized, and the non editor panel is hidden.
-		do
-			if not develop_window.is_unified_stone then
-				develop_window.commands.toggle_stone_cmd.execute
-			end
-		end
-
-	construct_as_editor
-			-- Create a new development window and expand the editor tool.
-		do
-			construct
-
-			-- Following comments are from non-docking Eiffel Studio.
-			-- Perform window setting from `show_actions', as the resizing executed
-			-- must be performed after `current' is displayed.
-		end
-
 	construct_with_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Recreate a previously existing development window using `a_session_data'.
 		local

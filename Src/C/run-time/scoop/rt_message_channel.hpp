@@ -123,7 +123,7 @@ it is destroyed completely.
 
 
 /* Declarations */
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call);
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call, priv_queue* queue);
 rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message);
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking);
 rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin);

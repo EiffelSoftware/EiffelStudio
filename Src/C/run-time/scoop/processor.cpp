@@ -40,15 +40,17 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 */
 
 #include "rt_msc_ver_mismatch.h"
-#include "eif_utils.hpp"
-#include "processor_registry.hpp"
 #include "internal.hpp"
-#include "private_queue.hpp"
+
 #include "processor.hpp"
+#include "processor_registry.hpp"
+
+#include "eif_atomops.h"
 #include "eif_posix_threads.h"
 #include "eif_threads.h"
 #include <stdarg.h>
 #include "rt_except.h"
+
 
 
 /* The number of active processors.

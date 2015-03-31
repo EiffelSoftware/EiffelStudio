@@ -38,78 +38,13 @@
 #ifndef _PROCESSOR_H
 #define _PROCESSOR_H
 #include <memory>
-#include <vector>
-#include <queue>
 #include "qoq.hpp"
-#include "eif_utils.hpp"
+
 #include "private_queue.hpp"
 #include "req_grp.hpp"
-#include "spsc.hpp"
-#include "notify_token.hpp"
 #include "queue_cache.hpp"
 
 #include "rt_vector.h"
-
-#if 0
-
-/* A specialized version of <spsc> that is for notification.
- *
- * The use of <spsc> allows notifications to not be lost, although
- * of course it can only be used between a single receiver and sender
- * at one time.
- *
- * TODO: this class can be eliminated: wait() should go
- * into rt_message_channel (the C version of spsc), and the rest is simple
- * enough to inline it at the call site.
- */
-struct notifier : spsc <rt_message> {
-
-	/* Wait for a new notification */
-	struct rt_message wait ()
-	{
-		rt_message msg;
-		this->pop(msg, 64);
-		return msg;
-	}
-
-	/* Awaken the waiter rudely.
-	 *
-	 * Here, rudely means that the supplier of the current query is
-	 * now dirty.
-	 */
-	void rude_awake()
-	{
-		rt_message msg;
-		rt_message_init (&msg, SCOOP_MESSAGE_DIRTY, NULL, NULL);
-		this->push (msg);
-	}
-
-	/* Regular (non-callback, non-rude) wakeup.
-	 *
-	 * This wakeup is for results, for example.
-	 */
-	void result_awake ()
-	{
-		rt_message msg;
-		rt_message_init (&msg, SCOOP_MESSAGE_RESULT_READY, NULL, NULL);
-		this->push (msg);
-	}
-
-	/* A callback wakeup.
-	 *
-	 * This means that the waiting is due to lock passing, and this is
-	 * actually a call from one of the suppliers that we passed our
-	 * callstack to.
-	 */
-	void callback_awake (processor* client, call_data *call)
-	{
-		rt_message msg;
-		rt_message_init (&msg, SCOOP_MESSAGE_CALLBACK, client, call);
-		this->push(msg);
-	}
-
-};
-#endif 
 
 /* Define the struct to be used for the group stack. */
 RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
@@ -118,7 +53,7 @@ RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
 RT_DECLARE_VECTOR_BASE (subscriber_list_t, processor*)
 
 /* Define the vector to be used for keeping track of private queues of this processor. */
-RT_DECLARE_VECTOR_BASE (private_queue_list_t, priv_queue*);
+RT_DECLARE_VECTOR_BASE (private_queue_list_t, priv_queue*)
 
 
 

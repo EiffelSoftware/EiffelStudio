@@ -518,6 +518,23 @@ feature{NONE} -- Implementation
 			remove_cache (l_displayers)
 		end
 
+	enable_dotnet_formatters (a_flag: BOOLEAN)
+			-- Set sensitivity of formatters to 'a_flag'.
+		do
+			from
+				formatters.start
+			until
+				formatters.after
+			loop
+				if (formatters.item.is_dotnet_formatter and a_flag) or (not a_flag) then
+					formatters.item.enable_sensitive
+				else
+					formatters.item.disable_sensitive
+				end
+				formatters.forth
+			end
+		end
+
 	setup_displayers (a_formatters: LIST [EB_FORMATTER])
 			-- Setup displayers for every formatter in `a_formatters'
 		require

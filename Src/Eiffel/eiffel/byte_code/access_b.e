@@ -492,7 +492,7 @@ feature -- C generation
 					buf.put_new_line
 					buf.put_string ("} else {")
 					buf.indent
-
+					buf.put_new_line
 					buf.put_string ("RTS_IMPERSONATE (RTS_PID(")
 					t.print_register
 					buf.put_string ("));")

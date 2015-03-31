@@ -134,26 +134,6 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	enable_dotnet_formatters (a_flag: BOOLEAN)
-			-- Set sensitivity of formatters to 'a_flag'.
-		do
-			from
-				formatters.start
-			until
-				formatters.after
-			loop
-				if
-					(formatters.item.is_dotnet_formatter and a_flag) or
-					(not a_flag)
-				then
-					formatters.item.enable_sensitive
-				else
-					formatters.item.disable_sensitive
-				end
-				formatters.forth
-			end
-		end
-
 	drop_stone (st: detachable STONE)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local

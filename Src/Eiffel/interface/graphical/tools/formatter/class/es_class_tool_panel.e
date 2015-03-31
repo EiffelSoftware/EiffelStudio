@@ -14,7 +14,8 @@ inherit
 		rename
 			last_stone as stone
 		redefine
-			tool_veto_pebble_function
+			tool_veto_pebble_function,
+			enable_dotnet_formatters
 		end
 
 	ES_CLASS_TOOL_COMMANDER_I
@@ -169,21 +170,7 @@ feature {NONE} -- Implementation
 		local
 			l_done: BOOLEAN
 		do
-			from
-				formatters.start
-			until
-				formatters.after
-			loop
-				if
-					(formatters.item.is_dotnet_formatter and a_flag) or
-					(not a_flag)
-				then
-					formatters.item.enable_sensitive
-				else
-					formatters.item.disable_sensitive
-				end
-				formatters.forth
-			end
+			Precursor (a_flag)
 
 				-- Determine which formatter to give focus based upon previous one.
 			if a_flag then

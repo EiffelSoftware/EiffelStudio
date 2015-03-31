@@ -323,6 +323,29 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 }
 
 /*
+doc:	<routine name="rt_message_channel_is_empty" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Check if the message channel is empty, i.e. if there are no messages to be received. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>
+doc:		<return> EIF_TRUE when the channel is empty. EIF_FALSE if there's a message to be received. </return>
+doc:		<thread_safety> Safe on the receiver thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_messae_channel_is_empty (struct rt_message_channel* self)
+{
+	struct mc_node* item = NULL;
+	REQUIRE ("self_not_null", self);
+
+		/* Check if there's a message to be dequeued.
+		 * The load_consume ensures that we get a consistent view
+		 * if the producer just enqueued a new item. */
+	item = load_consume ( &(self->tail->next));
+	return !item;
+}
+
+
+
+/*
 doc:	<routine name="rt_message_channel_mark" return_type="void" export="shared">
 doc:		<summary> Mark all call_data structs during garbage collection in message channel 'self'. </summary>
 doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>

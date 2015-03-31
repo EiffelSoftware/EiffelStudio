@@ -100,8 +100,12 @@ feature{NONE} -- Clean up
 				metric_manager.metric_loaded_actions.prune_all (on_metric_loaded_agent)
 			end
 			detach_veto_format_function
-			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
-			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)
+			across customized_formatters as l_formatter loop
+				l_formatter.item.recycle
+			end
+			across displayer_cache.linear_representation as l_displayer loop
+				l_displayer.item.recycle
+			end
 
 			Precursor {EB_STONABLE_TOOL}
 			Precursor {EB_HISTORY_OWNER}
@@ -189,7 +193,9 @@ feature -- Setting
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.invalidate end)
+			across formatters as l_formatter loop
+				l_formatter.item.invalidate
+			end
 			set_last_stone (Void)
 		end
 
@@ -197,47 +203,36 @@ feature -- Setting
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
-			do_all_in_list (formatters,
-				agent (a_formatter: EB_FORMATTER)
-					do
-						a_formatter.invalidate
-						a_formatter.format
-					end
-			)
+			across formatters as l_formatter loop
+				l_formatter.item.invalidate
+				l_formatter.item.format
+			end
 		end
 
 	quick_refresh_editor
 			-- Refresh the editor.
 		do
-			do_all_in_list (
-				displayer_cache.linear_representation,
-				agent (a_formatter: EB_FORMATTER_DISPLAYER)
-					do
-						if
-							attached {EB_FORMATTER_EDITOR_DISPLAYER} a_formatter as l_displayer and then
-						 	attached l_displayer.editor as l_editor
-						 then
-							l_editor.refresh
-						end
-					end
-				)
+			across displayer_cache.linear_representation as l_displayer loop
+				if
+					attached {EB_FORMATTER_EDITOR_DISPLAYER} l_displayer.item as l_displayer_editor and then
+					attached l_displayer_editor.editor as l_editor
+				 then
+					l_editor.refresh
+				end
+			end
 		end
 
 	quick_refresh_margin
 			-- Refresh the editor's margin.
 		do
-			do_all_in_list (
-				displayer_cache.linear_representation,
-				agent (a_formatter: EB_FORMATTER_DISPLAYER)
-					do
-						if
-							attached {EB_FORMATTER_EDITOR_DISPLAYER} a_formatter as l_displayer and then
-						 	attached l_displayer.editor as l_editor
-						 then
-							l_editor.margin.refresh
-						end
-					end
-					)
+			across displayer_cache.linear_representation as l_displayer loop
+				if
+					attached {EB_FORMATTER_EDITOR_DISPLAYER} l_displayer.item as l_displayer_editor and then
+					attached l_displayer_editor.editor as l_editor
+				 then
+					l_editor.margin.refresh
+				end
+			end
 		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK)
@@ -254,7 +249,9 @@ feature -- Setting
 		require
 			focusable: is_shown and then widget.is_sensitive
 		do
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_focus end)
+			across formatters as l_formatter loop
+				l_formatter.item.set_focus
+			end
 		end
 
 	ensure_formatter_display (a_formatter: EB_FORMATTER)
@@ -292,7 +289,9 @@ feature -- Setting
 			-- Force that `last_stone' is displayed in formatters in Current view
 		do
 			if not is_last_stone_processed then
-				do_all_in_list (formatters, agent {EB_FORMATTER}.set_stone (stone))
+				across formatters as l_formatter loop
+					l_formatter.item.set_stone (stone)
+				end
 				history_manager.extend (stone)
 				Precursor
 			end
@@ -302,15 +301,11 @@ feature -- Setting
 			-- Show tool.
 		do
 			Precursor
-			do_all_in_list (
-				formatters,
-				agent (a_formatter: EB_FORMATTER)
-					do
-						if a_formatter.selected then
-							a_formatter.set_focus
-						end
-					end
-			)
+			across formatters as l_formatter loop
+				if l_formatter.item.selected then
+					l_formatter.item.set_focus
+				end
+			end
 		end
 
 	show_with_setting
@@ -419,13 +414,17 @@ feature{NONE} -- Implementation
 	attach_veto_format_function
 			-- Attach veto format function to `formatters'.
 		do
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (agent veto_format) end)
+			across formatters as l_formatter loop
+				l_formatter.item.set_veto_format_function (agent veto_format)
+			end
 		end
 
 	detach_veto_format_function
 			-- Detach veto format function to `formatters'.
 		do
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (Void) end)
+			across formatters as l_formatter loop
+				l_formatter.item.set_veto_format_function (Void)
+			end
 		end
 
 	veto_format_function_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -457,7 +456,9 @@ feature{NONE} -- Implementation
 			l_customized_formatters: LIST [EB_FORMATTER]
 		do
 			detach_veto_format_function
-			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
+			across customized_formatters as l_formatter loop
+				l_formatter.item.recycle
+			end
 
 			l_layout_formatters := layout_formatters
 			l_layout_formatters.wipe_out
@@ -476,7 +477,9 @@ feature{NONE} -- Implementation
 
 			fill_formatters
 			attach_veto_format_function
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_manager (develop_window.tools) end)
+			across formatters as l_formatter loop
+				l_formatter.item.set_manager (develop_window.tools)
+			end
 		end
 
 	fill_formatters
@@ -743,7 +746,9 @@ feature{NONE} -- Actions
 			l_last_stone: like last_stone
 		do
 			if customized_formatter_manager.is_loaded and then customized_formatter_manager.has_formatters then
-				do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do if a_formatter /= Void then a_formatter.synchronize end end)
+				across formatters as l_formatter loop
+					l_formatter.item.synchronize
+				end
 				l_last_stone := last_stone
 				invalidate
 				set_stone (l_last_stone)
@@ -772,13 +777,17 @@ feature{NONE} -- Actions
 			-- Display information from the selected formatter.
 		do
 			visible := True
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.on_shown end)
+			across formatters as l_formatter loop
+				l_formatter.item.on_shown
+			end
 		end
 
 	on_deselect
 			-- This view is hidden.
 		do
-			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.on_hidden end)
+			across formatters as l_formatter loop
+				l_formatter.item.on_hidden
+			end
 			visible := False
 		end
 
@@ -809,15 +818,6 @@ feature{NONE} -- Implementation
 			mini_toolbar.extend (address_manager.header_info)
 			mini_toolbar.extend (history_toolbar)
 			address_manager.label_changed_actions.extend (agent (develop_window.docking_manager).update_mini_tool_bar_size (content))
-		end
-
-	do_all_in_list (a_list: LIST [ANY]; a_agent: PROCEDURE [ANY, TUPLE [ANY]])
-			-- Call `a_agent' for every element in `a_list'.
-		require
-			a_list_attached: a_list /= Void
-			a_agent_attached: a_agent /= Void
-		do
-			a_list.do_all (a_agent)
 		end
 
 	fill_in

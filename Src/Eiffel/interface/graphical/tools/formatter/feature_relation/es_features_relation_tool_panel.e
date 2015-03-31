@@ -182,7 +182,9 @@ feature -- Status setting
 				end
 			else
 				if a_stone = Void or else (not a_stone.is_valid) then
-					do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.reset_display end)
+					across formatters as l_formatter loop
+						l_formatter.item.reset_display
+					end
 				end
 			end
 
@@ -364,24 +366,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	retrieve_formatters
 			-- Retrieve all formatters related with Current tool and store them in `formatters'
 		do
 			Precursor
-			do_all_in_list (
-				formatters,
-				agent (a_formatter: EB_FORMATTER)
-					local
-						l_flat_formatter: like flat_formatter
-					do
-						l_flat_formatter ?= a_formatter
-						if l_flat_formatter /= Void then
-							flat_formatter := l_flat_formatter
-						end
-					end
-			)
+			across formatters as l_formatter until flat_formatter /= Void loop
+				if attached {like flat_formatter} l_formatter.item as l_flat_formatter then
+					flat_formatter := l_flat_formatter
+				end
+			end
 		end
 
 	tool_veto_pebble_function (a_stone: ANY): BOOLEAN

@@ -98,7 +98,7 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 
 
 	rt_queue_cache_init (&this->cache, this);
-	rt_message_init (&this->current_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /*TODO: Should we add a "default" enum for initialization? */
+	rt_message_init (&this->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 	rt_message_channel_init (&this->result_notify, 64);
 	rt_message_channel_init (&this->startup_notify, 64);
 	request_group_stack_t_init (&this->request_group_stack);
@@ -240,10 +240,10 @@ void processor::operator()(processor *client, call_data* call)
 			/* Propagate exceptions on a synchronous call. */
 		if (is_dirty) {
 			is_dirty = false;
-			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL);
+			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL, NULL);
 
 		} else {
-			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL);
+			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 		}
 	}
 
@@ -287,7 +287,7 @@ void spawn_main(char* data, EIF_SCP_PID pid)
 	eif_set_processor_id (pid);
 
 		/* TODO: Would it make sense to add another message type SCOOP_PROCESSOR_STARTED ? */
-	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL);
+	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 
 	proc->application_loop();
 

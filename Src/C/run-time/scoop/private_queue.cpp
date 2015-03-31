@@ -65,7 +65,7 @@ rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier)
 	self->lock_depth = 0;
 
 	rt_message_channel_init (&self->channel, 512);
-	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_UNLOCK, NULL, NULL); /* TODO: default state? */
+	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 }
 
 /*
@@ -152,7 +152,7 @@ rt_shared void rt_private_queue_unlock (priv_queue* self)
 	self->lock_depth--;
 
 	if (self->lock_depth == 0) {
-		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL);
+		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL, NULL);
 		self->synced = EIF_FALSE;
 	}
 }
@@ -212,10 +212,10 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 		call -> sync_pid = client -> pid;
 		will_sync = EIF_TRUE;
 
-		rt_message_channel_send (&self->supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call);
+		rt_message_channel_send (&self->supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call, NULL);
 
 	} else {
-		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_EXECUTE, client, call);
+		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_EXECUTE, client, call, NULL);
 	}
 		/* NOTE: After the previous send operations, the call data struct might have been */
 		/* free()'d by the supplier. Therefore it must not be accessed any more here. */

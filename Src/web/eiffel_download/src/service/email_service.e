@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			Result := "Eiffel Software Web Master <webmaster@eiffel.com>"
 		end
 
-
 	download_email: IMMUTABLE_STRING_8
 			-- Administrator email.
 		once
@@ -85,16 +84,9 @@ feature -- Basic Operations
 		end
 
 	send_email_download_notification (a_content: READABLE_STRING_32)
-		local
-			l_email: EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, download_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Notification EiffelStudio Download")
-			send_email (l_email)
+			send_download_notification (a_content,"Notification EiffelStudio Download")
 		end
-
 
 	send_email_internal_server_error (a_content: READABLE_STRING_32)
 		local
@@ -141,5 +133,19 @@ feature -- Basic Operations
 
 	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
 		-- Email not monitored disclaimer.
+
+feature {NONE} -- Implemenation
+
+	send_download_notification (a_content: READABLE_STRING_32; a_subject: READABLE_STRING_32)
+				-- Send a notification email with content `a_content' with subject `a_subject'.
+		local
+			l_email: EMAIL
+		do
+				-- Create our message.
+			create l_email.make_with_entry (admin_email, download_email)
+			l_email.set_message (a_content)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject)
+			send_email (l_email)
+		end
 
 end

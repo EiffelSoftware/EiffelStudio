@@ -56,7 +56,7 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 /* The number of active processors.
  * Must only be accessed via increment / decrement operations.
  * TODO: This is global state. Should it be moved to processor_registry? */
-rt_private EIF_INTEGER_32 active_processor_count = 0;
+rt_private volatile EIF_INTEGER_32 active_processor_count = 0;
 
 /* Atomically increment active_processor_count. */
 rt_private void increment_active_processor_count (void)

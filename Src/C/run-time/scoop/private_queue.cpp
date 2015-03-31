@@ -131,7 +131,7 @@ rt_shared void rt_private_queue_lock (priv_queue* self, processor* client)
 	REQUIRE ("client_not_null", client);
 
 	if (self->lock_depth == 0) {
-		self->supplier->qoq.push (qoq_item (client, self));
+		rt_message_channel_send (&(self->supplier->queue_of_queues), SCOOP_MESSAGE_ADD_QUEUE, client, NULL, self);
 		self->synced = EIF_FALSE;
 	}
 	self->lock_depth++;

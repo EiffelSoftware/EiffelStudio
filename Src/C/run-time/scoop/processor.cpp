@@ -100,6 +100,9 @@ processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	rt_message_init (&this->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 	rt_message_channel_init (&this->result_notify, 64);
 	rt_message_channel_init (&this->startup_notify, 64);
+
+	rt_message_channel_init (&this->queue_of_queues, 128);
+
 	request_group_stack_t_init (&this->request_group_stack);
 	subscriber_list_t_init (&this->wait_condition_subscribers);
 	private_queue_list_t_init (&this->generated_private_queues);
@@ -145,6 +148,8 @@ processor::~processor()
 		rt_private_queue_deinit (l_queue);
 		free (l_queue);
 	}
+
+	rt_message_channel_deinit (&this->queue_of_queues);
  	rt_message_channel_deinit (&this->startup_notify);
 	rt_message_channel_deinit (&this->result_notify);
 	private_queue_list_t_deinit (&this->generated_private_queues);
@@ -279,7 +284,7 @@ void processor::process_priv_queue(priv_queue *pq)
 /* The entry point for new SCOOP processors after the runtime has set up the context.
  * Note: The feature has an unused EIF_REFERENCE as its first argument. This is necessary
  * because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. */
-void spawn_main(EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
+void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
 	processor *proc = registry [pid];
 
@@ -349,28 +354,30 @@ void processor::application_loop()
 {
 	has_client = false;
 	for (;;) {
-		qoq_item res;
+		struct rt_message next_job;
 
 			/* Triggering the collection happens when all */
 			/* processors are idle. This is sufficient for */
 			/* program termination, but not sufficient for */
 			/* freeing threads to let new ones take their */
 			/* place. */
-		if (decrement_and_fetch_active_processor_count() == 0 && qoq.is_empty()) {
+		if (decrement_and_fetch_active_processor_count() == 0
+			&& rt_message_channel_is_empty (&this->queue_of_queues)) {
 			plsc();
 		}
 
-		qoq.pop(res);
+		rt_message_channel_receive (&this->queue_of_queues, &next_job);
 
-		if (!res.is_done) {
+		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();
 			has_client = true;
 
-			process_priv_queue (res.queue);
-			notify_next (res.client);
+			process_priv_queue (next_job.queue);
+			notify_next (next_job.sender);
 
 			has_client = false;
 		} else {
+			CHECK ("shutdown_message", next_job.message_type == SCOOP_MESSAGE_SHUTDOWN);
 			break;
 		}
 	}
@@ -378,7 +385,7 @@ void processor::application_loop()
 
 void processor::shutdown()
 {
-	qoq.push (qoq_item());
+	rt_message_channel_send (&this->queue_of_queues, SCOOP_MESSAGE_SHUTDOWN, NULL, NULL, NULL);
 }
 
 void processor::mark(MARKER marking)

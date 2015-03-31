@@ -331,7 +331,7 @@ doc:		<thread_safety> Safe on the receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_messae_channel_is_empty (struct rt_message_channel* self)
+rt_shared EIF_BOOLEAN rt_message_channel_is_empty (struct rt_message_channel* self)
 {
 	struct mc_node* item = NULL;
 	REQUIRE ("self_not_null", self);

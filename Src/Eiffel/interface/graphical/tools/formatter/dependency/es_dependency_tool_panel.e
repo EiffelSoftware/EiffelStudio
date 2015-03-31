@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			l_tool: EB_STONABLE_TOOL
 		do
 			l_tool := decide_tool_to_display (st)
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.set_stone (st)
 			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (st)

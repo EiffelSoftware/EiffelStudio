@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			develop_window.system_information_cmd.enable_sensitive
 			if
 				develop_window.stone /= Void and then
-				not develop_window.unified_stone
+				not develop_window.is_unified_stone
 			then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive
 			end
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.show_profiler.enable_sensitive
 			develop_window.show_dynamic_lib_tool.enable_sensitive
 			develop_window.system_information_cmd.enable_sensitive
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			elseif develop_window.stone /= Void then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive

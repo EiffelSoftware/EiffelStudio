@@ -104,7 +104,7 @@ feature -- Command
 			-- Set `current' into context mode, that is the context tool
 			-- maximized, and the non editor panel is hidden.
 		do
-			if not develop_window.unified_stone then
+			if not develop_window.is_unified_stone then
 				develop_window.commands.toggle_stone_cmd.execute
 			end
 		end
@@ -258,7 +258,7 @@ feature{NONE} -- Implementation
 			create menu_builder.make (develop_window)
 			create toolbar_builder.make (develop_window)
 
-			develop_window.set_unified_stone (develop_window.preferences.development_window_data.context_unified_stone)
+			develop_window.set_is_unified_stone (develop_window.preferences.development_window_data.context_unified_stone)
 				-- Build the history manager, the address manager, ...
 
 			create l_history_manager.make (develop_window)
@@ -325,7 +325,7 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

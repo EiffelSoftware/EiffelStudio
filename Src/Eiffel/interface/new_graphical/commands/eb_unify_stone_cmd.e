@@ -47,7 +47,7 @@ feature -- Status report
 
 	pixmap: EV_PIXMAP
 		do
-			if window.unified_stone then
+			if window.is_unified_stone then
 				Result := pixmaps.icon_pixmaps.context_unlink_icon
 			else
 				Result := pixmaps.icon_pixmaps.context_link_icon
@@ -57,7 +57,7 @@ feature -- Status report
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			if window.unified_stone then
+			if window.is_unified_stone then
 				Result := pixmaps.icon_pixmaps.context_unlink_icon_buffer
 			else
 				Result := pixmaps.icon_pixmaps.context_link_icon_buffer
@@ -66,7 +66,7 @@ feature -- Status report
 
 	tooltip: STRING_GENERAL
 		do
-			if window.unified_stone then
+			if window.is_unified_stone then
 				Result := Interface_names.e_Separate_stone
 			else
 				Result := Interface_names.e_Unify_stone
@@ -81,7 +81,7 @@ feature -- Status report
 
 	menu_name: STRING_GENERAL
 		do
-			if window.unified_stone then
+			if window.is_unified_stone then
 				Result := Interface_names.m_Separate_stone
 			else
 				Result := Interface_names.m_Unify_stone
@@ -124,7 +124,7 @@ feature -- Basic operations
 						l_button := internal_managed_sd_toolbar_items.item
 						if l_button /= Void then
 							l_button.select_actions.block
-							if window.unified_stone then
+							if window.is_unified_stone then
 								l_button.enable_select
 							else
 								l_button.disable_select

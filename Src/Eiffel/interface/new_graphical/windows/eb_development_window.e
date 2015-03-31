@@ -720,13 +720,13 @@ feature -- Stone process
 	toggle_unified_stone
 			-- Change the stone management mode.
 		do
-				-- Save new value of `unified_stone' after toggle.
-			set_unified_stone (not unified_stone)
+				-- Save new value of `is_unified_stone' after toggle.
+			set_is_unified_stone (not is_unified_stone)
 
 				-- Save the corresponding the preference.
-			preferences.development_window_data.context_unified_stone_preference.set_value (unified_stone)
+			preferences.development_window_data.context_unified_stone_preference.set_value (is_unified_stone)
 
-			if unified_stone then
+			if is_unified_stone then
 				send_stone_to_context
 				commands.send_stone_to_context_cmd.disable_sensitive
 			elseif stone /= Void then
@@ -767,7 +767,7 @@ feature -- Stone process
 		do
 			if s.is_storable then
 				set_stone (s)
-				if not unified_stone then
+				if not is_unified_stone then
 					tools.set_stone (s)
 				end
 			end
@@ -1349,7 +1349,7 @@ feature -- Tools & Controls
 	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			-- All formatters that can be displayed in the main editor frame.
 
-	unified_stone: BOOLEAN
+	is_unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
 
 	link_tools: BOOLEAN
@@ -2374,12 +2374,12 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 
 feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} --EB_DEVELOPMENT_WINDOW_DIRECTOR issues.
 
-	set_unified_stone (a_bool: like unified_stone)
-			-- Set `unified_stone' with `a_bool'.
+	set_is_unified_stone (a_bool: like is_unified_stone)
+			-- Set `is_unified_stone' with `a_bool'.
 		do
-			unified_stone := a_bool
+			is_unified_stone := a_bool
 		ensure
-			set: unified_stone = a_bool
+			set: is_unified_stone = a_bool
 		end
 
 	set_history_manager (a_manager: like history_manager)

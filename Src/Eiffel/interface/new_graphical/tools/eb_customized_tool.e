@@ -169,7 +169,7 @@ feature -- Setting
 --				end
 --			end
 
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.set_stone (st)
 			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (st)

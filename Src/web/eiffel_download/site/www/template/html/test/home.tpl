@@ -26,8 +26,19 @@
 		</label>
 		<label>
 		    <span>Your Company :</span>
-		    <input id="company" type="text" name="company" placeholder="Company Name" />
+		    <input id="company" type="text" name="company" placeholder="Company Name" /><br>
 		</label>
+		<label>
+			<span>Title:</span>
+				<select id="title" name="title">
+					<option value="developer">Developer</option>
+					<option value="project_manager">Project Manager</option>
+					<option value="cio_cto">CIO/CTO</option>
+					<option value="student">Student</option>
+					<option value="professor">Professor</option>
+					<option value="other">Other</option>
+				</select></br>
+		</label>	
 		 <label>
 		    <span>Platform :</span>
 			 <select name="platform">
@@ -57,7 +68,7 @@
 		<fieldset>	
 		<label>
 		    <span>&nbsp;</span> 
-		    <input type="Submit" class="button" value="Send" /> 
+		    <input type="Submit" class="button" value="Send" formtarget="_top" /> 
 		</label>
 		</fieldset>  
 									</form>                			

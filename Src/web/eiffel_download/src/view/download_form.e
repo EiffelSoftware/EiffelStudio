@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {DOWNLOAD_FORM}."
+	description: "Object that represent the download form."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,12 +16,14 @@ inherit
 feature {NONE} -- Initialization
 
 	default_create
+			-- Create an instance with default values.
 		do
 			set_first_name ("")
 			set_last_name ("")
 			set_email ("")
 			set_platform ("")
 			set_company ("")
+			set_title ("")
 		end
 
 feature -- Access
@@ -43,6 +45,9 @@ feature -- Access
 
 	newsletter: BOOLEAN
 		-- Newsletter subscription ?
+
+	title: READABLE_STRING_32
+		-- User title :Developer, Project Manajer, CIO/CTO, Student, Professor, Other.	
 
 feature -- Change elements
 
@@ -92,6 +97,14 @@ feature -- Change elements
 			company := a_organization
 		ensure
 			organization_set: company = a_organization
+		end
+
+	set_title (a_title: like title)
+			-- Set `title' to `a_title'.
+		do
+			title := a_title
+		ensure
+			title_set: title = a_title
 		end
 
 end

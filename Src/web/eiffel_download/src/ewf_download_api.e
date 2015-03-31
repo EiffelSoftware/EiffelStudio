@@ -135,15 +135,21 @@ feature -- Workflow
 							l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
 							l_service.initialize_download (l_token, l_form)
 					end
-					send_email (req, l_form, l_token, req.absolute_script_url (""))
-					if
-						attached email_service as l_email_service and then
-						attached l_email_service.last_error as l_error
-					then
-						send_internal_server_error ("Database service unavailable")
-						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+						-- If the title is Student or Porfessor, they will not receive an email.
+					if l_form.title.same_string ("student") or else l_form.title.same_string ("professor") then
+						-- Download a GPL version.
+						process_gpl_download (req, res, l_form, l_token)
 					else
-						compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
+						send_email (req, l_form, l_token, req.absolute_script_url (""))
+						if
+							attached email_service as l_email_service and then
+							attached l_email_service.last_error as l_error
+						then
+							send_internal_server_error ("Database service unavailable")
+							internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+						else
+							compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
+						end
 					end
 				else
 					send_internal_server_error ("Database service unavailable")
@@ -154,7 +160,6 @@ feature -- Workflow
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
-
 
 	process_workflow (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- /download?email=&token=&platform=
@@ -233,7 +238,7 @@ feature -- Workflow
 		end
 
 
-feature -- {none}
+feature -- {none} Implementation
 
 	generate_new_token (req: WSF_REQUEST; res: WSF_RESPONSE; a_info: DOWNLOAD_INFORMATION)
 			-- Generate a new token and send an email.
@@ -281,13 +286,90 @@ feature -- {none}
 			end
 		end
 
+	process_gpl_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: DOWNLOAD_FORM; a_token: READABLE_STRING_32)
+			-- Process gpl download.
+		local
+			l_cfg: DOWNLOAD_CONFIGURATION
+			l_link: STRING
+		do
+			if attached database_service as l_service then
+				log.write_debug (generator + ".process_gpl_download Start process gpl dowbload for a Student/Professor.")
+				l_cfg := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (layout.config_path.extended ("downloads_gpl_configuration.json"))
+				if
+					attached retrieve_mirror_gpl (l_cfg) as l_mirror  and then
+					attached {DOWNLOAD_PRODUCT} retrieve_product_gpl (l_cfg) as l_product and then
+					attached {DOWNLOAD_PRODUCT_OPTIONS} selected_platform (l_product.downloads, a_form.platform) as l_options and then
+					attached l_options.filename  as l_filename
+				then
+					if l_service.is_membership (a_form.email) then
+						log.write_debug (generator + ".process_gpl_download process " + a_form.email +  " Membership")
+						l_service.add_download_interaction_membership (a_form.email, "EiffelStudio", a_form.platform, l_filename, a_token)
+					elseif l_service.is_contact (a_form.email) then
+						log.write_debug (generator + ".process_gpl_download process " + a_form.email +  " Contact")
+						l_service.add_download_interaction_contact (a_form.email, "EiffelStudio", a_form.platform, l_filename, a_token)
+					else
+						check
+							l_service.is_new_contact (a_form.email)
+						end
+						log.write_debug (generator + ".process_gpl_download process " + a_form.email +  " New Contact")
+						l_service.validate_contact (a_form.email) --(add a new contact, remove temporary contact)
+						l_service.add_download_interaction_contact (a_form.email, "EiffelStudio", a_form.platform, l_filename, a_token)
+					end
+
+					if 	attached {DOWNLOAD_INFORMATION} l_service.retrieve_download_details (a_token) as l_info then
+						l_info.set_platform (a_form.platform)
+						l_info.set_product ("EiffelStudio GPL")
+						l_info.set_filename (l_filename)
+						l_info.set_download_date (create {DATE_TIME}.make_now_utc)
+						send_email_gpl_download_notification (l_info)
+					end
+						-- Build Link
+					create l_link.make_from_string (l_mirror)
+					l_link.append (l_filename)
+					--compute_response_redirect (req, res, l_link)
+					direct_download (req, res, l_link, l_filename, l_options.size.out )
+				else
+					log.write_debug (generator + ".process_gpl_download ")
+					send_internal_server_error ("Error processing: Student/Professor use case.")
+					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+				end
+			else
+				log.write_debug (generator + ".process_gpl_workflow: The database service is unavailable")
+				send_internal_server_error ("Database service unavailable")
+				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
+			end
+		end
+
+	retrieve_mirror_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_32
+			-- Get mirror.
+		do
+			if attached cfg.mirror as l_mirror then
+				Result := l_mirror
+			end
+		end
+
+	retrieve_product_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
+			-- Get product.
+		do
+			if attached cfg.products as l_products then
+				Result := l_products.at (1)
+			end
+		end
+
+	retrieve_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+			-- Get products.
+		do
+			if attached cfg.products as l_products then
+				Result := l_products
+			end
+		end
+
 feature -- Response
 
 	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
 		do
 			compute_download (req, res, a_link)
 		end
-
 
 	bad_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
 		local
@@ -300,7 +382,6 @@ feature -- Response
 				end
 			end
 		end
-
 
 	not_active_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
 		local
@@ -392,9 +473,24 @@ feature -- Response
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_disposition ("attachment; filename", output)
+			h.put_content_disposition ("attachment; filename=", output)
 			h.put_current_date
 			h.put_header_key_value ("Content-type", "application/octet-stream")
+			h.put_location (output)
+			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
+			res.put_header_text (h.string)
+		end
+
+
+	direct_download (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING; filename: STRING; size: STRING)
+			--Simple response to download content
+		local
+			h: HTTP_HEADER
+		do
+			create h.make
+			h.put_current_date
+			h.put_header_key_value ("Content-type", "application/octet-stream")
+			h.put_cache_control ("no-store, no-cache")
 			h.put_location (output)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
@@ -418,6 +514,9 @@ feature {NONE} -- Implementation
 			end
 			if attached {WSF_STRING} req.form_parameter ("company") as l_user_company then
 				Result.set_company (l_user_company.value)
+			end
+			if attached {WSF_STRING} req.form_parameter ("title") as l_user_title then
+				Result.set_title (l_user_title.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("platform") as l_platform then
 				Result.set_platform (l_platform.value)
@@ -513,6 +612,22 @@ feature -- Send Email
 			end
 		end
 
+	send_email_gpl_download_notification (a_download_information: DOWNLOAD_INFORMATION)
+		local
+			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
+		do
+			if
+				attached email_service as l_email_service and then
+				attached download_service as l_service
+			then
+				create l_hp.make (layout.html_template_path, a_download_information)
+				if attached l_hp.representation as l_html_download_info then
+					l_email_service.send_email_download_notification (l_html_download_info)
+				else
+					l_email_service.send_email_download_notification ("Internal Server Error")
+				end
+			end
+		end
 
 	send_internal_server_error (a_description: READABLE_STRING_32)
 		do
@@ -607,6 +722,4 @@ feature -- Read file
 				Result := f.last_string
 			end
 		end
-
-
 end

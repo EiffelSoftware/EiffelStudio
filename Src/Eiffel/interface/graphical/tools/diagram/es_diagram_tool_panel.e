@@ -1404,7 +1404,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 		do
 			fst ?= a_stone
 			l_tool := decide_tool_to_display (a_stone)
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.set_stone (a_stone)
 			else
 				l_tool.set_stone (a_stone)

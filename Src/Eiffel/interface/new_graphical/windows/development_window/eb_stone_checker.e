@@ -48,7 +48,7 @@ feature -- Command
 			handle_break_error_ace_external_file_stone (a_stone)
 			if
 				develop_window.stone /= Void and then
-				not develop_window.unified_stone
+				not develop_window.is_unified_stone
 			then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive
 			else
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation functions
 --			end
 
 				-- Update the context tool.
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.tools.set_stone (a_stone)
 			end
 		end

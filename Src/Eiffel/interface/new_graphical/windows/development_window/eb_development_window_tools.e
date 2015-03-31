@@ -223,7 +223,7 @@ feature -- Commands
 	launch_stone (a_stone: STONE)
 			--	Lanunch stone.
 		do
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.set_stone (a_stone)
 			else
 				set_stone (a_stone)
@@ -283,7 +283,7 @@ feature -- Commands
 
 			conv_dev := develop_window
 			if conv_dev /= Void then
-				if not conv_dev.unified_stone then
+				if not conv_dev.is_unified_stone then
 					invalidate_customizable_tools
 					if conv_dev.link_tools then
 						if stone /= Void then

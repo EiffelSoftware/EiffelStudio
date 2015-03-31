@@ -259,7 +259,7 @@ feature -- Status setting
 				l_tool := develop_window.tools.default_class_tool
 			end
 
-			if develop_window.unified_stone then
+			if develop_window.is_unified_stone then
 				develop_window.set_stone (st)
 			elseif develop_window.link_tools then
 				if not found then

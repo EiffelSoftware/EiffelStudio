@@ -130,30 +130,6 @@ feature -- Basic operations
 			initialize_window (l_window, True)
 		end
 
-	create_editor_window
-			-- Create a new editor window and update `last_created_window'.
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
-		do
-			create l_director.make
-			l_director.construct_as_editor
-			l_window := l_director.develop_window
-			initialize_window (l_window, True)
-		end
-
-	create_context_window
-			-- Create a new context window and update `last_created_window'.
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
-		do
-			create l_director.make
-			l_director.construct_as_context_tool
-			l_window := l_director.develop_window
-			initialize_window (l_window, True)
-		end
-
 	load_window_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Load `a_dev_window''s session data.
 			-- If `a_dev_window' is void, a new development window will be created.

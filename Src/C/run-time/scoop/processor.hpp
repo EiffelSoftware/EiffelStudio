@@ -109,12 +109,19 @@ public:
   operator()(processor *client, call_data* call);
 
 public:
-  /* The queue of queues.
+  /*
+   * The queue of queues.
    * 
-   * This will be used by private queues to add new calls for this processor
-   * to apply.
+   * This will be used by client processors to add new private queues
+   * for this processor to work on. Clients may only send
+   * SCOOP_MESSAGE_ADD_QUEUE on this channel, and the GC can only send
+   * SCOOP_MESSAGE_SHUTDOWN.
+   *
+   * NOTE: The rt_message_channel struct is NOT safe to be used by multiple senders
+   * concurrently. Any thread wishing to enqueue a new private queue thus needs
+   * acquire the lock on the queue_of_queues_mutex.
    */
-  mpscq <qoq_item> qoq;
+  struct rt_message_channel queue_of_queues;
   EIF_MUTEX_TYPE* queue_of_queues_mutex;
 
 public:

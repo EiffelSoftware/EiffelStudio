@@ -539,16 +539,8 @@ feature {NONE} -- Event implementation
 					end
 				end
 				if Result /= Void and then fig /= Void then
-					if fig.accept_cursor /= Void then
-						widget.set_accept_cursor (fig.accept_cursor)
-					else
-						widget.set_accept_cursor (fig.default_accept_cursor)
-					end
-					if fig.deny_cursor /= Void then
-						widget.set_deny_cursor (fig.deny_cursor)
-					else
-						widget.set_deny_cursor (fig.default_deny_cursor)
-					end
+					widget.set_accept_cursor (fig.accept_cursor)
+					widget.set_deny_cursor (fig.deny_cursor)
 				end
 			end
 		end

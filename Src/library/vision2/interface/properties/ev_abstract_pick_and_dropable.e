@@ -44,7 +44,7 @@ feature -- Access
 		deferred
 		end
 
-	accept_cursor: detachable EV_POINTER_STYLE
+	accept_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred
@@ -52,7 +52,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	deny_cursor: detachable EV_POINTER_STYLE
+	deny_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		deferred
@@ -122,7 +122,7 @@ feature -- Status setting
 			target_data_function_assigned: target_data_function /= Void and then target_data_function.is_equal (a_function)
 		end
 
-	set_accept_cursor (a_cursor: detachable  like accept_cursor)
+	set_accept_cursor (a_cursor: detachable like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred

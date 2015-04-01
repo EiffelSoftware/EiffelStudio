@@ -323,44 +323,67 @@ rt_private EIF_BOOLEAN rt_processor_try_call (call_data *call)
 	return success;
 }
 
-void processor::operator()(processor *client, call_data* call)
+  /* Process a call on this processor.
+   * @client the client of the call
+   * @call the call to execute.
+   */
+/*
+doc:	<routine name="rt_processor_execute_call" return_type="void" export="shared">
+doc:		<summary> Execute the call 'call' coming from processor 'client'. </summary>
+doc:		<param name="self" type="processor*"> The processor that executes the call. Must not be NULL. </param>
+doc:		<param name="client" type="processor*"> The processor that sent the request. Must not be NULL. </param>
+doc:		<param name="call" type="struct call_data*"> The call to be executed. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_execute_call (processor* self, processor* client, struct call_data* call)
 {
-	bool is_synchronous = (call_data_sync_pid (call) != NULL_PROCESSOR_ID);
+	EIF_BOOLEAN is_synchronous;
+	EIF_BOOLEAN is_successful;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("client_not_null", client);
+	REQUIRE ("call_not_null", call);
+
+	is_synchronous = (call_data_sync_pid (call) != NULL_PROCESSOR_ID);
 
 		/* Only execute the call when the current processor region is clean. */
-	if (!is_dirty) {
+	if (!self->is_dirty) {
 
 		if (is_synchronous) {
 				/* Grab all locks held by the client. */
-			rt_queue_cache_push (&this->cache, &client->cache);
+			rt_queue_cache_push (&self->cache, &client->cache);
 		}
 
 			/* Execute the call. */
-		EIF_BOOLEAN successful_call = rt_processor_try_call (call);
+		is_successful = rt_processor_try_call (call);
 
 			/* Mark the current region as dirty if the call fails. */
-		if (!successful_call) {
-			is_dirty = true;
+		if (!is_successful) {
+			self->is_dirty = true;
 		}
 
 		if (is_synchronous) {
 				/* Return the previously acquired locks. */
-			rt_queue_cache_pop (&this->cache);
+			rt_queue_cache_pop (&self->cache);
 		}
 	}
 
 	if (is_synchronous) {
 
-			/* Propagate exceptions on a synchronous call. */
-		if (is_dirty) {
-			is_dirty = false;
+		if (self->is_dirty) {
+			self->is_dirty = false;
+				/* Propagate exceptions on a synchronous call. */
 			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL, NULL);
 
 		} else {
+				/* Inform the client that we finished executing his call. */
 			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 		}
 	}
 
+		/* Free the call data struct, as it's not needed any more. */
 	free (call);
 }
 
@@ -371,7 +394,7 @@ doc:		<summary> Execute all calls in the private queue 'queue' until an unlock m
 doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
 doc:		<param name="queue" type="priv_queue*"> The private queue to be worked on. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None </synchronization>
+doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
 doc:	</routine>
 */
 rt_private void rt_processor_process_private_queue (processor* self, priv_queue *queue)
@@ -400,7 +423,7 @@ rt_private void rt_processor_process_private_queue (processor* self, priv_queue 
 			is_stopped = EIF_TRUE;
 		} else {
 
-			(*self)(self->current_msg.sender, self->current_msg.call);
+			rt_processor_execute_call (self, self->current_msg.sender, self->current_msg.call);
 
 				/* Make sure the call doesn't get traversed again for GC */
 			self->current_msg.message_type = SCOOP_MESSAGE_INVALID;

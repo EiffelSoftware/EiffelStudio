@@ -229,6 +229,8 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 			 * l_client == client && client->pid == l_sync_pid
 			 */
 		processor *l_client = registry[l_sync_pid];
+		CHECK ("some_test", l_client == client && client->pid == l_sync_pid);
+
 		struct rt_message* l_message = &self->call_stack_msg;
 
 			/* Wait on our own result notifier for a message by the other processor. */
@@ -238,7 +240,9 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 			l_message->message_type == SCOOP_MESSAGE_CALLBACK;
 			rt_message_channel_receive (&l_client->result_notify, l_message))
 		{
-			(*l_client) (l_message->sender, l_message->call);
+				/*NOTE: The thread executing this feature is the one behind 'client'. */
+			rt_processor_execute_call (l_client, l_message->sender, l_message->call);
+// 			(*l_client) (l_message->sender, l_message->call);
 			l_message->call = NULL;
 		}
 

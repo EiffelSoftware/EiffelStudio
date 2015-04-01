@@ -229,7 +229,7 @@ private:
 
 /* Creation and destruction. */
 rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result);
-rt_shared int rt_processor_destroy (processor* self);
+rt_shared void rt_processor_destroy (processor* self);
 
 /* Wait condition subscription management. */
 rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client);

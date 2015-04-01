@@ -258,78 +258,6 @@ rt_shared void rt_processor_destroy (processor* self)
 	}
 }
 
-
-processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
-	has_client (true),
-	has_backing_thread (_has_backing_thread),
-	pid(_pid),
-	is_dirty (false)
-{
-	int error = T_OK;
-
-
-	rt_queue_cache_init (&this->cache, this);
-	rt_message_init (&this->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
-	rt_message_channel_init (&this->result_notify, 64);
-	rt_message_channel_init (&this->startup_notify, 64);
-
-	rt_message_channel_init (&this->queue_of_queues, 128);
-
-	request_group_stack_t_init (&this->request_group_stack);
-	subscriber_list_t_init (&this->wait_condition_subscribers);
-	private_queue_list_t_init (&this->generated_private_queues);
-
-	increment_active_processor_count();
-
-		/* Create mutexes to protect the generated_private_queues and the queue_of_queues. */
-	error = eif_pthread_mutex_create (&this->generated_private_queues_mutex); /* TODO: Error handling */
-	error = eif_pthread_mutex_create (&this->queue_of_queues_mutex); /* TODO: Error handling */
-
-		/* Create the CV and mutex for wait condition signalling. */
-	error = eif_pthread_mutex_create (&this->wait_condition_mutex); /* TODO: Error handling */
-	error = eif_pthread_cond_create (&this->wait_condition); /* TODO: Error handling */
-}
-
-processor::~processor()
-{
-	int error = T_OK;
-	size_t l_count = 0;
-
-		/* Destroy the mutex and condition variable.
-		 * This is safe: No other thread can hold the lock on the mutex,
-		 * because during garbage collection all references in the
-		 * 'wait_condition_subscribers' vector of other processors have been removed,
-		 * and the GC cannot run while other processors may hold a lock
-		 * during 'notify_next'. */
-	error = eif_pthread_cond_destroy (this->wait_condition);
-	this->wait_condition = NULL;
-	eif_pthread_mutex_destroy (this->wait_condition_mutex);
-	this->wait_condition_mutex = NULL;
-
-
-		/* Destroy the other mutexes. */
-	error = eif_pthread_mutex_destroy (this->generated_private_queues_mutex);
-	this->generated_private_queues_mutex = NULL;
-	error = eif_pthread_mutex_destroy (this->queue_of_queues_mutex);
-	this->queue_of_queues_mutex = NULL;
-
-	l_count = private_queue_list_t_count (&this->generated_private_queues);
-
-	for (size_t i = 0; i < l_count; ++i) {
-		priv_queue* l_queue = private_queue_list_t_item (&this->generated_private_queues, i);
-		rt_private_queue_deinit (l_queue);
-		free (l_queue);
-	}
-
-	rt_message_channel_deinit (&this->queue_of_queues);
- 	rt_message_channel_deinit (&this->startup_notify);
-	rt_message_channel_deinit (&this->result_notify);
-	private_queue_list_t_deinit (&this->generated_private_queues);
-	subscriber_list_t_deinit (&this->wait_condition_subscribers);
-	request_group_stack_t_deinit (&this->request_group_stack);
-	rt_queue_cache_deinit (&this->cache);
-}
-
 bool processor::try_call (call_data *call)
 {
 		/* Switch this on to catch exceptions */
@@ -482,11 +410,24 @@ void processor::spawn()
 		NULL); /* There are no attributes */
 }
 
-void processor::notify_next(processor *client)
+/*
+doc:	<routine name="rt_processor_publish_wait_condition" return_type="void" export="private">
+doc:		<summary> Notify all processors in the 'self->wait_condition_subscribers' vector that a wait condition has changed. </summary>
+doc:		<param name="self" type="processor*"> The processor with the subscribers list. Must not be NULL. </param>
+doc:		<param name="dead_processor" type="processor*"> The processor whose private queue 'self' has been processing last. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> The feature rt_processor_subscribe_wait_condition must only be called when the thread executing 'self' is synchronized with a client.
+doc:			This ensures that rt_publish_wait_condition cannot be executed at the same time. </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_processor_publish_wait_condition (processor* self, processor *client)
 {
-	bool found = false;
-	int error = T_OK;
-	struct subscriber_list_t* subscribers = &this->wait_condition_subscribers;
+	EIF_BOOLEAN found = EIF_FALSE;
+	struct subscriber_list_t* subscribers = NULL;
+
+	REQUIRE ("self_not_null", self);
+
+	subscribers = &self->wait_condition_subscribers;
 
 	while ( !(0 == subscriber_list_t_count(subscribers))) {
 		processor* item = subscriber_list_t_last (subscribers);
@@ -496,7 +437,7 @@ void processor::notify_next(processor *client)
 				/* The client might be the processor that has just unlocked us
 				 * after a wait condition has failed. We obviously don't want to
 				 * send it a notification back. */
-			found = true;
+			found = EIF_TRUE;
 		} else {
 
 				/* To avoid having to move around items within the vector,
@@ -515,10 +456,9 @@ void processor::notify_next(processor *client)
 		}
 	}
 	if (found) {
-		error = subscriber_list_t_extend (subscribers, client);
 			/* A possible error can only happen during reallocation. This is impossible here,
 			 * because we only push one item, and only if it was removed previously. */
-		CHECK ("no_error_possible", error == T_OK);
+		RT_TRACE (subscriber_list_t_extend (subscribers, client));
 	}
 }
 
@@ -545,7 +485,7 @@ void processor::application_loop()
 			has_client = true;
 
 			process_priv_queue (next_job.queue);
-			notify_next (next_job.sender);
+			rt_processor_publish_wait_condition (this, next_job.sender);
 
 			has_client = false;
 		} else {

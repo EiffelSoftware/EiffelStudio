@@ -62,21 +62,7 @@ RT_DECLARE_VECTOR_BASE (private_queue_list_t, priv_queue*)
  */
 class processor
 {
-
 public:
-  /* Construct a new processor.
-   * @_pid the processor ID that will be used to identify this processor
-   *       to the Eiffel runtime
-   * @_has_backing_thread whether the processor alreadyd has a backing thread,
-   *                      normally this is false, but for the root processor
-   *                      it will already be true.
-   *
-   * The new processor will usually not yet have a thread backing it.
-   */
-  processor(EIF_SCP_PID _pid,
-            bool _has_backing_thread = false);
-
-  ~processor();
 
   /* The main loop of the processor.
    *
@@ -141,10 +127,6 @@ public:
 
 		/* The processors that registered for a wait condition change. */
 	subscriber_list_t wait_condition_subscribers;
-
-private:
-  void notify_next(processor *);
-
 
 public:
 

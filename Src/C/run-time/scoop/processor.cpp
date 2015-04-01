@@ -119,7 +119,8 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 doc:	<routine name="rt_processor_destroy" return_type="int" export="shared">
 doc:		<summary> Destroy the processor 'self' and release all internal resources. </summary>
 doc:		<param name="self" type="processor*"> The processor to be destroyed. May be NULL. </param>
-doc:		<return> T_OK on success. On failure, an error code that may happen during mutex / condition variable destruction is propagated. In case of an error the processor struct itself is not freed. </return>
+doc:		<return> T_OK on success. On failure, an error code that may happen during mutex / condition variable destruction is propagated.
+doc:			In case of an error the feature tries its best to free as many internal resources as possible, but does not free 'self' itself. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call this function after the garbage collection phase, when all wait condition registrations and private queues from this processor have been revoked. </synchronization>
 doc:	</routine>

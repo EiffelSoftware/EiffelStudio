@@ -63,7 +63,9 @@ processor_registry::processor_registry () :
 
 	used_pids.add(0);
 
-	processor *root_proc = new processor(0, true);
+	processor *root_proc = NULL;
+	int error = rt_processor_create (0, EIF_TRUE, &root_proc);
+	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
 	root_proc->has_client = true;
 
 	procs[0] = root_proc;
@@ -78,7 +80,7 @@ processor_registry::processor_registry () :
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 {
 	EIF_SCP_PID pid = 0;
-	processor *proc;
+	processor *proc = NULL;
 		/* TODO: Return newly allocated PID instead of writing it to 'obj'
 		   so that the argument 'obj' can be removed. */
 	EIF_OBJECT object = eif_protect (obj);
@@ -96,7 +98,9 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 		}
 	}
 
-	proc = new processor(pid, false);
+	int error = rt_processor_create (pid, EIF_FALSE, &proc);
+	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
+
 	procs[pid] = proc;
 	obj = eif_access (object);
 	RTS_PID(obj) = pid;
@@ -128,7 +132,8 @@ void processor_registry::return_processor (processor *proc)
 	eif_unset_processor_id ();
 
 	if (used_pids.erase (pid)) {
-		delete proc;
+		int error = rt_processor_destroy (proc);
+		CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
 		procs [pid] = NULL;
 
 		if (used_pids.size() == 0) {

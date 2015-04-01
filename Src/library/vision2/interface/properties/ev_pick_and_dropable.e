@@ -257,7 +257,7 @@ feature -- Status setting
 				pebble_y_position = a_y
 		end
 
-	set_accept_cursor (a_cursor: like accept_cursor)
+	set_accept_cursor (a_cursor: detachable like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -267,7 +267,7 @@ feature -- Status setting
 			implementation.set_accept_cursor (a_cursor)
 		end
 
-	set_deny_cursor (a_cursor: like deny_cursor)
+	set_deny_cursor (a_cursor: detachable like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -373,14 +373,14 @@ invariant
 		mode_is_target_menu.to_integer = 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -199,11 +199,6 @@ public:
   rt_message current_msg;
 
 private:
-  /* Try to execute a call from the private queue.
-   * @pq private queue to take the call from
-   * @call the call to apply
-   */
-  bool try_call (call_data *call);
 
   void process_priv_queue(priv_queue*);
 

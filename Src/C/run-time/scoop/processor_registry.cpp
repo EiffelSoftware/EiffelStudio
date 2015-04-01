@@ -132,8 +132,7 @@ void processor_registry::return_processor (processor *proc)
 	eif_unset_processor_id ();
 
 	if (used_pids.erase (pid)) {
-		int error = rt_processor_destroy (proc);
-		CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
+		rt_processor_destroy (proc);
 		procs [pid] = NULL;
 
 		if (used_pids.size() == 0) {

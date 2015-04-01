@@ -37,8 +37,6 @@
 
 #ifndef _PROCESSOR_H
 #define _PROCESSOR_H
-#include <memory>
-#include "qoq.hpp"
 
 #include "private_queue.hpp"
 #include "req_grp.hpp"
@@ -228,6 +226,10 @@ private:
   void process_priv_queue(priv_queue*);
 
 };
+
+/* Creation and destruction. */
+rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result);
+rt_shared int rt_processor_destroy (processor* self);
 
 /* Wait condition subscription management. */
 rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client);

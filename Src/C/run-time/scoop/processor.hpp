@@ -72,14 +72,6 @@ public:
    */
   void application_loop();
 
-  /* Send a shutdown message.
-   *
-   * Sending a shutdown message will cause the thread to shutdown when it
-   * receives it. It will only receive it after it has processed the other
-   * requests in its <qoq>, so it may not take effect immediately.
-   */
-  void shutdown();
-
   /* The cache of private queues.
    */
   queue_cache cache;
@@ -124,11 +116,6 @@ public:
    * processor, which may not have any references to it, from being collected.
    */
   bool has_client;
-
-  /* Marks the processor's <priv_queues>
-   * @mark The specific marking routine.
-   */
-  void mark (MARKER marking);
 
   /* A result notifier.
    * 
@@ -186,6 +173,10 @@ public:
 /* Creation and destruction. */
 rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result);
 rt_shared void rt_processor_destroy (processor* self);
+rt_private void rt_processor_mark (processor* self, MARKER marking);
+
+/* Thread spawning and teardown. */
+rt_shared void rt_processor_shutdown (processor* self);
 
 /* Wait condition subscription management. */
 rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client);

@@ -100,8 +100,8 @@ feature -- Status report
 					Result := item.valid_operands (l_tuple)
 					forth
 				end
+				go_to (cur)
 			end
-			go_to (cur)
 		end
 
 	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN]

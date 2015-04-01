@@ -87,6 +87,55 @@ RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, priv_queue*)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, priv_queue*)
 
 
+
+
+/*
+doc:	<routine name="rt_processor_create" return_type="int" export="shared">
+doc:		<summary> Create a new processor with ID 'a_pid'. </summary>
+doc:		<param name="a_pid" type="EIF_SCP_PID"> The new ID of the processor. </param>
+doc:		<param name="is_root_processor" type="EIF_BOOLEAN"> A boolean indicating whether the new processor is the root processor. </param>
+doc:		<param name="result" type="processor**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<return> An error code: T_OK on success. T_NO_MORE_MEMORY when memory allocation fails, and possibly any of the error codes that may happen during mutex creation. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result)
+{
+	int error = T_OK;
+	processor* self = NULL;
+
+	REQUIRE ("result_not_null", result);
+	REQUIRE ("valid_pid", a_pid != NULL_PROCESSOR_ID);
+		/* The valid_pid precondition may be dropped one day, but currently the SCOP
+		 * runtime is not able to handle processors with this reserved ID. */
+
+	self = new processor (a_pid, is_root_processor);
+	*result = self;
+	return error;
+}
+
+/*
+doc:	<routine name="rt_processor_destroy" return_type="int" export="shared">
+doc:		<summary> Destroy the processor 'self' and release all internal resources. </summary>
+doc:		<param name="self" type="processor*"> The processor to be destroyed. May be NULL. </param>
+doc:		<return> T_OK on success. On failure, an error code that may happen during mutex / condition variable destruction is propagated. In case of an error the processor struct itself is not freed. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call this function after the garbage collection phase, when all wait condition registrations and private queues from this processor have been revoked. </synchronization>
+doc:	</routine>
+*/
+rt_shared int rt_processor_destroy (processor* self)
+{
+	int error = T_OK;
+
+	if (self) {
+		delete self;
+	}
+
+	return error;
+}
+
+
 processor::processor(EIF_SCP_PID _pid, bool _has_backing_thread) :
 	has_client (true),
 	has_backing_thread (_has_backing_thread),

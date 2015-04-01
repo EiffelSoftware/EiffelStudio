@@ -175,7 +175,7 @@ void processor_registry::mark_all (MARKER marking)
 		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 			if (used_pids.has (i)) {
 				processor *proc = (*this) [i];
-				proc->mark (marking);
+				rt_processor_mark (proc, marking);
 			}
 		}
 		is_marking = false;
@@ -193,7 +193,7 @@ void processor_registry::unmark (EIF_SCP_PID pid)
 	if (used_pids.has (pid)) {
 		processor *proc = (*this) [pid];
 		clear_from_caches (proc);
-		proc->shutdown();
+		rt_processor_shutdown (proc);
 	}
 }
 

@@ -57,9 +57,8 @@ feature -- Basic operations
 			-- Create a development window and process `a_stone'.
 		do
 			if a_stone.is_valid then
-				was_dropped := True
 				tool.set_is_rebuild_world_needed (True)
-			tool.launch_stone (a_stone)
+				tool.launch_stone (a_stone)
 			end
 		end
 
@@ -67,9 +66,8 @@ feature -- Basic operations
 			-- Create a development window and process `a_stone'.
 		do
 			if a_stone.is_valid then
-				was_dropped := True
 				tool.set_is_rebuild_world_needed (True)
-			tool.launch_stone (a_stone)
+				tool.launch_stone (a_stone)
 			end
 		end
 
@@ -79,10 +77,8 @@ feature -- Basic operations
 			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_class_stone)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
-			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_fucntion)
-				-- Fixme: when EB_SD_COMMAND_TOOL_BAR_BUTTON supports `pebble',
-				-- we should uncomment following code.
---			Result.set_pebble_function (agent pebble)
+			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
+			Result.set_pebble_function (agent pebble)
 		end
 
 feature {NONE} -- Implementation
@@ -95,40 +91,28 @@ feature {NONE} -- Implementation
 			cluster_stone: CLUSTER_STONE
 			tbi: EB_SD_COMMAND_TOOL_BAR_BUTTON
 		do
-			if not was_dropped then
-				Result := tool.last_stone
-				check
-					internal_managed_sd_toolbar_items /= Void
-					not internal_managed_sd_toolbar_items.is_empty
-				end
-				tbi := internal_managed_sd_toolbar_items.first
-				class_stone ?= Result
-				cluster_stone ?= Result
-				if class_stone /= Void then
-					tbi.set_accept_cursor (cursors.Cur_class)
-				elseif cluster_stone /= Void then
-					tbi.set_accept_cursor (cursors.Cur_cluster)
-				end
-			else
-				was_dropped := False
+			Result := tool.last_stone
+			check
+				internal_managed_sd_toolbar_items /= Void
+				not internal_managed_sd_toolbar_items.is_empty
+			end
+			tbi := internal_managed_sd_toolbar_items.first
+			class_stone ?= Result
+			cluster_stone ?= Result
+			if class_stone /= Void then
+				tbi.set_accept_cursor (cursors.Cur_class)
+				tbi.set_deny_cursor (cursors.cur_x_class)
+			elseif cluster_stone /= Void then
+				tbi.set_accept_cursor (cursors.Cur_cluster)
+				tbi.set_deny_cursor (cursors.cur_x_cluster)
 			end
 		end
 
-	veto_pebble_fucntion (a_any: ANY): BOOLEAN
-			-- Veto function
-		local
-			cluster_stone: CLUSTER_STONE
-			class_stone: CLASSI_STONE
+	veto_pebble_function (a_any: ANY): BOOLEAN
+			-- Veto function. We only accept cluster or classes.
 		do
-			cluster_stone ?= a_any
-			Result := cluster_stone /= Void
-			if not Result then
-				class_stone ?= a_any
-				Result := class_stone /= Void
-			end
+			Result := attached {CLUSTER_STONE} a_any or attached {CLASSI_STONE} a_any
 		end
-
-	was_dropped: BOOLEAN
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
@@ -159,7 +143,7 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -172,22 +156,22 @@ feature {NONE} -- Implementation
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CENTER_DIAGRAM_COMMAND

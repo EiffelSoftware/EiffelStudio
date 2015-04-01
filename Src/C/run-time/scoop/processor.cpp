@@ -91,7 +91,7 @@ RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, priv_queue*)
 
 /*
 doc:	<routine name="rt_processor_create" return_type="int" export="shared">
-doc:		<summary> Create a new processor with ID 'a_pid'. </summary>
+doc:		<summary> Create a new processor with ID 'a_pid'. Note: This only creates the processor object and does not spawn a new thread. </summary>
 doc:		<param name="a_pid" type="EIF_SCP_PID"> The new ID of the processor. </param>
 doc:		<param name="is_root_processor" type="EIF_BOOLEAN"> A boolean indicating whether the new processor is the root processor. </param>
 doc:		<param name="result" type="processor**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
@@ -110,8 +110,73 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		/* The valid_pid precondition may be dropped one day, but currently the SCOP
 		 * runtime is not able to handle processors with this reserved ID. */
 
-	self = new processor (a_pid, is_root_processor);
-	*result = self;
+		/* Note: We initialize to zero to avoid having inconsistent states
+		 * in case we need to call rt_processor_destroy when a failure happens. */
+	self = (processor*) calloc (1, sizeof (class processor));
+
+	if (self) {
+
+			/* Initialize the data fields. */
+		self->pid = a_pid;
+		self->has_client = true;
+		self->is_dirty = false;
+		rt_message_init (&self->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+			/* Only the root processor initially has a backing thread. */
+		self->has_backing_thread = is_root_processor;
+
+			/* Initialize the embedded vector structs.
+			 * As no memory allocation happens, we don't have to care about errors. */
+		request_group_stack_t_init (&self->request_group_stack);
+		subscriber_list_t_init (&self->wait_condition_subscribers);
+		private_queue_list_t_init (&self->generated_private_queues);
+
+			/* Initialize the queue_cache. We may get an allocation failure here.
+			 * TODO: Change rt_queue_cache_init to report failure with an error code. */
+		/* error = */
+		rt_queue_cache_init (&self->cache, self);
+
+			/* Next we need to initialize several message channels. */
+		if (T_OK == error) {
+				/* TODO: Change rt_message_channel_init to return an error code instead of an exception. */
+			rt_message_channel_init (&self->result_notify, 64);
+		}
+		if (T_OK == error) {
+			rt_message_channel_init (&self->startup_notify, 64);
+		}
+		if (T_OK == error) {
+			rt_message_channel_init (&self->queue_of_queues, 128);
+		}
+
+
+			/* As a last step we create mutexes and condition variables.
+			 * This may fail as well, so we have to catch errors. */
+		if (T_OK == error) {
+			error = eif_pthread_mutex_create (&self->generated_private_queues_mutex);
+		}
+		if (T_OK == error) {
+			error = eif_pthread_mutex_create (&self->queue_of_queues_mutex);
+		}
+
+		if (T_OK == error) {
+			error = eif_pthread_mutex_create (&self->wait_condition_mutex);
+		}
+		if (T_OK == error) {
+			error = eif_pthread_cond_create (&self->wait_condition);
+		}
+
+		if (T_OK == error) {
+				/* If we managed to allocate all we need we can increase the number of active processors. */
+			increment_active_processor_count();
+			*result = self;
+		} else {
+				/* Something went wrong. Try to clean up any partially allocated resources before returning. */
+			rt_processor_destroy (self);
+		}
+	} else {
+			/* The initial allocation failed. Report allocation failure. */
+		error = T_NO_MORE_MEMORY;
+	}
+
 	return error;
 }
 
@@ -130,7 +195,9 @@ rt_shared int rt_processor_destroy (processor* self)
 	int error = T_OK;
 
 	if (self) {
-		delete self;
+		self->~processor();
+		free (self);
+// 		delete self;
 	}
 
 	return error;

@@ -267,8 +267,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call during GC. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_mark (processor* self, MARKER marking)
-// void processor::mark(MARKER marking)
+rt_shared void rt_processor_mark (processor* self, MARKER marking)
 {
 	size_t l_count = 0;
 	priv_queue* l_queue = NULL;
@@ -354,10 +353,6 @@ rt_private EIF_BOOLEAN rt_processor_try_call (call_data *call)
 	return success;
 }
 
-  /* Process a call on this processor.
-   * @client the client of the call
-   * @call the call to execute.
-   */
 /*
 doc:	<routine name="rt_processor_execute_call" return_type="void" export="shared">
 doc:		<summary> Execute the call 'call' coming from processor 'client'. </summary>
@@ -464,10 +459,18 @@ rt_private void rt_processor_process_private_queue (processor* self, priv_queue 
 	}
 }
 
-/* The entry point for new SCOOP processors after the runtime has set up the context.
- * Note: The feature has an unused EIF_REFERENCE as its first argument. This is necessary
- * because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. */
-void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
+/*
+doc:	<routine name="spawn_main" return_type="void" export="private">
+doc:		<summary> The entry point for new SCOOP processors after the Eiffel runtime has set up the context.
+doc:			Note: The feature has an unused EIF_REFERENCE as its first argument.
+doc:			This is necessary because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. </summary>
+doc:		<param name="dummy_thread_object" type="EIF_REFERENCE"> A dummy object to make the signature conform to EIF_PROCEDURE. </param>
+doc:		<param name="pid", type="EIF_SCP_PID"> The ID of the newly spawned processor. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
 	processor *proc = registry [pid];
 
@@ -482,15 +485,30 @@ void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 	registry.return_processor (proc);
 }
 
-
-void processor::spawn()
+/*
+doc:	<routine name="rt_processor_spawn" return_type="void" export="shared">
+doc:		<summary> Ask the Eiffel runtime to create a new thread for processor 'self'.
+doc:			The thread calling this function will wait until the new thread has been fully
+doc:			initialized. This is apparently necessary for garbage collection. </summary>
+doc:		<param name="self" type="processor*"> The processor object for which a thread shall be spawned. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call once per processor object. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_spawn (processor* self)
 {
+	struct rt_message dummy; /* TODO: Can we get rid of this dummy object? */
+
+		/* TODO: What happens when thread allocation fails? */
 	eif_thr_create_with_attr_new (
 		NULL,	/* No root object, if this is only passed to spawn_main this is OK */
 		(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
-		pid, /* Logical PID */
+		self->pid, /* Logical PID */
 		EIF_TRUE, /* We are a processor */
 		NULL); /* There are no attributes */
+
+		/* Wait for the signal that the new thread has started. */
+	rt_message_channel_receive (&self->startup_notify, &dummy);
 }
 
 /*

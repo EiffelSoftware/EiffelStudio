@@ -107,9 +107,7 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 
 	used_pids.add (pid);
 
-	proc->spawn();
-	struct rt_message dummy;
-	rt_message_channel_receive (&proc->startup_notify, &dummy);
+	rt_processor_spawn (proc);
 
 	eif_wean (object);
 

@@ -173,9 +173,10 @@ public:
 /* Creation and destruction. */
 rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result);
 rt_shared void rt_processor_destroy (processor* self);
-rt_private void rt_processor_mark (processor* self, MARKER marking);
+rt_shared void rt_processor_mark (processor* self, MARKER marking);
 
 /* Thread spawning and teardown. */
+rt_shared void rt_processor_spawn (processor* self);
 rt_shared void rt_processor_shutdown (processor* self);
 
 /* Wait condition subscription management. */

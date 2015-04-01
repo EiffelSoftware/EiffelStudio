@@ -268,7 +268,7 @@ doc:		<synchronization> None </synchronization>
 doc:		<fixme> This feature should be moved somewhere else. It doesn't need anything from the processor class, but pulls in a lot of dependencies. Maybe eveqs.cpp? </fixme>
 doc:	</routine>
 */
-EIF_BOOLEAN rt_processor_try_call (call_data *call)
+rt_private EIF_BOOLEAN rt_processor_try_call (call_data *call)
 {
 		/* Switch this on to catch exceptions */
 		/* This section slows down some benchmarks by 2x. I believe */
@@ -364,30 +364,49 @@ void processor::operator()(processor *client, call_data* call)
 	free (call);
 }
 
-void processor::process_priv_queue(priv_queue *pq)
+
+/*
+doc:	<routine name="rt_processor_process_private_queue" return_type="void" export="private">
+doc:		<summary> Execute all calls in the private queue 'queue' until an unlock message has arrived. </summary>
+doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
+doc:		<param name="queue" type="priv_queue*"> The private queue to be worked on. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_processor_process_private_queue (processor* self, priv_queue *queue)
 {
-	for (;;) {
+	EIF_BOOLEAN is_stopped = EIF_FALSE;
+	enum scoop_message_type type = SCOOP_MESSAGE_INVALID;
 
-		/* Receive a new call and store it in current_msg.
-		 * This is a blocking call if no data is available.
-		 * The call might be logged by the original client of the queue
-		 * or some other processor that has acquired the locks during lock passing. */
-		rt_message_channel_receive (&pq->channel, &this->current_msg);
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("queue_not_null", queue);
 
-		enum scoop_message_type type = current_msg.message_type;
+	while (!is_stopped) {
+
+			/* Receive a new call and store it in current_msg.
+			* This is a blocking call if no data is available.
+			* The call might be logged by the original client of the queue
+			* or some other processor that has acquired the locks during lock passing. */
+		rt_message_channel_receive (&queue->channel, &self->current_msg);
+
+		type = self->current_msg.message_type;
 
 		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK);
 
 		if (type == SCOOP_MESSAGE_UNLOCK) {
 			/* Forget dirtiness upon unlock */
-			is_dirty = false;
-			return;
+			self->is_dirty = false;
+			is_stopped = EIF_TRUE;
+		} else {
+
+			(*self)(self->current_msg.sender, self->current_msg.call);
+
+				/* Make sure the call doesn't get traversed again for GC */
+			self->current_msg.message_type = SCOOP_MESSAGE_INVALID;
+			self->current_msg.sender = NULL;
+			self->current_msg.call = NULL;
 		}
-
-		(*this)(current_msg.sender, current_msg.call);
-
-			/* Make sure the call doesn't get traversed again for GC */
-		current_msg.call = NULL; /* TODO: initialize to default state? */
 	}
 }
 
@@ -494,7 +513,7 @@ void processor::application_loop()
 			increment_active_processor_count();
 			has_client = true;
 
-			process_priv_queue (next_job.queue);
+			rt_processor_process_private_queue (this, next_job.queue);
 			rt_processor_publish_wait_condition (this, next_job.sender);
 
 			has_client = false;

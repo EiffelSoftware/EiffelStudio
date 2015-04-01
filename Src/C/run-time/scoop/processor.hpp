@@ -197,11 +197,6 @@ public:
    * This call in here will be traced during marking.
    */
   rt_message current_msg;
-
-private:
-
-  void process_priv_queue(priv_queue*);
-
 };
 
 /* Creation and destruction. */

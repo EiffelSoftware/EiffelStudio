@@ -1260,7 +1260,7 @@ feature -- Implementation
 			if not debugger_is_disabled then
 				debugger_is_disabled := True
 				saved_debug_state := debug_state
-				disable_debugger
+				discard_debug
 			end
 		end
 
@@ -1464,7 +1464,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

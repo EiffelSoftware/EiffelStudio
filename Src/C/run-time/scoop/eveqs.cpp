@@ -155,8 +155,8 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 
 	REQUIRE("has data", data);
 
-	if (!supplier->has_backing_thread) {
-		supplier->has_backing_thread = true;
+	if (!supplier->is_creation_procedure_logged) {
+		supplier->is_creation_procedure_logged = EIF_TRUE;
 		rt_private_queue_lock (pq, client);
 		rt_private_queue_log_call(pq, client, data);
 		rt_private_queue_unlock (pq);

@@ -66,7 +66,7 @@ processor_registry::processor_registry () :
 	processor *root_proc = NULL;
 	int error = rt_processor_create (0, EIF_TRUE, &root_proc);
 	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
-	root_proc->has_client = true;
+	CHECK ("has_client_set", root_proc->has_client);
 
 	procs[0] = root_proc;
 
@@ -211,7 +211,9 @@ void processor_registry::wait_for_all()
 {
 	processor *root_proc = (*this)[0];
 
-	root_proc->has_client = false;
+		/* This statement seems to be redundant with the code in rt_processor_application_loop */
+	root_proc->has_client = EIF_FALSE;
+
 	rt_processor_application_loop (root_proc);
 
 	return_processor (root_proc);

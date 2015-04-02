@@ -44,7 +44,8 @@ inherit
 			update_for_pick_and_drop,
 			initialize,
 			destroy,
-			set_background_color
+			set_background_color,
+			create_interface_objects
 		end
 
 	SD_WIDGETS_LISTS
@@ -55,25 +56,25 @@ inherit
 		end
 
 create
-	make
+	make, default_create
 
 feature {NONE} -- Initlization
 
 	make
 			-- Creation method
 		do
-			create internal_shared
-			create internal_items.make (1)
-
 			default_create
-
-			add_tool_bar (Current)
-
-				-- Prevent mouse press from taking the focus.
-			disable_focus_on_press
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create internal_shared
+			create internal_items.make (1)
+		end
 
 	initialize
 			-- Initlialize
@@ -96,6 +97,11 @@ feature {SD_TOOL_BAR} -- Internal initlization
 			set_pebble_function (agent on_pebble_function)
 
 			set_background_color (internal_shared.default_background_color)
+
+			add_tool_bar (Current)
+
+				-- Prevent mouse press from taking the focus.
+			disable_focus_on_press
 		end
 
 feature -- Command

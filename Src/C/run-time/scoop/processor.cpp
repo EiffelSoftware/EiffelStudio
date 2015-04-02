@@ -618,20 +618,56 @@ rt_shared void rt_processor_shutdown (processor* self)
 	rt_message_channel_send (&self->queue_of_queues, SCOOP_MESSAGE_SHUTDOWN, NULL, NULL, NULL);
 }
 
-
-priv_queue* processor::new_priv_queue()
+  /* New private queue.
+   *
+   * @return a new private queue whose supplier is this processor.
+   */
+/*
+doc:	<routine name="rt_processor_new_private_queue" return_type="int" export="shared">
+doc:		<summary> Create a new private queue whose supplier is this processor. </summary>
+doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
+doc:		<param name="result" type="priv_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex locking error code on failure. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+int rt_processor_new_private_queue (processor* self, priv_queue** result)
 {
 	int error = T_OK;
+	priv_queue* l_queue = NULL;
 
-	priv_queue* l_queue = (priv_queue*) malloc (sizeof (priv_queue)); /* TODO: Error handling */
-	rt_private_queue_init (l_queue, this);
+	REQUIRE ("self_not_nul", self);
+	REQUIRE ("result_not_null", result);
 
-		/* TODO: Error handling */
-	error = eif_pthread_mutex_lock (this->generated_private_queues_mutex);
-	error = private_queue_list_t_extend (&this->generated_private_queues, l_queue);
-	error = eif_pthread_mutex_unlock (this->generated_private_queues_mutex);
+	l_queue = (priv_queue*) malloc (sizeof (priv_queue));
 
-	return l_queue;
+	if (l_queue) {
+			/* TODO: Change rt_private_queue_init to return an error code instead of an exception. */
+		/*error=*/rt_private_queue_init (l_queue, self);
+
+		if (T_OK == error) {
+			error = eif_pthread_mutex_lock (self->generated_private_queues_mutex);
+
+			if (T_OK == error) {
+				error = private_queue_list_t_extend (&self->generated_private_queues, l_queue);
+			}
+				/* An error during unlock is an indication of a bug. */
+			RT_TRACE (eif_pthread_mutex_unlock (self->generated_private_queues_mutex));
+		}
+
+		if (T_OK == error) {
+			*result = l_queue;
+		} else {
+				/* An error occured. Free allocated resources and return. */
+			rt_private_queue_deinit (l_queue);
+			free (l_queue);
+		}
+
+	} else {
+		error = T_NO_MORE_MEMORY;
+	}
+	return error;
 }
 
 /*

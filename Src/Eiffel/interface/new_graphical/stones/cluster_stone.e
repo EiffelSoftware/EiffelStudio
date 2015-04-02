@@ -149,9 +149,9 @@ feature -- Access
  							l_group_valid: l_group.is_valid
  						end
 		 				if path /= Void then
-		 					create {CLUSTER_STONE}Result.make_subfolder (l_group, path, folder_name)
+		 					create {CLUSTER_STONE} Result.make_subfolder (l_group, path, folder_name)
 		 				else
-		 					create {CLUSTER_STONE}Result.make (l_group)
+		 					create {CLUSTER_STONE} Result.make (l_group)
 		 				end
  					end
  				end
@@ -219,7 +219,7 @@ invariant
 	path_not_void: path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

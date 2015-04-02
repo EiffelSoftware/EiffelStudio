@@ -130,7 +130,7 @@ feature {NONE} -- Operation
 	finish
 			-- Finish the HMAC computation.
 		local
-			hash_inner, hash_outer: SPECIAL [NATURAL_8]
+			hash_inner: SPECIAL [NATURAL_8]
 			l_hash: like message_hash
 		do
 			hash_inner := message_hash.digest
@@ -183,8 +183,6 @@ feature {NONE} -- Implementation
 		end
 
 	pad_key (k: SPECIAL [NATURAL_8]): SPECIAL [NATURAL_8]
-		local
-			l_result_bytes: SPECIAL [NATURAL_8]
 		do
 			create Result.make_filled (0, hash_block_size)
 			Result.copy_data (k, 0, 0, k.count)
@@ -194,7 +192,7 @@ feature {NONE} -- Implementation
 	opad: SPECIAL [NATURAL_8]
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

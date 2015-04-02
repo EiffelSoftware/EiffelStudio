@@ -11,8 +11,7 @@ deferred class
 inherit
 	STONE
 		redefine
-			is_valid,
-			synchronized_stone
+			is_valid
 		end
 
 feature -- Access
@@ -51,17 +50,8 @@ feature -- Access
 			Result := f.exists
 		end
 
-	synchronized_stone: STONE
-			-- Valid stone corresponding to `Current' if `is_valid'
-			-- or Void if not.
-		do
-			if is_valid then
-				Result := Current
-			end
-		end
-
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

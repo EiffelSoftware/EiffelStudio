@@ -480,7 +480,7 @@ rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 		/* TODO: Would it make sense to add another message type SCOOP_PROCESSOR_STARTED ? */
 	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 
-	proc->application_loop();
+	rt_processor_application_loop (proc);
 
 	registry.return_processor (proc);
 }
@@ -563,10 +563,26 @@ rt_private void rt_processor_publish_wait_condition (processor* self, processor 
 	}
 }
 
-void processor::application_loop()
+/*
+doc:	<routine name="rt_processor_application_loop" return_type="void" export="shared">
+doc:		<summary> The main loop of a SCOOP processor.
+doc:			Normally this will be called when the thread spawns but here we expose it
+doc:			so that it may be called externally for the root thread (whose thread is
+doc:			the main thread of the program, and thus already exists). </summary>
+doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_application_loop (processor* self)
 {
-	has_client = false;
-	for (;;) {
+	EIF_BOOLEAN is_stopped = EIF_FALSE;
+
+	REQUIRE ("self_not_null", self);
+
+	self->has_client = false;
+
+	while (!is_stopped) {
 		struct rt_message next_job;
 
 			/* Triggering the collection happens when all */
@@ -575,32 +591,26 @@ void processor::application_loop()
 			/* freeing threads to let new ones take their */
 			/* place. */
 		if (decrement_and_fetch_active_processor_count() == 0
-			&& rt_message_channel_is_empty (&this->queue_of_queues)) {
+			&& rt_message_channel_is_empty (&self->queue_of_queues)) {
 			plsc();
 		}
 
-		rt_message_channel_receive (&this->queue_of_queues, &next_job);
+		rt_message_channel_receive (&self->queue_of_queues, &next_job);
 
 		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();
-			has_client = true;
+			self->has_client = true;
 
-			rt_processor_process_private_queue (this, next_job.queue);
-			rt_processor_publish_wait_condition (this, next_job.sender);
+			rt_processor_process_private_queue (self, next_job.queue);
+			rt_processor_publish_wait_condition (self, next_job.sender);
 
-			has_client = false;
+			self->has_client = false;
 		} else {
 			CHECK ("shutdown_message", next_job.message_type == SCOOP_MESSAGE_SHUTDOWN);
-			break;
+			is_stopped = EIF_TRUE;
 		}
 	}
 }
-  /* Send a shutdown message.
-   *
-   * Sending a shutdown message will cause the thread to shutdown when it
-   * receives it. It will only receive it after it has processed the other
-   * requests in its <qoq>, so it may not take effect immediately.
-   */
 
 /*
 doc:	<routine name="rt_processor_shutdown" return_type="void" export="shared">
@@ -618,10 +628,6 @@ rt_shared void rt_processor_shutdown (processor* self)
 	rt_message_channel_send (&self->queue_of_queues, SCOOP_MESSAGE_SHUTDOWN, NULL, NULL, NULL);
 }
 
-  /* New private queue.
-   *
-   * @return a new private queue whose supplier is this processor.
-   */
 /*
 doc:	<routine name="rt_processor_new_private_queue" return_type="int" export="shared">
 doc:		<summary> Create a new private queue whose supplier is this processor. </summary>

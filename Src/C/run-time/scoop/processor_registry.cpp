@@ -212,7 +212,7 @@ void processor_registry::wait_for_all()
 	processor *root_proc = (*this)[0];
 
 	root_proc->has_client = false;
-	root_proc->application_loop();
+	rt_processor_application_loop (root_proc);
 
 	return_processor (root_proc);
 

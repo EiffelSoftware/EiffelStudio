@@ -172,6 +172,8 @@ feature -- dragging
 		do
 			if e_feature /= Void and then e_feature.is_valid then
 				Result := e_feature.written_class.file_name
+			else
+				Result := Precursor {CLASSC_STONE}
 			end
 		end
 
@@ -298,7 +300,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -94,8 +94,7 @@ feature {NONE} -- Constant setting
 			until
 				string_constant_set_procedures.off
 			loop
-				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
 				if s /= Void then
 					string_constant_set_procedures.item.call ([s])
 				end
@@ -116,8 +115,7 @@ feature {NONE} -- Constant setting
 			until
 				integer_constant_set_procedures.off
 			loop
-				integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).call (Void)
-				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).last_result
+				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).item (Void)
 				integer_constant_set_procedures.item.call ([i])
 				integer_constant_set_procedures.forth
 			end
@@ -127,11 +125,9 @@ feature {NONE} -- Constant setting
 			until
 				integer_interval_constant_retrieval_functions.off
 			loop
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg1 := integer_interval_constant_retrieval_functions.item.last_result
+				arg1 := integer_interval_constant_retrieval_functions.item.item (Void)
 				integer_interval_constant_retrieval_functions.forth
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg2 := integer_interval_constant_retrieval_functions.item.last_result
+				arg2 := integer_interval_constant_retrieval_functions.item.item (Void)
 				create int.make (arg1, arg2)
 				integer_interval_constant_set_procedures.item.call ([int])
 				integer_interval_constant_retrieval_functions.forth
@@ -150,8 +146,7 @@ feature {NONE} -- Constant setting
 			until
 				pixmap_constant_set_procedures.off
 			loop
-				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
 				if p /= Void then
 					pixmap_constant_set_procedures.item.call ([p])
 				end
@@ -170,8 +165,7 @@ feature {NONE} -- Constant setting
 			until
 				font_constant_set_procedures.off
 			loop
-				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
 				if f /= Void then
 					font_constant_set_procedures.item.call ([f])
 				end
@@ -190,8 +184,7 @@ feature {NONE} -- Constant setting
 			until
 				color_constant_set_procedures.off
 			loop
-				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
 				if c /= Void then
 					color_constant_set_procedures.item.call ([c])
 				end

@@ -363,8 +363,7 @@ feature {NONE}  -- Implementation functions
 				l_veto_function := l_actions.veto_pebble_function
 			end
 			if l_veto_function /= Void then
-				l_veto_function.call ([a_any, notebook.selected_item])
-				Result := l_veto_function.last_result
+				Result := l_veto_function.item ([a_any, notebook.selected_item])
 			else
 				-- If veto drop function not set
 				Result := True
@@ -587,7 +586,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

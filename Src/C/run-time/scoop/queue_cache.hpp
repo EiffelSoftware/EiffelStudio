@@ -56,7 +56,7 @@ class priv_queue;
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
 
 /*
-doc:	<struct name="queue_cache", export="shared">
+doc:	<struct name="queue_cache" export="shared">
 doc:		<summary> A cache of private queues.
 doc:
 doc:			This cache of private queues creates new private queues on demand.
@@ -75,9 +75,9 @@ doc: 			queues it already has, adds itself at the end of the stack, and gives
 doc: 			the whole borrowed_queues stack to the receiver. The reverse operation
 doc: 			happens on a lock passing pop().
 doc:		</summary>
-doc:		<field name="owner", type="processor*"> The owner of this queue_cache. </field>
-doc:		<field name="owned_queues", type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
-doc:		<field name="borrowed_queues", type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
+doc:		<field name="owner" type="processor*"> The owner of this queue_cache. </field>
+doc:		<field name="owned_queues" type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
+doc:		<field name="borrowed_queues" type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
 doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
 doc: 			In the future we may need to change the implementation e.g. by not extending the borrowed_queues stack if we detect that the queue_cache to be inserted
 doc:			is already in the stack. This probably needs some more data structures though to ensure correct behaviour on pop(). </fixme>
@@ -130,7 +130,8 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 		 * as the associated processor was idle and all its objects have been garbage collected. */
 	REQUIRE ("no_borrowed_queues", !self->borrowed_queues);
 
-		/* TODO: Figure out who is going to deallocate the private queues within this queue cache. */
+		/* Delete the hash table used to hold the queues owned by this processor.
+		 * The queues themselves will be deleted by the processor which is supplier of the queue. */
 	ht_release (&self->owned_queues);
 }
 

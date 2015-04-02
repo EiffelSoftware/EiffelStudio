@@ -1539,7 +1539,7 @@ feature -- Docking library menu items
 					if l_editor /= Void then
 						if attached {CLASSI_STONE} l_editor.stone as lt_class_stone then
 							l_file_name := lt_class_stone.file_name
-							if l_file_name /= Void and then not l_file_name.is_empty then
+							if not l_file_name.is_empty then
 								create l_menu_item.make_with_text (a_dev_window.interface_names.m_Copy_full_path)
 								l_menu_item.select_actions.extend (agent (a_path: READABLE_STRING_GENERAL)
 										require

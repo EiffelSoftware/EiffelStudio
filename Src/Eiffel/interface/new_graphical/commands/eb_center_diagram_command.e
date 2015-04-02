@@ -78,33 +78,23 @@ feature -- Basic operations
 			Result.drop_actions.extend (agent execute_with_class_stone)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
-			Result.set_pebble_function (agent pebble)
+			Result.set_pebble_function (agent pebble (Result, ?, ?))
 		end
 
 feature {NONE} -- Implementation
 
-	pebble (x, y: INTEGER): STONE
-			-- pebble corresponding to class or cluster currently
+	pebble (a_tbi: like new_sd_toolbar_item; x, y: INTEGER): detachable STONE
+			-- Pebble corresponding to class or cluster currently
 			-- displayed in the context tool.
-		local
-			class_stone: CLASSI_STONE
-			cluster_stone: CLUSTER_STONE
-			tbi: EB_SD_COMMAND_TOOL_BAR_BUTTON
 		do
 			Result := tool.last_stone
-			check
-				internal_managed_sd_toolbar_items /= Void
-				not internal_managed_sd_toolbar_items.is_empty
-			end
-			tbi := internal_managed_sd_toolbar_items.first
-			class_stone ?= Result
-			cluster_stone ?= Result
-			if class_stone /= Void then
-				tbi.set_accept_cursor (cursors.Cur_class)
-				tbi.set_deny_cursor (cursors.cur_x_class)
-			elseif cluster_stone /= Void then
-				tbi.set_accept_cursor (cursors.Cur_cluster)
-				tbi.set_deny_cursor (cursors.cur_x_cluster)
+				-- Depending on the stone we need to use the proper p&d cursors.
+			if attached {CLASSI_STONE} Result then
+				a_tbi.set_accept_cursor (cursors.Cur_class)
+				a_tbi.set_deny_cursor (cursors.cur_x_class)
+			elseif attached {CLUSTER_STONE} Result then
+				a_tbi.set_accept_cursor (cursors.Cur_cluster)
+				a_tbi.set_deny_cursor (cursors.cur_x_cluster)
 			end
 		end
 

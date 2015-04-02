@@ -291,8 +291,7 @@ feature {NONE} -- Events
 				tx := tx.min (maximum_x).max (minimum_x)
 				ty := ty.min (maximum_y).max (minimum_y)
 				if attached real_position_agent as l_real_position_agent then
-					l_real_position_agent.call ([tx, ty])
-					t := l_real_position_agent.last_result
+					t := l_real_position_agent.item ([tx, ty])
 					if t = Void then
 						check t /= Void then end
 					end
@@ -328,7 +327,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

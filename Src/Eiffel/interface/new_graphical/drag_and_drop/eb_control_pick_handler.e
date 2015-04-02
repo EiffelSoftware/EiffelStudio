@@ -38,7 +38,6 @@ feature -- Basic operations
 			valid_stone: st /= Void and then st.is_valid
 		local
 			pref: STRING
-			cv_cst: CLASSI_STONE
 		do
 			if st.is_storable then
 				pref := chosen_receiver
@@ -53,9 +52,9 @@ feature -- Basic operations
 					window_manager.last_focused_development_window.tools.set_stone (st)
 
 				elseif pref.is_equal (names.co_external_editor) then
-					cv_cst ?= st
-					if cv_cst /= Void then
-						edit_in_external_editor (cv_cst)
+						-- We will open the stone in the external editor only if it has an associated file.
+					if attached {FILED_STONE} st as fs then
+						edit_in_external_editor (fs)
 					else
 						window_manager.last_focused_development_window.force_stone (st)
 					end
@@ -81,16 +80,18 @@ feature {NONE} -- Implementation
 			lower_case: Result.is_equal (Result.as_lower)
 		end
 
-	edit_in_external_editor (cs: CLASSI_STONE)
+	edit_in_external_editor (fs: FILED_STONE)
 			-- Process class stone.
 		local
 			req: COMMAND_EXECUTOR
 		do
 			create req
-			if attached {FEATURE_STONE} cs as l_feature then
+			if attached {FEATURE_STONE} fs as l_feature then
+					-- With a feature stone we can open the external editor on that feature if it supports
+					-- the ability (e.g. with vi you can do vi +line_number filename).
 				req.execute (preferences.misc_data.external_editor_cli (l_feature.class_i.file_name.name, l_feature.line_number))
 			else
-				req.execute (preferences.misc_data.external_editor_cli (cs.file_name, 1))
+				req.execute (preferences.misc_data.external_editor_cli (fs.file_name, 1))
 			end
 		end
 

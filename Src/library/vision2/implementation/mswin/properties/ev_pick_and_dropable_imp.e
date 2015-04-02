@@ -173,9 +173,7 @@ feature {EV_ANY_I} -- Implementation
 			application_imp.clear_transport_just_ended
 			if mode_is_pick_and_drop and a_button /= 3 then
 			else
-				if pebble_function /= Void then
-					call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-				end
+				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 				l_pebble := pebble
 				reset_pebble_function
 				if not application_imp.drop_actions_executing then
@@ -409,10 +407,7 @@ feature {EV_ANY_I} -- Implementation
 				is_pnd_in_transport := False
 					-- Assign `Void' to `last_pointed_target'.
 				press_action := Ev_pnd_start_transport
-				if attached pebble_function as l_pebble_function then
-					l_pebble_function.clear_last_result
-					pebble := Void
-				end
+				reset_pebble_function
 			end
 		ensure then
 			original_window_void: original_top_level_window_imp = Void
@@ -717,7 +712,7 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

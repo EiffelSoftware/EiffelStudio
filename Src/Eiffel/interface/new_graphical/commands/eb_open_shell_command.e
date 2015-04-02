@@ -2,8 +2,8 @@ note
 	description	: "Command to open a shell with an editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_OPEN_SHELL_COMMAND
@@ -50,113 +50,36 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_stone (?))
+			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
 		end
 
 feature -- Access
 
-	execute_with_stone (s: STONE)
+	execute_with_stone (a_stone: STONE)
 		local
-			cs: CLASSI_STONE
-			fs: FEATURE_STONE
-			ls: LINE_STONE
-			ast: AST_STONE
-			cl_syntax_s: CL_SYNTAX_STONE
+			req: COMMAND_EXECUTOR
+			l_line_number: INTEGER
 		do
-			fs ?= s
-			if fs /= Void then
-				process_feature (fs)
-			else
-				cl_syntax_s ?= s
-				if cl_syntax_s /= Void then
-					process_class_syntax (cl_syntax_s)
+			if attached {FILED_STONE} a_stone as fs then
+				if attached {FEATURE_STONE} fs as l_stone then
+					l_line_number := l_stone.line_number
+				elseif attached {LINE_STONE} fs as l_stone then
+					l_line_number := l_stone.line_number
+				elseif attached {AST_STONE} fs as l_stone then
+					l_line_number := l_stone.line_position.max (1)
+				elseif attached {CL_SYNTAX_STONE} fs as l_stone then
+					l_line_number := l_stone.syntax_message.line
 				else
-					ast ?= s
-					if ast /= Void then
-						process_ast (ast)
-					else
-						cs ?= s
-						if cs /= Void then
-							process_class (cs)
-						else
-							ls ?= s
-							if ls /= Void then
-								process_line (ls)
-							end
-						end
-					end
+					l_line_number := 1
 				end
+				check valid_line_number: l_line_number > 0 end
+				create req
+				req.execute (preferences.misc_data.external_editor_cli (fs.file_name, l_line_number))
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	process_feature (fs: FEATURE_STONE)
-			-- Process feature stone.
-		require
-			fs_not_void: fs /= Void
-		local
-			req: COMMAND_EXECUTOR
-		do
-				-- feature text area
-			create req
-			req.execute (preferences.misc_data.external_editor_cli (fs.file_name, fs.line_number))
-		end
-
-	process_class (cs: CLASSI_STONE)
-			-- Process class stone.
-		require
-			cs_not_void: cs /= Void
-		local
-			req: COMMAND_EXECUTOR
-			conv_f: FEATURE_STONE
-		do
-			conv_f ?= cs
-			if conv_f = Void then
-				create req
-				req.execute (preferences.misc_data.external_editor_cli (cs.file_name, 1))
-			end
-		end
-
-	process_line (ls: LINE_STONE)
-			-- Process line stone.
-		require
-			ls_not_void: ls /= Void
-		local
-			req: COMMAND_EXECUTOR
-		do
-			create req
-			req.execute (preferences.misc_data.external_editor_cli (ls.file_name, ls.line_number))
-		end
-
-	process_ast (s: AST_STONE)
-			-- Process AST stone
-		require
-			ast_not_void: s /= Void
-		local
-			req: COMMAND_EXECUTOR
-			fn: like {AST_STONE}.file_name
-			ln: INTEGER
-		do
-			fn := s.file_name
-			if fn /= Void then
-				ln := s.line_position
-				create req
-				req.execute (preferences.misc_data.external_editor_cli (fn, ln.max (1)))
-			end
-		end
-
-	process_class_syntax (syn: CL_SYNTAX_STONE)
-			-- Process class syntax stone.
-		require
-			syn_not_void: syn /= Void
-		local
-			req: COMMAND_EXECUTOR
-		do
-			create req
-			req.execute (preferences.misc_data.external_editor_cli (syn.file_name, syn.syntax_message.line))
-		end
 
 	execute
 			-- Redefine
@@ -188,7 +111,7 @@ feature {NONE} -- Implementation
 			req.execute (preferences.misc_data.external_editor_cli (window_file_name, line_nb.max (1)))
 		end
 
-	window_file_name: like {FILED_STONE}.file_name
+	window_file_name: detachable like {FILED_STONE}.file_name
 			-- Provides the filename of the current edited element, if possible.
 		do
 			if attached {FILED_STONE} target.stone as fs then
@@ -240,33 +163,11 @@ feature {NONE} -- Implementation properties
 
 	is_droppable (st: ANY): BOOLEAN
 			-- Can `st' be dropped?
-		local
-			conv_st: STONE
-			l_ex: CLASSI_STONE
-			l_ex_c: CLASSC_STONE
-			l_fs: FEATURE_STONE
-			l_syntax: CL_SYNTAX_STONE
 		do
-			conv_st ?= st
-			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
-			if Result then
-					-- If it is an external class, then we cannot drop.
-				l_ex ?= st
-				if l_ex /= Void then
-					Result := not l_ex.class_i.is_external_class
-				else
-					l_ex_c ?= st
-					if l_ex_c /= Void then
-						Result := not l_ex_c.e_class.is_true_external
-					else
-						l_fs ?= st
-						Result := l_fs /= Void
-						if not Result then
-							l_syntax ?= st
-							Result := l_syntax /= Void
-						end
-					end
-				end
+			Result := attached {FILED_STONE} st as l_stone and then l_stone.is_storable and then l_stone.is_valid
+			if Result and attached {CLASSI_STONE} st as l_ext_stone then
+					-- If it is a .NET class, then we cannot drop.
+				Result := not l_ext_stone.is_dotnet_class
 			end
 		end
 

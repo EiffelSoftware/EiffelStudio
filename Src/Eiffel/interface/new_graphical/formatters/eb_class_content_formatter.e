@@ -75,7 +75,7 @@ feature -- Setting
 		do
 			force_stone (new_stone)
 			if attached {CLASSC_STONE} new_stone as l_classc_stone then
-				if (not l_classc_stone.class_i.is_external_class) or is_dotnet_formatter then
+				if (not l_classc_stone.is_dotnet_class) or is_dotnet_formatter then
 					set_class (l_classc_stone.e_class)
 				end
 			else

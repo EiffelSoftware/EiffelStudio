@@ -127,7 +127,12 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
-			Result := class_i /= Void and class_i.is_valid
+			Result := class_i /= Void and then class_i.is_valid
+		end
+
+	is_dotnet_class: BOOLEAN
+		do
+			Result := class_i /= Void and then class_i.is_valid and then class_i.is_external_class
 		end
 
 	same_as (other: STONE): BOOLEAN
@@ -145,7 +150,7 @@ invariant
 	actual_class_i_not_void: class_i /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

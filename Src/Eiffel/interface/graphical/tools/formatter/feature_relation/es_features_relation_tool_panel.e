@@ -161,7 +161,7 @@ feature -- Status setting
 				-- Avoid class stone from extending to the history.
 			if attached {FEATURE_STONE} a_stone as fst then
 					-- Update formatters.
-				enable_dotnet_formatters (fst.e_class.is_true_external)
+				enable_dotnet_formatters (fst.is_dotnet_class)
 
 				update_viewpoints (fst.e_class)
 				create l_feature_comparer

@@ -1660,19 +1660,14 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			-- Give a correct sensitivity to formatters.
 		local
 			cist: CLASSI_STONE
-			cst: CLASSC_STONE
 			type_changed: BOOLEAN
 			cluster_st: CLUSTER_STONE
 		do
-			cst ?= stone
 			cist ?= stone
 			-- Check to if formatting context has changed.
-			if cst /= Void then
-				type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-					(not cst.e_class.is_true_external and is_stone_external)
-			elseif cist /= Void then
-				type_changed := (cist.class_i.is_external_class and not is_stone_external) or
-					(not cist.class_i.is_external_class and is_stone_external)
+			if cist /= Void then
+				type_changed := (cist.is_dotnet_class and not is_stone_external) or
+					(not cist.is_dotnet_class and is_stone_external)
 			end
 
 			if type_changed then
@@ -1680,7 +1675,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				is_stone_external := not is_stone_external
 			end
 
-			if cst /= Void then
+			if attached {CLASSC_STONE} stone then
 				address_manager.enable_formatters
 				if is_stone_external then
 						-- Change formatters to .NET sensitivity (from normal).

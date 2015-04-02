@@ -14,7 +14,7 @@ inherit
 		rename
 			make as classi_make
 		redefine
-			is_valid, synchronized_stone,
+			is_valid, synchronized_stone, is_dotnet_class,
 			class_i, group, class_name, file_name,
 			header, stone_signature, history_name
 		end
@@ -113,6 +113,12 @@ feature -- Status report
 				Precursor {CLASSI_STONE}
 		end
 
+	is_dotnet_class: BOOLEAN
+			-- <Precursor>
+		do
+			Result := e_class /= Void and then e_class.is_valid and then e_class.is_true_external
+		end
+
 feature -- Synchronization
 
 	synchronized_stone: CLASSI_STONE
@@ -134,7 +140,7 @@ feature -- Synchronization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

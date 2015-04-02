@@ -124,10 +124,8 @@ feature -- Status setting
 			elseif attached {CLASSI_STONE} a_stone as ist then
 				if attached {CLASSC_STONE} a_stone as cst then
 					l_class_c_stone := cst
-					l_is_external_class := l_class_c_stone.e_class.is_true_external
-				else
-					l_is_external_class := ist.class_i.is_external_class
 				end
+				l_is_external_class := ist.is_dotnet_class
 			end
 
             	-- Update formatters.

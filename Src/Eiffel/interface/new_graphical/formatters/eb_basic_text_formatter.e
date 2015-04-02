@@ -131,7 +131,7 @@ feature -- Status setting
 		do
 			force_stone (new_stone)
 			if attached {CLASSI_STONE} new_stone as l_new_stone then
-				if not l_new_stone.class_i.is_external_class then
+				if not l_new_stone.is_dotnet_class then
 					set_classi (l_new_stone.class_i)
 				end
 			else

@@ -879,12 +879,8 @@ feature -- Element change
 				if l_class_stone /= Void then
 					a_content.set_description (interface_names.l_eiffel_class)
 					l_name := l_class_stone.file_name
-					if l_name /= Void then
-						a_content.set_detail (l_name.as_string_32)
-						a_content.set_tab_tooltip (l_name.as_string_32)
-					else
-						a_content.set_tab_tooltip (Void)
-					end
+					a_content.set_detail (l_name.as_string_32)
+					a_content.set_tab_tooltip (l_name.as_string_32)
 				elseif l_cluster_stone /= Void then
 					a_content.set_description (interface_names.l_eiffel_cluster)
 

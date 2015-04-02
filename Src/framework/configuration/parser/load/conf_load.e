@@ -286,7 +286,6 @@ feature {NONE} -- Redirection
 			a_redirections_attached: a_redirections /= Void
 		local
 			p: PATH
-			l_new_location: STRING_32
 		do
 				--| If a_new_location is an absolute path, use it
 				--| otherwise compute the absolute path with a_new_location as relative to parent folder of `a_file'

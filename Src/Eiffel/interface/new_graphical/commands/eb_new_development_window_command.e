@@ -74,7 +74,7 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_stone (?))
+			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
 

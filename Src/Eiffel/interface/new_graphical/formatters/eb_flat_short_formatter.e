@@ -135,7 +135,7 @@ feature -- Status setting
 			-- Associate `Current' with class contained in `new_stone'.
 		do
 			stone := new_stone
-			if attached {CLASSI_STONE} new_stone as l_new_stone and then l_new_stone.class_i.is_external_class then
+			if attached {CLASSI_STONE} new_stone as l_new_stone and then l_new_stone.is_dotnet_class then
 				set_dotnet_mode (True)
 				if attached {CLASSC_STONE} l_new_stone as l_classc_stone then
 					internal_consumed_type := consumed_type (l_classc_stone.class_i)

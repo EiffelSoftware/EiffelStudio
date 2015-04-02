@@ -80,7 +80,6 @@ feature -- Status setting
 	set_stone (a_stone: detachable STONE)
 			-- Send a stone to formatters.
 		local
-			l_is_external_class: BOOLEAN
 			l_stone: STONE
 		do
 				-- If `a_stone' is a feature stone, take the associated class.
@@ -89,15 +88,12 @@ feature -- Status setting
 
 			elseif attached {CLASSI_STONE} a_stone as ist then
 				if attached {CLASSC_STONE} a_stone as cst then
-					l_is_external_class := cst.e_class.is_true_external
 					update_viewpoints (cst.e_class)
 					l_stone := cst
-				else
-					l_is_external_class := ist.class_i.is_external_class
 				end
 
 	            	-- Update formatters.
-				enable_dotnet_formatters (l_is_external_class)
+				enable_dotnet_formatters (ist.is_dotnet_class)
 
 			elseif attached {CLUSTER_STONE} a_stone or attached {TARGET_STONE} a_stone then
 				l_stone := a_stone

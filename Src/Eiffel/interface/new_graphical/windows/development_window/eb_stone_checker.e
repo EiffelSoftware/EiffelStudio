@@ -418,8 +418,8 @@ feature {NONE} -- Implementation functions
 	set_class_text_for_class_stone
 			-- Set class texts for class stone.
 		do
-			if class_text_exists or else new_class_stone.class_i.is_external_class then
-				if new_class_stone.class_i.is_external_class then
+			if class_text_exists or else new_class_stone.is_dotnet_class then
+				if new_class_stone.is_dotnet_class then
 					externali ?= new_class_stone.class_i
 					check
 						externali_not_void: externali /= Void
@@ -1134,7 +1134,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

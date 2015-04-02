@@ -115,9 +115,9 @@ public:
 
 	struct rt_message current_msg;
 	EIF_SCP_PID pid;
-	bool has_client;
-	volatile bool has_backing_thread; /* TODO: Rename as is_creation_procedure_logged */
-	bool is_dirty;
+	EIF_BOOLEAN has_client;
+	volatile EIF_BOOLEAN is_creation_procedure_logged;
+	EIF_BOOLEAN is_dirty;
 };
 
 /* Creation and destruction. */

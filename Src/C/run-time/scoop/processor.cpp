@@ -118,11 +118,11 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 			/* Initialize the data fields. */
 		self->pid = a_pid;
-		self->has_client = true;
-		self->is_dirty = false;
+		self->has_client = EIF_TRUE;
+		self->is_dirty = EIF_FALSE;
 		rt_message_init (&self->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
-			/* Only the root processor initially has a backing thread. */
-		self->has_backing_thread = is_root_processor;
+			/* Only the root processor's creation procedure is initially "logged". */
+		self->is_creation_procedure_logged = is_root_processor;
 
 			/* Initialize the embedded vector structs.
 			 * As no memory allocation happens, we don't have to care about errors. */
@@ -387,7 +387,7 @@ rt_shared void rt_processor_execute_call (processor* self, processor* client, st
 
 			/* Mark the current region as dirty if the call fails. */
 		if (!is_successful) {
-			self->is_dirty = true;
+			self->is_dirty = EIF_TRUE;
 		}
 
 		if (is_synchronous) {
@@ -399,7 +399,7 @@ rt_shared void rt_processor_execute_call (processor* self, processor* client, st
 	if (is_synchronous) {
 
 		if (self->is_dirty) {
-			self->is_dirty = false;
+			self->is_dirty = EIF_FALSE;
 				/* Propagate exceptions on a synchronous call. */
 			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL, NULL);
 
@@ -444,8 +444,8 @@ rt_private void rt_processor_process_private_queue (processor* self, priv_queue 
 		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK);
 
 		if (type == SCOOP_MESSAGE_UNLOCK) {
-			/* Forget dirtiness upon unlock */
-			self->is_dirty = false;
+				/* Forget dirtiness upon unlock */
+			self->is_dirty = EIF_FALSE;
 			is_stopped = EIF_TRUE;
 		} else {
 
@@ -580,7 +580,7 @@ rt_shared void rt_processor_application_loop (processor* self)
 
 	REQUIRE ("self_not_null", self);
 
-	self->has_client = false;
+	self->has_client = EIF_FALSE;
 
 	while (!is_stopped) {
 		struct rt_message next_job;
@@ -599,12 +599,12 @@ rt_shared void rt_processor_application_loop (processor* self)
 
 		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();
-			self->has_client = true;
+			self->has_client = EIF_TRUE;
 
 			rt_processor_process_private_queue (self, next_job.queue);
 			rt_processor_publish_wait_condition (self, next_job.sender);
 
-			self->has_client = false;
+			self->has_client = EIF_FALSE;
 		} else {
 			CHECK ("shutdown_message", next_job.message_type == SCOOP_MESSAGE_SHUTDOWN);
 			is_stopped = EIF_TRUE;

@@ -66,6 +66,10 @@ feature {NONE} -- Basic operations
 					-- the interface class.
 				parent_start_position := parent_as.start_position
 				parent_end_position := parent_as.end_position
+			else
+					-- Expose the fact that there is no inheritance.
+				parent_start_position := -1
+				parent_end_position := -1
 			end
 		end
 

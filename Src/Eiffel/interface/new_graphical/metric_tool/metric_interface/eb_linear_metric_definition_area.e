@@ -77,6 +77,12 @@ feature {NONE} -- Initialization
 			metric_panel_set: metric_panel = a_panel
 		end
 
+	user_create_interface_objects
+			-- <Precursor>
+		do
+			-- FIXME: Currently code is not void-safe and initialization still takes place in `user_initialization'.
+		end
+
 	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
@@ -652,7 +658,7 @@ invariant
 	metric_grid_attached: metric_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

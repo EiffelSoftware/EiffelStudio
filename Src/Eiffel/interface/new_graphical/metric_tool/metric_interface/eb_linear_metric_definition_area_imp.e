@@ -6,6 +6,7 @@ note
 		You should not modify this code by hand, as it will be re-generated every time
 		 modifications are made to the project.
 		 	]"
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,35 +16,16 @@ deferred class
 inherit
 	EV_VERTICAL_BOX
 		redefine
-			initialize, is_in_default_state
+			create_interface_objects, initialize, is_in_default_state
 		end
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
-				-- Create all widgets.
-			create definition_area
-			create l_ev_horizontal_box_1
-			create metric_definition_lbl
-			create linear_lbl_empty_area
-			create grid_area
-			create toolbar_area
-			create linear_definition_empty_area
-			create tool_bar
-			create up_btn
-			create down_btn
-			create l_ev_tool_bar_separator_1
-			create remove_metric_btn
-			create remove_all_metric_btn
-			create l_ev_horizontal_box_2
-			create expression_lbl
-			create expression_lbl_empty_area
-			create l_ev_horizontal_box_3
-			create expression_text
+
 			
 				-- Build widget structure.
 			extend (definition_area)
@@ -64,20 +46,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (expression_lbl_empty_area)
 			definition_area.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (expression_text)
-			
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
+
 			definition_area.set_padding (3)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (toolbar_area)
@@ -98,67 +67,109 @@ feature {NONE}-- Initialization
 			expression_text.set_minimum_height (35)
 			expression_text.disable_edit
 			set_padding (10)
-			
+
 			set_all_attributes_using_constants
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
+		
+	frozen create_interface_objects
+			-- Create objects
+		do
+			
+				-- Create all widgets.
+			create definition_area
+			create l_ev_horizontal_box_1
+			create metric_definition_lbl
+			create linear_lbl_empty_area
+			create grid_area
+			create toolbar_area
+			create linear_definition_empty_area
+			create tool_bar
+			create up_btn
+			create down_btn
+			create l_ev_tool_bar_separator_1
+			create remove_metric_btn
+			create remove_all_metric_btn
+			create l_ev_horizontal_box_2
+			create expression_lbl
+			create expression_lbl_empty_area
+			create l_ev_horizontal_box_3
+			create expression_text
+
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
+		end
 
 
 feature -- Access
 
-	expression_text: EV_RICH_TEXT
-	linear_lbl_empty_area, linear_definition_empty_area, expression_lbl_empty_area: EV_CELL
-	tool_bar: EV_TOOL_BAR
-	up_btn,
-	down_btn, remove_metric_btn, remove_all_metric_btn: EV_TOOL_BAR_BUTTON
-	grid_area, toolbar_area: EV_HORIZONTAL_BOX
 	definition_area: EV_VERTICAL_BOX
-	metric_definition_lbl,
-	expression_lbl: EV_LABEL
+	metric_definition_lbl, expression_lbl: EV_LABEL
+	linear_lbl_empty_area, linear_definition_empty_area,
+	expression_lbl_empty_area: EV_CELL
+	grid_area, toolbar_area: EV_HORIZONTAL_BOX
+	tool_bar: EV_TOOL_BAR
+	up_btn, down_btn, remove_metric_btn,
+	remove_all_metric_btn: EV_TOOL_BAR_BUTTON
+	expression_text: EV_RICH_TEXT
 
 feature {NONE} -- Implementation
 
-	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
 		end
-	
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
+		end
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_GENERAL
+			s: STRING_32
 		do
 			from
 				string_constant_set_procedures.start
 			until
 				string_constant_set_procedures.off
 			loop
-				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
 				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_integer_constants
+
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -171,8 +182,7 @@ feature {NONE} -- Constant setting
 			until
 				integer_constant_set_procedures.off
 			loop
-				integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).call (Void)
-				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).last_result
+				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).item (Void)
 				integer_constant_set_procedures.item.call ([i])
 				integer_constant_set_procedures.forth
 			end
@@ -182,19 +192,17 @@ feature {NONE} -- Constant setting
 			until
 				integer_interval_constant_retrieval_functions.off
 			loop
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg1 := integer_interval_constant_retrieval_functions.item.last_result
+				arg1 := integer_interval_constant_retrieval_functions.item.item (Void)
 				integer_interval_constant_retrieval_functions.forth
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg2 := integer_interval_constant_retrieval_functions.item.last_result
+				arg2 := integer_interval_constant_retrieval_functions.item.item (Void)
 				create int.make (arg1, arg2)
 				integer_interval_constant_set_procedures.item.call ([int])
 				integer_interval_constant_retrieval_functions.forth
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_pixmap_constants
+
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
@@ -205,14 +213,13 @@ feature {NONE} -- Constant setting
 			until
 				pixmap_constant_set_procedures.off
 			loop
-				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
 				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_font_constants
+
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
@@ -223,14 +230,13 @@ feature {NONE} -- Constant setting
 			until
 				font_constant_set_procedures.off
 			loop
-				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
 			end	
 		end
-		
-	set_attributes_using_color_constants
+
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
@@ -241,14 +247,13 @@ feature {NONE} -- Constant setting
 			until
 				color_constant_set_procedures.off
 			loop
-				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
 				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end
-		
-	set_all_attributes_using_constants
+
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -258,9 +263,9 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_GENERAL]]
+	
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -271,8 +276,8 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
-	
-	integer_from_integer (an_integer: INTEGER): INTEGER
+
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do

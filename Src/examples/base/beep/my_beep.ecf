@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="my_beep">
+	<target name="my_beep">
+		<root class="BEEP" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<external_include location="$(ISE_EIFFEL)/examples/base/beep/Clib">
+			<description>my_beep interface</description>
+		</external_include>
+		<external_library location="$(ISE_EIFFEL)/examples/base/beep/spec/$(ISE_C_COMPILER)/$(ISE_PLATFORM)/lib/my_beep.lib">
+			<description>my_beep library</description>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_library>
+		<external_object location="$(ISE_LIBRARY)/examples/base/beep/spec/$(ISE_PLATFORM)/lib/my_beep.o">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="my_beep" location=".\"/>
+	</target>
+</system>

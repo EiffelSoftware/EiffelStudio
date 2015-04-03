@@ -274,8 +274,7 @@ feature{NONE} -- Position calculation
 			-- Preferred height
 		do
 			if attached preferred_height_agent as l_agent then
-				l_agent.apply
-				Result := l_agent.last_result
+				Result := l_agent.item (Void)
 			end
 		end
 

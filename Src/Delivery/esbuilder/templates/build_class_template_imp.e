@@ -87,7 +87,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: detachable STRING_32
+			s: STRING_32
 		do
 			from
 				string_constant_set_procedures.start
@@ -137,7 +137,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
-			p: detachable EV_PIXMAP
+			p: EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -154,7 +154,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
-			f: detachable EV_FONT
+			f: EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -171,7 +171,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
-			c: detachable EV_COLOR
+			c: EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start

@@ -138,6 +138,12 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 		end
 
+	user_create_interface_objects
+			-- <Precursor>
+		do
+			-- FIXME: Currently code is not void-safe and initialization still takes place in `user_initialization'.
+		end
+
 feature -- Access
 
 	descriptors: LIST [G]
@@ -637,7 +643,7 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

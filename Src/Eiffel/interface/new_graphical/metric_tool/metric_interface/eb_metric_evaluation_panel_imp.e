@@ -6,6 +6,7 @@ note
 		You should not modify this code by hand, as it will be re-generated every time
 		 modifications are made to the project.
 		 	]"
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,62 +16,16 @@ deferred class
 inherit
 	EV_VERTICAL_BOX
 		redefine
-			initialize, is_in_default_state
+			create_interface_objects, initialize, is_in_default_state
 		end
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
-				-- Create all widgets.
-			create main_panel_area
-			create toolbar_area
-			create control_toolbar
-			create run_metric_btn
-			create stop_metric_btn
-			create value_area
-			create metric_value_lbl
-			create metric_value_text
-			create percentage_tool_bar
-			create separator_bar1
-			create l_ev_tool_bar_separator_1
-			create send_to_history_bar
-			create send_to_history_btn
-			create separator_bar3
-			create l_ev_tool_bar_separator_2
-			create option_tool_bar
-			create synchronize_tool_bar
-			create separator_bar2
-			create l_ev_tool_bar_separator_3
-			create quick_metric_toolbar
-			create quick_metric_btn
-			create toolbar_empty_area
-			create slip_area
-			create metric_source_domain_area
-			create choose_input_domain_lbl
-			create metric_domain_selector_area
-			create main_area
-			create main_area_cell
-			create metric_selection_area
-			create l_ev_horizontal_box_1
-			create choose_metric_lbl
-			create choose_metric_lbl_cell
-			create l_ev_horizontal_split_area_1
-			create grid_wrapper
-			create grid_wrapper_empty_area
-			create metric_definition_area
-			create quick_metric_empty_area
-			create unit_area
-			create unit_lbl
-			create unit_combo
-			create l_ev_tool_bar_4
-			create go_to_definition_btn
-			create metric_definition_empty_area
-			create criterion_area
-			create l_ev_horizontal_box_2
+
 			
 				-- Build widget structure.
 			extend (main_panel_area)
@@ -118,20 +73,7 @@ feature {NONE}-- Initialization
 			unit_area.extend (metric_definition_empty_area)
 			metric_definition_area.extend (criterion_area)
 			metric_definition_area.extend (l_ev_horizontal_box_2)
-			
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
+
 			main_panel_area.set_padding (3)
 			main_panel_area.disable_item_expand (toolbar_area)
 			toolbar_area.disable_item_expand (control_toolbar)
@@ -193,78 +135,146 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.set_minimum_height (21)
 			set_padding (5)
 			set_border_width (5)
-			
+
 			set_all_attributes_using_constants
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
+		
+	frozen create_interface_objects
+			-- Create objects
+		do
+			
+				-- Create all widgets.
+			create main_panel_area
+			create toolbar_area
+			create control_toolbar
+			create run_metric_btn
+			create stop_metric_btn
+			create value_area
+			create metric_value_lbl
+			create metric_value_text
+			create percentage_tool_bar
+			create separator_bar1
+			create l_ev_tool_bar_separator_1
+			create send_to_history_bar
+			create send_to_history_btn
+			create separator_bar3
+			create l_ev_tool_bar_separator_2
+			create option_tool_bar
+			create synchronize_tool_bar
+			create separator_bar2
+			create l_ev_tool_bar_separator_3
+			create quick_metric_toolbar
+			create quick_metric_btn
+			create toolbar_empty_area
+			create slip_area
+			create metric_source_domain_area
+			create choose_input_domain_lbl
+			create metric_domain_selector_area
+			create main_area
+			create main_area_cell
+			create metric_selection_area
+			create l_ev_horizontal_box_1
+			create choose_metric_lbl
+			create choose_metric_lbl_cell
+			create l_ev_horizontal_split_area_1
+			create grid_wrapper
+			create grid_wrapper_empty_area
+			create metric_definition_area
+			create quick_metric_empty_area
+			create unit_area
+			create unit_lbl
+			create unit_combo
+			create l_ev_tool_bar_4
+			create go_to_definition_btn
+			create metric_definition_empty_area
+			create criterion_area
+			create l_ev_horizontal_box_2
+
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
+		end
 
 
 feature -- Access
 
-	unit_combo: EV_COMBO_BOX
-	toolbar_empty_area, main_area_cell, choose_metric_lbl_cell, grid_wrapper_empty_area,
-	metric_definition_empty_area: EV_CELL
+	main_panel_area, metric_source_domain_area, metric_domain_selector_area, metric_selection_area,
+	metric_definition_area, criterion_area: EV_VERTICAL_BOX
+	toolbar_area, value_area, main_area, grid_wrapper,
+	quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
 	control_toolbar, percentage_tool_bar, separator_bar1,
 	send_to_history_bar, separator_bar3, option_tool_bar, synchronize_tool_bar, separator_bar2,
 	quick_metric_toolbar: EV_TOOL_BAR
-	quick_metric_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_metric_btn, stop_metric_btn, send_to_history_btn,
-	go_to_definition_btn: EV_TOOL_BAR_BUTTON
-	slip_area: EV_HORIZONTAL_SPLIT_AREA
-	toolbar_area, value_area, main_area, grid_wrapper,
-	quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
-	main_panel_area, metric_source_domain_area, metric_domain_selector_area,
-	metric_selection_area, metric_definition_area, criterion_area: EV_VERTICAL_BOX
+	run_metric_btn, stop_metric_btn, send_to_history_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
 	metric_value_lbl,
 	choose_input_domain_lbl, choose_metric_lbl, unit_lbl: EV_LABEL
 	metric_value_text: EV_TEXT_FIELD
+	quick_metric_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	toolbar_empty_area,
+	main_area_cell, choose_metric_lbl_cell, grid_wrapper_empty_area, metric_definition_empty_area: EV_CELL
+	slip_area: EV_HORIZONTAL_SPLIT_AREA
+	unit_combo: EV_COMBO_BOX
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
-	l_ev_tool_bar_4: EV_TOOL_BAR
-	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
+	l_ev_tool_bar_4: EV_TOOL_BAR
 
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
 		end
-	
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
+		end
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_GENERAL
+			s: STRING_32
 		do
 			from
 				string_constant_set_procedures.start
 			until
 				string_constant_set_procedures.off
 			loop
-				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
 				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_integer_constants
+
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -277,8 +287,7 @@ feature {NONE} -- Constant setting
 			until
 				integer_constant_set_procedures.off
 			loop
-				integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).call (Void)
-				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).last_result
+				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).item (Void)
 				integer_constant_set_procedures.item.call ([i])
 				integer_constant_set_procedures.forth
 			end
@@ -288,19 +297,17 @@ feature {NONE} -- Constant setting
 			until
 				integer_interval_constant_retrieval_functions.off
 			loop
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg1 := integer_interval_constant_retrieval_functions.item.last_result
+				arg1 := integer_interval_constant_retrieval_functions.item.item (Void)
 				integer_interval_constant_retrieval_functions.forth
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg2 := integer_interval_constant_retrieval_functions.item.last_result
+				arg2 := integer_interval_constant_retrieval_functions.item.item (Void)
 				create int.make (arg1, arg2)
 				integer_interval_constant_set_procedures.item.call ([int])
 				integer_interval_constant_retrieval_functions.forth
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_pixmap_constants
+
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
@@ -311,14 +318,13 @@ feature {NONE} -- Constant setting
 			until
 				pixmap_constant_set_procedures.off
 			loop
-				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
 				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
-	set_attributes_using_font_constants
+
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
@@ -329,14 +335,13 @@ feature {NONE} -- Constant setting
 			until
 				font_constant_set_procedures.off
 			loop
-				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
 			end	
 		end
-		
-	set_attributes_using_color_constants
+
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
@@ -347,14 +352,13 @@ feature {NONE} -- Constant setting
 			until
 				color_constant_set_procedures.off
 			loop
-				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
 				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end
-		
-	set_all_attributes_using_constants
+
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -364,9 +368,9 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_GENERAL]]
+	
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -377,8 +381,8 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
-	
-	integer_from_integer (an_integer: INTEGER): INTEGER
+
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do

@@ -95,9 +95,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.off
 			loop
 				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
-				if s /= Void then
-					string_constant_set_procedures.item.call ([s])
-				end
+				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
@@ -147,9 +145,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.off
 			loop
 				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
-				if p /= Void then
-					pixmap_constant_set_procedures.item.call ([p])
-				end
+				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
@@ -166,9 +162,7 @@ feature {NONE} -- Constant setting
 				font_constant_set_procedures.off
 			loop
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
-				if f /= Void then
-					font_constant_set_procedures.item.call ([f])
-				end
+				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
 			end	
 		end
@@ -185,9 +179,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.off
 			loop
 				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
-				if c /= Void then
-					color_constant_set_procedures.item.call ([c])
-				end
+				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end

@@ -8,6 +8,7 @@ note
 		 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,41 +18,16 @@ deferred class
 inherit
 	EV_VERTICAL_BOX
 		redefine
-			initialize, is_in_default_state
+			create_interface_objects, initialize, is_in_default_state
 		end
 
 feature {NONE}-- Initialization
 
-	initialize
+	frozen initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
 
-				-- Create all widgets.
-			create l_ev_horizontal_separator_1
-			create l_ev_horizontal_box_1
-			create l_ev_cell_1
-			create l_ev_label_1
-			create keyword_field
-			create l_ev_cell_2
-			create l_ev_tool_bar_1.make
-			create next_button.make
-			create l_ev_tool_bar_2.make
-			create previous_button.make
-			create l_ev_cell_3
-			create match_case_button
-			create regular_expression_button
-			create l_ev_cell_4
-			create l_ev_tool_bar_3.make
-			create advanced_button.make
-			create l_ev_cell_5
-			create l_ev_vertical_box_1
-			create l_ev_cell_6
-			create message_box
-			create l_ev_cell_7
-			create l_ev_vertical_box_2
-			create l_ev_tool_bar_4.make
-			create close_button.make
 
 				-- Build widget structure.
 			extend (l_ev_horizontal_separator_1)
@@ -79,19 +55,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_4)
 			l_ev_tool_bar_4.extend (close_button)
 
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
 			l_ev_horizontal_box_1.set_border_width (1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
@@ -130,46 +93,87 @@ feature {NONE}-- Initialization
 
 			set_all_attributes_using_constants
 
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is received on `Current'. i.e. the cross is clicked.
-
 				-- Call `user_initialization'.
 			user_initialization
-			
-			l_ev_tool_bar_1.compute_minimum_size
-			l_ev_tool_bar_2.compute_minimum_size
-			l_ev_tool_bar_3.compute_minimum_size
-			l_ev_tool_bar_4.compute_minimum_size
 		end
+
+	frozen create_interface_objects
+			-- Create objects
+		do
+
+				-- Create all widgets.
+			create l_ev_horizontal_separator_1
+			create l_ev_horizontal_box_1
+			create l_ev_cell_1
+			create l_ev_label_1
+			create keyword_field
+			create l_ev_cell_2
+			create l_ev_tool_bar_1
+			create next_button
+			create l_ev_tool_bar_2
+			create previous_button
+			create l_ev_cell_3
+			create match_case_button
+			create regular_expression_button
+			create l_ev_cell_4
+			create l_ev_tool_bar_3
+			create advanced_button
+			create l_ev_cell_5
+			create l_ev_vertical_box_1
+			create l_ev_cell_6
+			create message_box
+			create l_ev_cell_7
+			create l_ev_vertical_box_2
+			create l_ev_tool_bar_4
+			create close_button
+
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+			user_create_interface_objects
+		end
+
 
 feature -- Access
 
 	keyword_field: EV_COMBO_BOX
-	next_button, previous_button, advanced_button, close_button: SD_TOOL_BAR_BUTTON
-	message_box: EV_HORIZONTAL_BOX
+	next_button, previous_button, advanced_button, close_button: EV_TOOL_BAR_BUTTON
 	match_case_button,
 	regular_expression_button: EV_CHECK_BUTTON
+	message_box: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4,
-	l_ev_cell_5, l_ev_cell_6, l_ev_cell_7: EV_CELL
-	l_ev_tool_bar_1, l_ev_tool_bar_2, l_ev_tool_bar_3,
-	l_ev_tool_bar_4: SD_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3,
+	l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, l_ev_cell_7: EV_CELL
 	l_ev_label_1: EV_LABEL
+	l_ev_tool_bar_1,
+	l_ev_tool_bar_2, l_ev_tool_bar_3, l_ev_tool_bar_4: EV_TOOL_BAR
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
-			-- Re-implement if you wish to enable checking
-			-- for `Current'.
 			Result := True
+		end
+
+	user_create_interface_objects
+			-- Feature for custom user interface object creation, called at end of `create_interface_objects'.
+		deferred
 		end
 
 	user_initialization
@@ -179,7 +183,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant setting
 
-	set_attributes_using_string_constants
+	frozen set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
@@ -190,14 +194,13 @@ feature {NONE} -- Constant setting
 			until
 				string_constant_set_procedures.off
 			loop
-				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
 				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
 
-	set_attributes_using_integer_constants
+	frozen set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
 		local
@@ -210,8 +213,7 @@ feature {NONE} -- Constant setting
 			until
 				integer_constant_set_procedures.off
 			loop
-				integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).call (Void)
-				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).last_result
+				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).item (Void)
 				integer_constant_set_procedures.item.call ([i])
 				integer_constant_set_procedures.forth
 			end
@@ -221,11 +223,9 @@ feature {NONE} -- Constant setting
 			until
 				integer_interval_constant_retrieval_functions.off
 			loop
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg1 := integer_interval_constant_retrieval_functions.item.last_result
+				arg1 := integer_interval_constant_retrieval_functions.item.item (Void)
 				integer_interval_constant_retrieval_functions.forth
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg2 := integer_interval_constant_retrieval_functions.item.last_result
+				arg2 := integer_interval_constant_retrieval_functions.item.item (Void)
 				create int.make (arg1, arg2)
 				integer_interval_constant_set_procedures.item.call ([int])
 				integer_interval_constant_retrieval_functions.forth
@@ -233,7 +233,7 @@ feature {NONE} -- Constant setting
 			end
 		end
 
-	set_attributes_using_pixmap_constants
+	frozen set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
@@ -244,14 +244,13 @@ feature {NONE} -- Constant setting
 			until
 				pixmap_constant_set_procedures.off
 			loop
-				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
 				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
 
-	set_attributes_using_font_constants
+	frozen set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
@@ -262,14 +261,13 @@ feature {NONE} -- Constant setting
 			until
 				font_constant_set_procedures.off
 			loop
-				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
 			end
 		end
 
-	set_attributes_using_color_constants
+	frozen set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
@@ -280,14 +278,13 @@ feature {NONE} -- Constant setting
 			until
 				color_constant_set_procedures.off
 			loop
-				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
 				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end
 
-	set_all_attributes_using_constants
+	frozen set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
 		do
@@ -298,7 +295,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_color_constants
 		end
 
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
@@ -311,7 +308,7 @@ feature {NONE} -- Constant setting
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
 
-	integer_from_integer (an_integer: INTEGER): INTEGER
+	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.
 		do
@@ -319,9 +316,9 @@ feature {NONE} -- Constant setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -332,21 +329,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class QUICK_SEARCH_BAR_IMP
+end

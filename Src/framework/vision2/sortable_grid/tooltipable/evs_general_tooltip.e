@@ -63,24 +63,16 @@ feature -- Access
 			-- Required width in pixel to display tooltip
 			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
 			-- tooltip is displayed.
-		local
-			l_func: like required_width_function
 		do
-			l_func := required_width_function
-			l_func.call (Void)
-			Result := l_func.last_result
+			Result := required_width_function.item (Void)
 		end
 
 	required_tooltip_height: INTEGER
 			-- Required height in pixel to display tooltip
 			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
 			-- tooltip is displayed.
-		local
-			l_func: like required_height_function
 		do
-			l_func := required_height_function
-			l_func.call (Void)
-			Result := l_func.last_result
+			Result := required_height_function.item (Void)
 		end
 
 feature {NONE} -- Access
@@ -121,22 +113,14 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 	is_owner_destroyed: BOOLEAN
 			-- If owner destroyed
 			-- Attach this to owner's `is_destroyed'.
-		local
-			l_func: like owner_destroy_function
 		do
-			l_func := owner_destroy_function
-			l_func.call (Void)
-			Result := l_func.last_result
+			Result := owner_destroy_function.item (Void)
 		end
 
 	tooltip_widget: EV_WIDGET
 			-- Widget of tooltip
-		local
-			l_func: like widget_function
 		do
-			l_func := widget_function
-			l_func.call (Void)
-			Result := l_func.item (Void)
+			Result := widget_function.item (Void)
 		end
 
 feature{NONE} -- Implementation
@@ -171,8 +155,8 @@ invariant
 	required_height_function_attached: required_height_function /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+        copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+        license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
                         This file is part of Eiffel Software's Eiffel Development Environment.
@@ -195,11 +179,11 @@ note
                         Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
                 ]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

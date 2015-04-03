@@ -1091,8 +1091,7 @@ feature {NONE} -- Implementation
 		do
 			last_equal := True
 			if sort_within_last then
-				last_equal_column_agent.call ([query_grid_row1, query_grid_row2, column_index])
-				last_equal := last_equal_column_agent.last_result
+				last_equal := last_equal_column_agent.item ([query_grid_row1, query_grid_row2, column_index])
 			end
 			if last_equal then
 				inspect
@@ -1140,8 +1139,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				sort_within_last := False
-				last_sorted_column_agent.call ([query_grid_row1, query_grid_row2])
-				Result := last_sorted_column_agent.last_result
+				Result := last_sorted_column_agent.item ([query_grid_row1, query_grid_row2])
 				sort_within_last := True
 			end
 		end
@@ -2001,7 +1999,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

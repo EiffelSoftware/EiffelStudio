@@ -24,12 +24,6 @@ create
 
 feature {NONE} -- Initialization
 
-	user_create_interface_objects
-			-- <Precursor>
-		do
-			-- FIXME: Currently code is not void-safe and initialization still takes place in `user_initialization'.
-		end
-
 	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that

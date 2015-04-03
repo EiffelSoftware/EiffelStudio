@@ -102,11 +102,11 @@ feature {NONE} -- Access
 					end
 				end (?, a_name)
 			if is_running then
-				l_function.call ([session.test_suite])
+				Result := l_function.item ([session.test_suite])
 			else
 				perform_with_test_suite (l_function)
+				Result := l_function.last_result
 			end
-			Result := l_function.last_result
 		ensure
 			result_valid: Result /= Void implies Result.name.same_string (a_name)
 		end
@@ -159,7 +159,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

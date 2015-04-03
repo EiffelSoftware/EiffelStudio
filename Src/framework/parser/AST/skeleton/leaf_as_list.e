@@ -705,8 +705,7 @@ feature -- Status reporting
 			until
 				l_start_index > l_end_index or not Result
 			loop
-				test.call ([i_th (l_start_index)])
-				Result := test.last_result
+				Result := test.item ([i_th (l_start_index)])
 				l_start_index := l_start_index + 1
 			end
 		end
@@ -727,8 +726,7 @@ feature -- Status reporting
 			until
 				l_start_index > l_end_index or Result
 			loop
-				test.call ([i_th (l_start_index)])
-				Result := test.last_result
+				Result := test.item ([i_th (l_start_index)])
 				l_start_index := l_start_index + 1
 			end
 		end
@@ -933,7 +931,7 @@ invariant
 	trunks_not_empty: not trunks.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

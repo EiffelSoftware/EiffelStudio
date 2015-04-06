@@ -31,7 +31,7 @@ feature {AST_VISITOR} -- Visitor
 	process (v: AST_VISITOR)
 			-- <Precursor>
 		do
-				-- TODO
+			v.process_separate_instruction_as (Current)
 		end
 
 feature -- Access

@@ -8543,6 +8543,12 @@ feature {NONE} -- Visitor
 			l_as.parameters.process (Current)
 		end
 
+	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+			-- <Precursor>
+		do
+				-- TODO: implement.
+		end
+
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
 			-- Process `l_as'.
 		do

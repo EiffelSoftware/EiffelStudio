@@ -1245,6 +1245,16 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
+	new_eiffel_list_named_expression_as (n: INTEGER): detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]
+			-- New empty list of `{NAMED_EXPRESSION_AS}'.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled (n)
+		ensure
+			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+		end
+
 	new_eiffel_list_operand_as (n: INTEGER): detachable EIFFEL_LIST [OPERAND_AS]
 			-- New empty list of OPERAND_AS
 		require
@@ -1653,6 +1663,14 @@ feature -- Access
 			end
 		end
 
+	new_named_expression_as (e: detachable EXPR_AS; a: detachable KEYWORD_AS; n: detachable ID_AS): detachable NAMED_EXPRESSION_AS
+			-- New `{NAMED_EXPRESSION_AS}' node.
+		do
+			if attached e and then attached n then
+				create Result.make (e, a, n)
+			end
+		end
+
 	new_nested_as (t: detachable ACCESS_AS; m: detachable CALL_AS; d_as: detachable SYMBOL_AS): detachable NESTED_AS
 			-- New NESTED CALL AST node
 		do
@@ -1826,6 +1844,14 @@ feature -- Access
 		do
 			if b /= Void and end_loc /= Void then
 				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos, k_as, r_as, object_test_locals)
+			end
+		end
+
+	new_separate_instruction_as (s: detachable KEYWORD_AS; a: detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]; d: detachable KEYWORD_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS]; e: detachable KEYWORD_AS): detachable SEPARATE_INSTRUCTION_AS
+			-- New `{SEPARATE_INSTRUCTION_AS}' node.
+		do
+			if attached a and then attached e then
+				create Result.make (s, a, d, c, e)
 			end
 		end
 
@@ -2077,7 +2103,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

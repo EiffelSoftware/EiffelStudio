@@ -23,7 +23,7 @@ inherit
 			new_eiffel_list_feature_as, new_eiffel_list_feature_clause_as,
 			new_eiffel_list_feature_name, new_eiffel_list_formal_dec_as, new_eiffel_list_id_as,
 			new_indexing_clause_as, new_eiffel_list_instruction_as, new_eiffel_list_interval_as,
-			new_eiffel_list_list_dec_as,
+			new_eiffel_list_list_dec_as, new_eiffel_list_named_expression_as,
 			new_eiffel_list_operand_as, new_eiffel_list_parent_as, new_eiffel_list_rename_as,
 			new_eiffel_list_string_as, new_eiffel_list_tagged_as, new_eiffel_list_type,
 			new_eiffel_list_type_dec_as, new_elseif_as, new_ensure_as, new_ensure_then_as,
@@ -35,13 +35,13 @@ inherit
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
 			new_integer_binary_as, new_interval_as, new_invariant_as, new_iteration_as,
 			new_like_id_as, new_like_current_as, new_list_dec_as, new_location_as, new_loop_as, new_loop_expr_as,
-			new_nested_as, new_nested_expr_as, new_none_type_as,
+			new_named_expression_as, new_nested_as, new_nested_expr_as, new_none_type_as,
 			new_object_test_as, new_old_syntax_object_test_as, new_once_as, new_operand_as,
 			new_paran_as, new_parent_as, new_precursor_as, new_prefix_as,
 			new_qualified_anchored_type, new_qualified_anchored_type_with_type,
 			new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as,
-			new_static_access_as, new_string_as, new_tagged_as,
+			new_separate_instruction_as, new_static_access_as, new_string_as, new_tagged_as,
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
 			new_un_not_as, new_un_old_as, new_un_plus_as, new_un_strip_as, new_unique_as,
 			new_variant_as, new_verbatim_string_as, new_void_as, new_filled_none_id_as,
@@ -673,6 +673,11 @@ feature -- Access
 		do
 		end
 
+	new_eiffel_list_named_expression_as (n: INTEGER): detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]
+			-- <Precursor>
+		do
+		end
+
 	new_eiffel_list_operand_as (n: INTEGER): detachable EIFFEL_LIST [OPERAND_AS]
 			-- New empty list of OPERAND_AS
 		do
@@ -908,6 +913,11 @@ feature -- Access
 		do
 		end
 
+	new_named_expression_as (e: detachable EXPR_AS; a: detachable KEYWORD_AS; n: detachable ID_AS): detachable NAMED_EXPRESSION_AS
+			-- <Precursor>
+		do
+		end
+
 	new_nested_as (t: detachable ACCESS_AS; m: detachable CALL_AS; d_as: detachable SYMBOL_AS): detachable NESTED_AS
 			-- New NESTED CALL AST node
 		do
@@ -1016,6 +1026,11 @@ feature -- Access
 			oms_count, a_pos: INTEGER; k_as, r_as: detachable KEYWORD_AS;
 			object_test_locals: detachable ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]): detachable ROUTINE_AS
 			-- New ROUTINE AST node
+		do
+		end
+
+	new_separate_instruction_as (s: detachable KEYWORD_AS; a: detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]; d: detachable KEYWORD_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS]; e: detachable KEYWORD_AS): detachable SEPARATE_INSTRUCTION_AS
+			-- <Precursor>
 		do
 		end
 
@@ -1162,7 +1177,7 @@ feature -- Access
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

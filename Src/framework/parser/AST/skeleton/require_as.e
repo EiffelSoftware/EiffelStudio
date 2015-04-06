@@ -2,8 +2,8 @@ note
 	description	: "AST representation of a require statement."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class REQUIRE_AS
 
@@ -40,10 +40,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	require_keyword_index: INTEGER
-			-- Index of keyword "require" accosiated with this structure.
+			-- Index of keyword "require" associated with this structure.
 
 	require_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "require" accosiated with this structure.
+			-- Keyword "require" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -97,7 +97,7 @@ feature -- Roundtrip/Location
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

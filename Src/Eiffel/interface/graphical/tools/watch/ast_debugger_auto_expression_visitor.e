@@ -26,6 +26,7 @@ inherit
 			process_instr_call_as,
 			process_interval_as,
 			process_loop_as,
+			process_named_expression_as,
 			process_nested_as,
 			process_parameter_list_as,
 			process_reverse_as,
@@ -368,6 +369,14 @@ feature -- Processing
 			safe_process (a_as.compound)
 		end
 
+	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+			-- <Precursor>
+			-- Process an argument of inline separate instruction of the form "expression 'as' variable".
+		do
+			a_as.expression.process (Current)
+			add_auto_span (a_as.name)
+		end
+
 	process_nested_as (a_as: NESTED_AS)
 			-- Processes a nested instruction/expression 'a.b.c'.
 			--
@@ -417,6 +426,14 @@ feature -- Processing
 			reset_auto_spans
 			set_can_add_auto_span (True)
 			a_as.source.process (Current)
+		end
+
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+			-- Process inline separate instruction of the form "separate ... do ... end".
+		do
+			a_as.arguments.process (Current)
+			safe_process (a_as.compound)
 		end
 
 	process_static_access_as (a_as: STATIC_ACCESS_AS)
@@ -750,7 +767,7 @@ feature {NONE} -- Implementation
 	leaf_as_list: LEAF_AS_LIST;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

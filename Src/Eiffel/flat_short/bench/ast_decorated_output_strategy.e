@@ -4199,6 +4199,14 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.exdent
 		end
 
+	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a_as.expression.process (Current)
+			text_formatter_decorator.put_space
+			a_as.name.process (Current)
+		end
+
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
 		do
 			check
@@ -5213,7 +5221,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

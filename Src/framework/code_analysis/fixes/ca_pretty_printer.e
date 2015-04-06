@@ -102,6 +102,7 @@ inherit
 			process_instr_call_as,
 			process_loop_as,
 			process_iteration_as,
+			process_named_expression_as,
 			process_variant_as,
 			process_retry_as,
 
@@ -1605,6 +1606,14 @@ feature {CLASS_AS, CA_FIX} -- Calls
 			end
 			print_list_inline (l_as.parameters)
 			safe_process (l_as.rparan_symbol (match_list))
+		end
+
+	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a_as.expression.process (Current)
+			safe_process (a_as.as_keyword (match_list))
+			a_as.name.process (Current)
 		end
 
 	process_access_inv_as (l_as: ACCESS_INV_AS)

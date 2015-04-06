@@ -40,6 +40,7 @@ inherit
 			process_retry_as,
 			process_routine_as,
 			process_routine_creation_as,
+			process_separate_instruction_as,
 			process_un_old_as,
 			process_unary_as
 		end
@@ -791,6 +792,15 @@ feature {AST_EIFFEL} -- Visitor: compound
 			end
 		end
 
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			keeper.enter_realm
+			a_as.arguments.process (Current)
+			safe_process (a_as.compound)
+			keeper.leave_realm
+		end
+
 feature {AST_EIFFEL} -- Visitor: nested call
 
 	process_bin_eq_as (a: BIN_EQ_AS)
@@ -977,7 +987,7 @@ feature {NONE} -- Access
 note
 	date: "$Date: 2012-02-01 23:20:47 +0400$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

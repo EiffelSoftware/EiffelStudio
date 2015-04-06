@@ -91,6 +91,7 @@ inherit
 			process_instr_call_as,
 			process_loop_as,
 			process_retry_as,
+			process_separate_instruction_as,
 			process_external_as,
 			process_attribute_as,
 			process_do_as,
@@ -1632,6 +1633,16 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			put_breakable (l_as)
+		end
+
+	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			put_breakable (a.arguments)
+			a.arguments.process (Current)
+			if attached a.compound as c then
+				format_compound (c)
+			end
 		end
 
 	process_external_as (l_as: EXTERNAL_AS)

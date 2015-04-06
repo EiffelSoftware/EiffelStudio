@@ -1232,6 +1232,14 @@ feature {AST_EIFFEL} -- Instructions visitors
 		deferred
 		end
 
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- Process `a_as'.
+		require
+			is_valid_visitor: is_valid
+			non_void_as: attached a_as
+		deferred
+		end
+
 feature {AST_EIFFEL} -- External visitors
 
 	process_external_as (l_as: EXTERNAL_AS)

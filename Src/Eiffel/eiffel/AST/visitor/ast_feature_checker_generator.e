@@ -7851,6 +7851,12 @@ feature {NONE} -- Visitor
 			context.set_all
 		end
 
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+				-- TODO
+		end
+
 	process_external_as (l_as: EXTERNAL_AS)
 		local
 			l_external: EXTERNAL_I

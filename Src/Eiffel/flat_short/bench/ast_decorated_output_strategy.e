@@ -3193,6 +3193,21 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.process_keyword_text (ti_retry_keyword, Void)
 		end
 
+	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			put_breakable
+			text_formatter_decorator.process_keyword_text (ti_separate_keyword, Void)
+			a.arguments.process (Current)
+			text_formatter_decorator.process_keyword_text (ti_do_keyword, Void)
+			text_formatter_decorator.put_new_line
+			text_formatter_decorator.indent
+			safe_process (a.compound)
+			text_formatter_decorator.exdent
+			text_formatter_decorator.put_new_line
+			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+		end
+
 	process_external_as (l_as: EXTERNAL_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator

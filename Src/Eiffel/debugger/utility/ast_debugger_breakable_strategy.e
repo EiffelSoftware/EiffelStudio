@@ -22,6 +22,7 @@ inherit
 			process_variant_as,
 			process_retry_as,
 			process_reverse_as,
+			process_separate_instruction_as,
 			process_tagged_as,
 			process_object_test_as,
 			process_nested_as
@@ -461,6 +462,14 @@ feature {NONE} -- Iteration
 			Precursor (l_as)
 		end
 
+	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			register_breakable (a)
+			a.arguments.process (Current)
+			safe_process (a.compound)
+		end
+
 	process_routine_as (l_as: ROUTINE_AS)
 		local
 			l_info: like breakable_feature_info
@@ -696,7 +705,7 @@ feature {NONE} -- Implementation: Iteration
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

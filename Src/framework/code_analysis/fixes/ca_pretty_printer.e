@@ -105,6 +105,7 @@ inherit
 			process_named_expression_as,
 			process_variant_as,
 			process_retry_as,
+			process_separate_instruction_as,
 
 			-- Expressions
 			process_typed_char_as,
@@ -1416,6 +1417,16 @@ feature {CLASS_AS, CA_FIX} -- Instructions
 				print_string (indent)
 				process_keyword_as (a)
 			end
+		end
+
+	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			print_on_new_line (a.separate_keyword (match_list))
+			process_eiffel_list (a.arguments)
+			process_keyword_as (a.do_keyword (match_list))
+			print_compound (a.compound)
+			print_on_new_line (a.end_keyword)
 		end
 
 feature {CLASS_AS, CA_FIX} -- Expressions

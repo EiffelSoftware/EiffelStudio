@@ -992,6 +992,16 @@ feature
 			safe_process (l_as.end_keyword)
 		end
 
+	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			safe_process (a.separate_keyword (match_list))
+			a.arguments.process (Current)
+			safe_process (a.do_keyword (match_list))
+			safe_process (a.compound)
+			a.end_keyword.process (Current)
+		end
+
 	process_external_as (l_as: EXTERNAL_AS)
 		do
 			safe_process (l_as.external_keyword (match_list))

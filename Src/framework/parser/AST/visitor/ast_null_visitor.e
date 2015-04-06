@@ -468,6 +468,11 @@ feature -- Implementation
 		do
 		end
 
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+		end
+
 	process_external_as (l_as: EXTERNAL_AS)
 		do
 		end

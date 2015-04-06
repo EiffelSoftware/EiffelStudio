@@ -30,6 +30,7 @@ inherit
 			process_nested_as,
 			process_parameter_list_as,
 			process_reverse_as,
+			process_separate_instruction_as,
 			process_static_access_as,
 			process_tuple_as,
 			process_result_as

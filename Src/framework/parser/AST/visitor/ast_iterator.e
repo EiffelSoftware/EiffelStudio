@@ -639,6 +639,13 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
+			-- <Precursor>
+		do
+			a_as.arguments.process (Current)
+			safe_process (a_as.compound)
+		end
+
 	process_external_as (l_as: EXTERNAL_AS)
 		do
 				-- Nothing to be done

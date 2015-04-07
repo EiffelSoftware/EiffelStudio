@@ -168,17 +168,19 @@ feature -- Access
 
 	editor_with_stone (a_stone: ANY) : like current_editor
 			-- Editor that has `a_stone', or editing the same path file.
-		local
-			l_fake_editor: EB_FAKE_SMART_EDITOR
 		do
 			if attached {STONE} a_stone as l_stone then
 				Result := editor_with_stone_internal (editors, l_stone)
 				if Result = Void and then fake_editors /= Void then
 					Result := editor_with_stone_internal (fake_editors, l_stone)
-					l_fake_editor ?= Result
-					if l_fake_editor /= Void then
+					if attached {EB_FAKE_SMART_EDITOR} Result as l_fake_editor then
 						init_editor
-						change_fake_to_real (last_created_editor, l_fake_editor, l_fake_editor.content)
+						Result := last_created_editor
+						change_fake_to_real (Result, l_fake_editor, l_fake_editor.content)
+					else
+							-- `fake_editors' can only contain instances of EB_FAKE_SMART_EDITOR so
+							-- Result is either a fake editor or nothing, i.e. Void.
+						check not_found: Result = Void end
 					end
 				end
 			end
@@ -687,18 +689,15 @@ feature -- Element change
 			create_editor_beside_content (Void, exist_content, False)
 		end
 
-	create_editor_beside_content (a_stone: ANY; a_content: SD_CONTENT; a_force_right_side: BOOLEAN)
+	create_editor_beside_content (a_stone: detachable ANY; a_content: SD_CONTENT; a_force_right_side: BOOLEAN)
 			-- Create an editor beside `a_content'. Meanwile set `a_stone' to the editor if `a_stone' is not void.
 			-- Set top if the a_content is void.
 		local
 			l_content: SD_CONTENT
 		do
-			check is_all_editors_valid end
-			if editor_with_stone (a_stone) = Void then
-				init_editor
-				l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content, a_force_right_side)
-				last_created_editor.set_docking_content (l_content)
-			end
+			init_editor
+			l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content, a_force_right_side)
+			last_created_editor.set_docking_content (l_content)
 			if attached {STONE} a_stone as l_stone then
 				on_drop (l_stone, last_created_editor)
 			end
@@ -788,8 +787,12 @@ feature -- Element change
 
 					if l_conf_class /= Void then
 						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration)
-
-						fake_editors.extend (last_created_editor)
+						if attached {EB_FAKE_SMART_EDITOR} last_created_editor as l_fake_editor then
+							fake_editors.extend (l_fake_editor)
+						else
+								-- Per postcondition of `create_docking_content_fake_one' we cannot execute this branch.
+							check inserted: False end
+						end
 
 						l_content.set_long_title (l_conf_class.name)
 						l_content.set_short_title (l_conf_class.name)
@@ -823,7 +826,12 @@ feature -- Element change
 					if l_group /= Void then
 						create l_cluster_stone.make (l_group)
 						l_content := create_docking_content_fake_one (a_open_clusters.key_for_iteration)
-						fake_editors.extend (last_created_editor)
+						if attached {EB_FAKE_SMART_EDITOR} last_created_editor as l_fake_editor then
+							fake_editors.extend (l_fake_editor)
+						else
+								-- Per postcondition of `create_docking_content_fake_one' we cannot execute this branch.
+							check inserted: False end
+						end
 						l_content.set_long_title (l_group.name)
 						l_content.set_short_title (l_group.name)
 						l_content.set_pixmap (pixmap_from_group (l_group))
@@ -841,7 +849,7 @@ feature -- Element change
 			not_opening_editors: not is_opening_editors
 		end
 
-	fake_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+	fake_editors: ARRAYED_LIST [EB_FAKE_SMART_EDITOR]
 			-- Fake editors which is used for fast opening Eiffel Studio.
 
 	show_editors_possible
@@ -1227,19 +1235,17 @@ feature {NONE} -- Agents
 	on_focus (a_editor: like current_editor)
 			-- Invoke when `a_editor' is focusing.
 		local
-			l_fake_editor: EB_FAKE_SMART_EDITOR
 			l_editor: EB_SMART_EDITOR
 			l_ignore: BOOLEAN
 		do
 			if not is_opening_editors then
-				l_fake_editor ?= a_editor
-				if l_fake_editor /= Void then
+				if attached {EB_FAKE_SMART_EDITOR} a_editor as l_fake_editor then
 					-- Maybe called by `on_show_imp' (`on_show_imp' called by `on_show') on same editor more than once.
 					l_ignore := has_editor_with_long_title (l_fake_editor.content.long_title)
 					if not l_ignore then
 						init_editor
-						change_fake_to_real (last_created_editor, l_fake_editor, l_fake_editor.content)
 						l_editor := last_created_editor
+						change_fake_to_real (l_editor, l_fake_editor, l_fake_editor.content)
 					end
 				else
 					l_editor := a_editor
@@ -1380,16 +1386,15 @@ feature {NONE} -- Agents
 							l_classes_founded.after
 						loop
 							l_item := l_classes_founded.item
-							-- FIXME: configuration library doesn't support STRING_32...so non-Enlgish file path not supported here.
-							if l_item.file_name.out.as_string_32 ~ l_class_name.as_lower  then
-
+							if l_item.file_name.name.is_case_insensitive_equal (l_class_name) then
 								create l_stone.make (l_item)
-								if current_editor /= Void then
-									create_editor_beside_content (l_stone, current_editor.docking_content, False)
+								if attached current_editor as l_editor then
+										-- There is already an editor, we drop the stone there.
+									on_drop (l_stone, l_editor)
 								else
-									create_editor_beside_content (l_stone, void, False)
+										-- No editor is present, we create a new one.
+									create_editor_beside_content (l_stone, Void, False)
 								end
-
 							end
 							l_classes_founded.forth
 						end
@@ -1408,32 +1413,35 @@ feature {NONE} -- Agents
 
 	on_drop (a_stone: STONE; a_editor: like current_editor)
 			-- Invoke when a stone is dropped on `a_editor'.
+		require
+			a_editor_attached: a_editor /= Void
 		local
 			l_editor : like current_editor
 		do
 			check is_all_editors_valid end
 			if a_stone /= Void and then a_stone.is_valid then
-				development_window.set_dropping_on_editor (true)
+
 				l_editor := editor_with_stone (a_stone)
-				if l_editor = Void then
-					l_editor := a_editor
-				end
 				if l_editor /= Void then
-					-- Following line will change fake editor to real editor if `l_editor' is fake editor
-					l_editor.docking_content.set_focus
-
-					-- If `l_editor' is fake editor, `editor_drawing_area' is void
-					if
-						attached a_editor.editor_drawing_area as draw and then
-						(draw.is_displayed and draw.is_sensitive)
-					then
-						a_editor.editor_drawing_area.set_focus
+						-- There is already an editor with `a_stone'. We simply switch to it.
+					select_editor (l_editor, False)
+				else
+						-- We use the current editor to drop, however it could be a fake editor, so we
+						-- need to update it to a real editor by forcing `set_focus' on it. If it is not
+						-- a fake editor, setting the focus is still what we need.
+					a_editor.docking_content.set_focus
+					check
+						not_fake: a_editor.editor_drawing_area /= Void
+						visible: attached a_editor.editor_drawing_area as draw and then (draw.is_displayed and draw.is_sensitive)
 					end
-				end
+						-- Make sure the editor drawing area has the focus now.
+					a_editor.editor_drawing_area.set_focus
 
-				update_content_description (a_stone, l_editor.docking_content)
-				development_window.set_stone (a_stone)
-				development_window.set_dropping_on_editor (false)
+						-- Now we are sure to have a valid editor, let's set the stone.
+					development_window.set_dropping_on_editor (true)
+					development_window.set_stone (a_stone)
+					development_window.set_dropping_on_editor (false)
+				end
 			end
 		end
 
@@ -1488,16 +1496,21 @@ feature {NONE} -- Implementation
 		local
 			l_editors: like editors_internal
 			l_fake_editors: like fake_editors
+			l_found: BOOLEAN
 		do
 			l_editors := editors_internal
 			if l_editors.has (a_editor) then
 				l_editors.prune_all (a_editor)
-			else
+				l_found := True
+			elseif attached {EB_FAKE_SMART_EDITOR} a_editor as l_fake_editor then
 				l_fake_editors := fake_editors
-				if l_fake_editors.has (a_editor) then
-					l_fake_editors.prune_all (a_editor)
+				if l_fake_editors.has (l_fake_editor) then
+					l_fake_editors.prune_all (l_fake_editor)
+					l_found := True
 				end
 			end
+
+			check found: l_found end
 
 			editor_number_factory.remove_editor_name (a_editor.docking_content.unique_title)
 			a_editor.docking_content.close
@@ -1661,9 +1674,11 @@ feature {NONE} -- Implementation
 
 			docking_manager.contents.extend (Result)
 			Result.set_type ({SD_ENUMERATION}.editor)
+		ensure
+			last_created_editor_non_void: attached {EB_FAKE_SMART_EDITOR} last_created_editor
 		end
 
-	change_fake_to_real (a_editor, a_fake_editor: like current_editor; a_content: SD_CONTENT)
+	change_fake_to_real (a_editor: like current_editor; a_fake_editor: EB_FAKE_SMART_EDITOR; a_content: SD_CONTENT)
 			-- Change fake editor to real editors.
 		require
 			not_void: a_editor /= Void
@@ -1671,7 +1686,7 @@ feature {NONE} -- Implementation
 		do
 			a_content.set_user_widget (a_editor.widget)
 
-			-- We wipe out the `drop_aciton' which registered in `create_docking_content_fake_one'
+				-- We wipe out the `drop_actions' which registered in `create_docking_content_fake_one'
 			a_content.drop_actions.wipe_out
 
 			register_action (a_content.drop_actions, agent on_drop (?, a_editor))
@@ -1691,6 +1706,7 @@ feature {NONE} -- Implementation
 			a_editor.set_docking_content (a_content)
 			a_editor.set_stone (a_fake_editor.stone)
 
+				-- Remove `a_fake_editor' from `fake_editors'.
 			fake_editors.start
 			fake_editors.prune (a_fake_editor)
 		ensure
@@ -1785,21 +1801,20 @@ feature {NONE} -- Implementation
 			-- Remove editor related with `a_content'.
 		local
 			l_editors: like editors
-			l_editor: EB_SMART_EDITOR
 			l_found: BOOLEAN
 		do
 			from
-				l_editors := editors
+				l_editors := editors_internal
 				l_editors.start
 			until
 				l_editors.after or l_found
 			loop
 				if l_editors.item.docking_content = a_content then
-					editors_internal.start
-					editors_internal.prune (l_editors.item)
+					l_editors.remove
 					l_found := True
+				else
+					l_editors.forth
 				end
-				l_editors.forth
 			end
 			if not l_found then
 				from
@@ -1808,9 +1823,7 @@ feature {NONE} -- Implementation
 					fake_editors.after or l_found
 				loop
 					if fake_editors.item.docking_content = a_content then
-						l_editor := fake_editors.item
-						fake_editors.start
-						fake_editors.prune (l_editor)
+						fake_editors.remove
 						l_found := True
 					else
 						fake_editors.forth

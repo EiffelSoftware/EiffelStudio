@@ -65,9 +65,7 @@ feature -- Basic operations
 			execute
 			new_window := window_manager.last_created_window
 			check creation_effective: new_window /= Void end
-			if a_stone /= Void then
-				new_window.force_stone (a_stone)
-			end
+			new_window.set_stone (a_stone)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON

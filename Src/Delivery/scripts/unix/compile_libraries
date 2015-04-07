@@ -36,4 +36,9 @@ if [ "$3" = "gtk" ]; then
 fi
 cd $2/library/vision2/implementation/gtk/Clib
 default_make
+
+remtrace beep example
+cd $2/examples/base/beep/Clib
+default_make
+
 cd $2

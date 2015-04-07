@@ -11,7 +11,8 @@ inherit
 		undefine
 			is_valid,
 			same_as,
-			synchronized_stone
+			synchronized_stone,
+			is_compatible_with
 		end
 
 	CLASSC_STONE

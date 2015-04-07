@@ -13,7 +13,7 @@ inherit
 
 	FILED_STONE
 		redefine
-			is_valid, synchronized_stone, same_as,
+			is_valid, synchronized_stone, same_as, is_compatible_with,
 			stone_name
 		end
 
@@ -135,11 +135,19 @@ feature -- Status report
 			Result := class_i /= Void and then class_i.is_valid and then class_i.is_external_class
 		end
 
-	same_as (other: STONE): BOOLEAN
+feature -- Comparison
+
+	is_compatible_with (other: STONE): BOOLEAN
 			-- Do `Current' and `other' represent the same class?
 		do
 			Result := attached {CLASSI_STONE} other as convcur and then class_i.is_equal (convcur.class_i)
 				and then equal (class_i.config_class.overriden_by, convcur.class_i.config_class.overriden_by)
+		end
+
+	same_as (other: STONE): BOOLEAN
+			-- Do `Current' and `other' represent the same class?
+		do
+			Result := is_compatible_with (other)
 		end
 
 feature {NONE} -- Implementation

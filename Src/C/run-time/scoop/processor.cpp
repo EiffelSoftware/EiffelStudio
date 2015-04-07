@@ -107,7 +107,7 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 	REQUIRE ("result_not_null", result);
 	REQUIRE ("valid_pid", a_pid != NULL_PROCESSOR_ID);
-		/* The valid_pid precondition may be dropped one day, but currently the SCOP
+		/* The valid_pid precondition may be dropped one day, but currently the SCOOP
 		 * runtime is not able to handle processors with this reserved ID. */
 
 		/* Note: We initialize to zero to avoid having inconsistent states
@@ -610,6 +610,8 @@ rt_shared void rt_processor_application_loop (processor* self)
 			is_stopped = EIF_TRUE;
 		}
 	}
+
+	CHECK ("empty_queue_of_queues", rt_message_channel_is_empty (&self->queue_of_queues));
 }
 
 /*

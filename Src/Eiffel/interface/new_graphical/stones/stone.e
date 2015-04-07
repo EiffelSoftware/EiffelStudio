@@ -53,17 +53,12 @@ feature  -- Access
 		deferred
 		end
 
-	is_valid: BOOLEAN
-			-- Is `Current' a valid stone?
+	stone_name: READABLE_STRING_GENERAL
+			-- Name of Current stone
 		do
-			Result := True
-		end
-
-	is_storable: BOOLEAN
-			-- Can `Current' be kept?
-			-- True by default.
-		do
-			Result := True
+			Result := ""
+		ensure
+			result_attached: Result /= Void
 		end
 
 	synchronized_stone: STONE
@@ -77,6 +72,23 @@ feature  -- Access
 			valid_stone: Result /= Void implies Result.is_valid
 		end
 
+feature -- Status Report
+
+	is_valid: BOOLEAN
+			-- Is `Current' a valid stone?
+		do
+			Result := True
+		end
+
+	is_storable: BOOLEAN
+			-- Can `Current' be kept?
+			-- True by default.
+		do
+			Result := True
+		end
+
+feature -- Comparison
+
 	same_as (other: STONE): BOOLEAN
 			-- Is `other' same as Current?
 			--| By default: Result = equal (Current, other).
@@ -86,16 +98,14 @@ feature  -- Access
 			end
 		end
 
-	stone_name: READABLE_STRING_GENERAL
-			-- Name of Current stone
+	is_compatible_with (other: STONE): BOOLEAN
+			-- Is `other' compatible with other?
 		do
-			Result := ""
-		ensure
-			result_attached: Result /= Void
+			Result := same_as (other)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

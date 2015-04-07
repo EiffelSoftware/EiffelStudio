@@ -385,8 +385,12 @@ feature {NONE} -- Implementation Repository Layer
 		do
 			create joc.make
 			json.add_converter(joc)
-			create parser.make_parser (l_post)
-			if attached parser.parse as jv and parser.is_parsed then
+			create parser.make_with_string (l_post)
+			parser.parse_content
+			if
+				parser.is_valid and then
+				attached parser.parsed_json_value as jv
+			then
 				if attached {like extract_order_request} json.object (jv, "ORDER") as res then
 					Result := res
 				end
@@ -394,6 +398,6 @@ feature {NONE} -- Implementation Repository Layer
 		end
 
 note
-	copyright: "2011-2013, Javier Velilla and others"
+	copyright: "2011-2015, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -20,15 +20,15 @@
 				<exclude>spec</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/tcp_stream_socket.e$</exclude>
+				<exclude>tcp_stream_socket.e</exclude>
 				<condition>
-					<version type="compiler" max="15.02"/>
+					<version type="compiler" max="15.01.9.6506"/>
 				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="spec_before_15_01" location=".\library\spec\before_15_01\" recursive="true">
 			<condition>
-				<version type="compiler" max="15.02"/>
+				<version type="compiler" max="15.01.9.6506"/>
 			</condition>
 		</cluster>
 	</target>

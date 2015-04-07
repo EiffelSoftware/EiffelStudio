@@ -89,8 +89,6 @@ feature -- Execution
 
 					if attached {STONE} a_stone as l_stone then
 						development_window.set_stone (l_stone)
-					else
-						development_window.set_stone (Void)
 					end
 					development_window.address_manager.on_new_tab_command
 				end
@@ -172,7 +170,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

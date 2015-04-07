@@ -97,7 +97,7 @@ feature -- Conversion
             Result.put (json.value (o.location), location_key)
 			Result.put (json.value (o.status), status_key)
             from
-            	create ja.make_array
+            	create ja.make_empty
             	o.items.start
             until
             	o.items.after
@@ -117,48 +117,48 @@ feature -- Conversion
  feature {NONE} -- Implementation
 	id_key: JSON_STRING
         once
-            create Result.make_json ("id")
+            create Result.make_from_string ("id")
         end
 
 	location_key: JSON_STRING
         once
-            create Result.make_json ("location")
+            create Result.make_from_string ("location")
         end
 
    status_key: JSON_STRING
         once
-            create Result.make_json ("status")
+            create Result.make_from_string ("status")
         end
 
     items_key : JSON_STRING
 	 	once
-    		create Result.make_json ("items")
+    		create Result.make_from_string ("items")
     	end
 
 
 	name_key : JSON_STRING
 
     	once
-    		create Result.make_json ("name")
+    		create Result.make_from_string ("name")
     	end
 
     size_key : JSON_STRING
 
     	once
-    		create Result.make_json ("size")
+    		create Result.make_from_string ("size")
     	end
 
 	quantity_key : JSON_STRING
 
     	once
-    		create Result.make_json ("quantity")
+    		create Result.make_from_string ("quantity")
     	end
 
 
     option_key : JSON_STRING
 
     	once
-    		create Result.make_json ("option")
+    		create Result.make_from_string ("option")
     	end
 feature -- Validation
 
@@ -171,6 +171,6 @@ feature -- Validation
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla and others"
+	copyright: "2011-2015, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

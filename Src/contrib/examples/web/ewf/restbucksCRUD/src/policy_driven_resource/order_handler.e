@@ -145,7 +145,9 @@ feature -- Access
 			-- If supplied, should be a single URI, or the values "*" or "null".
 			-- This is currently supported only for GET requests, and POSTs that functions as GET.
 		do
-			-- To implement
+			if req.is_get_head_request_method then
+				Result := "*"
+			end
 		end
 
 	matching_etag (req: WSF_REQUEST; a_etag: READABLE_STRING_32; a_strong: BOOLEAN): BOOLEAN
@@ -180,7 +182,6 @@ feature -- Access
 			-- When representation of resource selected in `req' was last modified;
 			-- SHOULD be set whenever it can reasonably be determined.
 		do
-			-- To Implement
 		end
 
 	modified_since (req: WSF_REQUEST; a_date_time: DATE_TIME): BOOLEAN
@@ -558,8 +559,9 @@ feature {NONE} -- Implementation Repository Layer
 		do
 			create joc.make
 			json.add_converter(joc)
-			create parser.make_parser (l_post)
-			if attached parser.parse as jv and parser.is_parsed then
+			create parser.make_with_string (l_post)
+			parser.parse_content
+			if parser.is_valid and then attached parser.parsed_json_value as jv then
 				if attached {like extract_order_request} json.object (jv, "ORDER") as res then
 					Result := res
 				end
@@ -567,6 +569,6 @@ feature {NONE} -- Implementation Repository Layer
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla and others"
+	copyright: "2011-2015, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

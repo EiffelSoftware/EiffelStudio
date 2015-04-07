@@ -41,7 +41,7 @@ feature -- Execution
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				create req.make ((create {EXECUTION_ENVIRONMENT}).starting_environment_variables, create {WGI_CGI_INPUT_STREAM}.make, Current)
+				create req.make ((create {EXECUTION_ENVIRONMENT}).starting_environment, create {WGI_CGI_INPUT_STREAM}.make, Current)
 				create res.make (create {WGI_CGI_OUTPUT_STREAM}.make, create {WGI_CGI_ERROR_STREAM}.make)
 				service.execute (req, res)
 				res.push
@@ -68,7 +68,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2013, Eiffel Software and others"
+	copyright: "2011-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

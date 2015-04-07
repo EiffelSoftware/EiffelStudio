@@ -42,8 +42,7 @@ feature -- Basic operations
 			if st.is_storable then
 				pref := chosen_receiver
 				if pref.is_equal (names.co_new_window) then
-					window_manager.create_window
-					window_manager.last_created_window.force_stone (st)
+					window_manager.last_focused_development_window.new_development_window_cmd.execute_with_stone (st)
 
 				elseif pref.is_equal (names.co_editor) then
 					window_manager.last_focused_development_window.set_stone (st)
@@ -56,7 +55,7 @@ feature -- Basic operations
 					if attached {FILED_STONE} st as fs then
 						edit_in_external_editor (fs)
 					else
-						window_manager.last_focused_development_window.force_stone (st)
+						window_manager.last_focused_development_window.set_stone (st)
 					end
 
 				elseif pref.is_equal (names.co_new_tab_editor) then

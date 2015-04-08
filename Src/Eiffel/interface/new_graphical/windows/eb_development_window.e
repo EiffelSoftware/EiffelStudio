@@ -1290,17 +1290,9 @@ feature -- Window management
 
 	save_editors_to_session_data (a_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA)
 			-- Save editor number, open classes and open clusters.
-		local
-			l_open_classes: HASH_TABLE [STRING, STRING]
-			l_open_clusters: HASH_TABLE [STRING, STRING]
 		do
-			l_open_classes := editors_manager.open_classes
-			l_open_classes.merge (editors_manager.open_fake_classes)
-			l_open_clusters := editors_manager.open_clusters
-			l_open_clusters.merge (editors_manager.open_fake_clusters)
-
-			a_data.save_open_classes (l_open_classes)
-			a_data.save_open_clusters (l_open_clusters)
+			a_data.save_open_classes (editors_manager.open_classes)
+			a_data.save_open_clusters (editors_manager.open_clusters)
 
 			a_data.save_formatting_marks (editors_manager.show_formatting_marks)
 		end

@@ -13,7 +13,6 @@ inherit
 		rename
 			make as make_real
 		redefine
-			set_stone,
 			on_focus,
 			changed,
 			update_click_list,
@@ -41,19 +40,6 @@ feature -- Query
 
 	is_offset_valid: BOOLEAN = True
 			-- Redefine for not break invariant.
-
-feature -- Stone
-
-	set_stone (a_stone: detachable STONE)
-			-- Redefine
-		local
-			l_cell: EB_FAKE_SMART_EDITOR_CELL
-		do
-			Precursor {EB_SMART_EDITOR}(a_stone)
-			l_cell ?= docking_content.user_widget
-			check not_void: l_cell /= Void end
-			l_cell.set_stone (a_stone)
-		end
 
 feature -- Fake implemetation
 

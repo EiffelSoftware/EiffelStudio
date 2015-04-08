@@ -270,6 +270,10 @@ feature -- Access
 			l_editors := editors
 			from
 				l_editors.start
+				if l_editors.after then
+					l_editors := fake_editors
+					l_editors.start
+				end
 			until
 				l_editors.after
 			loop
@@ -283,41 +287,11 @@ feature -- Access
 					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
-	open_fake_classes: HASH_TABLE [STRING, STRING]
-			-- Opened classes that in fake editors. [ID, title]
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_fake_editor: EB_FAKE_SMART_EDITOR_CELL
-			l_classc_stone: CLASSC_STONE
-			l_id: STRING
-		do
-			create Result.make (1)
-			from
-				l_contents := docking_manager.contents.twin
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_fake_editor ?= l_contents.item.user_widget
-					if l_fake_editor /= Void then
-						l_classc_stone ?= l_fake_editor.stone
-						if l_classc_stone /= Void then
-							check
-								class_not_void: l_classc_stone.class_i /= Void
-								config_class_not_void: l_classc_stone.class_i.config_class /= Void
-							end
-							l_id := id_of_class (l_classc_stone.class_i.config_class)
-							Result.force (l_id, l_contents.item.unique_title.as_string_8)
-						end
-					end
+					-- Perform a second iteration of the loop, this time using `fake_editors'.
+				if l_editors.after and then l_editors /= fake_editors then
+					l_editors := fake_editors
+					l_editors.start
 				end
-				l_contents.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -334,6 +308,10 @@ feature -- Access
 			l_editors := editors
 			from
 				l_editors.start
+				if l_editors.after then
+					l_editors := fake_editors
+					l_editors.start
+				end
 			until
 				l_editors.after
 			loop
@@ -343,38 +321,12 @@ feature -- Access
 					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
-			end
-		end
-
-	open_fake_clusters: HASH_TABLE [STRING, STRING]
-			-- Opened clusters that in fake editors. [ID, title]
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_fake_editor: EB_FAKE_SMART_EDITOR_CELL
-			l_cluster_stone: CLUSTER_STONE
-			l_id: STRING
-		do
-			create Result.make (1)
-			from
-				l_contents := docking_manager.contents.twin
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_fake_editor ?= l_contents.item.user_widget
-					if l_fake_editor /= Void then
-						l_cluster_stone ?= l_fake_editor.stone
-						if l_cluster_stone /= Void then
-							l_id := id_of_group (l_cluster_stone.group)
-							Result.force (l_id, l_contents.item.unique_title.as_string_8)
-						end
-					end
+					-- Perform a second iteration of the loop, this time using `fake_editors'.
+				if l_editors.after and then l_editors /= fake_editors then
+					l_editors := fake_editors
+					l_editors.start
 				end
-				l_contents.forth
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
 	changed_classes: ARRAYED_LIST [CLASS_I]
@@ -584,13 +536,13 @@ feature -- Status report
 				if last_focused_editor /= Void then
 					Result := veto_pebble_function_internal.item ([a_stone, last_focused_editor.docking_content])
 				else
-					Result := veto_pebble_function_internal.item ([a_stone, void])
+					Result := veto_pebble_function_internal.item ([a_stone, Void])
 				end
 			else
 				if last_focused_editor /= Void then
 					Result := default_veto_func (a_stone, last_focused_editor.docking_content)
 				else
-					Result := default_veto_func (a_stone, void)
+					Result := default_veto_func (a_stone, Void)
 				end
 			end
 		end
@@ -1299,7 +1251,7 @@ feature {NONE} -- Agents
 				l_commands.after
 			loop
 				l_item := l_commands.item
-				l_item.set_current_focused_content (void)
+				l_item.set_current_focused_content (Void)
 				l_item.disable_sensitive
 
 				l_commands.forth
@@ -1400,9 +1352,9 @@ feature {NONE} -- Agents
 						end
 					else
 						-- Should tell users only drop ".e" file here, only tell users ONE time.
-						if l_prompt_provider = void then
+						if l_prompt_provider = Void then
 							create l_prompt_provider
-							l_prompt_provider.show_error_prompt (interface_names.l_only_eiffel_class_file_allowed, void, void)
+							l_prompt_provider.show_error_prompt (interface_names.l_only_eiffel_class_file_allowed, Void, Void)
 						end
 
 					end
@@ -1415,33 +1367,20 @@ feature {NONE} -- Agents
 			-- Invoke when a stone is dropped on `a_editor'.
 		require
 			a_editor_attached: a_editor /= Void
-		local
-			l_editor : like current_editor
 		do
 			check is_all_editors_valid end
 			if a_stone /= Void and then a_stone.is_valid then
 
-				l_editor := editor_with_stone (a_stone)
-				if l_editor /= Void then
-						-- There is already an editor with `a_stone'. We simply switch to it.
+				if attached editor_with_stone (a_stone) as l_editor and then l_editor /= a_editor then
+						-- There is already an editor with `a_stone'. We simply switch to it if it
+						-- is not already our visible editor.
 					select_editor (l_editor, False)
-				else
-						-- We use the current editor to drop, however it could be a fake editor, so we
-						-- need to update it to a real editor by forcing `set_focus' on it. If it is not
-						-- a fake editor, setting the focus is still what we need.
-					a_editor.docking_content.set_focus
-					check
-						not_fake: a_editor.editor_drawing_area /= Void
-						visible: attached a_editor.editor_drawing_area as draw and then (draw.is_displayed and draw.is_sensitive)
-					end
-						-- Make sure the editor drawing area has the focus now.
-					a_editor.editor_drawing_area.set_focus
-
-						-- Now we are sure to have a valid editor, let's set the stone.
-					development_window.set_dropping_on_editor (true)
-					development_window.set_stone (a_stone)
-					development_window.set_dropping_on_editor (false)
 				end
+
+					-- Now we are sure to have a valid editor, let's set the stone.
+				development_window.set_dropping_on_editor (True)
+				development_window.set_stone (a_stone)
+				development_window.set_dropping_on_editor (False)
 			end
 		end
 
@@ -1653,7 +1592,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_unique_title /= Void
 		do
-			create Result.make_with_widget_title_pixmap (create {EB_FAKE_SMART_EDITOR_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
+			create Result.make_with_widget_title_pixmap (create {EV_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
 			create {EB_FAKE_SMART_EDITOR} last_created_editor.make (Result)
 			last_created_editor.set_docking_content (Result)
 

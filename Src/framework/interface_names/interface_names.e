@@ -1077,6 +1077,9 @@ feature -- Context menu
 			Result := locale.formatted_string (locale.translation ("External E&ditor $1 '$2'"), [a_type, a_name])
 		end
 
+	m_enable_pick_and_drop: STRING_32 do Result := locale.translation ("Enable Pick And Drop On Right-Click") end
+	m_disable_pick_and_drop: STRING_32 do Result := locale.translation ("Enable Context Menu On Right-Click") end
+
 	m_quick_metric: STRING_32			do Result := locale.translation("Quick metric") end
 	m_reload_metrics: STRING_32			do Result := locale.translation("&Reload metrics") end
 	m_remove: STRING_32						do Result := locale.translation ("&Remove") end

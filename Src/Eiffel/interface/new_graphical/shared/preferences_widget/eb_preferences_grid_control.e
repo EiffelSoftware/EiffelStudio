@@ -326,6 +326,8 @@ feature {NONE} -- Widget initialization
 				Result.set_displayed_value (l_displayed_names)
 			elseif a_pref = preferences.development_window_data.ctrl_right_click_receiver_preference then
 				Result.set_displayed_value (names.c_right_click_receiver)
+			elseif a_pref = preferences.development_window_data.override_tab_behavior_preference then
+				Result.set_displayed_value (names.c_override_tab_behavior)
 			elseif a_pref = preferences.search_tool_data.init_scope_preference then
 				Result.set_displayed_value (names.c_init_search_scope)
 			elseif a_pref = preferences.error_list_tool_data.report_c_compiler_errors_preference then
@@ -334,7 +336,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

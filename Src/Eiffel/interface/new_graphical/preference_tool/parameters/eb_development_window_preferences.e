@@ -109,6 +109,14 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := ctrl_right_click_receiver_preference.selected_value
 		end
 
+	override_tab_behavior: STRING
+			-- Defines how editor should behave when a stone is dropped onto an existing tab.
+		do
+			Result := override_tab_behavior_preference.selected_value
+		ensure
+			valid_choices: Result.same_string ({INTERFACE_NAMES}.co_editor) or Result.same_string ({INTERFACE_NAMES}.co_new_tab_editor) or Result.same_string ({INTERFACE_NAMES}.co_new_tab_editor_if_edited)
+		end
+
 	class_completion: BOOLEAN
 			--
 		do
@@ -192,6 +200,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE
 
+	override_tab_behavior_preference: ARRAY_PREFERENCE
+			-- Preference defining how an editor tab behaves when receiving a stone.
+
 	class_completion_preference: BOOLEAN_PREFERENCE
 
 	last_browsed_cluster_directory_preference: PATH_PREFERENCE
@@ -271,6 +282,7 @@ feature {NONE} -- Preference Strings
 	completion_list_height_string: STRING = "interface.development_window.completion_list_height"
 	progress_bar_color_preference_string: STRING = "interface.development_window.progress_bar_color"
 	ctrl_right_click_receiver_string: STRING = "interface.development_window.ctrl_right_click_receiver"
+	override_tab_behavior_string: STRING = "interface.development_window.override_tab_behavior"
 	class_completion_string: STRING = "interface.development_window.class_completion"
 	last_browsed_cluster_directory_string: STRING = "interface.development_window.last_browsed_cluster_directory"
 	context_unified_stone_string: STRING = "interface.development_window.unified_stone"
@@ -303,6 +315,8 @@ feature {NONE} -- Implementation
 			progress_bar_color_preference := l_manager.new_color_preference_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
 			ctrl_right_click_receiver_preference := l_manager.new_array_preference_value (l_manager, ctrl_right_click_receiver_string, <<"[new_tab_editor];new_window;current_editor;context;external">>)
 			ctrl_right_click_receiver_preference.set_is_choice (True)
+			override_tab_behavior_preference := l_manager.new_array_preference_value (l_manager, override_tab_behavior_string, <<"[current_editor];new_tab_editor;new_tab_if_edited">>)
+			override_tab_behavior_preference.set_is_choice (True)
 			class_completion_preference := l_manager.new_boolean_preference_value (l_manager, class_completion_string, True)
 			last_browsed_cluster_directory_preference := l_manager.new_path_preference_value (l_manager, last_browsed_cluster_directory_string, create {PATH}.make_empty)
 			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
@@ -374,7 +388,7 @@ invariant
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

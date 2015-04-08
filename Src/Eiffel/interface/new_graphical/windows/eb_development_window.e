@@ -20,7 +20,7 @@ inherit
 			{EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_ADDRESS_MANAGER}
 				Warning_messages, Interface_names,
 				init_commands, Pixmaps
-			{EB_STONE_FIRST_CHECKER}
+			{EB_STONE_CHECKER}
 				Ev_application, shared_environment
 			{ANY} auto_recycle, delayed_auto_recycle
 		redefine
@@ -102,7 +102,6 @@ inherit
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
 			{NONE} all
-			{EB_STONE_FIRST_CHECKER} pixmap_from_class_i
 		end
 
 	SHARED_TEXT_ITEMS
@@ -429,6 +428,9 @@ feature {NONE} -- Access
 			result_item_positive: Result.item > 0
 		end
 
+	is_processing_stone: BOOLEAN
+			-- To avoid recursion when processing stones in `set_stone'.
+
 feature -- Querys
 
 	docking_manager: SD_DOCKING_MANAGER
@@ -739,38 +741,62 @@ feature -- Stone process
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 			l_window_list: LIST [EB_DEVELOPMENT_WINDOW]
-			l_checker: EB_STONE_FIRST_CHECKER
+			l_checker: EB_STONE_CHECKER
+			l_normal_behavior: BOOLEAN
+			l_override_pref: STRING
+			l_editor: EB_SMART_EDITOR
 		do
-			if a_stone /= Void then
+			if not is_processing_stone and then a_stone /= Void then
+				is_processing_stone := True
+
 				create l_checker.make (Current)
-				if attached {CLASSI_STONE} a_stone as l_class_i_stone then
-					l_window_list := Window_manager.development_windows_with_class (l_class_i_stone.class_i)
-					if l_window_list.is_empty or else l_window_list.has (Current) then
-							-- We're not editing the class in another window.
+				l_override_pref := preferences.development_window_data.override_tab_behavior
+
+				if l_override_pref.same_string ({INTERFACE_NAMES}.co_editor) then
+						-- Normal behavior, we replace the existing stone in the current editor if any.
+					l_checker.set_stone_after_first_check (a_stone)
+
+				elseif l_override_pref.same_string ({INTERFACE_NAMES}.co_new_tab_editor) then
+					l_editor := editors_manager.editor_with_stone (a_stone)
+					if l_editor /= Void then
 						l_checker.set_stone_after_first_check (a_stone)
 					else
-						create l_warning.make_standard (warning_messages.w_class_already_edited, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.already_editing_class_preference, True))
-						l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent l_checker.set_stone_after_first_check (a_stone))
-						l_warning.show (window)
+							-- This is a new tab, there is no more stone associated to Current.
+						old_set_stone (Void)
+						commands.new_tab_cmd.execute
+							-- Apply now the stone on the new tab.
+						l_checker.set_stone_after_first_check (a_stone)
 					end
-				else
-					l_checker.set_stone_after_first_check (a_stone)
-				end
-			end
-			update_save_symbol
-		end
 
-	force_stone (s: STONE)
-			-- make `s' the new value of `stone', and
-			-- change the display accordingly. Try to
-			-- extract a class from `s' whenever possible.
-		do
-			if s.is_storable then
-				set_stone (s)
-				if not is_unified_stone then
-					tools.set_stone (s)
+				else
+					check new_tab_if_edited: l_override_pref.same_string ({INTERFACE_NAMES}.co_new_tab_editor_if_edited) end
+					l_editor := editors_manager.editor_with_stone (a_stone)
+					if l_editor /= Void then
+						l_checker.set_stone_after_first_check (a_stone)
+					else
+						l_editor := editors_manager.current_editor
+						if l_editor.text_displayed.history.is_empty then
+								-- No editing took place
+							l_checker.set_stone_after_first_check (a_stone)
+						else
+								-- This is a new tab, there is no more stone associated to Current.
+							old_set_stone (Void)
+							commands.new_tab_cmd.execute
+								-- Apply now the stone on the new tab.							
+							l_checker.set_stone_after_first_check (a_stone)
+						end
+					end
 				end
+
+				update_save_symbol
+				is_processing_stone := False
+			elseif a_stone = Void then
+					-- We reset the stone.
+				old_set_stone (Void)
 			end
+		ensure then
+			stone_set: not is_processing_stone implies stone = a_stone
+			editor_stone: not is_processing_stone implies editors_manager.current_editor.stone = a_stone
 		end
 
 	refresh
@@ -1558,16 +1584,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 	 	end
 
-feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
-
-	set_stone_after_check (a_stone: STONE)
-			-- Set stone after check
-		local
-			l_checker: EB_STONE_CHECKER
-		do
-			create l_checker.make (Current)
-			l_checker.set_stone_after_check (a_stone)
-		end
+feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
 
 	check_passed: BOOLEAN
 			-- If check passed?
@@ -1602,7 +1619,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 			end
 		end
 
-feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with EB_STONE_CHECKER
+feature {EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with EB_STONE_CHECKER
 
 	is_text_loaded: BOOLEAN
 			-- Text is loaded in current editor?
@@ -1767,7 +1784,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation
+feature {EB_DEVELOPMENT_WINDOW_PART, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation
 
 	update_save_symbol
 			-- Update save symbol.

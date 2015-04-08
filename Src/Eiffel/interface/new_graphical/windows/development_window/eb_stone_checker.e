@@ -17,6 +17,22 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -35,11 +51,190 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
+	set_stone_after_first_check (a_stone: STONE)
+			-- Display text associated with `a_stone', if any and if possible
+		require
+			a_stone_attached: a_stone /= Void
+		local
+			l_warning: ES_DISCARDABLE_WARNING_PROMPT
+			l_window_list: LIST [EB_DEVELOPMENT_WINDOW]
+		do
+			if a_stone /= Void then
+				if attached {CLASSI_STONE} a_stone as l_class_i_stone then
+					l_window_list := Window_manager.development_windows_with_class (l_class_i_stone.class_i)
+					if l_window_list.is_empty or else l_window_list.has (develop_window) then
+							-- We're not editing the class in another window.
+						set_stone_after_first_check_internal (a_stone)
+					else
+						create l_warning.make_standard (warning_messages.w_class_already_edited, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.already_editing_class_preference, True))
+						l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent set_stone_after_first_check_internal (a_stone))
+						l_warning.show (develop_window.window)
+					end
+				else
+					set_stone_after_first_check_internal (a_stone)
+				end
+			end
+		end
+
+feature {NONE} -- Implementation functions
+
+	set_stone_after_first_check_internal (a_stone: STONE)
+			-- Display text associated with `a_stone', if any and if possible
+		require
+			a_stone_attached: a_stone /= Void
+		local
+			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+			l_editors_manager: EB_EDITORS_MANAGER
+			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
+			l_feature_stone: FEATURE_STONE
+					-- Feature stone if exist.
+			l_old_class_stone: CLASSI_STONE
+					-- Old class stone if exist.
+			l_test_stone: CLASSI_STONE
+					-- Text stone if exist.
+			l_same_class: BOOLEAN
+					-- If old stone and new stone are same class?
+			l_conv_ferrst: FEATURE_ERROR_STONE
+					-- Feature errror stone if exist.
+			l_cluster_st: CLUSTER_STONE
+					-- Cluster stone if exist.
+			l_new_class_stone: CLASSI_STONE
+					-- New class stone if exist.
+			l_conv_errst: ERROR_STONE
+					-- Error stone if exist.
+			l_conv_brkstone: BREAKABLE_STONE
+					-- Breakable stone if exist.
+			editor: EB_SMART_EDITOR
+					-- Editor related if exist.
+			save_needed: BOOLEAN;
+					-- If save file needed?
+		do
+			l_old_class_stone ?= develop_window.stone
+			l_feature_stone ?= a_stone
+			l_new_class_stone ?= a_stone
+			l_cluster_st ?= a_stone
+			l_editors_manager := develop_window.editors_manager
+			editor := l_editors_manager.editor_with_stone (a_stone)
+
+			if editor /= Void then
+				l_editors_manager.editor_switched_actions.block
+				if not has_error_when_error_tool_auto_hide and then editor.docking_content.is_docking_manager_attached then
+					editor.docking_content.set_focus_no_maximized (editor.docking_content.user_widget)
+				end
+				l_editors_manager.editor_switched_actions.resume
+			else
+				if l_editors_manager.editor_count = 0 then
+					-- FIXIT: remove the following line if we reaaly decided we can have void editor
+					l_editors_manager.create_editor
+					l_editors_manager.last_created_editor.docking_content.set_focus
+				end
+			end
+
+			if editor = Void then
+				save_needed := True
+			end
+
+				-- Update the history.
+			l_conv_brkstone ?= a_stone
+			l_conv_errst ?= a_stone
+
+				-- If it is not cancelled, we set it back in EB_STONE_CHECKER
+			develop_window.set_history_moving_cancelled (True)
+
+			if l_conv_brkstone = Void and l_conv_errst = Void then
+				if l_new_class_stone /= Void then
+					develop_window.history_manager.extend (l_new_class_stone)
+				elseif l_cluster_st /= Void then
+					develop_window.history_manager.extend (l_cluster_st)
+				end
+			end
+
+				-- Refresh editor in main formatters.			
+			if l_editors_manager.current_editor /= Void then
+				create l_editor_displayer.make (l_editors_manager.current_editor)
+				from
+					l_managed_main_formatters := develop_window.managed_main_formatters
+					l_managed_main_formatters.start
+				until
+					l_managed_main_formatters.after
+				loop
+					l_managed_main_formatters.item.set_editor_displayer (l_editor_displayer)
+					l_managed_main_formatters.item.set_should_displayer_be_recycled (True)
+					l_managed_main_formatters.forth
+				end
+			end
+
+			if l_old_class_stone /= Void then
+				create l_test_stone.make (l_old_class_stone.class_i)
+				l_same_class := l_test_stone.same_as (a_stone)
+					-- We need to compare classes. If `l_old_class_stone' is a FEATURE_STONE
+					-- `same_as' will compare features. Therefore, we need `l_test_stone' to be sure
+					-- we have a CLASSI_STONE.
+				if l_same_class and then l_feature_stone /= Void then
+					l_same_class := False
+						-- if the stone corresponding to a feature of currently opened class is dropped
+						-- we attempt to scroll to the feature without asking to save the file
+						-- except if it is during a resynchronization, in which case we do not scroll at all.
+					if not develop_window.is_text_loaded and then not develop_window.during_synchronization then
+						develop_window.scroll_to_feature (l_feature_stone.e_feature, l_new_class_stone.class_i)
+						develop_window.set_feature_stone_already_processed (True)
+					else
+						develop_window.set_feature_stone_already_processed (False)
+					end
+					l_conv_ferrst ?= l_feature_stone
+					if develop_window.feature_stone_already_processed and l_conv_ferrst /= Void then
+							-- Scroll to the line of the error.
+						if not develop_window.during_synchronization and then l_editors_manager.current_editor /= Void then
+							l_editors_manager.current_editor.display_line_when_ready (l_conv_ferrst.line_number, 0, True)
+						end
+					end
+				end
+			end
+
+				-- first, let's check if there is already something in this window
+				-- if there's nothing, there's no need to save anything...
+			if develop_window.stone = Void or else not develop_window.changed or else develop_window.feature_stone_already_processed or else l_same_class then
+				set_stone_after_check (a_stone)
+				develop_window.set_feature_stone_already_processed (False)
+			else
+					-- there is something to be saved
+					-- if user chooses to save, current file will be parsed
+					-- if there is a syntax_error, new file is not loaded
+				if save_needed then
+					develop_window.save_and (agent set_stone_after_check (a_stone))
+				else
+					set_stone_after_check (a_stone)
+				end
+				if develop_window.text_saved and then not develop_window.syntax_is_correct then
+					develop_window.set_text_saved (False)
+					develop_window.set_during_synchronization (True)
+					set_stone_after_check (develop_window.stone)
+					develop_window.set_during_synchronization (False)
+					develop_window.address_manager.refresh
+				end
+			end
+
+			if l_editors_manager.current_editor /= Void and then not l_editors_manager.current_editor.has_focus and then not has_error_when_error_tool_auto_hide then
+				develop_window.ev_application.do_once_on_idle (agent develop_window.set_focus_to_main_editor)
+			end
+		end
+
 	set_stone_after_check (a_stone: STONE)
 			-- First we check `a_stone' then we set stone if possible.
+		require
+			a_stone_attached: a_stone /= Void
+		local
+			l_current_window: EV_WIDGET
+			l_old_cursor: EV_POINTER_STYLE
 		do
-				-- the text does not change if the text was saved with syntax errors
-			cur_wid := develop_window.window
+				-- The text does not change if the text was saved with syntax errors
+			l_current_window := develop_window.window
+				-- Only change the cursor in the event it is a different stone object.
+			if develop_window.stone /= a_stone and then l_current_window /= Void then
+				l_old_cursor := l_current_window.pointer_style
+				l_current_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Wait_cursor)
+			end
+
 			prepare (a_stone)
 
 				-- History moving is not going to be cancelled.
@@ -54,36 +249,30 @@ feature -- Command
 			else
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			end
-			if cur_wid = Void or old_cur = Void then
-				--| Do nothing.
-			else
-				cur_wid.set_pointer_style (old_cur)
-				old_cur := Void
-				cur_wid := Void
+			if l_current_window /= Void and l_old_cursor /= Void then
+				l_current_window.set_pointer_style (l_old_cursor)
 			end
 			develop_window.update_viewpoints
 		end
 
-feature {NONE} -- Implementation functions
+	has_error_when_error_tool_auto_hide: BOOLEAN
+			-- When project has errors and Errors Tools is auto hiding, we should not set focus to editor.
+			-- Otherwise the Errors Tools sliding panel will be removed automatically, because it doesn't has focus.
+			-- See bug#12765.
+		local
+			l_tool: ES_TOOL [EB_TOOL]
+		do
+			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
+			if l_tool /= Void and then not l_tool.is_recycled and then l_tool.docking_content /= Void then
+				Result := (l_tool.docking_content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
+			end
+		end
 
 	prepare (a_stone: STONE)
 			-- Try to assign different kinds of stones.
 		local
-			l_pixmaps: EV_STOCK_PIXMAPS
 			l_editor: like current_editor
 		do
-				-- Only change the cursor in the event it is a different stone object.
-			if develop_window.stone /= a_stone then
-				if cur_wid = Void then
-					--| Do nothing.
-				else
-					if old_cur = Void then
-						old_cur := cur_wid.pointer_style
-					end
-					create l_pixmaps
-					cur_wid.set_pointer_style (l_pixmaps.Wait_cursor)
-				end
-			end
 			old_class_stone ?= develop_window.stone
 			develop_window.old_set_stone (a_stone)
 			text_loaded := develop_window.is_text_loaded
@@ -1090,12 +1279,6 @@ feature {NONE} -- Implementation attributes
 
 	formatter: EB_FORMATTER
 			-- Formatter
-
-	old_cur: EV_POINTER_STYLE
-			-- Cursor saved while displaying the hourglass cursor.
-
-	cur_wid: EV_WIDGET
-			-- Widget on which the hourglass cursor was set.
 
 	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			-- Managed main formatters.

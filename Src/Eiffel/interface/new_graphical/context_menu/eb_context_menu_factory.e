@@ -1956,6 +1956,7 @@ feature {NONE} -- Implementation
 			a_menu_not_void: a_menu /= Void
 		local
 			l_text: STRING_32
+			l_menu_entry: EV_MENU_ITEM
 		do
 			if a_menu.count > 0 then
 				if last_type /= Void and then last_name /= Void then
@@ -1965,6 +1966,14 @@ feature {NONE} -- Implementation
 					l_text := names.m_pick
 				end
 				a_menu.first.set_text (l_text)
+				if preferences.misc_data.is_pnd_mode then
+					create l_menu_entry.make_with_text (names.m_disable_pick_and_drop)
+					l_menu_entry.select_actions.extend (agent (preferences.misc_data.pnd_preference).set_value (False))
+				else
+					create l_menu_entry.make_with_text (names.m_enable_pick_and_drop)
+					l_menu_entry.select_actions.extend (agent (preferences.misc_data.pnd_preference).set_value (True))
+				end
+				a_menu.extend (l_menu_entry)
 			end
 		end
 

@@ -38,8 +38,8 @@
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
-#include "mpmc.hpp"
 #include "processor.hpp"
+#include "rt_identifier_set.h"
 
 class pid_set
 {
@@ -93,6 +93,10 @@ class processor_registry
 public:
   processor_registry ();
 
+  ~processor_registry () {
+	rt_identifier_set_deinit (&this->free_pids);
+  }
+
   processor* create_fresh (EIF_REFERENCE obj);
 
   processor* operator[] (EIF_SCP_PID pid);
@@ -116,16 +120,12 @@ public:
 private:
   processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
   pid_set used_pids;
-  mpmc_bounded_queue<EIF_SCP_PID> free_pids;
+  struct rt_identifier_set free_pids;
 
   /* GC */
 private:
   atomic_bool_type is_marking;
   void clear_from_caches (processor *proc);
-
-private:
-  conditional_mutex_type need_pid_mutex;
-  condition_variable_type need_pid_cv;
 
   /* end of life notification */
 private:

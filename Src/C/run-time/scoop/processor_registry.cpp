@@ -50,12 +50,9 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 
 processor_registry registry;
 
-processor_registry::processor_registry () :
-	free_pids (RT_MAX_SCOOP_PROCESSOR_COUNT)
+processor_registry::processor_registry ()
 {
-	for (EIF_SCP_PID i = 1; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		free_pids.enqueue (i);
-	}
+	rt_identifier_set_init (&this->free_pids, RT_MAX_SCOOP_PROCESSOR_COUNT);
 
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		procs [i] = NULL;
@@ -85,17 +82,9 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 		   so that the argument 'obj' can be removed. */
 	EIF_OBJECT object = eif_protect (obj);
 
-	if (!free_pids.dequeue (pid)) {
+	if (!rt_identifier_set_try_consume (&this->free_pids, &pid)) {
 		plsc();
-		{
-			eif_lock lock (need_pid_mutex);
-			{
-				while (!free_pids.dequeue (pid))
-					{
-						need_pid_cv.wait (lock);
-					}
-			}
-		}
+		int error = rt_identifier_set_consume (&this->free_pids, &pid);  /* TODO: Error handling */
 	}
 
 	int error = rt_processor_create (pid, EIF_FALSE, &proc);
@@ -141,9 +130,7 @@ void processor_registry::return_processor (processor *proc)
 
 			/* pid 0 is special so we don't recycle that one. */
 		if (pid) {
-			eif_lock lock (need_pid_mutex);
-			free_pids.enqueue (pid);
-			need_pid_cv.notify_all();
+			int error = rt_identifier_set_extend (&this->free_pids, pid); /* TODO: Error handling */
 		}
 	} else {
 		CHECK ("return_pid: shouldn't be there", 0);

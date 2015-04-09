@@ -11,7 +11,14 @@ compile_final
 compile_result 	ok
 c_compile_final
 c_compile_result ok
-execute_final	NONE exec_output_f -i "$TEST/test.in" -bench
+
+
+define_directory EIFGEN  $TEST   EIFGENs
+define_directory TARGET  $EIFGEN test
+define_directory FCODE   $TARGET F_code
+copy_bin	 test.in $FCODE  test.in
+
+execute_final	NONE exec_output_f -i test.in -bench
 execute_result	ok
 
 test_end

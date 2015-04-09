@@ -2,6 +2,7 @@
 	<script type="text/javascript" src="/theme/js/jquery.main.js"></script>
 	<script type="text/javascript" src="/theme/js/wdownloads.js"></script>
 	<script type="text/javascript" src="/theme/js/wdocs.js"></script>
+	<script type="text/javascript" src="/theme/js/home.js"></script>
 
 	<link href="/theme/js/google-code-prettify-eiffel/styles/lang-eiffel.css" type="text/css" rel="stylesheet" />
     <script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>

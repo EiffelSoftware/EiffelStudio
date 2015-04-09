@@ -197,7 +197,8 @@ rt_private rt_inline void rt_identifier_set_do_consume (struct rt_identifier_set
 
 /*
 doc:	<routine name="rt_identifier_set_consume" return_type="int" export="shared">
-doc:		<summary> Remove and return an element from the queue 'self'. This feature waits on 'self->is_empty_condition' when no item is available. </summary>
+doc:		<summary> Remove and return an element from the queue 'self'. This feature waits on 'self->is_empty_condition' when no item is available.
+doc:			This feature should be called after rt_identifier_set_try_consume fails, as it introduces some overhead for compatibility with the GC. </summary>
 doc:		<param name="self" type="struct rt_identifier_set*"> The rt_identifier_set struct. Must not be NULL. </param>
 doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
 doc:		<return> T_OK on success. If acquiring the mutex fails, an error code is returned. </return>
@@ -212,19 +213,16 @@ rt_private rt_inline int rt_identifier_set_consume (struct rt_identifier_set* se
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("pid_not_null", result);
 
+		/* We need to wait for a new PID. This might take some time...
+		 * Allow the garbage collector to run in the meantime. */
+	EIF_ENTER_C;
 	error = eif_pthread_mutex_lock (self->lock);
 
 	if (T_OK == error) {
 
-		if (self->count == 0) {
-				/* We need to wait for a new PID. This might take some time...
-				 * Allow the garbage collector to run in the meantime. */
-			EIF_ENTER_C;
-			while (self->count == 0) {
-				RT_TRACE (eif_pthread_cond_wait (self->is_empty_condition, self->lock));
-			}
-			EIF_EXIT_C;
-			RTGC;
+			/* Wait for the queue to become non-empty. */
+		while (self->count == 0) {
+			RT_TRACE (eif_pthread_cond_wait (self->is_empty_condition, self->lock));
 		}
 
 			/* Perform the actual dequeue operation and release the lock. */
@@ -232,6 +230,8 @@ rt_private rt_inline int rt_identifier_set_consume (struct rt_identifier_set* se
 		RT_TRACE (eif_pthread_mutex_unlock (self->lock));
 	}
 
+	EIF_EXIT_C;
+	RTGC;
 	return error;
 }
 

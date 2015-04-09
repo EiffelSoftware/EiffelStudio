@@ -195,7 +195,7 @@ feature
 			end
 		end
 
-	accept_to (other: separate NETWORK_STREAM_SOCKET)
+	accept_to (other: separate like Current)
 			-- Accept a new connection on listen socket.
 			-- Socket of accepted connection is available in `other'.
 		require
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			is_created := True
 		end
 
-	do_accept (other: separate NETWORK_STREAM_SOCKET; a_address: attached like address)
+	do_accept (other: separate like Current; a_address: attached like address)
 			-- Accept a new connection.
 			-- The new socket is stored in `other'.
 			-- If the accept fails, `other.is_created' is still False.
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 				return := c_accept (fd, fd1, $l_last_fd, pass_address.socket_address.item, accept_timeout);
 				last_fd := l_last_fd
 				if return > 0 then
-					other.make_from_descriptor_and_address (return, a_address);
+					other.make_from_descriptor_and_address (return, a_address)
 					other.set_peer_address (pass_address)
 						-- We preserve the blocking state specified on Current.
 					if is_blocking then

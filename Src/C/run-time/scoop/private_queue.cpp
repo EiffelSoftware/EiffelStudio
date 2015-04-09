@@ -242,7 +242,6 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 		{
 				/*NOTE: The thread executing this feature is the one behind 'client'. */
 			rt_processor_execute_call (l_client, l_message->sender, l_message->call);
-// 			(*l_client) (l_message->sender, l_message->call);
 			l_message->call = NULL;
 		}
 

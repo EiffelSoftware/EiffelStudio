@@ -610,8 +610,8 @@ rt_shared void rt_processor_application_loop (processor* self)
 			is_stopped = EIF_TRUE;
 		}
 	}
-
-	CHECK ("empty_queue_of_queues", rt_message_channel_is_empty (&self->queue_of_queues));
+		/* Check disabled because queue-of-queues might contain multiple shutdown messages. */
+	/*CHECK ("empty_queue_of_queues", rt_message_channel_is_empty (&self->queue_of_queues)); */
 }
 
 /*

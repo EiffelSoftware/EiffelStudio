@@ -58,6 +58,7 @@ feature -- Initialization
 			a_dev_win.auto_recycle (Current)
 
 			create editors_internal.make (0)
+			create fake_editors.make (0)
 
 				-- Action sequences
 			create editor_switched_actions
@@ -728,7 +729,7 @@ feature -- Element change
 				is_opening_editors := True
 
 				create l_editor_numbers.make (a_open_classes.count + a_open_clusters.count)
-				create fake_editors.make (10)
+				fake_editors.wipe_out
 					-- Restore open classes.
 				from
 					a_open_classes.start

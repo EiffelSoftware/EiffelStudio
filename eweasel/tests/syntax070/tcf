@@ -1,0 +1,42 @@
+test_name 	 inline-separate-instruction-syntax
+test_description Syntax test for inline separate instruction.
+
+copy_sub 	Ace $TEST Ace
+
+define		ARGUMENTS "x as a"
+copy_sub 	test.e  $CLUSTER test.e
+
+compile_melted
+compile_result  ok
+
+define		ARGUMENTS ""
+copy_sub 	test.e  $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 33
+
+define		ARGUMENTS "x"
+copy_sub 	test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 33
+
+define		ARGUMENTS "x as a y as b"
+copy_sub 	test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 33
+
+define		ARGUMENTS "x as a, y"
+copy_sub 	test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 33
+
+define		ARGUMENTS "x, y as a"
+copy_sub 	test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 33
+
+define		ARGUMENTS "x as a, y, z as b"
+copy_sub 	test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 33
+
+test_end

@@ -1,4 +1,4 @@
---| Copyright (c) 1993-2013 University of Southern California and contributors.
+--| Copyright (c) 1993-2015 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General Public
 --| License version 2.
@@ -273,6 +273,7 @@ test	number-end-without-break	syntax066 tcf fail syntax
 test	empty-array-tuple-wrong-error-line	syntax067 tcf pass syntax
 test	once-followed-by-static-call	syntax068 tcf fail syntax
 test	syntax-obsolete-typed-string	syntax069 tcf pass syntax
+test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
 
 
 -- Validity tests

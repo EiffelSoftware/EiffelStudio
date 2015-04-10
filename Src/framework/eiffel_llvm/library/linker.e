@@ -14,9 +14,6 @@ create
 feature {NONE}
 
 	make (module: MODULE)
-		local
-			prog_name_ref: STRING_REF
-			module_name_ref: STRING_REF
 		do
 			item := make_external (module.item)
 		end
@@ -38,9 +35,9 @@ feature
 			failed := link_in_module_external (item, src.item, $str_pointer)
 			create str.own_from_pointer (str_pointer)
 			if failed then
-				do_nothing
---				create e
---				e.raise
+				create e
+				e.set_description ("Error Linking")
+				e.raise
 			end
 		end
 

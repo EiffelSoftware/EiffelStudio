@@ -26,9 +26,9 @@ feature {NONE}
 		obsolete
 			"Provide function with ArrayRef"
 		local
-			val_special: SPECIAL [POINTER]
+--			val_special: SPECIAL [POINTER]
 			array: VALUE_ARRAY_REF
-			i: INTEGER_32
+--			i: INTEGER_32
 		do
 			create array.make_from_vector (vals)
 --			create val_special.make_empty (vals.count.to_integer_32)

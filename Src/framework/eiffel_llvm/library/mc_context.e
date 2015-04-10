@@ -15,7 +15,7 @@ feature {NONE}
 
 	make
 		do
-			item := ctor_external ()
+			item := ctor_external
 		end
 
 feature

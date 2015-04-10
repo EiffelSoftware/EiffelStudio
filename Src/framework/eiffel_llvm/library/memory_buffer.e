@@ -22,7 +22,7 @@ feature {NONE}
 
 	get_file (filename: STRING)
 		local
-			filename_c_string: C_STRING
+--			filename_c_string: C_STRING
 		do
 			check signature_changed: False end
 --			create filename_c_string.make (filename)

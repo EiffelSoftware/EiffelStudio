@@ -186,14 +186,14 @@ feature -- Access
 			c_ssl_ctx_free (ctx)
 		end
 
-	use_certificate_file (a_file_name: FILE_NAME)
+	use_certificate_file (a_file_name: PATH)
 			-- Import the PEM certificate in `a_file_name' into this context.
 		local
 			c_string: C_STRING
 			err: INTEGER
 			l_exception: DEVELOPER_EXCEPTION
 		do
-			create c_string.make (a_file_name.out)
+			create c_string.make (a_file_name.utf_8_name)
 			err := c_ssl_ctx_use_certificate_file (ctx, c_string.item, 1)
 			if err <= 0 then
 				create l_exception
@@ -202,14 +202,14 @@ feature -- Access
 			end
 		end
 
-	use_private_key_file (a_file_name: FILE_NAME)
+	use_private_key_file (a_file_name: PATH)
 			-- Import the PEM private key in `a_file_name' into this context.
 		local
 			c_string: C_STRING
 			err: INTEGER
 			l_exception: DEVELOPER_EXCEPTION
 		do
-			create c_string.make (a_file_name.out)
+			create c_string.make (a_file_name.utf_8_name)
 			err := c_ssl_ctx_use_privatekey_file (ctx, c_string.item, 1)
 			if err <= 0 then
 				create l_exception
@@ -375,7 +375,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

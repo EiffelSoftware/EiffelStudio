@@ -12,7 +12,6 @@ inherit
 
 	INET_ADDRESS_FACTORY
 
-
 create
 	make
 
@@ -131,29 +130,34 @@ feature {NONE} --Implementation
 			l_last_string: detachable STRING
 		do
 			l_last_string := receive_data (a_socket)
-			check
-				l_last_string_attached: l_last_string /= Void
+			if l_last_string /= Void then
+				io.put_string ("Server Says: ")
+				io.put_string (l_last_string)
+				io.put_new_line
+			else
+				io.put_string ("No message from server%N")
 			end
-			io.put_string ("Server Says: ")
-			io.put_string (l_last_string)
-			io.put_new_line
 		end
 
-	receive_data (a_socket: SSL_NETWORK_STREAM_SOCKET): STRING
+	receive_data (a_socket: SSL_NETWORK_STREAM_SOCKET): detachable STRING
 		local
 			end_of_stream: BOOLEAN
+			s: STRING
 		do
-			from
-				a_socket.read_stream (1024)
-				Result := ""
-			until
-				end_of_stream
-			loop
-				Result.append (a_socket.last_string)
-				if a_socket.last_string /= void and not a_socket.last_string.is_empty and a_socket.socket_ok then
+			if a_socket.ready_for_reading then
+				from
 					a_socket.read_stream (1024)
-				else
-					end_of_stream := True
+					Result := ""
+				until
+					end_of_stream
+				loop
+					s := a_socket.last_string
+					Result.append (s)
+					if not s.is_empty and a_socket.socket_ok then
+						a_socket.read_stream (1024)
+					else
+						end_of_stream := True
+					end
 				end
 			end
 		end

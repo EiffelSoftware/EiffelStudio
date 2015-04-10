@@ -14,6 +14,7 @@ feature {NONE} -- Initialization
 			-- Initialize the SSL Library.
 		do
 			if ssl_initialized.item = False then
+					-- FIXME: issue with concurrent call (not thread safe)
 				c_ssleay_add_ssl_algorithms
 				c_ssl_load_error_strings
 				ssl_initialized.put (True)
@@ -47,7 +48,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

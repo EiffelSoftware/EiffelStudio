@@ -81,16 +81,21 @@ feature {NONE} -- Implementation
 		local
 			client_socket: detachable SSL_NETWORK_STREAM_SOCKET
 		do
-				socket.accept
-				client_socket := socket.accepted
-				if client_socket = Void then
-						-- Some error occured, perhaps because of the timeout
-						-- We probably should provide some diagnostics here
-					io.put_string ("accept result = Void")
-					io.put_new_line
-				else
-					perform_client_communication (client_socket)
-				end
+			socket.accept
+			client_socket := socket.accepted
+			if client_socket = Void then
+					-- Some error occured, perhaps because of the timeout
+					-- We probably should provide some diagnostics here
+				io.put_string ("accept result = Void")
+				io.put_new_line
+			elseif attached client_socket as l_socket and then client_socket.was_error then
+					-- Some error occured, not ssl client, ssl version not valid.
+				io.put_string (l_socket.error)
+				io.put_new_line
+				l_socket.close_socket
+			else
+				perform_client_communication (client_socket)
+			end
 		end
 
 	perform_client_communication (socket: SSL_NETWORK_STREAM_SOCKET)
@@ -163,10 +168,10 @@ feature -- SSL Certificates
 
 			--| Chnage the following two path's to your own crt and key files.
 
-	ca_crt: STRING = "C:/OpenSSL-Win64/bin/ca.crt"
+	ca_crt: STRING = "..\example.crt"
 		-- seff signed certificate.
 
-	ca_key: STRING = "C:/OpenSSL-Win64/bin/ca.key"
+	ca_key: STRING = "..\example.key"
 		-- ca key.
 
 end

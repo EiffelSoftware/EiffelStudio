@@ -15,8 +15,8 @@ feature -- Access
 		end
 
 	tls_protocol: NATURAL
-		-- TLS protocol, it could be Tlsv1.1 or Tlsv1.2, etc,
-		-- by default the protocol it's Tlsv1.2.
+			-- TLS protocol, it could be Tlsv1.1 or Tlsv1.2, etc,
+			-- by default the protocol it's Tlsv1.2.
 
 feature -- Change Element
 
@@ -28,7 +28,7 @@ feature -- Change Element
 			tls_protocol_set:  tls_protocol = a_protocol
 		end
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

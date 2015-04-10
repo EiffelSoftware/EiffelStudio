@@ -38,18 +38,30 @@ feature -- Access
 			l_string: STRING
 		do
 			err := c_ssl_accept (ptr)
-			io.error.putstring ("c_ssl_accept returned ")
-			io.error.putint (err)
-			io.error.putstring ("%N")
+			ssl_error_number := err
+			debug ("ssl")
+				io.error.putstring ("c_ssl_accept returned ")
+				io.error.putint (err)
+				io.error.putstring ("%N")
+			end
 			if err = -1 then
 				ssl_err := c_err_get_error
 				create l_string.make_from_c (c_err_error_string (ssl_err, default_pointer.item))
-				io.error.putstring ("Reason: " + l_string + "%N")
+				debug ("ssl")
+					io.error.putstring ("Reason: " + l_string + "%N")
+				end
+				ssl_socket_error := l_string
 				connected := False
 			elseif err = 0 then
 				ssl_err := c_err_get_error
 				create l_string.make_from_c (c_err_error_string (ssl_err, default_pointer.item))
-				io.error.putstring ("Reason: " + l_string + "%N")
+				ssl_socket_error := l_string
+				debug ("ssl")
+					io.error.putstring ("Reason: " + l_string + "%N")
+				end
+				connected := False
+			else
+				connected := True
 			end
 		end
 
@@ -61,18 +73,27 @@ feature -- Access
 			l_string: STRING
 		do
 			err := c_ssl_connect (ptr)
-			io.error.putstring ("c_ssl_connect returned ")
-			io.error.putint (err)
-			io.error.putstring ("%N")
+			ssl_error_number := err
+			debug ("ssl")
+				io.error.putstring ("c_ssl_connect returned ")
+				io.error.putint (err)
+				io.error.putstring ("%N")
+			end
 			if err = -1 then
 				ssl_err := c_err_get_error
 				create l_string.make_from_c (c_err_error_string (ssl_err, default_pointer.item))
-				io.error.putstring ("Reason: " + l_string + "%N")
+				ssl_socket_error := l_string
+				debug ("ssl")
+					io.error.putstring ("Reason: " + l_string + "%N")
+				end
 				connected := False
 			elseif err = 0 then
 				ssl_err := c_err_get_error
 				create l_string.make_from_c (c_err_error_string (ssl_err, default_pointer.item))
-				io.error.putstring ("Reason: " + l_string + "%N")
+				ssl_socket_error := l_string
+				debug ("ssl")
+					io.error.putstring ("Reason: " + l_string + "%N")
+				end
 				connected := False
 			else
 				connected := True
@@ -120,7 +141,35 @@ feature -- Status Report
 	connected: BOOLEAN
 			-- Is the underlying SSL Socket connected?
 
-feature {NONE} -- Implementation
+	was_error: BOOLEAN
+			-- Indicates that there was an error during the last operation
+		do
+			Result := ssl_socket_error /= Void
+		end
+
+	socket_ok: BOOLEAN
+			-- No error
+		do
+			Result := not was_error
+		end
+
+	ssl_error: STRING
+			-- Output a related error message.
+		do
+			if attached ssl_socket_error as l_error then
+				Result := l_error
+			else
+				Result := "SSL_SOCKET_OK"
+			end
+		end
+
+	ssl_error_number: INTEGER
+			-- Returned error number.
+
+feature {NONE} -- Implementation	 
+
+	ssl_socket_error: detachable STRING
+			-- Error description in case of an error.			
 
 feature {NONE} -- Attributes
 

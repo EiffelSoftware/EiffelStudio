@@ -739,10 +739,7 @@ feature -- Stone process
 	set_stone (a_stone: detachable STONE)
 			-- Change the currently focused stone.
 		local
-			l_warning: ES_DISCARDABLE_WARNING_PROMPT
-			l_window_list: LIST [EB_DEVELOPMENT_WINDOW]
 			l_checker: EB_STONE_CHECKER
-			l_normal_behavior: BOOLEAN
 			l_override_pref: STRING
 			l_editor: EB_SMART_EDITOR
 		do

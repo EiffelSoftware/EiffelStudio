@@ -49,8 +49,18 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 #include "eif_scoop.h"
 #include "eif_atomops.h"
 
+/* The global processor_registry struct. */
 processor_registry registry;
 
+/*
+doc:	<routine name="rt_processor_registry_init" return_type="int" export="shared">
+doc:		<summary> Initialize the global processor_registry struct and the root processor object.
+doc:			This routine must be called at program startup to initialize the SCOOP subsystem. </summary>
+doc:		<return> T_OK on success, or an error code when allocation of a resource (memory, locks) failed. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only called by the root thread during program startup. </synchronization>
+doc:	</routine>
+*/
 rt_shared int rt_processor_registry_init (void)
 {
 	processor_registry* self = &registry;
@@ -99,7 +109,14 @@ rt_shared int rt_processor_registry_init (void)
 	return error;
 }
 
-
+/*
+doc:	<routine name="rt_processor_registry_deinit" return_type="void" export="shared">
+doc:		<summary> Free all resources in the processor_registry struct.
+doc:			This routine can be called at program termination to free some internal resources. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only called by the root thread during program termination. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_processor_registry_deinit (void)
 {
 	processor_registry* self = &registry;

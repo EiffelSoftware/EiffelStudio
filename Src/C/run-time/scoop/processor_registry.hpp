@@ -41,6 +41,7 @@
 #include "processor.hpp"
 #include "rt_identifier_set.h"
 
+#if 0
 class pid_set
 {
 public:
@@ -86,7 +87,7 @@ private:
   atomic_size_t_type size_;
   atomic_bool_type proc_set [RT_MAX_SCOOP_PROCESSOR_COUNT];
 };
-
+#endif
 
 class processor_registry
 {
@@ -118,8 +119,41 @@ public:
   volatile int gc_fingerprint;
 
 private:
+	/*
+	 * Although the procs array is accessed by several threads,
+	 * it is not necessary to synchronize the access. There are several
+	 * properties that make it unnecessary:
+	 * 
+	 * Data race freedom:
+	 * - A new value is inserted by the creator thread after it received
+	 *   a new unique PID from the free_pids set. 
+	 * - After creation, the field remains constant.
+	 * - The value is reset to NULL only by the thread behind the specified
+	 *   processor ID, after the garbage collector concluded that it is no
+	 *   longer referenced anywhere.
+	 * - The uniqueness of PIDs is guaranteed by the free_pids set. A new 
+	 *   ID has to be acquired before adding an entry in 'procs', and it
+	 *   can only be released after resetting 'procs' to NULL.
+	 * 
+	 * Visibility:
+	 * - Generally, x86 has strong visibility guarantees, and by creating
+	 *   initializing the processor object before adding it to 'procs'
+	 *   any other thread can see a consistent view.
+	 * - The update to the procs array itself is visible in the garbage collector,
+	 *   because the creator thread synchronizes with the GC thread prior to a cycle.
+	 * - The same applies during removal of a processor.
+	 * - Between the creator thread and the spawned thread, visibility is guaranteed
+	 *   because of the thread creation operation.
+	 * - In between processors, visibility is guaranteed because the creator first
+	 *   has to publish the root object of the new processor, and as soon as this
+	 *   object is visible by other threads the update is visible as well, thanks
+	 *   to the visibility guarantees of x86.
+	 */
   processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
-  pid_set used_pids;
+  
+  /*pid_set used_pids;*/
+  volatile EIF_INTEGER_32 processor_count;
+  
   struct rt_identifier_set free_pids;
 
   /* GC */

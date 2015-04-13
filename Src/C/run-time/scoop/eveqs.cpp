@@ -43,6 +43,7 @@ doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP su
 #include "processor_registry.hpp"
 #include "internal.hpp"
 #include "eif_interp.h"
+#include "eif_atomops.h"
 #include "rt_wbench.h"
 #include "rt_struct.h"
 #include "rt_assert.h"
@@ -225,10 +226,42 @@ rt_public void eif_wait_for_all_processors(void)
 	registry.wait_for_all();
 }
 
+/*
+doc:	<routine name="rt_mark_all_processors" return_type="void" export="shared">
+doc:		<summary> Mark all processors in the system. </summary>
+doc:		<param name="marking" type="MARKER"> The marker function. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_mark_all_processors (MARKER marking)
 {
-	registry.mark_all(marking);
+	static volatile EIF_INTEGER_32 rt_is_marking = 0;
+	processor* proc = NULL;
+
+	EIF_INTEGER_32 new_value = 1;
+	EIF_INTEGER_32 expected = 0;
+
+	REQUIRE ("marking_not_null", marking);
+
+		/* Use compare-exchange to determine whether marking is necessary. */
+		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
+		 * operation is called exactly once and only by a single thread during GC... */
+	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
+
+	if (previous == expected) {
+		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+
+			proc = rt_lookup_processor (i);
+			if (proc) {
+				rt_processor_mark (proc, marking);
+			}
+		}
+			/* Reset rt_is_marking to zero. */
+		RTS_AS_I32 (&rt_is_marking, 0);
+	}
 }
+
 
 #ifdef __cplusplus
 }

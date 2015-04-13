@@ -192,50 +192,6 @@ void processor_registry::return_processor (processor *proc)
 	}
 }
 
-// /* GC activities */
-// void processor_registry::enumerate_live ()
-// {
-// 	processor* proc = NULL;
-// 	
-// 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-// 		
-// 		proc = this->procs[i];
-// 		
-// 		if (proc && proc->has_client) {
-// 			rt_mark_live_pid (proc->pid);
-// 		}
-// 	}
-// }
-
-/* Atomic integer used only by mark_all function. */
-rt_private volatile EIF_INTEGER_32 rt_is_marking = 0;
-
-/* use cas here for operations on is_marking */
-void processor_registry::mark_all (MARKER marking)
-{
-	processor* proc = NULL;
-	
-	EIF_INTEGER_32 new_value = 1;
-	EIF_INTEGER_32 expected = 0;
-	
-		/* Use compare-exchange to determine whether marking is necessary. */
-		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
-		 * operation is called exactly once and only by a single thread during GC... */
-	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
-
-	if (previous == expected) {
-		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-			proc = this->procs[i];
-			if (proc) {
-				rt_processor_mark (proc, marking);
-			}
-		}
-			/* Reset is_marking to zero. */
-		RTS_AS_I32 (&rt_is_marking, 0);
-	}
-}
-
-
 void processor_registry::unmark (EIF_SCP_PID pid)
 {
 		/* This is a callback from the GC, which will notify us */

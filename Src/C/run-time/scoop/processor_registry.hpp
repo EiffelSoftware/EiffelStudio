@@ -62,9 +62,6 @@ public:
 
   /* GC activities */
 public:
-//   void enumerate_live ();
-
-  void mark_all (MARKER marking);
 
   void unmark (EIF_SCP_PID pid);
 

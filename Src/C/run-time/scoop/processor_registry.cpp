@@ -52,28 +52,38 @@ processor_registry registry;
 
 processor_registry::processor_registry ()
 {
-	rt_identifier_set_init (&this->free_pids, RT_MAX_SCOOP_PROCESSOR_COUNT);
+	int error = T_OK;
+	processor_registry* self = this;
+	
+	error = rt_identifier_set_init (&self->free_pids, RT_MAX_SCOOP_PROCESSOR_COUNT);
+	CHECK ("TODO: error handling", error == T_OK);
+	
+	error = eif_pthread_mutex_create (&self->all_done_mutex);
+	CHECK ("TODO: error handling", error == T_OK);
+
+	error = eif_pthread_cond_create (&self->all_done_cv);
+	CHECK ("TODO: error handling", error == T_OK);
 
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		procs [i] = NULL;
+		self->procs [i] = NULL;
 	}
 
 // 	used_pids.add(0);
 		/* Atomic increment. */
-	RTS_AI_I32 (&this->processor_count);
+	RTS_AI_I32 (&self->processor_count);
 
 	processor *root_proc = NULL;
-	int error = rt_processor_create (0, EIF_TRUE, &root_proc);
+	error = rt_processor_create (0, EIF_TRUE, &root_proc);
 	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
 	CHECK ("has_client_set", root_proc->has_client);
 
 	procs[0] = root_proc;
 
 		/* end of life notification */
-	all_done = false;
+	self->all_done = false;
 
 		/* GC */
-	is_marking = false;
+	self->is_marking = false;
 }
 
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)
@@ -134,9 +144,10 @@ void processor_registry::return_processor (processor *proc)
 
 // 		if (used_pids.size() == 0) {
 		if (l_count == 0) {
-			conditional_unique_lock_type lock(all_done_mutex);
-			all_done = true;
-			all_done_cv.notify_one();
+			RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
+			this->all_done = true;
+			RT_TRACE (eif_pthread_cond_signal (this->all_done_cv));
+			RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
 		}
 
 			/* pid 0 is special so we don't recycle that one. */
@@ -235,12 +246,14 @@ void processor_registry::wait_for_all()
 
 	return_processor (root_proc);
 
-	while(!all_done) {
-		eif_lock lock (all_done_mutex);
-		while(!all_done) {
-			all_done_cv.wait(lock);
-		}
+	EIF_ENTER_C;
+	RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
+	while (!this->all_done) {
+		RT_TRACE (eif_pthread_cond_wait (this->all_done_cv, this->all_done_mutex));
 	}
+	RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
+	EIF_EXIT_C;
+	RTGC;
 }
 
 void processor_registry::request_gc(EIF_INTEGER_32 * fingerprint)

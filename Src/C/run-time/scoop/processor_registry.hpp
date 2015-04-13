@@ -96,6 +96,8 @@ public:
 
   ~processor_registry () {
 	rt_identifier_set_deinit (&this->free_pids);
+	RT_TRACE (eif_pthread_cond_destroy (this->all_done_cv));
+	RT_TRACE (eif_pthread_mutex_destroy (this->all_done_mutex));
   }
 
   processor* create_fresh (EIF_REFERENCE obj);
@@ -163,9 +165,9 @@ private:
 
   /* end of life notification */
 private:
-  bool all_done;
-  conditional_mutex_type all_done_mutex;
-  condition_variable_type all_done_cv;
+  volatile bool all_done;
+  EIF_MUTEX_TYPE* all_done_mutex;
+  EIF_COND_TYPE* all_done_cv;
 };
 
 void call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);

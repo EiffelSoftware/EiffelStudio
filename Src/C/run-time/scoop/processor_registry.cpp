@@ -112,14 +112,6 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 	return proc;
 }
 
-processor* processor_registry::operator[] (EIF_SCP_PID pid)
-{
-	REQUIRE ("processor_alive", this->procs[pid]);
-	processor *result = procs[pid];
-	ENSURE("processor_registry: retrieved processor not NULL", result);
-	return result;
-}
-
 void processor_registry::return_processor (processor *proc)
 {
 	EIF_SCP_PID pid = proc->pid;
@@ -225,7 +217,7 @@ void processor_registry::clear_from_caches (processor *to_be_removed)
 
 void processor_registry::wait_for_all()
 {
-	processor *root_proc = (*this)[0];
+	processor *root_proc = rt_find_processor (0);
 
 		/* This statement seems to be redundant with the code in rt_processor_application_loop */
 	root_proc->has_client = EIF_FALSE;

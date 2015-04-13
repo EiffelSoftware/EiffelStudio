@@ -103,7 +103,7 @@ rt_shared int rt_processor_registry_init (void)
 rt_shared void rt_processor_registry_deinit (void)
 {
 	processor_registry* self = &registry;
-	CHECK ("no_more_processors", self->processor_count == 0);
+	/* CHECK ("no_more_processors", self->processor_count == 0); */
 	
 	if (self->all_done_cv) {
 		RT_TRACE (eif_pthread_cond_destroy (self->all_done_cv));

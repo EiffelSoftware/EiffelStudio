@@ -106,9 +106,7 @@ feature -- Access
 			icon_info: WEL_ICON_INFO
 		do
 			create icon_info.make
-			if cwin_get_icon_info (item, icon_info.item) = 0 then
-				Result := Void
-			else
+			if cwin_get_icon_info (item, icon_info.item) /= 0 then
 				icon_info.initialize_bitmaps
 				Result := icon_info
 			end
@@ -199,7 +197,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

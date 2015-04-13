@@ -40,13 +40,14 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 */
 
 #include "rt_msc_ver_mismatch.h"
-#include "eif_utils.hpp"
 #include "processor_registry.hpp"
 #include "internal.hpp"
 #include "processor.hpp"
+
 #include "rt_assert.h"
 #include "eif_macros.h"
 #include "eif_scoop.h"
+#include "eif_atomops.h"
 
 processor_registry registry;
 
@@ -79,7 +80,7 @@ processor_registry::processor_registry ()
 	procs[0] = root_proc;
 
 		/* end of life notification */
-	self->all_done = false;
+	self->all_done = EIF_FALSE;
 }
 
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)
@@ -130,7 +131,7 @@ void processor_registry::return_processor (processor *proc)
 
 	if (l_count == 0) {
 		RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
-		this->all_done = true;
+		this->all_done = EIF_TRUE;
 		RT_TRACE (eif_pthread_cond_signal (this->all_done_cv));
 		RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
 	}

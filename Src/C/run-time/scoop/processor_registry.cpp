@@ -80,9 +80,6 @@ processor_registry::processor_registry ()
 
 		/* end of life notification */
 	self->all_done = false;
-
-		/* GC */
-	self->is_marking = false;
 }
 
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)
@@ -167,20 +164,31 @@ void processor_registry::enumerate_live ()
 	}
 }
 
+/* Atomic integer used only by mark_all function. */
+rt_private volatile EIF_INTEGER_32 rt_is_marking = 0;
+
 /* use cas here for operations on is_marking */
 void processor_registry::mark_all (MARKER marking)
 {
-	bool f = false;
 	processor* proc = NULL;
+	
+	EIF_INTEGER_32 new_value = 1;
+	EIF_INTEGER_32 expected = 0;
+	
+		/* Use compare-exchange to determine whether marking is necessary. */
+		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
+		 * operation is called exactly once and only by a single thread during GC... */
+	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
 
-	if (is_marking.compare_exchange_strong(f, true)) {
+	if (previous == expected) {
 		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 			proc = this->procs[i];
 			if (proc) {
 				rt_processor_mark (proc, marking);
 			}
 		}
-		is_marking = false;
+			/* Reset is_marking to zero. */
+		RTS_AS_I32 (&rt_is_marking, 0);
 	}
 }
 
@@ -236,10 +244,13 @@ void processor_registry::wait_for_all()
 	RTGC;
 }
 
+/* GC fingerprint, only used by request_gc. */
+rt_private volatile int rt_gc_fingerprint = 0;
+
 void processor_registry::request_gc(EIF_INTEGER_32 * fingerprint)
 {
 	int previous_fingerprint = * fingerprint;
-	int current_fingerprint = RTS_ACAS_I32 (&gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
+	int current_fingerprint = RTS_ACAS_I32 (&rt_gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
 	
 	if (current_fingerprint == previous_fingerprint) {
 			/* The fingerprint is unchanged since last call, no GC was run, do it now. */

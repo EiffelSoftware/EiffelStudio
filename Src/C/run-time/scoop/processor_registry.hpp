@@ -41,54 +41,6 @@
 #include "processor.hpp"
 #include "rt_identifier_set.h"
 
-#if 0
-class pid_set
-{
-public:
-  pid_set()
-  {
-    size_ = 0;
-    for (int i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++)
-      {
-	proc_set [i] = false;
-      }
-  }
-
-  void add (EIF_SCP_PID pid)
-  {
-    bool expected = false;
-    if (proc_set [pid].compare_exchange_strong (expected, true))
-      {
-	size_++;
-      }
-  }
-
-  bool has (EIF_SCP_PID pid)
-  {
-    return proc_set [pid];
-  }
-
-  bool erase (EIF_SCP_PID pid)
-  {
-    bool result = proc_set [pid].exchange (false);
-    if (result)
-      {
-	size_--;
-      }
-    return result;
-  }
-
-  size_t size() const 
-  {
-    return size_;
-  }
-
-private:
-  atomic_size_t_type size_;
-  atomic_bool_type proc_set [RT_MAX_SCOOP_PROCESSOR_COUNT];
-};
-#endif
-
 class processor_registry
 {
 public:
@@ -152,8 +104,7 @@ private:
 	 *   to the visibility guarantees of x86.
 	 */
   processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
-  
-  /*pid_set used_pids;*/
+
   volatile EIF_INTEGER_32 processor_count;
   
   struct rt_identifier_set free_pids;

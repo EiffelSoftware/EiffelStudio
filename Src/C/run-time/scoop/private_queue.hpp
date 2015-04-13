@@ -37,7 +37,6 @@
 
 #ifndef _PRIV_QUEUE_H
 #define _PRIV_QUEUE_H
-#include "eif_utils.hpp"
 
 #include "rt_message.h"
 #include "rt_message_channel.hpp"

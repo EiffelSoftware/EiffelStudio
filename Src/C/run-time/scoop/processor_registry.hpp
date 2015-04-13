@@ -110,7 +110,7 @@ private:
 
   /* end of life notification */
 private:
-  volatile bool all_done;
+  volatile EIF_BOOLEAN all_done;
   EIF_MUTEX_TYPE* all_done_mutex;
   EIF_COND_TYPE* all_done_cv;
 };

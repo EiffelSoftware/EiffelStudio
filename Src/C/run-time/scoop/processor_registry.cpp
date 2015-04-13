@@ -58,7 +58,9 @@ processor_registry::processor_registry ()
 		procs [i] = NULL;
 	}
 
-	used_pids.add(0);
+// 	used_pids.add(0);
+		/* Atomic increment. */
+	RTS_AI_I32 (&this->processor_count);
 
 	processor *root_proc = NULL;
 	int error = rt_processor_create (0, EIF_TRUE, &root_proc);
@@ -90,11 +92,13 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 	int error = rt_processor_create (pid, EIF_FALSE, &proc);
 	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
 
-	procs[pid] = proc;
 	obj = eif_access (object);
 	RTS_PID(obj) = pid;
 
-	used_pids.add (pid);
+	procs[pid] = proc;
+		/* Atomic increment. */
+	RTS_AI_I32 (&this->processor_count);
+// 	used_pids.add (pid);
 
 	rt_processor_spawn (proc);
 
@@ -105,7 +109,7 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 
 processor* processor_registry::operator[] (EIF_SCP_PID pid)
 {
-	REQUIRE("Has PID", used_pids.has (pid));
+// 	REQUIRE("Has PID", used_pids.has (pid));
 	processor *proc = procs[pid];
 	ENSURE("processor_registry: retrieved processor not NULL", proc);
 	return proc;
@@ -114,15 +118,22 @@ processor* processor_registry::operator[] (EIF_SCP_PID pid)
 void processor_registry::return_processor (processor *proc)
 {
 	EIF_SCP_PID pid = proc->pid;
+	EIF_INTEGER_32 l_count = 0;
 
 		/* Decouple processor ID from the current thread. */
 	eif_unset_processor_id ();
+	
+	CHECK ("processor_not_collected", procs[pid]);
 
-	if (used_pids.erase (pid)) {
-		rt_processor_destroy (proc);
+		/* Atomic pre-decrement. */
+	l_count = RTS_AD_I32 (&this->processor_count);
+	
+// 	if (used_pids.erase (pid)) {
 		procs [pid] = NULL;
+		rt_processor_destroy (proc);
 
-		if (used_pids.size() == 0) {
+// 		if (used_pids.size() == 0) {
+		if (l_count == 0) {
 			conditional_unique_lock_type lock(all_done_mutex);
 			all_done = true;
 			all_done_cv.notify_one();
@@ -132,21 +143,27 @@ void processor_registry::return_processor (processor *proc)
 		if (pid) {
 			int error = rt_identifier_set_extend (&this->free_pids, pid); /* TODO: Error handling */
 		}
-	} else {
-		CHECK ("return_pid: shouldn't be there", 0);
-	}
+// 	} else {
+// 		CHECK ("return_pid: shouldn't be there", 0);
+// 	}
 }
 
 /* GC activities */
 void processor_registry::enumerate_live ()
 {
+	processor* proc = NULL;
+	
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		if (used_pids.has (i)) {
-			processor* proc = (*this) [i];
 		
-			if (proc->has_client) {
+		proc = this->procs[i];
+		
+		if (proc && proc->has_client) {
+// 		if (used_pids.has (i)) {
+// 			processor* proc = (*this) [i];
+		
+// 			if (proc->has_client) {
 				rt_mark_live_pid (proc->pid);
-			}
+// 			}
 		}
 	}
 }
@@ -155,11 +172,14 @@ void processor_registry::enumerate_live ()
 void processor_registry::mark_all (MARKER marking)
 {
 	bool f = false;
+	processor* proc = NULL;
 
 	if (is_marking.compare_exchange_strong(f, true)) {
 		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-			if (used_pids.has (i)) {
-				processor *proc = (*this) [i];
+			proc = this->procs[i];
+			if (proc) {
+// 			if (used_pids.has (i)) {
+// 				processor *proc = (*this) [i];
 				rt_processor_mark (proc, marking);
 			}
 		}
@@ -172,24 +192,34 @@ void processor_registry::unmark (EIF_SCP_PID pid)
 {
 		/* This is a callback from the GC, which will notify us */
 		/* of all unused processors, even those that have already been */
-		/* shutdown, but still have a thread of execution. */
-		/* To avoid double free/shutdown we check first to see if they're */
+		/* freed, but still have a thread of execution. */
+		/* To avoid double free we check first to see if they're */
 		/* still active. */
-	if (used_pids.has (pid)) {
-		processor *proc = (*this) [pid];
+		/* Note that this mechanism doesn't avoid double shutdown messages */
+	processor* proc = this->procs[pid];
+	if (proc) {
+// 	if (used_pids.has (pid)) {
+// 		processor *proc = (*this) [pid];
 		clear_from_caches (proc);
 		rt_processor_shutdown (proc);
 	}
 }
 
 
-void processor_registry::clear_from_caches (processor *proc)
+void processor_registry::clear_from_caches (processor *to_be_removed)
 {
+	processor* item = NULL;
+
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		if (used_pids.has (i)) {
-			rt_queue_cache_clear ( &(procs[i]->cache), proc);
-			rt_processor_unsubscribe_wait_condition (procs[i], proc);
+		item = this->procs [i];
+		if (item) {
+			rt_queue_cache_clear (&item->cache, to_be_removed);
+			rt_processor_unsubscribe_wait_condition (item, to_be_removed);
 		}
+// 		if (used_pids.has (i)) {
+// 			rt_queue_cache_clear ( &(procs[i]->cache), to_be_removed);
+// 			rt_processor_unsubscribe_wait_condition (procs[i], to_be_removed);
+// 		}
 	}
 }
 

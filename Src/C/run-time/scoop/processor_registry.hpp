@@ -41,15 +41,19 @@
 #include "processor.hpp"
 #include "rt_identifier_set.h"
 
+/* Global initialization and teardown. */
+rt_shared int rt_processor_registry_init (void);
+rt_shared void rt_processor_registry_deinit (void);
+
 class processor_registry
 {
 public:
-  processor_registry ();
+  processor_registry () {
+	rt_processor_registry_init();
+  }
 
   ~processor_registry () {
-	rt_identifier_set_deinit (&this->free_pids);
-	RT_TRACE (eif_pthread_cond_destroy (this->all_done_cv));
-	RT_TRACE (eif_pthread_mutex_destroy (this->all_done_mutex));
+	rt_processor_registry_deinit();
   }
 
   processor* create_fresh (EIF_REFERENCE obj);
@@ -109,11 +113,12 @@ private:
   void clear_from_caches (processor *proc);
 
   /* end of life notification */
-private:
+public:
   volatile EIF_BOOLEAN all_done;
   EIF_MUTEX_TYPE* all_done_mutex;
   EIF_COND_TYPE* all_done_cv;
 };
+
 
 extern processor_registry registry;
 
@@ -125,7 +130,7 @@ doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline processor* rt_find_processor (EIF_SCP_PID pid)	
+rt_private rt_inline processor* rt_find_processor (EIF_SCP_PID pid)
 {
 	REQUIRE ("processor_alive", registry.procs[pid]);
 	processor *result = registry.procs[pid];

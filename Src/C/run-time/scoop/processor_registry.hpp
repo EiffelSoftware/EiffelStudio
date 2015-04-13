@@ -63,8 +63,6 @@ public:
   /* GC activities */
 public:
 
-  void unmark (EIF_SCP_PID pid);
-
   void wait_for_all();
 
   void request_gc (int * fingerprint);
@@ -105,12 +103,8 @@ public:
   
   struct rt_identifier_set free_pids;
 
-  /* GC */
-private:
-  void clear_from_caches (processor *proc);
 
   /* end of life notification */
-public:
   volatile EIF_BOOLEAN all_done;
   EIF_MUTEX_TYPE* all_done_mutex;
   EIF_COND_TYPE* all_done_cv;
@@ -151,6 +145,9 @@ rt_private rt_inline processor* rt_lookup_processor (EIF_SCP_PID pid)
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	return registry.procs [pid];
 }
+
+/* Function prototypes */
+rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
 
 
 #endif

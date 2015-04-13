@@ -192,35 +192,48 @@ void processor_registry::return_processor (processor *proc)
 	}
 }
 
-void processor_registry::unmark (EIF_SCP_PID pid)
+
+/*
+doc:	<routine name="rt_processor_registry_deactivate" return_type="void" export="shared">
+doc:		<summary> Deactivate the processor with ID 'pid' and remove all references to it from the other processors.
+doc:			This routine is a callback from the GC when it detects unused processors. </summary>
+doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be deactivated. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 {
 		/* This is a callback from the GC, which will notify us */
 		/* of all unused processors, even those that have already been */
 		/* freed, but still have a thread of execution. */
 		/* To avoid double free we check first to see if they're */
 		/* still active. */
-		/* Note that this mechanism doesn't avoid double shutdown messages */
-	processor* proc = this->procs[pid];
-	if (proc) {
-		clear_from_caches (proc);
-		rt_processor_shutdown (proc);
-	}
-}
-
-
-void processor_registry::clear_from_caches (processor *to_be_removed)
-{
+		/* Note that this mechanism doesn't avoid double shutdown messages. */
+	processor* to_be_removed = NULL;
 	processor* item = NULL;
+	EIF_SCP_PID index = 0;
 
-	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		item = this->procs [i];
-		if (item) {
-			rt_queue_cache_clear (&item->cache, to_be_removed);
-			rt_processor_unsubscribe_wait_condition (item, to_be_removed);
+	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
+
+	to_be_removed = rt_lookup_processor (pid);
+
+	if (to_be_removed) {
+
+			/* Remove any references to 'to_be_removed' from the other processors. */
+		for (index = 0; index < RT_MAX_SCOOP_PROCESSOR_COUNT; ++index) {
+			item = rt_lookup_processor (index);
+			if (item) {
+					/* Clear private queue caches. */
+				rt_queue_cache_clear (&item->cache, to_be_removed);
+					/* Remove leftover wait condition subscriptions. */
+				rt_processor_unsubscribe_wait_condition (item, to_be_removed);
+			}
 		}
+			/* Send a shutdown signal such that the processor can terminate itself. */
+		rt_processor_shutdown (to_be_removed);
 	}
 }
-
 
 void processor_registry::wait_for_all()
 {

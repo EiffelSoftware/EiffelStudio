@@ -195,7 +195,7 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 /* processor isn't used anymore. */
 rt_shared void rt_unmark_processor (EIF_SCP_PID pid)
 {
-	registry.unmark(pid);
+	rt_processor_registry_deactivate (pid);
 }
 
 /*

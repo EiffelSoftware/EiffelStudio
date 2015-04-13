@@ -70,8 +70,6 @@ public:
 
   void request_gc (int * fingerprint);
 
-  volatile int gc_fingerprint;
-
 private:
 	/*
 	 * Although the procs array is accessed by several threads,
@@ -111,7 +109,6 @@ private:
 
   /* GC */
 private:
-  atomic_bool_type is_marking;
   void clear_from_caches (processor *proc);
 
   /* end of life notification */

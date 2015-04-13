@@ -68,7 +68,6 @@ processor_registry::processor_registry ()
 		self->procs [i] = NULL;
 	}
 
-// 	used_pids.add(0);
 		/* Atomic increment. */
 	RTS_AI_I32 (&self->processor_count);
 
@@ -108,7 +107,6 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 	procs[pid] = proc;
 		/* Atomic increment. */
 	RTS_AI_I32 (&this->processor_count);
-// 	used_pids.add (pid);
 
 	rt_processor_spawn (proc);
 
@@ -119,10 +117,10 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 
 processor* processor_registry::operator[] (EIF_SCP_PID pid)
 {
-// 	REQUIRE("Has PID", used_pids.has (pid));
-	processor *proc = procs[pid];
-	ENSURE("processor_registry: retrieved processor not NULL", proc);
-	return proc;
+	REQUIRE ("processor_alive", this->procs[pid]);
+	processor *result = procs[pid];
+	ENSURE("processor_registry: retrieved processor not NULL", result);
+	return result;
 }
 
 void processor_registry::return_processor (processor *proc)
@@ -138,25 +136,20 @@ void processor_registry::return_processor (processor *proc)
 		/* Atomic pre-decrement. */
 	l_count = RTS_AD_I32 (&this->processor_count);
 	
-// 	if (used_pids.erase (pid)) {
-		procs [pid] = NULL;
-		rt_processor_destroy (proc);
+	procs [pid] = NULL;
+	rt_processor_destroy (proc);
 
-// 		if (used_pids.size() == 0) {
-		if (l_count == 0) {
-			RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
-			this->all_done = true;
-			RT_TRACE (eif_pthread_cond_signal (this->all_done_cv));
-			RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
-		}
+	if (l_count == 0) {
+		RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
+		this->all_done = true;
+		RT_TRACE (eif_pthread_cond_signal (this->all_done_cv));
+		RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
+	}
 
-			/* pid 0 is special so we don't recycle that one. */
-		if (pid) {
-			int error = rt_identifier_set_extend (&this->free_pids, pid); /* TODO: Error handling */
-		}
-// 	} else {
-// 		CHECK ("return_pid: shouldn't be there", 0);
-// 	}
+		/* pid 0 is special so we don't recycle that one. */
+	if (pid) {
+		int error = rt_identifier_set_extend (&this->free_pids, pid); /* TODO: Error handling */
+	}
 }
 
 /* GC activities */
@@ -169,12 +162,7 @@ void processor_registry::enumerate_live ()
 		proc = this->procs[i];
 		
 		if (proc && proc->has_client) {
-// 		if (used_pids.has (i)) {
-// 			processor* proc = (*this) [i];
-		
-// 			if (proc->has_client) {
-				rt_mark_live_pid (proc->pid);
-// 			}
+			rt_mark_live_pid (proc->pid);
 		}
 	}
 }
@@ -189,8 +177,6 @@ void processor_registry::mark_all (MARKER marking)
 		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 			proc = this->procs[i];
 			if (proc) {
-// 			if (used_pids.has (i)) {
-// 				processor *proc = (*this) [i];
 				rt_processor_mark (proc, marking);
 			}
 		}
@@ -209,8 +195,6 @@ void processor_registry::unmark (EIF_SCP_PID pid)
 		/* Note that this mechanism doesn't avoid double shutdown messages */
 	processor* proc = this->procs[pid];
 	if (proc) {
-// 	if (used_pids.has (pid)) {
-// 		processor *proc = (*this) [pid];
 		clear_from_caches (proc);
 		rt_processor_shutdown (proc);
 	}
@@ -227,10 +211,6 @@ void processor_registry::clear_from_caches (processor *to_be_removed)
 			rt_queue_cache_clear (&item->cache, to_be_removed);
 			rt_processor_unsubscribe_wait_condition (item, to_be_removed);
 		}
-// 		if (used_pids.has (i)) {
-// 			rt_queue_cache_clear ( &(procs[i]->cache), to_be_removed);
-// 			rt_processor_unsubscribe_wait_condition (procs[i], to_be_removed);
-// 		}
 	}
 }
 

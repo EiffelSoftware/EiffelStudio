@@ -42,9 +42,7 @@ doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" sum
 #include "rt_msc_ver_mismatch.h"
 #include "internal.hpp"
 #include "processor.hpp"
-#include "processor_registry.hpp"
 #include "private_queue.hpp"
-#include "eif_utils.hpp"
 
 /*
 doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">
@@ -222,26 +220,22 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 	call = NULL;
 	
 	if (will_sync) {
-			/* 
-			 * TODO: Figure out if it's really necessary to go to
-			 * the registry again to get the client to sync on.
-			 * In particular, would this invariant hold here?
-			 * l_client == client && client->pid == l_sync_pid
-			 */
-		processor *l_client = registry[l_sync_pid];
-		CHECK ("some_test", l_client == client && client->pid == l_sync_pid);
+		
+		/* NOTE: In a previous revision, the variable 'client' was retrieved again
+		 * from the global processor_registry. This seemed to be unnecessary however
+		 * and was therefore removed. */
 
 		struct rt_message* l_message = &self->call_stack_msg;
 
 			/* Wait on our own result notifier for a message by the other processor. */
-		rt_message_channel_receive (&l_client->result_notify, l_message);
+		rt_message_channel_receive (&client->result_notify, l_message);
 
 		for (;
 			l_message->message_type == SCOOP_MESSAGE_CALLBACK;
-			rt_message_channel_receive (&l_client->result_notify, l_message))
+			rt_message_channel_receive (&client->result_notify, l_message))
 		{
 				/*NOTE: The thread executing this feature is the one behind 'client'. */
-			rt_processor_execute_call (l_client, l_message->sender, l_message->call);
+			rt_processor_execute_call (client, l_message->sender, l_message->call);
 			l_message->call = NULL;
 		}
 

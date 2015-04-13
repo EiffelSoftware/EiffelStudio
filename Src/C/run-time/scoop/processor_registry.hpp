@@ -54,8 +54,6 @@ public:
 
   processor* create_fresh (EIF_REFERENCE obj);
 
-  processor* operator[] (EIF_SCP_PID pid);
-
   void return_processor (processor* proc);
 
   /* GC activities */
@@ -70,7 +68,6 @@ public:
 
   void request_gc (int * fingerprint);
 
-private:
 	/*
 	 * Although the procs array is accessed by several threads,
 	 * it is not necessary to synchronize the access. There are several
@@ -118,8 +115,22 @@ private:
   EIF_COND_TYPE* all_done_cv;
 };
 
-void call_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, void* data);
-
 extern processor_registry registry;
+
+/*
+doc:	<routine name="rt_find_processor" return_type="processor*" export="shared">
+doc:		<summary> Get the processor object with the SCOOP id 'pid'. </summary>
+doc:		<param name="pif" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
+doc:		<thread_safety> Safe </thread_safety>
+doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline processor* rt_find_processor (EIF_SCP_PID pid)	
+{
+	REQUIRE ("processor_alive", registry.procs[pid]);
+	processor *result = registry.procs[pid];
+	ENSURE("not_null", result);
+	return result;
+}
 
 #endif

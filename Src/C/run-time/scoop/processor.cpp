@@ -472,7 +472,7 @@ doc:	</routine>
 */
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
-	processor *proc = registry [pid];
+	processor *proc = rt_find_processor (pid);
 
 		/* Record that the current thread is associated with a processor of a given ID. */
 	eif_set_processor_id (pid);

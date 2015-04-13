@@ -51,36 +51,69 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 
 processor_registry registry;
 
-processor_registry::processor_registry ()
+rt_shared int rt_processor_registry_init (void)
 {
+	processor_registry* self = &registry;
+	processor* root_proc = NULL;
 	int error = T_OK;
-	processor_registry* self = this;
 	
+	self->all_done_mutex = NULL;
+	self->all_done_cv = NULL;
+	self->processor_count = 0;
+	self->all_done = EIF_FALSE; /* End of life notification. */
+	
+		/* Create and initialize the identifier set. */
 	error = rt_identifier_set_init (&self->free_pids, RT_MAX_SCOOP_PROCESSOR_COUNT);
-	CHECK ("TODO: error handling", error == T_OK);
 	
-	error = eif_pthread_mutex_create (&self->all_done_mutex);
-	CHECK ("TODO: error handling", error == T_OK);
-
-	error = eif_pthread_cond_create (&self->all_done_cv);
-	CHECK ("TODO: error handling", error == T_OK);
-
-	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		self->procs [i] = NULL;
+		/* Create mutex and CV. */
+	if (T_OK == error) {
+		error = eif_pthread_mutex_create (&self->all_done_mutex);
+	}
+	if (T_OK == error) {
+		error = eif_pthread_cond_create (&self->all_done_cv);
+	}
+	
+		/* Create the root processor. */
+	if (T_OK == error) {
+		error = rt_processor_create (0, EIF_TRUE, &root_proc);
 	}
 
-		/* Atomic increment. */
-	RTS_AI_I32 (&self->processor_count);
+	if (T_OK == error) {
+		
+			/* Prepare the procs attribute. */
+		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+			self->procs [i] = NULL;
+		}
+		
+		CHECK ("has_client_set", root_proc->has_client);
+		self->procs[0] = root_proc;
+		
+			/* Atomically increment processor_count (we start with 1 root processor). */
+		RTS_AI_I32 (&self->processor_count);
+	}
+	
+	if (T_OK != error) {
+			/* An error occurred. Free all resources. */
+		rt_processor_registry_deinit();
+	}
+	return error;
+}
 
-	processor *root_proc = NULL;
-	error = rt_processor_create (0, EIF_TRUE, &root_proc);
-	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
-	CHECK ("has_client_set", root_proc->has_client);
 
-	procs[0] = root_proc;
-
-		/* end of life notification */
-	self->all_done = EIF_FALSE;
+rt_shared void rt_processor_registry_deinit (void)
+{
+	processor_registry* self = &registry;
+	CHECK ("no_more_processors", self->processor_count == 0);
+	
+	if (self->all_done_cv) {
+		RT_TRACE (eif_pthread_cond_destroy (self->all_done_cv));
+		self->all_done_cv = NULL;
+	}
+	if (self->all_done_mutex) {
+		RT_TRACE (eif_pthread_mutex_destroy (self->all_done_mutex));
+		self->all_done_cv = NULL;
+	}
+	rt_identifier_set_deinit (&self->free_pids);
 }
 
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)

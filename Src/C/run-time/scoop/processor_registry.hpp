@@ -123,19 +123,21 @@ public:
 extern processor_registry registry;
 
 /*
-doc:	<routine name="rt_find_processor" return_type="processor*" export="shared">
+doc:	<routine name="rt_get_processor" return_type="processor*" export="shared">
 doc:		<summary> Get the processor object with the SCOOP id 'pid'. </summary>
 doc:		<param name="pif" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
 doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline processor* rt_find_processor (EIF_SCP_PID pid)
+rt_private rt_inline processor* rt_get_processor (EIF_SCP_PID pid)
 {
 	REQUIRE ("processor_alive", registry.procs[pid]);
 	processor *result = registry.procs[pid];
 	ENSURE("not_null", result);
 	return result;
 }
+
+
 
 #endif

@@ -62,7 +62,7 @@ public:
 
   /* GC activities */
 public:
-  void enumerate_live ();
+//   void enumerate_live ();
 
   void mark_all (MARKER marking);
 

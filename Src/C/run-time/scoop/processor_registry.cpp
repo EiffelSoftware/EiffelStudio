@@ -192,20 +192,20 @@ void processor_registry::return_processor (processor *proc)
 	}
 }
 
-/* GC activities */
-void processor_registry::enumerate_live ()
-{
-	processor* proc = NULL;
-	
-	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		
-		proc = this->procs[i];
-		
-		if (proc && proc->has_client) {
-			rt_mark_live_pid (proc->pid);
-		}
-	}
-}
+// /* GC activities */
+// void processor_registry::enumerate_live ()
+// {
+// 	processor* proc = NULL;
+// 	
+// 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+// 		
+// 		proc = this->procs[i];
+// 		
+// 		if (proc && proc->has_client) {
+// 			rt_mark_live_pid (proc->pid);
+// 		}
+// 	}
+// }
 
 /* Atomic integer used only by mark_all function. */
 rt_private volatile EIF_INTEGER_32 rt_is_marking = 0;

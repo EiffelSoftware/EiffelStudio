@@ -197,9 +197,27 @@ rt_shared void rt_unmark_processor (EIF_SCP_PID pid)
 	registry.unmark(pid);
 }
 
+/*
+doc:	<routine name="rt_enumerate_live_processors" return_type="void" export="shared">
+doc:		<summary> Mark all processors that currently have a client as alive. 
+doc:			Note: This is an approximation (i.e. a subset) of the truly alive processors.
+doc:			Some processors may not have a client at the moment, but some objects on them are still referenced. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
 rt_shared void rt_enumerate_live_processors(void)
 {
-	registry.enumerate_live();
+	processor* proc = NULL;
+	
+	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+		
+		proc = rt_lookup_processor (i);
+		
+		if (proc && proc->has_client) {
+			rt_mark_live_pid (proc->pid);
+		}
+	}
 }
 
 rt_public void eif_wait_for_all_processors(void)

@@ -125,19 +125,35 @@ extern processor_registry registry;
 /*
 doc:	<routine name="rt_get_processor" return_type="processor*" export="shared">
 doc:		<summary> Get the processor object with the SCOOP id 'pid'. </summary>
-doc:		<param name="pif" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
+doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
+doc:		<return> The processor with ID 'pid'. </return>
 doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
 doc:	</routine>
 */
 rt_private rt_inline processor* rt_get_processor (EIF_SCP_PID pid)
 {
+	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	REQUIRE ("processor_alive", registry.procs[pid]);
-	processor *result = registry.procs[pid];
+	processor *result = registry.procs [pid];
 	ENSURE("not_null", result);
 	return result;
 }
 
+/*
+doc:	<routine name="rt_lookup_processor" return_type="processor*" export="shared">
+doc:		<summary> Try to get the processor object with the SCOOP id 'pid'. If none exists, the result is NULL. </summary>
+doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
+doc:		<return> The processor with ID 'pid'. May be NULL. </return>
+doc:		<thread_safety> Safe </thread_safety>
+doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline processor* rt_lookup_processor (EIF_SCP_PID pid)
+{
+	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
+	return registry.procs [pid];
+}
 
 
 #endif

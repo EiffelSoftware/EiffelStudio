@@ -5,7 +5,7 @@ class
 	PRETTY_PRINTER_OUTPUT_STREAM
 
 inherit
-	SHARED_LOCALE
+	LOCALIZED_PRINTER
 
 create
 	make_file,
@@ -87,7 +87,7 @@ feature {NONE} -- Access
 ;note
 	revision: "$Revision$"
 	date: "$Date$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -482,7 +482,7 @@ rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 
 	rt_processor_application_loop (proc);
 
-	registry.return_processor (proc);
+	rt_processor_registry_destroy_region (proc);
 }
 
 /*

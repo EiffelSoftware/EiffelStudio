@@ -550,7 +550,7 @@ feature {CLASS_AS} -- Process leafs
 	process_symbol_as (l_as: SYMBOL_AS)
 			-- Process `l_as'.
 		do
-			prepare_inline_indented (l_as)
+			prepare_inline (l_as)
 			last_index := l_as.index
 			print_string (l_as.text_32 (match_list))
 		end
@@ -1418,8 +1418,17 @@ feature {CLASS_AS} -- Instructions
 			-- <Precursor>
 		do
 			print_on_new_line (a.separate_keyword (match_list))
-			process_eiffel_list (a.arguments)
-			process_keyword_as (a.do_keyword (match_list))
+			if a.arguments.count = 1 then
+					-- Put an argument on one line.
+				increase_indent
+				print_inline_unindented (a.arguments [1])
+				decrease_indent
+				print_inline_unindented (a.do_keyword (match_list))
+			else
+					-- Put arguments on separate lines.
+				print_list_indented (a.arguments)
+				print_on_new_line (a.do_keyword (match_list))
+			end
 			print_compound (a.compound)
 			print_on_new_line (a.end_keyword)
 		end
@@ -1614,12 +1623,12 @@ feature {CLASS_AS} -- Calls
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
-	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+	process_named_expression_as (a: NAMED_EXPRESSION_AS)
 			-- <Precursor>
 		do
-			a_as.expression.process (Current)
-			safe_process (a_as.as_keyword (match_list))
-			a_as.name.process (Current)
+			safe_process_and_print (a.expression, "", "")
+			print_inline_unindented (a.as_keyword (match_list))
+			print_inline_unindented (a.name)
 		end
 
 	process_access_inv_as (l_as: ACCESS_INV_AS)

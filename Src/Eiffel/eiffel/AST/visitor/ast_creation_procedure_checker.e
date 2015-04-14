@@ -32,6 +32,7 @@ inherit
 			process_inspect_as,
 			process_like_cur_as,
 			process_loop_as,
+			process_named_expression_as,
 			process_nested_expr_as,
 			process_nested_as,
 			process_once_as,
@@ -749,6 +750,13 @@ feature {AST_EIFFEL} -- Visitor: compound
 			end
 		end
 
+	process_named_expression_as (a: NAMED_EXPRESSION_AS)
+			-- <Precusor>
+		do
+			Precursor (a)
+			keeper.save_sibling
+		end
+
 	process_retry_as (a: RETRY_AS)
 		do
 				-- The code after this instruction is never reached.
@@ -796,7 +804,9 @@ feature {AST_EIFFEL} -- Visitor: compound
 			-- <Precursor>
 		do
 			keeper.enter_realm
+			keeper.enter_realm
 			a_as.arguments.process (Current)
+			keeper.leave_realm
 			safe_process (a_as.compound)
 			keeper.leave_realm
 		end

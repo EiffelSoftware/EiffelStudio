@@ -52,6 +52,10 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 /* The global processor_registry struct. */
 processor_registry registry;
 
+/* Private declarations. */
+rt_private void rt_processor_registry_destroy_region (processor* proc);
+rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid);
+
 /*
 doc:	<routine name="rt_processor_registry_init" return_type="int" export="shared">
 doc:		<summary> Initialize the global processor_registry struct and the root processor object.
@@ -203,43 +207,60 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
 }
 
 
-// rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid)
-
-processor* processor_registry::create_fresh (EIF_REFERENCE obj)
+/*
+doc:	<routine name="spawn_main" return_type="void" export="private">
+doc:		<summary> The entry point for new SCOOP processors after the Eiffel runtime has set up the context.
+doc:			Note: The feature has an unused EIF_REFERENCE as its first argument.
+doc:			This is necessary because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. </summary>
+doc:		<param name="dummy_thread_object" type="EIF_REFERENCE"> A dummy object to make the signature conform to EIF_PROCEDURE. </param>
+doc:		<param name="pid", type="EIF_SCP_PID"> The ID of the newly spawned processor. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
-	EIF_SCP_PID pid = 0;
-	processor *proc = NULL;
-		/* TODO: Return newly allocated PID instead of writing it to 'obj'
-		   so that the argument 'obj' can be removed. */
-	EIF_OBJECT object = eif_protect (obj);
+	processor *proc = rt_get_processor (pid);
 
-	RT_TRACE (rt_processor_registry_create_region (&pid));
+		/* Record that the current thread is associated with a processor of a given ID. */
+	eif_set_processor_id (pid);
 
-// 	if (!rt_identifier_set_try_consume (&this->free_pids, &pid)) {
-// 		plsc();
-// 		int error = rt_identifier_set_consume (&this->free_pids, &pid);  /* TODO: Error handling */
-// 	}
-//
-// 	int error = rt_processor_create (pid, EIF_FALSE, &proc);
-// 	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
+		/* Send a message to the creator thread that we have succesfully spawned.
+		 * We recycle the RESULT_READY message here since the creator is not interested in the message anyway. */
+	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 
-	obj = eif_access (object);
-	RTS_PID(obj) = pid;
+	rt_processor_application_loop (proc);
 
-	eif_wean (object);
-
-// 	procs[pid] = proc;
-// 		/* Atomic increment. */
-// 	RTS_AI_I32 (&this->processor_count);
-
-	rt_processor_spawn (procs[pid]);
-
-
-	return proc;
+	rt_processor_registry_destroy_region (proc);
 }
 
+/*
+doc:	<routine name="rt_processor_registry_activate" return_type="void" export="shared">
+doc:		<summary> Ask the Eiffel runtime to create a new thread for the region with ID 'pid'.
+doc:			The thread calling this function will wait until the new thread has been fully
+doc:			initialized. This is apparently necessary for garbage collection. </summary>
+doc:		<param name="pid" type="EIF_SCP_PID"> The processor region for which a thread shall be spawned. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call once per processor object. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
+{
+	struct rt_message dummy; /* TODO: Can we get rid of this dummy object? */
+	processor* proc = rt_get_processor (pid);
 
+		/* TODO: What happens when thread allocation fails? */
+	eif_thr_create_with_attr_new (
+		NULL,	/* No root object, if this is only passed to spawn_main this is OK */
+		(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
+		pid, /* Logical PID */
+		EIF_TRUE, /* We are a processor */
+		NULL); /* There are no attributes */
 
+		/* Wait for the signal that the new thread has started.
+		 * TODO: RS: Why exactly is this necessary? The GC can still run during the receive operation... */
+	rt_message_channel_receive (&proc->startup_notify, &dummy);
+}
 
 /*
 doc:	<routine name="rt_processor_registry_deactivate" return_type="void" export="shared">
@@ -284,14 +305,14 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 }
 
 /*
-doc:	<routine name="rt_processor_registry_destroy_region" return_type="void" export="shared">
+doc:	<routine name="rt_processor_registry_destroy_region" return_type="void" export="private">
 doc:		<summary> Free all resources in 'proc', remove the PID->processor mapping, and recycle the identifier. </summary>
 doc:		<param name="fingerprint" type="EIF_INTEGER_32"> The fingerprint value. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call from the thread belonging to processor 'proc'. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_registry_destroy_region (processor* proc)
+rt_private void rt_processor_registry_destroy_region (processor* proc)
 {
 	EIF_INTEGER_32 l_count = 0;
 	EIF_SCP_PID pid = proc->pid;

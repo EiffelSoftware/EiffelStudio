@@ -50,7 +50,7 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 #include "eif_atomops.h"
 
 /* The global processor_registry struct. */
-processor_registry registry;
+struct rt_processor_registry registry;
 
 /* Private declarations. */
 rt_private void rt_processor_registry_destroy_region (processor* proc);
@@ -67,7 +67,7 @@ doc:	</routine>
 */
 rt_shared int rt_processor_registry_init (void)
 {
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 	processor* root_proc = NULL;
 	int error = T_OK;
 	
@@ -123,7 +123,7 @@ doc:	</routine>
 */
 rt_shared void rt_processor_registry_deinit (void)
 {
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 	/* CHECK ("no_more_processors", self->processor_count == 0); */
 	
 	if (self->all_done_cv) {
@@ -152,7 +152,7 @@ rt_private int rt_processor_registry_new_identifier (EIF_SCP_PID* result)
 {
 	int error = T_OK;
 	EIF_BOOLEAN success = EIF_FALSE;
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 
 	REQUIRE ("result_not_null", result);
 
@@ -182,7 +182,7 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
 	EIF_SCP_PID pid = 0;
 	int error = T_OK;
 	processor* new_processor = NULL;
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 
 	REQUIRE ("result_not_null", result);
 
@@ -316,7 +316,7 @@ rt_private void rt_processor_registry_destroy_region (processor* proc)
 {
 	EIF_INTEGER_32 l_count = 0;
 	EIF_SCP_PID pid = proc->pid;
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 
 	REQUIRE ("processor_not_collected", rt_lookup_processor (pid));
 
@@ -355,7 +355,7 @@ doc:	</routine>
 */
 rt_shared void rt_processor_registry_quit_root_processor (void)
 {
-	processor_registry* self = &registry;
+	struct rt_processor_registry* self = &registry;
 	processor *root_proc = rt_get_processor (0);
 
 		/* First we have to enter a regular application loop, as some

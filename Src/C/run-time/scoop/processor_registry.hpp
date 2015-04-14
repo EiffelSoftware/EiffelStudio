@@ -34,9 +34,9 @@
 			Customer support http://support.eiffel.com
 		]"
 */
-
-#ifndef _GLOBAL_H
-#define _GLOBAL_H
+/* TODO: Rename this file to rt_processor_registry.h */
+#ifndef _rt_processor_registry_h_
+#define _rt_processor_registry_h_
 
 #include "processor.hpp"
 #include "rt_identifier_set.h"
@@ -56,15 +56,15 @@ rt_shared void rt_processor_registry_quit_root_processor (void);
 /* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
 rt_shared void rt_scoop_gc_request (int* fingerprint);
 
-class processor_registry
+struct rt_processor_registry
 {
 public:
 	/* C++ leftovers */
-  processor_registry () {
+  rt_processor_registry () {
 	rt_processor_registry_init();
   }
 
-  ~processor_registry () {
+  ~rt_processor_registry () {
 	rt_processor_registry_deinit();
   }
 
@@ -115,7 +115,7 @@ public:
 };
 
 
-extern processor_registry registry;
+extern struct rt_processor_registry registry;
 
 /*
 doc:	<routine name="rt_get_processor" return_type="processor*" export="shared">
@@ -150,5 +150,4 @@ rt_private rt_inline processor* rt_lookup_processor (EIF_SCP_PID pid)
 	return registry.procs [pid];
 }
 
-
-#endif
+#endif /* _rt_processor_registry_h_ */

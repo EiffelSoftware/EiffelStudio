@@ -126,7 +126,6 @@ rt_shared void rt_processor_destroy (processor* self);
 rt_shared void rt_processor_mark (processor* self, MARKER marking);
 
 /* Thread spawning and teardown. */
-rt_shared void rt_processor_spawn (processor* self);
 rt_shared void rt_processor_shutdown (processor* self);
 
 /* Wait condition subscription management. */

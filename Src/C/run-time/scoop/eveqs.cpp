@@ -98,7 +98,31 @@ rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 /* RTS_PA */
 rt_public void eif_new_processor (EIF_REFERENCE obj)
 {
-	registry.create_fresh (obj);
+	EIF_SCP_PID new_pid = 0;
+	int error = T_OK;
+
+		/* TODO: Return newly allocated PID instead of writing it to 'obj'
+		   so that the argument 'obj' can be removed. */
+	EIF_OBJECT object = eif_protect (obj);
+
+	error = rt_processor_registry_create_region (&new_pid);
+
+	switch (error) {
+		case T_OK:
+			obj = eif_access (object);
+			RTS_PID(obj) = new_pid;
+			eif_wean (object);
+			rt_processor_registry_activate (new_pid);
+			break;
+		case T_NO_MORE_MEMORY:
+			eif_wean (object);
+			enomem();
+			break;
+		default:
+			eif_wean (object);
+			esys();
+			break;
+	}
 }
 
 /* Call logging */

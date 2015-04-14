@@ -460,58 +460,6 @@ rt_private void rt_processor_process_private_queue (processor* self, priv_queue 
 }
 
 /*
-doc:	<routine name="spawn_main" return_type="void" export="private">
-doc:		<summary> The entry point for new SCOOP processors after the Eiffel runtime has set up the context.
-doc:			Note: The feature has an unused EIF_REFERENCE as its first argument.
-doc:			This is necessary because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. </summary>
-doc:		<param name="dummy_thread_object" type="EIF_REFERENCE"> A dummy object to make the signature conform to EIF_PROCEDURE. </param>
-doc:		<param name="pid", type="EIF_SCP_PID"> The ID of the newly spawned processor. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None </synchronization>
-doc:	</routine>
-*/
-rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
-{
-	processor *proc = rt_get_processor (pid);
-
-		/* Record that the current thread is associated with a processor of a given ID. */
-	eif_set_processor_id (pid);
-
-		/* TODO: Would it make sense to add another message type SCOOP_PROCESSOR_STARTED ? */
-	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
-
-	rt_processor_application_loop (proc);
-
-	rt_processor_registry_destroy_region (proc);
-}
-
-/*
-doc:	<routine name="rt_processor_spawn" return_type="void" export="shared">
-doc:		<summary> Ask the Eiffel runtime to create a new thread for processor 'self'.
-doc:			The thread calling this function will wait until the new thread has been fully
-doc:			initialized. This is apparently necessary for garbage collection. </summary>
-doc:		<param name="self" type="processor*"> The processor object for which a thread shall be spawned. Must not be NULL. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only call once per processor object. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_processor_spawn (processor* self)
-{
-	struct rt_message dummy; /* TODO: Can we get rid of this dummy object? */
-
-		/* TODO: What happens when thread allocation fails? */
-	eif_thr_create_with_attr_new (
-		NULL,	/* No root object, if this is only passed to spawn_main this is OK */
-		(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
-		self->pid, /* Logical PID */
-		EIF_TRUE, /* We are a processor */
-		NULL); /* There are no attributes */
-
-		/* Wait for the signal that the new thread has started. */
-	rt_message_channel_receive (&self->startup_notify, &dummy);
-}
-
-/*
 doc:	<routine name="rt_processor_publish_wait_condition" return_type="void" export="private">
 doc:		<summary> Notify all processors in the 'self->wait_condition_subscribers' vector that a wait condition has changed. </summary>
 doc:		<param name="self" type="processor*"> The processor with the subscribers list. Must not be NULL. </param>

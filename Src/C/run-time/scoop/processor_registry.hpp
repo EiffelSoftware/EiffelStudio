@@ -47,9 +47,8 @@ rt_shared void rt_processor_registry_deinit (void);
 
 /* Processor lifecycle management. */
 rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result);
-/*rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid); */
+rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid);
 rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
-rt_shared void rt_processor_registry_destroy_region (processor* proc);
 
 /* Root thread entry point. */
 rt_shared void rt_processor_registry_quit_root_processor (void);
@@ -60,6 +59,7 @@ rt_shared void rt_scoop_gc_request (int* fingerprint);
 class processor_registry
 {
 public:
+	/* C++ leftovers */
   processor_registry () {
 	rt_processor_registry_init();
   }
@@ -67,11 +67,6 @@ public:
   ~processor_registry () {
 	rt_processor_registry_deinit();
   }
-
-  processor* create_fresh (EIF_REFERENCE obj);
-
-  /* GC activities */
-public:
 
   void request_gc (int * fingerprint) {
 	  rt_scoop_gc_request (fingerprint);
@@ -112,7 +107,6 @@ public:
   volatile EIF_INTEGER_32 processor_count;
   
   struct rt_identifier_set free_pids;
-
 
   /* end of life notification */
   volatile EIF_BOOLEAN all_done;

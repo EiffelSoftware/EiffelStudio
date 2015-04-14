@@ -150,6 +150,7 @@ create
 %type <detachable INVARIANT_AS>		Class_invariant
 %type <detachable LOOP_EXPR_AS>			Loop_expression
 %type <detachable LOOP_AS>				Loop_instruction
+%type <detachable NAMED_EXPRESSION_AS>		Separate_argument
 %type <detachable NESTED_AS>			Call_on_feature_access
 %type <detachable OPERAND_AS>			Delayed_actual
 %type <detachable PARENT_AS>			Parent Parent_clause
@@ -163,6 +164,7 @@ create
 %type <detachable ROUTINE_AS>			Routine
 %type <detachable ROUTINE_CREATION_AS>	Agent
 %type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
+%type <detachable SEPARATE_INSTRUCTION_AS>	Separate_instruction
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
 %type <detachable TYPE_AS>				Type Anchored_type Typed Class_or_tuple_type Unmarked_class_type Unmarked_tuple_type Unmarked_anchored_type Unmarked_class_or_tuple_type Unmarked_unqualified_anchored_type Constraint_type
@@ -187,6 +189,7 @@ create
 %type <detachable EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
 %type <detachable EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
+%type <detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]>	Separate_argument_list
 %type <detachable CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
 %type <detachable UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
 %type <detachable REDEFINE_CLAUSE_AS> Redefine Redefine_opt
@@ -1530,6 +1533,8 @@ Instruction_impl: Creation
 	|	Check
 			{ $$ := $1 }
 	|	Guard
+			{ $$ := $1 }
+	|	Separate_instruction
 			{ $$ := $1 }
 	|	TE_RETRY
 			{ $$ := $1 }
@@ -3104,6 +3109,32 @@ Guard: TE_CHECK Assertion TE_THEN Compound TE_END
 			{ $$ := ast_factory.new_guard_as ($1, $2, $3, $4, $5) }
 	;
 
+-- Separate instruction
+
+Separate_instruction: TE_SEPARATE Add_counter Separate_argument_list Remove_counter TE_DO Compound TE_END
+			{ $$ := ast_factory.new_separate_instruction_as ($1, $3, $5, $6, $7) }
+	;
+
+Separate_argument: Expression TE_AS Identifier_as_lower
+			{ $$ := ast_factory.new_named_expression_as ($1, $2, $3) }
+	;
+
+Separate_argument_list: Separate_argument
+			{
+				$$ := ast_factory.new_eiffel_list_named_expression_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	Separate_argument TE_COMMA Increment_counter Separate_argument_list
+			{
+				$$ := $4
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+					ast_factory.reverse_extend_separator (l_list, $2)
+				end
+			}
+	;
 
 -- Expression
 

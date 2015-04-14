@@ -45,6 +45,17 @@
 rt_shared int rt_processor_registry_init (void);
 rt_shared void rt_processor_registry_deinit (void);
 
+/* Processor lifecycle management. */
+/*
+rt_shared EIF_SCP_PID rt_processor_registry_new_identifier (void);
+rt_shared int rt_processor_registry_new_region (EIF_SCP_PID pid);
+rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid);
+rt_shared void rt_processor_registry_root_processor_termination (void); */
+rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
+
+/* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
+rt_shared void rt_scoop_gc_request (int* fingerprint);
+
 class processor_registry
 {
 public:
@@ -65,7 +76,9 @@ public:
 
   void wait_for_all();
 
-  void request_gc (int * fingerprint);
+  void request_gc (int * fingerprint) {
+	  rt_scoop_gc_request (fingerprint);
+  }
 
 	/*
 	 * Although the procs array is accessed by several threads,
@@ -145,9 +158,6 @@ rt_private rt_inline processor* rt_lookup_processor (EIF_SCP_PID pid)
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	return registry.procs [pid];
 }
-
-/* Function prototypes */
-rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
 
 
 #endif

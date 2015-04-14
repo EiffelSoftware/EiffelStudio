@@ -118,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	current_editor: EB_SMART_EDITOR
+	current_editor: detachable EB_SMART_EDITOR
 			-- Current editor
 		do
 			if editors_internal.has (last_focused_editor) then

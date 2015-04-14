@@ -163,34 +163,7 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 	return proc;
 }
 
-void processor_registry::return_processor (processor *proc)
-{
-	EIF_SCP_PID pid = proc->pid;
-	EIF_INTEGER_32 l_count = 0;
 
-		/* Decouple processor ID from the current thread. */
-	eif_unset_processor_id ();
-	
-	CHECK ("processor_not_collected", procs[pid]);
-
-		/* Atomic pre-decrement. */
-	l_count = RTS_AD_I32 (&this->processor_count);
-	
-	procs [pid] = NULL;
-	rt_processor_destroy (proc);
-
-	if (l_count == 0) {
-		RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
-		this->all_done = EIF_TRUE;
-		RT_TRACE (eif_pthread_cond_signal (this->all_done_cv));
-		RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
-	}
-
-		/* pid 0 is special so we don't recycle that one. */
-	if (pid) {
-		int error = rt_identifier_set_extend (&this->free_pids, pid); /* TODO: Error handling */
-	}
-}
 
 
 /*
@@ -235,6 +208,47 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 	}
 }
 
+/*
+doc:	<routine name="rt_processor_registry_destroy_region" return_type="void" export="shared">
+doc:		<summary> Free all resources in 'proc', remove the PID->processor mapping, and recycle the identifier. </summary>
+doc:		<param name="fingerprint" type="EIF_INTEGER_32"> The fingerprint value. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call from the thread belonging to processor 'proc'. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_destroy_region (processor* proc)
+{
+	EIF_INTEGER_32 l_count = 0;
+	EIF_SCP_PID pid = proc->pid;
+	processor_registry* self = &registry;
+
+	REQUIRE ("processor_not_collected", rt_lookup_processor (pid));
+
+		/* Decouple processor ID from the current thread. */
+	eif_unset_processor_id ();
+
+		/* Remove the processor from the bookkeeping structures in the processor registry. */
+	l_count = RTS_AD_I32 (&self->processor_count); /* Atomic pre-decrement */
+	self->procs [pid] = NULL;
+
+		/* Free all resources in 'proc'. */
+	rt_processor_destroy (proc);
+
+		/* In case we're the last processor to be deleted, signal the root thread
+		 * that the program can now be terminated. */
+	if (l_count == 0) {
+		RT_TRACE (eif_pthread_mutex_lock (self->all_done_mutex));
+		self->all_done = EIF_TRUE;
+		RT_TRACE (eif_pthread_cond_signal (self->all_done_cv));
+		RT_TRACE (eif_pthread_mutex_unlock (self->all_done_mutex));
+	}
+
+		/* Add the identifier back to the list of free PIDs.
+		 * Note that PID 0 is special, so we don't recycle that one. */
+	if (pid != 0) {
+		RT_TRACE (rt_identifier_set_extend (&self->free_pids, pid));
+	}
+}
 
 /*
 doc:	<routine name="rt_processor_registry_quit_root_processor" return_type="void" export="shared">
@@ -253,7 +267,7 @@ rt_shared void rt_processor_registry_quit_root_processor (void)
 	rt_processor_application_loop (root_proc);
 
 		/* When no more references to objects on the root region exist, we terminate. */
-	self->return_processor (root_proc);
+	rt_processor_registry_destroy_region (root_proc);
 
 		/* Now the root thread has to wait for all processors to finish, such that it
 		 * can perform some final program cleanup.

@@ -48,10 +48,13 @@ rt_shared void rt_processor_registry_deinit (void);
 /* Processor lifecycle management. */
 /*
 rt_shared EIF_SCP_PID rt_processor_registry_new_identifier (void);
-rt_shared int rt_processor_registry_new_region (EIF_SCP_PID pid);
+rt_shared int rt_processor_registry_create_region (EIF_SCP_PID pid);
 rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid); */
-rt_shared void rt_processor_registry_quit_root_processor (void);
 rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
+rt_shared void rt_processor_registry_destroy_region (processor* proc);
+
+/* Root thread entry point. */
+rt_shared void rt_processor_registry_quit_root_processor (void);
 
 /* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
 rt_shared void rt_scoop_gc_request (int* fingerprint);
@@ -69,12 +72,8 @@ public:
 
   processor* create_fresh (EIF_REFERENCE obj);
 
-  void return_processor (processor* proc);
-
   /* GC activities */
 public:
-
-  void wait_for_all();
 
   void request_gc (int * fingerprint) {
 	  rt_scoop_gc_request (fingerprint);

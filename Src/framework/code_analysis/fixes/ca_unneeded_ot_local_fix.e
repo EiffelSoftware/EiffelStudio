@@ -48,7 +48,7 @@ feature {NONE} -- Visitor
 			-- Remove the object test local from `a_ot'.
 		local
 			l_new_ot: like a_ot
-			l_printer: CA_PRETTY_PRINTER
+			l_printer: PRETTY_PRINTER
 			l_new_string: STRING_32
 		do
 			if ot.is_equivalent (a_ot) then
@@ -61,7 +61,11 @@ feature {NONE} -- Visitor
 					-- object test local.
 				create l_new_string.make_empty
 				create l_new_ot.make (a_ot.attached_keyword (matchlist), a_ot.type, a_ot.expression, Void, Void)
-				create l_printer.make (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_string (l_new_string), parsed_class, matchlist)
+				create l_printer.make (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_string (l_new_string))
+				l_printer.set_parsed_class (parsed_class)
+				l_printer.set_match_list (matchlist)
+				l_printer.set_will_process_leading_leaves (False)
+				l_printer.set_will_process_trailing_leaves (False)
 				l_printer.process_object_test_as (l_new_ot)
 
 				a_ot.replace_text (l_new_string, matchlist)

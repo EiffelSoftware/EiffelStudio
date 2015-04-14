@@ -61,7 +61,7 @@ feature {NONE} -- Visitor
 					-- object test local.
 				create l_new_string.make_empty
 				create l_new_ot.make (a_ot.attached_keyword (matchlist), a_ot.type, a_ot.expression, Void, Void)
-				create l_printer.make (create {CA_PRETTY_PRINTER_OUTPUT_STREAM}.make_string (l_new_string), parsed_class, matchlist)
+				create l_printer.make (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_string (l_new_string), parsed_class, matchlist)
 				l_printer.process_object_test_as (l_new_ot)
 
 				a_ot.replace_text (l_new_string, matchlist)

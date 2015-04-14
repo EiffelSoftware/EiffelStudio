@@ -176,7 +176,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	out_stream: CA_PRETTY_PRINTER_OUTPUT_STREAM
+	out_stream: PRETTY_PRINTER_OUTPUT_STREAM
 			-- Output stream.
 
 	indent: STRING_32

@@ -235,23 +235,35 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 	}
 }
 
-void processor_registry::wait_for_all()
+
+/*
+doc:	<routine name="rt_processor_registry_quit_root_processor" return_type="void" export="shared">
+doc:		<summary> Finish execution of the root processor after it has completed the root feature. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call by the root processor. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_quit_root_processor (void)
 {
+	processor_registry* self = &registry;
 	processor *root_proc = rt_get_processor (0);
 
-		/* This statement seems to be redundant with the code in rt_processor_application_loop */
-	root_proc->has_client = EIF_FALSE;
-
+		/* First we have to enter a regular application loop, as some
+		 * clients may still have references to objects created by the root processor. */
 	rt_processor_application_loop (root_proc);
 
-	return_processor (root_proc);
+		/* When no more references to objects on the root region exist, we terminate. */
+	self->return_processor (root_proc);
 
+		/* Now the root thread has to wait for all processors to finish, such that it
+		 * can perform some final program cleanup.
+		 * Allow the GC to execute during this period. */
 	EIF_ENTER_C;
-	RT_TRACE (eif_pthread_mutex_lock (this->all_done_mutex));
-	while (!this->all_done) {
-		RT_TRACE (eif_pthread_cond_wait (this->all_done_cv, this->all_done_mutex));
+	RT_TRACE (eif_pthread_mutex_lock (self->all_done_mutex));
+	while (!self->all_done) {
+		RT_TRACE (eif_pthread_cond_wait (self->all_done_cv, self->all_done_mutex));
 	}
-	RT_TRACE (eif_pthread_mutex_unlock (this->all_done_mutex));
+	RT_TRACE (eif_pthread_mutex_unlock (self->all_done_mutex));
 	EIF_EXIT_C;
 	RTGC;
 }

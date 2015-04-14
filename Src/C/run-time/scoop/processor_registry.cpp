@@ -256,13 +256,19 @@ void processor_registry::wait_for_all()
 	RTGC;
 }
 
-/* GC fingerprint, only used by request_gc. */
-rt_private volatile int rt_gc_fingerprint = 0;
-
-void processor_registry::request_gc(EIF_INTEGER_32 * fingerprint)
+/*
+doc:	<routine name="rt_scoop_gc_request" return_type="void" export="shared">
+doc:		<summary> Run a GC cycle when 'fingerprint' has not changed since the last call. </summary>
+doc:		<param name="fingerprint" type="EIF_INTEGER_32"> The fingerprint value. </param>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required, done internally through atomic operations. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_scoop_gc_request (EIF_INTEGER_32* fingerprint)
 {
+	static volatile int gc_fingerprint = 0;
 	int previous_fingerprint = * fingerprint;
-	int current_fingerprint = RTS_ACAS_I32 (&rt_gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
+	int current_fingerprint = RTS_ACAS_I32 (&gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
 	
 	if (current_fingerprint == previous_fingerprint) {
 			/* The fingerprint is unchanged since last call, no GC was run, do it now. */

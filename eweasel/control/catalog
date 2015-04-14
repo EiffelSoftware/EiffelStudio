@@ -273,7 +273,7 @@ test	number-end-without-break	syntax066 tcf fail syntax
 test	empty-array-tuple-wrong-error-line	syntax067 tcf pass syntax
 test	once-followed-by-static-call	syntax068 tcf fail syntax
 test	syntax-obsolete-typed-string	syntax069 tcf pass syntax
-test	inline-separate-instruction-syntax	syntax070 tcf fail syntax scoop separate
+test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
 
 
 -- Validity tests
@@ -2934,7 +2934,7 @@ test	pretty-constant-attribute-comment	pretty026 tcf pass pretty
 test	pretty-feature-call-comment		pretty027 tcf pass pretty
 test	pretty-comments-between-features	pretty028 tcf pass pretty
 test	pretty-loop-invariant			pretty029 tcf pass pretty
-test	pretty-inline-separate-instruction	pretty030 tcf fail pretty
+test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
 
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc

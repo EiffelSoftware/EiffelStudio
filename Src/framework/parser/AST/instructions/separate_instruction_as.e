@@ -50,6 +50,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
+			Result :=
+				equivalent (arguments, other.arguments) and then
+				equivalent (compound, other.compound)
 		end
 
 feature -- Roundtrip

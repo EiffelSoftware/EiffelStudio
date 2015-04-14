@@ -746,44 +746,50 @@ feature -- Stone process
 			if not is_processing_stone and then a_stone /= Void then
 				is_processing_stone := True
 
-				create l_checker.make (Current)
 				l_override_pref := preferences.development_window_data.override_tab_behavior
 
 				if l_override_pref.same_string ({INTERFACE_NAMES}.co_editor) then
 						-- Normal behavior, we replace the existing stone in the current editor if any.
-					l_checker.set_stone_after_first_check (a_stone)
 
 				elseif l_override_pref.same_string ({INTERFACE_NAMES}.co_new_tab_editor) then
 					l_editor := editors_manager.editor_with_stone (a_stone)
-					if l_editor /= Void then
-						l_checker.set_stone_after_first_check (a_stone)
+					if l_editor = Void then
+							-- No editor has `a_stone', let's have a look at the current editor
+							-- if present to see if it already has a stone, otherwise we create a new tab.
+						l_editor := editors_manager.current_editor
+						if l_editor = Void or else l_editor.stone /= Void then
+								-- This is a new tab, there is no more stone associated to Current.
+							old_set_stone (Void)
+							commands.new_tab_cmd.execute
+						else
+							-- No need for creating a new tab since we have an empty editor.
+						end
 					else
-							-- This is a new tab, there is no more stone associated to Current.
-						old_set_stone (Void)
-						commands.new_tab_cmd.execute
-							-- Apply now the stone on the new tab.
-						l_checker.set_stone_after_first_check (a_stone)
+						-- No need to create a new tab since a tab already has `a_stone'.
 					end
 
 				else
 					check new_tab_if_edited: l_override_pref.same_string ({INTERFACE_NAMES}.co_new_tab_editor_if_edited) end
 					l_editor := editors_manager.editor_with_stone (a_stone)
-					if l_editor /= Void then
-						l_checker.set_stone_after_first_check (a_stone)
-					else
+					if l_editor = Void then
+							-- No editor has `a_stone', let's have a look at the current editor
+							-- if present to see if we could replace the stone.
 						l_editor := editors_manager.current_editor
-						if l_editor.text_displayed.history.is_empty then
-								-- No editing took place
-							l_checker.set_stone_after_first_check (a_stone)
-						else
+						if l_editor = Void or else not l_editor.text_displayed.history.is_empty then
 								-- This is a new tab, there is no more stone associated to Current.
 							old_set_stone (Void)
 							commands.new_tab_cmd.execute
-								-- Apply now the stone on the new tab.							
-							l_checker.set_stone_after_first_check (a_stone)
+						else
+							-- No need for creating a new tab since no editing took place
 						end
+					else
+						-- No need to create a new tab since a tab already has `a_stone'.
 					end
 				end
+
+					-- Apply now the stone.							
+				create l_checker.make (Current)
+				l_checker.set_stone_after_first_check (a_stone)
 
 				update_save_symbol
 				is_processing_stone := False

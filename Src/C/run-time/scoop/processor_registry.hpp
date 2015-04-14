@@ -49,8 +49,8 @@ rt_shared void rt_processor_registry_deinit (void);
 /*
 rt_shared EIF_SCP_PID rt_processor_registry_new_identifier (void);
 rt_shared int rt_processor_registry_new_region (EIF_SCP_PID pid);
-rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid);
-rt_shared void rt_processor_registry_root_processor_termination (void); */
+rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid); */
+rt_shared void rt_processor_registry_quit_root_processor (void);
 rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
 
 /* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */

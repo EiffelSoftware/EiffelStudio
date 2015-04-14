@@ -223,7 +223,7 @@ rt_shared void rt_enumerate_live_processors(void)
 
 rt_public void eif_wait_for_all_processors(void)
 {
-	registry.wait_for_all();
+	rt_processor_registry_quit_root_processor ();
 }
 
 /*

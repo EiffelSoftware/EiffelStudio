@@ -43,12 +43,9 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 #include "internal.hpp"
 
 #include "processor.hpp"
-#include "processor_registry.hpp"
 
 #include "eif_atomops.h"
 #include "eif_posix_threads.h"
-#include "eif_threads.h"
-#include <stdarg.h>
 #include "rt_except.h"
 
 

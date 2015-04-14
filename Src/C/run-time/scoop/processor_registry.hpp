@@ -1,9 +1,9 @@
 /*
-	description:	"SCOOP support."
+	description:	"Declarations for struct rt_processor_registry."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2014-2015, Eiffel Software.",
-			"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
+				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -38,8 +38,10 @@
 #ifndef _rt_processor_registry_h_
 #define _rt_processor_registry_h_
 
-#include "processor.hpp"
 #include "rt_identifier_set.h"
+
+/* Forward declarations */
+class processor;
 
 /* Global initialization and teardown. */
 rt_shared int rt_processor_registry_init (void);

@@ -13,7 +13,7 @@
 			Powered by <a href="https://feed.informer.com/">RSS Feed Informer</a></noscript>
     	</li>
     	<li>
-    		<h2>Recent Updated</h2>
+    		<h2>Recently Updated</h2>
     		<script type="text/javascript" src="https://feed.informer.com/widgets/EQWCGOOQEZ.js"></script>
 			<noscript><a href="https://feed.informer.com/widgets/EQWCGOOQEZ.html">"Recent Updates"</a>
 			Powered by <a href="http://feed.informer.com/">RSS Feed Informer</a></noscript>

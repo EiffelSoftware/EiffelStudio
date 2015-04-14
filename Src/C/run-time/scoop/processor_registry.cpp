@@ -133,6 +133,78 @@ rt_shared void rt_processor_registry_deinit (void)
 	rt_identifier_set_deinit (&self->free_pids);
 }
 
+
+/*
+doc:	<routine name="rt_processor_registry_new_identifier" return_type="int" export="private">
+doc:		<summary> Acquire a new unique region identifier and store it in 'result'.
+doc:			If none is currently available, a GC cycle is triggered and the feature blocks until it gets a free ID. </summary>
+doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<return> T_OK on success. If acquiring the mutex fails, an error code is returned. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_private int rt_processor_registry_new_identifier (EIF_SCP_PID* result)
+{
+	int error = T_OK;
+	EIF_BOOLEAN success = EIF_FALSE;
+	processor_registry* self = &registry;
+
+	REQUIRE ("result_not_null", result);
+
+		/* We first check if there's a result available. */
+	success = rt_identifier_set_try_consume (&self->free_pids, result);
+
+		/* If none is available, we have to run the garbage collector and then wait. */
+	if (!success) {
+		plsc();
+		error = rt_identifier_set_consume (&self->free_pids, result);
+	}
+	return error;
+}
+
+/*
+doc:	<routine name="rt_processor_registry_create_region" return_type="int" export="shared">
+doc:		<summary> Create a new SCOOP region. The region is created as passive, meaning it has no thread attached to it.
+doc:			The feature may block and run the GC if there's no free processor ID. </summary>
+doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the ID of the new region shall be stored. Must not be NULL. </param>
+doc:		<return> T_OK on success. If some allocation fails an error code is returned. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
+{
+	EIF_SCP_PID pid = 0;
+	int error = T_OK;
+	processor* new_processor = NULL;
+	processor_registry* self = &registry;
+
+	REQUIRE ("result_not_null", result);
+
+		/* Acquire a new ID. */
+	error = rt_processor_registry_new_identifier (&pid);
+
+	if (T_OK == error) {
+			/* Create and initialize the processor object. */
+		error = rt_processor_create (pid, EIF_FALSE, &new_processor);
+
+		if (T_OK == error) {
+				/* Update the internal bookkeeping structures. */
+			self->procs [pid] = new_processor;
+			RTS_AI_I32 (&self->processor_count); /* Atomic increment */
+			*result = pid;
+		} else {
+				/* Processor allocation failed. Return the PID. */
+			RT_TRACE (rt_identifier_set_extend (&self->free_pids, pid));
+		}
+	}
+	return error;
+}
+
+
+// rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid)
+
 processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 {
 	EIF_SCP_PID pid = 0;
@@ -141,24 +213,27 @@ processor* processor_registry::create_fresh (EIF_REFERENCE obj)
 		   so that the argument 'obj' can be removed. */
 	EIF_OBJECT object = eif_protect (obj);
 
-	if (!rt_identifier_set_try_consume (&this->free_pids, &pid)) {
-		plsc();
-		int error = rt_identifier_set_consume (&this->free_pids, &pid);  /* TODO: Error handling */
-	}
+	RT_TRACE (rt_processor_registry_create_region (&pid));
 
-	int error = rt_processor_create (pid, EIF_FALSE, &proc);
-	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
+// 	if (!rt_identifier_set_try_consume (&this->free_pids, &pid)) {
+// 		plsc();
+// 		int error = rt_identifier_set_consume (&this->free_pids, &pid);  /* TODO: Error handling */
+// 	}
+//
+// 	int error = rt_processor_create (pid, EIF_FALSE, &proc);
+// 	CHECK ("no_error", error == T_OK); /* TODO: Error handling. */
 
 	obj = eif_access (object);
 	RTS_PID(obj) = pid;
 
-	procs[pid] = proc;
-		/* Atomic increment. */
-	RTS_AI_I32 (&this->processor_count);
-
-	rt_processor_spawn (proc);
-
 	eif_wean (object);
+
+// 	procs[pid] = proc;
+// 		/* Atomic increment. */
+// 	RTS_AI_I32 (&this->processor_count);
+
+	rt_processor_spawn (procs[pid]);
+
 
 	return proc;
 }

@@ -46,10 +46,8 @@ rt_shared int rt_processor_registry_init (void);
 rt_shared void rt_processor_registry_deinit (void);
 
 /* Processor lifecycle management. */
-/*
-rt_shared EIF_SCP_PID rt_processor_registry_new_identifier (void);
-rt_shared int rt_processor_registry_create_region (EIF_SCP_PID pid);
-rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid); */
+rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result);
+/*rt_shared int rt_processor_registry_activate (EIF_SCP_PID pid); */
 rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
 rt_shared void rt_processor_registry_destroy_region (processor* proc);
 

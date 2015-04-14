@@ -1433,7 +1433,7 @@ feature {CLASS_AS} -- Instructions
 			print_on_new_line (a.end_keyword)
 		end
 
-feature {CLASS_AS} -- Expressions
+feature {AST_VISITOR} -- Expressions
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 			-- Process custom attribute expression `l_as'.

@@ -3198,11 +3198,27 @@ feature {NONE} -- Implementation
 		do
 			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_separate_keyword, Void)
-			a.arguments.process (Current)
+			text_formatter_decorator.set_separator (ti_comma)
+			if a.arguments.count = 1 then
+					-- One argument is formatted inline.
+				text_formatter_decorator.put_space
+				text_formatter_decorator.set_space_between_tokens
+				a.arguments.process (Current)
+				text_formatter_decorator.put_space
+				text_formatter_decorator.set_without_tabs
+			else
+					-- Multiple arguments are formatted on separate lines.
+				text_formatter_decorator.indent
+				text_formatter_decorator.put_new_line
+				text_formatter_decorator.set_new_line_between_tokens
+				a.arguments.process (Current)
+				text_formatter_decorator.exdent
+				text_formatter_decorator.put_new_line
+			end
 			text_formatter_decorator.process_keyword_text (ti_do_keyword, Void)
 			text_formatter_decorator.put_new_line
 			text_formatter_decorator.indent
-			safe_process (a.compound)
+			format_compound (a.compound)
 			text_formatter_decorator.exdent
 			text_formatter_decorator.put_new_line
 			text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
@@ -4059,7 +4075,6 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.set_without_tabs
 			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
-			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
 				l_text_formatter_decorator.indent
@@ -4218,6 +4233,8 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			a_as.expression.process (Current)
+			text_formatter_decorator.put_space
+			text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
 			text_formatter_decorator.put_space
 			a_as.name.process (Current)
 		end

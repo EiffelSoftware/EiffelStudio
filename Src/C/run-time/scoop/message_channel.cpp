@@ -175,12 +175,12 @@ doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_chann
 doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="sender" type="struct processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
-doc:		<param name="queue" type="priv_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
+doc:		<param name="queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
  */
-rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call, priv_queue* queue)
+rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call, struct rt_private_queue* queue)
 {
 	struct mc_node* node = NULL;
 	REQUIRE ("self_not_null", self);
@@ -252,12 +252,12 @@ doc:		<param name="self" type="struct rt_message_channel*"> The channel on which
 doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="sender" type="struct processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
-doc:		<param name="queue" type="priv_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
+doc:		<param name="queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call, priv_queue* queue)
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, processor* sender, struct call_data* call, struct rt_private_queue* queue)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", sender || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));

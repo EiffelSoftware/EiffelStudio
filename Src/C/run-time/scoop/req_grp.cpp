@@ -35,7 +35,7 @@
 		]"
 */
 
-/* TODO: Rename this file to rt_request_group.c when the C conversion is completed. */
+/* TODO: Rename this file to request_group.c when the C conversion is completed. */
 
 /*
 doc:<file name="req_grp.cpp" header="req_grp.hpp" version="$Id$" summary="Routines to manipulate SCOOP request groups, which are used to model separate arguments for routines.">
@@ -48,12 +48,12 @@ doc:<file name="req_grp.cpp" header="req_grp.hpp" version="$Id$" summary="Routin
 #include "rt_vector.h"
 
 /* We can reuse some of the functions in rt_vector.h */
-RT_DECLARE_VECTOR_SIZE_FUNCTIONS (rt_request_group, priv_queue*)
-RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (rt_request_group, priv_queue*)
-RT_DECLARE_VECTOR_STACK_FUNCTIONS (rt_request_group, priv_queue*)
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (rt_request_group, struct rt_private_queue*)
+RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (rt_request_group, struct rt_private_queue*)
+RT_DECLARE_VECTOR_STACK_FUNCTIONS (rt_request_group, struct rt_private_queue*)
 
 /* A simple bubblesort algorithm to sort an array of private queues. */
-rt_private rt_inline void bubble_sort (priv_queue** area, size_t count)
+rt_private rt_inline void bubble_sort (struct rt_private_queue** area, size_t count)
 {
 	int right_boundary = ((int) count)-1;
 	int swapped = 1;
@@ -61,7 +61,7 @@ rt_private rt_inline void bubble_sort (priv_queue** area, size_t count)
 		swapped = 0;
 		for (int i=0; i < right_boundary; ++i) {
 			if (area [i]->supplier->pid > area [i+1]->supplier->pid) {
-				priv_queue* tmp = area [i];
+				struct rt_private_queue* tmp = area [i];
 				area [i] = area [i+1];
 				area [i+1] = tmp;
 				swapped = 1;
@@ -82,7 +82,7 @@ doc:	</routine>
 */
 rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier)
 {
-	priv_queue* pq = NULL;
+	struct rt_private_queue* pq = NULL;
 	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
@@ -123,7 +123,7 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		/* Register the current client with the suppliers, such that we
 		 * can later get a notification if a wait condition may have changed. */
 	for (size_t i = 0; i < l_count; ++i) {
-		priv_queue* l_queue = rt_request_group_item (self, i);
+		struct rt_private_queue* l_queue = rt_request_group_item (self, i);
 
 			/* We only register on queues which are currently synchronized.
 			 * Those are the ones that have executed a query during the wait

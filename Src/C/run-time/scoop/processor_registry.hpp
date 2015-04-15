@@ -41,7 +41,7 @@
 #include "rt_identifier_set.h"
 
 /* Forward declarations */
-class processor;
+struct rt_processor;
 
 /* Global initialization and teardown. */
 rt_shared int rt_processor_registry_init (void);
@@ -104,7 +104,7 @@ public:
 	 *   object is visible by other threads the update is visible as well, thanks
 	 *   to the visibility guarantees of x86.
 	 */
-  processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
+  struct rt_processor* procs [RT_MAX_SCOOP_PROCESSOR_COUNT];
 
   volatile EIF_INTEGER_32 processor_count;
   
@@ -120,7 +120,7 @@ public:
 extern struct rt_processor_registry registry;
 
 /*
-doc:	<routine name="rt_get_processor" return_type="processor*" export="shared">
+doc:	<routine name="rt_get_processor" return_type="struct rt_processor*" export="shared">
 doc:		<summary> Get the processor object with the SCOOP id 'pid'. </summary>
 doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
 doc:		<return> The processor with ID 'pid'. </return>
@@ -128,17 +128,17 @@ doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline processor* rt_get_processor (EIF_SCP_PID pid)
+rt_private rt_inline struct rt_processor* rt_get_processor (EIF_SCP_PID pid)
 {
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	REQUIRE ("processor_alive", registry.procs[pid]);
-	processor *result = registry.procs [pid];
+	struct rt_processor *result = registry.procs [pid];
 	ENSURE("not_null", result);
 	return result;
 }
 
 /*
-doc:	<routine name="rt_lookup_processor" return_type="processor*" export="shared">
+doc:	<routine name="rt_lookup_processor" return_type="struct rt_processor*" export="shared">
 doc:		<summary> Try to get the processor object with the SCOOP id 'pid'. If none exists, the result is NULL. </summary>
 doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
 doc:		<return> The processor with ID 'pid'. May be NULL. </return>
@@ -146,7 +146,7 @@ doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline processor* rt_lookup_processor (EIF_SCP_PID pid)
+rt_private rt_inline struct rt_processor* rt_lookup_processor (EIF_SCP_PID pid)
 {
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	return registry.procs [pid];

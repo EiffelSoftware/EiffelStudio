@@ -41,14 +41,14 @@ doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" sum
 
 #include "rt_msc_ver_mismatch.h"
 #include "internal.hpp"
-#include "processor.hpp"
 #include "private_queue.hpp"
+#include "processor.hpp"
 
 /*
 doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">
 doc:		<summary> Initialize the private queue 'self' with supplier 'a_supplier'. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be initialized. Must not be NULL. </param>
-doc:		<param name="a_supplier" type="struct processor*"> The supplier processor. This is where all requests will be sent to. Must not be NULL. </param>
+doc:		<param name="a_supplier" type="struct rt_processor*"> The supplier processor. This is where all requests will be sent to. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
@@ -118,7 +118,7 @@ doc:	<routine name="rt_private_queue_lock" return_type="void" export="shared">
 doc:		<summary> Lock this private queue by placing the queue into the supplier's queue-of-queues.
 doc:			Locking can be recursive, both for the owner of this queue and any borrowers during lock passing. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be locked. Must not be NULL. </param>
-doc:		<param name="client" type="processor*"> The client that performs the lock operation. Must not be NULL. </param>
+doc:		<param name="client" type="struct rt_processor*"> The client that performs the lock operation. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
@@ -161,7 +161,7 @@ doc:		<summary> Register a wait operation at the supplier.
 doc:			The supplier will contact the client when it has executed some
 doc:			other calls, and thus may have changed a wait condition. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
-doc:		<param name="self" type="struct processor*"> The client that wants to register for a wait condition change notification. </param>
+doc:		<param name="self" type="struct rt_processor*"> The client that wants to register for a wait condition change notification. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
@@ -181,7 +181,7 @@ doc:		<summary> Log a new call to this queue.
 doc:			This is essentially an send operation on the underlying message channel,
 doc: 			which can wake up the supplier if it is waiting for more calls. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
-doc:		<param name="client" type="processor*"> The client that issues the call. </param>
+doc:		<param name="client" type="struct rt_processor*"> The client that issues the call. </param>
 doc:		<param name="call" type="struct call_data*"> The call to be executed by the supplier. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -222,7 +222,7 @@ rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, s
 	if (will_sync) {
 		
 		/* NOTE: In a previous revision, the variable 'client' was retrieved again
-		 * from the global processor_registry. This seemed to be unnecessary however
+		 * from the global rt_processor_registry. This seemed to be unnecessary however
 		 * and was therefore removed. */
 
 		struct rt_message* l_message = &self->call_stack_msg;

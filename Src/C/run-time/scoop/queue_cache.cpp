@@ -48,7 +48,7 @@ doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary
 doc:	<routine name="rt_queue_cache_find_from_owned return_type="struct priv_queue*" export="private">
 doc:		<summary> Find a priv_queue from the set of queues owned by 'self'. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
 doc:		<return> A private queue to the specified processor. The result may not be locked. If none can be found, the result is NULL. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -80,7 +80,7 @@ rt_private priv_queue* rt_queue_cache_find_from_owned (struct queue_cache* self,
 doc:	<routine name="rt_queue_cache_find_from_borrowed" return_type="struct priv_queue*" export="private">
 doc:		<summary> Find a locked priv_queue in the stack of borrowed queue caches. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
 doc:		<return> A private queue to the specified processor. If none can be found, the result is NULL. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -128,7 +128,7 @@ rt_private priv_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* se
 doc:	<routine name="rt_queue_cache_is_locked" return_type="EIF_BOOLEAN" export="shared">
 doc:		<summary> Check if 'self' has the lock (i.e. an open request queue) to 'supplier'. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="supplier" type="struct processor*"> The processor to which 'client' might have a lock to. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The processor to which 'client' might have a lock to. Must not be NULL. </param>
 doc:		<return> EIF_TRUE if 'self' currently holds a lock on 'supplier'. EIF_FALSE otherwise. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -258,7 +258,7 @@ doc:	<routine name="rt_queue_cache_has_locks_of" return_type="EIF_BOOLEAN" expor
 doc:		<summary> Check if 'self' has all the locks of 'supplier'. This can only be true when 'supplier' has passed the locks to 'client' in a previous call.
 dic:		The result of this query is important to determine if we need to perform a separate callback instead of a regular call. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="supplier" type="struct processor*"> The processor that might have passed its locks to 'self'. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The processor that might have passed its locks to 'self'. Must not be NULL. </param>
 doc:		<return> EIF_TRUE if 'self' currently has the locks of 'supplier'. EIF_FALSE otherwise. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -301,7 +301,7 @@ doc:			A new <priv_queue> will be constructed if none already exists.
 doc:			This will also look to see if there are any private queues that were passed to this queue_cache during lock-passing.
 doc:			These passed-queues will already be locked and have priority over non-passed, possibly unlocked queues. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="supplier" type="struct processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
 doc:		<return> A private queue to the specified processor. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>

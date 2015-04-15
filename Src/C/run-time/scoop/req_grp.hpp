@@ -43,7 +43,7 @@
 #include "eif_portable.h"
 #include "rt_assert.h"
 
-class processor;
+struct rt_processor;
 struct rt_private_queue;
 
 /*
@@ -53,7 +53,7 @@ doc: 			The rt_request_group contains all the fields of an vector struct, and th
 doc:		<field name="area", type="struct rt_private_queue**"> A dynamically allocated array containing private queues (~ locks) within the request group. </field>
 doc:		<field name="count", type="size_t"> The current number of private queues. </field>
 doc:		<field name="capacity", type="size_t"> The currently reserved space in 'area', measured in number of elements. </field>
-doc:		<field name="client", type="processor*> The processor that wants to acquire the locks. </field>
+doc:		<field name="client", type="struct rt_processor*> The processor that wants to acquire the locks. </field>
 doc:		<field name="is_sorted", type="EIF_BOOLEAN"> A boolean to indicate whether the private queues within this request group are sorted.
 doc: 			It also indicates whether rt_request_group_lock() has been called in the past. </field>
 doc:		<fixme> A possible improvement might be to place the first few private queues into the request group struct itself, to avoid memory allocation on the heap. </fixme>
@@ -65,7 +65,7 @@ struct rt_request_group
 	struct rt_private_queue** area;
 	size_t capacity;
 	size_t count;
-	processor* client;
+	struct rt_processor* client;
 	EIF_BOOLEAN is_sorted;
 };
 
@@ -73,12 +73,12 @@ struct rt_request_group
 doc:	<routine name="rt_request_group_init" return_type="void" export="private">
 doc:		<summary> Initialize the request group to a consistent state. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group to be initialized. Must not be NULL. </param>
-doc:		<param name="a_client" type="struct processor*"> The processor which will issue calls to the suppliers within this request group. </param>
+doc:		<param name="a_client" type="struct rt_processor*"> The processor which will issue calls to the suppliers within this request group. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_request_group_init (struct rt_request_group* self, processor* a_client)
+rt_private rt_inline void rt_request_group_init (struct rt_request_group* self, struct rt_processor* a_client)
 {
 	REQUIRE ("not_null", self);
 	self->area = NULL;
@@ -105,7 +105,7 @@ rt_private rt_inline void rt_request_group_deinit (struct rt_request_group* self
 
 
 /* Declarations */
-rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier);
+rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier);
 rt_shared void rt_request_group_wait (struct rt_request_group* self);
 rt_shared void rt_request_group_lock (struct rt_request_group* self);
 rt_shared void rt_request_group_unlock (struct rt_request_group* self);

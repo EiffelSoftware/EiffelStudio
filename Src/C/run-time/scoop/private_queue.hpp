@@ -42,7 +42,7 @@
 #include "rt_message.h"
 #include "rt_message_channel.hpp"
 
-class processor;
+struct rt_processor;
 
 /*
 doc:	<struct name="rt_private_queue", export="shared">
@@ -61,7 +61,7 @@ doc:			it's not guaranteed to be always the client that created the queue.
 doc:		</summary>
 doc:		<field name="call_stack_msg", type="struct rt_message"> The call being executed right now. Accessed only by the supplier or by the GC. </field>
 doc:		<field name="channel", type="struct rt_message_channel"> The message channel used for communication. </field>
-doc:		<field name="supplier", type="processor*"> The supplier to whom messages will be sent. This field is constant. Accessed only by the client. </field>
+doc:		<field name="supplier", type="struct rt_processor*"> The supplier to whom messages will be sent. This field is constant. Accessed only by the client. </field>
 doc:		<field name="lock_depth", type="int"> The current lock depth (for recursive locking). Accessed only by the client. </field>
 doc:		<field name="synced", type="EIF_BOOLEAN"> Whether the supplier is synchronized with the client. Accessed only by the client. </field>
 doc:		<fixme> It may be possible to improve performance slightly with some careful alignment to cache lines (also within rt_message_channel) </fixme>
@@ -75,7 +75,7 @@ struct rt_private_queue {
 	struct rt_message_channel channel;
 
 		/* Producer (or client)  part */
-	processor *supplier;
+	struct rt_processor *supplier;
 	int lock_depth;
 	EIF_BOOLEAN synced;
 };
@@ -83,17 +83,17 @@ struct rt_private_queue {
 typedef struct rt_private_queue priv_queue; /* TODO: Get rid of this typedef.*/
 
 /* Declarations. */
-rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
+rt_shared void rt_private_queue_init (priv_queue* self, struct rt_processor* a_supplier);
 rt_shared void rt_private_queue_deinit (priv_queue* self);
 rt_shared void rt_private_queue_mark (priv_queue* self, MARKER marking);
 
 rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self);
 rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self);
 
-rt_shared void rt_private_queue_lock (priv_queue* self, processor* client);
+rt_shared void rt_private_queue_lock (priv_queue* self, struct rt_processor* client);
 rt_shared void rt_private_queue_unlock (priv_queue* self);
-rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client);
+rt_shared void rt_private_queue_register_wait (priv_queue* self, struct rt_processor* client);
 
-rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call);
+rt_shared void rt_private_queue_log_call (priv_queue* self, struct rt_processor* client, struct call_data* call);
 
 #endif /* _rt_private_queue_h_ */

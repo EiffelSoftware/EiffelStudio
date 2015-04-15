@@ -49,7 +49,7 @@
 
 /* Forward declarations. */
 struct queue_cache;
-class processor;
+struct rt_processor;
 struct rt_private_queue;
 
 /* Declare an internal vector data structure. */
@@ -75,7 +75,7 @@ doc: 			queues it already has, adds itself at the end of the stack, and gives
 doc: 			the whole borrowed_queues stack to the receiver. The reverse operation
 doc: 			happens on a lock passing pop().
 doc:		</summary>
-doc:		<field name="owner" type="processor*"> The owner of this queue_cache. </field>
+doc:		<field name="owner" type="struct rt_processor*"> The owner of this queue_cache. </field>
 doc:		<field name="owned_queues" type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
 doc:		<field name="borrowed_queues" type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
 doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
@@ -84,7 +84,7 @@ doc:			is already in the stack. This probably needs some more data structures th
 doc:	</struct>
 */
 struct queue_cache {
-	processor *owner;
+	struct rt_processor *owner;
 	struct rt_vector_queue_cache *borrowed_queues;
 	struct htable owned_queues;
 };
@@ -93,12 +93,12 @@ struct queue_cache {
 doc:	<routine name="rt_queue_cache_init" return_type="void" export="private">
 doc:		<summary> Initialize the queue_cache struct 'self' with owner 'a_owner' and reserve some memory in the internal hash table. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache to be initialized. Must not be NULL. </param>
-doc:		<param name="a_owner" type="struct processor*"> The owner of the queue_cache. Must not be NULL. </param>
+doc:		<param name="a_owner" type="struct rt_processor*"> The owner of the queue_cache. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, processor* a_owner)
+rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, struct rt_processor* a_owner)
 {
 	int error = 0;
 
@@ -137,12 +137,12 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 
 
 /* Declarations */
-rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
-rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
+rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier);
+rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct rt_processor* supplier);
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);
-rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier);
+rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, struct rt_processor* const supplier);
 /* rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking); */
-rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc);
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, struct rt_processor *proc);
 
 #endif /* _rt_queue_cache_h_ */

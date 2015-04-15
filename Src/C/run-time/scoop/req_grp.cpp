@@ -75,7 +75,7 @@ rt_private rt_inline void bubble_sort (struct rt_private_queue** area, size_t co
 doc:	<routine name="rt_request_group_add" return_type="void" export="shared">
 doc:		<summary> Add a new supplier to the request group. This feature cannot be called any more after the first lock operation. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
-doc:		<param name="a_client" type="struct processor*"> The supplier processor to be added to this request group. Must not be NULL. </param>
+doc:		<param name="a_client" type="struct rt_processor*"> The supplier processor to be added to this request group. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>

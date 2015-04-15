@@ -109,7 +109,7 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 		/* Note: We initialize to zero to avoid having inconsistent states
 		 * in case we need to call rt_processor_destroy when a failure happens. */
-	self = (processor*) calloc (1, sizeof (class processor));
+	self = (processor*) calloc (1, sizeof (struct rt_processor));
 
 	if (self) {
 

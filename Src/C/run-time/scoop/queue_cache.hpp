@@ -50,7 +50,7 @@
 /* Forward declarations. */
 struct queue_cache;
 class processor;
-class priv_queue;
+struct rt_private_queue;
 
 /* Declare an internal vector data structure. */
 RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
@@ -108,7 +108,7 @@ rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, process
 	self -> owner = a_owner;
 	self -> borrowed_queues = NULL;
 
-	error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (priv_queue*));
+	error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (struct rt_private_queue*));
 	if (error != 0) {
 		enomem();
 	}
@@ -137,7 +137,7 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 
 
 /* Declarations */
-rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
+rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier);
 rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier);
 rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);

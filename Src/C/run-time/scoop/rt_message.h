@@ -44,7 +44,7 @@
 /* Forward declarations */
 class processor;
 struct call_data;
-class priv_queue;
+struct rt_private_queue;
 
 /* The message types that can be sent between processors. */
 enum scoop_message_type {
@@ -85,7 +85,7 @@ doc:	</struct>
 struct rt_message {
   processor* sender;
   struct call_data* call;
-  priv_queue* queue;
+  struct rt_private_queue* queue;
   enum scoop_message_type message_type;
 };
 
@@ -96,12 +96,12 @@ doc:		<param name="self" type="struct rt_message*"> The message to be initialize
 doc:		<param name="a_message" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="a_sender" type="struct processor*"> The sender of the message. Must not be NULL for EXECUTE and CALLBACK messages. </param>
 doc:		<param name="a_call" type="struct call_data*"> The information needed to execute a call. Must not be NULL for EXECUTE and CALLBACK messages. </param>
-doc:		<param name="a_queue" type="priv_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
+doc:		<param name="a_queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, processor* a_sender, struct call_data* a_call, priv_queue* a_queue)
+rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, processor* a_sender, struct call_data* a_call, struct rt_private_queue* a_queue)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));

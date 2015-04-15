@@ -38,8 +38,8 @@
 /*
 doc:<file name="notify_token.cpp" header="notify_token.hpp" version="$Id$" summary="SCOOP support.">
 */
-
 #include "rt_msc_ver_mismatch.h"
+#if 0
 #include "notify_token.hpp"
 
 notify_token::notify_token(processor *client) :
@@ -69,3 +69,4 @@ void notify_token::notify(processor *client)
 {
 	token_queue_->push (client);
 }
+#endif

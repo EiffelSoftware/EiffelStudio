@@ -44,13 +44,13 @@
 #include "rt_assert.h"
 
 class processor;
-class priv_queue;
+struct rt_private_queue;
 
 /*
 doc:	<struct name="rt_request_group", export="shared">
 doc:		<summary> Request groups model a set of locks to be taken and released atomically. They are used for separate arguments in a routine.
 doc: 			The rt_request_group contains all the fields of an vector struct, and thus "inherits" from it. </summary>
-doc:		<field name="area", type="priv_queue**"> A dynamically allocated array containing private queues (~ locks) within the request group. </field>
+doc:		<field name="area", type="struct rt_private_queue**"> A dynamically allocated array containing private queues (~ locks) within the request group. </field>
 doc:		<field name="count", type="size_t"> The current number of private queues. </field>
 doc:		<field name="capacity", type="size_t"> The currently reserved space in 'area', measured in number of elements. </field>
 doc:		<field name="client", type="processor*> The processor that wants to acquire the locks. </field>
@@ -62,7 +62,7 @@ doc:	</struct>
 struct rt_request_group
 {
 		/* NOTE: All fields are private. Do not modify them directly. */
-	priv_queue** area;
+	struct rt_private_queue** area;
 	size_t capacity;
 	size_t count;
 	processor* client;

@@ -35,8 +35,9 @@
 		]"
 */
 
-#ifndef _PRIV_QUEUE_H
-#define _PRIV_QUEUE_H
+/* TODO: Rename to rt_private_queue.h */
+#ifndef _rt_private_queue_h_
+#define _rt_private_queue_h_
 
 #include "rt_message.h"
 #include "rt_message_channel.hpp"
@@ -66,21 +67,20 @@ doc:		<field name="synced", type="EIF_BOOLEAN"> Whether the supplier is synchron
 doc:		<fixme> It may be possible to improve performance slightly with some careful alignment to cache lines (also within rt_message_channel) </fixme>
 doc:	</struct>
 */
-class priv_queue /* TODO: Rename this to 'struct rt_private_queue' */
-{
-public:
-	/* Consumer/Supplier part. */
-  struct rt_message call_stack_msg;
+struct rt_private_queue {
+		/* Consumer (or supplier) part. */
+	struct rt_message call_stack_msg;
 
-  /* Shared part. */
-  struct rt_message_channel channel;
+		/* Shared part. */
+	struct rt_message_channel channel;
 
-  /* Client / Producer part */
-  processor *supplier;
-  int lock_depth;
-  EIF_BOOLEAN synced;
+		/* Producer (or client)  part */
+	processor *supplier;
+	int lock_depth;
+	EIF_BOOLEAN synced;
 };
 
+typedef struct rt_private_queue priv_queue; /* TODO: Get rid of this typedef.*/
 
 /* Declarations. */
 rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier);
@@ -96,4 +96,4 @@ rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* clie
 
 rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call);
 
-#endif
+#endif /* _rt_private_queue_h_ */

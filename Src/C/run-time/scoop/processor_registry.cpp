@@ -246,7 +246,6 @@ doc:	</routine>
 */
 rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
 {
-	struct rt_message dummy; /* TODO: Can we get rid of this dummy object? */
 	processor* proc = rt_get_processor (pid);
 
 		/* TODO: What happens when thread allocation fails? */
@@ -259,7 +258,7 @@ rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
 
 		/* Wait for the signal that the new thread has started.
 		 * TODO: RS: Why exactly is this necessary? The GC can still run during the receive operation... */
-	rt_message_channel_receive (&proc->startup_notify, &dummy);
+	rt_message_channel_receive (&proc->startup_notify, NULL);
 }
 
 /*

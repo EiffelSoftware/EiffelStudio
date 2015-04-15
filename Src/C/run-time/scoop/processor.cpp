@@ -491,18 +491,18 @@ rt_private void rt_processor_publish_wait_condition (processor* self, processor 
 			if (item) {
 
 					/* Lock the registered processor's condition variable mutex. */
-				eif_pthread_mutex_lock (item->wait_condition_mutex); /* TODO: Error handling */
+				RT_TRACE (eif_pthread_mutex_lock (item->wait_condition_mutex)); /* TODO: Return an error code? */
 
 					/* Send a signal. */
-				eif_pthread_cond_signal (item->wait_condition); /* TODO: Error handling */
+				RT_TRACE (eif_pthread_cond_signal (item->wait_condition));
 
 					/* Release the lock. */
-				eif_pthread_mutex_unlock (item->wait_condition_mutex); /* TODO: Error handling */
+				RT_TRACE (eif_pthread_mutex_unlock (item->wait_condition_mutex));
 			}
 		}
 	}
 	if (found) {
-			/* A possible error can only happen during reallocation. This is impossible here,
+			/* An error can only happen during reallocation. This is impossible here,
 			 * because we only push one item, and only if it was removed previously. */
 		RT_TRACE (subscriber_list_t_extend (subscribers, client));
 	}

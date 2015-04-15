@@ -42,7 +42,6 @@ doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP su
 #include "rt_msc_ver_mismatch.h"
 #include "processor_registry.hpp"
 #include "processor.hpp"
-#include "internal.hpp"
 #include "eif_interp.h"
 #include "eif_atomops.h"
 #include "rt_wbench.h"

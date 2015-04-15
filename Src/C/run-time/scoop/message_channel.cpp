@@ -401,8 +401,9 @@ rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t 
 		enomem();
 	}
 
-		/* TODO: Add a default rt_message for initialization? */
+		/* Initialize the node to a consistent state. */
 	l_node->next = NULL;
+	rt_message_init (&l_node->value, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 
 		/* In the beginning, all pointers point to the guard node. */
 	self->head = l_node;
